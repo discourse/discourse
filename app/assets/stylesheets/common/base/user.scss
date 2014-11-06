@@ -15,9 +15,28 @@
   }
 }
 
+.user-field {
+  .required {
+    text-align: top;
+    color: $danger;
+    font-weight: bold;
+    font-size: 1.3em;
+  }
+}
+
+.end-of-stream {
+  border: 3px solid $primary;
+  width: 100%;
+}
+
+.notification-buttons {
+  margin: 10px 0;
+  text-align: right;
+}
+
 .user-navigation {
 
-    .map {
+  .map {
     height: 50px;
   }
   .avatar {
@@ -30,7 +49,7 @@
     .btn {
       width: 100%;
       margin-bottom: 5px;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
     }
   }
   h2 {
@@ -58,3 +77,4 @@
     margin: 5px 10px 5px 0;
   }
 }
+

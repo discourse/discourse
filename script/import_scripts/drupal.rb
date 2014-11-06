@@ -17,6 +17,10 @@ class ImportScripts::Drupal < ImportScripts::Base
     )
   end
 
+  def categories_query
+    @client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = 1")
+  end
+
   def execute
     create_users(@client.query("SELECT uid id, name, mail email, created FROM users;")) do |row|
       {id: row['id'], username: row['name'], email: row['email'], created_at: Time.zone.at(row['created'])}
@@ -27,8 +31,8 @@ class ImportScripts::Drupal < ImportScripts::Base
     #   * Drupal allows duplicate category names, so you may need to exclude some categories or rename them here.
     #   * Table name may be term_data.
     #   * May need to select a vid other than 1.
-    create_categories(@client.query("SELECT tid, name, description FROM taxonomy_term_data WHERE vid = 1;")) do |c|
-      {id: c['tid'], name: c['name'].try(:strip), description: c['description']}
+    create_categories(categories_query) do |c|
+      {id: c['tid'], name: c['name'], description: c['description']}
     end
 
     # "Nodes" in Drupal are divided into types. Here we import two types,
@@ -185,4 +189,6 @@ class ImportScripts::Drupal < ImportScripts::Base
 
 end
 
-ImportScripts::Drupal.new.perform
+if __FILE__==$0
+  ImportScripts::Drupal.new.perform
+end

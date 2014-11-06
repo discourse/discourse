@@ -21,7 +21,6 @@ var UserActionTypes = {
       messages_sent: 12,
       messages_received: 13
     },
-    esc = Handlebars.Utils.escapeExpression,
     InvertedActionTypes = {};
 
 _.each(UserActionTypes, function (k, v) {
@@ -73,31 +72,6 @@ Discourse.UserAction = Discourse.Model.extend({
     }
   }.property('action_type'),
 
-  /**
-    Returns the HTML representation of a user action's description, complete with icon.
-
-    @property descriptionHtml
-  **/
-  descriptionHtml: function() {
-    var descriptionKey = this.get('descriptionKey');
-    if (!descriptionKey) { return; }
-
-    var icon = this.get('isPM') ? '<i class="fa fa-envelope" title="{{i18n user.stream.private_message}}"></i>' : '';
-
-    return new Handlebars.SafeString(icon + " " + I18n.t("user_action." + descriptionKey, {
-      userUrl: this.get('userUrl'),
-      replyUrl: this.get('replyUrl'),
-      postUrl: this.get('postUrl'),
-      topicUrl: this.get('replyUrl'),
-      user: esc(this.get('presentName')),
-      post_number: '#' + this.get('reply_to_post_number'),
-      user1Url: this.get('userUrl'),
-      user2Url: this.get('targetUserUrl'),
-      another_user: esc(this.get('targetDisplayName'))
-    }));
-
-  }.property('descriptionKey'),
-
   sameUser: function() {
     return this.get('username') === Discourse.User.currentProp('username');
   }.property('username'),
@@ -134,6 +108,7 @@ Discourse.UserAction = Discourse.Model.extend({
   mentionType: Em.computed.equal('action_type', UserActionTypes.mentions),
   isPM: Em.computed.or('messageSentType', 'messageReceivedType'),
   postReplyType: Em.computed.or('postType', 'replyType'),
+  removableBookmark: Em.computed.and('bookmarkType', 'sameUser'),
 
   addChild: function(action) {
     var groups = this.get("childGroups");
@@ -193,7 +168,7 @@ Discourse.UserAction = Discourse.Model.extend({
 Discourse.UserAction.reopenClass({
   collapseStream: function(stream) {
     var uniq = {},
-        collapsed = Em.A(),
+        collapsed = [],
         pos = 0;
 
     stream.forEach(function(item) {

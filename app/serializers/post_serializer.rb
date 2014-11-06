@@ -1,8 +1,7 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_slug,
-                :topic_view,
+  attr_accessor :topic_view,
                 :parent_post,
                 :add_raw,
                 :single_post_link_counts,
@@ -20,8 +19,9 @@ class PostSerializer < BasicPostSerializer
              :reads,
              :score,
              :yours,
-             :topic_slug,
              :topic_id,
+             :topic_slug,
+             :topic_auto_close_at,
              :display_username,
              :primary_group_name,
              :version,
@@ -50,18 +50,27 @@ class PostSerializer < BasicPostSerializer
              :can_view_edit_history,
              :wiki,
              :user_custom_fields,
-             :static_doc
+             :static_doc,
+             :via_email
+
+  def topic_slug
+    object.try(:topic).try(:slug)
+  end
+
+  def topic_auto_close_at
+    object.try(:topic).try(:auto_close_at)
+  end
 
   def moderator?
-    !!(object.user && object.user.moderator?)
+    !!(object.try(:user).try(:moderator?))
   end
 
   def admin?
-    !!(object.user && object.user.admin?)
+    !!(object.try(:user).try(:admin?))
   end
 
   def staff?
-    !!(object.user && object.user.staff?)
+    !!(object.try(:user).try(:staff?))
   end
 
   def yours
@@ -118,11 +127,11 @@ class PostSerializer < BasicPostSerializer
   end
 
   def user_title
-    object.user.try(:title)
+    object.try(:user).try(:title)
   end
 
   def trust_level
-    object.user.try(:trust_level)
+    object.try(:user).try(:trust_level)
   end
 
   def reply_to_user
@@ -224,7 +233,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def can_view_edit_history
-    scope.can_view_post_revisions?(object)
+    scope.can_view_edit_history?(object)
   end
 
   def user_custom_fields
@@ -243,6 +252,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_static_doc?
     object.post_number == 1 && Discourse.static_doc_topic_ids.include?(object.topic_id)
+  end
+
+  def include_via_email?
+    object.via_email?
+  end
+
+  def version
+    scope.is_staff? ? object.version : object.public_version
   end
 
   private

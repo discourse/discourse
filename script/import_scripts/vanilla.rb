@@ -8,6 +8,8 @@ class ImportScripts::Vanilla < ImportScripts::Base
 
     @vanilla_file = ARGV[0]
     raise ArgumentError.new('Vanilla file argument missing. Provide full path to vanilla csv file.') if @vanilla_file.blank?
+
+    @use_lastest_activity_as_user_bio = true if ARGV.include?('use-latest-activity-as-user-bio')
   end
 
   def execute
@@ -53,7 +55,9 @@ class ImportScripts::Vanilla < ImportScripts::Base
             data << line.strip
           end
           # PERF: don't parse useless tables
-          next if ["user_meta"].include? table
+          useless_tables = ["user_meta"]
+          useless_tables << "activities" unless @use_lastest_activity_as_user_bio
+          next if useless_tables.include?(table)
           # parse the data
           puts "parsing #{table}..."
           parsed_data = CSV.parse(data.join("\n"), headers: true, header_converters: :symbol).map { |row| row.to_hash }
@@ -78,13 +82,17 @@ class ImportScripts::Vanilla < ImportScripts::Base
       admin_role_id = @roles.select { |r| r[:name] == "Administrator" }.first[:role_id]
       moderator_role_id = @roles.select { |r| r[:name] == "Moderator" }.first[:role_id]
 
-      activities = @activities.reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
+      activities = (@activities || []).reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
 
       create_users(@users) do |user|
         next if user[:name] == "[Deleted User]"
 
-        last_activity = activities.select { |a| user[:user_id] == a[:activity_user_id] }.last
-        bio_raw = last_activity.try(:[], :story) || ""
+        if @use_lastest_activity_as_user_bio
+          last_activity = activities.select { |a| user[:user_id] == a[:activity_user_id] }.last
+          bio_raw = last_activity.try(:[], :story) || ""
+        else
+          bio_raw = user[:discovery_text]
+        end
 
         u = {
           id: user[:user_id],
@@ -96,10 +104,6 @@ class ImportScripts::Vanilla < ImportScripts::Base
           moderator: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(moderator_role_id),
           admin: @user_roles.select { |ur| ur[:user_id] == user[:user_id] }.map { |ur| ur[:role_id] }.include?(admin_role_id),
         }
-
-        # if @comments.select { |c| c[:insert_user_id] == user[:user_id] }.map { |c| c[:discussion_id] }.uniq.count > 3
-        #   u[:trust_level] = TrustLevel.levels[:regular]
-        # end
 
         u
       end
@@ -244,9 +248,6 @@ class ImportScripts::Vanilla < ImportScripts::Base
          .gsub(/<\/?code\s*>/i, "`")
          .gsub("&lt;", "<")
          .gsub("&gt;", ">")
-         # .gsub(/`([^`]+)`/im) { "`" + $1.gsub("*", "\u2603") + "`" }
-         # .gsub("*", "\\*")
-         # .gsub("\u2603", "*")
     end
 
 end

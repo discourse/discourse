@@ -19,4 +19,6 @@ class LocaleSiteSetting < EnumSiteSetting
       @supported_locales ||= Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') ).map {|x| x.split('.')[-2]}.sort
     end
   end
+
+  private_class_method :supported_locales
 end

@@ -7,7 +7,8 @@ class PostActionsController < ApplicationController
   before_filter :fetch_post_action_type_id_from_params
 
   def create
-    guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id])
+    taken = PostAction.counts_for([@post], current_user)[@post.id]
+    guardian.ensure_post_can_act!(@post, PostActionType.types[@post_action_type_id], taken_actions: taken)
 
     args = {}
     args[:message] = params[:message] if params[:message].present?
@@ -21,8 +22,7 @@ class PostActionsController < ApplicationController
     else
       # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
-      post_serializer = PostSerializer.new(@post, scope: guardian, root: false)
-      render_json_dump(post_serializer)
+      render_post_json(@post, _add_raw = false)
     end
   end
 
@@ -42,7 +42,8 @@ class PostActionsController < ApplicationController
 
     PostAction.remove_act(current_user, @post, post_action.post_action_type_id)
 
-    render nothing: true
+    @post.reload
+    render_post_json(@post, _add_raw = false)
   end
 
   def defer_flags

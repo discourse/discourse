@@ -21,13 +21,16 @@ test("basic cooking", function() {
   cooked("__bold__", "<p><strong>bold</strong></p>", "it bolds text.");
   cooked("*trout*", "<p><em>trout</em></p>", "it italicizes text.");
   cooked("_trout_", "<p><em>trout</em></p>", "it italicizes text.");
-  cooked("*this is italic **with some bold** inside*", "<p><em>this is italic <strong>with some bold</strong> inside</em></p>", "it handles nested bold in italics");
   cooked("***hello***", "<p><strong><em>hello</em></strong></p>", "it can do bold and italics at once.");
   cooked("word_with_underscores", "<p>word_with_underscores</p>", "it doesn't do intraword italics");
   cooked("common/_special_font_face.html.erb", "<p>common/_special_font_face.html.erb</p>", "it doesn't intraword with a slash");
   cooked("hello \\*evil\\*", "<p>hello *evil*</p>", "it supports escaping of asterisks");
   cooked("hello \\_evil\\_", "<p>hello _evil_</p>", "it supports escaping of italics");
-  cooked("brussel sproutes are *awful*.", "<p>brussel sproutes are <em>awful</em>.</p>", "it doesn't swallow periods.");
+  cooked("brussels sprouts are *awful*.", "<p>brussels sprouts are <em>awful</em>.</p>", "it doesn't swallow periods.");
+});
+
+test("Nested bold and italics", function() {
+  cooked("*this is italic **with some bold** inside*", "<p><em>this is italic <strong>with some bold</strong> inside</em></p>", "it handles nested bold in italics");
 });
 
 test("Traditional Line Breaks", function() {
@@ -119,6 +122,10 @@ test("Links", function() {
 
   cooked("[3]: http://eviltrout.com", "", "It doesn't autolink markdown link references");
 
+  cooked("[]: http://eviltrout.com", "<p>[]: <a href=\"http://eviltrout.com\">http://eviltrout.com</a></p>", "It doesn't accept empty link references");
+
+  cooked("[b]label[/b]: description", "<p><span class=\"bbcode-b\">label</span>: description</p>", "It doesn't accept BBCode as link references");
+
   cooked("http://discourse.org and http://discourse.org/another_url and http://www.imdb.com/name/nm2225369",
          "<p><a href=\"http://discourse.org\">http://discourse.org</a> and " +
          "<a href=\"http://discourse.org/another_url\">http://discourse.org/another_url</a> and " +
@@ -141,12 +148,12 @@ test("Links", function() {
 
   cooked("[Link](http://www.example.com) (with an outer \"description\")",
          "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
-         "it doesn't consume closing parens as part of the url")
+         "it doesn't consume closing parens as part of the url");
 });
 
 test("simple quotes", function() {
   cooked("> nice!", "<blockquote><p>nice!</p></blockquote>", "it supports simple quotes");
-  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceeding spaces");
+  cooked(" > nice!", "<blockquote><p>nice!</p></blockquote>", "it allows quotes with preceding spaces");
   cooked("> level 1\n> > level 2",
          "<blockquote><p>level 1</p><blockquote><p>level 2</p></blockquote></blockquote>",
          "it allows nesting of blockquotes");
@@ -171,19 +178,19 @@ test("Quotes", function() {
 
   cookedOptions("[quote=\"eviltrout, post: 1\"]\na quote\n\nsecond line\n\nthird line[/quote]",
                 { topicId: 2 },
-                "<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:</div><blockquote>" +
+                "<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout:</div><blockquote>" +
                 "<p>a quote</p><p>second line</p><p>third line</p></blockquote></aside>",
                 "works with multiple lines");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function(name) { return "" + name; }, sanitize: true },
                 "<p>1</p>\n\n<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob" +
-                "bob said:</div><blockquote><p>my quote</p></blockquote></aside>\n\n<p>2</p>",
+                "bob:</div><blockquote><p>my quote</p></blockquote></aside>\n\n<p>2</p>",
                 "handles quotes properly");
 
   cookedOptions("1[quote=\"bob, post:1\"]my quote[/quote]2",
                 { topicId: 2, lookupAvatar: function() { } },
-                "<p>1</p>\n\n<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob said:" +
+                "<p>1</p>\n\n<aside class=\"quote\" data-post=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>bob:" +
                 "</div><blockquote><p>my quote</p></blockquote></aside>\n\n<p>2</p>",
                 "includes no avatar if none is found");
 });
@@ -272,6 +279,11 @@ test("bold and italics", function() {
   cooked("**你hello**", "<p><strong>你hello</strong></p>", "allows bolded chinese");
 });
 
+test("Escaping", function() {
+  cooked("*\\*laughs\\**", "<p><em>*laughs*</em></p>", "allows escaping strong");
+  cooked("*\\_laughs\\_*", "<p><em>_laughs_</em></p>", "allows escaping em");
+});
+
 test("New Lines", function() {
   // Note: This behavior was discussed and we determined it does not make sense to do this
   // unless you're using traditional line breaks
@@ -336,9 +348,11 @@ test("Code Blocks", function() {
          "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
-  cooked("```text\n<header>hello</header>\n```",
-         "<p><pre><code class=\"text\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
+  cooked("```ruby\n<header>hello</header>\n```",
+         "<p><pre><code class=\"ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
          "it escapes code in the code block");
+
+  cooked("```text\ntext\n```", "<p><pre><code>text</code></pre></p>", "handles text without adding class");
 
   cooked("```ruby\n# cool\n```",
          "<p><pre><code class=\"ruby\"># cool</code></pre></p>",
@@ -346,7 +360,7 @@ test("Code Blocks", function() {
 
   cooked("    ```\n    hello\n    ```",
          "<pre><code>&#x60;&#x60;&#x60;\nhello\n&#x60;&#x60;&#x60;</code></pre>",
-         "only detect ``` at the begining of lines");
+         "only detect ``` at the beginning of lines");
 
   cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
          "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
@@ -375,6 +389,14 @@ test("Code Blocks", function() {
   cooked("```\nline1\n```\n```\nline2\n\nline3\n```",
          "<p><pre><code class=\"lang-auto\">line1</code></pre></p>\n\n<p><pre><code class=\"lang-auto\">line2\n\nline3</code></pre></p>",
          "it does not consume next block's trailing newlines");
+
+  cooked("    <pre>test</pre>",
+         "<pre><code>&lt;pre&gt;test&lt;/pre&gt;</code></pre>",
+         "it does not parse other block types in markdown code blocks");
+
+  cooked("    [quote]test[/quote]",
+         "<pre><code>[quote]test[/quote]</code></pre>",
+         "it does not parse other block types in markdown code blocks");
 });
 
 test("sanitize", function() {
@@ -444,12 +466,11 @@ test("urlAllowed", function() {
   allowed("//eviltrout.com/evil/trout", "allows protocol relative urls");
 
   equal(urlAllowed("http://google.com/test'onmouseover=alert('XSS!');//.swf"),
-        "http://google.com/test&#39;onmouseover=alert(&#39;XSS!&#39;);//.swf",
+        "http://google.com/test%27onmouseover=alert(%27XSS!%27);//.swf",
         "escape single quotes");
 });
 
 test("images", function() {
-
   cooked("[![folksy logo](http://folksy.com/images/folksy-colour.png)](http://folksy.com/)",
          "<p><a href=\"http://folksy.com/\"><img src=\"http://folksy.com/images/folksy-colour.png\" alt=\"folksy logo\"/></a></p>",
          "It allows images with links around them");
@@ -457,4 +478,17 @@ test("images", function() {
   cooked("<img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\" alt=\"Red dot\">",
          "<p><img src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==\" alt=\"Red dot\"></p>",
          "It allows data images");
+});
+
+test("censoring", function() {
+  Discourse.SiteSettings.censored_words = "shucks|whiz|whizzer";
+  cooked("aw shucks, golly gee whiz.",
+         "<p>aw &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;, golly gee &#9632;&#9632;&#9632;&#9632;.</p>",
+         "it censors words in the Site Settings");
+  cooked("you are a whizzard! I love cheesewhiz. Whiz.",
+         "<p>you are a whizzard! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
+         "it doesn't censor words unless they have boundaries.");
+  cooked("you are a whizzer! I love cheesewhiz. Whiz.",
+         "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
+         "it censors words even if previous partial matches exist.");
 });

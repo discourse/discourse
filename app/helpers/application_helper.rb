@@ -11,6 +11,17 @@ module ApplicationHelper
   include CanonicalURL::Helpers
   include ConfigurableUrls
 
+  def shared_session_key
+    if SiteSetting.long_polling_base_url != '/'.freeze && current_user
+      sk = "shared_session_key"
+      return request.env[sk] if request.env[sk]
+
+      request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
+      $redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      key
+    end
+  end
+
   def script(*args)
     if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
       tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
@@ -32,7 +43,11 @@ module ApplicationHelper
   end
 
   def html_classes
-    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_view? ? 'rtl' : ''}"
+    "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class}"
+  end
+
+  def rtl_class
+    RTL.new(current_user).css_class
   end
 
   def escape_unicode(javascript)
@@ -110,7 +125,7 @@ module ApplicationHelper
   # Look up site content for a key. If the key is blank, you can supply a block and that
   # will be rendered instead.
   def markdown_content(key, replacements=nil)
-    result = PrettyText.cook(SiteContent.content_for(key, replacements || {})).html_safe
+    result = PrettyText.cook(SiteText.text_for(key, replacements || {})).html_safe
     if result.blank? && block_given?
       yield
       nil
@@ -131,21 +146,6 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
-  def rtl_view?
-     site_default_rtl? || current_user_rtl?
-  end
-
-  def current_user_rtl?
-    SiteSetting.allow_user_locale && current_user.try(:locale).in?(rtl_locales)
-  end
-
-  def site_default_rtl?
-    !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(rtl_locales)
-  end
-
-  def rtl_locales
-    %w(he ar)
-  end
 
   def customization_disabled?
     controller.class.name.split("::").first == "Admin" || session[:disable_customization]

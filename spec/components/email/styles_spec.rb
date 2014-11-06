@@ -24,7 +24,8 @@ describe Email::Styles do
       expect(style.to_html).to be_blank
     end
 
-    it "adds a max-width to images" do
+    # Pending due to email effort @coding-horror made in d2fb2bc4c
+    skip "adds a max-width to images" do
       frag = basic_fragment("<img src='gigantic.jpg'>")
       expect(frag.at("img")["style"]).to match("max-width")
     end
@@ -112,6 +113,11 @@ describe Email::Styles do
         frag.at('a')['href'].should == "http://test.localhost/discourse"
       end
 
+      it "rewrites the href for attachment files to have http" do
+        frag = html_fragment('<a class="attachment" href="//try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt">attachment_file.txt</a>')
+        frag.at('a')['href'].should == "http://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt"
+      end
+
       it "rewrites the src to have http" do
         frag = html_fragment('<img src="//test.localhost/blah.jpg">')
         frag.at('img')['src'].should == "http://test.localhost/blah.jpg"
@@ -123,9 +129,14 @@ describe Email::Styles do
         SiteSetting.stubs(:use_https).returns(true)
       end
 
-      it "rewrites the forum URL to have http" do
+      it "rewrites the forum URL to have https" do
         frag = html_fragment('<a href="//test.localhost/discourse">hello</a>')
         frag.at('a')['href'].should == "https://test.localhost/discourse"
+      end
+
+      it "rewrites the href for attachment files to have https" do
+        frag = html_fragment('<a class="attachment" href="//try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt">attachment_file.txt</a>')
+        frag.at('a')['href'].should == "https://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt"
       end
 
       it "rewrites the src to have https" do

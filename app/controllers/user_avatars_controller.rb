@@ -24,12 +24,12 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    if params[:version].to_i > LetterAvatar::VERSION
-      return render_dot
-    end
+    return render_dot if params[:version].to_i > LetterAvatar::VERSION
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
+
     response.headers["Last-Modified"] = File.ctime(image).httpdate
+    response.headers["Content-Length"] = File.size(image).to_s
     expires_in 1.year, public: true
     send_file image, disposition: nil
   end
@@ -64,24 +64,26 @@ class UserAvatarsController < ApplicationController
       if Discourse.store.external? || File.exists?(original)
         optimized = get_optimized_image(upload, size)
 
-        if Discourse.store.external?
-          expires_in 1.day, public: true
-          return redirect_to optimized.url
-        end
+        if optimized
+          if Discourse.store.external?
+            expires_in 1.day, public: true
+            return redirect_to optimized.url
+          end
 
-        image = Discourse.store.path_for(optimized)
+          image = Discourse.store.path_for(optimized)
+        end
       end
     end
 
     if image
       response.headers["Last-Modified"] = File.ctime(image).httpdate
+      response.headers["Content-Length"] = File.size(image).to_s
       expires_in 1.year, public: true
       send_file image, disposition: nil
     else
       render_dot
     end
   end
-
 
   # this protects us from a DoS
   def render_dot

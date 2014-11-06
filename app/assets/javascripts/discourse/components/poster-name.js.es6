@@ -1,5 +1,5 @@
 var PosterNameComponent = Em.Component.extend({
-  classNames: ['names', 'trigger-expansion'],
+  classNames: ['names', 'trigger-user-card'],
   displayNameOnPosts: Discourse.computed.setting('display_name_on_posts'),
 
   // sanitize name for comparison
@@ -26,7 +26,7 @@ var PosterNameComponent = Em.Component.extend({
         linkClass += ' ' + primaryGroupName;
       }
       // Main link
-      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true'>" + username + "</a>");
+      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true' data-user-card='" + username + "'>" + username + "</a>");
 
       // Add a glyph if we have one
       var glyph = this.posterGlyph(post);
@@ -38,7 +38,7 @@ var PosterNameComponent = Em.Component.extend({
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {
         name = Handlebars.Utils.escapeExpression(name);
-        buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true'>" + name + "</a></span>");
+        buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true' data-user-card='" + username  + "'>" + name + "</a></span>");
       }
 
       // User titles
@@ -59,20 +59,6 @@ var PosterNameComponent = Em.Component.extend({
     }
   },
 
-  click: function(e) {
-    var $target = $(e.target),
-        href = $target.attr('href'),
-        url = this.get('post.usernameUrl');
-
-    if (!Em.isEmpty(href) && href !== url) {
-      return true;
-    } else  {
-      this.appEvents.trigger('poster:expand', $target);
-      this.sendAction('expandAction', this.get('post'));
-    }
-    return false;
-  },
-
   /**
     Overwrite this to give a user a custom font awesome glyph.
 
@@ -83,10 +69,7 @@ var PosterNameComponent = Em.Component.extend({
   posterGlyph: function(post) {
     var desc;
 
-    if(post.get('admin')) {
-      desc = I18n.t('user.admin_tooltip');
-      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
-    } else if(post.get('moderator')) {
+    if(post.get('moderator')) {
       desc = I18n.t('user.moderator_tooltip');
       return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     }

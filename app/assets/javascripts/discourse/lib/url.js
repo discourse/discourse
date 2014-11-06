@@ -1,13 +1,6 @@
 /*global LockOn:true*/
-/**
-  URL related functions.
-
-  @class URL
-  @namespace Discourse
-  @module Discourse
-**/
-
-var jumpScheduled = false;
+var jumpScheduled = false,
+    rewrites = [];
 
 Discourse.URL = Em.Object.createWithMixins({
 
@@ -102,7 +95,7 @@ Discourse.URL = Em.Object.createWithMixins({
 
     if (Em.isEmpty(path)) { return; }
 
-    if(Discourse.get("requiresRefresh")){
+    if (Discourse.get('requiresRefresh')) {
       document.location.href = path;
       return;
     }
@@ -129,7 +122,6 @@ Discourse.URL = Em.Object.createWithMixins({
       path = path.replace(rootURL, '');
     }
 
-
     // Rewrite /my/* urls
     if (path.indexOf('/my/') === 0) {
       var currentUser = Discourse.User.current();
@@ -140,6 +132,10 @@ Discourse.URL = Em.Object.createWithMixins({
         return;
       }
     }
+
+    rewrites.forEach(function(rw) {
+      path = path.replace(rw.regexp, rw.replacement);
+    });
 
     if (this.navigatedToPost(oldPath, path)) { return; }
     // Schedule a DOM cleanup event
@@ -157,12 +153,10 @@ Discourse.URL = Em.Object.createWithMixins({
     return this.handleURL(path);
   },
 
-  /**
-    Redirect to a URL.
-    This has been extracted so it can be tested.
+  rewrite: function(regexp, replacement) {
+    rewrites.push({ regexp: regexp, replacement: replacement });
+  },
 
-    @method redirectTo
-  **/
   redirectTo: function(url) {
     window.location = Discourse.getURL(url);
   },
@@ -250,7 +244,10 @@ Discourse.URL = Em.Object.createWithMixins({
   navigatedToHome: function(oldPath, path) {
     var homepage = Discourse.Utilities.defaultHomepage();
 
-    if (window.history && window.history.pushState && path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
+    if (window.history &&
+        window.history.pushState &&
+        (path === "/" || path === "/" + homepage) &&
+        (oldPath === "/" || oldPath === "/" + homepage)) {
       this.appEvents.trigger('url:refresh');
       return true;
     }
@@ -317,6 +314,7 @@ Discourse.URL = Em.Object.createWithMixins({
     }
 
     var transition = router.handleURL(path);
+    transition._discourse_intercepted = true;
     transition.promise.then(function() {
       if (elementId) {
 

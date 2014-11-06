@@ -14,13 +14,14 @@ display: none;
 }
 
 #reply-control {
+  // used for upload link
   .composer-bottom-right {
     position: absolute;
-    bottom: -37px;
-    right: 5px;
-    margin-top: 0;
+    bottom: -32px;
+    right: -5px;
   }
   .toggle-preview { display:none; }
+  .preview-wrapper { display:none; }
   .mobile-file-upload {
     text-decoration: underline;
   }
@@ -49,14 +50,12 @@ display: none;
   font-size: 14px;
   position: fixed;
   .toggler {
-    display: block;
-    width: 13px;
-    height: 13px;
-    right: 13px;
+    width: 15px;
+    right: 1px;
     position: absolute;
     font-size: 15px;
     color: scale-color($primary, $lightness: 50%);
-    text-decoration: none;
+    padding: 0 10px 5px 10px;
     &:before {
       font-family: "FontAwesome";
       content: "\f078";
@@ -70,6 +69,11 @@ display: none;
   }
   .control-row {
     margin: 0 0 0 5px;
+    .reply-to {
+      overflow: hidden;
+      max-width: 92%;
+      white-space: nowrap;
+    }
   }
   .saving-text {
     display: none;
@@ -89,7 +93,7 @@ display: none;
     height: 0 !important;
   }
   &.draft {
-    height: 60px !important;
+    height: 35px !important;
     cursor: pointer;
     border-top: 1px solid scale-color-diff();
     .draft-text {
@@ -117,35 +121,6 @@ display: none;
       }
     }
   }
-  .spinner {
-    position: absolute;
-    @include fades-in(0.25s);
-    @include border-radius-all(10px);
-    left: 250px;
-    top: 95px;
-    height: 100px;
-    width: 70px;
-    height: 70px;
-    text-indent: -9999em;
-    background: {
-      color: #000;
-      image: image-url("spinner_96_w.gif");
-      repeat: no-repeat;
-      size: 35px;
-      position: 17px 17px;
-    };
-  }
-  &.loading {
-    .spinner {
-      z-index: 1000;
-      @include visible;
-    }
-  }
-  .reply-area {
-    max-width: 1500px;
-    margin-right: auto;
-    float: none;
-  }
 
   // if this is a new topic, make room for the category field in the editor on
   // a small screen mobile device
@@ -156,21 +131,22 @@ display: none;
     }
     .contents {
       input#reply-title {
-        padding: 7px 10px;
-        margin: 6px 10px 0 0;
+        padding: 5px;
+        margin-top: 6px;
+        width: 99%;
+        box-sizing: border-box;
       }
       .wmd-controls {
         @include transition(top 0.3s ease);
-        top: 120px;
+        top: 110px;
       }
     }
   }
   .contents {
-    padding: 10px 10px 0 10px;
-    min-width: 1280px;
+    padding: 8px 5px 0 5px;
     .form-element {
       .select2-container {
-        width: 400px;
+        width: 99%;
         margin-top: 6px;
         a {
           padding-top: 4px;
@@ -180,18 +156,7 @@ display: none;
           margin-top: 4px;
         }
       }
-      .category-combobox {
-        width: 430px;
-        @include medium-width { width: 285px; }
-        @include small-width { width: 220px; }
 
-        .select2-drop {
-          left: -9000px;
-          width: 428px;
-          @include medium-width { width: 283px; }
-          @include small-width { width: 218px; }
-        }
-      }
     }
     .edit-reason-input, .display-edit-reason {
       display: none;
@@ -213,24 +178,8 @@ display: none;
     #wmd-input:disabled {
       background-color: scale-color($primary, $lightness: 75%);
     }
-    #wmd-input, #wmd-preview {
+    #wmd-input {
       color: darken($primary, 40%);
-    }
-    #wmd-preview {
-      border: 1px dashed scale-color-diff();
-      overflow: auto;
-      visibility: visible;
-      video {
-        max-width: 100%;
-        height: auto;
-      }
-      audio {
-        max-width: 100%;
-      }
-      &.hidden {
-        width: 0;
-        visibility: hidden;
-      }
     }
     #wmd-input {
       bottom: 35px;
@@ -242,7 +191,10 @@ display: none;
     }
   }
   .category-input {
-    display: inline;
+    // hack, select2 is using inline styles
+    .select2-container {
+      width: 99% !important;
+    }
   }
   .popup-tip .close {
     padding: 0 2px 2px 8px; // so my fingers can touch the little x
@@ -272,35 +224,16 @@ display: none;
 }
 
 #reply-control {
-  &.hide-preview {
-    .wmd-controls {
-      #wmd-input {
-        width: 100%;
-      }
-      .preview-wrapper {
-        display: none;
-      }
-      .textarea-wrapper {
-        width: 100%;
-      }
-    }
-  }
+
   .wmd-controls {
     left: 10px;
     right: 10px;
     position: absolute;
     top: 40px;
-    bottom: 54px;
+    bottom: 50px;
     display: block;
 
-    // this removes the topmost margin;
-    // if we don't have this, all posts would have extra space at the top
-    #wmd-preview > *:first-child {
-      margin-top: 0 !important;
-    }
-
-    #wmd-input, #wmd-preview-scroller, #wmd-preview {
-      @include box-sizing(border-box);
+    #wmd-input {
       width: 100%;
       height: 100%;
       min-height: 100%;
@@ -308,42 +241,24 @@ display: none;
       margin: 0;
       background-color: $secondary;
       word-wrap: break-word;
+      box-sizing: border-box;
     }
-    #wmd-input, #wmd-preview-scroller {
+    #wmd-input {
       position: absolute;
       left: 0;
       top: 0;
-      font-size: 16px;
     }
-    #wmd-preview-scroller {
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      overflow: scroll;
-      visibility: hidden;
-      .marker, .caret {
-        display: inline-block;
-        vertical-align: top;
-      }
-    }
-    .textarea-wrapper, .preview-wrapper {
+    .textarea-wrapper {
       position: relative;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
       height: 100%;
       min-height: 100%;
       margin: 0;
       padding: 0;
-      width: 50%;
-    }
-    .textarea-wrapper {
-      padding-right: 5px;
-      float: left;
       .popup-tip {
         margin-top: 3px;
         right: 4px;
       }
-    }
-    .preview-wrapper {
-      padding-left: 5px;
-      float: right;
     }
   }
   #wmd-button-bar {

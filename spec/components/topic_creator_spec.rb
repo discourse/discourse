@@ -25,7 +25,7 @@ describe TopicCreator do
       end
 
       context 'regular user' do
-        before { SiteSetting.stubs(:min_trust_to_create_topic).returns(TrustLevel.levels[:newuser]) }
+        before { SiteSetting.stubs(:min_trust_to_create_topic).returns(TrustLevel[0]) }
 
         it "should be possible for a regular user to create a topic" do
           TopicCreator.create(user, Guardian.new(user), valid_attrs).should be_valid
@@ -38,7 +38,7 @@ describe TopicCreator do
         it "ignores auto_close_time without raising an error" do
           topic = TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(auto_close_time: '24'))
           topic.should be_valid
-          topic.auto_close_at.should be_nil
+          topic.auto_close_at.should == nil
         end
 
         it "category name is case insensitive" do

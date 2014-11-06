@@ -1,24 +1,13 @@
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 require "mysql2"
-require "csv"
-
-# TODO
-#
-# It would be better to have a mysql dump of the joomla users too.
-# But I got a csv file and had an awful time trying to use the LOAD DATA command to put it into a table.
-# So, this script reads Joomla users from a csv file for now.
 
 class ImportScripts::Kunena < ImportScripts::Base
 
   KUNENA_DB    = "kunena"
-  JOOMLA_USERS = "j-users.csv"
 
   def initialize
     super
-
-    @joomla_users_file = ARGV[0]
-    raise ArgumentError.new('Joomla users file argument missing. Provide full path to joomla users csv file.') if !@joomla_users_file.present?
 
     @users = {}
 
@@ -31,8 +20,6 @@ class ImportScripts::Kunena < ImportScripts::Base
   end
 
   def execute
-    check_files_exist
-
     parse_users
 
     puts "creating users"
@@ -48,6 +35,8 @@ class ImportScripts::Kunena < ImportScripts::Base
         suspended_at: user[:suspended] ? Time.zone.now : nil,
         suspended_till: user[:suspended] ? 100.years.from_now : nil }
     end
+
+    @users = nil
 
     create_categories(@client.query("SELECT id, parent, name, description, ordering FROM jos_kunena_categories ORDER BY parent, id;")) do |c|
       h = {id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i}
@@ -68,32 +57,21 @@ class ImportScripts::Kunena < ImportScripts::Base
     end
   end
 
-  def check_files_exist
-    raise ArgumentError.new("File does not exist: #{@joomla_users_file}") unless File.exist?(@joomla_users_file)
-  end
-
-  def read_csv(f)
-    data = File.read(f)
-    data.gsub!(/\" \n/,"\"\n")
-    data.gsub!(/\\\"/,";;")
-    data.gsub!(/\\/,"\n")
-    data
-  end
-
   def parse_users
     # Need to merge data from joomla with kunena
 
-    puts "parsing joomla user data from #{@joomla_users_file}"
-    CSV.foreach(@joomla_users_file) do |u|
-      next unless u[0].to_i > 0 and u[1].present? and u[2].present?
-      username = u[1].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0,User.username_length.end]
+    puts "fetching Joomla users data from mysql"
+    results = @client.query("SELECT id, username, email, registerDate FROM jos_users;", cache_rows: false)
+    results.each do |u|
+      next unless u['id'].to_i > 0 and u['username'].present? and u['email'].present?
+      username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0,User.username_length.end]
       if username.length < User.username_length.first
         username = username * User.username_length.first
       end
-      @users[u[0].to_i] = {id: u[0].to_i, username: username, email: u[2], created_at: Time.zone.parse(u[3])}
+      @users[u['id'].to_i] = {id: u['id'].to_i, username: username, email: u['email'], created_at: u['registerDate']}
     end
 
-    puts "parsing kunena user data from mysql"
+    puts "fetching Kunena user data from mysql"
     results = @client.query("SELECT userid, signature, moderator, banned FROM jos_kunena_users;", cache_rows: false)
     results.each do |u|
       next unless u['userid'].to_i > 0

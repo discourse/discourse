@@ -8,6 +8,7 @@
 **/
 export default Discourse.View.extend({
   tagName: 'select',
+  attributeBindings: ['tabindex'],
   classNames: ['combobox'],
   valueAttribute: 'id',
 
@@ -74,8 +75,8 @@ export default Discourse.View.extend({
   },
 
   willClearRender: function() {
-    var chosenId = "s2id_" + this.$().attr('id');
-    Ember.$("#" + chosenId).remove();
+    var elementId = "s2id_" + this.$().attr('id');
+    Ember.$("#" + elementId).remove();
   }
 
 });

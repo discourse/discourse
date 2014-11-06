@@ -6,9 +6,8 @@ module DiscourseHub
   def self.version_check_payload
     {
       installed_version: Discourse::VERSION::STRING
-    }
+    }.merge!( Discourse.git_branch == "unknown" ? {} : {branch: Discourse.git_branch})
   end
-
 
   def self.discourse_version_check
     get('/version_check', version_check_payload)

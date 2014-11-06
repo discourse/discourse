@@ -37,7 +37,6 @@
 
 }
 
-
 // Base list
 // --------------------------------------------------
 
@@ -69,7 +68,7 @@
         background-color: $secondary;
     }
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 85%);
+        background-color: dark-light-diff($tertiary, $secondary, 90%, -41%);
     }
   }
   button.bulk-select {
@@ -97,7 +96,12 @@
   .badge-notification {
     position: relative;
     top: -2px;
+    &.new-topic {
+      top: 0px;
+      padding-left: 5px;
+    }
   }
+
   .category {
     padding: 0 20px 0 20px;
     min-width: 80px;
@@ -118,8 +122,8 @@
     }
   }
   .avatar {
-    &.latest {
-      @include box-shadow(0 0 6px 1px desaturate(scale-color($tertiary, $lightness: 30%), 35%));
+    &.latest:not(.single) {
+      box-shadow: 0 0 6px 1px desaturate(scale-color($tertiary, $lightness: 30%), 35%);
     }
   }
 

@@ -1,5 +1,5 @@
 export default Discourse.ModalBodyView.extend({
-  templateName: 'modal/create_account',
+  templateName: 'modal/create-account',
   title: I18n.t('create_account.title'),
   classNames: ['create-account'],
 

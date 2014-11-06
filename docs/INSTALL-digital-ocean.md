@@ -4,15 +4,13 @@
 
 [Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
 
-Use the URL of your new site as the Droplet hostname, e.g. `discourse.example.com`. Discourse requires a minimum of **1 GB RAM** for small communities; we recommend 2 GB RAM for medium communities.
+- Enter your domain `discourse.example.com` as the Droplet name.
 
-<img src="http://www.discourse.org/images/install/droplet-step-1.png" width="670" height="489">
+- The default of **1GB** RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
+ 
+- The default of **Ubuntu 14.04 LTS x64** works fine. Always select the latest 64-bit [LTS distribution][lts].
 
-Install Discourse on Ubuntu 14.04 LTS x64. Always select [the latest LTS distribution][lts].
-
-<img src="http://www.discourse.org/images/install/droplet-step-2.png" width="540" height="478">
-
-You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
+Create your new Droplet. You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
 # Access Your Droplet
 
@@ -34,13 +32,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 - If you're using 2 GB+ memory, you can probably get by without a swap file.
 
-# Install Git
-
-    apt-get install git
-
-<img src="http://www.discourse.org/images/install/install-git.png" width="586" height="293">
-
-# Install Docker
+# Install Docker / Git
 
     wget -qO- https://get.docker.io/ | sh
 
@@ -71,7 +63,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - Place your mail credentials in `DISCOURSE_SMTP_ADDRESS`, `DISCOURSE_SMTP_PORT`, `DISCOURSE_SMTP_USER_NAME`, `DISCOURSE_SMTP_PASSWORD`. Be sure you remove the comment `#` character and space from the front of these lines as necessary.
 
-- If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 so you have more memory room.
+- If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
 <img src="http://www.discourse.org/images/install/nano-screenshot.png" width="578" height="407">
 
@@ -122,6 +114,8 @@ You should see Staff topics and the [Admin Quick Start Guide](https://github.com
 
 # Post-Install Maintenance
 
+We strongly suggest you turn on automatic security upates for Ubuntu via the `dpkg-reconfigure -plow unattended-upgrades` command.
+
 To **upgrade Discourse to the latest version**, visit `/admin/upgrade` and follow the instructions.
 
 The `launcher` command in the `/var/discourse` folder can be used for various kinds of maintenance:
@@ -153,7 +147,7 @@ Do you want...
 
 - Users to log in via Twitter? [Configure Twitter logins](https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395/last).
 
-- Users to post reples via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
+- Users to post replies via email? [Configure reply via email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
 
 - Automatic daily backups? [Configure backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855).
 
@@ -161,9 +155,11 @@ Do you want...
 
 - Multiple Discourse sites on the same server? [Configure multisite](https://meta.discourse.org/t/multisite-configuration-with-docker/14084).
 
-- A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857).
+- A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 
 - Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc? [See our open source importers](https://github.com/discourse/discourse/tree/master/script/import_scripts)
+
+- A firewall on your server? [Configure firewall](https://meta.discourse.org/t/configure-a-firewall-for-discourse/20584)
 
 If anything needs to be improved in this guide, feel free to ask on [meta.discourse.org][meta], or even better, submit a pull request.
 

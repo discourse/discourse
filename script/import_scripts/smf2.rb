@@ -421,7 +421,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         quote = "[quote=\"#{params['author']}"
         if QuoteParamsPattern =~ params['link']
           tl = topic_lookup_from_imported_post_id($~[:msg].to_i)
-          quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}"
+          quote << ", post:#{tl[:post_number]}, topic:#{tl[:topic_id]}" if tl
         end
         quote << "\"]#{inner}[/quote]"
       else
@@ -445,7 +445,8 @@ class ImportScripts::Smf2 < ImportScripts::Base
   # param1=value1=still1 value1 param2=value2 ...
   # => {'param1' => 'value1=still1 value1', 'param2' => 'value2 ...'}
   def parse_tag_params(params)
-    params.to_s.strip.scan(/(?<param>\w+)=(?<value>(?:(?>\S+)|\s+(?!\w+=))*)/).to_h
+    params.to_s.strip.scan(/(?<param>\w+)=(?<value>(?:(?>\S+)|\s+(?!\w+=))*)/).
+      inject({}) {|h,e| h[e[0]] = e[1]; h }
   end
 
   class << self
@@ -605,7 +606,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
 
       def quoted
-        @quoted.map {|id| @graph[id] }
+        @quoted.map {|id| @graph[id] }.reject(&:nil?)
       end
 
       def ignore_quotes?
@@ -633,7 +634,13 @@ class ImportScripts::Smf2 < ImportScripts::Base
       end
 
       def inspect
-        "#<#{self.class.name}: id=#{id.inspect}, prev=#{prev.try(:id).inspect}, quoted=#{quoted.map{|e|e.id}.inspect}>"
+        "#<#{self.class.name}: id=#{id.inspect}, prev=#{safe_id(@prev)}, quoted=[#{@quoted.map(&method(:safe_id)).join(', ')}]>"
+      end
+
+      private
+
+      def safe_id(id)
+        @graph[id].present? ? @graph[id].id.inspect : "(#{id})"
       end
     end #Node
 

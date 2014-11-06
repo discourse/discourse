@@ -12,7 +12,7 @@ module FlagQuery
     post_ids = actions.limit(per_page)
                       .offset(offset)
                       .group(:post_id)
-                      .order('min(post_actions.created_at) DESC')
+                      .order('MIN(post_actions.created_at) DESC')
                       .pluck(:post_id)
                       .uniq
 
@@ -26,11 +26,9 @@ module FlagQuery
              p.post_number,
              p.hidden,
              p.deleted_at,
-             (SELECT pr.created_at
-                FROM post_revisions pr
-               WHERE pr.post_id = p.id AND pr.user_id = p.user_id
-            ORDER BY created_at DESC
-               LIMIT 1) AS last_revised_at
+             p.user_deleted,
+             (SELECT created_at FROM post_revisions WHERE post_id = p.id AND user_id = p.user_id ORDER BY created_at DESC LIMIT 1) AS last_revised_at,
+             (SELECT COUNT(*) FROM post_actions WHERE (disagreed_at IS NOT NULL OR agreed_at IS NOT NULL OR deferred_at IS NOT NULL) AND post_id = p.id)::int AS previous_flags_count
         FROM posts p
        WHERE p.id in (:post_ids)").map_exec(OpenStruct, post_ids: post_ids)
 
@@ -116,7 +114,6 @@ module FlagQuery
                                .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
                                .joins("INNER JOIN topics ON topics.id = posts.topic_id")
                                .joins("LEFT JOIN users ON users.id = posts.user_id")
-                               .where("users.id IS NOT NULL")
 
       if filter == "old"
         post_actions.where("post_actions.disagreed_at IS NOT NULL OR

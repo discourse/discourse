@@ -9,7 +9,7 @@ export default Em.Component.extend({
       buffer.push("<i class='fa fa-group'></i> ");
     }
 
-    buffer.push("<a href='" + Discourse.getURL('/category/') + Discourse.Category.slugFor(category) + "'>");
+    buffer.push("<a href='" + Discourse.getURL('/c/') + Discourse.Category.slugFor(category) + "'>");
 
     var noLogo = Em.isEmpty(logoUrl);
     buffer.push(Handlebars.Utils.escapeExpression(category.get('name')));

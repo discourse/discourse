@@ -1,0 +1,31 @@
+<table>
+  <tr>
+    <th width="55%">{{i18n admin.backups.columns.filename}}</th>
+    <th width="10%">{{i18n admin.backups.columns.size}}</th>
+    <th>
+      <div class="pull-right">
+        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
+        <button {{action "toggleReadOnlyMode"}} class="btn" {{bind-attr disabled="readOnlyModeDisabled" title="readOnlyModeTitle"}}><i class="fa fa-eye"></i>{{readOnlyModeText}}</button>
+      </div>
+    </th>
+  </tr>
+  {{#each backup in model}}
+    <tr>
+      <td>{{backup.filename}}</td>
+      <td>{{human-size backup.size}}</td>
+      <td>
+        <div class="pull-right">
+          <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n admin.backups.operations.download.title}}"><i class="fa fa-download"></i>{{i18n admin.backups.operations.download.text}}</a>
+          <button {{action "destroyBackup" backup}} class="btn btn-danger no-text" {{bind-attr disabled="destroyDisabled" title="destroyTitle"}}><i class="fa fa-trash-o"></i></button>
+          <button {{action "startRestore" backup}} class="btn" {{bind-attr disabled="restoreDisabled" title="restoreTitle"}}><i class="fa fa-play"></i>{{i18n admin.backups.operations.restore.text}}</button>
+        </div>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td>{{i18n admin.backups.none}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+  {{/each}}
+</table>

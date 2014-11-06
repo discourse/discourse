@@ -1,18 +1,17 @@
 .d-header {
-    min-width: 100%;
+    width: 100%;
     position: absolute;
     top: 0;
     z-index: 1001;
     background-color: $header_background;
-    box-shadow: 0 2px 4px -2px rgba(0,0,0, .25);
+    box-shadow: 0 2px 4px -1px rgba(0,0,0, .25);
 
     .docked & {
       position: fixed;
-
     }
 
     .contents {
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
     .title {
@@ -30,8 +29,7 @@
     }
 
     .fa-home {
-      font-size: 20px;
-      line-height: 40px;
+      font-size: 23px;
     }
 
     .panel {
@@ -39,17 +37,6 @@
       position: relative;
     }
 
-    .current-username {
-      float: left;
-      a {
-        color: $header_primary;
-        font-size: 14px;
-        max-width: 200px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
     button.login-button, button.sign-up-button {
       float: left;
       margin-top: 7px;
@@ -66,6 +53,7 @@
       text-align: center;
       margin: 0 0 0 5px;
       list-style: none;
+
       > li {
         float: left;
       }
@@ -78,6 +66,7 @@
         border-top: 1px solid transparent;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
+        @include transition(all linear .15s);
 
 
         &:hover {
@@ -118,7 +107,7 @@
       [class^="fa fa-"] {
         width: 32px;
         height: 32px;
-        font-size: 20px;
+        font-size: 21px;
         line-height: 32px;
         display: inline-block;
       }
@@ -142,7 +131,6 @@
     .flagged-posts {
       background: $danger;
     }
-
 }
 
 .d-dropdown {
@@ -157,7 +145,7 @@
     border: 1px solid scale-color-diff();
     padding: 5px;
 
-    @include box-shadow(0 2px 2px rgba(0,0,0, .4));
+    box-shadow: 0 2px 2px rgba(0,0,0, .4);
 
   // note these topic counts only appear for anons in the category hamburger drop down
   b.topics-count {
@@ -176,12 +164,13 @@
     line-height: 16px;
 
       .fa {
-        margin-right: 3px;
+        font-size: inherit;
       }
 
       a {
         display: block;
         padding: 5px;
+        @include transition(all linear .15s);
       }
 
       &:hover a:not(.badge-notification) {
@@ -217,6 +206,14 @@
       p {
         margin: 0;
         overflow: hidden;
+      }
+    }
+    .is-warning {
+      i.fa-envelope-o {
+        &:before {
+          content: "\f0e0";
+        }
+        color: $danger;
       }
     }
     .read {
@@ -262,7 +259,7 @@
   }
 
   input[type='text'] {
-    width: 93%;
+    width: 518px;
     height: 22px;
     margin: 5px;
     padding: 5px;
@@ -273,24 +270,24 @@
   }
 
   .searching {
-    display: block;
     position: absolute;
-    top: 17px;
-    right: 15px;
-    width: 22px;
-    height: 22px;
-    background: {
-      image: image-url("spinner_96.gif");
-      repeat: no-repeat;
-      position: 0px 50%;
-      size: 18px;
-    };
+    top: 0;
+    right: 0;
+    .spinner {
+      width: 16px;
+      height: 16px;
+      }
+    .container1 > div, .container2 > div, .container3 > div {
+      width: 4px;
+      height: 4px;
+      }
   }
+  // I am ghetto using this to display "Show More".. be warned
   .no-results {
     padding: 5px;
+    text-align: center;
   }
   .filter {
-    float: right;
     padding: 0;
     &:hover {background: transparent;}
   }
@@ -319,4 +316,52 @@
       margin-right: 5px;
     }
   }
+}
+
+.search-link .topic-statuses {
+  float: none;
+  display: inline-block;
+  color: scale-color($primary, $lightness: 50%);
+  margin: 0;
+  .fa {
+    margin: 0;
+  }
+}
+
+.search-link .badge-category {
+  padding: 4px 6px;
+  margin-left: 6px;
+}
+
+.highlight-strong {
+  background-color: dark-light-diff($highlight, $secondary, 40%, -50%);
+}
+
+.search-highlight {
+  font-weight: bold;
+}
+
+.search-context .show-help {
+  position: absolute;
+  right: 10px;
+  top: 0;
+}
+
+.search-context {
+  min-height: 30px;
+  position: relative;
+}
+
+.d-dropdown#search-dropdown {
+  max-height: none;
+  overflow: inherit;
+}
+
+#search-dropdown .results {
+  max-height: 300px;
+  overflow: auto;
+}
+
+#search-help table td {
+  padding-right: 10px;
 }

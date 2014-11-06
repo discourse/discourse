@@ -8,7 +8,7 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close change_notification_level reset_read dismiss_posts delete)
+    %w(change_category close archive change_notification_level reset_read dismiss_posts delete)
   end
 
   def perform!
@@ -22,7 +22,7 @@ class TopicsBulkAction
     def dismiss_posts
       sql = "
       UPDATE topic_users tu
-      SET seen_post_count = t.posts_count , last_read_post_number = highest_post_number
+      SET highest_seen_post_number = t.highest_post_number , last_read_post_number = highest_post_number
       FROM topics t
       WHERE t.id = tu.topic_id AND tu.user_id = :user_id AND t.id IN (:topic_ids)
       "
@@ -56,6 +56,15 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_moderate?(t)
           t.update_status('closed', true, @user)
+          @changed_ids << t.id
+        end
+      end
+    end
+
+    def archive
+      topics.each do |t|
+        if guardian.can_moderate?(t)
+          t.update_status('archived', true, @user)
           @changed_ids << t.id
         end
       end

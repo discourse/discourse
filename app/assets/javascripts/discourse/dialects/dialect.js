@@ -21,6 +21,11 @@ var parser = window.BetterMarkdown,
 **/
 function initializeDialects() {
   MD.buildBlockOrder(dialect.block);
+  var index = dialect.block.__order__.indexOf("code");
+  if (index > -1) {
+    dialect.block.__order__.splice(index, 1);
+    dialect.block.__order__.unshift("code");
+  }
   MD.buildInlinePatterns(dialect.inline);
   initialized = true;
 }
@@ -147,6 +152,17 @@ function countLines(str) {
   return count;
 }
 
+function hoister(t, target, replacement) {
+  var regexp = new RegExp(target.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), "g");
+  if (t.match(regexp)) {
+    var hash = md5(target);
+    t = t.replace(regexp, hash);
+    hoisted[hash] = replacement;
+  }
+  return t;
+}
+
+
 /**
   An object used for rendering our dialects.
 
@@ -167,11 +183,13 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
 
+    // Helps us hoist out HTML
+    hoisted = {};
+
     preProcessors.forEach(function(p) {
-      text = p(text);
+      text = p(text, hoister);
     });
 
-    hoisted = {};
     dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
         result = parser.renderJsonML(parseTree(tree));

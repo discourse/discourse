@@ -8,14 +8,14 @@ require_dependency 'email/message_builder'
 
 module Jobs
   class PollMailbox < Jobs::Scheduled
-    every SiteSetting.pop3s_polling_period_mins.minutes
+    every SiteSetting.pop3_polling_period_mins.minutes
     sidekiq_options retry: false
     include Email::BuildEmailHelper
 
     def execute(args)
       @args = args
-      if SiteSetting.pop3s_polling_enabled?
-        poll_pop3s
+      if SiteSetting.pop3_polling_enabled?
+        poll_pop3
       end
     end
 
@@ -45,6 +45,10 @@ module Jobs
           message_template = :email_reject_reply_key
         when Email::Receiver::BadDestinationAddress
           message_template = :email_reject_destination
+        when Email::Receiver::TopicNotFoundError
+          message_template = :email_reject_topic_not_found
+        when Email::Receiver::TopicClosedError
+          message_template = :email_reject_topic_closed
         when ActiveRecord::Rollback
           message_template = :email_reject_post_error
         when Email::Receiver::InvalidPost
@@ -72,14 +76,11 @@ module Jobs
       end
     end
 
-    def poll_pop3s
-      if !SiteSetting.pop3s_polling_insecure
-        Net::POP3.enable_ssl(OpenSSL::SSL::VERIFY_NONE)
-      end
-      Net::POP3.start(SiteSetting.pop3s_polling_host,
-                      SiteSetting.pop3s_polling_port,
-                      SiteSetting.pop3s_polling_username,
-                      SiteSetting.pop3s_polling_password) do |pop|
+    def poll_pop3
+      connection = Net::POP3.new(SiteSetting.pop3_polling_host, SiteSetting.pop3_polling_port)
+      connection.enable_ssl if SiteSetting.pop3_polling_ssl
+
+      connection.start(SiteSetting.pop3_polling_username, SiteSetting.pop3_polling_password) do |pop|
         unless pop.mails.empty?
           pop.each do |mail|
             handle_mail(mail)

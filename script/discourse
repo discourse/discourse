@@ -29,11 +29,15 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       table_name = result["table_name"]
       column_name = result["column_name"]
       puts "Remapping #{table_name} #{column_name}"
-      result = cnn.async_exec("UPDATE #{table_name}
-                      SET #{column_name} = replace(#{column_name}, $1, $2)
-                      WHERE NOT #{column_name} IS NULL
-                        AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
-      puts "#{result.cmd_tuples} rows affected!"
+      begin
+        result = cnn.async_exec("UPDATE #{table_name}
+                        SET #{column_name} = replace(#{column_name}, $1, $2)
+                        WHERE NOT #{column_name} IS NULL
+                          AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+        puts "#{result.cmd_tuples} rows affected!"
+      rescue => ex
+        puts "Error: #{ex}"
+      end
     end
 
   end
@@ -41,21 +45,21 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
   desc "backup", "Backup a discourse forum"
   def backup(filename = nil)
     load_rails
-    require "backup_restore"
-    require "export/exporter"
+    require "backup_restore/backup_restore"
+    require "backup_restore/backuper"
 
-    puts "Starting export..."
-    exporter = Export::Exporter.new(Discourse.system_user.id)
-    backup = exporter.run
+    puts "Starting backup..."
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+    backup = backuper.run
     if filename.present?
       puts "Moving '#{backup}' to '#{filename}'"
       FileUtils.mv(backup, filename)
       backup = filename
     end
-    puts "Export done."
+    puts "Backup done."
     puts "Output file is in: #{backup}", ""
 
-    exit(1) unless exporter.success
+    exit(1) unless backuper.success
   end
 
   desc "export", "Backup a Discourse forum"
@@ -66,23 +70,23 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
   desc "restore", "Restore a Discourse backup"
   def restore(filename)
     load_rails
-    require "backup_restore"
-    require "import/importer"
+    require "backup_restore/backup_restore"
+    require "backup_restore/restorer"
 
     begin
       puts "Starting restore: #{filename}"
-      importer = Import::Importer.new(Discourse.system_user.id, filename)
-      importer.run
+      restorer = BackupRestore::Restorer.new(Discourse.system_user.id, filename)
+      restorer.run
       puts 'Restore done.'
-    rescue Import::FilenameMissingError
+    rescue BackupRestore::FilenameMissingError
       puts '', 'The filename argument was missing.', ''
       usage
-    rescue Import::ImportDisabledError
+    rescue BackupRestore::RestoreDisabledError
       puts '', 'Restores are not allowed.', 'An admin needs to set allow_restore to true in the site settings before restores can be run.', ''
       puts 'Restore cancelled.', ''
     end
 
-    exit(1) unless importer.try(:success)
+    exit(1) unless restorer.try(:success)
   end
 
   desc "import", "Restore a Discourse backup"

@@ -77,3 +77,78 @@ task "uploads:migrate_from_s3" => :environment do
   puts
 
 end
+
+task "uploads:clean_up" => :environment do
+
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+    puts "Cleaning up uploads and thumbnails for '#{db}'..."
+
+    if Discourse.store.external?
+      puts "This task only works for internal storages."
+      next
+    end
+
+    public_directory = "#{Rails.root}/public"
+
+    ##
+    ## DATABASE vs FILE SYSTEM
+    ##
+
+    # uploads & avatars
+    Upload.order(:id).find_each do |upload|
+      path = "#{public_directory}#{upload.url}"
+      if !File.exists?(path)
+        upload.destroy rescue nil
+        putc "#"
+      else
+        putc "."
+      end
+    end
+
+    # optimized images
+    OptimizedImage.order(:id).find_each do |optimized_image|
+      path = "#{public_directory}#{optimized_image.url}"
+      if !File.exists?(path)
+        optimized_image.destroy rescue nil
+        putc "#"
+      else
+        putc "."
+      end
+    end
+
+    ##
+    ## FILE SYSTEM vs DATABASE
+    ##
+
+    uploads_directory = "#{public_directory}/uploads/#{db}"
+
+    # avatars (no avatar should be stored in that old directory)
+    FileUtils.rm_rf("#{uploads_directory}/avatars") rescue nil
+
+    # uploads
+    Dir.glob("#{uploads_directory}/*/*.*").each do |f|
+      url = "/uploads/#{db}/" << f.split("/uploads/#{db}/")[1]
+      if !Upload.where(url: url).exists?
+        FileUtils.rm(f) rescue nil
+        putc "#"
+      else
+        putc "."
+      end
+    end
+
+    # optimized images
+    Dir.glob("#{uploads_directory}/_optimized/*/*/*.*").each do |f|
+      url = "/uploads/#{db}/_optimized/" << f.split("/uploads/#{db}/_optimized/")[1]
+      if !OptimizedImage.where(url: url).exists?
+        FileUtils.rm(f) rescue nil
+        putc "#"
+      else
+        putc "."
+      end
+    end
+
+    puts
+
+  end
+
+end

@@ -122,8 +122,7 @@ Discourse.PostStream = Em.Object.extend({
 
     var userFilters = this.get('userFilters');
     if (!Em.isEmpty(userFilters)) {
-      var userFiltersArray = this.get('userFilters').toArray();
-      if (userFiltersArray.length > 0) { result.username_filters = userFiltersArray.join(","); }
+      result.username_filters = userFilters.join(",");
     }
 
     return result;
@@ -131,7 +130,7 @@ Discourse.PostStream = Em.Object.extend({
 
   hasNoFilters: function() {
     var streamFilters = this.get('streamFilters');
-    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.userFilters));
+    return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.username_filters));
   }.property('streamFilters.[]', 'topic.posts_count', 'posts.length'),
 
   /**
@@ -150,7 +149,7 @@ Discourse.PostStream = Em.Object.extend({
     var firstIndex = this.indexOf(firstPost);
     if (firstIndex === -1) { return []; }
 
-    var startIndex = firstIndex - Discourse.SiteSettings.posts_per_page;
+    var startIndex = firstIndex - Discourse.SiteSettings.posts_chunksize;
     if (startIndex < 0) { startIndex = 0; }
     return stream.slice(startIndex, firstIndex);
 
@@ -174,7 +173,7 @@ Discourse.PostStream = Em.Object.extend({
     if ((lastIndex + 1) >= this.get('highest_post_number')) { return []; }
 
     // find our window of posts
-    return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_per_page+1);
+    return stream.slice(lastIndex+1, lastIndex+Discourse.SiteSettings.posts_chunksize+1);
   }.property('lastLoadedPost', 'stream.@each'),
 
 
@@ -215,9 +214,9 @@ Discourse.PostStream = Em.Object.extend({
     this.set('summary', false);
     this.set('show_deleted', true);
     if (userFilters.contains(username)) {
-      userFilters.remove(username);
+      userFilters.removeObject(username);
     } else {
-      userFilters.add(username);
+      userFilters.addObject(username);
     }
     return this.refresh();
   },
@@ -230,7 +229,7 @@ Discourse.PostStream = Em.Object.extend({
     @param {Object} opts Options for loading the stream
       @param {Integer} opts.nearPost The post we want to find other posts near to.
       @param {Boolean} opts.track_visit Whether or not to track this as a visit to a topic.
-    @returns {Ember.Deferred} a promise that is resolved when the posts have been inserted into the stream.
+    @returns {Promise} a promise that is resolved when the posts have been inserted into the stream.
   **/
   refresh: function(opts) {
     opts = opts || {};
@@ -260,6 +259,31 @@ Discourse.PostStream = Em.Object.extend({
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
 
+  collapsePosts: function(from, to){
+    var posts = this.get('posts');
+    var remove = posts.filter(function(post){
+      var postNumber = post.get('post_number');
+      return postNumber >= from && postNumber <= to;
+    });
+
+    posts.removeObjects(remove);
+
+    // make gap
+    this.set('gaps', this.get('gaps') || {before: {}, after: {}});
+    var before = this.get('gaps.before');
+
+    var post = posts.find(function(post){
+      return post.get('post_number') > to;
+    });
+
+    before[post.get('id')] = remove.map(function(post){
+      return post.get('id');
+    });
+    post.set('hasGap', true);
+
+    this.get('stream').enumerableContentDidChange();
+  },
+
 
   /**
     Fill in a gap of posts before a particular post
@@ -267,7 +291,7 @@ Discourse.PostStream = Em.Object.extend({
     @method fillGapBefore
     @paaram {Discourse.Post} post beside gap
     @paaram {Array} gap array of post ids to load
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   fillGapBefore: function(post, gap) {
     var postId = post.get('id'),
@@ -292,6 +316,7 @@ Discourse.PostStream = Em.Object.extend({
 
           delete self.get('gaps.before')[postId];
           self.get('stream').enumerableContentDidChange();
+          post.set('hasGap', false);
         });
       }
     }
@@ -304,7 +329,7 @@ Discourse.PostStream = Em.Object.extend({
     @method fillGapAfter
     @paaram {Discourse.Post} post beside gap
     @paaram {Array} gap array of post ids to load
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   fillGapAfter: function(post, gap) {
     var postId = post.get('id'),
@@ -325,7 +350,7 @@ Discourse.PostStream = Em.Object.extend({
     Appends the next window of posts to the stream. Call it when scrolling downwards.
 
     @method appendMore
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   appendMore: function() {
     var self = this;
@@ -354,7 +379,7 @@ Discourse.PostStream = Em.Object.extend({
     Prepend the previous window of posts to the stream. Call it when scrolling upwards.
 
     @method prependMore
-    @returns {Ember.Deferred} a promise that's resolved when the posts have been added.
+    @returns {Promise} a promise that's resolved when the posts have been added.
   **/
   prependMore: function() {
     var postStream = this;
@@ -624,7 +649,7 @@ Discourse.PostStream = Em.Object.extend({
   **/
   findReplyHistory: function(post) {
     var postStream = this,
-        url = "/posts/" + post.get('id') + "/reply-history.json";
+        url = "/posts/" + post.get('id') + "/reply-history.json?max_replies=" + Discourse.SiteSettings.max_reply_history;
 
     return Discourse.ajax(url).then(function(result) {
       return result.map(function (p) {
@@ -650,8 +675,10 @@ Discourse.PostStream = Em.Object.extend({
 
     var closest = null;
     this.get('posts').forEach(function (p) {
-      if (closest === postNumber) { return; }
-      if (!closest) { closest = p; }
+      if (!closest) {
+        closest = p;
+        return;
+      }
 
       if (Math.abs(postNumber - p.get('post_number')) < Math.abs(closest.get('post_number') - postNumber)) {
         closest = p;
@@ -759,6 +786,9 @@ Discourse.PostStream = Em.Object.extend({
         return existing;
       }
 
+      // Update the auto_close_at value of the topic
+      this.set("topic.details.auto_close_at", post.get("topic_auto_close_at"));
+
       post.set('topic', this.get('topic'));
       postIdentityMap.set(post.get('id'), post);
 
@@ -797,7 +827,7 @@ Discourse.PostStream = Em.Object.extend({
 
     @method findPostsByIds
     @param {Array} postIds The post Ids we want to retrieve, in order.
-    @returns {Ember.Deferred} a promise that will resolve to the posts in the order requested.
+    @returns {Promise} a promise that will resolve to the posts in the order requested.
   **/
   findPostsByIds: function(postIds) {
     var unloaded = this.listUnloadedIds(postIds),
@@ -818,13 +848,12 @@ Discourse.PostStream = Em.Object.extend({
 
     @method loadIntoIdentityMap
     @param {Array} postIds The post Ids we want to insert into the identity map.
-    @returns {Ember.Deferred} a promise that will resolve to the posts in the order requested.
+    @returns {Promise} a promise that will resolve to the posts in the order requested.
   **/
   loadIntoIdentityMap: function(postIds) {
-
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
-      return Ember.Deferred.promise(function (p) { p.resolve(); });
+      return Ember.RSVP.resolve();
     }
 
     var url = "/t/" + this.get('topic.id') + "/posts.json",
@@ -904,9 +933,9 @@ Discourse.PostStream.reopenClass({
   create: function() {
     var postStream = this._super.apply(this, arguments);
     postStream.setProperties({
-      posts: Em.A(),
-      stream: Em.A(),
-      userFilters: Em.Set.create(),
+      posts: [],
+      stream: [],
+      userFilters: [],
       postIdentityMap: Em.Map.create(),
       summary: false,
       loaded: false,

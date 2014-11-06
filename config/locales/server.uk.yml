@@ -80,7 +80,6 @@ uk:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     avatar: |
       ### Як щодо нового зображення для Вашого профілю?
@@ -151,13 +150,6 @@ uk:
       title: "новий користувач"
     basic:
       title: "базовий користувач"
-    regular:
-      title: "звичайний користувач"
-    leader:
-      title: "провідник"
-    elder:
-      title: "старійшина"
-    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}'"
   rate_limiter:
     too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
   datetime:
@@ -195,7 +187,6 @@ uk:
       long_form: 'flagged this as inappropriate'
     notify_user:
       title: 'Сповістити {{username}}'
-      description: 'Цей допис містить щось таке, про що я хотів би поговорити з цією людиною особисто і безпосередньо.'
       long_form: 'notified user'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -356,10 +347,6 @@ uk:
     login_required_welcome_message:
       title: "Потрібно увійти: Вітальне повідомлення"
       description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
-    tos_user_content_license:
-      title: "Умови використання: Ліцензія користувацького Контенту"
-    tos_miscellaneous:
-      title: "Умови використання: Різне"
     login_required:
       title: "Потрібно увійти: Головна сторінка"
       description: "Текст, що відображається для неавторизованих користувачів, коли потрібен вхід на сайт."
@@ -372,9 +359,6 @@ uk:
     bottom:
       title: "Нижній колонтитул сторінок"
       description: "HTML-код, що буде додаватися внизу кожної сторінки."
-    tos_signup_form_message:
-      title: "Signup Form: Terms of Service Message"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -392,10 +376,7 @@ uk:
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     use_https: "Чи повинна повна адреса сайта (Discourse.base_url) використовувати https (чи просто http)? ВМИКАЙТЕ ЦЕ ТІЛЬКИ ЯКЩО HTTPS ВЖЕ НАЛАШТОВАНО І ВІН ПРАЦЮЄ!"
-    enable_private_messages: "Дозволити Базовим користувам (Рівень довіри 1) створювати приватні повідомлення та відповідати на приватні повідомлення"
     enable_long_polling: "Message bus used for notification can use long polling"
-    long_polling_interval: "Interval before a new long poll is issued in milliseconds "
-    polling_interval: "How often should logged in user clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
@@ -461,7 +442,6 @@ uk:
     embeddable_host: "Хост, що можете вставляти коментарі з цього Discourse форуму."
     embed_truncate: "Обрізати вбудовані повідомлення. "
     embed_category: "Категорія вбудованих тем. "
-    tos_accept_required: "If enabled, users will need to check a box on the signup form to confirm that they accept the terms of service. Edit 'Signup Form: Terms of Service Message' in the Content tab to change the message."
     errors:
       invalid_integer: "Значення має бути цілим."
       regex_mismatch: "Значення не відповідає потрібному формату."
@@ -480,9 +460,7 @@ uk:
     private_message: "%{display_username} sent you a private message: %{link}"
     invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
-    granted_badge: "Ви отримали %{link}"
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Categories'
       topic: 'Результати'
@@ -498,28 +476,13 @@ uk:
     archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
     closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
     closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
-    autoclosed_enabled_days:
-      zero: "Ця тема була автоматично закрита через 1 день. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-    autoclosed_enabled_hours:
-      zero: "Ця тема була автоматично закрита через 1 годину. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-    autoclosed_enabled_minutes:
-      zero: "Ця тема була автоматично закрита через 1 хвилину. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
     pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
-    visible_enabled: "Тепер ця тема видима. Вона буде відображатися у списках тем."
-    visible_disabled: "Тепер ця тема невидима. Вона більше не відображатиметься в жодному списку тем. Єдиний спосіб отримати до неї доступ - це за прямим посиланням."
   login:
     not_approved: "Ваш обліковий запис ще не було схвалено. Ви отримаєте сповіщення на електронну скриньку, коли зможете увійти."
     incorrect_username_email_or_password: "Неправильне ім'я користувача, електронна скринька або пароль"
     wait_approval: "Дякуємо за реєстрацію. Ми сповістимо Вас, коли Ваш обліковий запис буде схвалено."
     active: "Тепер Ваш обліковий запис активовано і він готовий до використання."
-    activate_email: "Вже майже готово! Ми надіслали активаційного листа на скриньку <b>%{email}</b>. Будь ласка, дотимуйтеся інструкцій у листі, щоб активувати свій обліковий запис."
     not_activated: "Ви ще не можете увійти. Ми надіслали Вам активаційного листа. Будь ласка, дотримуйтеся інструкцій у листі, щоб активувати свій обліковий запис."
     suspended: "Ви не можете входити до %{date}."
     suspended_with_reason: "Ви не можете входити до %{date}. Причина призупинення Вашого облікового запису: %{reason}"
@@ -554,18 +517,10 @@ uk:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     welcome_invite:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
-    export_succeeded:
-      subject_template: "Експорт завершено успішно"
-      text_body_template: "Експорт був успішним."
-    import_succeeded:
-      subject_template: "Імпорт завершено успішно"
-      text_body_template: "Імпорт був успішним."
     bulk_invite_succeeded:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    email_reject_no_account:
-      subject_template: "Питання з email -- Немає облікового запису"
     email_reject_empty:
       subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:
@@ -698,9 +653,6 @@ uk:
     search_google: "Google"
   terms_of_service:
     title: "Умови Використання"
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'deleted'
   upload:

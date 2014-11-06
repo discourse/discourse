@@ -50,7 +50,7 @@ describe Auth::GoogleOAuth2Authenticator do
       authenticator = described_class.new
       result = authenticator.after_authenticate(hash)
 
-      result.user.should be_nil
+      result.user.should == nil
       result.extra_data[:name].should == "Jane Doe"
     end
   end

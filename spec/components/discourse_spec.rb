@@ -76,7 +76,10 @@ describe Discourse do
     end
 
     it "returns S3Store when S3 is enabled" do
-      SiteSetting.expects(:enable_s3_uploads?).returns(true)
+      SiteSetting.stubs(:enable_s3_uploads?).returns(true)
+      SiteSetting.stubs(:s3_upload_bucket).returns("s3_bucket")
+      SiteSetting.stubs(:s3_access_key_id).returns("s3_access_key_id")
+      SiteSetting.stubs(:s3_secret_access_key).returns("s3_secret_access_key")
       Discourse.store.should be_a(FileStore::S3Store)
     end
 
@@ -132,7 +135,7 @@ describe Discourse do
       Sidekiq.error_handlers.clear
       Sidekiq.error_handlers << logger
     end
-    
+
     it "should not fail when called" do
       exception = StandardError.new
 

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ReportsController do
 
   it "is a subclass of AdminController" do
-    (Admin::ReportsController < Admin::AdminController).should be_true
+    (Admin::ReportsController < Admin::AdminController).should == true
   end
 
   context 'while logged in as an admin' do
@@ -31,7 +31,7 @@ describe Admin::ReportsController do
 
         context 'missing report' do
           before do
-            Report.expects(:find).with('active').returns(nil)
+            Report.expects(:find).with('active', instance_of(Hash)).returns(nil)
             xhr :get, :show, type: 'active'
           end
 
@@ -42,7 +42,7 @@ describe Admin::ReportsController do
 
         context 'a report is found' do
           before do
-            Report.expects(:find).with('active').returns(Report.new('active'))
+            Report.expects(:find).with('active', instance_of(Hash)).returns(Report.new('active'))
             xhr :get, :show, type: 'active'
           end
 

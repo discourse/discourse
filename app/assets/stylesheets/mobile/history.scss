@@ -1,0 +1,20 @@
+.modal.history-modal {
+  button {
+    float: none;
+  }
+  #display-modes {
+    display: none;
+  }
+  #revision-numbers {
+    line-height: 2em;
+  }
+  #revision-details {
+    background-color: scale-color-diff();
+    padding: 5px;
+    margin-top: 10px;
+  }
+  img {
+    max-width: 95%;
+    height: auto;
+  }
+}

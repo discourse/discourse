@@ -1,9 +1,7 @@
 class EmailToken < ActiveRecord::Base
   belongs_to :user
 
-  validates_presence_of :token
-  validates_presence_of :user_id
-  validates_presence_of :email
+  validates :token, :user_id, :email, presence: true
 
   before_validation(on: :create) do
     self.token = EmailToken.generate_token
@@ -24,7 +22,7 @@ class EmailToken < ActiveRecord::Base
   end
 
   def self.confirm_valid_after
-    SiteSetting.email_token_grace_period_hours.ago
+    SiteSetting.email_token_grace_period_hours.hours.ago
   end
 
   def self.unconfirmed
@@ -79,8 +77,8 @@ end
 #  token      :string(255)      not null
 #  confirmed  :boolean          default(FALSE), not null
 #  expired    :boolean          default(FALSE), not null
-#  created_at :datetime
-#  updated_at :datetime
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
 #
 # Indexes
 #

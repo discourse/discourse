@@ -22,13 +22,13 @@ shared_examples 'finding and showing post' do
 
     it "can't find deleted posts as an anonymous user" do
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can't find deleted posts as a regular user" do
       log_in(:user)
       xhr :get, action, params
-      response.should be_forbidden
+      response.status.should == 404
     end
 
     it "can find posts as a moderator" do
@@ -66,6 +66,36 @@ describe PostsController do
       json.should be_present
       json['cooked'].should == 'wat'
     end
+  end
+
+  describe 'raw_email' do
+    include_examples "action requires login", :get, :raw_email, id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user, raw_email: 'email_content')}
+
+      it "raises an error if the user doesn't have permission to view raw email" do
+        Guardian.any_instance.expects(:can_view_raw_email?).returns(false)
+
+        xhr :get, :raw_email, id: post.id
+
+        response.should be_forbidden
+      end
+
+      it "can view raw email" do
+        Guardian.any_instance.expects(:can_view_raw_email?).returns(true)
+
+        xhr :get, :raw_email, id: post.id
+
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json.should be_present
+        json['raw_email'].should == 'email_content'
+      end
+
+    end
+
   end
 
   describe 'show' do
@@ -143,7 +173,7 @@ describe PostsController do
 
       it "uses a PostDestroyer" do
         destroyer = mock
-        PostDestroyer.expects(:new).with(user, post).returns(destroyer)
+        PostDestroyer.expects(:new).returns(destroyer)
         destroyer.expects(:destroy)
         xhr :delete, :destroy, id: post.id
       end
@@ -277,7 +307,7 @@ describe PostsController do
       end
 
       it "calls revise with valid parameters" do
-        PostRevisor.any_instance.expects(:revise!).with(post.user, 'edited body', edit_reason: 'typo')
+        PostRevisor.any_instance.expects(:revise!).with(post.user, { raw: 'edited body' , edit_reason: 'typo' })
         xhr :put, :update, update_params
       end
 
@@ -327,7 +357,7 @@ describe PostsController do
       let(:user) {log_in}
       let(:post) {Fabricate(:post, user: user)}
 
-      it "raises an error if the user doesn't have permission to see the post" do
+      it "raises an error if the user doesn't have permission to wiki the post" do
         Guardian.any_instance.expects(:can_wiki?).returns(false)
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
@@ -341,7 +371,7 @@ describe PostsController do
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
         post.reload
-        post.wiki.should be_true
+        post.wiki.should == true
       end
 
       it "can unwiki a post" do
@@ -351,7 +381,64 @@ describe PostsController do
         xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
 
         wikied_post.reload
-        wikied_post.wiki.should be_false
+        wikied_post.wiki.should == false
+      end
+
+    end
+
+  end
+
+  describe "post_type" do
+
+    include_examples "action requires login", :put, :post_type, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(false)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        response.should be_forbidden
+      end
+
+      it "can change the post type" do
+        Guardian.any_instance.expects(:can_change_post_type?).returns(true)
+
+        xhr :put, :post_type, post_id: post.id, post_type: 2
+
+        post.reload
+        post.post_type.should == 2
+      end
+
+    end
+
+  end
+
+  describe "rebake" do
+
+    include_examples "action requires login", :put, :rebake, post_id: 2
+
+    describe "when logged in" do
+      let(:user) {log_in}
+      let(:post) {Fabricate(:post, user: user)}
+
+      it "raises an error if the user doesn't have permission to rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(false)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_forbidden
+      end
+
+      it "can rebake the post" do
+        Guardian.any_instance.expects(:can_rebake?).returns(true)
+
+        xhr :put, :rebake, post_id: post.id
+
+        response.should be_success
       end
 
     end
@@ -384,6 +471,7 @@ describe PostsController do
     describe 'when logged in' do
 
       let!(:user) { log_in }
+      let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a raw parameter" do
@@ -492,6 +580,24 @@ describe PostsController do
           xhr :post, :create, {raw: 'hello', meta_data: {xyz: 'abc'}}
         end
 
+        context "is_warning" do
+          it "doesn't pass `is_warning` through if you're not staff" do
+            PostCreator.expects(:new).with(user, Not(has_entries('is_warning' => true))).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+          end
+
+          it "passes `is_warning` through if you're staff" do
+            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => true)).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+          end
+
+          it "passes `is_warning` as false through if you're staff" do
+            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => false)).returns(post_creator)
+            xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'false'}
+          end
+
+        end
+
       end
 
     end
@@ -499,7 +605,8 @@ describe PostsController do
 
   describe "revisions" do
 
-    let(:post_revision) { Fabricate(:post_revision) }
+    let(:post) { Fabricate(:post, version: 2) }
+    let(:post_revision) { Fabricate(:post_revision, post: post) }
 
     it "throws an exception when revision is < 2" do
       expect {
@@ -530,14 +637,14 @@ describe PostsController do
 
       it "ensures poster can see the revisions" do
         user = log_in(:active_user)
-        post = Fabricate(:post, user: user)
+        post = Fabricate(:post, user: user, version: 3)
         pr = Fabricate(:post_revision, user: user, post: post)
         xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
         response.should be_success
       end
 
       it "ensures trust level 4 can see the revisions" do
-        log_in(:elder)
+        log_in(:trust_level_4)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
         response.should be_success
       end
@@ -557,7 +664,7 @@ describe PostsController do
 
     context "deleted post" do
       let(:admin) { log_in(:admin) }
-      let(:deleted_post) { Fabricate(:post, user: admin) }
+      let(:deleted_post) { Fabricate(:post, user: admin, version: 3) }
       let(:deleted_post_revision) { Fabricate(:post_revision, user: admin, post: deleted_post) }
 
       before { deleted_post.trash!(admin) }
@@ -571,7 +678,7 @@ describe PostsController do
     context "deleted topic" do
       let(:admin) { log_in(:admin) }
       let(:deleted_topic) { Fabricate(:topic, user: admin) }
-      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic) }
+      let(:post) { Fabricate(:post, user: admin, topic: deleted_topic, version: 3) }
       let(:post_revision) { Fabricate(:post_revision, user: admin, post: post) }
 
       before { deleted_topic.trash!(admin) }
@@ -621,6 +728,29 @@ describe PostsController do
         response.should be_success
       end
 
+      it "only shows agreed and deferred flags" do
+        user = Fabricate(:user)
+        post_agreed = create_post(user: user)
+        post_deferred = create_post(user: user)
+        post_disagreed = create_post(user: user)
+
+        moderator = Fabricate(:moderator)
+        PostAction.act(moderator, post_agreed, PostActionType.types[:spam])
+        PostAction.act(moderator, post_deferred, PostActionType.types[:off_topic])
+        PostAction.act(moderator, post_disagreed, PostActionType.types[:inappropriate])
+
+        admin = Fabricate(:admin)
+        PostAction.agree_flags!(post_agreed, admin)
+        PostAction.defer_flags!(post_deferred, admin)
+        PostAction.clear_flags!(post_disagreed, admin)
+
+        Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
+        xhr :get, :flagged_posts, username: user.username
+        response.should be_success
+
+        JSON.parse(response.body).length.should == 2
+      end
+
     end
 
   end
@@ -642,6 +772,27 @@ describe PostsController do
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
         xhr :get, :deleted_posts, username: "system"
         response.should be_success
+      end
+
+      it "only shows posts deleted by other users" do
+        user = Fabricate(:user)
+        admin = Fabricate(:admin)
+
+        post_not_deleted = create_post(user: user)
+        post_deleted_by_user = create_post(user: user)
+        post_deleted_by_admin = create_post(user: user)
+
+        PostDestroyer.new(user, post_deleted_by_user).destroy
+        PostDestroyer.new(admin, post_deleted_by_admin).destroy
+
+        Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
+        xhr :get, :deleted_posts, username: user.username
+        response.should be_success
+
+        data = JSON.parse(response.body)
+        data.length.should == 1
+        data[0]["id"].should == post_deleted_by_admin.id
+        data[0]["deleted_by"]["id"].should == admin.id
       end
 
     end

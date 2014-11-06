@@ -26,6 +26,10 @@ module UserGuardian
     can_edit?(user)
   end
 
+  def can_see_notifications?(user)
+    is_me?(user) || is_admin?
+  end
+
   def can_block_user?(user)
     user && is_staff? && not(user.staff?)
   end
@@ -41,6 +45,10 @@ module UserGuardian
     else
       is_staff? && (user.first_post_created_at.nil? || user.first_post_created_at > SiteSetting.delete_user_max_post_age.to_i.days.ago)
     end
+  end
+
+  def can_check_emails?(user)
+    is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
   end
 
 end

@@ -8,14 +8,13 @@
   @module Discourse
 **/
 Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, {
-
-  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+  redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
     if (transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
       Discourse.User.currentProp("should_be_redirected_to_top", false);
-      this.transitionTo("discovery.top");
+      this.replaceWith("discovery.top");
     }
   },
 
@@ -36,7 +35,9 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
       var controller = this.controllerFor('discovery');
       Ember.run.cancel(controller.get('scheduledSpinner'));
       controller.setProperties({ loading: false, loadingSpinner: false });
-      this._scrollTop();
+      if (!Discourse.Session.currentProp('topicListScrollPosition')) {
+        this._scrollTop();
+      }
     },
 
     didTransition: function() {

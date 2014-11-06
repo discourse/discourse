@@ -24,12 +24,17 @@ describe UserProfile do
     let(:user_profile) { Fabricate.build(:user_profile) }
 
     it 'is not valid without user' do
-      expect(user_profile.valid?).to be_false
+      expect(user_profile.valid?).to be false
     end
 
     it 'is is valid with user' do
       user_profile.user = Fabricate.build(:user)
-      expect(user_profile.valid?).to be_true
+      expect(user_profile.valid?).to be true
+    end
+
+    it "doesn't support really long bios" do
+      user_profile = Fabricate.build(:user_profile_long)
+      user_profile.should_not be_valid
     end
 
     describe 'after save' do
@@ -92,42 +97,43 @@ describe UserProfile do
       end
 
       it 'removes the link if the user is new' do
-        user.trust_level = TrustLevel.levels[:newuser]
+        user.trust_level = TrustLevel[0]
         user_profile.send(:cook)
         expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
-      context 'leader_links_no_follow is false' do
-        before { SiteSetting.stubs(:leader_links_no_follow).returns(false) }
+      context 'tl3_links_no_follow is false' do
+        before { SiteSetting.stubs(:tl3_links_no_follow).returns(false) }
 
         it 'includes the link without nofollow if the user is trust level 3 or higher' do
-          user.trust_level = TrustLevel.levels[:leader]
+          user.trust_level = TrustLevel[3]
           user_profile.send(:cook)
           expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org'>http://discourse.org</a>")
           expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>")
         end
 
         it 'removes nofollow from links in bio when trust level is increased' do
-          created_user.change_trust_level!(:leader)
+          created_user.change_trust_level!(TrustLevel[3])
           expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org'>http://discourse.org</a>")
           expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\">http://discourse.org</a></p>")
         end
 
         it 'adds nofollow to links in bio when trust level is decreased' do
-          created_user.trust_level = TrustLevel.levels[:leader]
+          created_user.trust_level = TrustLevel[3]
           created_user.save
-          created_user.change_trust_level!(:regular)
+          created_user.reload
+          created_user.change_trust_level!(TrustLevel[2])
           expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow'>http://discourse.org</a>")
           expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow\">http://discourse.org</a></p>")
         end
       end
 
-      context 'leader_links_no_follow is true' do
-        before { SiteSetting.stubs(:leader_links_no_follow).returns(true) }
+      context 'tl3_links_no_follow is true' do
+        before { SiteSetting.stubs(:tl3_links_no_follow).returns(true) }
 
         it 'includes the link with nofollow if the user is trust level 3 or higher' do
-          user.trust_level = TrustLevel.levels[:leader]
+          user.trust_level = TrustLevel[3]
           user_profile.send(:cook)
           expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow'>http://discourse.org</a>")
           expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow\">http://discourse.org</a></p>")

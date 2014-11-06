@@ -25,6 +25,6 @@ end
 #  name        :string(255)      not null
 #  description :text
 #  position    :integer          not null
-#  created_at  :datetime
-#  updated_at  :datetime
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #

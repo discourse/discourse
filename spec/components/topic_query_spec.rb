@@ -43,7 +43,7 @@ describe TopicQuery do
   context 'category filter' do
     let(:category) { Fabricate(:category) }
 
-    let(:diff_category) { Fabricate(:category) }
+    let(:diff_category) { Fabricate(:diff_category) }
 
     it "returns topics in the category when we filter to it" do
       TopicQuery.new(moderator).list_latest.topics.size.should == 0
@@ -51,7 +51,10 @@ describe TopicQuery do
       # Filter by slug
       TopicQuery.new(moderator, category: category.slug).list_latest.topics.size.should == 1
       TopicQuery.new(moderator, category: "#{category.id}-category").list_latest.topics.size.should == 1
-      TopicQuery.new(moderator, category: diff_category.slug).list_latest.topics.size.should == 1
+
+      list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
+      list.topics.size.should == 1
+      list.preload_key.should == "topic_list_category/different-category/l/latest"
 
       # Defaults to no category filter when slug does not exist
       TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 2
@@ -151,10 +154,10 @@ describe TopicQuery do
         topics.map(&:id).should == [pinned_topic, future_topic, closed_topic, archived_topic, regular_topic].map(&:id)
 
         # includes the invisible topic if you're a moderator
-        TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(moderator).list_latest.topics.include?(invisible_topic).should == true
 
         # includes the invisible topic if you're an admin" do
-        TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should be_true
+        TopicQuery.new(admin).list_latest.topics.include?(invisible_topic).should == true
       end
 
       context 'sort_order' do
@@ -351,7 +354,7 @@ describe TopicQuery do
       let!(:created_topic) { create_post(user: user).topic }
 
       it "includes the created topic" do
-        topics.include?(created_topic).should be_true
+        topics.include?(created_topic).should == true
       end
     end
 
@@ -360,7 +363,7 @@ describe TopicQuery do
       let!(:your_post) { create_post(user: user, topic: other_users_topic )}
 
       it "includes the posted topic" do
-        topics.include?(other_users_topic).should be_true
+        topics.include?(other_users_topic).should == true
       end
     end
 

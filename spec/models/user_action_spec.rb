@@ -18,7 +18,7 @@ describe UserAction do
     let(:private_post) { Fabricate(:post) }
     let(:private_topic) do
       topic = private_post.topic
-      topic.update_column(:archetype, Archetype::private_message)
+      topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       topic
     end
 
@@ -49,7 +49,6 @@ describe UserAction do
     end
 
     it 'includes the events correctly' do
-
       mystats = stats_for_user(user)
       expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
       mystats.should == expecting
@@ -66,7 +65,6 @@ describe UserAction do
       stream_count.should == 0
 
       # groups
-
       category = Fabricate(:category, read_restricted: true)
 
       public_topic.recover!
@@ -90,7 +88,16 @@ describe UserAction do
       # duplicate should not exception out
       log_test_action
 
+      # recategorize belongs to the right user
+      category2 = Fabricate(:category)
+      admin = Fabricate(:admin)
+      public_post.revise(admin, { category_id: category2.id})
+
+      action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
+      action.acting_user_id.should == admin.id
+      action.action_type.should == UserAction::EDIT
     end
+
   end
 
   describe 'when user likes' do
@@ -110,7 +117,6 @@ describe UserAction do
     it "creates a new stream entry" do
       PostAction.act(liker, post, PostActionType.types[:like])
       likee_stream.count.should == @old_count + 1
-
     end
 
     context "successful like" do
@@ -121,8 +127,8 @@ describe UserAction do
       end
 
       it 'should result in correct data assignment' do
-        @liker_action.should_not be_nil
-        @likee_action.should_not be_nil
+        @liker_action.should_not == nil
+        @likee_action.should_not == nil
         likee.user_stat.reload.likes_received.should == 1
         liker.user_stat.reload.likes_given.should == 1
 
@@ -136,7 +142,7 @@ describe UserAction do
     context "liking a private message" do
 
       before do
-        post.topic.update_column(:archetype, Archetype::private_message)
+        post.topic.update_columns(category_id: nil, archetype: Archetype::private_message)
       end
 
       it "doesn't add the entry to the stream" do
@@ -163,13 +169,13 @@ describe UserAction do
         @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
       end
       it 'should exist' do
-        @action.should_not be_nil
+        @action.should_not == nil
         @action.created_at.should be_within(1).of(@post.topic.created_at)
       end
     end
 
     it 'should not log a post user action' do
-      @post.user.user_actions.find_by(action_type: UserAction::REPLY).should be_nil
+      @post.user.user_actions.find_by(action_type: UserAction::REPLY).should == nil
     end
 
 
@@ -183,9 +189,9 @@ describe UserAction do
       end
 
       it 'should log user actions correctly' do
-        @response.user.user_actions.find_by(action_type: UserAction::REPLY).should_not be_nil
-        @post.user.user_actions.find_by(action_type: UserAction::RESPONSE).should_not be_nil
-        @mentioned.user_actions.find_by(action_type: UserAction::MENTION).should_not be_nil
+        @response.user.user_actions.find_by(action_type: UserAction::REPLY).should_not == nil
+        @post.user.user_actions.find_by(action_type: UserAction::RESPONSE).should_not == nil
+        @mentioned.user_actions.find_by(action_type: UserAction::MENTION).should_not == nil
         @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
       end
 
@@ -213,7 +219,7 @@ describe UserAction do
       @action.user_id.should == @user.id
 
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
-      @user.user_actions.find_by(action_type: UserAction::BOOKMARK).should be_nil
+      @user.user_actions.find_by(action_type: UserAction::BOOKMARK).should == nil
     end
   end
 

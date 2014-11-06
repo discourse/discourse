@@ -13,7 +13,7 @@ describe ScreenedUrl do
     end
 
     it "last_match_at is null" do
-      described_class.create(valid_params).last_match_at.should be_nil
+      described_class.create(valid_params).last_match_at.should == nil
     end
 
     it "normalizes the url and domain" do
@@ -88,7 +88,7 @@ describe ScreenedUrl do
 
   describe 'find_match' do
     it 'returns nil when there is no match' do
-      described_class.find_match('http://spamspot.com/buy/it').should be_nil
+      described_class.find_match('http://spamspot.com/buy/it').should == nil
     end
 
     it 'returns the record when there is an exact match' do

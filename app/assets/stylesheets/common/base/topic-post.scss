@@ -37,10 +37,26 @@
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
+
+  .title {
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    color: scale-color($primary, $lightness: 30%);
+    // IE will screw up the blockquote underneath if bottom padding is 0px
+    padding: 12px 12px 1px 12px;
+    /* blockquote is underneath this and has top margin */
+    .avatar { margin-right: 7px; }
+    img { margin-top: -4px; }
+  }
+
   // blockquote is docked within aside for content
   blockquote {
     margin-top: 0;
   }
+}
+
+.quote-controls, .quote-controls .back:before, .quote-controls .quote-other-topic:before {
+  color: scale-color($primary, $lightness: 50%);
 }
 
 .cooked .highlight {
@@ -57,4 +73,97 @@ aside.quote {
 
 .post-hidden {
   opacity: 0.5;
+}
+
+
+.quote-controls {
+  float: right;
+  a {
+    margin: 0;
+  }
+
+  .back:before, .quote-other-topic:before
+  {
+    display: inline-block;
+    margin-left: 8px;
+    font-family: "FontAwesome";
+    position: relative;
+    z-index: 20;
+    content: "\f062";
+  }
+
+  .quote-other-topic:before
+  {
+    content: "\f061";
+  }
+}
+
+.quote-button {
+  display: none;
+  position: absolute;
+  background-color: scale-color($primary, $lightness: 50%);
+  color: $secondary;
+  padding: 10px;
+  z-index: 401;
+
+  &:before {
+    font-family: "FontAwesome";
+    content: "\f10e\00a0\00a0";
+  }
+
+  &:hover {
+    background-color: scale-color($primary, $lightness: 40%);
+    cursor: pointer;
+  }
+}
+
+.wiki .topic-body {
+  background-color: scale-color($wiki, $lightness: 95%);
+}
+
+.post-info {
+  &.wiki, &.via-email {
+    margin-right: 5px;
+    i.fa {
+      font-size: 14px;
+    }
+  }
+  &.wiki {
+    cursor: pointer;
+    color: $wiki;
+  }
+  &.via-email {
+    color: scale-color($primary, $lightness: 70%);
+  }
+  &.raw-email {
+    cursor: pointer;
+  }
+}
+
+
+pre {
+  code {
+    white-space: pre-wrap;
+    display: block;
+    padding: 5px 10px;
+    color: $primary;
+    background: scale-color-diff();
+    max-height: 500px;
+  }
+}
+
+kbd
+{
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0,0,0, .8);
+  color: $primary;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 0 .1em;
+  padding: .1em .6em;
+
+  * * { display: none; }
 }

@@ -55,7 +55,7 @@ Discourse.BBCode.register = function(codeName, args, emitter) {
           }
         });
       }
-      if (!args.singlePara && contents.length === 1) {
+      if (!args.singlePara && contents.length === 1 && contents[0] instanceof Array && contents[0][0] === "para") {
         contents[0].shift();
         contents = contents[0];
       }
@@ -136,7 +136,6 @@ Discourse.BBCode.replaceBBCode('li', function(contents) { return ['li'].concat(D
 
 Discourse.BBCode.rawBBCode('img', function(contents) { return ['img', {href: contents}]; });
 Discourse.BBCode.rawBBCode('email', function(contents) { return ['a', {href: "mailto:" + contents, 'data-bbcode': true}, contents]; });
-Discourse.BBCode.rawBBCode('url', function(contents) { return ['a', {href: contents, 'data-bbcode': true}, contents]; });
 Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   if (/<img/i.test(contents)) {
     return ['div', { 'class': 'spoiler' }, contents];
@@ -145,8 +144,32 @@ Discourse.BBCode.rawBBCode('spoiler', function(contents) {
   }
 });
 
-Discourse.BBCode.replaceBBCodeParamsRaw("url", function(param, contents) {
-  return ['a', {href: param, 'data-bbcode': true}].concat(contents);
+Discourse.BBCode.replaceBBCode('url', function(contents) {
+  if (!Array.isArray(contents)) { return; }
+  if (contents.length === 1 && contents[0][0] === 'a') {
+    // single-line bbcode links shouldn't be oneboxed, so we mark this as a bbcode link.
+    if (typeof contents[0][1] !== 'object') { contents[0].splice(1, 0, {}); }
+    contents[0][1]['data-bbcode'] = true;
+  }
+  return ['concat'].concat(contents);
+});
+Discourse.BBCode.replaceBBCodeParamsRaw('url', function(param, contents) {
+  var url = param.replace(/(^")|("$)/g, '');
+  return ['a', {'href': url}].concat(this.processInline(contents));
+});
+Discourse.Dialect.on('parseNode', function(event) {
+  if (!Array.isArray(event.node)) { return; }
+  var result = [ event.node[0] ];
+  var nodes = event.node.slice(1);
+  var i, j;
+  for (i = 0; i < nodes.length; i++) {
+    if (Array.isArray(nodes[i]) && nodes[i][0] === 'concat') {
+      for (j = 1; j < nodes[i].length; j++) { result.push(nodes[i][j]); }
+    } else {
+      result.push(nodes[i]);
+    }
+  }
+  for (i = 0; i < result.length; i++) { event.node[i] = result[i]; }
 });
 
 Discourse.BBCode.replaceBBCodeParamsRaw("email", function(param, contents) {
@@ -165,7 +188,7 @@ Discourse.Dialect.replaceBlock({
   rawContents: true,
 
   emitter: function(blockContents) {
-    var inner = blockContents.join("\n").replace(/^\s+/,'');
+    var inner = blockContents.join("\n");
     return ['p', ['pre', ['code', {'class': Discourse.SiteSettings.default_code_lang}, inner]]];
   }
 });

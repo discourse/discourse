@@ -89,7 +89,7 @@ describe EmailToken do
     context 'welcome message' do
       it 'sends a welcome message when the user is activated' do
         user = EmailToken.confirm(email_token.token)
-        user.send_welcome_message.should be_true
+        user.send_welcome_message.should == true
       end
 
       context "when using the code a second time" do
@@ -98,7 +98,7 @@ describe EmailToken do
           SiteSetting.email_token_grace_period_hours = 1
           EmailToken.confirm(email_token.token)
           user = EmailToken.confirm(email_token.token)
-          user.send_welcome_message.should be_false
+          user.send_welcome_message.should == false
         end
       end
 

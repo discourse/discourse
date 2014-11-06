@@ -39,12 +39,16 @@ h1 .topic-statuses .topic-status i {
 
 }
 
+.via-email .reply-to-tab {
+  padding: 13px 15px 5px;
+}
+
 .gutter {
   .reply-new {
     .discourse-no-touch & {
      opacity:0;
-     transition: opacity linear 0.4s;
-     -webkit-transition: opacity linear 0.4s;
+     @include transition(opacity linear 0.4s);
+
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -53,8 +57,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-       transition: opacity linear 0.4s;
-    -webkit-transition: opacity linear 0.4s;
+      @include transition(opacity linear 0.4s);
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -85,7 +88,8 @@ nav.post-controls {
 
   span.badge-posts {
     margin-right: 5px;
-    transition: all linear 0.15s;
+    @include transition(all linear 0.15s);
+
   }
 
   .actions {
@@ -126,7 +130,7 @@ nav.post-controls {
 
     &:active {
       background: dark-light-diff($tertiary, $secondary, 50%, -35%);
-    @include box-shadow(inset 0 1px 3px rgba(0,0,0, .3));
+    box-shadow: inset 0 1px 3px rgba(0,0,0, .3);
 
     }
 
@@ -143,14 +147,14 @@ nav.post-controls {
     background: transparent;
     border: none;
     margin-left: 3px;
-    transition: all linear 0.15s;
+    @include transition(all linear 0.15s);
          &:hover {
           background: scale-color-diff();
           color: $primary;
         }
 
         &:active {
-            @include box-shadow(inset 0 1px 3px rgba(0,0,0, .4));
+            box-shadow: inset 0 1px 3px rgba(0,0,0, .4);
         }
 
         &.hidden {
@@ -202,8 +206,8 @@ nav.post-controls {
     border: 1px solid scale-color-diff();
     position: absolute;
     text-align: left;
-    bottom: 0;
-    right: 0;
+    bottom: -2px;
+    right: 15px;
     z-index: 1000;
     display: none;
 
@@ -231,68 +235,62 @@ nav.post-controls {
 }
 
 .embedded-posts {
-  h1, h2, h3 {margin: 10px 0;}
-  a.mention {background: darken(scale-color-diff(), 10%);}
+  background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
 
-  p img {
-    max-width: 579px;
-    }
+  h1, h2, h3 { margin: 10px 0; }
+  a.mention { background: darken(scale-color-diff(), 10%); }
+
   .topic-body {
-     width: 86%;
-     padding-left: 1%;
-     padding-right: 1%;
-     border: none;
-     }
+    background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
+    width: 87%;
+    padding-left: 1%;
+    padding-right: 1%;
+    border-top: none;
+    // WARNING: overflow hide is required for quoted / embedded images
+    // which expect "normal" post width, but expansions are narrower
+    overflow: hidden;
+  }
 
   .topic-avatar {
      width: 45px;
-     margin: 0 10px 0 15px;
+     margin: 0 5px 0 15px;
      border: none;
-
   }
 
   // bottom means "reply expansion" below a post
   &.bottom {
-    &.hidden {display: block; opacity: 0; }
+    &.hidden {
+      display: block;
+      opacity: 0;
+    }
   }
-  &.bottom .arrow {float: right; margin: 0 0 0 0;}
+  &.bottom .arrow { float: right; }
   &.bottom {
-  margin-top: -11px;
-    // WARNING *ONLY* DO THIS ON REPLY EXPANSIONS!
-    // auto-sizing of images causes massive havoc with regular post stream
-    // but we have to do this on reply expansions because the width is
-    // unavoidably narrower than a regular post
-  .lightbox-wrapper img {
-    width: 100%;
-    height: auto;
+    margin-top: -11px;
   }
-}
 
   // top means "in reply to expansion" above a post
   &.top {
     margin-left: 56px;
     width: 701px;
-    // WARNING *ONLY* DO THIS ON REPLY EXPANSIONS!
-    // auto-sizing of images causes massive havoc with regular post stream
-    // but we have to do this on reply expansions because the width is
-    // unavoidably narrower than a regular post
-    .lightbox-wrapper img {
-      width: 100%;
-      height: auto;
-    }
   }
-  &.top.topic-body {padding-left: 0; padding-right: 0;}
-    .post-date {color: scale-color($primary, $lightness: 50%);}
-    .fa-arrow-up {margin-left: 5px;}
-    .row {border-top: 1px solid darken(scale-color-diff(), 10%); padding-top: 7px;}
-    .reply:first-of-type .row {border-top: none;}
-    background: dark-light-diff($primary, $secondary, 90%, -65%);
+  &.top.topic-body {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .post-date { color: scale-color($primary, $lightness: 50%); }
+  .fa-arrow-up { margin-left: 5px; }
+  .row {
+    border-top: 1px solid darken(scale-color-diff(), 10%);
+    padding-top: 7px;
+  }
+  .reply:first-of-type .row { border-top: none; }
 
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
     border-left: 5px solid darken(scale-color-diff(), 12%);
   }
-
 
   .topic-meta-data {
     position: relative;
@@ -381,10 +379,12 @@ a.star {
       font-size: 11px;
       line-height: 14px;
     }
+  }
 
-    /* limit to one line of avatars for now */
-    height:30px;
-    overflow:hidden;
+  /* in expanded avatar view, limit to one line for now */
+  .avatars.clearfix {
+    height: 25px;
+    overflow: hidden;
   }
 
   .avatar {
@@ -415,7 +415,7 @@ a.star {
   .avatars,
   .links,
   .information {
-    padding: 7px 10px;
+    padding: 7px 10px 15px 10px;
     color: $primary;
   }
   .information {
@@ -434,6 +434,7 @@ a.star {
 
   td {
     vertical-align: top;
+    padding:1px;
   }
 
   .buttons {
@@ -472,6 +473,7 @@ a.star {
     color: $primary;
   }
   .btn {
+    outline: 0;
     margin-bottom: 5px;
     margin-right: 10px;
     .fa-star {margin-right: 5px;}
@@ -512,20 +514,6 @@ button.expand-post {
   margin-top: 10px;
 }
 
-.quote-button {
-  display: none;
-  position: absolute;
-  background-color: scale-color($primary, $lightness: 50%);
-  color: $secondary;
-  padding: 10px;
-  z-index: 401;
-
-  &:hover {
-    background-color: scale-color($primary, $lightness: 40%);
-    cursor: pointer;
-  }
-}
-
 .quote-button.visible {
   display: block;
 }
@@ -534,38 +522,51 @@ iframe {
   max-width: 100%;
 }
 
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+@-webkit-keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
 .extra-info-wrapper {
-  float: left;
-  width: 46%;
+  overflow: hidden;
+
+.star, .badge-wrapper, i,  .topic-link:not(.loading) {
+  -webkit-animation: fadein .7s;
+  animation-duration: .7s;
+  animation-name: fadein;
+}
 
   .topic-statuses {
-    i         { color: $header_primary; }
+    i  { color: $header_primary; }
+    i.fa-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
-  .topic-link { color: $header_primary;
-  display: block;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
 
+  .topic-link {
+    color: $header_primary;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
+/* default docked header CSS for all topics, including those without categories */
 .extra-info {
   h1 {
     margin: 5px 0 0 0;
     font-size: 1.6em;
     line-height: 1.3em;
-    width: 820px;
-
   }
 
   a.star {
-    margin-right: 7px;
-    font-size: 20px;
-    margin-top: 6px;
+    margin: 0 7px 20px 2px;
+    font-size: 17px;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
-
   }
   a.star.starred {color: $danger !important;}
 
@@ -573,14 +574,32 @@ text-overflow: ellipsis;
     margin-top: -2px;
   }
 
-  .badge-category {
-    vertical-align: top;
-    margin-top: 2px;
-    float: left;
-    margin-right: 5px;
+  .badge-wrapper {
+    margin: 0 0 0 2px;
+    padding: 0;
+
+    .badge-category {
+      color: $header_primary;
+      padding: 0 0 0 3px;
+      margin-right: 5px;
+    }
+
+    .badge-category-parent {
+      margin: 0;
+      padding: 0px 1px;
+    }
   }
 
 }
+
+/* override docked header CSS for topics with categories */
+.extra-info.has-category {
+  h1 {
+    line-height: 1.1em;
+    margin: 0 0 2px 0;
+  }
+}
+
 
 .open >.dropdown-menu {
   display: block;
@@ -595,11 +614,11 @@ text-overflow: ellipsis;
   position: relative;
 }
 
-  a.mention {
-    padding: 2px 4px;
-    color: $primary;
-    background: scale-color-diff();
-  }
+a.mention {
+  padding: 2px 4px;
+  color: $primary;
+  background: scale-color-diff();
+}
 
 
 .modal-body {
@@ -610,7 +629,7 @@ text-overflow: ellipsis;
 
 .moderator {
   .topic-body {
-    background-color: dark-light-diff($highlight, $secondary, 50%, -80%);
+    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
   }
 }
 
@@ -674,19 +693,9 @@ blockquote > *:last-child {
 /* quotes with attribution */
 .quote {
   &>blockquote {
-    margin-top: 0;
-    padding-top: 0;
     .onebox-result {
       background-color: scale-color-diff();
     }
-  }
-
-  .title {
-    border-left: 5px solid darken(scale-color-diff(), 10%);
-    background-color: scale-color-diff();
-    padding: 12px;
-    .avatar { margin-right: 7px; }
-    img { margin-top: -4px; }
   }
 
   aside {
@@ -702,23 +711,7 @@ blockquote > *:last-child {
 
 }
 
-.quote-controls {
-  float: right;
-  color: scale-color($primary, $lightness: 50%);
-  a {
-    margin: 0;
-  }
-  .back:before
-  {
-    display: inline-block;
-    margin-left: 8px;
-    color: scale-color($primary, $lightness: 50%);
-    font-family: "FontAwesome";
-    position: relative;
-    z-index: 20;
-    content: "\f062";
-  }
-}
+
 
 .gutter {
   margin-top: 13px;
@@ -731,8 +724,14 @@ blockquote > *:last-child {
   li {margin-bottom: 10px;}
   i {font-size: 12px;}
 
-  .reply-new, .track-link {
+  .reply-new {
     padding-left: 27px;
+    display:block;
+    overflow:hidden;
+  }
+
+  .track-link {
+    padding-left: 10px;
     display: block;
     overflow: hidden;
     }
@@ -748,7 +747,7 @@ blockquote > *:last-child {
       margin-top: -2px;
       margin-left: -17px;
     }
-    a.track-link {color: scale-color($primary, $lightness: 50%);}
+
     a.toggle-more {
       display: block;
       text-align: right;
@@ -774,19 +773,12 @@ $topic-avatar-width: 45px;
   }
 }
 .topic-avatar {
- border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
- padding-top: 16px;
- width: $topic-avatar-width;
- float: left;
- position: relative;
- z-index: 2;
-
- .wiki {
-   margin-top: 14px;
-   color: scale-color($primary, $lightness: 60%);
-   margin-left: 5px;
-   cursor: pointer;
- }
+  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  padding-top: 16px;
+  width: $topic-avatar-width;
+  float: left;
+  position: relative;
+  z-index: 2;
 }
 
 .gap {
@@ -840,6 +832,7 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: 18px;
   color: $primary;
+  @include transition(all linear .15s);
 
   & > div {
     margin-left: 26px;
@@ -933,7 +926,7 @@ $topic-avatar-width: 45px;
     }
     &:active {
       @include linear-gradient(darken($tertiary, 18%), darken($tertiary, 12%));
-      @include box-shadow(inset 0 1px 3px rgba(0,0,0, 0.2));
+      box-shadow: inset 0 1px 3px rgba(0,0,0, 0.2);
       color: $secondary;
     }
     &[disabled] {
@@ -964,16 +957,17 @@ $topic-avatar-width: 45px;
 
     .select-posts {
       position: absolute;
-      right: 5px;
+      left: 100%;
       z-index: 490;
-      top: 4px;
+      top: 8px;
+      width: 800px;
+      height: 100px;
+      background-color: $secondary;
 
       button {
+        margin-left: 8px;
         background-color: scale-color($primary, $lightness: 70%);
-        border-top: 1px solid $tertiary;
-        border-left: 1px solid $tertiary;
-        border-bottom: 1px solid scale-color-diff();
-        border-right: 1px solid scale-color-diff();
+        border: 1px solid scale-color($primary, $lightness: 60%);
         color: $primary;
       }
     }
@@ -997,7 +991,7 @@ a.attachment:before {
     left: 767px;
     color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
     font: 90px/1 FontAwesome;
-    content: "\f05c";
+    content: "\f014";
     z-index: -5;
 }
 
@@ -1033,15 +1027,15 @@ span.highlighted {
 .read-state {
   color: scale-color($tertiary, $lightness: 50%);
   position: absolute;
-  right: -8px;
+  right: -2px;
   top: 13px;
   font-size: 8px;
 }
 
 .read-state.read {
   opacity: 0;
-  -webkit-transition: opacity 1s ease-out;
-  transition: opacity 1s ease-out;
+  @include transition(opacity ease-out 1s);
+
 }
 
 
@@ -1049,11 +1043,6 @@ span.highlighted {
 
 @media all
 and (max-width : 1140px) {
-  .extra-info {
-    h1 {
-      width: 720px;
-    }
-  }
   .post-cloak .reply-to-tab {
     right: 320px;
   }
@@ -1062,11 +1051,6 @@ and (max-width : 1140px) {
 
 @media all
 and (max-width : 975px) {
-  .extra-info {
-    h1 {
-      width: 650px;
-    }
-  }
   .post-cloak .reply-to-tab {
     right: 300px;
   }
@@ -1081,11 +1065,7 @@ and (max-width : 940px) {
 
 @media all
 and (max-width : 870px) {
-  .extra-info {
-    h1 {
-      width: 520px;
-    }
-  }
+
   .gutter {
     display: none;
     }
@@ -1108,7 +1088,7 @@ and (max-width : 870px) {
     &.top {
       margin-left: 6%;
       width: 91%;
-
     }
   }
+
 }

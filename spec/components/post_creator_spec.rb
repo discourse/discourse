@@ -59,7 +59,7 @@ describe PostCreator do
 
       it "doesn't return true for spam" do
         creator.create
-        creator.spam?.should be_false
+        creator.spam?.should == false
       end
 
       it "does not notify on system messages" do
@@ -70,8 +70,8 @@ describe PostCreator do
         end
         # don't notify on system messages they introduce too much noise
         channels = messages.map(&:channel)
-        channels.find{|s| s =~ /unread/}.should be_nil
-        channels.find{|s| s =~ /new/}.should be_nil
+        channels.find{|s| s =~ /unread/}.should == nil
+        channels.find{|s| s =~ /new/}.should == nil
       end
 
       it "generates the correct messages for a secure topic" do
@@ -104,7 +104,7 @@ describe PostCreator do
                                                    ].sort
         admin_ids = [Group[:admins].id]
 
-        messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}.should be_false
+        messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}.should == false
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -115,16 +115,16 @@ describe PostCreator do
         end
 
         latest = messages.find{|m| m.channel == "/latest"}
-        latest.should_not be_nil
+        latest.should_not == nil
 
         latest = messages.find{|m| m.channel == "/new"}
-        latest.should_not be_nil
+        latest.should_not == nil
 
         read = messages.find{|m| m.channel == "/unread/#{p.user_id}"}
-        read.should_not be_nil
+        read.should_not == nil
 
         user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
-        user_action.should_not be_nil
+        user_action.should_not == nil
 
         messages.length.should == 5
       end
@@ -178,7 +178,7 @@ describe PostCreator do
         topic_user.should be_present
         topic_user.should be_posted
         topic_user.last_read_post_number.should == first_post.post_number
-        topic_user.seen_post_count.should == first_post.post_number
+        topic_user.highest_seen_post_number.should == first_post.post_number
 
         user2 = Fabricate(:coding_horror)
         user2.user_stat.topic_reply_count.should == 0
@@ -201,13 +201,38 @@ describe PostCreator do
           topic.reload
         }.to_not change { topic.excerpt }
       end
+
+      describe "topic's auto close" do
+
+        it "doesn't update topic's auto close when it's not based on last post" do
+          auto_close_time = 1.day.from_now
+          topic = Fabricate(:topic, auto_close_at: auto_close_time, auto_close_hours: 12)
+
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          topic.reload
+
+          topic.auto_close_at.should be_within(1.second).of(auto_close_time)
+        end
+
+        it "updates topic's auto close date when it's based on last post" do
+          auto_close_time = 1.day.from_now
+          topic = Fabricate(:topic, auto_close_at: auto_close_time, auto_close_hours: 12, auto_close_based_on_last_post: true)
+
+          PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
+          topic.reload
+
+          topic.auto_close_at.should_not be_within(1.second).of(auto_close_time)
+        end
+
+      end
+
     end
 
     context 'when auto-close param is given' do
       it 'ensures the user can auto-close the topic, but ignores auto-close param silently' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         post = PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
-        post.topic.auto_close_at.should be_nil
+        post.topic.auto_close_at.should == nil
       end
     end
   end
@@ -288,7 +313,7 @@ describe PostCreator do
       GroupMessage.stubs(:create)
       creator.create
       creator.errors.should be_present
-      creator.spam?.should be_true
+      creator.spam?.should == true
     end
 
     it "sends a message to moderators" do
@@ -350,11 +375,15 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
+      # It's not a warning
+      post.topic.warning.should be_blank
+
       post.topic.archetype.should == Archetype.private_message
+      post.topic.subtype.should == TopicSubtype.user_to_user
       post.topic.topic_allowed_users.count.should == 3
 
       # PMs can't have a category
-      post.topic.category.should be_nil
+      post.topic.category.should == nil
 
       # does not notify an unrelated user
       unrelated.notifications.count.should == 0
@@ -367,6 +396,44 @@ describe PostCreator do
 
       post.topic.reload
       post.topic.topic_allowed_users.where(user_id: admin.id).count.should == 1
+    end
+  end
+
+  context "warnings" do
+    let(:target_user1) { Fabricate(:coding_horror) }
+    let(:target_user2) { Fabricate(:moderator) }
+    let(:base_args) do
+      { title: 'you need a warning buddy!',
+        raw: "you did something bad and I'm telling you about it!",
+        is_warning: true,
+        target_usernames: target_user1.username,
+        category: 1 }
+    end
+
+    it "works as expected" do
+      # Invalid archetype
+      creator = PostCreator.new(user, base_args)
+      creator.create
+      creator.errors.should be_present
+
+      # Too many users
+      creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message,
+                                                      target_usernames: [target_user1.username, target_user2.username].join(',')))
+      creator.create
+      creator.errors.should be_present
+
+      # Success
+      creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message))
+      post = creator.create
+      creator.errors.should be_blank
+
+      topic = post.topic
+      topic.should be_present
+      topic.warning.should be_present
+      topic.subtype.should == TopicSubtype.moderator_warning
+      topic.warning.user.should == target_user1
+      topic.warning.created_by.should == user
+      target_user1.warnings.count.should == 1
     end
   end
 
@@ -427,7 +494,7 @@ describe PostCreator do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
       creator.create
-      creator.errors.should be_nil
+      creator.errors.should == nil
     end
   end
 
@@ -452,7 +519,7 @@ describe PostCreator do
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
       creator.create
-      TopicEmbed.where(embed_url: embed_url).exists?.should be_true
+      TopicEmbed.where(embed_url: embed_url).exists?.should == true
     end
   end
 
@@ -468,7 +535,6 @@ describe PostCreator do
     end
   end
 
-
   describe "suspended users" do
     it "does not allow suspended users to create topics" do
       user = Fabricate(:user, suspended_at: 1.month.ago, suspended_till: 1.month.from_now)
@@ -479,5 +545,9 @@ describe PostCreator do
     end
   end
 
-end
+  it "doesn't strip starting whitespaces" do
+    post = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " }).create
+    post.raw.should == "    <-- whitespaces -->"
+  end
 
+end

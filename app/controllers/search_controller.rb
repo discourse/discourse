@@ -8,12 +8,13 @@ class SearchController < ApplicationController
 
   def query
     params.require(:term)
-    
+
     search_args = {guardian: guardian}
     search_args[:type_filter] = params[:type_filter] if params[:type_filter].present?
     if params[:include_blurbs].present?
       search_args[:include_blurbs] = params[:include_blurbs] == "true"
     end
+    search_args[:search_for_id] = true if params[:search_for_id].present?
 
     search_context = params[:search_context]
     if search_context.present?
@@ -35,7 +36,8 @@ class SearchController < ApplicationController
     end
 
     search = Search.new(params[:term], search_args.symbolize_keys)
-    render_json_dump(search.execute.as_json)
+    result = search.execute
+    render_serialized(result, GroupedSearchResultSerializer, :result => result)
   end
 
 end

@@ -6,104 +6,32 @@ class PostRevision < ActiveRecord::Base
 
   serialize :modifications, Hash
 
-  def body_changes
-    cooked_diff = DiscourseDiff.new(previous("cooked"), current("cooked"))
-    raw_diff = DiscourseDiff.new(previous("raw"), current("raw"))
+  def self.ensure_consistency!
+    # 1 - fix the numbers
+    PostRevision.exec_sql <<-SQL
+      UPDATE post_revisions
+         SET number = pr.rank
+        FROM (SELECT id, 1 + ROW_NUMBER() OVER (PARTITION BY post_id ORDER BY number, created_at, updated_at) AS rank FROM post_revisions) AS pr
+       WHERE post_revisions.id = pr.id
+         AND post_revisions.number <> pr.rank
+    SQL
 
-    {
-      inline: cooked_diff.inline_html,
-      side_by_side: cooked_diff.side_by_side_html,
-      side_by_side_markdown: raw_diff.side_by_side_markdown
-    }
+    # 2 - fix the versions on the posts
+    PostRevision.exec_sql <<-SQL
+      UPDATE posts
+         SET version = 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id),
+             public_version = 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
+       WHERE version <> 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id)
+          OR public_version <> 1 + (SELECT COUNT(*) FROM post_revisions pr WHERE post_id = posts.id AND pr.hidden = 'f')
+    SQL
   end
 
-  def category_changes
-    prev = previous("category_id")
-    cur = current("category_id")
-    return if prev == cur
-
-    {
-      previous_category_id: prev,
-      current_category_id: cur,
-    }
+  def hide!
+    update_column(:hidden, true)
   end
 
-  def wiki_changes
-    prev = lookup("wiki", 0)
-    cur = lookup("wiki", 1)
-    return if prev == cur
-
-    {
-        previous_wiki: prev,
-        current_wiki: cur,
-    }
-  end
-
-  def title_changes
-    prev = "<div>#{CGI::escapeHTML(previous("title"))}</div>"
-    cur = "<div>#{CGI::escapeHTML(current("title"))}</div>"
-    return if prev == cur
-
-    diff = DiscourseDiff.new(prev, cur)
-
-    {
-      inline: diff.inline_html,
-      side_by_side: diff.side_by_side_html
-    }
-  end
-
-  def user_changes
-    prev = previous("user_id")
-    cur = current("user_id")
-    return if prev == cur
-
-    {
-        previous_user: User.find_by(id: prev),
-        current_user: User.find_by(id: cur)
-    }
-  end
-
-  def previous(field)
-    lookup_with_fallback(field, 0)
-  end
-
-  def current(field)
-    lookup_with_fallback(field, 1)
-  end
-
-  def previous_revisions
-    @previous_revs ||= PostRevision.where("post_id = ? AND number < ?", post_id, number)
-                                   .order("number desc")
-                                   .to_a
-  end
-
-  def has_topic_data?
-    post && post.post_number == 1
-  end
-
-  def lookup_with_fallback(field, index)
-
-    unless val = lookup(field, index)
-      previous_revisions.each do |v|
-        break if val = v.lookup(field, 1)
-      end
-    end
-
-    unless val
-      if ["cooked", "raw"].include?(field)
-        val = post.send(field)
-      else
-        val = post.topic.send(field)
-      end
-    end
-
-    val
-  end
-
-  def lookup(field, index)
-    if mod = modifications[field]
-      mod[index]
-    end
+  def show!
+    update_column(:hidden, false)
   end
 
 end
@@ -117,8 +45,8 @@ end
 #  post_id       :integer
 #  modifications :text
 #  number        :integer
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #
 # Indexes
 #

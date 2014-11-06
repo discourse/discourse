@@ -74,6 +74,7 @@ describe PostMover do
           new_topic.reload
           new_topic.posts_count.should == 2
           new_topic.highest_post_number.should == 2
+          new_topic.last_post_user_id.should == new_topic.posts.last.user_id
           expect(new_topic.last_posted_at).to be_present
 
           p2.reload
@@ -121,7 +122,7 @@ describe PostMover do
           p2.post_number.should == 2
           p2.topic_id.should == moved_to.id
           p2.reply_count.should == 1
-          p2.reply_to_post_number.should be_nil
+          p2.reply_to_post_number.should == nil
 
           p4.reload
           p4.post_number.should == 3
@@ -207,7 +208,7 @@ describe PostMover do
           p2.post_number.should == 3
           p2.topic_id.should == moved_to.id
           p2.reply_count.should == 1
-          p2.reply_to_post_number.should be_nil
+          p2.reply_to_post_number.should == nil
 
           p4.reload
           p4.post_number.should == 4

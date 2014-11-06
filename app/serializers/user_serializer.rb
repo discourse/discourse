@@ -27,6 +27,7 @@ class UserSerializer < BasicUserSerializer
              :created_at,
              :website,
              :profile_background,
+             :card_background,
              :location,
              :can_edit,
              :can_edit_username,
@@ -43,23 +44,24 @@ class UserSerializer < BasicUserSerializer
              :suspended_till,
              :uploaded_avatar_id,
              :badge_count,
+             :notification_count,
              :has_title_badges,
              :edit_history_public,
-             :custom_fields
+             :custom_fields,
+             :user_fields
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
-
+  has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
   staff_attributes :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
-                   :number_of_suspensions
+                   :number_of_suspensions,
+                   :number_of_warnings
 
-
-  private_attributes :email,
-                     :locale,
+  private_attributes :locale,
                      :email_digests,
                      :email_private_messages,
                      :email_direct,
@@ -75,14 +77,26 @@ class UserSerializer < BasicUserSerializer
                      :tracked_category_ids,
                      :watched_category_ids,
                      :private_messages_stats,
+                     :notification_count,
                      :disable_jump_reply,
                      :gravatar_avatar_upload_id,
                      :custom_avatar_upload_id,
-                     :has_title_badges
+                     :has_title_badges,
+                     :card_image_badge,
+                     :card_image_badge_id
 
   ###
   ### ATTRIBUTES
   ###
+
+  def include_email?
+    object.id && object.id == scope.user.try(:id)
+  end
+
+  def card_badge
+    object.user_profile.card_image_badge
+  end
+
 
   def bio_raw
     object.user_profile.bio_raw
@@ -104,12 +118,36 @@ class UserSerializer < BasicUserSerializer
     website.present?
   end
 
+  def card_image_badge_id
+    object.user_profile.card_image_badge.try(:id)
+  end
+
+  def include_card_image_badge_id?
+    card_image_badge_id.present?
+  end
+
+  def card_image_badge
+    object.user_profile.card_image_badge.try(:image)
+  end
+
+  def include_card_image_badge?
+    card_image_badge.present?
+  end
+
   def profile_background
     object.user_profile.profile_background
   end
 
   def include_profile_background?
     profile_background.present?
+  end
+
+  def card_background
+    object.user_profile.card_background
+  end
+
+  def include_card_background?
+    card_background.present?
   end
 
   def location
@@ -174,23 +212,27 @@ class UserSerializer < BasicUserSerializer
         .where(user_id: object.id)
         .where(user_deleted: false)
         .where.not(deleted_by_id: object.id)
+        .where.not(deleted_at: nil)
         .count
   end
 
   def number_of_flagged_posts
     Post.with_deleted
         .where(user_id: object.id)
-        .where(id: PostAction.with_deleted
-                             .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+        .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                             .where(disagreed_at: nil)
                              .select(:post_id))
         .count
   end
 
   def number_of_flags_given
-    PostAction.with_deleted
-              .where(user_id: object.id)
+    PostAction.where(user_id: object.id)
               .where(post_action_type_id: PostActionType.notify_flag_type_ids)
               .count
+  end
+
+  def number_of_warnings
+    object.warnings.count
   end
 
   def number_of_suspensions
@@ -237,8 +279,20 @@ class UserSerializer < BasicUserSerializer
     object.badges.where(allow_title: true).count > 0
   end
 
+  def notification_count
+    Notification.where(user_id: object.id).count
+  end
+
   def include_edit_history_public?
     can_edit && !SiteSetting.edit_history_visible_to_public
+  end
+
+  def user_fields
+    object.user_fields
+  end
+
+  def include_user_fields?
+    user_fields.present?
   end
 
   def custom_fields

@@ -6,7 +6,7 @@
   <div class="span8 popular-topics">
     <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
     <% @top_viewed.each do |t| %>
-      <%= link_to t.title, t.relative_url %><br/>
+      <span style="line-height:2;"><%= link_to t.title, t.relative_url %><% if !t.category.uncategorized? %>&nbsp;&nbsp;<a href="<%= t.category.url %>" class="badge badge-category" style="background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>"><%= t.category.name %></a><% end %></span><br/>
     <% end %>
     <br/>
     <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
@@ -14,7 +14,7 @@
   <div class="span8 recent-topics">
     <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
     <% @recent.each do |t| %>
-      <%= link_to t.title, t.relative_url %><br/>
+      <span style="line-height:2;"><%= link_to t.title, t.relative_url %><% if !t.category.uncategorized? %>&nbsp;&nbsp;<a href="<%= t.category.url %>" class="badge badge-category" style="background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>"><%= t.category.name %></a><% end %></span><br/>
     <% end %>
     <br/>
     <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
@@ -23,8 +23,8 @@
 
 <%- unless @hide_google %>
   <div class="row">
-    <div class="span10" style='padding-top: 20px'>
-      <h2 class="page-not-found-search"><%= t 'page_not_found.search_title' %></h2>
+    <div class="span10 page-not-found-search">
+      <h2><%= t 'page_not_found.search_title' %></h2>
       <p>
         <form action='//google.com/search' id='google-search' onsubmit="return google_button_clicked()">
           <input type="text" id='user-query' value="<%= @slug %>">
@@ -41,5 +41,11 @@
       document.getElementById('google-query').value = 'site:<%= local_domain %> ' + searchValue;
       return true;
     }
+
+    window.onpopstate = function(event) {
+      if (!window.hasOwnProperty("Discourse")) {  //check if Discourse object exists if not take care of back navigation
+        window.location = document.location;
+      }
+    };
   </script>
 <%- end %>

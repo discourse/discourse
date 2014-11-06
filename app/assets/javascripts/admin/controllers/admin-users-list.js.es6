@@ -13,9 +13,12 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   content: null,
   loading: false,
 
+  mustApproveUsers: Discourse.computed.setting('must_approve_users'),
   queryNew: Em.computed.equal('query', 'new'),
   queryPending: Em.computed.equal('query', 'pending'),
   queryHasApproval: Em.computed.or('queryNew', 'queryPending'),
+
+  searchHint: function() { return I18n.t("search_hint"); }.property(),
 
   /**
     Triggered when the selectAll property is changed
@@ -87,11 +90,11 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
 
     @method refreshUsers
   **/
-  refreshUsers: function() {
+  refreshUsers: function(showEmails) {
     var adminUsersListController = this;
     adminUsersListController.set('loading', true);
 
-    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('username') }).then(function (result) {
+    Discourse.AdminUser.findAll(this.get('query'), { filter: this.get('username'), show_emails: showEmails }).then(function (result) {
       adminUsersListController.set('content', result);
       adminUsersListController.set('loading', false);
     });
@@ -137,6 +140,10 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
       bootbox.alert(message);
       controller.refreshUsers();
     });
+  },
+
+  showEmails: function() {
+    this.refreshUsers(true);
   }
 
 });

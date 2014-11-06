@@ -21,14 +21,32 @@ task 'assets:precompile:before' do
 
   module ::Sprockets
 
+    def self.redis
+      @redis ||=
+        (
+          redis_url = GlobalSetting.asset_redis_url
+          if redis_url.present?
+            uri = URI.parse(redis_url)
+            options = {}
+            options[:password] = uri.password if uri.password.present?
+            options[:host] = uri.host
+            options[:port] = uri.port || 6379
+            Redis.new(options)
+          else
+            DiscourseRedis.raw_connection
+          end
+        )
+    end
+
     def self.cache_compiled(type, data)
-      digest = Digest::SHA1.hexdigest(data)
+      # add cache breaker here if uglifier options change
+      digest = Digest::SHA1.hexdigest(data) << "v1"
       key = "SPROCKETS_#{type}_#{digest}"
-      if compiled = $redis.get(key)
-        $redis.expire(key, 1.week)
+      if compiled = redis.get(key)
+        redis.expire(key, 1.week)
       else
         compiled = yield
-        $redis.setex(key, 1.week, compiled)
+        redis.setex(key, 1.week, compiled)
       end
       compiled
     end
@@ -37,7 +55,9 @@ task 'assets:precompile:before' do
 
       def evaluate(context, locals, &block)
         ::Sprockets.cache_compiled("uglifier", data) do
-           Uglifier.new(:comments => :none).compile(data)
+           Uglifier.new(:comments => :none,
+                        :screw_ie8 => false,
+                        :output => {max_line_len: 1024}).compile(data)
         end
       end
 

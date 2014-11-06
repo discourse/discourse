@@ -130,6 +130,7 @@ class TopicTrackingState
     new = TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)
 
     sql = <<SQL
+    WITH x AS (
     SELECT u.id AS user_id,
            topics.id AS topic_id,
            topics.created_at,
@@ -163,7 +164,8 @@ SQL
     if topic_id
       sql << " AND topics.id = :topic_id"
     end
-    sql << " ORDER BY topics.bumped_at DESC LIMIT 500"
+
+    sql << " ORDER BY topics.bumped_at DESC ) SELECT * FROM x LIMIT 500"
 
     SqlBuilder.new(sql)
       .map_exec(TopicTrackingState, user_ids: user_ids, topic_id: topic_id)

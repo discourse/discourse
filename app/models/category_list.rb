@@ -55,7 +55,7 @@ class CategoryList
     # Find a list of all categories to associate the topics with
     def find_categories
       @categories = Category
-                        .includes(:featured_users, subcategories: [:topic_only_relative_url])
+                        .includes(:featured_users, :topic_only_relative_url, subcategories: [:topic_only_relative_url])
                         .secured(@guardian)
 
       if @options[:parent_category_id].present?

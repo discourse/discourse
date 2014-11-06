@@ -30,11 +30,13 @@ class TopicQuery
   # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
     'likes' => 'like_count',
+    'op_likes' => 'op_likes',
     'views' => 'views',
     'posts' => 'posts_count',
     'activity' => 'bumped_at',
     'posters' => 'participant_count',
-    'category' => 'category_id'
+    'category' => 'category_id',
+    'created' => 'created_at'
   }
 
   def initialize(user=nil, options={})
@@ -63,7 +65,7 @@ class TopicQuery
 
   # The latest view of topics
   def list_latest
-    TopicList.new(:latest, @user, latest_results)
+    create_list(:latest, {}, latest_results)
   end
 
   # The starred topics
@@ -78,11 +80,11 @@ class TopicQuery
   end
 
   def list_new
-    TopicList.new(:new, @user, new_results)
+    create_list(:new, {}, new_results)
   end
 
   def list_unread
-    TopicList.new(:new, @user, unread_results)
+    create_list(:unread, {}, unread_results)
   end
 
   def list_posted
@@ -93,7 +95,7 @@ class TopicQuery
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|
       topics = topics.joins(:top_topic).where("top_topics.#{score} > 0")
-      if period == :yearly && @user.try(:trust_level) == TrustLevel.levels[:newuser]
+      if period == :yearly && @user.try(:trust_level) == TrustLevel[0]
         topics.order(TopicQuerySQL.order_top_with_pinned_category_for(score))
       else
         topics.order(TopicQuerySQL.order_top_for(score))
@@ -109,19 +111,19 @@ class TopicQuery
 
   def list_private_messages(user)
     list = private_messages_for(user)
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_sent(user)
     list = private_messages_for(user)
     list = list.where(user_id: user.id)
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_private_messages_unread(user)
     list = private_messages_for(user)
     list = list.where("tu.last_read_post_number IS NULL OR tu.last_read_post_number < topics.highest_post_number")
-    TopicList.new(:private_messages, user, list)
+    create_list(:private_messages, {}, list)
   end
 
   def list_category(category)
@@ -156,7 +158,7 @@ class TopicQuery
     def create_list(filter, options={}, topics = nil)
       topics ||= default_results(options)
       topics = yield(topics) if block_given?
-      TopicList.new(filter, @user, topics)
+      TopicList.new(filter, @user, topics, options.merge(@options))
     end
 
     def private_messages_for(user)
@@ -210,6 +212,10 @@ class TopicQuery
         return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
       end
 
+      if sort_column == 'op_likes'
+        return result.order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
+      end
+
       result.order("topics.#{sort_column} #{sort_dir}")
     end
 
@@ -235,6 +241,7 @@ class TopicQuery
       end
 
       category_id = get_category_id(options[:category])
+      @options[:category_id] = category_id
       if category_id
         if options[:no_subcategories]
           result = result.where('categories.id = ?', category_id)
@@ -245,7 +252,7 @@ class TopicQuery
       end
 
       result = apply_ordering(result, options)
-      result = result.listable_topics.includes(category: :topic_only_relative_url)
+      result = result.listable_topics.includes(:category)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
       # Don't include the category topics if excluded
@@ -287,6 +294,10 @@ class TopicQuery
           result = result.where('topics.closed')
         when 'archived'
           result = result.where('topics.archived')
+        when 'visible'
+          result = result.where('topics.visible')
+        when 'invisible'
+          result = result.where('NOT topics.visible')
         end
       end
 

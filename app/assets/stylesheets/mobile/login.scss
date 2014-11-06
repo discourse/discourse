@@ -6,18 +6,15 @@
 }
 
 #login-buttons {
-  text-align: center;
   button {
     margin: 0 0 5px 0;
   }
-  margin-top: 0;
-  margin-bottom: 0;
+  display: inline-block;
 }
 
 #login-form {
   a {
-    color: $primary;
-    cursor: pointer;
+    color: scale-color($primary, $lightness: 35%);
   }
   label { float: left; display: block; }
   textarea, input, select {font-size: 16px; clear: left; margin-top: 0; }
@@ -49,10 +46,30 @@ a#forgot-password-link {clear: left; float: left; }
     }
   }
 
-  tr.in
   tr.input {
     td.label {
-      padding-top: 10px;
+      padding-right: 5px;
+    }
+  }
+}
+
+.create-account {
+  .user-field.confirm {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .user-field {
+    margin-top: 10px;
+    label {
+      width: 85px;
+    }
+
+    input[type=text] {
+      margin-top: 0;
+      width: 184px;
+    }
+    .controls {
+      margin-left: 85px;
     }
   }
 }

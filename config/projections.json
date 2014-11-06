@@ -17,7 +17,7 @@
   "app/assets/javascripts/discourse/helpers/*.js": {
     "command": "dhelper"
   },
-  "app/assets/javascripts/discourse/templates/*.handlebars": {
+  "app/assets/javascripts/discourse/templates/*.hbs": {
     "command": "dtemplate"
   },
   "app/assets/javascripts/discourse/views/*.js": {

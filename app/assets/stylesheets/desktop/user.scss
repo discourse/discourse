@@ -6,6 +6,21 @@
   }
 }
 
+.profile-image {
+  height: 250px;
+  width: 100%;
+  background-size: cover;
+  transition: height .15s linear;
+}
+
+
+.no-background {
+  .profile-image {
+    height: 0;
+  }
+
+}
+
 .user-preferences {
   input.category-group {
     width: 500px;
@@ -75,10 +90,19 @@
   }
 }
 
+.form-horizontal .control-group.other {
+  margin-bottom: 0;
+}
+
+.form-horizontal .control-group.category {
+  margin-top: 18px;
+}
+
 .user-navigation {
   width: 21.62%;
   margin-right: 1.8018%;
   float: left;
+  margin-top: 20px;
 
   h3 {
     color: $primary;
@@ -88,14 +112,12 @@
 }
 
 .user-main {
-
-  width: 76.5765%;
-  float: left;
   margin-bottom: 50px;
 
-
   table.group-members {
-    width: 100%;
+    width: 75%;
+    float:  right;
+
     p {
       max-width: 600px;
       white-space: nowrap;
@@ -124,6 +146,10 @@
     background-color: $secondary;
     border: 1px solid scale-color-diff();
     margin-bottom: 10px;
+    box-sizing: border-box;
+    width: 75%;
+    float: right;
+    margin-top: 20px;
 
     .btn.right {
       float: right
@@ -151,19 +177,67 @@
   }
 
   .about {
-    background-color: dark-light-diff($primary, $secondary, 0%, -75%);
-    background-size: cover;
+    background-size: 1110px 250px;
     background-position: center center;
-
+    width: 100%;
     margin-bottom: 10px;
     overflow: hidden;
     color: $secondary;
 
+    &.group {
+      width: 75%;
+      float: right;
+      margin-top: 20px;
+      .details {padding: 15px;}
+    }
+
+  .secondary {
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+    font-size: 13px;
+      .btn { padding: 3px 12px; }
+
+      dl dd {
+        display: inline;
+        margin: 0 10px 0 0;
+        padding: 0;
+      }
+
+      dl dt {
+        display: inline-block;
+        margin: 0 5px 0 0;
+        padding: 0;
+      }
+
+      dl {
+        margin: 0;
+        padding: 8px 10px;
+      }
+
+      dd {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: $primary;
+      }
+
+      dd.groups {
+        span:after {
+          content: ','
+        }
+        span:last-of-type:after {
+          content:''
+        }
+      }
+
+      dt {
+        color: dark-light-diff($secondary, $primary, 50%, -40%);
+        margin: 0;
+      }
+    }
 
     .details {
-      text-align: center;
-      padding: 12px;
-
+      padding: 15px 15px 4px 15px;
+      background-color: $primary;
+      transition: margin .15s linear;
 
       h1 {
         font-size: 30px;
@@ -171,23 +245,33 @@
       }
 
       h2 {
-        font-size: 20px;
-        margin-bottom: 6px;
+        font-size: 17px;
         font-weight: normal;
-        margin-top: 5px;
+        margin-top: 10px;
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
-      a[href] {
-        color: dark-light-diff($secondary, $primary, 75%, -10%);
-
+      h3 {
+        font-weight: normal;
+        font-size: 14px;
+        margin: 5px 0;
+        i:not(:first-of-type) {
+          margin-left: 10px;
+        }
       }
 
+      .groups {
+        margin-left: 10px;
+        display: inline;
+        }
+
       img.avatar {
-        margin-bottom: 10px;
+        margin: 0 20px 10px 0;
+        float: left;
+        transition: all .1s linear;
       }
 
       .suspended {
@@ -195,63 +279,53 @@
       }
 
       .primary {
+        width: 100%;
         position: relative;
         float: left;
-        width: 71%;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
-        text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+        color: $secondary;
 
-        h1, h2 {font-weight: bold;}
+        h1 {font-weight: bold;}
 
         .primary-textual {
-          background: rgba($primary, 0.2);
           padding: 3px;
+          a[href] {
+            color: $secondary;
+
+          }
         }
 
         .bio {
-          color: dark-light-diff($secondary, $primary, 75%, 0%);
-          text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
+          color: $secondary;
           max-height: 300px;
           overflow: auto;
+          max-width: 750px;
+
+          a.mention {
+            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
+          }
 
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, 0%);
             text-decoration: underline;
-            text-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px;
           }
 
           img {
             max-width: 100%;
           }
         }
-
-      }
-
-      .secondary {
-        float: right;
-        background-color: rgba(dark-light-diff($primary, $secondary, 20%, -85%), .9);
-        text-align: right;
-        padding: 0 10px;
-        max-width: 20%;
-
-        dd {
-          margin: 0 0 7px 0;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          color: dark-light-diff($secondary, $primary, 75%, -10%);
-
-        }
-        dt {
-          color: dark-light-diff($secondary, $primary, 50%, -40%);
-          margin: 0;
-        }
       }
     }
 
     .controls {
-      background-color: dark-light-diff($primary, $secondary, 30%, -80%);
-      padding: 12px;
-      height: 30px;
+      padding: 0 0 12px 0;
+      float: right;
+      width: 180px;
+      ul {list-style-type: none;}
+      a {
+        padding: 5px 10px;
+        width: 140px;
+        margin-bottom: 10px;
+        }
 
       .right {
         float: right;
@@ -263,20 +337,37 @@
   .about.collapsed-info {
     .controls {
       margin-top: 0;
+      width: auto;
+      ul {
+        li {display: inline;}
+        a {
+          padding: 5px 10px;
+          margin-bottom: 10px;
+          width: auto;
+          }
+      }
     }
 
     .staff-counters {
       display: none;
     }
 
+    .secondary { display: none; }
+
+    .profile-image {
+      height: 0;
+    }
+
     .details {
-      .secondary { display: none; }
+      padding: 12px 15px 2px 15px;
+      margin-top: 0;
+      background: rgba($primary, 1);
       .bio { display: none; }
 
       .primary {
-        width: 100%;
         text-align: left;
         margin-top: 0;
+        width: 100%;
 
         .avatar {
           float: left;
@@ -287,13 +378,15 @@
 
         h1 {
           font-size: 20px;
-          line-height: 22px;
         }
 
         h2 {
-          font-size: 17px;
-          line-height: 20px;
+          font-size: 15px;
           margin-top: 4px;
+        }
+
+        h3 {
+          display: none;
         }
       }
     }
@@ -301,6 +394,8 @@
 
 
   .user-stream {
+      float: right;
+      width: 75%;
     .excerpt {
       margin: 5px 0;
       font-size: 13px;
@@ -367,15 +462,54 @@
       float: right;
       margin-top: -4px;
     }
+    .notification {
+      &.unread {
+        background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+      }
+
+      li { display: inline-block; }
+      p {
+        display: inline-block;
+        margin-left: 10px;
+        span {
+          color: $primary;
+        }
+      }
+      .time {
+        display: inline-block;
+        margin-left: 10px;
+        float: none;
+      }
+      // common/base/header.scss
+      .fa, .icon {
+        color: scale-color($primary, $lightness: 50%);
+        font-size: 24px;
+      }
+    }
   }
 
   .staff-counters {
     text-align: left;
-    position: absolute;
+    background: $primary;
+    padding: 7px 0;
+    display: inline;
     > div {
-      margin-bottom: 10px;
+      margin: 0 10px 0 0;
+      display: inline-block;
+      padding: 5px 0;
+      &:first-of-type {
+        padding-left: 10px;
+        }
+      span {
+        padding: 1px 5px;
+        border-radius: 10px;
+        }
+
     }
-    a.active {
+    a {
+      color: $secondary;
+    }
+    .active {
       font-weight: bold;
     }
   }
@@ -395,10 +529,65 @@
   .flagged-posts {
     background-color: #E49735;
   }
+  .warnings-received {
+    background-color: #EC441B;
+  }
   .deleted-posts {
     background-color: #EC441B;
   }
   .suspensions {
     background-color: #c22020;
   }
+
+  .user-field.text {
+    padding-top: 18px;
+  }
+
+  .user-field {
+    label {
+      width: 140px;
+      float: left;
+      text-align: right;
+      font-weight: bold;
+    }
+    input[type=text] {
+      width: 530px;
+    }
+    .controls {
+      label {
+        width: auto;
+        text-align: left;
+        font-weight: normal;
+        float: auto;
+      }
+      p {
+        color: scale-color($primary, $lightness: 50%);
+        margin-top: 5px;
+        margin-bottom: 10px;
+        font-size: 80%;
+        line-height: 1.4em;
+      }
+    }
+    clear: both;
+    margin-bottom: 10px;
+  }
+}
+
+.paginated-topics-list {
+  float: right;
+  width: 75%;
+  margin-top: 20px;
+
+    .topic-list > tbody > tr:nth-child(odd)  {
+      background-color: darken($secondary, 3%);
+      }
+
+    .topic-list > tbody > tr:nth-child(even) {
+      background-color: $secondary;
+      }
+
+    .user-content {
+        width: 100%;
+        margin-top: 0;
+      }
 }

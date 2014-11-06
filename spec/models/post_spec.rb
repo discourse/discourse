@@ -104,7 +104,7 @@ describe Post do
   end
 
   describe "maximum images" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_images) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_image) { post_with_body("![sherlock](http://bbc.co.uk/sherlock.jpg)", newuser) }
     let(:post_two_images) { post_with_body("<img src='http://discourse.org/logo.png'> <img src='http://bbc.co.uk/sherlock.jpg'>", newuser) }
@@ -158,17 +158,17 @@ describe Post do
         end
 
         it "doesn't allow a new user to edit their post to insert an image" do
-          post_no_images.user.trust_level = TrustLevel.levels[:new]
+          post_no_images.user.trust_level = TrustLevel[0]
           post_no_images.save
           -> {
-            post_no_images.revise(post_no_images.user, post_two_images.raw)
+            post_no_images.revise(post_no_images.user, { raw: post_two_images.raw })
             post_no_images.reload
           }.should_not change(post_no_images, :raw)
         end
       end
 
       it "allows more images from a not-new account" do
-        post_two_images.user.trust_level = TrustLevel.levels[:basic]
+        post_two_images.user.trust_level = TrustLevel[1]
         post_two_images.should be_valid
       end
 
@@ -177,7 +177,7 @@ describe Post do
   end
 
   describe "maximum attachments" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_no_attachments) { Fabricate.build(:post, post_args.merge(user: newuser)) }
     let(:post_one_attachment) { post_with_body('<a class="attachment" href="/uploads/default/1/2082985.txt">file.txt</a>', newuser) }
     let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
@@ -206,17 +206,17 @@ describe Post do
         end
 
         it "doesn't allow a new user to edit their post to insert an attachment" do
-          post_no_attachments.user.trust_level = TrustLevel.levels[:new]
+          post_no_attachments.user.trust_level = TrustLevel[0]
           post_no_attachments.save
           -> {
-            post_no_attachments.revise(post_no_attachments.user, post_two_attachments.raw)
+            post_no_attachments.revise(post_no_attachments.user, { raw: post_two_attachments.raw })
             post_no_attachments.reload
           }.should_not change(post_no_attachments, :raw)
         end
       end
 
       it "allows more attachments from a not-new account" do
-        post_two_attachments.user.trust_level = TrustLevel.levels[:basic]
+        post_two_attachments.user.trust_level = TrustLevel[1]
         post_two_attachments.should be_valid
       end
 
@@ -225,7 +225,7 @@ describe Post do
   end
 
   context "links" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:no_links) { post_with_body("hello world my name is evil trout", newuser) }
     let(:one_link) { post_with_body("[jlawr](http://www.imdb.com/name/nm2225369)", newuser) }
     let(:two_links) { post_with_body("<a href='http://disneyland.disney.go.com/'>disney</a> <a href='http://reddit.com'>reddit</a>", newuser)}
@@ -292,7 +292,7 @@ describe Post do
 
 
   describe "maximum links" do
-    let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+    let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:post_one_link) { post_with_body("[sherlock](http://www.bbc.co.uk/programmes/b018ttws)", newuser) }
     let(:post_two_links) { post_with_body("<a href='http://discourse.org'>discourse</a> <a href='http://twitter.com'>twitter</a>", newuser) }
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
@@ -330,7 +330,7 @@ describe Post do
       end
 
       it "allows multiple images for basic accounts" do
-        post_two_links.user.trust_level = TrustLevel.levels[:basic]
+        post_two_links.user.trust_level = TrustLevel[1]
         post_two_links.should be_valid
       end
 
@@ -382,7 +382,7 @@ describe Post do
 
     context "max mentions" do
 
-      let(:newuser) { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      let(:newuser) { Fabricate(:user, trust_level: TrustLevel[0]) }
       let(:post_with_one_mention) { post_with_body("@Jake is the person I'm mentioning", newuser) }
       let(:post_with_two_mentions) { post_with_body("@Jake @Finn are the people I'm mentioning", newuser) }
 
@@ -408,12 +408,12 @@ describe Post do
         end
 
         it "allows vmax_mentions_per_post mentions" do
-          post_with_one_mention.user.trust_level = TrustLevel.levels[:basic]
+          post_with_one_mention.user.trust_level = TrustLevel[1]
           post_with_one_mention.should be_valid
         end
 
         it "doesn't allow to have more than max_mentions_per_post mentions" do
-          post_with_two_mentions.user.trust_level = TrustLevel.levels[:basic]
+          post_with_two_mentions.user.trust_level = TrustLevel[1]
           post_with_two_mentions.should_not be_valid
         end
       end
@@ -468,83 +468,56 @@ describe Post do
     it 'has no revision' do
       post.revisions.size.should == 0
       first_version_at.should be_present
-      post.revise(post.user, post.raw).should be_false
+      post.revise(post.user, { raw: post.raw }).should == false
     end
 
     describe 'with the same body' do
 
       it "doesn't change version" do
-        lambda { post.revise(post.user, post.raw); post.reload }.should_not change(post, :version)
+        lambda { post.revise(post.user, { raw: post.raw }); post.reload }.should_not change(post, :version)
       end
 
     end
 
-    describe 'ninja editing' do
-      before do
-        SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: post.updated_at + 10.seconds)
-        post.reload
-      end
+    describe 'ninja editing & edit windows' do
 
-      it 'causes no update' do
+      before { SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i) }
+
+      it 'works' do
+        revised_at = post.updated_at + 2.minutes
+        new_revised_at = revised_at + 2.minutes
+
+        # ninja edit
+        post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
+        post.reload
         post.version.should == 1
+        post.public_version.should == 1
         post.revisions.size.should == 0
-        post.last_version_at.should == first_version_at
-      end
+        post.last_version_at.to_i.should == first_version_at.to_i
 
-    end
-
-    describe 'revision much later' do
-
-      let!(:revised_at) { post.updated_at + 2.minutes }
-
-      before do
-        SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: revised_at)
+        # revision much later
+        post.revise(post.user, { raw: 'another updated body' }, revised_at: revised_at)
         post.reload
-      end
-
-      it 'updates the version' do
         post.version.should == 2
+        post.public_version.should == 2
         post.revisions.size.should == 1
         post.last_version_at.to_i.should == revised_at.to_i
-      end
 
-      describe "new edit window" do
+        # new edit window
+        post.revise(post.user, { raw: 'yet another updated body' }, revised_at: revised_at + 10.seconds)
+        post.reload
+        post.version.should == 2
+        post.public_version.should == 2
+        post.revisions.size.should == 1
+        post.last_version_at.to_i.should == revised_at.to_i
 
-        before do
-          post.revise(post.user, 'yet another updated body', revised_at: revised_at)
-          post.reload
-        end
-
-        it "doesn't create a new version if you do another" do
-          post.version.should == 2
-        end
-
-        it "doesn't change last_version_at" do
-          post.last_version_at.to_i.should == revised_at.to_i
-        end
-
-        context "after second window" do
-
-          let!(:new_revised_at) {revised_at + 2.minutes}
-
-          before do
-            post.revise(post.user, 'yet another, another updated body', revised_at: new_revised_at)
-            post.reload
-          end
-
-          it "does create a new version after the edit window" do
-            post.version.should == 3
-          end
-
-          it "does create a new version after the edit window" do
-            post.last_version_at.to_i.should == new_revised_at.to_i
-          end
-
-        end
-
-
+        # after second window
+        post.revise(post.user, { raw: 'yet another, another updated body' }, revised_at: new_revised_at)
+        post.reload
+        post.version.should == 3
+        post.public_version.should == 3
+        post.revisions.size.should == 2
+        post.last_version_at.to_i.should == new_revised_at.to_i
       end
 
     end
@@ -554,38 +527,40 @@ describe Post do
 
       it "triggers a rate limiter" do
         EditRateLimiter.any_instance.expects(:performed!)
-        post.revise(changed_by, 'updated body')
+        post.revise(changed_by, { raw: 'updated body' })
       end
     end
 
     describe 'with a new body' do
       let(:changed_by) { Fabricate(:coding_horror) }
-      let!(:result) { post.revise(changed_by, 'updated body') }
+      let!(:result) { post.revise(changed_by, { raw: 'updated body' }) }
 
       it 'acts correctly' do
-        result.should be_true
+        result.should == true
         post.raw.should == 'updated body'
         post.invalidate_oneboxes.should == true
         post.version.should == 2
+        post.public_version.should == 2
         post.revisions.size.should == 1
         post.revisions.first.user.should be_present
       end
 
       context 'second poster posts again quickly' do
-        before do
-          SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
-          post.revise(changed_by, 'yet another updated body', revised_at: post.updated_at + 10.seconds)
-          post.reload
-        end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
+          SiteSetting.expects(:ninja_edit_window).returns(1.minute.to_i)
+          post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
+          post.reload
+
           post.version.should == 2
+          post.public_version.should == 2
           post.revisions.size.should == 1
         end
 
       end
 
     end
+
   end
 
 
@@ -594,7 +569,7 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
 
     it "has correct info set" do
-      post.user_deleted?.should be_false
+      post.user_deleted?.should == false
       post.post_number.should be_present
       post.excerpt.should be_present
       post.post_type.should == Post.types[:regular]
@@ -671,8 +646,8 @@ describe Post do
 
         it 'has the correct info set' do
           multi_reply.quote_count.should == 2
-          post.replies.include?(multi_reply).should be_true
-          reply.replies.include?(multi_reply).should be_true
+          post.replies.include?(multi_reply).should == true
+          reply.replies.include?(multi_reply).should == true
         end
       end
 
@@ -715,6 +690,7 @@ describe Post do
 
     it "returns the posts in reply to this post" do
       p4.reply_history.should == [p1, p2]
+      p4.reply_history(1).should == [p2]
       p3.reply_history.should be_blank
       p2.reply_history.should == [p1]
     end
@@ -759,18 +735,18 @@ describe Post do
       post.cooked.should =~ /nofollow/
     end
 
-    it "when leader_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:leader_links_no_follow).returns(false)
+    it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
+      SiteSetting.stubs(:tl3_links_no_follow).returns(false)
       post.user.trust_level = 3
       post.save
-      (post.cooked =~ /nofollow/).should be_false
+      post.cooked.should_not =~ /nofollow/
     end
 
-    it "when leader_links_no_follow is true, should add nofollow for trust level 3 and higher" do
-      SiteSetting.stubs(:leader_links_no_follow).returns(true)
+    it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
+      SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
-      (post.cooked =~ /nofollow/).should be_true
+      post.cooked.should =~ /nofollow/
     end
   end
 
@@ -823,6 +799,8 @@ describe Post do
       Post.exec_sql("UPDATE posts SET cooked = 'frogs' WHERE id = ?", post.id)
       post.reload
 
+      post.expects(:publish_change_to_clients!).with(:rebaked)
+
       result = post.rebake!
 
       post.baked_at.should_not == first_baked
@@ -856,6 +834,8 @@ describe Post do
       post.reload
 
       post.hidden.should == true
+
+      post.expects(:publish_change_to_clients!).with(:acted)
 
       post.unhide!
       post.reload

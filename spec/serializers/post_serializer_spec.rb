@@ -54,11 +54,11 @@ describe PostSerializer do
     subject { PostSerializer.new(post, scope: Guardian.new(Fabricate(:admin)), root: false).as_json }
 
     it "serializes correctly" do
-      [:name, :username, :display_username, :avatar_template].each do |attr|
+      [:name, :username, :display_username, :avatar_template, :user_title, :trust_level].each do |attr|
         subject[attr].should be_nil
       end
-      [:moderator?, :staff?, :yours, :user_title, :trust_level].each do |attr|
-        subject[attr].should be_false
+      [:moderator, :staff, :yours].each do |attr|
+        subject[attr].should == false
       end
     end
   end
@@ -104,8 +104,8 @@ describe PostSerializer do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "shows the raw post only if authorized to see it" do
-        serialized_post_for_user(nil)[:raw].should be_nil
-        serialized_post_for_user(Fabricate(:user))[:raw].should be_nil
+        serialized_post_for_user(nil)[:raw].should == nil
+        serialized_post_for_user(Fabricate(:user))[:raw].should == nil
 
         serialized_post_for_user(user)[:raw].should == raw
         serialized_post_for_user(Fabricate(:moderator))[:raw].should == raw

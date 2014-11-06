@@ -112,7 +112,13 @@ export default Ember.DefaultResolver.extend({
   },
 
   findTemplate: function(parsedName) {
-    return this._super(parsedName) || this.findSlashedTemplate(parsedName) || this.findAdminTemplate(parsedName);
+    return this._super(parsedName) || this.findSlashedTemplate(parsedName) || this.findAdminTemplate(parsedName) || this.findUnderscoredTemplate(parsedName);
+  },
+
+  findUnderscoredTemplate: function(parsedName) {
+    var decamelized = parsedName.fullNameWithoutType.decamelize();
+    var underscored = decamelized.replace(/\-/g, "_");
+    return Ember.TEMPLATES[underscored];
   },
 
   // Try to find a template with slash instead of first underscore, e.g. foo_bar_baz => foo/bar_baz
@@ -130,7 +136,8 @@ export default Ember.DefaultResolver.extend({
       decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
       decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
       decamelized = decamelized.replace(/\./, '_');
-      return Ember.TEMPLATES[decamelized];
+      var dashed = decamelized.replace(/_/g, '-');
+      return Ember.TEMPLATES[decamelized] || Ember.TEMPLATES[dashed];
     }
   }
 

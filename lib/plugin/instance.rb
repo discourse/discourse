@@ -11,7 +11,7 @@ class Plugin::Instance
   def self.find_all(parent_path)
     [].tap { |plugins|
       # also follows symlinks - http://stackoverflow.com/q/357754
-      Dir["#{parent_path}/**/*/**/plugin.rb"].each do |path|
+      Dir["#{parent_path}/**/*/**/plugin.rb"].sort.each do |path|
         source = File.read(path)
         metadata = Plugin::Metadata.parse(source)
         plugins << self.new(metadata, path)
@@ -256,6 +256,8 @@ class Plugin::Instance
           DiscoursePluginRegistry.stylesheets << asset
         end
 
+      elsif asset =~ /\.hbs$/
+        DiscoursePluginRegistry.handlebars << asset
       elsif asset =~ /\.js\.handlebars$/
         DiscoursePluginRegistry.handlebars << asset
       end

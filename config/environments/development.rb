@@ -24,6 +24,8 @@ Discourse::Application.configure do
 
   config.assets.debug = true
 
+  # Raise an error on page load if there are pending migrations
+  config.active_record.migration_error = :page_load
   config.watchable_dirs['lib'] = [:rb]
 
   config.sass.debug_info = false
@@ -47,7 +49,7 @@ Discourse::Application.configure do
   require 'rbtrace'
 
   if emails = GlobalSetting.developer_emails
-    config.developer_emails = emails.split(",")
+    config.developer_emails = emails.split(",").map(&:strip)
   end
 end
 

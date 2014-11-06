@@ -38,7 +38,7 @@ asyncTestDiscourse("getAndRemove returns a promise that resolves to the result o
   expect(1);
 
   var finder = function() {
-    return Ember.Deferred.promise(function(promise) { promise.resolve('hahahah'); });
+    return new Ember.RSVP.Promise(function(resolve) { resolve('hahahah'); });
   };
 
   PreloadStore.getAndRemove('joker', finder).then(function(result) {
@@ -51,7 +51,7 @@ asyncTestDiscourse("returns a promise that rejects with the result of the finder
   expect(1);
 
   var finder = function() {
-    return Ember.Deferred.promise(function(promise) { promise.reject('error'); });
+    return new Ember.RSVP.Promise(function(resolve, reject) { reject('error'); });
   };
 
   PreloadStore.getAndRemove('joker', finder).then(null, function(result) {

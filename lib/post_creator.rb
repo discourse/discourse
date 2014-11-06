@@ -28,6 +28,7 @@ class PostCreator
   #   When creating a topic:
   #     title                 - New topic title
   #     archetype             - Topic archetype
+  #     is_warning            - Is the topic a warning?
   #     category              - Category to assign to topic
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
@@ -69,11 +70,13 @@ class PostCreator
       setup_topic
       setup_post
       rollback_if_host_spam_detected
+      plugin_callbacks
       save_post
       extract_links
       store_unique_post_key
       track_topic
       update_topic_stats
+      update_topic_auto_close
       update_user_counts
       create_embedded_topic
 
@@ -113,7 +116,6 @@ class PostCreator
 
     post.cooked ||= post.cook(post.raw, cooking_options)
     post.sort_order = post.post_number
-    DiscourseEvent.trigger(:before_create_post, post)
     post.last_version_at ||= Time.now
   end
 
@@ -155,6 +157,11 @@ class PostCreator
     elsif @post && !@post.errors.present? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
+  end
+
+  def plugin_callbacks
+    DiscourseEvent.trigger :before_create_post, @post
+    DiscourseEvent.trigger :validate_post, @post
   end
 
   def track_latest_on_category
@@ -202,15 +209,21 @@ class PostCreator
     @topic.update_attributes(attrs)
   end
 
+  def update_topic_auto_close
+    if @topic.auto_close_based_on_last_post && @topic.auto_close_hours
+      @topic.set_auto_close(@topic.auto_close_hours).save
+    end
+  end
+
   def setup_post
-    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).strip
+    @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).gsub(/\s+\z/, "")
 
     post = @topic.posts.new(raw: @opts[:raw],
                             user: @user,
                             reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
-    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method].each do |a|
+    [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email].each do |a|
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
@@ -270,14 +283,7 @@ class PostCreator
     return if @opts[:import_mode]
     return unless @post.post_number > 1
 
-    MessageBus.publish("/topic/#{@post.topic_id}",{
-                    id: @post.id,
-                    created_at: @post.created_at,
-                    user: BasicUserSerializer.new(@post.user).as_json(root: false),
-                    post_number: @post.post_number
-                  },
-                  group_ids: @topic.secure_group_ids
-    )
+    @post.publish_change_to_clients! :created
   end
 
   def extract_links
@@ -288,11 +294,11 @@ class PostCreator
   def track_topic
     return if @opts[:auto_track] == false
 
-    TopicUser.change(@post.user.id,
-                     @post.topic.id,
+    TopicUser.change(@post.user_id,
+                     @topic.id,
                      posted: true,
                      last_read_post_number: @post.post_number,
-                     seen_post_count: @post.post_number)
+                     highest_seen_post_number: @post.post_number)
 
 
     # assume it took us 5 seconds of reading time to make a post

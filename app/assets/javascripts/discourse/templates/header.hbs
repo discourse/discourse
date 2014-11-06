@@ -1,0 +1,132 @@
+<div class='container'>
+  <div class='contents clearfix'>
+
+    {{home-logo minimized=showExtraInfo}}
+
+    <div class='panel clearfix'>
+      {{#unless currentUser}}
+        {{#if showSignUpButton}}
+        <button {{action "showCreateAccount"}} class='btn btn-primary btn-small sign-up-button'>
+          {{i18n sign_up}}
+        </button>
+        {{/if}}
+        <button {{action "showLogin"}} class='btn btn-primary btn-small login-button'>
+          {{fa-icon user}} {{i18n log_in}}
+        </button>
+      {{/unless}}
+      <ul class='icons clearfix' role='navigation'>
+        {{#if currentUser}}
+          <li class='notifications'>
+            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
+              {{fa-icon comment label="notifications.title"}}
+            </a>
+            {{#if currentUser.unread_notifications}}
+              <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
+            {{/if}}
+            {{#if currentUser.unread_private_messages}}
+              <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
+            {{/if}}
+          </li>
+        {{/if}}
+        <li>
+          {{#if loginRequired}}
+            <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action "showLogin"}}>
+              {{fa-icon search}}
+            </a>
+          {{else}}
+            <a id='search-button'
+               class='icon expand'
+               href='#'
+               data-dropdown="search-dropdown"
+               title='{{i18n search.title}}'>
+               {{fa-icon search label="search.title"}}
+            </a>
+          {{/if}}
+        </li>
+        <li class='categories dropdown'>
+          {{#if loginRequired}}
+            <a class='icon'
+               href="#"
+               aria-hidden="true"
+               id="site-map"
+               {{action "showLogin"}}>
+               {{fa-icon bars}}
+            </a>
+          {{else}}
+            <a class='icon'
+               data-dropdown="site-map-dropdown"
+               data-render="renderSiteMap"
+               href="#"
+               title='{{i18n site_map}}'
+               id="site-map">
+               {{fa-icon bars label="site_map"}}
+            </a>
+          {{/if}}
+          {{#if currentUser.site_flagged_posts_count}}
+            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+          {{/if}}
+        </li>
+        {{#if currentUser}}
+          <li class='current-user dropdown'>
+            <a class='icon'
+               data-dropdown="user-dropdown"
+               data-render="renderUserDropdown"
+               href="#"
+               title='{{i18n user.avatar.title}}'
+               id="current-user">
+                 {{bound-avatar currentUser "medium"}}
+            </a>
+          </li>
+        {{/if}}
+      </ul>
+
+      {{#if view.renderDropdowns}}
+
+        {{render "search"}}
+
+        {{render "notifications" notifications}}
+
+        {{#if view.renderSiteMap}}
+          {{render "siteMap"}}
+        {{/if}}
+
+        {{render "user-dropdown"}}
+
+      {{/if}}
+
+    </div>
+
+    {{#if showExtraInfo}}
+      <div class="extra-info-wrapper">
+        <div {{bind-attr class=":extra-info hasCategory"}}>
+          <div class="title-wrapper">
+            <h1>
+              {{#if showPrivateMessageGlyph}}
+                <span class="private-message-glyph">{{fa-icon envelope}}</span>
+              {{/if}}
+
+              {{#if topic.details.loaded}}
+                {{#if showStarButton}}
+                  <a {{bind-attr class=":star topic.starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="topic.starTooltip"}}></a>
+                {{/if}}
+                {{topic-status topic=topic}}
+                <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
+              {{else}}
+                {{#if topic.errorLoading}}
+                  <span class="error">{{topic.errorTitle}}</span>
+                {{else}}
+                  <span class="loading">{{i18n topic.loading}}</span>
+                {{/if}}
+              {{/if}}
+            </h1>
+            {{#if topic.category.parentCategory}}
+              {{bound-category-link topic.category.parentCategory onlyStripe="true"}}
+            {{/if}}
+            {{bound-category-link topic.category onlyStripe="true"}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+  </div>
+</div>

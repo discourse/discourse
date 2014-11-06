@@ -27,22 +27,6 @@ Discourse.AdminPost = Discourse.Post.extend({
     } else {
       return this.get("sameUser") ? "you_replied_to_topic" : "user_replied_to_topic";
     }
-  }.property("reply_to_post_number", "sameUser"),
-
-  descriptionHtml: function () {
-    var descriptionKey = this.get("descriptionKey");
-    if (!descriptionKey) { return; }
-
-    var description = I18n.t("user_action." + descriptionKey, {
-      userUrl: this.get("usernameUrl"),
-      user: Handlebars.Utils.escapeExpression(this.get("presentName")),
-      postUrl: this.get("url"),
-      post_number: "#" + this.get("reply_to_post_number"),
-      topicUrl: this.get("url"),
-    });
-
-    return new Handlebars.SafeString(description);
-
-  }.property("descriptionKey")
+  }.property("reply_to_post_number", "sameUser")
 
 });

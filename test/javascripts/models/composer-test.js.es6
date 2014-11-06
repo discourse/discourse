@@ -158,8 +158,8 @@ test('editingFirstPost', function() {
 asyncTestDiscourse('importQuote with a post', function() {
   expect(1);
 
-  sandbox.stub(Discourse.Post, 'load').withArgs(123).returns(Em.Deferred.promise(function (p) {
-    p.resolve(Discourse.Post.create({raw: "let's quote"}));
+  sandbox.stub(Discourse.Post, 'load').withArgs(123).returns(new Ember.RSVP.Promise(function (resolve) {
+    resolve(Discourse.Post.create({raw: "let's quote"}));
   }));
 
   var composer = Discourse.Composer.create({post: Discourse.Post.create({id: 123})});
@@ -172,8 +172,8 @@ asyncTestDiscourse('importQuote with a post', function() {
 asyncTestDiscourse('importQuote with no post', function() {
   expect(1);
 
-  sandbox.stub(Discourse.Post, 'load').withArgs(4).returns(Em.Deferred.promise(function (p) {
-    p.resolve(Discourse.Post.create({raw: 'quote me'}));
+  sandbox.stub(Discourse.Post, 'load').withArgs(4).returns(new Ember.RSVP.Promise(function (resolve) {
+    resolve(Discourse.Post.create({raw: 'quote me'}));
   }));
 
   var composer = Discourse.Composer.create({topic: Discourse.Topic.create()});

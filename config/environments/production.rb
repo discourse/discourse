@@ -12,7 +12,8 @@ Discourse::Application.configure do
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = GlobalSetting.serve_static_assets
 
-  config.assets.js_compressor  = :uglifier
+  config.assets.js_compressor = :uglifier
+
   config.assets.css_compressor = :sass
 
   # stuff should be pre-compiled
@@ -61,7 +62,7 @@ Discourse::Application.configure do
   # developers have god like rights and may impersonate anyone in the system
   # normal admins may only impersonate other moderators (not admins)
   if emails = GlobalSetting.developer_emails
-    config.developer_emails = emails.split(",")
+    config.developer_emails = emails.split(",").map(&:strip)
   end
 
 end

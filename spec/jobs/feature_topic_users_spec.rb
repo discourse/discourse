@@ -22,22 +22,22 @@ describe Jobs::FeatureTopicUsers do
 
     it "won't feature the OP" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      topic.reload.featured_user_ids.include?(topic.user_id).should be_false
+      topic.reload.featured_user_ids.include?(topic.user_id).should == false
     end
 
     it "features the second poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      topic.reload.featured_user_ids.include?(coding_horror.id).should be_true
+      topic.reload.featured_user_ids.include?(coding_horror.id).should == true
     end
 
     it "will not feature the second poster if we supply their post to be ignored" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id, except_post_id: second_post.id)
-      topic.reload.featured_user_ids.include?(coding_horror.id).should be_false
+      topic.reload.featured_user_ids.include?(coding_horror.id).should == false
     end
 
     it "won't feature the last poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
-      topic.reload.featured_user_ids.include?(evil_trout.id).should be_false
+      topic.reload.featured_user_ids.include?(evil_trout.id).should == false
     end
 
   end

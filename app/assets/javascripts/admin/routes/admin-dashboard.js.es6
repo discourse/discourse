@@ -11,7 +11,6 @@ export default Discourse.Route.extend({
 
   setupController: function(c) {
     this.fetchDashboardData(c);
-    this.fetchGithubCommits(c);
   },
 
   fetchDashboardData: function(c) {
@@ -44,13 +43,6 @@ export default Discourse.Route.extend({
     if( !c.get('problemsFetchedAt') || moment().subtract(c.problemsCheckMinutes, 'minutes').toDate() > c.get('problemsFetchedAt') ) {
       c.set('problemsFetchedAt', new Date());
       c.loadProblems();
-    }
-  },
-
-  fetchGithubCommits: function(c) {
-    if( !c.get('commitsCheckedAt') || moment().subtract(1, 'hour').toDate() > c.get('commitsCheckedAt') ) {
-      c.set('commitsCheckedAt', new Date());
-      c.set('githubCommits', Discourse.GithubCommit.findAll());
     }
   }
 });

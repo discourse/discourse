@@ -1,6 +1,6 @@
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => 'environment' do
-  I18n.locale = SiteSetting.default_locale rescue :en
+  I18n.locale = (SiteSetting.default_locale || :en) rescue :en
   SeedFu.seed
 
   if SiteSetting.vacuum_db_days > 0 &&
@@ -23,6 +23,11 @@ end
 task 'test:prepare' => 'environment' do
   I18n.locale = SiteSetting.default_locale rescue :en
   SeedFu.seed
+end
+
+task 'db:api_test_seed' => 'environment' do
+  puts "Loading test data for discourse_api"
+  load Rails.root + 'db/api_test_seeds.rb'
 end
 
 desc 'Rebuild indexes'

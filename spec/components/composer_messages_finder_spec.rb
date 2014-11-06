@@ -102,12 +102,12 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_avatar log" do
-          UserHistory.exists_for_user?(user, :notified_about_avatar).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_avatar).should == true
         end
       end
 
       it "doesn't return notifications for new users" do
-        user.trust_level = TrustLevel.levels[:newuser]
+        user.trust_level = TrustLevel[0]
         finder.check_avatar_notification.should be_blank
       end
 
@@ -185,7 +185,7 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_sequential_replies log" do
-          UserHistory.exists_for_user?(user, :notified_about_sequential_replies).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_sequential_replies).should == true
         end
 
       end
@@ -258,7 +258,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify you in a private message" do
-        topic.update_column(:archetype, Archetype.private_message)
+        topic.update_columns(category_id: nil, archetype: Archetype.private_message)
         finder.check_dominating_topic.should be_blank
       end
 
@@ -270,7 +270,7 @@ describe ComposerMessagesFinder do
         end
 
         it "creates a notified_about_dominating_topic log" do
-          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should be_true
+          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should == true
         end
 
       end

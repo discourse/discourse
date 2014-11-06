@@ -5,6 +5,9 @@ var controllerOpts = {
   needs: ['discovery'],
   bulkSelectEnabled: false,
   selected: [],
+  period: null,
+
+  redirectedReason: Em.computed.alias('currentUser.redirected_to_top_reason'),
 
   order: 'default',
   ascending: false,
@@ -33,6 +36,8 @@ var controllerOpts = {
     refresh: function() {
       var filter = this.get('model.filter'),
           self = this;
+
+      this.setProperties({ order: 'default', ascending: false });
 
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
@@ -80,7 +85,7 @@ var controllerOpts = {
       if (selected.length > 0) {
         promise = Discourse.Topic.bulkOperation(selected, operation);
       } else {
-        promise = Discourse.Topic.bulkOperationByFilter(this.get('filter'), operation);
+        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, this.get('category.id'));
       }
       promise.then(function(result) {
         if (result && result.topic_ids) {
@@ -100,8 +105,12 @@ var controllerOpts = {
     return Discourse.TopicTrackingState.current();
   }.property(),
 
+  isFilterPage: function(filter, filterType) {
+    return filter.match(new RegExp(filterType + '$', 'gi')) ? true : false;
+  },
+
   showDismissRead: function() {
-    return this.get('filter') === 'unread' && this.get('topics.length') > 0;
+    return this.isFilterPage(this.get('filter'), 'unread') && this.get('topics.length') > 0;
   }.property('filter', 'topics.length'),
 
   showResetNew: function() {
@@ -109,16 +118,16 @@ var controllerOpts = {
   }.property('filter', 'topics.length'),
 
   showDismissAtTop: function() {
-    return (this.get('filter') === 'new' ||
-           this.get('filter') === 'unread') &&
+    return (this.isFilterPage(this.get('filter'), 'new') ||
+           this.isFilterPage(this.get('filter'), 'unread')) &&
            this.get('topics.length') >= 30;
   }.property('filter', 'topics.length'),
 
   canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
-  showTable: Em.computed.or('hasTopics', 'topicTrackingState.hasIncoming'),
   allLoaded: Em.computed.empty('more_topics_url'),
   latest: Discourse.computed.endWith('filter', 'latest'),
+  new: Discourse.computed.endWith('filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
   monthly: Em.computed.equal('period', 'monthly'),
@@ -150,7 +159,7 @@ var controllerOpts = {
 
     var split = this.get('filter').split('/');
 
-    if (split[0] !== 'new' && split[0] !== 'unread') { return; }
+    if (split[0] !== 'new' && split[0] !== 'unread' && split[0] !== 'starred') { return; }
 
     return I18n.t("topics.none.educate." + split[0], {
       userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"

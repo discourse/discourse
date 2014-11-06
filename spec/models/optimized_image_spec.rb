@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe OptimizedImage do
 
-  it { should belong_to :upload }
-
   let(:upload) { build(:upload) }
-
   before { upload.id = 42 }
 
   describe ".create_for" do
@@ -19,7 +16,7 @@ describe OptimizedImage do
 
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end
@@ -62,7 +59,7 @@ describe OptimizedImage do
 
         it "returns nil" do
           OptimizedImage.expects(:resize).returns(false)
-          OptimizedImage.create_for(upload, 100, 200).should be_nil
+          OptimizedImage.create_for(upload, 100, 200).should == nil
         end
 
       end

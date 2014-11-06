@@ -1,0 +1,4 @@
+plugins:
+  enable_emoji:
+    default: true
+    client: true

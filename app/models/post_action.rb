@@ -163,9 +163,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def moderator_already_replied?(topic, moderator)
-    topic.posts
-         .where("user_id = :user_id OR post_type = :post_type", user_id: moderator.id, post_type: Post.types[:moderator_action])
-         .exists?
+    topic.posts.where("user_id = :user_id OR post_type = :post_type", user_id: moderator.id, post_type: Post.types[:moderator_action]).exists?
   end
 
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
@@ -188,25 +186,25 @@ class PostAction < ActiveRecord::Base
     else
       opts[:subtype] = TopicSubtype.notify_user
       opts[:target_usernames] = if post_action_type == :notify_user
-        post.user.username
-      elsif post_action_type != :notify_moderators
-        # this is a hack to allow a PM with no reciepients, we should think through
-        # a cleaner technique, a PM with myself is valid for flagging
-        'x'
-      end
+                                  post.user.username
+                                elsif post_action_type != :notify_moderators
+                                  # this is a hack to allow a PM with no recipients, we should think through
+                                  # a cleaner technique, a PM with myself is valid for flagging
+                                  'x'
+                                end
     end
 
     PostCreator.new(user, opts).create.id
   end
 
-  def self.act(user, post, post_action_type_id, opts={})
+  def self.act(user, post, post_action_type_id, opts = {})
     related_post_id = create_message_for_post_action(user, post, post_action_type_id, opts)
     staff_took_action = opts[:take_action] || false
 
     targets_topic = if opts[:flag_topic] && post.topic
-      post.topic.reload
-      post.topic.posts_count != 1
-    end
+                      post.topic.reload
+                      post.topic.posts_count != 1
+                    end
 
     where_attrs = {
       post_id: post.id,
@@ -233,6 +231,9 @@ class PostAction < ActiveRecord::Base
       end
     else
       post_action = PostAction.where(where_attrs).first
+
+      # after_commit is not called on an `update_all` so do the notify ourselves
+      post_action.notify_subscribers
     end
 
     # agree with other flags
@@ -369,27 +370,27 @@ class PostAction < ActiveRecord::Base
 
   def enforce_rules
     post = Post.with_deleted.where(id: post_id).first
-    PostAction.auto_hide_if_needed(post, post_action_type_key)
+    PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
 
   def notify_subscribers
     if (is_like? || is_flag?) && post
-      MessageBus.publish("/topic/#{post.topic_id}",{
-                      id: post.id,
-                      post_number: post.post_number,
-                      type: "acted"
-                    },
-                    group_ids: post.topic.secure_group_ids
-      )
+      post.publish_change_to_clients! :acted
     end
   end
 
-  def self.auto_hide_if_needed(post, post_action_type)
+  def self.auto_hide_if_needed(acting_user, post, post_action_type)
     return if post.hidden
 
-    if PostActionType.auto_action_flag_types.include?(post_action_type) &&
-       SiteSetting.flags_required_to_hide_post > 0
+    if post_action_type == :spam &&
+       acting_user.trust_level == TrustLevel[3] &&
+       post.user.trust_level == TrustLevel[0]
+
+       hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
+
+    elsif PostActionType.auto_action_flag_types.include?(post_action_type) &&
+          SiteSetting.flags_required_to_hide_post > 0
 
       old_flags, new_flags = PostAction.flag_counts_for(post.id)
 
@@ -407,7 +408,7 @@ class PostAction < ActiveRecord::Base
       reason = guess_hide_reason(old_flags)
     end
 
-    Post.where(id: post.id).update_all(["hidden = true, hidden_at = CURRENT_TIMESTAMP, hidden_reason_id = COALESCE(hidden_reason_id, ?)", reason])
+    Post.where(id: post.id).update_all(["hidden = true, hidden_at = ?, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Time.now, reason])
     Topic.where("id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id).update_all(visible: false)
 
     # inform user
@@ -447,8 +448,8 @@ end
 #  user_id             :integer          not null
 #  post_action_type_id :integer          not null
 #  deleted_at          :datetime
-#  created_at          :datetime
-#  updated_at          :datetime
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
 #  deleted_by_id       :integer
 #  related_post_id     :integer
 #  staff_took_action   :boolean          default(FALSE), not null

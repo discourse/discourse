@@ -9,7 +9,7 @@ export default function(filter, params) {
       return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
     },
 
-    afterModel: function(model, transaction) {
+    afterModel: function(model, transition) {
       if (!model) {
         this.replaceWith('/404');
         return;
@@ -17,12 +17,12 @@ export default function(filter, params) {
 
       this._setupNavigation(model);
       return Em.RSVP.all([this._createSubcategoryList(model),
-                          this._retrieveTopicList(model, transaction)]);
+                          this._retrieveTopicList(model, transition)]);
     },
 
     _setupNavigation: function(model) {
       var noSubcategories = params && !!params.no_subcategories,
-          filterMode = "category/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter;
+          filterMode = "c/" + Discourse.Category.slugFor(model) + (noSubcategories ? "/none" : "") + "/l/" + filter;
 
       this.controllerFor('navigation/category').setProperties({
         category: model,
@@ -46,13 +46,14 @@ export default function(filter, params) {
       return Em.RSVP.resolve();
     },
 
-    _retrieveTopicList: function(model, transaction) {
-      var listFilter = "category/" + Discourse.Category.slugFor(model) + "/l/" + filter,
+    _retrieveTopicList: function(model, transition) {
+      var listFilter = "c/" + Discourse.Category.slugFor(model) + "/l/" + filter,
           self = this;
 
-      var findOpts = filterQueryParams(transaction.queryParams, params);
+      var findOpts = filterQueryParams(transition.queryParams, params),
+          extras = { cached: this.isPoppedState(transition) };
 
-      return Discourse.TopicList.list(listFilter, findOpts).then(function(list) {
+      return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
         // If all the categories are the same, we can hide them
         var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
         list.set('hideCategory', hideCategory);
@@ -60,13 +61,17 @@ export default function(filter, params) {
       });
     },
 
+    titleToken: function() {
+      var filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0}),
+          model = this.currentModel;
+
+      return I18n.t('filters.with_category', { filter: filterText, category: model.get('name') });
+    },
+
     setupController: function(controller, model) {
       var topics = this.get('topics'),
           periods = this.controllerFor('discovery').get('periods'),
-          periodId = filter.indexOf('/') > 0 ? filter.split('/')[1] : '',
-          filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title', {count: 0});
-
-      Discourse.set('title', I18n.t('filters.with_category', { filter: filterText, category: model.get('name') }));
+          periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
 
       this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({
@@ -74,7 +79,9 @@ export default function(filter, params) {
         category: model,
         period: periods.findBy('id', periodId),
         selected: [],
-        noSubcategories: params && !!params.no_subcategories
+        noSubcategories: params && !!params.no_subcategories,
+        order: model.get('params.order'),
+        ascending: model.get('params.ascending'),
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));

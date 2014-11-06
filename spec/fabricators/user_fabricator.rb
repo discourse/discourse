@@ -6,7 +6,7 @@ Fabricator(:user) do
   username { sequence(:username) { |i| "bruce#{i}" } }
   email { sequence(:email) { |i| "bruce#{i}@wayne.com" } }
   password 'myawesomepassword'
-  trust_level TrustLevel.levels[:basic]
+  trust_level TrustLevel[1]
   ip_address { sequence(:ip_address) { |i| "99.232.23.#{i%254}"} }
   active true
 end
@@ -32,6 +32,13 @@ Fabricator(:walter_white, from: :user) do
   password 'letscook'
 end
 
+Fabricator(:inactive_user, from: :user) do
+  name 'Inactive User'
+  username 'inactive_user'
+  email 'inactive@idontexist.com'
+  active false
+end
+
 Fabricator(:moderator, from: :user) do
   name { sequence(:name) {|i| "A#{i} Moderator"} }
   username { sequence(:username) {|i| "moderator#{i}"} }
@@ -50,7 +57,7 @@ Fabricator(:newuser, from: :user) do
   name 'Newbie Newperson'
   username 'newbie'
   email 'newbie@new.com'
-  trust_level TrustLevel.levels[:newuser]
+  trust_level TrustLevel[0]
 end
 
 Fabricator(:active_user, from: :user) do
@@ -58,7 +65,7 @@ Fabricator(:active_user, from: :user) do
   username { sequence(:username) { |i| "luke#{i}" } }
   email { sequence(:email) { |i| "luke#{i}@skywalker.com" } }
   password 'myawesomepassword'
-  trust_level TrustLevel.levels[:basic]
+  trust_level TrustLevel[1]
 
   after_create do |user|
     user.user_profile.bio_raw = "Don't ask me about my dad!"
@@ -67,15 +74,15 @@ Fabricator(:active_user, from: :user) do
 end
 
 Fabricator(:leader, from: :user) do
-  name 'Leader McLeaderman'
+  name 'Veteran McVeteranish'
   username { sequence(:username) { |i| "leader#{i}" } }
   email { sequence(:email) { |i| "leader#{i}@leaderfun.com" } }
-  trust_level TrustLevel.levels[:leader]
+  trust_level TrustLevel[3]
 end
 
-Fabricator(:elder, from: :user) do
-  name 'Elder McElderson'
-  username { sequence(:username) { |i| "elder#{i}" } }
-  email { sequence(:email) { |i| "elder#{i}@elderfun.com" } }
-  trust_level TrustLevel.levels[:elder]
+Fabricator(:trust_level_4, from: :user) do
+  name 'Leader McElderson'
+  username { sequence(:username) { |i| "tl4#{i}" } }
+  email { sequence(:email) { |i| "tl4#{i}@elderfun.com" } }
+  trust_level TrustLevel[4]
 end

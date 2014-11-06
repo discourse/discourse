@@ -1,69 +1,18 @@
 // styles that apply to the popup that appears when you show the edit history of a post
 
 .modal.history-modal {
-  .modal-inner-container {
-    min-width: 960px;
-    min-height: 500px;
-  }
-  #revision-controls {
-    float: left;
-    .btn[disabled]:hover {
-      color: $primary;
-    }
-  }
   #revision-numbers {
     display: inline-block;
-    min-width: 80px;
+    min-width: 96px;
     text-align: center;
   }
-  #display-modes {
-    text-align: right;
-  }
   #revision-loading {
-    float: left;
-    margin: 5px 0 0 10px;
     .fa {
       margin-right: 7px;
     }
   }
-  #revision-details {
-    background-color: scale-color-diff();
-    padding: 5px;
+  #revisions .row:first-of-type {
     margin-top: 10px;
-  }
-  #revisions {
-    word-wrap: break-word;
-    .row, table {
-      margin-top: 10px;
-      padding-bottom: 10px;
-      border-bottom: 1px dotted;
-    }
-  }
-  img {
-    max-width: 670px;
-    height: auto;
-  }
-  .inline-diff {
-    width: 670px;
-  }
-  .markdown {
-    font-family: monospace;
-    font-size: 12px;
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    td {
-      width: 50%;
-      vertical-align: top;
-      max-width: 440px;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-    }
-  }
-  .span8, .markdown {
-    img {
-      max-width: 400px;
-    }
   }
   ins, .diff-ins {
     code, img {
@@ -126,10 +75,20 @@
     background-color: lighten($highlight, 23%);
     padding: 3px 5px 5px 5px;
   }
-  .modal-header {
-    height: 42px;
-  }
   .fa-ban {
     color: #f00;
+  }
+  .hidden-revision-either {
+    opacity: .5;
+  }
+  .hidden-revision-previous .row {
+    div:nth-of-type(1), td:nth-of-type(1) {
+      opacity: .5;
+    }
+  }
+  .hidden-revision-current .row {
+    div:nth-of-type(2), td:nth-of-type(2) {
+      opacity: .5;
+    }
   }
 }

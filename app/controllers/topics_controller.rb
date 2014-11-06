@@ -30,6 +30,13 @@ class TopicsController < ApplicationController
 
   skip_before_filter :check_xhr, only: [:show, :feed]
 
+  def id_for_slug
+    topic = Topic.find_by(slug: params[:slug].downcase)
+    guardian.ensure_can_see!(topic)
+    raise Discourse::NotFound unless topic
+    render json: {slug: topic.slug, topic_id: topic.id, url: topic.url}
+  end
+
   def show
     flash["referer"] ||= request.referer
 
@@ -50,9 +57,14 @@ class TopicsController < ApplicationController
       redirect_to_correct_topic(topic, opts[:post_number]) && return
     end
 
+    page = params[:page].to_i
+    if (page < 0) || ((page - 1) * SiteSetting.posts_chunksize > @topic_view.topic.highest_post_number)
+      raise Discourse::NotFound
+    end
+
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.xhr? && params[:slug].nil?)
+    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
 
     track_visit_to_topic
 
@@ -110,12 +122,15 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit!(topic)
 
-    topic.title = params[:title] if params[:title].present?
-    topic.acting_user = current_user
+    changes = {}
+    changes[:title]       = params[:title]       if params[:title]
+    changes[:category_id] = params[:category_id] if params[:category_id]
 
-    success = false
-    Topic.transaction do
-      success = topic.save && topic.change_category_to_id(params[:category_id].to_i)
+    success = true
+
+    if changes.length > 0
+      first_post = topic.ordered_posts.first
+      success = PostRevisor.new(first_post, topic).revise!(current_user, changes)
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
@@ -164,12 +179,20 @@ class TopicsController < ApplicationController
   end
 
   def autoclose
-    raise Discourse::InvalidParameters.new(:auto_close_time) unless params.has_key?(:auto_close_time)
+    params.permit(:auto_close_time)
+    params.require(:auto_close_based_on_last_post)
+
     topic = Topic.find_by(id: params[:topic_id].to_i)
     guardian.ensure_can_moderate!(topic)
+
+    topic.auto_close_based_on_last_post = params[:auto_close_based_on_last_post]
     topic.set_auto_close(params[:auto_close_time], current_user)
+
     if topic.save
-      render json: success_json.merge!(auto_close_at: topic.auto_close_at)
+      render json: success_json.merge!({
+        auto_close_at: topic.auto_close_at,
+        auto_close_hours: topic.auto_close_hours
+      })
     else
       render_json_error(topic)
     end
@@ -198,7 +221,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_delete!(topic)
 
     first_post = topic.ordered_posts.first
-    PostDestroyer.new(current_user, first_post).destroy
+    PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
     render nothing: true
   end
@@ -286,21 +309,17 @@ class TopicsController < ApplicationController
 
     guardian.ensure_can_change_post_owner!
 
-    topic = Topic.find(params[:topic_id].to_i)
-    new_user = User.find_by_username(params[:username])
-    ids = params[:post_ids].to_a
+    post_ids = params[:post_ids].to_a
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    new_user = User.find_by(username: params[:username])
 
-    unless new_user && topic && ids
-      render json: failed_json, status: 422
-      return
-    end
+    return render json: failed_json, status: 422 unless post_ids && topic && new_user
 
     ActiveRecord::Base.transaction do
-      ids.each do |id|
-        post = Post.find(id)
-        if post.is_first_post?
-          topic.user = new_user # Update topic owner (first avatar)
-        end
+      post_ids.each do |post_id|
+        post = Post.find(post_id)
+        # update topic owner (first avatar)
+        topic.user = new_user if post.is_first_post?
         post.set_owner(new_user, current_user)
       end
     end
@@ -345,7 +364,9 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map {|t| t.to_i}
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
+      topics = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics
+      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+      topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
@@ -404,7 +425,7 @@ class TopicsController < ApplicationController
         username: request['u'],
         ip_address: request.remote_ip
       )
-    end unless request.xhr?
+    end unless request.format.json?
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
@@ -416,11 +437,11 @@ class TopicsController < ApplicationController
   end
 
   def should_track_visit_to_topic?
-    !!((!request.xhr? || params[:track_visit]) && current_user)
+    !!((!request.format.json? || params[:track_visit]) && current_user)
   end
 
   def perform_show_response
-    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|
       format.html do

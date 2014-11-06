@@ -46,7 +46,7 @@ describe PostAction do
       # reply to PM should not clear flag
       PostCreator.new(mod, topic_id: posts[0].topic_id, raw: "This is my test reply to the user, it should clear flags").create
       action.reload
-      action.deleted_at.should be_nil
+      action.deleted_at.should == nil
 
       # Acting on the flag should post an automated status message
       topic.posts.count.should == 2
@@ -113,19 +113,19 @@ describe PostAction do
       post = create_post
 
       PostAction.act(codinghorror, post, PostActionType.types[:off_topic])
-      post.hidden.should be_false
+      post.hidden.should == false
       post.hidden_at.should be_blank
       PostAction.defer_flags!(post, admin)
       PostAction.flagged_posts_count.should == 0
 
       post.reload
-      post.hidden.should be_false
+      post.hidden.should == false
       post.hidden_at.should be_blank
 
       PostAction.hide_post!(post, PostActionType.types[:off_topic])
 
       post.reload
-      post.hidden.should be_true
+      post.hidden.should == true
       post.hidden_at.should be_present
     end
 
@@ -292,38 +292,53 @@ describe PostAction do
 
       post.reload
 
-      post.hidden.should be_true
+      post.hidden.should == true
       post.hidden_at.should be_present
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached]
-      post.topic.visible.should be_false
+      post.topic.visible.should == false
 
-      post.revise(post.user, post.raw + " ha I edited it ")
+      post.revise(post.user, { raw: post.raw + " ha I edited it " })
 
       post.reload
 
-      post.hidden.should be_false
-      post.hidden_reason_id.should be_nil
+      post.hidden.should == false
+      post.hidden_reason_id.should == nil
       post.hidden_at.should be_blank
-      post.topic.visible.should be_true
+      post.topic.visible.should == true
 
       PostAction.act(eviltrout, post, PostActionType.types[:spam])
       PostAction.act(walterwhite, post, PostActionType.types[:off_topic])
 
       post.reload
 
-      post.hidden.should be_true
+      post.hidden.should == true
       post.hidden_at.should be_present
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
-      post.topic.visible.should be_false
+      post.topic.visible.should == false
 
-      post.revise(post.user, post.raw + " ha I edited it again ")
+      post.revise(post.user, { raw: post.raw + " ha I edited it again " })
 
       post.reload
 
-      post.hidden.should be_true
-      post.hidden_at.should be_true
+      post.hidden.should == true
+      post.hidden_at.should be_present
       post.hidden_reason_id.should == Post.hidden_reasons[:flag_threshold_reached_again]
-      post.topic.visible.should be_false
+      post.topic.visible.should == false
+    end
+
+    it "hide tl0 posts that are flagged as spam by a tl3 user" do
+      newuser = Fabricate(:newuser)
+      post = create_post(user: newuser)
+
+      Discourse.stubs(:site_contact_user).returns(admin)
+
+      PostAction.act(Fabricate(:leader), post, PostActionType.types[:spam])
+
+      post.reload
+
+      post.hidden.should == true
+      post.hidden_at.should be_present
+      post.hidden_reason_id.should == Post.hidden_reasons[:flagged_by_tl3_user]
     end
 
     it "can flag the topic instead of a post" do

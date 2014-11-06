@@ -36,10 +36,11 @@ Discourse.Lightbox = {
 
           image: {
             titleSrc: function(item) {
+              var href = item.el.data("download-href") || item.src;
               return [
                 item.el.attr("title"),
                 $("span.informations", item.el).text().replace('x', '&times;'),
-                '<a class="image-source-link" href="' + item.src + '" target="_blank">' + I18n.t("lightbox.download") + '</a>'
+                '<a class="image-source-link" href="' + href + '">' + I18n.t("lightbox.download") + '</a>'
               ].join(' &middot; ');
             }
           }

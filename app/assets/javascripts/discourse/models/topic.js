@@ -1,5 +1,24 @@
 Discourse.Topic = Discourse.Model.extend({
 
+  // returns createdAt if there's no bumped date
+  bumpedAt: function() {
+    var bumpedAt = this.get('bumped_at');
+    if (bumpedAt) {
+      return new Date(bumpedAt);
+    } else {
+      return this.get('createdAt');
+    }
+  }.property('bumped_at', 'createdAt'),
+
+  bumpedAtTitle: function() {
+    return I18n.t('first_post') + ": " + Discourse.Formatter.longDate(this.get('createdAt')) + "\n" +
+           I18n.t('last_post') + ": " + Discourse.Formatter.longDate(this.get('bumpedAt'));
+  }.property('bumpedAt'),
+
+  createdAt: function() {
+    return new Date(this.get('created_at'));
+  }.property('created_at'),
+
   postStream: function() {
     return Discourse.PostStream.create({topic: this});
   }.property(),
@@ -215,7 +234,10 @@ Discourse.Topic = Discourse.Model.extend({
       'details.can_delete': false,
       'details.can_recover': true
     });
-    return Discourse.ajax("/t/" + this.get('id'), { type: 'DELETE' });
+    return Discourse.ajax("/t/" + this.get('id'), {
+      data: { context: window.location.pathname },
+      type: 'DELETE'
+    });
   },
 
   // Recover this topic if deleted
@@ -449,18 +471,21 @@ Discourse.Topic.reopenClass({
     });
   },
 
-  bulkOperationByFilter: function(filter, operation) {
+  bulkOperationByFilter: function(filter, operation, categoryId) {
+    var data = { filter: filter, operation: operation };
+    if (categoryId) data['category_id'] = categoryId;
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',
-      data: { filter: filter, operation: operation }
+      data: data
     });
   },
 
   resetNew: function() {
     return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
+  },
+
+  idForSlug: function(slug) {
+    return Discourse.ajax("/t/id_for/" + slug);
   }
 
-
 });
-
-

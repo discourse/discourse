@@ -3,6 +3,9 @@ require 'pretty_text'
 
 describe PrettyText do
 
+  let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
+  let(:wrapped_image_excerpt) {  }
+
   describe "Cooking" do
 
     describe "with avatar" do
@@ -14,15 +17,15 @@ describe PrettyText do
       end
 
       it "produces a quote even with new lines in it" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout said:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "should produce a quote" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout said:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "trims spaces on quote params" do
-        PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout said:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
     end
@@ -40,6 +43,11 @@ describe PrettyText do
         match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
     end
 
+    # see: https://github.com/sparklemotion/nokogiri/issues/1173
+    skip 'allows html entities correctly' do
+      PrettyText.cook("&aleph;&pound;&#162;").should == "<p>&aleph;&pound;&#162;</p>"
+    end
+
   end
 
   describe "rel nofollow" do
@@ -53,23 +61,23 @@ describe PrettyText do
     end
 
     it "should not inject nofollow in all local links" do
-      (PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).should be_true
+      (PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).should == true
     end
 
     it "should not inject nofollow in all subdomain links" do
-      (PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).should be_true
+      (PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).should == true
     end
 
     it "should not inject nofollow for foo.com" do
-      (PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true
+      (PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).should == true
     end
 
     it "should not inject nofollow for bar.foo.com" do
-      (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should be_true
+      (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should == true
     end
 
     it "should not inject nofollow if omit_nofollow option is given" do
-      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should be_true
+      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should == true
     end
   end
 
@@ -105,6 +113,10 @@ describe PrettyText do
       it "should keep spoilers" do
         PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100).should match_html "<span class='spoiler'>[image]</span>"
         PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100).should match_html "<span class='spoiler'>spoiler</span>"
+      end
+
+      it "should remove meta informations" do
+        PrettyText.excerpt(wrapped_image, 100).should match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
     end
 
@@ -190,10 +202,18 @@ describe PrettyText do
       PrettyText.excerpt(nil,100).should == ''
     end
 
-    it "handles span excerpt" do
+    it "handles span excerpt at the beginning of a post" do
       PrettyText.excerpt("<span class='excerpt'>hi</span> test",100).should == 'hi'
       post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
       post.excerpt.should == "hi"
+    end
+
+    it "ignores max excerpt length if a span excerpt is specified" do
+      two_hundred = "123456789 " * 20 + "."
+      text =  two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
+      PrettyText.excerpt(text, 100).should == two_hundred
+      post = Fabricate(:post, raw: text)
+      post.excerpt.should == two_hundred
     end
 
   end
@@ -263,10 +283,8 @@ describe PrettyText do
       strip_image_wrapping(html).should == html
     end
 
-    let(:wrapped_image) { "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"><div class=\"meta\">\n<span class=\"filename\">Screen Shot 2014-04-14 at 9.47.10 PM.png</span><span class=\"informations\">966x737 1.47 MB</span><span class=\"expand\"></span>\n</div></a></div>" }
-
     it "strips the metadata" do
-      strip_image_wrapping(wrapped_image).should == "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
+      strip_image_wrapping(wrapped_image).should match_html "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
     end
   end
 

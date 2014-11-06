@@ -40,8 +40,17 @@ module Email
     end
 
     def subject
-      subject = @opts[:subject]
-      subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+      if @opts[:use_site_subject]
+        subject = String.new(SiteSetting.email_subject)
+        subject.gsub!("%{site_name}", @template_args[:site_name])
+        subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', template_args) : '')
+        subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', template_args) : '')
+        subject.gsub!("%{optional_cat}", @template_args[:show_category_in_subject] ? "[#{@template_args[:show_category_in_subject]}] " : '')
+        subject.gsub!("%{topic_title}", @template_args[:topic_title]) if @template_args[:topic_title] # must be last for safety
+      else
+        subject = @opts[:subject]
+        subject = I18n.t("#{@opts[:template]}.subject_template", template_args) if @opts[:template]
+      end
       subject
     end
 

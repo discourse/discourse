@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Admin::ScreenedIpAddressesController do
   it "is a subclass of AdminController" do
-    (Admin::ScreenedIpAddressesController < Admin::AdminController).should be_true
+    (Admin::ScreenedIpAddressesController < Admin::AdminController).should == true
   end
 
   let!(:user) { log_in(:admin) }

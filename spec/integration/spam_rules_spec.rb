@@ -17,7 +17,7 @@ describe SpamRulesEnforcer do
     Given(:user2)      { Fabricate(:user) }
 
     context 'spammer is a new user' do
-      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:newuser]) }
+      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel[0]) }
 
       context 'spammer post is not flagged enough times' do
         Given!(:spam_post)  { create_post(user: spammer) }
@@ -39,7 +39,7 @@ describe SpamRulesEnforcer do
 
           When { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
 
-          Invariant { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_false }
+          Invariant { expect(Guardian.new(spammer).can_create_topic?(nil)).should == false }
           Invariant { expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to raise_error(Discourse::InvalidAccess) }
           Invariant { expect{PostCreator.create(spammer, {topic_id: another_topic.id, raw: 'my reply is spam in your topic', archetype_id: 1})}.to raise_error(Discourse::InvalidAccess) }
 
@@ -63,8 +63,8 @@ describe SpamRulesEnforcer do
             Then { expect(spammer.reload).to be_blocked }
           end
 
-          context "spammer becomes a basic user" do
-            When { spammer.change_trust_level!(:basic); spammer.reload }
+          context "spammer becomes trust level 1" do
+            When { spammer.change_trust_level!(TrustLevel[1]); spammer.reload }
             Then { expect(spammer.reload).to be_blocked }
           end
         end
@@ -73,13 +73,13 @@ describe SpamRulesEnforcer do
           Given { SiteSetting.stubs(:flags_required_to_hide_post).returns(2) }
           When  { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
           Then  { expect(spammer.reload).to be_blocked }
-          And   { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_false }
+          And   { expect(Guardian.new(spammer).can_create_topic?(nil)).should == false }
         end
       end
     end
 
     context "spammer has trust level basic" do
-      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel.levels[:basic]) }
+      Given(:spammer)  { Fabricate(:user, trust_level: TrustLevel[1]) }
 
       context 'one spam post is flagged enough times by enough users' do
         Given!(:spam_post)              { Fabricate(:post, user: spammer) }
@@ -87,13 +87,13 @@ describe SpamRulesEnforcer do
         When { PostAction.act(user1, spam_post, PostActionType.types[:spam]) }
         When { PostAction.act(user2, spam_post, PostActionType.types[:spam]) }
         Then { expect(spam_post.reload).to_not be_hidden }
-        And  { expect(Guardian.new(spammer).can_create_topic?(nil)).to be_true }
+        And  { expect(Guardian.new(spammer).can_create_topic?(nil)).should == true }
         And  { expect{PostCreator.create(spammer, {title: 'limited time offer for you', raw: 'better buy this stuff ok', archetype_id: 1})}.to_not raise_error }
         And  { expect(spammer.reload.private_topics_count).to eq(private_messages_count) }
       end
     end
 
-    [[:user, trust_level: TrustLevel.levels[:regular]], [:admin], [:moderator]].each do |spammer_args|
+    [[:user, trust_level: TrustLevel[2]], [:admin], [:moderator]].each do |spammer_args|
       context "spammer is trusted #{spammer_args[0]}" do
         Given!(:spammer)                { Fabricate(*spammer_args) }
         Given!(:spam_post)              { Fabricate(:post, user: spammer) }

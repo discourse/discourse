@@ -295,6 +295,7 @@ SQL
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
       builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
+      builder.where("t.visible")
     end
 
     if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
@@ -331,8 +332,8 @@ end
 #  target_post_id  :integer
 #  target_user_id  :integer
 #  acting_user_id  :integer
-#  created_at      :datetime
-#  updated_at      :datetime
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
 #
 # Indexes
 #

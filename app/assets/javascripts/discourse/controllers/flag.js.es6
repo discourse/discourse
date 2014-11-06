@@ -1,16 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller supports actions related to flagging
-
-  @class FlagController
-  @extends ObjectController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
 export default ObjectController.extend(ModalFunctionality, {
 
   onShow: function() {
@@ -91,7 +81,7 @@ export default ObjectController.extend(ModalFunctionality, {
       if (opts) params = $.extend(params, opts);
 
       this.send('hideModal');
-      postAction.act(params).then(function() {
+      postAction.act(params).then(function(result) {
         self.send('closeModal');
       }, function(errors) {
         self.send('closeModal');
@@ -105,7 +95,7 @@ export default ObjectController.extend(ModalFunctionality, {
 
     changePostActionType: function(action) {
       this.set('selected', action);
-    }
+    },
   },
 
   canDeleteSpammer: function() {
@@ -117,11 +107,6 @@ export default ObjectController.extend(ModalFunctionality, {
       return false;
     }
   }.property('selected.name_key', 'userDetails.can_be_deleted', 'userDetails.can_delete_all_posts'),
-
-  deleteSpammer: function() {
-    this.send('closeModal');
-    this.get('userDetails').deleteAsSpammer(function() { window.location.reload(); });
-  },
 
   usernameChanged: function() {
     this.set('userDetails', null);

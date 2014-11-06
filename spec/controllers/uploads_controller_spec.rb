@@ -51,6 +51,14 @@ describe UploadsController do
             response.status.should eq 200
           end
 
+          it 'correctly sets retain_hours for admins' do
+            log_in :admin
+            xhr :post, :create, file: logo, retain_hours: 100
+            url = JSON.parse(response.body)["url"]
+            id = url.split("/")[3].to_i
+            Upload.find(id).retain_hours.should == 100
+          end
+
           context 'with a big file' do
 
             before { SiteSetting.stubs(:max_attachment_size_kb).returns(1) }
@@ -123,6 +131,8 @@ describe UploadsController do
 
     it "returns 404 when the upload doens't exist" do
       Upload.expects(:find_by).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns(nil)
+      Upload.expects(:find_by).with(sha1: "1234567890abcdef").returns(nil)
+
       get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
       response.response_code.should == 404
     end
@@ -135,6 +145,18 @@ describe UploadsController do
       controller.expects(:send_file)
 
       get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
+    end
+
+    context "prevent anons from downloading files" do
+
+      before { SiteSetting.stubs(:prevent_anons_from_downloading_files).returns(true) }
+
+      it "returns 404 when an anonymous user tries to download a file" do
+        Upload.expects(:find_by).never
+        get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+        response.response_code.should == 404
+      end
+
     end
 
   end

@@ -11,6 +11,44 @@ describe PostDestroyer do
   let(:admin) { Fabricate(:admin) }
   let(:post) { create_post }
 
+  describe "destroy_old_hidden_posts" do
+
+    it "destroys posts that have been hidden for 30 days" do
+      Fabricate(:admin)
+
+      now = Time.now
+
+      freeze_time(now - 60.days)
+      topic = post.topic
+      reply1 = create_post(topic: topic)
+
+      freeze_time(now - 40.days)
+      reply2 = create_post(topic: topic)
+      PostAction.hide_post!(reply2, PostActionType.types[:off_topic])
+
+      freeze_time(now - 20.days)
+      reply3 = create_post(topic: topic)
+      PostAction.hide_post!(reply3, PostActionType.types[:off_topic])
+
+      freeze_time(now - 10.days)
+      reply4 = create_post(topic: topic)
+
+      freeze_time(now)
+      PostDestroyer.destroy_old_hidden_posts
+
+      reply1.reload
+      reply2.reload
+      reply3.reload
+      reply4.reload
+
+      reply1.deleted_at.should == nil
+      reply2.deleted_at.should_not == nil
+      reply3.deleted_at.should == nil
+      reply4.deleted_at.should == nil
+    end
+
+  end
+
   describe 'destroy_old_stubs' do
     it 'destroys stubs for deleted by user posts' do
       SiteSetting.stubs(:delete_removed_posts_after).returns(24)
@@ -90,6 +128,18 @@ describe PostDestroyer do
 
       reply1.reload.deleted_at.should_not == nil
     end
+
+    it "deletes posts immediately if delete_removed_posts_after is 0" do
+      Fabricate(:admin)
+      topic = post.topic
+      reply1 = create_post(topic: topic)
+
+      SiteSetting.stubs(:delete_removed_posts_after).returns(0)
+
+      PostDestroyer.new(reply1.user, reply1).destroy
+
+      reply1.reload.deleted_at.should_not == nil
+    end
   end
 
   describe 'basic destroying' do
@@ -106,7 +156,7 @@ describe PostDestroyer do
 
       post2.deleted_at.should be_blank
       post2.deleted_by.should be_blank
-      post2.user_deleted.should be_true
+      post2.user_deleted.should == true
       post2.raw.should == I18n.t('js.post.deleted_by_author', {count: 24})
       post2.version.should == 2
 
@@ -114,7 +164,7 @@ describe PostDestroyer do
       PostDestroyer.new(post2.user, post2).recover
       post2.reload
       post2.version.should == 3
-      post2.user_deleted.should be_false
+      post2.user_deleted.should == false
       post2.cooked.should == @orig
     end
 
@@ -131,6 +181,12 @@ describe PostDestroyer do
           PostDestroyer.new(moderator, post).destroy
           author.reload
         }.to change { author.post_count }.by(-1)
+      end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(moderator, post).destroy
+        }.to change { UserHistory.count}.by(1)
       end
     end
 
@@ -177,7 +233,7 @@ describe PostDestroyer do
       let(:topic_user) { second_user.topic_users.find_by(topic_id: topic.id) }
 
       it 'clears the posted flag for the second user' do
-        topic_user.posted?.should be_false
+        topic_user.posted?.should == false
       end
 
       it "sets the second user's last_read_post_number back to 1" do
@@ -185,7 +241,7 @@ describe PostDestroyer do
       end
 
       it "sets the second user's last_read_post_number back to 1" do
-        topic_user.seen_post_count.should == 1
+        topic_user.highest_seen_post_number.should == 1
       end
 
     end
@@ -219,6 +275,12 @@ describe PostDestroyer do
       it "deletes the post" do
         post.deleted_at.should be_present
         post.deleted_by.should == admin
+      end
+
+      it "creates a new user history entry" do
+        expect {
+          PostDestroyer.new(admin, post).destroy
+        }.to change { UserHistory.count}.by(1)
       end
     end
   end

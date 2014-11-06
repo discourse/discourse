@@ -56,15 +56,13 @@ test('hasHistory', function() {
 
 
 test('destroy by staff', function() {
-  var user = Discourse.User.create({username: 'staff', staff: true});
-  var post = buildPost({user: user});
+  var user = Discourse.User.create({username: 'staff', staff: true}),
+      post = buildPost({user: user});
 
-  sandbox.stub(Discourse, 'ajax').returns(new Em.Deferred());
   post.destroy(user);
 
   present(post.get('deleted_at'), "it has a `deleted_at` field.");
   equal(post.get('deleted_by'), user, "it has the user in the `deleted_by` field");
-  ok(Discourse.ajax.calledOnce, "it made an AJAX call");
 
   post.recover();
   blank(post.get('deleted_at'), "it clears `deleted_at` when recovering");
@@ -73,16 +71,14 @@ test('destroy by staff', function() {
 });
 
 test('destroy by non-staff', function() {
-  var originalCooked = "this is the original cooked value";
-  var user = Discourse.User.create({username: 'evil trout'});
-  var post = buildPost({user: user, cooked: originalCooked});
+  var originalCooked = "this is the original cooked value",
+      user = Discourse.User.create({username: 'evil trout'}),
+      post = buildPost({user: user, cooked: originalCooked});
 
-  sandbox.stub(Discourse, 'ajax');
   post.destroy(user);
 
   ok(!post.get('can_delete'), "the post can't be deleted again in this session");
   ok(post.get('cooked') !== originalCooked, "the cooked content changed");
   equal(post.get('version'), 2, "the version number increased");
-  ok(Discourse.ajax.calledOnce, "it made an AJAX call");
 });
 

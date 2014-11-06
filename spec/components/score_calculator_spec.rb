@@ -39,14 +39,14 @@ describe ScoreCalculator do
     it "won't update the site settings when the site settings don't match" do
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_summary.should be_false
+      topic.has_summary.should == false
     end
 
     it "removes the summary flag if the topic no longer qualifies" do
       topic.update_column(:has_summary, true)
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_summary.should be_false
+      topic.has_summary.should == false
     end
 
     it "won't update the site settings when the site settings don't match" do
@@ -56,7 +56,7 @@ describe ScoreCalculator do
 
       ScoreCalculator.new(reads: 3).calculate
       topic.reload
-      topic.has_summary.should be_true
+      topic.has_summary.should == true
     end
 
   end

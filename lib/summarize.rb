@@ -4,7 +4,7 @@
 require 'sanitize'
 
 class Summarize
-  
+
   def initialize(text)
     @text = text
   end

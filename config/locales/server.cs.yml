@@ -65,6 +65,7 @@ cs:
     one: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit jen jeden odkaz."
     other: "Bohužel, návštěvníci mohou do jednoho příspěvku vložit maximálně %{count} odkazů."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
+  user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   has_already_been_used: "je již použito"
   invalid_characters: "obsahuje neplatné znaky"
@@ -95,7 +96,6 @@ cs:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
     until_posts:
       one: "příspěvek"
@@ -135,6 +135,8 @@ cs:
         name: "Název kategorie"
       post:
         raw: "Tělo"
+      user_profile:
+        bio_raw: "O mně"
     errors:
       messages:
         is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
@@ -148,6 +150,10 @@ cs:
           attributes:
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "není platná barva"
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
@@ -163,12 +169,11 @@ cs:
     basic:
       title: "základní uživatel"
     regular:
-      title: "pravidelný uživatel"
+      title: "člen"
     leader:
-      title: "vůdce"
+      title: "normální"
     elder:
-      title: "starší"
-    change_failed_explanation: "Pokusili jste se změnil důvěryhodnost uživatele %{user_name} na '%{new_trust_level}'. Jejich důvěryhodnost je ale již '%{current_trust_level}'. %{user_name} zůstané na důvěryhodnosti '%{current_trust_level}'"
+      title: "vůdce"
   rate_limiter:
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
@@ -305,7 +310,6 @@ cs:
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
       title: 'Informovat uživatele {{username}}'
-      description: 'Tento příspěvek obsahuje něco, kvůli čemu chci s tímto člověkem mluvím přímo a soukromě.'
       long_form: 'informoval uživatele'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
@@ -345,6 +349,7 @@ cs:
     title: 'Odhlášen'
     description: "Byli jste odhlášeni ze seznamu. Již vás nebudeme kontaktovat."
     oops: "Pokud jste tuto akci provedli omylem, klikněte na odkaz níže."
+    error: "Chyba při odhlašování"
     not_found_description: "Bohužel jsme vás nemohli odhlásit ze seznamu. Je možné, že váš odkaz z emailu již není platný."
   resubscribe:
     action: "Znovu přihlásit"
@@ -465,10 +470,6 @@ cs:
     login_required_welcome_message:
       title: "Vyžadováno přihlášení: Uvítací zpráva"
       description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
-    tos_user_content_license:
-      title: "Podmínky používání: Licence obsahu"
-    tos_miscellaneous:
-      title: "Podmínky používání: Různé"
     login_required:
       title: "Vyžadováno přihlášení: Úvodní stránka"
       description: "Text, který se zobrazí nepřihlášených uživatelům na webu, je-li přihlášení vyžadováno."
@@ -481,9 +482,6 @@ cs:
     bottom:
       title: "Patička stránky"
       description: "HTML přidané na spodek každé stránky."
-    tos_signup_form_message:
-      title: "Registrační formulář: Zpráva s podmínkami služby"
-      description: "The message that will appear beside a checkbox on the signup form if the tos_accept_required site setting is enabled."
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -496,10 +494,7 @@ cs:
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     use_https: "Should the full url for the site (Discourse.base_url) be http or https?"
-    enable_private_messages: "Povolit uživatelům s věrohodností 1, aby zasílali soukromé zprávy a zahajovali soukromé konverzace"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"
-    long_polling_interval: "Interval v milisekundách než je zahájena nová dlouhá výzva"
-    polling_interval: "Jak často se mají zasílat výzvy přihlášených uživatelům v milisekundách"
     anon_polling_interval: "Jak často se mají zasílat výzvy anonymním uživatelům v milisekundách"
     auto_track_topics_after: "Výchozí počet milisekund než je téma automaticky sledováno, uživatelé si pomoc změnit (0 znamená vždy, -1 znamená nikdy)"
     new_topic_duration_minutes: "Výchozí počet minut, jak dlouho je téma považováno za nové, uživatelé si pomoc změnit (-1 znamená vždy, -2 znamená od poslední návštěvy)"
@@ -554,7 +549,6 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
-    tos_accept_required: "Uživatelé budou muset při registraci zaškrtnout, že souhlasí s Podmínkami používání. Zprávu můžete upravit v záložce Obsah webu změnou „Registrace: Zpráva s podmínkami používání“."
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
@@ -567,7 +561,6 @@ cs:
     invited_to_private_message: "%{display_username} vás pozval k soukromé zprávě: %{link}"
     invitee_accepted: "%{display_username} přijal vaši pozvánku"
   search:
-    within_post: "#%{post_number} by %{username}: %{excerpt}"
     types:
       category: 'Kategorie'
       user: 'Uživatelé'
@@ -589,28 +582,13 @@ cs:
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
     closed_enabled: "Toto téma je uzavřeno. Nové odpovědi nebudou přijímány."
     closed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
-    autoclosed_enabled_days:
-      zero: "Tohle téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi už se nepřijímají."
-      one: "Tohle téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi už se nepřijímají."
-      other: "Toto téma bylo po %{count} dnech automaticky zavřeno. Nové odpovědi se už nepřijímají."
-    autoclosed_enabled_hours:
-      zero: "Toto téma bylo po 1 hodině automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      one: "Toto téma bylo po 1 hodině automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      other: "Toto téma bylo po %{count} hodinách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-    autoclosed_enabled_minutes:
-      zero: "Toto téma bylo po 1 minutě automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      one: "Toto téma bylo po 1 minutě automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      other: "Toto téma bylo po %{count} minutách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
-    visible_enabled: "Toto téma je viditelné. Bude se zobrazovat v seznamu témat."
-    visible_disabled: "Toto téma je neviditelné. Nebude se zobrazovat v seznamu témat. Je možné ho navštívit pouze přes přímý odkaz."
   login:
     not_approved: "Váš účet ještě nebyl schválen. Až se tak stane, obdržíte oznámení emailem."
     incorrect_username_email_or_password: "Neplatné uživatelské jméno, email nebo heslo"
     wait_approval: "Děkujeme, že jste se zaregistrovali. Dáme vám vědět, až bude váš nový účet schválen."
     active: "Váš účet je aktivní a připraven k používání."
-    activate_email: "Už to skoro bude! Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email na <b>%{email}</b>. Prosím následujte instrukce v tomto emailu a aktivujte si tak svůj účet."
     suspended: "Máte zakázáno přihlášení až do %{date}."
     suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
@@ -641,12 +619,6 @@ cs:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
-    export_succeeded:
-      subject_template: "Export úspěšně dokončen"
-      text_body_template: "Export proběhl úspěšně."
-    import_succeeded:
-      subject_template: "Import úspěšně dokončen"
-      text_body_template: "Import proběhl úspěšně."
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -780,9 +752,6 @@ cs:
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
   terms_of_service:
-    user_content_license: |-
-      Uživatelské příspěvky jsou licencovány pod licencí [Creative Commons Uveďte autora-Nevyužívejte dílo komerčně-Zachovejte licenci 3.0 Unported](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.cs). Aniž by tím byly tyto vyjádření nebo záruky dotčeny, má %{company_short_name} právo z vlastního úsudku (i) odmítnout nebo odstranit libovolný obsah, který podle rozumného názoru porušuje zásady tohoto webu nebo je jinak škodlivý nebo závadný, nebo (ii) ukončit nebo odepřít přístup k používání webu jakémukoliv jednotlivci nebo subjektu z jakéhokoliv důvodu. %{company_short_name} nemá žádnou povinnost poskytnout náhradu nebo vrátit jakoukoliv již zaplacenou částku.
-    miscellaneous: "Toto ujednání tvoří celou dohodu mezi %{company_short_name} a vámi ohledně zmiňované věci a smí být změněno pouze písemným dodatkem podepsaným pověřeným jednatelem společnosti %{company_short_name}, nebo zveřejněním revidované verze tohoto dokumentu. Provoz tohoto webu, jeho používání a jakýkoliv přístup na něj se řídí platnými zákony České republiky. Jakékoliv spory v souvislosti v tímto webem budou řešeny u soudů v České republice a používáním této služby souhlasíte se soudní pravomocí těchto soudů."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
   upload:

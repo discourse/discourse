@@ -11,3 +11,35 @@
 .discourse-touch .caps-lock-warning {
   display: none;
 }
+
+.create-account {
+  .user-field.confirm {
+    margin-top: 20px;
+  }
+
+  .user-field {
+    label {
+      width: 92px;
+      float: left;
+    }
+    input[type=text] {
+      width: 220px;
+      margin-bottom: 0;
+    }
+    .controls {
+      margin-left: 92px;
+      margin-bottom: 15px;
+      label {
+        width: auto;
+        text-align: left;
+        font-weight: normal;
+        float: auto;
+      }
+      p {
+        color: scale-color($primary, $lightness: 50%);
+        margin: 0;
+      }
+    }
+    clear: both;
+  }
+}

@@ -6,7 +6,7 @@
   @namespace Discourse
   @module Discourse
 **/
-Discourse.Route = Em.Route.extend({
+Discourse.Route = Ember.Route.extend({
 
   /**
     NOT called every time we enter a route on Discourse.
@@ -19,6 +19,40 @@ Discourse.Route = Em.Route.extend({
   activate: function() {
     this._super();
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
+  },
+
+  _refreshTitleOnce: function() {
+    this.send('_collectTitleTokens', []);
+  },
+
+  actions: {
+    _collectTitleTokens: function(tokens) {
+      // If there's a title token method, call it and get the token
+      if (this.titleToken) {
+        var t = this.titleToken();
+        if (t && t.length) {
+          if (t instanceof Array) {
+            t.forEach(function(ti) {
+              tokens.push(ti);
+            });
+          } else {
+            tokens.push(t);
+          }
+        }
+      }
+      return true;
+    },
+
+    refreshTitle: function() {
+      Ember.run.once(this, this._refreshTitleOnce);
+    }
+  },
+
+  redirectIfLoginRequired: function() {
+    var app = this.controllerFor('application');
+    if (app.get('loginRequired')) {
+      this.replaceWith('login');
+    }
   },
 
   openTopicDraft: function(model){
@@ -34,6 +68,10 @@ Discourse.Route = Em.Route.extend({
         });
       }
     }
+  },
+
+  isPoppedState: function(transition) {
+    return (!transition._discourse_intercepted) && (!!transition.intent.url);
   }
 
 });
@@ -66,7 +104,10 @@ Discourse.Route.reopenClass({
     $('header ul.icons li').removeClass('active');
     $('[data-toggle="dropdown"]').parent().removeClass('open');
     // close the lightbox
-    if ($.magnificPopup && $.magnificPopup.instance) { $.magnificPopup.instance.close(); }
+    if ($.magnificPopup && $.magnificPopup.instance) {
+      $.magnificPopup.instance.close();
+      $('body').removeClass('mfp-zoom-out-cur');
+    }
 
     // Remove any link focus
     // NOTE: the '.not("body")' is here to prevent a bug in IE10 on Win7

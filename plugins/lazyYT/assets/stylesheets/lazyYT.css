@@ -13,10 +13,12 @@
     left: 12px!important;
     position: absolute!important;
     margin: 0!important;
-    padding: 0!important;
+    padding: 0.5em!important;
     line-height: 1!important;
     font-style: normal!important;
     font-weight: normal!important;
+    background-color: rgba(0,0,0,0.8)!important;
+    border-radius: 0.5em!important;
 }
 
 .lazyYT-button {

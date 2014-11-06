@@ -136,14 +136,99 @@ aside.onebox {
 }
 
 .onebox-avatar {
-  height: 90px;
-  width: 90px;
+  height: 90px !important;
+  width: 90px !important;
 }
 
 blockquote {
   aside.onebox {
+    background: darken(scale-color-diff(), 5%);
+    border-left: 5px solid darken(scale-color-diff(), 12%);
+  }
+}
 
-        background: darken(scale-color-diff(), 5%);
-        border-left: 5px solid darken(scale-color-diff(), 12%);
-      }
-    }
+// -- Onebox Github Code Blob --
+pre.onebox code ol.lines li:before {
+  position: absolute;
+  display:inline-block;
+  width:35px;
+  left: -40px;
+  background: #F7F7F7;
+  color:#AFAFAF;
+  text-align:right;
+  padding-right:5px;
+  font-size:12px;
+  line-height: 1.9em;
+  content: counter(li-counter);
+  counter-increment: li-counter;
+}
+
+
+pre.onebox code ol{
+	margin-left:0px;
+	line-height:1.5em;
+}
+pre.onebox code li{
+	background-color:#fff;
+	padding-left:5px;
+}
+
+pre.onebox code ol.lines{
+	position:relative;
+	margin-left: 40px;
+}
+
+pre.onebox code ol.lines li {
+	list-style-type: none;
+	padding-left: 5px;
+	margin-left: 0px;
+	border-left: 1px solid #CFCFCF;
+	min-height: 1.5em; //show empty li lines
+  white-space: pre;
+}
+
+pre.onebox code li.selected{
+	background-color:#F8EEC7
+}
+
+pre.onebox code {
+ white-space: normal;
+}
+
+//Onebox - Github - Pull request
+.onebox-body .github-commit-status {
+  background: #F5F5F5;
+  border-radius: 5px;
+  margin:0px 0px 5px 100px;
+  padding: 10px;
+}
+
+.onebox-body .status_tag {
+  display:inline-block;
+  color:#fff;
+  padding:1px 4px;
+  border-radius:3px;
+  font-weight:bold;
+  margin-bottom:5px;
+  text-transform:capitalize;
+}
+
+.onebox-body .build_status
+{
+  padding: 2px;
+  font-size:12px;
+}
+
+.onebox-body .status_tag.open {
+  background-color:#6cc644;
+}
+.onebox-body .status_tag.merged{
+  background-color:#6e5494;
+}
+.onebox-body .status_tag.closed {
+  background-color:#bd2c00;
+}
+
+.onebox-body .github-content-right{
+  margin-left:100px;
+}

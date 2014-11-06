@@ -35,7 +35,7 @@ class ScreenedEmail < ActiveRecord::Base
 
     screened_email.record_match! if screened_email
 
-    screened_email && screened_email.action_type == actions[:block]
+    screened_email.try(:action_type) == actions[:block]
   end
 
   def self.levenshtein(first, second)
@@ -71,8 +71,8 @@ end
 #  action_type   :integer          not null
 #  match_count   :integer          default(0), not null
 #  last_match_at :datetime
-#  created_at    :datetime
-#  updated_at    :datetime
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
 #  ip_address    :inet
 #
 # Indexes

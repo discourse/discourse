@@ -13,6 +13,12 @@ class Badge < ActiveRecord::Base
   FirstQuote = 15
   ReadGuidelines = 16
   Reader = 17
+  NiceTopic = 18
+  GoodTopic = 19
+  GreatTopic = 20
+  NiceShare = 21
+  GoodShare = 22
+  GreatShare = 23
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -31,12 +37,24 @@ class Badge < ActiveRecord::Base
     PostRevision = 2
     TrustLevelChange = 4
     UserChange = 8
+
+    def self.is_none?(trigger)
+      [None].include? trigger
+    end
+
+    def self.uses_user_ids?(trigger)
+      [TrustLevelChange, UserChange].include? trigger
+    end
+
+    def self.uses_post_ids?(trigger)
+      [PostAction, PostRevision].include? trigger
+    end
   end
 
   module Queries
 
     Reader = <<SQL
-    SELECT id user_id, current_timestamp granted_at, NULL post_id
+    SELECT id user_id, current_timestamp granted_at
     FROM users
     WHERE id IN
     (
@@ -48,14 +66,14 @@ class Badge < ActiveRecord::Base
       LEFT JOIN user_badges ub ON ub.badge_id = 17 AND ub.user_id = pt.user_id
       WHERE ub.id IS NULL AND t.posts_count > 100
       GROUP BY pt.user_id, pt.topic_id, t.posts_count
-      HAVING count(*) = t.posts_count
+      HAVING count(*) >= t.posts_count
     )
 SQL
 
     ReadGuidelines = <<SQL
-    SELECT user_id, read_faq granted_at, NULL post_id
+    SELECT user_id, read_faq granted_at
     FROM user_stats
-    WHERE read_faq IS NOT NULL
+    WHERE read_faq IS NOT NULL AND (user_id IN (:user_ids) OR :backfill)
 SQL
 
     FirstQuote = <<SQL
@@ -145,7 +163,7 @@ SQL
 SQL
 
     Autobiographer = <<SQL
-    SELECT u.id user_id, current_timestamp granted_at, NULL post_id
+    SELECT u.id user_id, current_timestamp granted_at
     FROM users u
     JOIN user_profiles up on u.id = up.user_id
     WHERE bio_raw IS NOT NULL AND LENGTH(TRIM(bio_raw)) > #{Badge::AutobiographerMinBioLength} AND
@@ -153,12 +171,12 @@ SQL
           (:backfill OR u.id IN (:user_ids) )
 SQL
 
-    def self.like_badge(count)
+    def self.like_badge(count, is_topic)
       # we can do better with dates, but its hard work
 "
     SELECT p.user_id, p.id post_id, p.updated_at granted_at
     FROM badge_posts p
-    WHERE p.like_count >= #{count.to_i} AND
+    WHERE #{is_topic ? "p.post_number = 1" : "p.post_number > 1" } AND p.like_count >= #{count.to_i} AND
       (:backfill OR p.id IN (:post_ids) )
 "
     end
@@ -166,11 +184,27 @@ SQL
     def self.trust_level(level)
       # we can do better with dates, but its hard work figuring this out historically
 "
-    SELECT u.id user_id, current_timestamp granted_at, NULL post_id FROM users u
+    SELECT u.id user_id, current_timestamp granted_at FROM users u
     WHERE trust_level >= #{level.to_i} AND (
       :backfill OR u.id IN (:user_ids)
     )
 "
+    end
+
+    def self.sharing_badge(count)
+<<SQL
+    SELECT views.user_id, i2.post_id, i2.created_at granted_at
+    FROM
+    (
+      SELECT i.user_id, MIN(i.id) i_id
+      FROM incoming_links i
+      JOIN badge_posts p on p.id = i.post_id
+      WHERE i.user_id IS NOT NULL
+      GROUP BY i.user_id,i.post_id
+      HAVING COUNT(*) > #{count}
+    ) as views
+    JOIN incoming_links i2 ON i2.id = views.i_id
+SQL
     end
   end
 
@@ -202,7 +236,10 @@ SQL
     @like_badge_counts ||= {
       NicePost => 10,
       GoodPost => 25,
-      GreatPost => 50
+      GreatPost => 50,
+      NiceTopic => 10,
+      GoodTopic => 25,
+      GreatTopic => 50
     }
   end
 
@@ -213,6 +250,11 @@ SQL
 
   def single_grant?
     !self.multiple_grant?
+  end
+
+  def default_icon=(val)
+    self.icon ||= val
+    self.icon = val if self.icon = "fa-certificate"
   end
 
   def default_name=(val)
@@ -247,8 +289,8 @@ end
 #  description       :text
 #  badge_type_id     :integer          not null
 #  grant_count       :integer          default(0), not null
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  allow_title       :boolean          default(FALSE), not null
 #  multiple_grant    :boolean          default(FALSE), not null
 #  icon              :string(255)      default("fa-certificate")

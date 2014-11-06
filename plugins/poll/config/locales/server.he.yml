@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+he:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "אפשרויות הצבעה"
+  poll:
+    must_contain_poll_options: "חובה להכיל רשימה של אפשרויות הצבעה"
+    cannot_have_modified_options: "לא ניתן לשנות את האפשרויות לאחר 5 הדקות הראשונות. יש לפנות למנהל כדי לבצע שינויים אלו."
+    cannot_add_or_remove_options: "ניתן רק לערוך, לא להוסיף או להסיר אפשרויות. כדי להוסיף או להסיר אפשרויות יש לנעול את נושא זה ולפתוח אחד חדש."
+    prefix: "הצבעה"
+    closed_prefix: "הצבעה סגורה"

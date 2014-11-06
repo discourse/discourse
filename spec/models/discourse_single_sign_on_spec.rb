@@ -87,6 +87,6 @@ describe DiscourseSingleSignOn do
     url.should == @sso_url
 
     sso = DiscourseSingleSignOn.parse(payload)
-    sso.nonce.should_not be_nil
+    sso.nonce.should_not == nil
   end
 end

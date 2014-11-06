@@ -17,11 +17,39 @@ pt:
       date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Tópicos"
-  posts: "postagens"
+  posts: "posts"
   loading: "Carregando"
   powered_by_html: 'Desenvolvido por <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
+  log_in: "Entrar"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
+  purge_reason: "Apagar automaticamente devido à antiguidade e por não ser verificado"
+  errors:
+    messages:
+      too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."
+    embed:
+      load_from_remote: "Houve um erro no carregamento desse post."
+  bulk_invite:
+    file_should_be_csv: "O ficheiro a enviar deve estar em formato csv ou txt."
+  backup:
+    operation_already_running: "Existe actualmente uma operação em andamento. Neste momento não é possível iniciar um novo trabalho. "
+    backup_file_should_be_tar_gz: "O ficheiro de backup deve ser um arquivo .tar.gz"
+    not_enough_space_on_disk: "Não existe espaço suficiente no disco para carregar este backup."
+  not_logged_in: "Necessita de ter sessão iniciada para fazer isso."
+  read_only_mode_enabled: "Este site encontra-se no modo apenas leitura. As interacções estão desctivadas."
+  embed:
+    start_discussion: "Iniciar Discussão"
+    continue: "Continuar Discussão"
+    more_replies:
+      one: "mais 1 resposta"
+      other: "mais %{count} respostas"
+    loading: "A carregar Discussão..."
+    permalink: "Permalink"
+    imported_from: "Este é um tópico de discussão de acompanhamento para a entrada original em %{link}"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 resposta"
+      other: "%{count} respostas"
   too_many_mentions:
     zero: "Desculpe, você não pode mencionar outros usuários."
     one: "Desculpe, você pode mencionar apenas um outro usuário em um post."
@@ -43,32 +71,43 @@ pt:
     one: "Desculpe, usuários novos podem colocar apenas um link nas postagens."
     other: "Desculpe, usuários novos podem colocar apenas %{count} links nas postagens."
   spamming_host: "Desculpe, você não pode colocar um link para este site."
+  user_is_suspended: "Não é permitida a criação de posts para utilizadores suspensos."
   just_posted_that: "é demasiado similar ao que postaste recentemente"
   has_already_been_used: "já foi usado"
   invalid_characters: "contém caracteres inválidos"
   is_invalid: "é inválido; tenta ser um bocado mais descritivo"
   next_page: "próxima página →"
+  prev_page: "← página anterior"
+  page_num: "Página %{num}"
   topics_in_category: "Tópicos na categoria '%{category}'"
   rss_posts_in_topic: "RSS feed de '%{topic}'"
   rss_topics_in_category: "RSS feed dos tópicos da categoria '%{category}'"
   author_wrote: "%{author} escreveu:"
+  num_posts: "Posts:"
+  num_participants: "Participantes:"
+  read_full_topic: "Ler tópico completo"
   private_message_abbrev: "MP"
   rss_description:
     latest: "Últimos tópicos"
     hot: "Tópicos quentes"
+  too_late_to_edit: "Esse poste foi criada há muito tempo. Já não pode ser editado ou apagado."
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
     default_names:
+      everyone: "todos"
       admins: "admins"
       moderators: "moderadores"
       staff: "staff"
+      trust_level_0: "trust_level_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
-      trust_level_5: "nivel_de_confianca_5"
   education:
+    until_posts:
+      one: "1 post"
+      other: "%{count} posts"
     avatar: |
       ### Que tal uma nova imagem para a sua conta? ⏎
       ⏎
@@ -97,6 +136,8 @@ pt:
         name: "Nome da Categoria"
       post:
         raw: "Corpo"
+      user_profile:
+        bio_raw: "Sobre Mim"
     errors:
       messages:
         is_invalid: "é inválido; tente ser um pouco mais descritivo"
@@ -104,30 +145,55 @@ pt:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Apenas pode anexar avisos a mensagens privadas."
+              too_many_users: "Apenas pode envias avisos a um utilizador de cada vez."
             archetype:
               cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
           attributes:
+            password:
+              common: "é uma das 10000 senhas mais comuns. Por favor use uma senha mais segura."
             ip_address:
               signup_not_allowed: "O registo não é permitido através desta conta."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "não é uma cor válida"
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} ainda não colocou nada no campo Sobre Mim</div>"
+  vip_category_name: "Lounge"
+  vip_category_description: "Uma categoria exclusiva para membros de nível de confiança 3 ou mais alto."
+  meta_category_name: "Meta"
+  meta_category_description: "Discussão sobre este site, a sua organização, como funciona, e como o podemos melhorar."
+  staff_category_name: "Staff"
+  staff_category_description: "Categoria privada para discussões do staff. Os tópicos estão apenas visíveis para administradores e moderadores."
+  lounge_welcome:
+    title: "Bem-vindo ao Lounge"
   category:
+    topic_prefix: "Acerca da categoria %{category}"
     post_template: "%{replace_paragraph}\n\nUse os parágrados a seguir para uma descrição longa, assim como para estabelecer diretrizes ou regras da categoria.\n\nAlgumas coisas para se considerar em qualquer resposta de discussão:\n\n- Para que serve esta categoria? Porque algum usaria esta categoria para seu tópico?\n\n- Como esta categoria se difere das demais categorias já existentes?\n\n- Nós precisamos desta categoria?\n\n- Deveríamos mesclar esta categoria com outra, ou dividir esta categoria em mais categorias?\n"
+    cannot_delete:
+      uncategorized: "Não é possível apagar Sem Categoria"
+      has_subcategories: "Não é possível apagar esta categoria porque contém sub-categorias."
+      topic_exists:
+        one: "Não é possível apagar esta categoria porque contém 1 tópico. O tópico mais antigo é  %{topic_link}."
+        other: "Não é possível apagar esta categoria porque contém %{count} tópicos. O tópico mais antigo é  %{topic_link}."
+      topic_exists_no_oldest: "Não é possível apagar esta categoria porque a contagem de tópicos é de %{count}."
   trust_levels:
     newuser:
       title: "usuário novo"
     basic:
       title: "utilizador básico"
     regular:
-      title: "utilizador regular"
+      title: "membro"
     leader:
-      title: "líder"
+      title: "regular"
     elder:
-      title: "ancião"
-    change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}'"
+      title: "líder"
   rate_limiter:
+    slow_down: "Realizou esta acção demasiadas vezes, tente novamente mais tarde"
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
@@ -212,14 +278,22 @@ pt:
   password_reset:
     no_token: "Desculpe, o seu token expirou. Por favor tenta redefinir a sua password novamente."
     choose_new: "Por favor escolhe uma password nova"
+    choose: "Por favor escolha uma senha"
+    update: 'Actualizar Senha'
+    save: 'Definir Senha'
+    title: 'Redifinir Senha'
     success: "Sua senha foi modificado com sucesso e você está conectado agora."
     success_unapproved: "Senha modificada com sucesso."
     continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
+    please_continue: "Continuar para %{site_name}"
     error: "Houve um erro ao alterar o seu endereço de email. Talvez o endereço já esteja sendo utilizado?"
   activation:
+    action: "Activar a sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
+    please_continue: "A sua nova conta foi confirmada e tem agora a sessão iniciada."
+    continue_button: "Continuar para %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
@@ -234,8 +308,8 @@ pt:
       long_form: 'sinalizado como inapropriado'
     notify_user:
       title: 'Notificar {{username}}'
-      description: 'Esta postagem contém algo sobre o que quero falar com esta pessoal diretamente e em particular.'
       long_form: 'usuário notificado'
+      email_title: 'O seu post em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: 'Notificar moderadores'
@@ -254,6 +328,23 @@ pt:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'Este tópico é um anúncio. Não é útil ou relevante para este site, mas é promocional por natureza.'
+      long_form: 'denunciar isto como spam'
+    inappropriate:
+      title: 'Impróprio'
+      description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação das <a href="/guidelines">directrizes da nossa comunidades</a>.'
+      long_form: 'denunciar isto como impróprio'
+    notify_moderators:
+      title: 'Notificar moderadores'
+      long_form: 'moderadores notificados'
+      email_title: 'O tópico "%{title}" requer a atenção da moderação'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>O seu post foi denunciado pela comunidade. Por favor <a href="/my/private-messages">consulte as sua mensagens privadas</a>.</p>'
+    user_must_edit: '<p>Este post foi denunciado pela comunidade e está temporariamente oculto.</p>'
   archetypes:
     regular:
       title: "Tópico Regular"
@@ -295,6 +386,10 @@ pt:
       title: "Marcadores Adicionados"
       xaxis: "Dia"
       yaxis: "Número de novos marcadores adicionados"
+    starred:
+      title: "Favoritos"
+      xaxis: "Dia"
+      yaxis: "Número de novos tópicos favoritos"
     users_by_trust_level:
       title: "Usuários por Nível de Confiança"
       xaxis: "Nível de Confiança"
@@ -364,6 +459,9 @@ pt:
     education_new_topic:
       title: "Educação do Usuário Novo: Primeiros Tópicos"
       description: "Pop up de orientação automaticamente exibido em cima do composer quando usuário novo começa a escrever os seus dois primeiros tópicos."
+    usage_tips:
+      title: "Orientação para o novo utilizador"
+      description: "Orientação e informação essencial para novos utilizadores."
     welcome_user:
       title: "Boas-vindas: Usuário Novo"
       description: "Uma mensagem particular enviada automaticamente para todos os usuários novos quando eles se registram."
@@ -373,10 +471,6 @@ pt:
     login_required_welcome_message:
       title: "Boas-vindas: Login Solicitado"
       description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
-    tos_user_content_license:
-      title: "Termos do Serviço: Licença do Conteúdo"
-    tos_miscellaneous:
-      title: "Termos do Serviço: Diversos"
     login_required:
       title: "É requerido que você entre em sua conta: Página Inicial"
       description: "Texto exibido para usuários não autorizados quando é se exige entrar na conta para acessar o site."
@@ -386,15 +480,15 @@ pt:
       title: "Rodapé das páginas"
   site_settings:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
+    allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
+    title: "Breve título deste site, usado na tag título."
+    site_description: "Descrever este site num frase, usada na tag de descrição meta,"
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     favicon_url: "Um favicon para o seu site"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
-    enable_private_messages: "permitir membros a ter conversas com mensagens particulares"
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
-    long_polling_interval: "Intervalo em milisegundos antes de uma nova solicitação longa ser feita"
-    polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     auto_track_topics_after: "Quantos milisegundos esperar antes que um tópico seja automaticamente  rastreado (0 para sempre, -1 para nunca)"
     new_topic_duration_minutes: "Quantos minutos um tópico permanece considerado como novo (-1 para sempre, -2 para desde a última visita)"
@@ -465,14 +559,11 @@ pt:
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceites."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
-    visible_enabled: "Este tópico está agora visivél. Irá aparecer na lista dos tópicos."
-    visible_disabled: "Este tópico está agora invisivel. Não irá mais aparecer em qualquer listagem de tópicos. A única forma de aceder a este tópico é com o link direto."
   login:
     not_approved: "A sua conta ainda não foi aprovada. Vais ser notificado por email assim que estiver pronto para fazeres log in."
     incorrect_username_email_or_password: "Usuário, email ou senha incorretos"
     wait_approval: "Obrigado por se registar. Você será notificado por email quando a sua conta for aprovada."
     active: "A sua conta está ativa e pronta."
-    activate_email: "Estamos quase prontos! Enviamos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta."
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
     suspended: "Não pode iniciar sessão até %{date}"
     suspended_with_reason: "Não pode iniciar sessão até %{date}, pois encontra-se ativa uma suspensão com o seguinte motivo: %{reason}"
@@ -500,12 +591,6 @@ pt:
       subject_template: "Bem-vindo em %{site_name}!"
     welcome_invite:
       subject_template: "Bem-vindo em %{site_name}!"
-    export_succeeded:
-      subject_template: "Exportação completada com sucesso"
-      text_body_template: "A exportação foi bem sucedida."
-    import_succeeded:
-      subject_template: "Importação completada com sucesso"
-      text_body_template: "A importação foi bem sucedida."
     too_many_spam_flags:
       subject_template: "Nova conta bloqueada"
     blocked_by_staff:
@@ -598,10 +683,6 @@ pt:
         %{base_url}/users/activate-account/%{email_token}
 
         Se não conseguires clicar no link em cima, tenta copia-lo e cola-lo na barra de endereções do seu browser de internet.
-  terms_of_service:
-    user_content_license: |
-      As contribuições do usuário são licenciadas sob [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Sem limitação de nenhuma destas representações ou garantias, %{company_short_name} tem o direito (mas não a obrigação) de, segundo o próprio critério de %{company_short_name} (i) recusar ou remover qualquer conteúdo que, na avaliação de %{company_short_name} viole qualquer regra de %{company_short_name} ou seja de alguma forma prejudicial ou censurável, ou (ii) cancelar ou negar o acesso e a utilização do site para qualquer pessoa ou entidade, por qualquer motivo, segundo próprio e único critério de %{company_short_name}. %{company_short_name} não terá obrigação de fornecer qualquer reembolso de quaisquer valores já pagos. ⏎
-    miscellaneous: "Este Acordo constitui a totalidade do acordo entre %{company_short_name} e você sobre o assunto em questão, e só pode ser modificado por uma emenda por escrito assinado por um executivo autorizado %{company_short_name}, ou pela publicação por %{company_short_name} de uma versão revisada. Exceto o definido em lei aplicável, se houver, em contrário, o presente Contrato, qualquer acesso ou uso do Site serão regidos pelas leis do República Federativa do Brasil, Brasil, excluindo seu conflito às disposições da lei, e o local adequado para quaisquer disputas decorrentes ou relacionadas com qualquer do mesmo serão os tribunais estaduais e federais localizados em Florianópolis, Santa Catarina. Com exceção de pedidos de medida cautelar ou de equidade ou reclamações relativas aos direitos de propriedade intelectual (que podem ser levados a qualquer tribunal competente, sem a constituição de uma garantia), qualquer litígio decorrente do presente Acordo será resolvido de acordo com as Regras de Arbitragem globais de Arbitragem e Mediação Judicial, Inc. (\"JAMS\") por três árbitros nomeados em conformidade com tais regras. A arbitragem terá lugar em Florianópolis, Santa Catarina, no idioma português brasileiro e a decisão arbitral pode ser executada em qualquer tribunal. A parte prevalecente em qualquer ação ou processo para executar este Contrato terá o direito de custos e honorários advocatícios. Se qualquer parte deste Contrato for considerada inválida ou inexequível, essa parte será interpretada de modo a refletir a intenção original das partes, e as parcelas restantes permanecerão em pleno vigor e efeito. A renúncia por qualquer das partes de qualquer termo ou condição deste Contrato ou qualquer violação da mesma, em qualquer instância, não vai renunciar a tal termo ou condição ou qualquer violação subseqüente. Você pode transferir seus direitos sob este Contrato a qualquer partido que consente e concorda em ficar vinculado por seus termos e condições; %{company_short_name} pode ceder seus direitos sob este Contrato sem qualquer condição. Este Acordo será vinculativo e reverterá em benefício das partes, seus sucessores e cessionários autorizados."
   deleted: 'removido'
   upload:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."

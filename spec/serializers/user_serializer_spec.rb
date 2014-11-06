@@ -32,6 +32,16 @@ describe UserSerializer do
       end
     end
 
+    context "with filled out card background" do
+      before do
+        user.user_profile.card_background = 'http://card.com'
+      end
+
+      it "has a profile background" do
+        expect(json[:card_background]).to eq 'http://card.com'
+      end
+    end
+
     context "with filled out profile background" do
       before do
         user.user_profile.profile_background = 'http://background.com'
@@ -86,7 +96,7 @@ describe UserSerializer do
     it "serializes the fields listed in public_user_custom_fields site setting" do
       SiteSetting.stubs(:public_user_custom_fields).returns('public_field')
       json[:custom_fields]['public_field'].should == user.custom_fields['public_field']
-      json[:custom_fields]['secret_field'].should be_nil
+      json[:custom_fields]['secret_field'].should == nil
     end
   end
 end

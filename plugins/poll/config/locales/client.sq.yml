@@ -1,0 +1,11 @@
+sq:
+  js:
+    poll:
+      voteCount:
+        one: "1 votë"
+        other: "%{count} vota"
+      results:
+        show: Shfaq Rezultatet
+        hide: Fsheh Rezultate
+      close_poll: "Mbyll Sondazhin"
+      open_poll: "Hap Sondazhin"

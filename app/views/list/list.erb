@@ -2,7 +2,7 @@
 <% @list.topics.each do |t| %>
   <a href="<%= t.relative_url %>"><%= t.title %></a>
   <% if !@category && t.category %>
-    [<a href="/category/<%= t.category.slug.blank? ? t.category.id : t.category.slug %>"><%= t.category.name %></a>]
+    [<a href="<%= t.category.url%>"><%= t.category.name %></a>]
   <% end %>
   <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
@@ -28,6 +28,11 @@
   <% content_for :head do %>
     <%= auto_discovery_link_tag(@category, {action: :category_feed, format: :rss}, title: t('rss_topics_in_category', category: @category.name), type: 'application/rss+xml') %>
   <% end %>
+<% end %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% elsif @category %>
   <% content_for :title do %><%=@category.name%> <%=t('topics')%><% end %>
 <% elsif params[:page] %>
   <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>

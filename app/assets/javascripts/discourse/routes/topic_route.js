@@ -4,7 +4,7 @@ var isTransitioning = false,
     SCROLL_DELAY = 500;
 
 Discourse.TopicRoute = Discourse.Route.extend({
-  redirect: function() { Discourse.redirectIfLoginRequired(this); },
+  redirect: function() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
     filter: { replace: true },
@@ -12,17 +12,30 @@ Discourse.TopicRoute = Discourse.Route.extend({
     show_deleted: { replace: true }
   },
 
-  actions: {
-    // Modals that can pop up within a topic
-    expandPostUser: function(post) {
-      this.controllerFor('poster-expansion').show(post.get('username'), post.get('uploaded_avatar_id'));
-    },
+  titleToken: function() {
+    var model = this.modelFor('topic');
+    if (model) {
+      var result = model.get('title'),
+          cat = model.get('category');
 
-    expandPostUsername: function(username) {
-      username = username.replace(/^@/, '');
-      if (!Em.isEmpty(username)) {
-        this.controllerFor('poster-expansion').show(username);
+      if (cat && !cat.get('isUncategorized')) {
+        var catName = cat.get('name'),
+            parentCategory = cat.get('parentCategory');
+
+        if (parentCategory) {
+          catName = parentCategory.get('name') + " / " + catName;
+        }
+
+        return [result, catName];
       }
+      return result;
+    }
+  },
+
+  actions: {
+
+    showTopicAdminMenu: function() {
+      this.controllerFor("topic-admin-menu").send("show");
     },
 
     showFlags: function(post) {
@@ -31,7 +44,6 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     showFlagTopic: function(topic) {
-      //Discourse.Route.showModal(this, 'flagTopic', topic);
       Discourse.Route.showModal(this, 'flag', topic);
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
@@ -58,8 +70,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     showHistory: function(post) {
       Discourse.Route.showModal(this, 'history', post);
-      this.controllerFor('history').refresh(post.get("id"), post.get("version"));
+      this.controllerFor('history').refresh(post.get("id"), "latest");
       this.controllerFor('modal').set('modalClass', 'history-modal');
+    },
+
+    showRawEmail: function(post) {
+      Discourse.Route.showModal(this, 'raw-email', post);
+      this.controllerFor('raw_email').loadRawEmail(post.get("id"));
     },
 
     mergeTopic: function() {
@@ -92,6 +109,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
     },
 
     willTransition: function() {
+      this.controllerFor("quote-button").deselectText();
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -155,7 +173,7 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
     // Clear the search context
     this.controllerFor('search').set('searchContext', null);
-    this.controllerFor('poster-expansion').set('visible', false);
+    this.controllerFor('user-card').set('visible', false);
 
     var topicController = this.controllerFor('topic'),
         postStream = topicController.get('postStream');
@@ -195,6 +213,8 @@ Discourse.TopicRoute = Discourse.Route.extend({
       topic: model,
       showExtraInfo: false
     });
+
+    this.controllerFor('topic-admin-menu').set('model', model);
 
     this.controllerFor('composer').set('topic', model);
     Discourse.TopicTrackingState.current().trackIncoming('all');

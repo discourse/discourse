@@ -1,0 +1,5 @@
+{{#if openInPopup}}
+  <a href="#" {{action "sharePopup" target href}} {{bind-attr title="title"}}><i {{bind-attr class=":fa iconClass"}}></i></a>
+{{else}}
+  <a {{bind-attr href="href"}} {{bind-attr title="title"}} target="_blank"><i {{bind-attr class=":fa iconClass"}}></i></a>
+{{/if}}

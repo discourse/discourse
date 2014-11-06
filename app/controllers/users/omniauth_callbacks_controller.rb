@@ -38,13 +38,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     @data = authenticator.after_authenticate(auth)
     @data.authenticator_name = authenticator.name
 
-    if @data.user
-      user_found(@data.user)
-    elsif SiteSetting.invite_only?
-      @data.requires_invite = true
-    else
-      session[:authentication] = @data.session_data
-    end
+    complete_response_data
 
     respond_to do |format|
       format.html
@@ -75,14 +69,25 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   protected
 
+  def complete_response_data
+    if @data.user
+      user_found(@data.user)
+    elsif SiteSetting.invite_only?
+      @data.requires_invite = true
+    else
+      session[:authentication] = @data.session_data
+    end
+  end
+
   def user_found(user)
     # automatically activate any account if a provider marked the email valid
     if !user.active && @data.email_valid
       user.toggle(:active).save
     end
 
-    # log on any account that is active with forum access
-    if Guardian.new(user).can_access_forum? && user.active
+    if ScreenedIpAddress.block_login?(user, request.remote_ip)
+      @data.not_allowed_from_ip_address = true
+    elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore
       session[:authentication] = nil # don't carry around old auth info, perhaps move elsewhere

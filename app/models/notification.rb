@@ -143,8 +143,8 @@ end
 #  user_id           :integer          not null
 #  data              :string(1000)     not null
 #  read              :boolean          default(FALSE), not null
-#  created_at        :datetime
-#  updated_at        :datetime
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
 #  topic_id          :integer
 #  post_number       :integer
 #  post_action_id    :integer

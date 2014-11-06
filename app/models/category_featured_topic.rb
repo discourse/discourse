@@ -9,9 +9,8 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
         (current[f.category_id] ||= []) << f.topic_id
       end
-      Category.select(:id, :topic_id).all.each do |c|
-
-        feature_topics_for(c, current[c.id] || [])
+      Category.select(:id, :topic_id).find_each do |c|
+        CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
         CategoryFeaturedUser.feature_users_in(c.id)
       end
     end
@@ -20,8 +19,13 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   def self.feature_topics_for(c, existing=nil)
     return if c.blank?
 
-    query = TopicQuery.new(self.fake_admin, per_page: SiteSetting.category_featured_topics, except_topic_ids: [c.topic_id], visible: true, no_definitions: true)
-    results = query.list_category(c).topic_ids
+    query = TopicQuery.new(CategoryFeaturedTopic.fake_admin,
+      per_page: SiteSetting.category_featured_topics,
+      except_topic_ids: [c.topic_id],
+      visible: true,
+      no_definitions: true)
+
+    results = query.list_category(c).topic_ids.uniq
 
     return if results == existing
 
@@ -51,8 +55,8 @@ end
 #
 #  category_id :integer          not null
 #  topic_id    :integer          not null
-#  created_at  :datetime
-#  updated_at  :datetime
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #  rank        :integer          default(0), not null
 #  id          :integer          not null, primary key
 #

@@ -154,13 +154,10 @@ basic:
   topics_per_page:
     default: 30
     min: 1
+    client: true
   show_subcategory_list:
     default: false
     client: true
-  posts_per_page:
-    client: true
-    default: 20
-    min: 1
   enable_badges:
     client: true
     default: true
@@ -238,6 +235,7 @@ login:
   email_domains_whitelist:
     default: ''
     type: list
+  forgot_password_strict: false
 
 users:
   min_username_length:
@@ -281,18 +279,22 @@ users:
     client: true
     default: 15
   redirect_users_to_top_page: true
-
+  show_email_on_profile:
+    client: true
+    default: false
   email_token_valid_hours: 24
   email_token_grace_period_hours: 0
 
 posting:
   min_post_length:
     client: true
+    min: 1
     default:
       test: 5
       default: 20
   min_private_message_post_length:
     client: true
+    min: 1
     default:
       test: 5
       default: 10
@@ -326,13 +328,14 @@ posting:
     default: 15
   enable_private_messages: true
   ninja_edit_window: 300
-  post_edit_time_limit: 525600
+  post_edit_time_limit: 262800
   edit_history_visible_to_public:
     client: true
     default: true
   delete_removed_posts_after:
     client: true
     default: 24
+    min: 0
   traditional_markdown_linebreaks:
     client: true
     default: false
@@ -344,6 +347,12 @@ posting:
     default: true
   suppress_reply_when_quoting:
     default: true
+  max_reply_history:
+    default: 1
+    client: true
+  experimental_reply_expansion:
+    default: false
+    client: true
   post_undo_action_window_mins: 10
   max_mentions_per_post: 10
   newuser_max_replies_per_topic: 3
@@ -373,6 +382,12 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  delete_old_hidden_posts: true
+  censored_words:
+    client: true
+    default: ''
+    refresh: true
+    type: list
 
 email:
   email_time_window_mins: 10
@@ -383,15 +398,16 @@ email:
     default: 7
     enum: 'DigestEmailSiteSetting'
   email_custom_headers: 'Auto-Submitted: auto-generated'
+  email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
   reply_by_email_address: ''
-  pop3s_polling_enabled: false
-  pop3s_polling_insecure: false
-  pop3s_polling_period_mins: 5
-  pop3s_polling_host: ''
-  pop3s_polling_port: 995
-  pop3s_polling_username: ''
-  pop3s_polling_password: ''
+  pop3_polling_enabled: false
+  pop3_polling_ssl: true
+  pop3_polling_period_mins: 5
+  pop3_polling_host: ''
+  pop3_polling_port: 995
+  pop3_polling_username: ''
+  pop3_polling_password: ''
   email_in:
     default: false
     client: true
@@ -401,6 +417,9 @@ email:
   email_prefix: ''
   email_site_title: ''
   disable_emails: false
+  strip_images_from_short_emails: true
+  short_email_length: 2800
+  enable_email_names: true
 
 files:
   max_image_size_kb:
@@ -436,6 +455,9 @@ files:
   clean_up_uploads: false
   clean_orphan_uploads_grace_period_hours: 1
   purge_deleted_uploads_grace_period_days: 30
+  prevent_anons_from_downloading_files:
+    default: false
+    client: true
   enable_s3_uploads: false
   s3_use_iam_profile: false
   s3_access_key_id: ''
@@ -470,52 +492,52 @@ trust:
   min_trust_to_edit_wiki_post:
     default: 1
     enum: 'TrustLevelSetting'
-  basic_requires_topics_entered: 5
-  basic_requires_read_posts:
+  tl1_requires_topics_entered: 5
+  tl1_requires_read_posts:
     default: 30
     client: true
-  basic_requires_time_spent_mins: 10
-  regular_requires_topics_entered: 20
-  regular_requires_read_posts: 100
-  regular_requires_time_spent_mins: 60
-  regular_requires_days_visited: 15
-  regular_requires_likes_received: 1
-  regular_requires_likes_given: 1
-  regular_requires_topic_reply_count: 3
-  leader_requires_days_visited:
+  tl1_requires_time_spent_mins: 10
+  tl2_requires_topics_entered: 20
+  tl2_requires_read_posts: 100
+  tl2_requires_time_spent_mins: 60
+  tl2_requires_days_visited: 15
+  tl2_requires_likes_received: 1
+  tl2_requires_likes_given: 1
+  tl2_requires_topic_reply_count: 3
+  tl3_requires_days_visited:
     default: 50
     min: 0
     max: 100
-  leader_requires_topics_replied_to:
+  tl3_requires_topics_replied_to:
     default: 10
     min: 0
-  leader_requires_topics_viewed:
+  tl3_requires_topics_viewed:
     default: 25
     min: 0
     max: 100
-  leader_requires_posts_read:
+  tl3_requires_posts_read:
     default: 25
     min: 0
     max: 100
-  leader_requires_topics_viewed_all_time:
+  tl3_requires_topics_viewed_all_time:
     default: 200
     min: 0
-  leader_requires_posts_read_all_time:
+  tl3_requires_posts_read_all_time:
     default: 500
     min: 0
-  leader_requires_max_flagged:
+  tl3_requires_max_flagged:
     default: 5
     min: 0
-  leader_promotion_min_duration:
+  tl3_promotion_min_duration:
     default: 14
     min: 0
-  leader_requires_likes_given:
+  tl3_requires_likes_given:
     default: 30
     min: 0
-  leader_requires_likes_received:
+  tl3_requires_likes_received:
     default: 20
     min: 0
-  leader_links_no_follow: false
+  tl3_links_no_follow: false
 
 security:
   use_https: false
@@ -523,6 +545,9 @@ security:
   allow_index_in_robots_txt: true
   enable_noscript_support: true
   allow_moderators_to_create_categories: false
+  cors_origins:
+    default: ''
+    type: list
 
 onebox:
   enable_flash_video_onebox: false
@@ -571,29 +596,52 @@ rate_limits:
   max_replies_in_first_day: 10
 
 developer:
-  force_hostname: ''
+  force_hostname:
+    hidden:
+      development: false
+      default: true
+    default: ''
   port:
+    hidden:
+      development: false
+      default: true
     default:
       development: 3000
       default: ''
   queue_jobs:
+    hidden:
+      development: false
+      default: true
     default:
       test: false
       default: true
   enable_long_polling:
     client: true
     default: true
-  long_polling_interval: 15000
+  long_polling_interval: 25000
+  long_polling_base_url:
+    client: true
+    default: '/'
+  background_polling_interval:
+    client: true
+    default: 60000
   polling_interval:
     client: true
     default: 3000
   anon_polling_interval:
     client: true
-    default: 30000
+    default: 15000
   flush_timings_secs:
     client: true
-    default: 5
+    default: 10
   active_user_rate_limit_secs: 60
+  verbose_localization:
+    default: false
+    client: true
+  posts_chunksize:
+    client: true
+    default: 20
+    min: 1
 
 embedding:
   embeddable_host: ''
@@ -616,16 +664,13 @@ legal:
   privacy_policy_url:
     client: true
     default: ''
-  tos_accept_required:
-    client: true
-    default: false
   faq_url:
     client: true
     default: ''
 
 backups:
   allow_restore:
-    client: true
+    client: false
     default: false
   maximum_backups:
     client: true
@@ -668,6 +713,7 @@ uncategorized:
   summary_posts_required: 50
   summary_likes_required: 1
   summary_percent_filter: 20
+  summary_max_results: 100
 
   # View heat thresholds
   topic_views_heat_low:
@@ -773,4 +819,3 @@ uncategorized:
   privacy_topic_id:
     default: -1
     hidden: true
-

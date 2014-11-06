@@ -10,7 +10,7 @@ function performSearch(term, topicId, includeGroups, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
-    return true;
+    return;
   }
 
   // need to be able to cancel this
@@ -20,20 +20,20 @@ function performSearch(term, topicId, includeGroups, resultsFn) {
             include_groups: includeGroups }
   });
 
+  var returnVal = CANCELLED_STATUS;
+
   oldSearch.then(function (r) {
     cache[term] = r;
     cacheTime = new Date();
-
     // If there is a newer search term, return null
-    if (term !== currentTerm) { r = CANCELLED_STATUS; }
-    resultsFn(r);
+    if (term === currentTerm) { returnVal = r; }
 
   }).always(function(){
     oldSearch = null;
+    resultsFn(returnVal);
   });
-
-  return true;
 }
+
 var debouncedSearch = _.debounce(performSearch, 300);
 
 function organizeResults(r, options) {
@@ -96,14 +96,15 @@ export default function userSearch(options) {
     }
 
     cacheTopicId = topicId;
-    var executed = debouncedSearch(term, topicId, includeGroups, function(r) {
+
+    var clearPromise = setTimeout(function(){
+      resolve(CANCELLED_STATUS);
+    }, 5000);
+
+    debouncedSearch(term, topicId, includeGroups, function(r) {
+      clearTimeout(clearPromise);
       resolve(organizeResults(r, options));
     });
 
-    // TODO: This doesn't cancel all debounced promises, we should figure out
-    // a way to handle that.
-    if (!executed) {
-      resolve(CANCELLED_STATUS);
-    }
   });
 }

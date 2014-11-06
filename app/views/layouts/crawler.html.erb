@@ -5,7 +5,7 @@
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
-    <%= raw SiteContent.content_for(:head) %>
+    <%= raw SiteText.text_for(:head) %>
     <%= yield :head %>
   </head>
   <body>

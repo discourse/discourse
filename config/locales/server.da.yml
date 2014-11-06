@@ -23,6 +23,8 @@ da:
   log_in: "Log ind"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
+  purge_reason: "Slettet automatisk eftersom dette var gammelt og ikke verificeret"
+  disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   errors:
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
@@ -97,6 +99,7 @@ da:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
     default_names:
+      everyone: "Alle"
       admins: "admins"
       moderators: "moderatorer"
       staff: "staff"
@@ -104,7 +107,6 @@ da:
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
       trust_level_4: "tillidsniveau_4"
-      trust_level_5: "tillidsniveau_5"
   education:
     until_posts:
       one: "indlæg"
@@ -180,6 +182,9 @@ da:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
+              too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
             archetype:
               cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
         user:
@@ -220,13 +225,11 @@ da:
     basic:
       title: "basis-bruger"
     regular:
-      title: "almindelig bruger"
+      title: "medlem"
     leader:
-      title: "erfaren bruger"
-    elder:
-      title: "advanceret bruger"
-    change_failed_explanation: "Du forsøgte at degradere  %{user_name} til '%{new_trust_level}'. Imidlertid er deres tillidsniveau allerede '%{current_trust_level}'. %{user_name} bliver på '%{current_trust_level}'"
+      title: "stamgæst"
   rate_limiter:
+    slow_down: "Du har forsøgt denne handling for ofte, prøv igen senere"
     too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
     hours:
       one: "1 time"
@@ -344,7 +347,7 @@ da:
       long_form: 'markerede dette som stødende'
     notify_user:
       title: 'Underret {{username}}'
-      description: 'Dette indlæg indeholder noget, som jeg ønsker at diskutere privat med forfatteren.'
+      description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
       long_form: 'underrettede bruger'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -382,10 +385,6 @@ da:
   archetypes:
     regular:
       title: "Almindeligt emne"
-    banner:
-      message:
-        make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
-        remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: 'Frameldt'
     description: "Du er blevet frameldt. Vi skriver ikke til dig igen."
@@ -513,10 +512,6 @@ da:
     login_required_welcome_message:
       title: "Log ind påkrævet: Velkomstbesked"
       description: "Velkomstbesked som vises til anonyme brugere når indstillingen 'log ind påkrævet' er aktiveret."
-    tos_user_content_license:
-      title: "Servicevilkår: Indholdslicens"
-    tos_miscellaneous:
-      title: "Servicevilkår: Diverse"
     login_required:
       title: "Log ind påkrævet: Hjemmeside"
       description: "Teksten som vises til anonyme brugere når login er påkrævet på sitet."
@@ -541,10 +536,7 @@ da:
     favicon_url: "Sitets favicon, se http://en.wikipedia.org/wiki/Favicon."
     apple_touch_icon_url: "Ikon til Apple touch-enheder. Den anbefalede størrelse er 144px gange 144px."
     email_custom_headers: "En liste af brugerdefinerede e-mail-headers adskilt af |-tegn."
-    enable_private_messages: "Tillad bruger med basalt tillidsniveau (1) at oprette private beskeder og svare på private beskeder"
     enable_long_polling: "Message bus til underretninger kan bruge long polling"
-    long_polling_interval: "Interval før det lave et nyt long poll, i millisekunder."
-    polling_interval: "Hvor ofte skal indloggede brugere polle, i millisekunder."
     anon_polling_interval: "Hvor ofte skal anonyme brugere polle, i millisekunder."
     auto_track_topics_after: "Globalt antal millisekunder før et emne automatisk spores, kan tilsidesættes af brugerne (0 for altid, -1 for aldrig)."
     new_topic_duration_minutes: "Globalt antal minutter et emne opfattes som nyt, kan tilsidesættes af brugerne (-1 for altid, -2 for seneste besøg)."
@@ -559,7 +551,6 @@ da:
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
-    enable_badges: "Aktiver badge systemet (eksperimentielt)"
     port: "KUN FOR UDVIKLERE! ADVARSEL! Brug denne HTTP-port i stedet for standarden, som er port 80. Lad feltet stå tomt for at bruge standardværdien."
     force_hostname: "KUN FOR UDVIKLERE! ADVARSEL! Angiv et host-navn i URLen. Lad feltet stå tomt for at bruge standardværdien."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
@@ -628,29 +619,14 @@ da:
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
     closed_enabled: "Dette emne er nu lukket. Nye indlæg tillades ikke."
     closed_disabled: "Dette emne er nu åbent. Nye indlæg tillades."
-    autoclosed_enabled_days:
-      zero: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt."
-    autoclosed_enabled_hours:
-      zero: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} timer. Nye svar er ikke længere tilladt."
-    autoclosed_enabled_minutes:
-      zero: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     pinned_enabled: "Dette emne er nu fastgjort. Det vil stå i toppen af dets kategori indtil det bliver frigjort af \"staff\" for alle eller af hver bruger individuelt for dem selv."
     pinned_disabled: "Dette emne er nu frigjort. Det optræder ikke længere i toppen af dets kategori."
-    visible_enabled: "Dette emne er nu synligt. Det vises i emnelister."
-    visible_disabled: "Dette emne er nu usynligt. Det vises ikke længere på emnelister. Den eneste måde at tilfå dette emne er via et direkte link."
   login:
     not_approved: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
     incorrect_username_email_or_password: "Ugyldigt navn, e-mail eller adgangskode"
     wait_approval: "Tak for din tilmelding. Du får besked, når din konto er blevet godkendt."
     active: "Din konto er aktiv og klar."
-    activate_email: "Du er næsten færdig! Vi har sendt en aktiverings-e-mail til <b>%{email}</b>. Følg venligst instruktionerne i e-mail’en for at aktivere din konto."
     not_activated: "Du kan ikke logge ind endnu. Vi har sendt en aktiverings-e-mail til dig. Følg venligst instruktionerne i e-mail’en for at aktivere din konto."
     suspended: "Du kan ikke logge ind før %{date}."
     suspended_with_reason: "Du kan ikke logge ind før %{date}. Begrundelse for din suspendering: %{reason}"
@@ -685,12 +661,6 @@ da:
       subject_template: "Velkommen til %{site_name}!"
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
-    export_succeeded:
-      subject_template: "Eksport lykkedes"
-      text_body_template: "Eksporten lykkedes."
-    import_succeeded:
-      subject_template: "Import lykkedes"
-      text_body_template: "Importen lykkedes."
     too_many_spam_flags:
       subject_template: "Ny konto blokeret"
     blocked_by_staff:
@@ -828,10 +798,6 @@ da:
     recent_topics: "Nye"
     see_more: "Flere"
     search_title: "Søg på denne side"
-  terms_of_service:
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'slettet'
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."

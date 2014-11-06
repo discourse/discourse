@@ -19,9 +19,11 @@ class ListableTopicSerializer < BasicTopicSerializer
              :visible,
              :closed,
              :archived,
+             :is_warning,
              :notification_level
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
   def include_last_poster?
     object.include_last_poster
   end
@@ -35,6 +37,14 @@ class ListableTopicSerializer < BasicTopicSerializer
     return true if object.user_data && !object.user_data.last_read_post_number.nil?
     return true if object.created_at < scope.user.treat_as_new_topic_start_date
     false
+  end
+
+  def is_warning
+    object.subtype == TopicSubtype.moderator_warning
+  end
+
+  def include_is_warning?
+    is_warning
   end
 
   def unseen

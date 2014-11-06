@@ -84,13 +84,16 @@ Discourse.HTML = {
        ) return "";
 
     var name = Em.get(category, 'name'),
-        description = Em.get(category, 'description'),
+        description = Em.get(category, 'description_text'),
         restricted = Em.get(category, 'read_restricted'),
-        url = Discourse.getURL("/category/") + Discourse.Category.slugFor(category),
+        url = Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
         elem = (opts.link === false ? 'span' : 'a'),
         extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
         html = "<" + elem + " href=\"" + (opts.link === false ? '' : url) + "\" ",
         categoryStyle;
+
+    // Parent stripe implies onlyStripe
+    if (opts.onlyStripe) { opts.showParent = true; }
 
     html += "data-drop-close=\"true\" class=\"badge-category" + (restricted ? ' restricted' : '' ) +
             (opts.onlyStripe ? ' clear-badge' : '') +
@@ -98,7 +101,7 @@ Discourse.HTML = {
     name = Handlebars.Utils.escapeExpression(name);
 
     // Add description if we have it, without tags. Server has sanitized the description value.
-    if (description) html += "title=\"" + $("<div/>").html(description).text() + "\" ";
+    if (description) html += "title=\"" + Handlebars.Utils.escapeExpression(description) + "\" ";
 
     if (!opts.onlyStripe) {
       categoryStyle = Discourse.HTML.categoryStyle(category);
@@ -113,8 +116,10 @@ Discourse.HTML = {
       html += ">" + name + "</" + elem + ">";
     }
 
-    if (opts.showParent && category.get('parent_category_id')) {
+    if (opts.onlyStripe || (opts.showParent && category.get('parent_category_id'))) {
       var parent = Discourse.Category.findById(category.get('parent_category_id'));
+      if (!parent) { parent = category; }
+
       categoryStyle = Discourse.HTML.categoryStyle(opts.onlyStripe ? category : parent) || '';
       html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + categoryStyle + 
              "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +

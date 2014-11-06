@@ -118,7 +118,7 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        SiteSetting.stubs(:posts_per_page).returns(5)
+        SiteSetting.stubs(:posts_chunksize).returns(5)
         TopicView.new(1234, user, post_number: 50).canonical_path.should eql("/1234?page=10")
       end
     end
@@ -136,7 +136,7 @@ describe TopicView do
         TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
         TopicView.any_instance.stubs(:filter_posts)
         TopicView.any_instance.stubs(:last_post).returns(p2)
-        SiteSetting.stubs(:posts_per_page).returns(2)
+        SiteSetting.stubs(:posts_chunksize).returns(2)
       end
 
       it "should return the next page" do
@@ -193,14 +193,14 @@ describe TopicView do
     context '.read?' do
       it 'tracks correctly' do
         # anon is assumed to have read everything
-        TopicView.new(topic.id).read?(1).should be_true
+        TopicView.new(topic.id).read?(1).should == true
 
         # random user has nothing
-        topic_view.read?(1).should be_false
+        topic_view.read?(1).should == false
 
         # a real user that just read it should have it marked
         PostTiming.process_timings(coding_horror, topic.id, 1, [[1,1000]])
-        TopicView.new(topic.id, coding_horror).read?(1).should be_true
+        TopicView.new(topic.id, coding_horror).read?(1).should == true
         TopicView.new(topic.id, coding_horror).topic_user.should be_present
       end
     end
@@ -225,8 +225,8 @@ describe TopicView do
         recent_posts.count.should == 25
 
         # ordering
-        recent_posts.include?(p1).should be_false
-        recent_posts.include?(p3).should be_true
+        recent_posts.include?(p1).should == false
+        recent_posts.include?(p3).should == true
         recent_posts.first.created_at.should > recent_posts.last.created_at
       end
     end
@@ -245,7 +245,7 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster)}
 
     before do
-      SiteSetting.posts_per_page = 3
+      SiteSetting.posts_chunksize = 3
 
       # Update them to the sort order we're checking for
       [p1, p2, p3, p4, p5, p6, p7].each_with_index do |p, idx|
@@ -259,13 +259,13 @@ describe TopicView do
     describe "contains_gaps?" do
       it "works" do
         # does not contain contains_gaps with default filtering
-        topic_view.contains_gaps?.should be_false
+        topic_view.contains_gaps?.should == false
         # contains contains_gaps when filtered by username" do
-        TopicView.new(topic.id, coding_horror, username_filters: ['eviltrout']).contains_gaps?.should be_true
+        TopicView.new(topic.id, coding_horror, username_filters: ['eviltrout']).contains_gaps?.should == true
         # contains contains_gaps when filtered by summary
-        TopicView.new(topic.id, coding_horror, filter: 'summary').contains_gaps?.should be_true
+        TopicView.new(topic.id, coding_horror, filter: 'summary').contains_gaps?.should == true
         # contains contains_gaps when filtered by best
-        TopicView.new(topic.id, coding_horror, best: 5).contains_gaps?.should be_true
+        TopicView.new(topic.id, coding_horror, best: 5).contains_gaps?.should == true
       end
     end
 
@@ -289,7 +289,7 @@ describe TopicView do
 
 
     describe '#filter_posts_paged' do
-      before { SiteSetting.stubs(:posts_per_page).returns(2) }
+      before { SiteSetting.stubs(:posts_chunksize).returns(2) }
 
       it 'returns correct posts for all pages' do
         topic_view.filter_posts_paged(1).should == [p1, p2]
@@ -309,21 +309,21 @@ describe TopicView do
         near_view = topic_view_near(p1)
         near_view.desired_post.should == p1
         near_view.posts.should == [p1, p2, p3]
-        near_view.contains_gaps?.should be_false
+        near_view.contains_gaps?.should == false
       end
 
       it "snaps to the upper boundary" do
         near_view = topic_view_near(p5)
         near_view.desired_post.should == p5
         near_view.posts.should == [p2, p3, p5]
-        near_view.contains_gaps?.should be_false
+        near_view.contains_gaps?.should == false
       end
 
       it "returns the posts in the middle" do
         near_view = topic_view_near(p2)
         near_view.desired_post.should == p2
         near_view.posts.should == [p1, p2, p3]
-        near_view.contains_gaps?.should be_false
+        near_view.contains_gaps?.should == false
       end
 
       it "gaps deleted posts to an admin" do
@@ -340,7 +340,7 @@ describe TopicView do
         near_view = topic_view_near(p3, true)
         near_view.desired_post.should == p3
         near_view.posts.should == [p2, p3, p4]
-        near_view.contains_gaps?.should be_false
+        near_view.contains_gaps?.should == false
       end
 
       it "gaps deleted posts by nuked users to an admin" do
@@ -358,16 +358,16 @@ describe TopicView do
         near_view = topic_view_near(p5, true)
         near_view.desired_post.should == p5
         near_view.posts.should == [p4, p5, p6]
-        near_view.contains_gaps?.should be_false
+        near_view.contains_gaps?.should == false
       end
 
       context "when 'posts per page' exceeds the number of posts" do
-        before { SiteSetting.stubs(:posts_per_page).returns(100) }
+        before { SiteSetting.stubs(:posts_chunksize).returns(100) }
 
         it 'returns all the posts' do
           near_view = topic_view_near(p5)
           near_view.posts.should == [p1, p2, p3, p5]
-          near_view.contains_gaps?.should be_false
+          near_view.contains_gaps?.should == false
         end
 
         it 'gaps deleted posts to admins' do
@@ -382,7 +382,7 @@ describe TopicView do
           coding_horror.admin = true
           near_view = topic_view_near(p5, true)
           near_view.posts.should == [p1, p2, p3, p4, p5, p6, p7]
-          near_view.contains_gaps?.should be_false
+          near_view.contains_gaps?.should == false
         end
       end
     end

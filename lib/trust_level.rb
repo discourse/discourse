@@ -1,9 +1,18 @@
 require_dependency 'enum'
 
+class InvalidTrustLevel < StandardError; end
 class TrustLevel
   attr_reader :id, :name
 
   class << self
+
+    def[](level)
+      if !valid?(level)
+        raise InvalidTrustLevel
+      end
+      level
+    end
+
     def levels
       @levels ||= Enum.new(
         :newuser, :basic, :regular, :leader, :elder, start: 0
@@ -16,12 +25,16 @@ class TrustLevel
       end
     end
 
-    def valid_level?(level)
-      levels.valid?(level)
+    def valid?(level)
+       valid_range === level
+    end
+
+    def valid_range
+       (0..4)
     end
 
     def compare(current_level, level)
-      (current_level || levels[:newuser]) >= levels[level] rescue binding.pry
+      (current_level || 0) >= level
     end
   end
 

@@ -2,6 +2,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   attr_reader :excerpt
 
+  SPAN_REGEX = /<\s*span[^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
+
   def initialize(length, options=nil)
     @length = length
     @excerpt = ""
@@ -14,20 +16,28 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
   end
 
   def self.get_excerpt(html, length, options)
-    me = self.new(length,options)
+    html ||= ''
+    if (html.include? 'excerpt') && (SPAN_REGEX === html)
+      length = html.length
+    end
+    me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
     catch(:done) do
-      parser.parse(html) unless html.nil?
+      parser.parse(html)
     end
     me.excerpt.strip!
     me.excerpt
   end
 
   def escape_attribute(v)
-    v.gsub("&", "&amp;")
-     .gsub("\"", "&#34;")
-     .gsub("<", "&lt;")
-     .gsub(">", "&gt;")
+    return "" unless v
+
+    v = v.dup
+    v.gsub!("&", "&amp;")
+    v.gsub!("\"", "&#34;")
+    v.gsub!("<", "&lt;")
+    v.gsub!(">", "&gt;")
+    v
   end
 
   def include_tag(name, attributes)
@@ -63,6 +73,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
       when "div", "span"
         if attributes.include?(["class", "excerpt"])
+          @excerpt = ""
+          @current_length = 0
           @start_excerpt = true
         end
         # Preserve spoilers

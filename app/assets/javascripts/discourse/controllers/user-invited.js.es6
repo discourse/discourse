@@ -72,6 +72,17 @@ export default Ember.ObjectController.extend({
       return false;
     },
 
+    /**
+      Resend a given invite
+
+      @method reinvite
+      @param {Discourse.Invite} invite the invite to resend.
+    **/
+    reinvite: function(invite) {
+      invite.reinvite();
+      return false;
+    },
+
     loadMore: function() {
       var self = this;
       var model = self.get('model');

@@ -16,7 +16,6 @@ test('basic bbcode', function() {
   format("[u]underlined[/u]", "<span class=\"bbcode-u\">underlined</span>", "underlines text");
   format("[s]strikethrough[/s]", "<span class=\"bbcode-s\">strikethrough</span>", "strikes-through text");
   format("[img]http://eviltrout.com/eviltrout.png[/img]", "<img src=\"http://eviltrout.com/eviltrout.png\">", "links images");
-  format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without a title");
   format("[email]eviltrout@mailinator.com[/email]", "<a href=\"mailto:eviltrout@mailinator.com\">eviltrout@mailinator.com</a>", "supports [email] without a title");
   format("[b]evil [i]trout[/i][/b]",
          "<span class=\"bbcode-b\">evil <span class=\"bbcode-i\">trout</span></span>",
@@ -25,6 +24,14 @@ test('basic bbcode', function() {
   format("[b]strong [b]stronger[/b][/b]", "<span class=\"bbcode-b\">strong <span class=\"bbcode-b\">stronger</span></span>", "accepts nested bbcode tags");
 });
 
+test('urls', function() {
+  format("[url]not a url[/url]", "not a url", "supports [url] that isn't a url");
+  format("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without parameter");
+  format("[url=http://example.com]example[/url]", "<a href=\"http://example.com\">example</a>", "supports [url] with given href");
+  format("[url=http://www.example.com][img]http://example.com/logo.png[/img][/url]",
+         "<a href=\"http://www.example.com\"><img src=\"http://example.com/logo.png\"></a>",
+         "supports [url] with an embedded [img]");
+});
 test('invalid bbcode', function() {
   var cooked = Discourse.Markdown.cook("[code]I am not closed\n\nThis text exists.", {lookupAvatar: false});
   equal(cooked, "<p>[code]I am not closed</p>\n\n<p>This text exists.</p>", "does not raise an error with an open bbcode tag.");
@@ -34,6 +41,9 @@ test('code', function() {
   format("[code]\nx++\n[/code]", "<pre><code class=\"lang-auto\">x++</code></pre>", "makes code into pre");
   format("[code]\nx++\ny++\nz++\n[/code]", "<pre><code class=\"lang-auto\">x++\ny++\nz++</code></pre>", "makes code into pre");
   format("[code]abc\n#def\n[/code]", '<pre><code class=\"lang-auto\">abc\n#def</code></pre>', 'it handles headings in a [code] block');
+  format("[code]\n   s[/code]",
+         "<pre><code class=\"lang-auto\">   s</code></pre>",
+         "it doesn't trim leading whitespace");
 });
 
 test('spoiler', function() {
@@ -65,6 +75,9 @@ test("size tags", function() {
   format("[size=35]NEWLINE\n\ntest[/size]",
          "<span class=\"bbcode-size-35\"><p>NEWLINE</p><p>test</p></span>",
          "works with newlines");
+  format("[size=35][quote=\"user\"]quote[/quote][/size]",
+         "<span class=\"bbcode-size-35\"><aside class=\"quote\"><div class=\"title\"><div class=\"quote-controls\"></div>user:</div><blockquote><p>quote</p></blockquote></aside></span>",
+         "works with nested complex blocks");
 });
 
 test("quotes", function() {
@@ -119,27 +132,27 @@ test("quote formatting", function() {
 
   formatQ("[quote=\"EvilTrout, post:123, topic:456, full:true\"][sam][/quote]",
           "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
-          "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>[sam]</p></blockquote></aside>",
+          "<div class=\"quote-controls\"></div>EvilTrout:</div><blockquote><p>[sam]</p></blockquote></aside>",
           "it allows quotes with [] inside");
 
   formatQ("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]",
-         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout:" +
          "</div><blockquote><p>abc</p></blockquote></aside>",
          "renders quotes properly");
 
   formatQ("[quote=\"eviltrout, post:1, topic:1\"]abc[/quote]\nhello",
-         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout said:" +
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>eviltrout:" +
          "</div><blockquote><p>abc</p></blockquote></aside>\n\n<p>hello</p>",
          "handles new lines properly");
 
   formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]\n[/quote]",
-         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
-         "</div><blockquote><aside class=\"quote\" data-post=\"2\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Bob said:" +
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice:" +
+         "</div><blockquote><aside class=\"quote\" data-post=\"2\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Bob:" +
          "</div><blockquote></blockquote></aside></blockquote></aside>",
          "quotes can be nested");
 
   formatQ("[quote=\"Alice, post:1, topic:1\"]\n[quote=\"Bob, post:2, topic:1\"]\n[/quote]",
-         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice said:" +
+         "<aside class=\"quote\" data-post=\"1\" data-topic=\"1\"><div class=\"title\"><div class=\"quote-controls\"></div>Alice:" +
          "</div><blockquote><p>[quote=\"Bob, post:2, topic:1\"]</p></blockquote></aside>",
          "handles mismatched nested quote tags");
 });
@@ -148,7 +161,7 @@ test("quotes with trailing formatting", function() {
   var cooked = Discourse.Markdown.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]\nhello\n[/quote]\n*Test*", {lookupAvatar: false});
   equal(cooked,
         "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">" +
-        "<div class=\"quote-controls\"></div>EvilTrout said:</div><blockquote><p>hello</p></blockquote></aside>\n\n<p><em>Test</em></p>",
+        "<div class=\"quote-controls\"></div>EvilTrout:</div><blockquote><p>hello</p></blockquote></aside>\n\n<p><em>Test</em></p>",
         "it allows trailing formatting");
 });
 

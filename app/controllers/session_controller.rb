@@ -3,7 +3,7 @@ require_dependency 'rate_limiter'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login']
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -15,6 +15,17 @@ class SessionController < ApplicationController
     else
       render nothing: true, status: 404
     end
+  end
+
+  # For use in development mode only when login options could be limited or disabled.
+  # NEVER allow this to work in production.
+  def become
+    raise Discourse::InvalidAccess.new unless Rails.env.development?
+    user = User.find_by_username(params[:session_id])
+    raise "User #{params[:session_id]} not found" if user.blank?
+
+    log_on_user(user)
+    redirect_to "/"
   end
 
   def sso_login
@@ -89,6 +100,11 @@ class SessionController < ApplicationController
       return
     end
 
+    if ScreenedIpAddress.block_login?(user, request.remote_ip)
+      not_allowed_from_ip_address(user)
+      return
+    end
+
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
@@ -108,8 +124,13 @@ class SessionController < ApplicationController
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
-    # always render of so we don't leak information
-    render json: {result: "ok"}
+
+    json = { result: "ok" }
+    unless SiteSetting.forgot_password_strict
+      json[:user_found] = user.present?
+    end
+
+    render json: json
 
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
@@ -154,6 +175,10 @@ class SessionController < ApplicationController
       sent_to_email: user.find_email || user.email,
       current_email: user.email
     }
+  end
+
+  def not_allowed_from_ip_address(user)
+    render json: {error: I18n.t("login.not_allowed_from_ip_address", username: user.username)}
   end
 
   def failed_to_login(user)

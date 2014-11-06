@@ -110,46 +110,25 @@ Discourse.Badge = Discourse.Model.extend({
     @method save
     @returns {Promise} A promise that resolves to the updated `Discourse.Badge`
   **/
-  save: function(fields) {
-    this.set('savingStatus', I18n.t('saving'));
-    this.set('saving', true);
-
+  save: function(data) {
     var url = "/admin/badges",
         requestType = "POST",
         self = this;
 
-    if (!this.get('newBadge')) {
+    if (this.get('id')) {
       // We are updating an existing badge.
       url += "/" + this.get('id');
       requestType = "PUT";
     }
-
-    var boolFields = ['allow_title', 'multiple_grant',
-                      'listable', 'auto_revoke',
-                      'enabled', 'show_posts',
-                      'target_posts' ];
-
-    var data = {};
-    fields.forEach(function(field){
-      var d = self.get(field);
-      if(_.include(boolFields, field)) {
-        d = !!d;
-      }
-      data[field] = d;
-    });
 
     return Discourse.ajax(url, {
       type: requestType,
       data: data
     }).then(function(json) {
       self.updateFromJson(json);
-      self.set('savingStatus', I18n.t('saved'));
-      self.set('saving', false);
       return self;
-    }, function(error){
-      self.set('savingStatus', '');
-      self.set('saving', false);
-      bootbox.alert(error.responseText);
+    }).catch(function(error) {
+      throw error;
     });
   },
 

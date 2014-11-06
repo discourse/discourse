@@ -27,6 +27,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
+    @old_site_settings = {}
 
     puts "loading existing groups..."
     GroupCustomField.where(name: 'import_id').pluck(:group_id, :value).each do |group_id, import_id|
@@ -66,29 +67,49 @@ class ImportScripts::Base
   def perform
     Rails.logger.level = 3 # :error, so that we don't create log files that are many GB
 
-    SiteSetting.email_domains_blacklist = ''
-    SiteSetting.min_topic_title_length = 1
-    SiteSetting.min_post_length = 1
-    SiteSetting.min_private_message_post_length = 1
-    SiteSetting.min_private_message_title_length = 1
-    SiteSetting.allow_duplicate_topic_titles = true
-    SiteSetting.default_digest_email_frequency = ''
-    SiteSetting.disable_emails = true
-
-    RateLimiter.disable
-
+    change_site_settings
     execute
 
     puts ""
 
     update_bumped_at
+    update_last_posted_at
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
+    reset_topic_counters
 
     puts "", "Done"
 
   ensure
+    reset_site_settings
+  end
+
+  def change_site_settings
+    new_settings = {
+      email_domains_blacklist: '',
+      min_topic_title_length: 1,
+      min_post_length: 1,
+      min_private_message_post_length: 1,
+      min_private_message_title_length: 1,
+      allow_duplicate_topic_titles: true,
+      default_digest_email_frequency: '',
+      disable_emails: true
+    }
+
+    new_settings.each do |key, value|
+      @old_site_settings[key] = SiteSetting.send(key)
+      SiteSetting.set(key, value)
+    end
+
+    RateLimiter.disable
+  end
+
+  def reset_site_settings
+    @old_site_settings.each do |key, value|
+      SiteSetting.set(key, value)
+    end
+
     RateLimiter.enable
   end
 
@@ -139,7 +160,7 @@ class ImportScripts::Base
     admin.password = SecureRandom.uuid
     admin.save!
     admin.grant_admin!
-    admin.change_trust_level!(:regular)
+    admin.change_trust_level!(TrustLevel[4])
     admin.email_tokens.update_all(confirmed: true)
     admin
   end
@@ -208,28 +229,28 @@ class ImportScripts::Base
     results.each do |result|
       u = yield(result)
 
+      # block returns nil to skip a post
       if u.nil?
         users_skipped += 1
-        next # block returns nil to skip a post
-      end
+      else
+        import_id = u[:id]
 
-      import_id = u[:id]
+        if user_id_from_imported_user_id(import_id)
+          users_skipped += 1
+        elsif u[:email].present?
+          new_user = create_user(u, import_id)
 
-      if user_id_from_imported_user_id(import_id)
-        users_skipped += 1
-      elsif u[:email].present?
-        new_user = create_user(u, import_id)
-
-        if new_user.valid?
-          @existing_users[import_id.to_s] = new_user.id
-          users_created += 1
+          if new_user.valid?
+            @existing_users[import_id.to_s] = new_user.id
+            users_created += 1
+          else
+            @failed_users << u
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          end
         else
           @failed_users << u
-          puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+          puts "Skipping user id #{import_id} because email is blank"
         end
-      else
-        @failed_users << u
-        puts "Skipping user id #{import_id} because email is blank"
       end
 
       print_status users_created + users_skipped + @failed_users.length + (opts[:offset] || 0), total
@@ -260,7 +281,7 @@ class ImportScripts::Base
       opts[:username] = UserNameSuggester.suggest(opts[:username] || opts[:name] || opts[:email])
     end
     opts[:email] = opts[:email].downcase
-    opts[:trust_level] = TrustLevel.levels[:basic] unless opts[:trust_level]
+    opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = true
     opts[:import_mode] = true
 
@@ -301,6 +322,12 @@ class ImportScripts::Base
   def create_categories(results)
     results.each do |c|
       params = yield(c)
+
+      # Basic massaging on the category name
+      params[:name] = "Blank" if params[:name].blank?
+      params[:name].strip!
+      params[:name] = params[:name][0..49]
+
       puts "\t#{params[:name]}"
 
       # make sure categories don't go more than 2 levels deep
@@ -337,6 +364,10 @@ class ImportScripts::Base
     new_category
   end
 
+  def created_post(post)
+    # override if needed
+  end
+
   # Iterates through a collection of posts to be imported.
   # It can create topics and replies.
   # Attributes will be passed to the PostCreator.
@@ -350,39 +381,42 @@ class ImportScripts::Base
     results.each do |r|
       params = yield(r)
 
+      # block returns nil to skip a post
       if params.nil?
         skipped += 1
-        next # block returns nil to skip a post
-      end
-
-      import_id = params.delete(:id).to_s
-
-      if post_id_from_imported_post_id(import_id)
-        skipped += 1 # already imported this post
       else
-        begin
-          new_post = create_post(params, import_id)
-          if new_post.is_a?(Post)
-            @existing_posts[import_id] = new_post.id
-            @topic_lookup[new_post.id] = {
-              post_number: new_post.post_number,
-              topic_id: new_post.topic_id,
-              url: new_post.url,
-            }
+        import_id = params.delete(:id).to_s
 
-            created += 1
-          else
+        if post_id_from_imported_post_id(import_id)
+          skipped += 1 # already imported this post
+        else
+          begin
+            new_post = create_post(params, import_id)
+            if new_post.is_a?(Post)
+              @existing_posts[import_id] = new_post.id
+              @topic_lookup[new_post.id] = {
+                post_number: new_post.post_number,
+                topic_id: new_post.topic_id,
+                url: new_post.url,
+              }
+
+              created_post(new_post)
+
+              created += 1
+            else
+              skipped += 1
+              puts "Error creating post #{import_id}. Skipping."
+              puts new_post.inspect
+            end
+          rescue Discourse::InvalidAccess => e
             skipped += 1
-            puts "Error creating post #{import_id}. Skipping."
-            puts new_post.inspect
+            puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
+          rescue => e
+            skipped += 1
+            puts "Exception while creating post #{import_id}. Skipping."
+            puts e.message
+            puts e.backtrace.join("\n")
           end
-        rescue Discourse::InvalidAccess => e
-          skipped += 1
-          puts "InvalidAccess creating post #{import_id}. Topic is closed? #{e.message}"
-        rescue => e
-          skipped += 1
-          puts "Exception while creating post #{import_id}. Skipping."
-          puts e.message
         end
       end
 
@@ -442,7 +476,27 @@ class ImportScripts::Base
 
   def update_bumped_at
     puts "", "updating bumped_at on topics"
-    Post.exec_sql("update topics t set bumped_at = (select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]})")
+    Post.exec_sql("update topics t set bumped_at = COALESCE((select max(created_at) from posts where topic_id = t.id and post_type != #{Post.types[:moderator_action]}), bumped_at)")
+  end
+
+  def update_last_posted_at
+    puts "", "updating last posted at on users"
+
+    sql = <<-SQL
+      WITH lpa AS (
+        SELECT user_id, MAX(posts.created_at) AS last_posted_at
+        FROM posts
+        GROUP BY user_id
+      )
+      UPDATE users
+      SET last_posted_at = lpa.last_posted_at
+      FROM users u1
+      JOIN lpa ON lpa.user_id = u1.id
+      WHERE u1.id = users.id
+        AND users.last_posted_at <> lpa.last_posted_at
+    SQL
+
+    User.exec_sql(sql)
   end
 
   def update_feature_topic_users
@@ -453,6 +507,19 @@ class ImportScripts::Base
 
     Topic.find_each do |topic|
       topic.feature_topic_users
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
+  def reset_topic_counters
+    puts "", "reseting topic counters"
+
+    total_count = Topic.count
+    progress_count = 0
+
+    Topic.find_each do |topic|
+      Topic.reset_highest(topic.id)
       progress_count += 1
       print_status(progress_count, total_count)
     end
@@ -486,7 +553,7 @@ class ImportScripts::Base
   end
 
   def print_status(current, max)
-    print "\r%9d / %d (%5.1f%%)" % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+    print "\r%9d / %d (%5.1f%%)  " % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
   end
 
   def batches(batch_size)

@@ -1,0 +1,10 @@
+{{render "header"}}
+
+<div id='main-outlet' {{bind-attr class=backgroundClass}}>
+  {{outlet}}
+  {{render "user-card"}}
+</div>
+
+{{render "modal"}}
+{{render "topic-entrance"}}
+{{render "composer"}}

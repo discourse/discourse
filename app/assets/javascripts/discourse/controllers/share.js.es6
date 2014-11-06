@@ -3,6 +3,10 @@ import DiscourseController from 'discourse/controllers/controller';
 export default DiscourseController.extend({
   needs: ['topic'],
 
+  displayDate: function() {
+    return Discourse.Formatter.longDateNoYear(new Date(this.get('date')));
+  }.property('date'),
+
   // Close the share controller
   actions: {
     close: function() {

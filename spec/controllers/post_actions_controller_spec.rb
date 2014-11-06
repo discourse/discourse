@@ -28,7 +28,7 @@ describe PostActionsController do
       end
 
       it "fails when the user doesn't have permission to perform that action" do
-        Guardian.any_instance.expects(:post_can_act?).with(@post, :like).returns(false)
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :like, taken_actions: nil).returns(false)
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
         response.should be_forbidden
       end
@@ -36,6 +36,12 @@ describe PostActionsController do
       it 'allows us to create an post action on a post' do
         PostAction.expects(:act).once.with(@user, @post, PostActionType.types[:like], {})
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
+      end
+
+      it "passes a list of taken actions through" do
+        PostAction.create(post_id: @post.id, user_id: @user.id, post_action_type_id: PostActionType.types[:inappropriate])
+        Guardian.any_instance.expects(:post_can_act?).with(@post, :off_topic, has_entry({:taken_actions => has_key(PostActionType.types[:inappropriate])}))
+        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:off_topic]
       end
 
       it 'passes the message through' do
@@ -88,7 +94,7 @@ describe PostActionsController do
 
         it 'deletes the action' do
           xhr :delete, :destroy, id: post.id, post_action_type_id: 1
-          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should be_false
+          PostAction.exists?(user_id: user.id, post_id: post.id, post_action_type_id: 1, deleted_at: nil).should == false
         end
 
         it 'ensures it can be deleted' do

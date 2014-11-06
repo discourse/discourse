@@ -13,12 +13,6 @@
   .panel {
     margin-right: 20px;
   }
-  .current-username {
-    display: none;
-    a {
-      line-height: 40px;
-    }
-  }
 
   .icons {
     .badge-notification {
@@ -56,6 +50,12 @@
 
   // Search
 
+  .searching {
+    position: absolute;
+    top: 0;
+    right: 25px;
+  }
+  
   input[type='text'] {
     width: 265px;
     font-size: 16px;
@@ -71,4 +71,16 @@
       margin-right: 5px;
     }
   }
+}
+
+.search-link .badge-category {
+  display: none;
+}
+
+.search-link .topic-statuses .topic-status i {
+  font-size: 14px;
+}
+
+.d-dropdown#search-dropdown .heading {
+  padding: 0;
 }

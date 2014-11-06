@@ -25,6 +25,11 @@ de:
       long_no_year_no_time: "DD. MMM"
       long_with_year: "DD. MMM YYYY HH:mm"
       long_with_year_no_time: "DD. MMM YYYY"
+      long_date_with_year: "DD. MMM 'YY HH:mm"
+      long_date_without_year: "DD. MMM HH:mm"
+      long_date_with_year_without_time: "DD. MMM 'YY"
+      long_date_without_year_with_linebreak: "DD. MMM<br/>HH:mm"
+      long_date_with_year_with_linebreak: "DD. MMM 'YY<br/>HH:mm"
       tiny:
         half_a_minute: "< 1min"
         less_than_x_seconds:
@@ -66,7 +71,7 @@ de:
         x_days:
           one: "1 Tag"
           other: "%{count} Tage"
-        date_year: "DD. MMM YYYY"
+        date_year: "DD. MMM 'YY"
       medium_with_ago:
         x_minutes:
           one: "vor einer Minute"
@@ -85,6 +90,7 @@ de:
       facebook: 'diesen Link auf Facebook teilen'
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
+    topic_admin_menu: "Thema administrieren"
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Tut uns leid, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -98,6 +104,7 @@ de:
     admin_title: "Administration"
     flags_title: "Meldungen"
     show_more: "mehr anzeigen"
+    show_help: "Hilfe"
     links: "Links"
     links_lowercase: "Links"
     faq: "FAQ"
@@ -117,22 +124,10 @@ de:
     daily: "täglich"
     weekly: "wöchentlich"
     every_two_weeks: "jede zweite Woche"
-    max: "max"
+    max_of_count: "von max. {{count}}"
     character_count:
       one: "{{count}} Zeichen"
       other: "{{count}} Zeichen"
-    in_n_seconds:
-      one: "in einer Sekunde"
-      other: "in {{count}} Sekunden"
-    in_n_minutes:
-      one: "in einer Minute"
-      other: "in {{count}} Minuten"
-    in_n_hours:
-      one: "in einer Stunde"
-      other: "in {{count}} Stunden"
-    in_n_days:
-      one: "in einem Tag"
-      other: "in {{count}} Tagen"
     suggested_topics:
       title: "Vorgeschlagene Themen"
     about:
@@ -144,10 +139,10 @@ de:
       stat:
         all_time: "Gesamt"
         last_7_days: "Letzte 7 Tage"
-      like_count: "Anzahl der Likes"
-      topic_count: "Anzahl der Themen"
-      post_count: "Anzahl der Beiträge"
-      user_count: "Anzahl der Benutzer"
+      like_count: "Gefällt mir"
+      topic_count: "Themen"
+      post_count: "Beiträge"
+      user_count: "Benutzer"
     bookmarks:
       not_logged_in: "Entschuldigung, du musst eingeloggt sein, um ein Lesezeichen zu setzen."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
@@ -176,6 +171,7 @@ de:
     disable: "Deaktivieren"
     undo: "Rückgängig machen"
     revert: "Verwerfen"
+    failed: "Fehlgeschlagen"
     banner:
       close: "Diesen Banner ausblenden."
     choose_topic:
@@ -253,7 +249,7 @@ de:
       other_accounts: Andere Konten mit dieser IP-Adresse
       no_other_accounts: (keine)
     user:
-      said: "{{username}} sagte:"
+      said: "{{username}}:"
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
@@ -267,6 +263,8 @@ de:
       invited_by: "Eingeladen von"
       trust_level: "Vertrauensstufe"
       notifications: "Benachrichtigungen"
+      dismiss_notifications: "Alle als gelesen markieren"
+      dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Nach Verfassen einer Antwort nicht zum neuen Beitrag springen"
       dynamic_favicon: "Zeige Benachrichtigungen über eingehende Nachrichten im Favicon (experimentell)"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
@@ -279,23 +277,25 @@ de:
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
-      mailing_list_mode: "Erhalte jedes Mal eine E-Mail, wenn ein Beitrag im Forum geschrieben wurde (sofern du das Thema oder die Kategorie nicht stummgeschaltet hast)"
+      github_profile: "Github"
+      mailing_list_mode: "Erhalte bei jedem neuen Beitrag eine E-Mail (sofern du das Thema oder die Kategorie nicht stummgeschaltet hast)"
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
       tracked_categories: "Verfolgt"
-      tracked_categories_instructions: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Eintrag in der Themenliste angezeigt."
+      tracked_categories_instructions: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema angezeigt."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
       delete_account: "Lösche mein Benutzerkonto"
-      delete_account_confirm: "Bist du sicher, dass du dein Benutzerkonto permanent löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden!"
+      delete_account_confirm: "Möchtest du wirklich dein Benutzerkonto permanent löschen? Diese Aktion kann nicht rückgängig gemacht werden!"
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Benutzerkonto nicht löschen. Kontaktiere einen Administrator, um dein Benutzerkonto löschen zu lassen."
       unread_message_count: "Nachrichten"
       staff_counters:
-        flags_given: "hilfreiche Meldungen abgegeben"
+        flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
         deleted_posts: "gelöschte Beiträge"
         suspensions: "Sperren"
+        warnings_received: "Warnungen"
       messages:
         all: "Alle"
         mine: "Meine"
@@ -310,7 +310,7 @@ de:
         title: "„Über mich“ ändern"
       change_username:
         title: "Benutzernamen ändern"
-        confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist Du sicher, dass du fortfahren willst?"
+        confirm: "Wenn du deinen Benutzernamen änderst, werden alle derzeit vorhandenen Zitate deiner Beiträge und alle Erwähnungen per @Name nicht mehr funktionieren. Bist du dir absolut sicher, dass du fortfahren willst?"
         taken: "Der Benutzername ist bereits vergeben."
         error: "Bei der Änderung deines Benutzernamens ist ein Fehler aufgetreten."
         invalid: "Der Benutzernamen ist nicht zulässig. Er darf nur Zahlen und Buchstaben enthalten."
@@ -331,18 +331,25 @@ de:
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
       change_profile_background:
         title: "Profilhintergrund"
+        instructions: "Profilhintergründe werden zentriert und haben eine voreingestellte Breite von 850px."
+      change_card_background:
+        title: "Benutzerkartenhintergrund"
+        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590 Pixel."
       email:
         title: "E-Mail"
-        ok: "Schaut gut aus. Wir schicken dir eine E-Mail zur Bestätigung."
+        instructions: "Wird niemals öffentlich angezeigt."
+        ok: "Wir senden dir zur Bestätigung eine E-Mail."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
+        instructions: "Ihr vollständiger Name (optional)."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
+        instructions: "Eindeutig, keine Leerzeichen, kurz."
         short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
         available: "Dein Benutzername ist verfügbar."
         global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
@@ -350,7 +357,7 @@ de:
         not_available: "Nicht verfügbar. Wie wäre es mit {{suggestion}}?"
         too_short: "Dein Benutzername ist zu kurz."
         too_long: "Dein Benutzername ist zu lang."
-        checking: "Überprüfe die Verfügbarkeit des Benutzernamens..."
+        checking: "Verfügbarkeit wird geprüft..."
         enter_email: 'Benutzername gefunden. Gib die zugehörige E-Mail-Adresse ein.'
         prefilled: "Die E-Mail-Adresse passt zu diesem registrierten Benutzernamen."
       locale:
@@ -365,16 +372,18 @@ de:
       created: "Mitglied seit"
       log_out: "Abmelden"
       location: "Wohnort"
+      card_badge:
+        title: "Benutzerkartenabzeichen"
       website: "Website"
       email_settings: "E-Mail"
       email_digests:
-        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Seite länger nicht besuche:"
+        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Website länger nicht besuche:"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "alle zwei Wochen"
       email_direct: "Schicke eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
       email_private_messages: "Schicke eine E-Mail, wenn mir jemand eine private Nachricht sendet."
-      email_always: "Schicke mir Benachrichtigungen und Neuigkeiten per E-Mail auch wenn ich im Forum aktiv bin"
+      email_always: "E-Mail-Benachrichtigungen nicht unterdrücken, während ich im Forum aktiv bin"
       other_settings: "Andere"
       categories_settings: "Kategorien"
       new_topic_duration:
@@ -411,6 +420,8 @@ de:
         expired: "Diese Einladung ist abgelaufen."
         rescind: "Einladung zurücknehmen"
         rescinded: "Einladung zurückgenommen"
+        reinvite: "Einladung erneut senden"
+        reinvited: "Einladung erneut gesendet"
         time_read: "Lesezeit"
         days_visited: "Besuchstage"
         account_age_days: "Konto-Alter in Tagen"
@@ -418,7 +429,7 @@ de:
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
-          uploading: "wird hochgeladen"
+          uploading: "Wird hochgeladen..."
           success: "Datei erfolgreich hochgeladen. Du wirst in Kürze über den Fortschritt benachrichtigt."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
       password:
@@ -426,7 +437,8 @@ de:
         too_short: "Dein Passwort ist zu kurz."
         common: "Das Passwort wird zu häufig verwendet."
         ok: "Dein Passwort sieht gut aus."
-        instructions: "Muss mindestens %{count} Zeichen lang sein."
+        instructions: "Mindestens %{count} Zeichen."
+      associated_accounts: "Zugehörige Konten"
       ip_address:
         title: "Letzte IP-Adresse"
       registration_ip_address:
@@ -447,10 +459,14 @@ de:
       prev_page: "während des Ladens"
       reasons:
         network: "Netzwerkfehler"
+        server: "Server-Fehler"
+        forbidden: "Zugriff verweigert"
         unknown: "Fehler"
       desc:
         network: "Bitte überprüfe deine Netzwerkverbindung."
         network_fixed: "Sieht aus, als wäre es wieder da."
+        server: "Fehlercode: {{status}}"
+        forbidden: "Du darfst das nicht ansehen."
         unknown: "Etwas ist schief gelaufen."
       buttons:
         back: "Zurück"
@@ -459,8 +475,8 @@ de:
     close: "Schließen"
     assets_changed_confirm: "Diese Website wurde gerade aktualisiert. Neu laden für die neuste Version?"
     read_only_mode:
-      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Seite weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
-      login_disabled: "Login ist deaktiviert während sich die Seite im Nur-Lesen-Modus befindet."
+      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
+      login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
     too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und %{posts} öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung wird nur Mitarbeitern angezeigt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
@@ -476,7 +492,7 @@ de:
     last_post: Letzter Beitrag
     last_post_lowercase: letzter Beitrag
     summary:
-      enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: nur die interessantesten Beiträge die von der Gemeinschaft bestimmt wurden. Um wieder alle Beiträge zu sehen, klicke unten."
+      enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description: "Es gibt <b>{{count}}</b> Antworten."
       description_time: "Es gibt <b>{{count}}</b> Antworten mit einer geschätzten Lesezeit von <b>{{readingTime}} Minuten</b>."
       enable: 'Zusammenfassung vom Thema erstellen'
@@ -496,7 +512,7 @@ de:
     created: 'Erstellt'
     created_lowercase: 'erstellt'
     trust_level: 'Vertrauensstufe'
-    search_hint: 'Benutzername oder E-Mail-Adresse'
+    search_hint: 'Benutzername, E-Mail- oder IP-Adresse'
     create_account:
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
@@ -507,6 +523,10 @@ de:
       reset: "Passwort zurücksetzen"
       complete_username: "Wenn ein Benutzerkonto dem Benutzernamen <b>%{username}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
       complete_email: "Wenn ein Benutzerkonto der E-Mail <b>%{email}</b> entspricht, solltest du in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_username_found: "Wir haben ein zum Benutzername <b>%{username}</b> gehörendes Konto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_email_found: "Wir haben ein zu <b>%{email}</b> gehörendes Benutzerkonto gefunden. Du solltest in Kürze eine E-Mail mit Anweisungen zum Zurücksetzen deines Passwortes erhalten."
+      complete_username_not_found: "Es gibt kein Konto mit dem Benutzernamen <b>%{username}</b>"
+      complete_email_not_found: "Es gibt kein Benutzerkonto für <b>%{email}</b>"
     login:
       title: "Anmelden"
       username: "Benutzername"
@@ -521,8 +541,9 @@ de:
       authenticating: "Authentifiziere..."
       awaiting_confirmation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
       awaiting_approval: "Dein Konto wurde noch nicht von einem Mitarbeiter genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
-      requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung erlaubt."
+      requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht einloggen. Wir haben dir schon eine E-Mail zur Aktivierung an <b>{{sentTo}}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
+      not_allowed_from_ip_address: "Du kannst dich mit dieser IP-Adresse nicht anmelden."
       resend_activation_email: "Klicke hier um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
       google:
@@ -544,6 +565,7 @@ de:
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
     composer:
+      add_warning: "Dies ist eine offizielle Warnung."
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saving_draft_tip: "speichere"
       saved_draft_tip: "gespeichert"
@@ -552,7 +574,7 @@ de:
       drafts_offline: "Entwürfe offline"
       min_length:
         need_more_for_title: "im Titel fehlen noch {{n}} Zeichen"
-        need_more_for_reply: "im Beitrag fehlen noch {{n}} Zeichen"
+        need_more_for_reply: "noch {{n}}"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -576,7 +598,6 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
-      saved_draft: "Du hast einen Beitrag als Entwurf gespeichert. Aktiviere diese Leiste, um den Entwurf fortzusetzen."
       uploading: "Wird hochgeladen..."
       show_preview: 'Vorschau anzeigen &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
@@ -605,11 +626,16 @@ de:
       redo_title: "Wiederholen"
       help: "Hilfe zur Markdown-Formatierung"
       toggler: "Eingabebereich aus- oder einblenden"
-      admin_options_title: "Optionale Moderator-Einstellungen für dieses Thema"
-      auto_close_label: "Schließe das Thema automatisch nach:"
-      auto_close_units: "(Stunden, Uhrzeit oder Datum)"
-      auto_close_examples: 'Gib eine Anzahl von Stunden, eine Uhrzeit oder ein Datum ein — 24, 17:00, 2013-11-22 14:00'
-      auto_close_error: "Bitte einen gültigen Wert eingeben."
+      admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
+      auto_close:
+        label: "Thema automatisch schließen:"
+        error: "Bitte geben Sie einen gültigen Wert ein."
+        based_on_last_post: "Das Thema nicht schließen, wenn der letzte Beitrag nicht mindestens so alt ist."
+        all:
+          examples: 'Gib die Anzahl von Stunden (24), eine absolute Uhrzeit (17:30) oder einen Zeitstempel (2013-11-22 14:00) ein.'
+        limited:
+          units: "(# Stunden)"
+          examples: 'Geben Sie die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über Erwähnungen mit @Name, Antworten auf deine Beiträge und Themen, private Nachrichten etc."
       none: "Du hast momentan keine Benachrichtigungen."
@@ -626,7 +652,7 @@ de:
       invitee_accepted: "<i title='Einladung angenommen' class='fa fa-user'></i><p><span>{{username}}</span> hat deine Einladung angenommen</p>"
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Dir wurde das Abzeichen {{description}} verliehen</p>"
+      granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -644,6 +670,7 @@ de:
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       searching: "Suche ..."
+      post_format: "#{{post_number}} von {{username}}"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie „{{category}}“ durchsuchen"
@@ -651,9 +678,9 @@ de:
     site_map: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
-    current_user: 'zu deiner Nutzerseite gehen'
+    current_user: 'zu deiner Benutzerseite gehen'
     starred:
-      title: 'Favoriten'
+      title: 'Favorisieren'
       help:
         star: 'Füge dieses Thema deinen Favoriten hinzu'
         unstar: 'Entferne dieses Thema aus deinen Favoriten'
@@ -662,31 +689,31 @@ de:
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
         dismiss_posts: "Beiträge ignorieren"
-        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren, die Themen aber später wieder als ungelesen anzeigen, sobald weitere neue Beiträge verfasst wurden."
+        dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren. Die Themen aber später wieder als ungelesen anzeigen, sobald neue Beiträge verfasst werden."
         dismiss_topics: "Themen ignorieren"
-        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn weitere neue Beiträge verfasst wurden."
+        dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn neue Beiträge verfasst werden."
         dismiss_new: "Verwerfe neue Themen"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie ändern"
         close_topics: "Themen schließen"
-        notification_level: "Ändere die Benachrichtigungsstufe"
+        archive_topics: "Themen archivieren"
+        notification_level: "Benachrichtigungsstufe ändern"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
           other: "Du hast <b>{{count}}</b> Themen ausgewählt."
       none:
-        starred: "Du hast noch keine Themen favorisiert. Um ein Thema zu favorisieren, klicke auf den Stern neben dem Titel."
+        starred: "Du hast noch keine Themen zu deinen Favoriten hinzugefügt."
         unread: "Du hast alle Themen gelesen."
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
         posted: "Du hast noch keine Beiträge verfasst."
-        latest: "Es gibt keine aktuelle Themen. Das ist schade."
+        latest: "Es gibt keine aktuellen Themen. Das ist schade."
         hot: "Es gibt keine beliebten Themen."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
         educate:
-          new: '<p>Standardmäßig werden Themen als neu angesehen, wenn diese in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
-          unread: "<p>Standardmäßig werden Ungelesen-Indikatoren nur für jene Themen angezeigt, die du</p><ul>\t<li>erstellt,</li><li>beantwortet oder</li><li>länger als 4 Minuten gelesen hast.</li></ul>\t<p>Du kannst das in deinen <a href=\"%{userPrefsUrl}\">Einstellungen</a> ändern.</p><p>Außerdem werden jene Themen berücksichtigt, die du ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.<br/>Du kannst das in den Benachrichtigungseinstellungen am Ende eines jeden Themas ändern.</p>"
+          new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -695,7 +722,7 @@ de:
         new: "Das waren alle neuen Themen."
         unread: "Das waren alle ungelesen Themen."
         starred: "Das waren alle favorisierten Themen."
-        category: "Das waren alle Themen in der Kategorie{{category}}."
+        category: "Das waren alle Themen in der Kategorie „{{category}}“."
         top: "Das waren alle angesagten Themen."
     topic:
       filter_to: "{{post_count}} Beiträge im Thema"
@@ -712,7 +739,6 @@ de:
         one: '1 ungelesenes Thema'
         other: '{{count}} ungelesene Themen'
       title: 'Thema'
-      loading_more: "Weitere Themen werden geladen..."
       loading: 'Thema wird geladen...'
       invalid_access:
         title: "Thema ist privat"
@@ -750,6 +776,7 @@ de:
       jump_reply_down: zur nachfolgenden Antwort springen
       deleted: "Das Thema wurde gelöscht"
       auto_close_notice: "Dieses Thema wird %{timeLeft} automatisch geschlossen."
+      auto_close_notice_based_on_last_post: "Dieses Thema wird nach %{duration} der letzten Antwort geschlossen."
       auto_close_title: 'Automatisches Schließen'
       auto_close_save: "Speichern"
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
@@ -780,22 +807,21 @@ de:
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
         watching_pm:
           title: "Beobachten"
-          description: "Du wirst über jede neue Nachricht in dieser privaten Unterhaltung benachrichtigt. Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Themenliste angezeigt."
+          description: "Du wirst über jeden neuen Beitrag in dieser privaten Unterhaltung benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
         watching:
           title: "Beobachten"
-          description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird außerdem neben dem Eintrag in der Themenliste angezeigt."
+          description: "Du wirst über jeden neuen Beitrag in diesem Thema benachrichtigt. Die Anzahl der ungelesenen und neuen Beiträge wird auch neben dem Thema erscheinen."
         tracking_pm:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
+          description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Nachrichtenliste angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
-          description: "Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Eintrag in der Themenliste angezeigt. Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder deinen Beitrag beantwortet."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Unterhaltung antwortet."
+          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Nachricht antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über diese private Unterhaltung."
@@ -809,7 +835,7 @@ de:
         close: "Thema schließen"
         auto_close: "Automatisch schließen"
         make_banner: "Banner-Thema"
-        remove_banner: "Banner-Thema enfernen"
+        remove_banner: "Kein Banner-Thema"
         unpin: "Thema loslösen"
         pin: "Thema anheften"
         pin_globally: "Thema global anheften"
@@ -817,7 +843,7 @@ de:
         archive: "Thema archivieren"
         invisible: "Unsichtbar machen"
         visible: "Sichtbar machen"
-        reset_read: "Gelesene Daten zurücksetzen"
+        reset_read: "„Gelesen“ zurücksetzen"
         multi_select: "Beiträge auswählen"
       reply:
         title: 'Antworten'
@@ -847,19 +873,19 @@ de:
         title: 'Einladung'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
-        to_topic: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht direkt auf dieses Thema zu antworten. Hierfür ist kein Login erforderlich."
-        to_forum: "Wir senden deinem Freund eine kurze Email, die ihm ermöglicht dem Forum beizutreten. Hierfür ist kein Login erforderlich."
+        to_topic: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, direkt auf dieses Thema zu antworten. Es ist keine Anmeldung erforderlich."
+        to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
         email_placeholder: 'name@example.com'
-        success: "Wir haben deine Einladung an <b>{{email}}</b> verschickt. Wir lassen Dich wissen, sobald die Einladung eingelöst wird. In deinem Nutzerprofil kannst Du alle deine Einladungen überwachen."
+        success: "Wir haben an <b>{{email}}</b> eine Einladung verschickt. Wir werden dich benachrichtigen, sobald die Einladung angenommen wurde. Auf deiner Benutzerseite kannst du den Status deiner Einladungen verfolgen."
         error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
       login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
           one: "1 Beitrag"
           other: "{{count}} Beiträge"
-        cancel: "Zeige in diesem Thema wieder alle Beiträge an."
+        cancel: "Filter entfernen"
       split_topic:
-        title: "Verschiebe in neues Thema"
+        title: "In neues Thema verschieben"
         action: "in ein neues Thema verschieben"
         topic_name: "Bezeichnung des neuen Themas"
         error: "Beim Verschieben der Beiträge ins neue Thema ist ein Fehler aufgetreten."
@@ -867,7 +893,7 @@ de:
           one: "Du bist dabei, ein neues Thema zu erstellen und den ausgewählten Beitrag dorthin zu verschieben."
           other: "Du bist dabei, ein neues Thema zu erstellen und die <b>{{count}}</b> ausgewählten Beiträge dorthin zu verschieben."
       merge_topic:
-        title: "Verschiebe in vorhandenes Thema"
+        title: "In ein vorhandenes Thema verschieben"
         action: "in ein vorhandenes Thema verschieben"
         error: "Beim Verschieben der Beiträge in das Thema ist ein Fehler aufgetreten."
         instructions:
@@ -875,7 +901,7 @@ de:
           other: "Bitte wähle das Thema, in welches du die <b>{{count}}</b> Beiträge verschieben möchtest."
       change_owner:
         title: "Eigentümer der Beiträge ändern"
-        action: "ändere Eigentümer"
+        action: "Eigentümer ändern"
         error: "Beim Ändern des Eigentümers der Beiträge ist ein Fehler aufgetreten."
         label: "Neuer Eigentümer der Beiträge"
         placeholder: "Benutzername des neuen Eigentümers"
@@ -884,13 +910,13 @@ de:
           other: "Bitte wähle den neuen Eigentümer für {{count}} Beiträge von <b>{{old_user}}</b>."
         instructions_warn: "Bitte beachte, dass alle Benachrichtigungen für diesen Beitrag nicht rückwirkend auf den neuen Benutzer übertragen werden.<br>Warnung: Aktuell werden keine Daten, die mit dem Beitrag zusammenhängen an den neuen Benutzer übertragen. Mit Bedacht verwenden."
       multi_select:
-        select: 'Ausgewählt'
-        selected: 'Ausgewählt ({{count}})'
-        select_replies: 'Ausgewählt +Antworten'
-        delete: Auswahl löschen
-        cancel: Auswahl aufheben
+        select: 'auswählen'
+        selected: 'ausgewählt ({{count}})'
+        select_replies: 'samt Antworten auswählen'
+        delete: ausgewählte löschen
+        cancel: Auswahlvorgang abbrechen
         select_all: alle auswählen
-        deselect_all: alle deselektieren
+        deselect_all: keine auswählen
         description:
           one: Du hast <b>1</b> Beitrag ausgewählt.
           other: Du hast <b>{{count}}</b> Beiträge ausgewählt.
@@ -903,7 +929,7 @@ de:
       post_number: "Beitrag {{number}}"
       in_reply_to: "als Antwort auf"
       last_edited_on: "Beitrag zuletzt bearbeitet am"
-      reply_as_new_topic: "Mit Themenwechsel antworten"
+      reply_as_new_topic: "Mit verknüpftem Thema antworten"
       continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
       follow_quote: "springe zum zitierten Beitrag"
       show_full: "Zeige ganzen Beitrag"
@@ -924,22 +950,24 @@ de:
         create: "Entschuldige, es gab einen Fehler beim Anlegen des Beitrags. Bitte versuche es noch einmal."
         edit: "Entschuldige, es gab einen Fehler beim Bearbeiten des Beitrags. Bitte versuche es noch einmal."
         upload: "Entschuldige, es gab einen Fehler beim Hochladen der Datei. Bitte versuche es noch einmal."
-        attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb)."
-        image_too_large: "Entschuldige, das Bild, das du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb), bitte reduziere die Dateigröße und versuche es nochmal."
+        attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
+        file_too_large: "Achtung, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}}kb)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
+        attachment_download_requires_login: "Du musst eingeloggt sein, um Dateien herunterladen zu können."
       abandon:
-        confirm: "Willst du deinen Beitrag wirklich verwerfen?"
+        confirm: "Möchtest du deinen Beitrag wirklich verwerfen?"
         no_value: "Nein, beibehalten"
         yes_value: "Ja, verwerfen"
+      via_email: "dieser Beitrag ist per E-Mail eingetroffen"
       wiki:
         about: "dieser Beitrag ist ein Wiki; Neulinge können diesen bearbeiten"
       archetypes:
         save: 'Speicheroptionen'
       controls:
-        reply: "Fange eine Antwort auf diesen Beitrag an"
+        reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
         has_liked: "dir gefällt dieser Beitrag"
         undo_like: "gefällt mir nicht mehr"
@@ -957,8 +985,12 @@ de:
           yes_value: "Ja, auch die Antworten löschen"
           no_value: "Nein, nur diesen Beitrag"
         admin: "Aktionen für Administratoren"
-        wiki: "Beitrag in Wiki umwandeln"
-        unwiki: "Wiki in Beitrag umwandeln"
+        wiki: "Wiki erstellen"
+        unwiki: "Wiki entfernen"
+        convert_to_moderator: "Mitarbeiter-Einfärbung hinzufügen"
+        revert_to_regular: "Mitarbeiter-Einfärbung entfernen"
+        rebake: "HTML erneuern"
+        unhide: "Einblenden"
       actions:
         flag: 'Melden'
         defer_flags:
@@ -980,7 +1012,7 @@ de:
           like: "Gefällt mir nicht mehr"
           vote: "Stimme widerrufen"
         people:
-          off_topic: "{{icons}} haben das als Off-Topic gemeldet"
+          off_topic: "{{icons}} haben das als „am Thema vorbei“ gemeldet"
           spam: "{{icons}} haben das als Spam gemeldet"
           inappropriate: "{{icons}} haben das als unangemessen gemeldet"
           notify_moderators: "{{icons}} haben das den Moderatoren gemeldet"
@@ -991,7 +1023,7 @@ de:
           like: "{{icons}} gefällt dieser Beitrag"
           vote: "{{icons}} haben dafür gestimmt"
         by_you:
-          off_topic: "Du hast das als Off-Topic gemeldet"
+          off_topic: "Du hast das als „am Thema vorbei“ gemeldet"
           spam: "Du hast das als Spam gemeldet"
           inappropriate: "Du hast das als Unangemessen gemeldet"
           notify_moderators: "Du hast dies den Moderatoren gemeldet"
@@ -1001,8 +1033,8 @@ de:
           vote: "Du hast für diesen Beitrag gestimmt"
         by_you_and_others:
           off_topic:
-            one: "Du und eine weitere Person haben das als Off-Topic gemeldet"
-            other: "Du und {{count}} weitere Personen haben das als Off-Topic gemeldet"
+            one: "Du und eine weitere Person haben das als „am Thema vorbei“ gemeldet"
+            other: "Du und {{count}} weitere Personen haben das als „am Thema vorbei“ gemeldet"
           spam:
             one: "Du und eine weitere Person haben das als Spam gemeldet"
             other: "Du und {{count}} weitere Personen haben das als Spam gemeldet"
@@ -1026,8 +1058,8 @@ de:
             other: "Du und {{count}} weitere Personen haben für diesen Beitrag gestimmt"
         by_others:
           off_topic:
-            one: "Eine Person hat das als Off-Topic gemeldet"
-            other: "{{count}} Personen haben das als Off-Topic gemeldet"
+            one: "Eine Person hat das als „am Thema vorbei“ gemeldet"
+            other: "{{count}} Personen haben das als „am Thema vorbei“ gemeldet"
           spam:
             one: "Eine Person hat das als Spam gemeldet"
             other: "{{count}} Personen haben das als Spam gemeldet"
@@ -1055,14 +1087,16 @@ de:
         zero: keine Bearbeitungen
       delete:
         confirm:
-          one: "Bist du sicher, dass du diesen Beitrag löschen willst?"
-          other: "Bist du sicher, dass du all diese Beiträge löschen willst?"
+          one: "Möchtest du wirklich diesen Beitrag löschen?"
+          other: "Möchtest du wirklich all diese Beiträge löschen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
           previous: "Vorherige Überarbeitung"
           next: "Nächste Überarbeitung"
           last: "Letzte Überarbeitung"
+          hide: "Überarbeitung verstecken"
+          show: "Überarbeitung anzeigen"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs. <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1072,8 +1106,8 @@ de:
             title: "Zeige die Änderungen nebeneinander an"
             button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
-            title: "Zeige die Markdown Source diffs nebeneinander an"
-            button: '<i class="fa fa-columns"></i> Markdown'
+            title: "Zeige die Originaltexte zum Vergleich nebeneinander an"
+            button: '<i class="fa fa-columns"></i> Original'
         details:
           edited_by: "Bearbeitet von"
     category:
@@ -1092,27 +1126,27 @@ de:
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
       description: "Beschreibung"
-      topic: "Kategorie des Themas"
+      topic: "Themenkategorie"
       logo: "Logo für Kategorie"
-      background_image: "Hintergundbild für Kategorie"
-      badge_colors: "Plakettenfarben"
+      background_image: "Hintergrundbild für Kategorie"
+      badge_colors: "Farben von Abzeichen"
       background_color: "Hintergrundfarbe"
       foreground_color: "Vordergrundfarbe"
-      name_placeholder: "Sollte kurz und knapp sein."
-      color_placeholder: "Irgendeine Webfarbe"
-      delete_confirm: "Bist Du sicher, dass Du diese Kategorie löschen willst?"
+      name_placeholder: "Ein oder maximal zwei Wörter"
+      color_placeholder: "Irgendeine Web-Farbe"
+      delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
       list: "Kategorien auflisten"
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
-      change_in_category_topic: "Besuche die Themen dieser Kategorie um einen Eindruck für eine gute Beschreibung zu gewinnen."
+      change_in_category_topic: "Beschreibung bearbeiten"
       already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
       security: "Sicherheit"
       images: "Bilder"
       auto_close_label: "Themen automatisch schließen nach:"
       auto_close_units: "Stunden"
-      email_in: "Benutzerdefinierte Email Adresse:"
+      email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
-      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
+      email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
       edit_permissions: "Berechtigungen bearbeiten"
@@ -1122,14 +1156,14 @@ de:
       default_position: "Standardposition"
       position_disabled: "Kategorien werden in der Reihenfolge der Aktivität angezeigt. Um die Reihenfolge von Kategorien in Listen zu steuern,"
       position_disabled_click: 'aktiviere die Einstellung „fixed category positions“.'
-      parent: "Elternkategorie"
+      parent: "Übergeordnete Kategorie"
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
+          description: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Eintrag in der Themenliste angezeigt."
+          description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Normal"
           description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
@@ -1137,16 +1171,21 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
     flagging:
-      title: 'Aus welchem Grund meldest Du diesen Beitrag?'
+      title: 'Aus welchem Grund meldest du diesen Beitrag?'
       action: 'Beitrag melden'
       take_action: "Reagieren"
       notify_action: 'Private Nachricht'
       delete_spammer: "Spammer löschen"
       delete_confirm: "Du wirst <b>%{posts}</b> Beiträge und <b>%{topics}</b> Themen von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>%{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>%{ip_address}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
+      ip_address_missing: "(nicht verfügbar)"
+      hidden_email_address: "(versteckt)"
       submit_tooltip: "Private Meldung abschicken"
-      take_action_tooltip: "Den Meldungsschwellwert direkt erreichen, statt auf mehr Meldungen aus der Gemeinschaft zu warten."
+      take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
+      formatted_name:
+        inappropriate: "Es ist unangemessen"
+        spam: "Es ist Spam"
       custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
       custom_message:
@@ -1159,40 +1198,42 @@ de:
       notify_action: "Private Nachricht"
     topic_map:
       title: "Zusammenfassung des Themas"
-      links_shown: "Zeige alle {{totalLinks}} Links..."
+      links_shown: "zeige alle {{totalLinks}} Links..."
       clicks:
         one: "1 Klick"
         other: "%{count} Klicks"
     topic_statuses:
+      warning:
+        help: "Dies ist eine offizielle Warnung."
       locked:
-        help: "Dieses Thema ist geschlossen; Antworten werde nicht länger angenommen"
+        help: "Dieses Thema ist geschlossen; Antworten sind nicht mehr möglich"
       unpinned:
-        title: "Nicht gepinnt"
-        help: "Dieses Thema ist nicht angepinnt; es wird in der normalen Reihenfolge angezeigt"
+        title: "Losgelöst"
+        help: "Dieses Thema ist losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
-        title: "Global gepinnt"
-        help: "Dieses Thema ist global angepinnt; es wird immer am Anfang aller Listen auftauchen"
+        title: "Global angeheftet"
+        help: "Dieses Thema ist global angeheftet; es wird immer am Anfang aller Listen auftauchen"
       pinned:
-        title: "Angepinnt"
-        help: "Dieses Thema ist angepinnt; es wird immer am Anfang seiner Kategorie auftauchen"
+        title: "Angeheftet"
+        help: "Dieses Thema ist angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       invisible:
-        help: "Dieses Thema ist unsichtbar; es wird in keiner Themenliste angezeigt und kann nur über den Link betrachtet werden"
+        help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
     posts: "Beiträge"
     posts_lowercase: "Beiträge"
-    posts_long: "{{number}} Beiträge zu diesem Thema"
+    posts_long: "dieses Thema enthält {{number}} Beiträge"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {1 Beitrag} other {# Beiträge}} {ratio, select,
         low {mit einem hohen Verhältnis von Likes zu Beiträgen}
         med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
         high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
         other {}}
-    original_post: "Originaler Beitrag"
+    original_post: "Original-Beitrag"
     views: "Aufrufe"
     views_lowercase: "Aufrufe"
     replies: "Antworten"
-    views_long: "Dieses Thema wurde {{number}} aufgerufen"
+    views_long: "dieses Thema wurde {{number}} mal betrachtet"
     activity: "Aktivität"
     likes: "Likes"
     likes_lowercase: "Likes"
@@ -1201,27 +1242,30 @@ de:
     users_lowercase: "Benutzer"
     category_title: "Kategorie"
     history: "Verlauf"
-    changed_by: "durch {{author}}"
+    changed_by: "von {{author}}"
+    raw_email:
+      title: "Unverarbeitete E-Mail"
+      not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
       with_topics: "%{filter}e Themen"
       with_category: "%{filter}e Themen in %{category}"
       latest:
         title: "Aktuell"
-        help: "Die zuletzt geänderten Themen"
+        help: "die zuletzt geänderten Themen"
       hot:
         title: "Beliebt"
-        help: "Auswahl der beliebten Themen"
+        help: "eine Auswahl der beliebtesten Themen"
       starred:
         title: "Favorisiert"
-        help: "Themen, die Du als Favoriten markiert hast"
+        help: "Themen, die du als Favoriten markiert hast"
       read:
         title: "Gelesen"
-        help: "Themen, die Du gelesen hast"
+        help: "Themen, die du gelesen hast; werden in der Reihenfolge angezeigt, in der du diese gelesen hast"
       categories:
         title: "Kategorien"
         title_in: "Kategorie - {{categoryName}}"
-        help: "Alle Themen, gruppiert nach Kategorie"
+        help: "alle Themen, gruppiert nach Kategorie"
       unread:
         title:
           zero: "Ungelesen"
@@ -1233,8 +1277,8 @@ de:
           other: "{{count}} ungelesene"
       new:
         lower_title_with_count:
-          one: "1 neu"
-          other: "{{count}} neu"
+          one: "1 neues"
+          other: "{{count}} neue"
         lower_title: "neu"
         title:
           zero: "Neu"
@@ -1262,7 +1306,7 @@ de:
         daily:
           title: "Angesagt täglich"
         this_year: "Dieses Jahr"
-        this_month: "Dieses Monat"
+        this_month: "Dieser Monat"
         this_week: "Diese Woche"
         today: "Heute"
         other_periods: "zeige weitere angesagte Themen"
@@ -1274,7 +1318,7 @@ de:
   admin_js:
     type_to_filter: "zum Filtern hier eingeben..."
     admin:
-      title: 'Discourse Administrator'
+      title: 'Discourse-Administrator'
       moderator: 'Moderator'
       dashboard:
         title: "Übersicht"
@@ -1284,15 +1328,15 @@ de:
         critical_available: "Ein kritisches Update ist verfügbar."
         updates_available: "Updates sind verfügbar."
         please_upgrade: "Bitte Upgrade durchführen!"
-        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
-        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte sicherstellen, dass sidekiq lauft."
-        version_check_pending: "Sieht so aus, als hättest du vor Kurzem upgedated. Großartig!"
+        no_check_performed: "Es wurde nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
+        stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
+        version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
         installed_version: "Installiert"
         latest_version: "Neueste"
         problems_found: "Es gibt Probleme mit deiner Discourse-Installation:"
         last_checked: "Zuletzt geprüft"
         refresh_problems: "Aktualisieren"
-        no_problems: "Keine Probleme gefunden."
+        no_problems: "Es wurden keine Probleme gefunden."
         moderators: 'Moderatoren:'
         admins: 'Administratoren:'
         blocked: 'Blockiert:'
@@ -1300,19 +1344,22 @@ de:
         private_messages_short: "PNs"
         private_messages_title: "Private Nachrichten"
         reports:
-          today: "Heute"
-          yesterday: "Gestern"
-          last_7_days: "Die letzten 7 Tage"
-          last_30_days: "Die letzten 30 Tage"
-          all_time: "Bis heute"
-          7_days_ago: "Vor 7 Tagen"
-          30_days_ago: "Vor 30 Tagen"
-          all: "Alle"
-          view_table: "Als Tabelle anzeigen"
-          view_chart: "Als Balkendiagramm anzeigen"
+          today: "heute"
+          yesterday: "gestern"
+          last_7_days: "letzten 7 Tage"
+          last_30_days: "letzten 30 Tage"
+          all_time: "gesamt"
+          7_days_ago: "vor 7 Tagen"
+          30_days_ago: "vor 30 Tagen"
+          all: "alle"
+          view_table: "Tabelle"
+          view_chart: "Säulendiagramm"
+          refresh_report: "Bericht aktualisieren"
+          start_date: "Startdatum"
+          end_date: "Enddatum"
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
-        by: "durch"
+        by: "von"
       flags:
         title: "Meldungen"
         old: "Alt"
@@ -1322,16 +1369,18 @@ de:
         agree_flag_modal_title: "Zustimmen und..."
         agree_flag_hide_post: "Zustimmen (Beitrag ausblenden + PN senden)"
         agree_flag_hide_post_title: "Diesen Beitrag ausblenden und den Benutzer mit einer automatisch gesendeten, privaten Nachricht zum Bearbeiten des Beitrags auffordern."
+        agree_flag_restore_post: "Zustimmen (Beitrag wiederherstellen)"
+        agree_flag_restore_post_title: "Diesen Beitrag wiederherstellen"
         agree_flag: "Meldung zustimmen"
         agree_flag_title: "Der Meldung zustimmen und den Beitrag unverändert lassen."
         defer_flag: "Ignorieren"
         defer_flag_title: "Entferne diese Meldung. Derzeit besteht kein Handlungsbedarf."
         delete: "Löschen"
-        delete_title: "Lösche den Beitrag auf den diese Meldung verweist."
+        delete_title: "Lösche den Beitrag, auf den diese Meldung verweist."
         delete_post_defer_flag: "Beitrag löschen und Meldung ignorieren"
-        delete_post_defer_flag_title: "Beitrag löschen; wenn es sich um den ersten Beitrag handelt, dann das Thema löschen"
+        delete_post_defer_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
         delete_post_agree_flag: "Beitrag löschen und der Meldung zustimmen"
-        delete_post_agree_flag_title: "Beitrag löschen; wenn es sich um den ersten Beitrag handelt, dann das Thema löschen"
+        delete_post_agree_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
         delete_flag_modal_title: "Löschen und..."
         delete_spammer: "Spammer löschen"
         delete_spammer_title: "Lösche den Benutzer und alle seine Beiträge und Themen."
@@ -1340,7 +1389,7 @@ de:
         disagree_flag: "Ablehnen"
         disagree_flag_title: "Meldung ablehnen, weil diese ungültig oder falsch ist"
         clear_topic_flags: "Erledigt"
-        clear_topic_flags_title: "Das Thema wurde untersucht und Probleme beseitigt. Klicke auf 'Erledigt' um die Markierungen zu entfernen."
+        clear_topic_flags_title: "Das Thema wurde untersucht und Probleme wurden beseitigt. Klicke auf „Erledigt“, um die Meldungen zu entfernen."
         more: "(weitere Antworten...)"
         dispositions:
           agreed: "zugestimmt"
@@ -1356,19 +1405,20 @@ de:
         topic_flagged: "Dieses <strong>Thema</strong> wurde gemeldet."
         visit_topic: "Besuche das Thema, um zu reagieren"
         was_edited: "Beitrag wurde nach der ersten Meldung bearbeitet"
+        previous_flags_count: "Dieses Thema wurde bereits {{count}} mal gemeldet."
         summary:
           action_type_3:
-            one: "Passt nicht zum Thema"
-            other: "Passt nicht zum Thema x{{count}}"
+            one: "„am Thema vorbei“"
+            other: "„am Thema vorbei“ x{{count}}"
           action_type_4:
-            one: "Unangemessen"
-            other: "Unangemessen x{{count}}"
+            one: "unangemessen"
+            other: "unangemessen x{{count}}"
           action_type_6:
-            one: "Benutzerdefiniert"
-            other: "Benutzerdefiniert x{{count}}"
+            one: "benutzerdefiniert"
+            other: "benutzerdefiniert x{{count}}"
           action_type_7:
-            one: "Benutzerdefiniert"
-            other: "Benutzerdefiniert x{{count}}"
+            one: "benutzerdefiniert"
+            other: "benutzerdefiniert x{{count}}"
           action_type_8:
             one: "Spam"
             other: "Spam x{{count}}"
@@ -1387,19 +1437,19 @@ de:
         delete_confirm: "Diese Gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
       api:
-        generate_master: "Master API Key generieren"
+        generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
-        user: "User"
+        user: "Benutzer"
         title: "API"
-        key: "Schlüssel"
-        generate: "API-Schlüssel generieren"
-        regenerate: "API-Schlüssel neu generieren"
+        key: "API-Key"
+        generate: "Erzeugen"
+        regenerate: "Erneuern"
         revoke: "Widerrufen"
-        confirm_regen: "Bist du sicher, dass du den API Key mit einem neuen ersetzen willst?"
-        confirm_revoke: "Bist du dir sicher, dass du den API Key widerrufen willst?"
-        info_html: "Dein API-Schlüssel erlaubt Dir das Erstellen und Bearbeiten von Themen via JSON aufrufen."
+        confirm_regen: "Möchtest du wirklich den API Key mit einem neuen ersetzen?"
+        confirm_revoke: "Möchtest du wirklich den API Key widerrufen?"
+        info_html: "Dein API-Key erlaubt dir das Erstellen und Bearbeiten von Themen via JSON-Aufrufen."
         all_users: "Alle Benutzer"
-        note_html: "Behalte deinen <strong>Schlüssel</strong> geheim, jeder Benutzer mit diesem Schlüssel kann beliebige Beiträge unter jedem Benutzer im Forum erstellen."
+        note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
       backups:
         title: "Backups"
         menu:
@@ -1408,20 +1458,20 @@ de:
         none: "Kein Backup verfügbar."
         read_only:
           enable:
-            title: "Aktiviere den Nur-Lesen Modus"
-            text: "Aktiviere Nur-Lesen Modus"
-            confirm: "Bist du sicher, dass du den Nur-Lesen Modus aktivieren möchtest?"
+            title: "Nur-Lesen-Modus aktivieren"
+            text: "Nur-Lesen-Modus aktivieren"
+            confirm: "Möchtest du wirklich den Nur-Lesen Modus aktivieren?"
           disable:
-            title: "Deaktiviere den Nur-Lesen Modus"
-            text: "Deaktiviere Nur-Lesen Modus"
+            title: "Nur-Lesen-Modus deaktivieren"
+            text: "Nur-Lesen-Modus deaktivieren"
         logs:
-          none: "Noch keine Logs verfügbar..."
+          none: "Noch keine Protokolleinträge verfügbar..."
         columns:
           filename: "Dateiname"
           size: "Größe"
         upload:
           text: "Hochladen"
-          uploading: "wird hochgeladen"
+          uploading: "Wird hochgeladen..."
           success: "'{{filename}}' wurde erfolgreich hochgeladen."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
         operations:
@@ -1429,29 +1479,29 @@ de:
           failed: "Der Vorgang '{{operation}}' ist fehlgeschlagen. Bitte überprüfe die Logs."
           cancel:
             text: "Abbrechen"
-            title: "Bricht den aktuellen Vorgang ab"
-            confirm: "Bist du sicher, dass du den aktuellen Vorgang abbrechen möchtest?"
+            title: "Den aktuellen Vorgang abbrechen"
+            confirm: "Möchtest du wirklich den aktuellen Vorgang abbrechen?"
           backup:
             text: "Backup"
-            title: "Erstellt ein Backup"
+            title: "Ein Backup erstellen"
             confirm: "Willst du ein neues Backup starten?"
-            without_uploads: "Ja (ohne Upload)"
+            without_uploads: "Ja (ohne Dateien)"
           download:
             text: "Download"
             title: "Backup herunterladen"
           destroy:
             text: "Löschen"
-            title: "Löscht das Backup"
-            confirm: "Bist du sicher, dass du das Backup löschen möchtest?"
+            title: "Das Backup löschen"
+            confirm: "Möchtest du wirklich das Backup löschen?"
           restore:
-            is_disabled: "Wiederherstellung ist in den Einstellungen deaktiviert."
+            is_disabled: "Wiederherstellung ist in den Website-Einstellungen deaktiviert."
             text: "Wiederherstellen"
-            title: "Wiederherstellung des Backups"
-            confirm: "Bist du sicher, dass du dieses Backup wiederherstellen möchtest?"
+            title: "Das Backup wiederherstellen"
+            confirm: "Möchtest du wirklich dieses Backup wiederherstellen?"
           rollback:
             text: "Zurücksetzen"
-            title: "Setzt die Datenbank auf den letzten funktionierenden Zustand zurück"
-            confirm: "Bist du sicher, dass du die Datenbank auf den letzten funktionierenden Zustand zurücksetzen möchtest?"
+            title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
+            confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
         users:
           text: "Exportieren"
@@ -1459,61 +1509,61 @@ de:
         success: "Der Export wurde gestartet. Du wirst in Kürze über den Fortschritt benachrichtigt."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
       customize:
-        title: "Personalisieren"
-        long_title: "Seite personalisieren"
-        header: "Header"
+        title: "Anpassen"
+        long_title: "Website-Anpassungen"
+        header: "Kopfbereich"
         css: "Stylesheet"
-        mobile_header: "Mobiler Header"
-        mobile_css: "Mobiles Stylesheet"
-        override_default: "Standard überschreiben?"
+        mobile_header: "Kopfbereich für Mobilgeräte"
+        mobile_css: "Stylesheet Mobilgeräte"
+        override_default: "Das Standard-Stylesheet nicht verwenden"
         enabled: "Aktiviert?"
         preview: "Vorschau"
         undo_preview: "Vorschau entfernen"
-        rescue_preview: "Standardstil"
-        explain_preview: "Zeige die Seite mit benutzerdefiniertem Stylesheet"
-        explain_undo_preview: "Gehe zurück zum aktuell aktivierten benutzerdefinierten Stylesheet"
-        explain_rescue_preview: "Zeige die Seite mit dem Standard-Stylesheet"
+        rescue_preview: "Standard-Style"
+        explain_preview: "Zeige die Website mit benutzerdefiniertem Stylesheet an"
+        explain_undo_preview: "Gehe zurück zum aktuell aktivierten, benutzerdefinierten Stylesheet"
+        explain_rescue_preview: "Zeige die Website mit dem Standard-Stylesheet an"
         save: "Speichern"
         new: "Neu"
-        new_style: "Neuer Stil"
+        new_style: "Neuer Style"
         delete: "Löschen"
         delete_confirm: "Diese Anpassung löschen?"
-        about: "Ändere CSS stylesheets und HTML header auf der Seite. Füge eine Anpassung hinzu um zu starten."
+        about: "Ändere die Stylesheets (CSS) und den HTML-Header auf der Website. Füge eine Anpassung hinzu, um zu starten."
         color: "Farbe"
         opacity: "Transparenz"
         copy: "Kopieren"
         css_html:
-          title: "CSS, HTML"
+          title: "CSS/HTML"
           long_title: "CSS und HTML Anpassungen"
         colors:
           title: "Farben"
-          long_title: "Farb-Schemata"
-          about: "Farbschemen erlauben dir die auf der Seite benutzen Farben zu ändern ohne CSS schreiben zu müssen. Wähle oder füge eine hinzu, um zu beginnen."
+          long_title: "Farbschemata"
+          about: "Farbschemen erlauben dir die auf der Seite benutzen Farben zu ändern ohne CSS schreiben zu müssen. Füge ein Schema hinzu, um zu beginnen."
           new_name: "Neues Farbschema"
           copy_name_prefix: "Kopie von"
           delete_confirm: "Dieses Farbschema löschen?"
           undo: "rückgängig"
-          undo_title: "Änderungen an dieser Farbe bis zum lezten Speichern rückgängig machen"
+          undo_title: "Die seit dem letzten Speichern an dieser Farbe vorgenommenen Änderungen rückgängig machen."
           revert: "verwerfen"
-          revert_title: "Diese Farbe auf Discourse Standard Farbschema zurücksetzen."
+          revert_title: "Diese Farbe auf das Discourse-Standard-Farbschema zurücksetzen."
           primary:
             name: 'erste'
             description: 'Die meisten Texte, Bilder und Ränder.'
           secondary:
             name: 'zweite'
-            description: 'Die Haupt Hintergrundfarbe, und Textfarbe einiger Schaltflächen.'
+            description: 'Die Haupthintergrundfarbe und Textfarbe einiger Schaltflächen.'
           tertiary:
-            name: 'tertiär'
-            description: 'Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben'
+            name: 'dritte'
+            description: 'Links, einige Schaltflächen, Benachrichtigungen und Akzentfarben.'
           quaternary:
-            name: "quaternären"
+            name: "vierte"
             description: "Navigations-Links"
           header_background:
             name: "Hintergrund Kopfbereich"
-            description: "Hintergrundfarbe des Seitenkopfs."
+            description: "Hintergrundfarbe des Kopfbereichs der Website."
           header_primary:
             name: "primärer Kopfbereich"
-            description: "Texte und Bilder im Kopfbereich der Seite."
+            description: "Text und Symbole im Kopfbereich der Website."
           highlight:
             name: 'hervorheben'
             description: 'Die Hintergrundfarbe der hervorgehobenen Elemente auf der Seite, so wie Beiträge und Themen.'
@@ -1522,43 +1572,47 @@ de:
             description: 'Hervorhebungsfarbe für Aktionen wie Löschen von Beiträgen und Themen.'
           success:
             name: 'Erfolg'
-            description: 'Benutzt um anzuzeigen, dass eine Aktion erfolgreich war.'
+            description: 'Zeigt an, dass eine Aktion erfolgreich war.'
           love:
             name: 'Liebe'
             description: "Die Farbe des Like-Buttons."
+          wiki:
+            name: 'Wiki'
+            description: "Die Standardfarbe wird als Hintergrundfarbe für Wikiseiten genutzt."
       email:
-        title: "Mailprotokoll"
+        title: "E-Mail"
         settings: "Einstellungen"
         all: "Alle"
-        sending_test: "Versende Testemail..."
+        sending_test: "Versende Test-E-Mail..."
         test_error: "Es gab ein Problem beim Senden der Test-E-Mail. Bitte überprüfe nochmals deine E-Mail-Einstellungen, stelle sicher dass dein Anbieter keine E-Mail-Verbindungen blockiert und probiere es erneut."
         sent: "Gesendet"
         skipped: "Übersprungen"
         sent_at: "Gesendet am"
         time: "Zeit"
         user: "Benutzer"
-        email_type: "Mailtyp"
+        email_type: "E-Mail-Typ"
         to_address: "Empfänger"
-        test_email_address: "Mailadresse zum Testen"
-        send_test: "Testmail senden"
+        test_email_address: "E-Mail-Adresse für Test"
+        send_test: "Test-E-Mail senden"
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
         preview_digest_desc: "Hiermit kannst du dir anschauen, wie die regelmäßig versendeten Neuigkeits-Mails aussehen."
         refresh: "Aktualisieren"
         format: "Format"
-        html: "html"
-        text: "text"
+        html: "HTML"
+        text: "Text"
         last_seen_user: "Letzter Benutzer:"
         reply_key: "Antwort-Schlüssel"
         skipped_reason: "Grund des Überspringens"
         logs:
-          none: "Keine Protokolle gefunden."
+          none: "Keine Protokolleinträge gefunden."
           filters:
             title: "Filter"
             user_placeholder: "Benutzername"
             address_placeholder: "name@example.com"
             type_placeholder: "zusammenfassen, registrieren..."
+            reply_key_placeholder: "Antwort-Schlüssel"
             skipped_reason_placeholder: "Grund"
       logs:
         title: "Logs"
@@ -1567,57 +1621,63 @@ de:
         last_match_at: "Letzter Treffer"
         match_count: "Treffer"
         ip_address: "IP"
+        topic_id: "Themen-ID"
+        post_id: "Beitrags-ID"
         delete: 'Löschen'
-        edit: 'Editieren'
+        edit: 'Bearbeiten'
         save: 'Speichern'
         screened_actions:
           block: "blockieren"
-          do_nothing: "nichts machen"
+          do_nothing: "nichts tun"
         staff_actions:
-          title: "Mitarbeiter Aktion"
-          instructions: "Klicke auf die Benutzernamen und Aktionen um die Liste zu filtern. Klicke den Avatar um die Benutzerseite zu sehen."
+          title: "Mitarbeiter-Aktionen"
+          instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf Avatare, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Mitarbeiter"
-          target_user: "Zielnutzer"
+          target_user: "Betroffener Benutzer"
           subject: "Objekt"
           when: "Wann"
           context: "Kontext"
           details: "Details"
           previous_value: "Alt"
           new_value: "Neu"
-          diff: "Diff"
+          diff: "Vergleich"
           show: "Anzeigen"
           modal_title: "Details"
-          no_previous: "Es gibt keinen vorgängigen Wert."
+          no_previous: "Es gibt keinen vorherigen Wert."
           deleted: "Kein neuer Wert. Der Eintrag wurde gelöscht."
           actions:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
-            change_site_setting: "Seiteneinstellungen ändern"
-            change_site_customization: "Seitenanpassungen ändern"
-            delete_site_customization: "Seitenanpassungen löschen"
-            suspend_user: "gesperrter Benutzer"
-            unsuspend_user: "ungesperrter Benutzer"
+            change_site_setting: "Website-Einstellungen ändern"
+            change_site_customization: "Website-Anpassungen ändern"
+            delete_site_customization: "Website-Anpassungen löschen"
+            suspend_user: "Benutzer sperren"
+            unsuspend_user: "Benutzer entsperren"
             grant_badge: "Abzeichen verleihen"
             revoke_badge: "Abzeichen entziehen"
+            check_email: "E-Mail abrufen"
+            delete_topic: "Thema löschen"
+            delete_post: "Beitrag löschen"
         screened_emails:
-          title: "Geschützte E-Mails"
+          title: "Überprüfte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
           email: "E-Mail-Adresse"
           actions:
             allow: "Erlauben"
         screened_urls:
-          title: "Geschützte URLs"
-          description: "Die aufgelisteten URLs wurden in Beiträgen von identifizierten Spammen verwendet."
+          title: "Überprüfte URLs"
+          description: "Die aufgelisteten URLs wurden in Beiträgen verwendet, die von Spammen erstellt wurden."
           url: "URL"
           domain: "Domain"
         screened_ips:
-          title: "Geschützte IPs"
-          description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“ um IP-Adressen auf die Whitelist zu setzen.'
-          delete_confirm: "Bist du dir sicher, dass du die Rege für %{ip_address} entfernen willst?"
+          title: "Überprüfte IPs"
+          description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Whitelist zu setzen.'
+          delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
           actions:
             block: "Blockieren"
             do_nothing: "Erlauben"
+            allow_admin: "Administrator zulassen"
           form:
             label: "Neu:"
             ip_address: "IP-Adresse"
@@ -1625,17 +1685,15 @@ de:
         logster:
           title: "Fehlerprotokolle"
       impersonate:
-        title: "Aus Sicht des Benutzers betrachten"
-        username_or_email: "Benutzername oder E-Mail-Adresse des Benutzers"
-        help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen."
-        not_found: "Der Benutzer wurde nicht gefunden."
-        invalid: "Entschuldige, du darfst nicht in die Rolle dieses Benutzers schlüpfen."
+        title: "Als Benutzer ausgeben"
+        help: "Benutze dieses Werkzeug, um zur Fehlersuche in die Rolle eines anderen Benutzers zu schlüpfen. Du musst dich abmelden, wenn du fertig bist."
       users:
         title: 'Benutzer'
         create: 'Administrator hinzufügen'
         last_emailed: "Letzte E-Mail"
         not_found: "Entschuldige, dieser Benutzername existiert im System nicht."
         active: "Aktiv"
+        show_emails: "E-Mails anzeigen"
         nav:
           new: "Neu"
           active: "Aktiv"
@@ -1657,9 +1715,9 @@ de:
           pending: 'Benutzer mit ausstehender Genehmigung'
           newuser: 'Benutzer mit Vertrauensstufe 0 (Neuer Benutzer)'
           basic: 'Benutzer mit Vertrauensstufe 1 (Neulinge)'
-          regular: 'Benutzer mit Vertrauensstufe 2 (Stammgast)'
-          leader: 'Benutzer mit Vertrauensstufe 3 (Leitwolf)'
-          elder: 'Benutzer mit Vertrauensstufe 4 (Ältester)'
+          regular: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
+          leader: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
+          elder: 'Benutzer mit Vertrauensstufe 4 (Leitwolf)'
           admins: 'Administratoren'
           moderators: 'Moderatoren'
           blocked: 'Blockierte Benutzer'
@@ -1670,16 +1728,20 @@ de:
         reject_failures:
           one: "Konnte 1 Benutzer nicht ablehnen."
           other: "Konnte %{count} Benutzer nicht ablehnen."
+        not_verified: "Nicht überprüft"
+        check_email:
+          title: "E-Mail-Adresse des Benutzers anzeigen"
+          text: "Anzeigen"
       user:
         suspend_failed: "Beim Sperren dieses Benutzers ist etwas schief gegangen {{error}}"
         unsuspend_failed: "Beim Entsperren dieses Benutzers ist etwas schief gegangen {{error}}"
         suspend_duration: "Wie lange soll dieser Benutzer gesperrt werden?"
         suspend_duration_units: "(Tage)"
-        suspend_reason_label: "Warum wird gesperrt? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
+        suspend_reason_label: "Warum sperrst du? Dieser Text ist auf der Profilseite des Benutzers <b>für jeden sichtbar</b> und wird dem Benutzer angezeigt, wenn sich dieser anmelden will. Bitte kurz halten."
         suspend_reason: "Grund"
         suspended_by: "Gesperrt von"
         delete_all_posts: "Lösche alle Beiträge"
-        delete_all_posts_confirm: "Du wirst %{posts} Beiträge und %{topics} Themen löschen. Bist du sicher?"
+        delete_all_posts_confirm: "Du wirst %{posts} Beiträge und %{topics} Themen löschen. Bist du dir sicher?"
         suspend: "Sperren"
         unsuspend: "Entsperren"
         suspended: "Gesperrt?"
@@ -1706,13 +1768,14 @@ de:
         permissions: Berechtigungen
         activity: Aktivität
         like_count: Abgegebene / erhaltene Likes
-        last_100_days: 'in den letzten 100 tagen'
+        last_100_days: 'in den letzten 100 Tagen'
         private_topics_count: Private Themen
         posts_read_count: Gelesene Beiträge
         post_count: Erstelle Beiträge
         topics_entered: Betrachtete Themen
         flags_given_count: Gemachte Meldungen
         flags_received_count: Erhaltene Meldungen
+        warnings_received_count: Warnungen erhalten
         flags_given_received_count: 'Erhaltene / gemachte Meldungen'
         approve: 'Genehmigen'
         approved_by: "genehmigt von"
@@ -1751,6 +1814,10 @@ de:
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
+        trust_level_locked_tip: "Vertrauensstufe ist nicht gesperrt. Das System wird den Benutzer nicht befördern oder degradieren. "
+        trust_level_unlocked_tip: "Vertrauensstufe ist nicht gesperrt. Das System kann den Benutzer befördern oder degradieren. "
+        lock_trust_level: "Vertrauensstufe sperren"
+        unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
           table_title: "In den letzten 100 Tagen:"
@@ -1767,9 +1834,15 @@ de:
           flagged_by_users: "Von Benutzern gemeldet"
           likes_given: "Abgegebene Likes"
           likes_received: "Erhaltene Likes"
+          likes_received_days: "Erhaltene Likes: eindeutige Tage"
+          likes_received_users: "Erhaltene Likes: eindeutige Benutzer"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."
-          will_be_promoted: "Wird innerhalb der nächsten 24 Stunden befördert."
           does_not_qualify: "Erfüllt nicht die Anforderungen für Vertrauensstufe 3."
+          will_be_promoted: "Wird bald beförderd werden."
+          will_be_demoted: "Wird bald degradiert werden."
+          on_grace_period: "Wird nicht degradiert, da derzeit in Schonfrist nach Beförderung."
+          locked_will_not_be_promoted: "Vertrauensstufe ist gesperrt. Wird nie befördert werden."
+          locked_will_not_be_demoted: "Vertrauensstufe ist gesperrt. Wird nie degradiert werden."
         sso:
           title: "Single Sign-on"
           external_id: "Externe ID"
@@ -1777,10 +1850,33 @@ de:
           external_name: "Name"
           external_email: "E-Mail"
           external_avatar_url: "Avatar URL"
-      site_content:
+      user_fields:
+        title: "Benutzerfelder"
+        help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
+        create: "Benutzerfeld erstellen"
+        untitled: "Unbetitelt"
+        name: "Feldname"
+        type: "Feldtyp"
+        description: "Feldbeschreibung"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        cancel: "Abbrechen"
+        delete_confirm: "Sind Sie sicher, dass Sie dieses Textfeld löschen möchten?"
+        required:
+          title: "Bei Registrierung erforderlich?"
+          enabled: "erforderlich"
+          disabled: "nicht erforderlich"
+        editable:
+          title: "Nach der Registrierung editierbar?"
+          enabled: "editierbar"
+          disabled: "nicht editierbar"
+        field_types:
+          text: 'Textfeld'
+          confirm: 'Bestätigung'
+      site_text:
         none: "Wähle einen Inhaltstyp, um mit dem Bearbeiten zu beginnen."
-        title: 'Inhalt'
-        edit: "Website-Inhalte bearbeiten"
+        title: 'Textinhalt'
       site_settings:
         show_overriden: 'Zeige nur geänderte Einstellungen'
         title: 'Einstellungen'
@@ -1824,25 +1920,26 @@ de:
         granted_at: Verliehen am
         save: Speichern
         delete: Löschen
-        delete_confirm: Bist du dir sicher, dass du dieses Abzeichen löschen willst?
+        delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?
         revoke: Entziehen
-        revoke_confirm: Bist du dir sicher, dass du dieses Abzeichen entziehen willst?
+        revoke_confirm: Möchtest du wirklich dieses Abzeichen entziehen?
         edit_badges: Abzeichen bearbeiten
         grant_badge: Abzeichen verleihen
         granted_badges: Verliehene Abzeichen
         grant: Verleihen
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
+        none_selected: "Wähl' ein Abzeichen aus, um loszulegen"
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite an
         enabled: Abzeichen aktivieren
         icon: Symbol
+        image: Bild
         query: Abfrage für Abzeichen (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
-        preview: Abfrage ausprobieren
         trigger: Auslöser
         trigger_type:
           none: "Täglich aktualisieren"
@@ -1850,48 +1947,74 @@ de:
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
+        preview:
+          link_text: "Abzeichen betrachten"
+          plan_text: "Vorschau mit Query Plan"
+          modal_title: "Vorschau für Abzeichen-Abfrage"
+          sql_error_header: "Es gab einen Fehler mit der SQL-Abfrage."
+          bad_count_warning:
+            header: "WARNUNG!"
+          grant_count:
+            zero: "Es wird kein Abzeichen verliehen."
+            one: "Es wird <b>1</b> Abzeichen verliehen."
+            other: "Es werden <b>%{count}</b> Abzeichen verliehen."
+          sample: "Beispiel:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> für Beitrag in %{link}
+            with_post_time: <span class="username">%{username}</span> für Beitrag in %{link} um <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
     lightbox:
       download: "herunterladen"
+    search_help:
+      title: 'Suche in der Hilfe'
     keyboard_shortcuts_help:
       title: 'Tastenkombinationen'
       jump_to:
         title: 'Springe zu'
-        home: '<b>G</b>, <b>H</b> Hauptseite (Aktuell)'
-        latest: '<b>G</b>, <b>L</b> Aktuell'
-        new: '<b>G</b>, <b>N</b> Neu'
-        unread: '<b>G</b>, <b>U</b> Ungelesen'
-        starred: '<b>G</b>, <b>F</b> Favorisiert'
-        categories: '<b>G</b>, <b>C</b> Kategorien'
+        home: '<b>g</b>, <b>h</b> Hauptseite (Aktuell)'
+        latest: '<b>g</b>, <b>l</b> Aktuell'
+        new: '<b>g</b>, <b>n</b> Neu'
+        unread: '<b>g</b>, <b>u</b> Ungelesen'
+        starred: '<b>g</b>, <b>f</b> Favorisiert'
+        categories: '<b>g</b>, <b>c</b> Kategorien'
+        top: '<b>g</b>, <b>t</b> Anfang'
       navigation:
         title: 'Navigation'
-        jump: '<b>#</b> Springe zu Beitrag Nr.'
-        back: '<b>U</b> Zurück'
-        up_down: '<b>K</b>/<b>J</b> Auswahl nach oben/unten bewegen'
-        open: '<b>O</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
-        next_prev: '<b>`</b>/<b>~</b> Nächster/vorheriger Abschnitt'
+        jump: '<b>#</b> Zeige Beitrag #'
+        back: '<b>u</b> Zurück'
+        up_down: '<b>k</b>/<b>j</b> Auswahl &uarr; &darr; bewegen'
+        open: '<b>o</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
+        next_prev: '<b>⇧ Umsch</b> + <b>j</b> / <b>⇧ Umsch</b> + <b>k</b> Nächster/vorheriger Abschnitt'
       application:
         title: 'Anwendung'
-        create: '<b>C</b> Neues Thema erstellen'
-        notifications: '<b>N</b> Benachrichtigungen anzeigen'
+        create: '<b>c</b> Neues Thema erstellen'
+        notifications: '<b>n</b> Benachrichtigungen anzeigen'
+        site_map_menu: '<b>=</b> Seitenmenü öffnen'
+        user_profile_menu: '<b>p</b> Benutzermenü öffnen'
+        show_incoming_updated_topics: '<b>.</b> Zeige aktualisierte Themen'
         search: '<b>/</b> Suchen'
-        help: '<b>?</b> Hilfe zu Tastenkombinationen anzeigen'
+        help: '<b>?</b> Tastaturhilfe anzeigen'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Neue Themen / Beiträge ignorieren'
+        dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
       actions:
         title: 'Aktionen'
-        star: '<b>F</b> Thema favorisieren'
-        share_topic: '<b>⇧ Umsch</b> + <b>S</b> Thema teilen'
-        share_post: '<b>S</b> Beitrag teilen'
-        reply_topic: '<b>⇧ Umsch</b> + <b>R</b> Auf Thema antworten'
-        reply_post: '<b>R</b> Auf Beitrag antworten'
-        quote_post: '<b>Q</b> Beitrag zitieren'
-        like: '<b>L</b> Beitrag gefällt mir'
+        star: '<b>f</b> Thema favorisieren'
+        share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
+        share_post: '<b>s</b> Beitrag teilen'
+        reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
+        reply_topic: '<b>⇧ Umsch</b> + <b>r</b> Auf Thema antworten'
+        reply_post: '<b>r</b> Auf Beitrag antworten'
+        quote_post: '<b>q</b> Beitrag zitieren'
+        like: '<b>l</b> Beitrag gefällt mir'
         flag: '<b>!</b> Beitrag melden'
-        bookmark: '<b>B</b> Lesezeichen auf Beitrag setzen'
-        edit: '<b>E</b> Beitrag bearbeiten'
-        delete: '<b>D</b> Beitrag löschen'
-        mark_muted: '<b>M</b>, <b>M</b> Thema stummschalten'
-        mark_regular: '<b>M</b>, <b>R</b> Thema auf Normal setzen'
-        mark_tracking: '<b>M</b>, <b>T</b> Thema verfolgen'
-        mark_watching: '<b>M</b>, <b>W</b> Thema beobachten'
+        bookmark: '<b>b</b> Lesezeichen auf Beitrag setzen'
+        edit: '<b>e</b> Beitrag bearbeiten'
+        delete: '<b>d</b> Beitrag löschen'
+        mark_muted: '<b>m</b>, <b>m</b> Thema stummschalten'
+        mark_regular: '<b>m</b>, <b>r</b> Thema auf Normal setzen'
+        mark_tracking: '<b>m</b>, <b>t</b> Thema verfolgen'
+        mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
     badges:
       title: Abzeichen
       allow_title: "Abzeichen als Titel erlauben?"
@@ -1906,7 +2029,7 @@ de:
         one: "1 mal verliehen"
         other: "%{count} mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      no_title: "<keine Titel>"
+      none: "<keine>"
       badge_grouping:
         getting_started:
           name: Erste Schritte
@@ -1921,18 +2044,18 @@ de:
       badge:
         editor:
           name: Bearbeiter
-          description: Hat einen Beitrag bearbeitet
+          description: Hat den ersten Beitrag bearbeitet
         basic_user:
           name: Neuling
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Ermöglicht</a> das Nutzen alle wesentlichen Community-Funktionen
-        regular_user:
+        member:
+          name: Mitglied
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> Einladungen
+        regular:
           name: Stammgast
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> das Versenden von Einladungen
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> das Verschieben und Umbenennen von Themen, die Veröffentlichung von <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbaren Links</a> und den Zugang zur Lounge
         leader:
           name: Leitwolf
-          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> das Verschieben und Umbenennen von Themen, das Veröffentlichen von <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbaren Links</a> und den Zugang zur Lounge
-        elder:
-          name: Ältester
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> das Bearbeiten aller Beiträge und das Anheften, Schließen, Archivieren, Aufteilen und Zusammenfügen von Themen
         welcome:
           name: Willkommen
@@ -1941,7 +2064,7 @@ de:
           name: Autobiograf
           description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
         nice_post:
-          name: Netter Beitrag
+          name: Schöner Beitrag
           description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
         good_post:
           name: Guter Beitrag
@@ -1949,6 +2072,24 @@ de:
         great_post:
           name: Großartiger Beitrag
           description: Hat 50 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        nice_topic:
+          name: Schönes Thema
+          description: Hat 10 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        good_topic:
+          name: Gutes Thema
+          description: Hat 25 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        great_topic:
+          name: Großartiges Thema
+          description: Hat 50 Likes für ein Thema erhalten. Dieses Abzeichen kann mehrfach verliehen werden.
+        nice_share:
+          name: Schöne Weitergabe
+          description: Hat einen Beitrag mit 25 Besuchern geteilt
+        good_share:
+          name: Gute Weitergabe
+          description: Hat einen Beitrag mit 300 Besuchern geteilt
+        great_share:
+          name: Großartige Weitergabe
+          description: Hat einen Beitrag mit 1000 Besuchern geteilt
         first_like:
           name: Erster Like
           description: Hat Gefallen an einem Beitrag gefunden
@@ -1956,7 +2097,7 @@ de:
           name: Erste Meldung
           description: Hat einen Beitrag gemeldet
         first_share:
-          name: Erster geteilter Beitrag
+          name: Erste Weitergabe
           description: Hat einen Beitrag geteilt
         first_link:
           name: Erster Link
@@ -1970,3 +2111,12 @@ de:
         reader:
           name: Leser
           description: Hat in einem Thema mit mehr als 100 Beiträgen jeden Beitrag gelesen
+    google_search: |
+      <h2>Mit Google suchen</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

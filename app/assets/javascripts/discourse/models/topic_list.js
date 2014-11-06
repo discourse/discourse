@@ -123,20 +123,19 @@ Discourse.TopicList = Discourse.Model.extend({
 Discourse.TopicList.reopenClass({
 
   loadTopics: function(topic_ids, filter) {
-    var defer = new Ember.Deferred(),
-        url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      var url = Discourse.getURL("/") + filter + "?topic_ids=" + topic_ids.join(",");
 
-    Discourse.ajax({url: url}).then(function (result) {
-      if (result) {
-        // the new topics loaded from the server
-        var newTopics = Discourse.TopicList.topicsFrom(result);
-        defer.resolve(newTopics);
-      } else {
-        defer.reject();
-      }
-    }).then(null, function(){ defer.reject(); });
-
-    return defer;
+      Discourse.ajax({url: url}).then(function (result) {
+        if (result) {
+          // the new topics loaded from the server
+          var newTopics = Discourse.TopicList.topicsFrom(result);
+          resolve(newTopics);
+        } else {
+          reject();
+        }
+      }).catch(reject);
+    });
   },
 
   /**
@@ -176,6 +175,7 @@ Discourse.TopicList.reopenClass({
       draft_key: result.topic_list.draft_key,
       draft_sequence: result.topic_list.draft_sequence,
       draft: result.topic_list.draft,
+      for_period: result.topic_list.for_period,
       loaded: true
     });
 
@@ -192,54 +192,70 @@ Discourse.TopicList.reopenClass({
     @method list
     @param {Object} filter The menu item to filter to
     @param {Object} params Any additional params to pass to TopicList.find()
+    @param {Object} extras Additional finding options, such as caching
     @returns {Promise} a promise that resolves to the list of topics
   **/
-  list: function(filter, params) {
-    var session = Discourse.Session.current(),
-        list = session.get('topicList'),
-        tracking = Discourse.TopicTrackingState.current();
+  list: function(filter, filterParams, extras) {
+    var tracking = Discourse.TopicTrackingState.current();
 
-    if (list && (list.get('filter') === filter)) {
-      list.set('loaded', true);
+    extras = extras || {};
+    return new Ember.RSVP.Promise(function(resolve) {
+      var session = Discourse.Session.current();
 
-      if (tracking) {
-        tracking.updateTopics(list.get('topics'));
-      }
+      if (extras.cached) {
+        var cachedList = session.get('topicList');
 
-      return Ember.RSVP.resolve(list);
-    }
-    session.setProperties({topicList: null, topicListScrollPosition: null});
+        // Try to use the cached version if it exists and is greater than the topics per page
+        if (cachedList && (cachedList.get('filter') === filter) &&
+            (cachedList.get('topics.length') || 0) > Discourse.SiteSettings.topics_per_page &&
+            _.isEqual(cachedList.get('listParams'), filterParams)) {
+          cachedList.set('loaded', true);
 
-    // Clean up any string parameters that might slip through
-    params = params || {};
-    Ember.keys(params).forEach(function(k) {
-      var val = params[k];
-      if (val === "undefined" || val === "null" || val === 'false') {
-        params[k] = undefined;
-      }
-    });
-
-    var findParams = {};
-    Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
-      if (i.indexOf(filter) === 0) {
-        var exclude = i.split("-");
-        if (exclude && exclude.length === 2) {
-          findParams.exclude_category = exclude[1];
+          if (tracking) {
+            tracking.updateTopics(cachedList.get('topics'));
+          }
+          return resolve(cachedList);
         }
+        session.set('topicList', null);
+      } else {
+        // Clear the cache
+        session.setProperties({topicList: null, topicListScrollPosition: null});
       }
-    });
 
-    return Discourse.TopicList.find(filter, _.extend(findParams, params || {})).then(function (list) {
+
+      // Clean up any string parameters that might slip through
+      filterParams = filterParams || {};
+      Ember.keys(filterParams).forEach(function(k) {
+        var val = filterParams[k];
+        if (val === "undefined" || val === "null" || val === 'false') {
+          filterParams[k] = undefined;
+        }
+      });
+
+      var findParams = {};
+      Discourse.SiteSettings.top_menu.split('|').forEach(function (i) {
+        if (i.indexOf(filter) === 0) {
+          var exclude = i.split("-");
+          if (exclude && exclude.length === 2) {
+            findParams.exclude_category = exclude[1];
+          }
+        }
+      });
+      return resolve(Discourse.TopicList.find(filter, _.extend(findParams, filterParams || {})));
+
+    }).then(function(list) {
+      list.set('listParams', filterParams);
       if (tracking) {
         tracking.sync(list, list.filter);
         tracking.trackIncoming(list.filter);
       }
+      Discourse.Session.currentProp('topicList', list);
       return list;
     });
   },
 
   find: function(filter, params) {
-    return PreloadStore.getAndRemove("topic_list", finderFor(filter, params)).then(function(result) {
+    return PreloadStore.getAndRemove("topic_list_" + filter, finderFor(filter, params)).then(function(result) {
       return Discourse.TopicList.from(result, filter, params);
     });
   }

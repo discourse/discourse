@@ -1,11 +1,5 @@
-/**
-  This view presents the user with a widget to choose a topic.
+import searchForTerm from 'discourse/lib/search-for-term';
 
-  @class ChooseTopicView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.View.extend({
   templateName: 'choose_topic',
 
@@ -30,9 +24,9 @@ export default Discourse.View.extend({
       self.setProperties({ topics: null, loading: false });
       return;
     }
-    Discourse.Search.forTerm(title, {typeFilter: 'topic'}).then(function (facets) {
-      if (facets && facets[0] && facets[0].results) {
-        self.set('topics', facets[0].results);
+    searchForTerm(title, {typeFilter: 'topic', searchForId: true}).then(function (results) {
+      if (results && results.posts && results.posts.length > 0) {
+        self.set('topics', results.posts.mapBy('topic'));
       } else {
         self.setProperties({ topics: null, loading: false });
       }

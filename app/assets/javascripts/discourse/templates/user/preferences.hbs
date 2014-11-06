@@ -1,0 +1,250 @@
+<section class='user-content'>
+
+  <form class="form-horizontal">
+
+    <div class="control-group save-button" id='save-button-top'>
+      <div class="controls">
+        {{partial 'user/preferences/saveButton'}}
+      </div>
+    </div>
+
+    <div class="control-group pref-username">
+      <label class="control-label">{{i18n user.username.title}}</label>
+      <div class="controls">
+        <span class='static'>{{username}}</span>
+        {{#if can_edit_username}}
+          {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+        {{/if}}
+      </div>
+      <div class='instructions'>
+        {{{i18n user.username.short_instructions username="username"}}}
+      </div>
+    </div>
+
+    {{#if canEditName}}
+      <div class="control-group pref-name">
+        <label class="control-label">{{i18n user.name.title}}</label>
+        <div class="controls">
+          {{#if can_edit_name}}
+            {{text-field value=newNameInput classNames="input-xxlarge"}}
+          {{else}}
+            <span class='static'>{{name}}</span>
+          {{/if}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.name.instructions}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canSelectTitle}}
+      <div class="control-group pref-title">
+        <label class="control-label">{{i18n user.title.title}}</label>
+        <div class="controls">
+          <span class="static">{{title}}</span>
+          {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canCheckEmails}}
+      <div class="control-group pref-email">
+        <label class="control-label">{{i18n user.email.title}}</label>
+        {{#if email}}
+          <div class="controls">
+            <span class='static'>{{email}}</span>
+            {{#if can_edit_email}}
+              {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+            {{/if}}
+          </div>
+          <div class='instructions'>
+            {{i18n user.email.instructions}}
+          </div>
+        {{else}}
+          <div class="controls">
+            <button class="btn" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if canChangePassword}}
+    <div class="control-group pref-password">
+      <label class="control-label">{{i18n user.password.title}}</label>
+      <div class="controls">
+        <a href="#" {{action "changePassword"}} class='btn'><i class="fa fa-envelope"></i>
+          {{#if no_password}}
+            {{i18n user.change_password.set_password}}
+          {{else}}
+            {{i18n user.change_password.action}}
+          {{/if}}
+        </a>
+        {{passwordProgress}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="control-group pref-avatar">
+      <label class="control-label">{{i18n user.avatar.title}}</label>
+      <div class="controls">
+        {{bound-avatar model "large"}}
+        {{#if allowAvatarUpload}}
+          <button {{action "showAvatarSelector"}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
+        {{else}} {{#unless ssoOverridesAvatar}}
+          <a href="//gravatar.com/emails" target="_blank" title="{{i18n user.change_avatar.gravatar_title}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
+        {{/unless}} {{/if}}
+      </div>
+    </div>
+
+    {{#if allowBackgrounds}}
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n user.change_profile_background.title}}</label>
+        <div class="controls">
+          {{image-uploader uploadUrl=imageUploadUrl
+                           imageUrl=profile_background
+                           instantDelete="true"
+                           type="profile_background"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.change_profile_background.instructions}}
+        </div>
+      </div>
+
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n user.change_card_background.title}}</label>
+        <div class="controls">
+          {{image-uploader uploadUrl=imageUploadUrl
+                           imageUrl=card_background
+                           instantDelete="true"
+                           type="card_background"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.change_card_background.instructions}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if allowUserLocale}}
+      <div class="control-group pref-locale">
+        <label class="control-label">{{i18n user.locale.title}}</label>
+        <div class="controls">
+          {{combo-box valueAttribute="value" content=availableLocales value=locale none="user.locale.default"}}
+        </div>
+        <div class='instructions'>
+          {{i18n user.locale.instructions}}
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="control-group pref-bio">
+      <label class="control-label">{{i18n user.bio}}</label>
+      <div class="controls bio-composer">
+        {{pagedown-editor value=bio_raw}}
+      </div>
+    </div>
+
+    <div class="control-group pref-location">
+      <label class="control-label">{{i18n user.location}}</label>
+      <div class="controls">
+        {{input type="text" value=location class="input-xxlarge"}}
+      </div>
+    </div>
+
+    <div class="control-group pref-website">
+      <label class="control-label">{{i18n user.website}}</label>
+      <div class="controls">
+        {{input type="text" value=website class="input-xxlarge"}}
+      </div>
+    </div>
+
+    <div class="control-group pref-card-badge">
+      <label class="control-label">{{i18n user.card_badge.title}}</label>
+      <div class="controls">
+        {{#if card_image_badge}}
+          {{icon-or-image card_image_badge}}
+        {{/if}}
+        {{#link-to "preferences.card-badge" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+      </div>
+    </div>
+
+    <div class="control-group pref-email-settings">
+      <label class="control-label">{{i18n user.email_settings}}</label>
+      {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
+      {{#if email_digests}}
+        <div class='controls controls-dropdown'>
+          {{combo-box valueAttribute="value" content=digestFrequencies value=digest_after_days}}
+        </div>
+      {{/if}}
+      {{preference-checkbox labelKey="user.email_private_messages" checked=email_private_messages}}
+      {{preference-checkbox labelKey="user.email_direct" checked=email_direct}}
+      {{preference-checkbox labelKey="user.mailing_list_mode" checked=mailing_list_mode}}
+      {{preference-checkbox labelKey="user.email_always" checked=email_always}}
+
+      <div class='instructions'>
+        {{i18n user.email.frequency}}
+      </div>
+    </div>
+
+    <div class="control-group other">
+      <label class="control-label">{{i18n user.other_settings}}</label>
+      <div class="controls controls-dropdown">
+        <label>{{i18n user.auto_track_topics}}</label>
+        {{combo-box valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
+      </div>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n user.new_topic_duration.label}}</label>
+        {{combo-box valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
+      </div>
+
+      {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=external_links_in_new_tab}}
+      {{preference-checkbox labelKey="user.enable_quoting" checked=enable_quoting}}
+      {{preference-checkbox labelKey="user.dynamic_favicon" checked=dynamic_favicon}}
+      {{preference-checkbox labelKey="user.disable_jump_reply" checked=disable_jump_reply}}
+      {{#unless editHistoryVisible}}
+        {{preference-checkbox labelKey="user.edit_history_public" checked=edit_history_public}}
+      {{/unless}}
+
+      {{plugin-outlet "user_custom_preferences"}}
+    </div>
+
+    {{#each userFields}}
+      {{user-field field=field value=value}}
+    {{/each}}
+
+    <div class="control-group category">
+      <label class="control-label">{{i18n user.categories_settings}}</label>
+      <div class="controls category-controls">
+        <label>{{i18n user.watched_categories}}</label>
+        {{category-group categories=watchedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.watched_categories_instructions}}</div>
+      <div class="controls category-controls">
+        <label>{{i18n user.tracked_categories}}</label>
+        {{category-group categories=trackedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.tracked_categories_instructions}}</div>
+      <div class="controls category-controls">
+        <label>{{i18n user.muted_categories}}</label>
+        {{category-group categories=mutedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n user.muted_categories_instructions}}</div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{partial 'user/preferences/saveButton'}}
+      </div>
+    </div>
+
+    {{#if canDeleteAccount}}
+      <div class="control-group delete-account">
+        <hr/>
+        <div class="controls">
+            <button {{action "delete"}} {{bind-attr disabled="deleteDisabled"}} class="btn btn-danger"><i class="fa fa-trash-o"></i> {{i18n user.delete_account}}</button>
+        </div>
+      </div>
+    {{/if}}
+
+  </form>
+</section>

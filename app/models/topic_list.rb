@@ -8,12 +8,23 @@ class TopicList
                 :draft,
                 :draft_key,
                 :draft_sequence,
-                :filter
+                :filter,
+                :for_period
 
-  def initialize(filter, current_user, topics)
+  def initialize(filter, current_user, topics, opts=nil)
     @filter = filter
     @current_user = current_user
     @topics_input = topics
+    @opts = opts || {}
+  end
+
+  def preload_key
+    if @opts[:category]
+      c = Category.where(id: @opts[:category_id]).first
+      return "topic_list_#{c.url.sub(/^\//, '')}/l/#{@filter}" if c
+    end
+
+    "topic_list_#{@filter}"
   end
 
   # Lazy initialization

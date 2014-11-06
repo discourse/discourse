@@ -38,10 +38,10 @@ export default {
         if (me === "refresh") {
           // Refresh if necessary
           document.location.reload(true);
-        } else if (me.name.substr(-10) === "handlebars") {
+        } else if (me.name.substr(-10) === "hbs") {
 
           // Reload handlebars
-          var js = me.name.replace(".handlebars", "").replace("app/assets/javascripts", "/assets");
+          var js = me.name.replace(".hbs", "").replace("app/assets/javascripts", "/assets");
           $LAB.script(js + "?hash=" + me.hash).wait(function() {
             var templateName;
             templateName = js.replace(".js", "").replace("/assets/", "");

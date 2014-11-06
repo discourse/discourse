@@ -8,6 +8,7 @@ class BasicCategorySerializer < ApplicationSerializer
              :topic_count,
              :post_count,
              :description,
+             :description_text,
              :topic_url,
              :read_restricted,
              :permission,
@@ -28,6 +29,7 @@ class BasicCategorySerializer < ApplicationSerializer
   def can_edit
     true
   end
+
   def include_can_edit?
     scope && scope.can_edit?(object)
   end

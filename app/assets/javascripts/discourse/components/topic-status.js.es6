@@ -9,8 +9,8 @@
 export default Ember.Component.extend({
   classNames: ['topic-statuses'],
 
-  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault'),
-  shouldRerender: Discourse.View.renderIfChanged('topic.archived','topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned'),
+  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault', 'topic.is_warning'),
+  shouldRerender: Discourse.View.renderIfChanged('topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'),
 
   didInsertElement: function(){
     var self = this;
@@ -29,30 +29,32 @@ export default Ember.Component.extend({
     });
   },
 
+  canAct: function() {
+    return Discourse.User.current() && !this.get('disableActions');
+  }.property('disableActions'),
+
   render: function(buffer) {
     if (!this.get('hasDisplayableStatus')) { return; }
 
-    var self = this,
-        renderIconIf = function(conditionProp, name, key, actionable) {
-      if (!self.get(conditionProp)) { return; }
-      var title = I18n.t("topic_statuses." + key + ".help");
+    var self = this;
 
+    var renderIconIf = function(conditionProp, name, key, actionable) {
+      if (!self.get(conditionProp)) { return; }
+      var title = Handlebars.Utils.escapeExpression(I18n.t("topic_statuses." + key + ".help"));
       var startTag = actionable ? "a href='#'" : "span";
       var endTag = actionable ? "a" : "span";
 
-      buffer.push("<" + startTag +
-        " title='" + title +"' class='topic-status'><i class='fa fa-" + name + "'></i></" + endTag + ">");
+      buffer.push("<" + startTag + " title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></" + endTag + ">");
     };
 
     // Allow a plugin to add a custom icon to a topic
     this.trigger('addCustomIcon', buffer);
 
-    var togglePin = function () {};
-
+    renderIconIf('topic.is_warning', 'envelope', 'warning');
     renderIconIf('topic.closed', 'lock', 'locked');
     renderIconIf('topic.archived', 'lock', 'archived');
-    renderIconIf('topic.pinned', 'thumb-tack', 'pinned', togglePin);
-    renderIconIf('topic.unpinned', 'thumb-tack unpinned', 'unpinned', togglePin);
+    renderIconIf('topic.pinned', 'thumb-tack', 'pinned', self.get("canAct") );
+    renderIconIf('topic.unpinned', 'thumb-tack unpinned', 'unpinned', self.get("canAct"));
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
   }
 });

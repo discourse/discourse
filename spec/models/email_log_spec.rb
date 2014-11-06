@@ -30,7 +30,7 @@ describe EmailLog do
     it "counts sent emails" do
       user.email_logs.create(email_type: 'blah', to_address: user.email)
       user.email_logs.create(email_type: 'blah', to_address: user.email, skipped: true)
-      described_class.count_per_day.first[1].should == 1
+      described_class.count_per_day(1.day.ago, Time.now).first[1].should == 1
     end
   end
 

@@ -88,7 +88,10 @@ gem 'mail', '~> 2.5.4'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
-gem 'active_model_serializers'
+# We use some ams 0.8.0 features, need to amend code
+# to support 0.9 etc, bench needs to run and ensure no
+# perf regressions
+gem 'active_model_serializers', '~> 0.8.0'
 
 
 gem 'onebox'
@@ -102,7 +105,6 @@ gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
-gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'eventmachine'
 gem 'fast_xs'
 
@@ -161,7 +163,14 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails', '~> 4.0.2'
+
+  if rails_master?
+    gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
+  else
+    # later is breaking our asset compliation extensions
+    gem 'sass-rails', '4.0.2'
+  end
+
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
@@ -172,10 +181,13 @@ group :test do
 end
 
 group :test, :development do
+  # while upgrading to 3
+  gem 'rspec', '2.99.0'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false
-  gem 'fabrication', require: false
+  # later appears to break Fabricate(:topic, category: category)
+  gem 'fabrication', '2.9.8', require: false
   gem 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false

@@ -77,7 +77,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }
 
     // Create our post action
-    var actionSummary = this;
+    var self = this;
 
     return Discourse.ajax("/post_actions", {
       type: 'POST',
@@ -88,8 +88,14 @@ Discourse.ActionSummary = Discourse.Model.extend({
         take_action: opts.takeAction,
         flag_topic: this.get('flagTopic') ? true : false
       }
-    }).then(null, function (error) {
-      actionSummary.removeAction();
+    }).then(function(result) {
+      var post = self.get('post');
+      if (post && result && result.id === post.get('id')) {
+        post.updateFromJson(result);
+      }
+      return post;
+    }).catch(function (error) {
+      self.removeAction();
       var message = $.parseJSON(error.responseText).errors;
       bootbox.alert(message);
     });
@@ -100,11 +106,18 @@ Discourse.ActionSummary = Discourse.Model.extend({
     this.removeAction();
 
     // Remove our post action
+    var self = this;
     return Discourse.ajax("/post_actions/" + (this.get('post.id')), {
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
       }
+    }).then(function(result) {
+      var post = self.get('post');
+      if (post && result && result.id === post.get('id')) {
+        post.updateFromJson(result);
+      }
+      return post;
     });
   },
 
@@ -122,7 +135,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
   },
 
   loadUsers: function() {
-    var actionSummary = this;
+    var self = this;
     Discourse.ajax("/post_actions/users", {
       data: {
         id: this.get('post.id'),
@@ -130,7 +143,7 @@ Discourse.ActionSummary = Discourse.Model.extend({
       }
     }).then(function (result) {
       var users = Em.A();
-      actionSummary.set('users', users);
+      self.set('users', users);
       _.each(result,function(user) {
         if (user.id === Discourse.User.currentProp('id')) {
           users.pushObject(Discourse.User.current());

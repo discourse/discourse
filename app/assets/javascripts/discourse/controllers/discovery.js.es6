@@ -13,7 +13,7 @@ export default ObjectController.extend({
   showMoreUrl: function(period) {
     var url = '', category = this.get('category');
     if (category) {
-      url = '/category/' + Discourse.Category.slugFor(category) + (this.get('noSubcategories') ? '/none' : '') + '/l';
+      url = '/c/' + Discourse.Category.slugFor(category) + (this.get('noSubcategories') ? '/none' : '') + '/l';
     }
     url += '/top/' + period;
     return url;

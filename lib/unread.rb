@@ -10,17 +10,17 @@ class Unread
 
   def unread_posts
     return 0 if do_not_notify?(@topic_user.notification_level)
-    result = ((@topic_user.seen_post_count||0) - (@topic_user.last_read_post_number||0))
+    result = ((@topic_user.highest_seen_post_number||0) - (@topic_user.last_read_post_number||0))
     result = 0 if result < 0
     result
   end
 
   def new_posts
-    return 0 if @topic_user.seen_post_count.blank?
+    return 0 if @topic_user.highest_seen_post_number.blank?
     return 0 if do_not_notify?(@topic_user.notification_level)
     return 0 if (@topic_user.last_read_post_number||0) > @topic.highest_post_number
 
-    new_posts = (@topic.highest_post_number - @topic_user.seen_post_count)
+    new_posts = (@topic.highest_post_number - @topic_user.highest_seen_post_number)
     new_posts = 0 if new_posts < 0
     return new_posts
   end

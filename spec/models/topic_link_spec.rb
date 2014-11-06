@@ -20,7 +20,7 @@ describe TopicLink do
     ftl = TopicLink.new(url: "/t/#{topic.id}",
                               topic_id: topic.id,
                               link_topic_id: topic.id)
-    ftl.valid?.should be_false
+    ftl.valid?.should == false
   end
 
   describe 'external links' do
@@ -40,10 +40,10 @@ http://b.com/#{'a'*500}
       topic.topic_links.count.should == 2
 
       # works with markdown links
-      topic.topic_links.exists?(url: "http://a.com/").should be_true
+      topic.topic_links.exists?(url: "http://a.com/").should == true
 
       #works with markdown links followed by a period
-      topic.topic_links.exists?(url: "http://b.com/b").should be_true
+      topic.topic_links.exists?(url: "http://b.com/b").should == true
     end
 
   end
@@ -118,7 +118,7 @@ http://b.com/#{'a'*500}
       context 'removing a link' do
 
         before do
-          post.revise(post.user, "no more linkies")
+          post.revise(post.user, { raw: "no more linkies" })
           TopicLink.extract_from(post)
         end
 
@@ -217,7 +217,7 @@ http://b.com/#{'a'*500}
 
   describe 'internal link from pm' do
     it 'works' do
-      pm = Fabricate(:topic, user: user, archetype: 'private_message')
+      pm = Fabricate(:topic, user: user, category_id: nil, archetype: 'private_message')
       pm.posts.create(user: user, raw: "some content")
 
       url = "http://#{test_uri.host}/t/topic-slug/#{topic.id}"
@@ -227,8 +227,8 @@ http://b.com/#{'a'*500}
 
       TopicLink.extract_from(linked_post)
 
-      topic.topic_links.first.should be_nil
-      pm.topic_links.first.should_not be_nil
+      topic.topic_links.first.should == nil
+      pm.topic_links.first.should_not == nil
     end
 
   end

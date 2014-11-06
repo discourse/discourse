@@ -1,0 +1,15 @@
+<div class='row'>
+  <div class='content-list span6'>
+    <ul>
+      {{#each model}}
+        <li>
+          {{#link-to 'adminSiteText.edit' text_type}}{{title}}{{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class='content-editor'>
+    {{outlet}}
+  </div>
+</div>

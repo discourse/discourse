@@ -22,13 +22,13 @@ module TopicGuardian
     # No users can create posts on deleted topics
     return false if topic.trashed?
 
-    is_staff? || (authenticated? && user.has_trust_level?(:elder)) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
+    is_staff? || (authenticated? && user.has_trust_level?(TrustLevel[4])) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
   end
 
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
-    return true if is_staff? || user.has_trust_level?(:leader)
+    return true if is_staff? || (!topic.private_message? && user.has_trust_level?(TrustLevel[3]))
     return false if topic.archived
     is_my_own?(topic)
   end
@@ -46,7 +46,7 @@ module TopicGuardian
   end
 
   def can_reply_as_new_topic?(topic)
-    authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(:basic)
+    authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(TrustLevel[1])
   end
 
   def can_see_deleted_topics?

@@ -18,7 +18,8 @@ test('filterParam', function() {
   var user = Discourse.User.create({id: 1, username: 'eviltrout'});
   var stream = user.get('stream');
 
-  blank(stream.get('filterParam'), "it's blank by default");
+  // defaults to posts/topics
+  equal(stream.get('filterParam'), "4,5");
 
   stream.set('filter', Discourse.UserAction.TYPES.likes_given);
   equal(stream.get('filterParam'), Discourse.UserAction.TYPES.likes_given);

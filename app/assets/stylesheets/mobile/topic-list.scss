@@ -52,7 +52,6 @@
 
   .badge-notification {
     position: relative;
-    padding: 4px 4px 4px 3px;
     top: -1px;
       i {color: $secondary;}
   }
@@ -64,7 +63,6 @@
   .topic-item-stats {
     .category, .num, .last-poster {
       float: left;
-      margin-right: 14px;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -77,7 +75,9 @@
 
   .age {
     white-space: nowrap;
-    margin-left: 5px;
+    a {
+      padding: 15px 10px 15px 5px;
+    }
   }
 }
 
@@ -252,8 +252,9 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 .fade {
   opacity: 0;
-  -webkit-transition: opacity 0.15s linear;
-  transition: opacity 0.15s linear;
+  transition: opacity linear .15s;
+  -webkit-transition: opacity linear .15s;
+
 }
 .fade.in {
   opacity: 1;
@@ -303,5 +304,17 @@ ol.category-breadcrumb {
 .period-chooser {
   button {
     margin-top: 10px;
+  }
+}
+
+button.dismiss-read {
+  margin-right: 10px;
+}
+
+// base defines extra padding for easier click/top of title field
+// this is a bit too much for mobile
+td.main-link {
+  a.title {
+    padding: 5px 10px 5px 0;
   }
 }

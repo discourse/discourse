@@ -1,10 +1,22 @@
 (function() {
-
   var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
 
+  var _extendedEmoji = {};
+  Discourse.Dialect.registerEmoji = function(code, url) {
+    _extendedEmoji[code] = url;
+  };
+
+  function urlFor(code) {
+    var url = _extendedEmoji[code];
+    if (!url && emoji.indexOf(code) !== -1) {
+      url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+    }
+    return url;
+  }
+
   function imageFor(code) {
-    if (emoji.indexOf(code) !== -1) {
-      var url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+    var url = urlFor(code);
+    if (url) {
       return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
     }
   }
@@ -55,6 +67,7 @@
     } else {
       var replacement = translations[t];
       Discourse.Dialect.inlineReplace(t, function (token, match, prev) {
+        if (!Discourse.SiteSettings.enable_emoji) { return token; }
         return checkPrev(prev) ? imageFor(replacement) : token;
       });
     }
@@ -69,6 +82,8 @@
                                            }).join("|"));
 
   Discourse.Dialect.registerInline(':', function(text, match, prev) {
+    if (!Discourse.SiteSettings.enable_emoji) { return; }
+
     var endPos = text.indexOf(':', 1),
         firstSpace = text.search(/\s/),
         contents;
@@ -80,6 +95,10 @@
       translationColonRegexp.lastIndex = 0;
       var m = translationColonRegexp.exec(text);
       if (m && m[0] && text.indexOf(m[0]) === 0) {
+
+        // Check outer edge
+        var lastChar = text.charAt(m[0].length);
+        if (lastChar && (lastChar !== ' ' && lastChar !== "\n")) return;
         contents = imageFor(translationsWithColon[m[0]]);
         if (contents) {
           return [m[0].length, contents];
@@ -100,6 +119,7 @@
   var ComposerView = (Discourse && Discourse.ComposerView) || (typeof require !== "undefined" && require('discourse/views/composer').default);
   if (ComposerView) {
     ComposerView.on("initWmdEditor", function(event){
+      if (!Discourse.SiteSettings.enable_emoji) { return; }
 
       var baseUrl = Discourse.getURL("/");
 
@@ -108,49 +128,55 @@
                                           "{{#each options}}" +
                                               "<li>" +
                                                 "<a href='#'>" +
-                                                "<img src='" + baseUrl + "plugins/emoji/images/{{this}}.png' class='emoji'> " +
-                                                "{{this}}</a>" +
+                                                "<img src='{{src}}' class='emoji'> " +
+                                                "{{code}}</a>" +
                                               "</li>" +
                                           "{{/each}}" +
                                        "</ul>" +
                                     "</div>");
 
+      var toSearch = emoji.concat(Object.keys(_extendedEmoji));
       $('#wmd-input').autocomplete({
         template: template,
         key: ":",
-        transformComplete: function(v){ return v + ":"; },
+        transformComplete: function(v){  return v.code + ":"; },
         dataSource: function(term){
+          return new Ember.RSVP.Promise(function(resolve) {
+            var full = ":" + term;
+            term = term.toLowerCase();
 
-          var full = ":" + term;
-          term = term.toLowerCase();
-
-          if (term === "") {
-            return Ember.RSVP.resolve(["smile", "smiley", "wink", "sunny", "blush"]);
-          }
-
-          if (translations[full]) {
-            return Ember.RSVP.resolve([translations[full]]);
-          }
-
-          var options = [];
-          var i;
-          for (i=0; i < emoji.length; i++) {
-            if (emoji[i].indexOf(term) === 0) {
-              options.push(emoji[i]);
-              if(options.length > 4) { break; }
+            if (term === "") {
+              return resolve(["smile", "smiley", "wink", "sunny", "blush"]);
             }
-          }
 
-          if (options.length <= 4) {
-            for (i=0; i < emoji.length; i++) {
-              if (emoji[i].indexOf(term) > 0) {
-                options.push(emoji[i]);
+            if (translations[full]) {
+              return resolve([translations[full]]);
+            }
+
+            var options = [];
+            var i;
+            for (i=0; i < toSearch.length; i++) {
+              if (toSearch[i].indexOf(term) === 0) {
+                options.push(toSearch[i]);
                 if(options.length > 4) { break; }
               }
             }
-          }
 
-          return Ember.RSVP.resolve(options);
+            if (options.length <= 4) {
+              for (i=0; i < toSearch.length; i++) {
+                if (toSearch[i].indexOf(term) > 0) {
+                  options.push(toSearch[i]);
+                  if(options.length > 4) { break; }
+                }
+              }
+            }
+
+            return resolve(options);
+          }).then(function(list) {
+            return list.map(function(i) {
+              return {code: i, src: urlFor(i)};
+            });
+          });
         }
       });
     });

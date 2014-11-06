@@ -61,11 +61,11 @@ h1 a.badge-category div {vertical-align: top;}
 
 .badge-notification {
   @extend %badge;
-  padding: 3px;
+  padding: 3px 5px;
+  vertical-align: middle;
   color: $secondary;
   font-size: 11px;
   line-height: 1;
-  min-width: 11px;
   text-align: center;
   background-color: scale-color($primary, $lightness: 70%);
   &[href] {
@@ -80,7 +80,17 @@ h1 a.badge-category div {vertical-align: top;}
     font-weight: normal;
   }
 
+  &.new-topic {
+    background-color: transparent;
+    color: scale-color($tertiary, $lightness: 20%);
+    font-weight: normal;
+    font-size: 13px;
+  }
 
+  &.new-topic::before {
+    content: "●";
+    margin-right: 2px;
+  }
 
   // Click count
 
@@ -118,5 +128,5 @@ h1 a.badge-category div {vertical-align: top;}
   background-color: dark-light-diff($primary, $secondary, 90%, -65%);
   border-color: dark-light-diff($primary, $secondary, 90%, -65%);
   font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba(0,0,0, 0.22));
+  box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

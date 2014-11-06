@@ -39,6 +39,9 @@ td.flaggers td {
     }
   }
 
+  .view-options {
+    float: right;
+  }
   table.report {
     margin-top: 20px;
     tr {
@@ -66,24 +69,6 @@ td.flaggers td {
   }
 }
 
-.admin-loading {
-  width: 100px;
-  margin: 0 auto 30px auto;
-  background-color: $primary;
-  @include border-radius-all(10px);
-  padding: 10px 10px 10px 30px;
-  font-size: 15px;
-  line-height: 23px;
-  text-align: center;
-  color: $secondary;
-  background: {
-    image: image-url("spinner_96_w.gif");
-    repeat: no-repeat;
-    position: 10px 8px;
-    size: 25px;
-  };
-}
-
 .ip-lookup {
   position: relative;
   display: inline-block;
@@ -107,8 +92,12 @@ td.flaggers td {
   margin-top: 20px;
 }
 
+.admin-title {
+  height: 45px;
+}
+
 .admin-controls {
-  background-color: dark-light-diff($primary, $secondary, 90%, -20%);
+  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 10px 10px 3px 0;
   height: 35px;
   .nav.nav-pills {
@@ -272,7 +261,7 @@ td.flaggers td {
 
   .setting.overridden {
     input[type=text] {
-      background-color: dark-light-diff($highlight, $secondary, 50%, -10%);
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
 
     }
 
@@ -284,11 +273,11 @@ td.flaggers td {
 
 section.details {
   h1 {
-    font-size: 15px;
-    background-color: scale-color-diff();
-    color: $secondary;
-    padding: 0 10px;
-    margin: 0 0 5px 0;
+    font-size: 18px;
+    color: $primary;
+    padding: 5px 10px;
+    margin: 30px 0 5px 0;
+    border-bottom: 5px solid scale-color-diff();
   }
 }
 
@@ -299,6 +288,16 @@ section.details {
   position: fixed;
   bottom: 0;
   width: 1075px;
+}
+
+.user-controls {
+  padding: 5px;
+  clear: both;
+  text-align: right;
+}
+
+.display-row.associations .value {
+  width: 750px;
 }
 
 .display-row {
@@ -368,6 +367,12 @@ section.details {
 
   .current-badge {
     margin: 20px;
+
+    p.help {
+      margin: 0;
+      color: scale-color($primary, $lightness: 40%);
+      font-size: 0.9em;
+    }
   }
 
   .form-horizontal {
@@ -409,6 +414,40 @@ section.details {
       margin-left: 10px;
       width: 80px;
       color: $primary;
+    }
+  }
+}
+
+.badge-query-preview {
+  .grant-count, .sample, .error-header {
+    margin-left: 10px;
+  }
+
+  .badge-errors {
+    font-size: 14px;
+    line-height: 16px;
+    padding: 4px;
+    background-color: scale-color-diff();
+  }
+
+  .badge-query-plan {
+    font-size: 12px;
+    line-height: 13px;
+    padding: 4px;
+    background-color: scale-color-diff();
+  }
+
+  .count-warning {
+    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    margin: 0 0 7px 0;
+    padding: 10px 20px;
+
+    p {
+      margin: 0;
+    }
+    .heading {
+      color: $danger;
+      font-weight: bold;
     }
   }
 }
@@ -494,27 +533,30 @@ section.details {
 
 
 .admin-flags {
+  table-layout: fixed;
 
   .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
   .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
-  .message { background-color: scale-color($highlight, $lightness: 70%); }
-  .message:hover { background-color: scale-color($highlight, $lightness: 30%); }
+  .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+  .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
   td { vertical-align: top; }
   th { text-align: left; }
   .user {
-    width: 20px;
+    width: 25px;
     padding: 8px 0 0 0;
     text-align: center;
   }
   .excerpt {
     max-width: 700px;
-    width: 700px;
+    width: 75%;
     padding: 8px;
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
       max-height: 1.2em;
       overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 5px;
     }
   }
   .flaggers {
@@ -544,12 +586,14 @@ section.details {
     font-size: 13px;
     margin: 0 0 5px 0;
   }
+  .flagged-posts { background: $danger; }
 }
 
 /* Dashboard */
 
 .dashboard-left {
   float: left;
+  margin-top: 10px;
   width: 60%;
 }
 .dashboard-right {
@@ -565,6 +609,8 @@ section.details {
 }
 
 .version-check {
+  margin-top: 10px;
+
   .version-number {
     font-size: 18px;
     font-weight: bold;
@@ -645,7 +691,7 @@ table.api-keys {
     th {
       font-weight: normal;
       text-align: center;
-      background-color: scale-color-diff();
+      background: dark-light-diff($primary, $secondary, 80%, -65%);
     }
     th.title {
       text-align: left;
@@ -653,9 +699,6 @@ table.api-keys {
     thead {
       tr:hover > td {
         background-color: $secondary;
-      }
-      tr:hover > th {
-        background-color: scale-color($primary, $lightness: 75%);
       }
     }
 
@@ -689,11 +732,9 @@ table.api-keys {
   }
 
   &.detected-problems {
-    @include border-radius-all(5px);
-    background-color: scale-color-diff();
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
     margin-bottom: 20px;
     margin-top: 10px;
-    box-shadow: inset 0 0 10px rgba(0,0,0, .1);
 
     .look-here {
       float: left;
@@ -708,7 +749,8 @@ table.api-keys {
 
     .problem-messages {
       float: left;
-      width: 75%;
+      width: 80%;
+      margin-left: 1%;
       a {
         text-decoration: underline;
       }
@@ -716,10 +758,14 @@ table.api-keys {
         text-align: right;
       }
       .btn {
-        background-color: lighten($primary, 60%);
+        background: dark-light-diff($primary, $secondary, 80%, -85%);
       }
       ul {
         margin-left: 0;
+        padding-left: 20px;
+      li {
+        margin-bottom: 10px;
+        }
       }
   }
 }
@@ -749,9 +795,9 @@ table.api-keys {
   }
 
   .referred-topic-title {
-    width: 410px;
-    @include medium-width { width: 360px; }
-    @include small-width  { width: 320px; }
+    width: 355px;
+    @include medium-width { width: 305px; }
+    @include small-width  { width: 265px; }
   }
 }
 
@@ -780,7 +826,7 @@ table.api-keys {
     color: $primary;
     font-weight: bold;
     height: 30px;
-    background-color: scale-color($primary, $lightness: 75%);
+    background: dark-light-diff($primary, $secondary, 80%, -75%);
     cursor: pointer;
 
     h1 {
@@ -844,7 +890,7 @@ table.api-keys {
     width: 6px;
   }
   ::-webkit-scrollbar-thumb {
-    background-color: scale-color($primary, $lightness: 75%);
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
@@ -855,7 +901,7 @@ table.api-keys {
 .content-list {
 
   h3 {
-    color: dark-light-diff($primary, $secondary, 90%, -60%);
+    color: dark-light-diff($primary, $secondary, 50%, -60%);
     font-size: 15px;
     padding-left: 5px;
     margin-bottom: 10px;
@@ -1099,7 +1145,7 @@ table.api-keys {
   }
 }
 
-.leader-requirements {
+.tl3-requirements {
   .fa-check {
     color: $success;
   }
@@ -1257,6 +1303,50 @@ and (max-width : 500px) {
     float: right;
     a {
       margin-left: 5px;
+    }
+  }
+}
+
+tr.not-activated {
+  td, td a, td a:visited {
+    color: #bbb;
+  }
+}
+.details.not-activated {
+  .username .value, .email .value a, .email .value a:visited {
+    color: #bbb;
+  }
+}
+
+.user-fields {
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .user-field {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid scale-color-diff();
+
+    .form-display {
+      width: 25%;
+      display: inline-block;
+      float: left;
+    }
+
+    .form-element {
+      float: left;
+      width: 25%;
+    }
+
+    .controls {
+      float: right;
+      text-align: right;
+      width: 20%;
+    }
+
+    .clearfix {
+      clear: both;
     }
   }
 }

@@ -48,7 +48,7 @@ describe TopicLinkClick do
         let(:click) { TopicLinkClick.create_from(url: "url that doesn't exist", post_id: @post.id, ip: '127.0.0.1') }
 
         it "returns nil" do
-          click.should be_nil
+          click.should == nil
         end
       end
 

@@ -10,6 +10,7 @@ class Invite < ActiveRecord::Base
   has_many :topic_invites
   has_many :topics, through: :topic_invites, source: :topic
   validates_presence_of :invited_by_id
+  validates :email, email: true
 
   before_create do
     self.invite_key ||= SecureRandom.hex
@@ -95,7 +96,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-
   # generate invite tokens without email
   def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
     invite_tokens = []
@@ -179,6 +179,11 @@ class Invite < ActiveRecord::Base
     user
   end
 
+  def resend_invite
+    self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
+    Jobs.enqueue(:invite_email, invite_id: self.id)
+  end
+
   def self.base_directory
     File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
@@ -198,8 +203,8 @@ end
 #  invited_by_id  :integer          not null
 #  user_id        :integer
 #  redeemed_at    :datetime
-#  created_at     :datetime
-#  updated_at     :datetime
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
 #  deleted_at     :datetime
 #  deleted_by_id  :integer
 #  invalidated_at :datetime

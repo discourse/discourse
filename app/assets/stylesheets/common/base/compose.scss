@@ -93,18 +93,26 @@ div.ac-wrap {
   display: none;
 }
 
-
 .auto-close-fields {
+  div:not(:first-child) {
+    margin-top: 10px;
+  }
+  label {
+    font-size: 14px;
+  }
   input {
+    text-align: center;
     width: 150px;
   }
   .examples {
-    margin: 10px 0 0 0;
-    color: $primary;
+    color: lighten($primary, 40%);
   }
 }
 
 .edit-auto-close-modal {
+  .btn.pull-right {
+    margin-right: 10px;
+  }
   form {
     margin: 0;
   }
@@ -118,3 +126,28 @@ div.ac-wrap {
     }
   }
 }
+
+.edit-category-modal {
+  .auto-close-fields {
+    input[type=text] {
+      width: 50px;
+    }
+  }
+}
+
+#reply-control {
+  .spinner {
+    position: absolute;
+    @include fades-in(0.25s);
+    left: 45%;
+    top: 20%;
+  }
+  &.loading {
+    .spinner {
+      z-index: 1000;
+      @include visible;
+    }
+  }
+
+}
+

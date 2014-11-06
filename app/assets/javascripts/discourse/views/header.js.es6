@@ -6,19 +6,41 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var originalZIndex;
+
 export default Discourse.View.extend({
   tagName: 'header',
   classNames: ['d-header', 'clearfix'],
   classNameBindings: ['editingTopic'],
   templateName: 'header',
+  renderDropdowns: false,
 
   showDropdown: function($target) {
+    var self = this;
+
+    if(!this.get("renderDropdowns")){
+      this.set("renderDropdowns", true);
+      Em.run.next(function(){
+        self.showDropdown($target);
+      });
+      return;
+    }
+
     var elementId = $target.data('dropdown') || $target.data('notifications'),
         $dropdown = $("#" + elementId),
         $li = $target.closest('li'),
         $ul = $target.closest('ul'),
         $html = $('html'),
-        self = this;
+        $header = $('header'),
+        replyZIndex = parseInt($('#reply-control').css('z-index'), 10);
+
+
+    originalZIndex = originalZIndex || $('header').css('z-index');
+
+    if(replyZIndex > 0) {
+      $header.css("z-index", replyZIndex + 1);
+    }
 
     var controller = self.get('controller');
     if(controller && !controller.isDestroyed){
@@ -38,6 +60,7 @@ export default Discourse.View.extend({
     }
 
     var hideDropdown = function() {
+      $header.css("z-index", originalZIndex);
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);

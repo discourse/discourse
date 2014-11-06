@@ -19,14 +19,6 @@ describe Category do
     c.errors[:name].should be_present
   end
 
-  it { should belong_to :topic }
-  it { should belong_to :user }
-
-  it { should have_many :topics }
-  it { should have_many :category_featured_topics }
-  it { should have_many :featured_topics }
-  it { should belong_to :parent_category}
-
   describe "last_updated_at" do
     it "returns a number value of when the category was last updated" do
       last = Category.last_updated_at
@@ -39,7 +31,7 @@ describe Category do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
 
-      read_restricted.should be_false
+      read_restricted.should == false
       resolved.should == []
     end
   end
@@ -49,7 +41,7 @@ describe Category do
 
       # NOTE we also have the uncategorized category ... hence the increased count
 
-      default_category = Fabricate(:category)
+      _default_category = Fabricate(:category)
       full_category = Fabricate(:category)
       can_post_category = Fabricate(:category)
       can_read_category = Fabricate(:category)
@@ -102,13 +94,13 @@ describe Category do
     let(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       category.set_permissions({})
-      category.read_restricted?.should be_true
+      category.read_restricted?.should == true
 
       category.set_permissions(:everyone => :full)
-      category.read_restricted?.should be_false
+      category.read_restricted?.should == false
 
       user.secure_categories.should be_empty
 
@@ -194,6 +186,15 @@ describe Category do
     end
   end
 
+  describe 'description_text' do
+    it 'correctly generates text description as needed' do
+      c = Category.new
+      c.description_text.should == nil
+      c.description = "&lt;hello <a>test</a>."
+      c.description_text.should == "<hello test."
+    end
+  end
+
   describe 'after create' do
     before do
       @category = Fabricate(:category, name: 'Amazing Category')
@@ -216,7 +217,7 @@ describe Category do
 
       @topic.pinned_at.should be_present
 
-      Guardian.new(@category.user).can_delete?(@topic).should be_false
+      Guardian.new(@category.user).can_delete?(@topic).should == false
 
       @topic.posts.count.should == 1
 
@@ -243,7 +244,7 @@ describe Category do
 
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      category.topic.auto_close_at.should be_nil
+      category.topic.auto_close_at.should == nil
     end
 
     describe "creating a new category with the same slug" do
@@ -286,8 +287,8 @@ describe Category do
     end
 
     it 'is deleted correctly' do
-      Category.exists?(id: @category_id).should be_false
-      Topic.exists?(id: @topic_id).should be_false
+      Category.exists?(id: @category_id).should == false
+      Topic.exists?(id: @topic_id).should == false
     end
   end
 
@@ -367,7 +368,7 @@ describe Category do
         post = create_post(user: @category.user, category: @category.name)
 
         SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: post.updated_at + 2.minutes)
+        post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 2.minutes)
 
         Category.update_stats
         @category.reload
@@ -378,6 +379,26 @@ describe Category do
         @category.posts_year.should == 1
         @category.posts_month.should == 1
         @category.posts_week.should == 1
+      end
+    end
+
+    context 'for uncategorized category' do
+      before do
+        @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+        create_post(user: Fabricate(:user), category: @uncategorized.name)
+        Category.update_stats
+        @uncategorized.reload
+      end
+
+      it 'updates topic stats' do
+        @uncategorized.topics_week.should == 1
+        @uncategorized.topics_month.should == 1
+        @uncategorized.topics_year.should == 1
+        @uncategorized.topic_count.should == 1
+        @uncategorized.post_count.should == 1
+        @uncategorized.posts_year.should == 1
+        @uncategorized.posts_month.should == 1
+        @uncategorized.posts_week.should == 1
       end
     end
   end

@@ -15,6 +15,6 @@ describe UserAvatar do
     FileHelper.expects(:download).returns(temp)
     avatar.update_gravatar!
     temp.unlink
-    avatar.gravatar_upload.should_not be_nil
+    avatar.gravatar_upload.should_not == nil
   end
 end

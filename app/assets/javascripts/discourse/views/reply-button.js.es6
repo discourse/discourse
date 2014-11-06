@@ -13,7 +13,7 @@ export default ButtonView.extend({
   }.property(),
 
   renderIcon: function(buffer) {
-    buffer.push("<i class='fa fa-plus'></i>");
+    buffer.push("<i class='fa fa-reply'></i>");
   },
 
   click: function() {

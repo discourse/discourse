@@ -9,11 +9,6 @@
 Discourse.SiteCustomization = Discourse.Model.extend({
   trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'override_default_style'],
 
-  init: function() {
-    this._super();
-    this.startTrackingChanges();
-  },
-
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
   }.property('selected', 'name'),
@@ -43,7 +38,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       return true;
     });
     this.set('originals', originals);
-  },
+  }.on('init'),
 
   previewUrl: function() {
     return "/?preview-style=" + (this.get('key'));
@@ -103,15 +98,14 @@ var SiteCustomizations = Ember.ArrayProxy.extend({
 
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
-    var customizations = SiteCustomizations.create({ content: [], loading: true });
-    Discourse.ajax("/admin/site_customizations").then(function (data) {
+    return Discourse.ajax("/admin/site_customizations").then(function (data) {
+      var content = [];
       if (data) {
-        _.each(data.site_customizations,function(c) {
-          customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));
+        content = data.site_customizations.map(function(c) {
+          return Discourse.SiteCustomization.create(c);
         });
       }
-      customizations.set('loading', false);
+      return SiteCustomizations.create({ content: content });
     });
-    return customizations;
   }
 });

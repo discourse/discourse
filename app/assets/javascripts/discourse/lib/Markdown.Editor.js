@@ -38,14 +38,8 @@
         doc = window.document,
         re = window.RegExp,
         nav = window.navigator,
-        SETTINGS = { lineLength: 72 },
+        SETTINGS = { lineLength: 72 };
 
-    // Used to work around some browser bugs where we can't use feature testing.
-        uaSniffed = {
-            isIE: /msie/.test(nav.userAgent.toLowerCase()),
-            isIE_5or6: /msie 6/.test(nav.userAgent.toLowerCase()) || /msie 5/.test(nav.userAgent.toLowerCase()),
-            isOpera: /opera/.test(nav.userAgent.toLowerCase())
-        };
 
     var defaultsStrings = {
         bold: "Strong <strong> Ctrl+B",
@@ -313,20 +307,6 @@
 
     // A collection of the important regions on the page.
     // Cached so we don't have to keep traversing the DOM.
-    // Also holds ieCachedRange and ieCachedScrollTop, where necessary; working around
-    // this issue:
-    // Internet explorer has problems with CSS sprite buttons that use HTML
-    // lists.  When you click on the background image "button", IE will
-    // select the non-existent link text and discard the selection in the
-    // textarea.  The solution to this is to cache the textarea selection
-    // on the button's mousedown event and set a flag.  In the part of the
-    // code where we need to grab the selection, we check for the flag
-    // and, if it's set, use the cached area instead of querying the
-    // textarea.
-    //
-    // This ONLY affects Internet Explorer (tested on versions 6, 7
-    // and 8) and ONLY on button clicks.  Keyboard shortcuts work
-    // normally since the focus never leaves the textarea.
     function PanelCollection(postfix) {
         this.buttonBar = doc.getElementById("wmd-button-bar" + postfix);
         this.preview = doc.getElementById("wmd-preview" + postfix);
@@ -336,43 +316,21 @@
     // Returns true if the DOM element is visible, false if it's hidden.
     // Checks if display is anything other than none.
     util.isVisible = function (elem) {
-
-        if (window.getComputedStyle) {
-            // Most browsers
-            return window.getComputedStyle(elem, null).getPropertyValue("display") !== "none";
-        }
-        else if (elem.currentStyle) {
-            // IE
-            return elem.currentStyle["display"] !== "none";
-        }
+        return window.getComputedStyle(elem, null).getPropertyValue("display") !== "none";
     };
 
 
     // Adds a listener callback to a DOM element which is fired on a specified
     // event.
     util.addEvent = function (elem, event, listener) {
-        if (elem.attachEvent) {
-            // IE only.  The "on" is mandatory.
-            elem.attachEvent("on" + event, listener);
-        }
-        else {
-            // Other browsers.
-            elem.addEventListener(event, listener, false);
-        }
+        elem.addEventListener(event, listener, false);
     };
 
 
     // Removes a listener callback from a DOM element which is fired on a specified
     // event.
     util.removeEvent = function (elem, event, listener) {
-        if (elem.detachEvent) {
-            // IE only.  The "on" is mandatory.
-            elem.detachEvent("on" + event, listener);
-        }
-        else {
-            // Other browsers.
-            elem.removeEventListener(event, listener, false);
-        }
+        elem.removeEventListener(event, listener, false);
     };
 
     // Converts \r\n and \r to \n.
@@ -455,21 +413,8 @@
             scrollHeight = doc.body.offsetHeight;
         }
 
-        if (self.innerHeight) {
-            // Non-IE browser
-            innerWidth = self.innerWidth;
-            innerHeight = self.innerHeight;
-        }
-        else if (doc.documentElement && doc.documentElement.clientHeight) {
-            // Some versions of IE (IE 6 w/ a DOCTYPE declaration)
-            innerWidth = doc.documentElement.clientWidth;
-            innerHeight = doc.documentElement.clientHeight;
-        }
-        else if (doc.body) {
-            // Other versions of IE
-            innerWidth = doc.body.clientWidth;
-            innerHeight = doc.body.clientHeight;
-        }
+        innerWidth = self.innerWidth;
+        innerHeight = self.innerHeight;
 
         var maxWidth = Math.max(scrollWidth, innerWidth);
         var maxHeight = Math.max(scrollHeight, innerHeight);
@@ -497,7 +442,7 @@
                 }
             }
 
-            if (!uaSniffed.isIE || mode != "moving") {
+            if (mode != "moving") {
                 timer = setTimeout(refreshState, 1);
             }
             else {
@@ -600,8 +545,7 @@
 
             if ((event.ctrlKey || event.metaKey) && !event.altKey) {
 
-                // IE and Opera do not support charCode.
-                var keyCode = event.charCode || event.keyCode;
+                var keyCode = event.charCode;
                 var keyCodeChar = String.fromCharCode(keyCode);
 
                 switch (keyCodeChar.toLowerCase()) {
@@ -682,7 +626,7 @@
             });
 
             var handlePaste = function () {
-                if (uaSniffed.isIE || (inputStateObj && inputStateObj.text != panels.input.value)) {
+                if (inputStateObj && inputStateObj.text != panels.input.value) {
                     if (timer == undefined) {
                         mode = "paste";
                         saveState();
@@ -743,7 +687,7 @@
                 return;
             }
 
-            if (inputArea.selectionStart !== undefined && !uaSniffed.isOpera) {
+            if (inputArea.selectionStart !== undefined) {
 
                 inputArea.focus();
                 inputArea.selectionStart = stateObj.start;
@@ -768,8 +712,7 @@
 
         this.setInputAreaSelectionStartEnd = function () {
 
-            if (!panels.ieCachedRange && (inputArea.selectionStart || inputArea.selectionStart === 0)) {
-
+            if (inputArea.selectionStart || inputArea.selectionStart === 0) {
                 stateObj.start = inputArea.selectionStart;
                 stateObj.end = inputArea.selectionEnd;
             }
@@ -777,10 +720,7 @@
 
                 stateObj.text = util.fixEolChars(inputArea.value);
 
-                // IE loses the selection in the textarea when buttons are
-                // clicked.  On IE we cache the selection. Here, if something is cached,
-                // we take it.
-                var range = panels.ieCachedRange || doc.selection.createRange();
+                var range = doc.selection.createRange();
 
                 var fixedRange = util.fixEolChars(range.text);
                 var marker = "\x07";
@@ -805,10 +745,6 @@
                     range.text = fixedRange;
                 }
 
-                if (panels.ieCachedRange)
-                    stateObj.scrollTop = panels.ieCachedScrollTop; // this is set alongside with ieCachedRange
-
-                panels.ieCachedRange = null;
 
                 this.setInputAreaSelection();
             }
@@ -1044,24 +980,6 @@
 
         var isFirstTimeFilled = true;
 
-        // IE doesn't let you use innerHTML if the element is contained somewhere in a table
-        // (which is the case for inline editing) -- in that case, detach the element, set the
-        // value, and reattach. Yes, that *is* ridiculous.
-        var ieSafePreviewSet = function (previewText) {
-            var ieSafeSet = function(panel, text) {
-              var parent = panel.parentNode;
-              var sibling = panel.nextSibling;
-              parent.removeChild(panel);
-              panel.innerHTML = text;
-              if (!sibling)
-                parent.appendChild(panel);
-              else
-                parent.insertBefore(panel, sibling);
-            };
-
-            ieSafeSet(panels.preview, previewText);
-        }
-
         var nonSuckyBrowserPreviewSet = function (previewText) {
             panels.preview.innerHTML = previewText;
         }
@@ -1073,13 +991,8 @@
             if (previewSetter)
                 return previewSetter(previewText);
 
-            try {
-                nonSuckyBrowserPreviewSet(previewText);
-                previewSetter = nonSuckyBrowserPreviewSet;
-            } catch (e) {
-                previewSetter = ieSafePreviewSet;
-                previewSetter(previewText);
-            }
+            nonSuckyBrowserPreviewSet(previewText);
+            previewSetter = nonSuckyBrowserPreviewSet;
         };
 
         var pushPreviewHtml = function (previewText) {
@@ -1098,14 +1011,8 @@
 
             var fullTop = position.getTop(panels.input) - getDocScrollTop();
 
-            if (uaSniffed.isIE) {
-                setTimeout(function () {
-                    window.scrollBy(0, fullTop - emptyTop);
-                }, 0);
-            }
-            else {
-                window.scrollBy(0, fullTop - emptyTop);
-            }
+            window.scrollBy(0, fullTop - emptyTop);
+
         };
 
         var init = function () {
@@ -1133,27 +1040,14 @@
 
         style.position = "absolute";
         style.top = "0";
-
         style.zIndex = "2000";
-
-        if (uaSniffed.isIE) {
-            style.filter = "alpha(opacity=50)";
-        }
-        else {
-            style.opacity = "0.5";
-        }
+        style.opacity = "0.5";
 
         var pageSize = position.getPageSize();
         style.height = pageSize[1] + "px";
 
-        if (uaSniffed.isIE) {
-            style.left = doc.documentElement.scrollLeft;
-            style.width = doc.documentElement.clientWidth;
-        }
-        else {
-            style.left = "0";
-            style.width = "100%";
-        }
+        style.left = "0";
+        style.width = "100%";
 
         doc.body.appendChild(background);
         return background;
@@ -1280,11 +1174,6 @@
             dialog.style.top = "50%";
             dialog.style.left = "50%";
             dialog.style.display = "block";
-            if (uaSniffed.isIE_5or6) {
-                dialog.style.position = "absolute";
-                dialog.style.top = doc.documentElement.scrollTop + 200 + "px";
-                dialog.style.left = "50%";
-            }
             doc.body.appendChild(dialog);
 
             // This has to be done AFTER adding the dialog to the form if you
@@ -1325,10 +1214,6 @@
         makeSpritedButtonRow();
 
         var keyEvent = "keydown";
-        if (uaSniffed.isOpera) {
-            keyEvent = "keypress";
-        }
-
         util.addEvent(inputBox, keyEvent, function (key) {
 
             // Check to see if we have a button key and, if so execute the callback.
@@ -1393,15 +1278,6 @@
             }
         });
 
-        // special handler because IE clears the context of the textbox on ESC
-        if (uaSniffed.isIE) {
-            util.addEvent(inputBox, "keydown", function (key) {
-                var code = key.keyCode;
-                if (code === 27) {
-                    return false;
-                }
-            });
-        }
 
 
         // Perform the button's action.
@@ -1469,19 +1345,6 @@
 
             if (isEnabled) {
                 button.disabled = false
-
-                // IE tries to select the background image "button" text (it's
-                // implemented in a list item) so we have to cache the selection
-                // on mousedown.
-                if (uaSniffed.isIE) {
-                    button.onmousedown = function () {
-                        if (doc.activeElement && doc.activeElement !== panels.input) { // we're not even in the input box, so there's no selection
-                            return;
-                        }
-                        panels.ieCachedRange = document.selection.createRange();
-                        panels.ieCachedScrollTop = panels.input.scrollTop;
-                    };
-                }
 
                 if (!button.isHelp) {
                     button.onclick = function () {
@@ -2246,8 +2109,18 @@
         // make a level 2 hash header around some default text.
         if (!chunk.selection) {
             chunk.startTag = "## ";
+
+            if(chunk.before === "" || !chunk.before.match(/\n$/)){
+              chunk.startTag = "\n## ";
+            }
+
             chunk.selection = this.getString("headingexample");
             chunk.endTag = " ##";
+
+            if(chunk.after === "" || !chunk.after.match(/^\n/)){
+              chunk.endTag = " ##\n";
+            }
+
             return;
         }
 

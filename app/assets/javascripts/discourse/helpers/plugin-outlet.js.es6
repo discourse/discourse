@@ -13,7 +13,7 @@
    Then any handlebars files you create in the `connectors/evil-trout` directory
    will automatically be appended. For example:
 
-   plugins/hello/assets/javascripts/discourse/templates/connectors/evil-trout/hello.handlebars
+   plugins/hello/assets/javascripts/discourse/templates/connectors/evil-trout/hello.hbs
 
    With the contents:
 

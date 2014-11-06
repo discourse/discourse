@@ -27,15 +27,17 @@
             'height': height,
             'width': width,
             'padding-top': paddingTop,
-            'background': 'url(http://img.youtube.com/vi/' + id + '/hqdefault.jpg) center center no-repeat',
+            'background': 'url(//img.youtube.com/vi/' + id + '/hqdefault.jpg) center center no-repeat',
             'cursor': 'pointer',
             'background-size': 'cover'
         })
             .html('<p id="lazyYT-title-' + id + '" class="lazyYT-title"></p><div class="lazyYT-button"></div>')
             .addClass('lazyYT-image-loaded');
-
+            
+        var $el_title = $el.find("p.lazyYT-title");  //get reference to the current container title element
+        
         $.getJSON('https://gdata.youtube.com/feeds/api/videos/' + id + '?v=2&alt=json', function (data) {
-            $('#lazyYT-title-' + id).text(data.entry.title.$t);
+            $el_title.text(data.entry.title.$t); 
         });
 
         $el.on('click', function (e) {

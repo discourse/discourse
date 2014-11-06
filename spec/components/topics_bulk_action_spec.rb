@@ -6,13 +6,17 @@ describe TopicsBulkAction do
   describe "dismiss_posts" do
     it "dismisses posts" do
       post1 = create_post
+      p = create_post(topic_id: post1.topic_id)
       create_post(topic_id: post1.topic_id)
+
+      PostDestroyer.new(Fabricate(:admin), p).destroy
 
       TopicsBulkAction.new(post1.user, [post1.topic_id], type: 'dismiss_posts').perform!
 
       tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
-      tu.last_read_post_number.should == 2
-      tu.seen_post_count = 2
+
+      tu.last_read_post_number.should == 3
+      tu.highest_seen_post_number.should == 3
     end
   end
 
@@ -119,6 +123,33 @@ describe TopicsBulkAction do
         topic_ids.should be_blank
         topic.reload
         topic.should_not be_closed
+      end
+    end
+  end
+
+  describe "archive" do
+    let(:topic) { Fabricate(:topic) }
+
+    context "when the user can moderate the topic" do
+      it "archives the topic and returns the topic_id" do
+        Guardian.any_instance.expects(:can_moderate?).returns(true)
+        Guardian.any_instance.expects(:can_create?).returns(true)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should == [topic.id]
+        topic.reload
+        topic.should be_archived
+      end
+    end
+
+    context "when the user can't edit the topic" do
+      it "doesn't archive the topic" do
+        Guardian.any_instance.expects(:can_moderate?).returns(false)
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
+        topic_ids = tba.perform!
+        topic_ids.should be_blank
+        topic.reload
+        topic.should_not be_archived
       end
     end
   end

@@ -20360,7 +20360,7 @@ define("ember-runtime/system/namespace",
 
       for (var prop in lookup) {
         // These don't raise exceptions but can cause warnings
-        if (prop === "parent" || prop === "top" || prop === "frameElement" || prop === "webkitStorageInfo") { continue; }
+        if (prop === "parent" || prop === "top" || prop === "frameElement" || prop === "webkitStorageInfo" || prop === "webkitIndexedDB" ) { continue; }
 
         //  get(window.globalStorage, 'isNamespace') would try to read the storage for domain isNamespace and cause exception in Firefox.
         // globalStorage is a storage obsoleted by the WhatWG storage specification. See https://developer.mozilla.org/en/DOM/Storage#globalStorage

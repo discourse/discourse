@@ -10,6 +10,7 @@ var DiscourseResolver = require('discourse/ember/resolver').default;
 
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
+  _docTitle: null,
 
   getURL: function(url) {
     // If it's a non relative URL, return it.
@@ -25,13 +26,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
   Resolver: DiscourseResolver,
 
-  titleChanged: function() {
-    var title = "";
-
-    if (this.get('title')) {
-      title += "" + (this.get('title')) + " - ";
-    }
-    title += Discourse.SiteSettings.title;
+  _titleChanged: function() {
+    var title = this.get('_docTitle') || Discourse.SiteSettings.title;
 
     // if we change this we can trigger changes on document.title
     // only set if changed.
@@ -44,14 +40,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       title = "(" + notifyCount + ") " + title;
     }
 
-    if(title !== document.title) {
+    if (title !== document.title) {
       // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
       window.setTimeout(function() {
         document.title = ".";
         document.title = title;
       }, 200);
     }
-  }.observes('title', 'hasFocus', 'notifyCount'),
+  }.observes('_docTitle', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {
     if(Discourse.User.currentProp('dynamic_favicon')) {
@@ -98,14 +94,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return loginController.authenticationComplete(options);
   },
 
-  loginRequired: function() {
-    return Discourse.SiteSettings.login_required && !Discourse.User.current();
-  }.property().volatile(),
-
-  redirectIfLoginRequired: function(route) {
-    if(this.get('loginRequired')) { route.transitionTo('login'); }
-  },
-
   /**
     Start up the Discourse application by running all the initializers we've defined.
 
@@ -140,38 +128,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       }
     }
     return this.get("currentAssetVersion");
-  }.property(),
-
-  globalNotice: function(){
-    var notices = [];
-
-    if(this.get("isReadOnly")){
-      notices.push(I18n.t("read_only_mode.enabled"));
-    }
-
-    if(Discourse.User.currentProp('admin') && Discourse.SiteSettings.show_create_topics_notice) {
-      var topic_count = 0,
-          post_count = 0;
-      _.each(Discourse.Site.currentProp('categories'), function(c) {
-        if (!c.get('read_restricted')) {
-          topic_count += c.get('topic_count');
-          post_count  += c.get('post_count');
-        }
-      });
-      if (topic_count < 5 || post_count < Discourse.SiteSettings.basic_requires_read_posts) {
-        notices.push(I18n.t("too_few_topics_notice", {posts: Discourse.SiteSettings.basic_requires_read_posts}));
-      }
-    }
-
-    if(!_.isEmpty(Discourse.SiteSettings.global_notice)){
-      notices.push(Discourse.SiteSettings.global_notice);
-    }
-
-    if(notices.length > 0) {
-      return new Handlebars.SafeString(_.map(notices, function(text) {
-        return "<div class='row'><div class='alert alert-info'>" + text + "</div></div>";
-      }).join(""));
-    }
-  }.property("isReadOnly")
+  }.property()
 
 });

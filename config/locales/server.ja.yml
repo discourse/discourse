@@ -17,19 +17,30 @@ ja:
       date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "トピック"
-  posts: "ポスト"
+  posts: "投稿"
   loading: "読み込み中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
+  log_in: "ログイン"
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
+  errors:
+    messages:
+      too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
+  embed:
+    start_discussion: "議論の開始"
+    continue: "議論を続ける"
+    permalink: "パーマリンク"
+    in_reply_to: "▶ %{username}"
+    replies:
+      other: "%{count} 通の返信"
   too_many_mentions:
-    zero: "申し訳ありませんが、このポストにおいて他のユーザをメンションできません。"
-    one: "申し訳ありませんが、このポストにおいてあと1人しかメンションできません。"
-    other: "申し訳ありませんが、このポストにおいてあと%{count}人しかメンションできません。"
+    zero: "申し訳ありませんが、この投稿において他のユーザをタグ付けできません。"
+    one: "申し訳ありませんが、この投稿においてあと1人しかタグ付けできません。"
+    other: "申し訳ありませんが、このポストにおいてあと%{count}人しかタグ付けできません。"
   too_many_mentions_newuser:
-    zero: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをメンションできません。"
-    one: "申し訳ありませんが、新規ユーザはこのポストにおいてあと1人しかメンションできません。"
-    other: "申し訳ありませんが、新規ユーザはこのポストにおいてあと%{count}人しかメンションできません。"
+    zero: "申し訳ありませんが、新規ユーザはこのポストにおいて他のユーザをタグ付けできません。"
+    one: "申し訳ありませんが、新規ユーザはこのポストにおいてあと1人しかタグ付けできません。"
+    other: "申し訳ありませんが、新規ユーザはこのポストにおいてあと%{count}人しかタグ付けできません。"
   too_many_images:
     zero: "申し訳ありませんが、新規ユーザはこのポストに画像をアップロードできません。"
     one: "申し訳ありませんが、新規ユーザはこのポストに画像を1つしかアップロードできません。"
@@ -43,11 +54,14 @@ ja:
     one: "申し訳ありませんが、新規ユーザはこのポストにリンクを1つしか貼れません。"
     other: "申し訳ありませんが、新規ユーザはこのポストにリンクを%{count}個しか貼れません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
+  user_is_suspended: "サスペンド中のユーザーは投稿ができません。"
   just_posted_that: "はあなたが最近投稿したポストと内容がほぼ一緒です"
   has_already_been_used: "は既に使用中です"
   invalid_characters: "は不正なキャラクターを含んでいます"
   is_invalid: "は不正です。もう少し説明を追加してください"
   next_page: "次のページ →"
+  prev_page: "← 前のページ"
+  page_num: "%{num} ページ"
   topics_in_category: "'%{category}' カテゴリ内のトピック"
   rss_posts_in_topic: "'%{topic}' の RSS フィード"
   rss_topics_in_category: "'%{category}' カテゴリ内のトピックの RSS フィード"
@@ -59,6 +73,7 @@ ja:
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
+  too_late_to_edit: "この投稿の編集・削除期間が過ぎまして、編集・削除が出来ません。"
   groups:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
@@ -70,8 +85,9 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-      trust_level_5: "trust_level_5"
   education:
+    until_posts:
+      other: "%{count} 投稿"
     avatar: |
       ### アカウント用の画像を用意してみては?
 
@@ -107,27 +123,34 @@ ja:
               cant_send_pm: "申し訳ありませんが、このユーザにはプライベートメッセージを送信できません。"
         user:
           attributes:
+            password:
+              common: "は10000最も一般的なパスワードのいずれかである。より安全なパスワードを使用してください。"
             ip_address:
               signup_not_allowed: "このアカウントからのサインアップできません。"
   user_profile:
     no_info_me: "<div class='missing-profile'>プロフィールの自己紹介フィールドが空欄のようです。<a href='/users/%{username_lower}/preferences/about-me'>自己紹介をしてみませんか?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} は、まだプロフィールの自己紹介フィールドに何も書いていません</div>"
+  vip_category_name: "ラウンジ"
+  staff_category_name: "スタッフ"
+  lounge_welcome:
+    title: "ラウンジへようこそ"
   category:
     topic_prefix: "%{category} カテゴリの定義"
     replace_paragraph: "[この最初のパラグラフを、本カテゴリの簡単な紹介文に置き換えてください。このガイダンスはカテゴリ選択エリアに表示されるため、パラグラフは200文字以内にしてください。]"
     post_template: "%{replace_paragraph}\n\nこれ以降のパラグラフに、カテゴリのガイドライン等を書いてください。\n\nいくつかのヒント:\n\n- このカテゴリは何か? どのようなトピックをこのカテゴリに入れるべきか?\n\n- 既に存在するカテゴリとの違いは何か?\n\n- このカテゴリはなぜ必要か?\n\n- 他のカテゴリとの統合や、複数カテゴリへの分割をするべきか?\n"
+    errors:
+      uncategorized_parent: "未分類カテゴリは親カテゴリに設定出来ません。"
+    cannot_delete:
+      uncategorized: "未分類カテゴリは削除出来ません"
   trust_levels:
     newuser:
       title: "新規ユーザ"
     basic:
       title: "ベーシックユーザ"
     regular:
-      title: "レギュラーユーザ"
+      title: "メンバー"
     leader:
-      title: "リーダー"
-    elder:
-      title: "マスター"
-    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります。"
+      title: "レギュラー"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
     hours:
@@ -188,16 +211,22 @@ ja:
   password_reset:
     no_token: "申し訳ありませんがトークンの有効期限が切れました。パスワードをリセットを再度試みてください。"
     choose_new: "新しいパスワードを選択してください"
+    choose: "パスワードを入力ください"
     update: 'パスワード更新'
+    save: 'パスワードを設定する'
     title: 'パスワードリセット'
     success: "パスワードは無事更新され、ログインに成功しました。"
     success_unapproved: "パスワードは無事更新されました。"
     continue: "%{site_name} に進む"
   change_email:
     confirmed: "メールアドレスが更新されました。"
+    please_continue: "%{site_name}へ"
     error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
   activation:
+    action: "アカウントを有効する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
+    please_continue: "新しいアカウントを作成しました。自動的にログインされています。"
+    continue_button: "%{site_name} へ"
     welcome_to: "%{site_name} へようこそ!"
     approval_required: "このフォーラムにアクセスするにはモデレータによる承認が必要です。承認されるとメールにて通知されます!"
   post_action_types:
@@ -215,8 +244,9 @@ ja:
       long_form: '不適切フラグをたてる'
     notify_user:
       title: '{{username}} に通知'
-      description: 'この投稿やトピックを書いた人に、直接確認したい内容を含んでいる。'
+      description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
       long_form: 'ユーザに通知'
+      email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: '管理人に通知'
@@ -248,7 +278,12 @@ ja:
     notify_moderators:
       title: '管理人に通知'
       description: 'この投稿やトピックは不適切な可能性があるため、管理人による確認を必要とする。'
+      long_form: 'モデレータに告知する'
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>あなたの投稿はコミュニティにフラグを付けられました。<a href="/my/private-messages">受信トレイ</a>に確認してください。</p>'
+    user_must_edit: '<p>この投稿はコミュニティにフラグを付けられまして、非表示されています。</p>'
   archetypes:
     regular:
       title: "通常のトピック"
@@ -256,6 +291,7 @@ ja:
     title: '購読解除'
     description: "購読解除されました。メールの送信をストップしました。"
     oops: "誤って購読解除した場合は、下をクリックしてください。"
+    error: "購読エラー"
     not_found_description: "申し訳ありませんが購読解除に失敗しました。メール内のリンクの有効期限が切れているのかもしれません。"
   resubscribe:
     action: "再購読"
@@ -372,10 +408,6 @@ ja:
     login_required_welcome_message:
       title: "ウェルカムメッセージ: 要ログイン"
       description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
-    tos_user_content_license:
-      title: "利用規約: コンテンツ使用許諾"
-    tos_miscellaneous:
-      title: "利用規約: その他"
     login_required:
       title: "ホームページ: 要ログイン"
       description: "要ログイン設定の際に、未ログインユーザに対して表示されるメッセージの内容。"
@@ -395,10 +427,7 @@ ja:
     favicon_url: "サイトの favicon。参照: http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
-    enable_private_messages: "トラストレベルがベーシック (1) なユーザにプライベートメッセージの作成およびプライベートメッセージへの返信を許可"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
-    long_polling_interval: "新たなロングポーリングを開始するまでの間隔 (ミリ秒)"
-    polling_interval: "ログイン済ユーザのクライアントのポーリング間隔 (ミリ秒)"
     anon_polling_interval: "匿名ユーザのクライアントのポーリング間隔 (ミリ秒)"
     auto_track_topics_after: "トピックが自動的にトラックされるまでのデフォルト時間 (ミリ秒)。なお、ユーザはこの設定をカスタマイズできます。(0で常にトラック、-1で常にトラックしない)"
     new_topic_duration_minutes: "トピックが新規と見なされるデフォルト時間 (分)。なお、ユーザはこの設定をカスタマイズできます。(-1で常に新規とみなす、-2で最終訪問したものを新規とみなす)"
@@ -445,7 +474,7 @@ ja:
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
   notification_types:
-    mentioned: "%{link} で %{display_username} があなたをメンションしました"
+    mentioned: "%{link} で %{display_username} があなたをタグ付けしました"
     liked: "%{link} で %{display_username} があなたのポストを「いいね！」しました"
     replied: "%{link} で %{display_username} があなたのポストに回答しました"
     quoted: "%{link} で %{display_username} があなたのポストを引用しました"
@@ -468,28 +497,13 @@ ja:
     archived_disabled: "このトピックはアーカイブ解除されました。凍結解除され、変更可能になりました。"
     closed_enabled: "このトピックは終了しました。新たに回答を投稿することはできません。"
     closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
-    autoclosed_enabled_days:
-      zero: "このトピックは1日が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      one: "このトピックは1日が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      other: "このトピックは%{count}日が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-    autoclosed_enabled_hours:
-      zero: "このトピックは1時間が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      one: "このトピックは1時間が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      other: "このトピックは%{count}時間が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-    autoclosed_enabled_minutes:
-      zero: "このトピックは1分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      one: "このトピックは1分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
-      other: "このトピックは%{count}分が経過したので自動的に終了しました。新たに回答を投稿することはできません。"
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
     pinned_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません。"
-    visible_enabled: "このトピックは表示状態になりました。トピックリストに表示されます。"
-    visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます。"
   login:
     not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
     incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
     wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
     active: "アカウントが利用可能になりました。"
-    activate_email: "<b>%{email}</b> にメールを送りました。メールの指示に従ってあなたのアカウントを有効にしてください。"
     not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までログインできません。アカウントがサスペンドされた理由は次の通りです: %{reason}"
@@ -509,6 +523,8 @@ ja:
       blocked: "は許可されていません。"
     ip_address:
       blocked: "はブロックされてます。"
+  invite_forum_mailer:
+    subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
   flag_reasons:
@@ -523,12 +539,6 @@ ja:
       subject_template: "%{site_name} へようこそ!"
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-    export_succeeded:
-      subject_template: "エクスポートが正しく完了しました"
-      text_body_template: "エクスポートに成功しました。"
-    import_succeeded:
-      subject_template: "インポートが正しく完了しました"
-      text_body_template: "インポートに成功しました。"
     too_many_spam_flags:
       subject_template: "新規アカウントのブロック"
     blocked_by_staff:
@@ -576,7 +586,7 @@ ja:
         ---
         %{respond_instructions}
     user_mentioned:
-      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをメンションしました"
+      subject_template: "[%{site_name}] '%{topic_title}' で %{username} があなたをタグ付けしました"
       text_body_template: |
         %{message}
 
@@ -594,10 +604,19 @@ ja:
         ---
         %{respond_instructions}
     digest:
+      why: "あなたが最後にアクセスした %{last_seen_at} 以降に %{site_link} で行われた人気議論のまとめです。"
+      subject_template: "[%{site_name}] メールマガジン【%{date}】"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
+      top_topics: "人気の投稿"
+      other_new_topics: "人気のトピック"
+      unsubscribe: "こちらのメールマガジンでは、%{site_link} が最新情報をご紹介しています！配信停止はこちら %{unsubscribe_link}."
       click_here: "ここをクリック"
       from: "%{site_name} ダイジェスト"
       read_more: "もっと読む"
+      more_topics: "%{last_seen_at}ログイン以来%{new_topics_since_seen}個新規トピックが投稿されました。"
+      more_topics_category: "%{last_seen_at}ログイン以来%{new_topics_since_seen}個新規トピックが以下のカテゴリに投稿されました："
+      posts:
+        other: "%{count} 投稿"
     forgot_password:
       subject_template: "[%{site_name}] パスワードのリセット"
       text_body_template: |
@@ -626,10 +645,6 @@ ja:
         もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
-  terms_of_service:
-    user_content_license: |
-      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_short_name} has the right (though not the obligation) to, in %{company_short_name}’s sole discretion (i) refuse or remove any content that, in %{company_short_name}’s reasonable opinion, violates any %{company_short_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_short_name}’s sole discretion. %{company_short_name} will have no obligation to provide a refund of any amounts previously paid.
-    miscellaneous: "This Agreement constitutes the entire agreement between %{company_short_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_short_name}, or by the posting by %{company_short_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_short_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns."
   deleted: 'deleted'
   upload:
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."

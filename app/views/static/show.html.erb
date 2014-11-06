@@ -1,12 +1,12 @@
 <ul class="nav-pills">
   <% if @faq_overriden %>
-    <li><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
-    <li><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
+    <li class="nav-item-guidelines"><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
+    <li class="nav-item-faq"><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
   <% else %>
-    <li><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=faq_path%>"><%=t "js.faq" %></a></li>
+    <li class="nav-item-faq"><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=faq_path%>"><%=t "js.faq" %></a></li>
   <% end %>
-  <li><a href="<%=tos_path%>" class="<%= @page == 'tos' ? 'active' : '' %>"><%=t "terms_of_service.title" %></a></li>
-  <li><a href="<%=privacy_path%>" class="<%= @page == 'privacy' ? 'active' : '' %>"><%=t "privacy" %></a></li>
+  <li class="nav-item-tos"><a href="<%=tos_path%>" class="<%= @page == 'tos' ? 'active' : '' %>"><%=t "terms_of_service.title" %></a></li>
+  <li class="nav-item-privacy"><a href="<%=privacy_path%>" class="<%= @page == 'privacy' ? 'active' : '' %>"><%=t "privacy" %></a></li>
 </ul>
 
 <% if staff? %>
@@ -14,3 +14,7 @@
 <% end %>
 
 <%= @body.html_safe %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% end %>

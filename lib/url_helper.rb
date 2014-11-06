@@ -3,8 +3,8 @@ module UrlHelper
   def is_local(url)
     url.present? && (
       Discourse.store.has_been_uploaded?(url) ||
-      url =~ /^\/assets\// ||
-      url =~ /^\/plugins\// ||
+      !!(url =~ /^\/assets\//) ||
+      !!(url =~ /^\/plugins\//) ||
       url.start_with?(Discourse.asset_host || Discourse.base_url_no_prefix)
     )
   end

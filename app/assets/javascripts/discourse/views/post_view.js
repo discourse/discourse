@@ -7,7 +7,9 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'selected',
                       'post.hidden:post-hidden',
                       'post.deleted',
-                      'groupNameClass'],
+                      'byTopicCreator:topic-creator',
+                      'groupNameClass',
+                      'post.wiki:wiki'],
   postBinding: 'content',
 
   historyHeat: function() {
@@ -49,12 +51,6 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.get('controller').toggledSelectedPost(this.get('post'));
-    }
-
-    var $adminMenu = this.get('adminMenu');
-    if ($adminMenu && !$(e.target).is($adminMenu) && $adminMenu.has($(e.target)).length === 0) {
-      $adminMenu.hide();
-      this.set('adminMenu', null);
     }
   },
 
@@ -102,13 +98,22 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     var expandContract = "";
     if (!$aside.data('full')) {
       expandContract = "<i class='fa fa-" + desc + "' title='" + I18n.t("post.expand_collapse") + "'></i>";
-      $aside.css('cursor', 'pointer');
+      $('.title', $aside).css('cursor', 'pointer');
     }
     $('.quote-controls', $aside).html(expandContract + navLink);
   },
 
   _toggleQuote: function($aside) {
+    if (this.get('expanding')) { return; }
+    this.set('expanding', true);
+
     $aside.data('expanded', !$aside.data('expanded'));
+
+    var self = this,
+        finished = function() {
+          self.set('expanding', false);
+        };
+
     if ($aside.data('expanded')) {
       this._updateQuoteElements($aside, 'chevron-up');
       // Show expanded quote
@@ -130,12 +135,12 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
         var escaped = result.cooked.replace("&", "&amp;");
         var parsed = $(escaped);
         parsed.replaceText(originalText, "<span class='highlighted'>" + originalText + "</span>");
-        $blockQuote.showHtml(parsed);
+        $blockQuote.showHtml(parsed, 'fast', finished);
       });
     } else {
       // Hide expanded quote
       this._updateQuoteElements($aside, 'chevron-down');
-      $('blockquote', $aside).showHtml($aside.data('original-contents'));
+      $('blockquote', $aside).showHtml($aside.data('original-contents'), 'fast', finished);
     }
     return false;
   },
@@ -174,8 +179,30 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
       var replyHistory = post.get('replyHistory'),
           topicController = this.get('controller'),
-          origScrollTop = $(window).scrollTop();
+          origScrollTop = $(window).scrollTop(),
+          replyPostNumber = this.get('post.reply_to_post_number'),
+          postNumber = this.get('post.post_number'),
+          self = this;
 
+      if (Discourse.Mobile.mobileView) {
+        Discourse.URL.routeTo(this.get('post.topic').urlForPostNumber(replyPostNumber));
+        return;
+      }
+
+      var stream = topicController.get('postStream');
+      var offsetFromTop = this.$().position().top - $(window).scrollTop();
+
+      if(Discourse.SiteSettings.experimental_reply_expansion) {
+        if(postNumber - replyPostNumber > 1) {
+          stream.collapsePosts(replyPostNumber + 1, postNumber - 1);
+        }
+
+        Em.run.next(function() {
+          Discourse.PostView.highlight(replyPostNumber);
+          $(window).scrollTop(self.$().position().top - offsetFromTop);
+        });
+        return;
+      }
 
       if (replyHistory.length > 0) {
         var origHeight = this.$('.embedded-posts.top').height();
@@ -187,7 +214,6 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       } else {
         post.set('loadingReplyHistory', true);
 
-        var self = this;
         topicController.get('postStream').findReplyHistory(post).then(function () {
           post.set('loadingReplyHistory', false);
 
@@ -227,7 +253,6 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   _destroyedPostView: function() {
     Discourse.ScreenTrack.current().stopTracking(this.get('elementId'));
-    this._unbindExpandMentions();
   }.on('willDestroyElement'),
 
   _postViewInserted: function() {
@@ -255,22 +280,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
     Em.run.scheduleOnce('afterRender', this, '_insertQuoteControls');
 
     this._applySearchHighlight();
-    this._bindExpandMentions();
   }.on('didInsertElement'),
-
-  _bindExpandMentions: function() {
-    var self = this;
-    this.$('.cooked').on('click.discourse-mention', 'a.mention', function(e) {
-      var $target = $(e.target);
-      self.appEvents.trigger('poster:expand', $target);
-      self.get('controller').send('expandPostUsername', $target.text());
-      return false;
-    });
-  },
-
-  _unbindExpandMentions: function() {
-    this.$('.cooked').off('click.discourse-mention');
-  },
 
   _applySearchHighlight: function() {
     var highlight = this.get('controller.searchHighlight');
@@ -282,7 +292,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
       if(this._highlighted){
          cooked.unhighlight();
       }
-      cooked.highlight(highlight);
+      cooked.highlight(highlight.split(/\s+/));
       this._highlighted = true;
 
     } else if(this._highlighted){
@@ -293,23 +303,27 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 });
 
 Discourse.PostView.reopenClass({
+  highlight: function(postNumber){
+    var $contents = $('#post_' + postNumber +' .topic-body'),
+        origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+    $contents.data("orig-color", origColor);
+    $contents
+      .addClass('highlighted')
+      .stop()
+      .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+        $contents.removeClass('highlighted');
+        $contents.css({'background-color': ''});
+      });
+  },
+
   considerHighlighting: function(controller, postNumber) {
     var highlightNumber = controller.get('highlightOnInsert');
 
     // If we're meant to highlight a post
     if (highlightNumber === postNumber) {
       controller.set('highlightOnInsert', null);
-      var $contents = $('#post_' + postNumber +' .topic-body'),
-          origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
-
-      $contents.data("orig-color", origColor);
-      $contents
-        .addClass('highlighted')
-        .stop()
-        .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
-          $contents.removeClass('highlighted');
-          $contents.css({'background-color': ''});
-        });
+      this.highlight(postNumber);
     }
   }
 });

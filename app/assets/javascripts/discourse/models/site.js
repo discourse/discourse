@@ -8,6 +8,8 @@
 **/
 Discourse.Site = Discourse.Model.extend({
 
+  isReadOnly: Em.computed.alias('is_readonly'),
+
   notificationLookup: function() {
     var result = [];
     _.each(this.get('notification_types'), function(v,k) {
@@ -128,6 +130,12 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     if (result.archetypes) {
       result.archetypes = _.map(result.archetypes,function(a) {
         return Discourse.Archetype.create(a);
+      });
+    }
+
+    if (result.user_fields) {
+      result.user_fields = result.user_fields.map(function(uf) {
+        return Ember.Object.create(uf);
       });
     }
 

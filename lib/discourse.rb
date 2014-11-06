@@ -59,8 +59,12 @@ module Discourse
     @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
   end
 
+  def self.feed_filters
+    @feed_filters ||= [:latest]
+  end
+
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest]
+    @anonymous_filters ||= [:latest, :top, :categories]
   end
 
   def self.logged_in_filters
@@ -198,6 +202,16 @@ module Discourse
       $git_version ||= `git rev-parse HEAD`.strip
     rescue
       $git_version = "unknown"
+    end
+  end
+
+  def self.git_branch
+    return $git_branch if $git_branch
+
+    begin
+      $git_branch ||= `git rev-parse --abbrev-ref HEAD`.strip
+    rescue
+      $git_branch = "unknown"
     end
   end
 

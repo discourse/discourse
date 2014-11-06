@@ -1,5 +1,4 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
@@ -144,6 +143,12 @@ export default DiscourseController.extend(ModalFunctionality, {
     if (options.awaiting_activation) {
       this.send('showLogin');
       this.flash(I18n.t('login.awaiting_confirmation'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
+    if (options.not_allowed_from_ip_address) {
+      this.send('showLogin');
+      this.flash(I18n.t('login.not_allowed_from_ip_address'), 'success');
       this.set('authenticate', null);
       return;
     }

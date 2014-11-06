@@ -10,7 +10,6 @@ html {
   font: #{$base-font-size}/#{$base-line-height} $base-font-family;
   background-color: $secondary;
   overflow-y: scroll;
-  -webkit-font-smoothing: subpixel-antialiased;
 }
 
 // Links

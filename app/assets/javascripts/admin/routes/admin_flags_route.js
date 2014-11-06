@@ -15,17 +15,6 @@ Discourse.AdminFlagsRouteType = Discourse.Route.extend({
     adminFlagsController.set('query', this.get('filter'));
   },
 
-  actions: {
-    /**
-      Deletes a user and all posts and topics created by that user.
-
-      @method deleteSpammer
-    **/
-    deleteSpammer: function (user) {
-      user.deleteAsSpammer(function() { window.location.reload(); });
-    }
-  }
-
 });
 
 Discourse.AdminFlagsActiveRoute = Discourse.AdminFlagsRouteType.extend({
@@ -50,6 +39,3 @@ Discourse.AdminFlagsActiveRoute = Discourse.AdminFlagsRouteType.extend({
 Discourse.AdminFlagsOldRoute = Discourse.AdminFlagsRouteType.extend({
   filter: 'old'
 });
-
-
-

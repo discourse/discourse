@@ -1,0 +1,146 @@
+<div class='current-badge span13'>
+  <form class="form-horizontal">
+    <div>
+      <label for="name">{{i18n admin.badges.name}}</label>
+      {{input type="text" name="name" value=buffered.name}}
+    </div>
+
+    {{#if showDisplayName}}
+      <div>
+        <strong>{{i18n admin.badges.display_name}}</strong>
+        {{buffered.displayName}}
+      </div>
+    {{/if}}
+
+    <div>
+      <label for="name">{{i18n admin.badges.icon}}</label>
+      {{input type="text" name="name" value=buffered.icon}}
+      <p class='help'>{{i18n admin.badges.icon_help}}</p>
+    </div>
+
+    <div>
+      <label for="name">{{i18n admin.badges.image}}</label>
+      {{input type="text" name="name" value=buffered.image}}
+      <p class='help'>{{i18n admin.badges.icon_help}}</p>
+    </div>
+
+    <div>
+      <label for="badge_type_id">{{i18n admin.badges.badge_type}}</label>
+      {{view Ember.Select name="badge_type_id"
+                          value=buffered.badge_type_id
+                          content=badgeTypes
+                          optionValuePath="content.id"
+                          optionLabelPath="content.name"
+                          disabled=readOnly}}
+    </div>
+
+    <div>
+      <label for="badge_grouping_id">{{i18n admin.badges.badge_grouping}}</label>
+      {{view Ember.Select name="badge_grouping_id"
+                          value=buffered.badge_grouping_id
+                          content=badgeGroupings
+                          optionValuePath="content.id"
+                          optionLabelPath="content.name"}}
+      &nbsp;<button {{action "editGroupings"}} class='btn'>{{fa-icon 'pencil'}}</button>
+    </div>
+
+
+    <div>
+      <label for="description">{{i18n admin.badges.description}}</label>
+      {{#if canEditDescription}}
+        {{textarea name="description" value=buffered.description}}
+      {{else}}
+        {{textarea name="description" value=buffered.displayDescription disabled=true}}
+      {{/if}}
+    </div>
+
+    <div>
+      <label for="query">{{i18n admin.badges.query}}</label>
+      {{textarea name="query" value=buffered.query disabled=readOnly}}
+    </div>
+
+    {{#if hasQuery}}
+      <a href {{action "preview" buffered "false"}}>{{i18n admin.badges.preview.link_text}}</a>
+      |
+      <a href {{action "preview" buffered "true"}}>{{i18n admin.badges.preview.plan_text}}</a>
+      {{#if preview_loading}}
+        {{i18n loading}}...
+      {{/if}}
+
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.auto_revoke disabled=readOnly}}
+          {{i18n admin.badges.auto_revoke}}
+        </label>
+      </div>
+
+      <div>
+        <label>
+          {{input type="checkbox" checked=buffered.target_posts disabled=readOnly}}
+          {{i18n admin.badges.target_posts}}
+        </label>
+      </div>
+
+      <div>
+        <label for="trigger">{{i18n admin.badges.trigger}}</label>
+        {{view Ember.Select name="trigger"
+                            value=buffered.trigger
+                            content=badgeTriggers
+                            optionValuePath="content.id"
+                            optionLabelPath="content.name"
+                            disabled=readOnly}}
+      </div>
+    {{/if}}
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=buffered.allow_title}}
+        {{i18n admin.badges.allow_title}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=buffered.multiple_grant disabled=readOnly}}
+        {{i18n admin.badges.multiple_grant}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=buffered.listable disabled=readOnly}}
+        {{i18n admin.badges.listable}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=buffered.show_posts disabled=readOnly}}
+        {{i18n admin.badges.show_posts}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=buffered.enabled}}
+        {{i18n admin.badges.enabled}}
+      </label>
+    </div>
+
+    <div class='buttons'>
+      <button {{action "save"}} {{bind-attr disabled=saving}} class='btn btn-primary'>{{i18n admin.badges.save}}</button>
+      <span class='saving'>{{savingStatus}}</span>
+      {{#unless readOnly}}
+        <a {{action "destroy"}} class='delete-link'>{{i18n admin.badges.delete}}</a>
+      {{/unless}}
+    </div>
+  </form>
+</div>
+
+{{#if grant_count}}
+  <div class="span13 current-badge-actions">
+    <div>
+      {{#link-to 'badges.show' this}}{{i18n badges.granted count=grant_count}}{{/link-to}}
+    </div>
+  </div>
+{{/if}}

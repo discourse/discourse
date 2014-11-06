@@ -166,7 +166,7 @@ Discourse.Markdown = {
     var url = typeof(uri) === "string" ? uri : uri.toString();
 
     // escape single quotes
-    url = url.replace(/'/g, "&#39;");
+    url = url.replace(/'/g, "%27");
 
     // whitelist some iframe only
     if (hints && hints.XML_TAG === "iframe" && hints.XML_ATTR === "src") {

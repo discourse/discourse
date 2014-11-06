@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ApiController do
 
   it "is a subclass of AdminController" do
-    (Admin::ApiController < Admin::AdminController).should be_true
+    (Admin::ApiController < Admin::AdminController).should == true
   end
 
   let!(:user) { log_in(:admin) }

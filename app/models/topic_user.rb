@@ -152,15 +152,17 @@ class TopicUser < ActiveRecord::Base
         threshold: SiteSetting.auto_track_topics_after
       }
 
-      # In case anyone seens "seen_post_count" and gets confused, like I do.
-      # seen_post_count represents the highest_post_number of the topic when
+      # In case anyone seens "highest_seen_post_number" and gets confused, like I do.
+      # highest_seen_post_number represents the highest_post_number of the topic when
       # the user visited it. It may be out of alignment with last_read, meaning
       # ... user visited the topic but did not read the posts
+      #
+      # 86400000 = 1 day
       rows = exec_sql("UPDATE topic_users
                                     SET
-                                      last_read_post_number = greatest(:post_number, tu.last_read_post_number),
-                                      seen_post_count = t.highest_post_number,
-                                      total_msecs_viewed = tu.total_msecs_viewed + :msecs,
+                                      last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
+                                      highest_seen_post_number = t.highest_post_number,
+                                      total_msecs_viewed = LEAST(tu.total_msecs_viewed + :msecs,86400000),
                                       notification_level =
                                          case when tu.notifications_reason_id is null and (tu.total_msecs_viewed + :msecs) >
                                             coalesce(u.auto_track_topics_after_msecs,:threshold) and
@@ -208,7 +210,7 @@ class TopicUser < ActiveRecord::Base
         TopicTrackingState.publish_read(topic_id, post_number, user.id, args[:new_status])
         user.update_posts_read!(post_number)
 
-        exec_sql("INSERT INTO topic_users (user_id, topic_id, last_read_post_number, seen_post_count, last_visited_at, first_visited_at, notification_level)
+        exec_sql("INSERT INTO topic_users (user_id, topic_id, last_read_post_number, highest_seen_post_number, last_visited_at, first_visited_at, notification_level)
                   SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
                   FROM topics AS ft
                   JOIN users u on u.id = :user_id
@@ -239,7 +241,7 @@ class TopicUser < ActiveRecord::Base
 UPDATE topic_users t
   SET
     last_read_post_number = LEAST(GREATEST(last_read, last_read_post_number), max_post_number),
-    seen_post_count = LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
+    highest_seen_post_number = LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
 FROM (
   SELECT topic_id, user_id, MAX(post_number) last_read
   FROM post_timings
@@ -257,7 +259,7 @@ X.topic_id = t.topic_id AND
 X.user_id = t.user_id AND
 (
   last_read_post_number <> LEAST(GREATEST(last_read, last_read_post_number), max_post_number) OR
-  seen_post_count <> LEAST(max_post_number,GREATEST(t.seen_post_count, last_read))
+  highest_seen_post_number <> LEAST(max_post_number,GREATEST(t.highest_seen_post_number, last_read))
 )
 SQL
 
@@ -279,7 +281,7 @@ end
 #  starred                  :boolean          default(FALSE), not null
 #  posted                   :boolean          default(FALSE), not null
 #  last_read_post_number    :integer
-#  seen_post_count          :integer
+#  highest_seen_post_number :integer
 #  starred_at               :datetime
 #  last_visited_at          :datetime
 #  first_visited_at         :datetime
