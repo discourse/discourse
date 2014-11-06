@@ -38,7 +38,7 @@ def better(line)
 end
 
 def remove_prefix(line)
-  line.gsub(/^(FIX|FEATURE|UX):/, "").strip
+  line.gsub(/^(FIX|FEATURE|UX|SECURITY):/, "").strip
 end
 
 def escape_brackets(line)
