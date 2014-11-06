@@ -381,7 +381,7 @@ en:
       email:
         title: "Email"
         instructions: "Never shown to the public."
-        ok: "Looks good. We will email you to confirm."
+        ok: "We will email you to confirm."
         invalid: "Please enter a valid email address."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
