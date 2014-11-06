@@ -270,18 +270,17 @@
   }
 
   .searching {
-    display: block;
     position: absolute;
-    top: 17px;
-    right: 15px;
-    width: 22px;
-    height: 22px;
-    background: {
-      image: image-url("spinner_96.gif");
-      repeat: no-repeat;
-      position: 0px 50%;
-      size: 18px;
-    };
+    top: 0;
+    right: 0;
+    .spinner {
+      width: 16px;
+      height: 16px;
+      }
+    .container1 > div, .container2 > div, .container3 > div {
+      width: 4px;
+      height: 4px;
+      }
   }
   // I am ghetto using this to display "Show More".. be warned
   .no-results {
@@ -366,5 +365,3 @@
 #search-help table td {
   padding-right: 10px;
 }
-
-
