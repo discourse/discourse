@@ -343,7 +343,6 @@ it:
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
-        instructions: "Nome completo."
         too_short: "Il nome è troppo breve."
         ok: "Il nome è adeguato."
       username:
@@ -725,7 +724,7 @@ it:
         category: "Non ci sono altri argomenti nella categoria {{category}}."
         top: "Non ci sono altri argomenti di punta."
     topic:
-      filter_to: "{{post_count}} filtra messaggi in questo argomento"
+      filter_to: "{{post_count}} suoi messaggi"
       create: 'Crea Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia un messaggio privato'
@@ -882,7 +881,6 @@ it:
         n_posts:
           one: "1 post"
           other: "{{count}} messaggi"
-        cancel: "Mostra nuovamente tutti i messaggi di questo argomento."
       split_topic:
         title: "Sposta in un Nuovo Argomento"
         action: "sposta in un nuovo argomento"
@@ -1348,8 +1346,6 @@ it:
           7_days_ago: "7 Giorni Fa"
           30_days_ago: "30 Giorni Fa"
           all: "Tutti"
-          view_table: "Visualizza come Tabella"
-          view_chart: "Visualizza come Grafico a Barre"
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"

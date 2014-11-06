@@ -845,18 +845,6 @@ de:
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
     closed_enabled: "Dieses Thema ist nun geschlossen. Es ist nicht länger möglich, auf dieses Thema zu antworten."
     closed_disabled: "Dieses Thema ist nun geöffnet. Es ist wieder möglich, auf dieses Thema zu antworten."
-    autoclosed_enabled_days:
-      zero: "Dieses Thema wurde automatisch nach 1 Tag geschlossen. Neue Antworten sind nicht länger erlaubt."
-      one: "Dieses Thema wurde automatisch nach 1 Tag geschlossen. Neue Antworten sind nicht länger erlaubt."
-      other: "Dieses Thema wurde automatisch nach %{count} Tagen geschlossen. Neue Antworten sind nicht länger erlaubt."
-    autoclosed_enabled_hours:
-      zero: "Dieses Thema wurde automatisch nach 1 Stunde geschlossen. Neue Antworten sind nicht länger erlaubt."
-      one: "Dieses Thema wurde automatisch nach 1 Stunde geschlossen. Neue Antworten sind nicht länger erlaubt."
-      other: "Dieses Thema wurde automatisch nach %{count} Stunden geschlossen. Neue Antworten sind nicht länger erlaubt."
-    autoclosed_enabled_minutes:
-      zero: "Dieses Thema wurde automatisch nach 1 Minute geschlossen. Neue Antworten sind nicht länger erlaubt."
-      one: "Dieses Thema wurde automatisch nach 1 Minute geschlossen. Neue Antworten sind nicht länger erlaubt."
-      other: "Dieses Thema wurde automatisch nach %{count} Minuten geschlossen. Neue Antworten sind nicht länger erlaubt."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer selbst den Pin löst."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
@@ -1017,6 +1005,9 @@ de:
         ```
         %{logs}
         ```
+    restore_succeeded:
+      subject_template: "Wiederherstellung erfolgreich abgeschlossen"
+      text_body_template: "Die Wiederherstellung war erfolgreich."
     restore_failed:
       subject_template: "Wiederherstellung fehlgeschlagen"
     bulk_invite_succeeded:

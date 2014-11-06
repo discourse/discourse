@@ -104,6 +104,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
+    show_help: "ohje"
     links: "Linkit"
     links_lowercase: "linkit"
     faq: "UKK"
@@ -138,6 +139,10 @@ fi:
       stat:
         all_time: "Kaikki"
         last_7_days: "Viimeiset 7 päivää"
+      like_count: "Tykkäyksiä"
+      topic_count: "Ketjuja"
+      post_count: "Viestejä"
+      user_count: "Käyttäjiä"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
       created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
@@ -325,6 +330,10 @@ fi:
         image_is_not_a_square: "Varoitus: olemme rajanneet kuvaasti; se ei ole neliön muotoinen."
       change_profile_background:
         title: "Profiilin taustakuva"
+        instructions: "Profiilin taustakuvan leveys on 850 pikseliä."
+      change_card_background:
+        title: "Käyttäjäkortin taustakuva"
+        instructions: "Taustakuvan leveys on 590 pikseliä."
       email:
         title: "Sähköposti"
         instructions: "Ei tule julkiseksi."
@@ -334,7 +343,7 @@ fi:
         frequency: "Lähetämme sähköpostia vain aiheista, joita et ole nähnyt, ja kun emme ole nähneet sinua viime aikoina."
       name:
         title: "Nimi"
-        instructions: "Koko nimesi."
+        instructions: "Koko nimesi (valinnainen)"
         too_short: "Nimesi on liian lyhyt."
         ok: "Nimesi vaikuttaa hyvältä."
       username:
@@ -362,6 +371,8 @@ fi:
       created: "Liittynyt"
       log_out: "Kirjaudu ulos"
       location: "Sijainti"
+      card_badge:
+        title: "Käyttäjäkortin tunnus"
       website: "Nettisivu"
       email_settings: "Sähköposti"
       email_digests:
@@ -500,6 +511,7 @@ fi:
     created: 'Luotu'
     created_lowercase: 'luotu'
     trust_level: 'Luottamustaso'
+    search_hint: 'käyttäjätunnus, sähköposti tai IP-osoite'
     create_account:
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
@@ -585,6 +597,7 @@ fi:
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan..."
       saved: "Tallennettu!"
+      saved_draft: "Viestiluonnos kesken. Klikkaa tähän jatkaaksesi."
       uploading: "Lähettää..."
       show_preview: 'näytä esikatselu &raquo;'
       hide_preview: '&laquo; piilota esikatselu'
@@ -873,7 +886,6 @@ fi:
         n_posts:
           one: "1 viesti"
           other: "{{count}} viestiä"
-        cancel: "Näytä tämän ketjun kaikki viestit."
       split_topic:
         title: "Siirrä uuteen ketjuun"
         action: "siirrä uuteen ketjuun"
@@ -1231,6 +1243,7 @@ fi:
     history: "Historia"
     changed_by: "käyttäjältä {{author}}"
     raw_email:
+      title: "Alkuperäinen sähköposti"
       not_available: "Ei käytettävissä!"
     categories_list: "Lista alueista"
     filters:
@@ -1338,8 +1351,6 @@ fi:
           7_days_ago: "7 päivää sitten"
           30_days_ago: "30 päivää sitten"
           all: "Kaikki"
-          view_table: "Näytä taulukkona"
-          view_chart: "Katsele pylväsdiagrammina"
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
@@ -1858,7 +1869,7 @@ fi:
           confirm: 'Vahvistus'
       site_text:
         none: "Valitse sisällön tyyppi aloittaaksesi muokkaamisen."
-        title: 'Tekstin sisältö'
+        title: 'Tekstit'
       site_settings:
         show_overriden: 'Näytä vain muokatut'
         title: 'Asetukset'
@@ -1911,11 +1922,14 @@ fi:
         grant: Myönnä
         no_user_badges: "%{name} ei ole saanut yhtään arvomerkkiä."
         no_badges: Myönnettäviä arvomerkkejä ei ole.
+        none_selected: "Valitse arvomerkki aloittaaksesi"
         allow_title: Salli arvomerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja
         listable: Näytä arvomerkki julkisella arvomerkkisivulla
         enabled: Ota arvomerkki käyttöön
         icon: Ikoni
+        image: Kuva
+        icon_help: "Käytä joko Font Awesome -luokkaa tai kuvan URL-osoitetta"
         query: Arvomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit
         auto_revoke: Aja kumoamis-ajo päivittäin
@@ -1948,6 +1962,8 @@ fi:
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
     lightbox:
       download: "lataa"
+    search_help:
+      title: 'Etsi ohjetta'
     keyboard_shortcuts_help:
       title: 'Näppäinoikotiet'
       jump_to:
@@ -2009,6 +2025,7 @@ fi:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
       select_badge_for_title: Valitse tittelisi arvomerkeistä
+      none: "<ei mitään>"
       badge_grouping:
         getting_started:
           name: Ensiaskeleet
@@ -2090,3 +2107,12 @@ fi:
         reader:
           name: Lukija
           description: Luki kaikki viestit ketjusta, jossa on yli 100 viestiä
+    google_search: |
+      <h2>Etsi Googlella</h2>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>

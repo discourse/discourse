@@ -603,6 +603,7 @@ he:
     summary_posts_required: "מספר הפרסומים המנימאלי בנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
+    summary_max_results: "מספר הפרסומים שיוחזרו באמצעות \"סיכום נושא זה\""
     enable_private_messages: "אפשרו למשתמשים בעלי רמת אמון 1 ליצור מסרים פרטיים ולהשיב למסרים פרטיים"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
@@ -643,6 +644,7 @@ he:
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
     suppress_reply_when_quoting: "אל תציגו את הפרסום המקורי בפרסומים שמצטטים תגובות"
+    max_reply_history: "מספר התגובות המקסימלי להרחבה כאשר מרחיבים \"בתגובה ל\""
     experimental_reply_expansion: "החבא תגובות ביניים כאשר מרחיבים תגובה (ניסיוני)"
     topics_per_period_in_top_summary: "מספר הנושאים המוצגים בבריכת המחדל של סיכום הנושאים."
     topics_per_period_in_top_page: "מספר הנושאים הראשונים המוצגים בתצוגה המורחבת של \"הצג עוד\"."
@@ -742,6 +744,9 @@ he:
     tl3_requires_posts_read_all_time: "מספר מינימלי של פרסומים שמשתמש קרא על מנת שיוכל להיות משודרג לרמת אמון 3."
     tl3_requires_max_flagged: "משתמש לא פרסם יותר מ-X פרסומים שסומנו (flagged) ע\"י משתמשים ב-100 הימים האחרונים, על מנת שיוכל להיות משודרג לרמת אמון 3, כאשר X הוא הערך הזה (0 או גבוה יותר)."
     tl3_promotion_min_duration: "מספר הימים המינימלי ששדרוג לרמת אמון 3 תארך לפני שמשתמש יורד בדרגה לרמת אמון 2."
+    tl3_requires_likes_given: "מינימום הלייקים הנדרשים ב-100 הימים האחרונים כדי להכשיר קידום לרמת אמון 3."
+    tl3_requires_likes_received: "מינימום הלייקים הנדרש ב-100 הימים האחרונים כדי לאפשר קידום לרמת אמון 3."
+    tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים ברמת אמון 3."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     min_trust_to_edit_wiki_post: "דרגת האמון המינימלי הנדרשת כדי לערוך פרסום שמסומן כ-wiki."
     newuser_max_links: "כמה קישורים יכול/ה משתמש/ת חדשים להוספים לפרסום."
@@ -766,6 +771,18 @@ he:
     authorized_extensions: "רשימה של הרחבות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפרסום."
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    topic_views_heat_low: "לאחר כמות זו של צפיות,שדה הצפיות יהיה קצת יותר בהיר."
+    topic_views_heat_medium: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בינוני."
+    topic_views_heat_high: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בולט."
+    cold_age_days_low: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש מעט."
+    cold_age_days_medium: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש באופן בינוני."
+    cold_age_days_high: "לאחר מספר זה של ימי שיחה, תאריך הפעולה האחרונה מודגש חזק."
+    history_hours_low: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת קלות."
+    history_hours_medium: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן בינוני."
+    history_hours_high: "פרסום שנערך תוך כדי מספר שעות זה יופיע עם אינידקציית עריכה מודגשת באופן חזק."
+    topic_post_like_heat_low: "לאחר שהיחס בין לייקים למספר הפרסומים גבוהה מערך זה, שדה ספירת הפרסומים מודגש קלות."
+    topic_post_like_heat_medium: "לאחר שהיחס בין לייקים למספר הפרסומים גבוהה מערך זה, שדה ספירת הפרסומים מודגש באופן בינוני."
+    topic_post_like_heat_high: "לאחר שהיחס בין לייקים למספר הפרסומים גבוהה מערך זה, שדה ספירת הפרסומים מודגש באופן חזק."
     faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
     tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
@@ -776,6 +793,16 @@ he:
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
+    strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בייטים"
+    short_email_length: "אורכו של דוא\"ל קצר בבייטים (Bytes)"
+    enable_email_names: "אפשרו הצגת שם מלא של משתמש בדוא\"ל. נטרלו אפשרות זו כדי להסתיר את השם המלא בדוא\"ל."
+    pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
+    pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
+    pop3_polling_period_mins: "משך הזמן בדקות בין בדיקת הדוא\"ל בחשבון ה-POP3. הערה: דורש אתחול."
+    pop3_polling_port: "החיבור (Port) ממנו יש למשוך נתונים מחשבון POP3."
+    pop3_polling_host: "השרת המארח (Host) למשיכת דוא\"ל דרך POP3."
+    pop3_polling_username: "שם המשתמש/ת לחשבון ה-POP3 למשיכת דוא\"ל."
+    pop3_polling_password: "הסיסא לחשבון ה-POP3 למשיכת הדוא\"ל."
     email_in: "אפשרו למשתמשים לפרסם נושאים חדשים באמצעות דוא\"ל (דורש משיכה באמצעוצ pop3). הגדירו את הכתובת בלשונית \"הגדרות\" עבור כל קטגוריה."
     email_in_min_trust: "רמת האמון המינימלית הנדרשת למשתמש/ת כדי שיוכלו להעלות נושאים חדשים באמצעות הדוא\"ל."
     email_prefix: "ה[תווית] שתשמש בנושא הודעות הדוא\"ל. אם לא יוגדר, ברירת המחדל תכוון ל'כותרת' אם לא יוגדר אחרת."
@@ -786,6 +813,7 @@ he:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
+    logout_redirect: "מיקום להכוונת הדפדפן לאחר ההתנתקות לדוגמא: (http://somesite.com/logout)"
     allow_uploaded_avatars: "אפשרו למשתמשים להעלות אווטרים מותאמים אישית."
     allow_animated_avatars: "אפשרו למשתמשים להשתמש באווטרים מסוג GIF אנימציה. אזהרה: הריצו את האווטרים: רעננו לאחר שינוי הגדרה זו."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
@@ -802,6 +830,7 @@ he:
     dominating_topic_minimum_percent: "איזה אחוז מהפרסומים משתמש צריך לייצר בנושא לפני שיקבל תזכורת לגבי שליטת/שתלטנות יתר על הנושא."
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
+    disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
     enable_names: "אפשרו הצגת שמות מלאים של משתמשים. בטלו אפשרות זו כדי להסתיר את השמות המלאים."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
     invites_per_page: "ברירת המחדל, הזמנות המוצגות בעמוד המשתמש."
@@ -848,7 +877,9 @@ he:
     invited_to_private_message: "%{display_username} הזמין אותך להודעה פרטית: %{link}"
     invitee_accepted: "%{display_username} קיבל את הזמנתך"
     linked: "%{display_username} קישר אליך ב %{link}"
+    granted_badge: "הרווחת %{link}"
   search:
+    within_post: "#%{post_number} פרסומים של %{username}"
     types:
       category: 'קטגוריות'
       topic: 'תוצאות'
@@ -875,18 +906,25 @@ he:
     closed_enabled: "הנושא הזה נעול. לא ניתן להגיב תגובות חדשות."
     closed_disabled: "הנושא הזה פתוח. ניתן להגיב תגובות חדשות."
     autoclosed_enabled_days:
-      zero: "הנושא הזה ננעל אוטומטית לאחר יום אחד. תגובות חדשות לא מתקבלות."
       one: "הנושא הזה ננעל אוטומטית לאחר יום אחד. תגובות חדשות לא מתקבלות."
-      other: "הנושא הזה ננעל אוטומטית לאחר %{count} ימים. תגובות חדשות לא מתקבלות."
+      other: "נושא זה נסגר באופן אוטומטי לאחר %{count}. לא ניתן להוסיף תגובות חדשות."
     autoclosed_enabled_hours:
-      zero: "הנושא הזה ננעל אוטומטית לאחר שעה אחת. תגובות חדשות לא מתקבלות."
-      one: "הנושא הזה ננעל אוטומטית לאחר שעה אחת. תגובות חדשות לא מתקבלות."
-      other: "הנושא הזה ננעל אוטומטית לאחר %{count} שעות. תגובות חדשות לא מתקבלות."
+      one: "נושא זה ננעל לאחר שעה אחת. לא ניתן להוסיף תגובות חדשות."
+      other: "נושא זה נסגר אוטומטית לאחר %{count}. לא ניתן להוסיף תגובות חדשות."
     autoclosed_enabled_minutes:
-      zero: "הנושא הזה ננעל אוטומטית לאחר דקה אחת. תגובות חדשות לא מתקבלות."
-      one: "הנושא הזה ננעל אוטומטית לאחר דקה אחת. תגובות חדשות לא מתקבלות."
+      one: "הנושא הזה ננעל אוטומטית לאחר דקה. תגובות חדשות לא מתקבלות."
       other: "הנושא הזה ננעל אוטומטית לאחר %{count} דקות. תגובות חדשות לא מתקבלות."
+    autoclosed_enabled_lastpost_days:
+      one: "נושא זה ננעל אוטומטית לאחר יום אחד מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+      other: "נושא זה ננעל אוטומטית לאחר %{count} ימים מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+    autoclosed_enabled_lastpost_hours:
+      one: "נושא זה ננעל אוטומטית לאחר שעה מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+      other: "נושא זה ננעל אוטומטית לאחר %{count} שעות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+    autoclosed_enabled_lastpost_minutes:
+      one: "נושא זה ננעל אוטומטית לאחר דקה מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
+      other: "נושא זה ננעל אוטומטית לאחר %{count} דקות מהתגובה האחרונה. תגובות חדשות לא מתקבלות."
     autoclosed_disabled: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
+    autoclosed_disabled_lastpost: "הנושא הזה נפתח. ניתן להגיב תגובות חדשות."
     pinned_enabled: "הנושא הזה ננעץ. הוא יופיע בראש הקטגוריה שלו עד שיוסר מנעיצה על ידי מנהל או שכפתור נקה נעיצות נלחץ."
     pinned_disabled: "הנושא הזה הוסר מנעיצה. הוא לא יוצג יותר בראש הקטגוריה שלו."
     pinned_globally_enabled: "הנושא הזה עכשיו נעוץ גלובאלית. הוא יופיע בראש הקטגוריה שלו ובראש כל רשימות הנושאים עד שיוסר מנעיצה על ידי מנהל או שכפתור הנקה נעיצות יילחץ."
@@ -911,7 +949,9 @@ he:
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
     password_too_long: "סיסמאות מוגבלות ל-200 תווים."
     missing_user_field: "לא מילאת את כל שדות המשתמש/ת"
+    close_window: "האימות הושלם. סגרו חלון זה כדי להמשיך."
   user:
+    no_accounts_associated: "אין חשבונות מקושרים."
     username:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
@@ -958,6 +998,7 @@ he:
 
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   invite_password_instructions:
+    subject_template: "צרו סיסמא עבור חשבון ה-%{site_name} שלכם."
     text_body_template: |
       תודה על שאישרת את ההזמנה שלך אל %{site_name} - ברוכים הבאים!
 

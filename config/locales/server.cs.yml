@@ -582,18 +582,6 @@ cs:
     archived_disabled: "Toto téma je vráceno z archivu. Již není zmraženo a může být měněno."
     closed_enabled: "Toto téma je uzavřeno. Nové odpovědi nebudou přijímány."
     closed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
-    autoclosed_enabled_days:
-      zero: "Tohle téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi už se nepřijímají."
-      one: "Tohle téma bylo automaticky uzavřeno po 1 dni. Nové odpovědi už se nepřijímají."
-      other: "Toto téma bylo po %{count} dnech automaticky zavřeno. Nové odpovědi se už nepřijímají."
-    autoclosed_enabled_hours:
-      zero: "Toto téma bylo po 1 hodině automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      one: "Toto téma bylo po 1 hodině automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      other: "Toto téma bylo po %{count} hodinách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-    autoclosed_enabled_minutes:
-      zero: "Toto téma bylo po 1 minutě automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      one: "Toto téma bylo po 1 minutě automaticky uzavřeno. Nové odpovědi se už nepřijímají."
-      other: "Toto téma bylo po %{count} minutách automaticky uzavřeno. Nové odpovědi se už nepřijímají."
     autoclosed_disabled: "Toto téma je otevřeno. Nové odpovědi jsou povoleny."
     pinned_disabled: "Toto téma již není připevněno. Nebude se zobrazovat na vrcholu seznamu témat v kategorii."
   login:

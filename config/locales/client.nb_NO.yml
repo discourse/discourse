@@ -339,7 +339,6 @@ nb_NO:
         frequency: "Vi sender deg bare en e-post om vi ikke har sett deg nylig og du ikke allerede har sett det vi varsler deg om."
       name:
         title: "Navn"
-        instructions: "Ditt fulle navn."
         too_short: "Navnet ditt er for kort."
         ok: "Navnet ditt ser bra ut."
       username:
@@ -878,7 +877,6 @@ nb_NO:
         n_posts:
           one: "1 innlegg"
           other: "{{count}} innlegg"
-        cancel: "Vis alle innlegg i dette emnet igjen."
       split_topic:
         title: "Del opp Emne"
         action: "del opp emne"
@@ -1343,8 +1341,6 @@ nb_NO:
           7_days_ago: "7 Dager Siden"
           30_days_ago: "30 Dager Siden"
           all: "Alle"
-          view_table: "Se som Tabell"
-          view_chart: "Se som Stolpediagram"
       commits:
         latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
         by: "av"

@@ -328,7 +328,6 @@ pt:
         frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "O seu nome completo."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece bom."
       username:
@@ -840,7 +839,6 @@ pt:
         n_posts:
           one: "1 postagem"
           other: "{{count}} mensagens"
-        cancel: "Mostrar novamente todas as mensagens deste tópico."
       split_topic:
         title: "Mover para um novo Tópico"
         action: "mover para novo tópico"
@@ -1291,8 +1289,6 @@ pt:
           7_days_ago: "7 Dias Atrás"
           30_days_ago: "30 Dias Atrás"
           all: "Tudo"
-          view_table: "Visualizar como Tabela"
-          view_chart: "Visualizar como Gráfico de Barras"
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
         by: "por"

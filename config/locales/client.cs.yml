@@ -359,7 +359,6 @@ cs:
         frequency: "Budeme vás informovat emailem pouze pokud jste se na našem webu dlouho neukázali a pokud jste obsah, o kterém vás chceme informovat, doposud neviděli."
       name:
         title: "Jméno"
-        instructions: "Vaše celé jméno."
         too_short: "Vaše jméno je příliš krátké."
         ok: "Vaše jméno vypadá dobře"
       username:
@@ -387,6 +386,8 @@ cs:
       created: "Účet vytvořen"
       log_out: "Odhlásit se"
       location: "Lokace"
+      card_badge:
+        title: "User Card Badge"
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
       email_digests:
@@ -589,6 +590,7 @@ cs:
       drafts_offline: "koncepty offline"
       min_length:
         need_more_for_title: "ještě {{n}} znaků nadpisu tématu"
+        need_more_for_reply: "ještě {{n}} znaků"
       error:
         title_missing: "Název musí být vyplněn"
         title_too_short: "Název musí být dlouhý alespoň {{min}} znaků"
@@ -612,6 +614,7 @@ cs:
       view_new_post: "Zobrazit váš nový příspěvek."
       saving: "Ukládám..."
       saved: "Uloženo!"
+      saved_draft: "Máte rozepsaný příspěvek. Klikněte pro obnovení."
       uploading: "Nahrávám..."
       show_preview: 'zobrazit náhled &raquo;'
       hide_preview: '&laquo; skrýt náhled'
@@ -906,7 +909,6 @@ cs:
           one: "Je zobrazen pouze 1 příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           other: "Je zobrazeno pouze {{count}} příspěvků"
-        cancel: "Zobrazí znovu všechny příspěvky v tomto tématu."
       split_topic:
         title: "Rozdělit téma"
         action: "do nového téma"
@@ -1375,8 +1377,6 @@ cs:
           7_days_ago: "Týden"
           30_days_ago: "Měsíc"
           all: "Celkem"
-          view_table: "Zobrazit jako tabulku"
-          view_chart: "Zobrazit jako sloupcový graf"
       commits:
         latest_changes: "Poslední změny:"
         by: "od"
@@ -1883,6 +1883,7 @@ cs:
         star: '<b>f</b> Star topic'
         share_topic: '<b>shift s</b> Sdílet téma'
         share_post: '<b>s</b> Share post'
+        reply_as_new_topic: '<b>t</b> Odpovědět v propojeném tématu'
         reply_topic: '<b>shift r</b> Odpovědět na téma'
         reply_post: '<b>r</b> Odpovědět na příspěvek'
         quote_post: '<b>q</b> Citovat příspěvek'
@@ -1910,6 +1911,7 @@ cs:
         few: "1 udělen"
         other: "%{count} uděleno"
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
+      none: "<none>"
       badge_grouping:
         other:
           name: Ostatní

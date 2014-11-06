@@ -725,18 +725,6 @@ pt_BR:
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
     closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceitas."
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceitas."
-    autoclosed_enabled_days:
-      zero: "Este tópico foi fechado automaticamente após 1 dia. Novas respostas não são mais permitidas."
-      one: "Este tópico foi fechado automaticamente após 1 dia. Novas respostas não são mais permitidas."
-      other: "Este tópico foi fechado automaticamente após %{count} dias. Novas respostas não são mais permitidas."
-    autoclosed_enabled_hours:
-      zero: "Este tópico foi fechado automaticamente após 1 hora. Novas respostas não são mais permitidas."
-      one: "Este tópico foi fechado automaticamente após 1 hora. Novas respostas não são mais permitidas."
-      other: "Este tópico foi fechado automaticamente após %{count} horas. Novas respostas não são mais permitidas."
-    autoclosed_enabled_minutes:
-      zero: "Este tópico foi fechado automaticamente após 1 minuto. Novas respostas não são mais permitidas."
-      one: "Este tópico foi fechado automaticamente após 1 minuto. Novas respostas não são mais permitidas."
-      other: "Este tópico foi fechado automaticamente após %{count} minutos. Novas respostas não são mais permitidas."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
     pinned_enabled: "Este tópico está agora afixado. Irá aparecer no topo das suas categorias"
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
