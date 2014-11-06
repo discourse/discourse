@@ -31,7 +31,8 @@ export default Discourse.View.extend(CleansUp, {
       if (self.get('controller.visible')) {
         var $target = $(e.target);
         if ($target.closest('[data-user-card]').data('userCard') ||
-            $target.closest('a.mention').length > 0) {
+            $target.closest('a.mention').length > 0 || 
+            $target.closest('#user-card').length > 0) {
           return;
         }
 
@@ -75,6 +76,8 @@ export default Discourse.View.extend(CleansUp, {
             position.left += overage;
             position.top += target.height() + 5;
           }
+
+          position.top -= $('#main-outlet').offset().top;
           self.$().css(position);
         }
       }
