@@ -77,11 +77,11 @@
     font-size: 13px;
     font-weight: normal;
     margin-top: 0;
-    color: scale-color($primary, $lightness: 50%);
+    color: dark-light-diff($secondary, $primary, 25%, -25%);
     overflow: hidden;
     text-overflow: ellipsis;
     a {
-      color: $secondary;
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
     }
   }
   .groups {
@@ -103,7 +103,7 @@
       display: inline;
       margin-right: 5px;
       .desc, a {
-        color: scale-color($primary, $lightness: 70%);
+        color: dark-light-diff($secondary, $primary, 50%, -50%);
       }
     }
     div {display: inline; color: scale-color($primary, $lightness: 50%);
@@ -195,8 +195,8 @@
 
       .user-badge {
         background: transparent;
-        color: scale-color($primary, $lightness: 50%);
-        border-color: scale-color($primary, $lightness: 50%);
+        color: dark-light-diff($primary, $secondary, 50%, -50%);
+        border-color: dark-light-diff($primary, $secondary, 50%, -50%);
       }
 
       h3 {
