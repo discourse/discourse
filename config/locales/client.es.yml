@@ -343,7 +343,6 @@ es:
         frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
-        instructions: "Tu nombre completo."
         too_short: "Tu nombre es demasiado corto."
         ok: "Tu nombre es válido."
       username:
@@ -511,8 +510,6 @@ es:
     created: 'Creado'
     created_lowercase: 'creado'
     trust_level: 'Nivel de Confianza'
-    search_hint: 'nombre de usuario o dirección IP'
-    search_hint_admin: 'nombre de usuario, e-mail o dirección IP'
     create_account:
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
@@ -887,7 +884,6 @@ es:
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        cancel: "Mostrar de nuevo todos los posts de este tema."
       split_topic:
         title: "Mover a un tema nuevo"
         action: "mover a un tema nuevo"
@@ -1353,8 +1349,6 @@ es:
           7_days_ago: "Hace 7 días"
           30_days_ago: "Hace 30 días"
           all: "Todo"
-          view_table: "Ver como tabla"
-          view_chart: "Ver como gráfico de tablas"
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"

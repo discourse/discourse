@@ -320,7 +320,7 @@ ko:
         frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
       name:
         title: "이름"
-        instructions: "이름을 적어주세요."
+        instructions: "이름을 적어주세요. (선택사항)"
         too_short: "이름이 너무 짧습니다."
         ok: "사용 가능한 이름입니다."
       username:
@@ -484,8 +484,7 @@ ko:
     created: '생성'
     created_lowercase: '최초 글'
     trust_level: '신뢰도'
-    search_hint: '아이디 혹은 IP 주소'
-    search_hint_admin: '아이디, 이메일 혹은 IP 주소'
+    search_hint: '아이디, 이메일 혹은 IP 주소'
     create_account:
       title: "회원 가입"
       failed: "뭔가 잘못되었습니다. 이 메일은 등록이 되어있습니다. 비밀번호를 잊으셨다면 비밀번호 찾기를 눌러주세요."
@@ -604,6 +603,8 @@ ko:
       auto_close:
         label: "자동-닫기 토픽 시간:"
         error: "유효한 값은 눌러주세요."
+        all:
+          examples: '시간을 숫자(24이하)로 입력하거나 분을 포함한 시간(17:30) 혹은 타임스탬프(2013-11-22 14:00) 형식으로 입력하세요.'
         limited:
           units: "(# 시간)"
           examples: '시간에 해당하는 숫자를 입력하세요. (24)'
@@ -742,6 +743,7 @@ ko:
       jump_reply_down: 이후 답글로 이동
       deleted: "토픽이 삭제되었습니다"
       auto_close_notice: "이 토픽은 곧 자동으로 닫힙니다. %{timeLeft}."
+      auto_close_notice_based_on_last_post: "이 토픽은 마지막 답글이 달린 %{duration} 후 닫힙니다."
       auto_close_title: '자동으로 닫기 설정'
       auto_close_save: "저장"
       auto_close_remove: "이 토픽을 자동으로 닫지 않기"
@@ -765,6 +767,8 @@ ko:
           '2_4': '이 토픽에 답글을 게시하여서 알림을 받게 됩니다.'
           '2_2': '이 토픽을 추적하고 있어서 알림을 받게 됩니다.'
           '2': '이 토픽을 읽어서 알림을 받게 됩니다. <a href="/users/{{username}}/preferences">(설정)</a>'
+          '1_2': '누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다.'
+          '1': '누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다.'
           '0_7': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0_2': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
           '0': '당신은 이 토픽에 관한 모든 알림을 무시합니다.'
@@ -842,7 +846,6 @@ ko:
       filters:
         n_posts:
           other: "{{count}} 글"
-        cancel: "다시 이 토픽의 모든 게시물을 표시합니다."
       split_topic:
         title: "새로운 토픽으로 이동"
         action: "새로운 토픽으로 이동"
@@ -1170,6 +1173,9 @@ ko:
     category_title: "카테고리"
     history: "기록"
     changed_by: "{{author}}에 의해"
+    raw_email:
+      title: "Raw 이메일"
+      not_available: "Raw 이메일이 가능하지 않습니다."
     categories_list: "카테고리 목록"
     filters:
       with_topics: "%{filter} 토픽"
@@ -1276,8 +1282,6 @@ ko:
           7_days_ago: "7일"
           30_days_ago: "30일"
           all: "전체"
-          view_table: "테이블로 보기"
-          view_chart: "차트로 보기"
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
@@ -1492,6 +1496,9 @@ ko:
           love:
             name: '사랑'
             description: "좋아요 버튼 색"
+          wiki:
+            name: '위키'
+            description: "위키 게시글의 배경색으로 사용될 기본 색상"
       email:
         title: "이메일"
         settings: "설정"
@@ -1739,6 +1746,7 @@ ko:
           flagged_by_users: "신고한 사용자들"
           likes_given: "선사한  '좋아요'"
           likes_received: "받은 '좋아요'"
+          likes_received_days: "받은 '좋아요' : 특정일"
           qualifies: "신뢰 등급 3의 조건에 부합합니다."
           does_not_qualify: "신뢰 등급 3의 조건에 부합하지 않습니다."
           will_be_promoted: "곧 승급 됩니다."

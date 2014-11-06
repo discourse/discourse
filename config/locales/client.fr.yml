@@ -277,6 +277,7 @@ fr:
       admin_tooltip: "Cet utilisateur est un admin"
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
+      github_profile: "Github"
       mailing_list_mode: "Recevoir un e-mail pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
@@ -343,7 +344,7 @@ fr:
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
-        instructions: "Votre nom complet."
+        instructions: "Votre nom complet (facultatif)."
         too_short: "Votre nom est trop court."
         ok: "Votre nom semble correct."
       username:
@@ -511,8 +512,7 @@ fr:
     created: 'Créé'
     created_lowercase: 'créé'
     trust_level: 'Niveau de confiance'
-    search_hint: 'pseudo ou adresse IP'
-    search_hint_admin: 'pseudo, courriel ou adresse IP'
+    search_hint: 'pseudo, courriel ou adresse IP'
     create_account:
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
@@ -891,7 +891,7 @@ fr:
         n_posts:
           one: "1 message"
           other: "{{count}} messages"
-        cancel: "Réafficher tous les messages de ce sujet."
+        cancel: "Supprimer le filtre"
       split_topic:
         title: "Déplacer vers Nouveau Sujet"
         action: "déplacer vers un nouveau sujet"
@@ -1191,6 +1191,10 @@ fr:
       submit_tooltip: "Soumettre le signalement privé"
       take_action_tooltip: "Atteindre le seuil de signalement immédiatement, plutôt que d'attendre plus de signalement de la communauté."
       cant: "Désolé, vous ne pouvez pas signaler ce message pour le moment"
+      formatted_name:
+        off_topic: "C'est hors-sujet"
+        inappropriate: "C'est inapproprié"
+        spam: "C'est un pourriel"
       custom_placeholder_notify_user: "Pour quelles raisons ce message nécessite que vous contactiez cet utilisateur par messagerie privée ? Soyez précis, constructif et toujours aimable."
       custom_placeholder_notify_moderators: "Pourquoi ce message requière-t-il l'attention des modérateurs ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
       custom_message:
@@ -1357,8 +1361,11 @@ fr:
           7_days_ago: "il y a 7 jours"
           30_days_ago: "il y a 30 jours"
           all: "Tous"
-          view_table: "Tableau"
-          view_chart: "Graphique à barre"
+          view_table: "tableau"
+          view_chart: "histogramme"
+          refresh_report: "Actualiser le rapport"
+          start_date: "Date de début"
+          end_date: "Date de fin"
       commits:
         latest_changes: "Derniers changements..."
         by: "par"
@@ -1695,6 +1702,7 @@ fr:
         last_emailed: "Derniers contacts"
         not_found: "Désolé ce pseudo n'existe pas dans notre système."
         active: "Actifs"
+        show_emails: "Afficher les adresses de courriels"
         nav:
           new: "Nouveaux"
           active: "Actifs"

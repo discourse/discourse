@@ -277,6 +277,7 @@ de:
       admin_tooltip: "Dieser Benutzer ist ein Administrator"
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
+      github_profile: "Github"
       mailing_list_mode: "Erhalte bei jedem neuen Beitrag eine E-Mail (sofern du das Thema oder die Kategorie nicht stummgeschaltet hast)"
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
@@ -343,7 +344,7 @@ de:
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
-        instructions: "Dein vollständiger Name."
+        instructions: "Ihr vollständiger Name (optional)."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
@@ -511,8 +512,7 @@ de:
     created: 'Erstellt'
     created_lowercase: 'erstellt'
     trust_level: 'Vertrauensstufe'
-    search_hint: 'Benutzername oder IP-Adresse'
-    search_hint_admin: 'Benutzername, E-Mail- oder IP-Adresse'
+    search_hint: 'Benutzername, E-Mail- oder IP-Adresse'
     create_account:
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
@@ -712,6 +712,8 @@ de:
         hot: "Es gibt keine beliebten Themen."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
+        educate:
+          new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -881,7 +883,7 @@ de:
         n_posts:
           one: "1 Beitrag"
           other: "{{count}} Beiträge"
-        cancel: "Zeige in diesem Thema wieder alle Beiträge an."
+        cancel: "Filter entfernen"
       split_topic:
         title: "In neues Thema verschieben"
         action: "in ein neues Thema verschieben"
@@ -1181,6 +1183,9 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
+      formatted_name:
+        inappropriate: "Es ist unangemessen"
+        spam: "Es ist Spam"
       custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
       custom_message:
@@ -1239,6 +1244,7 @@ de:
     history: "Verlauf"
     changed_by: "von {{author}}"
     raw_email:
+      title: "Unverarbeitete E-Mail"
       not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
@@ -1346,8 +1352,11 @@ de:
           7_days_ago: "vor 7 Tagen"
           30_days_ago: "vor 30 Tagen"
           all: "alle"
-          view_table: "Als Tabelle anzeigen"
-          view_chart: "Als Balkendiagramm anzeigen"
+          view_table: "Tabelle"
+          view_chart: "Säulendiagramm"
+          refresh_report: "Bericht aktualisieren"
+          start_date: "Startdatum"
+          end_date: "Enddatum"
       commits:
         latest_changes: "Letzte Änderungen: bitte häufig updaten!"
         by: "von"
@@ -1684,6 +1693,7 @@ de:
         last_emailed: "Letzte E-Mail"
         not_found: "Entschuldige, dieser Benutzername existiert im System nicht."
         active: "Aktiv"
+        show_emails: "E-Mails anzeigen"
         nav:
           new: "Neu"
           active: "Aktiv"

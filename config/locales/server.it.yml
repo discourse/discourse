@@ -783,18 +783,6 @@ it:
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
     closed_enabled: "Questo argomento è stato chiuso. Non è più possibile inviare risposte."
     closed_disabled: "Questo argomento è stato aperto. È di nuovo possibile rispondere."
-    autoclosed_enabled_days:
-      zero: "Questo argomento è stato chiuso automaticamente dopo 1 giorno. Non sono più permesse altre risposte."
-      one: "Questo argomento è stato chiuso automaticamente dopo 1 giorno. Non sono più permesse risposte."
-      other: "Questo argomento è stato chiuso automaticamente dopo %{count} giorni. Non sono più permesse altre risposte."
-    autoclosed_enabled_hours:
-      zero: "Questo argomento è stato chiuso automaticamente dopo 1 ora. Non sono più permesse altre risposte."
-      one: "Questo argomento è stato chiuso automaticamente dopo 1 ora. Non sono più permesse altre risposte."
-      other: "Questo argomento è stato chiuso automaticamente dopo %{count} ore. Non sono più permesse altre risposte."
-    autoclosed_enabled_minutes:
-      zero: "Questo argomento è stato chiuso automaticamente dopo 1 minuto. Non sono più permesse altre risposte."
-      one: "Questo argomento è stato chiuso automaticamente dopo 1 minuto. Non sono più permesse altre risposte."
-      other: "Questo argomento è stato chiuso automaticamente dopo %{count} minuti. Non sono più permesse altre risposte."
     autoclosed_disabled: "Questo argomento è ora aperto. Sono permesse altre risposte."
     pinned_enabled: "Questo argomento è stato puntato. Sarà mostrato in cima alla sua categoria finché non sarà spuntato da un membro dello staff - e allora varrà per tutti - oppure dai singoli utenti - e varrà solo per loro stessi."
     pinned_disabled: "Questo argomento è stato spuntato. Non sarà più mostrato in cima alla sua categoria."
