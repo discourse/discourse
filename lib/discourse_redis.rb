@@ -6,8 +6,13 @@ class DiscourseRedis
 
   def self.raw_connection(config = nil)
     config ||= self.config
-    redis_opts = {host: config['host'], port: config['port'], db: config['db']}
+    if use_socket?(config)
+      redis_opts = {path: config['socket']}
+    else
+      redis_opts = {host: config['host'], port: config['port']}
+    end
     redis_opts[:password] = config['password'] if config['password']
+    redis_opts[:db] = config['db']
     Redis.new(redis_opts)
   end
 
@@ -17,7 +22,17 @@ class DiscourseRedis
 
   def self.url(config=nil)
     config ||= self.config
-    "redis://#{(':' + config['password'] + '@') if config['password']}#{config['host']}:#{config['port']}/#{config['db']}"
+    if use_socket?(config)
+      "unix://#{config['socket']}"
+    else
+      "redis://#{(':' + config['password'] + '@') if config['password']}#{config['host']}:#{config['port']}/#{config['db']}"
+    end
+  end
+
+  def self.use_socket?(config=nil)
+    config ||= self.config
+
+    !config['socket'].blank?
   end
 
   def initialize

@@ -292,7 +292,8 @@ module Discourse
   end
 
   def self.sidekiq_redis_config
-    { url: $redis.url, namespace: 'sidekiq' }
+    # the db option here is a workaround for unix socket URLs, which cannot contain the db number
+    { url: $redis.url, namespace: 'sidekiq', db: $redis.config['db'] }
   end
 
   def self.static_doc_topic_ids

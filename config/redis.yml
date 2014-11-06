@@ -1,6 +1,7 @@
 defaults: &defaults
   host: <%= GlobalSetting.redis_host %>
   port: <%= GlobalSetting.redis_port %>
+  socket: <%= GlobalSetting.redis_socket %>
   password: <%= GlobalSetting.redis_password %>
   db: <%= GlobalSetting.redis_db %>
 
