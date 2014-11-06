@@ -159,13 +159,7 @@
   .usercard-controls {
     list-style-type: none;
     float: right;
-
-    &:after {
-      content: '';
-      display: block;
-      clear: both;
-
-    }
+    margin: 0;
 
     a {width: 100%; min-width: 150px;}
   }
