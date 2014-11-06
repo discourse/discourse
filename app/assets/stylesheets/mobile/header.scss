@@ -50,6 +50,12 @@
 
   // Search
 
+  .searching {
+    position: absolute;
+    top: 0;
+    right: 25px;
+  }
+  
   input[type='text'] {
     width: 265px;
     font-size: 16px;

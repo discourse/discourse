@@ -8,7 +8,7 @@
   <a href="#" class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n show_help}}</a>
 </div>
 {{#if loading}}
-  <div class='searching'></div>
+  <div class='searching'>{{loading-spinner}}</div>
 {{else}}
   <div class="results">
   {{#unless noResults}}
