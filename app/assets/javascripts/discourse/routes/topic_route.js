@@ -38,18 +38,6 @@ Discourse.TopicRoute = Discourse.Route.extend({
       this.controllerFor("topic-admin-menu").send("show");
     },
 
-    // Modals that can pop up within a topic
-    expandPostUser: function(post) {
-      this.controllerFor('user-card').show(post.get('username'), post.get('uploaded_avatar_id'));
-    },
-
-    expandPostUsername: function(username) {
-      username = username.replace(/^@/, '');
-      if (!Em.isEmpty(username)) {
-        this.controllerFor('user-card').show(username);
-      }
-    },
-
     showFlags: function(post) {
       Discourse.Route.showModal(this, 'flag', post);
       this.controllerFor('flag').setProperties({ selected: null });

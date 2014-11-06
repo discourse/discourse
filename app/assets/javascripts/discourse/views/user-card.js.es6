@@ -30,10 +30,8 @@ export default Discourse.View.extend(CleansUp, {
     $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
       if (self.get('controller.visible')) {
         var $target = $(e.target);
-        if ($target.closest('.trigger-user-card').length > 0) { return; }
-        if (self.$().has(e.target).length !== 0) { return; }
-
-        if ($target.data("userCard")|| $target.closest('a.mention')) {
+        if ($target.closest('[data-user-card]').data('userCard') ||
+            $target.closest('a.mention').length > 0) {
           return;
         }
 
@@ -43,19 +41,22 @@ export default Discourse.View.extend(CleansUp, {
       return true;
     });
 
+    var expand = function(username, $target){
+      self._posterExpand($target);
+      self.get('controller').show(username, $target[0]);
+      return false;
+    };
+
     $('#main-outlet').on(clickDataExpand, '[data-user-card]', function(e) {
       var $target = $(e.currentTarget);
-      self._posterExpand($target);
-      self.get('controller').show($target.data('user-card'));
-      return false;
+      var username = $target.data('user-card');
+      return expand(username, $target);
     });
 
     $('#main-outlet').on(clickMention, 'a.mention', function(e) {
       var $target = $(e.target);
-      self._posterExpand($target);
       var username = $target.text().replace(/^@/, '');
-      self.get('controller').show(username);
-      return false;
+      return expand(username, $target);
     });
   }.on('didInsertElement'),
 

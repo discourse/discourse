@@ -8,6 +8,7 @@ export default ObjectController.extend({
   participant: null,
   avatar: null,
   userLoading: null,
+  cardTarget: null,
 
   postStream: Em.computed.alias('controllers.topic.postStream'),
   enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
@@ -34,7 +35,7 @@ export default ObjectController.extend({
     return img && img.indexOf('fa-') !== 0;
   }.property('user.card_badge.image'),
 
-  show: function(username, uploadedAvatarId) {
+  show: function(username, target) {
     // XSS protection (should be encapsulated)
     username = username.replace(/[^A-Za-z0-9_]/g, "");
     var url = "/users/" + username;
@@ -48,16 +49,12 @@ export default ObjectController.extend({
     var currentUsername = this.get('username'),
         wasVisible = this.get('visible');
 
-    if (uploadedAvatarId) {
-      this.set('avatar', {username: username, uploaded_avatar_id: uploadedAvatarId});
-    } else {
-      this.set('avatar', null);
-    }
+    this.set('avatar', null);
     this.set('username', username);
 
-    // If we click the avatar again, close it.
-    if (username === currentUsername && wasVisible) {
-      this.setProperties({ visible: false, username: null, avatar: null });
+    // If we click the avatar again, close it (unless its diff element on the screen).
+    if (target === this.get('cardTarget') && wasVisible) {
+      this.setProperties({ visible: false, username: null, avatar: null, cardTarget: null });
       return;
     }
 
@@ -76,8 +73,9 @@ export default ObjectController.extend({
 
     var self = this;
     self.set('user', null);
-
     self.set('userLoading', username);
+    self.set('cardTarget', target);
+
     Discourse.User.findByUsername(username).then(function (user) {
       self.setProperties({ user: user, avatar: user, visible: true});
     }).finally(function(){
@@ -87,6 +85,7 @@ export default ObjectController.extend({
 
   close: function() {
     this.set('visible', false);
+    this.set('cardTarget', null);
   },
 
   actions: {
