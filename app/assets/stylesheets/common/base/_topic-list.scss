@@ -149,17 +149,6 @@
   }
 }
 
-.topics-loading {
-  width: 20px;
-  margin: 0 auto;
-  padding: 25px 15px;
-  background: {
-    image: image-url("spinner_96.gif");
-    repeat: no-repeat;
-    size: 50px;
-  };
-}
-
 .list-controls {
   .home {
     background-color: scale-color-diff();
