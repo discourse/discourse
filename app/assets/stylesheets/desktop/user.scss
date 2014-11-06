@@ -198,23 +198,34 @@
 
       dl dd {
         display: inline;
-        margin: 0 15px 0 5px;
+        margin: 0 10px 0 0;
         padding: 0;
       }
 
       dl dt {
         display: inline-block;
+        margin: 0 5px 0 0;
+        padding: 0;
       }
 
       dl {
-        padding: 10px 15px;
         margin: 0;
+        padding: 8px 10px;
       }
 
       dd {
         overflow: hidden;
         text-overflow: ellipsis;
         color: $primary;
+      }
+
+      dd.groups {
+        span:after {
+          content: ','
+        }
+        span:last-of-type:after {
+          content:''
+        }
       }
 
       dt {
@@ -271,23 +282,27 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
+        color: $secondary;
 
         h1 {font-weight: bold;}
 
         .primary-textual {
           padding: 3px;
           a[href] {
-            color: dark-light-diff($secondary, $primary, 75%, -10%);
+            color: $secondary;
 
           }
         }
 
         .bio {
-          color: dark-light-diff($secondary, $primary, 75%, 0%);
+          color: $secondary;
           max-height: 300px;
           overflow: auto;
           max-width: 750px;
+
+          a.mention {
+            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
+          }
 
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, 0%);
@@ -304,6 +319,7 @@
     .controls {
       padding: 0 0 12px 0;
       float: right;
+      width: 180px;
       ul {list-style-type: none;}
       a {
         padding: 5px 10px;
@@ -321,6 +337,7 @@
   .about.collapsed-info {
     .controls {
       margin-top: 0;
+      width: auto;
       ul {
         li {display: inline;}
         a {

@@ -254,6 +254,7 @@ zh_CN:
       admin_tooltip: "用户是管理员"
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
+      github_profile: "Github"
       mailing_list_mode: "对每个新帖发送一封邮件（除非您屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "您将自动关注这些分类的所有新主题。您将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
@@ -320,7 +321,7 @@ zh_CN:
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
-        instructions: "您的全名。"
+        instructions: "您的全名（可选）。"
         too_short: "您设置的名字太短了。"
         ok: "您的名字符合要求。"
       username:
@@ -484,8 +485,7 @@ zh_CN:
     created: '创建时间'
     created_lowercase: '创建时间'
     trust_level: '用户级别'
-    search_hint: '用户名或IP地址'
-    search_hint_admin: '用户名，email或IP地址'
+    search_hint: '用户名、电子邮件或 IP 地址'
     create_account:
       title: "创建新帐号"
       failed: "出问题了，有可能这个电子邮箱已经被注册了。试试忘记密码链接？"
@@ -852,7 +852,7 @@ zh_CN:
       filters:
         n_posts:
           other: "{{count}} 个帖子"
-        cancel: "再次显示本主题下的所有帖子。"
+        cancel: "取消过滤器"
       split_topic:
         title: "拆分主题"
         action: "拆分主题"
@@ -1126,6 +1126,10 @@ zh_CN:
       submit_tooltip: "提交私有标记"
       take_action_tooltip: "与其等待更多的社区的标志, 不如立刻到达标志."
       cant: "抱歉，当前您不能报告本帖。"
+      formatted_name:
+        off_topic: "偏题"
+        inappropriate: "不合适"
+        spam: "广告"
       custom_placeholder_notify_user: "为何您要私下联系该用户？"
       custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的注意？"
       custom_message:
@@ -1163,10 +1167,10 @@ zh_CN:
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     posts_likes_MF: |
-      这个主题有 {count, plural, one {1 个帖子}其他{# 帖子数}} {ratio, select,
-      low {with a high like to like ratio}
-      med {with a very high post to like ratio}
-      high {with an extremely high post to like ratio}
+      这个主题有 {count, plural, other {# 个帖子}}，{ratio, select,
+      low {并被很多人赞了}
+      med {并被非常多人赞了}
+      high {并被特别多人赞了}
       other {}}
     original_post: "原始帖"
     views: "浏览"
@@ -1291,8 +1295,11 @@ zh_CN:
           7_days_ago: "7 天之前"
           30_days_ago: "30 天之前"
           all: "全部"
-          view_table: "以表格展示"
-          view_chart: "以柱状图展示"
+          view_table: "表格"
+          view_chart: "柱状图"
+          refresh_report: "刷新报告"
+          start_date: "开始日期"
+          end_date: "结束日期"
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
@@ -1624,6 +1631,7 @@ zh_CN:
         last_emailed: "最后一次邮寄"
         not_found: "抱歉，在我们的系统中此用户名不存在。"
         active: "活跃"
+        show_emails: "显示邮件"
         nav:
           new: "新建"
           active: "活跃"

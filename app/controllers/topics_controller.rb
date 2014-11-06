@@ -364,7 +364,9 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map {|t| t.to_i}
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topic_ids = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics.pluck(:id)
+      topics = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics
+      topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
+      topic_ids = topics.pluck(:id)
     else
       raise ActionController::ParameterMissing.new(:topic_ids)
     end
@@ -439,7 +441,7 @@ class TopicsController < ApplicationController
   end
 
   def perform_show_response
-    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false)
+    topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|
       format.html do

@@ -2,13 +2,13 @@
   <div class='topic-avatar'>
     <div class='contents'>
       <div>
-        {{poster-avatar action="expandPostUser" post=this classNames="main-avatar"}}
+        {{poster-avatar post=this classNames="main-avatar"}}
       </div>
     </div>
   </div>
   <div class='topic-body'>
     <div class="topic-meta-data">
-      {{poster-name post=this expandAction="expandPostUser"}}
+      {{poster-name post=this}}
       {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n topic.jump_reply_up}}"><i class='fa fa-arrow-up'></i></a>{{/if}}
       <div class='post-info post-date'>{{age-with-tooltip created_at}}</div>
     </div>

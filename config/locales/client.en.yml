@@ -310,6 +310,7 @@ en:
       admin_tooltip: "This user is an admin"
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
+      github_profile: "Github"
       mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
@@ -380,7 +381,7 @@ en:
       email:
         title: "Email"
         instructions: "Never shown to the public."
-        ok: "Looks good. We will email you to confirm."
+        ok: "We will email you to confirm."
         invalid: "Please enter a valid email address."
         authenticated: "Your email has been authenticated by {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
@@ -1003,7 +1004,7 @@ en:
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
-        cancel: "Show all posts in this topic again."
+        cancel: "Remove filter"
 
       split_topic:
         title: "Move to New Topic"
@@ -1323,6 +1324,10 @@ en:
       submit_tooltip: "Submit the private flag"
       take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
       cant: "Sorry, you can't flag this post at this time."
+      formatted_name:
+        off_topic: "It's Off-Topic"
+        inappropriate: "It's Inappropriate"
+        spam: "It's Spam"
       custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
       custom_message:
@@ -1507,8 +1512,11 @@ en:
           7_days_ago: "7 Days Ago"
           30_days_ago: "30 Days Ago"
           all: "All"
-          view_table: "View as Table"
-          view_chart: "View as Bar Chart"
+          view_table: "table"
+          view_chart: "bar chart"
+          refresh_report: "Refresh Report"
+          start_date: "Start Date"
+          end_date: "End Date"
 
       commits:
         latest_changes: "Latest changes: please update often!"
@@ -1825,6 +1833,7 @@ en:
             check_email: "check email"
             delete_topic: "delete topic"
             delete_post: "delete post"
+            impersonate: "impersonate"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -1861,6 +1870,7 @@ en:
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
         active: "Active"
+        show_emails: "Show Emails"
         nav:
           new: "New"
           active: "Active"

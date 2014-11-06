@@ -103,6 +103,7 @@ sv:
     admin_title: "Admin"
     flags_title: "Flaggningar"
     show_more: "visa mer"
+    show_help: "hjälp"
     links: "Länkar"
     links_lowercase: "länkar"
     faq: "FAQ"
@@ -136,6 +137,9 @@ sv:
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7 dagarna"
+      like_count: "Likes"
+      post_count: "Inlägg"
+      user_count: "Användare"
     bookmarks:
       not_logged_in: "förlåt, men du måste vara inloggad för att kunna bokmärka inlägg"
       created: "du har bokmärkt det här inlägget"
@@ -268,6 +272,7 @@ sv:
       admin_tooltip: "Den här användaren är administrator"
       suspended_notice: "Den här användaren är avstängd till {{date}}."
       suspended_reason: "Anledning:"
+      github_profile: "Github"
       mailing_list_mode: "Skicka ett e-postmeddelande för varje nytt inlägg (gäller ej tystade ämnen eller kategorier)"
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Du kommer att få notifieringar om alla nya inlägg och trådar; antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
@@ -284,6 +289,7 @@ sv:
         flagged_posts: "flaggade inlägg"
         deleted_posts: "borttagna inlägg"
         suspensions: "avstängningar"
+        warnings_received: "varningar"
       messages:
         all: "Alla"
         mine: "Mina"
@@ -329,7 +335,6 @@ sv:
         frequency: "Vi kommer bara maila dig om vi inte har sett dig nyligen och du inte redan sett det vi mailar dig om."
       name:
         title: "Namn"
-        instructions: "Ditt fullständiga namn"
         too_short: "Ditt namn är för kort."
         ok: "Ditt namn ser bra ut."
       username:
@@ -839,7 +844,6 @@ sv:
         n_posts:
           one: "1 inlägg"
           other: "{{count}} inlägg"
-        cancel: "Visa alla inlägg i den här tråden igen."
       split_topic:
         title: "Flytta till nyn tråd"
         action: "flytta till ny tråd"
@@ -1230,8 +1234,6 @@ sv:
           7_days_ago: "7 dagar sedan"
           30_days_ago: "30 dagar sedan"
           all: "Alla"
-          view_table: "Visa som tabell"
-          view_chart: "Visa som stapeldiagram"
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"

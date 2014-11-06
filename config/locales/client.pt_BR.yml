@@ -139,6 +139,7 @@ pt_BR:
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
+      like_count: "Likes"
       topic_count: "Tópicos"
       user_count: "Usuários"
     bookmarks:
@@ -329,6 +330,8 @@ pt_BR:
       change_profile_background:
         title: "Fundo do perfil"
         instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
+      change_card_background:
+        instructions: "As Imagens de fundo serão centralizadas e deverão ter largura de 590px"
       email:
         title: "Email"
         instructions: "Não visível publicamente."
@@ -338,7 +341,6 @@ pt_BR:
         frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "Seu nome completo."
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece ok."
       username:
@@ -504,7 +506,6 @@ pt_BR:
     created: 'Criado'
     created_lowercase: 'criado'
     trust_level: 'Nível de confiança'
-    search_hint: 'Nome de usuário ou endereço de IP'
     create_account:
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
@@ -590,6 +591,7 @@ pt_BR:
       view_new_post: "Ver sua nova resposta."
       saving: "Salvando..."
       saved: "Salvo!"
+      saved_draft: "Rascunho salvo, clique em selecionar para continuar editando."
       uploading: "Enviando..."
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
@@ -878,7 +880,6 @@ pt_BR:
         n_posts:
           one: "1 mensagem"
           other: "{{count}} mensagens"
-        cancel: "Mostrar novamente todas as mensagens deste tópico."
       split_topic:
         title: "Mover para novo tópico"
         action: "mover para novo tópico"
@@ -1344,8 +1345,6 @@ pt_BR:
           7_days_ago: "7 Dias Atrás"
           30_days_ago: "30 Dias Atrás"
           all: "Tudo"
-          view_table: "Visualizar como Tabela"
-          view_chart: "Visualizar como Gráfico de Barras"
       commits:
         latest_changes: "Últimas atualizações: atualize com frequência!"
         by: "por"
@@ -1923,6 +1922,7 @@ pt_BR:
         listable: Mostrar emblema na página pública de emblemas
         enabled: Habilitar emblema
         icon: Ícone
+        image: Imagem
         icon_help: "Use uma classe do Font Awesome ou uma URL de uma imagem"
         query: Badge Query (SQL)
         target_posts: Consultar respostas selecionadas

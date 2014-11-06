@@ -705,18 +705,6 @@ pl_PL:
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
     closed_enabled: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
     closed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
-    autoclosed_enabled_days:
-      zero: "Temat został automatycznie zamknięty po 1 dniu. Dodawanie nowych odpowiedzi nie jest możliwe."
-      one: "Temat został automatycznie zamknięty po 1 dniu. Dodawanie nowych odpowiedzi nie jest możliwe."
-      other: "Temat został automatycznie zamknięty po %{count} dniach. Dodawanie nowych odpowiedzi nie jest możliwe."
-    autoclosed_enabled_hours:
-      zero: "Temat został automatycznie zamknięty po 1 godzinie. Dodawanie nowych odpowiedzi nie jest możliwe."
-      one: "Temat został automatycznie zamknięty po 1 godzinie. Dodawanie nowych odpowiedzi nie jest możliwe."
-      other: "Temat został automatycznie zamknięty po %{count} godzinach. Dodawanie nowych odpowiedzi nie jest możliwe."
-    autoclosed_enabled_minutes:
-      zero: "Temat został automatycznie zamknięty po 1 minucie. Dodawanie nowych odpowiedzi nie jest możliwe."
-      one: "Temat został automatycznie zamknięty po 1 minucie. Dodawanie nowych odpowiedzi nie jest możliwe."
-      other: "Temat został automatycznie zamknięty po %{count} minutach. Dodawanie nowych odpowiedzi nie jest możliwe."
     autoclosed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
     pinned_enabled: "Temat został przypięty. Będzie pojawiać się na początku swojej kategorii dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
     pinned_disabled: "Temat został odpięty. Już nie będzie pojawiać się na początku swojej kategorii."

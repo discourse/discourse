@@ -619,18 +619,6 @@ da:
     archived_disabled: "Dette emne er nu ikke længere arkiveret. Det er ikke længere frosset fast, og kan ændres."
     closed_enabled: "Dette emne er nu lukket. Nye indlæg tillades ikke."
     closed_disabled: "Dette emne er nu åbent. Nye indlæg tillades."
-    autoclosed_enabled_days:
-      zero: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 dag. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} dage. Nye svar er ikke længere tilladt."
-    autoclosed_enabled_hours:
-      zero: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 time. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} timer. Nye svar er ikke længere tilladt."
-    autoclosed_enabled_minutes:
-      zero: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
-      one: "Dette emne blev automatisk lukket efter 1 minut. Nye svar er ikke længere tilladt."
-      other: "Dette emne blev automatisk lukket efter %{count} minutter. Nye svar er ikke længere tilladt."
     autoclosed_disabled: "Dette emne er nu åbnet. Nye svar er tilladt."
     pinned_enabled: "Dette emne er nu fastgjort. Det vil stå i toppen af dets kategori indtil det bliver frigjort af \"staff\" for alle eller af hver bruger individuelt for dem selv."
     pinned_disabled: "Dette emne er nu frigjort. Det optræder ikke længere i toppen af dets kategori."

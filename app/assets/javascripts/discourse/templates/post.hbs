@@ -20,7 +20,7 @@
     <div class='topic-avatar'>
       <div class="contents">
         {{#unless userDeleted}}
-          {{poster-avatar action="expandPostUser" post=this classNames="main-avatar"}}
+          {{poster-avatar post=this classNames="main-avatar"}}
         {{else}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
         {{/unless}}
@@ -30,7 +30,7 @@
 
     <div class='topic-body'>
       <div class='topic-meta-data'>
-        {{poster-name post=this expandAction="expandPostUser"}}
+        {{poster-name post=this}}
         <div class='post-info'>
           <a class='post-date' {{bind-attr href="shareUrl" data-share-url="shareUrl" data-post-number="post_number"}}>{{age-with-tooltip created_at}}</a>
         </div>

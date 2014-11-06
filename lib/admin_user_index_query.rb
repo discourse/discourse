@@ -78,6 +78,7 @@ class AdminUserIndexQuery
                     .includes(:github_user_info)
                     .includes(:google_user_info)
                     .includes(:oauth2_user_info)
+                    .includes(:user_open_ids)
                     .take(100)
   end
 end

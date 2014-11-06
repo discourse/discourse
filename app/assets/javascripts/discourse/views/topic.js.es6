@@ -70,35 +70,6 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
 
   }.on('willDestroyElement'),
 
-  debounceLoadSuggested: Discourse.debounce(function(){
-    if (this.get('isDestroyed') || this.get('isDestroying')) { return; }
-
-    var incoming = this.get('topicTrackingState.newIncoming'),
-        suggested = this.get('topic.details.suggested_topics'),
-        topicId = this.get('topic.id');
-
-    if(suggested) {
-      var existing = _.invoke(suggested, 'get', 'id'),
-          lookup = _.chain(incoming)
-                    .last(Discourse.SiteSettings.suggested_topics)
-                    .reverse()
-                    .union(existing)
-                    .uniq()
-                    .without(topicId)
-                    .first(Discourse.SiteSettings.suggested_topics)
-                    .value();
-
-      Discourse.TopicList.loadTopics(lookup, "").then(function(topics){
-        suggested.clear();
-        suggested.pushObjects(topics);
-      });
-    }
-  }, 1000),
-
-  hasNewSuggested: function(){
-    this.debounceLoadSuggested();
-  }.observes('topicTrackingState.incomingCount'),
-
   gotFocus: function(){
     if (Discourse.get('hasFocus')){
       this.scrolled();

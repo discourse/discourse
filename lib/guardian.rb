@@ -26,6 +26,8 @@ class Guardian
     def email; nil; end
   end
 
+  attr_accessor :can_see_emails
+
   def initialize(user=nil)
     @user = user.presence || AnonymousUser.new
   end
@@ -241,6 +243,10 @@ class Guardian
       @user == Discourse.system_user) &&
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?)
+  end
+
+  def can_see_emails?
+    @can_see_emails
   end
 
   private

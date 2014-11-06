@@ -94,11 +94,11 @@
 
               {{#if websiteName}}
                 <i class="fa fa-globe"></i>
-                  {{#if linkWebsite}}
-                    <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
-                  {{else}}
-                    <span {{bind-attr title="website"}}>{{websiteName}}</span>
-                  {{/if}}
+                {{#if linkWebsite}}
+                  <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                {{else}}
+                  <span {{bind-attr title="website"}}>{{websiteName}}</span>
+                {{/if}}
               {{/if}}
 
               </h3>
@@ -148,6 +148,14 @@
                 {{else}}
                   <button class="btn btn-primary" title="{{i18n admin.users.check_email.title}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n admin.users.check_email.text}}</button>
                 {{/if}}
+              </dd>
+            {{/if}}
+            {{#if custom_groups}}
+              <dt>{{i18n groups.title count=custom_groups.length}}</dt>
+              <dd class='groups'>
+                {{#each custom_groups}}
+                  <span>{{#link-to 'group' this class="group-link"}}{{name}}{{/link-to}}</span>
+                {{/each}}
               </dd>
             {{/if}}
           </dl>

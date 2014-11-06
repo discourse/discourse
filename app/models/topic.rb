@@ -345,8 +345,8 @@ class Topic < ActiveRecord::Base
     custom_fields[key.to_s]
   end
 
-  def self.listable_count_per_day(sinceDaysAgo=30)
-    listable_topics.where('created_at > ?', sinceDaysAgo.days.ago).group('date(created_at)').order('date(created_at)').count
+  def self.listable_count_per_day(start_date, end_date)
+    listable_topics.where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
@@ -421,9 +421,9 @@ class Topic < ActiveRecord::Base
                                           WHEN last_read_post_number > :highest THEN :highest
                                           ELSE last_read_post_number
                                           END,
-                  seen_post_count = CASE
-                                    WHEN seen_post_count > :highest THEN :highest
-                                    ELSE seen_post_count
+                  highest_seen_post_number = CASE
+                                    WHEN highest_seen_post_number > :highest THEN :highest
+                                    ELSE highest_seen_post_number
                                     END
               WHERE topic_id = :topic_id",
               highest: highest_post_number,

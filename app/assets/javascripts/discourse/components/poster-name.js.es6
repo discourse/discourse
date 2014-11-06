@@ -26,7 +26,7 @@ var PosterNameComponent = Em.Component.extend({
         linkClass += ' ' + primaryGroupName;
       }
       // Main link
-      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true'>" + username + "</a>");
+      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true' data-user-card='" + username + "'>" + username + "</a>");
 
       // Add a glyph if we have one
       var glyph = this.posterGlyph(post);
@@ -38,7 +38,7 @@ var PosterNameComponent = Em.Component.extend({
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {
         name = Handlebars.Utils.escapeExpression(name);
-        buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true'>" + name + "</a></span>");
+        buffer.push("<span class='full-name'><a href='" + url + "' data-auto-route='true' data-user-card='" + username  + "'>" + name + "</a></span>");
       }
 
       // User titles
@@ -57,20 +57,6 @@ var PosterNameComponent = Em.Component.extend({
 
       PosterNameComponent.trigger('renderedName', buffer, post);
     }
-  },
-
-  click: function(e) {
-    var $target = $(e.target),
-        href = $target.attr('href'),
-        url = this.get('post.usernameUrl');
-
-    if (!Em.isEmpty(href) && href !== url) {
-      return true;
-    } else  {
-      this.appEvents.trigger('poster:expand', $target);
-      this.sendAction('expandAction', this.get('post'));
-    }
-    return false;
   },
 
   /**

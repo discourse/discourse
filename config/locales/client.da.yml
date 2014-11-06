@@ -824,7 +824,6 @@ da:
         n_posts:
           one: "1 indlæg"
           other: "{{count}} indlæg"
-        cancel: "Se alle indlæg i emnet."
       split_topic:
         title: "Flyt til nyt emne"
         action: "flyt til nyt emne"
@@ -1263,8 +1262,6 @@ da:
           7_days_ago: "7 dage siden"
           30_days_ago: "30 dage siden"
           all: "Alle"
-          view_table: "Vis som tabel"
-          view_chart: "Vis som søjlediagram"
       commits:
         latest_changes: "Seneste ændringer: opdatér ofte!"
         by: "af"

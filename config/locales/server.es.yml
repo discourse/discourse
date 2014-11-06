@@ -924,18 +924,6 @@ es:
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
     closed_enabled: "Este tema está ahora cerrado. No se admiten nuevas respuestas."
     closed_disabled: "Este tema ahora está abierto. Se admiten nuevas respuestas."
-    autoclosed_enabled_days:
-      zero: "Este tema ha sido cerrado automáticamente después de 1 día. No se admiten nuevas respuestas."
-      one: "Este tema ha sido cerrado automáticamente después de 1 día. No se admiten nuevas respuestas."
-      other: "Este tema ha sido cerrado automáticamente después de %{count} días. No se admiten nuevas respuestas."
-    autoclosed_enabled_hours:
-      zero: "Este tema ha sido cerrado automáticamente después de 1 hora. No se admiten nuevas respuestas."
-      one: "Este tema ha sido cerrado automáticamente después de 1 hora. No se admiten nuevas respuestas."
-      other: "Este tema ha sido cerrado automáticamente después de %{count} horas. No se admiten nuevas respuestas."
-    autoclosed_enabled_minutes:
-      zero: "Este tema ha sido cerrado automáticamente después de 1 minuto. No se admiten nuevas respuestas."
-      one: "Este tema ha sido cerrado automáticamente después de 1 minuto. No se admiten nuevas respuestas."
-      other: "Este tema ha sido cerrado automáticamente después de %{count} minutos. No se admiten nuevas respuestas."
     autoclosed_disabled: "El tema ahora está en abierto, se permiten respuestas."
     pinned_enabled: "Este tema ahora está destacado. Aparecerá en primer lugar en la lista de su categoría hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
     pinned_disabled: "Este tema está ahora sin destacar. No aparecerá más en la parte superior de su categoría."

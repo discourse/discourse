@@ -181,9 +181,9 @@ class CookedPostProcessor
     informations = "#{original_width}x#{original_height}"
     informations << " #{number_to_human_size(upload.filesize)}" if upload
 
-    a["title"] = filename
+    a["title"] = img["title"] || filename
 
-    meta.add_child create_span_node("filename", filename)
+    meta.add_child create_span_node("filename", img["title"] || filename)
     meta.add_child create_span_node("informations", informations)
     meta.add_child create_span_node("expand")
   end

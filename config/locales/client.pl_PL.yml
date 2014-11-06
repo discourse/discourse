@@ -300,6 +300,7 @@ pl_PL:
       admin_tooltip: "Ten użytkownik jest administratorem"
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
+      github_profile: "Github"
       mailing_list_mode: "Otrzymuj email z każdym nowym wpisem (o ile nie wyciszysz kategorii lub tematu)."
       watched_categories: "Obserwowane"
       watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach: liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. Dodatkowo będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie."
@@ -366,7 +367,7 @@ pl_PL:
         frequency: "Wyślemy do Ciebie email tylko jeżeli dawno Cię nie widzieliśmy i wyłącznie na temat rzeczy których jeszcze nie widziałeś."
       name:
         title: "Pełna nazwa"
-        instructions: "Pełna wersja twojej nazwy."
+        instructions: "Twoja pełna nazwa (opcjonalna)"
         too_short: "Twoja nazwa jest za krótka."
         ok: "Twoja nazwa jest poprawna."
       username:
@@ -538,8 +539,7 @@ pl_PL:
     created: 'Utworzono'
     created_lowercase: 'utworzono'
     trust_level: 'Poziom zaufania'
-    search_hint: 'nazwa użytkownika lub adres IP'
-    search_hint_admin: 'nazwa użytkownika, email lub IP'
+    search_hint: 'nazwa użytkownika, email lub IP'
     create_account:
       title: "Utwórz konto"
       failed: "Coś poszło nie tak, możliwe, że wybrany adres email jest już zarejestrowany, spróbuj użyć odnośnika przypomnienia hasła"
@@ -924,7 +924,7 @@ pl_PL:
           one: "1 wpis"
           few: "{{count}} wpisy"
           other: "{{count}} wpisów"
-        cancel: "Pokaż ponownie wszystkie wpisy w tym temacie."
+        cancel: "Usuń filtr"
       split_topic:
         title: "Przenieś do nowego tematu"
         action: "przenieś do nowego tematu"
@@ -1250,6 +1250,10 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
+      formatted_name:
+        off_topic: "Jest nie-na-temat"
+        inappropriate: "Jest nieodpowiednie"
+        spam: "Jest odebrane jako spam"
       custom_placeholder_notify_user: "Dlaczego ten wpis wymaga bezpośredniej, prywatnej rozmowy z tym użytkownikiem? Napisz konkretnie, konstuktywnie i kulturalnie."
       custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Daj nam znać co konkretnie Cię zaniepokoiło i dostarcz nam odpowiednie odnośniki jeśli to możliwe."
       custom_message:
@@ -1411,8 +1415,11 @@ pl_PL:
           7_days_ago: "7 dni temu"
           30_days_ago: "30 dni temu"
           all: "Wszystkie"
-          view_table: "Pokaż jako Tabelę"
-          view_chart: "Pokaż jako wykres słupkowy"
+          view_table: "tabela"
+          view_chart: "wykres słupkowy"
+          refresh_report: "Odśwież raport"
+          start_date: "Data początkowa"
+          end_date: "Data końcowa"
       commits:
         latest_changes: "Ostatnie zmiany: aktualizuj często!"
         by: "przez"
@@ -1754,6 +1761,7 @@ pl_PL:
         last_emailed: "Ostatnio wysłano email"
         not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
         active: "Aktywny"
+        show_emails: "Pokaż emaile"
         nav:
           new: "Nowi"
           active: "Aktywni"

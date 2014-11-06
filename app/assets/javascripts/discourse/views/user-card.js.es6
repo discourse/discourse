@@ -6,7 +6,7 @@ var clickOutsideEventName = "mousedown.outside-user-card",
 
 export default Discourse.View.extend(CleansUp, {
   elementId: 'user-card',
-  classNameBindings: ['controller.visible::hidden', 'controller.showBadges'],
+  classNameBindings: ['controller.visible::hidden', 'controller.showBadges', 'controller.hasCardBadgeImage'],
   allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),
 
   addBackground: function() {
@@ -30,8 +30,11 @@ export default Discourse.View.extend(CleansUp, {
     $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
       if (self.get('controller.visible')) {
         var $target = $(e.target);
-        if ($target.closest('.trigger-user-card').length > 0) { return; }
-        if (self.$().has(e.target).length !== 0) { return; }
+        if ($target.closest('[data-user-card]').data('userCard') ||
+            $target.closest('a.mention').length > 0 || 
+            $target.closest('#user-card').length > 0) {
+          return;
+        }
 
         self.get('controller').close();
       }
@@ -39,19 +42,22 @@ export default Discourse.View.extend(CleansUp, {
       return true;
     });
 
+    var expand = function(username, $target){
+      self._posterExpand($target);
+      self.get('controller').show(username, $target[0]);
+      return false;
+    };
+
     $('#main-outlet').on(clickDataExpand, '[data-user-card]', function(e) {
       var $target = $(e.currentTarget);
-      self._posterExpand($target);
-      self.get('controller').show($target.data('user-card'));
-      return false;
+      var username = $target.data('user-card');
+      return expand(username, $target);
     });
 
     $('#main-outlet').on(clickMention, 'a.mention', function(e) {
       var $target = $(e.target);
-      self._posterExpand($target);
       var username = $target.text().replace(/^@/, '');
-      self.get('controller').show(username);
-      return false;
+      return expand(username, $target);
     });
   }.on('didInsertElement'),
 
@@ -67,9 +73,11 @@ export default Discourse.View.extend(CleansUp, {
 
           var overage = ($(window).width() - 50) - (position.left + width);
           if (overage < 0) {
-            position.left += overage;
-            position.top += target.height() + 5;
+            position.left -= (width/2) - 10;
+            position.top += target.height() + 8;
           }
+
+          position.top -= $('#main-outlet').offset().top;
           self.$().css(position);
         }
       }

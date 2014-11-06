@@ -1,4 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
+import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
 export default ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
@@ -8,6 +9,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   selectedPosts: null,
   selectedReplies: null,
   queryParams: ['filter', 'username_filters', 'show_deleted'],
+  searchHighlight: null,
 
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
 
@@ -509,7 +511,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('isPrivateMessage'),
 
   loadingHTML: function() {
-    return "<div class='spinner'></div>";
+    return spinnerHTML;
   }.property(),
 
   recoverTopic: function() {

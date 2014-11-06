@@ -308,7 +308,6 @@ ja:
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        instructions: "フルネーム"
         too_short: "名前が短すぎます。"
         ok: "名前 OK。"
       username:
@@ -818,7 +817,6 @@ ja:
       filters:
         n_posts:
           other: "{{count}} ポスト"
-        cancel: "Show all posts in this topic again."
       split_topic:
         title: "新規トピックに移動"
         action: "新規トピックに移動"
@@ -1229,8 +1227,6 @@ ja:
           7_days_ago: "7日前"
           30_days_ago: "30日前"
           all: "全て"
-          view_table: "テーブル表示"
-          view_chart: "棒グラフ表示"
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"

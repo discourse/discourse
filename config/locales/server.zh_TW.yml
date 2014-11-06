@@ -629,17 +629,6 @@ zh_TW:
     archived_disabled: "此討論話題已被解除封存，即不再凍結，可以修改。"
     closed_enabled: "此討論話題已關閉，不再接受新的回覆。"
     closed_disabled: "此討論話題已開放，可以發表新的回覆。"
-    autoclosed_enabled_days:
-      zero: "本話題在建立 1 天後自動關閉，不允許再增加新的回覆。"
-      one: "本話題在建立 1 天後自動關閉，不允許再增加新的回覆。"
-      other: "本話題在建立 %{count} 天後自動關閉，不允許再增加新的回覆。"
-    autoclosed_enabled_hours:
-      zero: "本話題在建立 1 小時後自動關閉，不允許再增加新的回覆。"
-      one: "本話題在建立 1 小時後自動關閉，不允許再增加新的回覆。"
-      other: "本話題在建立 %{count} 小時後自動關閉，不允許再增加新的回覆。"
-    autoclosed_enabled_minutes:
-      zero: "本話題在建立 1 分鐘後自動關閉，不允許再增加新的回覆。"
-      one: "本話題在建立 1 分鐘後自動關閉，不允許再增加新的回覆。"
     autoclosed_disabled: "此討論話題已開放，可以發表新的回覆。"
     pinned_disabled: "此討論話題已被解除置頂，它將不再顯示在它所屬分類的頂部。"
     pinned_globally_disabled: "本主題已被解除置頂，它將不再置頂於所屬分類"

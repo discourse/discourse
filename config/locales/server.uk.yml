@@ -476,18 +476,6 @@ uk:
     archived_disabled: "Цю тему тепер розархівовано. Вона більше не заморожена, і її можна змінювати."
     closed_enabled: "Цю тему закрито. Нові відповіді заборонено."
     closed_disabled: "Цю тему відкрито. Нові відповіді дозволено."
-    autoclosed_enabled_days:
-      zero: "Ця тема була автоматично закрита через 1 день. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 day. New replies are no longer allowed."
-    autoclosed_enabled_hours:
-      zero: "Ця тема була автоматично закрита через 1 годину. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
-    autoclosed_enabled_minutes:
-      zero: "Ця тема була автоматично закрита через 1 хвилину. Нові відповіді більше не дозволяються."
-      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
-      other: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
     autoclosed_disabled: "Тепер ця тема відкрита. Дозволено нові відповіді."
     pinned_disabled: "Тепер цю тему відкріплено. Вона більше не з'являтиметься вгорі своєї категорії."
   login:

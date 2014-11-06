@@ -39,6 +39,9 @@ td.flaggers td {
     }
   }
 
+  .view-options {
+    float: right;
+  }
   table.report {
     margin-top: 20px;
     tr {
@@ -87,6 +90,10 @@ td.flaggers td {
 
 .admin-container {
   margin-top: 20px;
+}
+
+.admin-title {
+  height: 45px;
 }
 
 .admin-controls {

@@ -99,7 +99,7 @@ class CategoriesController < ApplicationController
     category_id = params[:category_id].to_i
     notification_level = params[:notification_level].to_i
 
-    CategoryUser.set_notification_level_for_category(current_user, notification_level , category_id)
+    CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
     render json: success_json
   end
 

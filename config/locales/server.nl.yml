@@ -711,18 +711,6 @@ nl:
     archived_disabled: "Deze topic is niet langer gearchiveerd en kan weer veranderd worden."
     closed_enabled: "Deze topic is nu gesloten. Nieuwe reacties worden niet langer geaccepteerd."
     closed_disabled: "Deze topic is nu geopend. Nieuwe reacties worden weer geaccepteerd."
-    autoclosed_enabled_days:
-      zero: "Deze topic is automatisch na 1 dag gesloten. Reageren is niet meer mogelijk."
-      one: "Deze topic is automatisch na 1 dag gesloten. Reageren is niet meer mogelijk."
-      other: "Deze topic is automatisch na %{count} dagen gesloten. Reageren is niet meer mogelijk."
-    autoclosed_enabled_hours:
-      zero: "Deze topic is automatisch na 1 uur gesloten. Reageren is niet meer mogelijk."
-      one: "Deze topic is automatisch na 1 uur gesloten. Reageren is niet meer mogelijk."
-      other: "Deze topic is automatisch na %{count} uren gesloten. Reageren is niet meer mogelijk."
-    autoclosed_enabled_minutes:
-      zero: "Deze topic is automatisch na 1 minuut gesloten. Reageren is niet meer mogelijk."
-      one: "Deze topic is automatisch na 1 minuut gesloten. Reageren is niet meer mogelijk."
-      other: "Deze topic is automatisch na %{count} minuten gesloten. Reageren is niet meer mogelijk."
     autoclosed_disabled: "Deze topic is geopend. Reageren is mogelijk."
     pinned_enabled: "Deze topic is nu vastgepind en zal bovenaan de categorie verschijnen totdat de pin door de staf voor iedereen of een gebruiker voor zichzelf verwijderd wordt."
     pinned_disabled: "Deze topic is niet langer gepind en zal niet meer bovenaan de lijst van topics in zijn categorie staan."

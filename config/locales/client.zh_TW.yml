@@ -318,7 +318,6 @@ zh_TW:
         frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
-        instructions: "您的全名。"
         too_short: "你的名稱太短。"
         ok: "你的名稱符合要求。"
       username:
@@ -482,8 +481,6 @@ zh_TW:
     created: '已建立'
     created_lowercase: '已建立'
     trust_level: '信任等級'
-    search_hint: '用戶名稱或 IP 位址'
-    search_hint_admin: '用戶名稱、電子郵件、或 IP 位址'
     create_account:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
@@ -833,7 +830,6 @@ zh_TW:
       filters:
         n_posts:
           other: "{{count}} 則文章"
-        cancel: "再次顯示此討論話題的所有文章。"
       split_topic:
         title: "移至新討論話題"
         action: "移至新討論話題"
@@ -1256,8 +1252,6 @@ zh_TW:
           7_days_ago: "7 天前"
           30_days_ago: "30 天前"
           all: "全部"
-          view_table: "以數字檢視"
-          view_chart: "以直條圖檢視"
       commits:
         latest_changes: "最近的變更：請經常更新！"
         by: "由"

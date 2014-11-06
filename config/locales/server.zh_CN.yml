@@ -603,6 +603,7 @@ zh_CN:
     summary_posts_required: "在一个主题启用'摘要模式'的最小帖子数量"
     summary_likes_required: "在一个主题启用'摘要模式'的最小赞的数量"
     summary_percent_filter: "当用户点击摘要，显示前 % 几的帖子"
+    summary_max_results: "“概括主题”返回的最大帖子数量"
     enable_private_messages: "允许信任等级1的用户创建私信或者以私信回复"
     enable_long_polling: "启用 Message bus 使通知功能可以使用长轮询（long polling）"
     long_polling_base_url: "长轮询的基本 URL（当用 CDN 分发动态能让时，请设置此至原始拉取地址）例如：http://origin.site.com"
@@ -707,7 +708,7 @@ zh_CN:
     max_flags_per_day: "每个用户每天能标记的数量的最大值。"
     max_bookmarks_per_day: "每个用户每天能做书签数量的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
-    max_stars_per_day: "每个用户每天能心标的主题数量的最大值。"
+    max_stars_per_day: "每个用户每天能星标的主题数量的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_private_messages_per_day: "每个用户每天能发私信数量的最大值。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
@@ -903,18 +904,19 @@ zh_CN:
     closed_enabled: "本主题已关闭，不再接受新的回复。"
     closed_disabled: "本主题已开放，可以发表新的回复。"
     autoclosed_enabled_days:
-      zero: "本主题为创建 1 天后自动关闭，不允许添加新的回复。"
-      one: "本主题为创建 1 天后自动关闭，不允许添加新的回复。"
-      other: "本主题为创建 %{count} 天后自动关闭。不允许添加新回复。"
+      other: "本主题在创建 %{count} 天后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_hours:
-      zero: "本主题为创建 1 小时后自动关闭，不允许添加新的回复。"
-      one: "本主题为创建 1 小时后自动关闭，不允许添加新的回复。"
-      other: "本主题为创建 %{count} 小时后自动关闭。不允许添加新回复。"
+      other: "本主题在创建 %{count} 小时后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_minutes:
-      zero: "本主题为创建 1 分钟后自动关闭，不允许添加新的回复。"
-      one: "本主题为创建 1 分钟后自动关闭，不允许添加新的回复。"
-      other: "本主题为创建 %{count} 分钟后自动关闭。不允许添加新回复。"
+      other: "本主题在创建 %{count} 分钟后自动关闭。不再允许添加新回复。"
+    autoclosed_enabled_lastpost_days:
+      other: "本主题在最后一个回复创建后 %{count} 天后自动关闭。不再允许添加新回复。"
+    autoclosed_enabled_lastpost_hours:
+      other: "本主题在最后一个回复创建后 %{count} 小时后自动关闭。不再允许添加新回复。"
+    autoclosed_enabled_lastpost_minutes:
+      other: "本主题在最后一个回复创建后 %{count} 分钟后自动关闭。不再允许添加新回复。"
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
+    autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"
     pinned_disabled: "本主题已被解除置顶，它将不再显示在它所属分类的顶部。"
     pinned_globally_enabled: "本主题已全局置顶，它将始终显示在它所属分类的顶部。可由职员对所有人解除置顶，或者由用户自己取消置顶。"

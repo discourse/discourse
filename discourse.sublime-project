@@ -12,6 +12,7 @@
       "file_exclude_patterns": ["*.sqlite3"]
     },
     { "path": "lib" },
+    { "path": "plugins" },
     { "path": "script" },
     { "path": "spec" },
     { "path": "test",

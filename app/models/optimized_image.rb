@@ -31,9 +31,15 @@ class OptimizedImage < ActiveRecord::Base
         extension = File.extname(original_path)
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
-        original_path += "[0]" unless opts[:allow_animation]
 
-        if resize(original_path, temp_path, width, height)
+        if extension =~ /\.svg$/i
+          FileUtils.cp(original_path, temp_path)
+          resized = true
+        else
+          resized = resize(original_path, temp_path, width, height, opts[:allow_animation])
+        end
+
+        if resized
           thumbnail = OptimizedImage.create!(
             upload_id: upload.id,
             sha1: Digest::SHA1.file(temp_path).hexdigest,
@@ -72,7 +78,8 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.resize(from, to, width, height)
+  def self.resize(from, to, width, height, allow_animation=false)
+    from << "[0]" unless allow_animation
     # NOTE: ORDER is important!
     instructions = %W{
       #{from}
