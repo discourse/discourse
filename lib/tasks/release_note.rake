@@ -5,6 +5,7 @@ task "release_note:generate", :tag do |t, args|
   bug_fixes = Set.new
   new_features = Set.new
   ux_changes = Set.new
+  sec_changes = Set.new
 
 
   `git log #{tag}..HEAD`.each_line do |comment|
@@ -16,6 +17,8 @@ task "release_note:generate", :tag do |t, args|
         new_features << better(line)
       elsif line =~ /^UX:/
         ux_changes << better(line)
+      elsif line =~ /^SECURITY:/
+        sec_changes << better(line)
       end
     end
   end
@@ -23,6 +26,7 @@ task "release_note:generate", :tag do |t, args|
   puts "NEW FEATURES:", "-------------", "", new_features.to_a, ""
   puts "BUG FIXES:", "----------", "", bug_fixes.to_a, ""
   puts "UX CHANGES:", "-----------", "", ux_changes.to_a, ""
+  puts "SECURITY CHANGES:", "-----------------", "", sec_changes.to_a, ""
 end
 
 def better(line)
@@ -46,7 +50,7 @@ end
 
 def split_comments(text)
   text = normalize_terms(text)
-  terms = ["FIX:", "FEATURE:", "UX:"]
+  terms = ["FIX:", "FEATURE:", "UX:", "SECURITY:"]
   terms.each do |term|
     text = newlines_at_term(text, term)
   end
