@@ -282,26 +282,26 @@
         width: 100%;
         position: relative;
         float: left;
-        color: dark-light-diff($secondary, $primary, 75%, 0%);
+        color: $secondary;
 
         h1 {font-weight: bold;}
 
         .primary-textual {
           padding: 3px;
           a[href] {
-            color: dark-light-diff($secondary, $primary, 75%, -10%);
+            color: $secondary;
 
           }
         }
 
         .bio {
-          color: dark-light-diff($secondary, $primary, 75%, 0%);
+          color: $secondary;
           max-height: 300px;
           overflow: auto;
           max-width: 750px;
 
           a.mention {
-            background-color: dark-light-diff($secondary, $primary, 50%, -60%);
+            background-color: dark-light-diff($secondary, $primary, 20%, -50%);
           }
 
           a[href] {
