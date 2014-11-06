@@ -1833,6 +1833,7 @@ en:
             check_email: "check email"
             delete_topic: "delete topic"
             delete_post: "delete post"
+            impersonate: "impersonate"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
