@@ -4,6 +4,9 @@
   button {
     margin: 0 5px 5px 0;
     min-width: 180px;
+    &:lang(zh_CN) {
+      min-width: 200px;
+    }
   }
   margin-top: 10px;
   margin-bottom: 20px;
