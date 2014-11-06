@@ -68,7 +68,7 @@
         background-color: $secondary;
     }
     &.highlighted {
-      background-color: scale-color($tertiary, $lightness: 85%);
+        background-color: dark-light-diff($tertiary, $secondary, 90%, -41%);
     }
   }
   button.bulk-select {
