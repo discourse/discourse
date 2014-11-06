@@ -73,8 +73,8 @@ export default Discourse.View.extend(CleansUp, {
 
           var overage = ($(window).width() - 50) - (position.left + width);
           if (overage < 0) {
-            position.left += overage;
-            position.top += target.height() + 5;
+            position.left -= (width/2) - 10;
+            position.top += target.height() + 8;
           }
 
           position.top -= $('#main-outlet').offset().top;
