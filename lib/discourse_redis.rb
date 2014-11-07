@@ -49,6 +49,10 @@ class DiscourseRedis
     self.class.url(@config)
   end
 
+  def db
+    @config['db']
+  end
+
   # prefix the key with the namespace
   def method_missing(meth, *args, &block)
     if @redis.respond_to?(meth)
