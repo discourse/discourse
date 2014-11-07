@@ -22,7 +22,7 @@ before_install:
 
 before_script:
   - psql -c 'create database discourse_test;' -U postgres
-  - bundle exec rake db:schema:load
+  - bundle exec rake db:migrate
 
 bundler_args: --without development --deployment
 
