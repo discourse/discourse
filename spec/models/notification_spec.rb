@@ -40,7 +40,7 @@ describe Notification do
         lambda {
           reply = Fabricate(:basic_reply, user: post.user, topic: post.topic)
           process_alerts(reply)
-        }.should_not change(post.user.notifications, :count).by(1)
+        }.should_not change(post.user.notifications, :count)
       end
     end
 
