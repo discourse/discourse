@@ -377,7 +377,7 @@ posting:
     default: 10000
   default_code_lang:
     client: true
-    default: "lang-auto"
+    default: "auto"
   warn_reviving_old_topic_age: 180
   autohighlight_all_code:
     client: true

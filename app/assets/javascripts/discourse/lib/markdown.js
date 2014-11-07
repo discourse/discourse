@@ -1,4 +1,4 @@
-/*global Markdown:true, hljs:true */
+/*global Markdown:true */
 
 /**
   Contains methods to help us with markdown formatting.
@@ -7,10 +7,44 @@
   @namespace Discourse
   @module Discourse
 **/
-var _validClasses = {},
-    _validIframes = [],
-    _validTags = {},
-    _decoratedCaja = false;
+
+/**
+ * An object mapping from HTML tag names to an object mapping the valid
+ * attributes on that tag to an array of permitted values.
+ *
+ * The permitted values can be strings or regexes.
+ *
+ * The pseduo-attribute 'data-*' can be used to validate any data-foo
+ * attributes without any specified validations.
+ *
+ * Code can insert into this map by calling Discourse.Markdown.whiteListTag().
+ *
+ * Example:
+ *
+ * <pre><code>
+ * {
+ *   a: {
+ *     href: ['*'],
+ *     data-mention-id: [/^\d+$/],
+ *     ...
+ *   },
+ *   code: {
+ *     class: ['ada', 'haskell', 'c', 'cpp', ... ]
+ *   },
+ *   ...
+ * }
+ * </code></pre>
+ *
+ * @private
+ */
+var _validTags = {};
+/**
+ * Classes valid on all elements. Map from class name to 'true'.
+ * @private
+ */
+var _validClasses = {};
+var _validIframes = [];
+var _decoratedCaja = false;
 
 function validateAttribute(tagName, attribName, value) {
   var tag = _validTags[tagName];
@@ -18,18 +52,17 @@ function validateAttribute(tagName, attribName, value) {
   // Handle classes
   if (attribName === "class") {
     if (_validClasses[value]) { return value; }
+  }
 
-    if (tag) {
-      var classes = tag['class'];
-      if (classes && (classes.indexOf(value) !== -1 || classes.indexOf('*') !== -1)) {
-        return value;
-      }
-    }
-  } else if (attribName.indexOf('data-') === 0) {
-    // data-* attributes
-    if (tag) {
-      var allowed = tag[attribName] || tag['data-*'];
-      if (allowed && (allowed === value || allowed.indexOf('*') !== -1)) { return value; }
+  if (attribName.indexOf('data-') === 0) {
+    // data-* catch-all validators
+    if (tag && tag['data-*'] && !tag[attribName]) {
+      var permitted = tag['data-*'];
+      if (permitted && (
+            permitted.indexOf(value) !== -1 ||
+            permitted.indexOf('*') !== -1 ||
+            ((permitted instanceof RegExp) && permitted.test(value)))
+        ) { return value; }
     }
   }
 
@@ -37,21 +70,40 @@ function validateAttribute(tagName, attribName, value) {
     var attrs = tag[attribName];
     if (attrs && (attrs.indexOf(value) !== -1 ||
                   attrs.indexOf('*') !== -1) ||
-                  _.any(attrs,function(r){return (r instanceof RegExp) && value.search(r) >= 0;})
+                  _.any(attrs, function(r) { return (r instanceof RegExp) && r.test(value); })
         ) { return value; }
   }
+
+  // return undefined;
+}
+
+function anchorRegexp(regex) {
+  if (/^\^.*\$$/.test(regex.source)) {
+    return regex; // already anchored
+  }
+
+  var flags = "";
+  if (regex.global) { throw "Invalid attribute validation regex - cannot be global"; }
+  if (regex.ignoreCase) { flags += "i"; }
+  if (regex.multiline) { flags += "m"; }
+  if (regex.sticky) { throw "Invalid attribute validation regex - cannot be sticky"; }
+
+  return new RegExp("^" + regex.source + "$", flags);
 }
 
 Discourse.Markdown = {
 
   /**
-    Whitelist class for only a certain tag
+    Add to the attribute whitelist for a certain HTML tag.
 
-    @param {String} tagName to whitelist
-    @param {String} attribName to whitelist
-    @param {String} value to whitelist
+    @param {String} tagName tag to whitelist the attr for
+    @param {String} attribName attr to whitelist for the tag
+    @param {String | RegExp} [value] whitelisted value for the attribute
   **/
   whiteListTag: function(tagName, attribName, value) {
+    if (value instanceof RegExp) {
+      value = anchorRegexp(value);
+    }
     _validTags[tagName] = _validTags[tagName] || {};
     _validTags[tagName][attribName] = _validTags[tagName][attribName] || [];
     _validTags[tagName][attribName].push(value || '*');
@@ -238,25 +290,18 @@ Discourse.Markdown = {
 RSVP.EventTarget.mixin(Discourse.Markdown);
 
 Discourse.Markdown.whiteListTag('a', 'class', 'attachment');
-Discourse.Markdown.whiteListTag('a', 'target', '_blank');
 Discourse.Markdown.whiteListTag('a', 'class', 'onebox');
 Discourse.Markdown.whiteListTag('a', 'class', 'mention');
 
+Discourse.Markdown.whiteListTag('a', 'target', '_blank');
+Discourse.Markdown.whiteListTag('a', 'rel', 'nofollow');
 Discourse.Markdown.whiteListTag('a', 'data-bbcode');
 Discourse.Markdown.whiteListTag('a', 'name');
 
-Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*/i);
+Discourse.Markdown.whiteListTag('img', 'src', /^data:image.*$/i);
 
 Discourse.Markdown.whiteListTag('div', 'class', 'title');
 Discourse.Markdown.whiteListTag('div', 'class', 'quote-controls');
-
-// explicitly whitelist classes we need allowed through for
-// syntax highlighting, grabbed from highlight.js
-hljs.listLanguages().forEach(function (language) {
-  Discourse.Markdown.whiteListTag('code', 'class', language);
-});
-Discourse.Markdown.whiteListTag('code', 'class', 'text');
-Discourse.Markdown.whiteListTag('code', 'class', 'lang-auto');
 
 Discourse.Markdown.whiteListTag('span', 'class', 'mention');
 Discourse.Markdown.whiteListTag('span', 'class', 'spoiler');
