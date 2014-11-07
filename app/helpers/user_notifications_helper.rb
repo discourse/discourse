@@ -68,10 +68,17 @@ module UserNotificationsHelper
     return "" if category.uncategorized? && !opts[:show_uncategorized]
 
     result = ""
-    if category.parent_category.present?
-      result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</span>"
+
+    if opts[:only_stripe]
+      result << "<span style='background-color: ##{category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</span>"
+      result << "<span style='font-size: 12px; font-weight: bold; margin-left: 3px;'>#{category.name}</span>"
+    else
+      if category.parent_category.present?
+        result << "<span style='background-color: ##{category.parent_category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</span>"
+      end
+      result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0; white-space:nowrap;'>#{category.name}</span>"
     end
-    result << "<span style='background-color: ##{category.color}; color: ##{category.text_color}; font-size: 12px; padding: 4px 6px; font-weight: bold; margin: 0; white-space:nowrap;'>#{category.name}</span>"
+
     result.html_safe
   end
 end
