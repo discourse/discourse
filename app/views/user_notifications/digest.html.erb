@@ -56,7 +56,9 @@
         <p><%= t('user_notifications.digest.more_topics_category', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
         <div>
         <%- @new_by_category.each do |c| %>
-          <span style="margin-bottom: 8px; margin-right: 10px; display: inline-block;"><%= email_category(c[0], show_uncategorized: true) %> x <%= c[1] %></span>
+          <span style='white-space: nowrap'>
+            <b><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
+          </span>
         <%- end %>
       </div>
       <%- else %>
