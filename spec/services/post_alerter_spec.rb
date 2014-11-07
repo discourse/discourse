@@ -28,7 +28,7 @@ describe PostAlerter do
       topic = create_post_with_alerts.topic
       lambda {
         Fabricate(:post, topic: topic, user: topic.user, raw: '[quote="Bruce Wayne, post:1"]whatup[/quote]')
-      }.should_not change(topic.user.notifications, :count).by(1)
+      }.should_not change(topic.user.notifications, :count)
     end
   end
 
@@ -76,7 +76,7 @@ describe PostAlerter do
       mention_post
       lambda {
         create_post_with_alerts(user: user, raw: 'second post', topic: topic)
-      }.should_not change(user.notifications, :count).by(1)
+      }.should_not change(user.notifications, :count)
     end
 
   end
