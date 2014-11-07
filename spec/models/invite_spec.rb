@@ -366,7 +366,7 @@ describe Invite do
 
       invites = Invite.find_redeemed_invites_from(inviter)
 
-      expect(invites).to have(1).items
+      invites.size.should == 1
       expect(invites.first).to eq redeemed_invite
     end
   end

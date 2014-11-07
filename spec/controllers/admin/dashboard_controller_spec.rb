@@ -60,7 +60,7 @@ describe Admin::DashboardController do
         it 'returns an empty array' do
           xhr :get, :problems
           json = JSON.parse(response.body)
-          json['problems'].should have(0).problems
+          json['problems'].size.should == 0
         end
       end
 
@@ -72,7 +72,7 @@ describe Admin::DashboardController do
         it 'returns an array of strings' do
           xhr :get, :problems
           json = JSON.parse(response.body)
-          json['problems'].should have(2).problems
+          json['problems'].size.should == 2
           json['problems'][0].should be_a(String)
           json['problems'][1].should be_a(String)
         end
