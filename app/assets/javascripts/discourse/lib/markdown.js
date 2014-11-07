@@ -84,7 +84,6 @@ function anchorRegexp(regex) {
 
   var flags = "";
   if (regex.global) {
-    flags += "g";
     if (typeof console !== 'undefined') {
       console.warn("attribute validation regex should not be global");
     }
