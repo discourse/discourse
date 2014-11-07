@@ -1,4 +1,4 @@
-/*global Markdown:true */
+/*global Markdown, console */
 
 /**
   Contains methods to help us with markdown formatting.
@@ -83,7 +83,13 @@ function anchorRegexp(regex) {
   }
 
   var flags = "";
-  if (regex.global) { throw "Invalid attribute validation regex - cannot be global"; }
+  if (regex.global) {
+    flags += "g";
+    if (typeof console !== 'undefined') {
+      console.warn("attribute validation regex should not be global");
+    }
+  }
+
   if (regex.ignoreCase) { flags += "i"; }
   if (regex.multiline) { flags += "m"; }
   if (regex.sticky) { throw "Invalid attribute validation regex - cannot be sticky"; }
