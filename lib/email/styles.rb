@@ -18,7 +18,8 @@ module Email
     def add_styles(node, new_styles)
       existing = node['style']
       if existing.present?
-        node['style'] = "#{existing}; #{new_styles}"
+        # merge styles
+        node['style'] = "#{new_styles}; #{existing}"
       else
         node['style'] = new_styles
       end
