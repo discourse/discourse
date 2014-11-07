@@ -54,7 +54,7 @@ class UserNotifications < ActionMailer::Base
       featured_topic_ids = @featured_topics.map(&:id)
 
       @new_topics_since_seen = Topic.new_since_last_seen(user, min_date, featured_topic_ids).count
-      if @new_topics_since_seen > 1000
+      if @new_topics_since_seen > SiteSetting.digest_topics
         category_counts = Topic.new_since_last_seen(user, min_date, featured_topic_ids).group(:category_id).count
 
         @new_by_category = []
