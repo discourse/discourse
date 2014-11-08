@@ -52,16 +52,16 @@ module Jobs
       end
 
       def get_user_fields(user)
-        csv_user_attrs = ['id','name','username','email','created_at']
-        csv_user_stats_attr = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
+        csv_user_attrs = ['id','name','username','email','title','created_at']
+        csv_user_stats = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
         user_array = []
 
-        csv_user_attrs.each do |user_attr|
-          user_array.push(user.attributes[user_attr])
+        csv_user_attrs.each do |attr|
+          user_array.push(user.attributes[attr])
         end
 
-        csv_user_stats_attr.each do |user_stat_attr|
-          user_array.push(user.user_stat.attributes[user_stat_attr])
+        csv_user_stats.each do |stat|
+          user_array.push(user.user_stat.attributes[stat])
         end
 
         return user_array
