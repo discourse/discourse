@@ -414,7 +414,7 @@ en:
   activation:
     action: "Activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed! You will now be redirected to the home page."
+    please_continue: "Your new account is confirmed; you will be redirected to the home page."
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
