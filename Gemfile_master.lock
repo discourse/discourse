@@ -1,63 +1,64 @@
 GIT
-  remote: https://github.com/rails/actionpack-action_caching.git
-  revision: a9f3f09477b12b51faa6756005eee4103f7f4030
+  remote: git://github.com/rails-api/active_model_serializers.git
+  revision: b6b01d0b7396f3deaa6e661cedf4bc5efe2f4525
+  branch: 0-8-stable
   specs:
-    actionpack-action_caching (1.1.0)
-      actionpack (>= 4.0.0, < 5.0)
+    active_model_serializers (0.8.2)
+      activemodel (>= 3.0)
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 316962d0922992fbe756521bd7c94a751aa1253e
+  revision: aa6637d140c2ebd28bbd23fc250af033a065dbe8
   specs:
-    actionmailer (4.2.0.beta1)
-      actionpack (= 4.2.0.beta1)
-      actionview (= 4.2.0.beta1)
-      activejob (= 4.2.0.beta1)
+    actionmailer (4.2.0.beta4)
+      actionpack (= 4.2.0.beta4)
+      actionview (= 4.2.0.beta4)
+      activejob (= 4.2.0.beta4)
       mail (~> 2.5, >= 2.5.4)
-      rails-dom-testing (~> 1.0, >= 1.0.2)
-    actionpack (4.2.0.beta1)
-      actionview (= 4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
+      rails-dom-testing (~> 1.0, >= 1.0.4)
+    actionpack (4.2.0.beta4)
+      actionview (= 4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
       rack (~> 1.6.0.beta)
       rack-test (~> 0.6.2)
-      rails-dom-testing (~> 1.0, >= 1.0.2)
-      rails-html-sanitizer (~> 1.0)
-    actionview (4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
+      rails-dom-testing (~> 1.0, >= 1.0.4)
+      rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    actionview (4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
       builder (~> 3.1)
       erubis (~> 2.7.0)
-      rails-dom-testing (~> 1.0, >= 1.0.2)
-      rails-html-sanitizer (~> 1.0)
-    activejob (4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
-      globalid (>= 0.2.3)
-    activemodel (4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
+      rails-dom-testing (~> 1.0, >= 1.0.4)
+      rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    activejob (4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
+      globalid (>= 0.3.0)
+    activemodel (4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
       builder (~> 3.1)
-    activerecord (4.2.0.beta1)
-      activemodel (= 4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
-      arel (>= 6.0.0.beta1, < 6.1)
-    activesupport (4.2.0.beta1)
+    activerecord (4.2.0.beta4)
+      activemodel (= 4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
+      arel (>= 6.0.0.beta2, < 6.1)
+    activesupport (4.2.0.beta4)
       i18n (>= 0.7.0.beta1, < 0.8)
       json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    rails (4.2.0.beta1)
-      actionmailer (= 4.2.0.beta1)
-      actionpack (= 4.2.0.beta1)
-      actionview (= 4.2.0.beta1)
-      activejob (= 4.2.0.beta1)
-      activemodel (= 4.2.0.beta1)
-      activerecord (= 4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
+    rails (4.2.0.beta4)
+      actionmailer (= 4.2.0.beta4)
+      actionpack (= 4.2.0.beta4)
+      actionview (= 4.2.0.beta4)
+      activejob (= 4.2.0.beta4)
+      activemodel (= 4.2.0.beta4)
+      activerecord (= 4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
       bundler (>= 1.3.0, < 2.0)
-      railties (= 4.2.0.beta1)
+      railties (= 4.2.0.beta4)
       sprockets-rails (~> 3.0.0.beta1)
-    railties (4.2.0.beta1)
-      actionpack (= 4.2.0.beta1)
-      activesupport (= 4.2.0.beta1)
+    railties (4.2.0.beta4)
+      actionpack (= 4.2.0.beta4)
+      activesupport (= 4.2.0.beta4)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
 
@@ -79,16 +80,13 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    active_model_serializers (0.8.2)
-      activemodel (>= 3.0)
+    actionpack-action_caching (1.1.1)
+      actionpack (>= 4.0.0, < 5.0)
     addressable (2.3.6)
-    airbrake (3.1.2)
-      activesupport
-      builder
     annotate (2.6.5)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
-    arel (6.0.0.beta1)
+    arel (6.0.0.beta2)
     barber (0.4.2)
       ember-source
       execjs
@@ -114,25 +112,25 @@ GEM
       dotenv-deployment (~> 0.0.2)
     dotenv-deployment (0.0.2)
     email_reply_parser-discourse (0.6)
-    ember-data-source (1.0.0.beta.9)
+    ember-data-source (0.14)
       ember-source
-    ember-rails (0.15.0)
+    ember-rails (0.14.1)
       active_model_serializers
       barber (>= 0.4.1)
-      ember-data-source (>= 1.0.0.beta.5)
-      ember-source (>= 1.1.0)
+      ember-data-source
+      ember-source
       execjs (>= 1.2)
-      handlebars-source (> 1.0.0)
+      handlebars-source
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
     ember-source (1.6.0.beta.2)
       handlebars-source (~> 1.0)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    excon (0.39.5)
+    excon (0.39.6)
     execjs (2.2.1)
     exifr (1.1.3)
-    fabrication (2.11.3)
+    fabrication (2.9.8)
     fakeweb (1.3.0)
     faraday (0.9.0)
       multipart-post (>= 1.2, < 3)
@@ -146,7 +144,7 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.6.3)
       addressable (~> 2.3, >= 2.3.5)
-    ffi (1.9.3)
+    ffi (1.9.5)
     flamegraph (0.0.5)
       fast_stack
     fog (1.22.1)
@@ -155,7 +153,7 @@ GEM
       fog-json
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
-    fog-brightbox (0.5.0)
+    fog-brightbox (0.5.1)
       fog-core (~> 1.22)
       fog-json
       inflecto
@@ -176,7 +174,7 @@ GEM
     gctools (0.2.3)
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
-    globalid (0.2.3)
+    globalid (0.3.0)
       activesupport (>= 4.1.0)
     guess_html_encoding (0.0.9)
     handlebars-source (1.3.0)
@@ -205,7 +203,7 @@ GEM
     librarian (0.1.2)
       highline
       thor (~> 0.15)
-    libv8 (3.16.14.3)
+    libv8 (3.16.14.7)
     listen (0.7.3)
     logster (0.1.6)
     loofah (2.0.1)
@@ -215,15 +213,15 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     memory_profiler (0.0.4)
-    message_bus (0.9.5)
+    message_bus (1.0.5)
       eventmachine
       rack (>= 1.1.3)
       redis
     metaclass (0.0.4)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mini_portile (0.6.0)
-    minitest (5.4.1)
+    mini_portile (0.6.1)
+    minitest (5.4.2)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mock_redis (0.13.2)
@@ -237,8 +235,8 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.9.1)
     netrc (0.7.7)
-    nokogiri (1.6.3.1)
-      mini_portile (= 0.6.0)
+    nokogiri (1.6.4.1)
+      mini_portile (~> 0.6.0)
     nokogumbo (1.1.12)
       nokogiri
     oauth (0.4.7)
@@ -274,7 +272,7 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    onebox (1.4.9)
+    onebox (1.5.3)
       moneta (~> 0.7)
       multi_json (~> 1.7)
       mustache (~> 0.99)
@@ -293,7 +291,7 @@ GEM
       pry (>= 0.9.10, < 0.11.0)
     pry-rails (0.3.2)
       pry (>= 0.9.10)
-    puma (2.9.0)
+    puma (2.9.1)
       rack (>= 1.1, < 2.0)
     qunit-rails (0.0.7)
       railties
@@ -307,13 +305,13 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails-deprecated_sanitizer (1.0.2)
+    rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.2)
-      activesupport
+    rails-dom-testing (1.0.4)
+      activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
-    rails-html-sanitizer (1.0.0)
+    rails-html-sanitizer (1.0.1)
       loofah (~> 2.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
@@ -338,29 +336,28 @@ GEM
       netrc (~> 0.7)
     rinku (1.7.3)
     rmmseg-cpp (0.2.9)
-    rspec (3.0.0)
-      rspec-core (~> 3.0.0)
-      rspec-expectations (~> 3.0.0)
-      rspec-mocks (~> 3.0.0)
-    rspec-core (3.0.4)
-      rspec-support (~> 3.0.0)
-    rspec-expectations (3.0.4)
-      diff-lcs (>= 1.2.0, < 2.0)
-      rspec-support (~> 3.0.0)
+    rspec (2.99.0)
+      rspec-core (~> 2.99.0)
+      rspec-expectations (~> 2.99.0)
+      rspec-mocks (~> 2.99.0)
+    rspec-collection_matchers (1.0.0)
+      rspec-expectations (>= 2.99.0.beta1)
+    rspec-core (2.99.2)
+    rspec-expectations (2.99.2)
+      diff-lcs (>= 1.1.3, < 2.0)
     rspec-given (3.5.4)
       given_core (= 3.5.4)
       rspec (>= 2.12)
-    rspec-mocks (3.0.4)
-      rspec-support (~> 3.0.0)
-    rspec-rails (3.0.2)
+    rspec-mocks (2.99.2)
+    rspec-rails (2.99.0)
       actionpack (>= 3.0)
+      activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-core (~> 3.0.0)
-      rspec-expectations (~> 3.0.0)
-      rspec-mocks (~> 3.0.0)
-      rspec-support (~> 3.0.0)
-    rspec-support (3.0.4)
+      rspec-collection_matchers
+      rspec-core (~> 2.99.0)
+      rspec-expectations (~> 2.99.0)
+      rspec-mocks (~> 2.99.0)
     rtlit (0.0.5)
     ruby-openid (2.5.0)
     ruby-readability (0.7.0)
@@ -370,7 +367,7 @@ GEM
       crass (~> 0.2.0)
       nokogiri (>= 1.4.4)
       nokogumbo (= 1.1.12)
-    sass (3.4.2)
+    sass (3.2.19)
     seed-fu (2.3.3)
       activerecord (>= 3.1, < 4.2)
       activesupport (>= 3.1, < 4.2)
@@ -380,16 +377,16 @@ GEM
     shoulda-context (1.2.1)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
-    sidekiq (3.2.3)
-      celluloid (>= 0.15.2)
+    sidekiq (3.2.5)
+      celluloid (= 0.15.2)
       connection_pool (>= 2.0.0)
       json
       redis (>= 3.0.6)
       redis-namespace (>= 1.3.1)
     simple-rss (1.3.1)
-    simplecov (0.9.0)
+    simplecov (0.9.1)
       docile (~> 1.1.0)
-      multi_json
+      multi_json (~> 1.0)
       simplecov-html (~> 0.8.0)
     simplecov-html (0.8.0)
     sinatra (1.4.5)
@@ -402,7 +399,7 @@ GEM
     spork-rails (4.0.0)
       rails (>= 3.0.0, < 5)
       spork (>= 1.0rc0)
-    sprockets (2.12.1)
+    sprockets (2.12.3)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
@@ -445,9 +442,8 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  actionpack-action_caching!
-  active_model_serializers (~> 0.8.0)
-  airbrake (= 3.1.2)
+  actionpack-action_caching
+  active_model_serializers!
   annotate
   barber
   better_errors
@@ -457,7 +453,7 @@ DEPENDENCIES
   ember-rails
   ember-source (= 1.6.0.beta.2)
   eventmachine
-  fabrication
+  fabrication (= 2.9.8)
   fakeweb (~> 1.3.0)
   fast_blank
   fast_xor
@@ -514,6 +510,7 @@ DEPENDENCIES
   rest-client
   rinku
   rmmseg-cpp
+  rspec (= 2.99.0)
   rspec-given
   rspec-rails
   rtlit
