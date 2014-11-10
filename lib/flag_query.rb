@@ -133,7 +133,7 @@ module FlagQuery
       excerpt = Post.excerpt(cooked, 200)
       # remove the first link if it's the first node
       fragment = Nokogiri::HTML.fragment(excerpt)
-      if fragment.children.first == fragment.css("a:first").first
+      if fragment.children.first == fragment.css("a:first").first && fragment.children.first
         fragment.children.first.remove
       end
       fragment.to_html.strip
