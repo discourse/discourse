@@ -80,7 +80,9 @@
 
     <%= yield :data %>
 
-    <footer id='bottom'><%= raw SiteText.text_for(:bottom) %></footer>
+    <footer id='bottom'>
+      <%= raw SiteText.text_for(:bottom) %>
+    </footer>
 
     <%= render :partial => "common/discourse_javascript" %>
 

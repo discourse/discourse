@@ -261,7 +261,7 @@ class ApplicationController < ActionController::Base
     def custom_html_json
       data = {
         top: SiteText.text_for(:top),
-        bottom: SiteText.text_for(:bottom)
+        footer: SiteCustomization.custom_footer(session[:preview_style])
       }
 
       if DiscoursePluginRegistry.custom_html

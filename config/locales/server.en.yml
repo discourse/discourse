@@ -634,7 +634,7 @@ en:
       description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
     bottom:
       title: "Bottom of the pages"
-      description: "HTML that will be added at the bottom of every page."
+      description: "HTML that will be added before the </body> tag."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"

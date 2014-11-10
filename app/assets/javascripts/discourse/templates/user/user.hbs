@@ -5,7 +5,6 @@
 
 {{#unless loading}}
   <div class="container">
-
     <section class='user-main'>
       <section {{bind-attr class="collapsedInfo :about profileBackground:has-background:no-background"}}>
       <div class='staff-counters'>
@@ -33,80 +32,54 @@
           <div><span class="warnings-received">{{number_of_warnings}}</span>&nbsp;{{i18n user.staff_counters.warnings_received}}</div>
         {{/if}}
       </div>
-        <div class='profile-image'  {{bind-attr style="profileBackground"}}>
-
-      </div>
+        <div class='profile-image' {{bind-attr style="profileBackground"}}></div>
         <div class='details'>
           <div class='primary'>
-
             {{bound-avatar model "huge"}}
-
             <section class='controls'>
-
-            <ul>
-
-              {{#if can_send_private_message_to_user}}
-              <li>
-                <a class='btn btn-primary right' {{action "composePrivateMessage"}}>
-                  <i class='fa fa-envelope'></i>
-                  {{i18n user.private_message}}
-                </a>
-              </li>
-              {{/if}}
-
-              {{#if viewingSelf}}
-              <li>
-                <a {{action "logout"}} class='btn btn-danger right'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</a>
-              </li>
-              {{/if}}
-
-              {{#if currentUser.staff}}
-              <li>
-                <a {{bind-attr href="adminPath"}} class='btn right'><i class="fa fa-wrench"></i>{{i18n admin.user.show_admin_profile}}</a>
-              </li>
-              {{/if}}
-
-              {{#if can_edit}}
-              <li>
-                {{#link-to 'preferences' class="btn right"}}<i class='fa fa-cog'></i>{{i18n user.preferences}}{{/link-to}}
-              </li>
-              {{/if}}
-
-              {{#if canInviteToForum}}
-              <li>
-                {{#link-to 'user.invited' class="btn right"}}<i class='fa fa-envelope-o'></i>{{i18n user.invited.title}}{{/link-to}}
-              </li>
-              {{/if}}
-
-            </ul>
-
+              <ul>
+                {{#if can_send_private_message_to_user}}
+                <li>
+                  <a class='btn btn-primary right' {{action "composePrivateMessage"}}>
+                    {{fa-icon "envelope"}}
+                    {{i18n user.private_message}}
+                  </a>
+                </li>
+                {{/if}}
+                {{#if viewingSelf}}
+                  <li><a {{action "logout"}} class='btn btn-danger right'>{{fa-icon "sign-out"}}{{i18n user.log_out}}</a></li>
+                {{/if}}
+                {{#if currentUser.staff}}
+                  <li><a {{bind-attr href="adminPath"}} class='btn right'>{{fa-icon "wrench"}}{{i18n admin.user.show_admin_profile}}</a></li>
+                {{/if}}
+                {{#if can_edit}}
+                  <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n user.preferences}}{{/link-to}}</li>
+                {{/if}}
+                {{#if canInviteToForum}}
+                  <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "envelope-o"}}{{i18n user.invited.title}}{{/link-to}}</li>
+                {{/if}}
+              </ul>
             </section>
 
             <div class="primary-textual">
               <h1>{{username}} {{{statusIcon}}}</h1>
               <h2>{{name}}</h2>
               <h3>
-
-              {{#if location}}
-                <i class="fa fa-map-marker"></i>
-                {{location}}
-              {{/if}}
-
+              {{#if location}}{{fa-icon "map-maker"}}{{location}}{{/if}}
               {{#if websiteName}}
-                <i class="fa fa-globe"></i>
+                {{fa-icon "globe"}}
                 {{#if linkWebsite}}
                   <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
                 {{else}}
                   <span {{bind-attr title="website"}}>{{websiteName}}</span>
                 {{/if}}
               {{/if}}
-
               </h3>
 
               <div class='bio'>
                 {{#if isSuspended}}
                   <div class='suspended'>
-                    <i class='fa fa-ban'></i>
+                    {{fa-icon "ban"}}
                     <b>{{i18n user.suspended_notice date="suspendedTillDate"}}</b><br/>
                     <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
                   </div>
@@ -116,17 +89,13 @@
 
               {{plugin-outlet "user-profile-primary"}}
 
-
             </div>
-
           </div>
-
-        <div style='clear: both'></div>
+          <div style='clear: both'></div>
         </div>
 
         <div class='secondary'>
           <dl>
-
             {{#if created_at}}
               <dt>{{i18n user.created}}</dt><dd>{{bound-date created_at}}</dd>
             {{/if}}
@@ -162,67 +131,72 @@
           {{plugin-outlet "user-profile-secondary"}}
         </div>
       </section>
-    <section class='user-navigation'>
 
-      <ul class='action-list nav-stacked'>
-        {{activity-filter count=statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
-        {{#each stat in statsExcludingPms}}
-          {{activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
-        {{/each}}
-        {{#if showBadges}}
-          {{#link-to 'user.badges' tagName="li"}}
-            {{#link-to 'user.badges'}}
-              <i class='glyph fa fa-certificate'></i>
-              {{i18n badges.title}}
-              <span class='count'>({{badge_count}})</span>
-              <span class='fa fa-chevron-right'></span>
-            {{/link-to}}
-          {{/link-to}}
-        {{/if}}
-        {{#if canSeeNotificationHistory}}
-          {{#link-to 'user.notifications' tagName="li"}}
-            {{#link-to 'user.notifications'}}
-              <i class='glyph fa fa-comment'></i>
-              {{i18n user.notifications}}
-              <span class='count'>({{notification_count}})</span>
-              <span class='fa fa-chevron-right'></span>
-            {{/link-to}}
-          {{/link-to}}
-        {{/if}}
-      </ul>
-
-      {{#if canSeePrivateMessages}}
-        <h3><i class='fa fa-envelope'></i> {{i18n user.private_messages}}</h3>
+      <section class='user-navigation'>
         <ul class='action-list nav-stacked'>
-          <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
-            {{#link-to 'userPrivateMessages.index' model}}
-              {{i18n user.messages.all}}
-              {{#if hasPMs}}<span class='count'>({{private_messages_stats.all}})</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
+          {{activity-filter count=statsCountNonPM user=model userActionType=userActionType indexStream=indexStream}}
+          {{#each stat in statsExcludingPms}}
+            {{activity-filter content=stat user=model userActionType=userActionType indexStream=indexStream}}
+          {{/each}}
+          {{#if showBadges}}
+            {{#link-to 'user.badges' tagName="li"}}
+              {{#link-to 'user.badges'}}
+                <i class='glyph fa fa-certificate'></i>
+                {{i18n badges.title}}
+                <span class='count'>({{badge_count}})</span>
+                <span class='fa fa-chevron-right'></span>
+              {{/link-to}}
             {{/link-to}}
-          </li>
-          <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
-            {{#link-to 'userPrivateMessages.mine' model}}
-              {{i18n user.messages.mine}}
-              {{#if hasStartedPMs}}<span class='count'>({{private_messages_stats.mine}})</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
+          {{/if}}
+          {{#if canSeeNotificationHistory}}
+            {{#link-to 'user.notifications' tagName="li"}}
+              {{#link-to 'user.notifications'}}
+                <i class='glyph fa fa-comment'></i>
+                {{i18n user.notifications}}
+                <span class='count'>({{notification_count}})</span>
+                <span class='fa fa-chevron-right'></span>
+              {{/link-to}}
             {{/link-to}}
-          </li>
-          <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
-            {{#link-to 'userPrivateMessages.unread' model}}
-              {{i18n user.messages.unread}}
-              {{#if hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{private_messages_stats.unread}}</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
-            {{/link-to}}
-          </li>
+          {{/if}}
         </ul>
-      {{/if}}
+
+        {{#if canSeePrivateMessages}}
+          <h3>{{fa-icon "envelope"}} {{i18n user.private_messages}}</h3>
+          <ul class='action-list nav-stacked'>
+            <li {{bind-attr class=":noGlyph privateMessagesActive:active"}}>
+              {{#link-to 'userPrivateMessages.index' model}}
+                {{i18n user.messages.all}}
+                {{#if hasPMs}}<span class='count'>({{private_messages_stats.all}})</span>{{/if}}
+                <span class='fa fa-chevron-right'></span>
+              {{/link-to}}
+            </li>
+            <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
+              {{#link-to 'userPrivateMessages.mine' model}}
+                {{i18n user.messages.mine}}
+                {{#if hasStartedPMs}}<span class='count'>({{private_messages_stats.mine}})</span>{{/if}}
+                <span class='fa fa-chevron-right'></span>
+              {{/link-to}}
+            </li>
+            <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
+              {{#link-to 'userPrivateMessages.unread' model}}
+                {{i18n user.messages.unread}}
+                {{#if hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{private_messages_stats.unread}}</span>{{/if}}
+                <span class='fa fa-chevron-right'></span>
+              {{/link-to}}
+            </li>
+          </ul>
+        {{/if}}
+      </section>
+
+      {{outlet userOutlet}}
 
     </section>
-
-    {{outlet userOutlet}}
-
-    </section>
-
   </div>
+
+  {{#if loadedAllItems}}
+    <div class="container">
+      {{custom-html "footer"}}
+    </div>
+  {{/if}}
+
 {{/unless}}

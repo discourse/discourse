@@ -2,13 +2,15 @@ import ObjectController from 'discourse/controllers/object';
 import TopPeriod from 'discourse/models/top-period';
 
 export default ObjectController.extend({
-  needs: ['navigation/category'],
+  needs: ['navigation/category', 'discovery/topics'],
   loading: false,
   loadingSpinner: false,
   scheduledSpinner: null,
 
   category: Em.computed.alias('controllers.navigation/category.category'),
   noSubcategories: Em.computed.alias('controllers.navigation/category.noSubcategories'),
+
+  loadedAllItems: Em.computed.not("controllers.discovery/topics.canLoadMore"),
 
   showMoreUrl: function(period) {
     var url = '', category = this.get('category');
