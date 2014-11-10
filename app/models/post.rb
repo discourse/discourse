@@ -93,12 +93,15 @@ class Post < ActiveRecord::Base
   end
 
   def publish_change_to_clients!(type)
+    # special failsafe for posts missing topics
+    # consistency checks should fix, but message
+    # is safe to skip
     MessageBus.publish("/topic/#{topic_id}", {
         id: id,
         post_number: post_number,
         updated_at: Time.now,
         type: type
-    }, group_ids: topic.secure_group_ids)
+    }, group_ids: topic.secure_group_ids) if topic
   end
 
   def trash!(trashed_by=nil)
