@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: aa6637d140c2ebd28bbd23fc250af033a065dbe8
+  revision: 99dccf1aae31520b701fc37e62542db1e6c0994f
   specs:
     actionmailer (4.2.0.beta4)
       actionpack (= 4.2.0.beta4)
