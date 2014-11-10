@@ -65,8 +65,8 @@ Discourse.Post = Discourse.Model.extend({
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
   canViewRawEmail: function() {
-    return Discourse.User.currentProp('staff');
-  }.property(),
+    return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');
+  }.property("user_id"),
 
   bookmarkedChanged: function() {
     Discourse.Post.bookmark(this.get('id'), this.get('bookmarked'))
