@@ -31,6 +31,8 @@ function finderFor(filter, params) {
 }
 
 Discourse.TopicList = Discourse.Model.extend({
+  canLoadMore: Em.computed.notEmpty("more_topics_url"),
+
   forEachNew: function(topics, callback) {
     var topicIds = [];
     _.each(this.get('topics'),function(topic) {
@@ -68,7 +70,6 @@ Discourse.TopicList = Discourse.Model.extend({
 
     var moreUrl = this.get('more_topics_url');
     if (moreUrl) {
-
       var self = this;
       this.set('loadingMore', true);
 
@@ -84,7 +85,11 @@ Discourse.TopicList = Discourse.Model.extend({
             topics.pushObject(t);
           });
 
-          self.setProperties({ loadingMore: false, more_topics_url: result.topic_list.more_topics_url });
+          self.setProperties({
+            loadingMore: false,
+            more_topics_url: result.topic_list.more_topics_url
+          });
+
           Discourse.Session.currentProp('topicList', self);
           return self.get('more_topics_url');
         }

@@ -1682,10 +1682,9 @@ en:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
+        css: "CSS"
         header: "Header"
-        css: "Stylesheet"
-        mobile_header: "Mobile Header"
-        mobile_css: "Mobile Stylesheet"
+        footer: "Footer"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"

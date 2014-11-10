@@ -17,7 +17,6 @@ class SiteCustomization < ActiveRecord::Base
     DiscourseSassCompiler.compile(scss, 'custom')
   rescue => e
     puts e.backtrace.join("\n") unless Sass::SyntaxError === e
-
     raise e
   end
 
@@ -34,29 +33,21 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   after_save do
-    if stylesheet_changed?
-      File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath)
-    end
-    if mobile_stylesheet_changed?
-      File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile))
-    end
+    File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath) && stylesheet_changed?
+    File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile)) && mobile_stylesheet_changed?
     remove_from_cache!
-    if stylesheet_changed? or mobile_stylesheet_changed?
+    if stylesheet_changed? || mobile_stylesheet_changed?
       ensure_stylesheets_on_disk!
       # TODO: this is broken now because there's mobile stuff too
       MessageBus.publish "/file-change/#{key}", stylesheet_hash
     end
     MessageBus.publish "/header-change/#{key}", header if header_changed?
-
+    MessageBus.publish "/footer-change/#{key}", footer if footer_changed?
   end
 
   after_destroy do
-    if File.exists?(stylesheet_fullpath)
-      File.delete stylesheet_fullpath
-    end
-    if File.exists?(stylesheet_fullpath(:mobile))
-      File.delete stylesheet_fullpath(:mobile)
-    end
+    File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath)
+    File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile))
     self.remove_from_cache!
   end
 
@@ -92,6 +83,16 @@ class SiteCustomization < ActiveRecord::Base
     style = lookup_style(preview_style)
     if style && ((target != :mobile && style.header) || (target == :mobile && style.mobile_header))
       target == :mobile ? style.mobile_header.html_safe : style.header.html_safe
+    else
+      ""
+    end
+  end
+
+  def self.custom_footer(preview_style, target=:dekstop)
+    preview_style ||= enabled_style_key
+    style = lookup_style(preview_style)
+    if style && ((target != :mobile && style.footer) || (target == :mobile && style.mobile_footer))
+      target == :mobile ? style.mobile_footer.html_safe : style.footer.html_safe
     else
       ""
     end

@@ -23,7 +23,10 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
     controller.set('model', model);
     this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
 
-    this.controllerFor('user').set('indexStream', !this.get('userActionType'));
+    this.controllerFor('user').setProperties({
+      indexStream: !this.get('userActionType'),
+      datasource: "stream"
+    });
   },
 
   actions: {

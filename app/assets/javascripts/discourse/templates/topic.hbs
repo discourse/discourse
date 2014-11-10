@@ -43,7 +43,6 @@
                 </a>
               {{/if}}
 
-
               {{#if details.can_edit}}
                 <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n edit}}'>{{fa-icon pencil}}</a>
               {{/if}}
@@ -112,6 +111,9 @@
                 <h3>{{{view.browseMoreMessage}}}</h3>
               </div>
             {{/if}}
+            <div class="container">
+              {{custom-html "footer"}}
+            </div>
           {{/if}}
         {{/if}}
 
@@ -119,7 +121,6 @@
     </div>
 
   </div>
-
 {{else}}
   {{#if hasError}}
     <div class='container'>
@@ -133,11 +134,11 @@
             <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n log_in}}</button>
           {{/unless}}
         {{else}}
-          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}><i class="fa fa-refresh"></i> {{i18n errors.buttons.again}}</button>
+          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n errors.buttons.again}}</button>
         {{/if}}
       </div>
       {{#if retrying}}
-        {{loading-spinner}}      
+        {{loading-spinner}}
       {{/if}}
     {{/if}}
     </div>

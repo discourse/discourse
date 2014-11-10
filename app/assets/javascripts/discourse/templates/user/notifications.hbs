@@ -7,6 +7,7 @@
     {{/if}}
   </div>
 {{/if}}
+
 {{#if showDismissButton}}
   <div class='notification-buttons'>
     <button title="{{i18n user.dismiss_notifications_tooltip}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n user.dismiss_notifications}}</button>
@@ -24,12 +25,12 @@
 
 {{#if loading}}
   {{loading-spinner}}
+{{else}}
+  {{#unless canLoadMore}}
+    {{#if showDismissButton}}
+      <div class='notification-buttons'>
+        <button title="{{i18n user.dismiss_notifications_tooltip}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n user.dismiss_notifications}}</button>
+      </div>
+    {{/if}}
+  {{/unless}}
 {{/if}}
-{{#unless canLoadMore}}
-  <div class='end-of-stream'></div>
-  {{#if showDismissButton}}
-    <div class='notification-buttons'>
-      <button title="{{i18n user.dismiss_notifications_tooltip}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n user.dismiss_notifications}}</button>
-    </div>
-  {{/if}}
-{{/unless}}

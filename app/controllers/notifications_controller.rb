@@ -21,9 +21,7 @@ class NotificationsController < ApplicationController
     params[:before] ||= 1.day.from_now
 
     user = current_user
-    if params[:user]
-      user = User.find_by_username(params[:user].to_s)
-    end
+    user = User.find_by_username(params[:user].to_s) if params[:user]
 
     unless guardian.can_see_notifications?(user)
       return render json: {errors: [I18n.t('js.errors.reasons.forbidden')]}, status: 403
