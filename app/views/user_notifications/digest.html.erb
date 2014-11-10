@@ -70,7 +70,7 @@
   <span class='footer-notice'>
     <%=raw(t :'user_notifications.digest.unsubscribe',
        site_link: html_site_link,
-       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_path(host: Discourse.base_url, key: @user.temporary_key, only_path: false)))  %>
+       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @user.temporary_key)))  %>
   </span>
   </td>
 </tr>

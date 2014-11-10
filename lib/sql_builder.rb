@@ -71,11 +71,20 @@ class SqlBuilder
 
   #AS reloads this on tests
   remove_const :FTYPE_MAP if defined? FTYPE_MAP
-  FTYPE_MAP = {
-    23 => :value_to_integer,
-    1114 => :string_to_time,
-    16 => :value_to_boolean
-  }
+
+  if rails_master?
+    FTYPE_MAP = {
+      23 => ActiveRecord::Type::Integer.new,
+      1114 => ActiveRecord::Type::DateTime.new,
+      16 => ActiveRecord::Type::Boolean.new
+    }
+  else
+    FTYPE_MAP = {
+      23 => :value_to_integer,
+      1114 => :string_to_time,
+      16 => :value_to_boolean
+    }
+  end
 
   def self.map_exec(klass, sql, args = {})
     self.new(sql).map_exec(klass, args)
@@ -93,7 +102,11 @@ class SqlBuilder
       setters.each_with_index do |mapper, index|
         translated = row[index]
         if mapper[1] && !translated.nil?
-          translated = ActiveRecord::ConnectionAdapters::Column.send mapper[1], translated
+          if rails_master?
+            translated = mapper[1].type_cast_from_database(translated)
+          else
+            translated = ActiveRecord::ConnectionAdapters::Column.send mapper[1], translated
+          end
         end
         mapped.send mapper[0], translated
       end
