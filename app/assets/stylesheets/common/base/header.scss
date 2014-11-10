@@ -365,3 +365,8 @@
 #search-help table td {
   padding-right: 10px;
 }
+
+// we don't need this X to clear field
+#search-term::-ms-clear {
+  display: none;
+}
