@@ -151,7 +151,7 @@ module Email
       end
     end
 
-    REPLYING_HEADER_LABELS = ['From', 'Sent', 'To', 'Subject', 'Reply To']
+    REPLYING_HEADER_LABELS = ['From', 'Sent', 'To', 'Subject', 'Reply To', 'Cc', 'Bcc', 'Date']
     REPLYING_HEADER_REGEX = Regexp.union(REPLYING_HEADER_LABELS.map { |lbl| "#{lbl}:" })
 
     def discourse_email_trimmer(body)
