@@ -25,13 +25,12 @@ export default Discourse.View.extend(CleansUp, {
 
   _setup: function() {
     var self = this;
-    this.appEvents.on('poster:expand', this, '_posterExpand');
 
     $('html').off(clickOutsideEventName).on(clickOutsideEventName, function(e) {
       if (self.get('controller.visible')) {
         var $target = $(e.target);
         if ($target.closest('[data-user-card]').data('userCard') ||
-            $target.closest('a.mention').length > 0 || 
+            $target.closest('a.mention').length > 0 ||
             $target.closest('#user-card').length > 0) {
           return;
         }
@@ -43,7 +42,7 @@ export default Discourse.View.extend(CleansUp, {
     });
 
     var expand = function(username, $target){
-      self._posterExpand($target);
+      self._willShow($target);
       self.get('controller').show(username, $target[0]);
       return false;
     };
@@ -59,9 +58,19 @@ export default Discourse.View.extend(CleansUp, {
       var username = $target.text().replace(/^@/, '');
       return expand(username, $target);
     });
+
+    this.appEvents.on('usercard:shown', this, '_shown');
   }.on('didInsertElement'),
 
-  _posterExpand: function(target) {
+  _shown: function() {
+    var self = this;
+    // After the card is shown, focus on the first link
+    Ember.run.scheduleOnce('afterRender', function() {
+      self.$('a:first').focus();
+    });
+  },
+
+  _willShow: function(target) {
     if (!target) { return; }
     var self = this,
         width = this.$().width();
@@ -93,7 +102,7 @@ export default Discourse.View.extend(CleansUp, {
     $('#main').off(clickDataExpand);
     $('#main').off(clickMention);
 
-    this.appEvents.off('poster:expand', this, '_posterExpand');
+    this.appEvents.off('usercard:shown', this, '_shown');
   }.on('willDestroyElement')
 
 });
