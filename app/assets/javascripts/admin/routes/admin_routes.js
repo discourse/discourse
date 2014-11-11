@@ -30,8 +30,7 @@ Discourse.Route.buildRoutes(function() {
     this.resource('adminReports', { path: '/reports/:type' });
 
     this.resource('adminFlags', { path: '/flags' }, function() {
-      this.route('active');
-      this.route('old');
+      this.route('list', { path: '/:filter' });
     });
 
     this.resource('adminLogs', { path: '/logs' }, function() {

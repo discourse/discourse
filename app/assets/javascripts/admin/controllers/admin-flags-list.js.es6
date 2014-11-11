@@ -1,18 +1,10 @@
-/**
-  This controller supports the interface for dealing with flags in the admin section.
-
-  @class AdminFlagsController
-  @extends Ember.Controller
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.ArrayController.extend({
+  query: null,
 
   adminOldFlagsView: Em.computed.equal("query", "old"),
   adminActiveFlagsView: Em.computed.equal("query", "active"),
 
   actions: {
-
     disagreeFlags: function (flaggedPost) {
       var self = this;
       flaggedPost.disagreeFlags().then(function () {
