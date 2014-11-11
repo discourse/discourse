@@ -51,4 +51,17 @@ module Helpers
     yield(guardian) if block_given?
     Guardian.stubs(new: guardian).with(user)
   end
+
+  def wait_for(&blk)
+    i = 0
+    result = false
+    while !result && i < 300
+      result = blk.call
+      i += 1
+      sleep 0.001
+    end
+
+    result.should == true
+  end
+
 end
