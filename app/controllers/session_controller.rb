@@ -45,7 +45,8 @@ class SessionController < ApplicationController
 
     if user = sso.lookup_or_create_user
       if SiteSetting.must_approve_users? && !user.approved?
-        # TODO: need an awaiting approval message here
+        render text: "Your account is pending approval, you will recieve an email notification once your account has been approved by an administrator", status: 403
+        return
       else
         log_on_user user
       end
