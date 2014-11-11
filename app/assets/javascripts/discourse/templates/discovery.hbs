@@ -10,26 +10,26 @@
   </div>
 </div>
 
-{{#if loadingSpinner}}
+{{#if loading}}
   {{loading-spinner}}
-{{else}}
-  <div {{bind-attr class=":container :list-container loadingSpinner:hidden"}}>
-    <div class="row">
-      <div class="full-width">
-        <div id='header-list-area'>
-          {{outlet header-list-container}}
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="full-width">
-        <div id='list-area'>
-          {{outlet list-container}}
-        </div>
+{{/if}}
+
+<div {{bind-attr class=":container :list-container loading:hidden"}}>
+  <div class="row">
+    <div class="full-width">
+      <div id='header-list-area'>
+        {{outlet header-list-container}}
       </div>
     </div>
   </div>
-  {{#if loadedAllItems}}
-    {{custom-html "footer"}}
-  {{/if}}
+  <div class="row">
+    <div class="full-width">
+      <div id='list-area'>
+        {{outlet list-container}}
+      </div>
+    </div>
+  </div>
+</div>
+{{#if loadedAllItems}}
+  {{custom-html "footer"}}
 {{/if}}
