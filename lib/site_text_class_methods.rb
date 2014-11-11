@@ -15,37 +15,14 @@ module SiteTextClassMethods
     @types << SiteTextType.new(text_type, format, opts)
   end
 
+  def text_for_cache
+    @text_for_cache ||= DistributedCache.new("text_for_cache")
+  end
+
   def text_for(text_type, replacements=nil)
     text = nil
-    text = cached_text_for(text_type) if replacements.blank?
+    text = text_for_cache[text_type] if replacements.blank?
     text ||= uncached_text_for(text_type, replacements)
-  end
-
-  def cached_text_for(text_type)
-    ensure_subscribed!
-    @mutex.synchronize do
-      cache = @text_for_cache[RailsMultisite::ConnectionManagement.current_db]
-      cache[text_type] if cache
-    end
-  end
-
-  def store_cached_text_for(text_type, result)
-    ensure_subscribed!
-    @mutex.synchronize do
-      cache = (@text_for_cache[RailsMultisite::ConnectionManagement.current_db] ||= {})
-      cache[text_type] = result
-    end
-  end
-
-  def ensure_subscribed!
-    return if @subscribed
-    @mutex.synchronize do
-      MessageBus.subscribe("/text_for") do |message|
-        @mutex.synchronize do
-          @text_for_cache[message.site_id] = nil
-        end
-      end
-    end
   end
 
   def uncached_text_for(text_type, replacements=nil)
@@ -71,7 +48,7 @@ module SiteTextClassMethods
 
     if store_cache
       result.freeze
-      store_cached_text_for(text_type, result)
+      text_for_cache[text_type] = result
     end
 
     result

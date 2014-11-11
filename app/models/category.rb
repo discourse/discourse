@@ -1,3 +1,6 @@
+require_dependency 'distributed_cache'
+require_dependency 'sass/discourse_stylesheets'
+
 class Category < ActiveRecord::Base
 
   include Positionable
@@ -349,10 +352,26 @@ SQL
     id == SiteSetting.uncategorized_category_id
   end
 
+  @@url_cache = DistributedCache.new('category_url')
+
+  after_save do
+    # parent takes part in url calculation
+    # any change could invalidate multiples
+    @@url_cache.clear
+  end
+
   def url
-    url = "/category"
-    url << "/#{parent_category.slug}" if parent_category_id
-    url << "/#{slug}"
+    url = @@url_cache[self.id]
+    unless url
+      url = "/category"
+      url << "/#{parent_category.slug}" if parent_category_id
+      url << "/#{slug}"
+      url.freeze
+
+      @@url_cache[self.id] = url
+    end
+
+    url
   end
 
   # If the name changes, try and update the category definition topic too if it's
@@ -366,7 +385,7 @@ SQL
   end
 
   def publish_discourse_stylesheet
-    MessageBus.publish("/discourse_stylesheet", self.name)
+    DiscourseStylesheets.cache.clear
   end
 end
 
