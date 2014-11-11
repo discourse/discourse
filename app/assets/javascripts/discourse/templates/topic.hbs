@@ -112,8 +112,6 @@
               </div>
             {{/if}}
 
-            {{custom-html "footer"}}
-
           {{/if}}
         {{/if}}
 
@@ -147,6 +145,10 @@
       {{loading-spinner}}
     </div>
   {{/if}}
+{{/if}}
+
+{{#if postStream.loadedAllPosts}}
+  {{custom-html "footer"}}
 {{/if}}
 
 {{render "share"}}
