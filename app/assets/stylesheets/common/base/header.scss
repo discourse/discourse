@@ -274,12 +274,10 @@
     top: 0;
     right: 0;
     .spinner {
-      width: 16px;
-      height: 16px;
-      }
-    .container1 > div, .container2 > div, .container3 > div {
-      width: 4px;
-      height: 4px;
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      margin: 20px 0 0 0;
       }
   }
   // I am ghetto using this to display "Show More".. be warned
