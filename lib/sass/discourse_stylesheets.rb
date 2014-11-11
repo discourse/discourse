@@ -15,7 +15,11 @@ class DiscourseStylesheets
 
   def self.stylesheet_link_tag(target = :desktop)
     tag = cache[target]
-    return tag if tag
+
+    if tag
+      tag.html_safe
+      return tag
+    end
 
     @lock.synchronize do
       builder = self.new(target)
