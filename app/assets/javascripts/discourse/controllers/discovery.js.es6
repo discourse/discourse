@@ -4,8 +4,6 @@ import TopPeriod from 'discourse/models/top-period';
 export default ObjectController.extend({
   needs: ['navigation/category', 'discovery/topics'],
   loading: false,
-  loadingSpinner: false,
-  scheduledSpinner: null,
 
   category: Em.computed.alias('controllers.navigation/category.category'),
   noSubcategories: Em.computed.alias('controllers.navigation/category.noSubcategories'),
