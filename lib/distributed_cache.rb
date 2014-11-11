@@ -55,7 +55,7 @@ class DistributedCache
 
   def self.publish(hash, message)
     message[:origin] = hash.object_id
-    MessageBus.publish(channel_name, message)
+    MessageBus.publish(channel_name, message, {user_ids: [-1]})
   end
 
   def self.set(hash, key, value)
