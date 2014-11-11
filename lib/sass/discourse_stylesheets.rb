@@ -16,20 +16,17 @@ class DiscourseStylesheets
   def self.stylesheet_link_tag(target = :desktop)
     tag = cache[target]
 
-    if tag
-      tag.html_safe
-      return tag
-    end
+    return tag.dup.html_safe if tag
 
     @lock.synchronize do
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />].html_safe
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
 
       cache[target] = tag
 
-      tag
+      tag.dup.html_safe
     end
   end
 
