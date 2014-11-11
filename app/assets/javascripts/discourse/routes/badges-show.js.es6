@@ -13,6 +13,13 @@ export default Discourse.Route.extend({
     }
   },
 
+  afterModel: function(model) {
+    var self = this;
+    return Discourse.UserBadge.findByBadgeId(model.get('id')).then(function(userBadges) {
+      self.userBadges = userBadges;
+    });
+  },
+
   titleToken: function() {
     var model = this.modelFor('badges.show');
     if (model) {
@@ -21,10 +28,7 @@ export default Discourse.Route.extend({
   },
 
   setupController: function(controller, model) {
-    Discourse.UserBadge.findByBadgeId(model.get('id')).then(function(userBadges) {
-      controller.set('userBadges', userBadges);
-      controller.set('userBadgesLoaded', true);
-    });
     controller.set('model', model);
+    controller.set('userBadges', this.userBadges);
   }
 });

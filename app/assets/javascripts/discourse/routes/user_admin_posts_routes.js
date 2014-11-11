@@ -14,7 +14,7 @@ function createAdminPostRoute (filter) {
     },
 
     renderTemplate: function() {
-      this.render("user/posts", { into: "user", outlet: "userOutlet" });
+      this.render("user/posts", { into: "user" });
     }
   });
 }

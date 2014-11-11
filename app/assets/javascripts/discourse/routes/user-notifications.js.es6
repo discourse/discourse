@@ -19,6 +19,6 @@ export default Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('user-notification-history', {into: 'user', outlet: 'userOutlet'});
+    this.render('user-notification-history', {into: 'user'});
   }
 });

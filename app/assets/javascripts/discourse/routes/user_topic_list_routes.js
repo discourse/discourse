@@ -1,6 +1,6 @@
 Discourse.UserTopicListRoute = Discourse.Route.extend({
   renderTemplate: function() {
-    this.render('user_topics_list', {into: 'user', outlet: 'userOutlet'});
+    this.render('user_topics_list');
   },
 
   setupController: function(controller, model) {

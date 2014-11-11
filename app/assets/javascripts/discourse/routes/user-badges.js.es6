@@ -16,6 +16,6 @@ export default Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('user/badges', {into: 'user', outlet: 'userOutlet'});
+    this.render('user/badges', {into: 'user'});
   }
 });
