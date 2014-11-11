@@ -245,6 +245,8 @@ gem 'memory_profiler', require: false, platform: :mri_21
 
 gem 'rmmseg-cpp', require: false
 
+gem 'stringex', require: false
+
 gem 'logster'
 
 # perftools only works on 1.9 atm
