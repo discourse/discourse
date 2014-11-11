@@ -22,12 +22,17 @@ describe SiteText do
       SiteText.text_for("got.sso").frozen? == true
 
       SiteSetting.enable_sso = true
-      SiteText.text_for("got.sso").should == "got sso: true"
+      wait_for do
+        SiteText.text_for("got.sso") == "got sso: true"
+      end
 
       text.value = "I gots sso: %{enable_sso}"
       text.save!
 
-      SiteText.text_for("got.sso").should == "I gots sso: true"
+      wait_for do
+        SiteText.text_for("got.sso") == "I gots sso: true"
+      end
+
       SiteText.text_for("got.sso", enable_sso: "frog").should == "I gots sso: frog"
     end
 
