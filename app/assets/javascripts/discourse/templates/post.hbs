@@ -84,7 +84,15 @@
         {{/if}}
         {{view 'post-menu' post=this adminMenu=view.adminMenu}}
       </div>
-      {{view 'replies' content=replies}}
+
+      {{#if replies}}
+        <section class='embedded-posts bottom'>
+          {{#each replies}}
+            {{view 'embedded-post' content=this}}
+          {{/each}}
+        </section>
+      {{/if}}
+
       {{discourse-action-history post=this}}
       {{view 'topic-map-container' post=this topic=controller.model}}
     </div>
