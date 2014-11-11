@@ -38,6 +38,8 @@ class Category < ActiveRecord::Base
   after_destroy :publish_categories_list
   after_update :rename_category_definition, if: :name_changed?
 
+  after_save :publish_discourse_stylesheet
+
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
@@ -361,6 +363,10 @@ SQL
     if topic.title == I18n.t("category.topic_prefix", category: old_name)
       topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
     end
+  end
+
+  def publish_discourse_stylesheet
+    MessageBus.publish("/discourse_stylesheet", self.name)
   end
 end
 
