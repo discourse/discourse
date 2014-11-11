@@ -8,11 +8,27 @@ describe SiteText do
   describe "#text_for" do
 
     it "returns an empty string for a missing text_type" do
-      SiteText.text_for('breaking.bad').should == ""
+      SiteText.text_for('something_random').should == ""
     end
 
     it "returns the default value for a text` type with a default" do
       SiteText.text_for("usage_tips").should be_present
+    end
+
+    it "correctly expires and bypasses cache" do
+      SiteSetting.enable_sso = false
+      text = SiteText.create!(text_type: "got.sso", value: "got sso: %{enable_sso}")
+      SiteText.text_for("got.sso").should == "got sso: false"
+      SiteText.text_for("got.sso").frozen? == true
+
+      SiteSetting.enable_sso = true
+      SiteText.text_for("got.sso").should == "got sso: true"
+
+      text.value = "I gots sso: %{enable_sso}"
+      text.save!
+
+      SiteText.text_for("got.sso").should == "I gots sso: true"
+      SiteText.text_for("got.sso", enable_sso: "frog").should == "I gots sso: frog"
     end
 
     context "without replacements" do
@@ -46,12 +62,12 @@ describe SiteText do
       let!(:site_text) { Fabricate(:site_text_site_setting) }
 
       it "replaces site_settings by default" do
-        SiteSetting.stubs(:title).returns("Evil Trout")
+        SiteSetting.title = "Evil Trout"
         SiteText.text_for('site.replacement').should == "Evil Trout is evil."
       end
 
       it "allows us to override the default site settings" do
-        SiteSetting.stubs(:title).returns("Evil Trout")
+        SiteSetting.title = "Evil Trout"
         SiteText.text_for('site.replacement', title: 'Good Tuna').should == "Good Tuna is evil."
       end
 

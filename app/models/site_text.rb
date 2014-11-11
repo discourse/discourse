@@ -2,10 +2,18 @@ require_dependency 'site_text_type'
 require_dependency 'site_text_class_methods'
 
 class SiteText < ActiveRecord::Base
+
+  # needed for site text class methods
+  @mutex = Mutex.new
+  @text_for_cache = {}
   extend SiteTextClassMethods
   self.primary_key = 'text_type'
 
   validates_presence_of :value
+
+  after_save do
+    MessageBus.publish '/text_for', self.text_type
+  end
 
   def self.formats
     @formats ||= Enum.new(:plain, :markdown, :html, :css)

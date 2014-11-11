@@ -289,6 +289,7 @@ module SiteSettingExtension
   protected
 
   def clear_cache!
+    MessageBus.publish '/text_for', 'site_settings'
     Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
   end
 
