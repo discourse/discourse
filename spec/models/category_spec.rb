@@ -169,16 +169,22 @@ describe Category do
   end
 
   describe 'non-english characters' do
-    let(:category) { Fabricate(:category, name: "電車男") }
+    let(:category) { Fabricate(:category, name: "测试") }
 
     it "creates a blank slug, this is OK." do
       category.slug.should be_blank
       category.slug_for_url.should == "#{category.id}-category"
     end
+
+    it "creates a localized slug if default locale is zh_CN" do
+      SiteSetting.default_locale = 'zh_CN'
+      category.slug.should_not be_blank
+      category.slug_for_url.should == "ce-shi"
+    end
   end
 
   describe 'slug would be a number' do
-    let(:category) { Fabricate(:category, name: "電車男 2") }
+    let(:category) { Fabricate(:category, name: "2") }
 
     it 'creates a blank slug' do
       category.slug.should be_blank
