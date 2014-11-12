@@ -222,12 +222,11 @@
     .none {
       padding: 5px;
     }
-    .loading {
-      padding: 10px;
-      display: block;
-      color: scale-color($primary, $lightness: 50%);
-      font-size: 24px;
-      text-align: center;
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin: 0 auto;
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
