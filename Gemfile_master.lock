@@ -8,7 +8,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 99dccf1aae31520b701fc37e62542db1e6c0994f
+  revision: 46f172798e56ba5383ba5305e2cce5aad02e8e30
   specs:
     actionmailer (4.2.0.beta4)
       actionpack (= 4.2.0.beta4)
@@ -221,7 +221,7 @@ GEM
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.6.1)
-    minitest (5.4.2)
+    minitest (5.4.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     mock_redis (0.13.2)
@@ -409,6 +409,7 @@ GEM
       activesupport (>= 4.0)
       sprockets (~> 2.8)
     stackprof (0.2.7)
+    stringex (2.5.2)
     therubyracer (0.12.1)
       libv8 (~> 3.16.14.0)
       ref
@@ -526,6 +527,7 @@ DEPENDENCIES
   sinatra
   spork-rails
   stackprof
+  stringex
   therubyracer
   thin
   timecop
