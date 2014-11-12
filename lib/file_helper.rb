@@ -1,4 +1,15 @@
 require "open-uri"
+require "addressable/uri"
+
+class URI::Parser
+
+  # HACK to support underscores in URLs
+  def split(url)
+    a = Addressable::URI::parse(url)
+    [a.scheme, a.userinfo, a.host, a.port, nil, a.path, nil, a.query, a.fragment]
+  end
+
+end
 
 class FileHelper
 

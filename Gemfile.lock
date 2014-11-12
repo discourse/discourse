@@ -407,6 +407,7 @@ PLATFORMS
 DEPENDENCIES
   actionpack-action_caching
   active_model_serializers (~> 0.8.0)
+  addressable
   annotate
   barber
   better_errors
