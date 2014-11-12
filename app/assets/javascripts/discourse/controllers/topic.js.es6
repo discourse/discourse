@@ -486,6 +486,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('selectedPostsCount'),
 
   hasError: Ember.computed.or('notFoundHtml', 'message'),
+  noErrorYet: Ember.computed.not('hasError'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off

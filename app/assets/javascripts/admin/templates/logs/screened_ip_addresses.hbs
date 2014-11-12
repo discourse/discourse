@@ -3,9 +3,7 @@
 {{screened-ip-address-form action="recordAdded"}}
 <br/>
 
-{{#if loading}}
-  {{loading-spinner}}
-{{else}}
+{{#loading-spinner condition=loading}}
   {{#if model.length}}
 
     <div class='table admin-logs-table screened-ip-addresses'>
@@ -25,4 +23,4 @@
   {{else}}
     {{i18n search.no_results}}
   {{/if}}
-{{/if}}
+{{/loading-spinner}}

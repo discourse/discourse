@@ -146,10 +146,8 @@
 
     </tbody>
   </table>
-  {{#if view.loading}}
-    {{loading-spinner}}
-  {{/if}}
 
+  {{loading-spinner condition=view.loading}}
 {{else}}
   <p>{{i18n admin.flags.no_results}}</p>
 {{/if}}

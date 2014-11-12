@@ -71,9 +71,7 @@
 </div>
 
 <footer class='topic-list-bottom'>
-  {{#if loadingMore}}
-    {{loading-spinner}}
-  {{/if}}
+  {{loading-spinner condition=loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
       <button title="{{i18n topics.bulk.dismiss_topics_tooltip}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n topics.bulk.dismiss_topics}}</button>

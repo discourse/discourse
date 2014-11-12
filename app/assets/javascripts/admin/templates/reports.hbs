@@ -3,7 +3,7 @@
 <div>
   {{i18n admin.dashboard.reports.start_date}} {{input type="date" value=startDate}}
   {{i18n admin.dashboard.reports.end_date}} {{input type="date" value=endDate}}
-  <button {{action refreshReport}} class='btn btn-primary'>{{i18n admin.dashboard.reports.refresh_report}}</button>
+  <button {{action "refreshReport"}} class='btn btn-primary'>{{i18n admin.dashboard.reports.refresh_report}}</button>
 </div>
 
 <div class='view-options'>
@@ -20,9 +20,7 @@
   {{/if}}
 </div>
 
-{{#if refreshing}}
-  {{loading-spinner}}
-{{else}}
+{{#loading-spinner condition=refreshing}}
   <table class='table report'>
     <tr>
       <th>{{xaxis}}</th>
@@ -45,4 +43,4 @@
       </tr>
     {{/each}}
   </table>
-{{/if}}
+{{/loading-spinner}}
