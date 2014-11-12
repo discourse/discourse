@@ -180,8 +180,8 @@ module PostGuardian
     is_staff?
   end
 
-  def can_view_raw_email?
-    is_staff?
+  def can_view_raw_email?(post)
+    post && (is_staff? || post.user_id == @user.id)
   end
 
   def can_unhide?(post)
