@@ -136,7 +136,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   },
 
   pinUnpinTopic: function() {
-    Discourse.__container__lookup('controller:topic').togglePinnedState();
+    Discourse.__container__.lookup('controller:topic').togglePinnedState();
   },
 
   toggleProgress: function() {
