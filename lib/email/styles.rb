@@ -129,7 +129,7 @@ module Email
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
-      style('span.footer-notice', 'color:#666; font-size:80%')
+      style('div.footer', 'color:#666; font-size:80%')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
