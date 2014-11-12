@@ -52,6 +52,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     'shift+j': 'nextSection',
     'j': 'selectDown',
     'shift+k': 'prevSection',
+    'shift+p': 'pinUnpinTopic',
     'k': 'selectUp',
     'u': 'goBack',
     '/': 'showSearch',
@@ -132,6 +133,10 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   createTopic: function() {
     Discourse.__container__.lookup('controller:composer').open({action: Discourse.Composer.CREATE_TOPIC, draftKey: Discourse.Composer.DRAFT});
+  },
+
+  pinUnpinTopic: function() {
+    Discourse.__container__lookup('controller:topic').togglePinnedState();
   },
 
   toggleProgress: function() {
