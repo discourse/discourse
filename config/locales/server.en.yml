@@ -443,7 +443,7 @@ en:
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'It's something else'
+      title: "It's something else"
       description: 'This post requires moderator attention for another reason not listed above.'
       long_form: 'flagged this for moderator attention'
       email_title: 'A post in "%{title}" requires moderator attention'
