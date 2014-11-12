@@ -72,8 +72,8 @@ describe PostsController do
     include_examples "action requires login", :get, :raw_email, id: 2
 
     describe "when logged in" do
-      let(:user) {log_in}
-      let(:post) {Fabricate(:post, user: user, raw_email: 'email_content')}
+      let(:user) { log_in }
+      let(:post) { Fabricate(:post, user: user, raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(false)
@@ -90,7 +90,6 @@ describe PostsController do
 
         response.should be_success
         json = ::JSON.parse(response.body)
-        json.should be_present
         json['raw_email'].should == 'email_content'
       end
 
