@@ -100,8 +100,9 @@
 }
 
 .custom-message-length {
-  margin-bottom: 10px;
-  margin-left: 20px;
+  margin: -10px 0 10px 20px;
+  color: scale-color($primary, $lightness: 70%);
+  font-size: 85%;
 }
 
 .flag-message {
