@@ -249,10 +249,6 @@ gem 'stringex', require: false
 
 gem 'logster'
 
-# we need that to support underscore in URLs (mostly when using S3 for storing files)
-# cf. http://stackoverflow.com/a/17108137/11983
-gem 'addressable'
-
 # perftools only works on 1.9 atm
 group :profile do
   # travis refuses to install this, instead of fuffing, just avoid it for now

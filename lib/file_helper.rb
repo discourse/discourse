@@ -1,15 +1,4 @@
 require "open-uri"
-require "addressable/uri"
-
-class URI::Parser
-
-  # HACK to support underscores in URLs
-  def split(url)
-    a = Addressable::URI::parse(url)
-    [a.scheme, a.userinfo, a.host, a.port, nil, a.path, nil, a.query, a.fragment]
-  end
-
-end
 
 class FileHelper
 
@@ -20,7 +9,7 @@ class FileHelper
   def self.download(url, max_file_size, tmp_file_name, follow_redirect=false)
     raise Discourse::InvalidParameters.new(:url) unless url =~ /^https?:\/\//
 
-    uri = URI.parse(url)
+    uri = parse_url(url)
     extension = File.extname(uri.path)
     tmp = Tempfile.new([tmp_file_name, extension])
 
@@ -44,6 +33,17 @@ class FileHelper
 
   def self.images_regexp
     @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
+  end
+
+  # HACK to support underscores in URLs
+  # cf. http://stackoverflow.com/a/18938253/11983
+  def self.parse_url(url)
+    URI.parse(url)
+  rescue URI::InvalidURIError
+    host = url.match(".+\:\/\/([^\/]+)")[1]
+    uri = URI.parse(url.sub(host, 'valid-host'))
+    uri.instance_variable_set("@host", host)
+    uri
   end
 
 end
