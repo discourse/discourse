@@ -34,7 +34,9 @@ class UploadsController < ApplicationController
 
       # the "url" parameter is here to prevent people from scanning the uploads using the id
       if upload = (Upload.find_by(id: id, url: url) || Upload.find_by(sha1: params[:sha]))
-        send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+        opts = {filename: upload.original_filename}
+        opts[:disposition] = 'inline' if params[:inline]
+        send_file(Discourse.store.path_for(upload),opts)
       else
         render_404
       end
