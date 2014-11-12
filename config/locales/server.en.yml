@@ -437,13 +437,13 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Private Message {{username}}'
+      title: 'Private Message @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
       long_form: 'private messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "It's something else"
+      title: "It's Something Else"
       description: 'This post requires moderator attention for another reason not listed above.'
       long_form: 'flagged this for moderator attention'
       email_title: 'A post in "%{title}" requires moderator attention'
