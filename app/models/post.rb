@@ -299,7 +299,7 @@ class Post < ActiveRecord::Base
 
   def unhide!
     self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
-    self.topic.update_attributes(visible: true)
+    self.topic.update_attributes(visible: true) if post_number == 1
     save(validate: false)
     publish_change_to_clients!(:acted)
   end
