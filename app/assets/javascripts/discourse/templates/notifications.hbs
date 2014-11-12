@@ -1,5 +1,5 @@
 <section class="d-dropdown" id="notifications-dropdown">
-  {{#unless loadingNotifications}}
+  {{#loading-spinner condition=loadingNotifications}}
     {{#if content}}
       <ul>
         {{#each itemController="notification"}}
@@ -12,7 +12,5 @@
     {{else}}
       <div class="none">{{i18n notifications.none}}</div>
     {{/if}}
-  {{else}}
-    {{loading-spinner}}
-  {{/unless}}
+  {{/loading-spinner}}
 </section>

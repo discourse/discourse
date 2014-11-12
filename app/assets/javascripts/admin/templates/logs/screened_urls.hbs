@@ -1,10 +1,7 @@
 <p>{{i18n admin.logs.screened_urls.description}}</p>
 
-{{#if loading}}
-  {{loading-spinner}}
-{{else}}
+{{#loading-spinner condition=loading}}
   {{#if model.length}}
-
     <div class='table screened-urls'>
       <div class="heading-container">
         <div class="col heading first domain">{{i18n admin.logs.screened_urls.domain}}</div>
@@ -17,8 +14,7 @@
 
       {{view 'screened-urls-list' content=controller}}
     </div>
-
   {{else}}
     {{i18n search.no_results}}
   {{/if}}
-{{/if}}
+{{/loading-spinner}}

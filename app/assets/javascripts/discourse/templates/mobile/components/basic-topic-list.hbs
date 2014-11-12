@@ -1,4 +1,4 @@
-{{#if loaded}}
+{{#loading-spinner condition=loading}}
   {{#if topics}}
     <table class="topic-list">
       <tbody>
@@ -53,6 +53,4 @@
         {{i18n choose_topic.none_found}}
     </div>
   {{/if}}
-{{else}}
-  {{loading-spinner}}
-{{/if}}
+{{/loading-spinner}}

@@ -10,9 +10,7 @@
   </div>
 </div>
 
-{{#if loading}}
-  {{loading-spinner}}
-{{/if}}
+{{loading-spinner condition=loading}}
 
 <div {{bind-attr class=":container :list-container loading:hidden"}}>
   <div class="row">

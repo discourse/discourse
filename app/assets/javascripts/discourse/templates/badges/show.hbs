@@ -35,10 +35,10 @@
         </div>
       {{/each}}
     </div>
-    {{#if canLoadMore}}
-      {{loading-spinner}}
-    {{else}}
+
+    {{loading-spinner condition=canLoadMore}}
+    {{#unless canLoadMore}}
       {{custom-html "footer"}}
-    {{/if}}
+    {{/unless}}
   {{/if}}
 </div>

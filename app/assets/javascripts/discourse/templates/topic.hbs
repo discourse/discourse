@@ -71,9 +71,7 @@
 
           {{render 'topic-progress'}}
 
-          {{#if postStream.loadingAbove}}
-            {{loading-spinner}}
-          {{/if}}
+          {{loading-spinner condition=postStream.loadingAbove}}
 
           {{#unless postStream.loadingFilter}}
             {{cloaked-collection cloakView="post"
@@ -88,9 +86,7 @@
                                  offsetFixedBottom="#reply-control"}}
           {{/unless}}
 
-          {{#if postStream.loadingBelow}}
-            {{loading-spinner}}
-          {{/if}}
+          {{loading-spinner condition=postStream.loadingBelow}}
         </div>
         <div id='topic-bottom'></div>
 
@@ -120,31 +116,25 @@
 
   </div>
 {{else}}
-  {{#if hasError}}
-    <div class='container'>
-    {{#if notFoundHtml}}
-      {{{notFoundHtml}}}
-    {{else}}
-      <div class="topic-error">
-        <div>{{message}}</div>
-        {{#if noRetry}}
-          {{#unless currentUser}}
-            <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n log_in}}</button>
-          {{/unless}}
-        {{else}}
-          <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n errors.buttons.again}}</button>
-        {{/if}}
-      </div>
-      {{#if retrying}}
-        {{loading-spinner}}
+  <div class='container'>
+    {{#loading-spinner condition=noErrorYet}}
+      {{#if notFoundHtml}}
+        {{{notFoundHtml}}}
+      {{else}}
+        <div class="topic-error">
+          <div>{{message}}</div>
+          {{#if noRetry}}
+            {{#unless currentUser}}
+              <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n log_in}}</button>
+            {{/unless}}
+          {{else}}
+            <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n errors.buttons.again}}</button>
+          {{/if}}
+        </div>
+        {{loading-spinner condition=retrying}}
       {{/if}}
-    {{/if}}
-    </div>
-  {{else}}
-    <div class='container'>
-      {{loading-spinner}}
-    </div>
-  {{/if}}
+    {{/loading-spinner}}
+  </div>
 {{/if}}
 
 {{#if postStream.loadedAllPosts}}
