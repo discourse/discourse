@@ -1274,7 +1274,7 @@ en:
       other: "These flags were submitted over %{count} hours ago."
     please_review: "Please review them."
     post_number: "post"
-    how_to_disable: "Disable this email by changing the <pre>notify_about_flags_after</pre> setting to 0."
+    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
