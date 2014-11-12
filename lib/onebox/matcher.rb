@@ -13,8 +13,9 @@ module Onebox
     def oneboxed
       uri = URI(@url)
 
-      # A onebox needs a path or query string to be considered
+      # A onebox needs a path, query or fragment string to be considered
       return if (uri.query.nil? || uri.query.size == 0) &&
+                (uri.fragment.nil? || uri.fragment.size == 0) &&
                 (uri.path.size == 0 || uri.path == "/")
 
       ordered_engines.select do |engine|

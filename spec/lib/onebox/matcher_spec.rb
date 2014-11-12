@@ -39,5 +39,16 @@ describe Onebox::Matcher do
         matcher.oneboxed.should_not be_nil
       end
     end
+
+    describe "without a path but has a fragment string" do
+      let(:url) { "http://party.time.made.up-url.com/#article_id=1234" }
+      let(:matcher) { Onebox::Matcher.new(url) }
+
+      it "it finds an engine" do
+        matcher.stubs(:ordered_engines).returns([TestEngine])
+        matcher.oneboxed.should_not be_nil
+      end
+    end
+
   end
 end
