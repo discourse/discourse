@@ -471,7 +471,7 @@ en:
       description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_moderators:
-      title: "It's Something Else'
+      title: "It's Something Else"
       description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
       long_form: 'flagged this for moderator attention'
       email_title: 'The topic "%{title}" requires moderator attention'
