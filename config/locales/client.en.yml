@@ -2189,6 +2189,7 @@ en:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
+        pin_unpin_topic: '<b>shift p</b> Pin/Unpin topic'
         share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Reply as linked topic'

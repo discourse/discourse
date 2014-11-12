@@ -369,6 +369,11 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.get('content').clearPin();
     },
 
+    togglePinnedForUser: function() {
+      if (this.get('pinned_at'))
+        this.get('pinned') ? this.get('content').clearPin() : this.get('content').rePin();
+    },
+
     replyAsNewTopic: function(post) {
       var composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
@@ -435,6 +440,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     unhidePost: function (post) {
       post.unhide();
     }
+  },
+
+  togglePinnedState: function() {
+    this.send('togglePinnedForUser');
   },
 
   showExpandButton: function() {
