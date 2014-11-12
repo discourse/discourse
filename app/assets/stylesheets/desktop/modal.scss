@@ -56,6 +56,13 @@ animation: modal .25s;
 .modal-footer .btn-group .btn + .btn {
   margin-left: -1px;
 }
+
+.modal-footer span.hint {
+  color: scale-color($primary, $lightness: 70%);
+  float: right;
+  line-height: 30px;
+}
+
 .modal-header {
   border-bottom: 1px solid scale-color-diff();
   h3 {

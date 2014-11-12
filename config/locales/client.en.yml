@@ -1313,6 +1313,7 @@ en:
 
     flagging:
       title: 'Thank you for helping to keep our community civil!'
+      private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Private message'
@@ -1336,7 +1337,7 @@ en:
         left: "{{n}} remaining"
 
     flagging_topic:
-      title: "Why are you privately flagging this topic?"
+      title: "Thank you for helping to keep our community civil!"
       action: "Flag Topic"
       notify_action: "Private message"
 
