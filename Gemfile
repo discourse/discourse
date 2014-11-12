@@ -70,6 +70,7 @@ end
 gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
+  gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
 else
   gem 'rails'

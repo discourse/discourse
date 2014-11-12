@@ -7,6 +7,12 @@ GIT
       activemodel (>= 3.0)
 
 GIT
+  remote: https://github.com/rails/arel.git
+  revision: 5035526b534a5d7c9d95eb6b66ade349c3a947f0
+  specs:
+    arel (6.0.0.beta2)
+
+GIT
   remote: https://github.com/rails/rails.git
   revision: 46f172798e56ba5383ba5305e2cce5aad02e8e30
   specs:
@@ -86,7 +92,6 @@ GEM
     annotate (2.6.5)
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
-    arel (6.0.0.beta2)
     barber (0.4.2)
       ember-source
       execjs
@@ -446,6 +451,7 @@ DEPENDENCIES
   actionpack-action_caching
   active_model_serializers!
   annotate
+  arel!
   barber
   better_errors
   binding_of_caller
