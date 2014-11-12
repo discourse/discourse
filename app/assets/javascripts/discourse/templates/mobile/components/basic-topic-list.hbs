@@ -38,7 +38,7 @@
               {{#if controller.showParticipants}}
                 <div class='participants'>
                   {{#each participants}}
-                    <a href="{{user.path}}" class="{{extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+                    <a href="{{unbound user.path}}" class="{{unbound extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
                   {{/each}}
                 </div>
               {{/if}}
