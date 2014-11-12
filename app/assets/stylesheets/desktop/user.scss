@@ -141,15 +141,18 @@
     }
   }
 
+  .user-right {
+    width: 75%;
+    float: right;
+    margin-top: 20px;
+  }
+
   .user-content {
     padding: 10px 8px;
     background-color: $secondary;
     border: 1px solid scale-color-diff();
     margin-bottom: 10px;
     box-sizing: border-box;
-    width: 75%;
-    float: right;
-    margin-top: 20px;
 
     .btn.right {
       float: right
@@ -394,8 +397,6 @@
 
 
   .user-stream {
-      float: right;
-      width: 75%;
     .excerpt {
       margin: 5px 0;
       font-size: 13px;
@@ -574,20 +575,16 @@
 }
 
 .paginated-topics-list {
-  float: right;
-  width: 75%;
-  margin-top: 20px;
+  .topic-list > tbody > tr:nth-child(odd) {
+    background-color: darken($secondary, 3%);
+  }
 
-    .topic-list > tbody > tr:nth-child(odd)  {
-      background-color: darken($secondary, 3%);
-      }
+  .topic-list > tbody > tr:nth-child(even) {
+    background-color: $secondary;
+  }
 
-    .topic-list > tbody > tr:nth-child(even) {
-      background-color: $secondary;
-      }
-
-    .user-content {
-        width: 100%;
-        margin-top: 0;
-      }
+  .user-content {
+    width: 100%;
+    margin-top: 0;
+  }
 }
