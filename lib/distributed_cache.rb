@@ -12,6 +12,10 @@ class DistributedCache
 
   attr_reader :key
 
+  def self.subscribers
+    @subscribers
+  end
+
   def self.process_message(message)
     i = @subscribers.length-1
 
@@ -22,7 +26,10 @@ class DistributedCache
         current = @subscribers[i]
 
         next if payload["origin"] == current.object_id
+        next if current.key != payload["hash_key"]
+
         hash = current.hash(message.site_id)
+
         case payload["op"]
           when "set" then hash[payload["key"]] = payload["value"]
           when "delete" then hash.delete(payload["key"])
@@ -31,8 +38,9 @@ class DistributedCache
 
       rescue WeakRef::RefError
         @subscribers.delete_at(i)
+      ensure
+        i -= 1
       end
-      i -= 1
     end
   end
 
@@ -55,6 +63,7 @@ class DistributedCache
 
   def self.publish(hash, message)
     message[:origin] = hash.object_id
+    message[:hash_key] = hash.key
     MessageBus.publish(channel_name, message, {user_ids: [-1]})
   end
 
