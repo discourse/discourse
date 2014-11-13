@@ -478,6 +478,7 @@ files:
   allow_animated_avatars:
     client: true
     default: false
+  allow_animated_thumbnails: false
 
 trust:
   default_trust_level:
