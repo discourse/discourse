@@ -16,7 +16,7 @@
 
 .no-background {
   .profile-image {
-    height: 0;
+    height: 200px;
   }
 
 }
@@ -493,7 +493,6 @@
   .staff-counters {
     text-align: left;
     background: $primary;
-    padding: 2px 0;
     > div {
       margin: 0 10px 0 0;
       display: inline-block;
