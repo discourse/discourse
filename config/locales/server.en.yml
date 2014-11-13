@@ -1703,7 +1703,7 @@ en:
       from: "%{site_name} digest"
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
-      more_topics_category: "There were %{new_topics_since_seen} other new topics:"
+      more_topics_category: "More new topics:"
 
       posts:
         one: "1 post"
