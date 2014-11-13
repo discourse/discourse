@@ -74,6 +74,16 @@
   margin-left: 15px;
   padding: 14px 15px 15px;
   border-top: 1px solid scale-color-diff();
+  .login-spinner {
+    display: inline-block;
+    margin: 0;
+    .spinner {
+      margin: 0;
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+    }
+  }
 }
 .modal-footer:before,
 .modal-footer:after {
