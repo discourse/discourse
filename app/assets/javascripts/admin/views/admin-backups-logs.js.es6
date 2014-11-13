@@ -1,5 +1,6 @@
-Discourse.AdminBackupsLogsView = Discourse.View.extend({
+import { renderSpinner } from 'discourse/helpers/loading-spinner';
 
+export default Discourse.View.extend({
   classNames: ["admin-backups-logs"],
 
   _initialize: function() { this._reset(); }.on("init"),
@@ -38,7 +39,7 @@ Discourse.AdminBackupsLogsView = Discourse.View.extend({
     }
     // add a loading indicator
     if (this.get("controller.status.isOperationRunning")) {
-      buffer.push("<i class='fa fa-spinner fa-spin'></i>");
+      buffer.push(renderSpinner('small'));
     }
   },
 

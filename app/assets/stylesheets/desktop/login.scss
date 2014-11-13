@@ -18,12 +18,6 @@
   }
 }
 
-.login-modal {
-  .fa-spinner {
-    font-size: 18px;
-  }
-}
-
 // Create account
 
 #new-account-link {
@@ -53,10 +47,6 @@
     label {
       color: scale-color($primary, $lightness: 50%);
     }
-  }
-
-  .fa-spinner {
-    font-size: 18px;
   }
 
   .tos-agree {

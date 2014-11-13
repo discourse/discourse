@@ -135,16 +135,6 @@ div.ac-wrap {
   }
 }
 
-#file-uploading {
-  .spinner {
-    width: 10px;
-    height: 10px;
-    margin: 0 5px 0 0;
-    display: inline-block;
-    float: left;
-  }
-}
-
 #reply-control {
   .composer-loading {
     position: absolute;
@@ -158,6 +148,4 @@ div.ac-wrap {
       @include visible;
     }
   }
-
 }
-

@@ -88,7 +88,7 @@
   {{#if showCreateForm}}
     <div class="modal-footer">
       <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action "createAccount"}}>{{i18n create_account.title}}</button>
-      {{#loading-spinner condition=formSubmitted class="create-spinner"}}
+      {{#loading-spinner condition=formSubmitted size="small"}}
         <button class="btn btn-large" id="login-link" {{action "showLogin"}}>
           {{i18n log_in}}
         </button>

@@ -1,5 +1,11 @@
 import ConditionalLoadingSpinner from 'discourse/components/conditional-loading-spinner';
-var spinnerHTML = "<div class='spinner'></div>";
+
+function renderSpinner(cssClass) {
+  var html = "<div class='spinner";
+  if (cssClass) { html += ' ' + cssClass; }
+  return html + "'></div>";
+}
+var spinnerHTML = renderSpinner();
 
 /**
    If you use it as a regular helper {{loading-spinner}} you'll just get the
@@ -18,12 +24,8 @@ Handlebars.registerHelper('loading-spinner', function(options) {
     Discourse.Utilities.normalizeHash(hash, types);
     return Ember.Handlebars.helpers.view.call(this, ConditionalLoadingSpinner, options);
   } else {
-    var html = spinnerHTML;
-    if (hash && hash.class) {
-      html = "<div class='spinner " + hash.class + "'></div>";
-    }
-    return new Handlebars.SafeString(html);
+    return new Handlebars.SafeString(renderSpinner((hash && hash.size) ? hash.size : undefined));
   }
 });
 
-export { spinnerHTML };
+export { spinnerHTML, renderSpinner };

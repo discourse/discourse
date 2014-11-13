@@ -5,7 +5,6 @@
 </div>
 
 {{#if postStream.loaded}}
-
   {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
       <div class='container'>
@@ -90,9 +89,7 @@
         </div>
         <div id='topic-bottom'></div>
 
-        {{#if postStream.loadingFilter}}
-          <div class='spinner small'></div>
-        {{else}}
+        {{#loading-spinner condition=postStream.loadingFilter}}
           {{#if postStream.loadedAllPosts}}
 
             {{view 'topic-closing' topic=model}}
@@ -109,7 +106,7 @@
             {{/if}}
 
           {{/if}}
-        {{/if}}
+        {{/loading-spinner}}
 
       </section>
     </div>
