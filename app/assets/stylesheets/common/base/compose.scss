@@ -135,14 +135,24 @@ div.ac-wrap {
   }
 }
 
-#reply-control {
+#file-uploading {
   .spinner {
+    width: 10px;
+    height: 10px;
+    margin: 0 5px 0 0;
+    display: inline-block;
+    float: left;
+  }
+}
+
+#reply-control {
+  .composer-loading {
     position: absolute;
     @include fades-in(0.25s);
     left: 45%;
     top: 20%;
   }
-  &.loading {
+  &.composer-loading {
     .spinner {
       z-index: 1000;
       @include visible;

@@ -18,7 +18,11 @@ Handlebars.registerHelper('loading-spinner', function(options) {
     Discourse.Utilities.normalizeHash(hash, types);
     return Ember.Handlebars.helpers.view.call(this, ConditionalLoadingSpinner, options);
   } else {
-    return new Handlebars.SafeString(spinnerHTML);
+    var html = spinnerHTML;
+    if (hash && hash.class) {
+      html = "<div class='spinner " + hash.class + "'></div>";
+    }
+    return new Handlebars.SafeString(html);
   }
 });
 
