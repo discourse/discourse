@@ -1,4 +1,4 @@
-<table style="border: 1px solid #ddd;" cellspacing="0" cellpadding="0">
+<table style="border: 20px solid #eee;" cellspacing="0" cellpadding="0">
 <tr>
   <td style="padding: 10px 10px; background-color: #<%= @header_color %>;">
     <a href="<%= Discourse.base_url %>">
@@ -65,13 +65,13 @@
         <p><%= t('user_notifications.digest.more_topics', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
       <%- end %>
     <%- end -%>
-
-  <hr/>
-  <div class='footer'>
-    <%=raw(t :'user_notifications.digest.unsubscribe',
-       site_link: html_site_link,
-       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @user.temporary_key)))  %>
-  </div>
   </td>
 </tr>
 </table>
+
+<div class='footer'>
+  <%=raw(t :'user_notifications.digest.unsubscribe',
+           site_link: html_site_link,
+             unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @user.temporary_key)))  %>
+</div>
+
