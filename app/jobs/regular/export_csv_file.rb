@@ -4,6 +4,9 @@ require_dependency 'system_message'
 module Jobs
 
   class ExportCsvFile < Jobs::Base
+    CSV_USER_ATTRS = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
+    CSV_USER_STATS = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
+    
     sidekiq_options retry: false
     attr_accessor :current_user
 
@@ -43,7 +46,7 @@ module Jobs
     private
 
       def get_group_names(user)
-        group_names = []
+        group_names = Array.new
         groups = user.groups
         groups.each do |group|
           group_names.push(group.name)
@@ -52,19 +55,37 @@ module Jobs
       end
 
       def get_user_fields(user)
-        csv_user_attrs = ['id','name','username','email','title','created_at']
-        csv_user_stats = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
-        user_array = []
+        user_array = Array.new
 
-        csv_user_attrs.each do |attr|
+        CSV_USER_ATTRS.each do |attr|
           user_array.push(user.attributes[attr])
         end
 
-        csv_user_stats.each do |stat|
+        CSV_USER_STATS.each do |stat|
           user_array.push(user.user_stat.attributes[stat])
         end
 
+        if user.user_fields.present?
+          user.user_fields.each do |custom_field|
+            user_array.push(custom_field[1])
+          end
+        end
+
         return user_array
+      end
+
+      def get_header
+        header_array = CSV_USER_ATTRS + CSV_USER_STATS
+
+        user_custom_fields = UserField.all
+        if user_custom_fields.present?
+          user_custom_fields.each do |custom_field|
+            header_array.push("#{custom_field.name} (custom user field)")
+          end
+        end
+        header_array.push("group_names")
+
+        return header_array
       end
 
       def set_file_path
@@ -77,6 +98,7 @@ module Jobs
       def write_csv_file(data)
         # write to CSV file
         CSV.open(File.expand_path("#{ExportCsv.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
+          csv << get_header
           data.each do |value|
             csv << value
           end
