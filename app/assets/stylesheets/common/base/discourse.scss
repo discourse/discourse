@@ -195,6 +195,11 @@ body {
   }
 }
 
+.inline-spinner {
+  display: inline-block;
+  margin: 0;
+}
+
 .spinner {
   margin: 30px auto 0 auto;
   position: relative;
@@ -205,4 +210,11 @@ body {
   border: 4px solid dark-light-diff($primary, $secondary, 50%, -50%);
   border-right-color: transparent;
   border-radius: 50%;
+
+  &.small {
+    width: 10px;
+    height: 10px;
+    margin: 0;
+    display: inline-block;
+  }
 }

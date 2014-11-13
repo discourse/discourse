@@ -1,3 +1,8 @@
 export default Ember.Component.extend({
-  layoutName: 'components/conditional-loading-spinner'
+  classNameBindings: ['containerClass'],
+  layoutName: 'components/conditional-loading-spinner',
+
+  containerClass: function() {
+    return (this.get('size') === 'small') ? 'inline-spinner' : undefined;
+  }.property('size')
 });
