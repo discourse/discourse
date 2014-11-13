@@ -7,7 +7,7 @@
 }
 
 .profile-image {
-  height: 250px;
+  height: 420px;
   width: 100%;
   background-size: cover;
   transition: height .15s linear;
@@ -239,7 +239,8 @@
 
     .details {
       padding: 15px 15px 4px 15px;
-      background-color: $primary;
+      margin-top: -200px;
+      background: rgba($primary, .85);
       transition: margin .15s linear;
 
       h1 {
