@@ -2,6 +2,7 @@ import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 export default ObjectController.extend(CanCheckEmails, {
+  indexStream: true,
   needs: ['user-notifications', 'user_topics_list'],
 
   viewingSelf: function() {
