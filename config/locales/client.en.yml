@@ -1770,7 +1770,7 @@ en:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
+        preview_digest_desc: "Preview the content of the weekly digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
         html: "html"
