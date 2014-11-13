@@ -21,12 +21,13 @@ describe DistributedCache do
 
     add_throw_away_cache
     GC.start
+
     cache1["foofoo"] = "bar1"
     wait_for do
       cache2["foofoo"] == "bar1"
     end
 
-    DistributedCache.subscribers.length.should == start
+    DistributedCache.subscribers.length.should be <= start
   end
 
   it 'does not leak state across caches' do
