@@ -637,14 +637,18 @@ describe Topic do
     describe "make_banner!" do
 
       it "changes the topic archetype to 'banner'" do
-        topic.expects(:add_moderator_post)
-        MessageBus.expects(:publish).with("/site/banner", banner)
-        topic.make_banner!(user)
-        topic.archetype.should == Archetype.banner
+        messages = MessageBus.track_publish do
+          topic.make_banner!(user)
+          topic.archetype.should == Archetype.banner
+        end
+
+        channels = messages.map(&:channel)
+        channels.should include('/site/banner')
+        channels.should include('/distributed_hash')
       end
 
       it "ensures only one banner topic at all time" do
-        banner_topic = Fabricate(:banner_topic)
+        _banner_topic = Fabricate(:banner_topic)
         Topic.where(archetype: Archetype.banner).count.should == 1
 
         topic.make_banner!(user)
