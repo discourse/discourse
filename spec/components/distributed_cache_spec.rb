@@ -11,25 +11,6 @@ describe DistributedCache do
     DistributedCache.new("test")
   end
 
-  def add_throw_away_cache
-    c = DistributedCache.new("test")
-    c["foofoo"] = "bar"
-  end
-
-  it 'correctly clears up caches' do
-    start = DistributedCache.subscribers.length
-
-    add_throw_away_cache
-    GC.start
-
-    cache1["foofoo"] = "bar1"
-    wait_for do
-      cache2["foofoo"] == "bar1"
-    end
-
-    DistributedCache.subscribers.length.should be <= start
-  end
-
   it 'does not leak state across caches' do
     c2 = DistributedCache.new("test1")
     c3 = DistributedCache.new("test1")
