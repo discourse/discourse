@@ -66,20 +66,25 @@
     }
   }
   .active > a,
-  .active .fa-chevron-right {
+  {
     color: $secondary;
     background-color: $quaternary;
   }
+
+  .active > a::after,
+  {
+    left: 90%;
+    top: 28%;
+    border: solid transparent;
+    content: " ";
+    position: absolute;
+    border-width: 10px;
+    border-left-color: $secondary;
+  }
+
   .count {
     font-size: 12px;
     line-height: 16px;
-  }
-  .fa-chevron-right {
-    float: right;
-    margin: 0;
-    color: scale-color($primary, $lightness: 60%);
-    font-size: 14px;
-    line-height: 20px;
   }
 
   .glyph {
