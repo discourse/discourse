@@ -13,7 +13,7 @@ export default DiscoveryController.extend({
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
 
-      this.send('loading');
+      this.send('discoveryLoading');
       Discourse.CategoryList.list('categories').then(function(list) {
         self.set('model', list);
         self.send('loadingComplete');

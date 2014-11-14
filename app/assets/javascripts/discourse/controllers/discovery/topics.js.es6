@@ -42,7 +42,7 @@ var controllerOpts = {
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
 
-      this.send('loading');
+      this.send('discoveryLoading');
       Discourse.TopicList.find(filter).then(function(list) {
         self.setProperties({ model: list, selected: [] });
 

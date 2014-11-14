@@ -16,8 +16,6 @@ function loadingResolver(cb) {
       fullNameWithoutType = fullNameWithoutType.replace('Loading', '');
       if (LOADING_WHITELIST.indexOf(fullNameWithoutType) !== -1) {
         return cb(fullNameWithoutType);
-      } else {
-        Ember.warn('consider whitelisting a loading route for: ' + fullNameWithoutType);
       }
     }
   };

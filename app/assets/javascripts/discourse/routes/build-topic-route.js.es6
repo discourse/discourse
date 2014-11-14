@@ -17,7 +17,8 @@ export default function(filter, extras) {
   return Discourse.Route.extend({
     queryParams: queryParams,
 
-    beforeModel: function() {
+    beforeModel: function(transition) {
+      transition.send('discoveryLoading');
       this.controllerFor('navigation/default').set('filterMode', filter);
     },
 
@@ -60,6 +61,7 @@ export default function(filter, extras) {
 
       this.openTopicDraft(model);
       this.controllerFor('navigation/default').set('canCreateTopic', model.get('can_create_topic'));
+      this.controllerFor('discovery').send('loadingComplete');
     },
 
     renderTemplate: function() {
