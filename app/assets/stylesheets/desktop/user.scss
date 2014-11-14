@@ -115,9 +115,7 @@
   margin-bottom: 50px;
 
   table.group-members {
-    width: 75%;
-    float:  right;
-
+    width: 100%;
     p {
       max-width: 600px;
       white-space: nowrap;
@@ -139,6 +137,10 @@
         color: $primary;
       }
     }
+  }
+
+  .user-right.groups {
+    margin-top: 0;
   }
 
   .user-right {
@@ -188,10 +190,10 @@
     color: $secondary;
 
     &.group {
-      width: 75%;
-      float: right;
-      margin-top: 20px;
-      .details {padding: 15px;}
+      .details {
+        padding: 15px;
+        margin: 0;
+      }
     }
 
   .secondary {
