@@ -94,7 +94,7 @@ class ImportScripts::MyBB < ImportScripts::Base
           FROM mybb_posts p,
                mybb_threads t
          WHERE p.tid = t.tid
-      ORDER BY id
+      ORDER BY p.dateline
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       ")
