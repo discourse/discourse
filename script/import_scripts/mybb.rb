@@ -150,6 +150,9 @@ class ImportScripts::MyBB < ImportScripts::Base
     #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
     s.gsub!(/:(?:\w{8})\]/, ']')
 
+    # Remove mybb video tags.
+    s.gsub!(/(^\[video=.*?\])|(\[\/video\]$)/, '')
+
     s = CGI.unescapeHTML(s)
 
     # phpBB shortens link text like this, which breaks our markdown processing:
