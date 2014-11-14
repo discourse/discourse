@@ -126,6 +126,12 @@
               {{/each}}
             </dd>
           {{/if}}
+          {{#if canDeleteUser}}
+            <button class="btn btn-danger" {{action "adminDelete"}}>
+              <i class="fa fa-exclamation-triangle"></i>
+              {{i18n admin.user.delete}}
+            </button>
+          {{/if}}
         </dl>
         {{plugin-outlet "user-profile-secondary"}}
       </div>

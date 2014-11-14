@@ -314,7 +314,7 @@ Discourse.AdminUser = Discourse.User.extend({
     }
   }.property('deleteForbidden'),
 
-  destroy: function() {
+  destroy: function(opts) {
     var user = this;
 
     var performDestroy = function(block) {
@@ -323,6 +323,9 @@ Discourse.AdminUser = Discourse.User.extend({
         formData["block_email"] = true;
         formData["block_urls"] = true;
         formData["block_ip"] = true;
+      }
+      if (opts && opts.deletePosts) {
+        formData["delete_posts"] = true;
       }
       Discourse.ajax("/admin/users/" + user.get('id') + '.json', {
         type: 'DELETE',

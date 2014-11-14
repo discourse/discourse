@@ -38,6 +38,10 @@ export default ObjectController.extend(CanCheckEmails, {
     return Discourse.User.currentProp('can_invite_to_forum');
   }.property(),
 
+  canDeleteUser: function() {
+    return this.get('can_be_deleted') && this.get('can_delete_all_posts');
+  }.property('can_be_deleted', 'can_delete_all_posts'),
+
   loadedAllItems: function() {
     switch (this.get("datasource")) {
       case "badges": { return true; }
@@ -61,5 +65,13 @@ export default ObjectController.extend(CanCheckEmails, {
 
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
-  privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread')
+  privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
+
+  actions: {
+    adminDelete: function() {
+      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
+        user.destroy({deletePosts: true});
+      });
+    }
+  }
 });
