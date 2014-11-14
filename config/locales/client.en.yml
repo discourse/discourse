@@ -659,7 +659,7 @@ en:
       reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
-      create_topic: "Create Topic"
+      create_topic: "New Topic"
       create_pm: "Create Private Message"
       title: "Or press Ctrl+Enter"
 
@@ -814,7 +814,7 @@ en:
 
     topic:
       filter_to: "{{post_count}} posts in topic"
-      create: 'Create Topic'
+      create: 'New Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'
       list: 'Topics'
@@ -1258,7 +1258,7 @@ en:
       general: 'General'
       settings: 'Settings'
       delete: 'Delete Category'
-      create: 'Create Category'
+      create: 'New Category'
       save: 'Save Category'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
