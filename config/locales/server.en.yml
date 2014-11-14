@@ -1694,12 +1694,12 @@ en:
         %{respond_instructions}
 
     digest:
-      why: "A brief summary of %{site_link} since we last saw you on %{last_seen_at}."
+      why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}."
       subject_template: "[%{site_name}] Digest for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
-      unsubscribe: "This digest is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      unsubscribe: "This digest is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
