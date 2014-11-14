@@ -105,6 +105,20 @@ class ImportScripts::MyBB < ImportScripts::Base
         skip = false
         mapped = {}
 
+        # If you have imported a phpbb forum to mybb previously there might
+        # be a problem with mybb_threads.firstpost. If these ids are wrong
+        # the thread cannot be imported to discourse as the topic post is
+        # missing. This query retrieves the first_post_id manually. As it
+        # will decrease the performance it is commented out by default.
+        # m['first_post_id'] = mysql_query("
+        #   SELECT   p.pid id,
+        #   FROM     mybb_posts p,
+        #            mybb_threads t
+        #   WHERE    p.tid = #{m['topic_id']} AND t.tid = #{m['topic_id']}
+        #   ORDER BY p.dateline
+        #   LIMIT    1
+        # ").first['id']
+
         mapped[:id] = m['id']
         mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
         mapped[:raw] = process_mybb_post(m['raw'], m['id'])
