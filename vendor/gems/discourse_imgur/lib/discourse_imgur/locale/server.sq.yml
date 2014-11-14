@@ -1,0 +1,5 @@
+sq:
+  site_settings:
+    enable_imgur: "Aktivizo imgur api për ngarkimin, filet nuk mbështeten në host local"
+    imgur_client_id: "Për ngarkimit e fileve në imgur.com kërkohet client ID"
+    imgur_client_secret: "Client sekret juaj për imgur.com. Nuk është e domosdoshme, por mund të nevojitet në të ardhmen."
