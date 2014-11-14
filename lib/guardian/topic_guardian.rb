@@ -22,13 +22,17 @@ module TopicGuardian
     # No users can create posts on deleted topics
     return false if topic.trashed?
 
-    is_staff? || (authenticated? && user.has_trust_level?(TrustLevel[4])) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
+    is_staff? || (authenticated? && is_user_leader?) || (not(topic.closed? || topic.archived? || topic.trashed?) && can_create_post?(topic))
+  end
+
+  def trusted_or_moderating_topic?(topic)
+    is_user_regular? || user.doth_moderate?(topic)
   end
 
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
-    return true if is_staff? || (!topic.private_message? && user.has_trust_level?(TrustLevel[3]))
+    return true if is_staff? || (!topic.private_message? && trusted_or_moderating_topic?(topic))
     return false if topic.archived
     is_my_own?(topic)
   end
@@ -40,13 +44,13 @@ module TopicGuardian
 
   def can_delete_topic?(topic)
     !topic.trashed? &&
-    is_staff? &&
+    (is_staff? || user.doth_moderate?(topic)) &&
     !(Category.exists?(topic_id: topic.id)) &&
     !Discourse.static_doc_topic_ids.include?(topic.id)
   end
 
   def can_reply_as_new_topic?(topic)
-    authenticated? && topic && not(topic.private_message?) && @user.has_trust_level?(TrustLevel[1])
+    authenticated? && topic && not(topic.private_message?) && is_user_basic?
   end
 
   def can_see_deleted_topics?
@@ -69,4 +73,5 @@ module TopicGuardian
     !topic.read_restricted_category? || can_see_category?(topic.category)
 
   end
+
 end

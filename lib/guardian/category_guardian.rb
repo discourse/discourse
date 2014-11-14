@@ -7,7 +7,10 @@ module CategoryGuardian
     (
       SiteSetting.allow_moderators_to_create_categories &&
       is_moderator?
-    )
+    ) ||
+      (
+        parent && @user.doth_moderate?(parent)
+      )
   end
 
   # Editing Method
@@ -17,7 +20,8 @@ module CategoryGuardian
       SiteSetting.allow_moderators_to_create_categories &&
       is_moderator? &&
       can_see_category?(category)
-    )
+    ) ||
+      @user.doth_moderate?(category)
   end
 
   def can_delete_category?(category)
@@ -61,4 +65,9 @@ module CategoryGuardian
   def topic_create_allowed_category_ids
     @topic_create_allowed_category_ids ||= @user.topic_create_allowed_category_ids
   end
+
+  def can_appoint_moderator?(cat)
+    is_staff?
+  end
+  alias_method :can_dismiss_moderator?, :can_appoint_moderator?
 end

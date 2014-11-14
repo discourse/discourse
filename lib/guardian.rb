@@ -53,6 +53,22 @@ class Guardian
     @user.staff?
   end
 
+  def is_user_basic?
+    user.has_trust_level?(TrustLevel[1])
+  end
+
+  def is_user_member?
+    user.has_trust_level?(TrustLevel[2])
+  end
+
+  def is_user_regular?
+    user.has_trust_level?(TrustLevel[2])
+  end
+
+  def is_user_leader?
+    user.has_trust_level?(TrustLevel[4])
+  end
+
   def is_moderator?
     @user.moderator?
   end
@@ -106,8 +122,19 @@ class Guardian
     can_do?(:delete, obj)
   end
 
+  def can_moderate_obj?(obj)
+    case obj
+    when Topic
+      is_user_leader? || user.doth_moderate?(obj.category)
+    when Category
+      is_user_leader? || user.doth_moderate?(obj)
+    else
+      false
+    end
+  end
+
   def can_moderate?(obj)
-    obj && authenticated? && (is_staff? || (obj.is_a?(Topic) && @user.has_trust_level?(TrustLevel[4])))
+    obj && authenticated? && (is_staff? || can_moderate_obj?(obj))
   end
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
@@ -120,8 +147,6 @@ class Guardian
   def can_see_group?(group)
     group.present? && (is_admin? || group.visible?)
   end
-
-
 
   # Can we impersonate this user?
   def can_impersonate?(target)
@@ -147,8 +172,8 @@ class Guardian
     is_staff? && target && not(target.active?)
   end
 
-  def can_suspend?(user)
-    user && is_staff? && user.regular?
+  def can_suspend?(another_user)
+    another_user && is_staff? && another_user.regular?
   end
   alias :can_deactivate? :can_suspend?
 
@@ -200,8 +225,9 @@ class Guardian
     !SiteSetting.enable_sso &&
     SiteSetting.enable_local_logins &&
     (
-      (!SiteSetting.must_approve_users? && @user.has_trust_level?(TrustLevel[2])) ||
-      is_staff?
+      (!SiteSetting.must_approve_users? && is_user_member?) ||
+      is_staff? ||
+      user.moderating?
     ) &&
     (groups.blank? || is_admin?)
   end
@@ -236,7 +262,7 @@ class Guardian
     # Can't send message to yourself
     is_not_me?(target) &&
     # Have to be a basic level at least
-    @user.has_trust_level?(TrustLevel[1]) &&
+    is_user_basic? &&
     # PMs are enabled
     (SiteSetting.enable_private_messages ||
       @user.username == SiteSetting.site_contact_username ||
@@ -247,6 +273,10 @@ class Guardian
 
   def can_see_emails?
     @can_see_emails
+  end
+
+  def can_upload_for_category?
+    is_staff? || user.moderating?
   end
 
   private
@@ -290,5 +320,4 @@ class Guardian
       false
     end
   end
-
 end

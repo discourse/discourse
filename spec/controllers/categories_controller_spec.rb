@@ -199,6 +199,44 @@ describe CategoriesController do
       end
     end
 
+    describe "logged in as category moderator" do
+      let(:valid_attrs) { {id: @category.id, name: "hello", color: "ff0", text_color: "fff"} }
+
+      before do
+        @category = Fabricate(:category, user: Fabricate(:admin))
+        @user = Fabricate(:user)
+        @category.appoint_moderator(@user)
+        log_in_user(@user)
+        @another_user = Fabricate(:user)
+      end
+
+      describe "failure" do
+        # check for invalid user info in the moderator block? Or should that cause a 500
+      end
+
+      describe "success" do
+
+        it "updates the group correctly" do
+          readonly = CategoryGroup.permission_types[:readonly]
+          create_post = CategoryGroup.permission_types[:create_post]
+
+          xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
+                              auto_close_hours: 72,
+                              permissions: {
+                                "everyone" => readonly,
+                                "staff" => create_post
+                              },
+                              moderators: [
+                                @user.username,
+                                @another_user.username
+                              ]
+
+          response.status.should == 200
+          @category.reload
+          @category.moderators.map(&:username).should eq([@user.username, @another_user.username])
+        end
+      end
+    end
 
   end
 

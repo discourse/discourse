@@ -34,6 +34,7 @@ class Category < ActiveRecord::Base
 
   before_validation :ensure_slug
   before_save :apply_permissions
+  before_save :apply_moderators
   before_save :downcase_email
   before_save :downcase_name
   after_create :create_category_definition
@@ -46,6 +47,13 @@ class Category < ActiveRecord::Base
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
   has_many :subcategories, class_name: 'Category', foreign_key: 'parent_category_id'
+
+  has_many :category_users, dependent: :destroy
+  has_many :category_moderators, ->{ where(moderator: true) }, class_name: "CategoryUser"
+  has_many :moderators, through: :category_moderators, source: :user
+
+  scope :restricted, -> { where(read_restricted: true) }
+  scope :unrestricted, -> { where(read_restricted: false) }
 
   scope :latest, ->{ order('topic_count desc') }
 
@@ -386,6 +394,44 @@ SQL
 
   def publish_discourse_stylesheet
     DiscourseStylesheets.cache.clear
+  end
+
+  def parent_moderators
+    parent_category ? parent_category.moderators : []
+  end
+  def deep_moderators
+    moderators + parent_moderators
+  end
+
+  def moderated?
+    moderators.any?
+  end
+
+  def appoint_moderator(user)
+    record = CategoryUser.where(user: user, category_id: self.id).first
+
+    if record.present?
+      record.moderator = true
+      record.save!
+    else
+      CategoryUser.create!(user: user, category_id: self.id, notification_level: TopicUser.notification_levels[:watching], moderator: true)
+    end
+  end
+
+  def dismiss_moderator(user)
+    category_moderators.where(user: user).update_all(moderator: false)
+  end
+
+  def moderators=(usernames)
+    @pending_moderators = usernames.map{ |u| User.find_by_username(u) }.compact
+  end
+
+  def apply_moderators
+    if @pending_moderators
+      category_moderators.update_all(moderator: false)
+      @pending_moderators.each { |u| appoint_moderator(u) }
+      @pending_moderators = nil
+    end
   end
 end
 
