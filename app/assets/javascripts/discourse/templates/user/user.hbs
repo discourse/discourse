@@ -143,7 +143,6 @@
               <i class='glyph fa fa-certificate'></i>
               {{i18n badges.title}}
               <span class='count'>({{badge_count}})</span>
-              <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           {{/link-to}}
         {{/if}}
@@ -153,7 +152,6 @@
               <i class='glyph fa fa-comment'></i>
               {{i18n user.notifications}}
               <span class='count'>({{notification_count}})</span>
-              <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           {{/link-to}}
         {{/if}}
@@ -166,21 +164,18 @@
             {{#link-to 'userPrivateMessages.index' model}}
               {{i18n user.messages.all}}
               {{#if hasPMs}}<span class='count'>({{private_messages_stats.all}})</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesMineActive:active"}}>
             {{#link-to 'userPrivateMessages.mine' model}}
               {{i18n user.messages.mine}}
               {{#if hasStartedPMs}}<span class='count'>({{private_messages_stats.mine}})</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
           <li {{bind-attr class=":noGlyph privateMessagesUnreadActive:active"}}>
             {{#link-to 'userPrivateMessages.unread' model}}
               {{i18n user.messages.unread}}
               {{#if hasUnreadPMs}}<span class='badge-notification unread-private-messages'>{{private_messages_stats.unread}}</span>{{/if}}
-              <span class='fa fa-chevron-right'></span>
             {{/link-to}}
           </li>
         </ul>
