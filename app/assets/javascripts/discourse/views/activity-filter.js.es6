@@ -44,7 +44,6 @@ export default Ember.Component.extend({
       buffer.push("<i class='glyph fa fa-" + icon + "'></i> ");
     }
     buffer.push(this.get('description') + " <span class='count'>(" + this.get('activityCount') + ")</span>");
-    buffer.push("<span class='fa fa-chevron-right'></span></a>");
   },
 
   icon: function() {
