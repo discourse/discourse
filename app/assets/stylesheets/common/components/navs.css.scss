@@ -74,11 +74,11 @@
   .active > a::after,
   {
     left: 90%;
-    top: 28%;
+    top: 33%;
     border: solid transparent;
     content: " ";
     position: absolute;
-    border-width: 10px;
+    border-width: 8px;
     border-left-color: $secondary;
   }
 
