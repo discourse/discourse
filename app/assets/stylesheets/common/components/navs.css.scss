@@ -46,13 +46,13 @@
 // --------------------------------------------------
 
 .nav-stacked {
-  position: relative;
   @extend %nav;
   padding: 0;
   overflow: hidden;
   background: dark-light-diff($primary, $secondary, 90%, -75%);
   > li {
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -60%);
+    position: relative;
     &:last-of-type {
       border-bottom: 0;
     }
