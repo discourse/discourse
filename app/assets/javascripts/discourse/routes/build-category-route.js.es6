@@ -5,10 +5,6 @@ export default function(filter, params) {
   return Discourse.Route.extend({
     queryParams: queryParams,
 
-    beforeModel: function(transition) {
-      transition.send('discoveryLoading');
-    },
-
     model: function(modelParams) {
       return Discourse.Category.findBySlug(modelParams.slug, modelParams.parentSlug);
     },
@@ -89,7 +85,6 @@ export default function(filter, params) {
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));
-      this.controllerFor('discovery').send('loadingComplete');
       this.set('topics', null);
 
       this.openTopicDraft(topics);
