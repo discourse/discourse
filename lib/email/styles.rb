@@ -37,8 +37,8 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          # having no extra style on email images might work best?
-          if img['width'].to_i > 400 or img['height'].to_i > 400
+          # use dimensions of original iPhone screen for 'too big, let device rescale'
+          if img['width'].to_i > 320 or img['height'].to_i > 480
             img['width'] = 'auto'
             img['height'] = 'auto'
           end
