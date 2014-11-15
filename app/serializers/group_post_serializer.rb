@@ -5,7 +5,8 @@ class GroupPostSerializer < ApplicationSerializer
              :title,
              :url,
              :user_title,
-             :user_long_name
+             :user_long_name,
+             :category
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
@@ -23,6 +24,10 @@ class GroupPostSerializer < ApplicationSerializer
 
   def include_user_long_name?
     SiteSetting.enable_names?
+  end
+
+  def category
+    object.topic.category
   end
 end
 
