@@ -452,12 +452,13 @@
       text-overflow: ellipsis;
     }
     .name {
-      display: block;
+      display: inline-block;
       font-size: 14px;
       max-width: 400px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      vertical-align: middle;
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);
