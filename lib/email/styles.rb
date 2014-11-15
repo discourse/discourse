@@ -38,7 +38,7 @@ module Email
           img['height'] = 20
         else
           # having no extra style on email images might work best?
-          if img['width'].to_i > 250 and img['height'].to_i > 250
+          if img['width'].to_i > 400 or img['height'].to_i > 400
             img['width'] = 'auto'
             img['height'] = 'auto'
           end
