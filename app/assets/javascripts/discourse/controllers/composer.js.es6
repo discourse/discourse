@@ -73,6 +73,11 @@ export default DiscourseController.extend({
     if (c) { c.updateDraftStatus(); }
   },
 
+  setText: function(text) {
+    var c = this.get('model');
+    if (c) { c.setText(text); }
+  },
+
   appendText: function(text) {
     var c = this.get('model');
     if (c) { c.appendText(text); }

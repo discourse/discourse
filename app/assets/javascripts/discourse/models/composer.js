@@ -276,8 +276,10 @@ Discourse.Composer = Discourse.Model.extend({
 
     @method appendText
     @param {String} text the text to append
+    @param {Number|undefined} position starting position in the reply to append text at
+    @param {Object} opts Options. Available: (*) block: Boolean.
   **/
-  appendText: function(text,position,opts) {
+  appendText: function (text, position, opts) {
     var reply = (this.get('reply') || '');
     position = typeof(position) === "number" ? position : reply.length;
 
@@ -286,20 +288,20 @@ Discourse.Composer = Discourse.Model.extend({
 
     var stripped, i;
 
-    if(opts && opts.block){
-      if(before.trim() !== ""){
+    if (opts && opts.block) {
+      if (before.trim() !== "") {
         stripped = before.replace(/\r/g, "");
-        for(i=0; i<2; i++){
-          if(stripped[stripped.length - 1 - i] !== "\n"){
+        for (i = 0; i < 2; i++) {
+          if (stripped[stripped.length - 1 - i] !== "\n") {
             before += "\n";
             position++;
           }
         }
       }
-      if(after.trim() !== ""){
+      if (after.trim() !== "") {
         stripped = after.replace(/\r/g, "");
-        for(i=0; i<2; i++){
-          if(stripped[i] !== "\n"){
+        for (i = 0; i < 2; i++) {
+          if (stripped[i] !== "\n") {
             after = "\n" + after;
           }
         }
@@ -307,6 +309,10 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.set('reply', before + text + after);
+  },
+
+  setText: function(text) {
+    this.set('reply', text);
   },
 
   togglePreview: function() {
