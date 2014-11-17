@@ -170,7 +170,6 @@ uk:
       location: Місцеположення
       organisation: Організація
       phone: Телефон
-      other_accounts: Інші облікові записи з цією IP адресою
     user:
       profile: "Профіль"
       mute: "Mute"
@@ -244,7 +243,6 @@ uk:
         title: "Фон Профіля"
       email:
         title: "Електронна пошта"
-        ok: "Адресу прийнято. Ми надішлемо Вам листа для підтвердження."
         invalid: "Будь ласка, введіть правильну адресу електронної пошти."
         authenticated: "Вашу скриньку було автентифіковано {{provider}}."
         frequency: "Ми будемо надсилати Вам листи тільки якщо ми Вас останнім часом не бачили і Ви ще не бачили те, про що ми Вам пишемо."
@@ -439,8 +437,6 @@ uk:
       reply_here: "Відповісти тут"
       reply: "Відповісти"
       cancel: "Скасувати"
-      create_topic: "Створити тему"
-      create_pm: "Створити приватне повідомлення"
       title: "Or press Ctrl+Enter"
       users_placeholder: "Додати користувача"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
@@ -491,10 +487,7 @@ uk:
       title_with_attachments: "Додати зображення або файл"
       from_my_computer: "З мого пристрою"
       from_the_web: "З інтернету"
-      remote_tip: "введіть адресу зображення у вигляді http://example.com/image.jpg"
-      remote_tip_with_attachments: "введіть адресу зображення або файлу у вигляді http://example.com/file.ext (дозволені розширення: {{authorized_extensions}})."
       local_tip: "натисніть, щоб обрати зображення з Вашого пристрою"
-      local_tip_with_attachments: "натисніть, щоб обрати зображення або файл з Вашого пристрою (дозволені розширення: {{authorized_extensions}})"
       hint: "(Ви також можете перетягувати зображення в редактор, щоб їх завантажити)"
       uploading: "Завантаження"
     search:
@@ -541,7 +534,6 @@ uk:
         top: "There are no more top topics."
     topic:
       filter_to: "Показати {{post_count}} дописів в темі"
-      create: 'Створити тему'
       create_long: 'Створити нову тему'
       private_message: 'Надіслати приватне повідомлення'
       list: 'Теми'
@@ -799,7 +791,6 @@ uk:
       general: 'Основне'
       settings: 'Налаштування'
       delete: 'Видалити категорію'
-      create: 'Створити категорію'
       save: 'Зберегти категорію'
       creation_error: Під час створення категорії трапилася помилка.
       save_error: Під час збереження категорії трапилася помилка.
@@ -838,7 +829,6 @@ uk:
         muted:
           title: "Ігноровані"
     flagging:
-      title: 'Чому Ви приватно скаржитеся на цей допис?'
       action: 'Поскаржитися на допис'
       take_action: "Вжити заходів"
       notify_action: 'Сповістити'
@@ -846,14 +836,11 @@ uk:
       delete_confirm: "Ви збираєтеся видалити <b>%{posts}</b> дописів і <b>%{topics}</b> тем цього користувача, видалити його обліковий запис, заблокувати реєстрації з його IP-адреси <b>%{ip_address}</b> та додати його електронну скриньку <b>%{email}</b> до чорного списку заблокованих адрес. Ви впевнені, що цей користувач дійсно спамер?"
       yes_delete_spammer: "Так, видалити спамера"
       cant: "Даруйте, зараз Ви не можете поскаржитися на цей допис."
-      custom_placeholder_notify_user: "Чому цей допис вимагає, щоб Ви звернулися до автора напряму і приватно? Будьте конкретними, будьте конструктивними, і обов'язково - доброзичливими."
-      custom_placeholder_notify_moderators: "Чому цей допис потребує уваги модератора? Дайте нам знати, що саме Вас занепокоїло, і надайте відповідні посилання, якщо це можливо."
       custom_message:
         at_least: "введіть принаймні {{n}} символів"
         more: "ще {{n}}..."
         left: "залишилось {{n}}"
     flagging_topic:
-      title: "Why are you privately flagging this topic?"
       action: "Flag Topic"
       notify_action: "Notify"
     topic_map:
@@ -1089,9 +1076,6 @@ uk:
         title: "Customize"
         long_title: "Site Customizations"
         header: "Header"
-        css: "Stylesheet"
-        mobile_header: "Mobile Header"
-        mobile_css: "Mobile Stylesheet"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"
@@ -1144,7 +1128,6 @@ uk:
         sent_test: "надіслано!"
         delivery_method: "Спосіб доставки"
         preview_digest: "Стислий виклад новин"
-        preview_digest_desc: "Це - інструмент для попереднього перегляду вмісту листів зі стислим викладом новин, що надсилаються з Вашого форуму."
         refresh: "Оновити"
         format: "Формат"
         html: "html"

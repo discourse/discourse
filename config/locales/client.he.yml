@@ -246,10 +246,9 @@ he:
       location_not_found: (לא ידוע)
       organisation: ארגון
       phone: טלפון
-      other_accounts: חשבונות אחרים עם כתובת IP זהה
       no_other_accounts: (ללא)
     user:
-      said: "{{שם משתמש/ת}}:"
+      said: "{{username}}:"
       profile: "פרופיל"
       mute: "השתק"
       edit: "ערוך העדפות"
@@ -277,6 +276,7 @@ he:
       admin_tooltip: "משתמש זה הינו מנהל מערכת (Admin)"
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
+      github_profile: "גיטהאב"
       mailing_list_mode: "קבלו דוא\"ל על כל פרסום חדש (אלא אם כן השתקתם את הנושא או את הקטגוריה)"
       watched_categories: "נצפה"
       watched_categories_instructions: "את/ה אוטומטית תצפו בכל הנושאים החדשים בקטגוריות האלה. תקבלו התראות על כל ההודעות והנושאים החדשים, ובנוסף, כמות ההודעות שלא נקראו יופיעו לצד כל נושא."
@@ -337,7 +337,6 @@ he:
       email:
         title: "דואר אלקטרוני"
         instructions: "לעולם לא מוצג לציבור."
-        ok: "נראה טוב, נשלח לך דואר אלקטרוני לאישור."
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}."
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
@@ -586,8 +585,6 @@ he:
       reply_here: "תגובה כאן"
       reply: "תגובה"
       cancel: "ביטול"
-      create_topic: "יצירת נושא"
-      create_pm: "יצירת הודעה פרטית"
       title: "או לחץ Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
@@ -658,10 +655,7 @@ he:
       title_with_attachments: "הוספת תמונה או קובץ"
       from_my_computer: "מהמחשב שלי"
       from_the_web: "מהאינטרנט"
-      remote_tip: "קישור לתמונה http://example.com/image.jpg"
-      remote_tip_with_attachments: "קישור לתמונה או קובץ http://example.com/file.ext (סיומות מותרות: {{authorized_extensions}})."
       local_tip: "לחץ לבחירת תמונה מהמכשיר שלך"
-      local_tip_with_attachments: "לחץ לבחירת תמונה או קובץ מהמכשיר שלך (סיומות מותרות: {{authorized_extensions}})"
       hint: "(ניתן גם לגרור לעורך להעלאה)"
       hint_for_supported_browsers: "(אתה יכול גם לעשות drag and drop או להדביק תמונות אל תוך העורך כדי להעלות אותן)"
       uploading: "מעלה"
@@ -728,7 +722,6 @@ he:
         top: "אין עוד נושאים מובילים."
     topic:
       filter_to: "{{post_count}} הודעות בנושא"
-      create: 'יצירת נושא'
       create_long: 'יצירת נושא חדש'
       private_message: 'התחלת הודעה פרטית'
       list: 'נושאים'
@@ -886,6 +879,7 @@ he:
         n_posts:
           one: "הודעה אחת"
           other: "{{count}} הודעות"
+        cancel: "הסרת הסינון"
       split_topic:
         title: "העבר לנושא חדש"
         action: "העבר לנושא חדש"
@@ -1122,7 +1116,6 @@ he:
       general: 'כללי'
       settings: 'הגדרות'
       delete: 'מחק קטגוריה'
-      create: 'צור קטגוריה'
       save: 'שמור קטגוריה'
       creation_error: ארעה שגיאה במהלך יצירת הקטגוריה הזו.
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
@@ -1173,7 +1166,6 @@ he:
           title: "מושתק"
           description: "לא תקבל התראות בנוגע לנושאים חדשים בקטגוריות האלה, והם לא יופיעו בלשונית ה\"לא נקראו\" שלך."
     flagging:
-      title: 'מדוע את/ה מסמנים את הנושא באופן פרטי?'
       action: 'סימון פרסום'
       take_action: "בצע פעולה"
       notify_action: 'הודעה פרטית'
@@ -1185,14 +1177,15 @@ he:
       submit_tooltip: "שידור הסימון  כ \"פרטי\""
       take_action_tooltip: "הגעה באופן מיידי למספר הסימונים האפשרי, במקום להמתין לסימונים נוספים מן הקהילה"
       cant: "סליחה, לא ניתן לסמן הודעה זו כרגע."
-      custom_placeholder_notify_user: "מדוע ההודעה הזו דורשת ממך לדבר עם משתמש זה ישירות ובפרטיות? היה ספציפי, בונה, ותמיד אדיב."
-      custom_placeholder_notify_moderators: "מדוע הודעה זו דורשת תשומת לב של מנהל? ספר לנו באופן ספציפי מה מטריד לגבי זה וצרף קישורים רלוונטיים כשניתן."
+      formatted_name:
+        off_topic: "מחוץ לנושא"
+        inappropriate: "לא ראוי"
+        spam: "זהו ספאם"
       custom_message:
         at_least: "הזן לפחות {{n}} תווים"
         more: "{{n}} נשארו..."
         left: "{{n}} נותרו"
     flagging_topic:
-      title: "מדוע את/ה מסמנים את נושא זה באופן פרטי?"
       action: "סימון נושא"
       notify_action: "הודעה פרטית"
     topic_map:
@@ -1351,6 +1344,11 @@ he:
           7_days_ago: "לפני שבעה ימים"
           30_days_ago: "לפני 30 ימים"
           all: "הכל"
+          view_table: "טבלא"
+          view_chart: "תרשים בר"
+          refresh_report: "רענון דו\"ח"
+          start_date: "תאריך התחלה"
+          end_date: "תאריך סיום"
       commits:
         latest_changes: "שינויים אחרונים: בבקשה עדכן תכופות!"
         by: "על ידי"
@@ -1506,9 +1504,6 @@ he:
         title: "התאם אישית"
         long_title: "התאמה של האתר"
         header: "כותרת"
-        css: "Stylesheet"
-        mobile_header: "כותרת סלולרית"
-        mobile_css: "Stylesheet סלולרי"
         override_default: "אל תכלול את ה-Stylesheet הסטנדרטי"
         enabled: "מאופשר?"
         preview: "תצוגה מקדימה"
@@ -1591,7 +1586,6 @@ he:
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
         preview_digest: "תצוגה מקדימה של סיכום"
-        preview_digest_desc: "זה כלי לתצוגה מקדימה של תוכן של הודעת הסיכום הנשלחות בדואר אלקטרוני מהפורום."
         refresh: "רענן"
         format: "פורמט"
         html: "html"
@@ -1687,6 +1681,7 @@ he:
         last_emailed: "נשלח בדואר אלקטרוני לאחרונה"
         not_found: "סליחה, שם המשתמש הזה אינו קיים במערכת שלנו."
         active: "פעיל"
+        show_emails: "הצגת דוא\"לים"
         nav:
           new: "חדש"
           active: "פעיל"

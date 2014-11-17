@@ -108,8 +108,6 @@ id:
     spam:
       long_form: 'menandai sebagai spam'
     notify_moderators:
-      title: 'Beri notifikasi pada moderator'
-      long_form: 'telah mengirimkan notifikasi kepada moderator'
       email_title: 'Perhatian moderator dibutuhkan di topik "%{title}"'
   reports:
     moderator_warning_private_messages:

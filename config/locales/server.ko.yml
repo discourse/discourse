@@ -37,7 +37,7 @@ ko:
   not_logged_in: "로그인된 사용자만 사용 가능합니다."
   read_only_mode_enabled: "현재 읽기 전용 모드입니다."
   too_many_replies:
-    other: "죄송합니다. 신규 사용자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다."
+    other: "죄송합니다. 신규 가입자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다."
   embed:
     start_discussion: "토론 시작"
     continue: "토론 계속하기"
@@ -70,6 +70,7 @@ ko:
     one: "죄송합니다. 새로운 사용자는 한 게시물에 하나의 링크만 넣을 수 있습니다."
     other: "죄송합니다. 새로운 사용자는 한 게시물에 %{count}개의 링크만 넣을 수 있습니다."
   spamming_host: "죄송합니다. 링크를 첨부 하실 수 없습니다."
+  user_is_suspended: "가입이 보류된 사용자는 게시물을 작성할 수 없습니다."
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   has_already_been_used: "이미 사용되었습니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
@@ -168,6 +169,8 @@ ko:
         name: "카테고리 이름"
       post:
         raw: "본문"
+      user_profile:
+        bio_raw: "About Me"
     errors:
       messages:
         is_invalid: "사용할 수 없습니다. 조금 더 자세하게 적어주세요."
@@ -175,6 +178,9 @@ ko:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "개인 메시지를 통해 경고를 보낼 수 있습니다."
+              too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
             archetype:
               cant_send_pm: "그 사용자에게 개인 메세지를 보낼 수 없습니다."
         user:
@@ -193,10 +199,15 @@ ko:
   vip_category_name: "라운지"
   vip_category_description: "신뢰 등급 3 혹은 그 이상의 회원만 입장가능한 카테고리"
   meta_category_name: "메타"
+  meta_category_description: "이 사이트의 운영 방식에 대해 건의하고 토론하는 곳입니다."
   staff_category_name: "스태프"
   staff_category_description: "스태프들의 논의를 위한 비공개 카테고리입니다. 관리자 및 운영자에게만 보입니다."
+  assets_topic_body: "이 토픽은 스태프에게만 보이는 영구적인 토픽입니다. 사이트 디자인을 위한 이미지를 저장할 수 있습니다. 지우지 마세요!\n\n다음처럼 하세요:\n\n1. 이 토픽에 답글을 작성하세요.\n2. 로고, 파비콘 등으로 사용하고 싶은 모든 이미지들을 업로드한다. (포스트 에디터 툴바의 업로드 아이콘을 사용하거나, 드래그 앤 드롭으로 이미지를 올려주세요.)\n3. 답글을 제출한다.\n4. 답글의 업로드된 이미지를 우클릭하거나, 수정 버튼을 눌러 이미지의 경로를 확인하세요. 해당 이미지의 경로를 복사하세요.\n5. 복사한 이미지 경로를 [basic settings](/admin/site_settings/category/required)에 붙여넣으세요.\n\n\n다른 유형의 이미지를 사용해야한다면 [file settings](/admin/site_settings/category/files)의 `authorized_extensions` 를 수정하세요."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
+    body: |2
+
+      축하합니다! :confetti_ball: 당신의 신뢰도가 **지도자** (신뢰도 3등급)로 올라갔기 때문에 이 토픽을 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 토픽을 제목을 수정할 수 있습니다 * 토픽의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 신뢰도 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (신뢰도에 관한 더 자세한 정보를 보시려면, [이 토픽을 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]:  https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "'%{category}' 카테고리의 설명"
     replace_paragraph: "[이 첫번째 문단을 당신의 새로운 카테고리의 짧은 설명으로 바꿔주세요. 이 지침은 카테고리 선택 화면에 나타날 것입니다. 200자 이하로 적어주세요.]"
@@ -222,7 +233,9 @@ ko:
       title: "정규 회원"
     elder:
       title: "지도자"
+    change_failed_explanation: "당신은 %{user_name} 사용자를 '%{new_trust_level}'으로 강등시키려 하였습니다. 하지만 해당 사용자의 신뢰도는 이미 '%{current_trust_level}'입니다. %{user_name} 사용자의 신뢰도는 '%{current_trust_level}'으로 유지됩니다.  - if you wish to demote user lock trust level first"
   rate_limiter:
+    slow_down: "해당 작업을 너무 많이 수행했습니다. 잠시 뒤에 다시 시도해보세요."
     too_many_requests: "지금 하시려는 행동에는 하루 제한이 있습니다. %{time_left} 동안 기다리시고 다시 시도해 주세요."
     hours:
       other: "%{count}시간"
@@ -232,7 +245,7 @@ ko:
       other: "%{count}초"
   datetime:
     distance_in_words:
-      half_a_minute: "30초 전"
+      half_a_minute: "<1분"
       less_than_x_seconds:
         other: "%{count}초 전"
       x_seconds:
@@ -296,14 +309,12 @@ ko:
   activation:
     action: "계정 활성화"
     already_done: "죄송합니다. 이 계정 확인 링크는 더 이상 유효하지 않습니다."
-    please_continue: "계정이 활성화되었고, 로그인 되었습니다."
     continue_button: "%{site_name}으로 가기"
     welcome_to: "%{site_name}에 오신것을 환영합니다."
     approval_required: "이 포럼을 사용하기 위해선 운영자가 수동으로 당신의 새로운 계정을 수락해야 합니다. 계정이 수락이 되면 자동으로 이메일이 발송됩니다."
   post_action_types:
     off_topic:
       title: '오프 토픽'
-      description: '이 글은 현재 주제와 전혀 맞지 않습니다.'
       long_form: '오프 토픽으로 신고하기'
     spam:
       title: '스팸'
@@ -314,14 +325,10 @@ ko:
       description: '이 게시물은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
       long_form: '부적절함으로 신고하기'
     notify_user:
-      title: '{{username}}에게 알리기'
-      long_form: '신고한 사용자'
+      description: '이 게시물에 내가 작성자와 직접 대화하고 싶은 내용이 있습니다. 신고에서 제외해주세요.'
       email_title: '"%{title}" 내의 당신의 게시글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: '운영자에게 알리기'
-      description: '이 게시물은 <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, 또는 다른 이유에서 운영자의 주의가 필요합니다.'
-      long_form: '운영자에게 알림'
       email_title: '"%{title}" 게시물에 대한 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -348,9 +355,7 @@ ko:
         <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
-      title: '운영자에게 알림'
-      description: '이 게시물은 <a href="/faq">FAQ</a>, <a href="%{tos_url}">TOS</a>, 또는 기타 다른 이유에서 운영자의 주의가 필요합니다.'
-      long_form: '운영자에게 알림'
+      description: '이 게시물은 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 또는 다른 이유와 관련해서 운영자의 주의가 필요합니다.'
       email_title: '토픽 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -506,7 +511,6 @@ ko:
       description: "모든 페이지 상단에 추가할 HTML(헤더 아래, 네비게이션이나 토픽 제목 위)."
     bottom:
       title: "페이지 하단"
-      description: "모든 페이지 하단에 추가할 HTML"
   site_settings:
     default_locale: "Discourse 인스턴스가 사용하는 기본 언어 (ISO 639-1 Code)"
     allow_user_locale: "사용자에게 자신이 원하는 언어를 선택할 수 있는 옵션을 제공한다."
@@ -525,9 +529,9 @@ ko:
     title: "title 태그에 쓰일, 이 싸이트의 짧은 제목"
     site_description: "이 사이트를 한 문장으로 설명해 주세요. meta description 태그에 사용됩니다."
     contact_email: "이 사이트에 대한 주 이메일 주소. discourse.org로부터 중요한 업데이트에 대한 정보가 이 메일 주소로 보내질 것입니다."
-    company_full_name: "정책이나 약관에 사용되는 이 사이트를 운영하는 회사의 전체 이름"
-    company_short_name: "정책이나 약관에 사용되는 이 사이트를 운영하는 회사의 축약 이름"
-    company_domain: "정책이나 약관에 사용되는 이사이트를 운영하는 회사의 도메인 이름"
+    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_short_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_domain: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "오직 개발자만!! 주의!! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경한다. 이미지가 깨지는 것을 막을 수 있다."
@@ -536,6 +540,7 @@ ko:
     ninja_edit_window: "편집을 결과가 새로운 버전을 생성하지 않는 포스팅 이후에 경과할 시간(초)"
     post_edit_time_limit: "글 작성자가 해당 글을 편집하거나 삭제할 수 있도록 허용되는 시간(분). 0으로 설정하면 언제든지 편집이나 삭제가 허용됨."
     edit_history_visible_to_public: "모든 사용자가 게시글의 수정 내역을 볼 수 있도록 허용. 비활성화시 스태프 맴버만 수정 내역을 볼 수 있음."
+    delete_removed_posts_after: "작성자에 의해 삭제된 게시물은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
     category_featured_topics: "카테고리 페이지에서 한 카테고리당 보여질 토픽의 수"
@@ -650,7 +655,6 @@ ko:
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
-    s3_upload_bucket: "업로드된 파일이 위치할 Amazon S3 버켓 이름. 주의 : 소문자로 period(.)업는 문자열"
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
     s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"
@@ -741,7 +745,10 @@ ko:
     private_message: "%{display_username} 사용자가 당신에게 개인 메시지를 보냈습니다: %{link}"
     invited_to_private_message: "%{display_username} 사용자가 당신에게 개인 메시지로 초대하였습니다: %{link}"
     invitee_accepted: "%{display_username} 사용자가 당신의 초대를 수락하였습니다."
+    linked: "%{display_username} 사용자가 %{link} 에서 당신을 링크했습니다."
+    granted_badge: "당신은 %{link}를 획득했습니다."
   search:
+    within_post: "#%{post_number} by %{username}"
     types:
       category: '카테고리'
       topic: '검색 결과'
@@ -750,18 +757,41 @@ ko:
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
   frequent_poster: "빈번한 게시자"
+  redirected_to_top_reasons:
+    new_user: "우리 커뮤니티에 오신 것을 환영합니다! 다음은 우리 사이트에서 가장 인기 많은 최근 토픽들입니다."
+    not_seen_in_a_month: "잘 돌아오셨습니다. 다음은 당신이 오지 않은 동안 가장 인기있던 토픽들입니다."
   move_posts:
     new_topic_moderator_post:
       other: "%{count}개의 글을 새 토픽으로 옮겼습니다: %{topic_link}"
     existing_topic_moderator_post:
       other: "%{count}개의 글을 기존 토픽으로 옮겼습니다: %{topic_link}"
+  change_owner:
+    post_revision_text: "소유권이 %{old_user}에서 %{new_user}으로 이전되었습니다."
   topic_statuses:
     archived_enabled: "이 토픽은 보관되었고 더이상 변경하실 수 없습니다."
     archived_disabled: "이 토픽의 보관이 풀렸고 이제 변경하실 수 있습니다."
     closed_enabled: "이 토픽은 이제 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     closed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 다실 수 있습니다."
+    autoclosed_enabled_days:
+      other: "이 토픽은 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_hours:
+      other: "이 토픽은 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_minutes:
+      other: "이 토픽은 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_lastpost_days:
+      other: "이 토픽은 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_lastpost_hours:
+      other: "이 토픽은 마지막 답글이 달리고 %{count}시간 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_lastpost_minutes:
+      other: "이 토픽은 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
+    autoclosed_disabled_lastpost: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
+    pinned_enabled: "이 토픽은 고정되었습니다. 고정이 해제되기 전까지 카테고리의 상단에 나타납니다."
     pinned_disabled: "이 토픽은 이제 고정이 풀렸습니다. 더이상 카테고리 상단에 보이지 않을 것입니다."
+    pinned_globally_enabled: "이 토픽은 이제 전역적으로 고정되었습니다. 카테고리와 모든 토픽 리스트에서 상단에 나타납니다."
+    pinned_globally_disabled: "이 토픽은 이제 고정이 풀렸습니다. 더이상 카테고리 상단에 보이지 않을 것입니다."
+    visible_enabled: "이 토픽은 리스트에 추가되었습니다. 토픽 리스트에 나타나게 될 것입니다."
+    visible_disabled: "이 토픽은 이제 리스트에서 해제되었습니다. 더이상 토픽 리스트에 나타나지 않습니다. 링크를 통해서만 접근할 수 있습니다."
   login:
     not_approved: "당신의 계정은 아직 활성화되지 않았습니다. 이메일을 확인하시고 로그인 해주세요."
     incorrect_username_email_or_password: "계정 아이디, 이메일 또는 패스워드가 다릅니다."
@@ -789,7 +819,7 @@ ko:
     ip_address:
       blocked: "는 블락되었습니다."
   test_mailer:
-    subject_template: "[%{site_name}] Email Deliverability Test"
+    subject_template: "[%{site_name}] 이메일 발송 테스트"
   system_messages:
     post_hidden:
       subject_template: "포럼 신고로 인한 게시글 숨김"
@@ -805,6 +835,8 @@ ko:
         다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
+    backup_failed:
+      subject_template: "백업에 실패했습니다."
     too_many_spam_flags:
       subject_template: "새로운 계정은 블락되었습니다."
     blocked_by_staff:
@@ -833,6 +865,8 @@ ko:
     reply_by_email: "응답하시려면 %{base_url}%{url} 를 방문하시거나 이메일에 답장하세요."
     visit_link_to_respond: "응답하시려면 %{base_url}%{url} 를 방문하세요."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} 사용자가 당신을 개인 메시지에 초대했습니다. '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
       text_body_template: |
@@ -870,12 +904,10 @@ ko:
         ---
         %{respond_instructions}
     digest:
-      why: "본 메일은 %{last_seen_at}에  %{site_link} 방문 이후 작성된 글들을 간략하게 요약한 내용을 담고 있습니다."
       subject_template: "[%{site_name}] 요약 %{date}"
       new_activity: "당신의 토픽과 게시물에 등록된 새로운 활동:"
       top_topics: "인기 게시글"
       other_new_topics: "인기 토픽"
-      unsubscribe: "이 이메일은 사용자님께서 한동안 %{site_link}에 방문하지 않아 사이트의 활동들을 요약한것 입니다. 만약 구독 해지를 원하시면 링크를 클릭해주세요. %{unsubscribe_link}"
       click_here: "클릭"
       from: "%{site_name} 요약"
       read_more: "더 읽기"

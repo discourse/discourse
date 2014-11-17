@@ -245,7 +245,6 @@ pt_BR:
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefone
-      other_accounts: Outras contas com esse endereço de IP
       no_other_accounts: (nenhum)
     user:
       said: "{{username}}:"
@@ -335,12 +334,12 @@ pt_BR:
       email:
         title: "Email"
         instructions: "Não visível publicamente."
-        ok: "Parece ok. Vamos enviar um email para você confirmar."
         invalid: "Por favor, coloque um email válido."
         authenticated: "O seu email foi autenticado por {{provider}}."
         frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
+        instructions: "Nome Completo ( campo opcional )"
         too_short: "O seu nome é muito curto."
         ok: "O seu nome parece ok."
       username:
@@ -580,8 +579,6 @@ pt_BR:
       reply_here: "Responda aqui"
       reply: "Responder"
       cancel: "Cancelar"
-      create_topic: "Criar um tópico"
-      create_pm: "Criar uma Mensagem Privada"
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
@@ -652,10 +649,7 @@ pt_BR:
       title_with_attachments: "Adicionar uma imagem ou arquivo"
       from_my_computer: "Do meu dispositivo"
       from_the_web: "Da internet"
-      remote_tip: "link para a imagem http://exemplo.com.br/imagem.jpg"
-      remote_tip_with_attachments: "link para a imagem ou arquivo http://exemplo.com.br/arquivo.ext (extensões possíveis: {{authorized_extensions}})."
       local_tip: "clique para selecionar um arquivo do seu dispositivo"
-      local_tip_with_attachments: "clique para selecionar uma imagem ou arquivo do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(Você também pode arrastar e soltar para o editor para carregá-las)"
       hint_for_supported_browsers: "(você também pode arrastar e soltar ou colar imagens no editor para carregá-las)"
       uploading: "Enviando"
@@ -722,7 +716,6 @@ pt_BR:
         top: "Não há mais tópicos em alta."
     topic:
       filter_to: "{{post_count}} mensagens no tópico"
-      create: 'Criar tópico'
       create_long: 'Criar um novo tópico'
       private_message: 'Começar uma nova conversa privada'
       list: 'Tópicos'
@@ -1116,7 +1109,6 @@ pt_BR:
       general: 'Geral'
       settings: 'Configurações'
       delete: 'Apagar categoria'
-      create: 'Criar categoria'
       save: 'Salvar categoria'
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
@@ -1167,7 +1159,6 @@ pt_BR:
           title: "Silenciar"
           description: "Você não será notificado sobre novos tópicos dessas categorias e eles não vão aparecer na guia de mensagens não lidas."
     flagging:
-      title: 'Por que você está sinalizando como privada esta mensagem?'
       action: 'Sinalizar resposta'
       take_action: "Tomar Atitude"
       notify_action: 'Mensagem privada'
@@ -1179,14 +1170,11 @@ pt_BR:
       submit_tooltip: "Enviar uma sinalização privada"
       take_action_tooltip: "Atingir o limiar de denuncias imediatamente, ao invés de esperar para mais denuncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
-      custom_placeholder_notify_user: "Porque esta resposta requer que você fale diretamente e privativamente com este usuário? Seja específico, construtivo e sempre gentil."
-      custom_placeholder_notify_moderators: "Porque esta resposta requer atenção do moderador? Diga especificamente como isto te preocupa e forneça links relevantes se possível."
       custom_message:
         at_least: "insira pelo menos {{n}} caracteres"
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
     flagging_topic:
-      title: "Por que você está sinalizando privativamente este tópico?"
       action: "Sinalizar Tópico"
       notify_action: "Mensagem privada"
     topic_map:
@@ -1500,9 +1488,6 @@ pt_BR:
         title: "Personalizar"
         long_title: "Personalizações do Site"
         header: "Cabeçalho"
-        css: "Stylesheet"
-        mobile_header: "Cabeçalho Mobile"
-        mobile_css: "Folha de Estilos Mobile"
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
         preview: "pré-visualização"
@@ -1585,7 +1570,6 @@ pt_BR:
         sent_test: "enviado!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "Esta é uma ferramenta para prever o conteúdo dos emails de resumo enviados a partir do seu forum."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"

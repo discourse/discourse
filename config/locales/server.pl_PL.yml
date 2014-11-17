@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 pl_PL:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -377,14 +380,13 @@ pl_PL:
   activation:
     action: "Aktywuj swoje konto"
     already_done: "Przepraszamy, ten link aktywujący konto jest już nieważny. Być może Twoje konto jest już aktywne ?"
-    please_continue: "Twoje nowe konto zostało aktywowane, zalogowano."
+    please_continue: "Twoje nowe konto zostało aktywowane, zostaniesz przekierowany na stronę główną."
     continue_button: "Przejdź do %{site_name}"
     welcome_to: "Witamy na forum %{site_name}!"
     approval_required: "Moderator musi zaakceptować Twoje nowe konto zanim uzyskasz dostęp do forum. O aktywacji zostaniesz poinformowanym mailem."
   post_action_types:
     off_topic:
       title: 'Nie-na-temat'
-      description: 'Ten wpis nie ma żadnego związku z tematem w którym się znajduje i powinien prawdopodobnie zostać przeniesiony. Jeśli jest to wpis rozpoczynający temat, możliwe, że cały temat tu nie pasuje.'
       long_form: 'oflagowano jako nie-na-temat'
     spam:
       title: 'Spam'
@@ -395,15 +397,11 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      title: 'Powiadom {{username}}'
+      title: 'Prywatna wiadomość @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
-      long_form: 'powiadomiono użytkownika'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Powiadom moderatorów'
-      description: 'Ten wpis wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
-      long_form: 'powiadomiono moderatorów'
       email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -428,9 +426,7 @@ pl_PL:
       description: 'Ten temat zawiera treści jakie rozsądna osoba może uznać za agresywne, obraźliwe,  lub sprzeczne z <a href="/guidelines">wytycznymi społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
-      title: 'Powiadom moderatorów'
       description: 'Ten temat wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
-      long_form: 'powiadomiono moderatorów'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -586,7 +582,6 @@ pl_PL:
       description: "Kod HTML jaki zostanie dołączony na górze każdej strony (po nagłówku, przed nawigacją lub tytułem tematu)."
     bottom:
       title: "Stopka każdej strony"
-      description: "Kod HTML jaki zostanie dołączony na dole każdej strony."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -654,7 +649,6 @@ pl_PL:
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
@@ -896,17 +890,13 @@ pl_PL:
         ---
         %{respond_instructions}
     digest:
-      why: "Krótkie podsumowanie aktywności na %{site_link} od twojej ostatniej wizyty w dniu %{last_seen_at}."
       subject_template: "[%{site_name}] Podsumowanie dla %{date}"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
       top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"
-      unsubscribe: "To podsumowanie wysyłane jest przez %{site_link} gdy nie odwiedzasz serwisu przez jakiś czas.  Aby zrezygnować tych powiadomień %{unsubscribe_link}."
       click_here: "kliknij tutaj"
       from: "podsumowanie %{site_name} "
       read_more: "Czytaj więcej"
-      more_topics: "Od twojej ostatniej wizyty w dniu %{last_seen_at} pojawiło się jeszcze %{new_topics_since_seen} nowych tematów."
-      more_topics_category: "Od twojej ostatniej wizyty w dniu %{last_seen_at} w wybranych kategoriach pojawiło się %{new_topics_since_seen} nowych tematów:"
       posts:
         one: "1 wpis"
         few: "%{count} wpisy"

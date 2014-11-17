@@ -267,7 +267,6 @@ cs:
       location_not_found: (neznámá)
       organisation: Organizace
       phone: Telefon
-      other_accounts: Další účty s touto IP adresou
       no_other_accounts: (žádné)
     user:
       said: "{{username}}:"
@@ -353,7 +352,6 @@ cs:
       email:
         title: "Emailová adresa"
         instructions: "Nikdy nebude zveřejněno."
-        ok: "To vypadá dobře. Zašleme vám email s potvrzením."
         invalid: "Prosím zadejte platnou emailovou adresu."
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
         frequency: "Budeme vás informovat emailem pouze pokud jste se na našem webu dlouho neukázali a pokud jste obsah, o kterém vás chceme informovat, doposud neviděli."
@@ -603,8 +601,6 @@ cs:
       reply_here: "Odpovědět sem"
       reply: "Odpovědět"
       cancel: "Zrušit"
-      create_topic: "Nové téma"
-      create_pm: "Vytvořit soukromou zprávu"
       title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
@@ -675,10 +671,7 @@ cs:
       title_with_attachments: "Nahrát obrázek nebo soubor"
       from_my_computer: "Z mého zařízení"
       from_the_web: "Z webu"
-      remote_tip: "zadejte adresu obrázku ve formátu http://example.com/image.jpg"
-      remote_tip_with_attachments: "zadejte adresu obrázku nebo souboru ve formátu http://example.com/file.ext"
       local_tip: "klikněte sem pro výběr obrázku z vašeho zařízení."
-      local_tip_with_attachments: "klikněte sem pro výběr obrázku nebo souboru z vašeho zařízení."
       hint: "(můžete také rovnou soubor do editoru přetáhnout)"
       hint_for_supported_browsers: "(můžete také rovnou obrázky do editoru přetáhnout)"
       uploading: "Nahrávám"
@@ -746,7 +739,6 @@ cs:
         top: "Nejsou tu žádná další populární témata."
     topic:
       filter_to: "{{post_count}} příspěvků v tématu"
-      create: 'Nové téma'
       create_long: 'Vytvořit nové téma'
       private_message: 'Vytvořit soukromou konverzaci'
       list: 'Témata'
@@ -1162,7 +1154,6 @@ cs:
       general: 'Základní'
       settings: 'Nastavení'
       delete: 'Smazat kategorii'
-      create: 'Vytvořit kategorii'
       save: 'Uložit kategorii'
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
@@ -1206,7 +1197,6 @@ cs:
           title: "Ztišený"
           description: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
     flagging:
-      title: 'Proč nahlašujete tento příspěvek?'
       action: 'Nahlásit příspěvek'
       take_action: "Zakročit"
       notify_action: 'Private message'
@@ -1216,14 +1206,11 @@ cs:
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
       cant: "Bohužel nyní nemůžete tento příspěvek nahlásit."
-      custom_placeholder_notify_user: "Proč chcete s tímto uživatele mluvit přímo a soukromě? Buďte konstruktivní, konkrétní a hlavně vstřícní."
-      custom_placeholder_notify_moderators: "Proč příspěvek vyžaduje pozornost moderátora? Dejte nám vědět, co konkrétně vás znepokojuje, a poskytněte relevantní odkazy, je-li to možné."
       custom_message:
         at_least: "zadejte alespoň {{n}} znaků"
         more: "ještě {{n}}..."
         left: "{{n}} zbývá"
     flagging_topic:
-      title: "Proč nahlašujete tento příspěvek?"
       action: "Nahlásit téma"
       notify_action: "Private message"
     topic_map:
@@ -1521,9 +1508,6 @@ cs:
         title: "Přizpůsobení"
         long_title: "Přizpůsobení webu"
         header: "header"
-        css: "CSS"
-        mobile_header: "Mobilní header"
-        mobile_css: "Mobilní CSS"
         override_default: "Přetížit výchozí?"
         enabled: "Zapnuto?"
         preview: "náhled"
@@ -1574,7 +1558,6 @@ cs:
         sent_test: "odesláno!"
         delivery_method: "Způsob doručení"
         preview_digest: "Náhled souhrnu"
-        preview_digest_desc: "Toto je nástroj pro zobrazení toho, jak bude vypadat pravidelný souhrn odesílaný uživatelům."
         refresh: "Aktualizovat"
         format: "Formát"
         html: "html"

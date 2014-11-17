@@ -186,12 +186,8 @@ uk:
       title: 'Неприпустиме'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Сповістити {{username}}'
-      long_form: 'notified user'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Звернути увагу модераторів'
-      long_form: 'notified moderators'
       email_title: 'Допис у темі "%{title}" потребує уваги модератора'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -215,8 +211,6 @@ uk:
       title: 'Inappropriate'
       long_form: 'flagged this as inappropriate'
     notify_moderators:
-      title: 'Notify moderators'
-      long_form: 'notified moderators'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
   archetypes:
@@ -358,7 +352,6 @@ uk:
       description: "HTML-код, що буде додаватися на початку кожної сторінки (після заголовка, перед навігацією або назвою теми)."
     bottom:
       title: "Нижній колонтитул сторінок"
-      description: "HTML-код, що буде додаватися внизу кожної сторінки."
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
