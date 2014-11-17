@@ -360,14 +360,14 @@ fr:
   activation:
     action: "Activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
-    please_continue: "Votre nouveau compte est confirmé, et vous êtes maintenant connecté."
+    please_continue: "Votre nouveau compte est confirmé; vous allez être redirigé vers la page d'accueil."
     continue_button: "Continuer vers %{site_name}"
     welcome_to: "Bienvenue sur %{site_name} !"
     approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un courriel lorsque que votre compte sera approuvé !"
   post_action_types:
     off_topic:
       title: 'Hors-sujet'
-      description: 'Ce message est radicalement hors-sujet dans ce contexte, et devrait probablement être déplacé. Si c''est un sujet, il n''a peut être pas ça place içi.'
+      description: 'Étant donné le titre et le premier message de cette discussion, ce message n''est pas pertinent dans ce contexte et devrait probablement être déplacé ailleurs.'
       long_form: 'signalé comme hors-sujet.'
     spam:
       title: 'Spam'
@@ -378,15 +378,11 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
-      title: 'Avertir {{username}}'
       description: 'Ce message contient quelque chose sur lequel je souhaite discuter en privé avec cet utilisateur. N''envoi pas de signalement.'
-      long_form: 'utilisateur avertis'
       email_title: 'Votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Avertir un modérateur'
-      description: 'Ce message requiert l''attention de la modération d''après les <a href=''/fguidelines''>règlement de la communauté</a>, <a href=''%{tos_url}''>TOS</a>, ou pour une autre raison indéterminée.'
-      long_form: 'signalé aux modérateurs'
+      description: 'Ce message nécessite l''attention d''un modérateur pour une autre raison que celles listées ci-dessus.'
       email_title: 'Un message dans "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -411,9 +407,7 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_moderators:
-      title: 'Avertir les modérateurs'
       description: 'Ce message requiert l''attention de la modération d''après le <a href=''/guidelines''>règlement de la communauté</a>, <a href=''%{tos_url}''>TOS</a>, ou pour une autre raison non listée ici.'
-      long_form: 'signalé aux modérateurs'
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -571,7 +565,7 @@ fr:
       description: "HTML qui sera ajouté en haut de toutes les pages (après l'en-tête, avant la navigation ou le titre du sujet)."
     bottom:
       title: "Pied des pages"
-      description: "HTML qui sera ajouté au pied de chaque page."
+      description: "HTML qui sera ajouté avant la balise </body>."
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
@@ -744,7 +738,6 @@ fr:
     purge_inactive_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
-    s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans périodes."
     s3_access_key_id: "L' access key Amazon S3 qui sera utilisée pour uploader les images."
     s3_secret_access_key: "La clé secrète Amazon S3 qui va être utilisée pour uploader des images."
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
@@ -1109,7 +1102,6 @@ fr:
       other: "Il y a des signalements qui ont été soumis il y a plus de %{count} heures."
     please_review: "Veuillez examiner cela."
     post_number: "message"
-    how_to_disable: "Désactiver ce courriel en modifiant la valeur de <pre>notify_about_flags_after</pre> à 0."
     subject_template:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
@@ -1127,22 +1119,6 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à un signalement par la communauté"
-      text_body_template: |
-        Bonjour,
-
-        Ceci est un message automatique de %{site_name} pour vous informer que votre message ...
-
-        %{base_url}%{url}
-
-        ... a été caché à la suite d'un signalement de la communauté.
-
-        %{flag_reason}
-
-        Plusieurs membres ont signalé ce message avant qu'il ne soit caché, **veuillez donc prendre en compte leurs remarques pour revoir votre message**. Vous pouvez modifier le message après %{edit_delay} minutes, et il sera automatiquement ré-affiché. Ceci augmentera votre niveau de confiance sur le forum.
-
-        Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur -- et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
-
-        Pour plus d'informations, merci de vous en référer au [règlement de la communauté](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement.\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement. \n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes <kbd>☰</kbd> en haut à droite**.\n\n- Dans la liste des sujets, le titre vous emmènera toujours vers le prochain message non lu. Utiliser les colonnes Activité ou Messages pour allez au premier ou au dernier message. \n\n- Lorsque vous lisez un sujet, retournez en haut de celui &uarr; en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utilisez les touches <kbd>Home</kbd> et <kbd>Fin</kbd>. \n\n    <img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Comment je réponds ?\n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-post.png\" width=\"\
         29\" height=\"25\"> sur le message.\n\n - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionnez le texte que vous voulez citer et appuyez sur un des boutons Répondre.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nConcernant les [icones Emoji](http://www.emoji.codes/), commencez par écrire `:` ou le traditionnel smiley `:)` :smile: \n\n## Que puis-je faire d'autre ?\n\nÀ la fin de chaque message il y a un ensemble de boutons pour les différentes actions possibles.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler**\
@@ -1405,17 +1381,13 @@ fr:
         ---
         %{respond_instructions}
     digest:
-      why: "Voici un bref résumé de ce qu'il s'est passé sur %{site_link} depuis la dernière fois que nous vous avons vu(e) le %{last_seen_at}."
       subject_template: "[%{site_name}] Résumé du %{date}"
       new_activity: "Nouvelles activités sur vos sujets et messages :"
       top_topics: "Messages populaires"
       other_new_topics: "Sujets populaires"
-      unsubscribe: "Ce courriel résumé vous est transmis courtoisement par %{site_link} car nous ne vous avons pas vu depuis quelques temps. Pour vous désabonner %{unsubscribe_link}."
       click_here: "cliquez ici"
       from: "Résumé de %{site_name}"
       read_more: "Lire la suite"
-      more_topics: "Il y a eu %{new_topics_since_seen} autres nouveaux sujets postés depuis votre dernière visite le %{last_seen_at}."
-      more_topics_category: "Il y a eu %{new_topics_since_seen} autres nouveaux sujets postés dans ces catégories depuis votre dernière visite le %{last_seen_at}."
       posts:
         one: "1 message"
         other: "%{count} messages"

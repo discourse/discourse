@@ -28,6 +28,7 @@ da:
   errors:
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
+      invalid_boolean: "Ugyldig boolsk operator"
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
   bulk_invite:
@@ -175,6 +176,8 @@ da:
         name: "Kategorinavn"
       post:
         raw: "Brødtekst"
+      user_profile:
+        bio_raw: "Om mig"
     errors:
       messages:
         is_invalid: "er ugyldig; prøv at være lidt mere beskrivende"
@@ -203,6 +206,7 @@ da:
   vip_category_name: "Lounge"
   vip_category_description: "En ekslusiv kategori der kun er tilgængelig for medlemmer med tillidsniveu 3 eller højere."
   meta_category_name: "meta"
+  meta_category_description: "Diskussion om dette site, hvordan det er indrettet, hvordan det virker og hvordan vi kan forbedre det."
   staff_category_name: "Staff"
   staff_category_description: "Privat gruppe for staff diskussioner. Emner er kun synlige for administratorer og moderatorer."
   lounge_welcome:
@@ -228,6 +232,8 @@ da:
       title: "medlem"
     leader:
       title: "stamgæst"
+    elder:
+      title: "leder"
   rate_limiter:
     slow_down: "Du har forsøgt denne handling for ofte, prøv igen senere"
     too_many_requests: "Vi har en daglig grænse for hvor mange gange den pågældende handling kan udføres. Vent venligst %{time_left} før du prøver igen."
@@ -328,14 +334,14 @@ da:
   activation:
     action: "Aktiver din konto"
     already_done: "Beklager, dette bekræftelses-link er ikke længere gyldigt. Måske er din konto allerede aktiv?"
-    please_continue: "Din nye konto er bekræftet og du er nu logget ind."
+    please_continue: "Din nye konto er bekræftet; du bliver nu ledt til forsiden."
     continue_button: "Fortsæt til %{site_name}"
     welcome_to: "Velkommen til %{site_name}!"
     approval_required: "En moderator skal godkende din nye konto før du kan tilgå forummet. Du får en e-mail, når din konto er godkendt!"
   post_action_types:
     off_topic:
       title: 'Uden for emnet'
-      description: 'Dette indlæg ligger langt uden for emnet, og burde flyttes til et andet emne. Hvis det er et emne, hører det nok ikke til her.'
+      description: 'Dette indlæg er ikke relevant for denne diskussion som defineret af titlen og det første indlæg. Det skal nok flyttes et andet sted hen.'
       long_form: 'markerede dette som uden for emnet'
     spam:
       title: 'Spam'
@@ -346,13 +352,11 @@ da:
       description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'
       long_form: 'markerede dette som stødende'
     notify_user:
-      title: 'Underret {{username}}'
       description: 'Dette indlæg indeholder noget jeg gerne vil drøfte direkte og privat med vedkommende,  Bliver ikke markeret.'
-      long_form: 'underrettede bruger'
+      email_title: 'Dit indlæg i "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Underret moderatorer'
-      long_form: 'underrettede moderatorer'
+      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på en anden grund som ikke er nævnt ovenfor.'
       email_title: 'Et indlæg i "%{title}" kræver moderatorernes opmærksomhed'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -376,8 +380,6 @@ da:
       title: 'Upassende'
       long_form: 'markeret upassende'
     notify_moderators:
-      title: 'Underret moderatorer'
-      long_form: 'underrettede moderatorer'
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -385,6 +387,10 @@ da:
   archetypes:
     regular:
       title: "Almindeligt emne"
+    banner:
+      message:
+        make: "Dette emne er nu et banner-emne. Det optræder i toppen af alle sider indtil brugeren fjerner det."
+        remove: "Dette emne er ikke mere et banner-emne. Det optræder ikke længere i toppen af alle sider."
   unsubscribed:
     title: 'Frameldt'
     description: "Du er blevet frameldt. Vi skriver ikke til dig igen."
@@ -503,6 +509,9 @@ da:
     education_new_topic:
       title: "Uddannelse af nye brugere: Første emner"
       description: "Automatisk hjælp som vises over editoren når nye brugere begynder at skrive deres første to emner."
+    usage_tips:
+      title: "Tips til nye brugere"
+      description: "Vejledning og vigtig information til nye brugere."
     welcome_user:
       title: "Velkomst: Ny bruger"
       description: "En privat besked som automatisk sendes til nye brugere når de tilmelder sig."
@@ -523,11 +532,14 @@ da:
       description: "HTML som vises i toppen af alle sider (efter headeren, før navgationen eller emnetitlen)"
     bottom:
       title: "Bunden af siderne"
-      description: "HTML som tilføjes i bunden af alle sider"
   site_settings:
     default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
     min_private_message_post_length: "Minimumlængde tilladt for private beskeder i tegn"
+    max_post_length: "Maksimal længde af indlæg i tegn"
+    min_topic_title_length: "Minimumslængde af emnetitel i tegn."
+    max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
+    min_private_message_title_length: "Minimumslængde af titel på privat besked i tegn"
     allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."
@@ -570,7 +582,6 @@ da:
     previous_visit_timeout_hours: "Hvor lang tid et besøg varer før vi regner det med i det 'forrige' besøg, i timer."
     clean_orphan_uploads_grace_period_hours: "Grace-periode (i timer) før et forældreløst upload bliver fjernet."
     purge_deleted_uploads_grace_period_days: "Grace-periode (i dage) før et slettet upload bliver fjernet."
-    s3_upload_bucket: "Navn på Amazon S3 bucket som filer uploades til. ADVARSEL: kun små bogstaver og ingen punktummer."
     min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     title_fancy_entities: "Omdan almindelige ASCII-tegn i emnetitler til fancy HTML-entities, i stil med SmartyPants http://daringfireball.net/projects/smartypants/"
     title_prettify: "Undgå hyppige tastefejl i titlen, inklusive overforbrug af store bogstaver, første bogstav med småt, gentagne ! og ?, ekstra . i slutningen, etc."
@@ -742,17 +753,13 @@ da:
         ---
         %{respond_instructions}
     digest:
-      why: "En kort opsummering fra %{site_link} siden %{last_seen_at} hvor vi sidst så dig."
       subject_template: "[%{site_name}] Uddrag for %{date}"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
-      unsubscribe: "Denne besked med uddrag sendes fra %{site_link} når vi ikke set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
       read_more: "Læs mere"
-      more_topics: "Der er skrevet %{new_topics_since_seen} andre nye emner siden %{last_seen_at} hvor du sidst besøgte os."
-      more_topics_category: "Der er skrevet %{new_topics_since_seen} andre nye emner i disse kategorier siden %{last_seen_at} hvor du sidst besøgte os:"
       posts:
         one: "1 indlæg"
         other: "%{count} indlæg"

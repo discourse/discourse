@@ -246,7 +246,6 @@ fr:
       location_not_found: (inconnu)
       organisation: Société
       phone: Téléphone
-      other_accounts: Autres comptes utilisant cette adresse IP
       no_other_accounts: (aucun)
     user:
       said: "{{username}} :"
@@ -338,7 +337,7 @@ fr:
       email:
         title: "Courriel"
         instructions: "Ne sera jamais visible publiquement."
-        ok: "Cela semble correct. Un courriel de confirmation sera envoyé."
+        ok: "On vous envoie un mail pour confirmer."
         invalid: "Merci de saisir une adresse de courriel valide."
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
@@ -587,8 +586,6 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
-      create_topic: "Créer votre sujet"
-      create_pm: "Créer un Message Privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
@@ -659,10 +656,7 @@ fr:
       title_with_attachments: "Ajouter une image ou un fichier"
       from_my_computer: "Depuis mon appareil"
       from_the_web: "Depuis le web"
-      remote_tip: "Lien vers l'image http://monsite.com/image.jpg"
-      remote_tip_with_attachments: "lien vers l'image ou le fichier  http://monsite.com/fichier.txt (extensions autorisées : {{authorized_extensions}})."
       local_tip: "cliquez pour sélectionner une image depuis votre ordinateur"
-      local_tip_with_attachments: "Cliquez pour sélectionner une image ou un fichier depuis votre ordinateur (extensions autorisées : {{authorized_extensions}})."
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
@@ -733,7 +727,6 @@ fr:
         top: "Il n'y a plus de meilleurs sujets."
     topic:
       filter_to: "{{post_count}} messages sur ce sujet"
-      create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Commencer un message privé'
       list: 'Sujets'
@@ -1128,7 +1121,6 @@ fr:
       general: 'Général'
       settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
-      create: 'Créer une catégorie'
       save: 'Enregistrer la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
@@ -1179,7 +1171,6 @@ fr:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
     flagging:
-      title: 'Pourquoi signalez vous secrètement ce message ?'
       action: 'Signaler ce message'
       take_action: "Signaler"
       notify_action: 'Message privé'
@@ -1195,14 +1186,11 @@ fr:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
         spam: "C'est un pourriel"
-      custom_placeholder_notify_user: "Pour quelles raisons ce message nécessite que vous contactiez cet utilisateur par messagerie privée ? Soyez précis, constructif et toujours aimable."
-      custom_placeholder_notify_moderators: "Pourquoi ce message requière-t-il l'attention des modérateurs ? Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents si possible."
       custom_message:
         at_least: "saisir au moins {{n}} caractères"
         more: "{{n}} restants..."
         left: "{{n}} restants"
     flagging_topic:
-      title: "Pourquoi signalez-vous secrètement ce sujet ?"
       action: "Signaler Sujet"
       notify_action: "Message privé"
     topic_map:
@@ -1520,10 +1508,9 @@ fr:
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
+        css: "CSS"
         header: "En-tête"
-        css: "Feuille de style"
-        mobile_header: "Entête Mobile"
-        mobile_css: "Feuille de style Mobile"
+        footer: "Pied de page"
         override_default: "Ne pas inclure la feuille de style par défaut"
         enabled: "Activé ?"
         preview: "prévisualiser"
@@ -1606,7 +1593,6 @@ fr:
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
         preview_digest: "Prévisualisation du courriel"
-        preview_digest_desc: "Ceci est un outil pour prévisualiser le contenu du courriel envoyé depuis votre forum."
         refresh: "Rafraîchir"
         format: "Format"
         html: "html"
@@ -1668,6 +1654,7 @@ fr:
             check_email: "vérifier l'adresse courriel"
             delete_topic: "Supprimer le sujet"
             delete_post: "supprimer le message"
+            impersonate: "incarner"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
