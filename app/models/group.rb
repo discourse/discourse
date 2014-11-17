@@ -42,7 +42,7 @@ class Group < ActiveRecord::Base
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 
-    unless guardian.is_staff?
+    unless guardian.is_admin?
       allowed_ids = guardian.allowed_category_ids
       if allowed_ids.length > 0
         result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
