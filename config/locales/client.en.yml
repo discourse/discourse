@@ -661,7 +661,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "New Topic"
-      create_pm: "Create Private Message"
+      create_pm: "Private Message"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
