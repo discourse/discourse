@@ -278,8 +278,10 @@ en:
       location_not_found: (unknown)
       organisation: Organization
       phone: Phone
-      other_accounts: Other accounts with this IP address
+      other_accounts: "Other accounts with this IP address:"
       no_other_accounts: (none)
+      read_time: "read time:"
+      topics_entered: "topics entered:"
 
     user:
       said: "{{username}}:"
