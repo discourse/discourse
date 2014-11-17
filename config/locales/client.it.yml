@@ -246,7 +246,6 @@ it:
       location_not_found: (sconosciuto)
       organisation: Organizzazione
       phone: Telefono
-      other_accounts: Altri account con questo indirizzo IP
       no_other_accounts: (nessuno)
     user:
       said: "{{username}}:"
@@ -277,6 +276,7 @@ it:
       admin_tooltip: "Questo utente è un amministratore"
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
+      github_profile: "Github"
       mailing_list_mode: "Ricevi una email per ogni nuovo messaggio (a meno che tu non ignori l'argomento o la categoria)"
       watched_categories: "Osservato"
       watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
@@ -289,6 +289,7 @@ it:
       deleted_yourself: "Il tuo account è stato eliminato con successo."
       delete_yourself_not_allowed: "Non puoi eliminare il tuo account in questo momento. Contatta un amministratore e chiedigli di cancellarlo per te."
       unread_message_count: "Messaggi"
+      admin_delete: "Cancella"
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -337,12 +338,13 @@ it:
       email:
         title: "Email"
         instructions: "Mai mostrato pubblicamente."
-        ok: "Tutto a posto! Ti manderemo una email di conferma."
+        ok: "Ti invieremo una email di conferma."
         invalid: "Inserisci un indirizzo email valido."
         authenticated: "{{provider}} ha autenticato la tua email."
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
+        instructions: "Nome completo (facoltativo)."
         too_short: "Il nome è troppo breve."
         ok: "Il nome è adeguato."
       username:
@@ -510,6 +512,7 @@ it:
     created: 'Creato'
     created_lowercase: 'creato'
     trust_level: 'Livello Esperienza'
+    search_hint: 'nome utente, email o indirizzo IP'
     create_account:
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
@@ -584,8 +587,6 @@ it:
       reply_here: "Rispondi Qui"
       reply: "Rispondi"
       cancel: "Annulla"
-      create_topic: "Crea Argomento"
-      create_pm: "Crea Messaggio Privato"
       title: "O premi Ctrl+Enter"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
@@ -595,6 +596,7 @@ it:
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio..."
       saved: "Salvato!"
+      saved_draft: "Hai un messaggio in bozza in sospeso. Seleziona per riprendere la modifica."
       uploading: "In caricamento..."
       show_preview: 'visualizza anteprima &raquo;'
       hide_preview: '&laquo; nascondi anteprima'
@@ -655,10 +657,7 @@ it:
       title_with_attachments: "Aggiungi un'immagine o un file"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
-      remote_tip: "collegamento all'immagine http://example.com/image.jpg"
-      remote_tip_with_attachments: "collegamento all'immagine o al file http://example.com/file.ext (estensioni permesse: {{authorized_extensions}})."
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo"
-      local_tip_with_attachments: "clicca per selezionare un'immagine o un file dal tuo dispositivo (estensioni permesse: {{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
@@ -725,7 +724,6 @@ it:
         top: "Non ci sono altri argomenti di punta."
     topic:
       filter_to: "{{post_count}} suoi messaggi"
-      create: 'Crea Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia un messaggio privato'
       list: 'Argomenti'
@@ -799,6 +797,8 @@ it:
           '2_4': 'Riceverai notifiche perché hai pubblicato una risposta a questo argomento.'
           '2_2': 'Riceverai notifiche perché stai seguendo questo argomento.'
           '2': 'Riceverai notifiche perché <a href="/users/{{username}}/preferences">hai letto questo argomento</a>.'
+          '1_2': 'Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio.'
+          '1': 'Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio.'
           '0_7': 'Stai ignorando tutte le notifiche di questa categoria.'
           '0_2': 'Stai ignorando tutte le notifiche di questo argomento.'
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
@@ -881,6 +881,7 @@ it:
         n_posts:
           one: "1 post"
           other: "{{count}} messaggi"
+        cancel: "Rimuovi filtro"
       split_topic:
         title: "Sposta in un Nuovo Argomento"
         action: "sposta in un nuovo argomento"
@@ -915,7 +916,7 @@ it:
         select_all: seleziona tutto
         deselect_all: deseleziona tutto
         description:
-          one: Hai selezionato 1 post.
+          one: Hai selezionato <b>1</b> messaggio.
           other: Hai selezionato <b>{{count}}</b> messaggi.
     post:
       reply: "Rispondi a {{link}} da parte di {{replyAvatar}} {{username}}"
@@ -1117,7 +1118,6 @@ it:
       general: 'Generale'
       settings: 'Impostazioni'
       delete: 'Elimina Categoria'
-      create: 'Crea Categoria'
       save: 'Salva Categoria'
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
@@ -1168,7 +1168,6 @@ it:
           title: "Ignorato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
     flagging:
-      title: 'Perché vuoi contrassegnare questo post?'
       action: 'Segnala Messaggio'
       take_action: "Procedi"
       notify_action: 'Messaggio privato'
@@ -1180,14 +1179,15 @@ it:
       submit_tooltip: "Invia la segnalazione privata"
       take_action_tooltip: "Raggiungi la soglia di segnalazioni immediatamente, piuttosto che aspettare altre segnalazioni della comunità"
       cant: "Spiacenti, al momento non puoi segnalare questo messaggio."
-      custom_placeholder_notify_user: "Perché questo messaggio ti spinge a contattare l'utente direttamente e privatamente? Sii puntuale e costruttivo e sempre gentile."
-      custom_placeholder_notify_moderators: "Perché questo messaggio richiede l'attenzione dei moderatori? Facci sapere nello specifico cosa ti preoccupa, e fornisci collegamenti pertinenti se possibile."
+      formatted_name:
+        off_topic: "E' fuori tema"
+        inappropriate: "È inappropriato"
+        spam: "E' Spam"
       custom_message:
         at_least: "inserisci almeno {{n}} caratteri"
         more: "{{n}} alla fine..."
         left: "{{n}} rimanenti"
     flagging_topic:
-      title: "Perché vuoi contrassegnare questo argomento?"
       action: "Segnala Argomento"
       notify_action: "Messaggio privato"
     topic_map:
@@ -1346,6 +1346,11 @@ it:
           7_days_ago: "7 Giorni Fa"
           30_days_ago: "30 Giorni Fa"
           all: "Tutti"
+          view_table: "tabella"
+          view_chart: "grafico a barre"
+          refresh_report: "Aggiorna Rapporto"
+          start_date: "Data Inizio"
+          end_date: "Data Fine"
       commits:
         latest_changes: "Ultime modifiche: per favore aggiorna spesso!"
         by: "da"
@@ -1501,9 +1506,6 @@ it:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
         header: "Intestazione"
-        css: "Foglio di stile"
-        mobile_header: "Intestazione Mobile"
-        mobile_css: "Foglio di stile Mobile"
         override_default: "Non includere fogli di stile standard"
         enabled: "Attivo?"
         preview: "anteprima"
@@ -1586,7 +1588,6 @@ it:
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
         preview_digest: "Anteprima Riassunto"
-        preview_digest_desc: "Questo è uno strumento per vedere un'anteprima del contenuto delle email di riassunto inviate dal tuo forum."
         refresh: "Aggiorna"
         format: "Formato"
         html: "html"
@@ -1682,6 +1683,7 @@ it:
         last_emailed: "Ultima email inviata"
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
         active: "Attivo"
+        show_emails: "Mostre Email"
         nav:
           new: "Nuovi"
           active: "Attivi"
@@ -1874,7 +1876,7 @@ it:
         clear_filter: "Pulisci"
         categories:
           all_results: 'Tutti'
-          required: 'Obbligatorio'
+          required: 'Obbligatorie'
           basic: 'Di Base'
           users: 'Utenti'
           posting: 'Pubblicazione'
@@ -1923,6 +1925,8 @@ it:
         listable: Mostra targhetta sulla pagina pubblica delle targhette
         enabled: Attiva targhetta
         icon: Icona
+        image: Immagine
+        icon_help: "Usa una classe Font Awesome o la URL di un'immagine"
         query: Badge Query (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente
@@ -1955,6 +1959,8 @@ it:
             with_time: <span class="username">%{username}</span> in data <span class="time">%{time}</span>
     lightbox:
       download: "scaricamento"
+    search_help:
+      title: 'Aiuto Ricerca'
     keyboard_shortcuts_help:
       title: 'Scorciatoie da tastiera'
       jump_to:
@@ -2016,6 +2022,7 @@ it:
         one: "1 assegnato"
         other: "%{count} assegnate"
       select_badge_for_title: Scegli una targhetta da usare come titolo
+      none: "<none>"
       badge_grouping:
         getting_started:
           name: Per Iniziare
@@ -2039,7 +2046,7 @@ it:
           description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Assegnata</a> inviti
         regular:
           name: Esperto
-          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e Lounge'
+          description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concessi</a> i permessi di: ricategorizzare, rinominare, collegamenti seguiti e accesso al Lounge'
         leader:
           name: Leader
           description: '<a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concessi</a> i permessi di: modifica globale, evidenziare, chiudere, archiviare, separare e fondere'
@@ -2097,3 +2104,12 @@ it:
         reader:
           name: Lettore
           description: Letto tutti i messaggi in un argomento con più di 100 messaggi
+    google_search: |
+      <h2>Cerca con Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

@@ -309,12 +309,8 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
-      title: 'Informovat uživatele {{username}}'
-      long_form: 'informoval uživatele'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
-      title: 'Upozornit moderátory'
-      long_form: 'označil příspěvek pro moderátora'
       email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
@@ -338,8 +334,6 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_moderators:
-      title: 'Upozornit moderátory'
-      long_form: 'označil příspěvek pro moderátora'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
   archetypes:
@@ -481,7 +475,6 @@ cs:
       description: "HTML přidané na vršek každé stránky (za hlavičku, ale před navigaci a před název tématu)."
     bottom:
       title: "Patička stránky"
-      description: "HTML přidané na spodek každé stránky."
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"

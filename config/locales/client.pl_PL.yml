@@ -269,7 +269,6 @@ pl_PL:
       location_not_found: (nieznane)
       organisation: Organizacja
       phone: Numer telefonu
-      other_accounts: Inne konta z tym adresem IP
       no_other_accounts: (brak)
     user:
       said: "{{username}}:"
@@ -361,7 +360,7 @@ pl_PL:
       email:
         title: "Email"
         instructions: "Nie będzie publicznie widoczny."
-        ok: "Wygląda dobrze. Wyślemy Ci wiadomość do potwierdzenia."
+        ok: "Otrzymasz potwierdzenie emailem."
         invalid: "Podaj poprawny adres email."
         authenticated: "Twój adres email został potwierdzony przez {{provider}}."
         frequency: "Wyślemy do Ciebie email tylko jeżeli dawno Cię nie widzieliśmy i wyłącznie na temat rzeczy których jeszcze nie widziałeś."
@@ -614,8 +613,6 @@ pl_PL:
       reply_here: "Odpowiedz tutaj"
       reply: "Odpowiedz"
       cancel: "Anuluj"
-      create_topic: "Utwórz temat"
-      create_pm: "Utwórz prywatną wiadomość"
       title: "Lub naciśnij Ctrl+Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -686,10 +683,7 @@ pl_PL:
       title_with_attachments: "Dodaj obraz lub plik"
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
-      remote_tip: "odnośnik do obrazu http://example.com/image.jpg"
-      remote_tip_with_attachments: "odnośnik do obrazu lub pliku http://example.com/file.ext (dozwolone rozszerzenia: {{authorized_extensions}})."
       local_tip: "kliknij, aby wybrać obraz z Twojego urządzenia"
-      local_tip_with_attachments: "kliknij, aby wybrać obraz lub plik z Twojego urządzenia (dozwolone rozszerzenia: {{authorized_extensions}})"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
       hint_for_supported_browsers: "(możesz przeciągnąć lub wkleić obrazy do edytora, aby je wgrać)"
       uploading: "Wgrywanie"
@@ -759,7 +753,6 @@ pl_PL:
         top: "Nie ma już więcej najlepszych tematów."
     topic:
       filter_to: "{{post_count}} wpisów w temacie"
-      create: 'Utwórz temat'
       create_long: 'Utwórz nowy temat'
       private_message: 'Napisz Prywatną Wiadomość'
       list: 'Tematy'
@@ -1187,7 +1180,6 @@ pl_PL:
       general: 'Ogólne'
       settings: 'Ustawienia'
       delete: 'Usuń kategorię'
-      create: 'Utwórz kategorię'
       save: 'Zapisz kategorię'
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
@@ -1238,7 +1230,6 @@ pl_PL:
           title: "Wyciszone"
           description: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach i nie będą się one pojawiać w karcie Nieprzeczytane."
     flagging:
-      title: 'Dlaczego chcesz oflagować ten wpis?'
       action: 'Oflaguj wpis'
       take_action: "Podejmij działanie"
       notify_action: 'Prywatna wiadomość'
@@ -1254,14 +1245,11 @@ pl_PL:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
         spam: "Jest odebrane jako spam"
-      custom_placeholder_notify_user: "Dlaczego ten wpis wymaga bezpośredniej, prywatnej rozmowy z tym użytkownikiem? Napisz konkretnie, konstuktywnie i kulturalnie."
-      custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Daj nam znać co konkretnie Cię zaniepokoiło i dostarcz nam odpowiednie odnośniki jeśli to możliwe."
       custom_message:
         at_least: "wprowadź co najmniej {{n}} znaków"
         more: "{{n}} aby wysłać…"
         left: "{{n}} pozostało"
     flagging_topic:
-      title: "Dlaczego chcesz zgłosić ten temat?"
       action: "Zgłoś temat"
       notify_action: "Wyślij prywatną wiadomość"
     topic_map:
@@ -1384,7 +1372,7 @@ pl_PL:
       title: 'Administrator Discourse'
       moderator: 'Moderator'
       dashboard:
-        title: "Kokpit"
+        title: "Raporty"
         last_updated: "Ostatnia aktualizacja panelu kontrolnego:"
         version: "Wersja"
         up_to_date: "Wersja Aktualna!"
@@ -1579,10 +1567,9 @@ pl_PL:
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
+        css: "CSS"
         header: "Nagłówki"
-        css: "Arkusz stylów"
-        mobile_header: "Mobilne nagłówki"
-        mobile_css: "Mobilny arkusz stylów"
+        footer: "Stopka"
         override_default: "Nie dołączaj standardowego arkusza stylów"
         enabled: "Włączone?"
         preview: "podgląd"
@@ -1665,7 +1652,6 @@ pl_PL:
         sent_test: "wysłany!"
         delivery_method: "Metoda Dostarczenia"
         preview_digest: "Pokaż zestawienie aktywności"
-        preview_digest_desc: "Narzędzie służące do podglądu treści emaila z zestawieniem aktywności jaki jest wysyłany z twojego forum."
         refresh: "Odśwież"
         format: "Format"
         html: "html"
@@ -1727,6 +1713,7 @@ pl_PL:
             check_email: "sprawdzenie poczty"
             delete_topic: "usunięcie tematu"
             delete_post: "usunięcie wpisu"
+            impersonate: "udawanie użytkownika"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."

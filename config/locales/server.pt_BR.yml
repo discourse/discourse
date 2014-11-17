@@ -347,14 +347,12 @@ pt_BR:
   activation:
     action: "Ativar sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
-    please_continue: "Sua nova conta foi confirmada, e agora você está logado."
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
     off_topic:
       title: 'Off-Topic'
-      description: 'Esta mensagem é radicalmente off-topic e provavelmente deveria ser movido para um tópico diferente.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
@@ -365,15 +363,10 @@ pt_BR:
       description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizado como inapropriado'
     notify_user:
-      title: 'Notificar {{username}}'
       description: 'Este post contém algo que eu quero falar com essa pessoa diretamente e em particular sobre. Não lançar uma flag.'
-      long_form: 'usuário notificado'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notificar moderadores'
-      description: 'Este post requer atenção moderadora geral, com base na <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TOS </a>, ou por outro motivo não listados acima.'
-      long_form: 'moderadores notificados'
       email_title: 'Uma postagem em "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -398,9 +391,7 @@ pt_BR:
       description: 'Este tópico contém um conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou violação de <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizar como impróprio'
     notify_moderators:
-      title: 'Notificar moderadores'
       description: 'Este tópico requer atenção moderadora geral, com base na <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TOS </a>, ou por outro motivo não listados acima.'
-      long_form: 'moderadores notificados'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -558,7 +549,6 @@ pt_BR:
       description: "HTML que será adicionado no topo de cada página (após o cabeçalho, antes da navegação ou o título do tópico)."
     bottom:
       title: "Rodapé das páginas"
-      description: "HTML que será adicionado no rodapé de cada página."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -621,6 +611,7 @@ pt_BR:
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
+    enable_badges: "Habilita o sistema de emblemas (experimental)"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
     port: "Se você quiser especificar a porta na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
     force_hostname: "Se você quiser especificar um hostname na URL. Útil no modo de desenvolvimento. Deixe em branco para nada."
@@ -656,7 +647,6 @@ pt_BR:
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
     purge_inactive_users_grace_period_days: "Carência (em dias) antes de um usuário que não tenha ativado sua conta seja deletado."
-    s3_upload_bucket: "O nome do bucket no Amazon S3 em que os arquivos serão armazenados. AVISO: em letras minúsculas, não usar pontos."
     min_trust_to_create_topic: "O nível de confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -676,6 +666,7 @@ pt_BR:
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
+    embed_post_limit: "Número máximo de respostas para embutir"
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     errors:
@@ -886,22 +877,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-      text_body_template: |
-        Olá,
-
-        Este é um aviso automático de %{site_name} para informá-lo que sua mensagem...
-
-        %{base_url}%{url}
-
-        ... foi escondido devido a sinalização da comunidade.
-
-        %{flag_reason}
-
-        Vários membros da comunidade sinalizaram esta mensagem antes do mesmo ser escondida, portanto por-favor considere como deve revisa-la para refletir o retorno da comunidade. **Você pode editar sua mensagem após %{edit_delay} minutos, e depois ela  automaticamente voltará a ser visível. Isto irá aumentar o seu nível de confiança.
-
-        No entanto, caso a mensagem seja escondida pela comunidade uma segunda vez, os moderadores serão notificados -- e haverá futuras atuações, incluindo uma possível suspensão da sua conta.
-
-        Para mais ajuda, por-favor consulte nossas [diretrizes da comunidade](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Esta mensagem privada tem algumas dicas para te ajudar a começar.
@@ -1006,6 +981,8 @@ pt_BR:
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou.
 
         Sua conta não tem o nível de confiança necessário para criar novos tópicos para este endereço de e-mail. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
+    email_reject_no_account:
+      subject_template: "Problema com Email -- Conta Desconhecida"
     email_reject_post_error:
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
@@ -1138,17 +1115,13 @@ pt_BR:
         ---
         %{respond_instructions}
     digest:
-      why: "Um breve resumo do %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
       top_topics: "Tópicos populares"
       other_new_topics: "Tópicos populares"
-      unsubscribe: "Este resumo é enviado como uma cortesia de notificação do %{site_link}  desde o tempo que não te vimos a um tempo. Para cancelar a inscrição %{unsubscribe_link}."
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       read_more: "Leia Mais"
-      more_topics: "Há %{new_topics_since_seen} outros novos tópicos postados desde a sua última visita em %{last_seen_at}."
-      more_topics_category: "Há %{new_topics_since_seen} outros novos tópicos publicados nessa categoria desde a sua última visita em %{last_seen_at}:"
       posts:
         one: "1 mensagem"
         other: "%{count} mensagens"

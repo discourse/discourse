@@ -139,7 +139,7 @@ de:
       stat:
         all_time: "Gesamt"
         last_7_days: "Letzte 7 Tage"
-      like_count: "Gefällt mir"
+      like_count: "Likes"
       topic_count: "Themen"
       post_count: "Beiträge"
       user_count: "Benutzer"
@@ -246,7 +246,6 @@ de:
       location_not_found: (unbekannt)
       organisation: Organisation
       phone: Telefon
-      other_accounts: Andere Konten mit dieser IP-Adresse
       no_other_accounts: (keine)
     user:
       said: "{{username}}:"
@@ -290,6 +289,7 @@ de:
       deleted_yourself: "Dein Benutzerkonto wurde erfolgreich gelöscht."
       delete_yourself_not_allowed: "Du kannst im Moment dein Benutzerkonto nicht löschen. Kontaktiere einen Administrator, um dein Benutzerkonto löschen zu lassen."
       unread_message_count: "Nachrichten"
+      admin_delete: "Löschen"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -331,20 +331,20 @@ de:
         image_is_not_a_square: "Achtung: wir haben dein Bild zugeschnitten, da es nicht quadratisch war."
       change_profile_background:
         title: "Profilhintergrund"
-        instructions: "Profilhintergründe werden zentriert und haben eine voreingestellte Breite von 850px."
+        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 850px."
       change_card_background:
-        title: "Benutzerkartenhintergrund"
-        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590 Pixel."
+        title: "Benutzerkarten-Hintergrund"
+        instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
       email:
         title: "E-Mail"
         instructions: "Wird niemals öffentlich angezeigt."
-        ok: "Wir senden dir zur Bestätigung eine E-Mail."
+        ok: "Wir werden dir eine E-Mail zur Bestätigung senden."
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
-        instructions: "Ihr vollständiger Name (optional)."
+        instructions: "Dein vollständiger Name (optional)."
         too_short: "Dein Name ist zu kurz."
         ok: "Dein Name schaut gut aus."
       username:
@@ -373,7 +373,7 @@ de:
       log_out: "Abmelden"
       location: "Wohnort"
       card_badge:
-        title: "Benutzerkartenabzeichen"
+        title: "Benutzerkarten-Abzeichen"
       website: "Website"
       email_settings: "E-Mail"
       email_digests:
@@ -498,7 +498,7 @@ de:
       enable: 'Zusammenfassung vom Thema erstellen'
       disable: 'Alle Beiträge anzeigen'
     deleted_filter:
-      enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit ausgeblendet sind."
+      enabled_description: "Dieses Thema enthält gelöschte Beiträge, die derzeit versteckt sind."
       disabled_description: "Gelöschte Beiträge werden in diesem Thema angezeigt."
       enable: "Gelöschte Beiträge ausblenden"
       disable: "Gelöschte Beiträge anzeigen"
@@ -588,7 +588,6 @@ de:
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
-      create_pm: "Private Nachricht verfassen"
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -598,6 +597,7 @@ de:
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
+      saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
       uploading: "Wird hochgeladen..."
       show_preview: 'Vorschau anzeigen &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
@@ -658,10 +658,10 @@ de:
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
       from_my_computer: "Von meinem Gerät"
       from_the_web: "Aus dem Web"
-      remote_tip: "Link zu Bild http://example.com/image.jpg"
-      remote_tip_with_attachments: "Link zu Bild oder Datei http://example.com/file.ext (erlaubte Dateiendungen: {{authorized_extensions}})."
+      remote_tip: "Link zu Bild"
+      remote_tip_with_attachments: "Link zu Bild oder Datei ({{authorized_extensions}})"
       local_tip: "Klicke hier, um ein Bild von deinem Gerät zu wählen."
-      local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen (erlaubte Dateiendungen: {{authorized_extensions}})"
+      local_tip_with_attachments: "Klicke hier, um ein Bild oder eine Datei von deinem Gerät zu wählen ({{authorized_extensions}})"
       hint: "(du kannst Dateien auch in den Editor ziehen, um diese hochzuladen)"
       hint_for_supported_browsers: "(du kannst Bilder auch durch Ziehen in den Editor oder durch Einfügen aus der Zwischenablage hochladen)"
       uploading: "Wird hochgeladen"
@@ -714,6 +714,10 @@ de:
         top: "Es gibt keine Top-Themen."
         educate:
           new: '<p>Hier werden neue Themen angezeigt.</p><p>Standardmäßig werden jene Themen als neu angesehen und mit dem <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">neu</span> Indikator versehen, die in den letzten 2 Tagen erstellt wurden.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt.<br/>
+
+            Standardmäßig werden Themen als ungelesen angesehen, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
+          starred: '<p>Hier werden deine favorisierten Themen angezeigt.</p><p>Zum Ändern deiner Favoriten benutze:</p><ul><li>den <i class="fa fa-star"></i> neben jedem Thementitel</li><li>die Schaltfläche „Favorisieren“ am Ende eines jeden Themas</li></ul>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -726,7 +730,7 @@ de:
         top: "Das waren alle angesagten Themen."
     topic:
       filter_to: "{{post_count}} Beiträge im Thema"
-      create: 'Thema erstellen'
+      create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
       private_message: 'Eine private Unterhaltung beginnen'
       list: 'Themen'
@@ -800,8 +804,8 @@ de:
           '2_4': 'Du wirst Benachrichtigungen erhalten, weil du eine Antwort zu diesem Thema verfasst hast.'
           '2_2': 'Du wirst Benachrichtigungen erhalten, weil du dieses Thema verfolgst.'
           '2': 'Du wirst Benachrichtigungen erhalten, weil du <a href="/users/{{username}}/preferences">dieses Thema gelesen hast</a>.'
-          '1_2': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
-          '1': 'Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1_2': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
+          '1': 'Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet.'
           '0_7': 'Du ignorierst alle Benachrichtigungen dieser Kategorie.'
           '0_2': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
           '0': 'Du ignorierst alle Benachrichtigungen dieses Themas.'
@@ -816,12 +820,13 @@ de:
           description: "Die Anzahl der ungelesenen und neuen Nachrichten wird neben dem Eintrag in der Nachrichtenliste angezeigt. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder deine Nachricht beantwortet."
         tracking:
           title: "Verfolgen"
+          description: "Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         regular_pm:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Nachricht antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag in der privaten Nachricht antwortet."
         muted_pm:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über diese private Unterhaltung."
@@ -870,7 +875,7 @@ de:
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
       invite_reply:
-        title: 'Einladung'
+        title: 'Einladen'
         action: 'Einladung senden'
         help: 'Sendet Freunden eine Einladung, so dass mit einem Klick auf dieses Thema antworten können.'
         to_topic: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, direkt auf dieses Thema zu antworten. Es ist keine Anmeldung erforderlich."
@@ -939,8 +944,8 @@ de:
         other: "(Beitrag wurde vom Autor zurückgezogen und wird automatisch in %{count} Stunden gelöscht, sofern dieser Beitrag nicht gemeldet wird)"
       expand_collapse: "erweitern/minimieren"
       gap:
-        one: "ein ausgeblendeter Beitrag"
-        other: "{{count}} ausgeblendete Beiträge"
+        one: "1 versteckter Beitrag"
+        other: "{{count}} versteckte Beiträge"
       more_links: "{{count}} weitere..."
       unread: "Beitrag ist ungelesen"
       has_replies:
@@ -1120,7 +1125,7 @@ de:
       general: 'Allgemeines'
       settings: 'Einstellungen'
       delete: 'Kategorie löschen'
-      create: 'Kategorie erstellen'
+      create: 'Neue Kategorie'
       save: 'Kategorie speichern'
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
@@ -1166,12 +1171,12 @@ de:
           description: "Du wirst in diesen Kategorien automatisch allen neuen Themen folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Normal"
-          description: "Du wirst nur dann benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
+          description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
     flagging:
-      title: 'Aus welchem Grund meldest du diesen Beitrag?'
+      private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
       action: 'Beitrag melden'
       take_action: "Reagieren"
       notify_action: 'Private Nachricht'
@@ -1184,16 +1189,16 @@ de:
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, Du kannst diesen Beitrag augenblicklich nicht melden."
       formatted_name:
+        off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
         spam: "Es ist Spam"
-      custom_placeholder_notify_user: "Weshalb erfordert der Beitrag, dass du den Benutzer direkt und privat kontaktieren möchtest? Sei spezifisch, konstruktiv und immer freundlich."
-      custom_placeholder_notify_moderators: "Warum soll ein Moderator sich diesen Beitrag ansehen? Bitte lass uns wissen, was genau Dich beunruhigt, und wenn möglich dafür relevante Links."
+      custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
+      custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       custom_message:
         at_least: "gib mindestens {{n}} Zeichen ein"
         more: "{{n}} weitere..."
         left: "{{n}} übrig"
     flagging_topic:
-      title: "Warum meldest du dieses Thema vertraulich?"
       action: "Thema melden"
       notify_action: "Private Nachricht"
     topic_map:
@@ -1353,7 +1358,7 @@ de:
           30_days_ago: "vor 30 Tagen"
           all: "alle"
           view_table: "Tabelle"
-          view_chart: "Säulendiagramm"
+          view_chart: "Balkendiagramm"
           refresh_report: "Bericht aktualisieren"
           start_date: "Startdatum"
           end_date: "Enddatum"
@@ -1511,10 +1516,9 @@ de:
       customize:
         title: "Anpassen"
         long_title: "Website-Anpassungen"
+        css: "CSS"
         header: "Kopfbereich"
-        css: "Stylesheet"
-        mobile_header: "Kopfbereich für Mobilgeräte"
-        mobile_css: "Stylesheet Mobilgeräte"
+        footer: "Fußzeile"
         override_default: "Das Standard-Stylesheet nicht verwenden"
         enabled: "Aktiviert?"
         preview: "Vorschau"
@@ -1578,7 +1582,7 @@ de:
             description: "Die Farbe des Like-Buttons."
           wiki:
             name: 'Wiki'
-            description: "Die Standardfarbe wird als Hintergrundfarbe für Wikiseiten genutzt."
+            description: "Die Standardfarbe wird als Hintergrundfarbe für Wiki-Beiträge genutzt."
       email:
         title: "E-Mail"
         settings: "Einstellungen"
@@ -1597,7 +1601,6 @@ de:
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
-        preview_digest_desc: "Hiermit kannst du dir anschauen, wie die regelmäßig versendeten Neuigkeits-Mails aussehen."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"
@@ -1659,6 +1662,7 @@ de:
             check_email: "E-Mail abrufen"
             delete_topic: "Thema löschen"
             delete_post: "Beitrag löschen"
+            impersonate: "Nutzersicht"
         screened_emails:
           title: "Überprüfte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
@@ -1838,9 +1842,9 @@ de:
           likes_received_users: "Erhaltene Likes: eindeutige Benutzer"
           qualifies: "Erfüllt die Anforderungen für Vertrauensstufe 3."
           does_not_qualify: "Erfüllt nicht die Anforderungen für Vertrauensstufe 3."
-          will_be_promoted: "Wird bald beförderd werden."
+          will_be_promoted: "Wird bald befördert werden."
           will_be_demoted: "Wird bald degradiert werden."
-          on_grace_period: "Wird nicht degradiert, da derzeit in Schonfrist nach Beförderung."
+          on_grace_period: "Wird nicht degradiert. Derzeit gilt die Schonfrist der letzten Beförderung."
           locked_will_not_be_promoted: "Vertrauensstufe ist gesperrt. Wird nie befördert werden."
           locked_will_not_be_demoted: "Vertrauensstufe ist gesperrt. Wird nie degradiert werden."
         sso:
@@ -1862,7 +1866,7 @@ de:
         edit: "Bearbeiten"
         delete: "Löschen"
         cancel: "Abbrechen"
-        delete_confirm: "Sind Sie sicher, dass Sie dieses Textfeld löschen möchten?"
+        delete_confirm: "Bist du dir sicher, dass du dieses Benutzerfeld löschen möchtest?"
         required:
           title: "Bei Registrierung erforderlich?"
           enabled: "erforderlich"
@@ -1929,14 +1933,15 @@ de:
         grant: Verleihen
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen die verliehen werden können.
-        none_selected: "Wähl' ein Abzeichen aus, um loszulegen"
+        none_selected: "Wähle ein Abzeichen aus, um loszulegen"
         allow_title: Abzeichen darf als Titel verwendet werden
         multiple_grant: Kann mehrfach verliehen werden
         listable: Zeige Abzeichen auf der öffentlichen Abzeichenseite an
         enabled: Abzeichen aktivieren
         icon: Symbol
         image: Bild
-        query: Abfrage für Abzeichen (SQL)
+        icon_help: "Benutze eine Font Awesome class oder die URL eines Bildes"
+        query: Abzeichen-Abfrage (SQL)
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
@@ -1948,12 +1953,14 @@ de:
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
           user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
         preview:
-          link_text: "Abzeichen betrachten"
+          link_text: "Vorschau auf verliehene Abzeichen"
           plan_text: "Vorschau mit Query Plan"
           modal_title: "Vorschau für Abzeichen-Abfrage"
           sql_error_header: "Es gab einen Fehler mit der SQL-Abfrage."
+          error_help: "Unter den nachfolgenden Links findest du Hilfe zu Abzeichen-Abfragen."
           bad_count_warning:
             header: "WARNUNG!"
+            text: "Es fehlen Beispieldaten. Das passiert, wenn die Abzeichen-Abfrage IDs von Benutzern oder Beiträgen liefert, die nicht existieren. Das kann in weiterer Folge zu unerwarteten Ergebnissen führen. Bitte überprüfe nochmals deine Abfrage."
           grant_count:
             zero: "Es wird kein Abzeichen verliehen."
             one: "Es wird <b>1</b> Abzeichen verliehen."
@@ -1967,7 +1974,7 @@ de:
     lightbox:
       download: "herunterladen"
     search_help:
-      title: 'Suche in der Hilfe'
+      title: 'Hilfe zur Suche'
     keyboard_shortcuts_help:
       title: 'Tastenkombinationen'
       jump_to:
@@ -2000,6 +2007,7 @@ de:
       actions:
         title: 'Aktionen'
         star: '<b>f</b> Thema favorisieren'
+        pin_unpin_topic: '<b>⇧ Umsch</b> + <b>p</b> Thema anheften/loslösen'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
         reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
@@ -2029,7 +2037,7 @@ de:
         one: "1 mal verliehen"
         other: "%{count} mal verliehen"
       select_badge_for_title: Wähle ein Abzeichen als deinen Titel aus
-      none: "<keine>"
+      none: "<keines>"
       badge_grouping:
         getting_started:
           name: Erste Schritte

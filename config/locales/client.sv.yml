@@ -242,7 +242,6 @@ sv:
       location_not_found: (okänd)
       organisation: Organisation
       phone: Telefon
-      other_accounts: Andra konton med samma IP-adress
       no_other_accounts: (ingen)
     user:
       profile: "Profil"
@@ -329,7 +328,6 @@ sv:
       email:
         title: "E-post"
         instructions: "Visas aldrig publikt"
-        ok: "Ser bra ut. Vi kommer maila dig för att bekräfta."
         invalid: "Vad god ange en giltig e-postadress."
         authenticated: "Din e-post har autentiserats av {{provider}}."
         frequency: "Vi kommer bara maila dig om vi inte har sett dig nyligen och du inte redan sett det vi mailar dig om."
@@ -567,8 +565,6 @@ sv:
       reply_here: "Svara Här"
       reply: "Svara"
       cancel: "Avbryt"
-      create_topic: "Skapa Tråd"
-      create_pm: "Skapa Privat Meddelande"
       title: "eller tryck Ctrl+Enter"
       users_placeholder: "Lägg till en användare"
       title_placeholder: "Vad handlar denna diskussion om i en kort mening?"
@@ -631,10 +627,7 @@ sv:
       title_with_attachments: "Lägg till en bild eller en fil"
       from_my_computer: "Från min enhet"
       from_the_web: "Från webben"
-      remote_tip: "länk till bild http://example.com/image.jpg"
-      remote_tip_with_attachments: "länk till bild eller fil http://example.com/file.ext (tillåtna filtyper: {{authorized_extensions}})."
       local_tip: "klicka för att välja en bild från din enhet."
-      local_tip_with_attachments: "klicka för att välja en bild eller fil från din enhet (tillåtna filtyper: {{authorized_extensions}})"
       hint: "(du kan också dra & släppa in i redigeraren för att ladda upp dem)"
       hint_for_supported_browsers: "(du kan också dra och släppa eller klistra in bilder i redigeraren för att ladda upp dem)"
       uploading: "Laddar upp bild"
@@ -696,7 +689,6 @@ sv:
         top: "Det finns inga fler topptrådar."
     topic:
       filter_to: "{{post_count}} inlägg i tråd"
-      create: 'Skapa Tråd'
       create_long: 'Skapa en nytt Tråd'
       private_message: 'Starta en privat konversation'
       list: 'Trådar'
@@ -1066,7 +1058,6 @@ sv:
       general: 'Allmänt'
       settings: 'Inställningar'
       delete: 'Radera Kategori'
-      create: 'Skapa Kategori'
       save: 'Spara kategori'
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
@@ -1099,7 +1090,6 @@ sv:
         muted:
           title: "Tystad"
     flagging:
-      title: 'Varför flaggar du detta inlägg privat?'
       action: 'Flagga Inlägg'
       take_action: "Åtgärda"
       notify_action: 'Privat meddelande'
@@ -1107,14 +1097,11 @@ sv:
       delete_confirm: "Du håller på att radera <b>%{posts}</b> inlägg och <b>%{topics}</b> trådar från den här användaren, radera hans/hennes konto, blockera IP-adressen <b>%{ip_address}</b>, och lägga till email-adressen <b>%{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en spammare?"
       yes_delete_spammer: "Ja, radera spammare"
       cant: "Tyvärr, du kan inte flagga detta inlägg just nu."
-      custom_placeholder_notify_user: "Varför gör det här inlägget att du behöver tala direkt och privat med den här användaren? Var specifik, var konstruktiv, och var alltid vänlig."
-      custom_placeholder_notify_moderators: "Varför kräver detta inlägg uppmärksamhet från en moderator? Låt oss veta specifikt vad det gäller, med relevanta länkar där det är möjligt."
       custom_message:
         at_least: "skriv åtminstone {{n}} tecken"
         more: "{{n}} fler..."
         left: "{{n}} kvar"
     flagging_topic:
-      title: "Varför flaggar du privat denna tråd?"
       action: "Flagga tråd"
       notify_action: "Privatmeddelande"
     topic_map:
@@ -1327,9 +1314,6 @@ sv:
         title: "Anpassa"
         long_title: "Sidanpassningar"
         header: "Sidhuvud"
-        css: "Stilmall"
-        mobile_header: "Mobil-header"
-        mobile_css: "Mobil-stylesheet"
         override_default: "Skriv över standard?"
         enabled: "Aktiverad?"
         preview: "förhandsgranska"
@@ -1354,7 +1338,6 @@ sv:
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
         preview_digest: "Sammandrag"
-        preview_digest_desc: "Detta är ett verktyg för att förhandsgranska innehållet i email-sammandragen som skickas från ditt forum."
         refresh: "Uppdatera"
         format: "Format"
         html: "html"
