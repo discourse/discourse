@@ -75,6 +75,7 @@ var define, requireModule, require, requirejs, Ember;
 define("backburner",
   ["backburner/utils","backburner/deferred_action_queues","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
+    "use strict";
     var Utils = __dependency1__["default"];
     var DeferredActionQueues = __dependency2__.DeferredActionQueues;
 
@@ -590,6 +591,7 @@ define("backburner",
 define("backburner/deferred_action_queues",
   ["backburner/utils","backburner/queue","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
+    "use strict";
     var Utils = __dependency1__["default"];
     var Queue = __dependency2__.Queue;
 
@@ -715,6 +717,7 @@ define("backburner/deferred_action_queues",
 define("backburner/queue",
   ["exports"],
   function(__exports__) {
+    "use strict";
     function Queue(daq, name, options) {
       this.daq = daq;
       this.name = name;
@@ -843,6 +846,7 @@ define("backburner/queue",
 define("backburner/utils",
   ["exports"],
   function(__exports__) {
+    "use strict";
     __exports__["default"] = {
       each: function(collection, callback) {
         for (var i = 0; i < collection.length; i++) {
@@ -10494,6 +10498,7 @@ define("ember-metal/array",
 
     // From: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/map
     var map = isNativeFunc(ArrayPrototype.map) ? ArrayPrototype.map : function(fun /*, thisp */) {
+      //"use strict";
 
       if (this === void 0 || this === null) {
         throw new TypeError();
@@ -10518,6 +10523,7 @@ define("ember-metal/array",
 
     // From: https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/array/foreach
     var forEach = isNativeFunc(ArrayPrototype.forEach) ? ArrayPrototype.forEach : function(fun /*, thisp */) {
+      //"use strict";
 
       if (this === void 0 || this === null) {
         throw new TypeError();
@@ -12882,7 +12888,11 @@ define("ember-metal/core",
 define("ember-metal/dependent_keys",
   ["ember-metal/platform","ember-metal/watching","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module (in browser builds only) until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     var create = __dependency1__.create;
     var watch = __dependency2__.watch;
     var unwatch = __dependency2__.unwatch;
@@ -12963,6 +12973,7 @@ define("ember-metal/dependent_keys",
         unwatch(obj, depKey, meta);
       }
     }
+
     __exports__.removeDependentKeys = removeDependentKeys;
   });
 define("ember-metal/enumerable_utils",
@@ -13251,7 +13262,11 @@ define("ember-metal/error",
 define("ember-metal/events",
   ["ember-metal/core","ember-metal/utils","ember-metal/platform","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     /**
     @module ember-metal
     */
@@ -14691,7 +14706,11 @@ define("ember-metal/merge",
 define("ember-metal/mixin",
   ["ember-metal/core","ember-metal/merge","ember-metal/array","ember-metal/platform","ember-metal/utils","ember-metal/expand_properties","ember-metal/properties","ember-metal/computed","ember-metal/binding","ember-metal/observer","ember-metal/events","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     /**
     @module ember
     @submodule ember-metal
@@ -15700,7 +15719,11 @@ define("ember-metal/observer_set",
 define("ember-metal/platform",
   ["ember-metal/core","exports"],
   function(__dependency1__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module (in browser builds only) until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     /*globals Node */
 
     var Ember = __dependency1__["default"];
@@ -17272,7 +17295,11 @@ define("ember-metal/set_properties",
 define("ember-metal/utils",
   ["ember-metal/core","ember-metal/platform","ember-metal/array","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     var Ember = __dependency1__["default"];
     var platform = __dependency2__.platform;
     var create = __dependency2__.create;
@@ -32061,7 +32088,11 @@ define("ember-runtime/system/container",
 define("ember-runtime/system/core_object",
   ["ember-metal/core","ember-metal/property_get","ember-metal/property_set","ember-metal/utils","ember-metal/platform","ember-metal/watching","ember-metal/chains","ember-metal/events","ember-metal/mixin","ember-metal/enumerable_utils","ember-metal/error","ember-runtime/keys","ember-runtime/mixins/action_handler","ember-metal/properties","ember-metal/binding","ember-metal/computed","ember-metal/run_loop","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __dependency9__, __dependency10__, __dependency11__, __dependency12__, __dependency13__, __dependency14__, __dependency15__, __dependency16__, __dependency17__, __exports__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     /**
       @module ember
       @submodule ember-runtime
@@ -40589,7 +40620,11 @@ define("ember-views/views/view_collection",
 define("ember",
   ["ember-metal","ember-runtime","ember-handlebars","ember-views","ember-routing","ember-routing-handlebars","ember-application","ember-extension-support"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__) {
-    "use strict";
+        // Remove "use strict"; from transpiled module until
+    // https://bugs.webkit.org/show_bug.cgi?id=138038 is fixed
+    //
+    // REMOVE_USE_STRICT: true
+
     // require the main entry points for each of these packages
     // this is so that the global exports occur properly
 
@@ -40641,6 +40676,7 @@ define("ember",
 define("metamorph",
   [],
   function() {
+    "use strict";
     // ==========================================================================
     // Project:   metamorph
     // Copyright: ©2014 Tilde, Inc. All rights reserved.
@@ -41121,6 +41157,7 @@ define("metamorph",
 define("route-recognizer",
   ["route-recognizer/dsl","exports"],
   function(__dependency1__, __exports__) {
+    "use strict";
     var map = __dependency1__["default"];
 
     var specials = [
@@ -41653,6 +41690,7 @@ define("route-recognizer",
 define("route-recognizer/dsl",
   ["exports"],
   function(__exports__) {
+    "use strict";
     function Target(path, matcher, delegate) {
       this.path = path;
       this.matcher = matcher;
@@ -41757,6 +41795,7 @@ define("route-recognizer/dsl",
 define("router/handler-info",
   ["./utils","rsvp/promise","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
+    "use strict";
     var bind = __dependency1__.bind;
     var merge = __dependency1__.merge;
     var serialize = __dependency1__.serialize;
@@ -41933,6 +41972,7 @@ define("router/handler-info",
 define("router/handler-info/factory",
   ["router/handler-info/resolved-handler-info","router/handler-info/unresolved-handler-info-by-object","router/handler-info/unresolved-handler-info-by-param","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    "use strict";
     var ResolvedHandlerInfo = __dependency1__["default"];
     var UnresolvedHandlerInfoByObject = __dependency2__["default"];
     var UnresolvedHandlerInfoByParam = __dependency3__["default"];
@@ -41955,6 +41995,7 @@ define("router/handler-info/factory",
 define("router/handler-info/resolved-handler-info",
   ["../handler-info","router/utils","rsvp/promise","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    "use strict";
     var HandlerInfo = __dependency1__["default"];
     var subclass = __dependency2__.subclass;
     var promiseLabel = __dependency2__.promiseLabel;
@@ -41985,6 +42026,7 @@ define("router/handler-info/resolved-handler-info",
 define("router/handler-info/unresolved-handler-info-by-object",
   ["../handler-info","router/utils","rsvp/promise","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    "use strict";
     var HandlerInfo = __dependency1__["default"];
     var merge = __dependency2__.merge;
     var subclass = __dependency2__.subclass;
@@ -42046,6 +42088,7 @@ define("router/handler-info/unresolved-handler-info-by-object",
 define("router/handler-info/unresolved-handler-info-by-param",
   ["../handler-info","router/utils","exports"],
   function(__dependency1__, __dependency2__, __exports__) {
+    "use strict";
     var HandlerInfo = __dependency1__["default"];
     var resolveHook = __dependency2__.resolveHook;
     var merge = __dependency2__.merge;
@@ -42079,6 +42122,7 @@ define("router/handler-info/unresolved-handler-info-by-param",
 define("router/router",
   ["route-recognizer","rsvp/promise","./utils","./transition-state","./transition","./transition-intent/named-transition-intent","./transition-intent/url-transition-intent","./handler-info","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __dependency5__, __dependency6__, __dependency7__, __dependency8__, __exports__) {
+    "use strict";
     var RouteRecognizer = __dependency1__["default"];
     var Promise = __dependency2__["default"];
     var trigger = __dependency3__.trigger;
@@ -42895,6 +42939,7 @@ define("router/router",
 define("router/transition-intent",
   ["./utils","exports"],
   function(__dependency1__, __exports__) {
+    "use strict";
     var merge = __dependency1__.merge;
 
     function TransitionIntent(props) {
@@ -42914,6 +42959,7 @@ define("router/transition-intent",
 define("router/transition-intent/named-transition-intent",
   ["../transition-intent","../transition-state","../handler-info/factory","../utils","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+    "use strict";
     var TransitionIntent = __dependency1__["default"];
     var TransitionState = __dependency2__["default"];
     var handlerInfoFactory = __dependency3__["default"];
@@ -43114,6 +43160,7 @@ define("router/transition-intent/named-transition-intent",
 define("router/transition-intent/url-transition-intent",
   ["../transition-intent","../transition-state","../handler-info/factory","../utils","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __dependency4__, __exports__) {
+    "use strict";
     var TransitionIntent = __dependency1__["default"];
     var TransitionState = __dependency2__["default"];
     var handlerInfoFactory = __dependency3__["default"];
@@ -43183,6 +43230,7 @@ define("router/transition-intent/url-transition-intent",
 define("router/transition-state",
   ["./handler-info","./utils","rsvp/promise","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    "use strict";
     var ResolvedHandlerInfo = __dependency1__.ResolvedHandlerInfo;
     var forEach = __dependency2__.forEach;
     var promiseLabel = __dependency2__.promiseLabel;
@@ -43298,6 +43346,7 @@ define("router/transition-state",
 define("router/transition",
   ["rsvp/promise","./handler-info","./utils","exports"],
   function(__dependency1__, __dependency2__, __dependency3__, __exports__) {
+    "use strict";
     var Promise = __dependency1__["default"];
     var ResolvedHandlerInfo = __dependency2__.ResolvedHandlerInfo;
     var trigger = __dependency3__.trigger;
@@ -43608,6 +43657,7 @@ define("router/transition",
 define("router/utils",
   ["exports"],
   function(__exports__) {
+    "use strict";
     var slice = Array.prototype.slice;
 
     var _isArray;
@@ -43826,6 +43876,7 @@ define("router/utils",
 define("router",
   ["./router/router","exports"],
   function(__dependency1__, __exports__) {
+    "use strict";
     var Router = __dependency1__["default"];
 
     __exports__["default"] = Router;
