@@ -96,7 +96,7 @@ updateRelativeAge = function(elems) {
 
 autoUpdatingRelativeAge = function(date,options) {
   if (!date) return "";
-  if (+date === +new Date("1970/1/1 1:0:0")) return "";
+  if (+date === +new Date(0)) return "";
 
   options = options || {};
   var format = options.format || "tiny";
