@@ -1,22 +1,20 @@
 require_dependency 'enum'
 
 class InvalidTrustLevel < StandardError; end
+
 class TrustLevel
+
   attr_reader :id, :name
 
   class << self
 
-    def[](level)
-      if !valid?(level)
-        raise InvalidTrustLevel
-      end
+    def [](level)
+      raise InvalidTrustLevel if !valid?(level)
       level
     end
 
     def levels
-      @levels ||= Enum.new(
-        :newuser, :basic, :regular, :leader, :elder, start: 0
-      )
+      @levels ||= Enum.new(:newuser, :basic, :regular, :leader, :elder, start: 0)
     end
 
     def all
@@ -26,16 +24,17 @@ class TrustLevel
     end
 
     def valid?(level)
-       valid_range === level
+    valid_range === level
     end
 
     def valid_range
-       (0..4)
+      (0..4)
     end
 
     def compare(current_level, level)
       (current_level || 0) >= level
     end
+
   end
 
   def initialize(name_key, id)
@@ -46,4 +45,5 @@ class TrustLevel
   def serializable_hash
     { id: @id, name: @name }
   end
+
 end
