@@ -323,3 +323,4 @@ Discourse.Markdown.whiteListTag('span', 'bbcode-s');
 Discourse.Markdown.whiteListTag('span', 'class', 'excerpt');
 
 Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.google\.com\/maps\/embed\?.+/i);
+Discourse.Markdown.whiteListIframe(/^(https?:)?\/\/www\.openstreetmap\.org\/export\/embed.html\?.+/i);
