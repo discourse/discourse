@@ -576,6 +576,7 @@ spam:
       default: 2
       min: 0
       max: 3
+  max_new_accounts_per_registration_ip: 3
 
 rate_limits:
   unique_posts_mins:

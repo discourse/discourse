@@ -2,7 +2,6 @@
 # receive, their trust level, etc.
 class SpamRulesEnforcer
 
-  # The exclamation point means that this method may make big changes to posts and users.
   def self.enforce!(arg)
     SpamRulesEnforcer.new(arg).enforce!
   end
@@ -13,12 +12,8 @@ class SpamRulesEnforcer
   end
 
   def enforce!
-    if @user
-      SpamRule::AutoBlock.new(@user).perform
-    end
-    if @post
-      SpamRule::FlagSockpuppets.new(@post).perform
-    end
+    SpamRule::AutoBlock.new(@user).perform if @user
+    SpamRule::FlagSockpuppets.new(@post).perform if @post
     true
   end
 
