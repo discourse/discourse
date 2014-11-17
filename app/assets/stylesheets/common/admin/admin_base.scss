@@ -85,6 +85,14 @@ td.flaggers td {
     .close {
       float: right;
     }
+
+    .other-accounts {
+      margin: 0;
+      max-height: 200px;
+      overflow: auto;
+      ul { margin: 0; }
+      li { list-style: none; }
+    }
   }
 }
 
