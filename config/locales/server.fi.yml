@@ -365,14 +365,12 @@ fi:
   activation:
     action: "Vahvista käyttäjätilisi"
     already_done: "Pahoittelut, tämän tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
-    please_continue: "Uusi tilisi on nyt varmennettu ja olet kirjautuneena sisään."
     continue_button: "Jatka sivustolle %{site_name}"
     welcome_to: "Tervetuloa sivustolle %{site_name}!"
     approval_required: "Valvojan täytyy käsin hyväksyä uusi tilisi ennen kuin pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
   post_action_types:
     off_topic:
       title: 'Asiaankuulumaton'
-      description: 'Tämä viesti ei selvästi kuulu tähän ketjuun ja pitäisi todennäköisesti siirtää. Jos kyseessä on ketju, se ei kuulu tälle alueelle.'
       long_form: 'liputti tämän asiaankuulumattomaksi'
     spam:
       title: 'Roskaposti'
@@ -383,15 +381,10 @@ fi:
       description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
       long_form: 'liputti tämän asiattomaksi'
     notify_user:
-      title: 'Ilmoita käyttäjälle {{username}}'
       description: 'Tämä viesti sisältää jotain, mistä haluan keskustellä tämän henkilön kanssa suoraan ja yksityisesti. Tämä ei aiheuta liputusta.'
-      long_form: 'ilmoitti käyttäjälle'
       email_title: 'Viestisi ketjussa "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Ilmoita valvojille'
-      description: 'Valvojan tulee huomioida tämä viesti <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a>, tai muun syyn vuoksi.'
-      long_form: 'valvojille ilmoitettu'
       email_title: 'Viesti ketjussa "%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -416,9 +409,7 @@ fi:
       description: 'Tämän ketjun sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
       long_form: 'liputti tämän asiattomaksi'
     notify_moderators:
-      title: 'Ilmoita valvojille'
       description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a>, tai muun syyn vuoksi.'
-      long_form: 'ilmoitettu valvojille'
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -576,7 +567,6 @@ fi:
       description: "HTML joka lisätään jokaisen sivun ylälaitaan (headerin jälkeen, ennen navigaatiota tai ketjun otsikkoa)."
     bottom:
       title: "Sivun alaosa"
-      description: "HTML joka lisätään jokaisen sivun loppuun."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
@@ -746,7 +736,6 @@ fi:
     purge_inactive_users_grace_period_days: "Varoaika (päivinä) kunnes aktivoimaton käyttäjätili tuhotaan."
     enable_s3_uploads: "Lataa liitetiedostot Amazon S3:een. Tärkeää: edellyttää toimivat S3 kirjautumistiedot (access key id ja secret access key)."
     s3_use_iam_profile: 'Käytä AWS EC2 IAM roolia avainten hakuun. HUOM: käyttöönotto korvaa "s3 access key id" ja "s3 secret access key" asetukset.'
-    s3_upload_bucket: "Amazon S3 bucket, jonne lataukset sijoitetaan. VAROITUS: täytyy olla pienillä kirjaimilla, ei pisteitä."
     s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
     s3_secret_access_key: "Amazon S3 secret access key, jota käytetään kuvien sijoittamisessa."
     s3_region: "Amazon S3 region, jota käytetään kuvien sijoittamisessa."
@@ -1117,7 +1106,6 @@ fi:
       other: "Nämä liput annettiin yli %{count} tuntia sitten."
     please_review: "Ole hyvä ja tarkasta ne."
     post_number: "viesti"
-    how_to_disable: "Ota tämä sähköposti-ilmoitus pois käytöstä asettamalla <pre>notify_about_flags_after</pre> arvoon 0."
     subject_template:
       one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
@@ -1135,22 +1123,6 @@ fi:
   system_messages:
     post_hidden:
       subject_template: "Viesti on piilotettu liputuksen johdosta"
-      text_body_template: |
-        Hei,
-
-        Tämä on automaattinen viesti sivustolta %{site_name}, koska viestisi ...
-
-        %{base_url}%{url}
-
-        ... on piilotettu johtuen käyttäjien sille antamista liputuksista.
-
-        %{flag_reason}
-
-        Usea käyttäjä on liputtanut tämän viestien ennen sen piilottamista, joten harkitse miten voisit muokata viestiäsi tämän palautteen pohjalta. **Voit muokata viestiäsi %{edit_delay} minuutin kuluttua, jolloin se tuodaan taas näkyviin.** Tämä kasvattaa luottamustasoasi.
-
-        Kuitenkin, jos viesti piilotettiin toista kertaa, se pysyy piilotettuna kunnes henkilökunta tutkii tilanteen – jonka jälkeen voi seurata muita seuraamuksia, mukaan lukien tilisi hyllyttäminen.
-
-        Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Tässä yksityisviestissä on muutama pikaohje, joiden avulla pääset alkuun:
@@ -1491,17 +1463,13 @@ fi:
         ---
         %{respond_instructions}
     digest:
-      why: "Lyhyt tiivistelmä siitä mitä on tapahtunut sivustolla %{site_link} sen jälkeen, kun viimeksi näimme sinut %{last_seen_at}."
       subject_template: "[%{site_name}] Tiivistelmä ajalta %{date}"
       new_activity: "Uusi toiminta omissa ketjuissasi ja viesteissäsi:"
       top_topics: "Suosittuja viestejä"
       other_new_topics: "Suosittuja ketjuja"
-      unsubscribe: "Tämä tiivistelmä lähetettiin %{site_link}-sivustolta, jossa emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä, %{unsubscribe_link}."
       click_here: "klikkaa tästä"
       from: "%{site_name} tiivistelmä"
       read_more: "Lue lisää"
-      more_topics: "Sen jälkeen kun viimeksi vierailit palstalla %{last_seen_at}, on luotu %{new_topics_since_seen} muuta uutta ketjua."
-      more_topics_category: "Sen jälkeen kun viimeksi vierailit palstalla %{last_seen_at}, on luotu %{new_topics_since_seen} muuta uutta ketjua näille alueille."
       posts:
         one: "1 viesti"
         other: "%{count} viestiä"

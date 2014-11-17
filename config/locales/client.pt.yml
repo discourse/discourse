@@ -239,7 +239,6 @@ pt:
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefóne
-      other_accounts: Outras contas com este endereço IP
       no_other_accounts: (nenhum)
     user:
       profile: "Perfil"
@@ -322,7 +321,6 @@ pt:
         title: "Fundo de Perfil"
       email:
         title: "Email"
-        ok: "Parece OK. Vamos enviar um email para confirmar."
         invalid: "Por favor coloque um endereço de email válido."
         authenticated: "O seu email foi autenticado por {{provider}}."
         frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
@@ -561,8 +559,6 @@ pt:
       reply_here: "Responda Aqui"
       reply: "Responder"
       cancel: "Cancelar"
-      create_topic: "Criar um Tópico"
-      create_pm: "Criar uma Mensagem Particular"
       title: "Ou prima Ctrl+Enter"
       users_placeholder: "Adicionar um utilizador"
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
@@ -623,10 +619,7 @@ pt:
       title_with_attachments: "Adicionar uma imagem ou um ficheiro"
       from_my_computer: "Do meu dispositivo "
       from_the_web: "Da internet"
-      remote_tip: "ligação para a imagem http://example.com/image.jpg"
-      remote_tip_with_attachments: "link para a imagem ou ficheiro  http://example.com/file.ext (extensões permitidas: {{authorized_extensions}})."
       local_tip: "Carregue para selecionar um ficheiro do seu dispositivo"
-      local_tip_with_attachments: "carregue para selecionar uma imagem ou ficheiro do seu dispositivo (extensões permitidas: {{authorized_extensions}})"
       hint: "(poderá também arrastar o ficheiro para o editor para fazer o upload)"
       hint_for_supported_browsers: "(também pode arrastar ou colar imagens no editor de forma a carregá-las)"
       uploading: "A enviar"
@@ -690,7 +683,6 @@ pt:
         top: "Não existem mais tópicos populares."
     topic:
       filter_to: "{{post_count}} posts no tópico"
-      create: 'Criar Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Começar uma nova conversa privada'
       list: 'Tópicos'
@@ -1068,7 +1060,6 @@ pt:
       general: 'Geral'
       settings: 'Configurações'
       delete: 'Apagar Categoria'
-      create: 'Criar Categoria'
       save: 'Guardar Categoria'
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao guardar a categoria.
@@ -1116,7 +1107,6 @@ pt:
           title: "Silenciar"
           description: "Não será notificado relativamente a nada deste tópico, e não aparecerão no seu separador de não lidos."
     flagging:
-      title: 'Porque está a denunciar este post em privado?'
       action: 'Sinalizar Postagem'
       take_action: "Tomar Atitude"
       notify_action: 'Mensagem privada'
@@ -1126,14 +1116,11 @@ pt:
       submit_tooltip: "Submeter a denúncia privada"
       take_action_tooltip: "Atingir imediatamente o limite de denúncias, em vez de esperar por mais denúncias da comunidade"
       cant: "Desculpe, não é possível colocar uma sinalização neste momento."
-      custom_placeholder_notify_user: "Porque esta mensagem requer que fale diretamente e privativamente com este utilizador? Seja específico, construtivo e sempre gentil."
-      custom_placeholder_notify_moderators: "Porque esta mensagem requer atenção do moderador? Diga especificamente como isto te preocupou e forneça links relevantes, se possível."
       custom_message:
         at_least: "insira pelo menos {{n}} caracteres"
         more: "{{n}} em falta..."
         left: "{{n}} restantes"
     flagging_topic:
-      title: "Porque está a denunciar este tópico em privado?"
       action: "Denunciar Tópico"
       notify_action: "Mensagem privada"
     topic_map:
@@ -1443,9 +1430,6 @@ pt:
         title: "Personalizar"
         long_title: "Personalizações do Site"
         header: "Cabeçalho"
-        css: "Stylesheet"
-        mobile_header: "Cabeçalho Mobile"
-        mobile_css: "Folha de Estilos Mobile"
         override_default: "Sobrepor padrão?"
         enabled: "Habilitado?"
         preview: "pré-visualização"
@@ -1525,7 +1509,6 @@ pt:
         sent_test: "enviado!"
         delivery_method: "Método de Entrega"
         preview_digest: "Pré-vizualizar modo Digest"
-        preview_digest_desc: "Esta é uma ferramenta para prever o conteúdo dos emails de resumo enviados a partir do seu forum."
         refresh: "Atualizar"
         format: "Formato"
         html: "html"

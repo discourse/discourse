@@ -236,8 +236,6 @@ id:
       reply_here: "Balas Disini"
       reply: "Balas"
       cancel: "Batal"
-      create_topic: "Buat Topik"
-      create_pm: "Buat Pesan Pribadi"
       users_placeholder: "Tambahkan pengguna"
       bold_title: "Strong"
       italic_title: "Emphasis"

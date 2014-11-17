@@ -87,6 +87,7 @@ ja:
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
+    show_help: "ヘルプ"
     links: "リンク"
     links_lowercase: "リンク"
     faq: "よくある質問"
@@ -120,6 +121,7 @@ ja:
       stat:
         all_time: "All Time"
         last_7_days: "過去7日間"
+      topic_count: "トピック"
     bookmarks:
       not_logged_in: "ポストをブックマークするには、ログインする必要があります"
       created: "このポストをブックマークしました"
@@ -217,7 +219,6 @@ ja:
       location_not_found: （不明）
       organisation: 組織
       phone: 電話
-      other_accounts: 同じIPアドレスを持つアカウント
       no_other_accounts: （なし）
     user:
       said: "{{username}}:"
@@ -302,7 +303,6 @@ ja:
       email:
         title: "メールアドレス"
         instructions: "Eメールアドレスは外部に公開されません。"
-        ok: "メールアドレス OK。確認用のメールを送ります。"
         invalid: "正しいメールアドレスを入力してください。"
         authenticated: "あたなのメールは {{provider}} により認証されました。"
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
@@ -542,8 +542,6 @@ ja:
       reply_here: "ここに回答"
       reply: "回答"
       cancel: "キャンセル"
-      create_topic: "トピックを作成"
-      create_pm: "送信"
       title: "またはCtrl+Enter"
       users_placeholder: "ユーザの追加"
       title_placeholder: "このディスカッションを簡潔に説明してください。"
@@ -604,10 +602,7 @@ ja:
       title_with_attachments: "画像/ファイルをアップロード"
       from_my_computer: "このデバイスから"
       from_the_web: "Web から"
-      remote_tip: "画像のアドレスを入力してください (例 http://example.com/image.jpg)。"
-      remote_tip_with_attachments: "画像/ファイルのアドレスを入力してください (例 http://example.com/file.ext) (使用可能な拡張子: {{authorized_extensions}})."
       local_tip: "クリックしてアップロードする画像を選択してください"
-      local_tip_with_attachments: "クリックしてアップロードする画像/ファイルを選択してください (使用可能な拡張子: {{authorized_extensions}})"
       hint: "(アップロードする画像をエディタにドラッグ&ドロップすることもできます)"
       hint_for_supported_browsers: "(アップロードする画像をエディタにドラッグ&ドロップまたは貼り付けることもできます)"
       uploading: "アップロード中"
@@ -673,7 +668,6 @@ ja:
         top: "トップトピックはありません。"
     topic:
       filter_to: "トピック内の{{post_count}}個のポストを表示"
-      create: 'トピックを作成する'
       create_long: '新しいトピックの作成'
       private_message: 'プライベートメッセージを作成'
       list: 'トピック'
@@ -1021,7 +1015,6 @@ ja:
       general: '一般'
       settings: '設定'
       delete: 'カテゴリを削除する'
-      create: 'カテゴリを作成する'
       save: 'カテゴリを保存する'
       creation_error: カテゴリの作成に失敗しました。
       save_error: カテゴリの保存に失敗しました。
@@ -1066,7 +1059,6 @@ ja:
           title: "ミュート中"
           description: "このカテゴリに投稿されたトピックについての通知を受け取りません。また、未読タブにも通知されません。"
     flagging:
-      title: 'このポストにフラグをつける理由は何ですか?'
       action: 'フラグをつける'
       take_action: "アクションをする"
       notify_action: '通知する'
@@ -1075,14 +1067,11 @@ ja:
       yes_delete_spammer: "はい、スパマーを削除する"
       submit_tooltip: "プライベートフラッグを通知する"
       cant: "申し訳ありませんが、現在このポストにフラグを立てることはできません。"
-      custom_placeholder_notify_user: "ポストについて、このユーザに個人的に直接確認する必要がある内容を書いてください。詳細かつ建設的に、そして何よりマナーを守った内容にしてください。"
-      custom_placeholder_notify_moderators: "ポストについて、モデレータの確認が必要な理由を書いてください。問題の詳細を書くとともに、可能であれば参照リンクなども加えてください。"
       custom_message:
         at_least: "少なくとも{{n}}文字入力してください"
         more: "あと{{n}}文字..."
         left: "残り{{n}}文字"
     flagging_topic:
-      title: "このトピックにあなたがフラグを立てる理由は何ですか？"
       action: "トピックにフラグを立てる"
       notify_action: "プライベートメッセージ"
     topic_map:
@@ -1355,9 +1344,6 @@ ja:
         title: "カスタマイズ"
         long_title: "サイトのカスタマイズ"
         header: "ヘッダ"
-        css: "スタイルシート"
-        mobile_header: "モバイル向けヘッダ"
-        mobile_css: "モバイル向けスタイルシート"
         override_default: "標準のスタイルシートを読み込まない"
         enabled: "有効にする"
         preview: "プレビュー"
@@ -1422,7 +1408,6 @@ ja:
         sent_test: "送信完了!"
         delivery_method: "送信方法"
         preview_digest: "ダイジェストのプレビュー"
-        preview_digest_desc: "フォーラムより送信されるダイジェストメールのプレビューです。"
         refresh: "更新"
         format: "フォーマット"
         html: "html"
