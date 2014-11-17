@@ -115,7 +115,8 @@ class CategoryList
             topics_in_cat.each do |topic_id|
               topic = @topics_by_id[topic_id]
               if topic.present? && @guardian.can_see?(topic)
-                topic.category = c
+                # topic.category is very slow under rails 4.2
+                topic.association(:category).target = c
                 c.displayable_topics << topic
               end
             end
