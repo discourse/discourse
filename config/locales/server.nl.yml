@@ -341,14 +341,12 @@ nl:
   activation:
     action: "Activeer je account"
     already_done: "Sorry, de link om je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
-    please_continue: "Je account is bevestigd en je bent nu ingelogd."
     continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
   post_action_types:
     off_topic:
       title: 'Off-topic'
-      description: 'Dit bericht wijkt erg af van het onderwerp van deze discussie, en moet wellicht naar een ander topic worden verplaatst. Als het een topic op zichzelf is, dan hoort het hier wellicht niet.'
       long_form: 'heeft dit als off-topic gemeld'
     spam:
       title: 'Spam'
@@ -359,15 +357,10 @@ nl:
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
-      title: 'Stuur {{username}} een privébericht'
       description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
-      long_form: 'bericht aan schrijver verstuurd'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Licht moderators in'
-      description: 'Dit bericht moet door een moderator bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
-      long_form: 'moderators ingelicht'
       email_title: 'Graag aandacht van een moderator voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -392,9 +385,7 @@ nl:
       description: 'Dit topic bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'markeerde dit als ongepast'
     notify_moderators:
-      title: 'Licht moderators in'
       description: 'Dit topic moet door een moderator bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
-      long_form: 'lichtte moderators in'
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -543,7 +534,6 @@ nl:
       description: "HTML dat aan de bovenkant van alle pagina's wordt toegevoegd (na de header, voor de navigatie of topictitel)."
     bottom:
       title: "Onderkant van de pagina's"
-      description: "HTML dat aan de onderkant van alle pagina's wordt toegevoegd"
   site_settings:
     default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
@@ -623,7 +613,6 @@ nl:
     previous_visit_timeout_hours: "Hoe lang een bezoek duurt voordat we het als het 'vorige' bezoek beschouwen, in uren."
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
-    s3_upload_bucket: "De Amazon S3 bucket waar de bestanden naar geupload worden. WAARSCHUWING: gebruik kleine letters, geen punten."
     default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden."
     default_trust_level: "Het standaard trustlevel (0-4) voor alle nieuwe leden."
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
@@ -919,17 +908,13 @@ nl:
         ---
         %{respond_instructions}
     digest:
-      why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
       subject_template: "[%{site_name}] Samenvatting voor %{date}"
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Populaire berichten"
       other_new_topics: "Populaire topics"
-      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je een tijdje niet gezien gebben op onze site. Mocht je dit uit willen zetten of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: "klik hier"
       from: "%{site_name} Digest"
       read_more: "Lees verder"
-      more_topics: "Er werden nog %{new_topics_since_seen} andere nieuwe topics gepost sinds uw laatste bezoek op %{last_seen_at}."
-      more_topics_category: "Er werden nog %{new_topics_since_seen} andere nieuwe topics gepost in deze categorieën sinds uw laatste bezoek op %{last_seen_at}:"
       posts:
         one: "één bericht"
         other: "%{count} berichten"

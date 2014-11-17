@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_CN:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -335,14 +338,14 @@ zh_CN:
   activation:
     action: "激活您的帐号"
     already_done: "抱歉，此帐号激活链接已经失效。可能您的帐号已经被激活了？"
-    please_continue: "您的新帐号已激活，您现在已登陆论坛。"
+    please_continue: "您的新帐号已激活；即将转到主页。"
     continue_button: "转入到 %{site_name}"
     welcome_to: "欢迎来到%{site_name}！"
     approval_required: "您的新帐号需要由一位论坛版主手动批准方可使用。一旦您的帐号获得批准，您将收到一封电子邮件通知！"
   post_action_types:
     off_topic:
       title: '题外话'
-      description: '此帖对于当前讨论而言严重偏离话题，可能需要被移动。如果这是个需要讨论的主题，可能它不属于这里。'
+      description: '此帖与该主题标题和第一帖而言所讨论的主题无关，可能需要被移动。'
       long_form: '标记为题外话'
     spam:
       title: '垃圾'
@@ -353,15 +356,15 @@ zh_CN:
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
       long_form: '标记为不当内容'
     notify_user:
-      title: '通知 {{username}}'
+      title: '私信 @{{username}}'
       description: '此帖包含一些我想与该用户私下直接交流的内容。不能执行标记操作。'
-      long_form: '已通知用户'
+      long_form: '已私信用户'
       email_title: '您在“%{title}”中的帖子'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: '通知版主'
-      description: '此帖需要版主依据<a href="/guidelines">社群准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
-      long_form: '已通知版主'
+      title: "其他事项"
+      description: '此帖需要版主按照以上未列出的原因做出处理。'
+      long_form: '标记为需版主注意'
       email_title: '"%{title}" 主题需要您的关注'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -386,9 +389,9 @@ zh_CN:
       description: '此主题内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
       long_form: '标记为不当内容'
     notify_moderators:
-      title: '通知版主'
+      title: "其他内容"
       description: '该主题需要版主依据<a href="/guidelines">社群准则</a>、<a href="/tos">服务条款（TOS）</a>或其它未列出的原因来给予关注。'
-      long_form: '通知版主'
+      long_form: '标记为需版主注意'
       email_title: '"%{title}" 主题需要您的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -546,7 +549,7 @@ zh_CN:
       description: "将在每一个页面顶端（在头部之后，在导航或者主题标题前）插入的 HTML。"
     bottom:
       title: "页面底部"
-      description: "将在每一个页面底部加入的 HTML。"
+      description: "将在 </body> 标签前被插入的 HTML。"
   site_settings:
     censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
@@ -719,7 +722,7 @@ zh_CN:
     purge_inactive_users_grace_period_days: "删除不活跃用户账户的宽限期（单位：天）。"
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
-    s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点（.）。"
+    s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点，无下划线。"
     s3_access_key_id: "将用于上传图片的 Amazon S3 access key。"
     s3_secret_access_key: "将用于上传图片的 Amazon S3 secret key。"
     s3_region: "将用于上传图片的 Amazon S3 区域名。"
@@ -816,6 +819,7 @@ zh_CN:
     logout_redirect: "登出后重定向至的地址。如：http://somesite.com/logout"
     allow_uploaded_avatars: "允许用户上传他们自己的自定义头像。"
     allow_animated_avatars: "允许用户使用 gif 动画头像。警告：更改后运行 avatars:refresh 这个 rake 任务。"
+    allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
@@ -1079,7 +1083,7 @@ zh_CN:
       other: "这些标记在过去 %{count} 内被提交。"
     please_review: "请核查他们。"
     post_number: "帖子"
-    how_to_disable: "将 notify_about_flags_after 设为 0 禁用这个通知邮件。"
+    how_to_disable: '您可以通过修改“notify about flags after”设置项以禁用或改变邮件提醒设置。'
     subject_template:
       other: "%{count} 个标记需要被处理"
   flag_reasons:
@@ -1099,17 +1103,15 @@ zh_CN:
       text_body_template: |
         您好，
 
-        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子...
+        这是一封从 %{site_name} 自动发出的邮件，通知您的帖子已被隐藏。
 
         %{base_url}%{url}
 
-        ... 由于论坛用户的标记而被封。
-
         %{flag_reason}
 
-        请注意您的帖子是因为被多个社群成员标记才被封的。请根据他们的反馈考虑如何修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，然后它会被自动显示。**这将提高您在论坛的信任等级。
+        您的帖子是因为被多个社群成员标记才被隐藏的，所以请根据他们的反馈修改您的帖子。**您可以在 %{edit_delay} 分钟后开始编辑您的帖子，之后它会被自动显示。**这将提高您在论坛的信任等级。
 
-        但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括可能禁止您的用户帐号。
+        但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括禁止您的用户帐号的可能。
 
         需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
     usage_tips:
@@ -1201,7 +1203,7 @@ zh_CN:
       text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "备份成功完成"
-      text_body_template: "备份成功。\n访问[管理 > 备份](/admin/backups)系在您的新备份。"
+      text_body_template: "备份成功。\n访问[管理 > 备份](/admin/backups)下载您的新备份文件。"
     backup_failed:
       subject_template: "备份失败"
       text_body_template: |
@@ -1441,17 +1443,16 @@ zh_CN:
         ---
         %{respond_instructions}
     digest:
-      why: "这里是自从我们在 %{last_seen_at} 最后一次见到您之后，在 %{site_link} 发生的事情的简单汇总。"
       subject_template: "[%{site_name}] %{date} 的摘要"
       new_activity: "在您的主题和帖子里的动态："
       top_topics: "热门帖子"
       other_new_topics: "热门主题"
-      unsubscribe: "这封来自 %{site_link} 的汇总邮件是当我们有一段时间没有见到您之后，作为一个礼貌的通知发送给您的。点击 %{unsubscribe_link} 取消订阅。"
+      unsubscribe: "这封来自 %{site_link} 的摘要邮件是您一段时间没有访问后发送给您的。点击 %{unsubscribe_link} 取消订阅。"
       click_here: "点击此处"
       from: "%{site_name} 摘要"
       read_more: "阅读更多"
-      more_topics: "在您最后一次于 %{last_seen_at} 访问后有 %{new_topics_since_seen} 个新主题发布了。"
-      more_topics_category: "在您最后一次于 %{last_seen_at} 访问后在这些分类中有 %{new_topics_since_seen} 个新主题发布了。"
+      more_topics: "有其他 %{new_topics_since_seen} 个新主题。"
+      more_topics_category: "更多新主题："
       posts:
         other: "%{count} 个帖子"
     forgot_password:

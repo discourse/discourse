@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 it:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -331,14 +334,14 @@ it:
   activation:
     action: "Attiva il tuo account"
     already_done: "Spiacenti, questo collegamento di attivazione non è più valido. Forse il tuo account è già attivo?"
-    please_continue: "Il tuo nuovo account è confermato e ora sei collegato."
+    please_continue: "Il tuo nuovo account è confermato; verrai ora rediretto alla pagina iniziale."
     continue_button: "Procedi su %{site_name}."
     welcome_to: "Benvenuto su %{site_name}!"
     approval_required: "Un moderatore deve approvare manualmente il tuo account prima che tu possa accedere al forum. Riceverai un'email quando il tuo account sarà approvato!"
   post_action_types:
     off_topic:
       title: 'Fuori Tema'
-      description: 'Questo messaggio è completamente fuori tema rispetto all''argomento corrente, e dovrà probabilmente essere spostato. Se si tratta di un argomento, allora forse non dovrebbe essere qui.'
+      description: 'Questo messaggio è fuori tema rispetto al titolo e al primo messaggio e dovrà probabilmente essere spostato. '
       long_form: 'segnalato come fuori tema'
     spam:
       title: 'Spam'
@@ -349,15 +352,15 @@ it:
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_user:
-      title: 'Notifica {{username}}'
+      title: 'Messaggio Privato @{{username}}'
       description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
-      long_form: 'utente nofiticato'
+      long_form: 'messaggio privato inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notifica moderatori'
-      description: 'Questo messaggio richiede attenzione da parte dei moderatori in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a>, o per altri motivi non elencati.'
-      long_form: 'moderatori notificati'
+      title: "Altro"
+      description: 'Questo messaggio richiede attenzione da parte dei moderatori per altri motivi non elencati.'
+      long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'Un messaggio "%{title}" richiede l''attenzione dei moderatori'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -382,9 +385,9 @@ it:
       description: 'Questo argomento ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_moderators:
-      title: 'Avvisa i moderatori'
+      title: "Altro"
       description: 'Questo argomento richiede attenzione da parte dei moderatori in base alle <a href="/guidelines">linee guida</a>, ai <a href="%{tos_url}">TOS</a> o per altri motivi non elencati.'
-      long_form: 'moderatori avvisati'
+      long_form: 'segnalato all''attenzione dei moderatori'
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -496,9 +499,9 @@ it:
     enable_google_logins_warning: "Stai utilizzando una versione obsoleta dell'autenticazione Google OpenID. Google terminerà il supporto ad OpenID il 20 aprile 2015. Inizia ad usare Google OAuth2 al più presto. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Leggi questa guida per saperne di più</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
-    facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
-    twitter_config_warning: 'Il server è configurato per accettare registrazioni e login con Twitter (enable_twitter_logins), tuttavia la chiave e i parametri segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
-    github_config_warning: 'Il server è configurato per accettare registrazioni e login con GitHub (enable_github_logins), tuttavia il client id e i valori segreti non sono impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
+    facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
+    twitter_config_warning: 'Il server è configurato per accettare registrazioni e login con Twitter (enable_twitter_logins), tuttavia i parametri key e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Leggi questa guida per saperne di più</a>.'
+    github_config_warning: 'Il server è configurato per accettare registrazioni e login con GitHub (enable_github_logins), tuttavia i parametri client id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Leggi questa guida per saperne di più</a>.'
     s3_config_warning: 'Il server è configurato per caricare file a s3, ma almeno uno dei seguenti parametri non è impostato: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Vai <a href="/admin/site_settings">alle impostazioni del sito</a> e aggiorna i parametri. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno uno dei seguenti campi non è impostato: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Vai sulle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i relativi campi. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Guarda "Come impostare il caricamento di immagini su S3?" per informazioni</a>.'
     image_magick_warning: 'Il server è configurato per creare thumbnail di immagini di ampie dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo Package Manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
@@ -520,14 +523,14 @@ it:
       title: "Educatione Nuovi Utenti: Primi Argomenti"
       description: "Per i primi due argomenti dei nuovi utenti, verrà automaticamente visualizzata una finestra pop-up  per mostrare dei consigli durante la composizione del messaggio."
     usage_tips:
-      title: "Guida iniziale nuovi utenti"
+      title: "Guida Nuovi Utenti"
       description: "Guida e informazioni essenziali per nuovi utenti."
     welcome_user:
       title: "Benvenuto: Nuovo Utente"
-      description: "Un messaggio privato verrà automaticamente inviato a tutti i nuovi utenti dopo la registrazione."
+      description: "Verrà inviato automaticamente un messaggio privato a tutti i nuovi utenti dopo la registrazione."
     welcome_invite:
       title: "Benvenuto: Utente Invitato"
-      description: "Un messaggio privato verrà automaticamente inviato a tutti gli utenti invitati dopo che loro accettano l'invito."
+      description: "Verrà inviato automaticamente un messaggio privato a tutti gli utenti invitati quando accettano l'invito a partecipare da parte di un altro utente."
     login_required_welcome_message:
       title: "Accesso richiesto: messaggio di benvenuto"
       description: "Messaggio che viene mostrato agli utenti non collegati quando l'impostazione \"login obbligatorio\" è attiva."
@@ -542,7 +545,7 @@ it:
       description: "HTML che verrà aggiunto in cima a ogni pagina (dopo l'header, prima della barra di navigazione o del titolo dell'argomento)."
     bottom:
       title: "Fondo delle pagine"
-      description: "HTML che verrà aggiunto in fondo ad ogni pagina."
+      description: "HTML che verrà aggiunto prima del tag  </body>."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
@@ -591,6 +594,7 @@ it:
     summary_posts_required: "Minimo numero di messaggi in un argomento affinché venga abilitato 'Riassumi Questo Argomento' "
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
+    summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
     enable_private_messages: "Autorizza gli utenti con livello di esperienza 1 a creare e rispondere a messaggi privati"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
@@ -675,7 +679,6 @@ it:
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     clean_orphan_uploads_grace_period_hours: "Quante ore prima che un upload \"orphan\" venga rimosso."
     purge_deleted_uploads_grace_period_days: "Giorni che devono trascorrere prima che un upload cancellato venga rimosso del tutto."
-    s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere in minuscolo.\\"
     default_invitee_trust_level: "Livello di esperienza (0-4) assegnato di default agli utenti invitati."
     default_trust_level: "Livello di esperienza (0-4) assegnato di default ai nuovi utenti."
     tl1_requires_topics_entered: "Quanti argomenti deve inserire un utente per essere promosso a livello di esperienza 1."
@@ -783,7 +786,26 @@ it:
     archived_disabled: "Questo argomento non è più archiviato. Non è più congelato e può essere modificato."
     closed_enabled: "Questo argomento è stato chiuso. Non è più possibile inviare risposte."
     closed_disabled: "Questo argomento è stato aperto. È di nuovo possibile rispondere."
+    autoclosed_enabled_days:
+      one: "Questo argomento è stato automaticamente chiuso dopo un giorno. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso dopo %{count} giorni. Non sono permesse altre risposte."
+    autoclosed_enabled_hours:
+      one: "Questo argomento è stato automaticamente chiuso dopo un'ora. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso dopo %{count} ore. Non sono permesse altre risposte."
+    autoclosed_enabled_minutes:
+      one: "Questo argomento è stato automaticamente chiuso dopo un minuto. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso dopo %{count} minuti. Non sono permesse altre risposte."
+    autoclosed_enabled_lastpost_days:
+      one: "Questo argomento è stato automaticamente chiuso un giorno dopo l'ultima risposta. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso %{count} giorni dopo l'ultima risposta. Non sono permesse altre risposte."
+    autoclosed_enabled_lastpost_hours:
+      one: "Questo argomento è stato automaticamente chiuso un'ora dopo l'ultima risposta. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso %{count} ore dopo l'ultima risposta. Non sono permesse altre risposte."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Questo argomento è stato automaticamente chiuso un minuto dopo l'ultima risposta. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso %{count} minuti dopo l'ultima risposta. Non sono permesse altre risposte."
     autoclosed_disabled: "Questo argomento è ora aperto. Sono permesse altre risposte."
+    autoclosed_disabled_lastpost: "Questo argomento è ora aperto. Sono permesse altre risposte."
     pinned_enabled: "Questo argomento è stato puntato. Sarà mostrato in cima alla sua categoria finché non sarà spuntato da un membro dello staff - e allora varrà per tutti - oppure dai singoli utenti - e varrà solo per loro stessi."
     pinned_disabled: "Questo argomento è stato spuntato. Non sarà più mostrato in cima alla sua categoria."
     pinned_globally_enabled: "Questo argomento è ora puntato globalmente. Apparirà in cima sia alla sua categoria sia alle liste di tutti argomenti finché non sarà spuntato dallo staff - e allora varrà per tutti - oppure dai singoli utenti - e allora varrà solo per loro stessi."
@@ -848,7 +870,6 @@ it:
       other: "Queste segnalazioni sono state inviate oltre %{count} ore fa."
     please_review: "Per favore, revisionale."
     post_number: "messaggio"
-    how_to_disable: "Disattiva questa email impostando <pre>notify_about_flags_after</pre> a 0."
     subject_template:
       one: "1 segnalazione in attesa di essere revisionata"
       other: "%{count} segnalazioni in attesa di essere revisionate"
@@ -866,22 +887,6 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: |
-        Salve,
-
-        il presente è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio...
-
-        %{base_url}%{url}
-
-        ...è stato nascosto a causa di segnalazioni da parte della comunità.
-
-        %{flag_reason}
-
-        Diversi membri della comunità hanno segnalato questo messaggio, perciò considera l'opportunità di rivedere il suo contenuto in modo che rispetti tale valutazione. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente visualizzato.** Ciò aumenterà il tuo Livello Esperienza.
-
-        Comunque, se il messaggio verrà nascosto dalla comunità un'altra volta, resterà nascosto finché non verrà gestito dallo staff – e ci potrebbero essere ulteriori provvedimenti, inclusa la possibile sospensione del tuo account.
-
-        Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
@@ -896,6 +901,29 @@ it:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
       subject_template: "Backup completato correttamente"
+    backup_failed:
+      subject_template: "Backup fallito"
+      text_body_template: |
+        Il backup è fallito.
+
+        Questo è il log:
+
+        ```
+        %{logs}
+        ```
+    restore_succeeded:
+      subject_template: "Il ripristino è avvenuto con successo."
+      text_body_template: "Il ripristino è avvenuto con successo."
+    restore_failed:
+      subject_template: "Ripristino fallito"
+      text_body_template: |
+        Il ripristino è fallito.
+
+        Ecco il log:
+
+        ```
+        %{logs}
+        ```
     bulk_invite_succeeded:
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo invito di massa è stato processato, %{sent} inviti spediti."
@@ -1022,17 +1050,13 @@ it:
         ---
         %{respond_instructions}
     digest:
-      why: "Un breve resoconto di %{site_link} dall'ultima tua visita il %{last_seen_at}."
       subject_template: "[%{site_name}] Riepilogo per %{date}"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Post Popolari"
       other_new_topics: "Argomenti più attivi"
-      unsubscribe: "Questo riepilogo ti è stato inviato come notifica di cortesia da %{site_link} poiché non ti vediamo da un po'. Per cancellarti %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
       read_more: "Leggi altro"
-      more_topics: "Ci sono %{new_topics_since_seen} nuovi argomenti dall'ultima tua visita il %{last_seen_at}."
-      more_topics_category: "Ci sono %{new_topics_since_seen} nuovi argomenti inseriti in queste categorie dall'ultima tua visita il %{last_seen_at}."
       posts:
         one: "1 post"
         other: "%{count} post"
@@ -1099,7 +1123,7 @@ it:
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
   deleted: 'cancellato'
   upload:
-    edit_reason: "Abbiamo scaricato copie locali delle immagini in questo post"
+    edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."
     pasted_image_filename: "Immagine incollata"
     store_failure: "Upload #%{upload_id} fallito per l'utente #%{user_id}."
