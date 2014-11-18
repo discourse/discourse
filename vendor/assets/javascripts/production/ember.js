@@ -9074,6 +9074,7 @@ define("ember-handlebars/helpers/view",
         } else if (isGlobalPath(path)) {
           return null;
         } else if (path === 'this' || path === '') {
+          if (data.insideGroup && data.insideEach) { return 'context'; }
           return '_parentView.context';
         } else {
           return '_parentView.context.' + path;
