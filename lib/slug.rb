@@ -6,7 +6,9 @@ module Slug
   def self.for(string)
     slug = string.gsub("'", "").parameterize
     slug.gsub!("_", "-")
-    if ['zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale)
+    # TODO review if ja should use this
+    # ko asked for it to be removed
+    if ['zh_CN', 'ja'].include?(SiteSetting.default_locale)
       unless defined? Stringex
         require 'stringex_lite'
       end
