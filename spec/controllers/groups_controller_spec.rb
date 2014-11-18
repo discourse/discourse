@@ -70,10 +70,15 @@ describe GroupsController do
 
     it "ensures that over 200 members can be retrieved" do
       300.times { group.add(Fabricate(:user)) }
-      xhr :get, :members, group_id: group.name, limit: 400
+      xhr :get, :members, group_id: group.name, limit: 250
       response.should be_success
       members = JSON.parse(response.body)
-      members.count.should eq(300)
+      members.count.should eq(250)
+
+      xhr :get, :members, group_id: group.name, limit: 250, offset: 250
+      response.should be_success
+      members = JSON.parse(response.body)
+      members.count.should eq(50)
     end
   end
 end
