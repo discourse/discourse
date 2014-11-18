@@ -94,7 +94,7 @@ class ImportScripts::MyBB < ImportScripts::Base
           FROM mybb_posts p,
                mybb_threads t
          WHERE p.tid = t.tid
-      ORDER BY id
+      ORDER BY p.dateline
          LIMIT #{BATCH_SIZE}
         OFFSET #{offset};
       ")
@@ -104,6 +104,20 @@ class ImportScripts::MyBB < ImportScripts::Base
       create_posts(results, total: total_count, offset: offset) do |m|
         skip = false
         mapped = {}
+
+        # If you have imported a phpbb forum to mybb previously there might
+        # be a problem with mybb_threads.firstpost. If these ids are wrong
+        # the thread cannot be imported to discourse as the topic post is
+        # missing. This query retrieves the first_post_id manually. As it
+        # will decrease the performance it is commented out by default.
+        # m['first_post_id'] = mysql_query("
+        #   SELECT   p.pid id,
+        #   FROM     mybb_posts p,
+        #            mybb_threads t
+        #   WHERE    p.tid = #{m['topic_id']} AND t.tid = #{m['topic_id']}
+        #   ORDER BY p.dateline
+        #   LIMIT    1
+        # ").first['id']
 
         mapped[:id] = m['id']
         mapped[:user_id] = user_id_from_imported_user_id(m['user_id']) || -1
@@ -149,6 +163,9 @@ class ImportScripts::MyBB < ImportScripts::Base
     #   [url=https&#58;//google&#46;com:1qh1i7ky]click here[/url:1qh1i7ky]
     #   [quote=&quot;cybereality&quot;:b0wtlzex]Some text.[/quote:b0wtlzex]
     s.gsub!(/:(?:\w{8})\]/, ']')
+
+    # Remove mybb video tags.
+    s.gsub!(/(^\[video=.*?\])|(\[\/video\]$)/, '')
 
     s = CGI.unescapeHTML(s)
 

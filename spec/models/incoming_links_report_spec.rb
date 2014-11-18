@@ -48,7 +48,7 @@ describe IncomingLinksReport do
 
     it 'with no IncomingLink records, it returns correct data' do
       stub_empty_referrers_data
-      top_referrers[:data].should have(0).records
+      top_referrers[:data].size.should == 0
     end
 
     it 'with some IncomingLink records, it returns correct data' do
@@ -80,7 +80,7 @@ describe IncomingLinksReport do
 
     it 'with no IncomingLink records, it returns correct data' do
       stub_empty_traffic_source_data
-      top_traffic_sources[:data].should have(0).records
+      top_traffic_sources[:data].size.should == 0
     end
 
     it 'with some IncomingLink records, it returns correct data' do
@@ -108,7 +108,7 @@ describe IncomingLinksReport do
 
     it 'with no IncomingLink records, it returns correct data' do
       stub_empty_referred_topics_data
-      top_referred_topics[:data].should have(0).records
+      top_referred_topics[:data].size.should == 0
     end
 
     it 'with some IncomingLink records, it returns correct data' do

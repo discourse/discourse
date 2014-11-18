@@ -18,7 +18,8 @@ module Email
     def add_styles(node, new_styles)
       existing = node['style']
       if existing.present?
-        node['style'] = "#{existing}; #{new_styles}"
+        # merge styles
+        node['style'] = "#{new_styles}; #{existing}"
       else
         node['style'] = new_styles
       end
@@ -36,9 +37,11 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          # having no extra style on email images might work best?
-          img['width'] = 'auto'
-          img['height'] = 'auto'
+          # use dimensions of original iPhone screen for 'too big, let device rescale'
+          if img['width'].to_i > 320 or img['height'].to_i > 480
+            img['width'] = 'auto'
+            img['height'] = 'auto'
+          end
           add_styles(img, 'max-width:100%;') if img['style'] !~ /max-width/
         end
 
@@ -128,7 +131,7 @@ module Email
       style('li', 'padding-bottom: 10px')
       style('div.digest-post', 'margin-left: 15px; margin-top: 20px; max-width: 694px;')
       style('div.digest-post h1', 'font-size: 20px;')
-      style('span.footer-notice', 'color:#666; font-size:80%')
+      style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')

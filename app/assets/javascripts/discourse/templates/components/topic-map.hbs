@@ -46,7 +46,9 @@
     {{/if}}
     {{#if showPosterAvatar}}
       <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
-        {{#grouped-each participant in details.fewParticipants}}{{topic-participant participant=participant}}{{/grouped-each}}
+        {{#each details.fewParticipants}}
+          {{topic-participant participant=this}}
+        {{/each}}
       </li>
     {{/if}}
   </ul>
@@ -54,14 +56,16 @@
 
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
-    {{#grouped-each participant in details.participants}}{{topic-participant participant=participant}}{{/grouped-each}}
+    {{#each details.participants}}
+      {{topic-participant participant=this}}
+    {{/each}}
   </section>
 
   {{#if infoLinks}}
     <section class='links'>
 
         <table class='topic-links'>
-          {{#grouped-each infoLinks}}
+          {{#each infoLinks}}
             <tr>
             <td>
               <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
@@ -73,7 +77,7 @@
               {{link-domain this}}
             </td>
             </tr>
-          {{/grouped-each}}
+          {{/each}}
         </table>
 
         {{#if showAllLinksControls}}

@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 module ::Kernel
   def rails_master?
-    ENV["RAILS_MASTER"]
+    ENV["RAILS_MASTER"] == '1'
   end
 end
 
@@ -70,12 +70,13 @@ end
 gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
+  gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
-  gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
 else
   gem 'rails'
-  gem 'actionpack-action_caching'
 end
+
+gem 'actionpack-action_caching'
 gem 'rails-observers'
 
 # Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
@@ -91,7 +92,11 @@ gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 # We use some ams 0.8.0 features, need to amend code
 # to support 0.9 etc, bench needs to run and ensure no
 # perf regressions
-gem 'active_model_serializers', '~> 0.8.0'
+if rails_master?
+  gem 'active_model_serializers', github: 'rails-api/active_model_serializers', branch: '0-8-stable'
+else
+  gem 'active_model_serializers', '~> 0.8.0'
+end
 
 
 gem 'onebox'
@@ -240,6 +245,8 @@ gem 'stackprof', require: false, platform: :mri_21
 gem 'memory_profiler', require: false, platform: :mri_21
 
 gem 'rmmseg-cpp', require: false
+
+gem 'stringex', require: false
 
 gem 'logster'
 

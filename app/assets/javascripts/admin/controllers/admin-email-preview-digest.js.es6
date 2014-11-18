@@ -1,13 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller previews an email digest
-
-  @class AdminEmailPreviewDigestController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default ObjectController.extend({
 
   actions: {

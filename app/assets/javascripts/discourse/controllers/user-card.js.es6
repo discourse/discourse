@@ -78,6 +78,7 @@ export default ObjectController.extend({
 
     Discourse.User.findByUsername(username).then(function (user) {
       self.setProperties({ user: user, avatar: user, visible: true});
+      self.appEvents.trigger('usercard:shown');
     }).finally(function(){
       self.set('userLoading', null);
     });

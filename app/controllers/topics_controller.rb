@@ -110,7 +110,7 @@ class TopicsController < ApplicationController
     params.require(:post_ids)
 
     @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
-    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false))
+    render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
   end
 
   def destroy_timings
@@ -130,7 +130,7 @@ class TopicsController < ApplicationController
 
     if changes.length > 0
       first_post = topic.ordered_posts.first
-      success = PostRevisor.new(first_post, topic).revise!(current_user, changes)
+      success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
     end
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"

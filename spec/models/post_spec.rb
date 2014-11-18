@@ -828,8 +828,10 @@ describe Post do
   describe ".unhide!" do
     before { SiteSetting.stubs(:unique_posts_mins).returns(5) }
 
-    it "will unhide the post" do
-      post = create_post(user: Fabricate(:newuser))
+    it "will unhide the first post & make the topic visible" do
+      hidden_topic = Fabricate(:topic, visible: false)
+
+      post = create_post(topic: hidden_topic)
       post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
       post.reload
 
@@ -838,10 +840,30 @@ describe Post do
       post.expects(:publish_change_to_clients!).with(:acted)
 
       post.unhide!
+
       post.reload
+      hidden_topic.reload
 
       post.hidden.should == false
+      hidden_topic.visible.should == true
     end
+  end
+
+  it "will unhide the post but will keep the topic invisible/unlisted" do
+    hidden_topic = Fabricate(:topic, visible: false)
+    first_post = create_post(topic: hidden_topic)
+    second_post = create_post(topic: hidden_topic)
+
+    second_post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
+    second_post.expects(:publish_change_to_clients!).with(:acted)
+
+    second_post.unhide!
+
+    second_post.reload
+    hidden_topic.reload
+
+    second_post.hidden.should == false
+    hidden_topic.visible.should == false
   end
 
 end

@@ -15,6 +15,10 @@
 # http://yamllint.com/
 
 en:
+  stringex:
+    characters:
+      ellipsis: ""
+      number: "-"
   # some default transliteration rules may be missing, add them to your locale
   i18n:
     transliterate:
@@ -414,7 +418,7 @@ en:
   activation:
     action: "Activate your account"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed! You will now be redirected to the home page."
+    please_continue: "Your new account is confirmed; you will be redirected to the home page."
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
@@ -433,15 +437,15 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Notify {{username}}'
+      title: 'Private Message @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
-      long_form: 'notified user'
+      long_form: 'private messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notify moderators'
+      title: "Something Else"
       description: 'This post requires moderator attention for another reason not listed above.'
-      long_form: 'notified moderators'
+      long_form: 'flagged this for moderator attention'
       email_title: 'A post in "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -467,9 +471,9 @@ en:
       description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_moderators:
-      title: 'Notify moderators'
+      title: "Something Else"
       description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
-      long_form: 'notified moderators'
+      long_form: 'flagged this for moderator attention'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
 
@@ -634,7 +638,7 @@ en:
       description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
     bottom:
       title: "Bottom of the pages"
-      description: "HTML that will be added at the bottom of every page."
+      description: "HTML that will be added before the </body> tag."
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -843,7 +847,7 @@ en:
     purge_inactive_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
-    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods."
+    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
     s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
     s3_region: "The Amazon S3 region name that will be used to upload images."
@@ -937,6 +941,7 @@ en:
     staff_like_weight: "How much extra weighting factor to give staff likes."
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
+    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none at TL2 or higher), stop accepting new signups from that IP."
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -971,6 +976,7 @@ en:
 
     allow_uploaded_avatars: "Allow users to upload custom avatars."
     allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
+    allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
@@ -1093,7 +1099,7 @@ en:
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_hours:
       one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
-      other: "This topic was automatically closed count} hours after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed %{count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
       one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
@@ -1270,7 +1276,7 @@ en:
       other: "These flags were submitted over %{count} hours ago."
     please_review: "Please review them."
     post_number: "post"
-    how_to_disable: "Disable this email by changing the <pre>notify_about_flags_after</pre> setting to 0."
+    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
     subject_template:
       one: "1 flag waiting to be handled"
       other: "%{count} flags waiting to be handled"
@@ -1294,11 +1300,9 @@ en:
       text_body_template: |
         Hello,
 
-        This is an automated message from %{site_name} to inform you that your post ...
+        This is an automated message from %{site_name} to inform you that your post was hidden.
 
         %{base_url}%{url}
-
-        ... was hidden due to community flagging.
 
         %{flag_reason}
 
@@ -1691,17 +1695,17 @@ en:
         %{respond_instructions}
 
     digest:
-      why: "A brief summary of %{site_link} since we last saw you on %{last_seen_at}."
+      why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
       subject_template: "[%{site_name}] Digest for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
-      unsubscribe: "This digest is sent as a courtesy notification from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      unsubscribe: "This digest is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} digest"
       read_more: "Read More"
-      more_topics: "There were %{new_topics_since_seen} other new topics posted since you last visited on %{last_seen_at}."
-      more_topics_category: "There were %{new_topics_since_seen} other new topics posted in these categories since you last visited on %{last_seen_at}:"
+      more_topics: "There were %{new_topics_since_seen} other new topics."
+      more_topics_category: "More new topics:"
 
       posts:
         one: "1 post"

@@ -56,7 +56,5 @@
     &nbsp; {{i18n login.authenticating}}
   {{/if}}
 
-  {{#if showSpinner}}
-    &nbsp; <i class='fa fa-spinner fa-spin'></i>
-  {{/if}}
+  {{loading-spinner condition=showSpinner size="small"}}
 </div>

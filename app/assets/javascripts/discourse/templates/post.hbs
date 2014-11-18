@@ -50,16 +50,16 @@
           </div>
         {{/if}}
         {{#if wiki}}
-          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action "editPost" this}}><i class="fa fa-pencil-square-o"></i></div>
+          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
         {{/if}}
         {{#if via_email}}
           {{#if canViewRawEmail}}
-            <div class="post-info via-email raw-email" title="{{i18n post.via_email}}" {{action "showRawEmail" this}}><i class="fa fa-envelope-o"></i></div>
+            <div class="post-info via-email raw-email" title="{{i18n post.via_email}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
           {{else}}
-            <div class="post-info via-email" title="{{i18n post.via_email}}"><i class="fa fa-envelope-o"></i></div>
+            <div class="post-info via-email" title="{{i18n post.via_email}}">{{fa-icon "envelope-o"}}</div>
           {{/if}}
         {{/if}}
-        <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}"><i class='fa fa-circle'></i></div>
+        <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}">{{fa-icon "circle"}}</div>
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
@@ -84,7 +84,15 @@
         {{/if}}
         {{view 'post-menu' post=this adminMenu=view.adminMenu}}
       </div>
-      {{view 'replies' content=replies}}
+
+      {{#if replies}}
+        <section class='embedded-posts bottom'>
+          {{#each reply in replies}}
+            {{view 'embedded-post' content=reply}}
+          {{/each}}
+        </section>
+      {{/if}}
+
       {{discourse-action-history post=this}}
       {{view 'topic-map-container' post=this topic=controller.model}}
     </div>

@@ -69,9 +69,7 @@
           </tr>
         {{/each}}
       </table>
-      {{#if invitesLoading}}
-        {{loading-spinner}}
-      {{/if}}
+      {{loading-spinner condition=invitesLoading}}
 
     {{else}}
       {{#if canBulkInvite}}

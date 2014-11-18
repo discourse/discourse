@@ -115,7 +115,7 @@ module Email
       end
 
       begin
-        @message.deliver
+        @message.deliver_now
       rescue *SMTP_CLIENT_ERRORS => e
         return skip(e.message)
       end

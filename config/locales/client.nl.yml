@@ -241,7 +241,6 @@ nl:
       location_not_found: (onbekend)
       organisation: Organisatie
       phone: Telefoon
-      other_accounts: Andere accounts met dit IP-adres
       no_other_accounts: (geen)
     user:
       said: "{{username}}:"
@@ -326,7 +325,6 @@ nl:
       email:
         title: "E-mail"
         instructions: "Je e-mail adres zal nooit publieklijk zichtbaar zijn."
-        ok: "Prima. We zullen je een e-mail sturen ter bevestiging."
         invalid: "Vul een geldig e-mailadres in."
         authenticated: "Je e-mailadres is bevestigd door {{provider}}."
         frequency: "We zullen je alleen maar mailen als we je een tijd niet gezien hebben, en als je toevallig hetgeen waarover we je mailen nog niet hebt gezien op onze site."
@@ -570,8 +568,6 @@ nl:
       reply_here: "Reageer hier"
       reply: "Reageer"
       cancel: "Annuleer"
-      create_topic: "Maak topic"
-      create_pm: "Maak privébericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
@@ -632,10 +628,7 @@ nl:
       title_with_attachments: "Voeg een afbeelding of bestand toe"
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
-      remote_tip: "link naar afbeelding http://example.com/image.jpg"
-      remote_tip_with_attachments: "vul een url in van een afbeelding of bestand: http://example.com/file.ext (toegestane extensies: {{authorized_extensions}})."
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
-      local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
       hint_for_supported_browsers: "(je kan ook afbeeldingen hierheen slepen of copy/pasten om ze te uploaden)"
       uploading: "Uploaden"
@@ -698,7 +691,6 @@ nl:
         top: "Er zijn geen top-topics meer."
     topic:
       filter_to: "{{post_count}} berichten in topic"
-      create: 'Maak topic'
       create_long: 'Maak een nieuw topic'
       private_message: 'Stuur een privébericht'
       list: 'Topics'
@@ -1075,7 +1067,6 @@ nl:
       general: 'Algemeen'
       settings: 'Instellingen'
       delete: 'Verwijder categorie'
-      create: 'Maak categorie'
       save: 'Bewaar categorie'
       creation_error: Er ging bij het maken van de categorie iets mis.
       save_error: Er ging iets mis bij het opslaan van de categorie.
@@ -1122,7 +1113,6 @@ nl:
         muted:
           title: "Genegeerd"
     flagging:
-      title: 'Waarom meld je dit bericht (alleen zichtbaar voor moderatoren en admins)?'
       action: 'Meld bericht'
       take_action: "Onderneem actie"
       notify_action: 'Meld'
@@ -1133,14 +1123,11 @@ nl:
       hidden_email_address: "(verborgen)"
       submit_tooltip: "Verstuur de privé markering"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
-      custom_placeholder_notify_user: "Wat maakt dat je de schrijver persoonlijk iets wil melden? Wees specifiek, constructief en altijd aardig."
-      custom_placeholder_notify_moderators: "Waarom heeft dit bericht aandacht van een moderator nodig? Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links mee waar mogelijk."
       custom_message:
         at_least: "Gebruik ten minste {{n}} tekens"
         more: "Nog {{n}} te gaan..."
         left: "Nog {{n}}"
     flagging_topic:
-      title: "Waarom markeer je deze topic (privé)?"
       action: "Markeer topic"
       notify_action: "Notificeer"
     topic_map:
@@ -1445,9 +1432,6 @@ nl:
         title: "Aanpassingen"
         long_title: "Aanpassingen aan de site"
         header: "Header"
-        css: "Stylesheet"
-        mobile_header: "Mobiele header"
-        mobile_css: "Mobiele stylesheet"
         override_default: "Sluit de standaard stylesheet uit"
         enabled: "Ingeschakeld?"
         preview: "voorbeeld"
@@ -1527,7 +1511,6 @@ nl:
         sent_test: "verzonden!"
         delivery_method: "Verzendmethode"
         preview_digest: "Voorbeeld digestmail"
-        preview_digest_desc: "Hiermee kun je een voorbeeld van de digest email zien die vanaf het forum wordt verstuurd."
         refresh: "Verniew"
         format: "Formaat"
         html: "html"

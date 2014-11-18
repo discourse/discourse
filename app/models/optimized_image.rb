@@ -79,19 +79,30 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize(from, to, width, height, allow_animation=false)
-    from << "[0]" unless allow_animation
     # NOTE: ORDER is important!
-    instructions = %W{
-      #{from}
-      -background transparent
-      -gravity center
-      -thumbnail #{width}x#{height}^
-      -extent #{width}x#{height}
-      -interpolate bicubic
-      -unsharp 2x0.5+0.7+0
-      -quality 98
-      #{to}
-    }.join(" ")
+    instructions = if allow_animation
+      %W{
+        #{from}
+        -coalesce
+        -gravity center
+        -thumbnail #{width}x#{height}^
+        -extent #{width}x#{height}
+        -layers optimize
+        #{to}
+      }.join(" ")
+    else
+      %W{
+        #{from}[0]
+        -background transparent
+        -gravity center
+        -thumbnail #{width}x#{height}^
+        -extent #{width}x#{height}
+        -interpolate bicubic
+        -unsharp 2x0.5+0.7+0
+        -quality 98
+        #{to}
+      }.join(" ")
+    end
 
     `convert #{instructions}`
 

@@ -1,11 +1,17 @@
 require_dependency 'site_text_type'
 require_dependency 'site_text_class_methods'
+require_dependency 'distributed_cache'
 
 class SiteText < ActiveRecord::Base
+
   extend SiteTextClassMethods
   self.primary_key = 'text_type'
 
   validates_presence_of :value
+
+  after_save do
+    SiteText.text_for_cache.clear
+  end
 
   def self.formats
     @formats ||= Enum.new(:plain, :markdown, :html, :css)

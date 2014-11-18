@@ -136,18 +136,16 @@ div.ac-wrap {
 }
 
 #reply-control {
-  .spinner {
+  .composer-loading {
     position: absolute;
     @include fades-in(0.25s);
     left: 45%;
     top: 20%;
   }
-  &.loading {
+  &.composer-loading {
     .spinner {
       z-index: 1000;
       @include visible;
     }
   }
-
 }
-

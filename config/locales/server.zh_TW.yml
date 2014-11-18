@@ -249,7 +249,6 @@ zh_TW:
   post_action_types:
     off_topic:
       title: '離題內容'
-      description: '此文章嚴重偏離主題，應移至他處。如果這是一個討論話題，也許它不該屬於這裡。'
       long_form: '投訴為離題內容'
     spam:
       title: '垃圾內容'
@@ -259,13 +258,9 @@ zh_TW:
       title: '不當內容'
       long_form: '投訴為不當內容'
     notify_user:
-      title: '通知 {{username}}'
-      long_form: '已通知用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: '通知板主'
-      long_form: '已通知板主'
       email_title: '一篇在 "%{title}" 裡的文章需要板主注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -289,8 +284,6 @@ zh_TW:
       title: '不當內容'
       long_form: '投訴為不當內容'
     notify_moderators:
-      title: '通知板主'
-      long_form: '已通知板主'
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -433,7 +426,6 @@ zh_TW:
       title: "頁面頂部"
     bottom:
       title: "頁面底部"
-      description: "此 HTML 將插入於任何業面的尾部"
   site_settings:
     default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
     allow_user_locale: "允許用戶選擇自己的語言介面"
@@ -546,7 +538,6 @@ zh_TW:
     max_private_messages_per_day: "每個用戶每天最多能發\"私訊\"的數量"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
-    s3_upload_bucket: "上傳檔案到 Amazon S3 的 bucket 名，警告：必須為英文小寫，且無句點（.）"
     s3_access_key_id: "上傳至 Amazon S3 的 access key id，將用於上傳圖片"
     s3_secret_access_key: "上傳至 Amazon S3 的 secret access key，將用於上傳圖片"
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
@@ -796,8 +787,6 @@ zh_TW:
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
       read_more: "閱讀更多"
-      more_topics: "從你上次在 %{last_seen_at} 造訪後，已出現 %{new_topics_since_seen} 個新討論話題。"
-      more_topics_category: "從你上次在 %{last_seen_at} 造訪後，這些類別多了 %{new_topics_since_seen} 個新討論話題。"
       posts:
         other: "%{count} 篇文章"
     forgot_password:

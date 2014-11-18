@@ -377,7 +377,7 @@ posting:
     default: 10000
   default_code_lang:
     client: true
-    default: "lang-auto"
+    default: "auto"
   warn_reviving_old_topic_age: 180
   autohighlight_all_code:
     client: true
@@ -478,6 +478,7 @@ files:
   allow_animated_avatars:
     client: true
     default: false
+  allow_animated_thumbnails: false
 
 trust:
   default_trust_level:
@@ -575,6 +576,7 @@ spam:
       default: 2
       min: 0
       max: 3
+  max_new_accounts_per_registration_ip: 3
 
 rate_limits:
   unique_posts_mins:

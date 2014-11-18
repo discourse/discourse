@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 de:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -111,6 +114,7 @@ de:
       admins: "admins"
       moderators: "moderatoren"
       staff: "mitarbeiter"
+      trust_level_0: "vertrauensstufe_0"
       trust_level_1: "vertrauensstufe_1"
       trust_level_2: "vertrauensstufe_2"
       trust_level_3: "vertrauensstufe_3"
@@ -341,14 +345,12 @@ de:
   activation:
     action: "Aktiviere dein Benutzerkonto"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
-    please_continue: "Dein neues Konto ist aktiviert und du bist jetzt angemeldet."
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor Du auf das Forum zugreifen kannst, muss Dein neues Konto noch von einem Moderator genehmigt werden. Du erhälst eine E-Mail, sobald dies geschehen ist!"
   post_action_types:
     off_topic:
       title: 'Am Thema vorbei'
-      description: 'Dieser Beitrag geht komplett am Thema des aktuellen Gesprächs vorbei und sollte möglicherweise in ein anderes Thema verschoben werden.'
       long_form: 'dies als am Thema vorbei gemeldet'
     spam:
       title: 'Werbung'
@@ -359,14 +361,11 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
-      title: '{{username}} benachrichtigen'
-      long_form: 'dies dem Benutzer gemeldet'
+      title: 'Private Nachricht an {{username}}'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Moderatoren benachrichtigen'
-      description: 'Dieser Beitrag muss von einem Moderator begutachtet werden, da er entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
-      long_form: 'dies den Moderatoren gemeldet'
+      title: "Irgendetwas anderes"
       email_title: 'Der Beitrag "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -391,9 +390,8 @@ de:
       description: 'Dieses Thema enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'als unangemessen gemeldet'
     notify_moderators:
-      title: 'Moderatoren benachrichtigen'
+      title: "Irgendetwas anderes"
       description: 'Dieses Thema muss von einem Moderator begutachtet werden, da es entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
-      long_form: 'dies wurde den Moderatoren gemeldet'
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -547,7 +545,6 @@ de:
       description: "HTML das am Anfang jeder Seite hinzugefügt wird (Nach dem Header, vor der Navigation oder dem Thementitel)."
     bottom:
       title: "Unterer Teil der Seiten"
-      description: "HTML Code der am Ende jeder Seite eingefügt wird."
   site_settings:
     censored_words: "Wörter, die automatisch durch&#9632;&#9632;&#9632;&#9632; ersetzt werden"
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
@@ -700,7 +697,6 @@ de:
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
     purge_deleted_uploads_grace_period_days: "Frist (in Tagen) bevor ein entfernter Upload endgültig gelöscht wird."
     s3_use_iam_profile: 'Benutze die AWS EC2 IAM Rolle zum Abrufen von Keys. ANMERKUNG: Das Aktivieren überschreibt die Einstellungen „s3 access key id“ und „s3 secret access key“.'
-    s3_upload_bucket: "Der Amazon S3 Bucketname in den hochgeladene Dateien abgelegt werden. WARNUNG: Nur Kleinbuchstaben, keine Punkte."
     s3_access_key_id: "The Amazon S3 access key id that will be used to upload images"
     s3_secret_access_key: "Der geheime Schlüssel von Amazon S3 welcher für das Hochladen verwendet wird"
     s3_region: "Der Name der Amazon S3 Region welche für das Hochladen verwendet wird"
@@ -866,6 +862,7 @@ de:
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
+    missing_user_field: "Sie haben nicht alle Benutzerfelder ausgefüllt"
   user:
     no_accounts_associated: "Keine Konten zugehörig"
     username:
@@ -965,22 +962,6 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Beitrag ...
-
-        %{base_url}%{url}
-
-        ... wegen Meldungen aus der Community versteckt wurde.
-
-        %{flag_reason}
-
-        Beachte, dass mehrere Mitglieder der Community diesen Beitrag gemeldet haben, bevor dieser versteckt wurde. Überlege dir daher, wie du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest. **Du kannst deinen Beitrag nach %{edit_delay} Minuten überarbeiten. Anschließend wird er automatisch wieder sichtbar.** Dadurch erhöht sich auch deine Vertrauensstufe.
-
-        Wenn dieser Beitrag jedoch ein zweites Mal von der Community versteckt wird, bleibt dieser solange ausgeblendet, bis ein Mitarbeiter sich darum kümmert. Das kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
-
-        Weitere Hilfestellung findest du in unseren [Richtlinien](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -1190,17 +1171,13 @@ de:
         ---
         %{respond_instructions}
     digest:
-      why: "Hier ist eine kurze Zusammenfassung darüber, was auf %{site_link} passiert ist, seit du das letzte Mal am %{last_seen_at} da warst."
       subject_template: "[%{site_name}] Kurzfassung für %{date}"
       new_activity: "Neues in deinen Themen und Beiträgen:"
       top_topics: "Beliebte Beiträge"
       other_new_topics: "Beliebte Themen"
-      unsubscribe: "Diese Zusammenfassung wird Dir von %{site_link} als kleine Hilfestellung geschickt, um auf dem Laufenden zu bleiben, wenn wir Dich eine Weile nicht mehr gesehen haben. Um keine weiteren Nachrichten dieser Art mehr zu erhalten,%{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
       read_more: "Weiterlesen"
-      more_topics: "Es wurden %{new_topics_since_seen} weitere neue Themen erstellt, seit Du am %{last_seen_at} zuletzt online warst."
-      more_topics_category: "Es wurden %{new_topics_since_seen} weitere neue Themen in dieser Kategorie erstellt, seit Du am %{last_seen_at} zuletzt online warst:"
       posts:
         one: "1 Beitrag"
         other: "%{count} Beiträge"

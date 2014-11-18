@@ -1,8 +1,6 @@
 <p>{{i18n admin.logs.screened_emails.description}}</p>
 
-{{#if loading}}
-  {{loading-spinner}}
-{{else}}
+{{#loading-spinner condition=loading}}
   {{#if model.length}}
 
     <div class='table screened-emails'>
@@ -23,4 +21,4 @@
   {{else}}
     {{i18n search.no_results}}
   {{/if}}
-{{/if}}
+{{/loading-spinner}}

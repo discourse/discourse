@@ -1,4 +1,4 @@
-{{#if loaded}}
+{{#loading-spinner condition=loading}}
   {{#if topics}}
     <table class="topic-list">
       <thead>
@@ -17,36 +17,36 @@
       </thead>
 
       <tbody>
-        {{#grouped-each topic in topics}}
+        {{#each topics}}
           <tr {{bind-attr class="archived"}}>
             <td class='main-link'>
-              {{topic-status topic=topic}}
-              <a class='title' href="{{unbound topic.lastUnreadUrl}}">{{{unbound topic.fancy_title}}}</a>
-              {{topic-post-badges unread=topic.unread
-                                  newPosts=topic.new_posts
-                                  unseen=topic.unseen
-                                  url=topic.lastUnreadUrl}}
+              {{topic-status topic=this}}
+              <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
+              {{topic-post-badges unread=unread
+                                  newPosts=new_posts
+                                  unseen=unseen
+                                  url=lastUnreadUrl}}
             </td>
 
-            {{raw "list/category-column" hideCategory=controller.hideCategory category=topic.category}}
+            {{raw "list/category-column" hideCategory=controller.hideCategory category=category}}
 
-            {{posts-count-column topic=topic class="num" action="clickedPosts"}}
+            {{posts-count-column topic=this class="num" action="clickedPosts"}}
 
             {{#if controller.showParticipants}}
               <td class='participants'>
-                {{#each topic.participants}}
-                  <a href="{{user.path}}" class="{{extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+                {{#each participants}}
+                <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}" class="{{unbound extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
                 {{/each}}
               </td>
             {{/if}}
 
-            <td {{bind-attr class=":num :views topic.viewsHeat"}}>
-              {{number topic.views numberKey="views_long"}}
+            <td {{bind-attr class=":num :views viewsHeat"}}>
+              {{number views numberKey="views_long"}}
             </td>
 
-            {{raw "list/activity-column" topic=topic class="num" tagName="td"}}
+            {{raw "list/activity-column" topic=this class="num" tagName="td"}}
           </tr>
-        {{/grouped-each}}
+        {{/each}}
       </tbody>
 
     </table>
@@ -55,6 +55,4 @@
       {{i18n choose_topic.none_found}}
     </div>
   {{/if}}
-{{else}}
-  {{loading-spinner}}
-{{/if}}
+{{/loading-spinner}}

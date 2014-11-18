@@ -13,7 +13,10 @@ export default DiscoveryController.extend({
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
 
-      this.send('loading');
+      // If we `send('loading')` here, due to returning true it bubbles up to the
+      // router and ember throws an error due to missing `handlerInfos`.
+      // Lesson learned: Don't call `loading` yourself.
+      this.set('controllers.discovery.loading', true);
       Discourse.CategoryList.list('categories').then(function(list) {
         self.set('model', list);
         self.send('loadingComplete');

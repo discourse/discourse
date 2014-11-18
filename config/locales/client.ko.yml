@@ -223,7 +223,6 @@ ko:
       location_not_found: (알수없음)
       organisation: 소속
       phone: 전화
-      other_accounts: 이 IP 주소로 접속한 다른 계정
       no_other_accounts: (없음)
     user:
       said: "{{username}}:"
@@ -254,6 +253,7 @@ ko:
       admin_tooltip: "이 사용자는 관리자입니다."
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
+      github_profile: "Github"
       mailing_list_mode: "(토픽이나 카테고리의 알림을 끄지 않는 한) 모든 새로운 글에 대해 메일을 받을 수 있습니다."
       watched_categories: "지켜보기"
       watched_categories_instructions: "이 카테고리들에 있는 모든 새로운 토픽을 지켜봅니다. 새로운 글과 토픽이 작성될 때마다 알림이 오고, 읽지 않은 글과 새로운 글 수가 토픽의 리스트에 나타납니다."
@@ -314,7 +314,7 @@ ko:
       email:
         title: "이메일"
         instructions: "절대로 공개되지 않습니다."
-        ok: "완료. 확인 이메일을 보냈습니다."
+        ok: "당신에게 확인 메일을 보내겠습니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
         authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
         frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
@@ -559,8 +559,6 @@ ko:
       reply_here: "여기에 답글을 작성하세요."
       reply: "답글 전송"
       cancel: "취소"
-      create_topic: "토픽 만들기"
-      create_pm: "개인 메시지를 작성합니다."
       title: "혹은 Ctrl + Enter 누름"
       users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
@@ -630,10 +628,7 @@ ko:
       title_with_attachments: "이미지 또는 파일 추가하기"
       from_my_computer: "컴퓨터에서 가져오기"
       from_the_web: "인터넷에서 가져오기"
-      remote_tip: "http://example.com/image.jpg 형식으로 이미지 주소를 입력"
-      remote_tip_with_attachments: "http://example.com/file.ext 형식으로 이미지나 파일의 주소를 입력 (사용 가능한 확장자: {{authorized_extensions}})"
       local_tip: "내 컴퓨터에서 이미지를 가져오기"
-      local_tip_with_attachments: "내 컴퓨터에서 이미지나 파일 가져오기 (사용 가능한 확장자: {{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
       hint_for_supported_browsers: "(이미지 파일을 드래그&드랍하거나 붙여넣기하여 업로드 할 수 있습니다.)"
       uploading: "업로드 중입니다..."
@@ -699,7 +694,6 @@ ko:
         top: "더 이상 인기 토픽이 없습니다."
     topic:
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
-      create: '토픽 만들기'
       create_long: '새로운 토픽을 개설'
       private_message: '개인 메시지를 작성'
       list: '토픽 목록'
@@ -846,6 +840,7 @@ ko:
       filters:
         n_posts:
           other: "{{count}} 글"
+        cancel: "필터 제거"
       split_topic:
         title: "새로운 토픽으로 이동"
         action: "새로운 토픽으로 이동"
@@ -906,6 +901,7 @@ ko:
         edit: "죄송합니다. 게시물을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         attachment_too_large: "업로드하려는 파일의 크기가 너무 큽니다. 최대 크기는 {{max_size_kb}}kb 입니다."
+        file_too_large: "업로드하시려는 파일이 너무 커요. (최대 허용 파일 크기는 {{max_size_kb}}kb입니다)"
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
         upload_not_authorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
@@ -1055,7 +1051,6 @@ ko:
       general: '일반'
       settings: '설정'
       delete: '카테고리 삭제'
-      create: '카테고리 생성'
       save: '카테고리 저장'
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
@@ -1101,11 +1096,11 @@ ko:
           description: "이 카테고리 내의 새로운 토픽들을 추적하도록 자동으로 설정됩니다. 토픽 옆에 읽지 않은 게시글의 수가 표시됩니다."
         regular:
           title: "알림: 일반"
+          description: "누군가 당신의 @아아디 으로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         muted:
           title: "알림 꺼짐"
           description: "이 카테고리의 새로운 토픽에 대한 알림을 받지 않고 읽지 않\x1C은 탭에도 표시하지 않습니다."
     flagging:
-      title: '게시글을 신고하는 이유를 알려주세요.'
       action: '게시물 신고하기'
       take_action: "조치를 취하기"
       notify_action: '알림'
@@ -1117,14 +1112,15 @@ ko:
       submit_tooltip: "신고 접수하기"
       take_action_tooltip: "커뮤니티의 신고 수가 채워지기 기다리지 않고, 바로 신고 수를 제재 수준까지 채웁니다."
       cant: "죄송합니다, 당신은 지금 이 게시물을 신고 할 수 없습니다."
-      custom_placeholder_notify_user: "해당 유저에게 게인 메세지를 보내 이 문제를 해결할 수 있습니다."
-      custom_placeholder_notify_moderators: "이 게시물을 운영자에게 알리겠습니까? 구체적으로 사용자님께서 걱정하는 것과 가능한 모든 관련된 링크를 제공해주세요."
+      formatted_name:
+        off_topic: "오프 토픽입니다."
+        inappropriate: "부적절함"
+        spam: "스팸입니다"
       custom_message:
         at_least: "최소한 {{n}}자를 입력하세요"
         more: "{{n}} 이동합니다"
         left: "{{n}} 나머지"
     flagging_topic:
-      title: "왜 이 토픽을 신고하시나요?"
       action: "신고된 토픽"
       notify_action: "비공개 메시지"
     topic_map:
@@ -1282,6 +1278,11 @@ ko:
           7_days_ago: "7일"
           30_days_ago: "30일"
           all: "전체"
+          view_table: "테이블"
+          view_chart: "막대 차트"
+          refresh_report: "보고서 새로고침"
+          start_date: "시작일"
+          end_date: "종료일"
       commits:
         latest_changes: "최근 변경 사항: 자주 업데이트하십시오!"
         by: "에 의해"
@@ -1432,9 +1433,6 @@ ko:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
         header: "헤더"
-        css: "스타일"
-        mobile_header: "모바일 헤더"
-        mobile_css: "모바일 스타일시트"
         override_default: "표준 스타일 시트를 포함하지 마십시오"
         enabled: "사용가능?"
         preview: "미리 보기"
@@ -1517,7 +1515,6 @@ ko:
         sent_test: "전송됨!"
         delivery_method: "전달 방법"
         preview_digest: "요약 미리보기"
-        preview_digest_desc: "포럼에서 전송되는 요약 메일 미리보기 도구"
         refresh: "새로고침"
         format: "형식"
         html: "html"
@@ -1613,6 +1610,7 @@ ko:
         last_emailed: "마지막 이메일"
         not_found: "죄송합니다, 그 이름은 시스템에 존재하지 않습니다."
         active: "활동"
+        show_emails: "이메일 보기"
         nav:
           new: "새로운 사용자"
           active: "활성화 사용자"
@@ -1747,6 +1745,7 @@ ko:
           likes_given: "선사한  '좋아요'"
           likes_received: "받은 '좋아요'"
           likes_received_days: "받은 '좋아요' : 특정일"
+          likes_received_users: "받은 좋아요: 순사용자(unique users)"
           qualifies: "신뢰 등급 3의 조건에 부합합니다."
           does_not_qualify: "신뢰 등급 3의 조건에 부합하지 않습니다."
           will_be_promoted: "곧 승급 됩니다."
@@ -1763,6 +1762,7 @@ ko:
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "사용자 필드"
+        help: "사용자가 입력할 수 있는 필드를 추가"
         create: "사용자 필드 생성하기"
         untitled: "무제"
         name: "필드명"
@@ -1839,11 +1839,14 @@ ko:
         grant: 부여
         no_user_badges: "%{name}님은 수여받은 뱃지가 없습니다."
         no_badges: 받을 수 있는 뱃지가 없습니다.
+        none_selected: "시작하려면 뱃지를 선택하세요"
         allow_title: 뱃지를 칭호로 사용 가능하도록 허용
         multiple_grant: 중복 부여할 수 있도록 허용
         listable: 공개 뱃지 페이지에 표시되는 뱃지입니다.
         enabled: 뱃지 기능 사용
         icon: 아이콘
+        image: 이미지
+        icon_help: "Font Awesome class나 이미지 주소를 사용합니다"
         query: 뱃지 Query(SQL)
         target_posts: 포스트들을 타겟으로 하는 query
         auto_revoke: 매일 회수 query를 실행한다.
@@ -1876,6 +1879,8 @@ ko:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
     lightbox:
       download: "download"
+    search_help:
+      title: '검색 도움말'
     keyboard_shortcuts_help:
       title: '키보드 단축키'
       jump_to:
@@ -1934,6 +1939,7 @@ ko:
       granted:
         other: "%{count} 개 부여"
       select_badge_for_title: 칭호로 사용할 뱃지를 선택하세요
+      none: "<없음>"
       badge_grouping:
         getting_started:
           name: 교육용 훈장
@@ -2015,3 +2021,12 @@ ko:
         reader:
           name: 독서가
           description: 100개가 넘는 댓글이 달린 토픽의 댓글을 모두 읽었습니다.
+    google_search: |
+      <h2>검색 with Google</h2>
+      <p>
+        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+          <input type="text" id='user-query' value="">
+          <input type='hidden' id='google-query' name="q">
+          <button class="btn btn-primary">Google</button>
+        </form>
+      </p>

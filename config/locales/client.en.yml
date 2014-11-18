@@ -278,8 +278,10 @@ en:
       location_not_found: (unknown)
       organisation: Organization
       phone: Phone
-      other_accounts: Other accounts with this IP address
+      other_accounts: "Other accounts with this IP address:"
       no_other_accounts: (none)
+      read_time: "read time:"
+      topics_entered: "topics entered:"
 
     user:
       said: "{{username}}:"
@@ -323,6 +325,7 @@ en:
       deleted_yourself: "Your account has been deleted successfully."
       delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Messages"
+      admin_delete: "Delete"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -659,8 +662,8 @@ en:
       reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
-      create_topic: "Create Topic"
-      create_pm: "Create Private Message"
+      create_topic: "New Topic"
+      create_pm: "Private Message"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -737,10 +740,10 @@ en:
       title_with_attachments: "Add an image or a file"
       from_my_computer: "From my device"
       from_the_web: "From the web"
-      remote_tip: "link to image http://example.com/image.jpg"
-      remote_tip_with_attachments: "link to image or file http://example.com/file.ext (allowed extensions: {{authorized_extensions}})."
+      remote_tip: "link to image"
+      remote_tip_with_attachments: "link to image or file ({{authorized_extensions}})"
       local_tip: "click to select an image from your device"
-      local_tip_with_attachments: "click to select an image or a file from your device (allowed extensions: {{authorized_extensions}})"
+      local_tip_with_attachments: "click to select an image or file from your device ({{authorized_extensions}})"
       hint: "(you can also drag & drop into the editor to upload them)"
       hint_for_supported_browsers: "(you can also drag and drop or paste images into the editor to upload them)"
       uploading: "Uploading"
@@ -814,7 +817,7 @@ en:
 
     topic:
       filter_to: "{{post_count}} posts in topic"
-      create: 'Create Topic'
+      create: 'New Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a private message'
       list: 'Topics'
@@ -1258,7 +1261,7 @@ en:
       general: 'General'
       settings: 'Settings'
       delete: 'Delete Category'
-      create: 'Create Category'
+      create: 'New Category'
       save: 'Save Category'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
@@ -1312,7 +1315,8 @@ en:
           description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
 
     flagging:
-      title: 'Why are you privately flagging this post?'
+      title: 'Thanks for helping to keep our community civil!'
+      private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
       notify_action: 'Private message'
@@ -1328,15 +1332,15 @@ en:
         off_topic: "It's Off-Topic"
         inappropriate: "It's Inappropriate"
         spam: "It's Spam"
-      custom_placeholder_notify_user: "Why does this post require you to speak to this user directly and privately? Be specific, be constructive, and always be kind."
-      custom_placeholder_notify_moderators: "Why does this post require moderator attention? Let us know specifically what you are concerned about, and provide relevant links where possible."
+      custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
+      custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       custom_message:
         at_least: "enter at least {{n}} characters"
         more: "{{n}} to go..."
         left: "{{n}} remaining"
 
     flagging_topic:
-      title: "Why are you privately flagging this topic?"
+      title: "Thanks for helping to keep our community civil!"
       action: "Flag Topic"
       notify_action: "Private message"
 
@@ -1682,10 +1686,9 @@ en:
       customize:
         title: "Customize"
         long_title: "Site Customizations"
+        css: "CSS"
         header: "Header"
-        css: "Stylesheet"
-        mobile_header: "Mobile Header"
-        mobile_css: "Mobile Stylesheet"
+        footer: "Footer"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"
@@ -1770,7 +1773,7 @@ en:
         sent_test: "sent!"
         delivery_method: "Delivery Method"
         preview_digest: "Preview Digest"
-        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
+        preview_digest_desc: "Preview the content of the weekly digest emails sent to inactive users."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -2189,6 +2192,7 @@ en:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
+        pin_unpin_topic: '<b>shift p</b> Pin/Unpin topic'
         share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Reply as linked topic'

@@ -227,8 +227,7 @@ class UsersController < ApplicationController
     authentication = UserAuthenticator.new(user, session)
 
     if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
-      render nothing: true, status: 500
-      return
+      return render nothing: true, status: 500
     end
 
     authentication.start

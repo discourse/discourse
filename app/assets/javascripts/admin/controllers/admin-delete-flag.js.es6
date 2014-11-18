@@ -3,13 +3,12 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend(ModalFunctionality, {
-
-  needs: ["adminFlags"],
+  needs: ["admin-flags-list"],
 
   actions: {
 
     deletePostDeferFlag: function () {
-      var adminFlagController = this.get("controllers.adminFlags");
+      var adminFlagController = this.get("controllers.admin-flags-list");
       var post = this.get("content");
       var self = this;
 
@@ -22,7 +21,7 @@ export default ObjectController.extend(ModalFunctionality, {
     },
 
     deletePostAgreeFlag: function () {
-      var adminFlagController = this.get("controllers.adminFlags");
+      var adminFlagController = this.get("controllers.admin-flags-list");
       var post = this.get("content");
       var self = this;
 

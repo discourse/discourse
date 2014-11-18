@@ -116,6 +116,12 @@ module PrettyText
     @ctx
   end
 
+  def self.reset_context
+    @ctx_init.synchronize do
+      @ctx = nil
+    end
+  end
+
   def self.decorate_context(context)
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
@@ -149,6 +155,19 @@ module PrettyText
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
+    end
+
+    if baked.blank? && !(opts || {})[:skip_blank_test]
+      # we may have a js engine issue
+      test = markdown("a", skip_blank_test: true)
+      if test.blank?
+        Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
+        reset_context
+        opts ||= {}
+        opts = opts.dup
+        opts[:skip_blank_test] = true
+        baked = markdown(text, opts)
+      end
     end
 
     baked

@@ -1,0 +1,1954 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sq:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
+  time:
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      date_only: "%b %-d, %Y"
+  title: "Discourse"
+  topics: "Tema"
+  posts: "postime"
+  loading: "Loading"
+  powered_by_html: 'Mundësuar nga <a href="http://www.discourse.org">Discourse</a>, për një eksperience më të mirë aktivizoni JavaScript'
+  log_in: "Identifikohu"
+  via: "%{username} \tnëpër %{site_name}"
+  is_reserved: "është i rezervuar"
+  purge_reason: "Automatically deleted due to being old and unverified"
+  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  errors:
+    messages:
+      too_long_validation: "is limited to %{max} characters; you entered %{length}."
+      invalid_boolean: "Boolean jo i vlefshëm."
+      taken: "është i zënë"
+    embed:
+      load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
+  bulk_invite:
+    file_should_be_csv: "Skedari duhet të jete i formatit csv ose txt"
+  backup:
+    operation_already_running: "An operation is currently running. Can't start a new job right now."
+    backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
+    not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
+  not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
+  read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  too_many_replies:
+    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
+    other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
+  embed:
+    start_discussion: "Fillo Diskutim"
+    continue: "Vazhdo Diskutimin"
+    more_replies:
+      one: "edhe 1 përgjigje "
+      other: "janë %{count} përgjigje"
+    loading: "Duke Ngarkuar Diskutimin..."
+    permalink: "Permalink"
+    imported_from: "This is a companion discussion topic for the original entry at %{link}"
+    in_reply_to: "▶ %{username}"
+    replies:
+      one: "1 përgjigje"
+      other: "%{count} përgjigje"
+  too_many_mentions:
+    zero: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
+    one: "Sorry, you can only mention one other user in a post."
+    other: "Sorry, you can only mention %{count} users in a post."
+  too_many_mentions_newuser:
+    zero: "Sorry, new users can't mention other users."
+    one: "Sorry, new users can only mention one other user in a post."
+    other: "Sorry, new users can only mention %{count} users in a post."
+  too_many_images:
+    zero: "Sorry, new users can't put images in posts."
+    one: "Sorry, new users can only put one image in a post."
+    other: "Sorry, new users can only put %{count} images in a post."
+  too_many_attachments:
+    zero: "Sorry, new users can't put attachments in posts."
+    one: "Sorry, new users can only put one attachment in a post."
+    other: "Sorry, new users can only put %{count} attachments in a post."
+  too_many_links:
+    zero: "Sorry, new users can't put links in posts."
+    one: "Sorry, new users can only put one link in a post."
+    other: "Sorry, new users can only put %{count} links in a post."
+  spamming_host: "Sorry you cannot post a link to that host."
+  user_is_suspended: "Suspended users are not allowed to post."
+  just_posted_that: "is too similar to what you recently posted"
+  has_already_been_used: "është përdorur më parë"
+  invalid_characters: "përmban karaktere  jo të vlefshëm"
+  is_invalid: "is invalid; try to be a little more descriptive"
+  next_page: "faqja tjetër →"
+  prev_page: "← previous page"
+  page_num: "Faqe %{num}"
+  topics_in_category: "Topics in the '%{category}' category"
+  rss_posts_in_topic: "Burimi RSS i '%{topic}'"
+  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
+  author_wrote: "%{author} shkruajti:"
+  num_posts: "Postime:"
+  num_participants: "Pjesëmarrësit:"
+  read_full_topic: "Lexo temën e plotë"
+  private_message_abbrev: "PM"
+  rss_description:
+    latest: "Temat e fundit"
+    hot: "Tema të nxehta"
+  too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  groups:
+    errors:
+      can_not_modify_automatic: "You can not modify an automatic group"
+    default_names:
+      everyone: "të gjithë"
+      admins: "admins"
+      moderators: "moderatorët"
+      staff: "stafi"
+      trust_level_0: "trust_level_0"
+      trust_level_1: "trust_level_1"
+      trust_level_2: "trust_level_2"
+      trust_level_3: "trust_level_3"
+      trust_level_4: "trust_level_4"
+  education:
+    until_posts:
+      one: "1 postim"
+      other: "%{count} postime"
+    new-topic: |
+      Mirë se vini tek %{site_name} &mdash; **faleminderit që po hapni një temë të re!**
+
+      - Does the title accurately describe your topic? Does it sound interesting?
+
+      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+
+      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+    new-reply: |
+      Mirë se vini tek %{site_name} &mdash; **faleminderit për kontributin!**
+
+      - Does your reply improve the conversation in some way?
+
+      - Be kind to your fellow community members.
+
+      - Constructive criticism is welcome, but criticize *ideas*, not people.
+
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+    avatar: |
+      ### Pse nuk vendosni një fotografi tek llogaria juaj?
+
+      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+
+      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+
+      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+    sequential_replies: |
+      ### Consider replying to several posts at once
+
+      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+
+      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+
+      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+    dominating_topic: |
+      ### Let others join the conversation
+
+      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
+      Are you sure you're providing adequate time for other people to share their points of view, too?
+    too_many_replies: |
+      ### You have reached the reply limit for this topic
+
+      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+
+      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+    reviving_old_topic: |
+      ### Revive this topic?
+
+      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+
+      Are you sure you want to continue this old conversation?
+  activerecord:
+    attributes:
+      category:
+        name: "Emri Kategorisë"
+      post:
+        raw: "Trupi"
+      user_profile:
+        bio_raw: "Rreth Meje"
+    errors:
+      messages:
+        is_invalid: "is invalid; try to be a little more descriptive"
+        has_already_been_used: "është përdorur më parë"
+      models:
+        topic:
+          attributes:
+            base:
+              warning_requires_pm: "You can only attach warnings to private messages."
+              too_many_users: "You can only send warnings to one user at a time."
+            archetype:
+              cant_send_pm: "Na vjen keq, por nuk mund të dërgoni mesazh privat këtij anëtari."
+        user:
+          attributes:
+            password:
+              common: "është një ndër 10000 fjalëkalimet më të përdorur. Ju ftojmë të përdorni një më të sigurtë."
+            ip_address:
+              signup_not_allowed: "Signup is not allowed from this account."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "nuk është një ngjyrë e vlefshme"
+  user_profile:
+    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
+    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
+  vip_category_name: "Lounge"
+  vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  meta_category_name: "Meta"
+  meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
+  staff_category_name: "Stafi"
+  staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
+  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "Mirë se vini në Lounge"
+    body: |2
+
+      Congratulations! :confetti_ball:
+
+      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+
+      You can now &hellip;
+
+      * Edit the title of any topic
+      * Change the category of any topic
+      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+      * Access a private Lounge category only visible to users at trust level 3 and higher
+      * Hide spam with a single flag
+
+      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+
+      Thanks for being an important part of this community!
+
+      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+  category:
+    topic_prefix: "Rreth kategorisë %{category}"
+    replace_paragraph: "[Replace this first paragraph with a short description of your new category. This guidance will appear in the category selection area, so try to keep it below 200 characters. Until you edit this text or create topics, this category won't appear on the categories page.]"
+    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    errors:
+      uncategorized_parent: "Uncategorized can't have a parent category"
+      self_parent: "A subcategory's parent cannot be itself"
+      depth: "You can't nest a subcategory under another"
+    cannot_delete:
+      uncategorized: "Can't delete Uncategorized"
+      has_subcategories: "Can't delete this category because it has sub-categories."
+      topic_exists:
+        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
+        other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
+      topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
+  trust_levels:
+    newuser:
+      title: "anëtar i ri"
+    basic:
+      title: "anëtar basic"
+    regular:
+      title: "anëtarë"
+    leader:
+      title: "regular"
+    elder:
+      title: "leader"
+    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
+  rate_limiter:
+    slow_down: "You have performed this action too many times, try again later"
+    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    hours:
+      one: "1 hour"
+      other: "%{count} hours"
+    minutes:
+      one: "1 minutë"
+      other: "%{count} minuta"
+    seconds:
+      one: "1 sekondë"
+      other: "%{count} sekonda"
+  datetime:
+    distance_in_words:
+      half_a_minute: "< 1m"
+      less_than_x_seconds:
+        one: "< 1s"
+        other: "< %{count}s"
+      x_seconds:
+        one: "1s"
+        other: "%{count}s"
+      less_than_x_minutes:
+        one: "< 1m"
+        other: "< %{count}m"
+      x_minutes:
+        one: "1m"
+        other: "%{count}m"
+      about_x_hours:
+        one: "1h"
+        other: "%{count}h"
+      x_days:
+        one: "1d"
+        other: "%{count}d"
+      about_x_months:
+        one: "1mon"
+        other: "%{count}mon"
+      x_months:
+        one: "1mon"
+        other: "%{count}mon"
+      about_x_years:
+        one: "1y"
+        other: "%{count}y"
+      over_x_years:
+        one: "> 1y"
+        other: "> %{count}y"
+      almost_x_years:
+        one: "1y"
+        other: "%{count}y"
+    distance_in_words_verbose:
+      half_a_minute: "tani"
+      less_than_x_seconds:
+        one: "tani"
+        other: "tani"
+      x_seconds:
+        one: "1 sekondë më parë"
+        other: "%{count} sekonda më parë"
+      less_than_x_minutes:
+        one: "less than 1 minute ago"
+        other: "less than %{count} minutes ago"
+      x_minutes:
+        one: "1 minutë më parë"
+        other: "%{count} minuta më parë"
+      about_x_hours:
+        one: "1 hour ago"
+        other: "%{count} hours ago"
+      x_days:
+        one: "1 day ago"
+        other: "%{count} days ago"
+      about_x_months:
+        one: "about 1 month ago"
+        other: "about %{count} months ago"
+      x_months:
+        one: "1 month ago"
+        other: "%{count} months ago"
+      about_x_years:
+        one: "about 1 year ago"
+        other: "about %{count} years ago"
+      over_x_years:
+        one: "over 1 year ago"
+        other: "over %{count} years ago"
+      almost_x_years:
+        one: "almost 1 year ago"
+        other: "almost %{count} years ago"
+  password_reset:
+    no_token: "Sorry, your token has expired. Please try resetting your password again."
+    choose_new: "Zgjidhni një fjalëkalim të ri"
+    choose: "Ju lutem, zgjidhni një fjalëkalim"
+    update: 'Rifresko Fjalëkalimin'
+    save: 'Vendos Fjalëkalim'
+    title: 'Reseto Fjalëkalimin'
+    success: "You successfully changed your password and are now logged in."
+    success_unapproved: "You successfully changed your password."
+    continue: "Vazhdo tek %{site_name}"
+  change_email:
+    confirmed: "Adresa e postës u rifreskua."
+    please_continue: "Continue to %{site_name}"
+    error: "There was an error changing your email address. Perhaps the address is already in use?"
+  activation:
+    action: "Aktivizoni llogarinë tuaj"
+    already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
+    please_continue: "Your new account is confirmed; you will be redirected to the home page."
+    continue_button: "Vazhdo tek %{site_name}"
+    welcome_to: "Mirë se vini tek %{site_name}!"
+    approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
+  post_action_types:
+    off_topic:
+      title: 'Jashtë teme'
+      description: 'This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.'
+      long_form: 'flagged this as off-topic'
+    spam:
+      title: 'Spam'
+      description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
+      long_form: 'flagged this as spam'
+    inappropriate:
+      title: 'Inappropriate'
+      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
+      long_form: 'flagged this as inappropriate'
+    notify_user:
+      title: 'Mesazh Privat @{{username}}'
+      description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
+      long_form: 'mesazh privat anëtarit'
+      email_title: 'Your post in "%{title}"'
+      email_body: "%{link}\n\n%{message}"
+    notify_moderators:
+      title: "Diçka tjetër"
+      description: 'This post requires moderator attention for another reason not listed above.'
+      long_form: 'shënoje për vëmendjen e moderatorëve'
+      email_title: 'A post in "%{title}" requires moderator attention'
+      email_body: "%{link}\n\n%{message}"
+    bookmark:
+      title: 'Bookmark'
+      description: 'Bookmark this post'
+      long_form: 'bookmarked this post'
+    like:
+      title: 'Pëlqe'
+      description: 'Më pëlqen ky postim'
+      long_form: 'pëlqyen këtë'
+    vote:
+      title: 'Voto'
+      description: 'Vote for this post'
+      long_form: 'voted for this post'
+  topic_flag_types:
+    spam:
+      title: 'Spam'
+      description: 'This topic is an advertisement. It is not useful or relevant to this site, but promotional in nature.'
+      long_form: 'flagged this as spam'
+    inappropriate:
+      title: 'Inappropriate'
+      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
+      long_form: 'flagged this as inappropriate'
+    notify_moderators:
+      title: "Diçka Tjetër"
+      description: 'This topic requires general moderator attention based on the <a href="/guidelines">guidelines</a>, <a href="%{tos_url}">TOS</a>, or for another reason not listed above.'
+      long_form: 'shënoje për vëmendjen e moderatorëve'
+      email_title: 'The topic "%{title}" requires moderator attention'
+      email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
+    user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
+  archetypes:
+    regular:
+      title: "Regular Topic"
+    banner:
+      message:
+        make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
+        remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
+  unsubscribed:
+    title: 'Unsubscribed'
+    description: "You have been unsubscribed. We won't contact you again!"
+    oops: "In case you didn't mean to do this, click below."
+    error: "Error Unsubscribing"
+    preferences_link: "You can also unsubscribe from digest emails on your <a href='/my/preferences'>preferences page</a>"
+    different_user_description: "You are currently logged in as a different user than the one who the digest was mailed to. Please log out and try again."
+    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
+  resubscribe:
+    action: "Re-Subscribe"
+    title: "Re-Subscribed!"
+    description: "You have been re-subscribed."
+  reports:
+    visits:
+      title: "User Visits"
+      xaxis: "Ditë"
+      yaxis: "Number of visits"
+    signups:
+      title: "Users"
+      xaxis: "Ditë"
+      yaxis: "Number of new users"
+    topics:
+      title: "Topics"
+      xaxis: "Ditë"
+      yaxis: "Number of new topics"
+    posts:
+      title: "Posts"
+      xaxis: "Ditë"
+      yaxis: "Number of new posts"
+    likes:
+      title: "Pëlqime"
+      xaxis: "Ditë"
+      yaxis: "Number of new likes"
+    flags:
+      title: "Flags"
+      xaxis: "Ditë"
+      yaxis: "Number of flags"
+    bookmarks:
+      title: "Bookmarks"
+      xaxis: "Ditë"
+      yaxis: "Number of new bookmarks"
+    starred:
+      title: "Starred"
+      xaxis: "Ditë"
+      yaxis: "Number of new starred topics"
+    users_by_trust_level:
+      title: "Users per Trust Level"
+      xaxis: "Trust Level"
+      yaxis: "Number of Users"
+    emails:
+      title: "Emails Sent"
+      xaxis: "Ditë"
+      yaxis: "Number of Emails"
+    user_to_user_private_messages:
+      title: "User-to-User"
+      xaxis: "Ditë"
+      yaxis: "Number of private messages"
+    system_private_messages:
+      title: "Sistem"
+      xaxis: "Ditë"
+      yaxis: "Number of private messages"
+    moderator_warning_private_messages:
+      title: "Moderator Warning"
+      xaxis: "Ditë"
+      yaxis: "Number of private messages"
+    notify_moderators_private_messages:
+      title: "Notify Moderators"
+      xaxis: "Ditë"
+      yaxis: "Number of private messages"
+    notify_user_private_messages:
+      title: "Notify User"
+      xaxis: "Ditë"
+      yaxis: "Number of private messages"
+    top_referrers:
+      title: "Top Referrers"
+      xaxis: "User"
+      num_clicks: "Clicks"
+      num_topics: "Topics"
+    top_traffic_sources:
+      title: "Top Traffic Sources"
+      xaxis: "Domain"
+      num_clicks: "Clicks"
+      num_topics: "Topics"
+      num_users: "Users"
+    top_referred_topics:
+      title: "Top Referred Topics"
+      xaxis: "Topic"
+      num_clicks: "Clicks"
+  dashboard:
+    rails_env_warning: "Your server is running in %{env} mode."
+    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
+    host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
+    gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
+    sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
+    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
+    memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google OAuth2 as soon as possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>See this guide to learn more</a>"
+    both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
+    google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
+    facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
+    twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
+    github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
+    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
+    failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
+    default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_missing: "You haven't provided a contact email for your site. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
+    title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
+    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
+    consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
+    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
+    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
+    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
+  content_types:
+    education_new_reply:
+      title: "New User Education: First Replies"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new replies."
+    education_new_topic:
+      title: "New User Education: First Topics"
+      description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
+    usage_tips:
+      title: "New User Guidance"
+      description: "Guidance and essential information for new users."
+    welcome_user:
+      title: "Welcome: New User"
+      description: "A private message automatically sent to all new users when they sign up."
+    welcome_invite:
+      title: "Welcome: Invited User"
+      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+    login_required_welcome_message:
+      title: "Login Required: Welcome Message"
+      description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
+    login_required:
+      title: "Login Required: Homepage"
+      description: "The text displayed for unauthorized users when login is required on the site."
+    head:
+      title: "HTML head"
+      description: "HTML that will be inserted inside the <head></head> tags."
+    top:
+      title: "Top of the pages"
+      description: "HTML that will be added at the top of every page (after the header, before the navigation or the topic title)."
+    bottom:
+      title: "Bottom of the pages"
+      description: "HTML that will be added before the </body> tag."
+  site_settings:
+    censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
+    default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
+    allow_user_locale: "Allow users to choose their own language interface preference"
+    min_post_length: "Minimum allowed post length in characters"
+    min_private_message_post_length: "Minimum allowed post length in characters for private messages"
+    max_post_length: "Maximum allowed post length in characters"
+    min_topic_title_length: "Minimum allowed topic title length in characters"
+    max_topic_title_length: "Maximum allowed topic title length in characters"
+    min_private_message_title_length: "Minimum allowed title length for a private message in characters"
+    min_search_term_length: "Minimum valid search term length in characters"
+    allow_uncategorized_topics: "Allow topics to be created without a category."
+    uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
+    allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
+    unique_posts_mins: "How many minutes before a user can make a post with the same content again"
+    educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
+    title: "Brief title of this site, used in the title tag."
+    site_description: "Describe this site in one sentence, used in the meta description tag."
+    contact_email: "Email address of key contact for site. Important notices from discourse.org regarding critical updates may be sent to this address."
+    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
+    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
+    queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
+    crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
+    download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
+    download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
+    disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
+    ninja_edit_window: "For (n) seconds after posting, editing will not create a new version in the post history."
+    post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."
+    edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
+    delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
+    max_image_width: "Maximum thumbnail width of images in a post"
+    max_image_height: "Maximum thumbnail height of images in a post"
+    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
+    show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
+    fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
+    add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
+    exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
+    post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
+    post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
+    onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
+    logo_url: "The logo image at the top left of your site eg: http://example.com/logo.png"
+    digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
+    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. eg: http://example.com/logo-small.png"
+    favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
+    apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+    notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
+    email_custom_headers: "A pipe-delimited list of custom email headers"
+    email_subject: "Customizable subject format for standard emails. See https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
+    use_https: "Should the full url for the site (Discourse.base_url) be http or https? DO NOT ENABLE THIS UNLESS HTTPS IS ALREADY SET UP AND WORKING!"
+    summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
+    summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
+    summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
+    summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
+    summary_max_results: "Maximum posts returned by 'Summary This Topic'"
+    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
+    enable_long_polling: "Message bus used for notification can use long polling"
+    long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
+    long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
+    polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
+    anon_polling_interval: "How often should anonymous clients poll in milliseconds"
+    background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
+    auto_track_topics_after: "Global default milliseconds before a topic is automatically tracked, users can override (0 for always, -1 for never)"
+    new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
+    flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
+    cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
+    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
+    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
+    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
+    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
+    notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
+    flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
+    traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
+    post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
+    ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
+    enable_escaped_fragments: "Fall back to Google's Ajax-Crawling API if no webcrawler is detected. See https://support.google.com/webmasters/answer/174992?hl=en"
+    enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
+    allow_moderators_to_create_categories: "Allow moderators to create new categories"
+    cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
+    post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
+    post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
+    share_links: "Determine which items appear on the share dialog, and in what order."
+    track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
+    topics_per_page: "How many topics are loaded by default on the topic list, and when scrolling down to load more topics"
+    posts_chunksize: "How many posts are loaded by default on a topic, and when scrolling down to load more posts"
+    site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
+    send_welcome_message: "Send all new users a welcome private message with a quick start guide."
+    suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
+    suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
+    suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
+    max_reply_history: "Maximum number of replies to expand when expanding in-reply-to"
+    experimental_reply_expansion: "Hide intermediate replies when expanding a reply to (experimental)"
+    topics_per_period_in_top_summary: "Number of top topics shown in the default top topics summary."
+    topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
+    redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
+    show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
+    email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
+    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
+    enable_badges: "Aktivizo sistemin e targetave"
+    allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
+    email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
+    email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
+    version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
+    new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
+    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
+    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
+    invite_expiry_days: "How long user invitation keys are valid, in days"
+    invite_passthrough_hours: "How long a user can use a previously redeemed invitation key to log in, in hours"
+    invite_only: "Public registration is disabled, all new users must be explicitly invited by other members or staff."
+    login_required: "Require authentication to read content on this site, disallow anonymous access."
+    min_username_length: "Minimum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES SHORTER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
+    max_username_length: "Maximum username length in characters. WARNING: ANY EXISTING USERS WITH NAMES LONGER THAN THIS WILL BE UNABLE TO ACCESS THE SITE."
+    min_password_length: "Minimum password length."
+    block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
+    enable_sso: "Enable single sign on via an external site (Note: disables invites)"
+    sso_url: "URL of single sign on endpoint"
+    sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
+    sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
+    sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
+    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
+    sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
+    enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
+    allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
+    enable_google_logins: "(deprecated) Enable Google authentication. This is the OpenID method of authentication which Google has deprecated. New installs will NOT work with this. Use Google Oauth2 instead. Existing installs must move to Google Oauth2 by April 20, 2015."
+    enable_yahoo_logins: "Enable Yahoo authentication"
+    enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret."
+    google_oauth2_client_id: "Client ID of your Google application."
+    google_oauth2_client_secret: "Client secret of your Google application."
+    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
+    twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
+    twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
+    enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
+    facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
+    facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
+    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
+    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
+    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
+    allow_restore: "Allow restore, which can replace ALL site data! Leave false unless you plan to restore a backup"
+    maximum_backups: "The maximum amount of backups to keep on disk. Older backups are automatically deleted"
+    backup_daily: "Automatically create a site backup once a day."
+    enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
+    s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
+    active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
+    verbose_localization: "Show extended localization tips in the UI"
+    previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
+    rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
+    rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
+    rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
+    rate_limit_new_user_create_post: "After posting, new users must wait (n) seconds before creating another post."
+    max_likes_per_day: "Maximum number of likes per user per day."
+    max_flags_per_day: "Maximum number of flags per user per day."
+    max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
+    max_edits_per_day: "Maximum number of edits per user per day."
+    max_stars_per_day: "Maximum number of topics that can be starred per user per day."
+    max_topics_per_day: "Maximum number of topics a user can create per day."
+    max_private_messages_per_day: "Maximum number of private messages users can create per day."
+    suggested_topics: "Number of suggested topics shown at the bottom of a topic."
+    limit_suggested_to_category: "Only show topics from the current category in suggested topics."
+    clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
+    clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
+    purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
+    purge_inactive_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
+    enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
+    s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
+    s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
+    s3_access_key_id: "The Amazon S3 access key id that will be used to upload images."
+    s3_secret_access_key: "The Amazon S3 secret access key that will be used to upload images."
+    s3_region: "The Amazon S3 region name that will be used to upload images."
+    enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
+    default_invitee_trust_level: "Default trust level (0-4) for invited users."
+    default_trust_level: "Default trust level (0-4) for all new users."
+    tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
+    tl1_requires_read_posts: "How many posts a new user must read before promotion to trust level 1."
+    tl1_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to trust level 1."
+    tl2_requires_topics_entered: "How many topics a user must enter before promotion to trust level 2."
+    tl2_requires_read_posts: "How many posts a user must read before promotion to trust level 2."
+    tl2_requires_time_spent_mins: "How many minutes a user must read posts before promotion to trust level 2."
+    tl2_requires_days_visited: "How many days a user must visit the site before promotion to trust level 2."
+    tl2_requires_likes_received: "How many likes a user must receive before promotion to trust level 2."
+    tl2_requires_likes_given: "How many likes a user must cast before promotion to trust level 2."
+    tl2_requires_topic_reply_count: "How many topics user must reply to before promotion to trust level 2."
+    tl3_requires_days_visited: "Minimum number of days that a user needs to have visited the site in the last 100 days to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_topics_replied_to: "Minimum number of topics a user needs to have replied to in the last 100 days to qualify for promotion to trust level 3. (0 or higher)"
+    tl3_requires_topics_viewed: "The percentage of topics created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_posts_read: "The percentage of posts created in the last 100 days that a user needs to have viewed to qualify for promotion to trust level 3. (0 to 100)"
+    tl3_requires_topics_viewed_all_time: "The minimum total number of topics a user must have viewed to qualify for trust level 3."
+    tl3_requires_posts_read_all_time: "The minimum total number of posts a user must have read to qualify for trust level 3."
+    tl3_requires_max_flagged: "User must not have had more than x posts flagged by x different users in the last 100 days to qualify for promotion to trust level 3, where x is this setting's value. (0 or higher)"
+    tl3_promotion_min_duration: "The minimum number of days that a promotion to trust level 3 lasts before a user can be demoted back to trust level 2."
+    tl3_requires_likes_given: "The minimum number of likes that must be given in the last 100 days to qualify for promotion to trust level 3."
+    tl3_requires_likes_received: "The minimum number of likes that must be received in the last 100 days to qualify for promotion to trust level 3."
+    tl3_links_no_follow: "Do not remove rel=nofollow from links posted by trust level 3 users."
+    min_trust_to_create_topic: "The minimum trust level required to create a new topic."
+    min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+    newuser_max_links: "How many links a new user can add to a post."
+    newuser_max_images: "How many images a new user can add to a post."
+    newuser_max_attachments: "How many attachments a new user can add to a post."
+    newuser_max_mentions_per_post: "Maximum number of @name notifications a new user can use in a post."
+    newuser_max_replies_per_topic: "Maximum number of replies a new user can make in a single topic until someone replies to them."
+    max_mentions_per_post: "Maximum number of @name notifications anyone can use in a post."
+    create_thumbnails: "Create thumbnails and lightbox images that are too large to fit in a post."
+    email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
+    email_posts_context: "How many prior replies to include as context in notification emails."
+    flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
+    max_word_length: "The maximum allowed word length, in characters, in a topic title."
+    title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
+    body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
+    title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
+    min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
+    min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
+    category_colors: "A list of hexadecimal color values allowed for categories."
+    max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
+    max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
+    authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
+    max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
+    title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
+    topic_views_heat_low: "After this many views, the views field is slightly highlighted."
+    topic_views_heat_medium: "After this many views, the views field is moderately highlighted."
+    topic_views_heat_high: "After this many views, the views field is strongly highlighted."
+    cold_age_days_low: "After this many days of conversation, the last activity date is slightly highlighted."
+    cold_age_days_medium: "After this many days of conversation, the last activity date is moderately highlighted."
+    cold_age_days_high: "After this many days of conversation, the last activity date is strongly highlighted."
+    history_hours_low: "A post edited within this many hours has the edit indicator slightly highlighted"
+    history_hours_medium: "A post edited within this many hours has the edit indicator moderately highlighted."
+    history_hours_high: "A post edited within this many hours has the edit indicator strongly highlighted."
+    topic_post_like_heat_low: "After the likes:post ratio exceeds this ratio, the post count field is slightly highlighted."
+    topic_post_like_heat_medium: "After the likes:post ratio exceeds this ratio, the post count field is moderately highlighted."
+    topic_post_like_heat_high: "After the likes:post ratio exceeds this ratio, the post count field is strongly highlighted."
+    faq_url: "If you have a FAQ hosted elsewhere that you want to use, provide the full URL here."
+    tos_url: "If you have a Terms of Service document hosted elsewhere that you want to use, provide the full URL here."
+    privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
+    newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
+    white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
+    staff_like_weight: "How much extra weighting factor to give staff likes."
+    levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
+    reply_by_email_enabled: "Enable replying to topics via email."
+    reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    disable_emails: "Prevent Discourse from sending any kind of emails"
+    strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
+    short_email_length: "Short email length in Bytes"
+    enable_email_names: "Allow showing user full name in emails. Disable to hide full name in emails."
+    pop3_polling_enabled: "Poll via POP3 for email replies."
+    pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
+    pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
+    pop3_polling_port: "The port to poll a POP3 account on."
+    pop3_polling_host: "The host to poll for email via POP3."
+    pop3_polling_username: "The username for the POP3 account to poll for email."
+    pop3_polling_password: "The password for the POP3 account to poll for email."
+    email_in: "Allow users to post new topics via email (requires pop3 polling). Configure the addresses in the \"Settings\" tab of each category."
+    email_in_min_trust: "The minimum trust level a user needs to have to be allowed to post new topics via email."
+    email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
+    email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
+    minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
+    relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
+    delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
+    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
+    username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
+    email_editable: "Allow users to change their e-mail address after registration."
+    logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
+    allow_uploaded_avatars: "Allow users to upload custom avatars."
+    allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
+    allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
+    automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
+    digest_topics: "The maximum number of topics to display in the email digest."
+    digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
+    default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
+    detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
+    max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
+    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
+    allow_profile_backgrounds: "Allow users to upload profile backgrounds."
+    sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "
+    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
+    dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
+    suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
+    global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
+    disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    enable_names: "Allow showing user full names. Disable to hide full names."
+    display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
+    invites_per_page: "Default invites shown on the user page."
+    short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
+    default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
+    autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
+    embeddable_host: "Host that can embed the comments from this Discourse forum."
+    feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
+    feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
+    embed_by_username: "Discourse username of the user who creates the embedded topics."
+    embed_username_key_from_feed: "Key to pull discourse username from feed."
+    embed_truncate: "Truncate the embedded posts."
+    embed_category: "Category of embedded topics."
+    embed_post_limit: "Maximum number of posts to embed."
+    embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
+    embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
+    notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
+    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
+    show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
+    vacuum_db_days: "Run VACUUM FULL ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
+    prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
+    errors:
+      invalid_email: "Invalid email address."
+      invalid_username: "There's no user with that username."
+      invalid_integer_min_max: "Value must be between %{min} and %{max}."
+      invalid_integer_min: "Value must be %{min} or greater."
+      invalid_integer_max: "Value cannot be higher than %{max}."
+      invalid_integer: "Value must be an integer."
+      regex_mismatch: "Value doesn't match the required format."
+      invalid_string: "Invalid value."
+      invalid_string_min_max: "Must be between %{min} and %{max} characters."
+      invalid_string_min: "Must be at least %{min} characters."
+      invalid_string_max: "Must be no more than %{max} characters."
+  notification_types:
+    mentioned: "%{display_username} mentioned you in %{link}"
+    liked: "%{display_username} liked your post in %{link}"
+    replied: "%{display_username} replied to your post in %{link}"
+    quoted: "%{display_username} quoted your post in %{link}"
+    edited: "%{display_username} edited your post in %{link}"
+    posted: "%{display_username} posted in %{link}"
+    moved_post: "%{display_username} moved your post to %{link}"
+    private_message: "%{display_username} sent you a private message: %{link}"
+    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
+    invitee_accepted: "%{display_username} accepted your invitation"
+    linked: "%{display_username} linked you in %{link}"
+    granted_badge: "You earned %{link}"
+  search:
+    within_post: "#%{post_number} by %{username}"
+    types:
+      category: 'Categories'
+      topic: 'Results'
+      user: 'Users'
+  original_poster: "Original Poster"
+  most_posts: "Most Posts"
+  most_recent_poster: "Most Recent Poster"
+  frequent_poster: "Frequent Poster"
+  redirected_to_top_reasons:
+    new_user: "Welcome to our community! These are the most popular recent topics."
+    not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
+  move_posts:
+    new_topic_moderator_post:
+      one: "I moved a post to a new topic: %{topic_link}"
+      other: "I moved %{count} posts to a new topic: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "I moved a post to an existing topic: %{topic_link}"
+      other: "I moved %{count} posts to an existing topic: %{topic_link}"
+  change_owner:
+    post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
+  topic_statuses:
+    archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
+    archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
+    closed_enabled: "This topic is now closed. New replies are no longer allowed."
+    closed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_enabled_days:
+      one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
+      other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
+    autoclosed_enabled_hours:
+      one: "This topic was automatically closed after 1 hour. New replies are no longer allowed."
+      other: "This topic was automatically closed after %{count} hours. New replies are no longer allowed."
+    autoclosed_enabled_minutes:
+      one: "This topic was automatically closed after 1 minute. New replies are no longer allowed."
+      other: "This topic was automatically closed after %{count} minutes. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_days:
+      one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_hours:
+      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed count} hours after the last reply. New replies are no longer allowed."
+    autoclosed_enabled_lastpost_minutes:
+      one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
+      other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
+    autoclosed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
+    pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."
+    pinned_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
+    pinned_globally_enabled: "This topic is now pinned globally. It will appear at the top of its category and all topic lists until it is unpinned by staff for everyone, or by individual users for themselves."
+    pinned_globally_disabled: "This topic is now unpinned. It will no longer appear at the top of its category."
+    visible_enabled: "This topic is now listed. It will be displayed in topic lists."
+    visible_disabled: "This topic is now unlisted. It will no longer be displayed in any topic lists. The only way to access this topic is via direct link."
+  login:
+    not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
+    incorrect_username_email_or_password: "Incorrect username, email or password"
+    wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
+    active: "Your account is activated and ready to use."
+    activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"
+    not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
+    not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
+    suspended: "You can't log in until %{date}."
+    suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
+    errors: "%{errors}"
+    not_available: "Not available. Try %{suggestion}?"
+    something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
+    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
+    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    new_registrations_disabled: "New account registrations are not allowed at this time."
+    password_too_long: "Passwords are limited to 200 characters."
+    missing_user_field: "You have not completed all the user fields"
+    close_window: "Authentication is complete. Close this window to continue."
+  user:
+    no_accounts_associated: "No accounts associated"
+    username:
+      short: "must be at least %{min} characters"
+      long: "must be no more than %{max} characters"
+      characters: "must only include numbers, letters and underscores"
+      unique: "must be unique"
+      blank: "must be present"
+      must_begin_with_alphanumeric: "must begin with a letter or number"
+    email:
+      not_allowed: "is not allowed from that email provider. Please use another email address."
+      blocked: "is not allowed."
+    ip_address:
+      blocked: "is blocked."
+  invite_mailer:
+    subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to a discussion
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      at
+
+      > %{site_title} -- %{site_description}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so you can reply to the discussion immediately.
+  invite_forum_mailer:
+    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} invited you to join
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      If you're interested, click the link below:
+
+      %{invite_link}
+
+      This invitation is from a trusted user, so you won't need to log in.
+  invite_password_instructions:
+    subject_template: "Set password for your %{site_name} account"
+    text_body_template: |
+      Thanks for accepting your invitation to %{site_name} -- welcome!
+
+      To log in again, click the following link to choose a password:
+      %{base_url}/users/password-reset/%{email_token}
+  test_mailer:
+    subject_template: "[%{site_name}] Email Deliverability Test"
+    text_body_template: |
+      This is a test email from
+
+      [**%{base_url}**][0]
+
+      Email deliverability is complicated. Here are a few important things you should check first:
+
+      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
+
+      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
+
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
+
+      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
+
+      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
+
+      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
+
+      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
+
+      We hope you received this email deliverability test OK!
+
+      Good luck,
+
+      Your friends at [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [5]: %{base_url}/unsubscribe
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: http://www.mailjet.com/pricing
+
+      ----
+
+      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
+  new_version_mailer:
+    subject_template: "[%{site_name}] verion i ri i Discourse, përditësoje!"
+    text_body_template: |
+      A new version of [Discourse](http://www.discourse.org) is available.
+
+      Your version: %{installed_version}
+      New version: **%{new_version}**
+
+      You may want to:
+
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade) and pressing the "Upgrade" button.
+
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] ka perditesime"
+    text_body_template: |
+      A new version of [Discourse](http://www.discourse.org) is available.
+
+      Your version: %{installed_version}
+      New version: **%{new_version}**
+
+      You may want to:
+
+      - See what's new in the [GitHub changelog](https://github.com/discourse/discourse/commits/master).
+
+      - Upgrade by visiting [%{base_url}/admin/upgrade](%{base_url}/admin/upgrade), and pressing the "Upgrade" button.
+
+      - Visit [meta.discourse.org](http://meta.discourse.org) for news, discussion, and support for Discourse.
+
+      ### Release notes
+
+      %{notes}
+  flags_reminder:
+    flags_were_submitted:
+      one: "These flags were submitted over 1 hour ago."
+      other: "These flags were submitted over %{count} hours ago."
+    please_review: "Please review them."
+    post_number: "postim"
+    how_to_disable: 'You can disable or change the frequency of this email reminder via the "notify about flags after" setting.'
+    subject_template:
+      one: "1 flag waiting to be handled"
+      other: "%{count} flags waiting to be handled"
+  flag_reasons:
+    off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
+    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
+    spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
+    notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
+  flags_dispositions:
+    agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
+    agreed_and_deleted: "Thanks for letting us know. We agree there is an issue and we've removed the post."
+    disagreed: "Thanks for letting us know. We're looking into it."
+    deferred: "Thanks for letting us know. We're looking into it."
+    deferred_and_deleted: "Thanks for letting us know. We've removed the post."
+  system_messages:
+    post_hidden:
+      subject_template: "Post hidden due to community flagging"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your post was hidden.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.** This will increase your trust level.
+
+        However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        This private message has a few quick tips to get you started.
+
+        ## Keep scrolling
+
+        There are no next page buttons or page numbers – to read more, **just keep scrolling down!**
+
+        As new posts come in, they will appear automatically.
+
+        ## Where am I?
+
+        - For search, your user page, or the menu, use the **icon <kbd>☰</kbd> buttons at the upper right**.
+
+        - Any topic title will take you to the next unread post. Use the last activity time and post count to enter at the top or bottom.
+
+        - While reading a topic, jump to the top &uarr; by selecting the topic title. Select the green progress bar at the bottom right for full navigation controls, or use the <kbd>home</kbd> and <kbd>end</kbd> keys.
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## How do I reply?
+
+        - To reply to the overall topic, use the Reply button <img src="/images/welcome/reply-topic.png" width="29" height="25">  at the very bottom of the page.
+
+        - To reply to a specific post, use the Reply button <img src="/images/welcome/reply-post.png" width="29" height="25"> on that post.
+
+        - To take the conversation in a different direction, but keep them linked together, use <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Reply as linked Topic to the right of the post.
+
+        To quote someone in your reply, select the text you wish to quote, then press any Reply button.
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        For [standard Emoji](http://www.emoji.codes/), just start typing `:` or the traditional smileys `:)` :smile:
+
+        ## What else can I do?
+
+        There are action buttons at the bottom of each post.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        To let someone know that you enjoyed their post, use the **like** button. If you see a problem with a post, privately let them, or our staff, know about it with the **flag** button.
+
+        You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+
+        ## Who is talking to me?
+
+        When someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
+
+        ## When are conversations new?
+
+        By default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.
+
+        You will see the blue new and number indicators next to these topics:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
+
+        ## Why can't I do certain things?
+
+        New users are somewhat limited for safety reasons. As you participate here, you'll gain the trust of the community, become a full citizen, and those limitations will automatically be removed. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain even more abilities to help us manage our community together.
+    welcome_user:
+      subject_template: "Mirë se vini tek %{site_name}!"
+      text_body_template: |
+        Thanks for joining %{site_name}, and welcome!
+
+        %{new_user_tips}
+
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+    welcome_invite:
+      subject_template: "Mirë se vini tek %{site_name}!"
+      text_body_template: |
+        Thanks for accepting your invitation to %{site_name} -- welcome!
+
+        We've automatically generated a username for you: **%{username}**, but you can change it any time by visiting [your user profile][prefs].
+
+        To log in again, either:
+
+        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+
+        2. Create a unique password for [your user profile][prefs], and use it to log in.
+
+        %{new_user_tips}
+
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+
+        [prefs]: %{user_preferences_url}
+    backup_succeeded:
+      subject_template: "Backup completed successfully"
+      text_body_template: "The backup was successful.\nVisit the [admin > backup section](/admin/backups) to download your new backup."
+    backup_failed:
+      subject_template: "Backup failed"
+      text_body_template: |
+        The backup has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+    restore_succeeded:
+      subject_template: "Restore completed successfully"
+      text_body_template: "The restore was successful."
+    restore_failed:
+      subject_template: "Restore failed"
+      text_body_template: |
+        The restore has failed.
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+    bulk_invite_succeeded:
+      subject_template: "Bulk user invite processed successfully"
+      text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
+    bulk_invite_failed:
+      subject_template: "Bulk user invite processed with errors"
+      text_body_template: |
+        Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
+
+        Here's the log:
+
+        ```
+        %{logs}
+        ```
+    csv_export_succeeded:
+      subject_template: "Data Export completed successfully"
+      text_body_template: |
+        The data export was successful.
+
+        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        <small>CSV file download link will expire after 48 hours.</small>
+    csv_export_failed:
+      subject_template: "Export failed"
+      text_body_template: "The export has failed. Please check the logs."
+    email_reject_trust_level:
+      subject_template: "Email issue -- Insufficient Trust Level"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
+    email_reject_no_account:
+      subject_template: "Email issue -- Unknown Account"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
+    email_reject_empty:
+      subject_template: "Email issue -- No Content"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        We couldn't find any content in the email. Make sure your reply is at the top of the email -- we can't process inline replies.
+
+        If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
+    email_reject_parsing:
+      subject_template: "Email issue -- Content unrecognized"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
+    email_reject_post_error:
+      subject_template: "Email issue -- Posting error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
+    email_reject_post_error_specified:
+      subject_template: "Email issue -- Posting error"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Reason:
+
+        %{post_error}
+
+        If you can correct the problem, please try again.
+    email_reject_reply_key:
+      subject_template: "Email issue -- Unknown Reply Key"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
+    email_reject_destination:
+      subject_template: "Email issue -- Unknown To: Address"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
+    email_reject_topic_not_found:
+      subject_template: "Email issue -- Topic Not Found"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The topic is not found, it may have been deleted. If you believe this is in error, contact a staff member.
+    email_reject_topic_closed:
+      subject_template: "Email issue -- Topic Closed"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        The topic is closed. If you believe this is in error, contact a staff member.
+    email_error_notification:
+      subject_template: "Email issue -- POP authentication error"
+      text_body_template: |
+        There has been an authentication error while polling mails from the POP server.
+
+        Please make sure you have properly configured the POP credentials in [the site settings](%{base_url}/admin/site_settings/category/email).
+    too_many_spam_flags:
+      subject_template: "New account blocked"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your posts have been automatically hidden because they were flagged by the community.
+
+        As a precautionary measure, your new account has been blocked from creating new replies or topics until a staff member can review your account.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    blocked_by_staff:
+      subject_template: "Account blocked"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your account has been blocked by a staff member.
+
+        For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
+    user_automatically_blocked:
+      subject_template: "New user %{username} blocked due to community flags"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{base_url}%{user_url}) was automatically blocked because multiple users flagged %{username}'s post(s).
+
+        Please [review the flags](%{base_url}/admin/flags). If %{username} was incorrectly blocked from posting, click the unblock button on [the admin page for this user](%{base_url}%{user_url}).
+
+        This threshold can be changed via the `block_new_user` site settings.
+    spam_post_blocked:
+      subject_template: "New user %{username} posts blocked due to repeated links"
+      text_body_template: |
+        This is an automated message.
+
+        The new user [%{username}](%{base_url}%{user_url}) tried to create multiple posts with links to %{domains}, but those posts were blocked to avoid spam. The user is still able to create new posts that do not link to %{domains}.
+
+        Please [review the user](%{base_url}%{user_url}).
+
+        This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
+    unblocked:
+      subject_template: "Account unblocked"
+      text_body_template: |
+        Hello,
+
+        This is an automated message from %{site_name} to inform you that your account has been unblocked after staff review.
+
+        You can now create new replies and topics again.
+    pending_users_reminder:
+      subject_template:
+        one: "1 user waiting for approval"
+        other: "%{count} users waiting for approval"
+      text_body_template: |
+        There are new user signups waiting to be approved (or rejected) before they can access this forum.
+
+        [Please review them in the admin section](%{base_url}/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "Downloading remote images disabled"
+      text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+  unsubscribe_link: "To unsubscribe from these emails, visit your [user preferences](%{user_preferences_url})."
+  subject_re: "Re: "
+  subject_pm: "[PM] "
+  user_notifications:
+    previous_discussion: "Previous Replies"
+    unsubscribe:
+      title: "Unsubscribe"
+      description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+    reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
+    visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
+    posted_by: "Posted by %{username} on %{post_date}"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      text_body_template: |
+        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
+
+        Please visit this link to view the topic: %{base_url}%{url}
+    user_replied:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    digest:
+      subject_template: "[%{site_name}] Përmbledhja për %{date}"
+      new_activity: "New activity on your topics and posts:"
+      top_topics: "Popular posts"
+      other_new_topics: "Popular topics"
+      unsubscribe: "This digest is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
+      click_here: "click here"
+      from: "%{site_name} përmbledhje"
+      read_more: "Read More"
+      more_topics: "There were %{new_topics_since_seen} other new topics."
+      more_topics_category: "More new topics:"
+      posts:
+        one: "1 post"
+        other: "%{count} posts"
+    forgot_password:
+      subject_template: "[%{site_name}] Password reset"
+      text_body_template: |
+        Somebody asked to reset your password on [%{site_name}](%{base_url}).
+
+        If it was not you, you can safely ignore this email.
+
+        Click the following link to choose a new password:
+        %{base_url}/users/password-reset/%{email_token}
+    set_password:
+      subject_template: "[%{site_name}] Set Password"
+      text_body_template: |
+        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to choose a password:
+        %{base_url}/users/password-reset/%{email_token}
+    account_created:
+      subject_template: "[%{site_name}] Your New Account"
+      text_body_template: |
+        A new account was created for you at %{site_name}
+
+        Click the following link to choose a password for your new account:
+        %{base_url}/users/password-reset/%{email_token}
+    authorize_email:
+      subject_template: "[%{site_name}] Confirm your new email address"
+      text_body_template: |
+        Confirm your new email address for %{site_name} by clicking on the following link:
+
+        %{base_url}/users/authorize-email/%{email_token}
+    signup_after_approval:
+      subject_template: "You've been approved on %{site_name}!"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        A staff member approved your account on %{site_name}.
+
+        Click the following link to confirm and activate your new account:
+        %{base_url}/users/activate-account/%{email_token}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+
+        %{new_user_tips}
+
+        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        Enjoy your stay!
+    signup:
+      subject_template: "[%{site_name}] Activate your new account"
+      text_body_template: |
+        Welcome to %{site_name}!
+
+        Click the following link to confirm and activate your new account:
+        %{base_url}/users/activate-account/%{email_token}
+
+        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+  page_not_found:
+    title: "The page you requested doesn't exist or is private."
+    popular_topics: "Popular"
+    recent_topics: "Recent"
+    see_more: "More"
+    search_title: "Search this site"
+    search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[Welcome to %{title}](#welcome)
+      An account is required. Please create an account or log in to continue.
+  terms_of_service:
+    title: "Terms of Service"
+    signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
+  deleted: 'deleted'
+  upload:
+    edit_reason: "downloaded local copies of images"
+    unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    pasted_image_filename: "Pasted image"
+    store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
+    attachments:
+      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
+    images:
+      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
+      fetch_failure: "Sorry, there has been an error while fetching the image."
+      unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
+      size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+  flag_reason:
+    sockpuppet: "A new user created a topic, and another new user at the same IP address replied. See the flag_sockpuppets site setting."
+    spam_hosts: "This new user tried to create multiple posts with links to the same domain. See the newuser_spam_host_threshold site setting."
+  email_log:
+    no_user: "Can't find user with id %{user_id}"
+    suspended_not_pm: "User is suspended, not a private message"
+    seen_recently: "User was seen recently"
+    post_not_found: "Can't find a post with id %{post_id}"
+    notification_already_read: "The notification this email is about has already been read"
+    topic_nil: "post.topic is nil"
+    post_deleted: "post was deleted by the author"
+    user_suspended: "user was suspended"
+    already_read: "user has already read this post"
+    message_blank: "message is blank"
+    message_to_blank: "message.to is blank"
+    text_part_body_blank: "text_part.body is blank"
+    body_blank: "body is blank"
+  color_schemes:
+    base_theme_name: "Base"
+  guidelines: "Guidelines"
+  privacy: "Privacy"
+  edit_this_page: "Edit this page"
+  static_topic_first_reply: |
+    Edit the first post in this topic to change the contents of the %{page_name} page.
+  guidelines_topic:
+    title: "FAQ/Guidelines"
+    body: |
+      <a name="civilized"></a>
+
+      ## [This is a Civilized Place for Public Discussion](#civilized)
+
+      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
+
+      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
+
+      <a name="improve"></a>
+
+      ## [Improve the Discussion](#improve)
+
+      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
+
+      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
+
+      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
+
+      <a name="agreeable"></a>
+
+      ## [Be Agreeable, Even When You Disagree](#agreeable)
+
+      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
+
+      *   Name-calling.
+      *   Ad hominem attacks.
+      *   Responding to a post’s tone instead of its actual content.
+      *   Knee-jerk contradiction.
+
+      Instead, provide reasoned counter-arguments that improve the conversation.
+
+      <a name="participate"></a>
+
+      ## [Your Participation Counts](#participate)
+
+      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
+
+      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
+
+      Let’s try to leave our park better than we found it.
+
+      <a name="flag-problems"></a>
+
+      ## [If You See a Problem, Flag It](#flag-problems)
+
+      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
+
+      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
+
+      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
+
+      <a name="be-civil"></a>
+
+      ## [Always Be Civil](#be-civil)
+
+      Nothing sabotages a healthy conversation like rudeness:
+
+      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
+      *   Keep it clean. Don’t post anything obscene or sexually explicit.
+      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
+      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
+
+      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
+
+      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
+
+      <a name="keep-tidy"></a>
+
+      ## [Keep It Tidy](#keep-tidy)
+
+      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
+
+      *   Don’t start a topic in the wrong category.
+      *   Don’t cross-post the same thing in multiple topics.
+      *   Don’t post no-content replies.
+      *   Don’t divert a topic by changing it midstream.
+      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
+
+      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a New Topic.
+
+      <a name="stealing"></a>
+
+      ## [Post Only Your Own Stuff](#stealing)
+
+      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
+
+      <a name="tos"></a>
+
+      ## [Terms of Service](#tos)
+
+      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
+  tos_topic:
+    title: "Terms of Service"
+    body: |
+      The following terms and conditions govern all use of the %{company_domain} website and all content, services and products available at or through the website, including, but not limited to, %{company_domain} Forum Software, %{company_domain} Support Forums and the %{company_domain} Hosting service ("Hosting"), (taken together, the Website). The Website is owned and operated by %{company_full_name} ("%{company_name}"). The Website is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules, policies (including, without limitation, %{company_domain}’s [Privacy Policy](/privacy) and [Community Guidelines](/faq)) and procedures that may be published from time to time on this Site by %{company_name} (collectively, the "Agreement").
+
+      Please read this Agreement carefully before accessing or using the Website. By accessing or using any part of the web site, you agree to become bound by the terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the Website or use any services. If these terms and conditions are considered an offer by %{company_name}, acceptance is expressly limited to these terms. The Website is available only to individuals who are at least 13 years old.
+
+      <a name="1"></a>
+
+      ## [1. Your %{company_domain} Account](#1)
+
+      If you create an account on the Website, you are responsible for maintaining the security of your account and you are fully responsible for all activities that occur under the account. You must immediately notify %{company_name} of any unauthorized uses of your account or any other breaches of security. %{company_name} will not be liable for any acts or omissions by you, including any damages of any kind incurred as a result of such acts or omissions.
+
+      <a name="2"></a>
+
+      ## [2. Responsibility of Contributors](#2)
+
+      If you post material to the Website, post links on the Website, or otherwise make (or allow any third party to make) material available by means of the Website (any such material, "Content"), You are entirely responsible for the content of, and any harm resulting from, that Content. That is the case regardless of whether the Content in question constitutes text, graphics, an audio file, or computer software. By making Content available, you represent and warrant that:
+
+      *   the downloading, copying and use of the Content will not infringe the proprietary rights, including but not limited to the copyright, patent, trademark or trade secret rights, of any third party;
+      *   if your employer has rights to intellectual property you create, you have either (i) received permission from your employer to post or make available the Content, including but not limited to any software, or (ii) secured from your employer a waiver as to all rights in or to the Content;
+      *   you have fully complied with any third-party licenses relating to the Content, and have done all things necessary to successfully pass through to end users any required terms;
+      *   the Content does not contain or install any viruses, worms, malware, Trojan horses or other harmful or destructive content;
+      *   the Content is not spam, is not machine- or randomly-generated, and does not contain unethical or unwanted commercial content designed to drive traffic to third party sites or boost the search engine rankings of third party sites, or to further unlawful acts (such as phishing) or mislead recipients as to the source of the material (such as spoofing);
+      *   the Content is not pornographic, does not contain threats or incite violence, and does not violate the privacy or publicity rights of any third party;
+      *   your content is not getting advertised via unwanted electronic messages such as spam links on newsgroups, email lists, blogs and web sites, and similar unsolicited promotional methods;
+      *   your content is not named in a manner that misleads your readers into thinking that you are another person or company; and
+      *   you have, in the case of Content that includes computer code, accurately categorized and/or described the type, nature, uses and effects of the materials, whether requested to do so by %{company_name} or otherwise.
+
+      <a name="3"></a>
+
+      ## [3. User Content License](#3)
+
+      User contributions are licensed under a [Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US). Without limiting any of those representations or warranties, %{company_name} has the right (though not the obligation) to, in %{company_name}’s sole discretion (i) refuse or remove any content that, in %{company_name}’s reasonable opinion, violates any %{company_name} policy or is in any way harmful or objectionable, or (ii) terminate or deny access to and use of the Website to any individual or entity for any reason, in %{company_name}’s sole discretion. %{company_name} will have no obligation to provide a refund of any amounts previously paid.
+
+
+      <a name="4"></a>
+
+      ## [4. Payment and Renewal](#4)
+
+      ### General Terms
+
+      Optional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated. Payments will be charged on a pre-pay basis on the day you begin utilizing the service or upgrade and will cover the use of that service or upgrade for a monthly or annual subscription period as indicated. These fees are not refundable.
+
+      ### Automatic Renewal
+
+      Unless you notify %{company_name} before the end of the applicable subscription period that you want to cancel a service or upgrade, your subscription will automatically renew and you authorize us to collect the then-applicable annual or monthly subscription fee (as well as any taxes) using any credit card or other payment mechanism we have on record for you. Subscriptions can be canceled at any time.
+
+      <a name="5"></a>
+
+      ## [5. Services](#5)
+
+      ### Hosting, Support Services
+
+      Optional Hosting and Support services may be provided by %{company_name} under the terms and conditions for each such service. By signing up for a Hosting/Support or Support services account, you agree to abide by such terms and conditions.
+
+      <a name="6"></a>
+
+      ## [6. Responsibility of Website Visitors](#6)
+
+      %{company_name} has not reviewed, and cannot review, all of the material, including computer software, posted to the Website, and cannot therefore be responsible for that material’s content, use or effects. By operating the Website, %{company_name} does not represent or imply that it endorses the material there posted, or that it believes such material to be accurate, useful or non-harmful. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. The Website may contain content that is offensive, indecent, or otherwise objectionable, as well as content containing technical inaccuracies, typographical mistakes, and other errors. The Website may also contain material that violates the privacy or publicity rights, or infringes the intellectual property and other proprietary rights, of third parties, or the downloading, copying or use of which is subject to additional terms and conditions, stated or unstated. %{company_name} disclaims any responsibility for any harm resulting from the use by visitors of the Website, or from any downloading by those visitors of content there posted.
+
+      <a name="7"></a>
+
+      ## [7. Content Posted on Other Websites](#7)
+
+      We have not reviewed, and cannot review, all of the material, including computer software, made available through the websites and webpages to which %{company_domain} links, and that link to %{company_domain}. %{company_name} does not have any control over those non-%{company_domain} websites and webpages, and is not responsible for their contents or their use. By linking to a non-%{company_domain} website or webpage, %{company_name} does not represent or imply that it endorses such website or webpage. You are responsible for taking precautions as necessary to protect yourself and your computer systems from viruses, worms, Trojan horses, and other harmful or destructive content. %{company_name} disclaims any responsibility for any harm resulting from your use of non-%{company_domain} websites and webpages.
+
+      <a name="8"></a>
+
+      ## [8. Copyright Infringement and DMCA Policy](#8)
+
+      As %{company_name} asks others to respect its intellectual property rights, it respects the intellectual property rights of others. If you believe that material located on or linked to by %{company_domain} violates your copyright, and if this website resides in the USA, you are encouraged to notify %{company_name} in accordance with %{company_name}’s [Digital Millennium Copyright Act](http://en.wikipedia.org/wiki/Digital_Millennium_Copyright_Act) ("DMCA") Policy. %{company_name} will respond to all such notices, including as required or appropriate by removing the infringing material or disabling all links to the infringing material. %{company_name} will terminate a visitor’s access to and use of the Website if, under appropriate circumstances, the visitor is determined to be a repeat infringer of the copyrights or other intellectual property rights of %{company_name} or others. In the case of such termination, %{company_name} will have no obligation to provide a refund of any amounts previously paid to %{company_name}.
+
+      <a name="9"></a>
+
+      ## [9. Intellectual Property](#9)
+
+      This Agreement does not transfer from %{company_name} to you any %{company_name} or third party intellectual property, and all right, title and interest in and to such property will remain (as between the parties) solely with %{company_name}. %{company_name}, %{company_domain}, the %{company_domain} logo, and all other trademarks, service marks, graphics and logos used in connection with %{company_domain}, or the Website are trademarks or registered trademarks of %{company_name} or %{company_name}’s licensors. Other trademarks, service marks, graphics and logos used in connection with the Website may be the trademarks of other third parties. Your use of the Website grants you no right or license to reproduce or otherwise use any %{company_name} or third-party trademarks.
+
+      <a name="10"></a>
+
+      ## [10. Advertisements](#10)
+
+      %{company_name} reserves the right to display advertisements on your content unless you have purchased an Ad-free Upgrade or a Services account.
+
+      <a name="11"></a>
+
+      ## [11. Attribution](#11)
+
+      %{company_name} reserves the right to display attribution links such as ‘Powered by %{company_domain},’ theme author, and font attribution in your content footer or toolbar. Footer credits and the %{company_domain} toolbar may not be removed regardless of upgrades purchased.
+
+      <a name="12"></a>
+
+      ## [12. Changes](#12)
+
+      %{company_name} reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility to check this Agreement periodically for changes. Your continued use of or access to the Website following the posting of any changes to this Agreement constitutes acceptance of those changes. %{company_name} may also, in the future, offer new services and/or features through the Website (including, the release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.
+
+      <a name="13"></a>
+
+      ## [13. Termination](#13)
+
+      %{company_name} may terminate your access to all or any part of the Website at any time, with or without cause, with or without notice, effective immediately. If you wish to terminate this Agreement or your %{company_domain} account (if you have one), you may simply discontinue using the Website. All provisions of this Agreement which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.
+
+      <a name="14"></a>
+
+      ## [14. Disclaimer of Warranties](#14)
+
+      The Website is provided "as is". %{company_name} and its suppliers and licensors hereby disclaim all warranties of any kind, express or implied, including, without limitation, the warranties of merchantability, fitness for a particular purpose and non-infringement. Neither %{company_name} nor its suppliers and licensors, makes any warranty that the Website will be error free or that cess thereto will be continuous or uninterrupted. If you’re actually reading this, here’s [a treat](http://www.newyorker.com/online/blogs/shouts/2012/12/the-hundred-best-lists-of-all-time.html). You understand that you download from, or otherwise obtain content or services through, the Website at your own discretion and risk.
+
+      <a name="15"></a>
+
+      ## [15. Limitation of Liability](#15)
+
+      In no event will %{company_name}, or its suppliers or licensors, be liable with respect to any subject matter of this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages; (ii) the cost of procurement for substitute products or services; (iii) for interruption of use or loss or corruption of data; or (iv) for any amounts that exceed the fees paid by you to %{company_name} under this agreement during the twelve (12) month period prior to the cause of action. %{company_name} shall have no liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.
+
+      <a name="16"></a>
+
+      ## [16. General Representation and Warranty](#16)
+
+      You represent and warrant that (i) your use of the Website will be in strict accordance with the %{company_name} [Privacy Policy](/privacy), [Community Guidelines](/guidelines), with this Agreement and with all applicable laws and regulations (including without limitation any local laws or regulations in your country, state, city, or other governmental area, regarding online conduct and acceptable content, and including all applicable laws regarding the transmission of technical data exported from the country in which this website resides or the country in which you reside) and (ii) your use of the Website will not infringe or misappropriate the intellectual property rights of any third party.
+
+      <a name="17"></a>
+
+      ## [17. Indemnification](#17)
+
+      You agree to indemnify and hold harmless %{company_name}, its contractors, and its licensors, and their respective directors, officers, employees and agents from and against any and all claims and expenses, including attorneys’ fees, arising out of your use of the Website, including but not limited to your violation of this Agreement.
+
+      <a name="18"></a>
+
+      ## [18. Miscellaneous](#18)
+
+      This Agreement constitutes the entire agreement between %{company_name} and you concerning the subject matter hereof, and they may only be modified by a written amendment signed by an authorized executive of %{company_name}, or by the posting by %{company_name} of a revised version. Except to the extent applicable law, if any, provides otherwise, this Agreement, any access to or use of the Website will be governed by the laws of the state of California, U.S.A., excluding its conflict of law provisions, and the proper venue for any disputes arising out of or relating to any of the same will be the state and federal courts located in San Francisco County, California. Except for claims for injunctive or equitable relief or claims regarding intellectual property rights (which may be brought in any competent court without the posting of a bond), any dispute arising under this Agreement shall be finally settled in accordance with the Comprehensive Arbitration Rules of the Judicial Arbitration and Mediation Service, Inc. (“JAMS”) by three arbitrators appointed in accordance with such Rules. The arbitration shall take place in San Francisco, California, in the English language and the arbitral decision may be enforced in any court. The prevailing party in any action or proceeding to enforce this Agreement shall be entitled to costs and attorneys’ fees. If any part of this Agreement is held invalid or unenforceable, that part will be construed to reflect the parties’ original intent, and the remaining portions will remain in full force and effect. A waiver by either party of any term or condition of this Agreement or any breach thereof, in any one instance, will not waive such term or condition or any subsequent breach thereof. You may assign your rights under this Agreement to any party that consents to, and agrees to be bound by, its terms and conditions; %{company_name} may assign its rights under this Agreement without condition. This Agreement will be binding upon and will inure to the benefit of the parties, their successors and permitted assigns.
+
+      This document is CC-BY-SA. It was last updated May 31, 2013.
+
+      Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
+  privacy_topic:
+    title: "Privacy Policy"
+    body: |
+      <a name="collect"></a>
+
+      ## [What information do we collect?](#collect)
+
+      We collect information from you when you register on our site and gather data when you participate in the forum by reading, writing, and evaluating the content shared here.
+
+      When registering on our site, you may be asked to enter your name and e-mail address. You may, however, visit our site without registering. Your e-mail address will be verified by an email containing a unique link. If that link is visited, we know that you control the e-mail address.
+
+      When registered and posting, we record the IP address that the post originated from. We also may retain server logs which include the IP address of every request to our server.
+
+      <a name="use"></a>
+
+      ## [What do we use your information for?](#use)
+
+      Any of the information we collect from you may be used in one of the following ways:
+
+      *   To personalize your experience &mdash; your information helps us to better respond to your individual needs.
+      *   To improve our site &mdash; we continually strive to improve our site offerings based on the information and feedback we receive from you.
+      *   To improve customer service &mdash; your information helps us to more effectively respond to your customer service requests and support needs.
+      *   To send periodic emails &mdash; The email address you provide may be used to send you information, notifications that you request about changes to topics or in response to your user name, respond to inquiries, and/or other requests or questions.
+
+      <a name="protect"></a>
+
+      ## [How do we protect your information?](#protect)
+
+      We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information.
+
+      <a name="data-retention"></a>
+
+      ## [What is your data retention policy?](#data-retention)
+
+      We will make a good faith effort to:
+
+      *   Retain server logs containing the IP address of all requests to this server no more than 90 days.
+      *   Retain the IP addresses associated with registered users and their posts no more than 5 years.
+
+      <a name="cookies"></a>
+
+      ## [Do we use cookies?](#cookies)
+
+      Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.
+
+      We use cookies to understand and save your preferences for future visits and compile aggregate data about site traffic and site interaction so that we can offer better site experiences and tools in the future. We may contract with third-party service providers to assist us in better understanding our site visitors. These service providers are not permitted to use the information collected on our behalf except to help us conduct and improve our business.
+
+      <a name="disclose"></a>
+
+      ## [Do we disclose any information to outside parties?](#disclose)
+
+      We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety. However, non-personally identifiable visitor information may be provided to other parties for marketing, advertising, or other uses.
+
+      <a name="third-party"></a>
+
+      ## [Third party links](#third-party)
+
+      Occasionally, at our discretion, we may include or offer third party products or services on our site. These third party sites have separate and independent privacy policies. We therefore have no responsibility or liability for the content and activities of these linked sites. Nonetheless, we seek to protect the integrity of our site and welcome any feedback about these sites.
+
+      <a name="coppa"></a>
+
+      ## [Children's Online Privacy Protection Act Compliance](#coppa)
+
+      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)), do not use this site.
+
+      <a name="online"></a>
+
+      ## [Online Privacy Policy Only](#online)
+
+      This online privacy policy applies only to information collected through our site and not to information collected offline.
+
+      <a name="consent"></a>
+
+      ## [Your Consent](#consent)
+
+      By using our site, you consent to our web site privacy policy.
+
+      <a name="changes"></a>
+
+      ## [Changes to our Privacy Policy](#changes)
+
+      If we decide to change our privacy policy, we will post those changes on this page.
+
+      This document is CC-BY-SA. It was last updated May 31, 2013.
+  static:
+    search_help: |
+      <h2>Tips</h2>
+      <p>
+      <ul>
+        <li>Title matches are prioritized, so when in doubt, search for titles</li>
+        <li>Unique, uncommon words will always produce the best results</li>
+        <li>Whenever possible, scope your search to a particular category, user, or topic</li>
+      </ul>
+      </p>
+      <h2>Options</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
+      </p>

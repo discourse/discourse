@@ -172,6 +172,12 @@ class Topic < ActiveRecord::Base
     unless skip_callbacks
       schedule_auto_close_job
     end
+
+    banner = "banner".freeze
+
+    if archetype_was == banner || archetype == banner
+      ApplicationController.banner_json_cache.clear
+    end
   end
 
   def initialize_default_values

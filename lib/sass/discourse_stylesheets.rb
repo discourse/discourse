@@ -1,4 +1,5 @@
 require_dependency 'sass/discourse_sass_compiler'
+require_dependency 'distributed_cache'
 
 class DiscourseStylesheets
 
@@ -8,12 +9,25 @@ class DiscourseStylesheets
 
   @lock = Mutex.new
 
+  def self.cache
+    return {} if Rails.env.development?
+    @cache ||= DistributedCache.new("discourse_stylesheet")
+  end
+
   def self.stylesheet_link_tag(target = :desktop)
-    builder = self.new(target)
+    tag = cache[target]
+
+    return tag.dup.html_safe if tag
+
     @lock.synchronize do
+      builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />].html_safe
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+
+      cache[target] = tag
+
+      tag.dup.html_safe
     end
   end
 
