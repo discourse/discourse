@@ -79,6 +79,6 @@ class AdminUserIndexQuery
                     .includes(:google_user_info)
                     .includes(:oauth2_user_info)
                     .includes(:user_open_ids)
-                    .take(200)
+                    .take(100)
   end
 end
