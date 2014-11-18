@@ -68,6 +68,7 @@ class Admin::UsersController < Admin::AdminController
   def log_out
     @user.auth_token = nil
     @user.save!
+    MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
     render nothing: true
   end
 
