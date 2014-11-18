@@ -87,8 +87,8 @@
 
       {{#if replies}}
         <section class='embedded-posts bottom'>
-          {{#each replies}}
-            {{view 'embedded-post' content=this}}
+          {{#each reply in replies}}
+            {{view 'embedded-post' content=reply}}
           {{/each}}
         </section>
       {{/if}}
