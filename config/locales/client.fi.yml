@@ -246,7 +246,6 @@ fi:
       location_not_found: (tuntematon)
       organisation: Yritys
       phone: Puhelin
-      other_accounts: Muut tilit samasta IP osoitteesta
       no_other_accounts: (ei mitään)
     user:
       said: "{{username}}:"
@@ -337,7 +336,6 @@ fi:
       email:
         title: "Sähköposti"
         instructions: "Ei tule julkiseksi."
-        ok: "Hyvältä näyttää. Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite."
         authenticated: "{{provider}} on todentanut sähköpostisi."
         frequency: "Lähetämme sähköpostia vain aiheista, joita et ole nähnyt, ja kun emme ole nähneet sinua viime aikoina."
@@ -586,8 +584,6 @@ fi:
       reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
-      create_topic: "Luo uusi ketju"
-      create_pm: "Luo uusi yksityisviesti"
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
@@ -658,10 +654,7 @@ fi:
       title_with_attachments: "Lisää kuva tai tidosto"
       from_my_computer: "Tästä laitteesta"
       from_the_web: "Netistä"
-      remote_tip: "linkki kuvaan http://esimerkki.fi/kuva.jpg"
-      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon http://esimerkki.fi/tiedosto.txt (sallitut tiedostopäätteet: {{authorized_extensions}})."
       local_tip: "Klikkaa tästä ladataksesi kuvan laitteeltasi"
-      local_tip_with_attachments: "klikkaa valitaksesi kuvan tai tiedoston laitteeltasi (sallitut tiedostopäätteet: {{authorized_extensions}})."
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "(voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle)"
       uploading: "Lähettää"
@@ -728,7 +721,6 @@ fi:
         top: "Huippuketjuja ei ole enempää."
     topic:
       filter_to: "{{post_count}} viestiä ketjussa"
-      create: 'Luo ketju'
       create_long: 'Luo uusi ketju'
       private_message: 'Luo yksityisviesti'
       list: 'Ketjut'
@@ -1122,7 +1114,6 @@ fi:
       general: 'Yleistä'
       settings: 'Asetukset'
       delete: 'Poista alue'
-      create: 'Luo alue'
       save: 'Tallenna alue'
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
@@ -1173,7 +1164,6 @@ fi:
           title: "Vaimennettu"
           description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"
     flagging:
-      title: 'Miksi haluat liputtaa tämän viestin?'
       action: 'Liputa viesti'
       take_action: "Ryhdy toimiin"
       notify_action: 'Yksityisviesti'
@@ -1185,14 +1175,11 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
-      custom_placeholder_notify_user: "Miksi tässä viestissä edellyttää sinua lähettämään yksityisviestin suoraan käyttäjälle? Esitä asiasi ymmärrettävästi, ole rakentava ja kohtelias."
-      custom_placeholder_notify_moderators: "Miksi tässä viestissä edellyttää valvojan toimia? Kirjoita ymmärrettävästi ja lisää viestiin oleelliset linkit jos mahdollista."
       custom_message:
         at_least: "kirjoita vähintään {{n}} merkkiä"
         more: "vielä {{n}}..."
         left: "{{n}} jäljellä"
     flagging_topic:
-      title: "Miksi liputat tämän ketjun?"
       action: "Liputa ketju"
       notify_action: "Yksityisviesti"
     topic_map:
@@ -1506,9 +1493,6 @@ fi:
         title: "Mukauta"
         long_title: "Sivuston mukautukset"
         header: "Header"
-        css: "Tyylitiedosto"
-        mobile_header: "Mobiili header"
-        mobile_css: "Mobiili tyylitiedosto"
         override_default: "Älä sisällytä oletus-tyylitiedostoa"
         enabled: "Otettu käyttöön?"
         preview: "esikatselu"
@@ -1591,7 +1575,6 @@ fi:
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
         preview_digest: "Esikatsele tiivistelmä"
-        preview_digest_desc: "Tällä työkalulla voi esikatsella palstan lähettämien sähköpostitiivistelmien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
         html: "html"

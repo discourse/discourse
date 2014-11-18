@@ -107,7 +107,7 @@
       [class^="fa fa-"] {
         width: 32px;
         height: 32px;
-        font-size: 21px;
+        font-size: 24px;
         line-height: 32px;
         display: inline-block;
       }
@@ -222,12 +222,11 @@
     .none {
       padding: 5px;
     }
-    .loading {
-      padding: 10px;
-      display: block;
-      color: scale-color($primary, $lightness: 50%);
-      font-size: 24px;
-      text-align: center;
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border-width: 2px;
+      margin: 0 auto;
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
@@ -274,12 +273,10 @@
     top: 0;
     right: 0;
     .spinner {
-      width: 16px;
-      height: 16px;
-      }
-    .container1 > div, .container2 > div, .container3 > div {
-      width: 4px;
-      height: 4px;
+      width: 10px;
+      height: 10px;
+      border-width: 2px;
+      margin: 20px 0 0 0;
       }
   }
   // I am ghetto using this to display "Show More".. be warned
@@ -364,4 +361,9 @@
 
 #search-help table td {
   padding-right: 10px;
+}
+
+// we don't need this X to clear field
+#search-term::-ms-clear {
+  display: none;
 }

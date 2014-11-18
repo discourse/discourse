@@ -85,6 +85,14 @@ td.flaggers td {
     .close {
       float: right;
     }
+
+    .other-accounts {
+      margin: 0;
+      max-height: 200px;
+      overflow: auto;
+      ul { margin: 0; }
+      li { list-style: none; }
+    }
   }
 }
 
@@ -1223,7 +1231,6 @@ button.ru {
 and (max-width : 850px) {
   .nav-stacked {
     .glyph {width: auto; position: relative;}
-    .fa-chevron-right {display: none;}
     > li > a {padding: 13px}
   }
 }

@@ -7,6 +7,7 @@
   @module Discourse
 **/
 export default Ember.Component.extend({
+  loading: Ember.computed.not('loaded'),
 
   loaded: function() {
     var topicList = this.get('topicList');

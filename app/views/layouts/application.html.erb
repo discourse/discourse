@@ -80,10 +80,10 @@
 
     <%= yield :data %>
 
-    <footer id='bottom'><%= raw SiteText.text_for(:bottom) %></footer>
-
     <%= render :partial => "common/discourse_javascript" %>
 
     <%= render_google_analytics_code %>
+
+    <%= raw SiteText.text_for(:bottom) %>
   </body>
 </html>

@@ -48,7 +48,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     if (arguments.length > 1) {
       postStream.set('show_deleted', value);
     }
-    return postStream.get('show_deleted') ? true : null;
+    return postStream.get('show_deleted') ? true : undefined;
   }.property('postStream.summary'),
 
   filter: function(key, value) {
@@ -58,10 +58,18 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     if (arguments.length > 1) {
       postStream.set('summary', value === "summary");
     }
-    return postStream.get('summary') ? "summary" : null;
+    return postStream.get('summary') ? "summary" : undefined;
   }.property('postStream.summary'),
 
-  username_filters: Discourse.computed.queryAlias('postStream.streamFilters.username_filters'),
+  username_filters: function(key, value) {
+    var postStream = this.get('postStream');
+    if (!postStream) { return; }
+
+    if (arguments.length > 1) {
+      postStream.set('streamFilters.username_filters', value);
+    }
+    return postStream.get('streamFilters.username_filters');
+  }.property('postStream.streamFilters.username_filters'),
 
   init: function() {
     this._super();
@@ -361,6 +369,11 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.get('content').clearPin();
     },
 
+    togglePinnedForUser: function() {
+      if (this.get('pinned_at'))
+        this.get('pinned') ? this.get('content').clearPin() : this.get('content').rePin();
+    },
+
     replyAsNewTopic: function(post) {
       var composerController = this.get('controllers.composer'),
           quoteController = this.get('controllers.quote-button'),
@@ -429,6 +442,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     }
   },
 
+  togglePinnedState: function() {
+    this.send('togglePinnedForUser');
+  },
+
   showExpandButton: function() {
     var post = this.get('post');
     return post.get('post_number') === 1 && post.get('topic.expandable_first_post');
@@ -478,6 +495,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   }.property('selectedPostsCount'),
 
   hasError: Ember.computed.or('notFoundHtml', 'message'),
+  noErrorYet: Ember.computed.not('hasError'),
 
   multiSelectChanged: function() {
     // Deselect all posts when multi select is turned off

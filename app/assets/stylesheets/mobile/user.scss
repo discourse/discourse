@@ -342,8 +342,9 @@
     }
 
     .controls {
-      width: 55%;
-      float:right;
+      width: 160px;
+      float: right;
+      text-align: right;
       ul {
         list-style-type: none;
         margin: 0;
@@ -408,9 +409,6 @@
 
   .user-stream {
     padding: 0 10px;
-    .end-of-stream {
-      width: auto;
-      }
     .excerpt {
       margin: 5px 0;
       font-size: 13px;
@@ -461,12 +459,13 @@
       text-overflow: ellipsis;
     }
     .name {
-      display: block;
+      display: inline-block;
       font-size: 14px;
       max-width: 400px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      vertical-align: middle;
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);

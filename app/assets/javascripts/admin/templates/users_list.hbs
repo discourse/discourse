@@ -37,9 +37,7 @@
     </div>
   </div>
 
-  {{#if loading}}
-    {{loading-spinner}}
-  {{else}}
+  {{#loading-spinner condition=loading}}
     {{#if model.length}}
       <table class='table'>
         <tr>
@@ -101,5 +99,5 @@
     {{else}}
       <p>{{i18n search.no_results}}</p>
     {{/if}}
-  {{/if}}
+  {{/loading-spinner}}
 </div>

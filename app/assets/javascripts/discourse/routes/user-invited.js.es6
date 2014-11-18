@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   renderTemplate: function() {
-    this.render({ into: 'user', outlet: 'userOutlet' });
+    this.render({ into: 'user' });
   },
 
   model: function() {

@@ -1,6 +1,7 @@
 module("Discourse.Markdown", {
   setup: function() {
     Discourse.SiteSettings.traditional_markdown_linebreaks = false;
+    Discourse.SiteSettings.default_code_lang = "auto";
   }
 });
 
@@ -337,25 +338,25 @@ test("Code Blocks", function() {
          "it supports basic code blocks");
 
   cooked("```json\n{hello: 'world'}\n```\ntrailing",
-         "<p><pre><code class=\"json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
+         "<p><pre><code class=\"lang-json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
          "It does not truncate text after a code block.");
 
   cooked("```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+         "<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block.");
 
   cooked("hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
   cooked("```ruby\n<header>hello</header>\n```",
-         "<p><pre><code class=\"ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
          "it escapes code in the code block");
 
-  cooked("```text\ntext\n```", "<p><pre><code>text</code></pre></p>", "handles text without adding class");
+  cooked("```text\ntext\n```", "<p><pre><code class=\"lang-nohighlight\">text</code></pre></p>", "handles text by adding nohighlight");
 
   cooked("```ruby\n# cool\n```",
-         "<p><pre><code class=\"ruby\"># cool</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\"># cool</code></pre></p>",
          "it supports changing the language");
 
   cooked("    ```\n    hello\n    ```",
@@ -363,11 +364,11 @@ test("Code Blocks", function() {
          "only detect ``` at the beginning of lines");
 
   cooked("```ruby\ndef self.parse(text)\n\n  text\nend\n```",
-         "<p><pre><code class=\"ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">def self.parse(text)\n\n  text\nend</code></pre></p>",
          "it allows leading spaces on lines in a code block.");
 
   cooked("```ruby\nhello `eviltrout`\n```",
-         "<p><pre><code class=\"ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
+         "<p><pre><code class=\"lang-ruby\">hello &#x60;eviltrout&#x60;</code></pre></p>",
          "it allows code with backticks in it");
 
   cooked("```eviltrout\nhello\n```",
@@ -422,6 +423,11 @@ test("sanitize", function() {
   cooked("<iframe src=\"https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2624.9983685732213!2d2.29432085!3d48.85824149999999!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1385737436368\" width=\"100\" height=\"42\"></iframe>",
          "<iframe src=\"https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d2624.9983685732213!2d2.29432085!3d48.85824149999999!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2s!4v1385737436368\" width=\"100\" height=\"42\"></iframe>",
          "it allows iframe to google maps");
+
+  cooked("<iframe width=\"425\" height=\"350\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik\"></iframe>",
+         "<iframe width=\"425\" height=\"350\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\" src=\"http://www.openstreetmap.org/export/embed.html?bbox=22.49454975128174%2C51.220338322410775%2C22.523088455200195%2C51.23345342732931&amp;layer=mapnik\"></iframe>",
+         "it allows iframe to OpenStreetMap");
+
   equal(sanitize("<textarea>hullo</textarea>"), "hullo");
   equal(sanitize("<button>press me!</button>"), "press me!");
   equal(sanitize("<canvas>draw me!</canvas>"), "draw me!");

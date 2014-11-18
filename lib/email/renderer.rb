@@ -15,7 +15,6 @@ module Email
     end
 
     def html
-
       if @message.html_part
         style = Email::Styles.new(@message.html_part.body.to_s)
         style.format_basic

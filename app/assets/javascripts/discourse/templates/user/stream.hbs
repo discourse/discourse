@@ -1,4 +1,4 @@
-{{#grouped-each model.content}}
+{{#each model.content}}
   <div {{bind-attr class=":item hidden deleted moderator_action"}}>
     <div class='clearfix info'>
       <a href="{{unbound userUrl}}" data-user-card="{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
@@ -9,10 +9,10 @@
       <span class="category">{{category-link category}}</span>
     </div>
     <p class='excerpt'>{{{unbound excerpt}}}</p>
-    {{#grouped-each children}}
+    {{#each children}}
       <div class='child-actions'>
         <i class="icon {{unbound icon}}"></i>
-        {{#grouped-each items}}
+        {{#each items}}
           {{#if removableBookmark}}
             <button class="btn btn-default remove-bookmark" {{action "removeBookmark" this}}>
               {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
@@ -20,11 +20,8 @@
           {{/if}}
           <a href="{{unbound userUrl}}" data-user-card="{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
           {{#if edit_reason}} &mdash; <span class="edit-reason">{{unbound edit_reason}}</span>{{/if}}
-        {{/grouped-each}}
+        {{/each}}
       </div>
-    {{/grouped-each}}
+    {{/each}}
   </div>
-{{/grouped-each}}
-{{#if loading}}
-  {{loading-spinner}}
-{{/if}}
+{{/each}}

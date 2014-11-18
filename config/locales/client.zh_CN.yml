@@ -223,7 +223,6 @@ zh_CN:
       location_not_found: (未知)
       organisation: 组织
       phone: 电话
-      other_accounts: 其他使用该 IP 地址的账户
       no_other_accounts: (无)
     user:
       said: "{{username}}："
@@ -267,6 +266,7 @@ zh_CN:
       deleted_yourself: "您的帐号已被成功删除。"
       delete_yourself_not_allowed: "您目前不能删除自己的帐号。联系管理员帮助您删除帐号。"
       unread_message_count: "消息"
+      admin_delete: "删除"
       staff_counters:
         flags_given: "有用的标记"
         flagged_posts: "被报告的帖子"
@@ -315,7 +315,7 @@ zh_CN:
       email:
         title: "电子邮箱"
         instructions: "绝不会被公开显示。"
-        ok: "看起来不错哦，我们会发送电子邮件让您确认。"
+        ok: "我们将邮件跟您确认。"
         invalid: "请填写正确的电子邮箱地址。"
         authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
@@ -429,7 +429,7 @@ zh_CN:
         the_topic: "本主题"
     loading: "载入中..."
     errors:
-      prev_page: "当尝试载入时"
+      prev_page: "无法载入"
       reasons:
         network: "网络错误"
         server: "服务器错误"
@@ -560,8 +560,7 @@ zh_CN:
       reply_here: "在此回复"
       reply: "回复"
       cancel: "取消"
-      create_topic: "创建主题"
-      create_pm: "创建私信"
+      create_topic: "新主题"
       title: "或者按下 Ctrl + 回车"
       users_placeholder: "添加一个用户"
       title_placeholder: "简述此讨论内容是关于什么？"
@@ -632,10 +631,10 @@ zh_CN:
       title_with_attachments: "上传图片或文件"
       from_my_computer: "来自我的设备"
       from_the_web: "来自网络"
-      remote_tip: "链接图片 http://example.com/image.jpg"
-      remote_tip_with_attachments: "链接图片或文件 http://example.com/file.ext（支持的格式：{{authorized_extensions}}）。"
+      remote_tip: "图片链接"
+      remote_tip_with_attachments: "图片或文件链接（{{authorized_extensions}}）"
       local_tip: "点击从您的设备中选择一张图片。"
-      local_tip_with_attachments: "点击从您的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
+      local_tip_with_attachments: "点击从你的设备中选择图片或文件（支持的格式： {{authorized_extensions}}）。"
       hint: "（您也可以通过拖放至编辑器的方式来上传）"
       hint_for_supported_browsers: "（您也可以通过拖放或粘帖图片至编辑器的方式来上传）"
       uploading: "上传中"
@@ -701,7 +700,7 @@ zh_CN:
         top: "没有更多最佳主题了。"
     topic:
       filter_to: "只显示本主题中的 {{post_count}} 个帖子"
-      create: '创建主题'
+      create: '新主题'
       create_long: '创建一个新主题'
       private_message: '开启一段私下交流'
       list: '主题'
@@ -1063,7 +1062,7 @@ zh_CN:
       general: '通常'
       settings: '设置'
       delete: '删除分类'
-      create: '创建分类'
+      create: '新分类'
       save: '保存分类'
       creation_error: 创建此分类时发生了错误。
       save_error: 在保存此分类时发生了错误。
@@ -1114,7 +1113,8 @@ zh_CN:
           title: "免打扰"
           description: "你不会收到这些分类中的任何新主题通知，并且他们将不会出现在您的未读列表中。"
     flagging:
-      title: '为何要私下报告本帖？'
+      title: '感谢帮助社群远离邪恶！'
+      private_reminder: '标记是不公开的，<b>只有</b>职员才可以见到'
       action: '报告帖子'
       take_action: "立即执行"
       notify_action: '通知'
@@ -1130,14 +1130,14 @@ zh_CN:
         off_topic: "偏题"
         inappropriate: "不合适"
         spam: "广告"
-      custom_placeholder_notify_user: "为何您要私下联系该用户？"
-      custom_placeholder_notify_moderators: "为何本帖需要论坛版主的关注？为何本帖需要论坛版主的注意？"
+      custom_placeholder_notify_user: "请具体说明，有建设性的，再友好一些。"
+      custom_placeholder_notify_moderators: "让我们知道您关心地是什么，并尽可能地提供相关链接和例子。"
       custom_message:
         at_least: "输入至少 {{n}} 个字符"
         more: "还差 {{n}} 个..."
         left: "还剩下 {{n}}"
     flagging_topic:
-      title: "为何要私下报告本帖？"
+      title: "感谢帮助社群远离邪恶！"
       action: "报告帖子"
       notify_action: "私信"
     topic_map:
@@ -1449,10 +1449,9 @@ zh_CN:
       customize:
         title: "定制"
         long_title: "站点定制"
+        css: "CSS"
         header: "头部"
-        css: "层叠样式表（CSS）"
-        mobile_header: "移动版Header"
-        mobile_css: "移动版样式表"
+        footer: "底部"
         override_default: "覆盖缺省值？"
         enabled: "启用？"
         preview: "预览"
@@ -1535,7 +1534,7 @@ zh_CN:
         sent_test: "已发送！"
         delivery_method: "发送方式"
         preview_digest: "预览"
-        preview_digest_desc: "以下是摘要邮件内容的预览。"
+        preview_digest_desc: "预览每周投递给不活跃用户的摘要邮件内容。"
         refresh: "刷新"
         format: "格式"
         html: "html"
@@ -1597,6 +1596,7 @@ zh_CN:
             check_email: "检查电子邮件"
             delete_topic: "删除主题"
             delete_post: "删除帖子"
+            impersonate: "检视"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1809,7 +1809,7 @@ zh_CN:
         none: "选择一个内容类型开始编辑。"
         title: '文本内容'
       site_settings:
-        show_overriden: '只显示被覆盖了缺省值的'
+        show_overriden: '只显示修改过的'
         title: '设置'
         reset: '重置为默认'
         none: '无'
@@ -1934,6 +1934,7 @@ zh_CN:
       actions:
         title: '动作'
         star: '<b>f</b> 收藏主题'
+        pin_unpin_topic: '<b>shift p</b> 置顶/接触置顶主题'
         share_topic: '<b>shift s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
         reply_as_new_topic: '<b>t</b> 回复为联结主题'

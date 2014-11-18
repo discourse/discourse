@@ -14,15 +14,14 @@
 <div class="site-settings-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each category in controller}}
-      <li {{bind-attr class="category.nameKey"}}>
+      {{#link-to 'adminSiteSettingsCategory' category.nameKey tagName='li' class=category.nameKey}}
         {{#link-to 'adminSiteSettingsCategory' category.nameKey class=category.nameKey}}
           {{category.name}}
           {{#if filtered}}
             <span class="count">({{category.siteSettings.length}})</span>
           {{/if}}
-          <span class='fa fa-chevron-right'></span>
         {{/link-to}}
-      </li>
+      {{/link-to}}
     {{/each}}
   </ul>
 </div>

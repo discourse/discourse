@@ -246,7 +246,6 @@ es:
       location_not_found: (desconocido)
       organisation: Organización
       phone: Teléfono
-      other_accounts: Otras cuentas con esta dirección IP
       no_other_accounts: (ninguna)
     user:
       said: "{{username}}:"
@@ -277,6 +276,7 @@ es:
       admin_tooltip: "Este usuario es un administrador"
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
+      github_profile: "Github"
       mailing_list_mode: "Recibir un e-mail por cada nuevo post (a menos que hayas silenciado el tema o la categoría)"
       watched_categories: "Vigiladas"
       watched_categories_instructions: "Automáticamente vigilarás todos los temas en estas categorías. Se te notificará de todos los posts y temas, y además aparecerá un contador de posts nuevos y no leídos en la lista de temas."
@@ -289,6 +289,7 @@ es:
       deleted_yourself: "Tu cuenta ha sido borrada exitosamente."
       delete_yourself_not_allowed: "No puedes borrar tu cuenta en este momento. Contacta a un administrador para borrar tu cuenta en tu nombre."
       unread_message_count: "Mensajes"
+      admin_delete: "Eliminar"
       staff_counters:
         flags_given: "reportes útiles"
         flagged_posts: "posts reportados"
@@ -337,12 +338,13 @@ es:
       email:
         title: "E-mail"
         instructions: "Nunca se mostrará públicamente."
-        ok: "De acuerdo. Te enviaremos un e-mail para confirmar."
+        ok: "Te enviaremos un email para confirmar."
         invalid: "Por favor ingresa una dirección de e-mail válida."
         authenticated: "Tu e-mail ha sido autenticado por {{provider}}."
         frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
+        instructions: "Tu nombre completo (opcional)"
         too_short: "Tu nombre es demasiado corto."
         ok: "Tu nombre es válido."
       username:
@@ -510,6 +512,7 @@ es:
     created: 'Creado'
     created_lowercase: 'creado'
     trust_level: 'Nivel de Confianza'
+    search_hint: 'usuario, email o dirección IP'
     create_account:
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
@@ -584,8 +587,7 @@ es:
       reply_here: "Responder Aquí"
       reply: "Responder"
       cancel: "Cancelar"
-      create_topic: "Crear Tema"
-      create_pm: "Crear Mensaje Privado"
+      create_topic: "Crear tema"
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
@@ -656,10 +658,10 @@ es:
       title_with_attachments: "Añadir una imagen o archivo"
       from_my_computer: "Desde mi dispositivo"
       from_the_web: "Desde la web"
-      remote_tip: "introduce la dirección de una imagen de la siguiente forma: http://ejemplo.com/imagen.jpg"
-      remote_tip_with_attachments: "introduce el enlace a una imagen o un archivo de la siguiente forma: http://ejemplo.com/achivo.ext (extensiones válidas: {{authorized_extensions}})."
+      remote_tip: "enlace a la imagen"
+      remote_tip_with_attachments: "enlace a la imagen o al archivo ({{authorized_extensions}})"
       local_tip: "clic para seleccionar una imagen desde tu dispositivo."
-      local_tip_with_attachments: "clic para seleccionar una imagen o un archivo desde tu dispositivo (extensiones válidas: {{authorized_extensions}})"
+      local_tip_with_attachments: "clic para seleccionar una imagen o un archivo desde tu dispositivo ({{authorized_extensions}})"
       hint: "(también puedes arrastrarlos al editor para subirlos)"
       hint_for_supported_browsers: "(también puedes arrastrar o pegar imágenes en el editor para subirlas)"
       uploading: "Subiendo"
@@ -818,10 +820,10 @@ es:
           title: "Seguir"
           description: "Un contador de posts nuevos posts y posts sin ser leídos aparecerá en seguida del tema. Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         regular_pm:
-          title: "Habitual"
+          title: "Normal"
           description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo en el mensaje privado."
         muted_pm:
           title: "Silenciar"
@@ -884,6 +886,7 @@ es:
         n_posts:
           one: "1 post"
           other: "{{count}} posts"
+        cancel: "Quitar filtro"
       split_topic:
         title: "Mover a un tema nuevo"
         action: "mover a un tema nuevo"
@@ -1165,13 +1168,14 @@ es:
           title: "Seguir"
           description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
         regular:
-          title: "Habitual"
+          title: "Normal"
           description: "Serás notificado si alguien menciona tu @nombre o responde a un post tuyo."
         muted:
           title: "Silenciadas"
           description: "No se te notificará de nuevos temas en estas categorías y no aparecerán en la pestaña de no leídos."
     flagging:
-      title: '¿Por qué estas reportando de forma privada este post?'
+      title: '¡Gracias por ayudar a mantener una comunidad civilizada!'
+      private_reminder: 'los reportes son privados, son visibles <b>únicamente</b> por los administradores'
       action: 'Reportar post'
       take_action: "Tomar medidas"
       notify_action: 'Mensaje privado'
@@ -1183,14 +1187,18 @@ es:
       submit_tooltip: "Enviar el reporte privado"
       take_action_tooltip: "Alcanzar el umbral de reportes inmediatamente, en vez de esperar a más reportes de la comunidad"
       cant: "Lo sentimos, no puedes reportar este post en este momento."
-      custom_placeholder_notify_user: "¿Por qué este post requiere hablarle a este usuario directamente y por privado? Sé específico, constructivo y siempre amable."
-      custom_placeholder_notify_moderators: "¿Por qué este post requiere la atención de un moderador? Haznos saber qué te preocupa específicamente y añade los enlaces relevantes dónde sea posible."
+      formatted_name:
+        off_topic: "Está fuera de lugar"
+        inappropriate: "Es inapropiado"
+        spam: "Es Spam"
+      custom_placeholder_notify_user: "Sé específico, constructivo y siempre amable."
+      custom_placeholder_notify_moderators: "Haznos saber qué te preocupa específicamente y, siempre que sea posible, añade enlaces y ejemplos relevantes."
       custom_message:
         at_least: "introduce al menos {{n}} caracteres"
         more: "{{n}} para ir..."
         left: "{{n}} restantes"
     flagging_topic:
-      title: "¿Por qué estás reportando en privado este tema?"
+      title: "¡Gracias por ayudar a mantener una comunidad civilizada!"
       action: "Reportar tema"
       notify_action: "Mensaje privado"
     topic_map:
@@ -1349,6 +1357,11 @@ es:
           7_days_ago: "Hace 7 días"
           30_days_ago: "Hace 30 días"
           all: "Todo"
+          view_table: "tabla"
+          view_chart: "gráfico de barras"
+          refresh_report: "Actualizar reporte"
+          start_date: "Desde fecha"
+          end_date: "Hasta fecha"
       commits:
         latest_changes: "Cambios recientes: ¡actualiza a menudo!"
         by: "por"
@@ -1503,10 +1516,9 @@ es:
       customize:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
+        css: "CSS"
         header: "Encabezado"
-        css: "Hoja de estilo"
-        mobile_header: "Encabezado móvil"
-        mobile_css: "Hoja de estilo móvil"
+        footer: "Pie de página"
         override_default: "No incluir hoja de estilo estándar"
         enabled: "¿Activado?"
         preview: "vista previa"
@@ -1589,7 +1601,7 @@ es:
         sent_test: "enviado!"
         delivery_method: "Método de entrega"
         preview_digest: "Vista previa de Resumen"
-        preview_digest_desc: "Esta es una herramienta para previsualizar el contenido de los emails de resumen enviados desde tu foro."
+        preview_digest_desc: "Previsualiza el contenido de los emails de resumen semanal enviados a usuarios inactivos."
         refresh: "Actualizar"
         format: "Formato"
         html: "html"
@@ -1651,6 +1663,7 @@ es:
             check_email: "comprobar e-mail"
             delete_topic: "eliminar tema"
             delete_post: "eliminar post"
+            impersonate: "impersonar"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -1685,6 +1698,7 @@ es:
         last_emailed: "Último email enviado"
         not_found: "Lo sentimos, ese usuario no existe."
         active: "Activo"
+        show_emails: "Mostrat emails"
         nav:
           new: "Nuevo"
           active: "Activo"
@@ -1994,6 +2008,7 @@ es:
       actions:
         title: 'Acciones'
         star: '<b>f</b> Añadir tema a favoritos'
+        pin_unpin_topic: '<b>shift p</b> Destacar/No destacar tema'
         share_topic: '<b>shift s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'
         reply_as_new_topic: '<b>t</b> Responder como un tema enlazado.'

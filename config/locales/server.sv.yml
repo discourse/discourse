@@ -256,7 +256,6 @@ sv:
   activation:
     action: "Aktivera ditt konto"
     already_done: "Tyvärr, denna kontoaktiveringslänk är inte längre giltig. Kanske är ditt konto redan aktiverat?"
-    please_continue: "Ditt nya konto är konfirmerat och du är nu inloggad."
     continue_button: "Fortsätt till %{site_name}"
     welcome_to: "Välkommen till %{site_name}!"
     approval_required: "En moderator måste manuellt godkänna ditt nya konto innan du kan komma åt detta forum. Du kommer få ett mail när ditt konto har godkänts!"
@@ -273,12 +272,8 @@ sv:
       description: 'Detta inläggs innehåll är inkluderar saker som som en förnuftig person skulle betrakta som stötande, kränkande eller överträdelse av <a href="/guidelines"> våra community riktlinjer</a>r.'
       long_form: 'flagga detta som olämpligt'
     notify_user:
-      title: 'Notifiera {{username}}'
-      long_form: 'notifierad användare'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notifiera moderatorer'
-      long_form: 'notifierade moderatorer'
       email_title: 'Ett inlägg i "%{title}" kräver uppmärksamhet från en moderator'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -300,8 +295,6 @@ sv:
     inappropriate:
       title: 'Olämpligt'
       long_form: 'flaggad som olämplig'
-    notify_moderators:
-      title: 'Notifiera moderatorer'
   archetypes:
     regular:
       title: "Vanlig Tråd"

@@ -43,14 +43,11 @@
     <div class="clearfix"></div>
   </div>
 
-  {{#if loading}}
-    <br/>
-    {{loading-spinner}}
-  {{else}}
+  {{#loading-spinner condition=loading}}
     {{#if model.length}}
       {{view "staff-action-logs-list" content=controller}}
     {{else}}
       {{i18n search.no_results}}
     {{/if}}
-  {{/if}}
+  {{/loading-spinner}}
 </div>

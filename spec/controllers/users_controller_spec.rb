@@ -782,7 +782,7 @@ describe UsersController do
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
-      expect(invites).to have(1).item
+      invites.size.should == 1
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
 
@@ -804,7 +804,7 @@ describe UsersController do
       xhr :get, :invited, username: inviter.username, filter: 'billybob'
 
       invites = JSON.parse(response.body)['invites']
-      expect(invites).to have(1).item
+      invites.size.should == 1
       expect(invites.first).to include('email' => 'billybob@example.com')
     end
 
@@ -830,7 +830,7 @@ describe UsersController do
           xhr :get, :invited, username: inviter.username
 
           invites = JSON.parse(response.body)['invites']
-          expect(invites).to have(1).item
+          invites.size.should == 1
           expect(invites.first).to include('email' => invite.email)
         end
       end
@@ -851,7 +851,7 @@ describe UsersController do
             xhr :get, :invited, username: inviter.username
 
             invites = JSON.parse(response.body)['invites']
-            expect(invites).to have(1).item
+            invites.size.should == 1
             expect(invites.first).to include("email" => invite.email)
           end
         end
@@ -885,7 +885,7 @@ describe UsersController do
           xhr :get, :invited, username: inviter.username
 
           invites = JSON.parse(response.body)['invites']
-          expect(invites).to have(1).item
+          invites.size.should == 1
           expect(invites.first).to include('email' => invite.email)
         end
       end

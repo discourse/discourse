@@ -59,7 +59,9 @@ class UserSerializer < BasicUserSerializer
                    :number_of_flagged_posts,
                    :number_of_flags_given,
                    :number_of_suspensions,
-                   :number_of_warnings
+                   :number_of_warnings,
+                   :can_be_deleted,
+                   :can_delete_all_posts
 
   private_attributes :locale,
                      :email_digests,
@@ -237,6 +239,14 @@ class UserSerializer < BasicUserSerializer
 
   def number_of_suspensions
     UserHistory.for(object, :suspend_user).count
+  end
+
+  def can_be_deleted
+    scope.can_delete_user?(object)
+  end
+
+  def can_delete_all_posts
+    scope.can_delete_all_posts?(object)
   end
 
   ###

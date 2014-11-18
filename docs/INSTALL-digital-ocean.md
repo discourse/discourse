@@ -114,7 +114,7 @@ You should see Staff topics and the [Admin Quick Start Guide](https://github.com
 
 # Post-Install Maintenance
 
-We strongly suggest you turn on automatic security upates for Ubuntu via the `dpkg-reconfigure -plow unattended-upgrades` command.
+We strongly suggest you turn on automatic security updates for Ubuntu via the `dpkg-reconfigure -plow unattended-upgrades` command.
 
 To **upgrade Discourse to the latest version**, visit `/admin/upgrade` and follow the instructions.
 

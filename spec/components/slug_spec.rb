@@ -48,11 +48,16 @@ describe Slug do
   end
 
   it "doesn't generate slugs that are just numbers" do
-    Slug.for('電車男 2').should be_blank
+    Slug.for('2').should be_blank
   end
 
   it "doesn't keep single quotes within word" do
     Slug.for("Jeff hate's this").should == "jeff-hates-this"
+  end
+
+  it "translate the chineses" do
+    SiteSetting.default_locale = 'zh_CN'
+    Slug.for("习近平:中企承建港口电站等助斯里兰卡发展").should == "xi-jin-ping-zhong-qi-cheng-jian-gang-kou-dian-zhan-deng-zhu-si-li-lan-qia-fa-zhan"
   end
 
 end

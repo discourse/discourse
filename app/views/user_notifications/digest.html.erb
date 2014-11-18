@@ -1,4 +1,4 @@
-<table style="border: 1px solid #ddd;" cellspacing="0" cellpadding="0">
+<table style="border: 20px solid #eee;" cellspacing="0" cellpadding="0">
 <tr>
   <td style="padding: 10px 10px; background-color: #<%= @header_color %>;">
     <a href="<%= Discourse.base_url %>">
@@ -44,7 +44,7 @@
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
             <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
-            <%= email_category(t.category) %>
+            <%= email_category(t.category, only_stripe: true) %>
           </li>
         </ul>
       <%- end -%>
@@ -56,20 +56,22 @@
         <p><%= t('user_notifications.digest.more_topics_category', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
         <div>
         <%- @new_by_category.each do |c| %>
-          <span style="margin-bottom: 8px; margin-right: 10px; display: inline-block;"><%= email_category(c[0], show_uncategorized: true) %> x <%= c[1] %></span>
+          <span style='white-space: nowrap'>
+            <b><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
+          </span>
         <%- end %>
       </div>
       <%- else %>
         <p><%= t('user_notifications.digest.more_topics', last_seen_at: @last_seen_at, new_topics_since_seen: @new_topics_since_seen) %></p>
       <%- end %>
     <%- end -%>
-
-  <hr/>
-  <span class='footer-notice'>
-    <%=raw(t :'user_notifications.digest.unsubscribe',
-       site_link: html_site_link,
-       unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_path(host: Discourse.base_url, key: @user.temporary_key, only_path: false)))  %>
-  </span>
   </td>
 </tr>
 </table>
+
+<div class='footer'>
+  <%=raw(t :'user_notifications.digest.unsubscribe',
+           site_link: html_site_link,
+             unsubscribe_link: link_to(t('user_notifications.digest.click_here'), email_unsubscribe_url(host: Discourse.base_url, key: @user.temporary_key)))  %>
+</div>
+

@@ -4,13 +4,13 @@ export default Discourse.RestrictedUserRoute.extend({
   },
 
   renderTemplate: function() {
-    return this.render({ into: 'user', outlet: 'userOutlet' });
+    return this.render({ into: 'user' });
   },
 
   // A bit odd, but if we leave to /preferences we need to re-render that outlet
   deactivate: function() {
     this._super();
-    this.render('preferences', { into: 'user', outlet: 'userOutlet', controller: 'preferences' });
+    this.render('preferences', { into: 'user', controller: 'preferences' });
   },
 
   setupController: function(controller, model) {

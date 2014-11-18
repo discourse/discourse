@@ -292,7 +292,6 @@ pt:
   activation:
     action: "Activar a sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
-    please_continue: "A sua nova conta foi confirmada e tem agora a sessão iniciada."
     continue_button: "Continuar para %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
@@ -307,13 +306,9 @@ pt:
       title: 'Inapropriado'
       long_form: 'sinalizado como inapropriado'
     notify_user:
-      title: 'Notificar {{username}}'
-      long_form: 'usuário notificado'
       email_title: 'O seu post em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: 'Notificar moderadores'
-      long_form: 'moderadores notificados'
       email_title: 'Uma postagem em "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -338,8 +333,6 @@ pt:
       description: 'Este tópico contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo ou uma violação das <a href="/guidelines">directrizes da nossa comunidades</a>.'
       long_form: 'denunciar isto como impróprio'
     notify_moderators:
-      title: 'Notificar moderadores'
-      long_form: 'moderadores notificados'
       email_title: 'O tópico "%{title}" requer a atenção da moderação'
       email_body: "%{link}\n\n%{message}"
   flagging:

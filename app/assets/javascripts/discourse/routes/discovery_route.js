@@ -24,17 +24,13 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
 
       // If we're already loading don't do anything
       if (controller.get('loading')) { return; }
-
       controller.set('loading', true);
-      controller.set('scheduledSpinner', Ember.run.later(controller, function() {
-        this.set('loadingSpinner', true);
-      },500));
+      return true;
     },
 
     loadingComplete: function() {
       var controller = this.controllerFor('discovery');
-      Ember.run.cancel(controller.get('scheduledSpinner'));
-      controller.setProperties({ loading: false, loadingSpinner: false });
+      controller.set('loading', false);
       if (!Discourse.Session.currentProp('topicListScrollPosition')) {
         this._scrollTop();
       }

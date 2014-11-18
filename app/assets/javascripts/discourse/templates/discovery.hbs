@@ -10,12 +10,9 @@
   </div>
 </div>
 
-<div {{bind-attr class="loadingSpinner::hidden"}}>
-  {{loading-spinner}}
-</div>
+{{loading-spinner condition=loading}}
 
-
-<div {{bind-attr class=":container :list-container loadingSpinner:hidden"}}>
+<div {{bind-attr class=":container :list-container loading:hidden"}}>
   <div class="row">
     <div class="full-width">
       <div id='header-list-area'>
@@ -23,7 +20,6 @@
       </div>
     </div>
   </div>
-
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
@@ -32,3 +28,6 @@
     </div>
   </div>
 </div>
+{{#if loadedAllItems}}
+  {{custom-html "footer"}}
+{{/if}}

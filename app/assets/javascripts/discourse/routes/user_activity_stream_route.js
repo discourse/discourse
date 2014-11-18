@@ -1,12 +1,4 @@
-/**
-  The base route for showing an activity stream.
-
-  @class UserActivityStreamRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.UserActivityStreamRoute = Discourse.Route.extend({
+var UserActivityStreamRoute = Discourse.Route.extend({
   model: function() {
     return this.modelFor('user').get('stream');
   },
@@ -16,14 +8,17 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
   },
 
   renderTemplate: function() {
-    this.render('user_stream', {into: 'user', outlet: 'userOutlet'});
+    this.render('user_stream');
   },
 
   setupController: function(controller, model) {
     controller.set('model', model);
     this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
 
-    this.controllerFor('user').set('indexStream', !this.get('userActionType'));
+    this.controllerFor('user').setProperties({
+      indexStream: !this.get('userActionType'),
+      datasource: "stream"
+    });
   },
 
   actions: {
@@ -48,7 +43,7 @@ Discourse.UserActivityStreamRoute = Discourse.Route.extend({
 
 // Build all activity stream routes
 ['bookmarks', 'edits', 'likes_given', 'likes_received', 'replies', 'posts', 'index'].forEach(function (userAction) {
-  Discourse["UserActivity" + userAction.classify() + "Route"] = Discourse.UserActivityStreamRoute.extend({
+  Discourse["UserActivity" + userAction.classify() + "Route"] = UserActivityStreamRoute.extend({
     userActionType: Discourse.UserAction.TYPES[userAction]
   });
 });

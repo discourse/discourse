@@ -289,6 +289,7 @@ module SiteSettingExtension
   protected
 
   def clear_cache!
+    SiteText.text_for_cache.clear
     Rails.cache.delete(SiteSettingExtension.client_settings_cache_key)
   end
 
