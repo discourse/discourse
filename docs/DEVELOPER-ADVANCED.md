@@ -13,8 +13,9 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
   1. Run `redis-server -v` to see if you already have it.
 3. Install ImageMagick
 4. Install libxml2, g++, and make.
-5. Install Ruby 2.1.3 and Bundler.
-6. Clone the project and bundle.
+5. Install libpq-dev.
+6. Install Ruby 2.1.3 and Bundler.
+7. Clone the project and bundle.
 
 ## Before you start Rails
 
