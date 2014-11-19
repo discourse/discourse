@@ -52,4 +52,3 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:strip)
   end
 end
-

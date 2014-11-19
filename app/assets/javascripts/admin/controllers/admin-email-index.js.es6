@@ -36,8 +36,12 @@ export default DiscourseController.extend({
         data: { email_address: this.get('testEmailAddress') }
       }).then(function () {
         self.set('sentTestEmail', true);
-      }).catch(function () {
-        bootbox.alert(I18n.t('admin.email.test_error'));
+      }, function(e) {
+        if (e.responseJSON && e.responseJSON.errors) {
+          bootbox.alert(I18n.t('admin.email.error', { server_error: e.responseJSON.errors[0] }));
+        } else {
+          bootbox.alert(I18n.t('admin.email.test_error'));
+        }
       }).finally(function() {
         self.set('sendingEmail', false);
       });
