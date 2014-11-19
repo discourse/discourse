@@ -233,7 +233,7 @@ class TopicQuery
       options.reverse_merge!(per_page: SiteSetting.topics_per_page)
 
       # Start with a list of all topics
-      result = Topic
+      result = Topic.unscoped
 
       if @user
         result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
@@ -286,6 +286,7 @@ class TopicQuery
                                         notification_level = ?)', @user.id, level)
       end
 
+      require_deleted_clause = true
       if status = options[:status]
         case status
         when 'open'
@@ -298,9 +299,16 @@ class TopicQuery
           result = result.where('topics.visible')
         when 'invisible'
           result = result.where('NOT topics.visible')
+        when 'deleted'
+          guardian = Guardian.new(@user)
+          if guardian.is_staff?
+            result = result.where('topics.deleted_at IS NOT NULL')
+            require_deleted_clause = false
+          end
         end
       end
 
+      result = result.where('topics.deleted_at IS NULL') if require_deleted_clause
       result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
       result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
