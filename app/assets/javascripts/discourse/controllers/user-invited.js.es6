@@ -1,11 +1,4 @@
-/**
-  This controller handles actions related to a user's invitations
-
-  @class UserInvitedController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
-**/
+// This controller handles actions related to a user's invitations
 export default Ember.ObjectController.extend({
   user: null,
   model: null,

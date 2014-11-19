@@ -1,4 +1,6 @@
-export default Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
   renderTemplate: function() {
     this.render({ into: 'user' });
   },
@@ -14,7 +16,6 @@ export default Discourse.Route.extend({
       searchTerm: '',
       totalInvites: model.invites.length
     });
-    this.controllerFor('user').set('indexStream', false);
   },
 
   actions: {

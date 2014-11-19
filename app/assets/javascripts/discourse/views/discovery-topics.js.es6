@@ -1,6 +1,7 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
+import LoadMore from "discourse/mixins/load-more";
 
-export default Discourse.View.extend(Discourse.LoadMore, UrlRefresh, {
+export default Discourse.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
 
   actions: {

@@ -9,6 +9,7 @@ import ObjectController from 'discourse/controllers/object';
   @module Discourse
 **/
 export default ObjectController.extend({
+  needs: ["application"],
 
   actions: {
     loadMore: function() {
@@ -36,14 +37,17 @@ export default ObjectController.extend({
   }.property("userBadges"),
 
   canLoadMore: function() {
-    if(this.get('noMoreBadges')) {
-      return false;
-    }
+    if (this.get('noMoreBadges')) { return false; }
 
     if (this.get('userBadges')) {
       return this.get('model.grant_count') > this.get('userBadges.length');
     } else {
       return false;
     }
-  }.property('noMoreBadges', 'model.grant_count', 'userBadges.length')
+  }.property('noMoreBadges', 'model.grant_count', 'userBadges.length'),
+
+  _showFooter: function() {
+    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
+  }.observes("canLoadMore")
+
 });

@@ -1,6 +1,6 @@
-// A helper function to create a category route with parameters
 import { queryParams, filterQueryParams } from 'discourse/routes/build-topic-route';
 
+// A helper function to create a category route with parameters
 export default function(filter, params) {
   return Discourse.Route.extend({
     queryParams: queryParams,

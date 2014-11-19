@@ -1,4 +1,13 @@
-export default Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
+  actions: {
+    didTransition: function() {
+      this.controllerFor("badges/show")._showFooter();
+      return true;
+    }
+  },
+
   serialize: function(model) {
     return {id: model.get('id'), slug: model.get('name').replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase()};
   },

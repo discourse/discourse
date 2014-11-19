@@ -1,16 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller handles displaying of history
-
-  @class HistoryController
-  @extends ObjectController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
+// This controller handles displaying of history
 export default ObjectController.extend(ModalFunctionality, {
   loading: true,
   viewMode: "side_by_side",

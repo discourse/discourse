@@ -1,7 +1,6 @@
-// A helper to build a topic route for a filter
-
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 
+// A helper to build a topic route for a filter
 export function filterQueryParams(params, defaultParams) {
   var findOpts = defaultParams || {};
   if (params) {

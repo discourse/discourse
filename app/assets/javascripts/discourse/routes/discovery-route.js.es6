@@ -1,13 +1,11 @@
 /**
-  The parent route for all discovery routes. Handles the logic for showing
-  the loading spinners.
-
-  @class DiscoveryRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
+  The parent route for all discovery routes.
+  Handles the logic for showing the loading spinners.
 **/
-Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, {
+
+import ShowFooter from "discourse/mixins/show-footer";
+
+Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
@@ -20,24 +18,21 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
 
   actions: {
     loading: function() {
-      var controller = this.controllerFor('discovery');
-
-      // If we're already loading don't do anything
-      if (controller.get('loading')) { return; }
-      controller.set('loading', true);
+      this.controllerFor('discovery').set("loading", true);
       return true;
     },
 
     loadingComplete: function() {
-      var controller = this.controllerFor('discovery');
-      controller.set('loading', false);
+      this.controllerFor('discovery').set('loading', false);
       if (!Discourse.Session.currentProp('topicListScrollPosition')) {
         this._scrollTop();
       }
     },
 
     didTransition: function() {
+      this.controllerFor("discovery")._showFooter();
       this.send('loadingComplete');
+      return true;
     },
 
     // clear a pinned topic
@@ -65,3 +60,4 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
 
 });
 
+export default Discourse.DiscoveryRoute;
