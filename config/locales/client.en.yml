@@ -1760,6 +1760,7 @@ en:
         settings: "Settings"
         all: "All"
         sending_test: "Sending test Email..."
+        error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
