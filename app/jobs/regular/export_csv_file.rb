@@ -6,7 +6,7 @@ module Jobs
   class ExportCsvFile < Jobs::Base
     CSV_USER_ATTRS = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     CSV_USER_STATS = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
-    
+
     sidekiq_options retry: false
     attr_accessor :current_user
 
@@ -108,7 +108,7 @@ module Jobs
       def notify_user
         if @current_user
           if @file_name != "" && File.exists?("#{ExportCsv.base_directory}/#{@file_name}")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/admin/export_csv/#{@file_name}/download", file_name: @file_name)
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/admin/export_csv/#{@file_name}", file_name: @file_name)
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end
