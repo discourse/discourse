@@ -51,7 +51,6 @@ Discourse.Route.buildRoutes(function() {
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
 
-
     // homepage
     this.route(Discourse.Utilities.defaultHomepage(), { path: '/' });
   });

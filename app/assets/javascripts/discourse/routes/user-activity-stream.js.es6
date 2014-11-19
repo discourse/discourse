@@ -1,4 +1,6 @@
-var UserActivityStreamRoute = Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
   model: function() {
     return this.modelFor('user').get('stream');
   },
@@ -13,15 +15,15 @@ var UserActivityStreamRoute = Discourse.Route.extend({
 
   setupController: function(controller, model) {
     controller.set('model', model);
-    this.controllerFor('user_activity').set('userActionType', this.get('userActionType'));
-
-    this.controllerFor('user').setProperties({
-      indexStream: !this.get('userActionType'),
-      datasource: "stream"
-    });
+    this.controllerFor('user-activity').set('userActionType', this.get('userActionType'));
   },
 
   actions: {
+
+    didTransition: function() {
+      this.controllerFor("user-activity")._showFooter();
+      return true;
+    },
 
     removeBookmark: function(userAction) {
       var self = this;
@@ -39,11 +41,4 @@ var UserActivityStreamRoute = Discourse.Route.extend({
     },
 
   }
-});
-
-// Build all activity stream routes
-['bookmarks', 'edits', 'likes_given', 'likes_received', 'replies', 'posts', 'index'].forEach(function (userAction) {
-  Discourse["UserActivity" + userAction.classify() + "Route"] = UserActivityStreamRoute.extend({
-    userActionType: Discourse.UserAction.TYPES[userAction]
-  });
 });

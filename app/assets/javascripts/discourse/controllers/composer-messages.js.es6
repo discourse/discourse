@@ -1,11 +1,4 @@
-/**
-  A controller for displaying messages as the user composes a message.
-
-  @class ComposerMessagesController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
-**/
+// A controller for displaying messages as the user composes a message.
 export default Ember.ArrayController.extend({
   needs: ['composer'],
 

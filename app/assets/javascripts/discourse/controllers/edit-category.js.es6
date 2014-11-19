@@ -1,16 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  Modal for editing / creating a category
-
-  @class EditCategoryController
-  @extends ObjectController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
+// Modal for editing / creating a category
 export default ObjectController.extend(ModalFunctionality, {
   foregroundColors: ['FFFFFF', '000000'],
   categoryUploadUrl: '/category/uploads',
