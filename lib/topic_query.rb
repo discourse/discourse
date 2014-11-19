@@ -300,7 +300,8 @@ class TopicQuery
         when 'invisible'
           result = result.where('NOT topics.visible')
         when 'deleted'
-          if @user && @user.is_staff?
+          guardian = Guardian.new(@user)
+          if guardian.is_staff?
             result = result.where('topics.deleted_at IS NOT NULL')
             require_deleted_clause = false
           end
