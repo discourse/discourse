@@ -280,8 +280,11 @@ en:
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
       no_other_accounts: (none)
-      read_time: "read time:"
-      topics_entered: "topics entered:"
+      username: "username"
+      trust_level: "TL"
+      read_time: "read time"
+      topics_entered: "topics entered"
+      post_count: "# posts"
 
     user:
       said: "{{username}}:"
