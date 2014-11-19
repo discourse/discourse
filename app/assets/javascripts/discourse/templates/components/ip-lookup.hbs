@@ -5,6 +5,7 @@
 {{/if}}
 {{#if show}}
   <div class="location-box">
+    <a class="close" {{action "hide"}}>{{fa-icon "times"}}</a>
     <h4>{{i18n ip_lookup.title}}</h4>
     <dl>
       {{#if location}}
@@ -40,21 +41,33 @@
       <dd class="other-accounts">
         {{#loading-spinner size="small" condition=otherAccountsLoading}}
           {{#if other_accounts}}
-            <ul>
-            {{#each other_accounts}}
-              <li>
-                {{#link-to "adminUser" this}}{{avatar this usernamePath="user.username" imageSize="small"}}&nbsp;{{username}}{{/link-to}}
-                ({{trustLevel.name}}),
-                <strong>{{i18n ip_lookup.read_time}}</strong>&nbsp;{{time_read}},
-                <strong>{{i18n ip_lookup.topics_entered}}</strong>&nbsp;{{topics_entered}}
-              </li>
-            {{/each}}
+            <table class="table table-condensed table-hover">
+              <thead>
+                <tr>
+                  <th>{{i18n ip_lookup.username}}</th>
+                  <th>{{i18n ip_lookup.trust_level}}</th>
+                  <th>{{i18n ip_lookup.read_time}}</th>
+                  <th>{{i18n ip_lookup.topics_entered}}</th>
+                  <th>{{i18n ip_lookup.post_count}}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{#each other_accounts}}
+                  <tr>
+                    <td>{{#link-to "adminUser" this}}{{avatar this usernamePath="user.username" imageSize="small"}}&nbsp;{{username}}{{/link-to}}</td>
+                    <td>{{trustLevel.id}}</td>
+                    <td>{{time_read}}</td>
+                    <td>{{topics_entered}}</td>
+                    <td>{{post_count}}</td>
+                  </tr>
+                {{/each}}
+              </tbody>
+            </table>
           {{else}}
             {{i18n ip_lookup.no_other_accounts}}
           {{/if}}
         {{/loading-spinner}}
       <dd>
     </dl>
-    <button class="btn close" {{action "hide"}}>{{i18n close}}</button>
   </div>
 {{/if}}

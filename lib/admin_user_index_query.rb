@@ -10,11 +10,17 @@ class AdminUserIndexQuery
   attr_reader :params, :trust_levels
 
   def initialize_query_with_order(klass)
+    order = [params[:order]]
+
     if params[:query] == "active"
-      klass.order("COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC, username")
+      order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
     else
-      klass.order("created_at DESC, username")
+      order << "created_at DESC"
     end
+
+    order << "username"
+
+    klass.order(order.reject(&:blank?).join(","))
   end
 
   def filter_by_trust
