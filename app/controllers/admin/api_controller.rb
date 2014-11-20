@@ -1,7 +1,7 @@
 class Admin::ApiController < Admin::AdminController
 
   def index
-    render_serialized(ApiKey.all.to_a, ApiKeySerializer)
+    render_serialized(ApiKey.where(hidden: false).to_a, ApiKeySerializer)
   end
 
   def regenerate_key
