@@ -20,23 +20,51 @@ class Admin::GroupsController < Admin::AdminController
     render json: success_json
   end
 
-  def update
-    group = Group.find(params[:id].to_i)
+  def update_patch(group)
+    raise Discourse::InvalidAccess.new("automatic groups do not permit membership changes") if group.automatic
 
-    group.alias_level = params[:group][:alias_level].to_i if params[:group][:alias_level].present?
+    actions = params[:changes]
+    Array(actions[:add]).each do |username|
+      if user = User.find_by_username(username)
+        group.add(user)
+      end
+    end
+    Array(actions[:delete]).each do |username|
+      if user = User.find_by_username(username)
+        group.remove(user)
+      end
+    end
+
+    render json: success_json
+  end
+
+  def update_put(group)
+    payload = params[:group]
+
+    group.alias_level = payload[:alias_level].to_i if payload[:alias_level].present?
+    group.visible = payload[:visible] == "true"
 
     if group.automatic
-      # we can only change the alias level on automatic groups
+      # group rename & membership changes are ignored/prohibited for automatic groups
     else
-      group.usernames = params[:group][:usernames]
-      group.name = params[:group][:name] if params[:group][:name]
+      group.usernames = payload[:usernames] if payload[:usernames]
+      group.name = payload[:name] if payload[:name]
     end
-    group.visible = params[:group][:visible] == "true"
 
     if group.save
       render json: success_json
     else
       render_json_error group
+    end
+  end
+
+  def update
+    group = Group.find(params[:id].to_i)
+
+    if request.patch?
+      update_patch(group)
+    else
+      update_put(group)
     end
   end
 
