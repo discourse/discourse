@@ -6,11 +6,11 @@
 }
 
 .composer-popup-container {
-display: none;
+display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
 .composer-popup {
-display: none;
+display: none !important; // can be removed if inline JS CSS is removed from composer-popup
 }
 
 #reply-control {
