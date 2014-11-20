@@ -42,7 +42,7 @@ describe TopicQuery do
 
   context 'deleted filter' do
     it "filters deleted topics correctly" do
-      topic = Fabricate(:topic, deleted_at: -1.years.from_now)
+      topic = Fabricate(:topic, deleted_at: 1.year.ago)
 
       TopicQuery.new(admin, status: 'deleted').list_latest.topics.size.should == 1
       TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size.should == 1
