@@ -3,7 +3,6 @@ class ApiKey < ActiveRecord::Base
   belongs_to :created_by, class_name: User
 
   validates_presence_of :key
-  validates_uniqueness_of :user_id
 
   def regenerate!(updated_by)
     self.key = SecureRandom.hex(32)
