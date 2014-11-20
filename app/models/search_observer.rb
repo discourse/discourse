@@ -66,7 +66,7 @@ class SearchObserver < ActiveRecord::Observer
       end
     end
     if obj.class == User && (obj.username_changed? || obj.name_changed?)
-      SearchObserver.update_users_index(obj.id, obj.username_lower, obj.name.downcase)
+      SearchObserver.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
     end
 
     if obj.class == Topic && obj.title_changed?
