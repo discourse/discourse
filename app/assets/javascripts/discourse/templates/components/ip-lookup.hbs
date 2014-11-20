@@ -1,11 +1,11 @@
 {{#if ip}}
   <button class="btn" {{action "lookup"}}>
-    <span class="fa fa-globe"></span>&nbsp;{{i18n admin.user.ip_lookup}}
+    {{fa-icon "globe"}}{{i18n admin.user.ip_lookup}}
   </button>
 {{/if}}
 {{#if show}}
   <div class="location-box">
-    <a class="close" {{action "hide"}}>{{fa-icon "times"}}</a>
+    <a class="close pull-right" {{action "hide"}}>{{fa-icon "times"}}</a>
     <h4>{{i18n ip_lookup.title}}</h4>
     <dl>
       {{#if location}}
@@ -37,10 +37,18 @@
         {{loading-spinner size="small"}}
       {{/if}}
 
-      <dt>{{i18n ip_lookup.other_accounts}}&nbsp;<strong>{{other_accounts.length}}</strong></dt>
-      <dd class="other-accounts">
-        {{#loading-spinner size="small" condition=otherAccountsLoading}}
-          {{#if other_accounts}}
+      <dt>
+        {{i18n ip_lookup.other_accounts}}
+        <strong>{{other_accounts.length}}</strong>
+        {{#if other_accounts.length}}
+          <button class="btn btn-danger pull-right" {{action "deleteAllOtherAccounts"}}>
+            {{fa-icon "trash-o"}}{{i18n ip_lookup.delete_all}}
+          </button>
+        {{/if}}
+      </dt>
+      {{#loading-spinner size="small" condition=otherAccountsLoading}}
+        {{#if other_accounts.length}}
+          <dd class="other-accounts">
             <table class="table table-condensed table-hover">
               <thead>
                 <tr>
@@ -63,11 +71,9 @@
                 {{/each}}
               </tbody>
             </table>
-          {{else}}
-            {{i18n ip_lookup.no_other_accounts}}
-          {{/if}}
-        {{/loading-spinner}}
-      <dd>
+          </dd>
+        {{/if}}
+      {{/loading-spinner}}
     </dl>
   </div>
 {{/if}}

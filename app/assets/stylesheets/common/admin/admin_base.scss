@@ -82,16 +82,15 @@ td.flaggers td {
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
-    .close {
-      float: right;
-    }
 
     .other-accounts {
-      margin: 0;
+      margin: 5px 0 0;
       max-height: 200px;
       overflow: auto;
+      width: 455px;
       ul { margin: 0; }
       li { list-style: none; }
+      tr td:first-of-type { width: 130px; }
     }
   }
 }
