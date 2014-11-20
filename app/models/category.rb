@@ -393,38 +393,39 @@ end
 #
 # Table name: categories
 #
-#  id                       :integer          not null, primary key
-#  name                     :string(50)       not null
-#  color                    :string(6)        default("AB9364"), not null
-#  topic_id                 :integer
-#  topic_count              :integer          default(0), not null
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  user_id                  :integer          not null
-#  topics_year              :integer          default(0)
-#  topics_month             :integer          default(0)
-#  topics_week              :integer          default(0)
-#  slug                     :string(255)      not null
-#  description              :text
-#  text_color               :string(6)        default("FFFFFF"), not null
-#  read_restricted          :boolean          default(FALSE), not null
-#  auto_close_hours         :float
-#  post_count               :integer          default(0), not null
-#  latest_post_id           :integer
-#  latest_topic_id          :integer
-#  position                 :integer
-#  parent_category_id       :integer
-#  posts_year               :integer          default(0)
-#  posts_month              :integer          default(0)
-#  posts_week               :integer          default(0)
-#  email_in                 :string(255)
-#  email_in_allow_strangers :boolean          default(FALSE)
-#  topics_day               :integer          default(0)
-#  posts_day                :integer          default(0)
-#  logo_url                 :string(255)
-#  background_url           :string(255)
-#  allow_badges             :boolean          default(TRUE), not null
-#  name_lower               :string(50)       not null
+#  id                            :integer          not null, primary key
+#  name                          :string(50)       not null
+#  color                         :string(6)        default("AB9364"), not null
+#  topic_id                      :integer
+#  topic_count                   :integer          default(0), not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  user_id                       :integer          not null
+#  topics_year                   :integer          default(0)
+#  topics_month                  :integer          default(0)
+#  topics_week                   :integer          default(0)
+#  slug                          :string(255)      not null
+#  description                   :text
+#  text_color                    :string(6)        default("FFFFFF"), not null
+#  read_restricted               :boolean          default(FALSE), not null
+#  auto_close_hours              :float
+#  post_count                    :integer          default(0), not null
+#  latest_post_id                :integer
+#  latest_topic_id               :integer
+#  position                      :integer
+#  parent_category_id            :integer
+#  posts_year                    :integer          default(0)
+#  posts_month                   :integer          default(0)
+#  posts_week                    :integer          default(0)
+#  email_in                      :string(255)
+#  email_in_allow_strangers      :boolean          default(FALSE)
+#  topics_day                    :integer          default(0)
+#  posts_day                     :integer          default(0)
+#  logo_url                      :string(255)
+#  background_url                :string(255)
+#  allow_badges                  :boolean          default(TRUE), not null
+#  name_lower                    :string(50)       not null
+#  auto_close_based_on_last_post :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -31,6 +31,7 @@ end
 #  created_by_id :integer
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  allowed_ips   :inet             is an Array
 #
 # Indexes
 #

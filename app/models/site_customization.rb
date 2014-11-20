@@ -215,6 +215,8 @@ end
 #  mobile_stylesheet       :text
 #  mobile_header           :text
 #  mobile_stylesheet_baked :text
+#  footer                  :text
+#  mobile_footer           :text
 #
 # Indexes
 #

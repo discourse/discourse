@@ -106,10 +106,12 @@ end
 #  website              :string(255)
 #  bio_raw              :text
 #  bio_cooked           :text
-#  dismissed_banner_key :integer
 #  profile_background   :string(255)
-#  card_background      :string(255)
+#  dismissed_banner_key :integer
 #  bio_cooked_version   :integer
+#  badge_granted_title  :boolean          default(FALSE)
+#  card_background      :string(255)
+#  card_image_badge_id  :integer
 #
 # Indexes
 #
