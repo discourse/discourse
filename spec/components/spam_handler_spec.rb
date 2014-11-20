@@ -22,13 +22,26 @@ describe SpamHandler do
       -> { Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0]) }.should raise_error(ActiveRecord::RecordInvalid)
     end
 
-    it "only limit new registrations from an IP if *all* the users from that IP are TL1 or TL0" do
+    it "doesn't limit registrations since there is a TL2+ user with that IP" do
       # setup
       SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(0)
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[2])
 
-      # should not limit registrations since there is a TL2 user with that IP
+      # should not limit registration
+      SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(1)
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+    end
+
+    it "doesn't limit registrations since there is a staff member with that IP" do
+      # setup
+      SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(0)
+      Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+      Fabricate(:moderator, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
+
+      Group.refresh_automatic_groups!(:staff)
+
+      # should not limit registration
       SiteSetting.stubs(:max_new_accounts_per_registration_ip).returns(1)
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
     end
