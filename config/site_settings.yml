@@ -95,7 +95,7 @@ basic:
   post_menu:
     client: true
     type: list
-    default: 'like|share|flag|edit|bookmark|delete|admin|reply'
+    default: 'like|flag|bookmark|edit|share|delete|admin|reply'
     choices:
      - like
      - edit
@@ -108,7 +108,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'edit|delete|admin'
+    default: 'edit|share|delete|admin'
     choices:
      - like
      - edit
