@@ -107,12 +107,16 @@ class Auth::DefaultCurrentUserProvider
     api_key = ApiKey.where(key: api_key_value).includes(:user).first
     if api_key
       api_username = request["api_username"]
+
+      if api_key.allowed_ips.present? && !api_key.allowed_ips.any?{|ip| ip.include?(request.ip)}
+        Rails.logger.warn("Unauthorized API access: #{api_username} ip address: #{request.ip}")
+        return nil
+      end
+
       if api_key.user
         api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
       elsif api_username
         User.find_by(username_lower: api_username.downcase)
-      else
-        nil
       end
     end
   end
