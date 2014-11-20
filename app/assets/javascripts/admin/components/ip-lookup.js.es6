@@ -43,17 +43,20 @@ export default Ember.Component.extend({
 
     deleteAllOtherAccounts: function() {
       var self = this;
-      this.setProperties({ other_accounts: null, otherAccountsLoading: true });
-
-      Discourse.ajax("/admin/users/delete-others-with-same-ip.json", {
-        type: "DELETE",
-        data: {
-          "ip": this.get("ip"),
-          "exclude": this.get("user_id"),
-          "order": "trust_level DESC"
+      bootbox.confirm(I18n.t("ip_lookup.confirm_delete_other_accounts"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
+        if (confirmed) {
+          self.setProperties({ other_accounts: null, otherAccountsLoading: true });
+          Discourse.ajax("/admin/users/delete-others-with-same-ip.json", {
+            type: "DELETE",
+            data: {
+              "ip": self.get("ip"),
+              "exclude": self.get("user_id"),
+              "order": "trust_level DESC"
+            }
+          }).then(function() {
+            self.send("lookup");
+          });
         }
-      }).then(function() {
-        self.send("lookup");
       });
     }
   }

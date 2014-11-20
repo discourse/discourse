@@ -285,6 +285,7 @@ en:
       read_time: "read time"
       topics_entered: "topics entered"
       post_count: "# posts"
+      confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
 
     user:
       said: "{{username}}:"
