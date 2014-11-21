@@ -752,6 +752,7 @@ es:
     purge_inactive_users_grace_period_days: "Periodo de gracia (en días) durante los cuales un usuario que no haya activado su cuenta no será aún eliminado."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
+    s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
     s3_access_key_id: "La clave id de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_secret_access_key: "La clave secreta de acceso de Amazon S3 que se utilizará para subir imágenes."
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes."
@@ -848,6 +849,7 @@ es:
     logout_redirect: "Ubicación a redirigir después que el usuario cierre sesión Ejem: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Permitir a los usuarios subir su propio avatar personalizado."
     allow_animated_avatars: "Permitir a los usuarios usar avatares con imágenes animadas tipo gif. AVISO: ejecuta el rake task avatars:refresh después de cambiar esta opción."
+    allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
     digest_topics: "El número máximo de temas a mostrar en el resumen por email."
     digest_min_excerpt_length: "La extensión mínima, en caracteres, del extracto de un post en el resumen por email."
@@ -937,6 +939,18 @@ es:
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
     closed_enabled: "Este tema está ahora cerrado. No se admiten nuevas respuestas."
     closed_disabled: "Este tema ahora está abierto. Se admiten nuevas respuestas."
+    autoclosed_enabled_days:
+      one: "Este tema se cerró automáticamente después de 1 día. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} días. No se permiten nuevas respuestas."
+    autoclosed_enabled_hours:
+      one: "Este tema se cerró automáticamente después de 1 hora. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} horas. No se permiten nuevas respuestas."
+    autoclosed_enabled_minutes:
+      one: "Este tema se cerró automáticamente después de 1 minuto. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente después de %{count} minutos. No se permiten nuevas respuestas."
+    autoclosed_enabled_lastpost_days:
+      one: "Este tema se cerró automáticamente 1 día después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} días después del último post. No se permiten nuevas respuestas."
     autoclosed_disabled: "El tema ahora está en abierto, se permiten respuestas."
     autoclosed_disabled_lastpost: "Este tema está ahora abierto. Se permiten nuevas respuestas."
     pinned_enabled: "Este tema ahora está destacado. Aparecerá en primer lugar en la lista de su categoría hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
@@ -1090,6 +1104,7 @@ es:
       other: "Estos reportes fueron enviados desde hace %{count} horas."
     please_review: "Por favor, revísalos."
     post_number: "post"
+    how_to_disable: 'Puedes desactivar o cambiar la frecuencia de este email de recordatorio mediante la opción "notify about flags after".'
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
@@ -1353,10 +1368,12 @@ es:
         ---
         %{respond_instructions}
     digest:
+      why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
       subject_template: "[%{site_name}] Resumen del %{date}"
       new_activity: "Actividad nueva en tus temas y posts:"
       top_topics: "Posts populares"
       other_new_topics: "Temas populares"
+      unsubscribe: "Este resumen es enviado desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
       read_more: "Leer más"
@@ -1571,3 +1588,25 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
+  static:
+    search_help: |
+      <h2>Consejos</h2>
+      <p>
+      <ul>
+        <li>Se priorizan las coincidencias con el título, por lo que si tienes dudas, busca por títulos</li>
+        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
+        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
+      </ul>
+      </p>
+      <h2>Opciones</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
+      </p>

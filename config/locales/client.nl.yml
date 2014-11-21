@@ -241,7 +241,6 @@ nl:
       location_not_found: (onbekend)
       organisation: Organisatie
       phone: Telefoon
-      no_other_accounts: (geen)
     user:
       said: "{{username}}:"
       profile: "Profiel"
@@ -324,27 +323,14 @@ nl:
         title: "Profielachtergrond"
       email:
         title: "E-mail"
-        instructions: "Je e-mail adres zal nooit publieklijk zichtbaar zijn."
-        invalid: "Vul een geldig e-mailadres in."
-        authenticated: "Je e-mailadres is bevestigd door {{provider}}."
         frequency: "We zullen je alleen maar mailen als we je een tijd niet gezien hebben, en als je toevallig hetgeen waarover we je mailen nog niet hebt gezien op onze site."
       name:
         title: "Naam"
-        too_short: "Je naam is te kort."
-        ok: "Je naam ziet er prima uit."
       username:
         title: "Gebruikersnaam"
-        instructions: "Je gebruikersnaam moet uniek zijn en mag geen spaties bevatten."
-        short_instructions: "Mensen kunnen naar je verwijzen als @{{username}}."
-        available: "Je gebruikersnaam is beschikbaar."
-        global_match: "Je e-mailadres komt overeen met je geregistreerde gebruikersnaam."
         global_mismatch: "Is al geregistreerd. Gebruikersnaam {{suggestion}} proberen?"
         not_available: "Niet beschikbaar. Gebruikersnaam {{suggestion}} proberen?"
-        too_short: "Je gebruikersnaam is te kort."
-        too_long: "Je gebruikersnaam is te lang."
         checking: "Kijken of gebruikersnaam beschikbaar is..."
-        enter_email: 'Gebruikersnaam gevonden. Vul het gekoppelde e-mailadres in.'
-        prefilled: "E-mail hoort bij deze gebruikersnaam."
       locale:
         title: "Interfacetaal"
         instructions: "De taal van de foruminterface. Deze verandert als je de pagina herlaadt"

@@ -246,7 +246,6 @@ fi:
       location_not_found: (tuntematon)
       organisation: Yritys
       phone: Puhelin
-      no_other_accounts: (ei mitään)
     user:
       said: "{{username}}:"
       profile: "Profiili"
@@ -335,28 +334,14 @@ fi:
         instructions: "Taustakuvan leveys on 590 pikseliä."
       email:
         title: "Sähköposti"
-        instructions: "Ei tule julkiseksi."
-        invalid: "Ole hyvä ja anna toimiva sähköpostiosoite."
-        authenticated: "{{provider}} on todentanut sähköpostisi."
         frequency: "Lähetämme sähköpostia vain aiheista, joita et ole nähnyt, ja kun emme ole nähneet sinua viime aikoina."
       name:
         title: "Nimi"
-        instructions: "Koko nimesi (valinnainen)"
-        too_short: "Nimesi on liian lyhyt."
-        ok: "Nimesi vaikuttaa hyvältä."
       username:
         title: "Käyttäjätunnus"
-        instructions: "Uniikki, lyhyt ja ilman välilyöntejä."
-        short_instructions: "Muut käyttäjät voivat viitata sinuun nimellä @{{username}}."
-        available: "Käyttäjätunnuksesi on vapaana."
-        global_match: "Sähköposti vastaa rekisteröityä käyttäjänimeä."
         global_mismatch: "Nimi on jo käytössä. Kokeile {{suggestion}}?"
         not_available: "Ei saatavilla. Kokeile {{suggestion}}?"
-        too_short: "Käyttäjätunnus on liian lyhyt."
-        too_long: "Käyttäjätunnus on liian pitkä."
         checking: "Tarkistetaan käyttäjätunnusta..."
-        enter_email: 'Käyttäjänimi löydetty. Kirjoita sitä vastaava sähköpostiosoite.'
-        prefilled: "Sähköposti vastaa tätä käyttäjänimeä."
       locale:
         title: "Käyttöliittymän kieli"
         instructions: "Käyttöliittymän kieli. Kieli vaihtuu sivun uudelleen lataamisen yhteydessä."

@@ -267,7 +267,6 @@ cs:
       location_not_found: (neznámá)
       organisation: Organizace
       phone: Telefon
-      no_other_accounts: (žádné)
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -351,27 +350,14 @@ cs:
         title: "Pozadí profilu"
       email:
         title: "Emailová adresa"
-        instructions: "Nikdy nebude zveřejněno."
-        invalid: "Prosím zadejte platnou emailovou adresu."
-        authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
         frequency: "Budeme vás informovat emailem pouze pokud jste se na našem webu dlouho neukázali a pokud jste obsah, o kterém vás chceme informovat, doposud neviděli."
       name:
         title: "Jméno"
-        too_short: "Vaše jméno je příliš krátké."
-        ok: "Vaše jméno vypadá dobře"
       username:
         title: "Uživatelské jméno"
-        instructions: "Unikátní, bez mezer, krátké."
-        short_instructions: "Ostatní vás mohou zmínit pomocí @{{username}}."
-        available: "Toto uživatelské jméno je volné."
-        global_match: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
         global_mismatch: "již zaregistrováno. Co třeba {{suggestion}}?"
         not_available: "Není k dispozici. Co třeba {{suggestion}}?"
-        too_short: "Vaše uživatelské jméno je příliš krátké."
-        too_long: "Vaše uživatelské jméno je příliš dlouhé."
         checking: "Zjišťuji, zda je uživatelské jméno volné..."
-        enter_email: 'Uživatelské jméno nalezeno. Zadejte odpovídající emailovou adresu.'
-        prefilled: "Emailová adresa odpovídá registrovaného uživatelskému jménu."
       locale:
         title: "Jazyk rozhraní"
         instructions: "Jazyk uživatelského prostředí. Změna obnoví stránku."
@@ -739,6 +725,7 @@ cs:
         top: "Nejsou tu žádná další populární témata."
     topic:
       filter_to: "{{post_count}} příspěvků v tématu"
+      create: 'Nové téma'
       create_long: 'Vytvořit nové téma'
       private_message: 'Vytvořit soukromou konverzaci'
       list: 'Témata'
@@ -901,6 +888,7 @@ cs:
           one: "Je zobrazen pouze 1 příspěvek"
           few: "Jsou zobrazeny pouze {{count}} příspěvky"
           other: "Je zobrazeno pouze {{count}} příspěvků"
+        cancel: "Zrušit filtr"
       split_topic:
         title: "Rozdělit téma"
         action: "do nového téma"
@@ -1154,6 +1142,7 @@ cs:
       general: 'Základní'
       settings: 'Nastavení'
       delete: 'Smazat kategorii'
+      create: 'Nová kategorie'
       save: 'Uložit kategorii'
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
