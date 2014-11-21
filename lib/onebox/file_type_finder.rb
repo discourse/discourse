@@ -59,7 +59,7 @@ module Onebox
       # Otherwise, just split on the last ".",
       # but add one so we don't return the "." itself.
       dot_spot = lower_name.rindex(".")
-      return lower_name[dot_spot..-1] if dot_spot
+      return lower_name[(dot_spot+1)..-1] if dot_spot
       
       # If we couldn't figure it out from the name,
       # let the highlighter figure it out from the content.
