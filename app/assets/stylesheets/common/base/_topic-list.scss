@@ -122,6 +122,12 @@
     padding-top: 15px;
     padding-bottom: 15px;
     border-left: 6px solid;
+    // suppress extra long category names in tables
+    a {
+      max-width:150px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
   }
   td.stats {
     .unit {
