@@ -23,15 +23,16 @@ class Admin::GroupsController < Admin::AdminController
   def update_patch(group)
     raise Discourse::InvalidAccess.new("automatic groups do not permit membership changes") if group.automatic
 
-    actions = params[:changes]
-    Array(actions[:add]).each do |username|
-      if user = User.find_by_username(username)
-        group.add(user)
+    if actions = params[:changes]
+      Array(actions[:add]).each do |username|
+        if user = User.find_by_username(username)
+          group.add(user)
+        end
       end
-    end
-    Array(actions[:delete]).each do |username|
-      if user = User.find_by_username(username)
-        group.remove(user)
+      Array(actions[:delete]).each do |username|
+        if user = User.find_by_username(username)
+          group.remove(user)
+        end
       end
     end
 
