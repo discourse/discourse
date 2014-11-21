@@ -1686,6 +1686,9 @@ en:
         users:
           text: "Export Users"
           title: "Export user list in a CSV file."
+        screened_ips:
+          text: "Export Screened IPs"
+          title: "Export screened IPs list in a CSV file."
         success: "Export has been initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
 
