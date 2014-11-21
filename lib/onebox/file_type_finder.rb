@@ -14,7 +14,7 @@ module Onebox
       ".bib"             => "tex",
       ".html.hbs"        => "handlebars",
       ".html.handlebars" => "handlebars",
-      ".latex"           => "tex"
+      ".latex"           => "tex",
       ".ru"              => "rb",
       ".simplecov"       => "rb", # Not official, but seems commonly found
       ".sty"             => "tex"
