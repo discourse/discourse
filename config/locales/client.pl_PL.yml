@@ -269,7 +269,7 @@ pl_PL:
       location_not_found: (nieznane)
       organisation: Organizacja
       phone: Numer telefonu
-      no_other_accounts: (brak)
+      other_accounts: "Inne konta z tym adresem IP:"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -312,6 +312,7 @@ pl_PL:
       deleted_yourself: "Twoje konto zostało usunięte."
       delete_yourself_not_allowed: "Nie możesz usunąć swojego konta w tej chwili. Skontaktuj się z administratorem, by usunął Twoje konto za Ciebie."
       unread_message_count: "Wiadomości"
+      admin_delete: "Usuń"
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"
@@ -359,29 +360,14 @@ pl_PL:
         instructions: "Tło karty użytkownika est wycentrowane i posiada domyślną szerokość 590px."
       email:
         title: "Email"
-        instructions: "Nie będzie publicznie widoczny."
-        ok: "Otrzymasz potwierdzenie emailem."
-        invalid: "Podaj poprawny adres email."
-        authenticated: "Twój adres email został potwierdzony przez {{provider}}."
         frequency: "Wyślemy do Ciebie email tylko jeżeli dawno Cię nie widzieliśmy i wyłącznie na temat rzeczy których jeszcze nie widziałeś."
       name:
         title: "Pełna nazwa"
-        instructions: "Twoja pełna nazwa (opcjonalna)"
-        too_short: "Twoja nazwa jest za krótka."
-        ok: "Twoja nazwa jest poprawna."
       username:
         title: "Nazwa konta"
-        instructions: "Unikalna, krótka i bez spacji."
-        short_instructions: "Aby o tobie wspomnieć, wystarczy napisać @{{username}}."
-        available: "Nazwa jest dostępna."
-        global_match: "Email zgadza się z zarejestrowaną nazwą użytkownika."
         global_mismatch: "Zajęta. Może spróbuj {{suggestion}}?"
         not_available: "Niedostępna. Może spróbuj {{suggestion}}?"
-        too_short: "Nazwa jest za krótka."
-        too_long: "Nazwa jest za długa."
         checking: "Sprawdzanie, czy nazwa jest dostępna…"
-        enter_email: 'Nazwa znaleziona. Wpisz przypisany adres email.'
-        prefilled: "Email zgadza się z zarejestrowaną nazwą użytkownika."
       locale:
         title: "Język interfejsu"
         instructions: "Język interfejsu użytkownika. Zmieni się, gdy odświeżysz stronę."
@@ -613,6 +599,8 @@ pl_PL:
       reply_here: "Odpowiedz tutaj"
       reply: "Odpowiedz"
       cancel: "Anuluj"
+      create_topic: "Utwórz temat"
+      create_pm: "Prywatna wiadomość"
       title: "Lub naciśnij Ctrl+Enter"
       users_placeholder: "Dodaj osobę"
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
@@ -683,7 +671,10 @@ pl_PL:
       title_with_attachments: "Dodaj obraz lub plik"
       from_my_computer: "Z mojego urządzenia"
       from_the_web: "Z Internetu"
+      remote_tip: "link do obrazu"
+      remote_tip_with_attachments: "odnośnik do obrazu lub pliku ({{authorized_extensions}})"
       local_tip: "kliknij, aby wybrać obraz z Twojego urządzenia"
+      local_tip_with_attachments: "kliknij aby wybrać obraz lub plik ze swojego urządzenia ({{authorized_extensions}})"
       hint: "(możesz także upuścić plik z katalogu komputera w okno edytora)"
       hint_for_supported_browsers: "(możesz przeciągnąć lub wkleić obrazy do edytora, aby je wgrać)"
       uploading: "Wgrywanie"
@@ -753,6 +744,7 @@ pl_PL:
         top: "Nie ma już więcej najlepszych tematów."
     topic:
       filter_to: "{{post_count}} wpisów w temacie"
+      create: 'Nowy temat'
       create_long: 'Utwórz nowy temat'
       private_message: 'Napisz Prywatną Wiadomość'
       list: 'Tematy'
@@ -1180,6 +1172,7 @@ pl_PL:
       general: 'Ogólne'
       settings: 'Ustawienia'
       delete: 'Usuń kategorię'
+      create: 'Nowa kategoria'
       save: 'Zapisz kategorię'
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
@@ -1230,6 +1223,8 @@ pl_PL:
           title: "Wyciszone"
           description: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach i nie będą się one pojawiać w karcie Nieprzeczytane."
     flagging:
+      title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
+      private_reminder: 'oflagowania są poufne i widoczne <b>jedynie</b> dla obsługi serwisu'
       action: 'Oflaguj wpis'
       take_action: "Podejmij działanie"
       notify_action: 'Prywatna wiadomość'
@@ -1245,11 +1240,14 @@ pl_PL:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
         spam: "Jest odebrane jako spam"
+      custom_placeholder_notify_user: "Napisz konkretnie, konstuktywnie i kulturalnie."
+      custom_placeholder_notify_moderators: "Dlaczego ten wpis wymaga uwagi moderatora? Opisz co konkretnie Cię zaniepokoiło i jeśli to możliwe umieść odpowiednie odnośniki."
       custom_message:
         at_least: "wprowadź co najmniej {{n}} znaków"
         more: "{{n}} aby wysłać…"
         left: "{{n}} pozostało"
     flagging_topic:
+      title: "Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!"
       action: "Zgłoś temat"
       notify_action: "Wyślij prywatną wiadomość"
     topic_map:
@@ -1652,6 +1650,7 @@ pl_PL:
         sent_test: "wysłany!"
         delivery_method: "Metoda Dostarczenia"
         preview_digest: "Pokaż zestawienie aktywności"
+        preview_digest_desc: "Podgląd treści emaila z zestawieniem aktywności jaki jest wysyłany nieaktywnym użytkownikom."
         refresh: "Odśwież"
         format: "Format"
         html: "html"
@@ -2065,6 +2064,7 @@ pl_PL:
       actions:
         title: 'Operacje'
         star: '<b>f</b> oznacz temat gwiazdką'
+        pin_unpin_topic: '<b>shift p</b> przypnij/odepnij temat'
         share_topic: '<b>shift s</b> udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
         reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'

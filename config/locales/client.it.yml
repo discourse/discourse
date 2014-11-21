@@ -246,7 +246,7 @@ it:
       location_not_found: (sconosciuto)
       organisation: Organizzazione
       phone: Telefono
-      no_other_accounts: (nessuno)
+      other_accounts: "Altri account con questo indirizzo IP:"
     user:
       said: "{{username}}:"
       profile: "Profilo"
@@ -337,29 +337,14 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
-        instructions: "Mai mostrato pubblicamente."
-        ok: "Ti invieremo una email di conferma."
-        invalid: "Inserisci un indirizzo email valido."
-        authenticated: "{{provider}} ha autenticato la tua email."
         frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
       name:
         title: "Nome"
-        instructions: "Nome completo (facoltativo)."
-        too_short: "Il nome è troppo breve."
-        ok: "Il nome è adeguato."
       username:
         title: "Nome utente"
-        instructions: "Deve essere univoco, senza spazi e breve."
-        short_instructions: "Gli utenti possono citarti scrivendo @{{username}}."
-        available: "Il nome utente è disponibile."
-        global_match: "L'email corrisponde allo nome utente registrato."
         global_mismatch: "Già registrato. Prova {{suggestion}}?"
         not_available: "Non disponibile. Prova {{suggestion}}?"
-        too_short: "Il nome utente è troppo breve."
-        too_long: "Il nome utente è troppo lungo."
         checking: "Controllo la disponibilità del nome utente..."
-        enter_email: 'Nome utente trovato. Inserisci l''email corrispondente.'
-        prefilled: "L'email corrisponde allo username registrato."
       locale:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
@@ -587,6 +572,8 @@ it:
       reply_here: "Rispondi Qui"
       reply: "Rispondi"
       cancel: "Annulla"
+      create_topic: "Crea Argomento"
+      create_pm: "Messaggio Privato"
       title: "O premi Ctrl+Enter"
       users_placeholder: "Aggiunti un utente"
       title_placeholder: "In breve, di cosa tratta questa discussione?"
@@ -657,7 +644,10 @@ it:
       title_with_attachments: "Aggiungi un'immagine o un file"
       from_my_computer: "Dal mio dispositivo"
       from_the_web: "Dal web"
+      remote_tip: "collegamento all'immagine"
+      remote_tip_with_attachments: "collegamento ad un'immagine o a un file ({{authorized_extensions}})"
       local_tip: "clicca per selezionare un'immagine dal tuo dispositivo"
+      local_tip_with_attachments: "clicca per selezionare un'immagine o un file dal tuo dispositivo ({{authorized_extensions}})"
       hint: "(puoi anche trascinarle nell'editor per caricarle)"
       hint_for_supported_browsers: "(puoi anche trascinare o incollare immagini nell'editor per caricarle)"
       uploading: "In caricamento"
@@ -724,6 +714,7 @@ it:
         top: "Non ci sono altri argomenti di punta."
     topic:
       filter_to: "{{post_count}} suoi messaggi"
+      create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia un messaggio privato'
       list: 'Argomenti'
@@ -1118,6 +1109,7 @@ it:
       general: 'Generale'
       settings: 'Impostazioni'
       delete: 'Elimina Categoria'
+      create: 'Crea Categoria'
       save: 'Salva Categoria'
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
@@ -1168,6 +1160,7 @@ it:
           title: "Ignorato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
     flagging:
+      title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
       action: 'Segnala Messaggio'
       take_action: "Procedi"
       notify_action: 'Messaggio privato'
@@ -1188,6 +1181,7 @@ it:
         more: "{{n}} alla fine..."
         left: "{{n}} rimanenti"
     flagging_topic:
+      title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Argomento"
       notify_action: "Messaggio privato"
     topic_map:
@@ -1505,7 +1499,9 @@ it:
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
+        css: "CSS"
         header: "Intestazione"
+        footer: "Fondo pagina"
         override_default: "Non includere fogli di stile standard"
         enabled: "Attivo?"
         preview: "anteprima"
