@@ -245,7 +245,6 @@ pt_BR:
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefone
-      no_other_accounts: (nenhum)
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -333,28 +332,14 @@ pt_BR:
         instructions: "As Imagens de fundo serão centralizadas e deverão ter largura de 590px"
       email:
         title: "Email"
-        instructions: "Não visível publicamente."
-        invalid: "Por favor, coloque um email válido."
-        authenticated: "O seu email foi autenticado por {{provider}}."
         frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        instructions: "Nome Completo ( campo opcional )"
-        too_short: "O seu nome é muito curto."
-        ok: "O seu nome parece ok."
       username:
         title: "Nome de Usuário"
-        instructions: "Único, sem espaços e curto."
-        short_instructions: "As pessoas podem mencionar você usando @{{username}}."
-        available: "O seu Nome de Usuário está disponível."
-        global_match: "O email corresponde ao Nome de Usuário registado."
         global_mismatch: "Já está registado. Tente {{suggestion}}?"
         not_available: "Não está disponível. Tente {{suggestion}}?"
-        too_short: "O seu Nome de Usuário é muito curto."
-        too_long: "O seu Nome de Usuário é muito grande."
         checking: "Verificando disponibilidade do Nome de Usuário..."
-        enter_email: 'Nome de Usuário encontrado. Coloque o email referente a ele.'
-        prefilled: "E-mail corresponde a este nome de usuário registrado."
       locale:
         title: "idioma da interface"
         instructions: "Idioma da interface de usuário. Irá mudar quando você atualizar a página."

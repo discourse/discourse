@@ -246,7 +246,7 @@ de:
       location_not_found: (unbekannt)
       organisation: Organisation
       phone: Telefon
-      no_other_accounts: (keine)
+      other_accounts: "Andere Konten mit dieser IP-Adresse:"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -337,29 +337,14 @@ de:
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 590px."
       email:
         title: "E-Mail"
-        instructions: "Wird niemals öffentlich angezeigt."
-        ok: "Wir werden dir eine E-Mail zur Bestätigung senden."
-        invalid: "Bitte gib eine gültige E-Mail-Adresse ein."
-        authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt."
         frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
-        instructions: "Dein vollständiger Name (optional)."
-        too_short: "Dein Name ist zu kurz."
-        ok: "Dein Name schaut gut aus."
       username:
         title: "Benutzername"
-        instructions: "Eindeutig, keine Leerzeichen, kurz."
-        short_instructions: "Andere Benutzer können dich mit @{{username}} erwähnen."
-        available: "Dein Benutzername ist verfügbar."
-        global_match: "Die E-Mail-Adresse stimmt mit dem registrierten Benutzernamen überein."
         global_mismatch: "Bereits registriert. Wie wäre es mit {{suggestion}}?"
         not_available: "Nicht verfügbar. Wie wäre es mit {{suggestion}}?"
-        too_short: "Dein Benutzername ist zu kurz."
-        too_long: "Dein Benutzername ist zu lang."
         checking: "Verfügbarkeit wird geprüft..."
-        enter_email: 'Benutzername gefunden. Gib die zugehörige E-Mail-Adresse ein.'
-        prefilled: "Die E-Mail-Adresse passt zu diesem registrierten Benutzernamen."
       locale:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
@@ -574,7 +559,7 @@ de:
       drafts_offline: "Entwürfe offline"
       min_length:
         need_more_for_title: "im Titel fehlen noch {{n}} Zeichen"
-        need_more_for_reply: "noch {{n}}"
+        need_more_for_reply: "noch {{n}} Zeichen"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -588,6 +573,7 @@ de:
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
+      create_pm: "Private Nachricht"
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -1176,6 +1162,7 @@ de:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in diesen Kategorien und sie werden nicht in deiner Liste ungelesener Themen aufscheinen."
     flagging:
+      title: 'Danke für deine Mithilfe!'
       private_reminder: 'Meldungen sind vertraulich und <b>nur</b> für Mitarbeiter sichtbar'
       action: 'Beitrag melden'
       take_action: "Reagieren"
@@ -1199,6 +1186,7 @@ de:
         more: "{{n}} weitere..."
         left: "{{n}} übrig"
     flagging_topic:
+      title: "Danke für deine Mithilfe!"
       action: "Thema melden"
       notify_action: "Private Nachricht"
     topic_map:
@@ -1601,6 +1589,7 @@ de:
         sent_test: "Gesendet!"
         delivery_method: "Versandmethode"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
+        preview_digest_desc: "Vorschau auf Neuigkeits-Mails anzeigen. Diese werden wöchentlich an inaktive Benutzer gesendet."
         refresh: "Aktualisieren"
         format: "Format"
         html: "HTML"

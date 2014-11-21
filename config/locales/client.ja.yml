@@ -219,7 +219,6 @@ ja:
       location_not_found: （不明）
       organisation: 組織
       phone: 電話
-      no_other_accounts: （なし）
     user:
       said: "{{username}}:"
       profile: "プロフィール"
@@ -302,27 +301,14 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
-        instructions: "Eメールアドレスは外部に公開されません。"
-        invalid: "正しいメールアドレスを入力してください。"
-        authenticated: "あたなのメールは {{provider}} により認証されました。"
         frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
-        too_short: "名前が短すぎます。"
-        ok: "名前 OK。"
       username:
         title: "ユーザ名"
-        instructions: "空白を含まないユニークな名前を入力してください。"
-        short_instructions: "他のユーザはあなたを @{{username}} でタグ付けできます。"
-        available: "ユーザ名は利用可能です。"
-        global_match: "メールアドレスが登録済のユーザ名と一致しました。"
         global_mismatch: "既に利用されています。{{suggestion}} などはいかがでしょう？"
         not_available: "利用できません。{{suggestion}} などはいかがでしょう？"
-        too_short: "ユーザ名が短すぎます。"
-        too_long: "ユーザ名が長すぎます。"
         checking: "ユーザ名が利用可能か確認しています..."
-        enter_email: 'ユーザ名が見つかりました。メールアドレスを入力してください。'
-        prefilled: "この登録ユーザが使用するメールアドレスが見つかりました。"
       locale:
         title: "表示言語"
         instructions: "ユーザインタフェイス表示言語。ページを更新する際には、表示言語を更新されます。"

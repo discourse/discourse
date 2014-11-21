@@ -246,7 +246,7 @@ nb_NO:
       location_not_found: (ukjent)
       organisation: Organisasjon
       phone: Telefon
-      no_other_accounts: (ingen)
+      other_accounts: "Andre kontoer med denne IP-adressen:"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -333,33 +333,18 @@ nb_NO:
         title: "Profilbakgrunn"
         instructions: "Profil bakgrunner vil bli sentrert med en standard bredde på 850px"
       change_card_background:
-        title: "Profilbakgrunn"
+        title: "Brukerkort bakgrunn"
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
       email:
         title: "E-post"
-        instructions: "Vises aldri offentlig"
-        ok: "Vi sender deg en email for å bekrefte"
-        invalid: "Vennligst skriv inn en gyldig e-postadresse."
-        authenticated: "Din e-post har blitt autentisert av {{provider}}."
         frequency: "Vi sender deg bare en e-post om vi ikke har sett deg nylig og du ikke allerede har sett det vi varsler deg om."
       name:
         title: "Navn"
-        instructions: "Ditt fulle navn (valgfritt)."
-        too_short: "Navnet ditt er for kort."
-        ok: "Navnet ditt ser bra ut."
       username:
         title: "Brukernavn"
-        instructions: "Unikt, kort og uten mellomrom."
-        short_instructions: "Folk kan nevne deg som @{{username}}."
-        available: "Ditt brukernavn er tilgjengelig."
-        global_match: "E-post stemmer med det registrerte brukernavnet."
         global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
-        too_short: "Ditt brukernavn er for kort."
-        too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet..."
-        enter_email: 'Brukernavn funnet. Skriv inn tilhørende e-postadresse.'
-        prefilled: "E-postadresse passer med dette registrerte brukernavnet."
       locale:
         title: "Språk for grensesnitt"
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
@@ -587,6 +572,8 @@ nb_NO:
       reply_here: "Svar her"
       reply: "Svar"
       cancel: "Avbryt"
+      create_topic: "Nytt Emne"
+      create_pm: "Privat Melding"
       title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
@@ -596,6 +583,7 @@ nb_NO:
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
+      saved_draft: "Innleggsutkast. Velg for å fortsette."
       uploading: "Laster opp..."
       show_preview: 'se forhånsvisning &raquo;'
       hide_preview: '&laquo; skjul forhåndsvisning'
@@ -656,6 +644,8 @@ nb_NO:
       title_with_attachments: "Legg til et bilde eller en fil"
       from_my_computer: "Fra Min Enhet"
       from_the_web: "Fra nettet"
+      remote_tip: "link til bilde"
+      remote_tip_with_attachments: "link til bilde eller fil ({{authorized_extensions}})"
       local_tip: "klikk for å velge et bilde fra din enhet."
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
       hint_for_supported_browsers: "(du kan også drag og drop eller lime inn bilder inn i editoren for å laste dem opp)"
@@ -723,6 +713,7 @@ nb_NO:
         top: "Det er ingen flere populære emner."
     topic:
       filter_to: "{{post_count}} innlegg i dette emnet."
+      create: 'Nytt Emne'
       create_long: 'Opprett et nytt emne'
       private_message: 'Start en privat melding'
       list: 'Emner'
@@ -1117,6 +1108,7 @@ nb_NO:
       general: 'Generellt'
       settings: 'Innstillinger'
       delete: 'Slett kategori'
+      create: 'Ny Kategori'
       save: 'Lagre Kategori'
       creation_error: Det oppstod en feil ved å lage denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
@@ -1182,6 +1174,7 @@ nb_NO:
         off_topic: "Det er off-topic "
         inappropriate: "Det er upassende"
         spam: "Det er reklame"
+      custom_placeholder_notify_user: "Vær spesifikk, konstruktiv og snill."
       custom_message:
         at_least: "skriv minst {{n}} bokstaver"
         more: "{{n}} igjen..."
@@ -1344,6 +1337,8 @@ nb_NO:
           7_days_ago: "7 Dager Siden"
           30_days_ago: "30 Dager Siden"
           all: "Alle"
+          start_date: "Startdato"
+          end_date: "Sluttdato"
       commits:
         latest_changes: "Siste endringer: Vennligst oppgrader ofte!"
         by: "av"
@@ -1987,6 +1982,7 @@ nb_NO:
       actions:
         title: 'Handlinger'
         star: '<b>f</b> Legg emne i favoritter'
+        pin_unpin_topic: '<b>shift p</b> Fastsett/Løsgjør emne'
         share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del innlegg'
         reply_as_new_topic: '<b>t</b> Svar med lenket emne'
