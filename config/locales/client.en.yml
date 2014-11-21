@@ -387,30 +387,30 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public."
-        ok: "We will email you to confirm."
-        invalid: "Please enter a valid email address."
-        authenticated: "Your email has been authenticated by {{provider}}."
+        instructions: "Never shown to the public"
+        ok: "We will email you to confirm"
+        invalid: "Please enter a valid email address"
+        authenticated: "Your email has been authenticated by {{provider}}"
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        instructions: "Your full name (optional)"
+        too_short: "Your name is too short"
+        ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short."
-        short_instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
+        instructions: "Unique, no spaces, short"
+        short_instructions: "People can mention you as @{{username}}"
+        available: "Your username is available"
+        global_match: "Email matches the registered username"
         global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
+        too_short: "Your username is too short"
+        too_long: "Your username is too long"
         checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
-        prefilled: "Email matches this registered username."
+        enter_email: 'Username found; enter matching email'
+        prefilled: "Email matches this registered username"
 
       locale:
         title: "Interface language"
