@@ -223,7 +223,7 @@ ko:
       location_not_found: (알수없음)
       organisation: 소속
       phone: 전화
-      no_other_accounts: (없음)
+      other_accounts: "현재 IP주소의 다른 계정들:"
     user:
       said: "{{username}}:"
       profile: "프로필"
@@ -266,6 +266,7 @@ ko:
       deleted_yourself: "성공적으로 당신의 계정이 삭제 되었습니다."
       delete_yourself_not_allowed: "지금은 당신의 계정을 삭제할 수 없습니다. 관리자에게 당신의 계정을 삭제해달라고 연락해보세요."
       unread_message_count: "메시지"
+      admin_delete: "삭제"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 게시글"
@@ -313,29 +314,14 @@ ko:
         instructions: "배경 이미지는 가운데를 기준으로 표시되며 590px이 기본 가로 사이즈 입니다."
       email:
         title: "이메일"
-        instructions: "절대로 공개되지 않습니다."
-        ok: "당신에게 확인 메일을 보내겠습니다."
-        invalid: "유효한 이메일 주소를 입력해주세요."
-        authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
         frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
       name:
         title: "이름"
-        instructions: "이름을 적어주세요. (선택사항)"
-        too_short: "이름이 너무 짧습니다."
-        ok: "사용 가능한 이름입니다."
       username:
         title: "아이디"
-        instructions: "중복될 수 없으며 띄어쓰기 사용이 불가합니다. 짧을 수록 좋아요."
-        short_instructions: "@{{username}}으로 언급이 가능합니다."
-        available: "아이디\x1D로 사용가능합니다."
-        global_match: "이메일이 등록된 아이디와 일치합니다."
         global_mismatch: "이미 등록된 아이디입니다. 다시 시도해보세요. {{suggestion}}"
         not_available: "사용할 수 없는 아이디입니다. 다시 시도해보세요. {{suggestion}}"
-        too_short: "아이디가 너무 짧습니다."
-        too_long: "아이디가 너무 깁니다."
         checking: "사용가능한지 확인 중..."
-        enter_email: '아이디를 찾았습니다. 일치하는 이메일을 입력해주세요.'
-        prefilled: "이메일이 등록된 아이디와 연결되어 있습니다."
       locale:
         title: "인터페이스 언어"
         instructions: "UI 언어. 변경 후 새로 고침하면 반영됩니다."
@@ -559,6 +545,8 @@ ko:
       reply_here: "여기에 답글을 작성하세요."
       reply: "답글 전송"
       cancel: "취소"
+      create_topic: "토픽 게시"
+      create_pm: "비공개 메세지"
       title: "혹은 Ctrl + Enter 누름"
       users_placeholder: "사용자 추가"
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
@@ -601,6 +589,7 @@ ko:
       auto_close:
         label: "자동-닫기 토픽 시간:"
         error: "유효한 값은 눌러주세요."
+        based_on_last_post: "적어도 토픽의 마지막 글이 이만큼 오래되지 않았으면 닫지 마세요."
         all:
           examples: '시간을 숫자(24이하)로 입력하거나 분을 포함한 시간(17:30) 혹은 타임스탬프(2013-11-22 14:00) 형식으로 입력하세요.'
         limited:
@@ -628,7 +617,10 @@ ko:
       title_with_attachments: "이미지 또는 파일 추가하기"
       from_my_computer: "컴퓨터에서 가져오기"
       from_the_web: "인터넷에서 가져오기"
+      remote_tip: "이미지 링크"
+      remote_tip_with_attachments: "이미지 또는 파일 링크 ({{authorized_extensions}})"
       local_tip: "내 컴퓨터에서 이미지를 가져오기"
+      local_tip_with_attachments: "기기에서 이미지나 파일 선택을 위해 클릭 ({{authorized_extensions}})"
       hint: "(드래그&드랍으로 업로드 가능)"
       hint_for_supported_browsers: "(이미지 파일을 드래그&드랍하거나 붙여넣기하여 업로드 할 수 있습니다.)"
       uploading: "업로드 중입니다..."
@@ -694,6 +686,7 @@ ko:
         top: "더 이상 인기 토픽이 없습니다."
     topic:
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
+      create: '새 토픽 만들기'
       create_long: '새로운 토픽을 개설'
       private_message: '개인 메시지를 작성'
       list: '토픽 목록'
@@ -774,12 +767,16 @@ ko:
           description: "이 토픽의 새로운 게시글은 항상 알림이 동작합니다. 읽지 않은 글의 수는 토픽 옆에 표시됩니다."
         tracking_pm:
           title: "알림 : 새 글 표시 중"
+          description: "읽지 않은 글과 새로운 게시물 수를 볼 수 있습니다. 누군가 당신의 @이름 을 언급했거나 당신의 글에 답글을 작성하면 알림을 받습니다."
         tracking:
           title: "새 글 표시 중"
+          description: "읽지 않은 게시글의 수는 토픽 옆에 표시됩니다. 당신의 @이름 을 언급하거나 당신의 게시글에 답글을 작성한 경우에 알림이 작동합니다."
         regular:
           title: "알림: 일반"
+          description: "누군가 당신의 @이름 을 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
         regular_pm:
           title: "알림: 일반"
+          description: "누군가 당신의 @이름을 언급했거나 당신의 글에 답글이 달릴 때만 알림을 받게 됩니다."
         muted_pm:
           title: "알림 : 끔"
           description: "이 개인 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
@@ -1051,6 +1048,7 @@ ko:
       general: '일반'
       settings: '설정'
       delete: '카테고리 삭제'
+      create: '새 카테고리'
       save: '카테고리 저장'
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
@@ -1101,6 +1099,8 @@ ko:
           title: "알림 꺼짐"
           description: "이 카테고리의 새로운 토픽에 대한 알림을 받지 않고 읽지 않\x1C은 탭에도 표시하지 않습니다."
     flagging:
+      title: '우리 커뮤니티에 기여해 주셔서 감사합니다.'
+      private_reminder: '신고는 <b>오직</b> 관리자만 볼 수 있습니다.'
       action: '게시물 신고하기'
       take_action: "조치를 취하기"
       notify_action: '알림'
@@ -1116,11 +1116,14 @@ ko:
         off_topic: "오프 토픽입니다."
         inappropriate: "부적절함"
         spam: "스팸입니다"
+      custom_placeholder_notify_user: "구체적이고, 건설적이며, 항상 친절하세요."
+      custom_placeholder_notify_moderators: "구체적으로 사용자님께서 걱정하는 것과 가능한 모든 관련된 링크를 제공해주세요."
       custom_message:
         at_least: "최소한 {{n}}자를 입력하세요"
         more: "{{n}} 이동합니다"
         left: "{{n}} 나머지"
     flagging_topic:
+      title: "우리 커뮤니티에 기여해 주셔서 감사합니다."
       action: "신고된 토픽"
       notify_action: "비공개 메시지"
     topic_map:
@@ -1432,7 +1435,9 @@ ko:
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
+        css: "CSS"
         header: "헤더"
+        footer: "푸터(하단영역)"
         override_default: "표준 스타일 시트를 포함하지 마십시오"
         enabled: "사용가능?"
         preview: "미리 보기"
@@ -1515,6 +1520,7 @@ ko:
         sent_test: "전송됨!"
         delivery_method: "전달 방법"
         preview_digest: "요약 미리보기"
+        preview_digest_desc: "비활성화중인 사용자에게 보내는 매주 요약된 이메일링의 컨텐츠 미리보기"
         refresh: "새로고침"
         format: "형식"
         html: "html"
@@ -1576,6 +1582,7 @@ ko:
             check_email: "이메일 확인"
             delete_topic: "토픽 삭제"
             delete_post: "게시글 삭제"
+            impersonate: "대역"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."
@@ -1913,6 +1920,7 @@ ko:
       actions:
         title: 'Actions'
         star: '<b>f</b> 별표시 토픽'
+        pin_unpin_topic: '<b>Shift + p</b> 핀고정/핀해제'
         share_topic: '<b>shift s</b> 토픽 공유'
         share_post: '<b>s</b> 게시글 공유'
         reply_as_new_topic: '<b>t</b> 링크된 토픽으로 답글 작성하기'

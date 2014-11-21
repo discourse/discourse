@@ -42,8 +42,8 @@ class AdminUserIndexQuery
 
   def filter_by_search
     if params[:filter].present?
-      if params[:filter] =~ Resolv::IPv4::Regex || params[:filter] =~ Resolv::IPv6::Regex
-        @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:filter])
+      if ip = IPAddr.new(params[:filter]) rescue nil
+        @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
         @query.where('username_lower ILIKE :filter OR email ILIKE :filter', filter: "%#{params[:filter]}%")
       end

@@ -246,7 +246,7 @@ fr:
       location_not_found: (inconnu)
       organisation: Société
       phone: Téléphone
-      no_other_accounts: (aucun)
+      other_accounts: "Autres comptes avec cette adresse IP :"
     user:
       said: "{{username}} :"
       profile: "Profil"
@@ -289,6 +289,7 @@ fr:
       deleted_yourself: "Votre compte a été supprimé avec succès."
       delete_yourself_not_allowed: "Vous ne pouvez pas supprimer votre compte maintenant. Contactez un administrateur pour faire supprimer votre compte pour vous."
       unread_message_count: "Messages"
+      admin_delete: "Supprimer"
       staff_counters:
         flags_given: "signalements obligeants"
         flagged_posts: "messages signalés"
@@ -336,29 +337,14 @@ fr:
         instructions: "Les images d'arrière plan seront centrées avec une taille par défaut de 590 pixels."
       email:
         title: "Courriel"
-        instructions: "Ne sera jamais visible publiquement."
-        ok: "On vous envoie un mail pour confirmer."
-        invalid: "Merci de saisir une adresse de courriel valide."
-        authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}."
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
-        instructions: "Votre nom complet (facultatif)."
-        too_short: "Votre nom est trop court."
-        ok: "Votre nom semble correct."
       username:
         title: "Pseudo"
-        instructions: "Unique, sans espace, court."
-        short_instructions: "Les utilisateurs peuvent vous mentionner avec @{{username}}."
-        available: "Votre pseudo est disponible."
-        global_match: "L'adresse de courriel correspond au pseudo enregistré."
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
         not_available: "Non disponible. Essayez {{suggestion}} ?"
-        too_short: "Votre pseudo est trop court."
-        too_long: "Votre pseudo est trop long."
         checking: "Vérification de la disponibilité de votre pseudo..."
-        enter_email: 'Pseudo trouvé. Entrez l''adresse de courriel correspondante.'
-        prefilled: "L'adresse de courriel correspond à ce pseudo enregistré."
       locale:
         title: "Langue de l'interface"
         instructions: "Langage de votre interface.  Cette dernière changera lorsque vous actualiserez la page."
@@ -586,6 +572,7 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
+      create_pm: "Message privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est votre sujet en une phrase descriptive ?"

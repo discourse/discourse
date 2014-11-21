@@ -79,6 +79,27 @@ describe TopicLinkClick do
         end
       end
 
+      context "relative urls" do
+        let(:host) { URI.parse(Discourse.base_url).host }
+
+        it 'returns the url' do
+          url = TopicLinkClick.create_from(url: '/relative-url', post_id: @post.id, ip: '127.0.0.1')
+          url.should == "/relative-url"
+        end
+
+        it 'finds a protocol relative urls with a host' do
+          url = "//#{host}/relative-url"
+          redirect = TopicLinkClick.create_from(url: url)
+          redirect.should == url
+        end
+
+        it "returns the url if it's on our host" do
+          url = "http://#{host}/relative-url"
+          redirect = TopicLinkClick.create_from(url: url)
+          redirect.should == url
+        end
+      end
+
       context 'with a HTTPS version of the same URL' do
         before do
           @url = TopicLinkClick.create_from(url: 'https://twitter.com', topic_id: @topic.id, ip: '127.0.0.3')

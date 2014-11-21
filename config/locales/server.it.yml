@@ -798,9 +798,6 @@ it:
     autoclosed_enabled_lastpost_days:
       one: "Questo argomento è stato automaticamente chiuso un giorno dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} giorni dopo l'ultima risposta. Non sono permesse altre risposte."
-    autoclosed_enabled_lastpost_hours:
-      one: "Questo argomento è stato automaticamente chiuso un'ora dopo l'ultima risposta. Non sono permesse altre risposte."
-      other: "Questo argomento è stato automaticamente chiuso %{count} ore dopo l'ultima risposta. Non sono permesse altre risposte."
     autoclosed_enabled_lastpost_minutes:
       one: "Questo argomento è stato automaticamente chiuso un minuto dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} minuti dopo l'ultima risposta. Non sono permesse altre risposte."

@@ -97,6 +97,10 @@ export default Discourse.View.extend({
       }
     }
 
+    if(post.get("bookmarked")){
+      hiddenButtons.removeObject("bookmark");
+    }
+
     var yours = post.get('yours');
     Discourse.SiteSettings.post_menu.split("|").forEach(function(i) {
       var creator = self["buttonFor" + i.replace(/\+/, '').capitalize()];

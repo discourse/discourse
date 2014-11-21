@@ -246,7 +246,7 @@ es:
       location_not_found: (desconocido)
       organisation: Organización
       phone: Teléfono
-      no_other_accounts: (ninguna)
+      other_accounts: "Otras cuentas con esta dirección IP:"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -337,29 +337,14 @@ es:
         instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
-        instructions: "Nunca se mostrará públicamente."
-        ok: "Te enviaremos un email para confirmar."
-        invalid: "Por favor ingresa una dirección de e-mail válida."
-        authenticated: "Tu e-mail ha sido autenticado por {{provider}}."
         frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
-        instructions: "Tu nombre completo (opcional)"
-        too_short: "Tu nombre es demasiado corto."
-        ok: "Tu nombre es válido."
       username:
         title: "Nombre de usuario"
-        instructions: "Debe ser único, sin espacios y conciso."
-        short_instructions: "La gente puede mencionarte como @{{username}}."
-        available: "Tu nombre de usuario está disponible."
-        global_match: "El e-mail coincide con el nombre de usuario registrado."
         global_mismatch: "Ya está registrado. ¿Prueba {{suggestion}}?"
         not_available: "No disponible. ¿Prueba {{suggestion}}?"
-        too_short: "Tu nombre de usuario es demasiado corto."
-        too_long: "Tu nombre de usuario es demasiado largo."
         checking: "Comprobando la disponibilidad del nombre de usuario..."
-        enter_email: 'Nombre de usuario encontrado. Por favor, Introduce el e-mail correspondiente.'
-        prefilled: "El e-mail coincide con el nombre de usuario registrado."
       locale:
         title: "Idioma de la interfaz"
         instructions: "El idioma de la interfaz. Cambiará cuando recargues la página."
@@ -588,6 +573,7 @@ es:
       reply: "Responder"
       cancel: "Cancelar"
       create_topic: "Crear tema"
+      create_pm: "Mensaje Privado"
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"

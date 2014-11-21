@@ -52,6 +52,7 @@ Discourse::Application.routes.draw do
       collection do
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
+        delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
