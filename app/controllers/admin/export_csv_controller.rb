@@ -8,6 +8,12 @@ class Admin::ExportCsvController < Admin::AdminController
     render json: success_json
   end
 
+  def export_screened_ips_list
+    # export csv file in a background thread
+    Jobs.enqueue(:export_csv_file, entity: 'screened_ips', user_id: current_user.id)
+    render json: success_json
+  end
+
   # download
   def show
     filename = params.fetch(:id)
