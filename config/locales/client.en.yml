@@ -539,6 +539,8 @@ en:
         fixed: "Load Page"
     close: "Close"
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
+    logout: "You were logged out."
+    refresh: "Refresh"
     read_only_mode:
       enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
