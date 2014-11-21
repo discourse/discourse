@@ -163,7 +163,7 @@ sq:
     cancel: "anulo"
     save: "Ruaj Ndryshimet"
     saving: "Duke e ruajtur..."
-    saved: "Ruajtur!"
+    saved: "U ruajt!"
     upload: "Ngarko"
     uploading: "Duke nga ngarkuar..."
     uploaded: "U ngarkua!"
@@ -221,7 +221,7 @@ sq:
       '12': "Sent Items"
       '13': "Inbox"
     categories:
-      all: "të gjitha kategoritë"
+      all: "shfaq kategoritë"
       all_subcategories: "të gjitha"
       no_subcategory: "asnjë"
       category: "Kategori"
@@ -246,7 +246,6 @@ sq:
       location_not_found: (i panjohur)
       organisation: Organizata
       phone: Telefoni
-      no_other_accounts: (asnjë)
     user:
       said: "{{username}}:"
       profile: "Profili"
@@ -337,29 +336,14 @@ sq:
         instructions: "Sfondi profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
       email:
         title: "Email"
-        instructions: "Mos e shfaq në publik."
-        ok: "Do ju nisim emailin e konfirmimit."
-        invalid: "Ju lutemi të vendosni një adresë emaili të vlefshme."
-        authenticated: "Emaili juaj duhet të aprovohet nga {{provider}}."
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
       name:
         title: "Emri"
-        instructions: "Emër Mbiemër (fakultativ)."
-        too_short: "Emri juaj është shumë i shkurtër."
-        ok: "Emri juaj është i pranueshëm."
       username:
         title: "Pseudonimi"
-        instructions: "Unik, pa hapësira, i shkurtër."
-        short_instructions: "Personat mund tu citojnë si @{{username}}."
-        available: "Pseudonimi është i disponueshëm."
-        global_match: "Email matches the registered username."
         global_mismatch: "Jeni vallë regjistruar më parë. Provo {{suggestion}}?"
         not_available: "Nuk është i disponueshëm. Provo {{suggestion}}?"
-        too_short: "Pseudonimi është shumë i shkurtër."
-        too_long: "Pseudonimi është shumë i gjatë."
         checking: "Duke kontrolluar disponibilitetin e pseudonimit...."
-        enter_email: 'Pseudonimi u gjet. Shkruaj emailin relativ.'
-        prefilled: "Email matches this registered username."
       locale:
         title: "Gjuha e faqes"
         instructions: "User interface language. It will change when you refresh the page."
@@ -594,7 +578,7 @@ sq:
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
-      view_new_post: "View your new post."
+      view_new_post: "Shikoni postimin tuaj te ri."
       saving: "Duke ruajtur..."
       saved: "U Ruajt!"
       saved_draft: "Post draft in progress. Select to resume."
@@ -881,7 +865,7 @@ sq:
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
         error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
-      login_reply: 'Log In to Reply'
+      login_reply: 'Përgjigju tek Diskutimi'
       filters:
         n_posts:
           one: "1 postim"
@@ -1259,7 +1243,7 @@ sq:
         title: "Të Fundit"
         help: "temat me postime të fundit"
       hot:
-        title: "Popullore"
+        title: "Kryesoret"
         help: "a selection of the hottest topics"
       starred:
         title: "Preferuar"
@@ -1286,9 +1270,9 @@ sq:
           other: "{{count}} të ri"
         lower_title: "i ri"
         title:
-          zero: "I Ri"
-          one: "I Ri (1)"
-          other: "New ({{count}})"
+          zero: "Tema të Reja"
+          one: "Tema të Reja (1)"
+          other: "Tema të Reja ({{count}})"
         help: "topics created in the last few days"
       posted:
         title: "Postimet e Mia"
@@ -1300,7 +1284,7 @@ sq:
           other: "{{categoryName}} ({{count}})"
         help: "latest topics in the {{categoryName}} category"
       top:
-        title: "Top"
+        title: "Kryesoret"
         help: "the most active topics in the last year, month, week or day"
         yearly:
           title: "Top Vjetore"
@@ -1996,7 +1980,7 @@ sq:
         next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
       application:
         title: 'Aplikacion'
-        create: '<b>c</b> Create a new topic'
+        create: '<b>c</b> Filloni një diskutim të ri'
         notifications: '<b>n</b> Open notifications'
         site_map_menu: '<b>=</b> Open site menu'
         user_profile_menu: '<b>p</b> Open user menu'
