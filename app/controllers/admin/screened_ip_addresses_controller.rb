@@ -3,7 +3,7 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
   before_filter :fetch_screened_ip_address, only: [:update, :destroy]
 
   def index
-    screened_ip_addresses = ScreenedIpAddress.limit(200).order('id desc').to_a
+    screened_ip_addresses = ScreenedIpAddress.limit(200).order('match_count desc').to_a
     render_serialized(screened_ip_addresses, ScreenedIpAddressSerializer)
   end
 
