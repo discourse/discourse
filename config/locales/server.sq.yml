@@ -68,32 +68,32 @@ sq:
       other: "%{count} përgjigje"
   too_many_mentions:
     zero: "Na vjen keq, por s'mund të citosh anëtarë të tjerë."
-    one: "Sorry, you can only mention one other user in a post."
-    other: "Sorry, you can only mention %{count} users in a post."
+    one: "Na vjen keq, you can only mention one other user in a post."
+    other: "Na vjen keq, you can only mention %{count} users in a post."
   too_many_mentions_newuser:
     zero: "Sorry, new users can't mention other users."
-    one: "Sorry, new users can only mention one other user in a post."
-    other: "Sorry, new users can only mention %{count} users in a post."
+    one: "Na vjen keq, new users can only mention one other user in a post."
+    other: "Na vjen keq, new users can only mention %{count} users in a post."
   too_many_images:
-    zero: "Sorry, new users can't put images in posts."
-    one: "Sorry, new users can only put one image in a post."
-    other: "Sorry, new users can only put %{count} images in a post."
+    zero: "Na vjen keq, new users can't put images in posts."
+    one: "Na vjen keq, new users can only put one image in a post."
+    other: "Na vjen keq, new users can only put %{count} images in a post."
   too_many_attachments:
-    zero: "Sorry, new users can't put attachments in posts."
-    one: "Sorry, new users can only put one attachment in a post."
-    other: "Sorry, new users can only put %{count} attachments in a post."
+    zero: "Na vjen keq, new users can't put attachments in posts."
+    one: "Na vjen keq, new users can only put one attachment in a post."
+    other: "Na vjen keq, new users can only put %{count} attachments in a post."
   too_many_links:
-    zero: "Sorry, new users can't put links in posts."
-    one: "Sorry, new users can only put one link in a post."
-    other: "Sorry, new users can only put %{count} links in a post."
-  spamming_host: "Sorry you cannot post a link to that host."
+    zero: "Na vjen keq, new users can't put links in posts."
+    one: "Na vjen keq, new users can only put one link in a post."
+    other: "Na vjen keq, new users can only put %{count} links in a post."
+  spamming_host: "Na vjen keq, you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "është përdorur më parë"
   invalid_characters: "përmban karaktere  jo të vlefshëm"
   is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "faqja tjetër →"
-  prev_page: "← previous page"
+  prev_page: "← faqe mëparshme"
   page_num: "Faqe %{num}"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
@@ -105,7 +105,7 @@ sq:
   private_message_abbrev: "PM"
   rss_description:
     latest: "Temat e fundit"
-    hot: "Tema të nxehta"
+    hot: "Temat Kryesore"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
   groups:
     errors:
@@ -311,11 +311,11 @@ sq:
         one: "1y"
         other: "%{count}y"
       over_x_years:
-        one: "> 1y"
-        other: "> %{count}y"
+        one: "> 1v"
+        other: "> %{count}v"
       almost_x_years:
-        one: "1y"
-        other: "%{count}y"
+        one: "1v"
+        other: "%{count}v"
     distance_in_words_verbose:
       half_a_minute: "tani"
       less_than_x_seconds:
@@ -951,9 +951,6 @@ sq:
     autoclosed_enabled_lastpost_days:
       one: "This topic was automatically closed 1 day after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} days after the last reply. New replies are no longer allowed."
-    autoclosed_enabled_lastpost_hours:
-      one: "This topic was automatically closed 1 hour after the last reply. New replies are no longer allowed."
-      other: "This topic was automatically closed count} hours after the last reply. New replies are no longer allowed."
     autoclosed_enabled_lastpost_minutes:
       one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."

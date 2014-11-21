@@ -223,7 +223,6 @@ zh_TW:
       location_not_found: (unknown)
       organisation: 組織
       phone: 電話
-      no_other_accounts: (none)
     user:
       said: "{{username}}："
       profile: "基本資料"
@@ -313,28 +312,14 @@ zh_TW:
         instructions: "背景會被置中，且默認寬度為850px。"
       email:
         title: "電子郵件"
-        instructions: "我們不會公開您的電子郵件信箱。"
-        invalid: "請輸入有效的電子郵件地址。"
-        authenticated: "你的電子郵件地址已得到 {{provider}} 的認証。"
         frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
-        instructions: "您的全名（選填）。"
-        too_short: "你的名稱太短。"
-        ok: "你的名稱符合要求。"
       username:
         title: "用戶名稱"
-        instructions: "獨一無二，沒有空白，夠短。"
-        short_instructions: "其他人可以輸入 @{{username}} 提到你。"
-        available: "你的用戶名稱可以使用。"
-        global_match: "電子郵件地址與註冊的用戶名稱相符。"
         global_mismatch: "已經註冊過了，請試試看 {{suggestion}}？"
         not_available: "無法使用，請試試看 {{suggestion}}？"
-        too_short: "你的用戶名稱太短。"
-        too_long: "你的用戶名稱太長。"
         checking: "正在檢查用戶名稱是否已經有人使用..."
-        enter_email: '找到用戶名稱，請輸入相符的電子郵件地址。'
-        prefilled: "電子郵件地址與此註冊的用戶名稱相符。"
       locale:
         title: "界面語言"
         instructions: "使用者介面的語言，當頁面重新整理的時候會更換成你的設定。"

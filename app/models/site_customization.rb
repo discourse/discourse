@@ -1,4 +1,5 @@
 require_dependency 'sass/discourse_sass_compiler'
+require_dependency 'sass/discourse_stylesheets'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
@@ -43,6 +44,7 @@ class SiteCustomization < ActiveRecord::Base
     end
     MessageBus.publish "/header-change/#{key}", header if header_changed?
     MessageBus.publish "/footer-change/#{key}", footer if footer_changed?
+    DiscourseStylesheets.cache.clear
   end
 
   after_destroy do

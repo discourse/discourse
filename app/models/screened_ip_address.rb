@@ -1,4 +1,5 @@
 require_dependency 'screening_model'
+require_dependency 'ip_addr'
 
 # A ScreenedIpAddress record represents an IP address or subnet that is being watched,
 # and possibly blocked from creating accounts.
@@ -47,18 +48,8 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   # Return a string with the ip address and mask in standard format. e.g., "127.0.0.0/8".
-  # Ruby's IPAddr class has no method for getting this.
   def ip_address_with_mask
-    if ip_address
-      mask = ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')
-      if mask == 32
-        ip_address.to_s
-      else
-        "#{ip_address}/#{ip_address.instance_variable_get(:@mask_addr).to_s(2).count('1')}"
-      end
-    else
-      nil
-    end
+    ip_address.try(:to_cidr_s)
   end
 
   def self.match_for_ip_address(ip_address)

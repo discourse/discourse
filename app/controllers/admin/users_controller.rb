@@ -68,6 +68,7 @@ class Admin::UsersController < Admin::AdminController
   def log_out
     @user.auth_token = nil
     @user.save!
+    MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
     render nothing: true
   end
 
@@ -264,15 +265,27 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def sync_sso
-    unless SiteSetting.enable_sso
-      render nothing: true, status: 404
-      return
-    end
+    return render nothing: true, status: 404 unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
     user = sso.lookup_or_create_user
 
     render_serialized(user, AdminDetailedUserSerializer, root: false)
+  end
+
+  def delete_other_accounts_with_same_ip
+    params.require(:ip)
+    params.require(:exclude)
+    params.require(:order)
+
+    user_destroyer = UserDestroyer.new(current_user)
+    options = { delete_posts: true, block_email: true, block_urls: true, block_ip: true, delete_as_spammer: true }
+
+    AdminUserIndexQuery.new(params).find_users.each do |user|
+      user_destroyer.destroy(user, options) rescue nil
+    end
+
+    render json: success_json
   end
 
   private

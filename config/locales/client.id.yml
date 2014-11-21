@@ -193,15 +193,8 @@ id:
       private_messages: "Messages"
       activity_stream: "Activity"
       bio: "About me"
-      email:
-        invalid: "Masukkan email yang valid."
       name:
         title: "Name"
-        too_short: "Nama kamu terlalu pendek."
-      username:
-        available: "Username tersedia."
-        too_short: "Username kamu terlalu pendek."
-        too_long: "Username kamu terlalu panjang."
       last_seen: "Seen"
       created: "Joined"
       email_settings: "Email"
