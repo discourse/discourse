@@ -43,15 +43,25 @@ class SessionController < ApplicationController
     return_path = sso.return_path
     sso.expire_nonce!
 
-    if user = sso.lookup_or_create_user
-      if SiteSetting.must_approve_users? && !user.approved?
-        # TODO: need an awaiting approval message here
+    begin
+      if user = sso.lookup_or_create_user
+        if SiteSetting.must_approve_users? && !user.approved?
+          # TODO: need an awaiting approval message here
+        else
+          log_on_user user
+        end
+        redirect_to return_path
       else
-        log_on_user user
+        render text: "unable to log on user", status: 500
       end
-      redirect_to return_path
-    else
-      render text: "unable to log on user", status: 500
+    rescue => e
+      details = {}
+      SingleSignOn::ACCESSORS.each do |a|
+        details[a] = sso.send(a)
+      end
+      Discourse.handle_exception(e, details)
+
+      render text: "unable to log on user contact site admin (see /logs for more info)", status: 500
     end
   end
 
