@@ -14,8 +14,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 [![](http://www.discourse.org/faq/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
 [![](http://www.discourse.org/faq/new-relic-categories-small2.png)](http://discuss.newrelic.com)
 [![](http://www.discourse.org/faq/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
-[![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
-[![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
+[![](http://www.discourse.org/faq/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
+[![](http://www.discourse.org/faq/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
 
 
 ## Development
