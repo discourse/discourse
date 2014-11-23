@@ -155,7 +155,7 @@ module Onebox
           to   = /\d+/.match(m[:to])     #get numeric should only match a positive interger
 
           @file = m[:file]
-          @file_type = Onebox::FileTypeFinder.from_file_name(m[:file])
+          @lang = Onebox::FileTypeFinder.from_file_name(m[:file])
           contents = open("https://raw.github.com/#{m[:user]}/#{m[:repo]}/#{m[:sha1]}/#{m[:file]}", read_timeout: timeout).read
 
           contents_lines = contents.lines           #get contents lines
@@ -195,8 +195,11 @@ module Onebox
       def data
         @data ||= {title: link.sub(/^https?\:\/\/github\.com\//, ''),
                    link: link,
-                   lang: @file_type,
+                   # IMPORTANT NOTE: All of the other class variables are populated
+                   #     as *side effects* of the `raw` method! They must all appear
+                   #     AFTER the call to `raw`! Don't get bitten by this like I did!
                    content: raw,
+                   lang: @lang,
                    lines:  @selected_lines_array ,
                    has_lines: !@selected_lines_array.nil?,
                    selected_one_liner: @selected_one_liner,
