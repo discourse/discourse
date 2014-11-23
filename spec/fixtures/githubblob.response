@@ -30,11 +30,7 @@ module Oneboxer
       end
 
       extension = @file.split(".")[-1]
-      @lang = case extension
-                when "rb" then "ruby"
-                when "js" then "javascript"
-                else extension
-             end
+      @lang = extension
 
       truncated = false
       if data.length > SiteSetting.onebox_max_chars
