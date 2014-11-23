@@ -1,14 +1,8 @@
 /**
-  This mixin provides the ability to load more items for a view which is
-  scrolled to the bottom.
-
-  @class Discourse.LoadMore
-  @extends Ember.Mixin
-  @uses Discourse.Scrolling
-  @namespace Discourse
-  @module Discourse
+  Provides the ability to load more items for a view which is scrolled to the bottom.
 **/
-Discourse.LoadMore = Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrolling, {
+
+export default Em.Mixin.create(Ember.ViewTargetActionSupport, Discourse.Scrolling, {
 
   scrolled: function() {
     var eyeline = this.get('eyeline');

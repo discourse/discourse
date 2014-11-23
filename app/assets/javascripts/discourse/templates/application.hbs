@@ -5,6 +5,10 @@
   {{render "user-card"}}
 </div>
 
+{{#if showFooter}}
+  {{custom-html "footer"}}
+{{/if}}
+
 {{render "modal"}}
 {{render "topic-entrance"}}
 {{render "composer"}}

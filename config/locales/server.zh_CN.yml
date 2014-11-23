@@ -915,8 +915,6 @@ zh_CN:
       other: "本主题在创建 %{count} 分钟后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_lastpost_days:
       other: "本主题在最后一个回复创建后 %{count} 天后自动关闭。不再允许添加新回复。"
-    autoclosed_enabled_lastpost_hours:
-      other: "本主题在最后一个回复创建后 %{count} 小时后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_lastpost_minutes:
       other: "本主题在最后一个回复创建后 %{count} 分钟后自动关闭。不再允许添加新回复。"
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
@@ -1443,6 +1441,7 @@ zh_CN:
         ---
         %{respond_instructions}
     digest:
+      why: "在您上一次于 %{last_seen_at} 访问后，在 %{site_link} 上的简洁的摘要。"
       subject_template: "[%{site_name}] %{date} 的摘要"
       new_activity: "在您的主题和帖子里的动态："
       top_topics: "热门帖子"

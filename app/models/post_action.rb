@@ -384,7 +384,7 @@ class PostAction < ActiveRecord::Base
     return if post.hidden
 
     if post_action_type == :spam &&
-       acting_user.trust_level == TrustLevel[3] &&
+       acting_user.has_trust_level?(TrustLevel[3]) &&
        post.user.trust_level == TrustLevel[0]
 
        hide_post!(post, post_action_type, Post.hidden_reasons[:flagged_by_tl3_user])
@@ -464,5 +464,6 @@ end
 # Indexes
 #
 #  idx_unique_actions             (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
+#  idx_unique_flags               (user_id,post_id,targets_topic) UNIQUE
 #  index_post_actions_on_post_id  (post_id)
 #

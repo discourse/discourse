@@ -12,6 +12,7 @@ Discourse.UserPostsStream = Discourse.Model.extend({
   _initialize: function () {
     this.setProperties({
       itemsLoaded: 0,
+      canLoadMore: true,
       content: []
     });
   }.on("init"),
@@ -24,6 +25,7 @@ Discourse.UserPostsStream = Discourse.Model.extend({
     this.setProperties({
       filter: filter,
       itemsLoaded: 0,
+      canLoadMore: true,
       content: []
     });
 
@@ -32,7 +34,7 @@ Discourse.UserPostsStream = Discourse.Model.extend({
 
   findItems: function () {
     var self = this;
-    if (this.get("loading")) { return Ember.RSVP.reject(); }
+    if (this.get("loading") || !this.get("canLoadMore")) { return Ember.RSVP.reject(); }
 
     this.set("loading", true);
 
@@ -42,7 +44,8 @@ Discourse.UserPostsStream = Discourse.Model.extend({
         self.get("content").pushObjects(posts);
         self.setProperties({
           loaded: true,
-          itemsLoaded: self.get("itemsLoaded") + posts.length
+          itemsLoaded: self.get("itemsLoaded") + posts.length,
+          canLoadMore: posts.length === 0 || posts.length < 60
         });
       }
     }).finally(function () {

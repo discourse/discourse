@@ -8,6 +8,9 @@
       <li><a href="/logs" data-auto-route="true">{{i18n admin.logs.logster.title}}</a></li>
     </ul>
   </div>
+  <div class="pull-right">
+    <button {{action "exportScreenedIps"}} class="btn" title="{{i18n admin.export_csv.screened_ips.title}}">{{fa-icon "download"}}{{i18n admin.export_csv.screened_ips.text}}</button>
+  </div>
 </div>
 
 <div class="admin-container">

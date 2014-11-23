@@ -1,14 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
-/**
-  Modal for performing bulk actions on topics
-
-  @class TopicBulkActionsController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
+// Modal for performing bulk actions on topics
 export default Ember.ArrayController.extend(ModalFunctionality, {
   needs: ['discovery/topics'],
 

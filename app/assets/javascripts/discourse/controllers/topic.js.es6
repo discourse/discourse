@@ -3,7 +3,7 @@ import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
 export default ObjectController.extend(Discourse.SelectedPostsCount, {
   multiSelect: false,
-  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress'],
+  needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
   editingTopic: false,
   selectedPosts: null,
@@ -697,6 +697,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     if (lastLoadedPost && lastLoadedPost === post) {
       postStream.appendMore();
     }
-  }
+  },
+
+  _showFooter: function() {
+    this.set("controllers.application.showFooter", this.get("postStream.loadedAllPosts"));
+  }.observes("postStream.loadedAllPosts")
 
 });

@@ -1,12 +1,6 @@
-/**
-  This route is used for retrieving a topic based on params
+// This route is used for retrieving a topic based on params
 
-  @class TopicFromParamsRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.TopicFromParamsRoute = Discourse.Route.extend({
+export default Discourse.Route.extend({
 
   setupController: function(controller, params) {
     params = params || {};
@@ -56,6 +50,3 @@ Discourse.TopicFromParamsRoute = Discourse.Route.extend({
   }
 
 });
-
-Discourse.TopicFromParamsNearRoute = Discourse.TopicFromParamsRoute;
-

@@ -933,9 +933,6 @@ fi:
     autoclosed_enabled_lastpost_days:
       one: "Tämä ketju suljettiin automaattisesti 1 päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Tämä ketju suljettiin automaattisesti %{count} päivän kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
-    autoclosed_enabled_lastpost_hours:
-      one: "Tämä ketju suljettiin automaattisesti 1 tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
-      other: "Tämä ketju suljettiin automaattisesti %{count} tunnin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
     autoclosed_enabled_lastpost_minutes:
       one: "Tämä ketju suljettiin automaattisesti 1 minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."
       other: "Tämä ketju suljettiin automaattisesti %{count} minuutin kuluttua viimeisestä viestistä. Uusia vastauksia ei voi enää kirjoittaa."

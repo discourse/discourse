@@ -39,7 +39,10 @@
 //= require ./discourse/views/pagedown-preview
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/build-topic-route
-//= require ./discourse/routes/discourse_restricted_user_route
+//= require ./discourse/routes/restricted-user
+//= require ./discourse/routes/user-topic-list
+//= require ./discourse/routes/user-activity-stream
+//= require ./discourse/routes/topic-from-params
 //= require ./discourse/components/top-title
 //= require ./discourse/components/text-field
 //= require ./discourse/components/visible

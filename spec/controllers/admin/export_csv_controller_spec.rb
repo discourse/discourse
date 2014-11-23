@@ -19,12 +19,12 @@ describe Admin::ExportCsvController do
         export = ExportCsv.new()
         ExportCsv.expects(:get_download_path).with(export_filename).returns(export)
         subject.expects(:send_file).with(export)
-        get :download, id: export_filename
+        get :show, id: export_filename
       end
 
       it "returns 404 when the export file does not exist" do
         ExportCsv.expects(:get_download_path).returns(nil)
-        get :download, id: export_filename
+        get :show, id: export_filename
         response.should be_not_found
       end
 

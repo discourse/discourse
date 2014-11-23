@@ -1,6 +1,6 @@
 class Admin::ExportCsvController < Admin::AdminController
 
-  skip_before_filter :check_xhr, only: [:download]
+  skip_before_filter :check_xhr, only: [:show]
 
   def export_user_list
     # export csv file in a background thread
@@ -8,7 +8,14 @@ class Admin::ExportCsvController < Admin::AdminController
     render json: success_json
   end
 
-  def download
+  def export_screened_ips_list
+    # export csv file in a background thread
+    Jobs.enqueue(:export_csv_file, entity: 'screened_ips', user_id: current_user.id)
+    render json: success_json
+  end
+
+  # download
+  def show
     filename = params.fetch(:id)
     if export_csv_path = ExportCsv.get_download_path(filename)
       send_file export_csv_path

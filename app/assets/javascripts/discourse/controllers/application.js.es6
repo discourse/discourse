@@ -1,4 +1,5 @@
 export default Ember.Controller.extend({
+  showFooter: false,
   styleCategory: null,
 
   canSignUp: function() {

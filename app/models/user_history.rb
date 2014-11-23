@@ -126,6 +126,7 @@ end
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
+#  post_id        :integer
 #
 # Indexes
 #

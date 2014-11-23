@@ -246,7 +246,6 @@ he:
       location_not_found: (לא ידוע)
       organisation: ארגון
       phone: טלפון
-      no_other_accounts: (ללא)
     user:
       said: "{{username}}:"
       profile: "פרופיל"
@@ -336,28 +335,14 @@ he:
         instructions: "תמונות רקע ימורכזו ויוצגו עם ברירת מחדל של רוחב 590px."
       email:
         title: "דואר אלקטרוני"
-        instructions: "לעולם לא מוצג לציבור."
-        invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
-        authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}."
         frequency: "נשלח לך דואר אלקטרוני רק אם לא ראינו אותך לאחרונה ועדיין לא ראית את מה שאנחנו רוצים לשלוח"
       name:
         title: "שם"
-        instructions: "שמך המלא (רשות)."
-        too_short: "השם שלך קצר מידי."
-        ok: "השם נראה טוב."
       username:
         title: "שם משתמש"
-        instructions: "ייחדוי, ללא רווחים, קצר."
-        short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}."
-        available: "שם המשתמש שלך פנוי."
-        global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
         global_mismatch: "כבר רשום. נסה {{suggestion}}?"
         not_available: "לא זמין. נסה {{suggestion}}?"
-        too_short: "שם המשתמש שלך קצר מידי."
-        too_long: "שם המשתמש שלך ארוך מידי."
         checking: "בודק זמינות שם משתמש..."
-        enter_email: 'נמצא שם משתמש. הכנס דואר אלקטרוני תואם.'
-        prefilled: "הדואר האלקטרוני תואם את שם המשתמש הזה."
       locale:
         title: "שפת ממשק"
         instructions: "שפת ממשק המשתמש. היא תתחלף כשתרעננו את העמוד."

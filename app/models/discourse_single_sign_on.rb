@@ -134,6 +134,10 @@ class DiscourseSingleSignOn < SingleSignOn
         upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), { origin: avatar_url })
         user.uploaded_avatar_id = upload.id
 
+        unless user.user_avatar
+          user.build_user_avatar
+        end
+
         if !user.user_avatar.contains_upload?(upload.id)
           user.user_avatar.custom_upload_id = upload.id
         end

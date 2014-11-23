@@ -239,7 +239,6 @@ pt:
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefóne
-      no_other_accounts: (nenhum)
     user:
       profile: "Perfil"
       mute: "Silenciar"
@@ -321,25 +320,14 @@ pt:
         title: "Fundo de Perfil"
       email:
         title: "Email"
-        invalid: "Por favor coloque um endereço de email válido."
-        authenticated: "O seu email foi autenticado por {{provider}}."
         frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
-        too_short: "O seu nome é muito curto."
-        ok: "O seu nome parece bom."
       username:
         title: "Nome de Utilizador"
-        short_instructions: "As pessoas podem mencioná-lo utilizando @{{username}}."
-        available: "O seu nome de utilizador está disponível."
-        global_match: "O email corresponde ao nome de utilizador registado."
         global_mismatch: "Já está registado. Tente {{suggestion}}?"
         not_available: "Não está disponível. Tente {{suggestion}}?"
-        too_short: "O seu nome de utilizador é muito curto."
-        too_long: "O seu nome de utilizador é muito comprido."
         checking: "A verificar a disponibilidade do nome de utilizador..."
-        enter_email: 'Nome de utilizador encontrado. Coloque o email referente a ele.'
-        prefilled: "O email corresponde ao nome de um utilizador registado."
       locale:
         title: "Idioma de Interface"
         instructions: "Idioma da interface de utilizador. Será alterado quando atualizar a página."

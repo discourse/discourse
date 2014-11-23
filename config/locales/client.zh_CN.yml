@@ -223,7 +223,7 @@ zh_CN:
       location_not_found: (未知)
       organisation: 组织
       phone: 电话
-      no_other_accounts: (无)
+      other_accounts: "其他使用该 IP 地址的账户："
     user:
       said: "{{username}}："
       profile: "个人资料"
@@ -314,29 +314,14 @@ zh_CN:
         instructions: "背景图片将被居中并且默认宽度为 590px。"
       email:
         title: "电子邮箱"
-        instructions: "绝不会被公开显示。"
-        ok: "我们将邮件跟您确认。"
-        invalid: "请填写正确的电子邮箱地址。"
-        authenticated: "您的电子邮箱已经被 {{provider}} 确认有效。"
         frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
       name:
         title: "名字"
-        instructions: "您的全名（可选）。"
-        too_short: "您设置的名字太短了。"
-        ok: "您的名字符合要求。"
       username:
         title: "用户名"
-        instructions: "唯一，没有空格，简短。"
-        short_instructions: "其他人可以用 @{{username}} 来提及您。"
-        available: "您的用户名可用。"
-        global_match: "电子邮箱与注册用户名相匹配。"
         global_mismatch: "已被注册。试试 {{suggestion}} ？"
         not_available: "不可用。试试 {{suggestion}} ？"
-        too_short: "您设置的用户名太短了。"
-        too_long: "您设置的用户名太长了。"
         checking: "查看用户名是否可用..."
-        enter_email: '找到用户名，请输入对应电子邮箱。'
-        prefilled: "电子邮箱与用户名匹配。"
       locale:
         title: "界面语言"
         instructions: "用户界面语言。将在您刷新页面后改变。"
@@ -561,6 +546,7 @@ zh_CN:
       reply: "回复"
       cancel: "取消"
       create_topic: "新主题"
+      create_pm: "私信"
       title: "或者按下 Ctrl + 回车"
       users_placeholder: "添加一个用户"
       title_placeholder: "简述此讨论内容是关于什么？"
@@ -727,7 +713,7 @@ zh_CN:
       unread_posts:
         other: "在这个主题中，您有 {{count}} 条未读的帖子"
       new_posts:
-        other: "从你最近一次阅读此主题后，又有 {{new_posts}} 个新帖子发表"
+        other: "自您上一次阅读此主题后，又有 {{count}} 个新帖子发表"
       likes:
         other: "本主题已有 {{number}} 次赞"
       back_to_list: "返回主题列表"

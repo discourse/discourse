@@ -1,4 +1,6 @@
-Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, {
+import ShowFooter from "discourse/mixins/show-footer";
+
+Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, ShowFooter, {
   renderTemplate: function() {
     this.render('navigation/categories', { outlet: 'navigation-bar' });
     this.render('discovery/categories', { outlet: 'list-container' });
@@ -58,3 +60,5 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenCompos
     }
   }
 });
+
+export default Discourse.DiscoveryCategoriesRoute;

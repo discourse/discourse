@@ -1,4 +1,12 @@
-export default Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
+  actions: {
+    didTransition: function() {
+      return true;
+    }
+  },
+
   model: function() {
     return this.modelFor('group').findPosts();
   },
