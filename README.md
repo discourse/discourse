@@ -10,10 +10,10 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-[![](http://www.discourse.org/faq/boing-boing-latest-large.png)](http://bbs.boingboing.net)
-[![](http://www.discourse.org/faq/how-to-geek-profile-large.png)](http://discuss.howtogeek.com)
-[![](http://www.discourse.org/faq/new-relic-categories-large.png)](http://discuss.newrelic.com)
-[![](http://www.discourse.org/faq/turtle-rock-topic-large.jpg)](https://talk.turtlerockstudios.com/)
+[![](http://www.discourse.org/faq/boing-boing-latest-small.png)](http://bbs.boingboing.net)
+[![](http://www.discourse.org/faq/how-to-geek-profile-small.png)](http://discuss.howtogeek.com)
+[![](http://www.discourse.org/faq/new-relic-categories-small.png)](http://discuss.newrelic.com)
+[![](http://www.discourse.org/faq/turtle-rock-topic-small.jpg)](https://talk.turtlerockstudios.com/)
 [![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
 [![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
 
