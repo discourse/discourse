@@ -84,6 +84,7 @@ Discourse::Application.routes.draw do
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
+    post "users/invite_admin" => "users#invite_admin", constraints: AdminConstraint.new
 
     resources :impersonate, constraints: AdminConstraint.new
 
