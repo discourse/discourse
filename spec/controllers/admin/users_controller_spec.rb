@@ -427,6 +427,18 @@ describe Admin::UsersController do
 
     end
 
+    context ".invite_admin" do
+      it 'should invite admin' do
+        xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
+        response.should be_success
+
+        u = User.find_by(email: 'bill@bill.com')
+        u.name.should == "Bill"
+        u.username.should == "bill22"
+        u.admin.should == true
+      end
+    end
+
   end
 
   it 'can sync up sso' do
