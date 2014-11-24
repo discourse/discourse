@@ -1862,6 +1862,7 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          roll_up_confirm: "Are you sure you want to roll up ban entries?"
           actions:
             block: "Block"
             do_nothing: "Allow"
