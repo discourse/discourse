@@ -279,7 +279,7 @@ en:
       organisation: Organization
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
-      delete_other_accounts: "Delete up to 50"
+      delete_other_accounts: "Delete %{count}"
       username: "username"
       trust_level: "TL"
       read_time: "read time"
