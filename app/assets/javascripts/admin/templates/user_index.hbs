@@ -110,7 +110,7 @@
         <button class='btn' {{action "refreshBrowsers" target="content"}}>
           {{i18n admin.user.refresh_browsers}}
         </button>
-        {{ip-lookup ip=ip_address user_id=id}}
+        {{ip-lookup ip=ip_address userId=id}}
       {{/if}}
     </div>
   </div>
@@ -120,7 +120,7 @@
     <div class='value'>{{registration_ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.staff}}
-        {{ip-lookup ip=registration_ip_address user_id=id}}
+        {{ip-lookup ip=registration_ip_address userId=id}}
       {{/if}}
     </div>
   </div>
