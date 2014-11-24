@@ -6,17 +6,7 @@
 
 <article {{bind-attr class=":boxed via_email" id="postElementId" data-post-id="id" data-user-id="user_id"}}>
   <div class='row'>
-    {{#if showUserReplyTab}}
-      <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
-        {{#if loadingReplyHistory}}
-          {{i18n loading}}
-        {{else}}
-          <i class="fa fa-mail-forward"></i>
-          {{avatar reply_to_user imageSize="tiny"}}
-          <span>{{reply_to_user.username}}</span>
-        {{/if}}
-      </a>
-    {{/if}}
+
     <div class='topic-avatar'>
       <div class="contents">
         {{#unless userDeleted}}
@@ -58,6 +48,17 @@
           {{else}}
             <div class="post-info via-email" title="{{i18n post.via_email}}">{{fa-icon "envelope-o"}}</div>
           {{/if}}
+        {{/if}}
+        {{#if showUserReplyTab}}
+        <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
+          {{#if loadingReplyHistory}}
+          {{i18n loading}}
+          {{else}}
+          <i class="fa fa-mail-forward"></i>
+          {{avatar reply_to_user imageSize="tiny"}}
+          <span>{{reply_to_user.username}}</span>
+          {{/if}}
+        </a>
         {{/if}}
         <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}">{{fa-icon "circle"}}</div>
       </div>
