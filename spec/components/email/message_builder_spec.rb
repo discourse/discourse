@@ -58,7 +58,7 @@ describe Email::MessageBuilder do
         end
 
         it "cleans up the site title" do
-          SiteSetting.stubs(:title).returns(">>>Obnoxious Title: Deal With It<<<")
+          SiteSetting.stubs(:title).returns(">>>Obnoxious Title: Deal, With It<<<")
           expect(reply_by_email_builder.header_args['Reply-To']).to eq("Obnoxious Title Deal With It <r+#{reply_key}@reply.myforum.com>")
         end
       end
@@ -253,12 +253,12 @@ describe Email::MessageBuilder do
     end
 
     it "cleans up aliases in the from_alias arg" do
-      builder = Email::MessageBuilder.new(to_address, from_alias: "Finn: the Dog <3", from: finn_email)
+      builder = Email::MessageBuilder.new(to_address, from_alias: "Finn: the Dog, <3", from: finn_email)
       builder.build_args[:from].should == "Finn the Dog 3 <#{finn_email}>"
     end
 
     it "cleans up the email_site_title" do
-      SiteSetting.stubs(:email_site_title).returns("::>>>Best Forum EU: Award Winning<<<")
+      SiteSetting.stubs(:email_site_title).returns("::>>>Best Forum, EU: Award Winning<<<")
       expect(build_args[:from]).to eq("Best Forum EU Award Winning <#{SiteSetting.notification_email}>")
     end
 
