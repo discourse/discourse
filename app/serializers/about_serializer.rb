@@ -6,5 +6,6 @@ class AboutSerializer < ApplicationSerializer
              :description,
              :title,
              :locale,
-             :version
+             :version,
+             :https
 end
