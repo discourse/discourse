@@ -45,11 +45,14 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
       action_type: ScreenedIpAddress.actions[:block],
       min_count: SiteSetting.min_ban_entries_for_roll_up).values.flatten
 
+    # 2 - log the call
+    StaffActionLogger.new(current_user).log_roll_up(subnets) unless subnets.blank?
+
     subnets.each do |subnet|
-      # 2 - create subnet if not already exists
+      # 3 - create subnet if not already exists
       ScreenedIpAddress.new(ip_address: subnet).save unless ScreenedIpAddress.where(ip_address: subnet).first
 
-      # 3 - update stats
+      # 4 - update stats
       sql = <<-SQL
         UPDATE screened_ip_addresses
            SET match_count   = sum_match_count,
@@ -70,7 +73,7 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
 
       ScreenedIpAddress.exec_sql(sql, action_type: ScreenedIpAddress.actions[:block], ip_address: subnet)
 
-      # 4 - remove old matches
+      # 5 - remove old matches
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
                        .where("family(ip_address) = 4")
                        .where("masklen(ip_address) = 32")

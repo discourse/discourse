@@ -21,14 +21,15 @@ describe Admin::ScreenedIpAddressesController do
   describe 'roll_up' do
 
     it "works" do
-      SiteSetting.expects(:min_ban_entries_for_roll_up).returns(3)
-
       Fabricate(:screened_ip_address, ip_address: "1.2.3.4", match_count: 1)
       Fabricate(:screened_ip_address, ip_address: "1.2.3.5", match_count: 1)
       Fabricate(:screened_ip_address, ip_address: "1.2.3.6", match_count: 1)
 
       Fabricate(:screened_ip_address, ip_address: "42.42.42.4", match_count: 1)
       Fabricate(:screened_ip_address, ip_address: "42.42.42.5", match_count: 1)
+
+      StaffActionLogger.any_instance.expects(:log_roll_up)
+      SiteSetting.expects(:min_ban_entries_for_roll_up).returns(3)
 
       xhr :post, :roll_up
       response.should be_success
