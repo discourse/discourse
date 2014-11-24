@@ -13,12 +13,12 @@ module Onebox
     attr_reader :url
     attr_reader :cache
     attr_reader :timeout
-    
+
     DEFUALT = {}
     def options
       @options
     end
-    
+
     def options=(opt)
       return @options if opt.nil? #make sure options provided
       if opt.instance_of? OpenStruct
@@ -28,14 +28,14 @@ module Onebox
       end
       @options
     end
-    
+
 
     def initialize(link, cache = nil, timeout = nil)
-      
+
       @options = DEFUALT
       class_name = self.class.name.split("::").last.to_s
       self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.
-      
+
       @url = link
       @cache = cache || Onebox.options.cache
       @timeout = timeout || Onebox.options.timeout
@@ -140,3 +140,4 @@ require_relative "engine/whitelisted_generic_onebox"
 require_relative "engine/pubmed_onebox"
 require_relative "engine/video_onebox"
 require_relative "engine/audio_onebox"
+require_relative "engine/google_calendar_onebox"
