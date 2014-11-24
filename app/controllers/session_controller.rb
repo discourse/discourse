@@ -36,7 +36,7 @@ class SessionController < ApplicationController
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
-      render text: "Timeout expired, please try logging in again.", status: 500
+      render text: I18n.t("sso.timeout_expired"), status: 500
       return
     end
 
@@ -46,13 +46,13 @@ class SessionController < ApplicationController
     begin
       if user = sso.lookup_or_create_user
         if SiteSetting.must_approve_users? && !user.approved?
-          # TODO: need an awaiting approval message here
+          render text: I18n.t("sso.account_not_approved"), status: 403
         else
           log_on_user user
         end
         redirect_to return_path
       else
-        render text: "unable to log on user", status: 500
+        render text: I18n.t("sso.not_found"), status: 500
       end
     rescue => e
       details = {}
@@ -61,7 +61,7 @@ class SessionController < ApplicationController
       end
       Discourse.handle_exception(e, details)
 
-      render text: "unable to log on user contact site admin (see /logs for more info)", status: 500
+      render text: I18n.t("sso.unknown_error"), status: 500
     end
   end
 
