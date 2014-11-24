@@ -1870,6 +1870,9 @@ en:
             label: "New:"
             ip_address: "IP address"
             add: "Add"
+          roll_up:
+            text: "Roll up"
+            title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "Error Logs"
 
