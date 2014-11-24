@@ -273,6 +273,10 @@ class Group < ActiveRecord::Base
     self.users.push(user)
   end
 
+  def remove(user)
+    self.group_users.where(user: user).each(&:destroy)
+  end
+
   protected
 
     def name_format_validator
