@@ -1060,6 +1060,12 @@ en:
       topic: 'Results'
       user: 'Users'
 
+  sso:
+    not_found: "Unable to lookup or create account, contact site admin"
+    account_not_approved: "Account is pending approval, you will receive an email notification once approved"
+    unknown_error: "Error updating information, contact site admin"
+    timeout_expired: "Account login timed out, please try logging in again"
+
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
