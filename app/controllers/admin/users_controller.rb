@@ -278,6 +278,8 @@ class Admin::UsersController < Admin::AdminController
     params.require(:exclude)
     params.require(:order)
 
+    params[:limit] = 50
+
     user_destroyer = UserDestroyer.new(current_user)
     options = { delete_posts: true, block_email: true, block_urls: true, block_ip: true, delete_as_spammer: true }
 
