@@ -23,24 +23,26 @@ class GroupsController < ApplicationController
     render_serialized(members.to_a, GroupUserSerializer)
   end
 
+  # for PATCH requests
   def update
-    logger.info("HERE WE ARE IN GROUP UPDATE WITH #{params}")
     guardian.ensure_can_edit!(the_group)
-    logger.info("GROUP EDIT IS OK FOR #{the_group.name}")
 
+    added_users = []
     if actions = params[:changes]
-      if actions[:add] && usernames = Array(actions[:add])
-        users = User.where(username: usernames)
-        # the_group.add(users)
-        render_serialized(users, GroupUserSerializer)
-      elsif actions[:delete] && usernames = Array(actions[:delete])
-        users = User.where(username: usernames)
-        # the_group.remove(users)
-        render nothing: true
-      else
-        render nothing: true
+      Array(actions[:add]).each do |username|
+        if user = User.find_by_username(username)
+          the_group.add(user)
+          added_users << user
+        end
+      end
+      Array(actions[:delete]).each do |username|
+        if user = User.find_by_username(username)
+          the_group.remove(user)
+        end
       end
     end
+
+    render_serialized(added_users, GroupUserSerializer)
   end
 
   private
