@@ -115,13 +115,13 @@
   margin-bottom: 50px;
 
   table.group-members {
-    width: 100%;
-    p {
-      max-width: 600px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    /* width: 100%; */
+    /* p { */
+    /*   max-width: 600px; */
+    /*   white-space: nowrap; */
+    /*   overflow: hidden; */
+    /*   text-overflow: ellipsis; */
+    /* } */
     th.seen {
       text-align: right;
     }
@@ -129,12 +129,22 @@
       width: 60px;
     }
     td {
+      padding-bottom: 10px;
       img {
         margin-right: 10px;
+      }
+      span.fullname {
+        margin-right: 100px;
       }
       span.last-seen-at {
         float: right;
         color: $primary;
+      }
+      span.remove {
+        margin-right: 10px;
+        border: thin solid $primary;
+        padding: 2px 5px;
+        cursor: pointer;
       }
     }
   }

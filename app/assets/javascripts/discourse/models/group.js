@@ -37,13 +37,23 @@ Discourse.Group = Discourse.Model.extend({
              usernames: this.get('usernames') } };
   },
 
-  createWithUsernames: function(usernames){
-    var self = this,
-        json = this.asJSON();
-    json.group.usernames = usernames;
+  addMembers: function(usernames) {
+    var self = this;
+    var payload = {changes: {add: usernames}};
 
-    return Discourse.ajax("/admin/groups", {type: "POST", data: json}).then(function(resp) {
-      self.set('id', resp.basic_group.id);
+    return Discourse.ajax("/groups/" + this.get('name'), {
+      type: "PATCH",
+      data: payload
+    });
+  },
+
+  removeMember: function(username) {
+    var self = this;
+    var payload = {changes: {delete: username}};
+
+    return Discourse.ajax("/groups/" + this.get('name'), {
+      type: "PATCH",
+      data: payload
     });
   },
 

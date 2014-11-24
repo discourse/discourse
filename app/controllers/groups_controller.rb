@@ -27,6 +27,26 @@ class GroupsController < ApplicationController
     render_serialized(paginated_members.to_a, GroupUserSerializer)
   end
 
+  def update
+    logger.info("HERE WE ARE IN GROUP UPDATE WITH #{params}")
+    guardian.ensure_can_edit!(the_group)
+    logger.info("GROUP EDIT IS OK FOR #{the_group.name}")
+
+    if actions = params[:changes]
+      if actions[:add] && usernames = Array(actions[:add])
+        users = User.where(username: usernames)
+        # the_group.add(users)
+        render_serialized(users, GroupUserSerializer)
+      elsif actions[:delete] && usernames = Array(actions[:delete])
+        users = User.where(username: usernames)
+        # the_group.remove(users)
+        render nothing: true
+      else
+        render nothing: true
+      end
+    end
+  end
+
   private
 
   def find_group(param_name)
@@ -36,4 +56,7 @@ class GroupsController < ApplicationController
     group
   end
 
+  def the_group
+    @the_group ||= find_group(:id)
+  end
 end

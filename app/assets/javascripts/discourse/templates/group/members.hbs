@@ -1,22 +1,40 @@
 {{#if model}}
+  <p>
+    SOME INSTRUCTIONS HERE
+  </p>
+  {{#if canManageGroup}}
+  <p>
+    {{user-selector usernames=emailOrUsername placeholderKey="admin.groups.selector_placeholder" tabindex="1" disabled=automatic}}
+    <button {{action "addMember"}} {{bind-attr disabled="disableSave"}} class='btn'>{{i18n admin.groups.selector_placeholder}}</button>
+  </p>
+  {{/if}}
+
   <table class='group-members'>
-    <tr>
-      <th colspan="3" class="seen">{{i18n last_seen}}</th>
-    </tr>
-  {{#each model}}
-  <tr>
-      <td class='avatar'>
-        {{avatar this imageSize="large"}}
-      </td>
-      <td>
-        <h3>{{#link-to 'user' this}}{{username}}{{/link-to}}</h3>
-        <p>{{name}}</p>
-      </td>
-      <td>
-        <span class='last-seen-at'>{{bound-date last_seen_at}}</span>
-      </td>
-    </tr>
-    </div>
-  {{/each}}
-</table>
+    {{! <tr> }}
+    {{!   <th colspan="3" class="seen">{{i18n last_seen}\}</th> }}
+    {{! </tr> }}
+    <tbody>
+      {{#each model itemController="group/member"}}
+      <tr id="member-{{unbound username}}">
+        {{#if canManageGroup}}
+          <td class='action'>
+            <span class='remove' {{action "removeMe"}}><i class='fa fa-times'></i> remove</span>
+          </td>
+        {{/if}}
+        <td class='avatar'>
+          {{#link-to 'user' this class="avatar-link"}}<div class='avatar-wrapper'>{{avatar this imageSize="medium" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
+        </td>
+        <td>
+          <span class='username'>{{#link-to 'user' this}}{{unbound username}}{{/link-to}}</span>
+        </td>
+        <td>
+          <span class='fullname'>{{unbound name}}</span>
+        </td>
+        <td>
+          <span class='last-seen-at'>{{bound-date last_seen_at}}</span>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
 {{/if}}
