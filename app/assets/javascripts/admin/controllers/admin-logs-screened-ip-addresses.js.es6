@@ -18,9 +18,13 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
 
     rollUp: function() {
       var self = this;
-      this.set("loading", true)
-      return Discourse.ScreenedIpAddress.rollUp().then(function() {
-        self.send("show");
+      return bootbox.confirm(I18n.t("admin.logs.screened_ips.roll_up_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
+        if (confirmed) {
+          self.set("loading", true)
+          return Discourse.ScreenedIpAddress.rollUp().then(function() {
+            self.send("show");
+          });
+        }
       });
     }
   }
