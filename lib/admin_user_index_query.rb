@@ -62,6 +62,11 @@ class AdminUserIndexQuery
     end
   end
 
+  def limit
+    limit = params[:limit].to_i
+    @query.limit(limit > 0 ? limit : 100)
+  end
+
   # this might not be needed in rails 4 ?
   def append(active_relation)
     @query = active_relation if active_relation
@@ -73,6 +78,7 @@ class AdminUserIndexQuery
     append filter_by_ip
     append filter_exclude
     append filter_by_search
+    append limit
     @query
   end
 
@@ -85,6 +91,5 @@ class AdminUserIndexQuery
                     .includes(:google_user_info)
                     .includes(:oauth2_user_info)
                     .includes(:user_open_ids)
-                    .take(100)
   end
 end
