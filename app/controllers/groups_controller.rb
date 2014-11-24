@@ -18,9 +18,33 @@ class GroupsController < ApplicationController
 
   def members
     group = find_group(:group_id)
-    members = group.users.order('username_lower asc')
-    members = members.limit(200) if group.automatic
-    render_serialized(members.to_a, GroupUserSerializer)
+
+    limit = (params[:limit] || 200).to_i
+    offset = (params[:offset] || 0).to_i
+
+    paginated_members = group.users.order('username_lower asc').limit(limit).offset(offset)
+
+    render_serialized(paginated_members.to_a, GroupUserSerializer)
+  end
+
+  def update
+    logger.info("HERE WE ARE IN GROUP UPDATE WITH #{params}")
+    guardian.ensure_can_edit!(the_group)
+    logger.info("GROUP EDIT IS OK FOR #{the_group.name}")
+
+    if actions = params[:changes]
+      if actions[:add] && usernames = Array(actions[:add])
+        users = User.where(username: usernames)
+        # the_group.add(users)
+        render_serialized(users, GroupUserSerializer)
+      elsif actions[:delete] && usernames = Array(actions[:delete])
+        users = User.where(username: usernames)
+        # the_group.remove(users)
+        render nothing: true
+      else
+        render nothing: true
+      end
+    end
   end
 
   private
@@ -32,4 +56,7 @@ class GroupsController < ApplicationController
     group
   end
 
+  def the_group
+    @the_group ||= find_group(:id)
+  end
 end
