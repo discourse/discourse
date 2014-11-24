@@ -33,7 +33,8 @@ class UserHistory < ActiveRecord::Base
                           :check_email,
                           :delete_post,
                           :delete_topic,
-                          :impersonate)
+                          :impersonate,
+                          :roll_up)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -50,7 +51,8 @@ class UserHistory < ActiveRecord::Base
                         :check_email,
                         :delete_post,
                         :delete_topic,
-                        :impersonate]
+                        :impersonate,
+                        :roll_up]
   end
 
   def self.staff_action_ids

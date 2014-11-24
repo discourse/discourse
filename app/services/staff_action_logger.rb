@@ -1,5 +1,6 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
+
   def initialize(admin)
     @admin = admin
     raise Discourse::InvalidParameters.new('admin is nil') unless @admin && @admin.is_a?(User)
@@ -164,10 +165,17 @@ class StaffActionLogger
     }))
   end
 
+  def log_roll_up(subnets)
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.action[:roll_up],
+      details: subnets.join(", ")
+    }))
+  end
+
   private
 
-  def params(opts)
-    { acting_user_id: @admin.id, context: opts[:context] }
-  end
+    def params(opts)
+      { acting_user_id: @admin.id, context: opts[:context] }
+    end
 
 end
