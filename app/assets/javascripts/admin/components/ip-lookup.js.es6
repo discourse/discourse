@@ -26,7 +26,7 @@ export default Ember.Component.extend({
         this.set("otherAccountsLoading", true);
         Discourse.AdminUser.findAll("active", {
           "ip": this.get("ip"),
-          "exclude": this.get("user_id"),
+          "exclude": this.get("userId"),
           "order": "trust_level DESC"
         }).then(function (users) {
           self.setProperties({
@@ -41,7 +41,7 @@ export default Ember.Component.extend({
       this.set("show", false);
     },
 
-    deleteAllOtherAccounts: function() {
+    deleteOtherAccounts: function() {
       var self = this;
       bootbox.confirm(I18n.t("ip_lookup.confirm_delete_other_accounts"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
         if (confirmed) {
@@ -50,7 +50,7 @@ export default Ember.Component.extend({
             type: "DELETE",
             data: {
               "ip": self.get("ip"),
-              "exclude": self.get("user_id"),
+              "exclude": self.get("userId"),
               "order": "trust_level DESC"
             }
           }).then(function() {
