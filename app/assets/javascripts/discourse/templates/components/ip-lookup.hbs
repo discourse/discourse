@@ -39,10 +39,10 @@
 
       <dt>
         {{i18n ip_lookup.other_accounts}}
-        <strong>{{other_accounts.length}}</strong>
+        <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
           <button class="btn btn-danger pull-right" {{action "deleteOtherAccounts"}}>
-            {{fa-icon "warning"}}{{i18n ip_lookup.delete_other_accounts}}
+            {{fa-icon "warning"}}{{i18n ip_lookup.delete_other_accounts count=otherAccountsToDelete}}
           </button>
         {{/if}}
       </dt>

@@ -9,6 +9,13 @@ export default Ember.Component.extend({
     ].filter(Boolean).join(", ");
   }.property("location.{city,region,country}"),
 
+  otherAccountsToDelete: function() {
+    // can only delete up to 50 accounts at a time
+    var total = Math.min(50, this.get("totalOthersWithSameIP") || 0);
+    var visible = Math.min(50, this.get("other_accounts.length") || 0);
+    return Math.max(visible, total);
+  }.property("other_accounts", "totalOthersWithSameIP"),
+
   actions: {
     lookup: function () {
       var self = this;
@@ -24,11 +31,18 @@ export default Ember.Component.extend({
 
       if (!this.get("other_accounts")) {
         this.set("otherAccountsLoading", true);
-        Discourse.AdminUser.findAll("active", {
+
+        var data = {
           "ip": this.get("ip"),
           "exclude": this.get("userId"),
           "order": "trust_level DESC"
-        }).then(function (users) {
+        };
+
+        Discourse.ajax("/admin/users/total-others-with-same-ip.json", { data: data }).then(function (result) {
+          self.set("totalOthersWithSameIP", result.total);
+        });
+
+        Discourse.AdminUser.findAll("active", data).then(function (users) {
           self.setProperties({
             other_accounts: users,
             otherAccountsLoading: false,
@@ -45,7 +59,12 @@ export default Ember.Component.extend({
       var self = this;
       bootbox.confirm(I18n.t("ip_lookup.confirm_delete_other_accounts"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
         if (confirmed) {
-          self.setProperties({ other_accounts: null, otherAccountsLoading: true });
+          self.setProperties({
+            other_accounts: null,
+            otherAccountsLoading: true,
+            totalOthersWithSameIP: null
+          });
+
           Discourse.ajax("/admin/users/delete-others-with-same-ip.json", {
             type: "DELETE",
             data: {
