@@ -51,5 +51,9 @@ Discourse.ScreenedIpAddress.reopenClass({
         return Discourse.ScreenedIpAddress.create(b);
       });
     });
+  },
+
+  rollUp: function() {
+    return Discourse.ajax("/admin/logs/screened_ip_addresses/roll_up", { type: "POST" });
   }
 });
