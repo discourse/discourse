@@ -18,6 +18,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :background_url,
              :can_edit
 
+  has_many :moderators, serializer: BasicUserSerializer, embed: :objects
+
   def include_parent_category_id?
     parent_category_id
   end

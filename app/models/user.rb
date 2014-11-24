@@ -53,6 +53,10 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
+  has_many :category_users, dependent: :destroy
+  has_many :category_moderators, ->{ where(moderator: true) }, class_name: "CategoryUser"
+  has_many :moderated_categories, through: :category_moderators, source: :category
+
   has_one :user_search_data, dependent: :destroy
   has_one :api_key, dependent: :destroy
 
@@ -686,6 +690,22 @@ class User < ActiveRecord::Base
     write_attribute(:title, val)
     if !new_record? && user_profile
       user_profile.update_column(:badge_granted_title, false)
+    end
+  end
+
+  def moderating?
+    moderated_categories.any?
+  end
+
+  # reserve the can_ prefix for methods on Guardian classes
+  def doth_moderate?(obj)
+    case obj
+    when Category
+      obj.deep_moderators.map(&:id).include?(self.id)
+    when Topic
+      doth_moderate?(obj.category)
+    else
+      false
     end
   end
 

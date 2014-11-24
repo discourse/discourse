@@ -33,7 +33,9 @@ class CategoriesController < ApplicationController
 
   def upload
     params.require(:image_type)
-    guardian.ensure_can_create!(Category)
+    # TODO: should really be checking upload permission for specific category,
+    # but no category_id is provided in this API call
+    guardian.ensure_can_upload_for_category!
 
     file = params[:file] || params[:files].first
     upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, File.size(file.tempfile))
@@ -138,7 +140,9 @@ class CategoriesController < ApplicationController
                         :logo_url,
                         :background_url,
                         :allow_badges,
-                        :permissions => [*p.try(:keys)])
+                        :permissions => [*p.try(:keys)],
+                        :moderators => []
+                     )
       end
     end
 
