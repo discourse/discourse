@@ -68,17 +68,17 @@ describe GroupsController do
       response.should be_success
     end
 
-    it "ensures that over 200 members can be retrieved" do
-      300.times { group.add(Fabricate(:user)) }
-      xhr :get, :members, group_id: group.name, limit: 250
+    it "ensures that membership can be paginated" do
+      5.times { group.add(Fabricate(:user)) }
+      xhr :get, :members, group_id: group.name, limit: 3
       response.should be_success
       members = JSON.parse(response.body)
-      members.count.should eq(250)
+      members.count.should eq(3)
 
-      xhr :get, :members, group_id: group.name, limit: 250, offset: 250
+      xhr :get, :members, group_id: group.name, limit: 3, offset: 3
       response.should be_success
       members = JSON.parse(response.body)
-      members.count.should eq(50)
+      members.count.should eq(2)
     end
   end
 end
