@@ -5,4 +5,7 @@ class AboutController < ApplicationController
     @about = About.new
     render_serialized(@about, AboutSerializer)
   end
+
+  def show
+  end
 end

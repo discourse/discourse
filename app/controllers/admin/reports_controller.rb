@@ -5,7 +5,7 @@ class Admin::ReportsController < Admin::AdminController
   def show
     report_type = params[:type]
 
-    raise Discourse::NotFound.new unless report_type =~ /^[a-z0-9\_]+$/
+    raise Discourse::NotFound.new unless report_type =~ /^[a-z0-9_]+$/
 
     start_date = 1.month.ago
     start_date = Time.parse(params[:start_date]) if params[:start_date].present?

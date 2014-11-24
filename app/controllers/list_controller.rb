@@ -115,7 +115,7 @@ class ListController < ApplicationController
       target_user = fetch_user_from_params
       guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
       list = generate_list_for(action.to_s, target_user, list_opts)
-      url_prefix = "topics" unless action == :topics_by
+      url_prefix = ("topics" unless action == :topics_by) || nil
       list.more_topics_url = url_for(construct_next_url_with(list_opts, url_prefix))
       list.prev_topics_url = url_for(construct_prev_url_with(list_opts, url_prefix))
       respond(list)
@@ -134,7 +134,7 @@ class ListController < ApplicationController
 
     render 'list', formats: [:rss]
   end
-  
+
   def top(options=nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
@@ -242,7 +242,7 @@ class ListController < ApplicationController
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
-    raise Discourse::NotFound.new if !@category
+    raise Discourse::NotFound.new unless @category
 
     @description_meta = @category.description
     guardian.ensure_can_see!(@category)

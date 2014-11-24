@@ -5,7 +5,9 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown, :raw, :cooked]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number,
+                    :short_link, :reply_history, :revisions, :latest_revision,
+                    :expand_embed, :markdown_id, :markdown_num, :cooked]
 
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
@@ -52,7 +54,7 @@ class PostsController < ApplicationController
     key = params_key(params)
     error_json = nil
 
-    if (is_api?)
+    if is_api?
       payload = DistributedMemoizer.memoize(key, 120) do
         success, json = create_post(params)
         unless success

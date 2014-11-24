@@ -75,7 +75,7 @@ class UsersController < ApplicationController
       end
     end
 
-    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |u|
+    json_result(user, serializer: UserSerializer, additional_errors: [:user_profile]) do |_|
       updater = UserUpdater.new(current_user, user)
       updater.update(params)
     end
@@ -172,8 +172,8 @@ class UsersController < ApplicationController
   # Used for checking availability of a username and will return suggestions
   # if the username is not available.
   def check_username
-    if !params[:username].present?
-      params.require(:username) if !params[:email].present?
+    unless params[:username].present?
+      params.require(:username) unless params[:email].present?
       return render(json: success_json)
     end
     username = params[:username]
@@ -226,7 +226,7 @@ class UsersController < ApplicationController
 
     authentication = UserAuthenticator.new(user, session)
 
-    if !authentication.has_authenticator? && !SiteSetting.enable_local_logins
+    unless authentication.has_authenticator? || SiteSetting.enable_local_logins
       return render nothing: true, status: 500
     end
 
@@ -277,7 +277,7 @@ class UsersController < ApplicationController
   end
 
   def password_reset
-    expires_now()
+    expires_now
 
     if EmailToken.valid_token_format?(params[:token])
       @user = EmailToken.confirm(params[:token])
@@ -353,7 +353,8 @@ class UsersController < ApplicationController
   end
 
   def authorize_email
-    expires_now()
+    expires_now
+
     if @user = EmailToken.confirm(params[:token])
       log_on_user(@user)
     else
@@ -480,6 +481,8 @@ class UsersController < ApplicationController
         upload_profile_background_for(user.user_profile, upload)
       when "card_background"
         upload_card_background_for(user.user_profile, upload)
+      else
+        render status: 422, text: I18n.t("upload.images.unknown_image_type")
       end
     else
       render status: 422, text: upload.errors.full_messages
@@ -528,12 +531,13 @@ class UsersController < ApplicationController
   end
 
   def read_faq
-    if(user = current_user)
+    if user = current_user
       user.user_stat.read_faq = 1.second.ago
       user.user_stat.save
+      render json: success_json
+    else
+      render_json_error I18n.t('not_logged_in')
     end
-
-    render json: success_json
   end
 
   private
@@ -562,7 +566,7 @@ class UsersController < ApplicationController
       AvatarUploadService.new(file, source)
     end
 
-    def upload_avatar_for(user, upload)
+    def upload_avatar_for(_, upload)
       render json: { upload_id: upload.id, url: upload.url, width: upload.width, height: upload.height }
     end
 
