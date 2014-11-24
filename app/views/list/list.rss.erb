@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:discourse="http://www.discourse.org/" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <% lang = SiteSetting.find_by_name('default_locale').try(:value) %>
     <% site_email = SiteSetting.find_by_name('contact_email').try(:value) %>
@@ -27,6 +27,9 @@
           ]]></description>
           <link><%= topic_url %></link>
           <pubDate><%= topic.created_at.rfc2822 %></pubDate>
+          <discourse:topicPinned><%= topic.pinned_at ? 'Yes' : 'No' %></discourse:topicPinned>
+          <discourse:topicClosed><%= topic.closed ? 'Yes' : 'No' %></discourse:topicClosed>
+          <discourse:topicArchived><%= topic.archived ? 'Yes' : 'No' %></discourse:topicArchived>
           <guid isPermaLink="false">topic-<%= topic.id %></guid>
           <source url="<%= topic_url %>.rss"><%= topic.title %></source>
         </item>

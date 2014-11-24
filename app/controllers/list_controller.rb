@@ -134,7 +134,7 @@ class ListController < ApplicationController
 
     render 'list', formats: [:rss]
   end
-  
+
   def top(options=nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
