@@ -43,11 +43,16 @@ describe Auth::DefaultCurrentUserProvider do
 
   it "allows a user with a matching ip" do
     user = Fabricate(:user)
-    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
 
     found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
-                          "REMOTE_ADDR" => "10.0.0.22").current_user
+                          "REMOTE_ADDR" => "100.0.0.22").current_user
 
+    found_user.id.should == user.id
+
+
+    found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
+                          "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
     found_user.id.should == user.id
 
   end

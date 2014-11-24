@@ -106,11 +106,11 @@
     <div class='field'>{{i18n user.ip_address.title}}</div>
     <div class='value'>{{ip_address}}</div>
     <div class='controls'>
-      {{#if currentUser.admin}}
+      {{#if currentUser.staff}}
         <button class='btn' {{action "refreshBrowsers" target="content"}}>
           {{i18n admin.user.refresh_browsers}}
         </button>
-        {{ip-lookup ip=ip_address user_id=id}}
+        {{ip-lookup ip=ip_address userId=id}}
       {{/if}}
     </div>
   </div>
@@ -119,8 +119,8 @@
     <div class='field'>{{i18n user.registration_ip_address.title}}</div>
     <div class='value'>{{registration_ip_address}}</div>
     <div class='controls'>
-      {{#if currentUser.admin}}
-        {{ip-lookup ip=registration_ip_address user_id=id}}
+      {{#if currentUser.staff}}
+        {{ip-lookup ip=registration_ip_address userId=id}}
       {{/if}}
     </div>
   </div>

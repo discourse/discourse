@@ -279,7 +279,7 @@ en:
       organisation: Organization
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
-      delete_all: "Delete all"
+      delete_other_accounts: "Delete %{count}"
       username: "username"
       trust_level: "TL"
       read_time: "read time"
@@ -1862,6 +1862,7 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          roll_up_confirm: "Are you sure you want to roll up ban entries?"
           actions:
             block: "Block"
             do_nothing: "Allow"
@@ -1870,6 +1871,9 @@ en:
             label: "New:"
             ip_address: "IP address"
             add: "Add"
+          roll_up:
+            text: "Roll up"
+            title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "Error Logs"
 

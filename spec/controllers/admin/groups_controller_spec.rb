@@ -79,18 +79,66 @@ describe Admin::GroupsController do
     end
   end
 
-  it "is able to update group members" do
-    user1 = Fabricate(:user)
-    user2 = Fabricate(:user)
-    group = Fabricate(:group)
+  context '.update' do
+    let (:group) { Fabricate(:group) }
 
-    xhr :put, :update, id: group.id, name: 'fred', group: {
-        name: 'fred',
-        usernames: "#{user1.username},#{user2.username}"
-    }
+    it "is able to update group members" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
 
-    group.reload
-    group.users.count.should == 2
-    group.name.should == 'fred'
+      xhr :put, :update, id: group.id, name: 'fred', group: {
+            name: 'fred',
+            usernames: "#{user1.username},#{user2.username}"
+          }
+
+      group.reload
+      group.users.count.should == 2
+      group.name.should == 'fred'
+    end
+
+    context 'incremental' do
+      before do
+        @user1 = Fabricate(:user)
+        group.add(@user1)
+        group.reload
+      end
+
+      it "can make incremental adds" do
+        user2 = Fabricate(:user)
+        xhr :patch, :update, id: group.id, changes: {add: user2.username}
+        response.status.should == 200
+        group.reload
+        group.users.count.should eq(2)
+      end
+
+      it "succeeds silently when adding non-existent users" do
+        xhr :patch, :update, id: group.id, changes: {add: "nosuchperson"}
+        response.status.should == 200
+        group.reload
+        group.users.count.should eq(1)
+      end
+
+      it "can make incremental deletes" do
+        xhr :patch, :update, id: group.id, changes: {delete: @user1.username}
+        response.status.should == 200
+        group.reload
+        group.users.count.should eq(0)
+      end
+
+      it "succeeds silently when removing non-members" do
+        user2 = Fabricate(:user)
+        xhr :patch, :update, id: group.id, changes: {delete: user2.username}
+        response.status.should == 200
+        group.reload
+        group.users.count.should eq(1)
+      end
+
+      it "cannot patch automatic groups" do
+        auto_group = Fabricate(:group, name: "auto_group", automatic: true)
+
+        xhr :patch, :update, id: auto_group.id, changes: {add: "bob"}
+        response.status.should == 403
+      end
+    end
   end
 end

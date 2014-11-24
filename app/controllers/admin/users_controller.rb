@@ -281,11 +281,48 @@ class Admin::UsersController < Admin::AdminController
     user_destroyer = UserDestroyer.new(current_user)
     options = { delete_posts: true, block_email: true, block_urls: true, block_ip: true, delete_as_spammer: true }
 
-    AdminUserIndexQuery.new(params).find_users.each do |user|
+    AdminUserIndexQuery.new(params).find_users(50).each do |user|
       user_destroyer.destroy(user, options) rescue nil
     end
 
     render json: success_json
+  end
+
+  def total_other_accounts_with_same_ip
+    params.require(:ip)
+    params.require(:exclude)
+    params.require(:order)
+
+    render json: { total: AdminUserIndexQuery.new(params).count_users }
+  end
+
+  def invite_admin
+
+    email = params[:email]
+    unless user = User.find_by_email(email)
+      name = params[:name] if params[:name].present?
+      username = params[:username] if params[:username].present?
+
+      user = User.new(email: email)
+      user.password = SecureRandom.hex
+      user.username = UserNameSuggester.suggest(username || name || email)
+      user.name = User.suggest_name(name || username || email)
+    end
+
+    user.active = true
+    user.save!
+    user.grant_admin!
+    user.change_trust_level!(4)
+    user.email_tokens.update_all  confirmed: true
+
+    email_token = user.email_tokens.create(email: user.email)
+    Jobs.enqueue(:user_email,
+                    type: :account_created,
+                    user_id: user.id,
+                    email_token: email_token.token)
+
+    render json: success_json
+
   end
 
   private

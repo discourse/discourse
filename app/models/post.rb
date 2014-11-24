@@ -170,7 +170,16 @@ class Post < ActiveRecord::Base
                cloned[1][:omit_nofollow] = true
                post_analyzer.cook(*cloned)
              end
-    Plugin::Filter.apply( :after_post_cook, self, cooked )
+
+    new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
+
+    if new_cooked != cooked && new_cooked.blank?
+      Rails.logger.warn("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
+    elsif new_cooked.blank?
+      Rails.logger.warn("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+    end
+
+    new_cooked
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.

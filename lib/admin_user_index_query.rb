@@ -1,6 +1,7 @@
 require_dependency 'trust_level'
 
 class AdminUserIndexQuery
+
   def initialize(params = {}, klass = User, trust_levels = TrustLevel.levels)
     @params = params
     @query = initialize_query_with_order(klass)
@@ -8,6 +9,22 @@ class AdminUserIndexQuery
   end
 
   attr_reader :params, :trust_levels
+
+  def find_users(limit=100)
+    find_users_query.includes(:user_stat)
+                    .includes(:single_sign_on_record)
+                    .includes(:facebook_user_info)
+                    .includes(:twitter_user_info)
+                    .includes(:github_user_info)
+                    .includes(:google_user_info)
+                    .includes(:oauth2_user_info)
+                    .includes(:user_open_ids)
+                    .limit(limit)
+  end
+
+  def count_users
+    find_users_query.count
+  end
 
   def initialize_query_with_order(klass)
     order = [params[:order]]
@@ -32,11 +49,11 @@ class AdminUserIndexQuery
 
   def filter_by_query_classification
     case params[:query]
-      when 'admins' then @query.where(admin: true)
+      when 'admins'     then @query.where(admin: true)
       when 'moderators' then @query.where(moderator: true)
-      when 'blocked' then @query.blocked
-      when 'suspended' then @query.suspended
-      when 'pending' then @query.not_suspended.where(approved: false)
+      when 'blocked'    then @query.blocked
+      when 'suspended'  then @query.suspended
+      when 'pending'    then @query.not_suspended.where(approved: false)
     end
   end
 
@@ -76,15 +93,4 @@ class AdminUserIndexQuery
     @query
   end
 
-  def find_users
-    find_users_query.includes(:user_stat)
-                    .includes(:single_sign_on_record)
-                    .includes(:facebook_user_info)
-                    .includes(:twitter_user_info)
-                    .includes(:github_user_info)
-                    .includes(:google_user_info)
-                    .includes(:oauth2_user_info)
-                    .includes(:user_open_ids)
-                    .take(100)
-  end
 end
