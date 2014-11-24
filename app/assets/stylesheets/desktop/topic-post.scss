@@ -30,13 +30,11 @@ h1 .topic-statuses .topic-status i {
   }
 
 .reply-to-tab {
-  position: absolute;
-  right: 420px;
   z-index: 400;
-  padding: 13px 6px 5px;
-  font-size: 12px;
+  font-size: 13px;
+  float: right;
+  margin: 1px 25px 0 0;
   color: scale-color($primary, $lightness: 50%);
-
 }
 
 .via-email .reply-to-tab {
