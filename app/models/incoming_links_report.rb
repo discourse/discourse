@@ -46,7 +46,6 @@ class IncomingLinksReport
     @per_user_query ||= IncomingLink
         .where('incoming_links.created_at > ? AND incoming_links.user_id IS NOT NULL', 30.days.ago)
         .joins(:user)
-        .joins(:post)
         .group('users.username')
   end
 
@@ -55,7 +54,7 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_user
-    per_user.count('topic_id', distinct: true)
+    per_user.joins(:post).count("DISTINCT posts.topic_id")
   end
 
 
@@ -85,14 +84,13 @@ class IncomingLinksReport
   def self.per_domain(domains)
     IncomingLink
         .joins(:incoming_referer => :incoming_domain)
-        .joins(:post)
         .where('incoming_links.created_at > ? AND incoming_domains.name IN (?)', 30.days.ago, domains)
         .group('incoming_domains.name')
   end
 
   def self.topic_count_per_domain(domains)
     # COUNT(DISTINCT) is slow
-    per_domain(domains).count('topic_id', distinct: true)
+    per_domain(domains).joins(:post).count("DISTINCT posts.topic_id")
   end
 
 
