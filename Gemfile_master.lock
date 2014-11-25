@@ -8,32 +8,32 @@ GIT
 
 GIT
   remote: https://github.com/rails/arel.git
-  revision: a04851702b0e8e694a92139c3ee9f3b1622f3f5d
+  revision: 1fefe71b1872c0a83f09231164863cd8dbb57174
   specs:
-    arel (6.0.0.beta2)
+    arel (6.0.0)
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 08576b94ad4f19dfc368619d7751e211d23dcad8
+  revision: 2f8be7ebafcf7815f9f3ec7983789157525a60fa
   specs:
     actionmailer (4.2.0.beta4)
       actionpack (= 4.2.0.beta4)
       actionview (= 4.2.0.beta4)
       activejob (= 4.2.0.beta4)
       mail (~> 2.5, >= 2.5.4)
-      rails-dom-testing (~> 1.0, >= 1.0.4)
+      rails-dom-testing (~> 1.0, >= 1.0.5)
     actionpack (4.2.0.beta4)
       actionview (= 4.2.0.beta4)
       activesupport (= 4.2.0.beta4)
       rack (~> 1.6.0.beta)
       rack-test (~> 0.6.2)
-      rails-dom-testing (~> 1.0, >= 1.0.4)
+      rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
     actionview (4.2.0.beta4)
       activesupport (= 4.2.0.beta4)
       builder (~> 3.1)
       erubis (~> 2.7.0)
-      rails-dom-testing (~> 1.0, >= 1.0.4)
+      rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
     activejob (4.2.0.beta4)
       activesupport (= 4.2.0.beta4)
@@ -44,7 +44,7 @@ GIT
     activerecord (4.2.0.beta4)
       activemodel (= 4.2.0.beta4)
       activesupport (= 4.2.0.beta4)
-      arel (>= 6.0.0.beta2, < 6.1)
+      arel (~> 6.0)
     activesupport (4.2.0.beta4)
       i18n (>= 0.7.0.beta1, < 0.8)
       json (~> 1.7, >= 1.7.7)
@@ -312,7 +312,7 @@ GEM
       rack (>= 1.0)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.4)
+    rails-dom-testing (1.0.5)
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
@@ -321,7 +321,7 @@ GEM
     rails-observers (0.1.2)
       activemodel (~> 4.0)
     raindrops (0.13.0)
-    rake (10.3.2)
+    rake (10.4.0)
     rake-compiler (0.9.3)
       rake
     rb-fsevent (0.9.4)
