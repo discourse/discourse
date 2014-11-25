@@ -12,12 +12,12 @@ class UserProfile < ActiveRecord::Base
 
   def bio_excerpt
     excerpt = PrettyText.excerpt(bio_cooked, 350)
-    return excerpt if excerpt.blank? || user.has_trust_level?(TrustLevel[1])
+    return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
   end
 
   def bio_processed
-    return bio_cooked if bio_cooked.blank? || user.has_trust_level?(TrustLevel[1])
+    return bio_cooked if bio_cooked.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(bio_cooked)
   end
 
