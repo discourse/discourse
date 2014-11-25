@@ -20,7 +20,12 @@ module Onebox
       def data
         result = raw.clone
         result['link'] = link
-        result['title'] = result['commit']['message']
+        result['title'] = result['commit']['message'].split("\n").first
+
+        if result['commit']['message'].lines.count > 1
+          result['message'] = result['commit']['message'].split("\n", 2).last.strip
+        end
+
         result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
         result
       end

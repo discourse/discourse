@@ -5,8 +5,12 @@
 {{/author.avatar_url}}
 
 <h4>
-  <a href="{{html_url}}" target="_blank">{{commit.message}}</a>
+  <a href="{{html_url}}" target="_blank">{{title}}</a>
 </h4>
+
+{{#message}}
+  <pre class="message" style="white-space: pre-wrap;">{{message}}</pre>
+{{/message}}
 
 <div class="date">
   by <a href="{{author.html_url}}" target="_blank">{{author.login}}</a>
