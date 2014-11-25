@@ -5,7 +5,7 @@ var isTransitioning = false,
 
 import ShowFooter from "discourse/mixins/show-footer";
 
-Discourse.TopicRoute = Discourse.Route.extend(ShowFooter, {
+var TopicRoute = Discourse.Route.extend(ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
@@ -235,5 +235,5 @@ Discourse.TopicRoute = Discourse.Route.extend(ShowFooter, {
 
 });
 
-RSVP.EventTarget.mixin(Discourse.TopicRoute);
-export default Discourse.TopicRoute;
+RSVP.EventTarget.mixin(TopicRoute);
+export default TopicRoute;
