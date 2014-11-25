@@ -103,6 +103,14 @@ describe UserProfile do
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
       end
 
+      it 'removes the link if the user is suspended' do
+        user.suspended_till = 1.month.from_now
+        puts user.suspended?.inspect
+        user_profile.send(:cook)
+        expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
+        expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
+      end
+
       context 'tl3_links_no_follow is false' do
         before { SiteSetting.stubs(:tl3_links_no_follow).returns(false) }
 
