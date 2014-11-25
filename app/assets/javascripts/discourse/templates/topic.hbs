@@ -1,7 +1,7 @@
 <div class='container'>
   {{custom-html "top"}}
   {{global-notice}}
-  {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled}}
+  {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled hide=errorLoading}}
 </div>
 
 {{#if postStream.loaded}}
