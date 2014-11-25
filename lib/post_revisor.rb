@@ -42,8 +42,13 @@ class PostRevisor
     @post_successfully_saved = true
     @topic_successfully_saved = true
 
-    @validate_post  = @opts[:validate_post]  || !@opts[:skip_validations]
-    @validate_topic = @opts[:validate_topic] || !@opts[:skip_validations]
+    @validate_post = true
+    @validate_post = @opts[:validate_post] if @opts.has_key?(:validate_post)
+    @validate_post = !@opts[:skip_validations] if @opts.has_key?(:skip_validations)
+
+    @validate_topic = true
+    @validate_topic = @opts[:validate_topic] if @opts.has_key?(:validate_topic)
+    @validate_topic = !@opts[:validate_topic] if @opts.has_key?(:skip_validations)
 
     Post.transaction do
       revise_post
