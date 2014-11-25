@@ -8,6 +8,7 @@
  **/
 export default Ember.ArrayController.extend({
   needs: ['group'],
+  loading: false,
 
   groupName: function() {
     this.get('controllers.group.name');
@@ -27,17 +28,33 @@ export default Ember.ArrayController.extend({
   }.property(),
 
   actions: {
-    addMember: function() {
+    addMembers: function() {
       var self = this;
-      var usernames = this.get('emailOrUsername').split(',');
-      console.log("Ask the group to add members", usernames);
-
       var group = this.get('controllers.group').model;
+      var add_usernames = this.get('add_usernames').split(',');
 
-      group.addMembers(usernames).then(function(results) {
-        var users = results.map(function(u) { return Discourse.User.create(u) });
-        return self.unshiftObjects(users);
+      group.addMembers(add_usernames).then(function(results) {
+        return results.map(function(userdata) {
+          self.unshiftObject(Discourse.User.create(userdata));
+        });
       });
     },
+
+    loadMore: function() {
+      if (this.get('loading')) { return; }
+      this.set('loading', true);
+
+      var members = this.get('model');
+      if (members && members.length) {
+        var self = this;
+        var group = this.get('controllers.group.model');
+
+        group.findMembers({offset: members.length}).then(function(newMembers) {
+          members.addObjects(newMembers);
+          self.set('loading', false);
+        });
+      }
+    }
+
   }
 });

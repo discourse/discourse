@@ -114,14 +114,12 @@
 .user-main {
   margin-bottom: 50px;
 
+  .group-membership .ac-wrap {
+    float: left;
+    margin-right: 10px;
+  }
+
   table.group-members {
-    /* width: 100%; */
-    /* p { */
-    /*   max-width: 600px; */
-    /*   white-space: nowrap; */
-    /*   overflow: hidden; */
-    /*   text-overflow: ellipsis; */
-    /* } */
     th.seen {
       text-align: right;
     }

@@ -31,8 +31,10 @@ class GroupsController < ApplicationController
     if actions = params[:changes]
       Array(actions[:add]).each do |username|
         if user = User.find_by_username(username)
-          the_group.add(user)
-          added_users << user
+          unless user.belongs_to_group?(the_group)
+            the_group.add(user)
+            added_users << user
+          end
         end
       end
       Array(actions[:delete]).each do |username|

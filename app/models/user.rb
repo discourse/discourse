@@ -689,6 +689,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def belongs_to_group?(group)
+    groups.where(id: group.id).any?
+  end
+
   protected
 
   def badge_grant

@@ -16,12 +16,14 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
-  findMembers: function() {
+  findMembers: function(opts) {
+    opts = opts || {};
     if (Em.isEmpty(this.get('name'))) { return Ember.RSVP.resolve([]); }
 
-    return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
-      return result.map(function(u) { return Discourse.User.create(u) });
-    });
+    return Discourse.ajax(
+      '/groups/' + this.get('name') + '/members.json', {data: opts}).then(function(result) {
+        return result.map(function(u) { return Discourse.User.create(u) });
+      });
   },
 
   destroy: function(){

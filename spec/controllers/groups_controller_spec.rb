@@ -111,6 +111,13 @@ describe GroupsController do
       group.users.count.should eq(1)
     end
 
+    it "succeeds silently when adding duplicate users" do
+      xhr :patch, :update, id: group.name, changes: {add: @user1.username}
+      response.status.should == 200
+      group.reload
+      group.users.count.should eq([@user1])
+    end
+
     it "can make incremental deletes" do
       xhr :patch, :update, id: group.name, changes: {delete: @user1.username}
       response.status.should == 200
