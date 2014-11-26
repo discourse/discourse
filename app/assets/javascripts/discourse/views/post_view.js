@@ -157,7 +157,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
       self.$(".cooked a[href]").each(function() {
         var link = $(this);
-        if (!lc.internal && link.attr('href') === lc.url) {
+        if ((!lc.internal || lc.url[0] === "/") && link.attr('href') === lc.url) {
           // don't display badge counts on category badge
           if (link.closest('.badge-category').length === 0 && ((link.closest(".onebox-result").length === 0 && link.closest('.onebox-body').length === 0) || link.hasClass("track-link"))) {
             link.append("<span class='badge badge-notification clicks' title='" +
