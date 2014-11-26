@@ -26,9 +26,9 @@ describe SessionController do
       @sso_url = "http://somesite.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
 
-      SiteSetting.stubs("enable_sso").returns(true)
-      SiteSetting.stubs("sso_url").returns(@sso_url)
-      SiteSetting.stubs("sso_secret").returns(@sso_secret)
+      SiteSetting.enable_sso = true
+      SiteSetting.sso_url = @sso_url
+      SiteSetting.sso_secret = @sso_secret
 
       # We have 2 options, either fabricate an admin or don't
       # send welcome messages
@@ -97,6 +97,7 @@ describe SessionController do
     it 'allows login to existing account with valid nonce' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'
+      sso.sso_url = "http://somewhere.over.com/sso_login"
 
       user = Fabricate(:user)
       user.create_single_sign_on_record(external_id: '997', last_payload: '')
@@ -114,6 +115,40 @@ describe SessionController do
       # nonce is bad now
       get :sso_login, Rack::Utils.parse_query(sso.payload)
       response.code.should == '500'
+    end
+
+    it 'can act as an SSO provider' do
+      SiteSetting.enable_sso_provider = true
+      SiteSetting.enable_sso = false
+      SiteSetting.enable_local_logins = true
+      SiteSetting.sso_secret = "topsecret"
+
+      sso = SingleSignOn.new
+      sso.nonce = "mynonce"
+      sso.sso_secret = SiteSetting.sso_secret
+      sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+
+      get :sso_provider, Rack::Utils.parse_query(sso.payload)
+
+      response.should redirect_to("/login")
+
+      user = Fabricate(:user, password: "frogs", active: true)
+      EmailToken.update_all(confirmed: true)
+
+      xhr :post, :create, login: user.username, password: "frogs", format: :json
+
+      location = response.header["Location"]
+      location.should =~ /^http:\/\/somewhere.over.rainbow\/sso/
+
+      payload = location.split("?")[1]
+
+      sso2 = SingleSignOn.parse(payload, "topsecret")
+
+      sso2.email.should == user.email
+      sso2.name.should == user.name
+      sso2.username.should == user.username
+      sso2.external_id == user.id.to_s
+
     end
 
     describe 'local attribute override from SSO payload' do

@@ -14,6 +14,7 @@ class DiscourseSingleSignOn < SingleSignOn
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
+    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
     sso.to_url
   end
 

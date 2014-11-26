@@ -221,6 +221,7 @@ login:
   enable_sso:
     client: true
     default: false
+  enable_sso_provider: false
   sso_url: ''
   sso_secret: ''
   sso_overrides_email: false
