@@ -1,9 +1,10 @@
 require_dependency 'rate_limiter'
+require_dependency 'single_sign_on'
 
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become']
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -12,6 +13,25 @@ class SessionController < ApplicationController
   def sso
     if SiteSetting.enable_sso
       redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || '/')
+    else
+      render nothing: true, status: 404
+    end
+  end
+
+  def sso_provider(payload=nil)
+    payload ||= request.query_string
+    if SiteSetting.enable_sso_provider
+      sso = SingleSignOn.parse(payload, SiteSetting.sso_secret)
+      if current_user
+        sso.name = current_user.name
+        sso.username = current_user.username
+        sso.email = current_user.email
+        sso.external_id = current_user.id.to_s
+        redirect_to sso.to_url(sso.return_sso_url)
+      else
+        session[:sso_payload] = request.query_string
+        redirect_to '/login'
+      end
     else
       render nothing: true, status: 404
     end
@@ -82,6 +102,7 @@ class SessionController < ApplicationController
 
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
+
 
     if user = User.find_by_username_or_email(login)
 
@@ -200,7 +221,12 @@ class SessionController < ApplicationController
 
   def login(user)
     log_on_user(user)
-    render_serialized(user, UserSerializer)
+
+    if payload = session.delete(:sso_payload)
+      sso_provider(payload)
+    else
+      render_serialized(user, UserSerializer)
+    end
   end
 
 end
