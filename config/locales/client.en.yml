@@ -1892,8 +1892,7 @@ en:
           new: "New"
           active: "Active"
           pending: "Pending"
-          admins: 'Admins'
-          moderators: 'Mods'
+          staff: 'Staff'
           suspended: 'Suspended'
           blocked: 'Blocked'
         approved: "Approved?"
@@ -1912,6 +1911,7 @@ en:
           regular: 'Users at Trust Level 2 (Member)'
           leader: 'Users at Trust Level 3 (Regular)'
           elder: 'Users at Trust Level 4 (Leader)'
+          staff: "Staff"
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
