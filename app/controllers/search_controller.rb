@@ -24,7 +24,6 @@ class SearchController < ApplicationController
       klass = search_context[:type].classify.constantize
 
       # A user is found by username
-      context_obj = nil
       if search_context[:type] == 'user'
         context_obj = klass.find_by(username_lower: params[:search_context][:id].downcase)
       else

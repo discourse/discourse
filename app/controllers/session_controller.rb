@@ -3,7 +3,7 @@ require_dependency 'rate_limiter'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become']
+  skip_before_filter :check_xhr, only: [:sso, :sso_login, :become]
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -35,7 +35,7 @@ class SessionController < ApplicationController
     end
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
-    if !sso.nonce_valid?
+    unless sso.nonce_valid?
       render text: I18n.t("sso.timeout_expired"), status: 500
       return
     end

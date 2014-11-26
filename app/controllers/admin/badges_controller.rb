@@ -38,7 +38,7 @@ class Admin::BadgesController < Admin::AdminController
 
     params[:names].each_with_index do |name,index|
       id = ids[index].to_i
-      group = badge_groupings.find{|b| b.id == id} || BadgeGrouping.new()
+      group = badge_groupings.find{|b| b.id == id} || BadgeGrouping.new
       group.name = name
       group.position = index
       group.save

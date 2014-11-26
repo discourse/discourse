@@ -80,7 +80,6 @@ class ApplicationController < ActionController::Base
   # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
 
-    time_left = ""
     if e.available_in < 1.minute.to_i
       time_left = I18n.t("rate_limiter.seconds", count: e.available_in)
     elsif e.available_in < 1.hour.to_i

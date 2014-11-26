@@ -61,9 +61,8 @@ class UserBadgesController < ApplicationController
 
     # Get the badge from either the badge name or id specified in the params.
     def fetch_badge_from_params
-      badge = nil
-
       params.permit(:badge_name)
+
       if params[:badge_name].nil?
         params.require(:badge_id)
         badge = Badge.find_by(id: params[:badge_id], enabled: true)

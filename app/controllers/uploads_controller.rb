@@ -23,9 +23,9 @@ class UploadsController < ApplicationController
   end
 
   def show
-    return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
+    return render_404 unless RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
-    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
+    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |_|
       return render_404 unless Discourse.store.internal?
       return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 

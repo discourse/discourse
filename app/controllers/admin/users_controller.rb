@@ -300,8 +300,8 @@ class Admin::UsersController < Admin::AdminController
 
     email = params[:email]
     unless user = User.find_by_email(email)
-      name = params[:name] if params[:name].present?
-      username = params[:username] if params[:username].present?
+      name = params[:name] || nil
+      username = params[:username] || nil
 
       user = User.new(email: email)
       user.password = SecureRandom.hex

@@ -24,7 +24,7 @@ class StaticController < ApplicationController
     @page = 'faq' if @page == 'guidelines'
 
     # Don't allow paths like ".." or "/" or anything hacky like that
-    @page.gsub!(/[^a-z0-9\_\-]/, '')
+    @page.gsub!(/[^a-z0-9_\-]/, '')
 
     if map.has_key?(@page)
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
