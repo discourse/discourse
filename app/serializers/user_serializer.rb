@@ -18,6 +18,17 @@ class UserSerializer < BasicUserSerializer
     end
   end
 
+  # attributes that are hidden for TL0 users when seen by anonymous
+  def self.untrusted_attributes(*attrs)
+    attrs.each do |attr|
+      method_name = "include_#{attr}?"
+      define_method(method_name) do
+        return false if object.trust_level == TrustLevel[0] && scope.anonymous?
+        send(attr).present?
+      end
+    end
+  end
+
   attributes :name,
              :email,
              :last_posted_at,
@@ -87,6 +98,14 @@ class UserSerializer < BasicUserSerializer
                      :card_image_badge,
                      :card_image_badge_id
 
+  untrusted_attributes :bio_raw,
+                       :bio_cooked,
+                       :bio_excerpt,
+                       :location,
+                       :website,
+                       :profile_background,
+                       :card_background
+
   ###
   ### ATTRIBUTES
   ###
@@ -99,13 +118,8 @@ class UserSerializer < BasicUserSerializer
     object.user_profile.card_image_badge
   end
 
-
   def bio_raw
     object.user_profile.bio_raw
-  end
-
-  def include_bio_raw?
-    bio_raw.present?
   end
 
   def bio_cooked
@@ -114,10 +128,6 @@ class UserSerializer < BasicUserSerializer
 
   def website
     object.user_profile.website
-  end
-
-  def include_website?
-    website.present?
   end
 
   def card_image_badge_id
@@ -140,24 +150,12 @@ class UserSerializer < BasicUserSerializer
     object.user_profile.profile_background
   end
 
-  def include_profile_background?
-    profile_background.present?
-  end
-
   def card_background
     object.user_profile.card_background
   end
 
-  def include_card_background?
-    card_background.present?
-  end
-
   def location
     object.user_profile.location
-  end
-
-  def include_location?
-    location.present?
   end
 
   def can_edit
