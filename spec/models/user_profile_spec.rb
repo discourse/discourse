@@ -105,7 +105,6 @@ describe UserProfile do
 
       it 'removes the link if the user is suspended' do
         user.suspended_till = 1.month.from_now
-        puts user.suspended?.inspect
         user_profile.send(:cook)
         expect(user_profile.bio_excerpt).to match_html("I love http://discourse.org")
         expect(user_profile.bio_processed).to eq("<p>I love http://discourse.org</p>")
