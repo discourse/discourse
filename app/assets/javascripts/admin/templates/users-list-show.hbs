@@ -41,7 +41,7 @@
         <th>&nbsp;</th>
       </tr>
 
-      {{#each model}}
+      {{#each user in model}}
         <tr {{bind-attr class="selected active::not-activated"}}>
           {{#if controller.showApproval}}
             <td>
@@ -50,20 +50,20 @@
               {{/if}}
             </td>
           {{/if}}
-          <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
-          <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
-          <td>{{{unbound email}}}</td>
-          <td>{{{unbound last_emailed_age}}}</td>
-          <td>{{{unbound last_seen_age}}}</td>
-          <td>{{{unbound topics_entered}}}</td>
-          <td>{{{unbound posts_read_count}}}</td>
-          <td>{{{unbound time_read}}}</td>
+          <td><a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="small"}}</a></td>
+          <td>{{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}</td>
+          <td>{{{unbound user.email}}}</td>
+          <td>{{{unbound user.last_emailed_age}}}</td>
+          <td>{{{unbound user.last_seen_age}}}</td>
+          <td>{{{unbound user.topics_entered}}}</td>
+          <td>{{{unbound user.posts_read_count}}}</td>
+          <td>{{{unbound user.time_read}}}</td>
 
-          <td>{{{unbound created_at_age}}}</td>
+          <td>{{{unbound user.created_at_age}}}</td>
 
           {{#if showApproval}}
           <td>
-            {{#if approved}}
+            {{#if user.approved}}
               {{i18n yes_value}}
             {{else}}
               {{i18n no_value}}
@@ -71,8 +71,8 @@
           </td>
           {{/if}}
           <td>
-            {{#if admin}}<i class="fa fa-shield" title="{{i18n admin.title}}"></i>{{/if}}
-            {{#if moderator}}<i class="fa fa-shield" title="{{i18n admin.moderator}}"></i>{{/if}}
+            {{#if user.admin}}<i class="fa fa-shield" title="{{i18n admin.title}}"></i>{{/if}}
+            {{#if user.moderator}}<i class="fa fa-shield" title="{{i18n admin.moderator}}"></i>{{/if}}
           <td>
         </tr>
       {{/each}}
