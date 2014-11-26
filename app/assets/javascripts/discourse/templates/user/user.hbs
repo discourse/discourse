@@ -5,7 +5,7 @@
 
 <div class="container">
   <section class='user-main'>
-    <section {{bind-attr class="collapsedInfo :about profileBackground:has-background:no-background"}}>
+    <section {{bind-attr class="collapsedInfo :about profileBackground:has-background:no-background"}}  {{bind-attr style="profileBackground"}}>
     <div class='staff-counters'>
       {{#if number_of_flags_given}}
         <div><span class="helpful-flags">{{number_of_flags_given}}</span>&nbsp;{{i18n user.staff_counters.flags_given}}</div>
@@ -31,7 +31,7 @@
         <div><span class="warnings-received">{{number_of_warnings}}</span>&nbsp;{{i18n user.staff_counters.warnings_received}}</div>
       {{/if}}
     </div>
-      <div class='profile-image' {{bind-attr style="profileBackground"}}></div>
+      <div class='profile-image'></div>
       <div class='details'>
         <div class='primary'>
           {{bound-avatar model "huge"}}
