@@ -1,19 +1,16 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#link-to 'adminUsersList.active'}}{{i18n admin.users.nav.active}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.new'}}{{i18n admin.users.nav.new}}{{/link-to}}</li>
-      {{#if mustApproveUsers}}
-        <li>{{#link-to 'adminUsersList.pending'}}{{i18n admin.users.nav.pending}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'active'}}{{i18n admin.users.nav.active}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'new'}}{{i18n admin.users.nav.new}}{{/link-to}}</li>
+      {{#if siteSettings.must_approve_users}}
+        <li>{{#link-to 'adminUsersList.show' 'pending'}}{{i18n admin.users.nav.pending}}{{/link-to}}</li>
       {{/if}}
-      <li>{{#link-to 'adminUsersList.admins'}}{{i18n admin.users.nav.admins}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.moderators'}}{{i18n admin.users.nav.moderators}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.suspended'}}{{i18n admin.users.nav.suspended}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.blocked'}}{{i18n admin.users.nav.blocked}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'admins'}}{{i18n admin.users.nav.admins}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'moderators'}}{{i18n admin.users.nav.moderators}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'suspended'}}{{i18n admin.users.nav.suspended}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'blocked'}}{{i18n admin.users.nav.blocked}}{{/link-to}}</li>
     </ul>
-  </div>
-  <div class='username controls'>
-    {{text-field value=username placeholder=searchHint}}
   </div>
   <div class="pull-right">
     <button {{action "exportUsers"}} class="btn" title="{{i18n admin.export_csv.users.title}}"><i class="fa fa-download"></i>{{i18n admin.export_csv.users.text}}</button>
@@ -21,83 +18,5 @@
 </div>
 
 <div class="admin-container">
-  {{#if hasSelection}}
-    <div id='selected-controls'>
-      <button {{action "approveUsers"}} class='btn'>{{countI18n admin.users.approved_selected countBinding="selectedCount"}}</button>
-      <button {{action "rejectUsers"}}  class='btn btn-danger'>{{countI18n admin.users.reject_selected countBinding="selectedCount"}}</button>
-    </div>
-  {{/if}}
-
-  <div class="admin-title">
-    <div class="pull-left">
-      <h2>{{title}}</h2>
-    </div>
-    <div class="pull-right">
-      <button {{action "showEmails"}} class="btn">{{i18n admin.users.show_emails}}</button>
-    </div>
-  </div>
-
-  {{#loading-spinner condition=loading}}
-    {{#if model.length}}
-      <table class='table'>
-        <tr>
-          {{#if showApproval}}
-            <th>{{view Ember.Checkbox checkedBinding="selectAll"}}</th>
-          {{/if}}
-          <th>&nbsp;</th>
-          <th>{{i18n username}}</th>
-          <th>{{i18n email}}</th>
-          <th>{{i18n admin.users.last_emailed}}</th>
-          <th>{{i18n last_seen}}</th>
-          <th>{{i18n admin.user.topics_entered}}</th>
-          <th>{{i18n admin.user.posts_read_count}}</th>
-          <th>{{i18n admin.user.time_read}}</th>
-          <th>{{i18n created}}</th>
-          {{#if showApproval}}
-            <th>{{i18n admin.users.approved}}</th>
-          {{/if}}
-          <th>&nbsp;</th>
-        </tr>
-
-        {{#each model}}
-          <tr {{bind-attr class="selected active::not-activated"}}>
-            {{#if controller.showApproval}}
-              <td>
-                {{#if can_approve}}
-                  {{view Ember.Checkbox checkedBinding="selected"}}
-                {{/if}}
-              </td>
-            {{/if}}
-            <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
-            <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
-            <td>{{{unbound email}}}</td>
-            <td>{{{unbound last_emailed_age}}}</td>
-            <td>{{{unbound last_seen_age}}}</td>
-            <td>{{{unbound topics_entered}}}</td>
-            <td>{{{unbound posts_read_count}}}</td>
-            <td>{{{unbound time_read}}}</td>
-
-            <td>{{{unbound created_at_age}}}</td>
-
-            {{#if showApproval}}
-            <td>
-              {{#if approved}}
-                {{i18n yes_value}}
-              {{else}}
-                {{i18n no_value}}
-              {{/if}}
-            </td>
-            {{/if}}
-            <td>
-              {{#if admin}}<i class="fa fa-shield" title="{{i18n admin.title}}"></i>{{/if}}
-              {{#if moderator}}<i class="fa fa-shield" title="{{i18n admin.moderator}}"></i>{{/if}}
-            <td>
-          </tr>
-        {{/each}}
-
-      </table>
-    {{else}}
-      <p>{{i18n search.no_results}}</p>
-    {{/if}}
-  {{/loading-spinner}}
+  {{outlet}}
 </div>

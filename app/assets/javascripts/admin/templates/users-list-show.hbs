@@ -1,0 +1,84 @@
+{{#if hasSelection}}
+  <div id='selected-controls'>
+    <button {{action "approveUsers"}} class='btn'>{{countI18n admin.users.approved_selected count=selectedCount}}</button>
+    <button {{action "rejectUsers"}}  class='btn btn-danger'>{{countI18n admin.users.reject_selected count=selectedCount}}</button>
+  </div>
+{{/if}}
+
+<div class="admin-title">
+  <div class="pull-left">
+    <h2>{{title}}</h2>
+  </div>
+</div>
+<div class='username controls'>
+  {{text-field value=listFilter placeholder=searchHint}}
+  {{#unless showEmails}}
+    <div class="pull-right">
+      <button {{action "showEmails"}} class="btn">{{i18n admin.users.show_emails}}</button>
+    </div>
+  {{/unless}}
+</div>
+
+{{#loading-spinner condition=refreshing}}
+  {{#if model}}
+    <table class='table'>
+      <tr>
+        {{#if showApproval}}
+          <th>{{input type="checkbox" checked=selectAll}}</th>
+        {{/if}}
+        <th>&nbsp;</th>
+        <th>{{i18n username}}</th>
+        <th>{{i18n email}}</th>
+        <th>{{i18n admin.users.last_emailed}}</th>
+        <th>{{i18n last_seen}}</th>
+        <th>{{i18n admin.user.topics_entered}}</th>
+        <th>{{i18n admin.user.posts_read_count}}</th>
+        <th>{{i18n admin.user.time_read}}</th>
+        <th>{{i18n created}}</th>
+        {{#if showApproval}}
+          <th>{{i18n admin.users.approved}}</th>
+        {{/if}}
+        <th>&nbsp;</th>
+      </tr>
+
+      {{#each model}}
+        <tr {{bind-attr class="selected active::not-activated"}}>
+          {{#if controller.showApproval}}
+            <td>
+              {{#if can_approve}}
+                {{input type="checkbox" checked=selected}}
+              {{/if}}
+            </td>
+          {{/if}}
+          <td>{{#link-to 'adminUser' this}}{{avatar this imageSize="small"}}{{/link-to}}</td>
+          <td>{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
+          <td>{{{unbound email}}}</td>
+          <td>{{{unbound last_emailed_age}}}</td>
+          <td>{{{unbound last_seen_age}}}</td>
+          <td>{{{unbound topics_entered}}}</td>
+          <td>{{{unbound posts_read_count}}}</td>
+          <td>{{{unbound time_read}}}</td>
+
+          <td>{{{unbound created_at_age}}}</td>
+
+          {{#if showApproval}}
+          <td>
+            {{#if approved}}
+              {{i18n yes_value}}
+            {{else}}
+              {{i18n no_value}}
+            {{/if}}
+          </td>
+          {{/if}}
+          <td>
+            {{#if admin}}<i class="fa fa-shield" title="{{i18n admin.title}}"></i>{{/if}}
+            {{#if moderator}}<i class="fa fa-shield" title="{{i18n admin.moderator}}"></i>{{/if}}
+          <td>
+        </tr>
+      {{/each}}
+
+    </table>
+  {{else}}
+    <p>{{i18n search.no_results}}</p>
+  {{/if}}
+{{/loading-spinner}}
