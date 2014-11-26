@@ -49,6 +49,7 @@ class AdminUserIndexQuery
 
   def filter_by_query_classification
     case params[:query]
+      when 'staff'      then @query.where("admin or moderator")
       when 'admins'     then @query.where(admin: true)
       when 'moderators' then @query.where(moderator: true)
       when 'blocked'    then @query.blocked
