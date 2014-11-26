@@ -43,14 +43,13 @@ class AdminUserIndexQuery
     where_conds = []
 
     # One signal: no reading yet the user has bio text
-    where_conds << "user_stats.posts_read_count = 0 AND user_stats.topics_entered = 0 AND COALESCE(user_profiles.bio_raw, '') = ''"
-    # Another surprising signal: Username ends with a number
-    where_conds << "users.username ~ '[0-9]+$'"
+    where_conds << "user_stats.posts_read_count = 0 AND user_stats.topics_entered = 0"
 
     @query.activated
           .references(:user_stats)
           .includes(:user_profile)
-          .where(where_conds.map {|c| "(#{c})"}.join(" AND "))
+          .where("COALESCE(user_profiles.bio_raw, '') != ''")
+          .where(where_conds.map {|c| "(#{c})"}.join(" OR "))
   end
 
   def filter_by_query_classification
