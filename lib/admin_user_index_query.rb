@@ -11,15 +11,7 @@ class AdminUserIndexQuery
   attr_reader :params, :trust_levels
 
   def find_users(limit=100)
-    find_users_query.includes(:user_stat)
-                    .includes(:single_sign_on_record)
-                    .includes(:facebook_user_info)
-                    .includes(:twitter_user_info)
-                    .includes(:github_user_info)
-                    .includes(:google_user_info)
-                    .includes(:oauth2_user_info)
-                    .includes(:user_open_ids)
-                    .limit(limit)
+    find_users_query.includes(:user_stat).limit(limit)
   end
 
   def count_users
@@ -32,10 +24,10 @@ class AdminUserIndexQuery
     if params[:query] == "active"
       order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
     else
-      order << "created_at DESC"
+      order << "users.created_at DESC"
     end
 
-    order << "username"
+    order << "users.username"
 
     klass.order(order.reject(&:blank?).join(","))
   end
@@ -47,6 +39,20 @@ class AdminUserIndexQuery
     end
   end
 
+  def suspect_users
+    where_conds = []
+
+    # One signal: no reading yet the user has bio text
+    where_conds << "user_stats.posts_read_count = 0 AND user_stats.topics_entered = 0 AND COALESCE(user_profiles.bio_raw, '') = ''"
+    # Another surprising signal: Username ends with a number
+    where_conds << "users.username ~ '[0-9]+$'"
+
+    @query.activated
+          .references(:user_stats)
+          .includes(:user_profile)
+          .where(where_conds.map {|c| "(#{c})"}.join(" AND "))
+  end
+
   def filter_by_query_classification
     case params[:query]
       when 'staff'      then @query.where("admin or moderator")
@@ -55,6 +61,7 @@ class AdminUserIndexQuery
       when 'blocked'    then @query.blocked
       when 'suspended'  then @query.suspended
       when 'pending'    then @query.not_suspended.where(approved: false)
+      when 'suspect'    then suspect_users
     end
   end
 

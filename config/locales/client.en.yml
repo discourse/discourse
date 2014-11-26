@@ -1895,6 +1895,7 @@ en:
           staff: 'Staff'
           suspended: 'Suspended'
           blocked: 'Blocked'
+          suspect: 'Suspect'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -1916,6 +1917,7 @@ en:
           moderators: 'Moderators'
           blocked: 'Blocked Users'
           suspended: 'Suspended Users'
+          suspect: 'Suspect Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."

@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::AdminController
       StaffActionLogger.new(current_user).log_show_emails(users)
     end
 
-    render_serialized(users, AdminUserSerializer)
+    render_serialized(users, AdminUserListSerializer)
   end
 
   def show
