@@ -65,6 +65,23 @@ describe SessionController do
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
     end
 
+    it 'allows you to create an admin account' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+      sso.custom_fields["shop_url"] = "http://my_shop.com"
+      sso.custom_fields["shop_name"] = "Sam"
+      sso.admin = true
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      logged_on_user.admin.should == true
+
+    end
+
     it 'allows you to create an account' do
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
@@ -82,6 +99,7 @@ describe SessionController do
       # ensure nothing is transient
       logged_on_user = User.find(logged_on_user.id)
 
+      logged_on_user.admin.should == false
       logged_on_user.email.should == 'bob@bob.com'
       logged_on_user.name.should == 'Sam Saffron'
       logged_on_user.username.should == 'sam'
@@ -132,7 +150,7 @@ describe SessionController do
 
       response.should redirect_to("/login")
 
-      user = Fabricate(:user, password: "frogs", active: true)
+      user = Fabricate(:user, password: "frogs", active: true, admin: true)
       EmailToken.update_all(confirmed: true)
 
       xhr :post, :create, login: user.username, password: "frogs", format: :json
@@ -147,7 +165,9 @@ describe SessionController do
       sso2.email.should == user.email
       sso2.name.should == user.name
       sso2.username.should == user.username
-      sso2.external_id == user.id.to_s
+      sso2.external_id.should == user.id.to_s
+      sso2.admin.should == true
+      sso2.moderator.should == false
 
     end
 
