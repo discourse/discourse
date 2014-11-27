@@ -42,10 +42,10 @@
       </tr>
 
       {{#each user in model}}
-        <tr {{bind-attr class="selected active::not-activated"}}>
+        <tr {{bind-attr class="selected user.active::not-activated"}}>
           {{#if controller.showApproval}}
             <td>
-              {{#if can_approve}}
+              {{#if user.can_approve}}
                 {{input type="checkbox" checked=selected}}
               {{/if}}
             </td>
