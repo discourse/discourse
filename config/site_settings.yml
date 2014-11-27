@@ -108,7 +108,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'edit|delete|admin'
+    default: 'bookmark|edit|delete|admin'
     choices:
      - like
      - edit
@@ -221,6 +221,7 @@ login:
   enable_sso:
     client: true
     default: false
+  enable_sso_provider: false
   sso_url: ''
   sso_secret: ''
   sso_overrides_email: false
@@ -577,6 +578,9 @@ spam:
       min: 0
       max: 3
   max_new_accounts_per_registration_ip: 3
+  min_ban_entries_for_roll_up: 5
+  max_age_unmatched_emails: 365
+  max_age_unmatched_ips: 365
 
 rate_limits:
   unique_posts_mins:

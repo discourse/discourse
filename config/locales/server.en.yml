@@ -787,6 +787,7 @@ en:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (Note: disables invites)"
+    enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -941,7 +942,11 @@ en:
     staff_like_weight: "How much extra weighting factor to give staff likes."
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
-    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none at TL2 or higher), stop accepting new signups from that IP."
+    max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
+    min_ban_entries_for_roll_up: "When clicking the Roll up button, will create a new subnet ban entry if there are at least (N) entries."
+
+    max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
+    max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1059,6 +1064,12 @@ en:
       category: 'Categories'
       topic: 'Results'
       user: 'Users'
+
+  sso:
+    not_found: "Unable to lookup or create account, contact site admin"
+    account_not_approved: "Account is pending approval, you will receive an email notification once approved"
+    unknown_error: "Error updating information, contact site admin"
+    timeout_expired: "Account login timed out, please try logging in again"
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"

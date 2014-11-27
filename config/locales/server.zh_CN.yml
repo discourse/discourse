@@ -793,6 +793,7 @@ zh_CN:
     white_listed_spam_host_domains: "广告主机白名单域名列表。新用户可以任意链接至这些域名。"
     staff_like_weight: "职员赞时的额外权重。"
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
+    max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是职员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
@@ -1443,6 +1444,7 @@ zh_CN:
         ---
         %{respond_instructions}
     digest:
+      why: "在您上一次于 %{last_seen_at} 访问后，在 %{site_link} 上的简洁的摘要。"
       subject_template: "[%{site_name}] %{date} 的摘要"
       new_activity: "在您的主题和帖子里的动态："
       top_topics: "热门帖子"

@@ -8,6 +8,10 @@ class About
     Discourse::VERSION::STRING
   end
 
+  def https
+    SiteSetting.use_https
+  end
+
   def title
     SiteSetting.title
   end

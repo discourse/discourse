@@ -279,9 +279,13 @@ en:
       organisation: Organization
       phone: Phone
       other_accounts: "Other accounts with this IP address:"
-      no_other_accounts: (none)
-      read_time: "read time:"
-      topics_entered: "topics entered:"
+      delete_other_accounts: "Delete %{count}"
+      username: "username"
+      trust_level: "TL"
+      read_time: "read time"
+      topics_entered: "topics entered"
+      post_count: "# posts"
+      confirm_delete_other_accounts: "Are you sure you want to delete these accounts?"
 
     user:
       said: "{{username}}:"
@@ -383,30 +387,30 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public."
-        ok: "We will email you to confirm."
-        invalid: "Please enter a valid email address."
-        authenticated: "Your email has been authenticated by {{provider}}."
+        instructions: "Never shown to the public"
+        ok: "We will email you to confirm"
+        invalid: "Please enter a valid email address"
+        authenticated: "Your email has been authenticated by {{provider}}"
         frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)."
-        too_short: "Your name is too short."
-        ok: "Your name looks good."
+        instructions: "Your full name (optional)"
+        too_short: "Your name is too short"
+        ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short."
-        short_instructions: "People can mention you as @{{username}}."
-        available: "Your username is available."
-        global_match: "Email matches the registered username."
+        instructions: "Unique, no spaces, short"
+        short_instructions: "People can mention you as @{{username}}"
+        available: "Your username is available"
+        global_match: "Email matches the registered username"
         global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
-        too_short: "Your username is too short."
-        too_long: "Your username is too long."
+        too_short: "Your username is too short"
+        too_long: "Your username is too long"
         checking: "Checking username availability..."
-        enter_email: 'Username found. Enter matching email.'
-        prefilled: "Email matches this registered username."
+        enter_email: 'Username found; enter matching email'
+        prefilled: "Email matches this registered username"
 
       locale:
         title: "Interface language"
@@ -535,6 +539,8 @@ en:
         fixed: "Load Page"
     close: "Close"
     assets_changed_confirm: "This site was just updated. Refresh now for the latest version?"
+    logout: "You were logged out."
+    refresh: "Refresh"
     read_only_mode:
       enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
@@ -1678,10 +1684,12 @@ en:
 
       export_csv:
         users:
-          text: "Export Users"
-          title: "Export user list in a CSV file."
-        success: "Export has been initiated, you will be notified shortly with progress."
+          title: "Export full user list in CSV format."
+        screened_ips:
+          title: "Export full screened IPs list in CSV format."
+        success: "Export initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
+        button_text: "Export"
 
       customize:
         title: "Customize"
@@ -1760,6 +1768,7 @@ en:
         settings: "Settings"
         all: "All"
         sending_test: "Sending test Email..."
+        error: "<b>ERROR</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
@@ -1852,6 +1861,9 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          roll_up_confirm: "Are you sure you want to roll up ban entries?"
+          rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
+          rolled_up_no_subnet: "There was nothing to roll up."
           actions:
             block: "Block"
             do_nothing: "Allow"
@@ -1860,6 +1872,9 @@ en:
             label: "New:"
             ip_address: "IP address"
             add: "Add"
+          roll_up:
+            text: "Roll up"
+            title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
         logster:
           title: "Error Logs"
 
@@ -1878,10 +1893,10 @@ en:
           new: "New"
           active: "Active"
           pending: "Pending"
-          admins: 'Admins'
-          moderators: 'Mods'
+          staff: 'Staff'
           suspended: 'Suspended'
           blocked: 'Blocked'
+          suspect: 'Suspect'
         approved: "Approved?"
         approved_selected:
           one: "approve user"
@@ -1898,10 +1913,12 @@ en:
           regular: 'Users at Trust Level 2 (Member)'
           leader: 'Users at Trust Level 3 (Regular)'
           elder: 'Users at Trust Level 4 (Leader)'
+          staff: "Staff"
           admins: 'Admin Users'
           moderators: 'Moderators'
           blocked: 'Blocked Users'
           suspended: 'Suspended Users'
+          suspect: 'Suspect Users'
         reject_successful:
           one: "Successfully rejected 1 user."
           other: "Successfully rejected %{count} users."

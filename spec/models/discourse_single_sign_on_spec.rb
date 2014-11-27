@@ -5,9 +5,9 @@ describe DiscourseSingleSignOn do
     @sso_url = "http://somesite.com/discourse_sso"
     @sso_secret = "shjkfdhsfkjh"
 
-    SiteSetting.stubs("enable_sso").returns(true)
-    SiteSetting.stubs("sso_url").returns(@sso_url)
-    SiteSetting.stubs("sso_secret").returns(@sso_secret)
+    SiteSetting.enable_sso = true
+    SiteSetting.sso_url = @sso_url
+    SiteSetting.sso_secret = @sso_secret
   end
 
   def make_sso

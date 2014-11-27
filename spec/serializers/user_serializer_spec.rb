@@ -3,6 +3,18 @@ require_dependency 'user'
 
 describe UserSerializer do
 
+  context "with a TL0 user seen as anonymous" do
+    let(:user) { Fabricate.build(:user, trust_level: 0, user_profile: Fabricate.build(:user_profile)) }
+    let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }
+    let(:json) { serializer.as_json }
+
+    let(:untrusted_attributes) { %i{bio_raw bio_cooked bio_excerpt location website profile_background card_background} }
+
+    it "doesn't serialize untrusted attributes" do
+      untrusted_attributes.each { |attr| json.should_not have_key(attr) }
+    end
+  end
+
   context "with a user" do
     let(:user) { Fabricate.build(:user, user_profile: Fabricate.build(:user_profile) ) }
     let(:serializer) { UserSerializer.new(user, scope: Guardian.new, root: false) }

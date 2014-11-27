@@ -15,12 +15,15 @@ Discourse.ExportCsv.reopenClass({
     @method export_user_list
   **/
   exportUserList: function() {
-    return Discourse.ajax("/admin/export_csv/users.json").then(function(result) {
-      if (result.success) {
-        bootbox.alert(I18n.t("admin.export_csv.success"));
-      } else {
-        bootbox.alert(I18n.t("admin.export_csv.failed"));
-      }
-    });
+    return Discourse.ajax("/admin/export_csv/users.json");
+  },
+
+  /**
+    Exports screened IPs list
+
+    @method export_screened_ips_list
+  **/
+  exportScreenedIpsList: function() {
+    return Discourse.ajax("/admin/export_csv/screened_ips.json");
   }
 });

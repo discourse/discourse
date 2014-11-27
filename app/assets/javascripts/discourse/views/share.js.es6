@@ -104,6 +104,8 @@ export default Discourse.View.extend({
   },
 
   willDestroyElement: function() {
+    this.get('controller').send('close');
+
     $('html').off('click.discoure-share-link')
              .off('mousedown.outside-share-link')
              .off('keydown.share-view');

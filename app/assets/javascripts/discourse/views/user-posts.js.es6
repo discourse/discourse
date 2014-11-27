@@ -1,4 +1,6 @@
-export default Ember.View.extend(Discourse.LoadMore, {
+import LoadMore from "discourse/mixins/load-more";
+
+export default Ember.View.extend(LoadMore, {
   loading: false,
   eyelineSelector: ".user-stream .item",
   classNames: ["user-stream"],

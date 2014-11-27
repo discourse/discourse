@@ -26,9 +26,9 @@ describe SessionController do
       @sso_url = "http://somesite.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
 
-      SiteSetting.stubs("enable_sso").returns(true)
-      SiteSetting.stubs("sso_url").returns(@sso_url)
-      SiteSetting.stubs("sso_secret").returns(@sso_secret)
+      SiteSetting.enable_sso = true
+      SiteSetting.sso_url = @sso_url
+      SiteSetting.sso_secret = @sso_secret
 
       # We have 2 options, either fabricate an admin or don't
       # send welcome messages
@@ -65,6 +65,23 @@ describe SessionController do
       logged_on_user.single_sign_on_record.external_username.should == 'sam'
     end
 
+    it 'allows you to create an admin account' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+      sso.custom_fields["shop_url"] = "http://my_shop.com"
+      sso.custom_fields["shop_name"] = "Sam"
+      sso.admin = true
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      logged_on_user.admin.should == true
+
+    end
+
     it 'allows you to create an account' do
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
@@ -82,6 +99,7 @@ describe SessionController do
       # ensure nothing is transient
       logged_on_user = User.find(logged_on_user.id)
 
+      logged_on_user.admin.should == false
       logged_on_user.email.should == 'bob@bob.com'
       logged_on_user.name.should == 'Sam Saffron'
       logged_on_user.username.should == 'sam'
@@ -97,6 +115,7 @@ describe SessionController do
     it 'allows login to existing account with valid nonce' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'
+      sso.sso_url = "http://somewhere.over.com/sso_login"
 
       user = Fabricate(:user)
       user.create_single_sign_on_record(external_id: '997', last_payload: '')
@@ -114,6 +133,42 @@ describe SessionController do
       # nonce is bad now
       get :sso_login, Rack::Utils.parse_query(sso.payload)
       response.code.should == '500'
+    end
+
+    it 'can act as an SSO provider' do
+      SiteSetting.enable_sso_provider = true
+      SiteSetting.enable_sso = false
+      SiteSetting.enable_local_logins = true
+      SiteSetting.sso_secret = "topsecret"
+
+      sso = SingleSignOn.new
+      sso.nonce = "mynonce"
+      sso.sso_secret = SiteSetting.sso_secret
+      sso.return_sso_url = "http://somewhere.over.rainbow/sso"
+
+      get :sso_provider, Rack::Utils.parse_query(sso.payload)
+
+      response.should redirect_to("/login")
+
+      user = Fabricate(:user, password: "frogs", active: true, admin: true)
+      EmailToken.update_all(confirmed: true)
+
+      xhr :post, :create, login: user.username, password: "frogs", format: :json
+
+      location = response.header["Location"]
+      location.should =~ /^http:\/\/somewhere.over.rainbow\/sso/
+
+      payload = location.split("?")[1]
+
+      sso2 = SingleSignOn.parse(payload, "topsecret")
+
+      sso2.email.should == user.email
+      sso2.name.should == user.name
+      sso2.username.should == user.username
+      sso2.external_id.should == user.id.to_s
+      sso2.admin.should == true
+      sso2.moderator.should == false
+
     end
 
     describe 'local attribute override from SSO payload' do

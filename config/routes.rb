@@ -52,6 +52,8 @@ Discourse::Application.routes.draw do
       collection do
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
+        delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
+        get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
@@ -83,6 +85,7 @@ Discourse::Application.routes.draw do
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
+    post "users/invite_admin" => "users#invite_admin", constraints: AdminConstraint.new
 
     resources :impersonate, constraints: AdminConstraint.new
 
@@ -99,7 +102,11 @@ Discourse::Application.routes.draw do
     scope "/logs" do
       resources :staff_action_logs,     only: [:index]
       resources :screened_emails,       only: [:index, :destroy]
-      resources :screened_ip_addresses, only: [:index, :create, :update, :destroy]
+      resources :screened_ip_addresses, only: [:index, :create, :update, :destroy] do
+        collection do
+          post "roll_up"
+        end
+      end
       resources :screened_urls,         only: [:index]
     end
 
@@ -156,11 +163,12 @@ Discourse::Application.routes.draw do
     end
 
     resources :export_csv, constraints: AdminConstraint.new do
-      member do
-        get "download" => "export_csv#download", constraints: { id: /[^\/]+/ }
-      end
       collection do
         get "users" => "export_csv#export_user_list"
+        get "screened_ips" => "export_csv#export_screened_ips_list"
+      end
+      member do
+        get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
       end
     end
 
@@ -189,6 +197,7 @@ Discourse::Application.routes.draw do
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
+  get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"

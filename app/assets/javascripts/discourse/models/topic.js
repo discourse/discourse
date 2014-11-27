@@ -207,9 +207,15 @@ Discourse.Topic = Discourse.Model.extend({
     // Don't save unless we can
     if (!this.get('details.can_edit')) return;
 
+    var data = { title: this.get('title') };
+
+    if(this.get('category')){
+      data.category_id = this.get('category.id');
+    }
+
     return Discourse.ajax(this.get('url'), {
       type: 'PUT',
-      data: { title: this.get('title'), category_id: this.get('category.id') }
+      data: data
     });
   },
 

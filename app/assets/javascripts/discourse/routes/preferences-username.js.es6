@@ -1,4 +1,6 @@
-export default Discourse.RestrictedUserRoute.extend({
+import RestrictedUserRoute from "discourse/routes/restricted-user";
+
+export default RestrictedUserRoute.extend({
   model: function() {
     return this.modelFor('user');
   },

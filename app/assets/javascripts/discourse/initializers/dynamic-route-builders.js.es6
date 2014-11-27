@@ -22,8 +22,10 @@ export default {
     Discourse.DiscoveryTopRoute = buildTopicRoute('top', {
       actions: {
         willTransition: function() {
+          this._super();
           Discourse.User.currentProp("should_be_redirected_to_top", false);
           Discourse.User.currentProp("redirected_to_top_reason", null);
+          return true;
         }
       }
     });

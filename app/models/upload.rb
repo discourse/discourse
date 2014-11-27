@@ -150,6 +150,7 @@ end
 #  updated_at        :datetime         not null
 #  sha1              :string(40)
 #  origin            :string(1000)
+#  retain_hours      :integer
 #
 # Indexes
 #

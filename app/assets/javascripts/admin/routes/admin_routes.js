@@ -49,11 +49,9 @@ Discourse.Route.buildRoutes(function() {
         this.route('badges');
         this.route('tl3Requirements', { path: '/tl3_requirements' });
       });
+
       this.resource('adminUsersList', { path: '/list' }, function() {
-        _.each(['active', 'new', 'pending', 'admins', 'moderators', 'blocked', 'suspended',
-                'newuser', 'basicuser', 'regular', 'leaders', 'elders'], function(x) {
-          this.route(x, { path: '/' + x });
-        }, this);
+        this.route('show', {path: '/:filter'});
       });
     });
 

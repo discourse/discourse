@@ -414,6 +414,31 @@ describe Admin::UsersController do
 
     end
 
+    context "delete_other_accounts_with_same_ip" do
+
+      it "works" do
+        Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+
+        UserDestroyer.any_instance.expects(:destroy).twice
+
+        xhr :delete, :delete_other_accounts_with_same_ip, ip: "42.42.42.42", exclude: -1, order: "trust_level DESC"
+      end
+
+    end
+
+    context ".invite_admin" do
+      it 'should invite admin' do
+        xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
+        response.should be_success
+
+        u = User.find_by(email: 'bill@bill.com')
+        u.name.should == "Bill"
+        u.username.should == "bill22"
+        u.admin.should == true
+      end
+    end
+
   end
 
   it 'can sync up sso' do

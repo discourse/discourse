@@ -4,7 +4,7 @@ var classify = Ember.String.classify;
 var get = Ember.get;
 
 var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin', 'adminFlags',
-                         'user', 'preferences', 'adminEmail'],
+                         'user', 'preferences', 'adminEmail', 'adminUsersList'],
     _dummyRoute,
     _loadingView;
 

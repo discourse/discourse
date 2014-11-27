@@ -3,7 +3,9 @@ var isTransitioning = false,
     lastScrollPos = null,
     SCROLL_DELAY = 500;
 
-Discourse.TopicRoute = Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+var TopicRoute = Discourse.Route.extend(ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
@@ -108,7 +110,13 @@ Discourse.TopicRoute = Discourse.Route.extend({
       }
     },
 
+    didTransition: function() {
+      this.controllerFor("topic")._showFooter();
+      return true;
+    },
+
     willTransition: function() {
+      this._super();
       this.controllerFor("quote-button").deselectText();
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
@@ -227,4 +235,5 @@ Discourse.TopicRoute = Discourse.Route.extend({
 
 });
 
-RSVP.EventTarget.mixin(Discourse.TopicRoute);
+RSVP.EventTarget.mixin(TopicRoute);
+export default TopicRoute;
