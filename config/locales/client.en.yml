@@ -1684,13 +1684,12 @@ en:
 
       export_csv:
         users:
-          text: "Export Users"
-          title: "Export user list in a CSV file."
+          title: "Export full user list in CSV format."
         screened_ips:
-          text: "Export Screened IPs"
-          title: "Export screened IPs list in a CSV file."
-        success: "Export has been initiated, you will be notified shortly with progress."
+          title: "Export full screened IPs list in CSV format."
+        success: "Export initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
+        button_text: "Export"
 
       customize:
         title: "Customize"
