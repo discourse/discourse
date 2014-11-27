@@ -67,6 +67,9 @@ class DiscourseSingleSignOn < SingleSignOn
       user.custom_fields[k] = v
     end
 
+    user.admin = admin unless admin.nil?
+    user.moderator = moderator unless moderator.nil?
+
     # optionally save the user and sso_record if they have changed
     user.save!
     sso_record.save!
