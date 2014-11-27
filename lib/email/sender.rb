@@ -67,6 +67,8 @@ module Email
         email_log.topic_id = topic_id
 
         topic_identifier = "<topic/#{topic_id}@#{host}>"
+        post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
+        @message.header['Message-ID'] = post_identifier
         @message.header['In-Reply-To'] = topic_identifier
         @message.header['References'] = topic_identifier
 
