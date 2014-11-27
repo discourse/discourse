@@ -1492,10 +1492,6 @@ sq:
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
-        users:
-          text: "Export Users"
-          title: "Export user list in a CSV file."
-        success: "Export has been initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
       customize:
         title: "Personalizo"
@@ -1687,8 +1683,6 @@ sq:
           new: "New"
           active: "Aktiv"
           pending: "Pezulluar"
-          admins: 'Admins'
-          moderators: 'Mods'
           suspended: 'Suspended'
           blocked: 'Blocked'
         approved: "Aprovuar?"

@@ -6,6 +6,16 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ja:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "MMM D"
     short_date: "MMM D, YYYY"
@@ -23,12 +33,31 @@ ja:
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
+  purge_reason: "古い、もしくは未検証の為、自動的に削除された"
+  disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   errors:
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
+      invalid_boolean: "無効なboolean."
+      taken: "既に取得されています"
+    embed:
+      load_from_remote: "投稿の読み込みに失敗しました。"
+  bulk_invite:
+    file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
+  backup:
+    operation_already_running: "操作を実行しています。他の操作はできません。"
+    backup_file_should_be_tar_gz: "バックアップファイルは .tar .gz 形式でなければいけません。"
+    not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
+  not_logged_in: "ログインしてください。"
+  read_only_mode_enabled: "このサイトは読み取り専用モードです。会話は無効になっています。"
+  too_many_replies:
+    other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
   embed:
     start_discussion: "議論の開始"
     continue: "議論を続ける"
+    more_replies:
+      other: "%{count} 以上の返信"
+    loading: "会話をロードしています…"
     permalink: "パーマリンク"
     in_reply_to: "▶ %{username}"
     replies:

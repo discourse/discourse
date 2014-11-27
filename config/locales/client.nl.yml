@@ -1409,10 +1409,6 @@ nl:
             title: "Herstel de database naar de laatst werkende versie"
             confirm: "Weet je zeker dat je de database wil herstellen naar de laatste versie?"
       export_csv:
-        users:
-          text: "Exporteer gebruikers"
-          title: "Exporteer gebruikerslijst in *.CSV-formaat"
-        success: "Exporteren is gestart; over enkele momenten krijg je meer informatie over de voortgang"
         failed: "Exporteren is mislukt. Controleer de logbestanden."
       customize:
         title: "Aanpassingen"
@@ -1595,8 +1591,6 @@ nl:
           new: "Nieuw"
           active: "Actief"
           pending: "Te beoordelen"
-          admins: 'Admins'
-          moderators: 'Moderatoren'
           suspended: 'Geschorst'
           blocked: 'Geblokt'
         approved: "Goedgekeurd?"

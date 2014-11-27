@@ -1469,10 +1469,6 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
-        users:
-          text: "Vie käyttäjätiedot"
-          title: "Vie lista käyttäjistä CSV-tiedostoon."
-        success: "Vienti on käynnissä, saat pian ilmoituksen sen edistymisestä."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
       customize:
         title: "Mukauta"
@@ -1659,8 +1655,6 @@ fi:
           new: "Uudet"
           active: "Aktiiviset"
           pending: "Odottaa"
-          admins: 'Ylläpitäjät'
-          moderators: 'Valvojat'
           suspended: 'Hyllytetyt'
           blocked: 'Estetyt'
         approved: "Hyväksytty?"

@@ -247,6 +247,12 @@ es:
       organisation: Organización
       phone: Teléfono
       other_accounts: "Otras cuentas con esta dirección IP:"
+      username: "usuario"
+      trust_level: "NC"
+      read_time: "tiempo de lectura"
+      topics_entered: "temas vistos"
+      post_count: "# posts"
+      confirm_delete_other_accounts: "¿Seguro que quieres eliminar estas cuentas?"
     user:
       said: "{{username}}:"
       profile: "Perfil"
@@ -337,14 +343,29 @@ es:
         instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
+        instructions: "Nunca se mostrará públicamente"
+        ok: "Te enviaremos un email para confirmar"
+        invalid: "Por favor, introduce una dirección de correo válida"
+        authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
         frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
+        instructions: "Tu nombre completo (opcional)"
+        too_short: "Tu nombre es demasiado corto"
+        ok: "Tu nombre es válido"
       username:
         title: "Nombre de usuario"
+        instructions: "Debe ser único, sin espacios y conciso"
+        short_instructions: "Los demás usuarios pueden mencionarte como @{{username}}"
+        available: "Tu nombre de usuario está disponible"
+        global_match: "La dirección coincide con la del nombre de usuario registrado"
         global_mismatch: "Ya está registrado. ¿Prueba {{suggestion}}?"
         not_available: "No disponible. ¿Prueba {{suggestion}}?"
+        too_short: "Tu nombre de usuario es demasiado corto"
+        too_long: "Tu nombre de usuario es demasiado largo"
         checking: "Comprobando la disponibilidad del nombre de usuario..."
+        enter_email: 'Nombre de usuario encontrado; introduce la dirección de correo correspondiente'
+        prefilled: "El email coincide con el nombre de usuario registrado"
       locale:
         title: "Idioma de la interfaz"
         instructions: "El idioma de la interfaz. Cambiará cuando recargues la página."
@@ -459,6 +480,8 @@ es:
         fixed: "Cargar Página"
     close: "Cerrar"
     assets_changed_confirm: "Este sitio acaba de ser actualizado justo ahora. ¿Quieres recargar la página para ver la última versión?"
+    logout: "Has cerrado sesión."
+    refresh: "Actualizar"
     read_only_mode:
       enabled: "Un administrador ha activado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
@@ -1494,10 +1517,6 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
-        users:
-          text: "Exportar usuarios"
-          title: "Exportar la lista de usuarios en un archivo CSV."
-        success: "La exportación ha sido iniciada. Serás notificado en breves con los avances."
         failed: "Exportación fallida, revisa los logs."
       customize:
         title: "Personalizar"
@@ -1574,6 +1593,7 @@ es:
         settings: "Ajustes"
         all: "Todos"
         sending_test: "Enviando e-mail de prueba..."
+        error: "<b>ERROR</b> - %{server_error}"
         test_error: "Hubo un error al enviar el email de prueba. Por favor, revisa la configuración de correo, verifica que tu servicio de alojamiento no esté bloqueando los puertos de conexión de correo, y prueba de nuevo."
         sent: "Enviado"
         skipped: "Omitidos"
@@ -1684,13 +1704,11 @@ es:
         last_emailed: "Último email enviado"
         not_found: "Lo sentimos, ese usuario no existe."
         active: "Activo"
-        show_emails: "Mostrat emails"
+        show_emails: "Mostrar emails"
         nav:
           new: "Nuevo"
           active: "Activo"
           pending: "Pendiente"
-          admins: 'Administradores'
-          moderators: 'Moderadores'
           suspended: 'Suspendidos'
           blocked: 'Bloqueados'
         approved: "Aprobado/s?"
