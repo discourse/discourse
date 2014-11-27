@@ -1387,10 +1387,6 @@ zh_TW:
             title: "回溯資料庫到以前的工作階段"
             confirm: "你確定要回溯資料庫到以前的工作階段?"
       export_csv:
-        users:
-          text: "匯出用戶"
-          title: "以CSV格式匯出用戶清單"
-        success: "開始匯出，你很快就會收到進度通知。"
         failed: "匯出失敗。請觀看紀錄。"
       customize:
         title: "客製化"
@@ -1577,8 +1573,6 @@ zh_TW:
           new: "新用戶"
           active: "啟用的"
           pending: "申請中"
-          admins: '管理員'
-          moderators: '版主'
           suspended: '已停權'
           blocked: '已封鎖'
         approved: "已批准？"

@@ -823,6 +823,7 @@ es:
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, qué número de caracteres permiten una coincidencia parcial."
+    max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas con nivel de confianza 0 desde esta IP (y ninguna es de un miembro del staff o de nivel de confianza 2 o más), prohibir nuevos registros desde esa IP."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
@@ -951,6 +952,12 @@ es:
     autoclosed_enabled_lastpost_days:
       one: "Este tema se cerró automáticamente 1 día después del último post. No se permiten nuevas respuestas."
       other: "Este tema se cerró automáticamente %{count} días después del último post. No se permiten nuevas respuestas."
+    autoclosed_enabled_lastpost_hours:
+      one: "Este tema se cerró automáticamente 1 hora después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} horas después del último post. No se permiten nuevas respuestas."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Este tema se cerró automáticamente 1 minuto después del último post. No se permiten nuevas respuestas."
+      other: "Este tema se cerró automáticamente %{count} minutos después del último post. No se permiten nuevas respuestas."
     autoclosed_disabled: "El tema ahora está en abierto, se permiten respuestas."
     autoclosed_disabled_lastpost: "Este tema está ahora abierto. Se permiten nuevas respuestas."
     pinned_enabled: "Este tema ahora está destacado. Aparecerá en primer lugar en la lista de su categoría hasta que se deshaga el destacado de forma general por los moderadores o de forma particular por cada usuario para sí."
@@ -1122,6 +1129,20 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
+      text_body_template: |
+        Hola,
+
+        Este se un mensaje automatizado de %{site_name} para informarte de que tu post fue ocultado.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Varios miembros de la comunidad reportaron este post antes de ocultarlo, por favor considera revisar tu post para reflejar la retroalimentación de los demás miembros. **Puedes editar tu post después de %{edit_delay} minutos, y será automáticamente  mostrado de vuelta.** Esto incrementara tu nivel de confianza.
+
+        Sin embargo, si el post es ocultado por la comunidad una segunda vez, este se mantendrá oculto hasta que sea atendido por el staff – y tal vez vez se tomen medidas, incluyendo la posible suspensión de tu cuenta.
+
+        Para más información, por favor consulta nuestras [reglas de comunidad](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "Este mensaje privado tiene unos cuantos consejos para ayudarte a empezar.\n\n## Sigue desplazándote\n\nNo hay botones de siguiente página o número de páginas - para leer más, **¡solo sigue desplazándote hacia abajo!**\n\nTan pronto como llegue nuevos posts, aparecerán automáticamente.\n\n## ¿Dónde estoy?\n\n- Para buscar, ver tu página de usuario, o el menú, usa el **los botones con el icono <kbd>☰</kbd> en la parte superior derecha**.\n\n- Cualquier título de un tema te llevara al siguiente post sin leer. Usa el tiempo de la última actividad y el contador de posts para ir al inicio o al final.\n\n- Mientras estés leyendo un tema, regresa al inicio &uarr; seleccionando el título del tema. Selecciona la barra de proceso verde en la parte inferior derecha para mostrar todos los controles de navegación, o usa las teclas <kbd>inicio</kbd> y <kbd>fin</kbd>.\n\n<img src=\"/images/welcome/progress-bar.png\"\
         \ width=\"143\" height=\"39\">\n\n## ¿Cómo respondo?\n\n- Para responder para el tema en general, usa el botón Responder <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> al final de la página.\n\n- Para responder a un post especifico, usa el botón Responder <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> en ese post.\n\n- Para llevar la conversación a una dirección diferente, pero manteniéndola enlazada, usa <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Responder como Tema enlazado a la derecha del post.\n\nPara citar a alguien en tu respuesta, selecciona el texto que desees citar, y presiona cualquier botón de Responder.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPara mencionar a alguien en tu respuesta, menciona su nombre. Escribe `@` y el autocompletado aparecerá.\n\
@@ -1216,10 +1237,19 @@ es:
         Tu cuenta no tiene el nivel de confianza suficiente para publicar nuevos temas a esta dirección de correo electrónico. Si crees que esto es un error, contacta con algún miembro del Staff.
     email_reject_no_account:
       subject_template: "Problema con el e-mail -- Cuenta Desconocida"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
+
+        No hay una cuenta de usuario asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_empty:
       subject_template: "Error con el email -- No hay contenido"
+      text_body_template: "Lo sentimos, pero tu email para %{destination} (titled %{former_title}) no funcionó.\n\nNo pudimos encontrar contenido en este e-mail. Asegúrate de que hayas escrito algo al inicio del e-mail - no podemos analizar respuestas en una sola línea.\n\nSi estás teniendo este problema y _sí_ incluiste contenido, intenta otra vez con contenido HTML incluido en tu e-mail (no solo texto plano). \n"
     email_reject_parsing:
       subject_template: "Error con el email -- Contenido desconocido"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
+
+        No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - no podemos analizar respuestas entre líneas.
     email_reject_post_error:
       subject_template: "Error con el email -- Error de publicación"
       text_body_template: |
@@ -1244,10 +1274,22 @@ es:
         La clave de respuesta proporcionada no es válida o es desconocida, por lo que no sabemos a qué responde este email. Contacta con algún miembro del staff.
     email_reject_destination:
       subject_template: "Problema con el e-mail -- Desconocido Para: Dirección"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
+
+        No se ha podido reconocer ninguna de las direcciones destino. Por favor, asegúrate de que la dirección del sitio está en Para: (no CC ni BCC), y que lo estás enviando a la dirección de e-mail proporcionada por los administradores.
     email_reject_topic_not_found:
       subject_template: "Problema con el email -- Tema No Encontrado"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
+
+        No hemos encontrado el tema, debe haber sido eliminado. Si crees que esto es un error, contacta a un administrador.
     email_reject_topic_closed:
       subject_template: "Problema con el email -- Tema Cerrado"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
+
+        El tema está cerrado a respuestas. Si crees que esto es un error, contacta a un administrador.
     email_error_notification:
       subject_template: "Error con el email -- Autenticación POP errónea"
       text_body_template: |

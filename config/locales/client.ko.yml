@@ -1427,10 +1427,6 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
       export_csv:
-        users:
-          text: "사용자 내보내기"
-          title: "CSV 파일로 사용자 목록 내보내기"
-        success: "내보내기가 시작되었습니다. 곧 진행사항을 알려드릴께요."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
       customize:
         title: "사용자 지정"
@@ -1622,8 +1618,6 @@ ko:
           new: "새로운 사용자"
           active: "활성화 사용자"
           pending: "보류된 사용자"
-          admins: '관리자 목록'
-          moderators: '운영자'
           suspended: '접근 금지 사용자'
           blocked: '블락된 사용자'
         approved: "승인?"

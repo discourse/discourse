@@ -6,6 +6,16 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 cs:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
@@ -20,8 +30,20 @@ cs:
   posts: "příspěvky"
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlepší zážitek je se zapnutým JavaScriptem'
+  log_in: "Přihlásit se"
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
+  purge_reason: "Automaticky smazáno: staré a neověřené"
+  disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
+  errors:
+    messages:
+      too_long_validation: "je limitováno na %{max} znaků; zadali jste %{length}."
+      invalid_boolean: "Nevalidní boolean."
+      taken: "už je zabráno"
+    embed:
+      load_from_remote: "Při načítání příspěvku nastala chyba."
+  bulk_invite:
+    file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -33,6 +55,8 @@ cs:
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
     other: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědí v tématu."
   embed:
+    start_discussion: "Začít diskuzi"
+    continue: "Pokračovat v diskuzi"
     more_replies:
       one: "1 další odpověď"
       few: "%{count} další odpověďi"
@@ -40,6 +64,7 @@ cs:
     loading: "Načítám diskuzi..."
     permalink: "Permalink"
     imported_from: "Diskuze k původnímu příspěvku na blogu: %{link}"
+    in_reply_to: "▶ %{username}"
     replies:
       one: "1 reakce"
       few: "%{count} reakce"
@@ -89,6 +114,7 @@ cs:
     errors:
       can_not_modify_automatic: "Automatickou skupinu nelze upravit"
     default_names:
+      everyone: "kdokoliv"
       admins: "admins"
       moderators: "moderators"
       staff: "staff"
@@ -101,6 +127,26 @@ cs:
       one: "příspěvek"
       few: "%{count} příspěvky"
       other: "%{count} příspěvků"
+    new-topic: |
+      Vítejte na %{site_name} &mdash; **díky za vytvoření nové konverzace!**
+
+      - Popisuje vybraný název nové téma přesně? Zní dostatečně zajímavě?
+
+      - O čem to je? Proč by mělo lidi zajímat? V jaké odpovědi od komunity doufáte?
+
+      - Používejte běžná slova podle kterých ostatní budou toto téma najít při **vyhledávání**. Pro lepší zařazení vyberte i kategorii.
+
+      Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
+    new-reply: |
+      Vítejte na %{site_name} &mdash; **díky za přispívání!**
+
+      - Přispívá nějak vaše odpověď k diskuzi?
+
+      - Buďte na ostatní členy komunity milí.
+
+      - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
+
+      Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     avatar: |
       ### How about a new picture for your account?
 
@@ -129,6 +175,12 @@ cs:
       We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
 
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+    reviving_old_topic: |
+      ### Oživit téma?
+
+      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď vyšvyhne toto téma v seznamu nahoru a uporozní všechny kdo se tohoto tématu účastní.
+
+      Určitě chcete pokračovat v této staré konverzaci?
   activerecord:
     attributes:
       category:
@@ -144,10 +196,15 @@ cs:
       models:
         topic:
           attributes:
+            base:
+              warning_requires_pm: "Varování můžete přidat pouze k soukromým zprávám."
+              too_many_users: "Varování můžete najednou poslat pouze jednomu uživateli."
             archetype:
               cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
         user:
           attributes:
+            password:
+              common: "je jedno z 10 000 nejčastějších hesel. Použijte prosím bezpečnější heslo."
             ip_address:
               signup_not_allowed: "Registrace z této adresy není povolena."
         color_scheme_color:
@@ -157,12 +214,31 @@ cs:
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} o sobě zatím žádné informace nevyplnil</div>"
+  vip_category_name: "VIP"
   vip_category_description: "Kategorie je přístupná výhradně členům s důvěryhodností 3 a vyšší."
+  meta_category_name: "Meta"
+  meta_category_description: "Diskutuje tento web, jeho organizaci, jak funguje a jak ho vylepšit."
+  staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
+  assets_topic_body: "Tohle je permanentí téma, viditelné pouze redaktorům, pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nTady je jak:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte nebo „vložte“)\n3. Pošlete tuto odpověď\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu přípěvku a adresy vykopírujte tam.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
+  lounge_welcome:
+    title: "Vítejte v Redakci"
   category:
     topic_prefix: "Definice kategorie pro %{category}"
     replace_paragraph: "[Nahraďte tento první odstavec krátkých popisem nové kategorie. Zkuste se vejít do 200 znaků.]"
     post_template: "%{replace_paragraph}\\\n\\\nPoužijte toto místo níže pro delší popis a stanovení pravidel diskuze!\n"
+    errors:
+      uncategorized_parent: "„Bez kategorie“ nemůže mít nadřazenou kategorii"
+      self_parent: "Nadřazená kategorie nemůže zároveň být podkategorie"
+      depth: "Pokategorie se nedají vnořovat"
+    cannot_delete:
+      uncategorized: "„Bez kategorie“ nejde smazat"
+      has_subcategories: "Tato kategorie nejde smazat protože obsahuje podkategorie."
+      topic_exists:
+        one: "Tato kategorie nejde smazat protože obsahuje 1 téma: %{topic_link}."
+        few: "Tato kategorie nejde smazat protože obsahuje %{count} témata. Nejstarší téma je %{topic_link}."
+        other: "Tato kategorie nejde smazat protože obsahuje %{count} témat. Nejstarší téma je %{topic_link}."
+      topic_exists_no_oldest: "Kategorii nelze smazat protože počet příspěvků je %{count}."
   trust_levels:
     newuser:
       title: "nový uživatel"
@@ -175,6 +251,7 @@ cs:
     elder:
       title: "vůdce"
   rate_limiter:
+    slow_down: "Provedli jste tuhle akci moooockrát, zkuste to později"
     too_many_requests: "Děláte tuto akci příliš často. Prosím počkejte %{time_left} a zkuste to znovu."
     hours:
       one: "1 hodina"
@@ -293,24 +370,35 @@ cs:
     continue: "Pokračovat na %{site_name}"
   change_email:
     confirmed: "Vaše emailová adresa bylo změněna."
+    please_continue: "Pokračovat na %{site_name}"
     error: "Nastala chyba běhěm změny emailové adresy. Není nová adresa již někým používána?"
   activation:
+    action: "Aktivovat účet"
     already_done: "Bohužel, tento odkaz pro aktivaci účtu již není platný. Není váš účet jíž aktivní?"
+    please_continue: "Váš účet je aktivovaný; budete přesměrování na výchozí stránku."
+    continue_button: "Pokračovat na %{site_name}"
     welcome_to: "Vítejte na %{site_name}!"
     approval_required: "Váš nový účet musí být schválen moderátorem, než budete moci používat fórum. Jakmile se tak stane, budete informováni emailem."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
+      description: 'Tento příspěvek se nevztahuje k diskuzi definované názvem a obsahem prvního příspěvku a měl by asi být přesunut jinam.'
       long_form: 'označil příspěvek jako off-topic'
     spam:
       title: 'Spam'
+      description: 'Tento příspěvek je reklama. Není užitečný ani relevantní k tématu.'
       long_form: 'označeno jako spam'
     inappropriate:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
+      description: 'Tato zpráva obsahuje něco o čem bych s autorem rád mluvil přímo a soukromě. Nevytvoří varování moderátorům.'
+      email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
+      title: "Něco jiného"
+      description: 'Tento příspěvek vyžaduje pozornost moderátor z důvodů nevypsaných výše.'
+      long_form: 'nahlášeno moderátorům'
       email_title: 'Příspěvek v tématu "%{title}" vyžaduje pozornost moderátora'
       email_body: "%{link}\\\n\\\n%{message}\n"
     bookmark:
@@ -332,18 +420,26 @@ cs:
       long_form: 'označeno jako spam'
     inappropriate:
       title: 'Nevhodné'
+      description: 'Obsah tohoto příspěvku by rozumný člověk shledal urážlivý, hrubý nebo v rozporu s <a href="/guidelines">pravidly komunity</a>.'
       long_form: 'nahlášeno jako nevhodné'
     notify_moderators:
+      title: "Něco jiného"
+      description: 'Toto téma vyžaduje pozornost moderátorů na základě <a href="/guidelines">pravidel komunity</a>, <a href="%{tos_url}">pravidel použítí</a>, nebo z jiného výše neuvedeného důvodu.'
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\\\n\\\n%{message}\n"
   archetypes:
     regular:
       title: "Běžné téma"
+    banner:
+      message:
+        make: "Tento příspěvek je nyní banner. Bude se zobrazovat na vršku každé stránky dokud ho uživatel nezavře."
+        remove: "Tento příspěvek už není banner. Nebude se dále zobrazovat na vršku každé stránky."
   unsubscribed:
     title: 'Odhlášen'
     description: "Byli jste odhlášeni ze seznamu. Již vás nebudeme kontaktovat."
     oops: "Pokud jste tuto akci provedli omylem, klikněte na odkaz níže."
     error: "Chyba při odhlašování"
+    preferences_link: "Také se můžete z souhrných emailů odhlásit na <a href='/my/preferences'>stránce nastavení</a>"
     not_found_description: "Bohužel jsme vás nemohli odhlásit ze seznamu. Je možné, že váš odkaz z emailu již není platný."
   resubscribe:
     action: "Znovu přihlásit"
@@ -561,6 +657,9 @@ cs:
   most_posts: "Více příspěvků"
   most_recent_poster: "Poslední zasilatel"
   frequent_poster: "Častý zasilatel"
+  redirected_to_top_reasons:
+    new_user: "Vítejte v naší komunitě! Tohle jsou poslední populární témata."
+    not_seen_in_a_month: "Vítejte zprátky! Chvíli jsme se neviděli. Tohle jsou nejpopulárnější témata od vaší poslední návštěvy."
   move_posts:
     new_topic_moderator_post:
       one: "Přesunul jsem příspěvek do nového tématu: %{topic_link}"
@@ -601,6 +700,12 @@ cs:
       blocked: "není povolen."
     ip_address:
       blocked: "is blocked."
+  invite_password_instructions:
+    text_body_template: |
+      Díky za potvrzení pozvánky na %{site_name} - vítejte!
+
+      Pro další přihlášení, klikněte na následující odkaz a nastavte si heslo:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
   new_version_mailer_with_notes:
@@ -608,10 +713,99 @@ cs:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Oznámení: Příspěvek skryt kvůli hlášením od komunity"
+    usage_tips:
+      text_body_template: |
+        Tahle soukromá zpráva obsahuje pár tipů jak začít.
+
+        ## Roluj dolů
+
+        Nejsou zde žádné šipky na další stránky - když chcete číst víc, **prostě rolujte dolů!**
+
+        Nové odpovědi se zobrazí automaticky jak budou přibývat.
+
+        ## Kde jsem?
+
+        - K vyhledávání, zobrazení vašeho profilu nebo pro další možnosti vyberte **ikonková tračítka <kbd>☰</kbd> v pravém horním rohu**.
+
+        - Název tématu vás vezme na poslední nepřečtený příspěvek. Kliknutím na čas poslední aktivity nebo na počet příspěvků se přesunete na začátek nebo konec vlákna.
+
+        - Při čtení tématu můžete přeskočit nahoru &uarr; kliknutím na název v hlavičce. Kliknutím na zelenou listu otevřete další možnosti navigace. A taky můžete použít klávesy <kbd>home</kbd> a <kbd>end</kbd>.
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## Jak odpovídat?
+
+        - Pokud chcete přidat další příspěvek do diskuze, klikněte na tlačítko Opovědi <img src="/images/welcome/reply-topic.png" width="29" height="25"> úplně na konci stránky.
+
+        - Nebo můžete odpovědět na konkrétní příspěvěk - to klikněte na tlačítko Odpovědi <img src="/images/welcome/reply-post.png" width="29" height="25"> u konkrétního příspěvku.
+
+        - Pokud chcete konverzaci odvést jinam, použijte tlačítko Opovědět v propojeném tématu <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25">.
+
+        Citovat ve své odpovědi můžete tak, že něčí text vyberete a kliknete na tlačítko Odpověď s citací.
+
+        <img src="/images/welcome/quote-reply-cs.png" height="129">
+
+        To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
+        Upozornit někoho na vaši odpověď můžete zmíněním jejich jména. Napište `@` a zobrazí se doplňovač se všemy jmény.
+
+        <img src="/images/welcome/username-completion-cs.png" height="160">
+
+        Smajlíky ([standartní Emoji](http://www.emoji.codes/)), napište `:` a zobrazí se doplňovač. A nebo používejte tradiční smajlíky `:)` :smile:
+
+        ## Co můžu dělat dát?
+
+        U každého příspěvku je několik tlačítek.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Nechat někoho vědět, že s jeho příspěvkem souhlasíte a nebo vás třeba pobavil, můžete tlačítkem **to se mi líbí**. Naopak pokud je příspěvek problematický, kliknutím na vlaječku ho můžete soukromě **nahlásit** moderátorům.
+
+        You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
+        Také můžete **sdílet** odkaz na příspěvek nebo si ho dát do **záložek** na později.
+
+        ## Kdo to ke mě mluví?
+
+        Když někdo odpoví na váš příspěvek, cituje vás nebo vás zmíní `@jmenem`, na vrchu stránky se okamžitě zobrazí číslo. Můžete tím otevřít svoje **uporoznění**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Nestrachujte se že propásnete nějakou odpověď - pokud nejste zrovna online, na přímé odpovědi (a soukromé zprávy) dostanete upozornění emailem.
+
+        ## Kdy jsou konverzace nové?
+
+        Obyčejně jsou za nové považovány všechny konverzace mladší než 2 dny. Některé konverzace (vámi vytvořené, s odpovědí, nebo ty které jste dlouho četli) se nastaví jako „hlídané“.
+
+        U takovýhle témat uvidíte modré „nové“ a číslo nových příspěvků:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Stavy témat můžete nastavit přepínačem na spodku stránky (a dají se nastavit i pro celé kategorie). Pro nová témata můžete taky pravidla [upravit v nastavení](/my/preferences).
+
+        ## Proč něco dělat nemůžu?
+
+        Noví uživatelé mají z bezpečnostních důvodů trochu omezená práva. Čím víc se do komunity zapojíte, tím větší důvěryhodnost získáte a všechny omezení se automaticky odstraní. Na dostatečně vysoké [důvěryhodnosti](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) můžete získat i moderátorská oprávnění.
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
+      text_body_template: |
+        Díky za přijmutí pozvánky na %{site_name} -- vítejte!
+
+        Automaticky jsme vám vytvořili uživatelské jméno **%{username}**, ale můžete si ho změnit [na svém profilu][prefs].
+
+        Pro příští přihlášení, buď:
+
+        1. Přihlaste se libovolnou metodou -- ale musíte použít stejnou **emailovou adresu** na kterou jste dostali pozvánku. Jinak nedokážeme rozpoznat, že jste to vy.
+
+        2. V [nastavení][prefs] si vyplňte heslo, které budeme moct pro přihlášení použít.
+
+        %{new_user_tips}
+
+        Věříme v [civilizovanou komunitu](%{base_url}/guidelines).
+
+        Užijte si to tu!
+
+        [prefs]: %{user_preferences_url}
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -733,6 +927,21 @@ cs:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
+      text_body_template: |
+        Vítejte na %{site_name}!
+
+        Moderátor potvrdil vaši registraci na %{site_name}.
+
+        Na následujícím odkazu můžete aktivovat váš nový účet:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Jestli se vám na odkaz nedaří kliknout, zkopírujte si ho a vložte ho do adresní řádky internetového prohlížeče.
+
+        %{new_user_tips}
+
+        Věříme v [civilizovanou komunitu](%{base_url}/guidelines).
+
+        Užijte si to tu!
     signup:
       subject_template: "[%{site_name}] Aktivujte svůj nový účet"
       text_body_template: |
@@ -744,6 +953,10 @@ cs:
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
+  login_required:
+    welcome_message: |
+      #[Vítejte na %{title}](#welcome)
+      Je vyžadován uživatelský účet. Prosím vytvořte si nový účet nebo se přihlaste.
   terms_of_service:
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
@@ -772,3 +985,86 @@ cs:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+  privacy_topic:
+    body: |
+      <a name="collect"></a>
+
+      ## [Jaké informace sbíráme?](#collect)
+
+      Sbíráme informace od vaší registrace a shromažďujeme data o tom když se účastníte chodu fóra čtením, přispíváním a hodnocením zdejšího obsahu.
+
+      Při registraci na náš web můžete být požádání o jméno a emailovou adresu. Můžete ale tento web navštěvovat i bez registrace. Vaše emailová adresa bude ověřena emailem obsahujícím unikátní odkaz. Po návštěvě tohoto odkazu víme, že spravujete onu emailovou adresu.
+
+      Při registraci a při přispívání uchováváme IP adresu ze které byl požadavek odeslán. Dále také můžeme mít na serveru logy které uchovávají IP adresu každého požadavku na tento server.
+
+      <a name="use"></a>
+
+      ## [Na co vaše informace používáme?](#use)
+
+      Každá informace kterou shromažďujeme může být použivate následovně:
+
+      *   Přizpůsobení webu &mdash; vaše informace nám pomáhá lépe upravit fórum pro vaše osobní potřeby.
+      *   Zdokonalování našeho webu &mdash; neustále se na základě vaší odezvy snažíme náš web vylepšovat.
+      *   Lepší uživatelská podpora &mdash; vaše informace nám pomáhají efektivněji řešit uživatelskou podporu.
+      *   Odesílání periodických emailů &mdash; Emailová adresa kterou nám poskytnete může být použita k tomu, že vám odešleme informace a nebo upozornění na změny na webu a nebo akce ostatních uživatelů nebo další otázky, požadavky nebo odpovědi.
+
+      <a name="protect"></a>
+
+      ## [Jak chráníme vaše informace?](#protect)
+
+      Zavedli jsme celou řadu bezpečnostních opatření abychom zajistili bezpočnost vašich soukromých informací vždy když vkládáte, odesíláte nebo čtete vaše soukromé informace.
+
+      <a name="data-retention"></a>
+
+      ## [Jaká je vaše politika uchovávání osobních údajů?](#data-retention)
+
+      Snažíme se:
+
+      *   Uchovávat logy obsahující IP adresu všech požadavků na tento server méně než 90 dní.
+      *   Uchovávat IP adresu asociovanou s registrovaným uživatelem a jejich příspěvky méně než 5 let.
+
+      <a name="cookies"></a>
+
+      ## [Používáme cookies?](#cookies)
+
+      Samozřejmě. Cookies jsou miniaturní soubory, které stránka nebo její provozovatel vytvoří na vašem počítači skrz webový prohlížeč (pokud to ten povolí). Tato cookies umožňují rozpoznat váš prohlížeč a, pokud máte registrovaný účet, asociovat vás s registrovaným účtem.
+
+      Používáme cookie k pochopení a uložení vašich preferencí pro budoucí návštěvi a kompilujeme souhrná data o provozu na webu a interakcí s webem tak, že můžeme nabídnout lepší uživatelský zážitek a nástroje. Můžeme tato souhrnná data poskytnout třetí straně, která nám pomůže lépe porozumět uživatelům našeho webu. Tyto třetí strany nemají povoleno tyto souhrné informace využívat kromě toho, když nám pomáhají vylepšovat náš web.
+
+      <a name="disclose"></a>
+
+      ## [Prozrazujeme libovolné informace cizím stranám?](#disclose)
+
+      Neprodáváme, neobchodujeme s, ani jinak nepřenášíme cizím stranám vaše osobní údaje. Toto se nevztahuje na důvěryhodné třetí strany které nám pomáhají provozovat tento web, vést podnikání, dokud tyto strany souhlasí, že vaše osobní data zůstanou důvěrná. Můžeme také uvolnit informace v důsledku dodržování zákonů, pro vynucování politiky tohoto webu, k ochranně našich nebo cizích práv, majetku nebo bezpečnosti. Neosobní informace ale můžeme poskytnout třetím stranám pro účely marketingu, reklamy nebo další použití.
+
+      <a name="third-party"></a>
+
+      ## [Odkazy třetích stran](#third-party)
+
+      Podle našeho uvážení můžeme příležitostně na tomto webu zobrazovat produkty a služby třetích stran. Tyto třetí strany mohou mít jiné a nezávislé zásady ochrany osobních údajů. Nemáme tedy žádnou odpovědnost ani ručení za obsah těchto stran. Snažíme se nicméně ochraňovat integritu tohoto webu a vítáme zpětnou vazbu o obsahu cizích stran na tomto webu.
+
+      <a name="coppa"></a>
+
+      ## [Children's Online Privacy Protection Act Compliance](#coppa)
+
+      Tento web, produkty a služby jsou určeny pro lidi staré alespoň 13 let. Pokud je tento server v USA a jste mladší než 13 let, nesmíte podle požadavků COPPA ([Children's Online Privacy Protection Act](http://en.wikipedia.org/wiki/Children)) tento web používat.
+
+      <a name="online"></a>
+
+      ## [Pouze online zásady](#online)
+
+      Tyto zásady ochrany osobních údajů jsou platné pouze online a nevztahují se na informace sbírané offline.
+
+      <a name="consent"></a>
+
+      ## [Váš souhlas](#consent)
+
+      Používáním tohoto webu souhlasíte s těmito zásadami ochrany osobních údajů.
+
+      <a name="changes"></a>
+
+      ## [Změny v zásadách ochrany osobních údajů](#changes)
+
+      Pokud se rozhodneme změnit naše zásady ochrany osobních údajů, oznámíme tyto změny na této stránce.
+
+      Tento text je pod licencí CC-BY-SA. Naposledy byl změněn 22. listopadu 2014.

@@ -1409,10 +1409,6 @@ pt:
             title: "Reverter a base de dados para um estado anterior operacional"
             confirm: "Tem a certeza que deseja reverter a base de dados para um estado anterior operacional?"
       export_csv:
-        users:
-          text: "Exportar Utilizadores"
-          title: "Exportar lista de utilizadores num ficheiro CSV."
-        success: "Exportação foi iniciada, será notificado brevemente do progresso da mesma."
         failed: "Exportação falhou. Por favor verifique os logs."
       customize:
         title: "Personalizar"
@@ -1591,8 +1587,6 @@ pt:
           new: "Novos"
           active: "Ativos"
           pending: "Pendentes"
-          admins: 'Administradores'
-          moderators: 'Moderadores'
           suspended: 'Suspenso'
           blocked: 'Bloqueados'
         approved: "Aprovado?"

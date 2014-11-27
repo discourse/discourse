@@ -1203,8 +1203,6 @@ uk:
           new: "Нові"
           active: "Активні"
           pending: "Очікують"
-          admins: 'Адміни'
-          moderators: 'Моди'
           suspended: 'Призупинені'
           blocked: 'Заблоковані'
         approved: "Схвалено?"

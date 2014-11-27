@@ -599,8 +599,13 @@ da:
       toggler: "skjul eller vis editor-panelet"
       admin_options_title: "Valgfrie staff-indstillinger for dette emne"
       auto_close:
+        label: "Tidspunkt for automatisk lukning af emne:"
         error: "Indtast venligst en gyldig værdi"
+        based_on_last_post: "Luk ikke før det seneste indlæg i emnet er mindst så gammel."
+        all:
+          examples: 'Indtast et antal timer (24), et bestemt tidspunkt (17:30) eller et tidsstempel (2013-11-22 14:00).'
         limited:
+          units: "(# timer)"
           examples: 'Indtast antal timer (24).'
     notifications:
       title: "notifikation ved @navns nævnelse, svar til dine indlæg og emner, private beskeder, mv."
@@ -1427,10 +1432,6 @@ da:
             title: "Rul databasen tilbage til et tidspunkt hvor tingene virkede"
             confirm: "Er du sikker på du vil rulle databasen tilbage?"
       export_csv:
-        users:
-          text: "Eksporter Brugere"
-          title: "Eksporter brugerliste i en CSV-fil"
-        success: "Eksport er påbegyndt, du får snart besked om hvordan det skrider frem."
         failed: "Eksport fejlede. Tjek venligst loggen."
       customize:
         title: "Tilpasning"
@@ -1619,8 +1620,6 @@ da:
           new: "Ny"
           active: "Aktiv"
           pending: "Afventer"
-          admins: 'Admins'
-          moderators: 'Mods'
           suspended: 'Suspenderet'
           blocked: 'Blokeret'
         approved: "Godkendt?"

@@ -270,6 +270,12 @@ pl_PL:
       organisation: Organizacja
       phone: Numer telefonu
       other_accounts: "Inne konta z tym adresem IP:"
+      username: "nazwa użytkownika"
+      trust_level: "TL"
+      read_time: "czas czytania:"
+      topics_entered: "wprowadzone tematy:"
+      post_count: "# wpisów"
+      confirm_delete_other_accounts: "Czy na pewno chcesz usunąć wybrane konta?"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -360,14 +366,29 @@ pl_PL:
         instructions: "Tło karty użytkownika est wycentrowane i posiada domyślną szerokość 590px."
       email:
         title: "Email"
+        instructions: "Nie będzie publicznie widoczny"
+        ok: "Otrzymasz potwierdzenie emailem"
+        invalid: "Podaj poprawny adres email"
+        authenticated: "Twój email został potwierdzony przez {{provider}}"
         frequency: "Wyślemy do Ciebie email tylko jeżeli dawno Cię nie widzieliśmy i wyłącznie na temat rzeczy których jeszcze nie widziałeś."
       name:
         title: "Pełna nazwa"
+        instructions: "Twoja pełna nazwa (opcjonalna)"
+        too_short: "Twoja nazwa jest zbyt krótka"
+        ok: "Twoja nazwa jest ok"
       username:
         title: "Nazwa konta"
+        instructions: "Unikalna, krótka i bez spacji"
+        short_instructions: "Inni mogą o tobie wspomnieć pisząc @{{username}}"
+        available: "Nazwa użytkownika jest dostępna"
+        global_match: "Email zgadza się z zarejestrowaną nazwą użytkownika"
         global_mismatch: "Zajęta. Może spróbuj {{suggestion}}?"
         not_available: "Niedostępna. Może spróbuj {{suggestion}}?"
+        too_short: "Nazwa użytkownika jest zbyt krótka"
+        too_long: "Nazwa użytkownika jest zbyt długa"
         checking: "Sprawdzanie, czy nazwa jest dostępna…"
+        enter_email: 'Nazwa użytkownika znaleziona – wpisz przypisany adres email'
+        prefilled: "Email zgadza się z zarejestrowaną nazwą użytkownika"
       locale:
         title: "Język interfejsu"
         instructions: "Język interfejsu użytkownika. Zmieni się, gdy odświeżysz stronę."
@@ -486,6 +507,8 @@ pl_PL:
         fixed: "Załaduj stronę"
     close: "Zamknij"
     assets_changed_confirm: "Serwis został zmieniony, czy pozwolisz na przeładowanie strony w celu aktualizacji do najnowszej wersji?"
+    logout: "Nastąpiło wylogowanie."
+    refresh: "Odśwież"
     read_only_mode:
       enabled: "Administrator włączył tryb tylko do odczytu. Możesz przeglądać serwis, jednak zmiany nie będą możliwe."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
@@ -1557,10 +1580,6 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
-        users:
-          text: "Eksport użytkowników"
-          title: "Wyeksportuj listę użytkowników do pliku CSV"
-        success: "Rozpoczęto eksport, za jakiś czas otrzymasz powiadomienie z informacją o postępach."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
       customize:
         title: "Wygląd"
@@ -1637,6 +1656,7 @@ pl_PL:
         settings: "Ustawienia"
         all: "Wszystkie"
         sending_test: "Wysyłanie testowego emaila…"
+        error: "<b>BŁAD</b> - %{server_error}"
         test_error: "Wystąpił problem podczas wysyłania testowego maila. Sprawdź ustawienia poczty, sprawdź czy Twój serwer nie blokuje połączeń pocztowych i spróbuj ponownie."
         sent: "Wysłane"
         skipped: "Pominięte"
@@ -1752,8 +1772,6 @@ pl_PL:
           new: "Nowi"
           active: "Aktywni"
           pending: "Oczekujący"
-          admins: 'Administratorzy'
-          moderators: 'Moderatorzy'
           suspended: 'Zawieszeni'
           blocked: 'Zablokowani'
         approved: "Zatwierdzam?"
