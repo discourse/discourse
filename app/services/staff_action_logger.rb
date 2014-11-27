@@ -165,9 +165,9 @@ class StaffActionLogger
     }))
   end
 
-  def log_roll_up(subnets)
+  def log_roll_up(subnets, opts={})
     UserHistory.create(params(opts).merge({
-      action: UserHistory.action[:roll_up],
+      action: UserHistory.actions[:roll_up],
       details: subnets.join(", ")
     }))
   end
