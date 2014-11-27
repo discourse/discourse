@@ -1422,10 +1422,6 @@ sv:
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
-        users:
-          text: "Exportera användare"
-          title: "Exportera användare i en CSV fil."
-        success: "Exporteringen har påbörjats, du kommer snart att få en notifiering över hur det går."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
       customize:
         title: "Anpassa"
@@ -1587,8 +1583,6 @@ sv:
           new: "Ny"
           active: "Aktiv"
           pending: "Avvaktande"
-          admins: 'Admins'
-          moderators: 'Mods'
           suspended: 'Avstängd'
           blocked: 'Blockerad'
         approved: "Godkänd?"

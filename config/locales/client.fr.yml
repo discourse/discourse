@@ -247,6 +247,12 @@ fr:
       organisation: Société
       phone: Téléphone
       other_accounts: "Autres comptes avec cette adresse IP :"
+      username: "nom d'utilisateur"
+      trust_level: "NC"
+      read_time: "temps de lecture"
+      topics_entered: "sujets postées"
+      post_count: "# messages"
+      confirm_delete_other_accounts: "Êtes-vous sûr de vouloir supprimer tous ces comptes ?"
     user:
       said: "{{username}} :"
       profile: "Profil"
@@ -337,14 +343,29 @@ fr:
         instructions: "Les images d'arrière plan seront centrées avec une taille par défaut de 590 pixels."
       email:
         title: "Courriel"
+        instructions: "Ne sera jamais visible publiquement"
+        ok: "On vous envoie un mail pour confirmer"
+        invalid: "Merci d'entrer une adresse email valide"
+        authenticated: "Votre adresse email a été authentifiée par {{provider}}"
         frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
       name:
         title: "Nom"
+        instructions: "Votre nom complet (facultatif)"
+        too_short: "Votre nom est trop court"
+        ok: "Votre nom a l'air bon."
       username:
         title: "Pseudo"
+        instructions: "Unique, sans espace, court"
+        short_instructions: "Les gens peuvent vous mentionner avec @{{username}}"
+        available: "Votre pseudo est disponible"
+        global_match: "L'adresse email correspond au pseudo enregistré"
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
         not_available: "Non disponible. Essayez {{suggestion}} ?"
+        too_short: "Votre pseudo est trop court"
+        too_long: "Votre pseudo est trop long"
         checking: "Vérification de la disponibilité de votre pseudo..."
+        enter_email: 'Pseudo trouvé; Entrez l''adresse email correspondante'
+        prefilled: "L'adresse email correspond à ce pseudo enregistré"
       locale:
         title: "Langue de l'interface"
         instructions: "Langage de votre interface.  Cette dernière changera lorsque vous actualiserez la page."
@@ -459,6 +480,8 @@ fr:
         fixed: "Charger la page"
     close: "Fermer"
     assets_changed_confirm: "Ce site vient d'être mis à jour. Rafraîchir maintenant pour accéder à la nouvelle version ?"
+    logout: "Vous avez été déconnecté"
+    refresh: "Rafraîchir"
     read_only_mode:
       enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
@@ -572,6 +595,7 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
+      create_topic: "Nouvelle discussion"
       create_pm: "Message privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
@@ -643,7 +667,10 @@ fr:
       title_with_attachments: "Ajouter une image ou un fichier"
       from_my_computer: "Depuis mon appareil"
       from_the_web: "Depuis le web"
+      remote_tip: "lien vers l'image"
+      remote_tip_with_attachments: "lien vers l'image ou le fichier ({{authorized_extensions}})"
       local_tip: "cliquez pour sélectionner une image depuis votre ordinateur"
+      local_tip_with_attachments: "Cliquez pour sélectionner une image ou un fichier depuis votre ordinateur ({{authorized_extensions}})"
       hint: "(vous pouvez également faire un glisser-déposer dans l'éditeur pour les télécharger)"
       hint_for_supported_browsers: "(vous pouvez aussi glisser et déposer ou coller des images dans l'éditeur pour les envoyer) "
       uploading: "Fichier en cours d'envoi"
@@ -714,6 +741,7 @@ fr:
         top: "Il n'y a plus de meilleurs sujets."
     topic:
       filter_to: "{{post_count}} messages sur ce sujet"
+      create: 'Nouvelle discussion'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Commencer un message privé'
       list: 'Sujets'
@@ -1108,6 +1136,7 @@ fr:
       general: 'Général'
       settings: 'Paramètres'
       delete: 'Supprimer la catégorie'
+      create: 'Nouvelle catégorie'
       save: 'Enregistrer la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
@@ -1158,6 +1187,8 @@ fr:
           title: "Silencieux"
           description: "Vous ne recevrez aucune notification sur les sujets de ces catégories, et ils n'apparaîtront pas dans votre onglet \"non-lus\"."
     flagging:
+      title: 'Merci de nous aider à garder notre communauté civilisé !'
+      private_reminder: 'les signalements sont privés, <b>seulement</b> visible aux modérateurs'
       action: 'Signaler ce message'
       take_action: "Signaler"
       notify_action: 'Message privé'
@@ -1173,11 +1204,14 @@ fr:
         off_topic: "C'est hors-sujet"
         inappropriate: "C'est inapproprié"
         spam: "C'est un pourriel"
+      custom_placeholder_notify_user: "Soyez précis, constructif, et toujours respectueux."
+      custom_placeholder_notify_moderators: "Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents et exemples si possible."
       custom_message:
         at_least: "saisir au moins {{n}} caractères"
         more: "{{n}} restants..."
         left: "{{n}} restants"
     flagging_topic:
+      title: "Merci de nous aider à garder notre communauté civilisé !"
       action: "Signaler Sujet"
       notify_action: "Message privé"
     topic_map:
@@ -1487,10 +1521,6 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
-        users:
-          text: "Exporter les utilisateurs"
-          title: "Exporte la liste des utilisateurs dans un fichier CSV."
-        success: "L'export a commencé, vous serez notifié prochainement de sa progression."
         failed: "L'export a échoué. Veuillez consulter les logs."
       customize:
         title: "Personnaliser"
@@ -1567,6 +1597,7 @@ fr:
         settings: "Paramètrage"
         all: "Tous"
         sending_test: "Envoi en cours du courriel de test..."
+        error: "<b>ERREUR</b> - %{server_error}"
         test_error: "Il y a eu un problème avec l'envoi du courriel de test. Veuillez vérifier vos paramètres, que votre hébergeur ne bloque pas les connections aux courriels, et réessayer."
         sent: "Envoyé"
         skipped: "Passé"
@@ -1580,6 +1611,7 @@ fr:
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
         preview_digest: "Prévisualisation du courriel"
+        preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         format: "Format"
         html: "html"
@@ -1681,8 +1713,6 @@ fr:
           new: "Nouveaux"
           active: "Actifs"
           pending: "En attente"
-          admins: 'Administrateurs'
-          moderators: 'Modérateurs'
           suspended: 'Suspendus'
           blocked: 'Bloqués'
         approved: "Approuvé ?"
@@ -1986,6 +2016,7 @@ fr:
       actions:
         title: 'Actions'
         star: '<b>f</b> Sujet Favoris'
+        pin_unpin_topic: '<b>shift p</b> Épingler/De-épingler le sujet'
         share_topic: '<b>shift s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'
         reply_as_new_topic: '<b>t</b> Répondre en créant un sujet lié'
