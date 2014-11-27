@@ -610,12 +610,6 @@ a.mention {
 }
 
 
-.modal-body {
-  input[type=text] {
-    font-size: 16px;
-  }
-}
-
 .moderator {
   .topic-body {
     background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
