@@ -27,6 +27,8 @@ class SessionController < ApplicationController
         sso.username = current_user.username
         sso.email = current_user.email
         sso.external_id = current_user.id.to_s
+        sso.admin = current_user.admin?
+        sso.moderator = current_user.moderator?
         redirect_to sso.to_url(sso.return_sso_url)
       else
         session[:sso_payload] = request.query_string
