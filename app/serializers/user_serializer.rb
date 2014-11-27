@@ -23,7 +23,7 @@ class UserSerializer < BasicUserSerializer
     attrs.each do |attr|
       method_name = "include_#{attr}?"
       define_method(method_name) do
-        return false if object.trust_level == TrustLevel[0] && scope.anonymous?
+        return false if scope.restrict_user_fields?(object)
         send(attr).present?
       end
     end

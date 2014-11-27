@@ -1,9 +1,17 @@
 <h2><%= @user.username %></h2>
 
+<% unless @restrict_fields %>
 <p><%= raw @user.user_profile.bio_processed %></p>
-
-<% content_for :head do %>
-  <%= crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
 <% end %>
 
-<% content_for :title do %><%=t("js.user.profile")%> - <%= @user.username %><% end %>
+<% content_for :head do %>
+  <% if @restrict_fields %>
+    <%= crawlable_meta_data(title: @user.username, image: @user.small_avatar_url) %>
+  <% else %>
+    <%= crawlable_meta_data(title: @user.username, description: @user.user_profile.bio_summary, image: @user.small_avatar_url) %>
+  <% end %>
+<% end %>
+
+<% content_for :title do %>
+  <%= t("js.user.profile")%> - <%= @user.username %>
+<% end %>
