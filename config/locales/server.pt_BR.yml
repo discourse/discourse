@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 pt_BR:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -247,6 +250,7 @@ pt_BR:
       title: "regular"
     elder:
       title: "líder"
+    change_failed_explanation: "Você tentou rebaixar %{user_name} para '%{new_trust_level}'. No entanto o nível de confiança dele já é '%{current_trust_level}'. %{user_name} permanecerá em '%{current_trust_level}' - se você deseja rebaixar um usuário, tranque o nível de confiança primeiro"
   rate_limiter:
     slow_down: "Você executou esta ação muitas vezes, tente novamente mais tarde"
     too_many_requests: "Nós possuímos um limite diário do número de vezes que uma ação pode ser tomada. Por favor aguarde %{time_left} antes de tentar novamente."
@@ -347,12 +351,14 @@ pt_BR:
   activation:
     action: "Ativar sua conta"
     already_done: "Desculpe, este link de confirmação não está mais válido. Talvez a sua conta já esteja ativa?"
+    please_continue: "Sua conta agora está confirmada; você vai ser redirecionado para a página inicial."
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
   post_action_types:
     off_topic:
       title: 'Off-Topic'
+      description: 'Essa mensagem não é relevante para a discussão definida pelo título e primeira mensagem, e deveria ser movida para outro local.'
       long_form: 'sinalizou isto como off-topic'
     spam:
       title: 'Spam'
@@ -363,10 +369,15 @@ pt_BR:
       description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizado como inapropriado'
     notify_user:
+      title: 'Mensagem privada @{{username}}'
       description: 'Este post contém algo que eu quero falar com essa pessoa diretamente e em particular sobre. Não lançar uma flag.'
+      long_form: 'usuário de mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Algo mais"
+      description: 'Essa mensagem requer atenção da moderação por outra razão não listada acima.'
+      long_form: 'sinalizar isso para atenção da moderação'
       email_title: 'Uma postagem em "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -391,7 +402,9 @@ pt_BR:
       description: 'Este tópico contém um conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou violação de <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizar como impróprio'
     notify_moderators:
+      title: "Algo mais"
       description: 'Este tópico requer atenção moderadora geral, com base na <a href="/guidelines">diretrizes</a>, <a href="%{tos_url}">TOS </a>, ou por outro motivo não listados acima.'
+      long_form: 'sinalizar isso para atenção da moderação'
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -549,6 +562,7 @@ pt_BR:
       description: "HTML que será adicionado no topo de cada página (após o cabeçalho, antes da navegação ou o título do tópico)."
     bottom:
       title: "Rodapé das páginas"
+      description: "HTML que será adicionado antes da tag </body>"
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -568,6 +582,7 @@ pt_BR:
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
     title: "Breve título deste site, utilizado na tag title."
     site_description: "Descreva este site em uma frase, usada na meta tag description."
+    contact_email: "Endereço de email ou chave de contato para o site. Avisos importantes do discourse.org em relação a atualizações críticas vão ser enviadas para esse endereço."
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
@@ -716,7 +731,11 @@ pt_BR:
     archived_disabled: "Este tópico foi agora desarquivado. Já não está congelado, e pode ser alterado."
     closed_enabled: "Este tópico está agora fechado. Novas respostas não são aceitas."
     closed_disabled: "Este tópico está agora aberto. Novas respostas serão aceitas."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Este tópico foi fechado automaticamente após 1 minuto após a última resposta. Novas respostas não são mais permitidas."
+      other: "Este tópico foi fechado automaticamente após %{count} minutos depois da última resposta. Novas respostas não são mais permitidas."
     autoclosed_disabled: "Este tópico está aberto agora. Novas respostas estão permitidas."
+    autoclosed_disabled_lastpost: "Este tópico está aberto agora. Novas respostas estão permitidas."
     pinned_enabled: "Este tópico está agora afixado. Irá aparecer no topo das suas categorias"
     pinned_disabled: "Este tópico deixou de estár afixado. Não irá mais aparecer no topo das suas categorias."
     pinned_globally_enabled: "Esse tópico agora está fixado globalmente. Ele irá aparecer no topo dessa categoria e de todas as listagens de tópicos até que seja desfixado pela equipe para todo mundo, ou para usuários individuais por eles mesmo."
@@ -1115,6 +1134,7 @@ pt_BR:
         ---
         %{respond_instructions}
     digest:
+      why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
       subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
       top_topics: "Tópicos populares"
@@ -1122,6 +1142,8 @@ pt_BR:
       click_here: "clique aqui"
       from: "resumo de %{site_name}"
       read_more: "Leia Mais"
+      more_topics: "Há %{new_topics_since_seen} outros novos tópicos."
+      more_topics_category: "Mais tópicos novos:"
       posts:
         one: "1 mensagem"
         other: "%{count} mensagens"

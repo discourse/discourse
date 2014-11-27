@@ -793,6 +793,7 @@ zh_CN:
     white_listed_spam_host_domains: "广告主机白名单域名列表。新用户可以任意链接至这些域名。"
     staff_like_weight: "职员赞时的额外权重。"
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
+    max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是职员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
@@ -915,6 +916,8 @@ zh_CN:
       other: "本主题在创建 %{count} 分钟后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_lastpost_days:
       other: "本主题在最后一个回复创建后 %{count} 天后自动关闭。不再允许添加新回复。"
+    autoclosed_enabled_lastpost_hours:
+      other: "本主题在最后一个回复创建后 %{count} 小时后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_lastpost_minutes:
       other: "本主题在最后一个回复创建后 %{count} 分钟后自动关闭。不再允许添加新回复。"
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"

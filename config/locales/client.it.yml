@@ -247,6 +247,8 @@ it:
       organisation: Organizzazione
       phone: Telefono
       other_accounts: "Altri account con questo indirizzo IP:"
+      username: "nome utente"
+      trust_level: "TL"
     user:
       said: "{{username}}:"
       profile: "Profilo"
@@ -342,8 +344,11 @@ it:
         title: "Nome"
       username:
         title: "Nome utente"
+        available: "Il tuo nome utente è disponibile"
         global_mismatch: "Già registrato. Prova {{suggestion}}?"
         not_available: "Non disponibile. Prova {{suggestion}}?"
+        too_short: "Il tuo nome utente è troppo corto"
+        too_long: "Il tuo nome utente è troppo lungo"
         checking: "Controllo la disponibilità del nome utente..."
       locale:
         title: "Lingua dell'interfaccia"
@@ -459,6 +464,7 @@ it:
         fixed: "Carica Pagina"
     close: "Chiudi"
     assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
+    refresh: "Ricarica"
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
@@ -1491,10 +1497,6 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
-        users:
-          text: "Esporta Utenti"
-          title: "Esporta la lista utenti in un file CSV."
-        success: "L'esportazione è stata avviata. Sarai notificato a breve con il progresso del processo."
         failed: "Esportazione fallita. Controlla i log."
       customize:
         title: "Personalizza"
@@ -1684,8 +1686,6 @@ it:
           new: "Nuovi"
           active: "Attivi"
           pending: "In attesa"
-          admins: 'Amministratori'
-          moderators: 'Moderatori'
           suspended: 'Sospesi'
           blocked: 'Bloccati'
         approved: "Approvato?"
