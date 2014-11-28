@@ -21,6 +21,7 @@
       <%- @featured_topics.each_with_index do |t, i| %>
         <div class='featured-topic'>
           <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
+          <br/>
           <%= email_category(t.category) %>
         </div>
 

@@ -136,7 +136,7 @@ module Email
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
-      style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; margin-right: 5px')
+      style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; line-height:2em;')
 
       onebox_styles
       plugin_styles
