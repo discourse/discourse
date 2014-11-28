@@ -58,7 +58,7 @@
         <div>
         <%- @new_by_category.each do |c| %>
           <span style='white-space: nowrap'>
-            <b><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
+            <a href='<%= Discourse.base_url %><%= c[0].url %>' style='color: #333'><%= c[0].name %></b> <span style='color: #777; margin: 0 10px 0 5px; font-size: 0.9em;'> <%= c[1] %></span>
           </span>
         <%- end %>
       </div>
