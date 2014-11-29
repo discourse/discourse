@@ -72,7 +72,7 @@ module UserNotificationsHelper
     category_url = "#{Discourse.base_url}#{category.url}"
 
     if opts[:only_stripe]
-      result << "<a href='#{category_url}' style='background-color: ##{category.color}; font-size: 12px; padding: 4px 2px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</a>"
+      result << "<a href='#{category_url}' style='background-color: ##{category.color}; font-size: 12px; padding: 2px 1px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</a>"
       result << "<a href='#{category_url}' style='font-size: 12px; font-weight: bold; margin-left: 3px;'>#{category.name}</a>"
     else
       if category.parent_category.present?
