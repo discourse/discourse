@@ -293,6 +293,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "download archive of my posts"
+      new_private_message: "New Private Message"
       private_message: "Private Message"
       private_messages: "Messages"
       activity_stream: "Activity"
