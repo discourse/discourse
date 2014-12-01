@@ -8,10 +8,13 @@
     @namespace Ember
   **/
   Ember.CloakedCollectionView = Ember.CollectionView.extend({
+    cloakView: Ember.computed.alias('itemViewClass'),
     topVisible: null,
     bottomVisible: null,
     offsetFixedTopElement: null,
     offsetFixedBottomElement: null,
+    loadingHTML: 'Loading...',
+    scrollDebounce: 10,
 
     init: function() {
       var cloakView = this.get('cloakView'),
@@ -25,7 +28,7 @@
       this.set('itemViewClass', Ember.CloakedView.extend({
         classNames: [cloakView + '-cloak'],
         cloaks: cloakView,
-        preservesContext: this.get('preservesContext') === "true",
+        preservesContext: this.get('preservesContext') === 'true',
         cloaksController: this.get('itemController'),
         defaultHeight: this.get('defaultHeight'),
 
@@ -199,12 +202,11 @@
         var checkView = childViews[j];
         if (!checkView._containedView) {
           if (!checkView.get('loading')) {
-            checkView.$().html(this.get('loadingHTML') || "Loading...");
+            checkView.$().html(this.get('loadingHTML'));
           }
           return;
         }
       }
-
     },
 
     uncloakQueue: function(){
@@ -248,8 +250,9 @@
       var self = this,
           offsetFixedTop = this.get('offsetFixedTop') || this.get('offsetFixed'),
           offsetFixedBottom = this.get('offsetFixedBottom'),
+          scrollDebounce = this.get('scrollDebounce'),
           onScrollMethod = function() {
-            Ember.run.debounce(self, 'scrollTriggered', 10);
+            Ember.run.debounce(self, 'scrollTriggered', scrollDebounce);
           };
 
       if (offsetFixedTop) {
@@ -291,6 +294,49 @@
   **/
   Ember.CloakedView = Ember.View.extend({
     attributeBindings: ['style'],
+    _containedView: null,
+    _scheduled: null,
+
+    init: function() {
+      this._super();
+      this._scheduled = false;
+      this._childViews = [];
+    },
+
+    setContainedView: function(cv) {
+      if (this._childViews[0]) {
+        this._childViews[0].destroy();
+      }
+      this._childViews[0] = cv;
+      this.setupChildView(cv);
+      if (!this._elementCreated || this._scheduled) return;
+
+      this._scheduled = true;
+      this.set('_containedView', cv);
+      Ember.run.schedule('render', this, this.updateChildView);
+    },
+
+    setupChildView: function (childView) {
+      if (childView) {
+        childView.set('_parentView', this);
+        childView.set('templateData', this.get('templateData'));
+      }
+    },
+
+    render: function (buffer) {
+      var el = buffer.element();
+      this._childViewsMorph = buffer.dom.createMorph(el, null, null, el);
+    },
+
+    updateChildView: function () {
+      this._scheduled = false;
+      if (!this._elementCreated || this.isDestroying || this.isDestroyed) { return; }
+
+      var childView = this._containedView;
+      if (childView && !childView._elementCreated) {
+        this._renderer.renderTree(childView, this, 0);
+      }
+    },
 
     /**
       Triggers the set up for rendering a view that is cloaked.
@@ -343,8 +389,7 @@
           loading: false
         });
 
-        this._containedView = this.createChildView(this.get('cloaks'), createArgs);
-        this.rerender();
+        this.setContainedView(this.createChildView(this.get('cloaks'), createArgs));
       }
     },
 
@@ -361,24 +406,14 @@
         this.set('style', style);
         this.$().prop('style', style);
 
+
         // We need to remove the container after the height of the element has taken
         // effect.
         Ember.run.schedule('afterRender', function() {
-          if(self._containedView){
-            self._containedView.remove();
-            self._containedView = null;
-          }
+          self.setContainedView(null);
         });
       }
     },
-
-    _removeContainedView: function(){
-      if(this._containedView){
-        this._containedView.remove();
-        this._containedView = null;
-      }
-      this._super();
-    }.on('willDestroyElement'),
 
     _setHeights: function(){
       if (!this._containedView) {
@@ -393,36 +428,8 @@
           this.$().css('height', defaultHeight);
         }
       }
-     }.on('didInsertElement'),
-
-    /**
-      Render the cloaked view if applicable.
-
-      @method render
-    */
-    render: function(buffer) {
-      var containedView = this._containedView, self = this;
-
-      if (containedView && (containedView._state || containedView.state) !== 'inDOM') {
-        containedView.triggerRecursively('willInsertElement');
-        containedView.renderToBuffer(buffer);
-        if (Ember.View.prototype._transitionTo) {
-          containedView._transitionTo('inDOM');
-        } else {
-          containedView.transitionTo('inDOM');
-        }
-
-        Em.run.schedule('afterRender', function() {
-          if(self._containedView) {
-            self._containedView.triggerRecursively('didInsertElement');
-          }
-        });
-      }
-    }
-
+     }.on('didInsertElement')
   });
-
-
 
   Ember.Handlebars.registerHelper('cloaked-collection', function(options) {
     var hash = options.hash,

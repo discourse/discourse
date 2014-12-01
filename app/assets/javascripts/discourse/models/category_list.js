@@ -8,7 +8,7 @@
 **/
 Discourse.CategoryList = Ember.ArrayProxy.extend({
   init: function() {
-    this.content = [];
+    this.set('content', []);
     this._super();
   }
 });
