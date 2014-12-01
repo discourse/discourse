@@ -360,6 +360,29 @@ describe Admin::UsersController do
       end
     end
 
+    context 'log_out' do
+      before do
+        @reg_user = Fabricate(:user)
+      end
+
+      it 'returns JSON' do
+        xhr :put, :log_out, user_id: @reg_user.id
+        ::JSON.parse(response.body).should be_present
+      end
+
+      it "returns success" do
+        xhr :put, :log_out, user_id: @reg_user.id
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json['success'].should == "OK"
+      end
+
+      it "returns 404 when user_id does not exist" do
+        xhr :put, :log_out, user_id: 123123
+        response.should_not be_success
+      end
+    end
+
     context 'block' do
       before do
         @reg_user = Fabricate(:user)
