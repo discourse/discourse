@@ -27,10 +27,16 @@ var ApplicationRoute = Discourse.Route.extend({
       }
 
       var exceptionController = this.controllerFor('exception'),
-          errorString = err.toString();
-      if (err.statusText) {
-        errorString = err.statusText;
-      }
+          errorString = err.toString(),
+          stack = err.stack;
+
+      // If we have a stack call `toString` on it. It gives us a better
+      // stack trace since `console.error` uses the stack track of this
+      // error callback rather than the original error.
+      if (stack) { errorString = stack.toString(); }
+
+      if (err.statusText) { errorString = err.statusText; }
+
       var c = window.console;
       if (c && c.error) {
         c.error(errorString);
