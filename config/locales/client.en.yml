@@ -1887,6 +1887,7 @@ en:
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
+        id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Active"
         show_emails: "Show Emails"
         nav:
