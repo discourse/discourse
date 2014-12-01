@@ -120,11 +120,7 @@ gem 'fastimage'
 gem 'fog', '1.22.1', require: false
 gem 'unf', require: false
 
-# see: https://twitter.com/samsaffron/status/412360162297393152
-# Massive amount of changes made in branch we use, no PR upstreamed
-# We need to get this sorted
-# https://github.com/samsaffron/email_reply_parser
-gem 'email_reply_parser-discourse', require: 'email_reply_parser'
+gem 'email_reply_parser'
 
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
