@@ -43,7 +43,7 @@ class AdminUserIndexQuery
     where_conds = []
 
     # One signal: no reading yet the user has bio text
-    where_conds << "user_stats.posts_read_count = 0 AND user_stats.topics_entered = 0"
+    where_conds << "user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1"
 
     @query.activated
           .references(:user_stats)
