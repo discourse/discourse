@@ -450,17 +450,18 @@ span.highlighted {
 .topic-avatar {
   float: left;
   position: relative;
+  z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {
-  margin-left: 60px;
   white-space: nowrap;
   position: absolute;
-  width: 80%;
+  width: 100%;
   left: 0px;
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
+    padding-left: 60px;
     span {
       display: block;
     }
