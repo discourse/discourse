@@ -99,7 +99,7 @@ GEM
     fastimage (1.6.3)
       addressable (~> 2.3, >= 2.3.5)
     ffi (1.9.5)
-    flamegraph (0.0.8)
+    flamegraph (0.0.9)
       fast_stack
     fog (1.22.1)
       fog-brightbox
@@ -273,7 +273,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.13.0)
-    rake (10.3.2)
+    rake (10.4.0)
     rake-compiler (0.9.3)
       rake
     rb-fsevent (0.9.4)

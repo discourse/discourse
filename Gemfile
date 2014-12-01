@@ -67,17 +67,19 @@ unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
    end
 end
 
-gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
+  gem 'rails-observers', git: 'https://github.com/SamSaffron/rails-observers.git'
+  gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
+  gem 'seed-fu', '~> 2.3.3'
   gem 'rails'
+  gem 'rails-observers'
 end
 
 gem 'actionpack-action_caching'
-gem 'rails-observers'
 
 # Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
 # However, mail gem 2.6.x currently does not work with discourse because of the
@@ -144,8 +146,15 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
-# while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
-gem 'pg', '0.15.1'
+
+if rails_master?
+  # native casting
+  gem 'pg', '0.18.0.pre20141117110243'
+else
+  # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
+  gem 'pg', '0.15.1'
+end
+
 gem 'pry-rails', require: false
 gem 'rake'
 
