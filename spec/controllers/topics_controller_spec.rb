@@ -783,6 +783,12 @@ describe TopicsController do
           expect(response).not_to be_success
         end
 
+        it "doesn't call the PostRevisor when there is no changes" do
+          PostRevisor.any_instance.expects(:revise!).never
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: @topic.category_id
+          expect(response).to be_success
+        end
+
         context "allow_uncategorized_topics is false" do
           before do
             SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
