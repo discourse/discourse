@@ -91,7 +91,7 @@ blockquote {
   .topic-status {
     i {
       font-size: 20px;
-      color: darken($secondary, 60%);
+      color: dark-light-diff($secondary, $primary, 40%, -20%);
     }
   }
 }
