@@ -391,7 +391,9 @@ posting:
     type: list
 
 email:
-  email_time_window_mins: 10
+  email_time_window_mins:
+    default: 10
+    client: true
   email_posts_context: 5
   digest_min_excerpt_length: 100
   digest_topics: 20

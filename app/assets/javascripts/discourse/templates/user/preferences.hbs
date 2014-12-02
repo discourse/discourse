@@ -181,7 +181,7 @@
       {{preference-checkbox labelKey="user.email_always" checked=email_always}}
 
       <div class='instructions'>
-        {{i18n user.email.frequency}}
+        {{i18n user.email.frequency count=siteSettings.email_time_window_mins}}
       </div>
     </div>
 
