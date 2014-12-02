@@ -74,7 +74,14 @@ export default ObjectController.extend({
     self.set('cardTarget', target);
 
     Discourse.User.findByUsername(username).then(function (user) {
-      self.setProperties({ user: Discourse.AdminUser.create(user), avatar: user, visible: true});
+
+      // A bit hacky. If viewing admin, wrap it in Discourse.AdminUser
+      // TODO: Restructure this to be cleaner
+      var wrapped = user;
+      if (self.get('viewingAdmin')) {
+        wrapped = Discourse.AdminUser.create(user);
+      }
+      self.setProperties({ user: wrapped, avatar: user, visible: true});
       self.appEvents.trigger('usercard:shown');
     }).finally(function(){
       self.set('userLoading', null);
