@@ -123,8 +123,8 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
 
     changes = {}
-    changes[:title]       = params[:title]       if params[:title]
-    changes[:category_id] = params[:category_id] if params[:category_id]
+    changes[:title]       = params[:title]       if params[:title] && topic.title != params[:title]
+    changes[:category_id] = params[:category_id] if params[:category_id] && topic.category_id != params[:category_id].to_i
 
     success = true
 
