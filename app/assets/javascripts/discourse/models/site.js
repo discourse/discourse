@@ -66,7 +66,12 @@ Discourse.Site = Discourse.Model.extend({
 
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
-    if (existingCategory) existingCategory.setProperties(newCategory);
+    if (existingCategory) {
+      // Don't update null permissions
+      if (newCategory.permission === null) { delete newCategory.permission; }
+
+      existingCategory.setProperties(newCategory);
+    }
   }
 });
 
