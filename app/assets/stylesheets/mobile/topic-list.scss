@@ -58,11 +58,13 @@
 
   .topic-item-stats {
     margin-top: 8px;
-  }
-
-  .topic-item-stats {
     .category, .num, .last-poster {
       float: left;
+    }
+    .category a {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -261,9 +263,7 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 
 ol.category-breadcrumb {
-
   margin: 5px 10px 0 0;
-
 }
 
 .category-dropdown-menu {
@@ -273,10 +273,6 @@ ol.category-breadcrumb {
   a.badge-category {
     line-height: 26px !important;
     margin-bottom: 0 !important;
-  }
-
-  div {
-    margin-bottom: 10px;
   }
 }
 
