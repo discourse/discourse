@@ -66,7 +66,8 @@ class UserSerializer < BasicUserSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
-  staff_attributes :number_of_deleted_posts,
+  staff_attributes :post_count,
+                   :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
                    :number_of_suspensions,
@@ -206,6 +207,10 @@ class UserSerializer < BasicUserSerializer
   ###
   ### STAFF ATTRIBUTES
   ###
+
+  def post_count
+    object.user_stat.try(:post_count)
+  end
 
   def number_of_deleted_posts
     Post.with_deleted
