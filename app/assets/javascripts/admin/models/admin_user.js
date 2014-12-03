@@ -314,9 +314,10 @@ Discourse.AdminUser = Discourse.User.extend({
 
   destroy: function(opts) {
     var user = this;
+    var location = document.location.pathname;
 
     var performDestroy = function(block) {
-      var formData = { context: window.location.pathname };
+      var formData = { context: location };
       if (block) {
         formData["block_email"] = true;
         formData["block_urls"] = true;
@@ -330,7 +331,7 @@ Discourse.AdminUser = Discourse.User.extend({
         data: formData
       }).then(function(data) {
         if (data.deleted) {
-          document.location = "/admin/users/list/active";
+          document.location = location;
         } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
           if (data.user) {

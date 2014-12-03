@@ -98,10 +98,6 @@ export default ObjectController.extend({
       postStream.cancelFilter();
       postStream.refresh();
       this.close();
-    },
-
-    deleteUser: function(user) {
-      user.destroy({ deletePosts: true });
     }
   }
 
