@@ -20,8 +20,7 @@ export default ObjectController.extend({
   isSuspended: Em.computed.notEmpty('user.suspend_reason'),
   showBadges: Discourse.computed.setting('enable_badges'),
   showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
-  canDelete: Em.computed.not("user.deleteForbidden"),
-  showDelete: Em.computed.and("viewingAdmin", "showName", "canDelete"),
+  showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
 
   moreBadgesCount: function() {
     return this.get('user.badge_count') - this.get('user.featured_user_badges.length');
@@ -74,14 +73,8 @@ export default ObjectController.extend({
     self.set('cardTarget', target);
 
     Discourse.User.findByUsername(username).then(function (user) {
-
-      // A bit hacky. If viewing admin, wrap it in Discourse.AdminUser
-      // TODO: Restructure this to be cleaner
-      var wrapped = user;
-      if (self.get('viewingAdmin')) {
-        wrapped = Discourse.AdminUser.create(user);
-      }
-      self.setProperties({ user: wrapped, avatar: user, visible: true});
+      user = Discourse.User.create(user);
+      self.setProperties({ user: user, avatar: user, visible: true});
       self.appEvents.trigger('usercard:shown');
     }).finally(function(){
       self.set('userLoading', null);

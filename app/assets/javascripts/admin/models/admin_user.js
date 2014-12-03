@@ -298,9 +298,7 @@ Discourse.AdminUser = Discourse.User.extend({
     });
   },
 
-  deleteForbidden: function() {
-    return (!this.get('can_be_deleted') || this.get('post_count') > 0);
-  }.property('post_count'),
+  deleteForbidden: Em.computed.not("canBeDeleted"),
 
   deleteExplanation: function() {
     if (this.get('deleteForbidden')) {
