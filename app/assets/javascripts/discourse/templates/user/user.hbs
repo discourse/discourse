@@ -83,7 +83,9 @@
                   <b>{{i18n user.suspended_reason}}</b> {{suspend_reason}}
                 </div>
               {{/if}}
-              {{{bio_cooked}}}
+              {{#if bio_cooked}}
+                {{{bio_cooked}}}
+              {{/if}}
             </div>
 
             {{plugin-outlet "user-profile-primary"}}
