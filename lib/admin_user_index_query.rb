@@ -49,6 +49,7 @@ class AdminUserIndexQuery
           .references(:user_stats)
           .includes(:user_profile)
           .where("COALESCE(user_profiles.bio_raw, '') != ''")
+          .where('users.created_at <= ?', 1.day.ago)
           .where(where_conds.map {|c| "(#{c})"}.join(" OR "))
   end
 
