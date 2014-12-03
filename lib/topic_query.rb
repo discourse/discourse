@@ -56,9 +56,9 @@ class TopicQuery
     # When logged in we start with different results
     if @user
       builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
-      builder.add_results(new_results(topic: topic, per_page: builder.category_results_left), :high) unless builder.category_full?
+      builder.add_results(new_results(topic: topic, per_page: builder.category_results_left)) unless builder.full?
     end
-    builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids), :low) unless builder.full?
+    builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids)) unless builder.full?
 
     create_list(:suggested, {}, builder.results)
   end

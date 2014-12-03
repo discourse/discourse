@@ -70,14 +70,6 @@ class SuggestedTopicsBuilder
     SiteSetting.suggested_topics - @results.count{|r| r.category_id == @category_id}
   end
 
-  def category_full?
-    if @category_id
-
-    else
-      full?
-    end
-  end
-
   def size
     @results.size
   end
