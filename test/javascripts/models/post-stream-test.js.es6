@@ -233,7 +233,7 @@ test("storePost", function() {
   var postWithoutId = Discourse.Post.create({raw: 'hello world'});
   stored = postStream.storePost(postWithoutId);
   equal(stored, postWithoutId, "it returns the same post back");
-  equal(postStream.get('postIdentityMap.size'), 1, "it does not add a new entry into the identity map");
+  equal(postStream.get('postIdentityMap.length'), 1, "it does not add a new entry into the identity map");
 
 });
 

@@ -73,7 +73,7 @@
           {{loading-spinner condition=postStream.loadingAbove}}
 
           {{#unless postStream.loadingFilter}}
-            {{cloaked-collection itemViewClass="post"
+            {{cloaked-collection cloakView="post"
                                  idProperty="post_number"
                                  defaultHeight="200"
                                  content=postStream.posts
