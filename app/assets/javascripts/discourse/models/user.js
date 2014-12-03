@@ -92,7 +92,7 @@ Discourse.User = Discourse.Model.extend({
       desc = I18n.t('user.moderator', {user: name});
       return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
     }
-    return null;
+    return "";
   }.property('admin','moderator'),
 
   /**
