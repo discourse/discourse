@@ -24,7 +24,8 @@
           </td>
         {{/if}}
         <td class='avatar'>
-          {{#link-to 'user' this class="avatar-link"}}<div class='avatar-wrapper'>{{avatar this imageSize="medium" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
+          {{! {{#link-to 'user' this class="avatar-link" data-user-card="{{unbound username}\}"}\}<div class='avatar-wrapper'>{{avatar this imageSize="medium" extraClasses="actor" ignoreTitle="true"}\}</div>{{/link-to}\} }}
+          <a href="#" data-user-card="{{unbound username}}">{{avatar this imageSize="medium" extraClasses="actor" ignoreTitle="true"}}</a>
         </td>
         <td>
           <span class='username'>{{#link-to 'user' this}}{{unbound username}}{{/link-to}}</span>

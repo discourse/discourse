@@ -53,6 +53,9 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users
   has_many :secure_categories, through: :groups, source: :categories
 
+  has_many :group_managers, dependent: :destroy, foreign_key: :manager_id, inverse_of: :manager
+  has_many :managed_groups, through: :group_managers, source: :group
+
   has_one :user_search_data, dependent: :destroy
   has_one :api_key, dependent: :destroy
 
