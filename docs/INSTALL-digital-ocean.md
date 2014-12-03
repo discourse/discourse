@@ -172,3 +172,4 @@ If anything needs to be improved in this guide, feel free to ask on [meta.discou
   [jet]: http://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
+  Discourse presentation and installation (in French) : http://aedirn.fr/presentation-installation-discourse
