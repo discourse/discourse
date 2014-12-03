@@ -661,7 +661,7 @@ pt_BR:
     clean_up_uploads: "Remover envios sem referência para evitar hospedagem ilegal. AVISO: você pode querer fazer um backup do seu diretório de /uploads antes de habilitar essa configuração."
     clean_orphan_uploads_grace_period_hours: "Carência (em horas) antes de um upload órfão ser removido."
     purge_deleted_uploads_grace_period_days: "Carência (em dias) antes que um upload excluído seja apagado."
-    purge_inactive_users_grace_period_days: "Carência (em dias) antes de um usuário que não tenha ativado sua conta seja deletado."
+    purge_unactivated_users_grace_period_days: "Carência (em dias) antes de um usuário que não tenha ativado sua conta seja deletado."
     min_trust_to_create_topic: "O nível de confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"

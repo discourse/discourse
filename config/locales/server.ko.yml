@@ -691,7 +691,7 @@ ko:
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
-    purge_inactive_users_grace_period_days: "활성화 되지 않은 사용자를 삭제하기 까지의 기간(일)"
+    purge_unactivated_users_grace_period_days: "활성화 되지 않은 사용자를 삭제하기 까지의 기간(일)"
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
     s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"

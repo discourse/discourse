@@ -726,7 +726,7 @@ he:
     clean_up_uploads: "הסירו העלאות יתומות וללא הפניה כדי למנוע אירוח בלתי חוקי של חומר. אזהרה: אתם עלולי לרצות לגבות את תיקיית ה-/uploads שלכם לפנו שתאפשרו הגדרה זו."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    purge_inactive_users_grace_period_days: "תקופת המתנה (בימים) לפני שמשתמש שלא הפעיל את החשבון שלו יימחק."
+    purge_unactivated_users_grace_period_days: "תקופת המתנה (בימים) לפני שמשתמש שלא הפעיל את החשבון שלו יימחק."
     enable_s3_uploads: "אחסן העלאות (uploads) על תשתית של Amazon S3. חשוב: מצריך מפתח גישה + מפתח גישה סודי שיהיו חוקיים."
     s3_use_iam_profile: 'השתמש ב-AWS EC2 IAM role על מנת לאחזר מפתחות. שימו לב: איפשור של זה ידרוס את ההגדרות "S3 access key id" וכן את "s3 secret access key".'
     s3_access_key_id: "מפתח הגישה (access key id) של Amazon S3 שישמש להעלאת התמונות."

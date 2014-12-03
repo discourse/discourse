@@ -719,7 +719,7 @@ zh_CN:
     clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
-    purge_inactive_users_grace_period_days: "删除不活跃用户账户的宽限期（单位：天）。"
+    purge_unactivated_users_grace_period_days: "删除不活跃用户账户的宽限期（单位：天）。"
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点，无下划线。"

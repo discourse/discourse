@@ -733,7 +733,7 @@ fi:
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
     clean_orphan_uploads_grace_period_hours: "Varoaika (tunteina) kunnes orpoutuneet liitetiedostot poistetaan"
     purge_deleted_uploads_grace_period_days: "Varoaika (päivinä) kunnes poistettu liitetiedosto tuhotaan."
-    purge_inactive_users_grace_period_days: "Varoaika (päivinä) kunnes aktivoimaton käyttäjätili tuhotaan."
+    purge_unactivated_users_grace_period_days: "Varoaika (päivinä) kunnes aktivoimaton käyttäjätili tuhotaan."
     enable_s3_uploads: "Lataa liitetiedostot Amazon S3:een. Tärkeää: edellyttää toimivat S3 kirjautumistiedot (access key id ja secret access key)."
     s3_use_iam_profile: 'Käytä AWS EC2 IAM roolia avainten hakuun. HUOM: käyttöönotto korvaa "s3 access key id" ja "s3 secret access key" asetukset.'
     s3_access_key_id: "Amazon S3 access key id, jota käytetään kuvien sijoittamisessa."
