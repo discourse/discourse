@@ -102,16 +102,18 @@ end
 ENV["RAILS_ENV"] = "profile"
 
 
+gc_env_vars = %w(RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
+
 if @include_env
   puts "Running with tuned environment"
   ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
-  ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
-  ENV.delete "RUBY_HEAP_MIN_SLOTS"
-  ENV.delete "RUBY_FREE_MIN"
+  gc_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
+    ENV.delete v
+  end
 else
   # clean env
   puts "Running with the following custom environment"
-  %w{RUBY_GC_MALLOC_LIMIT RUBY_HEAP_MIN_SLOTS RUBY_FREE_MIN}.each do |w|
+  gc_env_vars.each do |w|
     puts "#{w}: #{ENV[w]}"
   end
 end
