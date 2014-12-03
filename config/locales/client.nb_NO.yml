@@ -247,6 +247,9 @@ nb_NO:
       organisation: Organisasjon
       phone: Telefon
       other_accounts: "Andre kontoer med denne IP-adressen:"
+      username: "brukernavn"
+      read_time: "lesetid"
+      post_count: "# innlegg"
     user:
       said: "{{username}}:"
       profile: "Profil"
@@ -337,13 +340,22 @@ nb_NO:
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
       email:
         title: "E-post"
+        ok: "Vi sender deg en email for å bekrefte"
         frequency: "Vi sender deg bare en e-post om vi ikke har sett deg nylig og du ikke allerede har sett det vi varsler deg om."
       name:
         title: "Navn"
+        instructions: "Ditt fulle navn (valgfritt)"
+        too_short: "Navnet ditt er for kort."
+        ok: "Navnet ditt ser bra ut."
       username:
         title: "Brukernavn"
+        instructions: "Unikt, kort og uten mellomrom."
+        short_instructions: "Folk kan nevne deg som @{{username}}."
+        available: "Ditt brukernavn er tilgjengelig."
         global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
+        too_short: "Ditt brukernavn er for kort."
+        too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet..."
       locale:
         title: "Språk for grensesnitt"
@@ -459,6 +471,7 @@ nb_NO:
         fixed: "Last side"
     close: "Lukk"
     assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Oppdater nå for nyeste versjon?"
+    refresh: "Refresh"
     read_only_mode:
       enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
@@ -1485,10 +1498,6 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
-        users:
-          text: "Eksporter brukere"
-          title: "Eksporter brukerlisten til en CSV-fil."
-        success: "Eksporteringen er startet. Du vil bli varslet snarlig om fremgangen."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
       customize:
         title: "Tilpasse"
@@ -1578,6 +1587,7 @@ nb_NO:
         sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvis Oppsummering"
+        preview_digest_desc: "Forhåndsvis innholdet i den ukentlige sammendrags emailen sendt til innaktive melemer."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -1678,8 +1688,6 @@ nb_NO:
           new: "Ny"
           active: "Aktiv"
           pending: "Ventende"
-          admins: 'Administratorer'
-          moderators: 'Moderatorer'
           suspended: 'Bannlyst'
           blocked: 'Blokkert'
         approved: "Godkjent?"

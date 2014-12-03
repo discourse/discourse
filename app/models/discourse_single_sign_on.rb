@@ -14,6 +14,7 @@ class DiscourseSingleSignOn < SingleSignOn
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
+    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
     sso.to_url
   end
 
@@ -65,6 +66,9 @@ class DiscourseSingleSignOn < SingleSignOn
     custom_fields.each do |k,v|
       user.custom_fields[k] = v
     end
+
+    user.admin = admin unless admin.nil?
+    user.moderator = moderator unless moderator.nil?
 
     # optionally save the user and sso_record if they have changed
     user.save!

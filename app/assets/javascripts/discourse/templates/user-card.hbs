@@ -27,11 +27,15 @@
     {{/if}}
 
     {{#if showFilter}}
-    <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
+      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
     {{/if}}
 
     {{#if hasUserFilters}}
-    <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</a></li>
+      <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</a></li>
+    {{/if}}
+
+    {{#if showDelete}}
+      <li><a class='btn btn-danger' {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n admin.user.delete}}</a></li>
     {{/if}}
   </ul>
 
@@ -52,10 +56,10 @@
   {{/if}}
 
   {{#if user}}
-  <div class="metadata">
-    <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}} </h3>
-    <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
-  </div>
+    <div class="metadata">
+      <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}}</h3>
+      <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+    </div>
   {{/if}}
 
   {{#if showBadges}}

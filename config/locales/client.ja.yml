@@ -1321,10 +1321,6 @@ ja:
             title: "データベースを元の作業状態にロールバックする"
             confirm: "本当にデータベースを元の作業状態にロールバックしますか？"
       export_csv:
-        users:
-          text: "ユーザ情報を出力する"
-          title: "ユーザ情報をCSVファイルに出力する"
-        success: "出力作業が始まりました。"
         failed: "出力失敗。詳しくはログに参考してください。"
       customize:
         title: "カスタマイズ"
@@ -1487,8 +1483,6 @@ ja:
           new: "新規"
           active: "アクティブ"
           pending: "保留中"
-          admins: '管理者'
-          moderators: 'モデレータ'
           suspended: 'サスペンド中'
           blocked: 'ブロック中'
         approved: "承認?"

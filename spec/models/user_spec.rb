@@ -1155,13 +1155,13 @@ describe User do
     end
   end
 
-  describe "#purge_inactive" do
+  describe "#purge_unactivated" do
     let!(:user) { Fabricate(:user) }
     let!(:inactive) { Fabricate(:user, active: false) }
     let!(:inactive_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
 
-    it 'should only remove old, inactive users' do
-      User.purge_inactive
+    it 'should only remove old, unactivated users' do
+      User.purge_unactivated
       all_users = User.all
       all_users.include?(user).should == true
       all_users.include?(inactive).should == true

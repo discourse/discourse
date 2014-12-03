@@ -3,7 +3,7 @@ module Jobs
     every 1.day
 
     def execute(args)
-      User.purge_inactive
+      User.purge_unactivated
     end
   end
 end

@@ -33,6 +33,7 @@ de:
   log_in: "Anmelden"
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
+  purge_reason: "Automatisch gelöscht, da alt und ungeprüft"
   disable_remote_images_download_reason: "Da nicht mehr genug Plattenplatz vorhanden ist, wurde der Download von Bildern deaktiviert."
   errors:
     messages:
@@ -345,12 +346,14 @@ de:
   activation:
     action: "Aktiviere dein Benutzerkonto"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
+    please_continue: "Dein neuer Account ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor Du auf das Forum zugreifen kannst, muss Dein neues Konto noch von einem Moderator genehmigt werden. Du erhälst eine E-Mail, sobald dies geschehen ist!"
   post_action_types:
     off_topic:
       title: 'Am Thema vorbei'
+      description: 'Dieser Beitrag hat nichts mit dem Thema zu tun wie es im Titel und ersten Beitrag steht. Deshalb sollte er woanders hin verschoben werden.'
       long_form: 'dies als am Thema vorbei gemeldet'
     spam:
       title: 'Werbung'
@@ -362,10 +365,13 @@ de:
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
       title: 'Private Nachricht an {{username}}'
+      description: 'Dieser Beitrag enthält etwas, worüber ich mit dem Autor direkt und persönlich reden möchte. Wird nicht gemeldet.'
+      long_form: 'privat angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Irgendetwas anderes"
+      description: 'Auf diesen Beitrag sollte aus einem anderen Grund ein Moderator aufmerksam gemacht werden.'
       email_title: 'Der Beitrag "%{title}" sollte von einem Moderator begutachtet werden'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -374,7 +380,7 @@ de:
       long_form: 'ein Lesezeichen auf diesen Beitrag gesetzt'
     like:
       title: 'Gefällt mir'
-      description: 'Dieser Beitrag gefällt mit'
+      description: 'Dieser Beitrag gefällt mir'
       long_form: 'dies gefällt mit'
     vote:
       title: 'Abstimmung'
@@ -416,7 +422,7 @@ de:
     visits:
       title: "Nutzerbesuche"
       xaxis: "Tag"
-      yaxis: "Zahl der Besuche"
+      yaxis: "Anzahl der Besuche"
     signups:
       title: "Benutzer"
       xaxis: "Tag"
@@ -436,43 +442,43 @@ de:
     flags:
       title: "Meldungen"
       xaxis: "Tag"
-      yaxis: "Zahl der Meldungen"
+      yaxis: "Anzahl der Meldungen"
     bookmarks:
       title: "Lesezeichen"
       xaxis: "Tag"
-      yaxis: "Zahl der Lesezeichen"
+      yaxis: "Anzahl der Lesezeichen"
     starred:
       title: "Favoriten"
       xaxis: "Tag"
-      yaxis: "Zahl der Favoriten"
+      yaxis: "Anzahl der Favoriten"
     users_by_trust_level:
       title: "Benutzer nach Stufe"
       xaxis: "Stufe"
-      yaxis: "Zahl der Nutzer"
+      yaxis: "Anzahl der Nutzer"
     emails:
       title: "Gesendete E-Mails"
       xaxis: "Tag"
-      yaxis: "Zahl der E-Mails"
+      yaxis: "Anzahl der E-Mails"
     user_to_user_private_messages:
       title: "Benutzer-zu-Benutzer"
       xaxis: "Tag"
-      yaxis: "Zahl der privaten Nachrichten"
+      yaxis: "Anzahl privater Nachrichten"
     system_private_messages:
       title: "System"
       xaxis: "Tag"
-      yaxis: "Zahl der privaten Nachrichten"
+      yaxis: "Anzahl privater Nachrichten"
     moderator_warning_private_messages:
       title: "Warnungen von Moderatoren"
       xaxis: "Tag"
-      yaxis: "Zahl der privaten Nachrichten"
+      yaxis: "Anzahl privater Nachrichten"
     notify_moderators_private_messages:
       title: "Meldungen an Moderatoren"
       xaxis: "Tag"
-      yaxis: "Zahl der privaten Nachrichten"
+      yaxis: "Anzahl privater Nachrichten"
     notify_user_private_messages:
       title: "Meldungen an Benutzer"
       xaxis: "Tag"
-      yaxis: "Zahl der privaten Nachrichten"
+      yaxis: "Anzahl privater Nachrichten"
     top_referrers:
       title: "Top Referrers"
       xaxis: "Benutzer"
@@ -572,12 +578,12 @@ de:
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
     download_remote_images_threshold: "Minimal benötigter freier Festplattenspeicher um externe Bilder lokal herunterzuladen (in Prozent)"
     disabled_image_download_domains: "Liste von Domänen, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
-    ninja_edit_window: "Anzahl Sekunden nach Erstellen eines Beitrags, während der Änderungen am Beitrag nicht im Bearbeitungsverlauf gespeichert werden."
+    ninja_edit_window: "Für (n) Sekunden wird nach dem Bearbeiten keine neue Revision im Beitragsverlauf angelegt."
     post_edit_time_limit: "Der Verfasser eines Beitrags kann diesen nur für (n) Minuten nach Absenden des Beitrags bearbeiten. 0 deaktiviert diese Beschränkung."
     edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Mitarbeiter sichtbar."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
-    category_featured_topics: "Zahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories."
+    category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
     show_subcategory_list: "Zeige Liste von Unterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links allen nutzergenerierten Inhalten 'rel nofollow' hinzu (inkludiert übergeordnete Domains). Die Änderung dieser Einstellung erfordert, dass Du sämtliche Markdown-Beiträge aktualisierst."
@@ -602,7 +608,7 @@ de:
     anon_polling_interval: "Pollingintervall in Millisekunden für anonyme Clients."
     auto_track_topics_after: "Millisekunden, bevor ein Thema automatisch verfolgt wird. Nutzer können diesen Wert überschreiben (0 heißt immer, -1 heißt niemals)."
     new_topic_duration_minutes: "Minuten, die ein neues Thema als neu aufgeführt wird. Nutzer können diesen Wert überschreiben (-1 heißt immer, -2 heißt seit dem letzten Besuch)."
-    flags_required_to_hide_post: "Zahl der Meldungen, die dazu führen, dass ein Beitrag automatisch versteckt und eine private Nachricht an den Nutzer geschickt wird (0 heißt niemals)."
+    flags_required_to_hide_post: "Anzahl der Meldungen, die dazu führen, dass ein Beitrag automatisch versteckt und eine private Nachricht an den Nutzer geschickt wird (0 für niemals)."
     cooldown_minutes_after_hiding_posts: "Minuten, die ein Nutzer warten muss, bevor ein Beitrag, der wegen Meldungen anderer Nutzer versteckt wurde, bearbeitet werden kann."
     max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer an seinem ersten Tag auf der Seite erstellen kann"
     max_replies_in_first_day: "Maximale Anzahl an Antworten, die ein Benutzer an seinem ersten Tag auf der Seite erstellen kann"
@@ -625,11 +631,12 @@ de:
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
-    topics_per_page: "Zahl der Themen, die auf der Themen-Übersichtsseite zu Beginn und beim Scrollen geladen werden."
+    topics_per_page: "Anzahl der Themen, die auf der Themen-Übersichtsseite zu Beginn und beim Scrollen geladen werden."
     send_welcome_message: "Sende allen neuen Nutzern eine private Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
     suppress_reply_when_quoting: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der Beitrag den beantworteten Beitrag zitiert."
+    max_reply_history: "Maximale Anzahl an Antworten beim Ausklappen von in-reply-to"
     topics_per_period_in_top_summary: "Anzahl der Themen, die in der Top-Themübersicht angezeigt werden."
     topics_per_period_in_top_page: "Anzahl der Themen, die in der mit \"Mehr zeigen\" erweiterten Top-Themenübersicht angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Nutzer automatisch zur Top Übersichtsseite"
@@ -684,14 +691,14 @@ de:
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Nutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Nutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_new_user_create_post: "Nach Schreiben eines Beitrags muss ein neuer Nutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
-    max_likes_per_day: "Maximale Zahl der „Gefällt mir“ pro Nutzer pro Tag."
-    max_flags_per_day: "Maximale Zahl der Meldungen pro Nutzer pro Tag."
-    max_bookmarks_per_day: "Maximale Zahl der Lesezeichen pro Nutzer pro Tag."
-    max_edits_per_day: "Maximale Zahl der Bearbeitungen pro Nutzer pro Tag."
+    max_likes_per_day: "Maximale Anzahl der Likes pro Nutzer pro Tag."
+    max_flags_per_day: "Maximale Anzahl der Meldungen pro Nutzer pro Tag."
+    max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Nutzer pro Tag."
+    max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Nutzer pro Tag."
     max_stars_per_day: "Maximale Anzahl der Themen, die ein User pro Tag favorisieren kann."
-    max_topics_per_day: "Maximale Zahl der Themen, die ein Nutzer pro Tag erstellen kann."
+    max_topics_per_day: "Maximale Anzahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
-    suggested_topics: "Zahl der empfohlenen Themen am Ende eines Themas."
+    suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: Du solltest ein Backup deines /uploads Verzeichnisses erstellen, bevor Du diese Funktion aktivierst."
     clean_orphan_uploads_grace_period_hours: "Frist (in Stunden) bevor ein verwaister Upload entfernt wird."
@@ -705,12 +712,12 @@ de:
     default_trust_level: "Standardwert für die Vertrauensstufe von neuen Nutzern (0-4)."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
-    newuser_max_links: "Maximale Zahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
-    newuser_max_images: "Maximale Zahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
-    newuser_max_attachments: "Maximale Zahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
-    newuser_max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
+    newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
+    newuser_max_images: "Maximale Anzahl der Bilder, die neue Benutzer Beiträgen hinzufügen dürfen."
+    newuser_max_attachments: "Maximale Anzahl der Dateien, die neue Benutzer Beiträgen hinzufügen dürfen."
+    newuser_max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die neue Benutzer in Beiträgen nutzen dürfen."
     newuser_max_replies_per_topic: "Maximale Anzahl an Antworten, die ein neuer Benutzer in einem einzigen Thema geben darf, bevor jemand auf diese antwortet."
-    max_mentions_per_post: "Maximale Zahl der @Namens-Erwähnungen, die jemand in einem Beitrag nutzen kann."
+    max_mentions_per_post: "Maximale Anzahl der @Namens-Erwähnungen, die jemand in einem Beitrag nutzen kann."
     create_thumbnails: "Erzeuge ein Vorschaubild und eine Lightbox für Bilder, die zu groß sind, um in einem Beitrag angezeigt zu werden."
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
@@ -754,6 +761,7 @@ de:
     logout_redirect: "Ziel für Weiterleitung nach einem Logout (z. B.: http://somesite.com/logout)"
     allow_uploaded_avatars: "Erlaube das Hochladen benutzerdefinierter Avatare."
     allow_animated_avatars: "Erlaube den Benutzern animierte GIFs als Avatar zu benutzen. ACHTUNG: Wenn Du diese Einstellung änderst, solltest Du den Rake-Task avatars:refresh ausführen."
+    allow_animated_thumbnails: "Generiert animierte Vorschaubilder von animierten gifs."
     automatically_download_gravatars: "Avatare von Gravatar herunterladen, wenn ein Nutzer sich registriert oder seine E-Mail-Adresse ändert."
     digest_topics: "Maximale Anzahl von Themen, die in der E-Mail-Zusammenfassung angezeigt werden."
     digest_min_excerpt_length: "Minimale Länge des Auszugs aus einem Beitrag in der E-Mail-Zusammenfassung, in Zeichen."
@@ -841,11 +849,32 @@ de:
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
     closed_enabled: "Dieses Thema ist nun geschlossen. Es ist nicht länger möglich, auf dieses Thema zu antworten."
     closed_disabled: "Dieses Thema ist nun geöffnet. Es ist wieder möglich, auf dieses Thema zu antworten."
+    autoclosed_enabled_days:
+      one: "Dieses Thema wurde nach einem Tag automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde nach %{count} Tagen automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+    autoclosed_enabled_hours:
+      one: "Dieses Thema wurde nach einer Stunde automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde nach %{count} Stunden automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+    autoclosed_enabled_minutes:
+      one: "Dieses Thema wurde nach einer Minute automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde nach %{count} Minuten automatisch geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+    autoclosed_enabled_lastpost_days:
+      one: "Dieses Thema wurde automatisch einen Tag nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde automatisch %{count} Tage nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+    autoclosed_enabled_lastpost_hours:
+      one: "Dieses Thema wurde automatisch eine Stunde nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde automatisch %{count} Stunden nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Dieses Thema wurde automatisch eine Minute nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
+      other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
+    autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
     pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer selbst den Pin löst."
     pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
     pinned_globally_enabled: "Dieses Thema ist nun global angepinnt. Es wird sowohl in seiner Kategorie als auch in allen anderen Themenlisten oben aufgelistet, solange der Pin nicht von einem Moderator gelöst wird, oder nicht jeder Nutzer selbst den Pin löst."
     pinned_globally_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
+    visible_enabled: "Das Thema ist jetzt gelistet. Es wird in der Themenliste angezeigt."
+    visible_disabled: "Das Thema ist jetzt ungelistet. Es wird nicht mehr in der Themenliste angezeigt. Dieses Thema kann nur mit einem direkten Link erreicht werden."
   login:
     not_approved: "Dein Benutzerkonto wurde noch nicht genehmigt. Du wirst per E-Mail benachrichtigt, sobald dies geschehen ist."
     incorrect_username_email_or_password: "Benutzername, Mailadresse oder Passwort falsch"
@@ -1021,6 +1050,8 @@ de:
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
 
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
+    email_reject_no_account:
+      subject_template: "E-Mail-Problem -- Unbekannter Account"
     email_reject_empty:
       subject_template: "E-Mail-Problem -- Kein Inhalt"
     email_reject_parsing:
@@ -1042,9 +1073,16 @@ de:
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_reply_key:
+      subject_template: "E-Mail Problem -- Unbekannter Reply Key"
       text_body_template: |
         Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
+    email_reject_destination:
+      subject_template: "E-Mail Problem -- Unbekannte Adresse"
+    email_reject_topic_not_found:
+      subject_template: "E-Mail Problem -- Thema nicht gefunden"
+    email_reject_topic_closed:
+      subject_template: "E-Mail Problem -- Thema geschlossen"
     email_error_notification:
       subject_template: "E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
@@ -1109,7 +1147,7 @@ de:
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
   unsubscribe_link: "Wenn Du diese Mails nicht mehr erhalten möchtest, verändere deine [Benutzereinstellungen](%{user_preferences_url})."
-  subject_re: "Antw: "
+  subject_re: "Re: "
   subject_pm: "[PN]"
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
@@ -1171,13 +1209,17 @@ de:
         ---
         %{respond_instructions}
     digest:
+      why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten BEsucht am %{last_seen_at}"
       subject_template: "[%{site_name}] Kurzfassung für %{date}"
       new_activity: "Neues in deinen Themen und Beiträgen:"
       top_topics: "Beliebte Beiträge"
       other_new_topics: "Beliebte Themen"
+      unsubscribe: "Diese Zusammenfassung wurde von %{site_link} gesendet, da wir dich eine Weile nicht mehr gesehen haben. Zum Abmelden %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "%{site_name} Übersicht"
       read_more: "Weiterlesen"
+      more_topics: "Es gab %{new_topics_since_seen} andere neue Themen."
+      more_topics_category: "Weitere neue Themen:"
       posts:
         one: "1 Beitrag"
         other: "%{count} Beiträge"
@@ -1201,6 +1243,11 @@ de:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Dein neues Konto"
+      text_body_template: |
+        Ein neuer Account wurde für dich auf %{site_name} erstellt.
+
+        Klicke auf den folgenden Link um ein Passwort für deinen neuen Account zu setzen:
+        %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
       text_body_template: |

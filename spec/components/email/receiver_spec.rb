@@ -93,6 +93,132 @@ Pleasure to have you here!
       )
     end
 
+    it "handles newlines" do
+      test_parse_body(fixture_file("emails/newlines.eml")).
+          should == (
+"This is my reply.
+It is my best reply.
+It will also be my *only* reply."
+      )
+    end
+
+    it "handles inline reply" do
+      test_parse_body(fixture_file("emails/inline_reply.eml")).
+          should == (
+"On Wed, Oct 8, 2014 at 11:12 AM, techAPJ <info@unconfigured.discourse.org> wrote:
+
+>     techAPJ <https://meta.discourse.org/users/techapj>
+> November 28
+>
+> Test reply.
+>
+> First paragraph.
+>
+> Second paragraph.
+>
+> To respond, reply to this email or visit
+> https://meta.discourse.org/t/testing-default-email-replies/22638/3 in
+> your browser.
+>  ------------------------------
+> Previous Replies    codinghorror
+> <https://meta.discourse.org/users/codinghorror>
+> November 28
+>
+> We're testing the latest GitHub email processing library which we are
+> integrating now.
+>
+> https://github.com/github/email_reply_parser
+>
+> Go ahead and reply to this topic and I'll reply from various email clients
+> for testing.
+>   ------------------------------
+>
+> To respond, reply to this email or visit
+> https://meta.discourse.org/t/testing-default-email-replies/22638/3 in
+> your browser.
+>
+> To unsubscribe from these emails, visit your user preferences
+> <https://meta.discourse.org/my/preferences>.
+>
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
+fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog."
+      )
+    end
+
+    it "should not include previous replies" do
+      test_parse_body(fixture_file("emails/previous_replies.eml")).should_not match /Previous Replies/
+    end
+
+    it "strips iPhone signature" do
+      test_parse_body(fixture_file("emails/iphone_signature.eml")).should_not match /Sent from my iPhone/
+    end
+
+    it "properly renders email reply from gmail web client" do
+      test_parse_body(fixture_file("emails/gmail_web.eml")).
+          should == (
+"### This is a reply from standard GMail in Google Chrome.
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
+fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog.
+
+Here's some **bold** text in Markdown.
+
+Here's a link http://example.com"
+      )
+    end
+
+    it "properly renders email reply from iOS default mail client" do
+      test_parse_body(fixture_file("emails/ios_default.eml")).
+          should == (
+"### this is a reply from iOS default mail
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+
+Here's some **bold** markdown text.
+
+Here's a link http://example.com"
+      )
+    end
+
+    it "properly renders email reply from Android 5 gmail client" do
+      test_parse_body(fixture_file("emails/android_gmail.eml")).
+          should == (
+"### this is a reply from Android 5 gmail
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over
+the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown
+fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+The quick brown fox jumps over the lazy dog.
+
+This is **bold** in Markdown.
+
+This is a link to http://example.com"
+      )
+    end
+
+    it "properly renders email reply from Windows 8.1 Metro default mail client" do
+      test_parse_body(fixture_file("emails/windows_8_metro.eml")).
+          should == (
+"### reply from default mail client in Windows 8.1 Metro
+
+
+The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog.
+
+
+This is a **bold** word in Markdown
+
+
+This is a link http://example.com"
+      )
+    end
+
     it "properly renders email reply from MS Outlook client" do
       test_parse_body(fixture_file("emails/outlook.eml")).should == "Microsoft Outlook 2010"
     end

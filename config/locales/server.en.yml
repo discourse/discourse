@@ -47,7 +47,7 @@ en:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
-  purge_reason: "Automatically deleted due to being old and unverified"
+  purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
 
   errors:
@@ -660,9 +660,6 @@ en:
     title: "Brief title of this site, used in the title tag."
     site_description: "Describe this site in one sentence, used in the meta description tag."
     contact_email: "Email address of key contact for site. Important notices from discourse.org regarding critical updates may be sent to this address."
-    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -787,6 +784,7 @@ en:
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (Note: disables invites)"
+    enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
@@ -844,7 +842,7 @@ en:
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    purge_inactive_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
+    purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."

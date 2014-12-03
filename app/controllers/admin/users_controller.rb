@@ -32,7 +32,7 @@ class Admin::UsersController < Admin::AdminController
       StaffActionLogger.new(current_user).log_show_emails(users)
     end
 
-    render_serialized(users, AdminUserSerializer)
+    render_serialized(users, AdminUserListSerializer)
   end
 
   def show
@@ -66,10 +66,14 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def log_out
-    @user.auth_token = nil
-    @user.save!
-    MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
-    render nothing: true
+    if @user
+      @user.auth_token = nil
+      @user.save!
+      MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
+      render json: success_json
+    else
+      render json: {error: I18n.t('admin_js.admin.users.id_not_found')}, status: 404
+    end
   end
 
   def refresh_browsers

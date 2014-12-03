@@ -51,4 +51,8 @@ module UserGuardian
     is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
   end
 
+  def restrict_user_fields?(user)
+    user.trust_level == TrustLevel[0] && anonymous?
+  end
+
 end

@@ -13,22 +13,18 @@ export default ObjectController.extend({
   postStream: Em.computed.alias('controllers.topic.postStream'),
   enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
+  viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
   showFilter: Em.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
-
-  // showFilter: Em.computed.and('postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: Discourse.computed.propertyNotEqual('user.name', 'user.username'),
-
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
-
   isSuspended: Em.computed.notEmpty('user.suspend_reason'),
-
   showBadges: Discourse.computed.setting('enable_badges'),
+  showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
+  showDelete: Em.computed.and("viewingAdmin", "showName", "user.canBeDeleted"),
 
   moreBadgesCount: function() {
     return this.get('user.badge_count') - this.get('user.featured_user_badges.length');
   }.property('user.badge_count', 'user.featured_user_badges.@each'),
-
-  showMoreBadges: Em.computed.gt('moreBadgesCount', 0),
 
   hasCardBadgeImage: function() {
     var img = this.get('user.card_badge.image');
@@ -77,6 +73,7 @@ export default ObjectController.extend({
     self.set('cardTarget', target);
 
     Discourse.User.findByUsername(username).then(function (user) {
+      user = Discourse.User.create(user);
       self.setProperties({ user: user, avatar: user, visible: true});
       self.appEvents.trigger('usercard:shown');
     }).finally(function(){

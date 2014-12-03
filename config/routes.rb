@@ -197,6 +197,7 @@ Discourse::Application.routes.draw do
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
+  get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"

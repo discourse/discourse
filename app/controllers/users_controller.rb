@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
     respond_to do |format|
       format.html do
+        @restrict_fields = guardian.restrict_user_fields?(@user)
         store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
       end
 

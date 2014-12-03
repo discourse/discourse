@@ -37,10 +37,6 @@ h1 .topic-statuses .topic-status i {
   color: scale-color($primary, $lightness: 50%);
 }
 
-.via-email .reply-to-tab {
-  padding: 13px 15px 5px;
-}
-
 .gutter {
   .reply-new {
     .discourse-no-touch & {
@@ -613,12 +609,6 @@ a.mention {
   background: scale-color-diff();
 }
 
-
-.modal-body {
-  input[type=text] {
-    font-size: 16px;
-  }
-}
 
 .moderator {
   .topic-body {

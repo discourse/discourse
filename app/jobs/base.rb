@@ -48,7 +48,6 @@ module Jobs
     end
 
     def log(*args)
-      puts args
       args.each do |arg|
         Rails.logger.info "#{Time.now.to_formatted_s(:db)}: [#{self.class.name.upcase}] #{arg}"
       end

@@ -100,33 +100,29 @@ Discourse.Composer = Discourse.Model.extend({
 
   hidePreview: Em.computed.not('showPreview'),
 
-  // Whether to disable the post button
+  // whether to disable the post button
   cantSubmitPost: function() {
-
-    // Can't submit while loading
+    // can't submit while loading
     if (this.get('loading')) return true;
 
-    // Title is required when:
-    //    - creating a new topic
-    //    - editing the 1st post
-    //    - creating a private message
-
+    // title is required when
+    //  - creating a new topic/private message
+    //  - editing the 1st post
     if (this.get('canEditTitle') && !this.get('titleLengthValid')) return true;
-
-    // Need at least one user when sending a private message
-    if ( this.get('creatingPrivateMessage') &&
-         this.get('targetUsernames') &&
-        (this.get('targetUsernames').trim() + ',').indexOf(',') === 0) {
-      return true;
-    }
 
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
-    return this.get('canCategorize') &&
-        !Discourse.SiteSettings.allow_uncategorized_topics &&
-        !this.get('categoryId') &&
-        !Discourse.User.currentProp('staff');
+    if (this.get("privateMessage")) {
+      // need at least one user when sending a PM
+      return this.get('targetUsernames') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0;
+    } else {
+      // has a category? (when needed)
+      return this.get('canCategorize') &&
+            !Discourse.SiteSettings.allow_uncategorized_topics &&
+            !this.get('categoryId') &&
+            !Discourse.User.currentProp('staff');
+    }
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
   /**
