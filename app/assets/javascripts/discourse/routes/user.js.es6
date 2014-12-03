@@ -15,11 +15,11 @@ export default Discourse.Route.extend({
       Discourse.logout();
     },
 
-    composePrivateMessage: function() {
-      var user = this.modelFor('user');
+    composePrivateMessage: function(user) {
+      var recipient = user ? user.username : '';
       return this.controllerFor('composer').open({
         action: Discourse.Composer.PRIVATE_MESSAGE,
-        usernames: user.get('username'),
+        usernames: recipient,
         archetypeId: 'private_message',
         draftKey: 'new_private_message'
       });

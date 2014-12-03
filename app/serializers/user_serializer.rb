@@ -45,6 +45,7 @@ class UserSerializer < BasicUserSerializer
              :can_edit_email,
              :can_edit_name,
              :stats,
+             :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
              :trust_level,
@@ -177,6 +178,12 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
+  end
+
+  # Needed because 'send_private_message_to_user' will always return false
+  # when the current user is being serialized
+  def can_send_private_messages
+    scope.can_send_private_message?(Discourse.system_user)
   end
 
   def can_send_private_message_to_user
