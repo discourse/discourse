@@ -9,6 +9,10 @@ export default Discourse.Route.extend({
           bootbox.alert(I18n.t("admin.export_csv.failed"));
         }
       });
+    },
+
+    deleteUser: function(user) {
+      Discourse.AdminUser.create(user).destroy({ deletePosts: true });
     }
   }
 
