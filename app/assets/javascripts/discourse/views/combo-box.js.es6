@@ -7,7 +7,7 @@
   @module Discourse
 **/
 export default Discourse.View.extend({
-  tagName: 'select',
+  tagName: 'span',
   attributeBindings: ['tabindex'],
   classNames: ['combobox'],
   valueAttribute: 'id',
@@ -27,6 +27,7 @@ export default Discourse.View.extend({
         none = this.get('none');
 
     // Add none option if required
+    buffer.push('<select class=\'combobox\'>');
     if (typeof none === "string") {
       buffer.push('<option value="">' + I18n.t(none) + "</option>");
     } else if (typeof none === "object") {
@@ -46,10 +47,11 @@ export default Discourse.View.extend({
         buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
+    buffer.push('</select>');
   },
 
   valueChanged: function() {
-    var $combo = this.$(),
+    var $combo = this.$('select'),
         val = this.get('value');
     if (val !== undefined && val !== null) {
       $combo.val(val.toString());
@@ -64,7 +66,7 @@ export default Discourse.View.extend({
   }.observes('content.@each'),
 
   didInsertElement: function() {
-    var $elem = this.$(),
+    var $elem = this.$('select'),
         self = this;
 
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
