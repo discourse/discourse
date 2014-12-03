@@ -329,6 +329,9 @@
     },
 
     updateChildView: function () {
+      // If the element has been destroyed before this call occurs
+      if (!this) { return; }
+
       this._scheduled = false;
       if (!this._elementCreated || this.isDestroying || this.isDestroyed) { return; }
 
