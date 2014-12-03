@@ -39,7 +39,7 @@
             <ul>
               {{#if can_send_private_message_to_user}}
               <li>
-                <a class='btn btn-primary right' {{action "composePrivateMessage"}}>
+                <a class='btn btn-primary right' {{action "composePrivateMessage" model}}>
                   {{fa-icon "envelope"}}
                   {{i18n user.private_message}}
                 </a>
