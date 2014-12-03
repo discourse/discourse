@@ -15,7 +15,7 @@ var ApplicationRoute = Discourse.Route.extend({
     composePrivateMessage: function(user) {
       var self = this;
       this.transitionTo('userActivity', user).then(function () {
-        self.controllerFor('user-activity').send('composePrivateMessage');
+        self.controllerFor('user-activity').send('composePrivateMessage', user);
       });
     },
 

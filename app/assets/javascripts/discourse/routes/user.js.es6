@@ -16,7 +16,7 @@ export default Discourse.Route.extend({
     },
 
     composePrivateMessage: function(user) {
-      var recipient = user ? user.username : '';
+      var recipient = user ? user.get('username') : '';
       return this.controllerFor('composer').open({
         action: Discourse.Composer.PRIVATE_MESSAGE,
         usernames: recipient,
