@@ -808,10 +808,6 @@ uncategorized:
 
   disable_edit_notifications: false
 
-  company_full_name: 'My Unconfigured Forum Ltd.'
-  company_short_name: 'Unconfigured Forum'
-  company_domain: 'www.example.com'
-
   vacuum_db_days: 90
   last_vacuum:
     default: 0
