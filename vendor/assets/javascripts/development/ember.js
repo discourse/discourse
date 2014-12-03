@@ -10112,10 +10112,6 @@ enifed("ember-handlebars/string",
       @return {Handlebars.SafeString} a string that will not be html escaped by Handlebars
     */
     function htmlSafe(str) {
-      if (str === undefined || str === null) {
-        return "";
-      }
-
       if (typeof str !== 'string') {
         str = ''+str;
       }
