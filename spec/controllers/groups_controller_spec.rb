@@ -67,5 +67,20 @@ describe GroupsController do
       xhr :get, :posts, group_id: group.name
       response.should be_success
     end
+
+    it "ensures that membership can be paginated" do
+      5.times { group.add(Fabricate(:user)) }
+      usernames = group.users.map{ |m| m['username'] }.sort
+
+      xhr :get, :members, group_id: group.name, limit: 3
+      response.should be_success
+      members = JSON.parse(response.body)
+      members.map{ |m| m['username'] }.should eq(usernames[0..2])
+
+      xhr :get, :members, group_id: group.name, limit: 3, offset: 3
+      response.should be_success
+      members = JSON.parse(response.body)
+      members.map{ |m| m['username'] }.should eq(usernames[3..4])
+    end
   end
 end
