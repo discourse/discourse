@@ -527,7 +527,7 @@ Discourse.PostStream = Em.Object.extend({
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
     postIds.forEach(function(id){
-      identityMap.delete(id);
+      identityMap.remove(id);
     });
   },
 

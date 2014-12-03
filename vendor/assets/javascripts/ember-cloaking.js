@@ -8,13 +8,10 @@
     @namespace Ember
   **/
   Ember.CloakedCollectionView = Ember.CollectionView.extend({
-    cloakView: Ember.computed.alias('itemViewClass'),
     topVisible: null,
     bottomVisible: null,
     offsetFixedTopElement: null,
     offsetFixedBottomElement: null,
-    loadingHTML: 'Loading...',
-    scrollDebounce: 10,
 
     init: function() {
       var cloakView = this.get('cloakView'),
@@ -28,7 +25,7 @@
       this.set('itemViewClass', Ember.CloakedView.extend({
         classNames: [cloakView + '-cloak'],
         cloaks: cloakView,
-        preservesContext: this.get('preservesContext') === 'true',
+        preservesContext: this.get('preservesContext') === "true",
         cloaksController: this.get('itemController'),
         defaultHeight: this.get('defaultHeight'),
 
@@ -202,11 +199,12 @@
         var checkView = childViews[j];
         if (!checkView._containedView) {
           if (!checkView.get('loading')) {
-            checkView.$().html(this.get('loadingHTML'));
+            checkView.$().html(this.get('loadingHTML') || "Loading...");
           }
           return;
         }
       }
+
     },
 
     uncloakQueue: function(){
@@ -250,9 +248,8 @@
       var self = this,
           offsetFixedTop = this.get('offsetFixedTop') || this.get('offsetFixed'),
           offsetFixedBottom = this.get('offsetFixedBottom'),
-          scrollDebounce = this.get('scrollDebounce'),
           onScrollMethod = function() {
-            Ember.run.debounce(self, 'scrollTriggered', scrollDebounce);
+            Ember.run.debounce(self, 'scrollTriggered', 10);
           };
 
       if (offsetFixedTop) {
@@ -392,7 +389,8 @@
           loading: false
         });
 
-        this.setContainedView(this.createChildView(this.get('cloaks'), createArgs));
+        this._containedView = this.createChildView(this.get('cloaks'), createArgs);
+        this.rerender();
       }
     },
 
@@ -409,14 +407,24 @@
         this.set('style', style);
         this.$().prop('style', style);
 
-
         // We need to remove the container after the height of the element has taken
         // effect.
         Ember.run.schedule('afterRender', function() {
-          self.setContainedView(null);
+          if(self._containedView){
+            self._containedView.remove();
+            self._containedView = null;
+          }
         });
       }
     },
+
+    _removeContainedView: function(){
+      if(this._containedView){
+        this._containedView.remove();
+        this._containedView = null;
+      }
+      this._super();
+    }.on('willDestroyElement'),
 
     _setHeights: function(){
       if (!this._containedView) {
@@ -431,8 +439,36 @@
           this.$().css('height', defaultHeight);
         }
       }
-     }.on('didInsertElement')
+     }.on('didInsertElement'),
+
+    /**
+      Render the cloaked view if applicable.
+
+      @method render
+    */
+    render: function(buffer) {
+      var containedView = this._containedView, self = this;
+
+      if (containedView && (containedView._state || containedView.state) !== 'inDOM') {
+        containedView.triggerRecursively('willInsertElement');
+        containedView.renderToBuffer(buffer);
+        if (Ember.View.prototype._transitionTo) {
+          containedView._transitionTo('inDOM');
+        } else {
+          containedView.transitionTo('inDOM');
+        }
+
+        Em.run.schedule('afterRender', function() {
+          if(self._containedView) {
+            self._containedView.triggerRecursively('didInsertElement');
+          }
+        });
+      }
+    }
+
   });
+
+
 
   Ember.Handlebars.registerHelper('cloaked-collection', function(options) {
     var hash = options.hash,
