@@ -791,16 +791,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Delete inactive accounts that are over a week old
-  def self.purge_inactive
+  # Delete unactivated accounts (without verified email) that are over a week old
+  def self.purge_unactivated
 
-    # You might be wondering why this query matches on post_count = 0. The reason
-    # is a long time ago we had a bug where users could post before being activated
-    # and some sites still have those records which can't be purged.
     to_destroy = User.where(active: false)
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
-                     .where("created_at < ?", SiteSetting.purge_inactive_users_grace_period_days.days.ago)
-                     .where('us.post_count = 0')
+                     .where("created_at < ?", SiteSetting.purge_unactivated_users_grace_period_days.days.ago)
                      .where('NOT admin AND NOT moderator')
                      .limit(100)
 

@@ -744,7 +744,7 @@ fr:
     clean_up_uploads: "Retirer les fichiers téléchargés orphelins pour prévenir les hébergements illégaux. ATTENTION: vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
     clean_orphan_uploads_grace_period_hours: "La période de grâce (en heures) avant qu'un fichier envoyé orphelin soit retiré."
     purge_deleted_uploads_grace_period_days: "La période de grâce (en jours) avant qu'un fichier envoyé et supprimé soit effacé."
-    purge_inactive_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé."
+    purge_unactivated_users_grace_period_days: "Période de grâce (en jours) avant qu'un utilisateur qui n'a pas activé son compte soit supprimé."
     enable_s3_uploads: "Placez les fichiers envoyés sur un stockage Amazon S3. IMPORTANT: nécessite un accès valide à S3  (l'identifiant et la clé secrète)."
     s3_use_iam_profile: 'Utiliser un role AWS EC2 IAM pour la récupération des clés. NOTE: si activé, surcharge les paramètres "s3 access key id" et "s3 secret access key".'
     s3_upload_bucket: "Le nom du bucket Amazon S3 qui contiendra les fichiers téléchargés. ATTENTION : doit être en minuscule, sans points et sans caractères de soulignement."

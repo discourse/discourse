@@ -749,7 +749,7 @@ es:
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
-    purge_inactive_users_grace_period_days: "Periodo de gracia (en días) durante los cuales un usuario que no haya activado su cuenta no será aún eliminado."
+    purge_unactivated_users_grace_period_days: "Periodo de gracia (en días) durante los cuales un usuario que no haya activado su cuenta no será aún eliminado."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
