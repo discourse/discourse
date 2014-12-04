@@ -7,7 +7,7 @@
   @module Discourse
 **/
 export default Discourse.View.extend({
-  tagName: 'span',
+  tagName: 'select',
   attributeBindings: ['tabindex'],
   classNames: ['combobox'],
   valueAttribute: 'id',
@@ -27,7 +27,6 @@ export default Discourse.View.extend({
         none = this.get('none');
 
     // Add none option if required
-    buffer.push('<select class=\'combobox\'>');
     if (typeof none === "string") {
       buffer.push('<option value="">' + I18n.t(none) + "</option>");
     } else if (typeof none === "object") {
@@ -47,11 +46,10 @@ export default Discourse.View.extend({
         buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
-    buffer.push('</select>');
   },
 
   valueChanged: function() {
-    var $combo = this.$('select'),
+    var $combo = this.$(),
         val = this.get('value');
     if (val !== undefined && val !== null) {
       $combo.val(val.toString());
@@ -66,8 +64,14 @@ export default Discourse.View.extend({
   }.observes('content.@each'),
 
   didInsertElement: function() {
-    var $elem = this.$('select'),
+    var $elem = this.$(),
         self = this;
+
+    // Workaround for https://github.com/emberjs/ember.js/issues/9813
+    // Can be removed when fixed. Without it, the wrong option is selected
+    this.$('option').each(function(i, o) {
+      o.selected = !!$(o).attr('selected');
+    });
 
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
