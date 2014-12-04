@@ -61,10 +61,10 @@
   }
 
   > tbody > tr {
-    &:nth-child(even) {
+    &:nth-child(odd) {
         background-color: darken($secondary, 3%);
     }
-    &:nth-child(odd) {
+    &:nth-child(even) {
         background-color: $secondary;
     }
     &.highlighted {
