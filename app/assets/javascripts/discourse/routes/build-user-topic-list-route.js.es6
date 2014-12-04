@@ -25,7 +25,12 @@ export default function (viewName, path) {
         showParticipants: true
       });
 
-      this.controllerFor('user').set("pmView", viewName);
+      this.controllerFor('user').set('pmView', viewName);
+      this.controllerFor('search').set('contextType', 'private_messages');
+    },
+
+    deactivate: function(){
+      this.controllerFor('search').set('contextType', 'user');
     }
   });
 }

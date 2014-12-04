@@ -17,7 +17,7 @@ class Search
   end
 
   def self.facets
-    %w(topic category user)
+    %w(topic category user private_messages)
   end
 
   def self.long_locale
@@ -277,10 +277,20 @@ class Search
     def posts_query(limit, opts=nil)
       opts ||= {}
       posts = Post
-                  .joins(:post_search_data, {:topic => :category})
+                  .joins(:post_search_data, :topic)
+                  .joins("LEFT JOIN categories ON categories.id = topics.category_id")
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
-                  .where("topics.archetype <> ?", Archetype.private_message)
+
+      if opts[:private_messages]
+         posts = posts.where("topics.archetype =  ?", Archetype.private_message)
+
+         unless @guardian.is_admin?
+            posts = posts.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", @guardian.user.id)
+         end
+      else
+         posts = posts.where("topics.archetype <> ?", Archetype.private_message)
+      end
 
       if @search_context.present? && @search_context.is_a?(Topic)
         posts = posts.joins('JOIN users u ON u.id = posts.user_id')
@@ -336,7 +346,13 @@ class Search
       if @search_context.present?
 
         if @search_context.is_a?(User)
-          posts = posts.where("posts.user_id = #{@search_context.id}")
+
+          if opts[:private_messages]
+            posts = posts.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = ?)", @search_context.id)
+          else
+            posts = posts.where("posts.user_id = #{@search_context.id}")
+          end
+
         elsif @search_context.is_a?(Category)
           posts = posts.where("topics.category_id = #{@search_context.id}")
         elsif @search_context.is_a?(Topic)
@@ -407,15 +423,20 @@ class Search
       end
     end
 
-    def aggregate_search
+    def aggregate_search(opts = {})
 
-      post_sql = posts_query(@limit, aggregate_search: true)
+      post_sql = posts_query(@limit, aggregate_search: true,
+                                     private_messages: opts[:private_messages])
         .select('topics.id', 'min(post_number) post_number')
         .group('topics.id')
         .to_sql
 
       # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
+
+      # p Topic.exec_sql(post_sql).to_a
+      # puts post_sql
+      # p Topic.exec_sql("SELECT topic_id FROM topic_allowed_users WHERE user_id = 2").to_a
 
       posts = Post.includes(:topic => :category)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
@@ -424,6 +445,12 @@ class Search
       posts.each do |post|
         @results.add(post)
       end
+    end
+
+    def private_messages_search
+      raise Discourse::InvalidAccess.new("anonymous can not search PMs") unless @guardian.user
+
+      aggregate_search(private_messages: true)
     end
 
     def topic_search

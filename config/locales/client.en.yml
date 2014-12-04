@@ -769,6 +769,7 @@ en:
         user: "Search posts by @{{username}}"
         category: "Search the \"{{category}}\" category"
         topic: "Search this topic"
+        private_messages: "Search private messages"
 
     site_map: "go to another topic list or category"
     go_back: 'go back'
