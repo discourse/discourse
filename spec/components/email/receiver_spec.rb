@@ -346,6 +346,14 @@ This is a link http://example.com"
       end
     end
 
+    describe "auto response email replies should not be accepted" do
+      let!(:reply_key) { '636ca428858779856c226bb145ef4fad' }
+      let!(:email_raw) { fixture_file("emails/auto_reply.eml") }
+      it "raises a TopicNotFoundError" do
+        expect { receiver.process }.to raise_error(Email::Receiver::TopicNotFoundError)
+      end
+    end
+
   end
 
   describe "posting reply to a closed topic" do
