@@ -40,7 +40,6 @@ Discourse.Group = Discourse.Model.extend({
   },
 
   addMembers: function(usernames) {
-    var self = this;
     var payload = {changes: {add: usernames}};
 
     return Discourse.ajax("/groups/" + this.get('name'), {
@@ -50,7 +49,6 @@ Discourse.Group = Discourse.Model.extend({
   },
 
   removeMember: function(username) {
-    var self = this;
     var payload = {changes: {delete: username}};
 
     return Discourse.ajax("/groups/" + this.get('name'), {
