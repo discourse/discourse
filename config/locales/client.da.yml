@@ -333,7 +333,6 @@ da:
         instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
       email:
         title: "E-mail"
-        frequency: "Vi sender dig kun e-mail, hvis du ikke har været på siden for nylig, og du ikke allerede har set de ting vi ville e-mail’e dig om."
       name:
         title: "Navn"
       username:

@@ -320,7 +320,6 @@ pt:
         title: "Fundo de Perfil"
       email:
         title: "Email"
-        frequency: "Vamos enviar-lhe emails apenas quando não o virmos há algum tempo e não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
       username:

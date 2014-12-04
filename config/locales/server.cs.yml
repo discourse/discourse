@@ -33,7 +33,6 @@ cs:
   log_in: "Přihlásit se"
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
-  purge_reason: "Automaticky smazáno: staré a neověřené"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   errors:
     messages:

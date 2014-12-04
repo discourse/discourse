@@ -247,8 +247,13 @@ it:
       organisation: Organizzazione
       phone: Telefono
       other_accounts: "Altri account con questo indirizzo IP:"
+      delete_other_accounts: "Cancella %{count}"
       username: "nome utente"
       trust_level: "TL"
+      read_time: "durata lettura"
+      topics_entered: "argomenti creati"
+      post_count: "n° messaggi"
+      confirm_delete_other_accounts: "Sicuro di voler cancellare questi account?"
     user:
       said: "{{username}}:"
       profile: "Profilo"
@@ -339,17 +344,28 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
-        frequency: "Ti invieremo mail solo se è un po' che non ti si vede; le email riguarderanno solo le conversazioni che non hai letto."
+        instructions: "Mai mostrato pubblicamente"
+        ok: "Ti invieremo una email di conferma"
+        invalid: "Inserisci un indirizzo email valido"
+        authenticated: "{{provider}} ha autenticato la tua email"
       name:
         title: "Nome"
+        instructions: "Nome completo (facoltativo)"
+        too_short: "Il nome è troppo breve"
+        ok: "Il nome sembra adeguato"
       username:
         title: "Nome utente"
-        available: "Il tuo nome utente è disponibile"
+        instructions: "Deve essere univoco, senza spazi e breve"
+        short_instructions: "Gli utenti possono citarti scrivendo @{{username}}"
+        available: "Il nome utente è disponibile"
+        global_match: "L'email corrisponde al nome utente registrato"
         global_mismatch: "Già registrato. Prova {{suggestion}}?"
         not_available: "Non disponibile. Prova {{suggestion}}?"
-        too_short: "Il tuo nome utente è troppo corto"
-        too_long: "Il tuo nome utente è troppo lungo"
+        too_short: "Il nome utente è troppo corto"
+        too_long: "Il nome utente è troppo lungo"
         checking: "Controllo la disponibilità del nome utente..."
+        enter_email: 'Nome utente trovato; inserisci l''email corrispondente'
+        prefilled: "L'email corrisponde al nome utente registrato"
       locale:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
@@ -464,6 +480,7 @@ it:
         fixed: "Carica Pagina"
     close: "Chiudi"
     assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
+    logout: "Ti sei disconnesso."
     refresh: "Ricarica"
     read_only_mode:
       enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
@@ -1167,6 +1184,7 @@ it:
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
+      private_reminder: 'le segnalazioni sono private, visibili <b>soltanto</b> allo staff  '
       action: 'Segnala Messaggio'
       take_action: "Procedi"
       notify_action: 'Messaggio privato'
@@ -1182,6 +1200,8 @@ it:
         off_topic: "E' fuori tema"
         inappropriate: "È inappropriato"
         spam: "E' Spam"
+      custom_placeholder_notify_user: "Sii dettagliato, costruttivo e sempre gentile."
+      custom_placeholder_notify_moderators: "Facci sapere esattamente cosa ti preoccupa, fornendo collegamenti pertinenti ed esempi ove possibile."
       custom_message:
         at_least: "inserisci almeno {{n}} caratteri"
         more: "{{n}} alla fine..."
@@ -1326,7 +1346,7 @@ it:
         stale_data: "Non è stato effettuato un controllo recente sugli aggiornamenti. Assicurati che sidekiq sia attivo."
         version_check_pending: "Sembra che tu abbia aggiornato di recente. Ottimo!"
         installed_version: "Installata"
-        latest_version: "Ultimi"
+        latest_version: "Ultima"
         problems_found: "Si sono verificati dei problemi con la tua installazione di Discourse:"
         last_checked: "Ultimo controllo"
         refresh_problems: "Aggiorna"
@@ -1497,7 +1517,13 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
+        users:
+          title: "Esporta l'intero elenco utenti in formato CSV."
+        screened_ips:
+          title: "Esposta l'elenco completo di indirizzi IP schermati in formato CSV."
+        success: "L'esportazione è stata avviata, ti verrà a breve notificato il progresso del processo."
         failed: "Esportazione fallita. Controlla i log."
+        button_text: "Esporta"
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
@@ -1573,6 +1599,7 @@ it:
         settings: "Impostazioni"
         all: "Tutto"
         sending_test: "Invio email di prova in corso..."
+        error: "<b>ERRORE</b> - %{server_error}"
         test_error: "C'è stato un problema nell'invio dell'email di test. Controlla nuovamente le impostazioni email, verifica che il tuo host non blocchi le connessioni email e riprova."
         sent: "Inviato"
         skipped: "Omesso"
@@ -1586,6 +1613,7 @@ it:
         sent_test: "inviata!"
         delivery_method: "Metodo di consegna"
         preview_digest: "Anteprima Riassunto"
+        preview_digest_desc: "Vedi in anteprima il contenuto delle email di riassunto inviate agli utenti inattivi."
         refresh: "Aggiorna"
         format: "Formato"
         html: "html"
@@ -1647,6 +1675,7 @@ it:
             check_email: "controlla email"
             delete_topic: "cancella argomento"
             delete_post: "cancella messaggio"
+            impersonate: "impersona"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -1662,6 +1691,9 @@ it:
           title: "IP scansionati"
           description: 'Gli indirizzi IP che sono sotto controllo. Usa "Permetti" per inserirli nella lista bianca.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
+          roll_up_confirm: "Sicuro di voler sintetizzare l'elenco di indirizzi IP interdetti?"
+          rolled_up_some_subnets: "L'elenco di indirizzi IP interdetti sono stati sintetizzati con successo: %{subnets}."
+          rolled_up_no_subnet: "Non c'era nulla da sintetizzare."
           actions:
             block: "Blocca"
             do_nothing: "Permetti"
@@ -1670,6 +1702,9 @@ it:
             label: "Nuovo:"
             ip_address: "Indirizzo IP"
             add: "Aggiungi"
+          roll_up:
+            text: "Sintetizza"
+            title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."
         logster:
           title: "Log Errori"
       impersonate:
@@ -1686,8 +1721,10 @@ it:
           new: "Nuovi"
           active: "Attivi"
           pending: "In attesa"
+          staff: 'Staff'
           suspended: 'Sospesi'
           blocked: 'Bloccati'
+          suspect: 'Sospetti'
         approved: "Approvato?"
         approved_selected:
           one: "approva l'utente"
@@ -1704,10 +1741,12 @@ it:
           regular: 'Utenti al Livello Esperienza 2 (Assiduo)'
           leader: 'Utenti al Livello Esperienza 3 (Esperto)'
           elder: 'Utenti al Livello Esperienza 4 (Veterano)'
+          staff: "Staff"
           admins: 'Utenti Amministratori'
           moderators: 'Moderatori'
           blocked: 'Utenti Bloccati'
           suspended: 'Utenti Sospesi'
+          suspect: 'Utenti Sospetti'
         reject_successful:
           one: "1 utente rifiutato."
           other: "%{count} utenti rifiutati."
@@ -1864,7 +1903,7 @@ it:
         none: "Scegli un tipo di contenuto per iniziare la modifica."
         title: 'Contenuto Testuale'
       site_settings:
-        show_overriden: 'Mostra solo i sovrascritti'
+        show_overriden: 'Mostra solo le opzioni sovrascritte'
         title: 'Impostazioni'
         reset: 'reimposta'
         none: 'nessuno'
@@ -1989,6 +2028,7 @@ it:
       actions:
         title: 'Azioni'
         star: '<b>f</b> Aggiungi l''argomento ai preferiti'
+        pin_unpin_topic: '<b>shift p</b> Appunta/Spunta argomento'
         share_topic: '<b>shift s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
         reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
