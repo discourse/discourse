@@ -201,8 +201,9 @@
       for (var j=bottomView; j<childViews.length; j++) {
         var checkView = childViews[j];
         if (!checkView._containedView) {
-          if (!checkView.get('loading')) {
-            checkView.$().html(this.get('loadingHTML'));
+          var loadingHTML = this.get('loadingHTML');
+          if (!Em.isEmpty(loadingHTML) && !checkView.get('loading')) {
+            checkView.$().html(loadingHTML);
           }
           return;
         }
