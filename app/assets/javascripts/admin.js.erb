@@ -1,12 +1,5 @@
 <%
-if Rails.env.development?
-  require_asset ("development/list-view.js")
-else
-  require_asset ("production/list-view.js")
-end
-
 require_asset("main_include_admin.js")
 
 DiscoursePluginRegistry.admin_javascripts.each { |js| require_asset(js) }
-
 %>
