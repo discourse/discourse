@@ -90,6 +90,7 @@ sv:
       facebook: 'dela denna länk på Facebook'
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
+    topic_admin_menu: "ämne admin åtgärder"
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
@@ -123,6 +124,7 @@ sv:
     daily: "dagligen"
     weekly: "veckovis"
     every_two_weeks: "varannan vecka"
+    max_of_count: "max av {{count}}"
     character_count:
       one: "{{count}} tecken"
       other: "{{count}} tecken"
@@ -245,11 +247,20 @@ sv:
       organisation: Organisation
       phone: Telefon
       other_accounts: "Andra konton med samma IP-adress"
+      delete_other_accounts: "Ta bort %{count}"
+      username: "användarnamn"
+      trust_level: "TL"
+      read_time: "lästid"
+      topics_entered: "ämnen skapade"
+      post_count: "# inlägg"
+      confirm_delete_other_accounts: "Är du säker på att du vill ta bort dessa här konton?"
     user:
+      said: "{{användarnamn}}:"
       profile: "Profil"
       mute: "Dämpa"
       edit: "Redigera inställningar"
       download_archive: "ladda ned ett arkiv med mina inlägg"
+      new_private_message: "Nytt Privat Meddelande"
       private_message: "Privat meddelande"
       private_messages: "Meddelanden"
       activity_stream: "Aktivitet"
@@ -334,7 +345,12 @@ sv:
         instructions: "Bakgrundsbilder kommer att vara centrerade och ha en standardbredd på 590 px."
       email:
         title: "E-post"
-        frequency: "Vi kommer bara maila dig om vi inte har sett dig nyligen och du inte redan sett det vi mailar dig om."
+        instructions: "Visas aldrig publikt"
+        ok: "Vi skickar e-post till dig för bekräftelse."
+        invalid: "Vänligen ange en giltig e-postadress."
+        authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
+        frequency:
+          zero: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
       name:
         title: "Namn"
       username:

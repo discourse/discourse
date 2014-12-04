@@ -246,6 +246,14 @@ fi:
       location_not_found: (tuntematon)
       organisation: Yritys
       phone: Puhelin
+      other_accounts: "Muut tilit samasta IP osoitteesta:"
+      delete_other_accounts: "Poista %{count}"
+      username: "käyttäjätunnus"
+      trust_level: "LT"
+      read_time: "lukuaika"
+      topics_entered: "katseltuja ketjuja"
+      post_count: "# viestiä"
+      confirm_delete_other_accounts: "Oletko varma, että haluat poistaa nämä tunnukset?"
     user:
       said: "{{username}}:"
       profile: "Profiili"
@@ -275,6 +283,7 @@ fi:
       admin_tooltip: "Tämä käyttäjä on ylläpitäjä"
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_reason: "Syy:"
+      github_profile: "GitHub"
       mailing_list_mode: "Lähetä sähköposti jokaisesta uudesta viestistä (paitsi vaimennetuista ketjuista ja alueilta)."
       watched_categories: "Tarkkaillut"
       watched_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa. "
@@ -287,6 +296,7 @@ fi:
       deleted_yourself: "Käyttäjätilisi on poistettu."
       delete_yourself_not_allowed: "Et voi poistaa käyttäjätiliäsi juuti nyt. Sinun tulee pyytää ylläpitäjää poistamaan tilisi."
       unread_message_count: "Viestit"
+      admin_delete: "Poista"
       staff_counters:
         flags_given: "hyödyllisiä lippuja"
         flagged_posts: "liputettuja viestejä"
@@ -334,14 +344,28 @@ fi:
         instructions: "Taustakuvan leveys on 590 pikseliä."
       email:
         title: "Sähköposti"
-        frequency: "Lähetämme sähköpostia vain aiheista, joita et ole nähnyt, ja kun emme ole nähneet sinua viime aikoina."
+        instructions: "Ei tule julkiseksi"
+        ok: "Lähetämme sinulle sähköpostin varmistukseksi."
+        invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
+        authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
       name:
         title: "Nimi"
+        instructions: "Koko nimesi (valinnainen)"
+        too_short: "Nimesi on liian lyhyt"
+        ok: "Nimesi vaikuttaa hyvältä"
       username:
         title: "Käyttäjätunnus"
+        instructions: "Uniikki, lyhyt, ei välilyöntejä"
+        short_instructions: "Muut käyttäjät voivat viitata sinuun nimellä @{{username}}"
+        available: "Käyttäjätunnus on vapaana"
+        global_match: "Sähköposti vastaa rekisteröityä käyttäjänimeä"
         global_mismatch: "Nimi on jo käytössä. Kokeile {{suggestion}}?"
         not_available: "Ei saatavilla. Kokeile {{suggestion}}?"
+        too_short: "Käyttäjätunnus on liian lyhyt"
+        too_long: "Käyttäjätunnus on liian pitkä"
         checking: "Tarkistetaan käyttäjätunnusta..."
+        enter_email: 'Käyttäjänimi löydetty; kirjoita sitä vastaava sähköpostiosoite.'
+        prefilled: "Sähköposti vastaa tätä käyttäjänimeä"
       locale:
         title: "Käyttöliittymän kieli"
         instructions: "Käyttöliittymän kieli. Kieli vaihtuu sivun uudelleen lataamisen yhteydessä."
@@ -456,6 +480,8 @@ fi:
         fixed: "Lataa sivu"
     close: "Sulje"
     assets_changed_confirm: "Sivustolla on tehty päivityksiä. Ladataanko uudelleen?"
+    logout: "Sinut kirjattiin ulos."
+    refresh: "Lataa uudelleen"
     read_only_mode:
       enabled: "Ylläpitäjä on käynnistänyt vain luku -tilan. Voit jatkaa sivuston selaamista, mutta osa toiminallisuudesta on poistettu käytöstä."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
@@ -569,6 +595,8 @@ fi:
       reply_here: "Vastaa tänne"
       reply: "Vastaa"
       cancel: "Peruuta"
+      create_topic: "Uusi ketju"
+      create_pm: "Yksityisviesti"
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
@@ -639,7 +667,10 @@ fi:
       title_with_attachments: "Lisää kuva tai tidosto"
       from_my_computer: "Tästä laitteesta"
       from_the_web: "Netistä"
+      remote_tip: "linkki kuvaan"
+      remote_tip_with_attachments: "linkki kuvaan tai tiedostoon ({{authorized_extensions}})"
       local_tip: "Klikkaa tästä ladataksesi kuvan laitteeltasi"
+      local_tip_with_attachments: "klikkaa valitaksesi kuvan tai tiedoston laitteeltasi ({{authorized_extensions}})"
       hint: "(voit myös raahata ne editoriin ladataksesi ne sivustolle)"
       hint_for_supported_browsers: "(voit myös raahata tai liittää kuvia editoriin ladataksesi ne sivustolle)"
       uploading: "Lähettää"
@@ -706,6 +737,7 @@ fi:
         top: "Huippuketjuja ei ole enempää."
     topic:
       filter_to: "{{post_count}} viestiä ketjussa"
+      create: 'Uusi ketju'
       create_long: 'Luo uusi ketju'
       private_message: 'Luo yksityisviesti'
       list: 'Ketjut'
@@ -863,6 +895,7 @@ fi:
         n_posts:
           one: "1 viesti"
           other: "{{count}} viestiä"
+        cancel: "Poista suodatin"
       split_topic:
         title: "Siirrä uuteen ketjuun"
         action: "siirrä uuteen ketjuun"
@@ -1099,6 +1132,7 @@ fi:
       general: 'Yleistä'
       settings: 'Asetukset'
       delete: 'Poista alue'
+      create: 'Uusi alue'
       save: 'Tallenna alue'
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
@@ -1149,6 +1183,8 @@ fi:
           title: "Vaimennettu"
           description: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy Lukemattomat-välilehdellä"
     flagging:
+      title: 'Kiitos avustasi yhteisön hyväksi!'
+      private_reminder: 'liput ovat yksityisiä, ne näkyvät <b>ainoastaan</b> henkilökunnalle'
       action: 'Liputa viesti'
       take_action: "Ryhdy toimiin"
       notify_action: 'Yksityisviesti'
@@ -1160,11 +1196,18 @@ fi:
       submit_tooltip: "Toimita lippu"
       take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
+      formatted_name:
+        off_topic: "Se on asiaankuulumaton"
+        inappropriate: "Se on asiaton"
+        spam: "Se on roskapostia"
+      custom_placeholder_notify_user: "Esitä asiasi ymmärrettäväsi, ole rakentava ja kohtelias."
+      custom_placeholder_notify_moderators: "Kerro ymmärrettävästi ja selvästi, mistä olet huolestunut ja lisää viestiin oleelliset esimerkit ja linkit, jos mahdollista."
       custom_message:
         at_least: "kirjoita vähintään {{n}} merkkiä"
         more: "vielä {{n}}..."
         left: "{{n}} jäljellä"
     flagging_topic:
+      title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa ketju"
       notify_action: "Yksityisviesti"
     topic_map:
@@ -1323,6 +1366,11 @@ fi:
           7_days_ago: "7 päivää sitten"
           30_days_ago: "30 päivää sitten"
           all: "Kaikki"
+          view_table: "taulukko"
+          view_chart: "pylväsdiagrammi"
+          refresh_report: "Päivitä raportti"
+          start_date: "Alkupäivämäärä"
+          end_date: "Loppupäivämäärä"
       commits:
         latest_changes: "Viimeisimmät muutokset: päivitä usein!"
         by: "käyttäjältä"
@@ -1469,11 +1517,19 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
+        users:
+          title: "Vie lista käyttäjistä CSV-formaatissa."
+        screened_ips:
+          title: "Vie koko lista seulotuista IP-osoitteista CSV-formaatissa."
+        success: "Vienti on käynnissä, saat pian ilmoituksen sen edistymisestä."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
+        button_text: "Vie"
       customize:
         title: "Mukauta"
         long_title: "Sivuston mukautukset"
+        css: "CSS"
         header: "Header"
+        footer: "Footer"
         override_default: "Älä sisällytä oletus-tyylitiedostoa"
         enabled: "Otettu käyttöön?"
         preview: "esikatselu"
@@ -1543,6 +1599,7 @@ fi:
         settings: "Asetukset"
         all: "Kaikki"
         sending_test: "Lähetetään testisähköpostia..."
+        error: "<b>VIRHE</b> - %{server_error}"
         test_error: "Testisähköpostin lähettäminen ei onnistunut. Tarkista uudelleen sähköpostiasetukset, varmista, että palveluntarjoajasi ei estä sähköpostiyhteyksiä ja kokeile sitten uudestaan."
         sent: "Lähetetty"
         skipped: "Jätetty väliin"
@@ -1556,6 +1613,7 @@ fi:
         sent_test: "lähetetty!"
         delivery_method: "Lähetystapa"
         preview_digest: "Esikatsele tiivistelmä"
+        preview_digest_desc: "Esikatsele palstan viikoittaisten sähköpostitiivistelmien sisältöä."
         refresh: "Päivitä"
         format: "Muotoilu"
         html: "html"
@@ -1617,6 +1675,7 @@ fi:
             check_email: "tarkista sähköposti"
             delete_topic: "poista ketju"
             delete_post: "poista viesti"
+            impersonate: "esiinny käyttäjänä"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -1651,10 +1710,12 @@ fi:
         last_emailed: "Viimeksi lähetetty sähköpostia"
         not_found: "Pahoittelut, tuota käyttäjänimeä ei löydy järjestelmästä."
         active: "Aktiivinen"
+        show_emails: "Näytä sähköpostit"
         nav:
           new: "Uudet"
           active: "Aktiiviset"
           pending: "Odottaa"
+          staff: 'Henkilökunta'
           suspended: 'Hyllytetyt'
           blocked: 'Estetyt'
         approved: "Hyväksytty?"
@@ -1673,6 +1734,7 @@ fi:
           regular: 'Käyttäjät luottamustasolla 2 (Konkari)'
           leader: 'Käyttäjät luottamustasolla 3 (Mestari)'
           elder: 'Käyttäjät luottamustasolla 4 (Johtaja)'
+          staff: "Henkilökunta"
           admins: 'Ylläpitäjät'
           moderators: 'Valvojat'
           blocked: 'Estetyt käyttäjät'
@@ -1958,6 +2020,7 @@ fi:
       actions:
         title: 'Toiminnot'
         star: '<b>f</b> Merkitse ketju tähdellä'
+        pin_unpin_topic: '<b>shift p</b> Kiinnitä ketju/poista kiinnitys'
         share_topic: '<b>shift s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'
         reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'

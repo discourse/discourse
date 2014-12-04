@@ -224,6 +224,7 @@ zh_CN:
       organisation: 组织
       phone: 电话
       other_accounts: "其他使用该 IP 地址的账户："
+      delete_other_accounts: "删除 %{count}"
       username: "用户名"
       trust_level: "信任等级"
       read_time: "阅读时间"
@@ -236,6 +237,7 @@ zh_CN:
       mute: "防打扰"
       edit: "修改设置"
       download_archive: "下载我的帖子的存档"
+      new_private_message: "新私信"
       private_message: "私信"
       private_messages: "消息"
       activity_stream: "活动"
@@ -324,7 +326,10 @@ zh_CN:
         ok: "我们将邮件跟您确认"
         invalid: "请填写正确的电子邮箱地址"
         authenticated: "你的电子邮箱已经被 {{provider}} 验证了。"
-        frequency: "只有当您最近一段时间没有访问时，我们才会把您未读过的内容发送到您的电子邮箱。"
+        frequency:
+          zero: "如果您没有阅读过我们想寄给您的内容，我们会立即发送电子邮件给您。"
+          one: "如果您没有阅读过我们想寄给您的内容，我们只会在您没有访问时才会发送电子邮件给您。"
+          other: "如果您没有阅读过我们想寄给您的内容，我们只会在您最近 {{count}} 分钟内没有访问时才会发送电子邮件给您。"
       name:
         title: "名字"
         instructions: "您的全名（可选）"
@@ -1450,7 +1455,13 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "您确定要将数据库回滚到之前的工作状态吗？"
       export_csv:
+        users:
+          title: "以 CSV 格式导出所有用户。"
+        screened_ips:
+          title: "以 CSV 格式导出所有 IP。"
+        success: "导出开始，您将马上看到进度提示。"
         failed: "导出失败。请检查日志。"
+        button_text: "导出"
       customize:
         title: "定制"
         long_title: "站点定制"
@@ -1618,6 +1629,9 @@ zh_CN:
           title: "被屏蔽的 IP"
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
+          roll_up_confirm: "您确定您想要折叠封禁记录吗？"
+          rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
+          rolled_up_no_subnet: "无法折叠。"
           actions:
             block: "封禁"
             do_nothing: "放行"
@@ -1626,6 +1640,9 @@ zh_CN:
             label: "新："
             ip_address: "IP地址"
             add: "添加"
+          roll_up:
+            text: "折叠"
+            title: "如果有至少 'min_ban_entries_for_roll_up' 个记录，创建一个子网封禁记录"
         logster:
           title: "错误日志"
       impersonate:
@@ -1636,14 +1653,17 @@ zh_CN:
         create: '添加管理员用户'
         last_emailed: "最后一次邮寄"
         not_found: "抱歉，在我们的系统中此用户名不存在。"
+        id_not_found: "抱歉，在我们的系统中此用户 id 不存在。"
         active: "活跃"
         show_emails: "显示邮件"
         nav:
           new: "新建"
           active: "活跃"
           pending: "待定"
+          staff: '职员'
           suspended: '禁止登录'
           blocked: '禁止参与讨论'
+          suspect: '怀疑'
         approved: "已批准？"
         approved_selected:
           other: "批准用户（{{count）"
@@ -1658,10 +1678,12 @@ zh_CN:
           regular: '信用等级为2的用户（成员）'
           leader: '信用等级为3的用户（常规）'
           elder: '信用等级为4的用户（领导）'
+          staff: "职员"
           admins: '管理员'
           moderators: '版主'
           blocked: '被封用户'
           suspended: '被禁用户'
+          suspect: '嫌疑用户'
         reject_successful:
           other: "成功拒绝 %{count} 个用户。"
         reject_failures:

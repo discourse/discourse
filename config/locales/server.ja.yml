@@ -33,7 +33,6 @@ ja:
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
-  purge_reason: "古い、もしくは未検証の為、自動的に削除された"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   errors:
     messages:

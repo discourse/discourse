@@ -247,6 +247,7 @@ fr:
       organisation: Société
       phone: Téléphone
       other_accounts: "Autres comptes avec cette adresse IP :"
+      delete_other_accounts: "Supprimer %{count}"
       username: "nom d'utilisateur"
       trust_level: "NC"
       read_time: "temps de lecture"
@@ -259,6 +260,7 @@ fr:
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive: "télécharger une archive de mes messages"
+      new_private_message: "Nouveau Message Privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
       activity_stream: "Activité"
@@ -347,7 +349,10 @@ fr:
         ok: "On vous envoie un mail pour confirmer"
         invalid: "Merci d'entrer une adresse email valide"
         authenticated: "Votre adresse email a été authentifiée par {{provider}}"
-        frequency: "Nous vous envoyons des courriels contenant uniquement des informations que vous n'avez pas déjà vues lors d'une précédente connexion."
+        frequency:
+          zero: "Nous vous enverrons des courriels seulement si vous n'avez pas lu le contenu pour lequel nous envoyons un courriel."
+          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute et que vous n'avez pas lu le contenu pour lequel nous envoyons un courriel."
+          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes et que vous n'avez pas lu le contenu pour lequel nous envoyons un courriel."
       name:
         title: "Nom"
         instructions: "Votre nom complet (facultatif)"
@@ -595,7 +600,7 @@ fr:
       reply_here: "Répondre ici"
       reply: "Répondre"
       cancel: "Annuler"
-      create_topic: "Nouvelle discussion"
+      create_topic: "Créer votre sujet"
       create_pm: "Message privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
@@ -637,7 +642,7 @@ fr:
       toggler: "Afficher ou cacher le composer"
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
-        label: "Heure de fermeture automatique de cette discussion:"
+        label: "Heure de fermeture automatique de ce sujet :"
         error: "Merci d'entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message dans ce sujet n'est pas plus ancien que çà."
         all:
@@ -741,7 +746,7 @@ fr:
         top: "Il n'y a plus de meilleurs sujets."
     topic:
       filter_to: "{{post_count}} messages sur ce sujet"
-      create: 'Nouvelle discussion'
+      create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Commencer un message privé'
       list: 'Sujets'
@@ -1521,7 +1526,13 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
+        users:
+          title: "Exporter la liste des utilisateurs dans un fichier CSV."
+        screened_ips:
+          title: "Exporter la liste complète des adresses IP sous surveillance dans un fichier CSV."
+        success: "L'export a commencé, vous serez notifié prochainement de sa progression."
         failed: "L'export a échoué. Veuillez consulter les logs."
+        button_text: "Exporter"
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -1689,6 +1700,9 @@ fr:
           title: "IP Suivies"
           description: 'Adresses IP qui sont surveillés. Utiliser "Autoriser" pour ajouter les adresses IP à la liste blanche.'
           delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
+          roll_up_confirm: "Êtes-vous certain de vouloir consolider la liste des interdictions ?"
+          rolled_up_some_subnets: "Consolidation réussie des adresses IP interdites sous cette forme de plages de sous réseaux: %{subnets}."
+          rolled_up_no_subnet: "Aucune consolidation possible."
           actions:
             block: "Bloquer"
             do_nothing: "Autoriser"
@@ -1697,6 +1711,9 @@ fr:
             label: "Nouveau :"
             ip_address: "Adresse IP"
             add: "Ajouter"
+          roll_up:
+            text: "Consolider"
+            title: "Créer de nouvelles plages de sous réseaux à bannir s'il y a au moins 'min_ban_entries_for_roll_up' entrées."
         logster:
           title: "Logs d'erreurs"
       impersonate:
@@ -1707,14 +1724,17 @@ fr:
         create: 'Ajouter un administateur'
         last_emailed: "Derniers contacts"
         not_found: "Désolé ce pseudo n'existe pas dans notre système."
+        id_not_found: "Désolé cet identifiant d'utilisateur n'existe pas dans notre système."
         active: "Actifs"
         show_emails: "Afficher les adresses de courriels"
         nav:
           new: "Nouveaux"
           active: "Actifs"
           pending: "En attente"
+          staff: 'Membres de l''équipe'
           suspended: 'Suspendus'
           blocked: 'Bloqués'
+          suspect: 'Suspect'
         approved: "Approuvé ?"
         approved_selected:
           one: "Approuver l'utilisateur"
@@ -1731,10 +1751,12 @@ fr:
           regular: 'Utilisateurs de niveau 2 (Membre)'
           leader: 'Utilisateurs de niveau 3 (Régulier)'
           elder: 'Utilisateurs de niveau 4 (Meneur)'
+          staff: "Membres de l'équipe"
           admins: 'Administrateurs'
           moderators: 'Modérateurs'
           blocked: 'Utilisateurs bloqués'
           suspended: 'Utilisateurs suspendus'
+          suspect: 'Utilisateurs suspects'
         reject_successful:
           one: "Utilisateur rejeté avec succès."
           other: "%{count} utilisateurs rejetés avec succès."
