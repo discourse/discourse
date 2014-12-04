@@ -1,4 +1,4 @@
-{{#if currentUser.can_send_private_messages}}
+{{#if showNewPM}}
   <div class="clearfix">
     <a class='btn btn-primary pull-right new-private-message' {{action "composePrivateMessage"}}>{{fa-icon "envelope"}}{{i18n user.new_private_message}}</a>
   </div>
