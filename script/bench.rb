@@ -2,6 +2,7 @@ require "socket"
 require "csv"
 require "yaml"
 require "optparse"
+require "fileutils"
 
 @include_env = false
 @result_file = nil
@@ -170,6 +171,7 @@ begin
 
   pid = if @unicorn
           ENV['UNICORN_PORT'] = @port.to_s
+          FileUtils.mkdir_p(File.join('tmp', 'pids'))
           spawn("bundle exec unicorn -c config/unicorn.conf.rb")
         else
           spawn("bundle exec thin start -p #{@port}")
