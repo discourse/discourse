@@ -306,21 +306,21 @@
     setContainedView: function(cv) {
       if (this._childViews[0]) {
         this._childViews[0].destroy();
+        this._childViews[0] = cv;
       }
-      this._childViews[0] = cv;
-      this.setupChildView(cv);
-      if (!this._elementCreated || this._scheduled) return;
 
+      if (cv) {
+        cv.set('_parentView', this);
+        cv.set('templateData', this.get('templateData'));
+        this._childViews[0] = cv;
+      } else {
+        this._childViews.clear();
+      }
+
+      if (!this._elementCreated || this._scheduled) return;
       this._scheduled = true;
       this.set('_containedView', cv);
       Ember.run.schedule('render', this, this.updateChildView);
-    },
-
-    setupChildView: function (childView) {
-      if (childView) {
-        childView.set('_parentView', this);
-        childView.set('templateData', this.get('templateData'));
-      }
     },
 
     render: function (buffer) {
