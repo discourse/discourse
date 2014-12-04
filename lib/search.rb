@@ -106,6 +106,12 @@ class Search
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
     @limit = Search.per_facet
+
+    if @search_pms && @guardian.user
+      @opts[:type_filter] = "private_messages"
+      @search_context = @guardian.user
+    end
+
     if @opts[:type_filter].present?
       @limit = Search.per_filter
     end
@@ -182,6 +188,9 @@ class Search
           nil
         elsif word == 'in:tracking'
           @notification_level = TopicUser.notification_levels[:tracking]
+          nil
+        elsif word == 'in:private'
+          @search_pms = true
           nil
         else
           word
