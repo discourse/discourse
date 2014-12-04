@@ -230,25 +230,22 @@ nav.post-controls {
 
 .embedded-posts {
   background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-
   h1, h2, h3 { margin: 10px 0; }
   a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
     background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-    width: 87%;
-    padding-left: 1%;
-    padding-right: 1%;
-    border-top: none;
+    box-sizing: border-box;
+    width: calc(100% - 60px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
+    padding: 10px 15px 15px 15px;
   }
 
   .topic-avatar {
      width: 45px;
-     margin: 0 5px 0 15px;
-     border: none;
+     padding-left: 15px;
   }
 
   // bottom means "reply expansion" below a post
@@ -261,6 +258,9 @@ nav.post-controls {
   &.bottom .arrow { float: right; }
   &.bottom {
     margin-top: -11px;
+    .row {
+      padding-top: 7px;
+    }
   }
 
   // top means "in reply to expansion" above a post
@@ -277,7 +277,6 @@ nav.post-controls {
   .fa-arrow-up { margin-left: 5px; }
   .row {
     border-top: 1px solid darken(scale-color-diff(), 10%);
-    padding-top: 7px;
   }
   .reply:first-of-type .row { border-top: none; }
 
@@ -757,7 +756,7 @@ $topic-avatar-width: 45px;
 }
 .topic-avatar {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
-  padding-top: 16px;
+  padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
   position: relative;
@@ -861,8 +860,6 @@ $topic-avatar-width: 45px;
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
-
-
 
   button {
     width: 180px;
@@ -1018,33 +1015,11 @@ span.highlighted {
 .read-state.read {
   opacity: 0;
   @include transition(opacity ease-out 1s);
-
 }
 
 
 /* Tablet (portrait) ----------- */
 
-@media all
-and (max-width : 1140px) {
-  .post-cloak .reply-to-tab {
-    right: 320px;
-  }
-}
-
-
-@media all
-and (max-width : 975px) {
-  .post-cloak .reply-to-tab {
-    right: 300px;
-  }
-}
-
-@media all
-and (max-width : 940px) {
-  .post-cloak .reply-to-tab {
-    right: 250px;
-  }
-}
 
 @media all
 and (max-width : 870px) {
@@ -1054,7 +1029,7 @@ and (max-width : 870px) {
     }
 
   .topic-avatar {
-    width: 5%;
+    width: 45px;
   }
 
   .post-cloak .reply-to-tab {
@@ -1062,16 +1037,31 @@ and (max-width : 870px) {
     }
 
   .topic-body {
-      width: 91%;
+      box-sizing: border-box;
+      width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+
       padding-left: 2%;
     }
 
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {
-      margin-left: 6%;
-      width: 91%;
+      width: calc(100% - 56px); // [100% - margin-left]
     }
+  }
+
+}
+
+/* below standard tablet portrait ----------- */
+
+@media all
+and (max-width : 767px) {
+
+  .reply-to-tab {
+    span {display: none;}
+  }
+  .names {
+    span {display: block;}
   }
 
 }
