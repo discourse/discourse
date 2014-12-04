@@ -43,13 +43,12 @@ describe CategoriesController do
         end
       end
 
-
       describe "success" do
         it "works" do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          xhr :post, :create, name: "hello", color: "ff0", text_color: "fff",
+          xhr :post, :create, name: "hello", color: "ff0", text_color: "fff", slug: "hello-cat",
                               auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
@@ -62,6 +61,7 @@ describe CategoriesController do
             [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
           ]
           category.name.should == "hello"
+          category.slug.should == "hello-cat"
           category.color.should == "ff0"
           category.auto_close_hours.should == 72
         end
@@ -180,7 +180,7 @@ describe CategoriesController do
           readonly = CategoryGroup.permission_types[:readonly]
           create_post = CategoryGroup.permission_types[:create_post]
 
-          xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff",
+          xhr :put, :update, id: @category.id, name: "hello", color: "ff0", text_color: "fff", slug: "hello-category",
                               auto_close_hours: 72,
                               permissions: {
                                 "everyone" => readonly,
@@ -193,6 +193,7 @@ describe CategoriesController do
             [Group[:everyone].id, readonly],[Group[:staff].id,create_post]
           ]
           @category.name.should == "hello"
+          @category.slug.should == "hello-category"
           @category.color.should == "ff0"
           @category.auto_close_hours.should == 72
         end

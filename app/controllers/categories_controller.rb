@@ -138,6 +138,7 @@ class CategoriesController < ApplicationController
                         :logo_url,
                         :background_url,
                         :allow_badges,
+                        :slug,
                         :permissions => [*p.try(:keys)])
       end
     end
