@@ -30,10 +30,10 @@
 .topic-list {
 
   > tbody > tr {
-    &:nth-child(odd) {
+    &:nth-child(even) {
       background-color: darken($secondary, 3%);
       }
-    &:nth-child(even) {
+    &:nth-child(odd) {
       background-color: $secondary;
       }
     &.highlighted {
