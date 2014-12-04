@@ -46,7 +46,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       }).then(success, fail).finally(function(){
         setTimeout(function(){
           self.set('disabled',false);
-        }, 5*1000);
+        }, 1000);
       });
 
       return false;
