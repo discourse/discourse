@@ -587,6 +587,8 @@ spam:
   min_ban_entries_for_roll_up: 5
   max_age_unmatched_emails: 365
   max_age_unmatched_ips: 365
+  num_flaggers_to_close_topic: 5
+  num_flags_to_close_topic: 12
 
 rate_limits:
   unique_posts_mins:

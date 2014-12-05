@@ -370,6 +370,55 @@ describe PostAction do
       post.hidden.should == false
     end
 
+    it "will automatically close a topic due to large community flagging" do
+      SiteSetting.stubs(:flags_required_to_hide_post).returns(0)
+      SiteSetting.stubs(:num_flags_to_close_topic).returns(12)
+      SiteSetting.stubs(:num_flaggers_to_close_topic).returns(5)
+
+      topic = Fabricate(:topic)
+      post1 = create_post(topic: topic)
+      post2 = create_post(topic: topic)
+      post3 = create_post(topic: topic)
+      post4 = create_post(topic: topic)
+
+      flagger1 = Fabricate(:user)
+      flagger2 = Fabricate(:user)
+      flagger3 = Fabricate(:user)
+      flagger4 = Fabricate(:user)
+      flagger5 = Fabricate(:user)
+
+      # reaching `num_flaggers_to_close_topic` isn't enough
+      [flagger1, flagger2, flagger3, flagger4, flagger5].each do |flagger|
+        PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+      end
+
+      topic.reload.closed.should == false
+
+      # clean up
+      PostAction.where(post: post1).delete_all
+
+      # reaching `num_flags_to_close_topic` isn't enough
+      [flagger1, flagger2, flagger3].each do |flagger|
+        [post1, post2, post3, post4].each do |post|
+          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+        end
+      end
+
+      topic.reload.closed.should == false
+
+      # clean up
+      PostAction.where(post: [post1, post2, post3, post4]).delete_all
+
+      # reaching both should close the topic
+      [flagger1, flagger2, flagger3, flagger4, flagger5].each do |flagger|
+        [post1, post2, post3, post4].each do |post|
+          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+        end
+      end
+
+      topic.reload.closed.should == true
+    end
+
   end
 
   it "prevents user to act twice at the same time" do
