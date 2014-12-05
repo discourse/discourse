@@ -397,8 +397,8 @@ class Topic < ActiveRecord::Base
     similar
   end
 
-  def update_status(status, enabled, user)
-    TopicStatusUpdate.new(self, user).update!(status, enabled)
+  def update_status(status, enabled, user, message=nil)
+    TopicStatusUpdate.new(self, user).update!(status, enabled, message)
   end
 
   # Atomically creates the next post number
