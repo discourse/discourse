@@ -1,4 +1,7 @@
 en:
+  js:
+    composer:
+      emoji: "Emoji :smile:"
   admin_js:
     admin:
       site_settings:
