@@ -399,7 +399,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       }).then(function(q) {
         var postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
             postLink = "[" + self.get('title') + "](" + postUrl + ")";
-        composerController.appendText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
+        composerController.setText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
       });
     },
 
