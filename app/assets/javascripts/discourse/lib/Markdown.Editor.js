@@ -1439,6 +1439,19 @@
             }));
             buttons.heading = makeButton("wmd-heading-button", getString("heading"), bindCommand("doHeading"));
             buttons.hr = makeButton("wmd-hr-button", getString("hr"), bindCommand("doHorizontalRule"));
+
+            // If we have any buttons to append, do it!
+            if (typeof PagedownCustom != "undefined") {
+                var appendButtons = PagedownCustom.appendButtons
+                if (appendButtons && (appendButtons.length > 0)) {
+                    for (var i=0; i< appendButtons.length; i++) {
+                        var b = appendButtons[i];
+                        makeButton(b.id, b.description, b.execute)
+                    }
+                }
+            }
+
+
             //makeSpacer(3);
             //buttons.undo = makeButton("wmd-undo-button", getString("undo"), null);
             //buttons.undo.execute = function (manager) { if (manager) manager.undo(); };
@@ -1450,23 +1463,23 @@
             //buttons.redo = makeButton("wmd-redo-button", redoTitle, null);
             //buttons.redo.execute = function (manager) { if (manager) manager.redo(); };
 
-            if (helpOptions) {
-                var helpButton = document.createElement("li");
-                var helpButtonImage = document.createElement("span");
-                helpButton.appendChild(helpButtonImage);
-                helpButton.className = "wmd-button wmd-help-button";
-                helpButton.id = "wmd-help-button" + postfix;
-                helpButton.isHelp = true;
-                helpButton.style.right = "0px";
-                helpButton.title = getString("help");
-                helpButton.onclick = helpOptions.handler;
+            // if (helpOptions) {
+            //     var helpButton = document.createElement("li");
+            //     var helpButtonImage = document.createElement("span");
+            //     helpButton.appendChild(helpButtonImage);
+            //     helpButton.className = "wmd-button wmd-help-button";
+            //     helpButton.id = "wmd-help-button" + postfix;
+            //     helpButton.isHelp = true;
+            //     helpButton.style.right = "0px";
+            //     helpButton.title = getString("help");
+            //     helpButton.onclick = helpOptions.handler;
+            //
+            //     setupButton(helpButton, true);
+            //     buttonRow.appendChild(helpButton);
+            //     buttons.help = helpButton;
+            // }
 
-                setupButton(helpButton, true);
-                buttonRow.appendChild(helpButton);
-                buttons.help = helpButton;
-            }
-
-            setUndoRedoButtonStates();
+            // setUndoRedoButtonStates();
         }
 
         function setUndoRedoButtonStates() {

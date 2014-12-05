@@ -302,6 +302,15 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }
 
+    if(opts && opts.space){
+      if(before.length > 0 && !before[before.length-1].match(/\s/)){
+        before = before + " ";
+      }
+      if(after.length > 0 && !after[0].match(/\s/)){
+        after = " " + after;
+      }
+    }
+
     this.set('reply', before + text + after);
   },
 
