@@ -137,54 +137,57 @@
     }
   });
 
-  var renderPage = Handlebars.compile(
-      "<table class='emoji-page'>" +
-        "{{#each this}}"+
-        "<tr>{{#each this}}" +
-        "<td><a title='{{title}}'><img src='{{src}}' class='emoji'></a></td>" +
-          "{{/each}}</tr>" +
-          "{{/each}}"+
-      "</table>");
 
-  var closeSelector = function(){
-    $('.emoji-modal, .emoji-modal-wrapper').remove();
-  };
+  if(window.PagedownCustom) {
+    var renderPage = Handlebars.compile(
+        "<table class='emoji-page'>" +
+          "{{#each this}}"+
+          "<tr>{{#each this}}" +
+          "<td><a title='{{title}}'><img src='{{src}}' class='emoji'></a></td>" +
+            "{{/each}}</tr>" +
+            "{{/each}}"+
+        "</table>");
 
-  var showSelector = function(){
+    var closeSelector = function(){
+      $('.emoji-modal, .emoji-modal-wrapper').remove();
+    };
 
-    $('body').append('<div class="emoji-modal-wrapper"></div>');
+    var showSelector = function(){
 
-    $('.emoji-modal-wrapper').click(function(){
-      closeSelector();
-    });
+      $('body').append('<div class="emoji-modal-wrapper"></div>');
 
-    var rows = [];
-    var row = [];
-    var icons = groups[0].icons;
+      $('.emoji-modal-wrapper').click(function(){
+        closeSelector();
+      });
 
-    for(var i=0; i<50; i++){
-      if(row.length === 10){
-        rows.push(row);
-        row = [];
+      var rows = [];
+      var row = [];
+      var icons = groups[0].icons;
+
+      for(var i=0; i<50; i++){
+        if(row.length === 10){
+          rows.push(row);
+          row = [];
+        }
+        row.push({src: urlFor(icons[i]), title: icons[i]});
       }
-      row.push({src: urlFor(icons[i]), title: icons[i]});
-    }
-    rows.push(row);
+      rows.push(row);
 
-    $('body').append('<div class="emoji-modal">' + renderPage(rows) + '</div>');
+      $('body').append('<div class="emoji-modal">' + renderPage(rows) + '</div>');
 
-    var composerController = Discourse.__container__.lookup('controller:composer');
-    $('.emoji-page a').click(function(){
-       composerController.appendText(":" + $(this).attr('title') + ":", {space: true});
-       closeSelector();
+      var composerController = Discourse.__container__.lookup('controller:composer');
+      $('.emoji-page a').click(function(){
+         composerController.appendText(":" + $(this).attr('title') + ":", {space: true});
+         closeSelector();
+      });
+    };
+
+    window.PagedownCustom.appendButtons.push({
+      id: 'wmd-emoji-button',
+      description: I18n.t("composer.emoji"),
+      execute: showSelector
     });
-  };
-
-  window.PagedownCustom.appendButtons.push({
-    id: 'wmd-emoji-button',
-    description: I18n.t("composer.emoji"),
-    execute: showSelector
-  });
+  }
 
   // TODO: Make this a proper ES6 import
   var ComposerView = (Discourse && Discourse.ComposerView) || (typeof require !== "undefined" && require('discourse/views/composer').default);
