@@ -28,13 +28,19 @@ export default Discourse.View.extend({
 
   linkChanged: function() {
     if (this.present('controller.link')) {
-      var $linkInput = $('#share-link input');
-      $linkInput.val(this.get('controller.link'));
+      if (!this.capabilities.touch) {
+        var $linkInput = $('#share-link input');
+        $linkInput.val(this.get('controller.link'));
 
-      // Wait for the fade-in transition to finish before selecting the link:
-      window.setTimeout(function() {
-        $linkInput.select().focus();
-      }, 160);
+        // Wait for the fade-in transition to finish before selecting the link:
+        window.setTimeout(function() {
+          $linkInput.select().focus();
+        }, 160);
+      } else {
+        var $linkForTouch = $('#share-link .share-for-touch a');
+        $linkForTouch.attr('href', this.get('controller.link'));
+        $linkForTouch.html(this.get('controller.link'));
+      }
     }
   }.observes('controller.link'),
 
@@ -84,10 +90,11 @@ export default Discourse.View.extend({
         y = $currentTargetOffset.top + 10;
       }
 
-      $shareLink.css({
-        left: "" + x + "px",
-        top: "" + y + "px"
-      });
+      $shareLink.css({top: "" + y + "px"});
+
+      if (!Discourse.Mobile.mobileView) {
+        $shareLink.css({left: "" + x + "px"});
+      }
 
       shareView.set('controller.link', url);
       shareView.set('controller.postNumber', postNumber);
