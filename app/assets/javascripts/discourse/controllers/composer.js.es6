@@ -73,9 +73,9 @@ export default DiscourseController.extend({
     if (c) { c.updateDraftStatus(); }
   },
 
-  appendText: function(text) {
+  appendText: function(text, opts) {
     var c = this.get('model');
-    if (c) { c.appendText(text); }
+    if (c) { c.appendText(text, undefined , opts); }
   },
 
   appendBlockAtCursor: function(text) {

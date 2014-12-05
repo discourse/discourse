@@ -10,6 +10,8 @@ window.PagedownCustom = {
     }
   ],
 
+  appendButtons: [],
+
   customActions: {
     "doBlockquote": function(chunk, postProcessing, oldDoBlockquote) {
 
