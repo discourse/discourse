@@ -41,6 +41,7 @@ module Email
       end
 
       raise BadDestinationAddress if dest_info[:type] == :invalid
+      raise TopicNotFoundError if message.header.to_s =~ /auto-generated/ || message.header.to_s =~ /auto-replied/
 
       # TODO get to a state where we can remove this
       @message = message
