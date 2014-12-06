@@ -1,6 +1,5 @@
 require_dependency 'rate_limiter'
 require_dependency 'system_message'
-require_dependency 'maximum_flow'
 
 class PostAction < ActiveRecord::Base
   class AlreadyActed < StandardError; end
@@ -387,70 +386,20 @@ class PostAction < ActiveRecord::Base
   def self.auto_close_if_treshold_reached(topic)
     return if topic.closed?
 
-    # 1) retrieve a list of pairs (user_id, post_id) representing active flags
     flags = PostAction.active
                       .flags
                       .joins(:post)
                       .where("posts.topic_id = ?", topic.id)
                       .where.not(user_id: Discourse::SYSTEM_USER_ID)
-                      .pluck(:user_id, :post_id)
+                      .group("post_actions.user_id")
+                      .pluck("post_actions.user_id, COUNT(post_id)")
 
-    # check we have enough flags
-    return if flags.count < SiteSetting.num_flags_to_close_topic
+    # we need a minimum number of unique flaggers
+    return if flags.count < SiteSetting.num_flaggers_to_close_topic
+    # we need a minimum number of flags
+    return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
 
-    # 2) build sets of unique user_ids and post_ids
-    user_ids = Set.new
-    post_ids = Set.new
-
-    flags.each do |f|
-      user_ids << f[0]
-      post_ids << f[1]
-    end
-
-    # check we have enough flaggers
-    return if user_ids.count < SiteSetting.num_flaggers_to_close_topic
-    # check we have enough posts flagged
-    min_post_required = SiteSetting.num_flags_to_close_topic / MAXIMUM_FLAGS_PER_POST
-    return if post_ids.count < min_post_required
-
-    # 3) now we have a maximum flow problem...
-    # the network will have
-    #  - edges from the 'source' to each flaggers with a capacity of '# of flags casted by that user'
-    #  - edges for each flags with a capacity of 1
-    #  - edges from each posts to the 'sink' with a capacity of MAXIMUM_FLAGS_PER_POST
-
-    # first, we need to count the # of flags casted by each users
-    flags_casted_by_user = {}
-    flags.each { |flag| flags_casted_by_user[flag[0]] = flags.count { |f| f[0] == flag[0] } }
-
-    # then, we need to build a list of all the vertices
-    # ('source' being the first and 'sink" being the last)
-    index_of_user_id = {}
-    index_of_post_id = {}
-
-    user_ids.each_with_index { |user_id, index| index_of_user_id[user_id] = 1 + index }
-    post_ids.each_with_index { |post_id, index| index_of_post_id[post_id] = 1 + index + user_ids.count }
-
-    source = 0
-    sink = user_ids.count + post_ids.count + 1
-    n = sink + 1
-
-    # then, we need to build a map of all the edges (with their respective capacity)
-    # initially, everything is 0 (ie. no edge)
-    capacities = Array.new(n) { Array.new(n, 0) }
-
-    # from the 'source' -> all user_ids with a capacity of '# of flags casted by that user'
-    user_ids.each { |user_id| capacities[source][index_of_user_id[user_id]] = flags_casted_by_user[user_id] }
-    # for each pair (user_id, post_id) with a capacity of 1
-    flags.each { |f| capacities[index_of_user_id[f[0]]][index_of_post_id[f[1]]] = 1 }
-    # from each post_ids -> sink with a capacity of MAXIMUM_FLAGS_PER_POST
-    index_of_post_id.values.each { |i| capacities[i][sink] = MAXIMUM_FLAGS_PER_POST }
-
-    # finally, we use the 'relabel to front' algorithm to solve the maximum flow problem
-    maximum_flow = MaximumFlow.new.relabel_to_front(capacities, source, sink)
-    return if maximum_flow < SiteSetting.num_flags_to_close_topic
-
-    # 4) the threshold has been reached, we will close the topic waiting for intervention
+    # the threshold has been reached, we will close the topic waiting for intervention
     message = I18n.t("temporarily_closed_due_to_flags")
     topic.update_status("closed", true, Discourse.system_user, message)
   end
