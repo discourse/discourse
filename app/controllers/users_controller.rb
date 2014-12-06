@@ -500,7 +500,7 @@ class UsersController < ApplicationController
     end
     user.save!
 
-    render nothing: true
+    render json: success_json
   end
 
   def destroy_user_image
