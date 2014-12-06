@@ -10,8 +10,8 @@ class UserProfile < ActiveRecord::Base
 
   BAKED_VERSION = 1
 
-  def bio_excerpt
-    excerpt = PrettyText.excerpt(bio_cooked, 350)
+  def bio_excerpt(length=350)
+    excerpt = PrettyText.excerpt(bio_cooked, length)
     return excerpt if excerpt.blank? || (user.has_trust_level?(TrustLevel[1]) && !user.suspended?)
     PrettyText.strip_links(excerpt)
   end
@@ -23,7 +23,7 @@ class UserProfile < ActiveRecord::Base
 
   def bio_summary
     return nil unless bio_cooked.present?
-    Summarize.new(bio_cooked).summary
+    bio_excerpt(500)
   end
 
   def recook_bio
