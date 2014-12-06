@@ -191,8 +191,8 @@ ko:
       '2': "받은 '좋아요'"
       '3': "북마크"
       '4': "토픽"
-      '5': "게시글"
-      '6': "답글"
+      '5': "작성한 답글"
+      '6': "받은 답글"
       '7': "언급"
       '9': "인용"
       '10': "즐겨찾기"
@@ -224,6 +224,12 @@ ko:
       organisation: 소속
       phone: 전화
       other_accounts: "현재 IP주소의 다른 계정들:"
+      delete_other_accounts: "삭제 %{count}"
+      username: "아이디"
+      trust_level: "TL"
+      read_time: "읽은 시간"
+      post_count: "포스트 개수"
+      confirm_delete_other_accounts: "정말 이 계정들을 삭제하시겠습니까?"
     user:
       said: "{{username}}:"
       profile: "프로필"
@@ -314,14 +320,27 @@ ko:
         instructions: "배경 이미지는 가운데를 기준으로 표시되며 590px이 기본 가로 사이즈 입니다."
       email:
         title: "이메일"
-        frequency: "당신의 활동이 뜸해지거나 저희가 보낸 이메일에 포함된 글들을 읽지 못하셨다면 확인 이메일을 보내드립니다."
+        instructions: "절대로 공개되지 않습니다."
+        ok: "당신에게 확인 메일을 보내겠습니다."
+        invalid: "유효한 이메일 주소를 입력해주세요."
+        authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
       name:
         title: "이름"
+        instructions: "이름을 적어주세요. (선택사항)"
+        too_short: "이름이 너무 짧습니다."
+        ok: "사용 가능한 이름입니다."
       username:
         title: "아이디"
+        instructions: "중복될 수 없으며 띄어쓰기 사용이 불가합니다. 짧을 수록 좋아요."
+        short_instructions: "@{{username}}으로 언급이 가능합니다."
+        available: "아이디\x1D로 사용가능합니다."
         global_mismatch: "이미 등록된 아이디입니다. 다시 시도해보세요. {{suggestion}}"
         not_available: "사용할 수 없는 아이디입니다. 다시 시도해보세요. {{suggestion}}"
+        too_short: "아이디가 너무 짧습니다"
+        too_long: "아이디가 너무 깁니다."
         checking: "사용가능한지 확인 중..."
+        enter_email: '아이디를 찾았습니다. 일치하는 이메일을 입력해주세요.'
+        prefilled: "이메일이 등록된 아이디와 연결되어 있습니다."
       locale:
         title: "인터페이스 언어"
         instructions: "UI 언어. 변경 후 새로 고침하면 반영됩니다."
@@ -432,6 +451,8 @@ ko:
         fixed: "페이지 열기"
     close: "닫기"
     assets_changed_confirm: "사이트가 업데이트 되었습니다. 새로고침하시겠습니까?"
+    logout: "로그아웃 되었습니다."
+    refresh: "새로고침"
     read_only_mode:
       enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
@@ -1427,7 +1448,13 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
       export_csv:
+        users:
+          title: "CSV 파일로 사용자 목록 내보내기"
+        screened_ips:
+          title: "CVS 파일로 차단한 IPs 목록 내보내기"
+        success: "내보내기가 시작되었습니다. 곧 진행사항을 알려드릴께요."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
+        button_text: "내보니기"
       customize:
         title: "사용자 지정"
         long_title: "사이트 사용자 지정"
@@ -1503,6 +1530,7 @@ ko:
         settings: "설정"
         all: "전체"
         sending_test: "테스트 메일 발송중..."
+        error: "<b>에러</b> - %{server_error}"
         test_error: "테스트 메일을 전송하는데 문제가 있습니다. 메일 설정을 다시한번 체크해보고 메일 전송이 정상인지 다시 확인하고 시도해주세요."
         sent: "보낸 메일"
         skipped: "생략"
@@ -1618,6 +1646,7 @@ ko:
           new: "새로운 사용자"
           active: "활성화 사용자"
           pending: "보류된 사용자"
+          staff: '스태프'
           suspended: '접근 금지 사용자'
           blocked: '블락된 사용자'
         approved: "승인?"
@@ -1634,6 +1663,7 @@ ko:
           regular: '사용자 신뢰도 2 (회원)'
           leader: '사용자 신뢰도 3 (정규)'
           elder: '사용자 신뢰도 4 (지도자)'
+          staff: "스태프"
           admins: '관리자 사용자 목록'
           moderators: '운영자'
           blocked: '블락된 사용자들'

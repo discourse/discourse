@@ -347,7 +347,6 @@ pt_BR:
         ok: "Nós vamos pedir confirmação por email"
         invalid: "Insira um endereço de email"
         authenticated: "Seu email foi autenticado por {{provider}}"
-        frequency: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado."
       name:
         title: "Nome"
         instructions: "Seu nome completo (opcional)"

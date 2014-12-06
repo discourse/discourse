@@ -23,7 +23,6 @@ da:
   log_in: "Log ind"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
-  purge_reason: "Slettet automatisk eftersom dette var gammelt og ikke verificeret"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   errors:
     messages:

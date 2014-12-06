@@ -336,7 +336,6 @@ sq:
         instructions: "Sfondi profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
       email:
         title: "Email"
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
       name:
         title: "Emri"
       username:

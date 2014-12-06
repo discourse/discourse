@@ -312,7 +312,6 @@ zh_TW:
         instructions: "背景會被置中，且默認寬度為850px。"
       email:
         title: "電子郵件"
-        frequency: "我們只會在一段時間未看到你及你尚未看過我們通知你的事物時才會寄信給你。"
       name:
         title: "名稱"
       username:
