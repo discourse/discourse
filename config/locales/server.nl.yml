@@ -30,7 +30,6 @@ nl:
   log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
-  purge_reason: "Automatisch verwijderd omdat het oud en niet geverifieerd is"
   errors:
     messages:
       too_long_validation: "is beperkt tot %{max} tekens; je gebruikt %{length}."
@@ -550,9 +549,6 @@ nl:
     title: "Korte titel van deze website, wordt gebruikt in de titeltag"
     site_description: "Omschrijf dit forum in een zin. Deze wordt getoond in de meta omschrijvingstag."
     contact_email: "E-mailadres van een contactpersoon van deze site. Belangrijke updates van Discourse.org worden naar dit adres gestuurd."
-    company_full_name: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De volledige naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
-    company_short_name: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De korte naam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
-    company_domain: "ACHTERHAALD. Wordt niet meer gebruikt en zal verwijderd worden. De domeinnaam van het bedrijf dat deze site draait. Wordt gebruikt in juridische delen van de site, zoals /tos en /privacy"
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."

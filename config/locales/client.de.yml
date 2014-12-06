@@ -260,6 +260,7 @@ de:
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
       download_archive: "Ein Archiv meiner Beiträge herunterladen"
+      new_private_message: "Neue private Nachricht"
       private_message: "Private Nachricht"
       private_messages: "Nachrichten"
       activity_stream: "Aktivität"
@@ -348,7 +349,6 @@ de:
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt"
-        frequency: "Wir werden dir nur E-Mails senden, wenn wir dich kürzlich nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gesehen hast."
       name:
         title: "Name"
         instructions: "Dein vollständiger Name (optional)"
@@ -553,7 +553,7 @@ de:
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>{{sentTo}}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
       not_allowed_from_ip_address: "Du kannst dich mit dieser IP-Adresse nicht anmelden."
-      resend_activation_email: "Klicke hier um eine neue Aktivierungsmail zu schicken."
+      resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
       google:
         title: "mit Google"
@@ -597,7 +597,7 @@ de:
       reply: "Antworten"
       cancel: "Abbrechen"
       create_topic: "Thema erstellen"
-      create_pm: "Private Nachricht"
+      create_pm: "Private Nachricht erstellen"
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
@@ -1520,6 +1520,9 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
+        users:
+          title: "Vollständige Benutzerliste im CSV-Format exportieren."
+        success: "Der Export wurde gestartet. Du wirst in Kürze über den Fortschritt benachrichtigt."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         button_text: "Exportieren"
       customize:
@@ -1713,8 +1716,10 @@ de:
           new: "Neu"
           active: "Aktiv"
           pending: "Genehmigung"
+          staff: 'Mitarbeiter'
           suspended: 'Gesperrt'
           blocked: 'Blockiert'
+          suspect: 'Verdächtiger'
         approved: "Genehmigt?"
         approved_selected:
           one: "Benutzer genehmigen"
@@ -1731,10 +1736,12 @@ de:
           regular: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
           leader: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
           elder: 'Benutzer mit Vertrauensstufe 4 (Leitwolf)'
+          staff: "Mitarbeiter"
           admins: 'Administratoren'
           moderators: 'Moderatoren'
           blocked: 'Blockierte Benutzer'
           suspended: 'Gesperrte Benutzer'
+          suspect: 'Verdächtige Benutzer'
         reject_successful:
           one: "Erfolgreich 1 Benutzer abgelehnt."
           other: "Erfolgreich %{count} Benutzer abgelehnt."

@@ -23,7 +23,6 @@ pt:
   log_in: "Entrar"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
-  purge_reason: "Apagar automaticamente devido à antiguidade e por não ser verificado"
   errors:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; inseriu %{length}."

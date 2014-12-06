@@ -247,6 +247,7 @@ es:
       organisation: Organización
       phone: Teléfono
       other_accounts: "Otras cuentas con esta dirección IP:"
+      delete_other_accounts: "Eliminar %{count}"
       username: "usuario"
       trust_level: "NC"
       read_time: "tiempo de lectura"
@@ -347,7 +348,6 @@ es:
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
-        frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
       name:
         title: "Nombre"
         instructions: "Tu nombre completo (opcional)"
@@ -1517,7 +1517,13 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
+        users:
+          title: "Exportar lista completa de usuarios en formato CSV"
+        screened_ips:
+          title: "Exportar lista completa de IPs vifiladas en formato CSV"
+        success: "Exportación iniciada, serás notificado dentro de poco sobre el progreso."
         failed: "Exportación fallida, revisa los logs."
+        button_text: "Exportar"
       customize:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
@@ -1685,6 +1691,7 @@ es:
           title: "IPs bloqueadas"
           description: 'Direcciones IP que están siendo vigiladas. Usa "Permitir" para añadir direcciones IP preaprobadas.'
           delete_confirm: "Estás seguro que quieres remover el bloqueo para %{ip_address}?"
+          roll_up_confirm: "Estás seguro de que quieres deshacer estos baneos?"
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
@@ -1693,6 +1700,9 @@ es:
             label: "Nueva:"
             ip_address: "Dirección IP"
             add: "Añadir"
+          roll_up:
+            text: "Deshacer"
+            title: "Crea nuevas entradas de baneo de subred si hay al menos 'min_ban_entries_for_roll_up' entradas."
         logster:
           title: "Registros de errores"
       impersonate:
@@ -1709,8 +1719,10 @@ es:
           new: "Nuevo"
           active: "Activo"
           pending: "Pendiente"
+          staff: 'Staff'
           suspended: 'Suspendidos'
           blocked: 'Bloqueados'
+          suspect: 'Sospechoso'
         approved: "Aprobado/s?"
         approved_selected:
           one: "aprobar usuario"
@@ -1727,10 +1739,12 @@ es:
           regular: 'Usuarios con Nivel de confianza 2 (Miembro)'
           leader: 'Usuarios con Nivel de confianza 3 (Habitual)'
           elder: 'Usuarios con Nivel de confianza 4 (Líder)'
+          staff: "Staff"
           admins: 'Administradores'
           moderators: 'Moderadores'
           blocked: 'Usuarios bloqueados'
           suspended: 'Usuarios suspendidos'
+          suspect: 'Usuarios sospechados'
         reject_successful:
           one: "1 usuario rechazado con éxito."
           other: "%{count} usuarios rechazados con éxito."

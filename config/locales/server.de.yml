@@ -33,7 +33,6 @@ de:
   log_in: "Anmelden"
   via: "%{username} via %{site_name}"
   is_reserved: "ist reserviert"
-  purge_reason: "Automatisch gelöscht, da alt und ungeprüft"
   disable_remote_images_download_reason: "Da nicht mehr genug Plattenplatz vorhanden ist, wurde der Download von Bildern deaktiviert."
   errors:
     messages:
@@ -570,9 +569,6 @@ de:
     title: "Kurzer Titel dieser Seite, der im Title-Tag verwendet wird."
     site_description: "Beschreibe diese Seite in einem Satz. Diese Beschreibung wird im \"description\" Meta-Tag verwendet."
     contact_email: "E-Mail-Adresse eines zentralen Ansprechpartners der Webseite. Wichtige Benachrichtigungen von discourse.org bezüglich kritischer Updates werden an diese Adresse gesendet."
-    company_full_name: "VERALTET. Ist nicht mehr benutzt und wird entfernt. Voller Name des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie /tos und /privacy verwendet."
-    company_short_name: "VERALTET. Ist nicht mehr benutzt und wird entfernt. Kurzname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie /tos und /privacy verwendet."
-    company_domain: "VERALTET. Ist nicht mehr benutzt und wird entfernt. Domainname des Unternehmens, das diese Seite betreibt. Wird in rechtlich relevanten Dokumenten wie /tos und /privacy verwendet."
     queue_jobs: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze Sidekiq zur Ausführung von Jobs. Wenn dies abgeschaltet wird, dann wird die Seite nicht mehr richtig funktionieren!"
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."

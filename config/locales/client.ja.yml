@@ -301,7 +301,6 @@ ja:
         title: "プロフィール背景"
       email:
         title: "メールアドレス"
-        frequency: "メールは、あなたがしばらくの間サイトにログインせず未読トピックが溜まった時のみ送信されます。"
       name:
         title: "名前"
       username:

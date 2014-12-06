@@ -84,7 +84,7 @@ nb_NO:
           other: "%{count} dager siden"
     share:
       topic: 'del en lenke til dette emnet'
-      post: 'del en lenke til dette innlegget'
+      post: 'del en lenke til innlegg #%{postNumber}'
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
@@ -247,15 +247,20 @@ nb_NO:
       organisation: Organisasjon
       phone: Telefon
       other_accounts: "Andre kontoer med denne IP-adressen:"
+      delete_other_accounts: "Slett %{count}"
       username: "brukernavn"
+      trust_level: "TN"
       read_time: "lesetid"
+      topics_entered: "emner laget"
       post_count: "# innlegg"
+      confirm_delete_other_accounts: "Er du sikker på at du vil slette disse kontoene?"
     user:
       said: "{{username}}:"
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
       download_archive: "last ned arkiv av mine innlegg"
+      new_private_message: "Ny Privat Melding"
       private_message: "Privat melding"
       private_messages: "Meldinger"
       activity_stream: "Aktivitet"
@@ -340,8 +345,14 @@ nb_NO:
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
       email:
         title: "E-post"
+        instructions: "Aldri vist i offentlighet"
         ok: "Vi sender deg en email for å bekrefte"
-        frequency: "Vi sender deg bare en e-post om vi ikke har sett deg nylig og du ikke allerede har sett det vi varsler deg om."
+        invalid: "Vennligst gi en gyldig email-addresse"
+        authenticated: "Din email har blitt autentisert av {{provider}}"
+        frequency:
+          zero: "Vi sender deg straks en email hvis du ikke har lest tingen vi sendte deg en email om."
+          one: "Vi sender deg bare en email hvis vi ikke har sett deg i det siste minuttet og du har ikke lest tingen vi sender deg en email om."
+          other: "Vi sender deg bare en email om vi ikke har sett deg i de siste {{count}} minuttene og du har ikke lest tingen vi sender deg en email om."
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)"
@@ -352,11 +363,14 @@ nb_NO:
         instructions: "Unikt, kort og uten mellomrom."
         short_instructions: "Folk kan nevne deg som @{{username}}."
         available: "Ditt brukernavn er tilgjengelig."
+        global_match: "Email stemmer med det registrerte brukernavnet"
         global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
         too_short: "Ditt brukernavn er for kort."
         too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet..."
+        enter_email: 'Brukernavn funnet; oppgi samsvarende email'
+        prefilled: "Email stemmer med dette registrerte brukernavnet"
       locale:
         title: "Språk for grensesnitt"
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
@@ -471,6 +485,7 @@ nb_NO:
         fixed: "Last side"
     close: "Lukk"
     assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Oppdater nå for nyeste versjon?"
+    logout: "De ble logget ut."
     refresh: "Refresh"
     read_only_mode:
       enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
@@ -660,6 +675,7 @@ nb_NO:
       remote_tip: "link til bilde"
       remote_tip_with_attachments: "link til bilde eller fil ({{authorized_extensions}})"
       local_tip: "klikk for å velge et bilde fra din enhet."
+      local_tip_with_attachments: "klikk for å velge et bilde eller en fil fra din enhet ({{authorized_extensions}})"
       hint: "(du kan også drag & drop inn i editoren for å laste dem opp)"
       hint_for_supported_browsers: "(du kan også drag og drop eller lime inn bilder inn i editoren for å laste dem opp)"
       uploading: "Laster opp bilde"
@@ -1172,6 +1188,8 @@ nb_NO:
           title: "Dempet"
           description: "Du vil ikke bli varslet om noe vedrørende disse emnene i disse kategoriene og de vil ikke vises i din ulest-liste."
     flagging:
+      title: 'Takk for at du hjelper å holde forumet ryddig!'
+      private_reminder: 'flagg er private, <b>bare</b> synlige for staben'
       action: 'Rapporter innlegg'
       take_action: "Ta Handling"
       notify_action: 'Privat melding'
@@ -1188,11 +1206,13 @@ nb_NO:
         inappropriate: "Det er upassende"
         spam: "Det er reklame"
       custom_placeholder_notify_user: "Vær spesifikk, konstruktiv og snill."
+      custom_placeholder_notify_moderators: "La oss vite nøyaktig hva problemet er, og del relevante lenker og eksempler hvorvidt det er mulig."
       custom_message:
         at_least: "skriv minst {{n}} bokstaver"
         more: "{{n}} igjen..."
         left: "{{n}} gjenstående"
     flagging_topic:
+      title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter emne"
       notify_action: "Privat melding"
     topic_map:
@@ -1243,6 +1263,7 @@ nb_NO:
     history: "Historie"
     changed_by: "av {{author}}"
     raw_email:
+      title: "Rå Email"
       not_available: "Ikke tilgjengelig!"
     categories_list: "Kategoriliste"
     filters:
@@ -1350,6 +1371,9 @@ nb_NO:
           7_days_ago: "7 Dager Siden"
           30_days_ago: "30 Dager Siden"
           all: "Alle"
+          view_table: "tabell"
+          view_chart: "stolpediagram"
+          refresh_report: "Refresh Rapport"
           start_date: "Startdato"
           end_date: "Sluttdato"
       commits:
@@ -1498,7 +1522,13 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
+        users:
+          title: "Eksporter komplett brukerliste i CSV format."
+        screened_ips:
+          title: "Eksporter komplett liste over filtrerte IP-addresser i CSV format."
+        success: "Eksport igangsatt; du vil motta en prosessrapport om kort tid."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
+        button_text: "Eksporter"
       customize:
         title: "Tilpasse"
         long_title: "Nettstedstilpasninger"
@@ -1574,6 +1604,7 @@ nb_NO:
         settings: "Instillinger"
         all: "Alle"
         sending_test: "Sender e-post for testing"
+        error: "<b>ERROR</b> - %{server_error}"
         test_error: "Det oppsto et problem ved utsendelse av e-post for testing. Sjekk e-postinnstillinger nøye, sjekk at verten ikke blokkerer e-posttilkoblinger, og prøv igjen."
         sent: "Sendt"
         skipped: "Hoppet over"
@@ -1649,6 +1680,7 @@ nb_NO:
             check_email: "sjekk e-post"
             delete_topic: "slett emne"
             delete_post: "slett innlegg"
+            impersonate: "overta brukerkonto"
         screened_emails:
           title: "Kontrollerte Emails"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -1664,6 +1696,9 @@ nb_NO:
           title: "Kontrollerte IPs"
           description: 'IP-adresser som blir fulgt. Benytt "Tillat" for å hvitliste IP-adresser.'
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
+          roll_up_confirm: "Er du sikker på at du vil så sammen ban-oppføringer?"
+          rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-addresser til disse subnettene: %{subnets}."
+          rolled_up_no_subnet: "Det var ingenting å slå sammen."
           actions:
             block: "Blokker"
             do_nothing: "Tillat"
@@ -1672,6 +1707,9 @@ nb_NO:
             label: "Ny:"
             ip_address: "IP-adresse"
             add: "Legg til"
+          roll_up:
+            text: "Slå sammen."
+            title: "Lager nye blokkeringsoppføringer for subnett hvis det er minst 'min_ban_entries_for_roll_up' oppføringer."
         logster:
           title: "Feillogg"
       impersonate:
@@ -1682,14 +1720,17 @@ nb_NO:
         create: 'Legg til Admin Bruker'
         last_emailed: "Sist kontaktet"
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
+        id_not_found: "Beklager, denne brukerID eksisterer ikke i vårt system."
         active: "Aktiv"
         show_emails: "Vis email"
         nav:
           new: "Ny"
           active: "Aktiv"
           pending: "Ventende"
+          staff: 'Stab'
           suspended: 'Bannlyst'
           blocked: 'Blokkert'
+          suspect: 'Mistenkt'
         approved: "Godkjent?"
         approved_selected:
           one: "godkjenn bruker"
@@ -1706,10 +1747,12 @@ nb_NO:
           regular: 'Brukere med tillitsnivå 2 (Medlem)'
           leader: 'Brukere med tillitsnivå 3 (Aktivt medlem)'
           elder: 'Brukere med tillitsnivå 4 (Leder)'
+          staff: "Stab"
           admins: 'Admins'
           moderators: 'Moderatorer'
           blocked: 'Blokkerte brukere'
           suspended: 'Bannlyste brukere'
+          suspect: 'Mistenkte Brukere'
         reject_successful:
           one: "Avvist 1 bruker."
           other: "Avviste %{count} brukere."
@@ -1924,6 +1967,7 @@ nb_NO:
         enabled: Aktiver merke
         icon: Ikon
         image: Bilde
+        icon_help: "Bruk enten en Font Awesome class eller URL for et bilde"
         query: Spørring for merke (SQL)
         target_posts: Spørring har innlegg som mål
         auto_revoke: Kjør tilbakedragningsspørring daglig

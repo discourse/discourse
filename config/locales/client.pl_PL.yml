@@ -270,6 +270,7 @@ pl_PL:
       organisation: Organizacja
       phone: Numer telefonu
       other_accounts: "Inne konta z tym adresem IP:"
+      delete_other_accounts: "Usuń %{count}"
       username: "nazwa użytkownika"
       trust_level: "TL"
       read_time: "czas czytania:"
@@ -282,6 +283,7 @@ pl_PL:
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
       download_archive: "pobierz archiwum moich wpisów"
+      new_private_message: "Nowa Prywatna Wiadomość"
       private_message: "Prywatna wiadomość"
       private_messages: "Wiadomości"
       activity_stream: "Aktywność"
@@ -370,7 +372,6 @@ pl_PL:
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
-        frequency: "Wyślemy do Ciebie email tylko jeżeli dawno Cię nie widzieliśmy i wyłącznie na temat rzeczy których jeszcze nie widziałeś."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -1580,7 +1581,13 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
+        users:
+          title: "Eksportuj listę użytkowników do pliku CSV."
+        screened_ips:
+          title: "Eksportuj listę obserwowanych IP do pliku CSV."
+        success: "Rozpoczęto eksport, wkrótce otrzymasz powiadomienie z informacją o postępie."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
+        button_text: "Eksportuj"
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
@@ -1748,6 +1755,9 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adres IP który teraz oglądasz. Użyj "Zezwól" aby dodać do białej listy adresów IP.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
+          roll_up_confirm: "Czy na pewno chcesz zgrupować zbanowane pozycje?"
+          rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
+          rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
             block: "Zablokuj"
             do_nothing: "Zezwól"
@@ -1756,6 +1766,9 @@ pl_PL:
             label: "Nowy:"
             ip_address: "Adres IP"
             add: "Dodaj"
+          roll_up:
+            text: "Zgrupuj"
+            title: "Tworzy nowy ban dla podsieci jeśli jest co najmniej  'min_ban_entries_for_roll_up' pozycji."
         logster:
           title: "Logi błędów"
       impersonate:
@@ -1766,14 +1779,17 @@ pl_PL:
         create: 'Dodaj Administratora'
         last_emailed: "Ostatnio wysłano email"
         not_found: "Przepraszamu, taka nazwa użytkowanika nie istnieje w naszym systemie."
+        id_not_found: "Przepraszamy, ten identyfikator użytkownika nie istnieje w naszym systemie."
         active: "Aktywny"
         show_emails: "Pokaż emaile"
         nav:
           new: "Nowi"
           active: "Aktywni"
           pending: "Oczekujący"
+          staff: 'Zespół'
           suspended: 'Zawieszeni'
           blocked: 'Zablokowani'
+          suspect: 'Podejrzani'
         approved: "Zatwierdzam?"
         approved_selected:
           one: "zatwierdź użytkownika"
@@ -1792,10 +1808,12 @@ pl_PL:
           regular: 'Użytkownicy na 2 poziomie zaufania (Zwyczajni)'
           leader: 'Użytkownicy na 3 poziomie zaufania (Regularni)'
           elder: 'Użytkownicy na 4 poziomie zaufania (Weterani)'
+          staff: "Zespół"
           admins: 'Administratorzy'
           moderators: 'Moderatoratorzy'
           blocked: 'Zablokowane konta'
           suspended: 'Zawieszone konta'
+          suspect: 'Podejrzani użytkownicy'
         reject_successful:
           one: "Odrzucenie 1 użytkownika(-czki) powiodło się."
           few: "Odrzucenie %{count} użytkowników powiodło się."
