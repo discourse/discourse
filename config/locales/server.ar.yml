@@ -1,0 +1,66 @@
+ar:
+  stringex:
+    characters:
+      number: "-"
+  dates:
+    short_date_no_year: "يوم شهر"
+    short_date: "يوم شهر سنة"
+  title: "ديسكورس"
+  topics: "عناوين"
+  posts: "منشورات"
+  loading: "تحميل"
+  log_in: "تسجيل الدخول"
+  via: "%{username} من موقع %{site_name}"
+  is_reserved: "محجوز"
+  disable_remote_images_download_reason: "لقد تم تعطيل تحميل الصور عن بعد بسبب عدم وجود مساحة كافية"
+  errors:
+    messages:
+      too_long_validation: "إنها محددة بعدد حروف %{max} حرف; لقد أدخلت %{length}."
+      invalid_boolean: "قيمة منطقية غير صحيحة"
+      taken: "تم إختياره من قبل"
+    embed:
+      load_from_remote: "هناك خطأ في تحميل هذا المنشور."
+  bulk_invite:
+    file_should_be_csv: "الملف المرفوع يجب أن يكون بنسق وامتداد txt أو csv"
+  backup:
+    backup_file_should_be_tar_gz: "ملف الاحتياط يجب أن يكون أرشيف .tar.gz."
+  not_logged_in: "يجب عليك تسجيل الدخول لفعل هذا."
+  embed:
+    start_discussion: "إبدأ نقاش"
+    continue: "الاستمرار في هذا النقاش"
+    loading: "تحميل النقاش"
+  too_many_mentions:
+    zero: "عذراً، لا يمكنكم تنويه مستخدمين آخرين."
+    one: "عذراً، يمكنكم فقط تنويه مستخدم واحد في هذا المنشور."
+  has_already_been_used: "هو مستخدم بالفعل"
+  next_page: "الصفحة التالية ←"
+  prev_page: "→ الصفحة السابقة "
+  num_participants: "المشاركين"
+  read_full_topic: "قراءة العنوان كامل"
+  rss_description:
+    hot: "عناوين ساخنة"
+  groups:
+    default_names:
+      everyone: "الجميع"
+      admins: "المسؤولين"
+      staff: "العاملين"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            ip_address:
+              signup_not_allowed: "التسجيل غير مسموح من هذا الحساب."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "هذا لون غير صالح"
+  trust_levels:
+    basic:
+      title: "مستخدم أساسي"
+    regular:
+      title: "عضو"
+    leader:
+      title: "منتظم"
+    elder:
+      title: "قائد"
