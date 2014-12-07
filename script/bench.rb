@@ -10,6 +10,7 @@ require "fileutils"
 @best_of = 1
 @mem_stats = false
 @unicorn = false
+@dump_heap = false
 
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
@@ -25,6 +26,11 @@ opts = OptionParser.new do |o|
   end
   o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
     @best_of = i.to_i
+  end
+  o.on("-d", "--heap_dump") do
+    @dump_heap = true
+    # We need an env var for config/boot.rb to enable allocation tracing prior to framework init
+    ENV['DISCOURSE_DUMP_HEAP'] = "1"
   end
   o.on("-m", "--memory_stats") do
     @mem_stats = true
@@ -103,18 +109,18 @@ end
 ENV["RAILS_ENV"] = "profile"
 
 
-gc_env_vars = %w(RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
+discourse_env_vars = %w(DISCOURSE_DUMP_HEAP RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
 
 if @include_env
   puts "Running with tuned environment"
   ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
-  gc_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
+  discourse_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
     ENV.delete v
   end
 else
   # clean env
   puts "Running with the following custom environment"
-  gc_env_vars.each do |w|
+  discourse_env_vars.each do |w|
     puts "#{w}: #{ENV[w]}"
   end
 end
@@ -254,6 +260,11 @@ begin
   if @mem_stats
     puts
     puts open("http://127.0.0.1:#{@port}/admin/memory_stats#{append}").read
+  end
+
+  if @dump_heap
+    puts
+    puts open("http://127.0.0.1:#{@port}/admin/dump_heap#{append}").read
   end
 
   if @result_file
