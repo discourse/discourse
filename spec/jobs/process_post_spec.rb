@@ -9,26 +9,41 @@ describe Jobs::ProcessPost do
 
   context 'with a post' do
 
-    before do
-      @post = Fabricate(:post)
+    let(:post) do
+      Fabricate(:post)
     end
 
-    it 'calls process on a CookedPostProcessor' do
-      CookedPostProcessor.any_instance.expects(:post_process).once
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'does not erase posts when CookedPostProcessor malfunctions' do
+      # Look kids, an actual reason why you want to use mocks
+      CookedPostProcessor.any_instance.expects(:html).returns(' ')
+      cooked = post.cooked
+
+      post.reload
+      post.cooked.should == cooked
+
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
     end
 
-    it 'updates the html if the dirty flag is true' do
-      CookedPostProcessor.any_instance.expects(:dirty?).returns(true)
-      CookedPostProcessor.any_instance.expects(:html).returns('test')
-      Post.any_instance.expects(:update_column).with(:cooked, 'test').once
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'recooks if needed' do
+      cooked = post.cooked
+
+      post.update_columns(cooked: "frogs")
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
+
+      post.reload
+      post.cooked.should == cooked
     end
 
-    it "doesn't update the cooked content if dirty is false" do
-      CookedPostProcessor.any_instance.expects(:dirty?).returns(false)
-      Post.any_instance.expects(:update_column).never
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'processes posts' do
+
+      post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
+      post.cooked.should =~ /http/
+
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      post.reload
+
+      # subtle but cooked post processor strip this stuff, this ensures all the code gets a workout
+      post.cooked.should_not =~ /http/
     end
 
   end
