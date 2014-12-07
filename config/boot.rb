@@ -1,6 +1,10 @@
 if ENV['DISCOURSE_DUMP_HEAP'] == "1"
   require 'objspace'
-  ObjectSpace.trace_object_allocations_start
+  begin
+    ObjectSpace.trace_object_allocations_start
+  rescue NoMethodError
+    puts "Heap dumps not available for Ruby #{RUBY_VERSION} (> 2.1 required)"
+  end
 end
 
 require 'rubygems'
