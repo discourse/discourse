@@ -28,6 +28,11 @@
   {{/if}}
 </div>
 
+<div class="pull-right">
+  <button class="btn" {{action "exportStaffActionLogs"}} title="{{i18n 'admin.export_csv.button_title.staff_action'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+</div>
+</br>
+
 <div class="staff-action-logs-instructions" {{bind-attr class=":staff-action-logs-instructions showInstructions::invisible"}}>
   {{i18n 'admin.logs.staff_actions.instructions'}}
 </div>

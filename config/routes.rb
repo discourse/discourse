@@ -164,8 +164,7 @@ Discourse::Application.routes.draw do
 
     resources :export_csv, constraints: AdminConstraint.new do
       collection do
-        get "users" => "export_csv#export_user_list"
-        get "screened_ips" => "export_csv#export_screened_ips_list"
+        get "export_entity" => "export_csv#export_entity"
       end
       member do
         get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
