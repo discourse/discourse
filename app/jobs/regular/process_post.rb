@@ -10,15 +10,29 @@ module Jobs
       # two levels of deletion
       return unless post.present? && post.topic.present?
 
-      post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id)) if args[:cook].present?
+      orig_cooked = post.cooked
+      recooked = nil
+
+      if args[:cook].present?
+        recooked = post.cook(post.raw, topic_id: post.topic_id)
+        post.update_column(:cooked, recooked)
+      end
 
       cp = CookedPostProcessor.new(post, args)
       cp.post_process(args[:bypass_bump])
 
       # If we changed the document, save it
-      if cp.dirty?
-        post.update_column(:cooked, cp.html)
-        post.publish_change_to_clients! :revised
+      cooked = cp.html
+
+      if cooked != (recooked || orig_cooked)
+
+        if orig_cooked.present? && cooked.blank?
+          # TODO suicide if needed, let's gather a few here first
+          Rails.logger.warn("Cooked post processor if FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
+        else
+          post.update_column(:cooked, cp.html)
+          post.publish_change_to_clients! :revised
+        end
       end
     end
 
