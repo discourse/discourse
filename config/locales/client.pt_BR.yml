@@ -259,6 +259,7 @@ pt_BR:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive: "baixar o arquivo das minhas mensagens"
+      new_private_message: "Nova mensagem privada"
       private_message: "Mensagem Privada"
       private_messages: "Mensagens"
       activity_stream: "Atividade"
@@ -347,6 +348,9 @@ pt_BR:
         ok: "Nós vamos pedir confirmação por email"
         invalid: "Insira um endereço de email"
         authenticated: "Seu email foi autenticado por {{provider}}"
+        frequency:
+          one: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado"
+          other: "Vamos lhe enviar emails apenas se não vimos você nos últimos {{count}} você não tiver visto as coisas que temos enviado"
       name:
         title: "Nome"
         instructions: "Seu nome completo (opcional)"
@@ -683,6 +687,7 @@ pt_BR:
         user: "Procurar respostas de @{{username}}"
         category: "Procurar a categoria \"{{category}}\""
         topic: "Procurar nesse tópico"
+        private_messages: "Procurar mensagens privadas"
     site_map: "ir para outra lista de tópicos ou categorias"
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
@@ -1702,14 +1707,17 @@ pt_BR:
         create: 'Adicionar Usuário Admin'
         last_emailed: "Último email enviado"
         not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
+        id_not_found: "Desculpe, esse nome de usuário não existe no nosso sistema."
         active: "Ativo"
         show_emails: "Mostrar Emails"
         nav:
           new: "Novos"
           active: "Ativos"
           pending: "Pendentes"
+          staff: 'Equipe'
           suspended: 'Suspenso'
           blocked: 'Bloqueados'
+          suspect: 'Suspeito'
         approved: "Aprovado?"
         approved_selected:
           one: "aprovar usuário"
@@ -1730,6 +1738,7 @@ pt_BR:
           moderators: 'Moderadores'
           blocked: 'Usuários Boqueados'
           suspended: 'Usuários Suspensos'
+          suspect: 'Usuários suspeitos'
         reject_successful:
           one: "1 usuário foi rejeitado com sucesso."
           other: "%{count} usuários foram rejeitados com sucesso."

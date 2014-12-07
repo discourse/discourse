@@ -351,13 +351,26 @@ sv:
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
         frequency:
           zero: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
+          one: "Vi kommer bara att skicka e-post till dig om vi inte sett dig den senaste minuten och du inte har läst det som vi skickar e-post till dig om."
+          other: "Vi kommer bara att skicka e-post till dig om vi inte sett dig de senaste  {{count}} minuterna och du inte har läst det som vi skickar e-post till dig om."
       name:
         title: "Namn"
+        instructions: "Ditt fullständiga namn (valfritt)"
+        too_short: "Ditt namn är för kort"
+        ok: "Ditt namn ser bra ut"
       username:
         title: "Användarnamn"
+        instructions: "Unikt, inga mellanrum, kort"
+        short_instructions: "Folk kan nämna dig som @{{username}}"
+        available: "Ditt användarnamn är tillgängligt"
+        global_match: "E-postadressen matchar det registrerade användarnamnet"
         global_mismatch: "Redan registrerat. Prova {{suggestion}}?"
         not_available: "Inte tillgängligt. Prova {{suggestion}}?"
+        too_short: "Ditt användarnamn är för kort"
+        too_long: "Ditt användarnamn är för långt"
         checking: "Kollar användarnamnets tillgänglighet..."
+        enter_email: 'Annvändarnamn hittat; ange matchande e-postadress'
+        prefilled: "E-postadressen matchar det här registrerade användarnamnet"
       locale:
         title: "gränssnittsspråk"
         instructions: "Språket som används av forumsgränssnittet. Det kommer att ändras när du laddar om sidan."
@@ -370,6 +383,8 @@ sv:
       created: "Gick med"
       log_out: "Logga ut"
       location: "Plats"
+      card_badge:
+        title: "Visitkortsbricka"
       website: "Webbplats"
       email_settings: "E-post"
       email_digests:
@@ -470,6 +485,8 @@ sv:
         fixed: "Ladda sida"
     close: "Stäng"
     assets_changed_confirm: "Den här siten uppdaterades precis. Ladda om för att se den senaste versionen?"
+    logout: "Du loggades ut."
+    refresh: "Uppdatera"
     read_only_mode:
       enabled: "En administratör har aktiverat läsläge. Du kan fortsätta kolla runt på sidan men kanske inte interagera med den."
       login_disabled: "Det går inte att logga in medan siten är i skrivskyddat läge."
@@ -672,6 +689,7 @@ sv:
         user: "Sök inlägg av @{{username}}"
         category: "Sök i kategorin \"{{category}}\""
         topic: "Sök i denna diskussion"
+        private_messages: "Sök privata meddelanden"
     site_map: "gå till en annan trådlista eller kategori"
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
@@ -984,6 +1002,7 @@ sv:
             other: "Vill du radera de {{count}} direkta svaren på det här inlägget också?"
           yes_value: "Ja, radera även svaren"
           no_value: "Nej, bara det här inlägget"
+        admin: "inlägg admin åtgärder"
         wiki: "Skapa wiki"
         unwiki: "Ta bort wiki"
         convert_to_moderator: "Lägg till "
@@ -1347,6 +1366,9 @@ sv:
           7_days_ago: "7 dagar sedan"
           30_days_ago: "30 dagar sedan"
           all: "Alla"
+          view_table: "tabell"
+          start_date: "Startdatum"
+          end_date: "Slutdatum"
       commits:
         latest_changes: "Senaste ändringarna: snälla uppdatera ofta!"
         by: "av"
@@ -1354,13 +1376,41 @@ sv:
         title: "Flaggningar"
         old: "Gamla"
         active: "Aktiva"
+        agree: "Godkänn"
+        agree_title: "Bekräfta att den här flaggan är giltig och korrekt"
+        agree_flag_modal_title: "Bekräfta och..."
+        agree_flag_hide_post: "Godkänn (dölj inlägg + skicka PM)"
+        agree_flag_hide_post_title: "Dölj detta inlägg och skicka automatiskt ett privat meddelande som ber användaren att redigera det"
+        agree_flag_restore_post: "Godkänn (återställ inlägg)"
+        agree_flag_restore_post_title: "Återställ detta inlägg"
+        agree_flag: "Godkänn flaggning"
+        agree_flag_title: "Godkänn flaggning och behåll inlägget oförändrat"
+        defer_flag_title: "Ta bort den här flaggan; den kräver ingen åtgärd för tillfället."
+        delete: "Ta bort"
+        delete_title: "Ta bort inlägget som den här flaggan refererar till."
+        delete_post_defer_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
+        delete_post_agree_flag: "Ta bort inlägg och godkänn flaggning."
+        delete_post_agree_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
+        delete_flag_modal_title: "Ta bort och..."
+        delete_spammer: "Radera spammare"
+        delete_spammer_title: "Radera användaren och alla hens inlägg och trådar."
+        disagree_flag_unhide_post: "Håll inte med (avgöm inlägg)"
+        disagree_flag_unhide_post_title: "Ta bort alla flaggor från detta inlägg och gör det synligt igen"
+        disagree_flag: "Håll inte med"
+        disagree_flag_title: "Neka den här flaggningen som ogiltig eller inkorrekt"
         clear_topic_flags: "Klar"
         clear_topic_flags_title: "Tråden har undersökts och eventuella problem har lösts. Klicka på klar för att ta bort flaggorna."
+        more: "(mer svar...)"
         flagged_by: "Flaggad av"
+        resolved_by: "Löst av"
         system: "System"
         error: "Någonting gick snett"
+        reply_message: "Svara"
         no_results: "Det finns inga flaggor."
         topic_flagged: "Denna <strong>tråd</strong> har blivit flaggad."
+        visit_topic: "Besök ämnet för att vidta åtgärder"
+        was_edited: "Inlägget redigerades efter den första flaggningen"
+        previous_flags_count: "Det här inlägget har redan flaggats {{count}} gånger."
         summary:
           action_type_3:
             one: "off-topic"
@@ -1383,9 +1433,11 @@ sv:
         title: "Groups"
         edit: "Edit Groups"
         refresh: "uppdatera"
+        new: "Ny"
         selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
+        group_members: "Gruppmedlemmar"
         delete: "Radera"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
@@ -1402,24 +1454,42 @@ sv:
         confirm_revoke: "Är du säker på att du vill återkalla den nyckeln?"
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "Alla användare"
+        note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
       backups:
         title: "säkerhetskopior"
         menu:
           backups: "säkerhetskopior"
           logs: "loggar"
         none: "Ingen säkerhetskopia är tillgänglig."
+        read_only:
+          enable:
+            title: "Aktivera skrivskyddat läget"
+            text: "Aktivera skrivskyddat läge"
+            confirm: "Är du säker på att du vill aktivera skrivskyddat läge?"
+          disable:
+            title: "Avaktivera skrivskyddat läget"
+            text: "Avaktivera skrivskyddat läge"
+        logs:
+          none: "Inga loggar ännu..."
         columns:
           filename: "filnamn"
           size: "storlek"
         upload:
+          text: "Ladda upp"
+          uploading: "Laddar upp..."
           success: "'{{filename}}' har laddats upp."
           error: "Ett fel har uppstått vid uppladdning av '{{filename}}': {{message}}"
         operations:
+          is_running: "En operation körs just nu..."
+          failed: " {{operation}} misslyckades. Kontrollera loggarna."
           cancel:
             text: "avbryt"
+            title: "Avbryt den pågående operationen"
+            confirm: "Är du säker på att du vill avbryta den pågående operationen?"
           backup:
             text: "säkerhetskopia"
             title: "skapa en säkerhetskopia"
+            confirm: "Vill du skapa en ny säkerhetskopiering?"
             without_uploads: "Ja (inkluder inte filer)"
           download:
             text: "ladda ned"
@@ -1438,7 +1508,13 @@ sv:
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
+        users:
+          title: "Exportera alla användare i CSV format."
+        screened_ips:
+          title: "Exportera alla IP-adresser i CSV format."
+        success: "Exporteringen har påbörjats, du kommer snart att få en notifiering över hur det går."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
+        button_text: "Exportera"
       customize:
         title: "Anpassa"
         long_title: "Sidanpassningar"
@@ -1450,11 +1526,15 @@ sv:
         preview: "förhandsgranska"
         undo_preview: "ta bort förhandsgranskning"
         rescue_preview: "standard stil"
+        explain_preview: "Se sidan med skräddarsydd stilmall"
+        explain_undo_preview: "Gå tillbaka till den nuvarande aktiva stilmallen"
+        explain_rescue_preview: "Se sidan med standard stilmallen"
         save: "Spara"
         new: "Ny"
         new_style: "Ny Stil"
         delete: "Radera"
         delete_confirm: "Radera denna anpassning?"
+        about: "Modifiera CSS stilmallar och HTML sidhuvuden på sidan. Lägg till en anpassning för att börja."
         color: "Färg"
         opacity: "Opacitet"
         copy: "Kopiera"
@@ -1474,14 +1554,28 @@ sv:
           revert_title: "Återställ den här färgen till Discourse standard färgschema."
           primary:
             name: 'primär'
+            description: 'Det mesta av texten, ikoner och ramar.'
           secondary:
             name: 'sekundär'
             description: 'Den huvudsakliga bakgrundsfärgen, och textfärgen på vissa knappar.'
+          tertiary:
+            description: 'Länkar, några knappar, notiser, och accentfärger.'
           quaternary:
             description: "Navigationslänkar."
+          header_background:
+            name: "Bakgrund för sidhuvud"
+            description: "Bakgrundsfärg för sidans sidhuvud. "
+          header_primary:
+            name: "sidhuvud primär"
+            description: "Text och ikoner i sidans sidhuvud."
+          highlight:
+            name: 'highlight'
           danger:
             name: 'fara'
+          success:
+            description: 'Används för att indikera att en åtgärd lyckades.'
           love:
+            name: 'älska'
             description: "Gillaknappens färg."
           wiki:
             name: 'wiki'
@@ -1491,6 +1585,8 @@ sv:
         settings: "Inställningar"
         all: "alla"
         sending_test: "Skickar testmail..."
+        error: "<b>ERROR</b> - %{server_error}"
+        test_error: "Det uppstod ett problem med att skicka test meddelandet. Dubbelkolla dina e-postinställningar, verifiera att din host inte blockerar e-postkopplingar, och försök igen."
         sent: "skickade"
         skipped: "överhoppade"
         sent_at: "Skickat"
@@ -1503,6 +1599,7 @@ sv:
         sent_test: "skickat!"
         delivery_method: "Leveransmetod"
         preview_digest: "Sammandrag"
+        preview_digest_desc: "Förhandsgrandska innehållet i sammanfattningen som veckovis skickas till inaktiva användare."
         refresh: "Uppdatera"
         format: "Format"
         html: "html"
@@ -1563,6 +1660,7 @@ sv:
             check_email: "kolla epost"
             delete_topic: "ta bort tråd"
             delete_post: "ta bort inlägg"
+            impersonate: "imitera"
         screened_emails:
           title: "Kontrollerade email"
           description: "När någon försöker skapa ett nytt konto, kommer följande emailadresser att kontrolleras och registrationen blockeras, eller någon annan åtgärd vidtas."
@@ -1588,11 +1686,15 @@ sv:
             add: "Lägg till"
         logster:
           title: "Felprotokoll"
+      impersonate:
+        title: "Imitera"
+        help: "Använd det här verktyget för att imitera ett användarkonto för avlusningssyften. Du kommer behöva logga ut när du är klar."
       users:
         title: 'Användare'
         create: 'Lägg till Administratör'
         last_emailed: "Senast Mailad"
         not_found: "Tyvärr den användaren existerar inte i vårt system."
+        id_not_found: "Tyvärr, den användaren existerar inte i vårt system."
         active: "Aktiv"
         show_emails: "Visa Epost"
         nav:

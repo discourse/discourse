@@ -712,6 +712,7 @@ pl_PL:
         user: "Szukaj wpisów @{{username}}"
         category: "Szukaj w kategorii \"{{category}}\""
         topic: "Szukaj w tym temacie"
+        private_messages: "Wyszukiwanie w prywatnych wiadomościach"
     site_map: "przejdź do innej listy tematów lub kategorii"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
@@ -1755,7 +1756,6 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adres IP który teraz oglądasz. Użyj "Zezwól" aby dodać do białej listy adresów IP.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
-          roll_up_confirm: "Czy na pewno chcesz zgrupować zbanowane pozycje?"
           rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
           rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:

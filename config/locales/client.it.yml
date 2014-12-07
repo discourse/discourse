@@ -1691,7 +1691,6 @@ it:
           title: "IP scansionati"
           description: 'Gli indirizzi IP che sono sotto controllo. Usa "Permetti" per inserirli nella lista bianca.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
-          roll_up_confirm: "Sicuro di voler sintetizzare l'elenco di indirizzi IP interdetti?"
           rolled_up_some_subnets: "L'elenco di indirizzi IP interdetti sono stati sintetizzati con successo: %{subnets}."
           rolled_up_no_subnet: "Non c'era nulla da sintetizzare."
           actions:

@@ -689,6 +689,7 @@ fr:
         user: "Chercher dans les messages de @{{username}}"
         category: "Rechercher dans la catégorie \"{{category}}\""
         topic: "Rechercher dans ce sujet"
+        private_messages: "Chercher les messages privés"
     site_map: "aller à une autre liste de sujet ou catégorie"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
@@ -1700,7 +1701,6 @@ fr:
           title: "IP Suivies"
           description: 'Adresses IP qui sont surveillés. Utiliser "Autoriser" pour ajouter les adresses IP à la liste blanche.'
           delete_confirm: "Êtes-vous sûr de vouloir supprimer la règle pour %{ip_address} ?"
-          roll_up_confirm: "Êtes-vous certain de vouloir consolider la liste des interdictions ?"
           rolled_up_some_subnets: "Consolidation réussie des adresses IP interdites sous cette forme de plages de sous réseaux: %{subnets}."
           rolled_up_no_subnet: "Aucune consolidation possible."
           actions:

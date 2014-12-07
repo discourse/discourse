@@ -247,6 +247,7 @@ he:
       organisation: ארגון
       phone: טלפון
       other_accounts: "חשבונות נוספים עם כתובת IP זו:"
+      delete_other_accounts: "מחיקה %{count}"
       username: "שם משתמש"
       trust_level: "TL"
       read_time: "זמן צפייה"
@@ -259,6 +260,7 @@ he:
       mute: "השתק"
       edit: "ערוך העדפות"
       download_archive: "הורד ארכיון של ההודעות שלי"
+      new_private_message: "מסר פרטי חדש"
       private_message: "הודעה פרטית"
       private_messages: "הודעות"
       activity_stream: "פעילות"
@@ -347,6 +349,10 @@ he:
         ok: "נשלח לך דואר אלקטרוני לאישור"
         invalid: "בבקשה הכנס כתובת דואר אלקטרוני חוקית"
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}"
+        frequency:
+          zero: "נעדכן אותך מיד בדוא\"ל אם לא קראת את הדבר שעליו אנחנו שולחים אליך דוא\"ל."
+          one: "נשלח לך דוא\"ל רק אם לא ראינו אותך בדקה האחרונה ולא קראת את הדבר שעליו אנחנו שולחים לך את הדוא\"ל."
+          other: "נשלח לך דוא\"ל רק אם לא ראינו אותך ב-{{count}} דקןץ האחרונות ואם לא קראת את הדבר שאנחנו שולחים לך עליו דוא\"ל."
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
@@ -683,6 +689,7 @@ he:
         user: "חיפוש פרסומים לפי @{{username}}"
         category: "חיפוש בקטגוריה \"{{category}}\""
         topic: "חפשו בנושא זה"
+        private_messages: "חיפוש הודעות פרטיות"
     site_map: "לך לרשימת נושאים או קטגוריה אחרת"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
@@ -1516,7 +1523,13 @@ he:
             title: "הזחר את מסד הנתונים למצב עבודה קודם"
             confirm: "אתה בטוח שברצונך להחזיר את מסד הנתונים למצב עבודה קודם?"
       export_csv:
+        users:
+          title: "ייצא רשימת המשתמשים המלאה בפורמט CSV."
+        screened_ips:
+          title: "ייצוא רשימת ה-IP הנעקבות בפורמט CSV."
+        success: "פעולת הייצוא החלה, תוך זמן קצר תעודכנו בהתקדמות."
         failed: "הייצוא נכשל. אנא בדקו ברישומי הלוג."
+        button_text: "ייצוא"
       customize:
         title: "התאם אישית"
         long_title: "התאמה של האתר"
@@ -1684,6 +1697,8 @@ he:
           title: "כתובות IP מסוננות"
           description: 'כתובות IP שנצפות כרגע. השתמש בכפתור "אפשר" בשביל לבטל חסימת כתובת'
           delete_confirm: "אתה בטוח שברצונך להסיר את הכלל עבור הכתובת %{ip_address}?"
+          rolled_up_some_subnets: "ערכי IP אסורים גולגלו בהצלחה לרשתות המשנה הבאות: %{subnets}."
+          rolled_up_no_subnet: "לא היה שום דבר לגלגל"
           actions:
             block: "חסום"
             do_nothing: "אפשר"
@@ -1692,6 +1707,9 @@ he:
             label: "חדש:"
             ip_address: "כתובת IP"
             add: "הוסף"
+          roll_up:
+            text: "גלגול (Roll up)"
+            title: "יוצר ערכי איסור משנה חדשים, אם יש לפחות 'min_ban_entries_for_roll_up' ערכים."
         logster:
           title: "רישום תקלות"
       impersonate:
@@ -1702,14 +1720,17 @@ he:
         create: 'הוסף מנהל'
         last_emailed: "נשלח בדואר אלקטרוני לאחרונה"
         not_found: "סליחה, שם המשתמש הזה אינו קיים במערכת שלנו."
+        id_not_found: "מצטערים, זהות המשתמש/ת אינה קיימת במערכת שלנו."
         active: "פעיל"
         show_emails: "הצגת דוא\"לים"
         nav:
           new: "חדש"
           active: "פעיל"
           pending: "ממתין"
+          staff: 'צוות'
           suspended: 'מושעים'
           blocked: 'חסום'
+          suspect: 'חשוד/ה'
         approved: "מאושר?"
         approved_selected:
           one: "אשר משתמש"
@@ -1726,10 +1747,12 @@ he:
           regular: 'משתמשים בדרגת אמון 2 (חברים)'
           leader: 'משתמשים בדרגת אמון 3 (רגילים)'
           elder: 'משתמשים בדרגת אמון 4 (מובילים)'
+          staff: "צוות"
           admins: 'מנהלים ראשיים'
           moderators: 'מנהלים'
           blocked: 'משתמשים חסומים'
           suspended: 'משתמשים מושעים'
+          suspect: 'משתמשים חשודים'
         reject_successful:
           one: "משתמש אחד נדחה בהצלחה."
           other: "%{count} משתמשים נדחו בהצלחה."

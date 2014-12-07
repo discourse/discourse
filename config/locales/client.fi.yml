@@ -260,6 +260,7 @@ fi:
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive: "lataa arkisto viesteistäsi"
+      new_private_message: "Uusi yksityisviesti"
       private_message: "Yksityisviesti"
       private_messages: "Viestit"
       activity_stream: "Toiminta"
@@ -348,6 +349,10 @@ fi:
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
+        frequency:
+          zero: "Lähetämme sähköpostia heti, jos et ole lukenut sähköpostin aihetta."
+          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen minuutin aikana, etkä ole lukenut sähköpostin aihetta."
+          other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana, etkä ole lukenut sähköpostin aihetta."
       name:
         title: "Nimi"
         instructions: "Koko nimesi (valinnainen)"
@@ -684,6 +689,7 @@ fi:
         user: "Etsi @{{username}} viestejä"
         category: "Etsi alueelta \"{{category}}\""
         topic: "Etsi tästä ketjusta"
+        private_messages: "Etsi yksityisviesteistä"
     site_map: "siirry toiseen ketjuun tai alueelle"
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
@@ -1691,6 +1697,8 @@ fi:
           title: "Seulottavat IP:t"
           description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen ohitettavien listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön osoitteelle %{ip_address}?"
+          rolled_up_some_subnets: "Porttikieltojen IP osoitteet käärittiin onnistuneesti näiksi aliverkoiksi: %{subnets}."
+          rolled_up_no_subnet: "Mitään käärittävää ei ollut."
           actions:
             block: "Estä"
             do_nothing: "Salli"
@@ -1699,6 +1707,9 @@ fi:
             label: "Uusi:"
             ip_address: "IP-osoite"
             add: "Lisää"
+          roll_up:
+            text: "Kääri"
+            title: "Luo uusia aliverkkojen laajuisia porttikieltoja, jos kieltoja on asetettu vähintään 'min_ban_entries_for_roll_up' asetuksen määrä."
         logster:
           title: "Virhelokit"
       impersonate:
@@ -1709,6 +1720,7 @@ fi:
         create: 'Lisää ylläpitäjä'
         last_emailed: "Viimeksi lähetetty sähköpostia"
         not_found: "Pahoittelut, tuota käyttäjänimeä ei löydy järjestelmästä."
+        id_not_found: "Pahoittelut, tuota käyttäjätunnusta ei löydy järjestelmästä."
         active: "Aktiivinen"
         show_emails: "Näytä sähköpostit"
         nav:
@@ -1718,6 +1730,7 @@ fi:
           staff: 'Henkilökunta'
           suspended: 'Hyllytetyt'
           blocked: 'Estetyt'
+          suspect: 'Epäilty'
         approved: "Hyväksytty?"
         approved_selected:
           one: "hyväksy käyttäjä"
@@ -1739,6 +1752,7 @@ fi:
           moderators: 'Valvojat'
           blocked: 'Estetyt käyttäjät'
           suspended: 'Hyllytetyt käyttäjät'
+          suspect: 'Epäillyt käyttäjät'
         reject_successful:
           one: "Yksi käyttäjä torjuttiin."
           other: "({{count}}) käyttäjää torjuttiin."
