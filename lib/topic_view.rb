@@ -114,7 +114,8 @@ class TopicView
   def summary
     return nil if desired_post.blank?
     # TODO, this is actually quite slow, should be cached in the post table
-    desired_post.excerpt(500)
+    excerpt = desired_post.excerpt(500, strip_links: true, text_entities: true)
+    (excerpt || "").gsub(/\n/, ' ').strip
   end
 
   def image_url
