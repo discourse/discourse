@@ -6,6 +6,8 @@
   @namespace Discourse
   @module Discourse
 **/
+import { outputExportResult } from 'admin/lib/export-result';
+
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
   filters: {},
@@ -60,6 +62,10 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
 
     filterBySubject: function(subject) {
       this.set('filters.subject', subject);
+    },
+
+    exportStaffActionLogs: function(subject) {
+      Discourse.ExportCsv.exportStaffActionLogs().then(outputExportResult);
     }
   }
 });

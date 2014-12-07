@@ -1,4 +1,8 @@
-<p>{{i18n 'admin.logs.screened_urls.description'}}</p>
+<p>
+  {{i18n 'admin.logs.screened_urls.description'}}
+  <button class="btn pull-right" {{action "exportScreenedUrlList"}} title="{{i18n 'admin.export_csv.button_title.screened_url'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+</p>
+</br>
 
 {{#loading-spinner condition=loading}}
   {{#if model.length}}

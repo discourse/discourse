@@ -1,5 +1,8 @@
 <p>{{i18n 'admin.logs.screened_ips.description'}}</p>
-<button class="btn pull-right" {{action "rollUp"}} title="{{i18n 'admin.logs.screened_ips.roll_up.title'}}">{{i18n 'admin.logs.screened_ips.roll_up.text'}}</button>
+<div class="pull-right">
+  <button class="btn" {{action "rollUp"}} title="{{i18n 'admin.logs.screened_ips.roll_up.title'}}">{{i18n 'admin.logs.screened_ips.roll_up.text'}}</button>
+  <button class="btn" {{action "exportScreenedIpList"}} title="{{i18n 'admin.export_csv.button_title.screened_ip'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+</div>
 {{screened-ip-address-form action="recordAdded"}}
 <br/>
 
