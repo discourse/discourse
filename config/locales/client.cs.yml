@@ -1701,6 +1701,8 @@ cs:
             label: "Nové:"
             ip_address: "IP adresa"
             add: "Přidat"
+        logster:
+          title: "Chybové záznamy"
       users:
         title: 'Uživatelé'
         create: 'Přidat administrátora'
@@ -1712,6 +1714,7 @@ cs:
           new: "Noví"
           active: "Aktivní"
           pending: "Čeká na schválení"
+          staff: 'Štáb'
           suspended: 'Zakázaní'
           blocked: 'Blokovaní'
         approved: "Schválen?"
@@ -1732,6 +1735,7 @@ cs:
           regular: 'Uživatelé s věrohodností 2 (Člen)'
           leader: 'Uživatelé s věrohodností 3 (Pravidelný uživatel)'
           elder: 'Uživatelé s věrohodností 4 (Vedoucí)'
+          staff: "Štáb"
           admins: 'Admininstrátoři'
           moderators: 'Moderátoři'
           blocked: 'Blokovaní uživatelé'
@@ -1906,13 +1910,18 @@ cs:
         grant: Udělit
         no_user_badges: "%{name} nezískal žádné oznaky."
         no_badges: Nejsou tu žádné odznaky, které by se dali rozdat.
+        allow_title: Povolit užití odzanku jako titul
         multiple_grant: Může být přiděleno několikrát
+        listable: Zobrazit odznak na veřejné stránce s odzanky
         enabled: Povolit odznaky
         icon: Ikona
         image: Obrázek
+        icon_help: "Použijte buď Font Awesome nebo URL k obrázku."
+        trigger: Spouštěč
         preview:
           bad_count_warning:
             header: "VAROVÁNÍ!"
+          sample: "Příklad:"
     lightbox:
       download: "download"
     search_help:
@@ -1967,6 +1976,8 @@ cs:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Odznaky
+      allow_title: "Povolit užití odzanku jako titulu?"
+      multiple_grant: "Může být přiděleno několikrát"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"
@@ -1982,6 +1993,8 @@ cs:
       select_badge_for_title: Vyberte odznak, který chcete použít jako svůj titul
       none: "<none>"
       badge_grouping:
+        getting_started:
+          name: Jak začít?
         community:
           name: Komunita
         trust_level:
@@ -1993,6 +2006,7 @@ cs:
       badge:
         editor:
           name: Editor
+          description: První úprava příspěvku.
         basic_user:
           name: Základní
         member:
@@ -2006,6 +2020,7 @@ cs:
           description: Obdrženo líbí se mi
         autobiographer:
           name: Autor vlastního životopisu
+          description: Vypněné informace v <a href="/my/preferences">profilu</a>.
         nice_post:
           name: Zdařilý příspěvek
           description: Obdrženo 10 líbí se na příspěvku. Tento odznak můžete získat opakovaně

@@ -550,6 +550,8 @@ cs:
     education_new_topic:
       title: "Školení nového uživatele: První témata"
       description: "Návod, který se automaticky zobrazí ve vyskakovacím okně nad editorem zpráv, když uživatelé zakládají první dvě nová témata."
+    usage_tips:
+      title: "Příručka pro nové uživatele"
     welcome_user:
       title: "Uvítání: Nový uživatel"
       description: "Soukromá zpráva, která je automaticky zaslaná novým uživatelům, když se zaregistrují."
@@ -785,6 +787,14 @@ cs:
         Noví uživatelé mají z bezpečnostních důvodů trochu omezená práva. Čím víc se do komunity zapojíte, tím větší důvěryhodnost získáte a všechny omezení se automaticky odstraní. Na dostatečně vysoké [důvěryhodnosti](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) můžete získat i moderátorská oprávnění.
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
+      text_body_template: |
+        Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
+
+        %{new_user_tips}
+
+        Věříme v [civilizované komunitní chování](%{base_url}/guidelines) za všech okolností.
+
+        Užijte si naše fórum!
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
       text_body_template: |

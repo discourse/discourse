@@ -33,7 +33,6 @@ ko:
   log_in: "로그인"
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
-  purge_reason: "오래되고 검수되지 않은 글은 자동 삭제"
   disable_remote_images_download_reason: "서버에 저장공간이 부족해서  원격 이미지 저장이 비활성화됨. "
   errors:
     messages:
@@ -557,9 +556,6 @@ ko:
     title: "title 태그에 쓰일, 이 싸이트의 짧은 제목"
     site_description: "이 사이트를 한 문장으로 설명해 주세요. meta description 태그에 사용됩니다."
     contact_email: "이 사이트에 대한 주 이메일 주소. discourse.org로부터 중요한 업데이트에 대한 정보가 이 메일 주소로 보내질 것입니다."
-    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_short_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_domain: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "오직 개발자만!! 주의!! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경한다. 이미지가 깨지는 것을 막을 수 있다."
@@ -691,7 +687,6 @@ ko:
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
-    purge_unactivated_users_grace_period_days: "활성화 되지 않은 사용자를 삭제하기 까지의 기간(일)"
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
     s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"
