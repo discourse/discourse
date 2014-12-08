@@ -360,14 +360,22 @@ describe Admin::UsersController do
       end
     end
 
+    context 'activate' do
+      before do
+        @reg_user = Fabricate(:inactive_user)
+      end
+
+      it "returns success" do
+        xhr :put, :activate, user_id: @reg_user.id
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json['success'].should == "OK"
+      end
+    end
+
     context 'log_out' do
       before do
         @reg_user = Fabricate(:user)
-      end
-
-      it 'returns JSON' do
-        xhr :put, :log_out, user_id: @reg_user.id
-        ::JSON.parse(response.body).should be_present
       end
 
       it "returns success" do

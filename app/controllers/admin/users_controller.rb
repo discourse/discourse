@@ -198,7 +198,7 @@ class Admin::UsersController < Admin::AdminController
   def activate
     guardian.ensure_can_activate!(@user)
     @user.activate
-    render nothing: true
+    render json: success_json
   end
 
   def deactivate
