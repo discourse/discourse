@@ -76,13 +76,17 @@ export default DiscourseController.extend({
   appendText: function(text, opts) {
     var c = this.get('model');
     if (c) {
+      opts = opts || {};
       var wmd = $('#wmd-input');
-      var position = opts.position === "cursor" ? wmd.caret() : wmd.val().length;
+      var val = wmd.val() || '';
+      var position = opts.position === "cursor" ? wmd.caret() : val.length;
 
       var caret = c.appendText(text, position, opts);
-      Em.run.next(function(){
-        Discourse.Utilities.setCaretPosition(wmd[0], caret);
-      });
+      if(wmd[0]){
+        Em.run.next(function(){
+          Discourse.Utilities.setCaretPosition(wmd[0], caret);
+        });
+      }
     }
   },
 

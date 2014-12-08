@@ -10,7 +10,7 @@ var groups = [
 },
 {
   name: "objects",
-  icons: ["dog","wolf","cat","mouse","hamster","rabbit","frog","tiger","koala","bear","pig","pig_nose","cow","boar","monkey_face","monkey","horse","sheep","elephant","panda_face","penguin","bird","baby_chick","hatched_chick","hatching_chick","chicken","snake","turtle","bug","bee","ant","beetle","snail","octopus","shell","tropical_fish","fish","dolphin","whale","whale2","cow2","ram","rat","water_buffalo","tiger2","rabbit2","dragon","racehorse","goat","rooster","dog2","pig2","mouse2","ox","dragon_face","blowfish","crocodile","camel","dromedary_camel","leopard","cat2","poodle","feet","bouquet","cherry_blossom","tulip","four_leaf_clover","rose","sunflower","hibiscus","maple_leaf","leaves","fallen_leaf","herb","ear_of_rice","mushroom","cactus","palm_tree","evergreen_tree","deciduous_tree","chestnut","seedling","blossom","globe_with_meridians","sun_with_face","full_moon_with_face","new_moon_with_face","new_moon","waxing_crescent_moon","first_quarter_moon","waxing_gibbous_moon","full_moon","waning_gibbous_moon","last_quarter_moon","waning_crescent_moon","last_quarter_moon_with_face","first_quarter_moon_with_face","crescent_moon","earth_africa","earth_americas","earth_asia","volcano","milky_way","stars","star","sunny","partly_sunny","cloud","zap","umbrella","snowflake","snowman","cyclone","foggy","rainbow","ocean"]
+  icons: ["bamboo","gift_heart","dolls","school_satchel","mortar_board","flags","fireworks","sparkler","wind_chime","rice_scene","jack_o_lantern","ghost","santa","christmas_tree","gift","tanabata_tree","tada","confetti_ball","balloon","crossed_flags","crystal_ball","movie_camera","camera","video_camera","vhs","cd","dvd","minidisc","floppy_disk","computer","iphone","telephone","telephone_receiver","pager","fax","satellite","tv","radio","loud_sound","sound","speaker","mute","bell","no_bell","loudspeaker","mega","hourglass_flowing_sand","hourglass","alarm_clock","watch","unlock","lock","lock_with_ink_pen","closed_lock_with_key","key","mag_right","bulb","flashlight","high_brightness","low_brightness","electric_plug","battery","mag","bathtub","bath","shower","toilet","wrench","nut_and_bolt","hammer","door","smoking","bomb","gun","knife","pill","syringe","moneybag","yen","dollar","pound","euro","credit_card","money_with_wings","calling","e-mail","inbox_tray","outbox_tray","envelope","envelope_with_arrow","incoming_envelope","postal_horn","mailbox","mailbox_closed","mailbox_with_mail","mailbox_with_no_mail","postbox","package","pencil","page_facing_up","page_with_curl","bookmark_tabs","bar_chart","chart_with_upwards_trend","chart_with_downwards_trend","scroll","clipboard","date","calendar","card_index","file_folder","open_file_folder","scissors","pushpin","paperclip","black_nib","pencil2","straight_ruler","triangular_ruler","closed_book","green_book","blue_book","orange_book","notebook","notebook_with_decorative_cover","ledger","books","book","bookmark","name_badge","microscope","telescope","newspaper","art","clapper","microphone","headphones","musical_score","musical_note","notes","musical_keyboard","violin","trumpet","saxophone","guitar","space_invader","video_game","black_joker","flower_playing_cards","mahjong","game_die","dart","football","basketball","soccer","baseball","tennis","8ball","rugby_football","bowling","golf","mountain_bicyclist","bicyclist","checkered_flag","horse_racing","trophy","ski","snowboarder","swimmer","surfer","fishing_pole_and_fish","coffee","tea","sake","baby_bottle","beer","beers","cocktail","tropical_drink","wine_glass","fork_and_knife","pizza","hamburger","fries","poultry_leg","meat_on_bone","spaghetti","curry","fried_shrimp","bento","sushi","fish_cake","rice_ball","rice_cracker","rice","ramen","stew","oden","dango","egg","bread","doughnut","custard","icecream","ice_cream","shaved_ice","birthday","cake","cookie","chocolate_bar","candy","lollipop","honey_pot","apple","green_apple","tangerine","lemon","cherries","grapes","watermelon","strawberry","peach","melon","banana","pear","pineapple","sweet_potato","eggplant","tomato","corn"]
 },
 {
   name: "places",
@@ -21,6 +21,13 @@ var groups = [
   icons: ["hash","one","two","three","four","five","six","seven","eight","nine","zero","keycap_ten","1234","symbols","arrow_up","arrow_down","arrow_left","arrow_right","capital_abcd","abcd","abc","arrow_upper_right","arrow_upper_left","arrow_lower_right","arrow_lower_left","left_right_arrow","arrow_up_down","arrows_counterclockwise","arrow_backward","arrow_forward","arrow_up_small","arrow_down_small","leftwards_arrow_with_hook","arrow_right_hook","information_source","rewind","fast_forward","arrow_double_up","arrow_double_down","arrow_heading_down","arrow_heading_up","ok","twisted_rightwards_arrows","repeat","repeat_one","new","up","cool","free","ng","signal_strength","cinema","koko","u6307","u7a7a","u6e80","u5408","u7981","ideograph_advantage","u5272","u55b6","u6709","u7121","restroom","mens","womens","baby_symbol","wc","potable_water","put_litter_in_its_place","parking","wheelchair","no_smoking","u6708","u7533","sa","m","passport_control","baggage_claim","left_luggage","customs","accept","secret","congratulations","cl","sos","id","no_entry_sign","underage","no_mobile_phones","do_not_litter","non-potable_water","no_bicycles","no_pedestrians","children_crossing","no_entry","eight_spoked_asterisk","sparkle","negative_squared_cross_mark","white_check_mark","eight_pointed_black_star","heart_decoration","vs","vibration_mode","mobile_phone_off","a","b","ab","o2","diamond_shape_with_a_dot_inside","loop","recycle","aries","taurus","gemini","cancer","leo","virgo","libra","scorpius","sagittarius","capricorn","aquarius","pisces","ophiuchus","six_pointed_star","atm","chart","heavy_dollar_sign","currency_exchange","copyright","registered","tm","part_alternation_mark","wavy_dash","top","end","back","on","soon","x","o","exclamation","question","grey_exclamation","grey_question","bangbang","interrobang","arrows_clockwise","clock12","clock1230","clock1","clock130","clock2","clock230","clock3","clock330","clock4","clock430","clock5","clock530","clock6","clock7","clock8","clock9","clock10","clock11","clock630","clock730","clock830","clock930","clock1030","clock1130","heavy_multiplication_x","heavy_plus_sign","heavy_minus_sign","heavy_division_sign","spades","hearts","clubs","diamonds","white_flower","100","heavy_check_mark","ballot_box_with_check","radio_button","link","curly_loop","trident","black_square_button","white_square_button","black_medium_square","white_medium_square","black_medium_small_square","white_medium_small_square","black_small_square","white_small_square","small_red_triangle","white_large_square","black_large_square","black_circle","white_circle","red_circle","large_blue_circle","small_red_triangle_down","large_orange_diamond","large_blue_diamond","small_orange_diamond","small_blue_diamond"]
 }];
 
+// scrub groups
+groups.forEach(function(group){
+  group.icons = _.reject(group.icons, function(obj){
+    return !Discourse.Emoji.exists(obj);
+  });
+});
+
 var renderPage = Handlebars.compile(
     "<table class='emoji-page'>" +
       "{{#each this}}"+
@@ -30,10 +37,77 @@ var renderPage = Handlebars.compile(
         "{{/each}}"+
     "</table>");
 
+var renderToolbar = Handlebars.compile(
+    "<ul class='toolbar'>" +
+      "{{#each this}}" +
+      "<li ><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>" +
+      "{{/each}}" +
+    "</ul>"
+    );
+
 var closeSelector = function(){
   $('.emoji-modal, .emoji-modal-wrapper').remove();
   $('body, textarea').off('keydown.emoji');
 };
+
+var toolbar = function(selected){
+  return _.map(groups, function(g, i){
+    var row = {src: Discourse.Emoji.urlFor(g.icons[0]), groupId: i};
+    if(i===selected){
+      row.selected = true;
+    }
+    return row;
+  });
+};
+
+var bindEvents = function(){
+
+  var composerController = Discourse.__container__.lookup('controller:composer');
+  $('.emoji-page a').click(function(){
+     composerController.appendTextAtCursor(":" + $(this).attr('title') + ":", {space: true});
+     closeSelector();
+     return false;
+  }).hover(function(){
+    var title = $(this).attr('title');
+    $('.emoji-modal .info').html("<img src='" + Discourse.Emoji.urlFor(title) +  "' class='emoji'> <span>:" + title + ":<span>");
+  },function(){
+    $('.emoji-modal .info').html("");
+  });
+
+  $('.emoji-modal .toolbar a').click(function(){
+    var page = parseInt($(this).data('group-id'));
+    render(page,0);
+  });
+
+
+};
+
+var perRow = 10, perPage=60;
+
+var render = function(page, offset){
+  var rows = [];
+  var row = [];
+  var icons = groups[page].icons;
+
+  for(var i=offset; i<(offset+perPage); i++){
+    if(!icons[i]){
+      break;
+    }
+    if(row.length === perRow){
+      rows.push(row);
+      row = [];
+    }
+    row.push({src: Discourse.Emoji.urlFor(icons[i]), title: icons[i]});
+  }
+  rows.push(row);
+
+  $('body .emoji-modal').remove();
+  $('body').append('<div class="emoji-modal">' + renderToolbar(toolbar(page)) + renderPage(rows) +
+      "<div class='info'></div></div>')");
+
+  bindEvents();
+};
+
 
 var showSelector = function(){
 
@@ -43,27 +117,8 @@ var showSelector = function(){
     closeSelector();
   });
 
-  var rows = [];
-  var row = [];
-  var icons = groups[0].icons;
+  render(0,0);
 
-  for(var i=0; i<50; i++){
-    if(row.length === 10){
-      rows.push(row);
-      row = [];
-    }
-    row.push({src: Discourse.Emoji.urlFor(icons[i]), title: icons[i]});
-  }
-  rows.push(row);
-
-  $('body').append('<div class="emoji-modal">' + renderPage(rows) + '</div>');
-
-  var composerController = Discourse.__container__.lookup('controller:composer');
-  $('.emoji-page a').click(function(){
-     composerController.appendTextAtCursor(":" + $(this).attr('title') + ":", {space: true});
-     closeSelector();
-     return false;
-  });
 
   $('body, textarea').on('keydown.emoji', function(e){
     if(e.which === 27){
