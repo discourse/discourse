@@ -1,16 +1,16 @@
 <table class='table'>
   <thead>
     <tr>
-      <th>{{i18n admin.email.sent_at}}</th>
-      <th>{{i18n admin.email.user}}</th>
-      <th>{{i18n admin.email.to_address}}</th>
-      <th>{{i18n admin.email.email_type}}</th>
-      <th>{{i18n admin.email.reply_key}}</th>
+      <th>{{i18n 'admin.email.sent_at'}}</th>
+      <th>{{i18n 'admin.email.user'}}</th>
+      <th>{{i18n 'admin.email.to_address'}}</th>
+      <th>{{i18n 'admin.email.email_type'}}</th>
+      <th>{{i18n 'admin.email.reply_key'}}</th>
     </tr>
   </thead>
 
   <tr class="filters">
-    <td>{{i18n admin.email.logs.filters.title}}</td>
+    <td>{{i18n 'admin.email.logs.filters.title'}}</td>
     <td>{{text-field value=filter.user placeholderKey="admin.email.logs.filters.user_placeholder"}}</td>
     <td>{{text-field value=filter.address placeholderKey="admin.email.logs.filters.address_placeholder"}}</td>
     <td>{{text-field value=filter.type placeholderKey="admin.email.logs.filters.type_placeholder"}}</td>
@@ -33,7 +33,7 @@
       <td>{{reply_key}}</td>
     </tr>
   {{else}}
-    <tr><td colspan="5">{{i18n admin.email.logs.none}}</td></tr>
+    <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>
   {{/each}}
 
 </table>

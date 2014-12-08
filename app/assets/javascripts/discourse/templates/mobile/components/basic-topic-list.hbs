@@ -17,10 +17,10 @@
                 <div class="topic-excerpt">
                   {{excerpt}}
                   {{#if excerptTruncated}}
-                    {{#unless canClearPin}}<a href="{{url}}">{{i18n read_more}}</a>{{/unless}}
+                    {{#unless canClearPin}}<a href="{{url}}">{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
                   {{#if canClearPin}}
-                    <a href="#" {{action "clearPin" this}} title="{{i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+                    <a href="#" {{action "clearPin" this}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
                   {{/if}}
                 </div>
             {{/if}}
@@ -51,7 +51,7 @@
       </table>
     {{else}}
       <div class='alert alert-info'>
-        {{i18n choose_topic.none_found}}
+        {{i18n 'choose_topic.none_found'}}
     </div>
   {{/if}}
 {{/loading-spinner}}

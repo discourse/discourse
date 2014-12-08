@@ -6,7 +6,7 @@
         <table>
           <tr>
             <td>
-              <label for='login-account-name'>{{i18n login.username}}&nbsp;</label>
+              <label for='login-account-name'>{{i18n 'login.username'}}&nbsp;</label>
             </td>
             <td>
               {{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
@@ -15,18 +15,18 @@
           </tr>
           <tr>
             <td>
-                <label for='login-account-password'>{{i18n login.password}}&nbsp;</label>
+                <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
             </td>
             <td>
                 {{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}} &nbsp;
             </td>
             <td>
-              <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n forgot_password.action}}</a>
+              <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
             </td>
           </tr>
           <tr>
             <td></td>
-            <td><div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n login.caps_lock_warning}}</div></td>
+            <td><div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
             <td></td>
           </tr>
         </table>
@@ -47,13 +47,13 @@
     {{#if showSignupLink}}
       &nbsp;
       <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
-        {{i18n create_account.title}}
+        {{i18n 'create_account.title'}}
       </button>
     {{/if}}
   {{/if}}
 
   {{#if authenticate}}
-    &nbsp; {{i18n login.authenticating}}
+    &nbsp; {{i18n 'login.authenticating'}}
   {{/if}}
 
   {{loading-spinner condition=showSpinner size="small"}}

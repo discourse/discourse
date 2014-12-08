@@ -1,19 +1,19 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#link-to 'adminUsersList.show' 'active'}}{{i18n admin.users.nav.active}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'new'}}{{i18n admin.users.nav.new}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'active'}}{{i18n 'admin.users.nav.active'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'new'}}{{i18n 'admin.users.nav.new'}}{{/link-to}}</li>
       {{#if siteSettings.must_approve_users}}
-        <li>{{#link-to 'adminUsersList.show' 'pending'}}{{i18n admin.users.nav.pending}}{{/link-to}}</li>
+        <li>{{#link-to 'adminUsersList.show' 'pending'}}{{i18n 'admin.users.nav.pending'}}{{/link-to}}</li>
       {{/if}}
-      <li>{{#link-to 'adminUsersList.show' 'staff'}}{{i18n admin.users.nav.staff}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'suspended'}}{{i18n admin.users.nav.suspended}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'blocked'}}{{i18n admin.users.nav.blocked}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'suspect'}}{{i18n admin.users.nav.suspect}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'staff'}}{{i18n 'admin.users.nav.staff'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'suspended'}}{{i18n 'admin.users.nav.suspended'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'blocked'}}{{i18n 'admin.users.nav.blocked'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminUsersList.show' 'suspect'}}{{i18n 'admin.users.nav.suspect'}}{{/link-to}}</li>
     </ul>
   </div>
   <div class="pull-right">
-    <button {{action "exportUsers"}} class="btn" title="{{i18n admin.export_csv.users.title}}"><i class="fa fa-download"></i>{{i18n admin.export_csv.button_text}}</button>
+    <button {{action "exportUsers"}} class="btn" title="{{i18n 'admin.export_csv.users.title'}}"><i class="fa fa-download"></i>{{i18n 'admin.export_csv.button_text'}}</button>
   </div>
 </div>
 

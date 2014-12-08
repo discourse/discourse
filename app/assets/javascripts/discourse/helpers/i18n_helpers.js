@@ -26,7 +26,11 @@ I18n.toHumanSize = function(number, options) {
 Handlebars.registerHelper('i18n', function(property, options) {
   // Resolve any properties
   var params = options.hash,
-    self = this;
+      self = this;
+
+  if (options.types[0] !== "STRING") {
+    Em.warn("Using the `{{i18n}}` helper without quotes is deprecated.");
+  }
 
   _.each(params, function(value, key) {
     params[key] = Em.Handlebars.get(self, value, options);

@@ -1,22 +1,22 @@
 <h3>{{title}}</h3>
 
 <div>
-  {{i18n admin.dashboard.reports.start_date}} {{input type="date" value=startDate}}
-  {{i18n admin.dashboard.reports.end_date}} {{input type="date" value=endDate}}
-  <button {{action "refreshReport"}} class='btn btn-primary'>{{i18n admin.dashboard.reports.refresh_report}}</button>
+  {{i18n 'admin.dashboard.reports.start_date'}} {{input type="date" value=startDate}}
+  {{i18n 'admin.dashboard.reports.end_date'}} {{input type="date" value=endDate}}
+  <button {{action "refreshReport"}} class='btn btn-primary'>{{i18n 'admin.dashboard.reports.refresh_report'}}</button>
 </div>
 
 <div class='view-options'>
   {{#if viewingTable}}
-    {{i18n admin.dashboard.reports.view_table}}
+    {{i18n 'admin.dashboard.reports.view_table'}}
   {{else}}
-    <a href {{action "viewAsTable"}}>{{i18n admin.dashboard.reports.view_table}}</a>
+    <a href {{action "viewAsTable"}}>{{i18n 'admin.dashboard.reports.view_table'}}</a>
   {{/if}}
   |
   {{#if viewingBarChart}}
-    {{i18n admin.dashboard.reports.view_chart}}
+    {{i18n 'admin.dashboard.reports.view_chart'}}
   {{else}}
-    <a href {{action "viewAsBarChart"}}>{{i18n admin.dashboard.reports.view_chart}}</a>
+    <a href {{action "viewAsBarChart"}}>{{i18n 'admin.dashboard.reports.view_chart'}}</a>
   {{/if}}
 </div>
 

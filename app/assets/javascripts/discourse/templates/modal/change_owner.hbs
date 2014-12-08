@@ -1,11 +1,11 @@
 <div class="modal-body">
-  {{{i18n topic.change_owner.instructions count="selectedPostsCount" old_user="selectedPostsUsername"}}}
+  {{{i18n 'topic.change_owner.instructions' count="selectedPostsCount" old_user="selectedPostsUsername"}}}
   <p>
-      {{{i18n topic.change_owner.instructions_warn}}}
+      {{{i18n 'topic.change_owner.instructions_warn'}}}
   </p>
 
   <form>
-      <label>{{i18n topic.change_owner.label}}</label>
+      <label>{{i18n 'topic.change_owner.label'}}</label>
     {{user-selector single=true usernames=new_user include_groups="false" placeholderKey="topic.change_owner.placeholder"}}
   </form>
 

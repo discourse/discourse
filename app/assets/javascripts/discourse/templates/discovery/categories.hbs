@@ -3,9 +3,9 @@
     <table class='topic-list categories'>
       <thead>
         <tr>
-          <th class='category'>{{i18n categories.category}}</th>
-          <th class='latest'>{{i18n categories.latest}}</th>
-          <th class='stats topics'>{{i18n categories.topics}}</th>
+          <th class='category'>{{i18n 'categories.category'}}</th>
+          <th class='latest'>{{i18n 'categories.latest'}}</th>
+          <th class='stats topics'>{{i18n 'categories.topics'}}</th>
         </tr>
       </thead>
       <tbody>
@@ -16,10 +16,10 @@
               <div class="pull-left">
                 {{category-title-link category=this}}
                 {{#if unreadTopics}}
-                  <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{i18n filters.unread.lower_title_with_count count="unreadTopics"}}</a>
+                  <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count="unreadTopics"}}'>{{i18n 'filters.unread.lower_title_with_count' count="unreadTopics"}}</a>
                 {{/if}}
                 {{#if newTopics}}
-                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{i18n filters.new.lower_title_with_count count="newTopics"}}</a>
+                  <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count="newTopics"}}'>{{i18n 'filters.new.lower_title_with_count' count="newTopics"}}</a>
                 {{/if}}
               </div>
               <div class="clearfix"></div>
@@ -34,10 +34,10 @@
                 {{#each subcategories}}
                   {{category-link this showParent=true onlyStripe=true}}
                   {{#if unreadTopics}}
-                    <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n topic.unread_topics count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
+                    <a href={{unbound unreadUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count="unreadTopics"}}'>{{unbound unreadTopics}}</a>
                   {{/if}}
                   {{#if newTopics}}
-                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n topic.new_topics count="newTopics"}}'>{{unbound newTopics}}</a>
+                    <a href={{unbound newUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count="newTopics"}}'>{{unbound newTopics}}</a>
                   {{/if}}
                 {{/each}}
               </div>
@@ -52,7 +52,7 @@
 
                 {{#if controller.latestTopicOnly}}
                   <div class='last-user-info'>
-                    {{i18n categories.latest_by}} <a href="{{{unbound lastPosterUrl}}}">{{unbound last_poster.username}}</a>
+                    {{i18n 'categories.latest_by'}} <a href="{{{unbound lastPosterUrl}}}">{{unbound last_poster.username}}</a>
                     <a href="{{unbound lastPostUrl}}">{{format-age last_posted_at}}</a>
                   </div>
                 {{else}}

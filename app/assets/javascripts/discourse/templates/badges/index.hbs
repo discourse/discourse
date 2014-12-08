@@ -1,5 +1,5 @@
 <div class='container badges'>
-  <h1>{{i18n badges.title}}</h1>
+  <h1>{{i18n 'badges.title'}}</h1>
 
   <table class='badges-listing'>
     <tbody>
@@ -12,7 +12,7 @@
             <td class='granted'>{{#if this.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
             <td class='badge'>{{user-badge badge=this}}</td>
             <td class='description'>{{{displayDescriptionHtml}}}</td>
-            <td class='grant-count'><span title="{{i18n badges.granted count=grant_count}}">{{grant_count}}</span></td>
+            <td class='grant-count'><span title="{{i18n 'badges.granted' count=grant_count}}">{{grant_count}}</span></td>
           </tr>
         {{/each}}
       {{/each}}

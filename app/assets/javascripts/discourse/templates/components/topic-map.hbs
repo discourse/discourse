@@ -1,5 +1,5 @@
 <nav class='buttons'>
-  <button class='btn' {{action "toggleMap"}} title="{{i18n topic.toggle_information}}">
+  <button class='btn' {{action "toggleMap"}} title="{{i18n 'topic.toggle_information'}}">
     <i {{bind-attr class=":fa toggleMapClass"}}></i>
   </button>
 </nav>
@@ -8,40 +8,40 @@
   <ul class="clearfix">
     <li>
       <a href='{{unbound topic.url}}'>
-      <h4>{{i18n created_lowercase}}</h4>
+      <h4>{{i18n 'created_lowercase'}}</h4>
       {{avatar details.created_by imageSize="tiny"}}
       {{format-date topic.created_at}}
       </a>
     </li>
     <li>
       <a {{bind-attr href="topic.lastPostUrl"}}>
-      <h4>{{i18n last_post_lowercase}}</h4>
+      <h4>{{i18n 'last_post_lowercase'}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
       {{format-date topic.last_posted_at}}
       </a>
     </li>
     <li>
       {{posts-count-column topic=topic tagName="span"}}
-      <h4>{{i18n posts_lowercase}}</h4>
+      <h4>{{i18n 'posts_lowercase'}}</h4>
     </li>
     <li class='secondary'>
       {{number topic.views class=topic.viewsHeat}}
-      <h4>{{i18n views_lowercase}}</h4>
+      <h4>{{i18n 'views_lowercase'}}</h4>
     </li>
     <li class='secondary'>
       {{number topic.participant_count}}
-      <h4>{{i18n users_lowercase}}</h4>
+      <h4>{{i18n 'users_lowercase'}}</h4>
     </li>
     {{#if topic.like_count}}
       <li class='secondary'>
         {{number topic.like_count}}
-        <h4>{{i18n likes_lowercase}}</h4>
+        <h4>{{i18n 'likes_lowercase'}}</h4>
       </li>
     {{/if}}
     {{#if details.links.length}}
       <li class='secondary'>
         {{number details.links.length}}
-        <h4>{{i18n links_lowercase}}</h4>
+        <h4>{{i18n 'links_lowercase'}}</h4>
       </li>
     {{/if}}
     {{#if showPosterAvatar}}
@@ -68,7 +68,7 @@
           {{#each infoLinks}}
             <tr>
             <td>
-              <span class='badge badge-notification clicks' title='{{i18n topic_map.clicks count=clicks}}'>{{clicks}}</span>
+              <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=clicks}}'>{{clicks}}</span>
             </td>
             <td>
               <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
@@ -82,7 +82,7 @@
 
         {{#if showAllLinksControls}}
           <div class='link-summary'>
-            <a href='#' {{action "showAllLinks"}}>{{i18n topic_map.links_shown totalLinks="details.links.length"}}</a>
+            <a href='#' {{action "showAllLinks"}}>{{i18n 'topic_map.links_shown' totalLinks="details.links.length"}}</a>
           </div>
         {{/if}}
 

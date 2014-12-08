@@ -43,7 +43,7 @@
               {{/if}}
 
               {{#if details.can_edit}}
-                <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n edit}}'>{{fa-icon pencil}}</a>
+                <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n 'edit'}}'>{{fa-icon pencil}}</a>
               {{/if}}
             </h1>
 
@@ -97,7 +97,7 @@
 
             {{#if details.suggested_topics.length}}
               <div id='suggested-topics'>
-                <h3>{{i18n suggested_topics.title}}</h3>
+                <h3>{{i18n 'suggested_topics.title'}}</h3>
                 <div class='topics'>
                   {{basic-topic-list topics=details.suggested_topics postsAction="showTopicEntrance"}}
                 </div>
@@ -122,10 +122,10 @@
           <div>{{message}}</div>
           {{#if noRetry}}
             {{#unless currentUser}}
-              <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n log_in}}</button>
+              <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon user}} {{i18n 'log_in'}}</button>
             {{/unless}}
           {{else}}
-            <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n errors.buttons.again}}</button>
+            <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n 'errors.buttons.again'}}</button>
           {{/if}}
         </div>
         {{loading-spinner condition=retrying}}
