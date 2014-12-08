@@ -312,6 +312,8 @@ Discourse.Composer = Discourse.Model.extend({
     }
 
     this.set('reply', before + text + after);
+
+    return before.length + text.length;
   },
 
   togglePreview: function() {
