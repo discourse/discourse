@@ -1,17 +1,11 @@
-/**
-  This view handles rendering of a navigation item
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  @class NavigationItemComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
-export default Ember.Component.extend({
+export default Ember.Component.extend(StringBuffer, {
   tagName: 'li',
   classNameBindings: ['active', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],
   hidden: Em.computed.not('content.visible'),
-  shouldRerender: Discourse.View.renderIfChanged('content.count'),
+  rerenderTriggers: ['content.count'],
 
   title: function() {
     var categoryName = this.get('content.categoryName'),
@@ -42,7 +36,7 @@ export default Ember.Component.extend({
     return I18n.t("filters." + name + ".title", extra);
   }.property('content.count'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var content = this.get('content');
     buffer.push("<a href='" + content.get('href') + "'>");
     if (content.get('hasIcon')) {

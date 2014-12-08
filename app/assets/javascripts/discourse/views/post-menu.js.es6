@@ -1,3 +1,5 @@
+import StringBuffer from 'discourse/mixins/string-buffer';
+
 // Helper class for rendering a button
 export var Button = function(action, label, icon, opts) {
   this.action = action;
@@ -28,11 +30,11 @@ Button.prototype.render = function(buffer) {
 
 var hiddenButtons;
 
-export default Discourse.View.extend({
+export default Discourse.View.extend(StringBuffer, {
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
-  shouldRerender: Discourse.View.renderIfChanged(
+  rerenderTriggers: [
     'post.deleted_at',
     'post.flagsAvailable.@each',
     'post.reply_count',
@@ -43,13 +45,13 @@ export default Discourse.View.extend({
     'post.topic.deleted_at',
     'post.replies.length',
     'post.wiki',
-    'collapsed'),
+    'collapsed'],
 
   _collapsedByDefault: function() {
     this.set('collapsed', true);
   }.on('init'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var post = this.get('post');
 
     buffer.push("<nav class='post-controls'>");

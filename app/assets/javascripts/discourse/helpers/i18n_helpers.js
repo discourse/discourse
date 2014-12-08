@@ -49,14 +49,13 @@ Ember.Handlebars.registerBoundHelper("boundI18n", function(property, options) {
   @for Handlebars
 **/
 Ember.Handlebars.registerHelper('countI18n', function(key, options) {
-  var view = Discourse.View.extend({
+  var view = Discourse.View.extend(Discourse.StringBuffer, {
     tagName: 'span',
-    shouldRerender: Discourse.View.renderIfChanged('count', 'suffix'),
+    rerenderTriggers: ['count', 'suffix'],
 
-    render: function(buffer) {
+    renderString: function(buffer) {
       buffer.push(I18n.t(key + (this.get('suffix') || ''), { count: this.get('count') }));
     }
-
   });
   return Ember.Handlebars.helpers.view.call(this, view, options);
 });

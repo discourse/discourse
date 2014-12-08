@@ -40,16 +40,8 @@ Discourse.View.reopenClass({
     });
   },
 
-  /**
-    Returns an observer that will re-render if properties change. This is useful for
-    views where rendering is done to a buffer manually and need to know when to trigger
-    a new render call.
-
-    @method renderIfChanged
-    @params {String} propertyNames*
-    @return {Function} observer
-  **/
   renderIfChanged: function() {
+    Em.warn("`rerenderIfChanged` is deprecated. Use the `StringBuffer` mixin with `rerenderTriggers` instead.");
     var args = Array.prototype.slice.call(arguments, 0);
     args.unshift(function () {
       Ember.run.once(this, 'rerender');
