@@ -1,7 +1,11 @@
 var MAX_SHOWN = 5;
 
-export default Em.Component.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
+
+export default Em.Component.extend(StringBuffer, {
   classNameBindings: [':gutter'],
+
+  rerenderTriggers: ['expanded'],
 
   // Roll up links to avoid duplicates
   collapsed: function() {
@@ -21,7 +25,7 @@ export default Em.Component.extend({
     return result;
   }.property('links'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var links = this.get('collapsed'),
         toRender = links,
         collapsed = !this.get('expanded');
@@ -61,10 +65,6 @@ export default Em.Component.extend({
       buffer.push("<a href='#' class='reply-new'><i class='fa fa-plus'></i>" + I18n.t('post.reply_as_new_topic') + "</a>");
     }
   },
-
-  _rerenderIfNeeded: function() {
-    this.rerender();
-  }.observes('expanded'),
 
   click: function(e) {
     var $target = $(e.target);

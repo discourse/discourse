@@ -1,8 +1,9 @@
-export default Ember.Component.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  shouldRerender: Discourse.View.renderIfChanged("site.isReadOnly"),
+export default Ember.Component.extend(StringBuffer, {
+  rerenderTriggers: ['site.isReadOnly'],
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var notices = [];
 
     if (this.site.get("isReadOnly")) {
