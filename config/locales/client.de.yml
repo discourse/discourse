@@ -349,6 +349,10 @@ de:
         ok: "Wir senden dir zur Bestätigung eine E-Mail"
         invalid: "Bitte gib eine gültige E-Mail-Adresse ein"
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt"
+        frequency:
+          zero: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
+          one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten Minute nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
+          other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten {{count}} Minuten nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
       name:
         title: "Name"
         instructions: "Dein vollständiger Name (optional)"
@@ -395,7 +399,7 @@ de:
       categories_settings: "Kategorien"
       new_topic_duration:
         label: "Themen als neu ansehen, wenn"
-        not_viewed: "ich sie noch nicht betrachtet habe"
+        not_viewed: "ich diese noch nicht betrachtet habe"
         last_here: "seit meinem letzten Besuch erstellt"
         after_n_days:
           one: "vor einem Tag erstellt"
@@ -639,7 +643,7 @@ de:
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
         label: "Thema automatisch schließen:"
-        error: "Bitte geben Sie einen gültigen Wert ein."
+        error: "Bitte gib einen gültigen Wert ein."
         based_on_last_post: "Das Thema nicht schließen, wenn der letzte Beitrag nicht mindestens so alt ist."
         all:
           examples: 'Gib die Anzahl von Stunden (24), eine absolute Uhrzeit (17:30) oder einen Zeitstempel (2013-11-22 14:00) ein.'
@@ -685,6 +689,7 @@ de:
         user: "Beiträge von @{{username}} durchsuchen"
         category: "Kategorie „{{category}}“ durchsuchen"
         topic: "Dieses Thema durchsuchen"
+        private_messages: "Private Nachrichten durchsuchen"
     site_map: "zu einer anderen Themenliste oder Kategorie wechseln"
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
@@ -1522,6 +1527,8 @@ de:
       export_csv:
         users:
           title: "Vollständige Benutzerliste im CSV-Format exportieren."
+        screened_ips:
+          title: "Vollständige Liste der überprüften IP-Adressen im CSV-Format exportieren."
         success: "Der Export wurde gestartet. Du wirst in Kürze über den Fortschritt benachrichtigt."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         button_text: "Exportieren"
@@ -1692,6 +1699,8 @@ de:
           title: "Überprüfte IPs"
           description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Whitelist zu setzen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
+          rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
+          rolled_up_no_subnet: "Es konnte nichts zusammengefasst werden."
           actions:
             block: "Blockieren"
             do_nothing: "Erlauben"
@@ -1700,6 +1709,9 @@ de:
             label: "Neu:"
             ip_address: "IP-Adresse"
             add: "Hinzufügen"
+          roll_up:
+            text: "Zusammenfassen"
+            title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
         logster:
           title: "Fehlerprotokolle"
       impersonate:
@@ -1710,6 +1722,7 @@ de:
         create: 'Administrator hinzufügen'
         last_emailed: "Letzte E-Mail"
         not_found: "Entschuldige, dieser Benutzername existiert im System nicht."
+        id_not_found: "Entschuldigung, diese Benutzerkennung ist in unserem System nicht vorhanden."
         active: "Aktiv"
         show_emails: "E-Mails anzeigen"
         nav:

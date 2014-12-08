@@ -1629,7 +1629,6 @@ zh_CN:
           title: "被屏蔽的 IP"
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
-          roll_up_confirm: "您确定您想要折叠封禁记录吗？"
           rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
           rolled_up_no_subnet: "无法折叠。"
           actions:

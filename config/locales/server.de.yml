@@ -612,7 +612,7 @@ de:
     num_users_to_block_new_user: "Verstecke alle Beiträge eines neuen Nutzers und erlaube keine neuen Beiträge mehr, wenn der neue Nutzer num_flags_to_block_new_user Meldungen bezüglich Werbung von der hier angegebenen Zahl verschiedener anderer Nutzer erhalten hat. 0 deaktiviert diese Funktion."
     notify_mods_when_user_blocked: "Wenn ein Benutzer automatisch gesperrt wird, sende eine Mail an alle Moderatoren."
     flag_sockpuppets: "Wenn ein neuer Nutzer auf ein Thema antwortet, das von einem anderen neuen Nutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als Werbung."
-    traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, anstatt zwei nachfolgende Leerzeichen als Zeilenumbruch zu verwenden."
+    traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, welche zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, etc.)."
     must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
@@ -934,6 +934,11 @@ de:
       Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
   invite_password_instructions:
     subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
+    text_body_template: |
+      Danke, dass du der Einladung zu %{site_name} gefolgt bist - herzlich willkommen!
+
+      Klicke auf den folgenden Link und wähle ein passwort um dich wieder anzumelden:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:
@@ -999,6 +1004,24 @@ de:
         Viel Vergnügen!
     welcome_invite:
       subject_template: "Willkommen bei %{site_name}!"
+      text_body_template: |
+        Danke, dass du der Einladung zu %{site_name} gefolgt bist - herzlich willkommen!
+
+        Wir haben automatisch einen Benutzernamen generiert: **%{username}**, aber du kannst diesen in [deinem Profil][prefs] ändern.
+
+        Um dich wieder anzumelden:
+
+        1. Melde dich entweder mit eine beliebigen Methode an, die der **gleichen E-Mail-Addresse** mit welcher du die Einladung erhalten hast zugeordnet ist. Ansonsten wissen wir nicht dass du es bist!
+
+        2. Oder wähle ein Passwort für [dein Benutzerkonto][prefs] und benutze dieses zum Anmelden.
+
+        %{new_user_tips}
+
+        Wir glauben an [zivilisiertes Verhalten in Online-Communities](%{base_url}/guidelines).
+
+        Viel Spaß!
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sicherung erfolgreich abgeschlossen"
     backup_failed:

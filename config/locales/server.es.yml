@@ -33,7 +33,7 @@ es:
   log_in: "Iniciar sesión"
   via: "%{username} vía %{site_name}"
   is_reserved: "está reservado"
-  purge_reason: "Borrado automáticamente dado que es antiguo y no está verificado"
+  purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   errors:
     messages:
@@ -600,9 +600,6 @@ es:
     title: "Título breve de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, se utiliza en la etiqueta meta description."
     contact_email: "Dirección de correo electrónico del contacto principal para el sitio. Las noticias de importancia desde discourse.org con actualizaciones críticas se enviarán a esta dirección."
-    company_full_name: "OBSOLETO PRÓXIMAMENTE. No se usará más, será eliminado. El nombre completo de la compañía que administra el sitio, usado en documentos legales como las Condiciones de Servicio y la Privacidad"
-    company_short_name: "OBSOLETO PRÓXIMAMENTE. No se usará más, será eliminado. El nombre en versión reducida de la compañía que administra el sitio, usado en documentos legales como las Condiciones de Servicio y la Privacidad"
-    company_domain: "OBSOLETO PRÓXIMAMENTE. No se usará más, será eliminado. El nombre de dominio propiedad de la compañía que administra el sitio, usado en documentos legales como las Condiciones de Servicio y la Privacidad"
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -703,6 +700,7 @@ es:
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
     enable_sso: "Habilitar el single sign on a través de un sitio externo (Nota: deshabilita las invitaciones)"
+    enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
     sso_secret: "Cadena secreta utilizada para cifrar/descifrar la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_email: "Reemplaza el email local con el email del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los correos electrónicos locales)"
@@ -749,7 +747,7 @@ es:
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
-    purge_unactivated_users_grace_period_days: "Periodo de gracia (en días) durante los cuales un usuario que no haya activado su cuenta no será aún eliminado."
+    purge_unactivated_users_grace_period_days: "Período de gracia (en días) que se concede a un usuario que no haya activado su cuenta antes de eliminarla."
     enable_s3_uploads: "Coloca los archivos subidos en el almacén Amazon S3. IMPORTANTE: requiere de credenciales de S3 validas. (ambas clave de acceso y clave de acceso secreta)."
     s3_use_iam_profile: 'Usar el rol de AWS EC2 IAM para descargar las llaves. NOTA: habilitando esta opción ignorará la "llave de acceso s3" y "la llave de acceso secreta s3".'
     s3_upload_bucket: "El nombre del bucket Amazon S3 donde se subirán los archivos. AVISO: debe ser en minúsculas, sin puntos ni guiones bajos."
@@ -824,6 +822,9 @@ es:
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, qué número de caracteres permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas con nivel de confianza 0 desde esta IP (y ninguna es de un miembro del staff o de nivel de confianza 2 o más), prohibir nuevos registros desde esa IP."
+    min_ban_entries_for_roll_up: "Al hacer clic en el botón Agrupar, se crea un nuevo rango de entradas para banear si hay al menos (N) entradas."
+    max_age_unmatched_emails: "Eliminar entradas de email que no coincidan después de (N) días."
+    max_age_unmatched_ips: "Eliminar entradas de IP que no coincidan después de (N) días."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
@@ -919,6 +920,11 @@ es:
       category: 'Categorías'
       topic: 'Resultados'
       user: 'Usuarios'
+  sso:
+    not_found: "No se puede buscar o crear cuenta, contacta al administrador del sitio"
+    account_not_approved: "La cuenta está pendiente de aprobación, recibirás una notificación por email cuando se apruebe"
+    unknown_error: "Error al actualizar la información, contacta al administrador del sitio"
+    timeout_expired: "Se agotó el tiempo de espera para el inicio de sesión, por favor, intenta iniciar sesión de nuevo"
   original_poster: "Autor original"
   most_posts: "Con más posts"
   most_recent_poster: "Autor más reciente"
@@ -1630,25 +1636,3 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
-  static:
-    search_help: |
-      <h2>Consejos</h2>
-      <p>
-      <ul>
-        <li>Se priorizan las coincidencias con el título, por lo que si tienes dudas, busca por títulos</li>
-        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
-        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
-      </ul>
-      </p>
-      <h2>Opciones</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
-      </p>
