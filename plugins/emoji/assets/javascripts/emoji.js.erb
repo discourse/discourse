@@ -56,6 +56,15 @@ var urlFor = function(code) {
 
 Discourse.Emoji.urlFor = urlFor;
 
+var emojiHash = {};
+emoji.forEach(function(code){
+  emojiHash[code] = true;
+});
+
+Discourse.Emoji.exists = function(code){
+ return !!(_extendedEmoji[code] || emojiHash[code]);
+}
+
 function imageFor(code) {
   var url = urlFor(code);
   if (url) {

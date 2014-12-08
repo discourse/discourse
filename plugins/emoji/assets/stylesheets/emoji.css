@@ -46,3 +46,39 @@ body img.emoji {
   opacity: 0.8;
   background-color: black;
 }
+
+
+.emoji-modal .toolbar {
+  margin: 0;
+  padding: 0;
+  margin-top: 10px;
+  margin-left: 5px;
+  margin-bottom: 5px
+}
+
+.emoji-modal .toolbar li {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+.emoji-modal .toolbar li a {
+  padding: 8px;
+  background-color: #dadada;
+}
+
+.emoji-modal .toolbar li a.selected {
+  background-color: #fff;
+}
+
+.emoji-modal .info {
+  height: 30px;
+  margin-left: 8px;
+  margin-top: 15px;
+  margin-bottom: 0px;
+}
+
+.emoji-modal .info span {
+  margin-left: 5px;
+  font-weight: bold;
+}
