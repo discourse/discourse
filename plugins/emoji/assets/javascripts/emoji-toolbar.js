@@ -32,6 +32,8 @@ var renderPage = Handlebars.compile(
 
 var closeSelector = function(){
   $('.emoji-modal, .emoji-modal-wrapper').remove();
+  $('body, textarea').off('keydown.emoji');
+  $('#wmd-input').focus();
 };
 
 var showSelector = function(){
@@ -62,10 +64,18 @@ var showSelector = function(){
      composerController.appendText(":" + $(this).attr('title') + ":", {space: true});
      closeSelector();
   });
+
+  $('body, textarea').on('keydown.emoji', function(e){
+    if(e.which === 27){
+      closeSelector();
+      return false;
+    }
+  });
 };
 
 window.PagedownCustom.appendButtons.push({
   id: 'wmd-emoji-button',
   description: I18n.t("composer.emoji"),
-  execute: showSelector
+  execute: showSelector,
+  shortcut: 'e'
 });

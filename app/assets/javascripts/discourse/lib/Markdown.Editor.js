@@ -1214,6 +1214,17 @@
         makeSpritedButtonRow();
 
         var keyEvent = "keydown";
+
+        var extendedEvents = [];
+
+        if(window.PagedownCustom){
+          window.PagedownCustom.appendButtons.concat(window.PagedownCustom.insertButtons).forEach(function(button){
+            if(button.shortcut){
+              extendedEvents.push([button.shortcut, button.execute]);
+            }
+          });
+        }
+
         util.addEvent(inputBox, keyEvent, function (key) {
 
             // Check to see if we have a button key and, if so execute the callback.
@@ -1221,6 +1232,12 @@
 
                 var keyCode = key.charCode || key.keyCode;
                 var keyCodeStr = String.fromCharCode(keyCode).toLowerCase();
+
+                for(var i=0; i<extendedEvents.length; i++){
+                  if(keyCodeStr===extendedEvents[i][0]){
+                    extendedEvents[i][1]();
+                  }
+                }
 
                 switch (keyCodeStr) {
                     case "b":
