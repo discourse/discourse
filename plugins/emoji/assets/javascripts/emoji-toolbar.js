@@ -33,7 +33,6 @@ var renderPage = Handlebars.compile(
 var closeSelector = function(){
   $('.emoji-modal, .emoji-modal-wrapper').remove();
   $('body, textarea').off('keydown.emoji');
-  $('#wmd-input').focus();
 };
 
 var showSelector = function(){
@@ -61,8 +60,9 @@ var showSelector = function(){
 
   var composerController = Discourse.__container__.lookup('controller:composer');
   $('.emoji-page a').click(function(){
-     composerController.appendText(":" + $(this).attr('title') + ":", {space: true});
+     composerController.appendTextAtCursor(":" + $(this).attr('title') + ":", {space: true});
      closeSelector();
+     return false;
   });
 
   $('body, textarea').on('keydown.emoji', function(e){
