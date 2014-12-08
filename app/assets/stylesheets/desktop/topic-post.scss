@@ -510,6 +510,10 @@ iframe {
   max-width: 100%;
 }
 
+video {
+  max-height: 500px;
+}
+
 @keyframes fadein {
     from {opacity: 0;}
     to {opacity: 1;}
