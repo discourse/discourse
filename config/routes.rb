@@ -181,6 +181,7 @@ Discourse::Application.routes.draw do
     end
 
     get "memory_stats"=> "diagnostics#memory_stats", constraints: AdminConstraint.new
+    get "dump_heap"=> "diagnostics#dump_heap", constraints: AdminConstraint.new
 
   end # admin namespace
 

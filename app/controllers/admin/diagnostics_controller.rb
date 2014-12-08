@@ -18,4 +18,20 @@ class Admin::DiagnosticsController < Admin::AdminController
       content_type: Mime::TEXT
 
   end
+
+  def dump_heap
+    begin
+      # ruby 2.1
+      GC.start(full_mark: true)
+      require 'objspace'
+
+      io = File.open("discourse-heap-#{SecureRandom.hex(3)}.json",'w')
+      ObjectSpace.dump_all(:output => io)
+      io.close
+
+      render text: "HEAP DUMP:\n#{io.path}", content_type: Mime::TEXT
+    rescue
+      render text: "HEAP DUMP:\nnot supported", content_type: Mime::TEXT
+    end
+  end
 end
