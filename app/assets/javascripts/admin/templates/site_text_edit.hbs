@@ -17,10 +17,10 @@
 <div class='controls'>
   <button class='btn' {{action "saveChanges"}} {{bind-attr disabled="saveDisabled"}}>
     {{#if saving}}
-      {{i18n saving}}
+      {{i18n 'saving'}}
     {{else}}
-      {{i18n save}}
+      {{i18n 'save'}}
     {{/if}}
   </button>
-  {{#if saved}}{{i18n saved}}{{/if}}
+  {{#if saved}}{{i18n 'saved'}}{{/if}}
 </div>

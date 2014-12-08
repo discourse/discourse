@@ -10,7 +10,7 @@
         <table>
 
         <tr class="input">
-              <td class="label"><label for='new-account-email'>{{i18n user.email.title}}</label></td>
+              <td class="label"><label for='new-account-email'>{{i18n 'user.email.title'}}</label></td>
               <td>
               {{input type="email" value=accountEmail id="new-account-email" disabled=emailValidated name="email" autofocus="autofocus"}}
               &nbsp;{{input-tip validation=emailValidation}}
@@ -18,11 +18,11 @@
         </tr>
         <tr class="instructions">
           <td></td>
-          <td><label>{{i18n user.email.instructions}}</label></td>
+          <td><label>{{i18n 'user.email.instructions'}}</label></td>
         </tr>
 
         <tr class="input">
-              <td class="label"><label for='new-account-username'>{{i18n user.username.title}}</label></td>
+              <td class="label"><label for='new-account-username'>{{i18n 'user.username.title'}}</label></td>
               <td>
               {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength}}
               &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
@@ -30,11 +30,11 @@
         </tr>
         <tr class="instructions">
           <td></td>
-          <td><label>{{i18n user.username.instructions}}</label></td>
+          <td><label>{{i18n 'user.username.instructions'}}</label></td>
         </tr>
 
         <tr class="input">
-            <td style="width:80px" class="label"><label for='new-account-name'>{{i18n user.name.title}}</label></td>
+            <td style="width:80px" class="label"><label for='new-account-name'>{{i18n 'user.name.title'}}</label></td>
             <td style="width:496px">
                 {{text-field value=accountName id="new-account-name"}}
                 &nbsp;{{input-tip validation=nameValidation}}
@@ -42,12 +42,12 @@
         </tr>
         <tr class="instructions">
             <td></td>
-            <td><label>{{i18n user.name.instructions}}</label></td>
+            <td><label>{{i18n 'user.name.instructions'}}</label></td>
         </tr>
 
         {{#if passwordRequired}}
         <tr class="input">
-            <td class="label"><label for='new-account-password'>{{i18n user.password.title}}</label></td>
+            <td class="label"><label for='new-account-password'>{{i18n 'user.password.title'}}</label></td>
             <td>
             {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
             &nbsp;{{input-tip validation=passwordValidation}}
@@ -57,13 +57,13 @@
           <td></td>
           <td>
             <label>{{passwordInstructions}}</label>
-            <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n login.caps_lock_warning}}</div>
+            <div {{bind-attr class=":caps-lock-warning capsLockOn::invisible"}}><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
           </td>
         </tr>
         {{/if}}
 
         <tr class="password-confirmation">
-          <td><label for='new-account-password-confirmation'>{{i18n user.password_confirmation.title}}</label></td>
+          <td><label for='new-account-password-confirmation'>{{i18n 'user.password_confirmation.title'}}</label></td>
           <td>
             {{input type="password" value=accountPasswordConfirm id="new-account-confirmation"}}
             {{input value=accountChallenge id="new-account-challenge"}}
@@ -87,10 +87,10 @@
 
   {{#if showCreateForm}}
     <div class="modal-footer">
-      <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action "createAccount"}}>{{i18n create_account.title}}</button>
+      <button class='btn btn-large btn-primary' {{bind-attr disabled="submitDisabled"}} {{action "createAccount"}}>{{i18n 'create_account.title'}}</button>
       {{#loading-spinner condition=formSubmitted size="small"}}
         <button class="btn btn-large" id="login-link" {{action "showLogin"}}>
-          {{i18n log_in}}
+          {{i18n 'log_in'}}
         </button>
       {{/loading-spinner}}
     </div>

@@ -1,12 +1,12 @@
 <div class='content-list span6'>
-  <h3>{{i18n admin.customize.css_html.long_title}}</h3>
+  <h3>{{i18n 'admin.customize.css_html.long_title'}}</h3>
   <ul>
     {{#each model}}
       <li><a {{action "selectStyle" this}} {{bind-attr class="this.selected:active"}}>{{this.description}}</a></li>
     {{/each}}
   </ul>
   <button {{action "newCustomization"}} class='btn'>
-    {{fa-icon "plus"}}{{i18n admin.customize.new}}
+    {{fa-icon "plus"}}{{i18n 'admin.customize.new'}}
   </button>
 </div>
 
@@ -17,12 +17,12 @@
 
       <div class='admin-controls'>
         <ul class="nav nav-pills">
-          <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n admin.customize.css}}</a></li>
-          <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n admin.customize.header}}</a></li>
-          <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n admin.customize.footer}}</a></li>
-          <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n admin.customize.css}}</a></li>
-          <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n admin.customize.header}}</a></li>
-          <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n admin.customize.footer}}</a></li>
+          <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
+          <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
+          <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
+          <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
+          <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
+          <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
         </ul>
       </div>
 
@@ -37,23 +37,23 @@
     {{/with}}
     <br>
     <div class='status-actions'>
-      <span>{{i18n admin.customize.override_default}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
-      <span>{{i18n admin.customize.enabled}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
+      <span>{{i18n 'admin.customize.override_default'}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
+      <span>{{i18n 'admin.customize.enabled'}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
       {{#unless selectedItem.changed}}
-      <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n admin.customize.explain_preview}}">{{i18n admin.customize.preview}}</a>
+      <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
       |
-      <a href="/?preview-style=" target='_blank' title="{{i18n admin.customize.explain_undo_preview}}">{{i18n admin.customize.undo_preview}}</a>
+      <a href="/?preview-style=" target='_blank' title="{{i18n 'admin.customize.explain_undo_preview'}}">{{i18n 'admin.customize.undo_preview'}}</a>
       |
-      <a href="/?preview-style=default" target='_blank' title="{{i18n admin.customize.explain_rescue_preview}}">{{i18n admin.customize.rescue_preview}}</a><br>
+      <a href="/?preview-style=default" target='_blank' title="{{i18n 'admin.customize.explain_rescue_preview'}}">{{i18n 'admin.customize.rescue_preview'}}</a><br>
       {{/unless}}
     </div>
 
     <div class='buttons'>
-      <button {{action "save"}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n admin.customize.save}}</button>
+      <button {{action "save"}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n 'admin.customize.save'}}</button>
       <span class='saving'>{{selectedItem.savingStatus}}</span>
-      <a {{action "destroy"}} class='delete-link'>{{i18n admin.customize.delete}}</a>
+      <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.customize.delete'}}</a>
     </div>
   </div>
 {{else}}
-  <p class="about">{{i18n admin.customize.about}}</p>
+  <p class="about">{{i18n 'admin.customize.about'}}</p>
 {{/if}}

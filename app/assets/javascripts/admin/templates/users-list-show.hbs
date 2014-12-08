@@ -14,7 +14,7 @@
   {{text-field value=listFilter placeholder=searchHint}}
   {{#unless showEmails}}
     <div class="pull-right">
-      <button {{action "showEmails"}} class="btn">{{i18n admin.users.show_emails}}</button>
+      <button {{action "showEmails"}} class="btn">{{i18n 'admin.users.show_emails'}}</button>
     </div>
   {{/unless}}
 </div>
@@ -27,16 +27,16 @@
           <th>{{input type="checkbox" checked=selectAll}}</th>
         {{/if}}
         <th>&nbsp;</th>
-        <th>{{i18n username}}</th>
-        <th>{{i18n email}}</th>
-        <th>{{i18n admin.users.last_emailed}}</th>
-        <th>{{i18n last_seen}}</th>
-        <th>{{i18n admin.user.topics_entered}}</th>
-        <th>{{i18n admin.user.posts_read_count}}</th>
-        <th>{{i18n admin.user.time_read}}</th>
-        <th>{{i18n created}}</th>
+        <th>{{i18n 'username'}}</th>
+        <th>{{i18n 'email'}}</th>
+        <th>{{i18n 'admin.users.last_emailed'}}</th>
+        <th>{{i18n 'last_seen'}}</th>
+        <th>{{i18n 'admin.user.topics_entered'}}</th>
+        <th>{{i18n 'admin.user.posts_read_count'}}</th>
+        <th>{{i18n 'admin.user.time_read'}}</th>
+        <th>{{i18n 'created'}}</th>
         {{#if showApproval}}
-          <th>{{i18n admin.users.approved}}</th>
+          <th>{{i18n 'admin.users.approved'}}</th>
         {{/if}}
         <th>&nbsp;</th>
       </tr>
@@ -64,21 +64,21 @@
           {{#if showApproval}}
           <td>
             {{#if user.approved}}
-              {{i18n yes_value}}
+              {{i18n 'yes_value'}}
             {{else}}
-              {{i18n no_value}}
+              {{i18n 'no_value'}}
             {{/if}}
           </td>
           {{/if}}
           <td>
-            {{#if user.admin}}<i class="fa fa-shield" title="{{i18n admin.title}}"></i>{{/if}}
-            {{#if user.moderator}}<i class="fa fa-shield" title="{{i18n admin.moderator}}"></i>{{/if}}
+            {{#if user.admin}}<i class="fa fa-shield" title="{{i18n 'admin.title'}}"></i>{{/if}}
+            {{#if user.moderator}}<i class="fa fa-shield" title="{{i18n 'admin.moderator'}}"></i>{{/if}}
           </td>
         </tr>
       {{/each}}
 
     </table>
   {{else}}
-    <p>{{i18n search.no_results}}</p>
+    <p>{{i18n 'search.no_results'}}</p>
   {{/if}}
 {{/loading-spinner}}

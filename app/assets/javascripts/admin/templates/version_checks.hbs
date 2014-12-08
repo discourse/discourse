@@ -5,15 +5,15 @@
           {{custom-html 'upgrade-header'}}
           <tr>
             <th>&nbsp;</th>
-            <th>{{i18n admin.dashboard.installed_version}}</th>
-            <th>{{i18n admin.dashboard.latest_version}}</th>
+            <th>{{i18n 'admin.dashboard.installed_version'}}</th>
+            <th>{{i18n 'admin.dashboard.latest_version'}}</th>
             <th>&nbsp;</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
         {{#unless loading}}
           <tbody>
-            <td class="title">{{i18n admin.dashboard.version}}</td>
+            <td class="title">{{i18n 'admin.dashboard.version'}}</td>
             <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
 
             {{#if versionCheck.noCheckPerformed}}
@@ -22,7 +22,7 @@
                 <span class="icon critical-updates-available">☹</span>
               </td>
               <td class="version-notes">
-                <span class="normal-note">{{i18n admin.dashboard.no_check_performed}}</span>
+                <span class="normal-note">{{i18n 'admin.dashboard.no_check_performed'}}</span>
               </td>
             {{else}}
               {{#if versionCheck.staleData}}
@@ -37,9 +37,9 @@
                 <td class="version-notes">
                   <span class="normal-note">
                     {{#if versionCheck.version_check_pending}}
-                      {{i18n admin.dashboard.version_check_pending}}
+                      {{i18n 'admin.dashboard.version_check_pending'}}
                     {{else}}
-                      {{i18n admin.dashboard.stale_data}}
+                      {{i18n 'admin.dashboard.stale_data'}}
                     {{/if}}
                   </span>
                 </td>
@@ -60,11 +60,11 @@
                 </td>
                 <td class="version-notes">
                   {{#if versionCheck.upToDate }}
-                    {{i18n admin.dashboard.up_to_date}}
+                    {{i18n 'admin.dashboard.up_to_date'}}
                   {{else}}
-                    <span class="critical-note">{{i18n admin.dashboard.critical_available}}</span>
-                    <span class="normal-note">{{i18n admin.dashboard.updates_available}}</span>
-                    {{i18n admin.dashboard.please_upgrade}}
+                    <span class="critical-note">{{i18n 'admin.dashboard.critical_available'}}</span>
+                    <span class="normal-note">{{i18n 'admin.dashboard.updates_available'}}</span>
+                    {{i18n 'admin.dashboard.please_upgrade'}}
                   {{/if}}
                 </td>
               {{/if}}

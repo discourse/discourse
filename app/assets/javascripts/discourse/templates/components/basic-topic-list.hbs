@@ -3,16 +3,16 @@
     <table class="topic-list">
       <thead>
         <tr>
-          <th class="default">{{i18n topic.title}}</th>
+          <th class="default">{{i18n 'topic.title'}}</th>
           {{#unless controller.hideCategory}}
-            <th class="category">{{i18n category_title}}</th>
+            <th class="category">{{i18n 'category_title'}}</th>
           {{/unless}}
-          <th class="num posts">{{i18n posts}}</th>
+          <th class="num posts">{{i18n 'posts'}}</th>
           {{#if controller.showParticipants}}
-            <th class="posters">{{i18n users}}</th>
+            <th class="posters">{{i18n 'users'}}</th>
           {{/if}}
-          <th class="num views">{{i18n views}}</th>
-          <th class="num activity">{{i18n activity}}</th>
+          <th class="num views">{{i18n 'views'}}</th>
+          <th class="num activity">{{i18n 'activity'}}</th>
         </tr>
       </thead>
 
@@ -52,7 +52,7 @@
     </table>
   {{else}}
     <div class='alert alert-info'>
-      {{i18n choose_topic.none_found}}
+      {{i18n 'choose_topic.none_found'}}
     </div>
   {{/if}}
 {{/loading-spinner}}

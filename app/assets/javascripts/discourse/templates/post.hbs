@@ -27,12 +27,12 @@
         {{#if hasHistory}}
           <div class='post-info edits'>
             {{#if can_view_edit_history}}
-              <a href class="{{unbound view.historyHeat}}" {{action "showHistory" this}} title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
+              <a href class="{{unbound view.historyHeat}}" {{action "showHistory" this}} title="{{i18n 'post.last_edited_on'}} {{raw-date updated_at}}">
                 {{editCount}}
                 <i class='fa fa-pencil'></i>
               </a>
             {{else}}
-              <span class="{{unbound view.historyHeat}}" title="{{i18n post.last_edited_on}} {{raw-date updated_at}}">
+              <span class="{{unbound view.historyHeat}}" title="{{i18n 'post.last_edited_on'}} {{raw-date updated_at}}">
                 {{editCount}}
                 <i class='fa fa-pencil'></i>
               </span>
@@ -40,19 +40,19 @@
           </div>
         {{/if}}
         {{#if wiki}}
-          <div class="post-info wiki" title="{{i18n post.wiki.about}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
+          <div class="post-info wiki" title="{{i18n 'post.wiki.about'}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
         {{/if}}
         {{#if via_email}}
           {{#if canViewRawEmail}}
-            <div class="post-info via-email raw-email" title="{{i18n post.via_email}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
+            <div class="post-info via-email raw-email" title="{{i18n 'post.via_email'}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
           {{else}}
-            <div class="post-info via-email" title="{{i18n post.via_email}}">{{fa-icon "envelope-o"}}</div>
+            <div class="post-info via-email" title="{{i18n 'post.via_email'}}">{{fa-icon "envelope-o"}}</div>
           {{/if}}
         {{/if}}
         {{#if showUserReplyTab}}
         <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
           {{#if loadingReplyHistory}}
-          {{i18n loading}}
+          {{i18n 'loading'}}
           {{else}}
           <i class="fa fa-mail-forward"></i>
           {{avatar reply_to_user imageSize="tiny"}}
@@ -60,11 +60,11 @@
           {{/if}}
         </a>
         {{/if}}
-        <div {{bind-attr class=":read-state read"}} title="{{i18n post.unread}}">{{fa-icon "circle"}}</div>
+        <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>
 
       <div {{bind-attr class=":select-posts controller.multiSelect::hidden"}}>
-        <button {{action "toggledSelectedPostReplies" this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n topic.multi_select.select_replies}}</button>
+        <button {{action "toggledSelectedPostReplies" this}} {{bind-attr class="view.canSelectReplies::hidden"}}>{{i18n 'topic.multi_select.select_replies'}}</button>
         <button {{action "toggledSelectedPost" this}} class="select-post">{{view.selectPostText}}</button>
       </div>
 
@@ -74,13 +74,13 @@
           {{{cooked}}}
         </div>
         {{#if cooked_hidden}}
-          <a href {{action "expandHidden" this}}>{{i18n post.show_hidden}}</a>
+          <a href {{action "expandHidden" this}}>{{i18n 'post.show_hidden'}}</a>
         {{/if}}
         {{#if view.showExpandButton}}
           {{#if controller.loadingExpanded}}
-            <button class="btn expand-post" disabled>{{i18n loading}}</button>
+            <button class="btn expand-post" disabled>{{i18n 'loading'}}</button>
           {{else}}
-            <button {{action "expandFirstPost" this}} class='btn expand-post'>{{i18n post.show_full}}&hellip;</button>
+            <button {{action "expandFirstPost" this}} class='btn expand-post'>{{i18n 'post.show_full'}}&hellip;</button>
           {{/if}}
         {{/if}}
         {{view 'post-menu' post=this adminMenu=view.adminMenu}}

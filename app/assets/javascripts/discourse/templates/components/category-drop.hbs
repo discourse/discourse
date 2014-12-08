@@ -7,7 +7,7 @@
   </a>
 {{else}}
   {{#if noSubcategories}}
-    <a href='#' {{action "expand"}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{i18n categories.no_subcategory}}</a>
+    <a href='#' {{action "expand"}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{i18n 'categories.no_subcategory'}}</a>
   {{else}}
     <a href='#' {{action "expand"}} class='badge-category home' {{bind-attr style="badgeStyle"}}>{{allCategoriesLabel}}</a>
   {{/if}}
@@ -18,7 +18,7 @@
   <section {{bind-attr class="expanded::hidden :category-dropdown-menu"}} class='chooser'>
     <div class='cat'><a {{bind-attr href=allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}
-    <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n categories.no_subcategory}}</a></div>
+    <div class='cat'><a {{bind-attr href=noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>
     {{/if}}
     {{#if renderCategories}}
     {{#each categories}}<div class='cat'>{{category-link this allowUncategorized=true}}</div>{{/each}}

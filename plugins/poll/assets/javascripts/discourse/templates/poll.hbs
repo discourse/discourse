@@ -7,7 +7,7 @@
       <td class="option">
         <div class="option">{{{option}}}</div>
         {{#if controller.showResults}}
-          <div class="result">{{i18n poll.voteCount count=votes}}</div>
+          <div class="result">{{i18n 'poll.voteCount' count=votes}}</div>
         {{/if}}
       </td>
     </tr>
@@ -18,10 +18,10 @@
 <button {{action "toggleShowResults"}} class="btn btn-small show-results">
   {{#if showResults}}
     <i class="fa fa-eye-slash"></i>
-    {{i18n poll.results.hide}}
+    {{i18n 'poll.results.hide'}}
   {{else}}
     <i class="fa fa-eye"></i>
-    {{i18n poll.results.show}}
+    {{i18n 'poll.results.show'}}
   {{/if}}
 </button>
 
@@ -29,10 +29,10 @@
   <button {{action "toggleClosePoll"}} class="btn btn-small toggle-poll">
     {{#if poll.closed}}
       <i class="fa fa-unlock-alt"></i>
-      {{i18n poll.open_poll}}
+      {{i18n 'poll.open_poll'}}
     {{else}}
       <i class="fa fa-lock"></i>
-      {{i18n poll.close_poll}}
+      {{i18n 'poll.close_poll'}}
     {{/if}}
   </button>
 {{/if}}

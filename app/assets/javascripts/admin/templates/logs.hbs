@@ -1,15 +1,15 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#link-to 'adminLogs.staffActionLogs'}}{{i18n admin.logs.staff_actions.title}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedEmails'}}{{i18n admin.logs.screened_emails.title}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedIpAddresses'}}{{i18n admin.logs.screened_ips.title}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedUrls'}}{{i18n admin.logs.screened_urls.title}}{{/link-to}}</li>
-      <li><a href="/logs" data-auto-route="true">{{i18n admin.logs.logster.title}}</a></li>
+      <li>{{#link-to 'adminLogs.staffActionLogs'}}{{i18n 'admin.logs.staff_actions.title'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminLogs.screenedEmails'}}{{i18n 'admin.logs.screened_emails.title'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminLogs.screenedIpAddresses'}}{{i18n 'admin.logs.screened_ips.title'}}{{/link-to}}</li>
+      <li>{{#link-to 'adminLogs.screenedUrls'}}{{i18n 'admin.logs.screened_urls.title'}}{{/link-to}}</li>
+      <li><a href="/logs" data-auto-route="true">{{i18n 'admin.logs.logster.title'}}</a></li>
     </ul>
   </div>
   <div class="pull-right">
-    <button {{action "exportScreenedIps"}} class="btn" title="{{i18n admin.export_csv.screened_ips.title}}">{{fa-icon "download"}}{{i18n admin.export_csv.button_text}}</button>
+    <button {{action "exportScreenedIps"}} class="btn" title="{{i18n 'admin.export_csv.screened_ips.title'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
   </div>
 </div>
 

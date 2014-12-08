@@ -2,12 +2,12 @@
   <div class='search controls'>
     <label>
       {{input type="checkbox" checked=onlyOverridden}}
-      {{i18n admin.site_settings.show_overriden}}
+      {{i18n 'admin.site_settings.show_overriden'}}
     </label>
   </div>
   <div class='controls'>
     {{text-field value=filter placeholderKey="type_to_filter"}}
-    <button {{action "clearFilter"}} class="btn">{{i18n admin.site_settings.clear_filter}}</button>
+    <button {{action "clearFilter"}} class="btn">{{i18n 'admin.site_settings.clear_filter'}}</button>
   </div>
 </div>
 

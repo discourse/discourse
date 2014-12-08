@@ -1,4 +1,4 @@
-<h3><i class='fa fa-envelope'></i> {{i18n private_message_info.title}}</h3>
+<h3><i class='fa fa-envelope'></i> {{i18n 'private_message_info.title'}}</h3>
 <div class='participants clearfix'>
   {{#each details.allowed_groups}}
     <div class='user group'>
@@ -21,6 +21,6 @@
 </div>
 {{#if details.can_invite_to}}
   <div class='controls'>
-    <button class='btn' {{action "showPrivateInvite"}}>{{i18n private_message_info.invite}}</button>
+    <button class='btn' {{action "showPrivateInvite"}}>{{i18n 'private_message_info.invite'}}</button>
   </div>
 {{/if}}

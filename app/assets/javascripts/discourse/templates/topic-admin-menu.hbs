@@ -1,49 +1,49 @@
-<h3>{{i18n admin_title}}</h3>
+<h3>{{i18n 'admin_title'}}</h3>
 
 <ul>
     <li>
-      <button {{action "toggleMultiSelect"}} class='btn btn-admin'>{{fa-icon tasks}} {{i18n topic.actions.multi_select}}</button>
+      <button {{action "toggleMultiSelect"}} class='btn btn-admin'>{{fa-icon tasks}} {{i18n 'topic.actions.multi_select'}}</button>
     </li>
 
   {{#if details.can_delete}}
     <li>
-      <button {{action "deleteTopic"}} class='btn btn-admin btn-danger'>{{fa-icon trash-o}} {{i18n topic.actions.delete}}</button>
+      <button {{action "deleteTopic"}} class='btn btn-admin btn-danger'>{{fa-icon trash-o}} {{i18n 'topic.actions.delete'}}</button>
     </li>
   {{/if}}
 
   {{#if showRecover}}
     <li>
-      <button {{action "recoverTopic"}} class='btn btn-admin'>{{fa-icon undo}} {{i18n topic.actions.recover}}</button>
+      <button {{action "recoverTopic"}} class='btn btn-admin'>{{fa-icon undo}} {{i18n 'topic.actions.recover'}}</button>
     </li>
   {{/if}}
 
   <li>
     {{#if closed}}
-      <button {{action "toggleClosed"}} class='btn btn-admin'>{{fa-icon unlock}} {{i18n topic.actions.open}}</button>
+      <button {{action "toggleClosed"}} class='btn btn-admin'>{{fa-icon unlock}} {{i18n 'topic.actions.open'}}</button>
     {{else}}
-      <button {{action "toggleClosed"}} class='btn btn-admin'>{{fa-icon lock}} {{i18n topic.actions.close}}</button>
-      <button {{action "showAutoClose"}} class='btn btn-admin'>{{fa-icon clock-o}} {{i18n topic.actions.auto_close}}</button>
+      <button {{action "toggleClosed"}} class='btn btn-admin'>{{fa-icon lock}} {{i18n 'topic.actions.close'}}</button>
+      <button {{action "showAutoClose"}} class='btn btn-admin'>{{fa-icon clock-o}} {{i18n 'topic.actions.auto_close'}}</button>
     {{/if}}
   </li>
 
   {{#unless isPrivateMessage}}
     <li>
       {{#if isBanner}}
-        <button {{action "removeBanner"}} class='btn btn-admin'>{{fa-icon bullhorn}} {{i18n topic.actions.remove_banner}}</button>
+        <button {{action "removeBanner"}} class='btn btn-admin'>{{fa-icon bullhorn}} {{i18n 'topic.actions.remove_banner'}}</button>
       {{else}}
         {{#if visible}}
-          <button {{action "makeBanner"}} class='btn btn-admin'>{{fa-icon bullhorn}} {{i18n topic.actions.make_banner}}</button>
+          <button {{action "makeBanner"}} class='btn btn-admin'>{{fa-icon bullhorn}} {{i18n 'topic.actions.make_banner'}}</button>
         {{/if}}
       {{/if}}
     </li>
 
     <li>
       {{#if pinned_at}}
-        <button {{action "togglePinned"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n topic.actions.unpin}}</button>
+        <button {{action "togglePinned"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n 'topic.actions.unpin'}}</button>
       {{else}}
         {{#if visible}}
-          <button {{action "togglePinned"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n topic.actions.pin}}</button>
-          <button {{action "togglePinnedGlobally"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n topic.actions.pin_globally}}</button>
+          <button {{action "togglePinned"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n 'topic.actions.pin'}}</button>
+          <button {{action "togglePinnedGlobally"}} class='btn btn-admin'>{{fa-icon thumb-tack}} {{i18n 'topic.actions.pin_globally'}}</button>
         {{/if}}
       {{/if}}
     </li>
@@ -51,17 +51,17 @@
 
   <li>
     {{#if archived}}
-      <button {{action "toggleArchived"}} class='btn btn-admin'>{{fa-icon folder}} {{i18n topic.actions.unarchive}}</button>
+      <button {{action "toggleArchived"}} class='btn btn-admin'>{{fa-icon folder}} {{i18n 'topic.actions.unarchive'}}</button>
     {{else}}
-      <button {{action "toggleArchived"}} class='btn btn-admin'>{{fa-icon folder}} {{i18n topic.actions.archive}}</button>
+      <button {{action "toggleArchived"}} class='btn btn-admin'>{{fa-icon folder}} {{i18n 'topic.actions.archive'}}</button>
     {{/if}}
   </li>
 
   <li>
     {{#if visible}}
-      <button {{action "toggleVisibility"}} class='btn btn-admin'>{{fa-icon eye-slash}} {{i18n topic.actions.invisible}}</button>
+      <button {{action "toggleVisibility"}} class='btn btn-admin'>{{fa-icon eye-slash}} {{i18n 'topic.actions.invisible'}}</button>
     {{else}}
-      <button {{action "toggleVisibility"}} class='btn btn-admin'>{{fa-icon eye}} {{i18n topic.actions.visible}}</button>
+      <button {{action "toggleVisibility"}} class='btn btn-admin'>{{fa-icon eye}} {{i18n 'topic.actions.visible'}}</button>
     {{/if}}
   </li>
 

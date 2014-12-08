@@ -23,27 +23,27 @@
 
   <ul class="usercard-controls">
     {{#if user.can_send_private_message_to_user}}
-      <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n user.private_message}}</a></li>
+      <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
     {{/if}}
 
     {{#if showFilter}}
-      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n topic.filter_to username="username" post_count="participant.post_count"}}</a></li>
+      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username="username" post_count="participant.post_count"}}</a></li>
     {{/if}}
 
     {{#if hasUserFilters}}
-      <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n topic.filters.cancel}}</a></li>
+      <li><a class='btn' {{action "cancelFilter"}}>{{fa-icon "times"}}{{i18n 'topic.filters.cancel'}}</a></li>
     {{/if}}
 
     {{#if showDelete}}
-      <li><a class='btn btn-danger' {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n admin.user.delete}}</a></li>
+      <li><a class='btn btn-danger' {{action "deleteUser" user}}>{{fa-icon "exclamation-triangle"}}{{i18n 'admin.user.delete'}}</a></li>
     {{/if}}
   </ul>
 
   {{#if isSuspended}}
     <div class='suspended'>
       {{fa-icon "ban"}}
-      <b>{{i18n user.suspended_notice date="user.suspendedTillDate"}}</b><br/>
-      <b>{{i18n user.suspended_reason}}</b> {{user.suspend_reason}}
+      <b>{{i18n 'user.suspended_notice' date="user.suspendedTillDate"}}</b><br/>
+      <b>{{i18n 'user.suspended_reason'}}</b> {{user.suspend_reason}}
     </div>
   {{else}}
     {{#if user.bio_cooked}}<div class='bio'>{{text-overflow class="overflow" text=user.bio_cooked}}</div>{{/if}}
@@ -57,8 +57,8 @@
 
   {{#if user}}
     <div class="metadata">
-      <h3><span class='desc'>{{i18n last_post}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}}</h3>
-      <h3><span class='desc'>{{i18n joined}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+      <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}}</h3>
+      <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
     </div>
   {{/if}}
 
@@ -69,7 +69,7 @@
       {{/each}}
       {{#if showMoreBadges}}
         {{#link-to 'user.badges' user class="btn more-user-badges"}}
-          {{i18n badges.more_badges count=moreBadgesCount}}
+          {{i18n 'badges.more_badges' count=moreBadgesCount}}
         {{/link-to}}
       {{/if}}
     </div>
