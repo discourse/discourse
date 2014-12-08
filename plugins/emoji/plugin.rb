@@ -4,6 +4,8 @@
 # authors: Sam Saffron, Robin Ward
 
 register_asset('javascripts/emoji.js.erb', :server_side)
+register_asset('javascripts/emoji-autocomplete.js', :composer)
+register_asset('javascripts/emoji-toolbar.js', :composer)
 register_asset('stylesheets/emoji.css')
 
 after_initialize do
