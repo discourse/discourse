@@ -430,34 +430,6 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
-  # fixing it requires a rebake of all the posts
-  def avatar
-    user = User.find_by(username_lower: params[:username].downcase)
-    if user.present?
-      size = determine_avatar_size(params[:size])
-      url = user.avatar_template.gsub("{size}", size.to_s)
-      expires_in 1.day
-      redirect_to url
-    else
-      raise ActiveRecord::RecordNotFound
-    end
-  end
-
-  def determine_avatar_size(size)
-    size = size.to_i
-    size = 64 if size == 0
-    size = 10 if size < 10
-    size = 128 if size > 128
-    size
-  end
-
-  # LEGACY: used by the API
-  def upload_avatar
-    params[:image_type] = "avatar"
-    upload_user_image
-  end
-
   def upload_user_image
     params.require(:image_type)
     user = fetch_user_from_params
