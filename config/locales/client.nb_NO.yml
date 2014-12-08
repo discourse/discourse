@@ -689,6 +689,7 @@ nb_NO:
         user: "Søk innleggene av @{{username}}"
         category: "Søk i kategorien \"{{category}}\""
         topic: "Søk i dette emnet"
+        private_messages: "Søk i private meldinger"
     site_map: "gå til en annen emneliste eller kategori"
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
@@ -1696,7 +1697,6 @@ nb_NO:
           title: "Kontrollerte IPs"
           description: 'IP-adresser som blir fulgt. Benytt "Tillat" for å hvitliste IP-adresser.'
           delete_confirm: "Er du sikker på at du vil fjerne regelen for %{ip_address}?"
-          roll_up_confirm: "Er du sikker på at du vil så sammen ban-oppføringer?"
           rolled_up_some_subnets: "Fullførte sammenslåingen av blokkerte IP-addresser til disse subnettene: %{subnets}."
           rolled_up_no_subnet: "Det var ingenting å slå sammen."
           actions:

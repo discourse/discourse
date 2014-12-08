@@ -33,7 +33,7 @@ zh_CN:
   log_in: "登陆"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
-  purge_reason: "自动删除长期未使用或者未验证"
+  purge_reason: "自动删除被遗弃、未激活账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
   errors:
     messages:
@@ -570,9 +570,6 @@ zh_CN:
     title: "本站点的简短标题，用于 HTML 标题标签（title）"
     site_description: "用一句话描述这个论坛，用于 meta 描述标签。"
     contact_email: "本站关键联系人的电子邮件地址。Discourse.org 可能把重要更新的通知消息发送到该邮箱。"
-    company_full_name: "废弃。不再使用并且将被移除。运行本站点的公司全称，用于法律文档，例如服务条款 /tos 和 /privacy"
-    company_short_name: "废弃。不再使用并且将被移除。运行本站点的公司短名，用于法律文档，例如服务条款 /tos 和 /privacy"
-    company_domain: "废弃。不再使用并且将被移除。运行本站点的公司域名，用于法律文档，例如服务条款 /tos 和 /privacy"
     queue_jobs: "仅限开发者设定！警告！默认使用 sidekiq 完成队列工作。如果禁用，您的站点将无法使用。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
@@ -673,6 +670,7 @@ zh_CN:
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用外部站点单点登录（注意：禁用邀请功能）"
+    enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于加密/解密 SSO 信息，请保证有 10 个字符或者更长"
     sso_overrides_email: "用 SSO 信息中的外部邮件地址覆盖本地邮件地址（警告：因为对本地邮件的统一处理，这个邮件地址可能不同）"
@@ -719,7 +717,7 @@ zh_CN:
     clean_up_uploads: "移除孤立的已上传资料。警告：您可能想要在启用这个设定前备份一下 /uploads 目录。"
     clean_orphan_uploads_grace_period_hours: "删除孤立上传资料的宽限期（单位：小时）"
     purge_deleted_uploads_grace_period_days: "移除已删除的孤立上传资料的宽限期（单位：小时）"
-    purge_unactivated_users_grace_period_days: "删除不活跃用户账户的宽限期（单位：天）。"
+    purge_unactivated_users_grace_period_days: "删除未激活用户账户的宽限期（单位：天）。"
     enable_s3_uploads: "上传至 Amazon S3 存储的地址。重要：需要有效的 S3 验证资料（包括 access key id & secret access key）。"
     s3_use_iam_profile: '使用 AWS EC2 IAM 角色来获得 key。注意：启用这个会覆盖“S3 access key id”和“S3 secret access key” 设置。'
     s3_upload_bucket: "上传文件保存于 Amazon S3 的 bucket 名字。警告：必须为小写，无句点，无下划线。"
@@ -794,6 +792,9 @@ zh_CN:
     staff_like_weight: "职员赞时的额外权重。"
     levenshtein_distance_spammer_emails: "当匹配广告邮件时，模糊匹配判断差异的字符数。"
     max_new_accounts_per_registration_ip: "如果已经有了从这个 IP 创建的(n)个信任等级0的账户（并且没有一个是职员或者是信任等级2以上的用户），不再允许来自该 IP 地址的注册请求。"
+    min_ban_entries_for_roll_up: "当点击折叠按钮时，且至少 (N) 条记录时，将会创建一个子网封禁记录"
+    max_age_unmatched_emails: "在 (N) 天后删除不匹配的邮件地址。"
+    max_age_unmatched_ips: "在 (N) 天后删除不匹配的 IP 记录。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
@@ -889,6 +890,11 @@ zh_CN:
       category: '分类'
       topic: '结果'
       user: '用户'
+  sso:
+    not_found: "无法找到或创建账户，联系站点管理员"
+    account_not_approved: "账户正在等待验证，完成后您将收到一封邮件提醒"
+    unknown_error: "更新信息时错误，联系站点管理员"
+    timeout_expired: "账户登录超时，请重试登录"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
@@ -1753,25 +1759,3 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
-  static:
-    search_help: |
-      <h2>小技巧</h2>
-      <p>
-      <ul>
-        <li>标题匹配优先，所以有疑问时，搜索标题</li>
-        <li>独一无二的、不常见的单词将总是产生最好的结果</li>
-        <li>无论何时，限制您的搜索范围至一个特定的分类、用户或主题</li>
-      </ul>
-      </p>
-      <h2>选项</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>彩虹 category:公园 status:open order:latest</code>将搜索在“公园”分类中没有关闭或存档中的包含“彩虹”的主题，并按最后一个帖子的日期来排序。
-      </p>
