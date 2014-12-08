@@ -1,0 +1,15 @@
+ar:
+  js:
+    poll:
+      voteCount:
+        zero: "صوت 1"
+        one: "صوت 1"
+        two: "صوت 1"
+        few: "صوت 1"
+        many: "%{احسب} الأصوات"
+        other: "%{احسب} الأصوات"
+      results:
+        show: إظهار النتائج
+        hide: إخفاء النتائج
+      close_poll: "إغلاق التصويت"
+      open_poll: "فتح التصويت"
