@@ -105,8 +105,9 @@ var render = function(page, offset){
   rows.push(row);
 
   $('body .emoji-modal').remove();
-  $('body').append('<div class="emoji-modal">' + renderToolbar(toolbar(page)) + renderPage(rows) +
-      "<div class='info'></div></div>')");
+  var newPage = '<div class="emoji-modal">' + renderToolbar(toolbar(page)) + renderPage(rows) +
+      "<div class='info'></div></div>";
+  $('body').append(newPage);
 
   bindEvents();
 };
