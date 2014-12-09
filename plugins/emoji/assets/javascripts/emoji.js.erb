@@ -1,7 +1,9 @@
-var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
-
 // TODO @robin to move this whole thing to es6
 Discourse.Emoji = {};
+// bump up this number to expire all emojis
+Discourse.Emoji.ImageVersion = "0"
+
+var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
 
 var _extendedEmoji = {};
 Discourse.Dialect.registerEmoji = function(code, url) {
@@ -46,6 +48,7 @@ var search = function(term, options) {
 
 Discourse.Emoji.search = search;
 
+
 var emojiHash = {};
 emoji.forEach(function(code){
   emojiHash[code] = true;
@@ -57,12 +60,16 @@ var urlFor = function(code) {
     url = _extendedEmoji[code];
   }
 
-  if (!url && emojiHash.hasOwnProperty(code)) {
+  if(!url && emojiHash.hasOwnProperty(code)) {
     url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
   }
 
   if(url && url[0] !== 'h' && Discourse.CDN) {
     url = Discourse.CDN + url;
+  }
+
+  if(url){
+    url = url + "?v=" + Discourse.Emoji.ImageVersion;
   }
 
   return url;
