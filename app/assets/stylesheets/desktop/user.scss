@@ -120,6 +120,7 @@
   }
 
   table.group-members {
+    margin-top: 20px;
     th.seen {
       text-align: right;
     }
@@ -128,21 +129,12 @@
     }
     td {
       padding-bottom: 10px;
-      img {
-        margin-right: 10px;
-      }
+      padding-left: 10px;
       span.fullname {
-        margin-right: 100px;
+        margin-right: 50px;
       }
       span.last-seen-at {
         float: right;
-        color: $primary;
-      }
-      span.remove {
-        margin-right: 10px;
-        border: thin solid $primary;
-        padding: 2px 5px;
-        cursor: pointer;
       }
     }
   }
