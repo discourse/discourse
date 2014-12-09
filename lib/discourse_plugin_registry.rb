@@ -4,21 +4,25 @@
 class DiscoursePluginRegistry
 
   class << self
-    attr_accessor :javascripts
-    attr_accessor :server_side_javascripts
-    attr_accessor :admin_javascripts
-    attr_accessor :stylesheets
-    attr_accessor :mobile_stylesheets
-    attr_accessor :desktop_stylesheets
-    attr_accessor :sass_variables
-    attr_accessor :handlebars
-    attr_accessor :custom_html
-    attr_accessor :serialized_current_user_fields
+    attr_writer :javascripts
+    attr_writer :server_side_javascripts
+    attr_writer :admin_javascripts
+    attr_writer :stylesheets
+    attr_writer :mobile_stylesheets
+    attr_writer :desktop_stylesheets
+    attr_writer :sass_variables
+    attr_writer :handlebars
+    attr_writer :serialized_current_user_fields
 
+    attr_accessor :custom_html
 
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
+    end
+
+    def asset_globs
+      @asset_globs ||= Set.new
     end
 
     def admin_javascripts
@@ -66,6 +70,10 @@ class DiscoursePluginRegistry
 
   def register_archetype(name, options={})
     Archetype.register(name, options)
+  end
+
+  def self.register_glob(root, extension)
+    self.asset_globs << [root, extension]
   end
 
   def self.register_asset(asset, opts=nil)
@@ -143,6 +151,7 @@ class DiscoursePluginRegistry
     desktop_stylesheets.clear
     sass_variables.clear
     serialized_current_user_fields
+    asset_globs.clear
   end
 
   def self.setup(plugin_class)

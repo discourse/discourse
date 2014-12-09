@@ -26,19 +26,10 @@ class Plugin::Instance
     @color_schemes = []
 
     if @path
-
-      # Automatically include all ES6 JS files
-      dir = File.dirname(@path)
-      Dir.glob("#{dir}/assets/javascripts/**/*.js.es6") do |f|
-        relative = f.sub("#{dir}/assets/", "")
-        register_asset(relative)
-      end
-
-      # Automatically include all hbs files
-      Dir.glob("#{dir}/assets/javascripts/**/*.hbs") do |f|
-        relative = f.sub("#{dir}/assets/", "")
-        register_asset(relative)
-      end
+      # Automatically include all ES6 JS and hbs files
+      root_path = "#{File.dirname(@path)}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
+      DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
   end
 
