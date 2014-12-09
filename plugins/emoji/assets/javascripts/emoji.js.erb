@@ -46,23 +46,29 @@ var search = function(term, options) {
 
 Discourse.Emoji.search = search;
 
-var urlFor = function(code) {
-  var url = _extendedEmoji[code];
-  if (!url && emoji.indexOf(code) !== -1) {
-    url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
-  }
-  return url;
-}
-
-Discourse.Emoji.urlFor = urlFor;
-
 var emojiHash = {};
 emoji.forEach(function(code){
   emojiHash[code] = true;
 });
 
+var urlFor = function(code) {
+  var url;
+  if(_extendedEmoji.hasOwnProperty(code)) {
+    url = _extendedEmoji[code];
+  }
+
+  if (!url && emojiHash.hasOwnProperty(code)) {
+    url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+  }
+
+  return url;
+}
+
+Discourse.Emoji.urlFor = urlFor;
+
+
 Discourse.Emoji.exists = function(code){
- return !!(_extendedEmoji[code] || emojiHash[code]);
+ return !!(_extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
 }
 
 function imageFor(code) {
