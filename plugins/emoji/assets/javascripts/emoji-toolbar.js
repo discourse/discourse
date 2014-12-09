@@ -10,7 +10,11 @@ var groups = [
 },
 {
   name: "objects",
-  icons: ["bamboo","gift_heart","dolls","school_satchel","mortar_board","flags","fireworks","sparkler","wind_chime","rice_scene","jack_o_lantern","ghost","santa","christmas_tree","gift","tanabata_tree","tada","confetti_ball","balloon","crossed_flags","crystal_ball","movie_camera","camera","video_camera","vhs","cd","dvd","minidisc","floppy_disk","computer","iphone","telephone","telephone_receiver","pager","fax","satellite","tv","radio","loud_sound","sound","speaker","mute","bell","no_bell","loudspeaker","mega","hourglass_flowing_sand","hourglass","alarm_clock","watch","unlock","lock","lock_with_ink_pen","closed_lock_with_key","key","mag_right","bulb","flashlight","high_brightness","low_brightness","electric_plug","battery","mag","bathtub","bath","shower","toilet","wrench","nut_and_bolt","hammer","door","smoking","bomb","gun","knife","pill","syringe","moneybag","yen","dollar","pound","euro","credit_card","money_with_wings","calling","e-mail","inbox_tray","outbox_tray","envelope","envelope_with_arrow","incoming_envelope","postal_horn","mailbox","mailbox_closed","mailbox_with_mail","mailbox_with_no_mail","postbox","package","pencil","page_facing_up","page_with_curl","bookmark_tabs","bar_chart","chart_with_upwards_trend","chart_with_downwards_trend","scroll","clipboard","date","calendar","card_index","file_folder","open_file_folder","scissors","pushpin","paperclip","black_nib","pencil2","straight_ruler","triangular_ruler","closed_book","green_book","blue_book","orange_book","notebook","notebook_with_decorative_cover","ledger","books","book","bookmark","name_badge","microscope","telescope","newspaper","art","clapper","microphone","headphones","musical_score","musical_note","notes","musical_keyboard","violin","trumpet","saxophone","guitar","space_invader","video_game","black_joker","flower_playing_cards","mahjong","game_die","dart","football","basketball","soccer","baseball","tennis","8ball","rugby_football","bowling","golf","mountain_bicyclist","bicyclist","checkered_flag","horse_racing","trophy","ski","snowboarder","swimmer","surfer","fishing_pole_and_fish","coffee","tea","sake","baby_bottle","beer","beers","cocktail","tropical_drink","wine_glass","fork_and_knife","pizza","hamburger","fries","poultry_leg","meat_on_bone","spaghetti","curry","fried_shrimp","bento","sushi","fish_cake","rice_ball","rice_cracker","rice","ramen","stew","oden","dango","egg","bread","doughnut","custard","icecream","ice_cream","shaved_ice","birthday","cake","cookie","chocolate_bar","candy","lollipop","honey_pot","apple","green_apple","tangerine","lemon","cherries","grapes","watermelon","strawberry","peach","melon","banana","pear","pineapple","sweet_potato","eggplant","tomato","corn"]
+  icons: ["bamboo","gift_heart","dolls","school_satchel","mortar_board","flags","fireworks","sparkler","wind_chime","rice_scene","jack_o_lantern","ghost","santa","christmas_tree","gift","tanabata_tree","tada","confetti_ball","balloon","crossed_flags","crystal_ball","movie_camera","camera","video_camera","vhs","cd","dvd","minidisc","floppy_disk","computer","iphone","telephone","telephone_receiver","pager","fax","satellite","tv","radio","loud_sound","sound","speaker","mute","bell","no_bell","loudspeaker","mega","hourglass_flowing_sand","hourglass","alarm_clock","watch","unlock","lock","lock_with_ink_pen","closed_lock_with_key","key","mag_right","bulb","flashlight","high_brightness","low_brightness","electric_plug","battery","mag","bathtub","bath","shower","toilet","wrench","nut_and_bolt","hammer","door","smoking","bomb","gun","knife","pill","syringe","moneybag","yen","dollar","pound","euro","credit_card","money_with_wings","calling","e-mail","inbox_tray","outbox_tray","envelope","envelope_with_arrow","incoming_envelope","postal_horn","mailbox","mailbox_closed","mailbox_with_mail","mailbox_with_no_mail","postbox","package","pencil","page_facing_up","page_with_curl","bookmark_tabs","bar_chart","chart_with_upwards_trend","chart_with_downwards_trend","scroll","clipboard","date","calendar","card_index","file_folder","open_file_folder","scissors","pushpin","paperclip","black_nib","pencil2","straight_ruler","triangular_ruler","closed_book","green_book","blue_book","orange_book","notebook","notebook_with_decorative_cover","ledger","books","book","bookmark","name_badge","microscope","telescope","newspaper","art","clapper","microphone","headphones","musical_score","musical_note","notes","musical_keyboard","violin","trumpet","saxophone","guitar","space_invader","video_game","black_joker","flower_playing_cards","mahjong","game_die","dart","football","basketball","soccer","baseball","tennis","8ball","rugby_football","bowling","golf","mountain_bicyclist","bicyclist","checkered_flag","horse_racing","trophy","ski","snowboarder","swimmer","surfer","fishing_pole_and_fish"]
+},
+{
+  name: "foods",
+  icons: ["coffee","tea","sake","baby_bottle","beer","beers","cocktail","tropical_drink","wine_glass","fork_and_knife","pizza","hamburger","fries","poultry_leg","meat_on_bone","spaghetti","curry","fried_shrimp","bento","sushi","fish_cake","rice_ball","rice_cracker","rice","ramen","stew","oden","dango","egg","bread","doughnut","custard","icecream","ice_cream","shaved_ice","birthday","cake","cookie","chocolate_bar","candy","lollipop","honey_pot","apple","green_apple","tangerine","lemon","cherries","grapes","watermelon","strawberry","peach","melon","banana","pear","pineapple","sweet_potato","eggplant","tomato","corn"]
 },
 {
   name: "places",
@@ -31,23 +35,6 @@ groups.forEach(function(group){
 // export so others can modify
 Discourse.Emoji.groups = groups;
 
-var renderPage = Handlebars.compile(
-    "<table class='emoji-page'>" +
-      "{{#each this}}"+
-      "<tr>{{#each this}}" +
-      "<td><a title='{{title}}'><img src='{{src}}' class='emoji'></a></td>" +
-        "{{/each}}</tr>" +
-        "{{/each}}"+
-    "</table>");
-
-var renderToolbar = Handlebars.compile(
-    "<ul class='toolbar'>" +
-      "{{#each this}}" +
-      "<li><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>" +
-      "{{/each}}" +
-    "</ul>"
-    );
-
 var closeSelector = function(){
   $('.emoji-modal, .emoji-modal-wrapper').remove();
   $('body, textarea').off('keydown.emoji');
@@ -63,7 +50,9 @@ var toolbar = function(selected){
   });
 };
 
-var bindEvents = function(){
+var perRow=12, perPage=60;
+
+var bindEvents = function(page,offset){
 
   var composerController = Discourse.__container__.lookup('controller:composer');
   $('.emoji-page a').click(function(){
@@ -80,6 +69,14 @@ var bindEvents = function(){
     $('.emoji-modal .info').html("");
   });
 
+  $('.emoji-modal .nav .next a').click(function(){
+    render(page, offset+perPage);
+  });
+
+  $('.emoji-modal .nav .prev a').click(function(){
+    render(page, offset-perPage);
+  });
+
   $('.emoji-modal .toolbar a').click(function(){
     var page = parseInt($(this).data('group-id'));
     render(page,0);
@@ -87,7 +84,6 @@ var bindEvents = function(){
   });
 };
 
-var perRow = 10, perPage=60;
 
 var render = function(page, offset){
   var rows = [];
@@ -106,12 +102,18 @@ var render = function(page, offset){
   }
   rows.push(row);
 
-  $('body .emoji-modal').remove();
-  var newPage = '<div class="emoji-modal">' + renderToolbar(toolbar(page)) + renderPage(rows) +
-      "<div class='info'></div></div>";
-  $('body').append(newPage);
+  var model = {
+    toolbarItems: toolbar(page),
+    rows: rows,
+    prevDisabled: offset === 0,
+    nextDisabled: (offset + perPage + 1) > icons.length
+  };
 
-  bindEvents();
+  $('body .emoji-modal').remove();
+  var rendered = Ember.TEMPLATES["javascripts/emoji-toolbar.raw"](model);
+  $('body').append(rendered);
+
+  bindEvents(page,offset);
 };
 
 
