@@ -43,7 +43,7 @@ var renderPage = Handlebars.compile(
 var renderToolbar = Handlebars.compile(
     "<ul class='toolbar'>" +
       "{{#each this}}" +
-      "<li ><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>" +
+      "<li><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>" +
       "{{/each}}" +
     "</ul>"
     );
@@ -72,7 +72,10 @@ var bindEvents = function(){
      return false;
   }).hover(function(){
     var title = $(this).attr('title');
-    $('.emoji-modal .info').html("<img src='" + Discourse.Emoji.urlFor(title) +  "' class='emoji'> <span>:" + title + ":<span>");
+    $('.emoji-modal .info')
+        .html("<img src='" + Discourse.Emoji.urlFor(title) +
+               "' class='emoji'> <span>:" + title + ":<span>");
+
   },function(){
     $('.emoji-modal .info').html("");
   });
@@ -80,9 +83,8 @@ var bindEvents = function(){
   $('.emoji-modal .toolbar a').click(function(){
     var page = parseInt($(this).data('group-id'));
     render(page,0);
+    return false;
   });
-
-
 };
 
 var perRow = 10, perPage=60;
