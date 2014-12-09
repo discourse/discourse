@@ -61,6 +61,10 @@ var urlFor = function(code) {
     url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
   }
 
+  if(url && url[0] !== 'h' && Discourse.CDN) {
+    url = Discourse.CDN + url;
+  }
+
   return url;
 }
 
