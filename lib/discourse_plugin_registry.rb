@@ -68,6 +68,34 @@ class DiscoursePluginRegistry
     Archetype.register(name, options)
   end
 
+  def self.register_asset(asset, opts=nil)
+    if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
+      if opts == :admin
+        self.admin_javascripts << asset
+      else
+        if opts == :server_side
+          self.server_side_javascripts << asset
+        end
+        self.javascripts << asset
+      end
+    elsif asset =~ /\.css$|\.scss$/
+      if opts == :mobile
+        self.mobile_stylesheets << asset
+      elsif opts == :desktop
+        self.desktop_stylesheets << asset
+      elsif opts == :variables
+        self.sass_variables << asset
+      else
+        self.stylesheets << asset
+      end
+
+    elsif asset =~ /\.hbs$/
+      self.handlebars << asset
+    elsif asset =~ /\.js\.handlebars$/
+      self.handlebars << asset
+    end
+  end
+
   def javascripts
     self.class.javascripts
   end
@@ -104,6 +132,17 @@ class DiscoursePluginRegistry
     self.desktop_stylesheets = nil
     self.sass_variables = nil
     self.handlebars = nil
+  end
+
+  def self.reset!
+    javascripts.clear
+    admin_javascripts.clear
+    server_side_javascripts.clear
+    stylesheets.clear
+    mobile_stylesheets.clear
+    desktop_stylesheets.clear
+    sass_variables.clear
+    serialized_current_user_fields
   end
 
   def self.setup(plugin_class)

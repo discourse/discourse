@@ -40,7 +40,6 @@ class Plugin::Instance
         register_asset(relative)
       end
     end
-
   end
 
   def name
@@ -186,7 +185,6 @@ class Plugin::Instance
       Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     end
 
-
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
@@ -243,31 +241,7 @@ class Plugin::Instance
 
   def register_assets!
     assets.each do |asset, opts|
-      if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
-        if opts == :admin
-          DiscoursePluginRegistry.admin_javascripts << asset
-        else
-          if opts == :server_side
-            DiscoursePluginRegistry.server_side_javascripts << asset
-          end
-          DiscoursePluginRegistry.javascripts << asset
-        end
-      elsif asset =~ /\.css$|\.scss$/
-        if opts == :mobile
-          DiscoursePluginRegistry.mobile_stylesheets << asset
-        elsif opts == :desktop
-          DiscoursePluginRegistry.desktop_stylesheets << asset
-        elsif opts == :variables
-          DiscoursePluginRegistry.sass_variables << asset
-        else
-          DiscoursePluginRegistry.stylesheets << asset
-        end
-
-      elsif asset =~ /\.hbs$/
-        DiscoursePluginRegistry.handlebars << asset
-      elsif asset =~ /\.js\.handlebars$/
-        DiscoursePluginRegistry.handlebars << asset
-      end
+      DiscoursePluginRegistry.register_asset(asset, opts)
     end
   end
 
