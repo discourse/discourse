@@ -31,6 +31,11 @@ body img.emoji {
   background-color: rgb(210, 236, 252);
 }
 
+.emoji-table-wrapper {
+  min-width: 444px;
+  min-height: 185px;
+}
+
 .emoji-page {
   border-collapse: collapse;
   margin: 3px;
@@ -81,4 +86,21 @@ body img.emoji {
 .emoji-modal .info span {
   margin-left: 5px;
   font-weight: bold;
+}
+
+.emoji-modal .info {
+  float: left;
+}
+.emoji-modal .nav {
+  float: right;
+  margin-top: 15px;
+}
+
+.emoji-modal .nav span {
+  color: #aaa;
+  margin-right: 10px;
+}
+
+.emoji-modal .nav a {
+  color: #333;
 }

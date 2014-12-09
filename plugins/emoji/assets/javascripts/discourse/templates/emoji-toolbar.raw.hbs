@@ -1,0 +1,35 @@
+<div class='emoji-modal'>
+  <ul class='toolbar'>
+    {{#each toolbarItems}}<li><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>{{/each}}
+  </ul>
+  <div class='emoji-table-wrapper'>
+  <table class='emoji-page'>
+    {{#each rows}}
+      <tr>
+        {{#each this}}
+          <td><a title='{{title}}'><img src='{{src}}' class='emoji'></a></td>
+        {{/each}}
+      </tr>
+    {{/each}}
+  </table>
+  </div>
+
+  <div class='info'></div>
+  <div class='nav'>
+    <span class='prev'>
+      {{#if prevDisabled}}
+        <i class='fa fa-fast-backward'></i>
+      {{else}}
+        <a><i class='fa fa-fast-backward'></i></a>
+      {{/if}}
+    </span>
+    <span class='next'>
+      {{#if nextDisabled}}
+        <i class='fa fa-fast-forward'></i>
+      {{else}}
+        <a><i class='fa fa-fast-forward'></i></a>
+      {{/if}}
+    </span>
+  </div>
+  <div class='clearfix'></div>
+</div>
