@@ -28,6 +28,9 @@ groups.forEach(function(group){
   });
 });
 
+// export so others can modify
+Discourse.Emoji.groups = groups;
+
 var renderPage = Handlebars.compile(
     "<table class='emoji-page'>" +
       "{{#each this}}"+
