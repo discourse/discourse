@@ -25,10 +25,17 @@ class Plugin::Instance
     @assets = []
     @color_schemes = []
 
-    # Automatically include all ES6 JS files
     if @path
+
+      # Automatically include all ES6 JS files
       dir = File.dirname(@path)
       Dir.glob("#{dir}/assets/javascripts/**/*.js.es6") do |f|
+        relative = f.sub("#{dir}/assets/", "")
+        register_asset(relative)
+      end
+
+      # Automatically include all hbs files
+      Dir.glob("#{dir}/assets/javascripts/**/*.hbs") do |f|
         relative = f.sub("#{dir}/assets/", "")
         register_asset(relative)
       end
