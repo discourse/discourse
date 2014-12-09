@@ -1,8 +1,10 @@
-export default Ember.Component.extend({
-  tagName: 'h2',
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  _shouldRerender: Discourse.View.renderIfChanged('period.title'),
-  render: function(buffer) {
+export default Ember.Component.extend(StringBuffer, {
+  tagName: 'h2',
+  rerenderTriggers: ['period.title'],
+
+  renderString: function(buffer) {
     buffer.push("<i class='fa fa-calendar-o'></i> " + this.get('period.title'));
   }
 });

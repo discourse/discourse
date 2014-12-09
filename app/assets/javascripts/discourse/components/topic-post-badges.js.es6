@@ -1,3 +1,4 @@
+import StringBuffer from 'discourse/mixins/string-buffer';
 
 // Creates a link
 function link(buffer, prop, url, cssClass, i18nKey, text) {
@@ -7,12 +8,12 @@ function link(buffer, prop, url, cssClass, i18nKey, text) {
   buffer.push("<a href='" + url + "' class='badge " + cssClass + " badge-notification' title='" + title + "'>" + (text || prop) + "</a>\n");
 }
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(StringBuffer, {
   tagName: 'span',
   classNameBindings: [':topic-post-badges'],
-  _shouldRerender: Discourse.View.renderIfChanged('url', 'unread', 'newPosts', 'unseen'),
+  rerenderTriggers: ['url', 'unread', 'newPosts', 'unseen'],
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var url = this.get('url');
 
     link(buffer, this.get('unread'), url, 'unread', 'unread_posts');

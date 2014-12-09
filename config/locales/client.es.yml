@@ -247,6 +247,7 @@ es:
       organisation: Organización
       phone: Teléfono
       other_accounts: "Otras cuentas con esta dirección IP:"
+      delete_other_accounts: "Eliminar %{count}"
       username: "usuario"
       trust_level: "NC"
       read_time: "tiempo de lectura"
@@ -259,6 +260,7 @@ es:
       mute: "Silenciar"
       edit: "Editar Preferencias"
       download_archive: "descargar un archivo con mis publicaciones"
+      new_private_message: "Nuevo Mensaje Privado"
       private_message: "Mensaje Privado"
       private_messages: "Mensajes"
       activity_stream: "Actividad"
@@ -347,7 +349,10 @@ es:
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
-        frequency: "Sólo te enviaremos e-mails si no te hemos visto recientemente y todavía no has visto lo que te estamos enviando."
+        frequency:
+          zero: "Te enviaremos un email inmediatamente si no has leído aquello que vamos a enviarte."
+          one: "Solo te enviaremos emails si, pasado un minuto, no te hemos visto y no has leído aquello que vamos a enviarte."
+          other: "Solo te enviaremos emails si, pasados {{count}} minutos, no te hemos visto y no has leído aquello que vamos a enviarte."
       name:
         title: "Nombre"
         instructions: "Tu nombre completo (opcional)"
@@ -684,6 +689,7 @@ es:
         user: "Buscar posts por @{{username}}"
         category: "Buscar la categoría \"{{category}}\""
         topic: "Buscar este tema"
+        private_messages: "Buscar en mensajes privados"
     site_map: "ir a otra lista de temas o categoría"
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
@@ -1517,7 +1523,13 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
+        users:
+          title: "Exportar lista completa de usuarios en formato CSV"
+        screened_ips:
+          title: "Exportar lista completa de IPs vifiladas en formato CSV"
+        success: "Exportación iniciada, serás notificado dentro de poco sobre el progreso."
         failed: "Exportación fallida, revisa los logs."
+        button_text: "Exportar"
       customize:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
@@ -1685,6 +1697,8 @@ es:
           title: "IPs bloqueadas"
           description: 'Direcciones IP que están siendo vigiladas. Usa "Permitir" para añadir direcciones IP preaprobadas.'
           delete_confirm: "Estás seguro que quieres remover el bloqueo para %{ip_address}?"
+          rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP baneadas a estos rangos: %{subnets}."
+          rolled_up_no_subnet: "No había nada para agrupar."
           actions:
             block: "Bloquear"
             do_nothing: "Permitir"
@@ -1693,6 +1707,9 @@ es:
             label: "Nueva:"
             ip_address: "Dirección IP"
             add: "Añadir"
+          roll_up:
+            text: "Agrupar"
+            title: "Crea un nuevo rango de entradas para banear si hay al menos 'min_ban_entries_for_roll_up' entradas."
         logster:
           title: "Registros de errores"
       impersonate:
@@ -1703,14 +1720,17 @@ es:
         create: 'Añadir Usuario Administrador'
         last_emailed: "Último email enviado"
         not_found: "Lo sentimos, ese usuario no existe."
+        id_not_found: "Lo sentimos, esa id de usuario no existe en nuestro sistema."
         active: "Activo"
         show_emails: "Mostrar emails"
         nav:
           new: "Nuevo"
           active: "Activo"
           pending: "Pendiente"
+          staff: 'Staff'
           suspended: 'Suspendidos'
           blocked: 'Bloqueados'
+          suspect: 'Sospechoso'
         approved: "Aprobado/s?"
         approved_selected:
           one: "aprobar usuario"
@@ -1727,10 +1747,12 @@ es:
           regular: 'Usuarios con Nivel de confianza 2 (Miembro)'
           leader: 'Usuarios con Nivel de confianza 3 (Habitual)'
           elder: 'Usuarios con Nivel de confianza 4 (Líder)'
+          staff: "Staff"
           admins: 'Administradores'
           moderators: 'Moderadores'
           blocked: 'Usuarios bloqueados'
           suspended: 'Usuarios suspendidos'
+          suspect: 'Usuarios sospechados'
         reject_successful:
           one: "1 usuario rechazado con éxito."
           other: "%{count} usuarios rechazados con éxito."

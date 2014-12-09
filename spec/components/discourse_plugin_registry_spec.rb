@@ -82,4 +82,65 @@ describe DiscoursePluginRegistry do
     end
   end
 
+  context '#register_asset' do
+    let(:registry) { DiscoursePluginRegistry }
+
+    after do
+      registry.reset!
+    end
+
+    it "does register general css properly" do
+      registry.register_asset("test.css")
+      registry.register_asset("test2.css")
+
+      registry.mobile_stylesheets.count.should == 0
+      registry.stylesheets.count.should == 2
+    end
+
+    it "registers desktop css properly" do
+      registry.register_asset("test.css", :desktop)
+
+      registry.mobile_stylesheets.count.should == 0
+      registry.desktop_stylesheets.count.should == 1
+      registry.stylesheets.count.should == 0
+    end
+
+    it "registers mobile css properly" do
+      registry.register_asset("test.css", :mobile)
+
+      registry.mobile_stylesheets.count.should == 1
+      registry.stylesheets.count.should == 0
+    end
+
+    it "registers desktop css properly" do
+      registry.register_asset("test.css", :desktop)
+
+      registry.desktop_stylesheets.count.should == 1
+      registry.stylesheets.count.should == 0
+    end
+
+    it "registers sass variable properly" do
+      registry.register_asset("test.css", :variables)
+
+      registry.sass_variables.count.should == 1
+      registry.stylesheets.count.should == 0
+    end
+
+    it "registers admin javascript properly" do
+      registry.register_asset("my_admin.js", :admin)
+
+      registry.admin_javascripts.count.should == 1
+      registry.javascripts.count.should == 0
+      registry.server_side_javascripts.count.should == 0
+    end
+
+    it "registers server side javascript properly" do
+      registry.register_asset("my_admin.js", :server_side)
+
+      registry.server_side_javascripts.count.should == 1
+      registry.javascripts.count.should == 1
+      registry.admin_javascripts.count.should == 0
+    end
+  end
+
 end

@@ -39,9 +39,8 @@ export default function searchForTerm(term, opts) {
     });
 
     results.categories = results.categories.map(function(category){
-      category = Discourse.Category.list().findProperty('id', category.id);
-      return category;
-    });
+      return Discourse.Category.list().findProperty('id', category.id);
+    }).compact();
 
     var r = results.grouped_search_result;
     results.resultTypes = [];

@@ -232,7 +232,7 @@ class PostAction < ActiveRecord::Base
     else
       post_action = PostAction.where(where_attrs).first
 
-      # after_commit is not called on an `update_all` so do the notify ourselves
+      # after_commit is not called on an 'update_all' so do the notify ourselves
       post_action.notify_subscribers
     end
 
@@ -349,7 +349,7 @@ class PostAction < ActiveRecord::Base
       # Voting also changes the sort_order
       Post.where(id: post_id).update_all ["vote_count = :count, sort_order = :max - :count", count: count, max: Topic.max_sort_order]
     when :like
-      # `like_score` is weighted higher for staff accounts
+      # 'like_score' is weighted higher for staff accounts
       score = PostAction.joins(:user)
                         .where(post_id: post_id)
                         .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
@@ -370,6 +370,7 @@ class PostAction < ActiveRecord::Base
 
   def enforce_rules
     post = Post.with_deleted.where(id: post_id).first
+    PostAction.auto_close_if_treshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
@@ -378,6 +379,29 @@ class PostAction < ActiveRecord::Base
     if (is_like? || is_flag?) && post
       post.publish_change_to_clients! :acted
     end
+  end
+
+  MAXIMUM_FLAGS_PER_POST = 3
+
+  def self.auto_close_if_treshold_reached(topic)
+    return if topic.closed?
+
+    flags = PostAction.active
+                      .flags
+                      .joins(:post)
+                      .where("posts.topic_id = ?", topic.id)
+                      .where.not(user_id: Discourse::SYSTEM_USER_ID)
+                      .group("post_actions.user_id")
+                      .pluck("post_actions.user_id, COUNT(post_id)")
+
+    # we need a minimum number of unique flaggers
+    return if flags.count < SiteSetting.num_flaggers_to_close_topic
+    # we need a minimum number of flags
+    return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
+
+    # the threshold has been reached, we will close the topic waiting for intervention
+    message = I18n.t("temporarily_closed_due_to_flags")
+    topic.update_status("closed", true, Discourse.system_user, message)
   end
 
   def self.auto_hide_if_needed(acting_user, post, post_action_type)

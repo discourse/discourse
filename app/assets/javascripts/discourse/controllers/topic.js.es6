@@ -78,6 +78,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
   },
 
   actions: {
+    deleteTopic: function() {
+      this.deleteTopic();
+    },
+
     // Post related methods
     replyToPost: function(post) {
       var composerController = this.get('controllers.composer'),
@@ -370,8 +374,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     },
 
     togglePinnedForUser: function() {
-      if (this.get('pinned_at'))
-        this.get('pinned') ? this.get('content').clearPin() : this.get('content').rePin();
+      if (this.get('pinned_at')) {
+        if (this.get('pinned')) {
+          this.get('content').clearPin();
+        } else {
+          this.get('content').rePin();
+        }
+      }
     },
 
     replyAsNewTopic: function(post) {

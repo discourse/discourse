@@ -27,13 +27,13 @@
     <button class="btn btn-danger" {{action "destroy" this}}><i class="fa fa-trash-o"></i></button>
     <button class="btn" {{action "edit" this}}><i class="fa fa-pencil"></i></button>
     {{#if isBlocked}}
-      <button class="btn" {{action "allow" this}}><i {{bind-attr class=":fa doNothingIcon"}}></i> {{i18n admin.logs.screened_ips.actions.do_nothing}}</button>
+      <button class="btn" {{action "allow" this}}><i {{bind-attr class=":fa doNothingIcon"}}></i> {{i18n 'admin.logs.screened_ips.actions.do_nothing'}}</button>
     {{else}}
-      <button class="btn" {{action "block" this}}><i {{bind-attr class=":fa blockIcon"}}></i> {{i18n admin.logs.screened_ips.actions.block}}</button>
+      <button class="btn" {{action "block" this}}><i {{bind-attr class=":fa blockIcon"}}></i> {{i18n 'admin.logs.screened_ips.actions.block'}}</button>
     {{/if}}
   {{else}}
-    <button class="btn" {{action "save" this}}>{{i18n admin.logs.save}}</button>
-    <a {{action "cancel" this}}>{{i18n cancel}}</a>
+    <button class="btn" {{action "save" this}}>{{i18n 'admin.logs.save'}}</button>
+    <a {{action "cancel" this}}>{{i18n 'cancel'}}</a>
   {{/unless}}
 </div>
 <div class="clearfix"></div>

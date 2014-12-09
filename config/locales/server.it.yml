@@ -33,7 +33,6 @@ it:
   log_in: "Accedi"
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
-  purge_reason: "Cancellato automaticamente poiché vecchio e non verificato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   errors:
     messages:
@@ -262,17 +261,17 @@ it:
         one: "1m"
         other: "%{count}m"
       about_x_hours:
-        one: "1h"
-        other: "%{count}h"
+        one: "1o"
+        other: "%{count}o"
       x_days:
-        one: "1d"
-        other: "%{count}d"
+        one: "1g"
+        other: "%{count}gg"
       about_x_months:
-        one: "1mes"
-        other: "%{count}mes"
+        one: "1mese"
+        other: "%{count}mesi"
       x_months:
-        one: "1mes"
-        other: "%{count}mes"
+        one: "1mese"
+        other: "%{count}mesi"
       about_x_years:
         one: "1a"
         other: "%{count}a"
@@ -508,7 +507,7 @@ it:
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il tuo file config/environments/production.rb e accertati che le impostazioni config.action_mailer siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
     default_logo_warning: "Non hai personalizzato le immagini dei logo per il tuo sito. Aggiorna logo_url, logo_small_url, e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     contact_email_missing: "Non hai fornito una email di contatto per il tuo sito. Per favore aggiorna il campo contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    contact_email_invalid: "Il contatto email non è valido. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    contact_email_invalid: "La email di contatto non è valida. Per favore aggiorna contact_email nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     title_nag: "Il titolo del sito è ancora impostato al valore di default. Per favore aggiornalo con il titolo del tuo sito, dalle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     site_description_missing: "L'impostazione site_description è vuota. Scrivi una breve descrizione del forum nelle <a href='/admin/site_settings'>Impostazioni del sito</a>."
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un provider come mandrill.com per l'invio delle tue email."
@@ -708,11 +707,13 @@ it:
     newuser_max_attachments: "Quanti allegati un nuovo utente può aggiungere ad un post."
     newuser_max_replies_per_topic: "Numero massimo di risposte, che un utente può inoltrare in un singolo topic, prima che qualcuno risponda."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli dell'argomento, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
+    category_colors: "Un elenco di valori di colori esadecimali permessi per le categorie."
     title_prettify: "Previeni refusi ed errori comuni nei titoli, inclusi Tutto maiuscolo, Primo carattere minuscolo, ! e ? ripetuti, . aggiuntivi alla fine, etc etc."
     faq_url: "Se hai un documento sulle FAQ ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     tos_url: "Se hai un documento dei Termini di Servizio ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     privacy_policy_url: "Se hai un documento sulle Politiche di Privacy ospitato da qualche altra parte che vuoi usare, fornisci l'URL qui."
     newuser_spam_host_threshold: "Il numero delle volte che un nuovo utente può postare un link verso lo stesso host compreso nel `newuser_spam_host_posts` post prima che venga considerato spam."
+    reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite e-mail."
     reply_by_email_address: "Template di risposta via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     pop3_polling_port: "La porta dell'account POP3."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
@@ -727,6 +728,7 @@ it:
     enable_mobile_theme: "I dispositivi mobile usano un tema apposito, con possibilità di passare alla visualizzazione desktop. Disabilita questa opzione se vuoi usare un foglio di stile custom e completamente responsive."
     suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
     global_notice: "Mostra a tutti i visitatori un avviso con striscione globale URGENTE, EMERGENZA, lascia vuoto per nasconderlo (HTML consentito)."
+    invites_per_page: "Inviti predefiniti mostrati nella pagina utente."
     short_progress_text_threshold: "Quando il numero di messaggi di un argomento supera questo valore, la barra di avanzamento mostrerà solo il numero attuale di messaggi. Se modifichi la lunghezza della barra di avanzamento, potresti dover cambiare questo valore."
     default_code_lang: "Ai blocchi di codice GitHub viene applicata l'evidenziazione della sintassi del linguaggio di programmazione di default (lang-auto, ruby, python ecc.)"
     embed_truncate: "Tronca i messaggi incorporati."
@@ -798,6 +800,9 @@ it:
     autoclosed_enabled_lastpost_days:
       one: "Questo argomento è stato automaticamente chiuso un giorno dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} giorni dopo l'ultima risposta. Non sono permesse altre risposte."
+    autoclosed_enabled_lastpost_hours:
+      one: "Questo argomento è stato automaticamente chiuso un'ora dopo l'ultima risposta. Non sono permesse altre risposte."
+      other: "Questo argomento è stato automaticamente chiuso %{count} ore dopo l'ultima risposta. Non sono permesse altre risposte."
     autoclosed_enabled_lastpost_minutes:
       one: "Questo argomento è stato automaticamente chiuso un minuto dopo l'ultima risposta. Non sono permesse altre risposte."
       other: "Questo argomento è stato automaticamente chiuso %{count} minuti dopo l'ultima risposta. Non sono permesse altre risposte."
@@ -937,6 +942,8 @@ it:
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
+    email_reject_no_account:
+      subject_template: "Problema relativo all'e-mail -- Account sconosciuto"
     email_reject_empty:
       subject_template: "Problema email -- Nessun contenuto"
     email_reject_parsing:
@@ -945,6 +952,8 @@ it:
       subject_template: "Problema email -- Errore di invio"
     email_reject_post_error_specified:
       subject_template: "Problema email -- Errore di invio"
+    email_reject_topic_not_found:
+      subject_template: "Problema relativo all'e-mail -- Argomento non trovato"
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -984,16 +993,16 @@ it:
     download_remote_images_disabled:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché il limite di spazio sul disco definito in `download_remote_images_threshold` è stato raggiunto."
-  unsubscribe_link: "Se vuoi cancellarti per non ricevere più queste email, visita le tue [preferenze utente](%{user_preferences_url})."
+  unsubscribe_link: "Se vuoi annullare l'iscrizione a queste email, visita le tue [preferenze utente](%{user_preferences_url})."
   subject_re: "R:"
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     unsubscribe:
-      title: "Cancella iscrizione"
-      description: "Non sei interessato a ricevere queste email? Nessun problema! Clicca qui sotto per cancellarti istantaneamente:"
+      title: "Annulla iscrizione"
+      description: "Non vuoi ricevere queste email? Nessun problema! Clicca qui sotto per annullare l'iscrizione:"
     reply_by_email: "Per intervenire, rispondi a questa email o visita %{base_url}%{url}."
-    visit_link_to_respond: "Per intervenire, visita %{base_url}%{url}"
+    visit_link_to_respond: "Per rispondere, visita %{base_url}%{url}"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita alla conversazione privata '%{topic_title}'"
@@ -1047,18 +1056,19 @@ it:
         ---
         %{respond_instructions}
     digest:
-      subject_template: "[%{site_name}] Riepilogo per %{date}"
+      subject_template: "[%{site_name}] Riepilogo del %{date}"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
-      top_topics: "Post Popolari"
+      top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
-      read_more: "Leggi altro"
+      read_more: "Leggi Altro"
+      more_topics_category: "Ulteriori nuovi argomenti:"
       posts:
-        one: "1 post"
-        other: "%{count} post"
+        one: "1 messaggio"
+        other: "%{count} messaggi"
     forgot_password:
-      subject_template: "[%{site_name}] Reset Password"
+      subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |
         Qualcuno ha richiesto il reset della password per questo account su [%{site_name}](%{base_url}).
 
@@ -1067,7 +1077,7 @@ it:
         Clicca il link qui sotto per scegliere una nuova password:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
-      subject_template: "[%{site_name}] Imposta una password"
+      subject_template: "[%{site_name}] Imposta Password"
       text_body_template: "Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato. \n\nSe non hai fatto tu questa richiesta, ignora tranquillamente questa email.\n\nClicca sul seguente collegamento per scegliere una password:\n%{base_url}/users/password-reset/%{email_token}\n"
     account_created:
       subject_template: "[%{site_name}] Il Tuo Nuovo Account "
@@ -1078,7 +1088,7 @@ it:
 
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
-      subject_template: "Puoi partecipare a %{site_name}!"
+      subject_template: "Sei stato ammesso su %{site_name}!"
       text_body_template: |+
         Benvenuto su %{site_name}!
 
@@ -1106,7 +1116,7 @@ it:
         Se il link non è cliccabile, copialo ed incollalo manualmente nella barra degli indirizzi del browser.
   page_not_found:
     title: "La pagina richiesta non esiste oppure è privata."
-    popular_topics: "Popolari"
+    popular_topics: "Di successo"
     recent_topics: "Recenti"
     see_more: "Altro"
     search_title: "Cerca nel sito"
@@ -1118,7 +1128,7 @@ it:
   terms_of_service:
     title: "Termini di Servizio"
     signup_form_message: 'Ho letto e accetto i <a href="/tos" target="_blank">Termini del Servizio</a>.'
-  deleted: 'cancellato'
+  deleted: 'cancellati'
   upload:
     edit_reason: "copie locali delle immagini scaricate"
     unauthorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: %{authorized_extensions})."

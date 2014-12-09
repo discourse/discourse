@@ -67,6 +67,12 @@ export default Discourse.View.extend({
     var $elem = this.$(),
         self = this;
 
+    // Workaround for https://github.com/emberjs/ember.js/issues/9813
+    // Can be removed when fixed. Without it, the wrong option is selected
+    this.$('option').each(function(i, o) {
+      o.selected = !!$(o).attr('selected');
+    });
+
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
     $elem.on("change", function (e) {

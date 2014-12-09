@@ -201,8 +201,9 @@
       for (var j=bottomView; j<childViews.length; j++) {
         var checkView = childViews[j];
         if (!checkView._containedView) {
-          if (!checkView.get('loading')) {
-            checkView.$().html(this.get('loadingHTML'));
+          var loadingHTML = this.get('loadingHTML');
+          if (!Em.isEmpty(loadingHTML) && !checkView.get('loading')) {
+            checkView.$().html(loadingHTML);
           }
           return;
         }
@@ -306,21 +307,21 @@
     setContainedView: function(cv) {
       if (this._childViews[0]) {
         this._childViews[0].destroy();
+        this._childViews[0] = cv;
       }
-      this._childViews[0] = cv;
-      this.setupChildView(cv);
-      if (!this._elementCreated || this._scheduled) return;
 
+      if (cv) {
+        cv.set('_parentView', this);
+        cv.set('templateData', this.get('templateData'));
+        this._childViews[0] = cv;
+      } else {
+        this._childViews.clear();
+      }
+
+      if (!this._elementCreated || this._scheduled) return;
       this._scheduled = true;
       this.set('_containedView', cv);
       Ember.run.schedule('render', this, this.updateChildView);
-    },
-
-    setupChildView: function (childView) {
-      if (childView) {
-        childView.set('_parentView', this);
-        childView.set('templateData', this.get('templateData'));
-      }
     },
 
     render: function (buffer) {
@@ -329,9 +330,6 @@
     },
 
     updateChildView: function () {
-      // If the element has been destroyed before this call occurs
-      if (!this) { return; }
-
       this._scheduled = false;
       if (!this._elementCreated || this.isDestroying || this.isDestroyed) { return; }
 

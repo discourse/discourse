@@ -73,14 +73,34 @@ export default DiscourseController.extend({
     if (c) { c.updateDraftStatus(); }
   },
 
-  appendText: function(text) {
+  appendText: function(text, opts) {
     var c = this.get('model');
-    if (c) { c.appendText(text); }
+    if (c) {
+      opts = opts || {};
+      var wmd = $('#wmd-input');
+      var val = wmd.val() || '';
+      var position = opts.position === "cursor" ? wmd.caret() : val.length;
+
+      var caret = c.appendText(text, position, opts);
+      if(wmd[0]){
+        Em.run.next(function(){
+          Discourse.Utilities.setCaretPosition(wmd[0], caret);
+        });
+      }
+    }
   },
 
-  appendBlockAtCursor: function(text) {
-    var c = this.get('model');
-    if (c) { c.appendText(text, $('#wmd-input').caret(), {block: true}); }
+  appendTextAtCursor: function(text, opts) {
+    opts = opts || {};
+    opts.position = "cursor";
+    this.appendText(text, opts);
+  },
+
+  appendBlockAtCursor: function(text, opts) {
+    opts = opts || {};
+    opts.position = "cursor";
+    opts.block = true;
+    this.appendText(text, opts);
   },
 
   categories: function() {

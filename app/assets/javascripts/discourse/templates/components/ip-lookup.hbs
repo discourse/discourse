@@ -1,36 +1,36 @@
 {{#if ip}}
   <button class="btn" {{action "lookup"}}>
-    {{fa-icon "globe"}}{{i18n admin.user.ip_lookup}}
+    {{fa-icon "globe"}}{{i18n 'admin.user.ip_lookup'}}
   </button>
 {{/if}}
 {{#if show}}
   <div class="location-box">
     <a class="close pull-right" {{action "hide"}}>{{fa-icon "times"}}</a>
-    <h4>{{i18n ip_lookup.title}}</h4>
+    <h4>{{i18n 'ip_lookup.title'}}</h4>
     <dl>
       {{#if location}}
         {{#if location.hostname}}
-          <dt>{{i18n ip_lookup.hostname}}</dt>
+          <dt>{{i18n 'ip_lookup.hostname'}}</dt>
           <dd>{{location.hostname}}</dd>
         {{/if}}
 
-        <dt>{{i18n ip_lookup.location}}</dt>
+        <dt>{{i18n 'ip_lookup.location'}}</dt>
         <dd>
           {{#if location.loc}}
             <a href="https://maps.google.com/maps?q={{unbound location.loc}}" target="_blank">{{location.loc}}</a><br>
             {{city}}
           {{else}}
-            {{i18n ip_lookup.location_not_found}}
+            {{i18n 'ip_lookup.location_not_found'}}
           {{/if}}
         </dd>
 
         {{#if location.org}}
-          <dt>{{i18n ip_lookup.organisation}}</dt>
+          <dt>{{i18n 'ip_lookup.organisation'}}</dt>
           <dd>{{location.org}}</dd>
         {{/if}}
 
         {{#if location.phone}}
-          <dt>{{i18n ip_lookup.phone}}</dt>
+          <dt>{{i18n 'ip_lookup.phone'}}</dt>
           <dd>{{location.phone}}</dd>
         {{/if}}
       {{else}}
@@ -38,11 +38,11 @@
       {{/if}}
 
       <dt>
-        {{i18n ip_lookup.other_accounts}}
+        {{i18n 'ip_lookup.other_accounts'}}
         <strong>{{totalOthersWithSameIP}}</strong>
         {{#if other_accounts.length}}
           <button class="btn btn-danger pull-right" {{action "deleteOtherAccounts"}}>
-            {{fa-icon "warning"}}{{i18n ip_lookup.delete_other_accounts count=otherAccountsToDelete}}
+            {{fa-icon "warning"}}{{i18n 'ip_lookup.delete_other_accounts' count=otherAccountsToDelete}}
           </button>
         {{/if}}
       </dt>
@@ -52,11 +52,11 @@
             <table class="table table-condensed table-hover">
               <thead>
                 <tr>
-                  <th>{{i18n ip_lookup.username}}</th>
-                  <th>{{i18n ip_lookup.trust_level}}</th>
-                  <th>{{i18n ip_lookup.read_time}}</th>
-                  <th>{{i18n ip_lookup.topics_entered}}</th>
-                  <th>{{i18n ip_lookup.post_count}}</th>
+                  <th>{{i18n 'ip_lookup.username'}}</th>
+                  <th>{{i18n 'ip_lookup.trust_level'}}</th>
+                  <th>{{i18n 'ip_lookup.read_time'}}</th>
+                  <th>{{i18n 'ip_lookup.topics_entered'}}</th>
+                  <th>{{i18n 'ip_lookup.post_count'}}</th>
                 </tr>
               </thead>
               <tbody>

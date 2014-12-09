@@ -1,19 +1,15 @@
-/**
-  This view is used for rendering the notification that a topic will
-  automatically close.
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  @class TopicClosingView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.View.extend({
+export default Discourse.View.extend(StringBuffer, {
   elementId: 'topic-closing-info',
   delayedRerender: null,
 
-  shouldRerender: Discourse.View.renderIfChanged('topic.closed', 'topic.details.{auto_close_at,auto_close_based_on_last_post,auto_close_hours}'),
+  rerenderTriggers: ['topic.closed',
+                     'topic.details.auto_close_at',
+                     'topic.details.auto_close_based_on_last_post',
+                     'topic.details.auto_close_hours'],
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     if (!this.present('topic.details.auto_close_at')) return;
     if (this.get("topic.closed")) return;
 
@@ -36,8 +32,7 @@ export default Discourse.View.extend({
     }
 
     var basedOnLastPost = this.get("topic.details.auto_close_based_on_last_post");
-    var key = basedOnLastPost ? 'topic.auto_close_notice_based_on_last_post' : 'topic.auto_close_notice'
-
+    var key = basedOnLastPost ? 'topic.auto_close_notice_based_on_last_post' : 'topic.auto_close_notice';
     var autoCloseHours = this.get("topic.details.auto_close_hours") || 0;
 
     buffer.push('<h3><i class="fa fa-clock-o"></i> ');

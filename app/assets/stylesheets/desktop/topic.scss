@@ -257,3 +257,24 @@ and (max-width : 870px) {
     }
 
 }
+
+
+@media all
+and (max-width : 724px) {
+
+  #topic-progress-wrapper {
+    right: 0;
+    #topic-progress, #topic-progress-expanded { left: auto; right: 145px;  }
+  }
+
+}
+
+@media all
+and (max-width : 485px) {
+
+  #topic-progress-wrapper.docked {
+    display: none;
+    }
+
+
+}

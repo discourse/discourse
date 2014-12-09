@@ -33,7 +33,6 @@ ru:
   log_in: "Войти"
   via: "%{username} на %{site_name}"
   is_reserved: "зарезервировано"
-  purge_reason: "Автоматически удалить из-за просроченности и непроверенности"
   disable_remote_images_download_reason: "Загрузка картинок была отключена из-за недостаточности места на диске."
   errors:
     messages:
@@ -605,9 +604,6 @@ ru:
     title: "Короткое название этого сайта. Будет использоваться в HTML-тэге title."
     site_description: "Короткое описание этого сайта. Будет использоваться в HTML-тэге description."
     contact_email: "Главный адрес электронной почты для переписки по вопросам сайта. Команда Discourse.org может посылать важные уведомления на этот адрес."
-    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "ТОЛЬКО ДЛЯ РАЗРАБОТЧИКОВ! ВНИМАНИЕ! По умолчанию задачи обрабатываются асинхронно в очереди sidekiq. Если настройка выключена, ваш сайт может не работать."
     crawl_images: "Скачивать картинки с других сайтов для автоматического определения их размеров."
     download_remote_images_to_local: "Скачивать картинки, вставленные в сообщения ссылками на другие сайты, и хранить их локально, чтобы предотвратить их изменения или утерю."

@@ -1,21 +1,21 @@
 <div class="badges">
 
   <div class='content-list span6'>
-    <h3>{{i18n admin.badges.title}}</h3>
+    <h3>{{i18n 'admin.badges.title'}}</h3>
     <ul>
       {{#each}}
       <li>
         {{#link-to 'adminBadges.show' id}}
           {{badge-button badge=this}}
           {{#if newBadge}}
-            <span class="list-badge">{{i18n filters.new.lower_title}}</span>
+            <span class="list-badge">{{i18n 'filters.new.lower_title'}}</span>
           {{/if}}
         {{/link-to}}
       </li>
       {{/each}}
     </ul>
     {{#link-to 'adminBadges.show' 'new' class="btn"}}
-      {{fa-icon "plus"}} {{i18n admin.badges.new}}
+      {{fa-icon "plus"}} {{i18n 'admin.badges.new'}}
     {{/link-to}}
     <br>
     <br>

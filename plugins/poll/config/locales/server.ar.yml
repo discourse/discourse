@@ -1,0 +1,11 @@
+ar:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "خيارات التصويت"
+  poll:
+    must_contain_poll_options: "يجب أن يحتوي على قائمة خيارات التصويت"
+    cannot_have_modified_options: "التعديل غير ممكن بعد مضي 5 دقائق. اتصل بالمسؤول إذا كنت بحاجة لتغييرها."
+    cannot_add_or_remove_options: "تستطيع تعديله فقط ولا يمكنك إضافته أو حذفه. إذا كنت بحاجة لإضافة أو حذف خيارات يجب أن تُقفل هذا العنوان وتنشئ عنوان جديد."
+    prefix: "تصويت"
+    closed_prefix: "هذا التصويت مغلق"

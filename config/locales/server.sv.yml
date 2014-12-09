@@ -23,7 +23,6 @@ sv:
   log_in: "Logga in"
   via: "%{username} via %{site_name}"
   is_reserved: "är reserverat"
-  purge_reason: "Automatiskt borttagen på grund av att vara gammal och ej verifierad"
   disable_remote_images_download_reason: "Fjärrbilds nedladdning är inaktiverad eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   errors:
     messages:

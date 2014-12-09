@@ -2,12 +2,12 @@
   <div>
     <div>
       <input type="radio" id="system-avatar" name="avatar" value="system" {{action "useSystem"}}>
-      <label class="radio" for="system-avatar">{{bound-avatar controller "large" system_avatar_upload_id}} {{{i18n user.change_avatar.letter_based}}}</label>
+      <label class="radio" for="system-avatar">{{bound-avatar controller "large" system_avatar_upload_id}} {{{i18n 'user.change_avatar.letter_based'}}}</label>
     </div>
     <div>
       <input type="radio" id="gravatar" name="avatar" value="gravatar" {{action "useGravatar"}}>
-      <label class="radio" for="gravatar">{{bound-avatar controller "large" gravatar_avatar_upload_id}} {{{i18n user.change_avatar.gravatar}}} {{email}}</label>
-      <button href {{action "refreshGravatar"}} title="{{i18n user.change_avatar.refresh_gravatar_title}}" {{bind-attr enabled="view.gravatarRefreshEnabled"}} class="btn no-text"><i class="fa fa-refresh"></i></button>
+      <label class="radio" for="gravatar">{{bound-avatar controller "large" gravatar_avatar_upload_id}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
+      <button href {{action "refreshGravatar"}} title="{{i18n 'user.change_avatar.refresh_gravatar_title'}}" {{bind-attr enabled="view.gravatarRefreshEnabled"}} class="btn no-text"><i class="fa fa-refresh"></i></button>
     </div>
     <div>
       <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded" {{action "useUploadedAvatar"}}>
@@ -16,10 +16,10 @@
           {{#if view.uploadedAvatarTemplate}}
             {{bound-avatar-template view.uploadedAvatarTemplate "large"}}
           {{else}}
-            {{bound-avatar controller "large" custom_avatar_upload_id}} {{i18n user.change_avatar.uploaded_avatar}}
+            {{bound-avatar controller "large" custom_avatar_upload_id}} {{i18n 'user.change_avatar.uploaded_avatar'}}
           {{/if}}
         {{else}}
-          {{i18n user.change_avatar.uploaded_avatar_empty}}
+          {{i18n 'user.change_avatar.uploaded_avatar_empty'}}
         {{/if}}
       </label>
       {{avatar-uploader username=username
@@ -30,6 +30,6 @@
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action "saveAvatarSelection"}} {{bind-attr disabled="view.saveDisabled"}}>{{i18n save}}</button>
-  <a {{action "closeModal"}}>{{i18n cancel}}</a>
+  <button class="btn btn-primary" {{action "saveAvatarSelection"}} {{bind-attr disabled="view.saveDisabled"}}>{{i18n 'save'}}</button>
+  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
 </div>

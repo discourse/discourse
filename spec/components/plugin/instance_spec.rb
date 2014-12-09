@@ -4,14 +4,7 @@ require_dependency 'plugin/instance'
 describe Plugin::Instance do
 
   after do
-    DiscoursePluginRegistry.javascripts.clear
-    DiscoursePluginRegistry.admin_javascripts.clear
-    DiscoursePluginRegistry.server_side_javascripts.clear
-    DiscoursePluginRegistry.stylesheets.clear
-    DiscoursePluginRegistry.mobile_stylesheets.clear
-    DiscoursePluginRegistry.desktop_stylesheets.clear
-    DiscoursePluginRegistry.sass_variables.clear
-    DiscoursePluginRegistry.serialized_current_user_fields
+    DiscoursePluginRegistry.reset!
   end
 
   context "find_all" do
@@ -31,7 +24,7 @@ describe Plugin::Instance do
   end
 
   context "register asset" do
-    it "does register general css properly" do
+    it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css")
       plugin.register_asset("test2.css")
@@ -41,70 +34,7 @@ describe Plugin::Instance do
       DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
       DiscoursePluginRegistry.stylesheets.count.should == 2
     end
-
-    it "registers desktop css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :desktop)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
-      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-    it "registers mobile css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :mobile)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-    it "registers desktop css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :desktop)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-
-    it "registers sass variable properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :variables)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.sass_variables.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-
-    it "registers admin javascript properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("my_admin.js", :admin)
-
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.admin_javascripts.count.should == 1
-      DiscoursePluginRegistry.javascripts.count.should == 0
-      DiscoursePluginRegistry.server_side_javascripts.count.should == 0
-    end
-
-    it "registers server side javascript properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("my_admin.js", :server_side)
-
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.server_side_javascripts.count.should == 1
-      DiscoursePluginRegistry.javascripts.count.should == 1
-      DiscoursePluginRegistry.admin_javascripts.count.should == 0
-    end
-
   end
-
 
   context "activate!" do
     it "can activate plugins correctly" do

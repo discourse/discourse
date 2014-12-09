@@ -1,7 +1,6 @@
 require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
-require_dependency 'summarize'
 require_dependency 'gaps'
 
 class TopicView
@@ -115,7 +114,8 @@ class TopicView
   def summary
     return nil if desired_post.blank?
     # TODO, this is actually quite slow, should be cached in the post table
-    Summarize.new(desired_post.cooked).summary
+    excerpt = desired_post.excerpt(500, strip_links: true, text_entities: true)
+    (excerpt || "").gsub(/\n/, ' ').strip
   end
 
   def image_url

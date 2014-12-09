@@ -1,4 +1,6 @@
-export default Discourse.View.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
+
+export default Discourse.View.extend(StringBuffer, {
   tagName: 'button',
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
   attributeBindings: ['title', 'data-toggle', 'data-share-url'],
@@ -12,7 +14,7 @@ export default Discourse.View.extend({
     return I18n.t(this.get('textKey'));
   }.property('textKey'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     if (this.renderIcon) {
       this.renderIcon(buffer);
     }

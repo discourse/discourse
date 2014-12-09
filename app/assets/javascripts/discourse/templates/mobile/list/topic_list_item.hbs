@@ -11,10 +11,10 @@
     <div class="topic-excerpt">
       {{{excerpt}}}
       {{#if excerptTruncated}}
-        {{#unless canClearPin}}<a href="{{url}}">{{i18n read_more}}</a>{{/unless}}
+        {{#unless canClearPin}}<a href="{{url}}">{{i18n 'read_more'}}</a>{{/unless}}
       {{/if}}
       {{#if canClearPin}}
-        <a href="#" {{action "clearPin" this}} title="{{i18n topic.clear_pin.help}}">{{i18n topic.clear_pin.title}}</a>
+        <a href="#" {{action "clearPin" this}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
       {{/if}}
     </div>
   {{/if}}
@@ -30,7 +30,7 @@
   <div class="pull-right">
     {{posts-count-column topic=this tagName="div" class="num posts" action="showTopicEntrance"}}
     <div class='num activity last'>
-      <a href="{{lastPostUrl}}" title='{{i18n last_post}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
+      <a href="{{lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date bumped_at}}}'>{{last_poster_username}}</a>
       {{raw "list/activity-column" topic=this tagName="span" class="age"}}
     </div>
   </div>
