@@ -9,11 +9,11 @@
 
     <div class='topic-avatar'>
       <div class="contents">
-        {{#unless userDeleted}}
-          {{poster-avatar post=this classNames="main-avatar"}}
-        {{else}}
+        {{#unboundIf userDeleted}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
-        {{/unless}}
+        {{else}}
+          {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
+        {{/unboundIf}}
         {{plugin-outlet "poster-avatar-bottom"}}
       </div>
     </div>
@@ -42,14 +42,14 @@
         {{#if wiki}}
           <div class="post-info wiki" title="{{i18n 'post.wiki.about'}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
         {{/if}}
-        {{#if via_email}}
+        {{#unboundIf via_email}}
           {{#if canViewRawEmail}}
             <div class="post-info via-email raw-email" title="{{i18n 'post.via_email'}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
           {{else}}
             <div class="post-info via-email" title="{{i18n 'post.via_email'}}">{{fa-icon "envelope-o"}}</div>
           {{/if}}
-        {{/if}}
-        {{#if showUserReplyTab}}
+        {{/unboundIf}}
+        {{#unboundIf showUserReplyTab}}
         <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
           {{#if loadingReplyHistory}}
           {{i18n 'loading'}}
@@ -59,7 +59,7 @@
           <span>{{reply_to_user.username}}</span>
           {{/if}}
         </a>
-        {{/if}}
+        {{/unboundIf}}
         <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>
 
