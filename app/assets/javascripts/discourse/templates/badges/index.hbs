@@ -3,16 +3,16 @@
 
   <table class='badges-listing'>
     <tbody>
-      {{#each badgeGroups}}
+      {{#each bg in badgeGroups}}
         <tr class='title'>
-          <td colspan=4><h3>{{this.badgeGrouping.displayName}}</h3></td>
+          <td colspan=4><h3>{{bg.badgeGrouping.displayName}}</h3></td>
         </tr>
-        {{#each this.badges}}
+        {{#each b in bg.badges}}
           <tr>
-            <td class='granted'>{{#if this.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
-            <td class='badge'>{{user-badge badge=this}}</td>
-            <td class='description'>{{{displayDescriptionHtml}}}</td>
-            <td class='grant-count'><span title="{{i18n 'badges.granted' count=grant_count}}">{{grant_count}}</span></td>
+            <td class='granted'>{{#if b.has_badge}}<i class='fa fa-check'></i>{{/if}}</td>
+            <td class='badge'>{{user-badge badge=b}}</td>
+            <td class='description'>{{{b.displayDescriptionHtml}}}</td>
+            <td class='grant-count'><span title="{{i18n 'badges.granted' count=b.grant_count}}">{{b.grant_count}}</span></td>
           </tr>
         {{/each}}
       {{/each}}

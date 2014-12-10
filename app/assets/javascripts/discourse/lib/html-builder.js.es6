@@ -1,13 +1,18 @@
 export function categoryLinkHTML(category, options) {
   var categoryOptions = {};
-  if (options.hash) {
-    if (options.hash.allowUncategorized) { categoryOptions.allowUncategorized = true; }
-    if (options.hash.showParent) { categoryOptions.showParent = true; }
-    if (options.hash.onlyStripe) { categoryOptions.onlyStripe = true; }
-    if (options.hash.link !== undefined) { categoryOptions.link = options.hash.link; }
-    if (options.hash.extraClasses) { categoryOptions.extraClasses = options.hash.extraClasses; }
-    if (options.hash.categories) {
-      categoryOptions.categories = Em.Handlebars.get(this, options.hash.categories, options);
+
+  // TODO: This is a compatibility layer with the old helper structure.
+  // Can be removed once we migrate to `registerUnbound` fully
+  if (options && options.hash) { options = options.hash; }
+
+  if (options) {
+    if (options.allowUncategorized) { categoryOptions.allowUncategorized = true; }
+    if (options.showParent) { categoryOptions.showParent = true; }
+    if (options.onlyStripe) { categoryOptions.onlyStripe = true; }
+    if (options.link !== undefined) { categoryOptions.link = options.link; }
+    if (options.extraClasses) { categoryOptions.extraClasses = options.extraClasses; }
+    if (options.categories) {
+      categoryOptions.categories = Em.Handlebars.get(this, options.categories, options);
     }
   }
   return new Handlebars.SafeString(Discourse.HTML.categoryBadge(category, categoryOptions));
