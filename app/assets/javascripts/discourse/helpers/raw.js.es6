@@ -3,6 +3,9 @@ Handlebars.registerHelper('raw', function(property, options) {
       template = Discourse.__container__.lookup('template:' + templateName),
       params = options.hash;
 
+  // {{raw}} helper is broken!
+  return;
+
   if (!template) {
     Ember.warn('Could not find raw template: ' + templateName);
     return;
@@ -11,7 +14,7 @@ Handlebars.registerHelper('raw', function(property, options) {
   if (params) {
     for (var prop in params) {
       if (options.hashTypes[prop] === "ID") {
-        params[prop] = Ember.Handlebars.get(this, params[prop], options);
+        params[prop] = Ember.get(this, params[prop], options);
       }
     }
   }

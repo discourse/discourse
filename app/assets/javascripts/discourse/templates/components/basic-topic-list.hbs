@@ -17,34 +17,34 @@
       </thead>
 
       <tbody>
-        {{#each topics}}
-          <tr {{bind-attr class="archived"}}>
+        {{#each t in topics}}
+          <tr {{bind-attr class="t.archived"}}>
             <td class='main-link'>
-              {{topic-status topic=this}}
-              <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
-              {{topic-post-badges unread=unread
-                                  newPosts=new_posts
-                                  unseen=unseen
-                                  url=lastUnreadUrl}}
+              {{topic-status topic=t}}
+              <a class='title' href="{{unbound t.lastUnreadUrl}}">{{{unbound t.fancy_title}}}</a>
+              {{topic-post-badges unread=t.unread
+                                  newPosts=t.new_posts
+                                  unseen=t.unseen
+                                  url=t.lastUnreadUrl}}
             </td>
 
-            {{raw "list/category-column" hideCategory=controller.hideCategory category=category}}
+            {{raw "list/category-column" hideCategory=controller.hideCategory category=t.category}}
 
-            {{posts-count-column topic=this class="num" action="clickedPosts"}}
+            {{posts-count-column topic=t class="num" action="clickedPosts"}}
 
             {{#if controller.showParticipants}}
               <td class='participants'>
-                {{#each participants}}
-                <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}" class="{{unbound extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
+                {{#each p in t.participants}}
+                <a href="{{unbound p.user.path}}" data-user-card="{{unbound p.user.username}}" class="{{unbound p.extras}}">{{avatar p usernamePath="user.username" imageSize="small"}}</a>
                 {{/each}}
               </td>
             {{/if}}
 
-            <td {{bind-attr class=":num :views viewsHeat"}}>
-              {{number views numberKey="views_long"}}
+            <td {{bind-attr class=":num :views t.viewsHeat"}}>
+              {{number t.views numberKey="views_long"}}
             </td>
 
-            {{raw "list/activity-column" topic=this class="num" tagName="td"}}
+            {{raw "list/activity-column" topic=t class="num" tagName="td"}}
           </tr>
         {{/each}}
       </tbody>

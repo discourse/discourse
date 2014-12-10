@@ -121,8 +121,8 @@
           {{#if custom_groups}}
             <dt>{{i18n 'groups.title' count=custom_groups.length}}</dt>
             <dd class='groups'>
-              {{#each custom_groups}}
-                <span>{{#link-to 'group' this class="group-link"}}{{name}}{{/link-to}}</span>
+              {{#each group in custom_groups}}
+                <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
             </dd>
           {{/if}}

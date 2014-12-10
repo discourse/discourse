@@ -1,5 +1,4 @@
 import { categoryLinkHTML } from 'discourse/lib/html-builder';
+import registerUnbound from 'discourse/helpers/register-unbound';
 
-Handlebars.registerHelper('category-link', function(property, options) {
-  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
-});
+registerUnbound('category-link', categoryLinkHTML);

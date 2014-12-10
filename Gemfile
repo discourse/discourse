@@ -104,8 +104,8 @@ end
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.6.0.beta.2'
-gem 'handlebars-source', '1.3.0'
+gem 'ember-source', '1.9.0.beta.4'
+gem 'handlebars-source', '2.0.0'
 gem 'barber'
 
 gem 'message_bus'

@@ -1,3 +1,4 @@
+//= require ./discourse/helpers/register-unbound
 //= require ./discourse/helpers/i18n_helpers
 //= require ./discourse/mixins/ajax
 //= require ./discourse
