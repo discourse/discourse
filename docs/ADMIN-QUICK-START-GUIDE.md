@@ -230,7 +230,8 @@ The invite area on your profile page also includes advanced Staff methods of [se
    - [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
    - [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
    - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
-   - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc?](https://github.com/discourse/discourse/tree/master/script/import_scripts)?
+   - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/master/script/import_scripts)
+   - Embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](http://eviltrout.com/2014/01/22/embedding-discourse.html)?
 
 ### Need more Help?
 
