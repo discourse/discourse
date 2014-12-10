@@ -10,6 +10,14 @@ Discourse.Dialect.registerEmoji = function(code, url) {
   _extendedEmoji[code] = url;
 };
 
+Discourse.Emoji.list = function(){
+  var copy = emoji.slice(0);
+  _.each(_extendedEmoji, function(v,k){
+    copy.push(k);
+  });
+  return copy;
+};
+
 var toSearch;
 
 var search = function(term, options) {
