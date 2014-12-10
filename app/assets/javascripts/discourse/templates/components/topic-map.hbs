@@ -46,8 +46,8 @@
     {{/if}}
     {{#if showPosterAvatar}}
       <li {{bind-attr class=":avatars mapCollapsed::hidden"}}>
-        {{#each details.fewParticipants}}
-          {{topic-participant participant=this}}
+        {{#each p in details.fewParticipants}}
+          {{topic-participant participant=p}}
         {{/each}}
       </li>
     {{/if}}
@@ -56,8 +56,8 @@
 
 {{#unless mapCollapsed}}
   <section class='avatars clearfix'>
-    {{#each details.participants}}
-      {{topic-participant participant=this}}
+    {{#each p in details.participants}}
+      {{topic-participant participant=p}}
     {{/each}}
   </section>
 
@@ -65,16 +65,16 @@
     <section class='links'>
 
         <table class='topic-links'>
-          {{#each infoLinks}}
+          {{#each link in infoLinks}}
             <tr>
             <td>
-              <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=clicks}}'>{{clicks}}</span>
+              <span class='badge badge-notification clicks' title='{{i18n 'topic_map.clicks' count=clicks}}'>{{link.clicks}}</span>
             </td>
             <td>
-              <a href="{{unbound url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound user_id}}" data-ignore-post-id="true" title="{{unbound url}}">
-                {{#if title}}{{title}}{{else}}{{shorten-url url}}{{/if}}
+              <a href="{{unbound link.url}}" target="_blank" class='topic-link track-link' data-user-id="{{unbound link.user_id}}" data-ignore-post-id="true" title="{{unbound link.url}}">
+                {{#if link.title}}{{link.title}}{{else}}{{shorten-url link.url}}{{/if}}
               </a>
-              {{link-domain this}}
+              {{link-domain link}}
             </td>
             </tr>
           {{/each}}
