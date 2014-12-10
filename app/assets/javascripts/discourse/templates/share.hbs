@@ -10,7 +10,7 @@
   <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
 </div>
 
-{{each shareLinks itemView='share-link'}}
+{{each s in shareLinks itemView='share-link'}}
 
 <div class='link'>
   <a href='#' {{action "close"}} title='{{i18n 'share.close'}}'><i class="fa fa-times-circle"></i></a>

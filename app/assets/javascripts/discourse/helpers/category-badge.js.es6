@@ -1,6 +1,7 @@
 import { categoryLinkHTML } from 'discourse/lib/html-builder';
+import registerUnbound from 'discourse/helpers/register-unbound';
 
-Handlebars.registerHelper('category-badge', function(property, options) {
-  options.hash.link = false;
-  return categoryLinkHTML(Ember.Handlebars.get(this, property, options), options);
+registerUnbound('category-badge', function(cat, options) {
+  options.link = false;
+  return categoryLinkHTML(cat, options);
 });
