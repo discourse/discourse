@@ -1,6 +1,7 @@
 *.gem
 *.rbc
 .bundle
+/.idea
 .config
 .yardoc
 Gemfile.lock
