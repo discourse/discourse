@@ -120,14 +120,15 @@ class SessionController < ApplicationController
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
 
     user = User.find_by_username_or_email(params[:login])
-    if user.present?
+    user_presence = user.present? && user.id != -1
+    if user_presence
       email_token = user.email_tokens.create(email: user.email)
       Jobs.enqueue(:user_email, type: :forgot_password, user_id: user.id, email_token: email_token.token)
     end
 
     json = { result: "ok" }
     unless SiteSetting.forgot_password_strict
-      json[:user_found] = user.present?
+      json[:user_found] = user_presence
     end
 
     render json: json

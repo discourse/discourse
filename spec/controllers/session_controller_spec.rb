@@ -134,7 +134,7 @@ describe SessionController do
         @sso.name = @reversed_name
 
         @suggested_username = UserNameSuggester.suggest(@sso.username || @sso.name || @sso.email)
-        @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email) 
+        @suggested_name = User.suggest_name(@sso.name || @sso.username || @sso.email)
         @user.create_single_sign_on_record(external_id: '997', last_payload: '')
       end
 
@@ -431,6 +431,18 @@ describe SessionController do
       end
     end
 
+    context 'do nothing to system username' do
+      let(:user) { User.find(-1) }
+
+      it 'generates no token for system username' do
+        lambda { xhr :post, :forgot_password, login: user.username}.should_not change(EmailToken, :count)
+      end
+
+      it 'enqueues no email' do
+        Jobs.expects(:enqueue).never
+        xhr :post, :forgot_password, login: user.username
+      end
+    end
   end
 
   describe '.current' do
