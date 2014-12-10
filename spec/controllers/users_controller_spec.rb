@@ -636,6 +636,11 @@ describe UsersController do
         response.should be_success
       end
 
+      it 'should return a JSON response with the updated username' do
+        xhr :put, :username, username: user.username, new_username: new_username
+        ::JSON.parse(response.body)['username'].should == new_username
+      end
+
     end
   end
 
