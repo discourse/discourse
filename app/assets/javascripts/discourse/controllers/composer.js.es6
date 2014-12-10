@@ -21,7 +21,7 @@ export default DiscourseController.extend({
     var usernames = this.get('model.targetUsernames');
 
     // We need exactly one user to issue a warning
-    if (Em.empty(usernames) || usernames.split(',').length !== 1) {
+    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1) {
       return false;
     }
     return this.get('model.creatingPrivateMessage');
