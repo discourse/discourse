@@ -40,7 +40,32 @@ var closeSelector = function(){
   $('body, textarea').off('keydown.emoji');
 };
 
+var ungroupedIcons;
+
 var toolbar = function(selected){
+
+  if(!ungroupedIcons){
+    ungroupedIcons = [];
+    var groupedIcons = {};
+
+    _.each(groups, function(group){
+      _.each(group.icons, function(icon){
+        groupedIcons[icon] = true;
+      });
+    });
+
+    var emojis = Discourse.Emoji.list();
+    _.each(emojis,function(emoji){
+      if(groupedIcons[emoji] !== true){
+        ungroupedIcons.push(emoji);
+      }
+    });
+
+    if(ungroupedIcons.length > 0){
+      groups.push({name: 'ungrouped', icons: ungroupedIcons});
+    }
+  }
+
   return _.map(groups, function(g, i){
     var row = {src: Discourse.Emoji.urlFor(g.icons[0]), groupId: i};
     if(i===selected){
@@ -83,7 +108,6 @@ var bindEvents = function(page,offset){
     return false;
   });
 };
-
 
 var render = function(page, offset){
   var rows = [];
