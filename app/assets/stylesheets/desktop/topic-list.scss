@@ -160,8 +160,6 @@
   }
 }
 
-#list-area .top-lists h2 { margin: 5px 0 10px; }
-
 .topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
   margin-top: 3px;
@@ -272,6 +270,8 @@
 
 // Misc. stuff
 // --------------------------------------------------
+
+#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 #list-area {
   h2 {
