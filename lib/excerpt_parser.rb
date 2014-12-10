@@ -17,16 +17,15 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   def self.get_excerpt(html, length, options)
     html ||= ''
-    if (html.include? 'excerpt') && (SPAN_REGEX === html)
-      length = html.length
-    end
+    length = html.length if html.include?('excerpt') && SPAN_REGEX === html
     me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
     catch(:done) do
       parser.parse(html)
     end
-    me.excerpt.strip!
-    me.excerpt
+    excerpt = me.excerpt.strip
+    excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
+    excerpt
   end
 
   def escape_attribute(v)
