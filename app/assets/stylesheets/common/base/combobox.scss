@@ -11,7 +11,8 @@
     color: $primary;
   }
   .category-desc {
-    color: scale-color($primary, $lightness: 45%);
+    /* leave this color as non-variable -- it is displayed on a white background in a dropdown */
+    color: #333;
     margin: 6px 0 0 3px;
     font-size: 12px;
     line-height: 16px;
