@@ -91,7 +91,10 @@ class UsersController < ApplicationController
     result = user.change_username(params[:new_username])
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render nothing: true
+    render json: {
+      id: user.id,
+      username: user.username
+    }
   end
 
   def check_emails
