@@ -483,10 +483,15 @@ files:
   allow_profile_backgrounds:
     client: true
     default: true
-  automatically_download_gravatars: true
+  enable_gravatar:
+    client: true
+    default: true
+    refresh: true
+  automatically_refresh_gravatars: true
   allow_uploaded_avatars:
     client: true
     default: true
+    refresh: true
   allow_animated_avatars:
     client: true
     default: false

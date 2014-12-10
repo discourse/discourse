@@ -3,8 +3,11 @@ export default Discourse.ModalBodyView.extend({
   classNames: ['avatar-selector'],
   title: I18n.t('user.change_avatar.title'),
   saveDisabled: false,
+  gravatarEnabled: Discourse.computed.setting('enable_gravatar'),
+  allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
   gravatarRefreshEnabled: Em.computed.not('controller.gravatarRefreshDisabled'),
   hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'controller.custom_avatar_upload_id'),
+  notUploadedAvatar: Em.computed.not('hasUploadedAvatar'),
 
   // *HACK* used to select the proper radio button, cause {{action}}
   //  stops the default behavior

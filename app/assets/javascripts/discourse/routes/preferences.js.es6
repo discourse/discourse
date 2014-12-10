@@ -12,8 +12,6 @@ export default RestrictedUserRoute.extend(ShowFooter, {
 
   actions: {
     showAvatarSelector: function() {
-      Discourse.Route.showModal(this, 'avatar-selector');
-
       // all the properties needed for displaying the avatar selector modal
       var controller = this.controllerFor('avatar-selector');
       var user = this.modelFor('user');
@@ -32,11 +30,16 @@ export default RestrictedUserRoute.extend(ShowFooter, {
         case props.gravatar_avatar_upload_id:
           props.selected = "gravatar";
           break;
-        default:
+        case props.custom_avatar_upload_id:
           props.selected = "uploaded";
+          break;
+        default:
+          props.selected = "system";
       }
 
       controller.setProperties(props);
+
+      Discourse.Route.showModal(this, 'avatar-selector');
     },
 
     saveAvatarSelection: function() {

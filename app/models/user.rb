@@ -36,12 +36,12 @@ class User < ActiveRecord::Base
   has_many :uploads
   has_many :warnings
 
-  has_one :user_avatar, dependent: :destroy
   has_one :facebook_user_info, dependent: :destroy
   has_one :twitter_user_info, dependent: :destroy
   has_one :github_user_info, dependent: :destroy
   has_one :google_user_info, dependent: :destroy
   has_one :oauth2_user_info, dependent: :destroy
+  has_one :user_avatar, dependent: :destroy
   has_one :user_stat, dependent: :destroy
   has_one :user_profile, dependent: :destroy, inverse_of: :user
   has_one :single_sign_on_record, dependent: :destroy
@@ -76,13 +76,13 @@ class User < ActiveRecord::Base
   after_create :create_user_stat
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
+  after_create :create_user_avatar
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
   after_save :update_tracked_topics
   after_save :clear_global_notice_if_needed
-  after_save :refresh_avatar
   after_save :badge_grant
 
   before_destroy do
@@ -634,13 +634,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
   end
 
-  def refresh_avatar
+  def refresh_gravatar
     return if @import_mode
 
-    avatar = user_avatar || create_user_avatar
-
-    if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
-      Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
+    if SiteSetting.enable_gravatar?
+      Jobs.enqueue(:update_gravatar, user_id: id)
     end
   end
 
@@ -816,6 +814,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def create_user_avatar
+    user_avatar || UserAvatar.create(user: self)
+    refresh_gravatar
+  end
 end
 
 # == Schema Information

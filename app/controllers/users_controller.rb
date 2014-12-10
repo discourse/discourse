@@ -472,6 +472,7 @@ class UsersController < ApplicationController
     # ensure we associate the custom avatar properly
     if upload_id && !user.user_avatar.contains_upload?(upload_id)
       user.user_avatar.custom_upload_id = upload_id
+      user.user_avatar.save
     end
     user.save!
 

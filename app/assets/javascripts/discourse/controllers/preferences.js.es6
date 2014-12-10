@@ -4,6 +4,7 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 export default ObjectController.extend(CanCheckEmails, {
 
   allowAvatarUpload: Discourse.computed.setting('allow_uploaded_avatars'),
+  gravatarEnabled: Discourse.computed.setting('enable_gravatar'),
   allowUserLocale: Discourse.computed.setting('allow_user_locale'),
   ssoOverridesAvatar: Discourse.computed.setting('sso_overrides_avatar'),
   allowBackgrounds: Discourse.computed.setting('allow_profile_backgrounds'),

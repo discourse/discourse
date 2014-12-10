@@ -35,8 +35,6 @@ Spork.prefork do
   # let's not run seed_fu every test
   SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
-  SiteSetting.automatically_download_gravatars = false
-
   SeedFu.seed
 
   RSpec.configure do |config|
@@ -90,7 +88,9 @@ Spork.prefork do
       end
 
       # very expensive IO operations
-      SiteSetting.automatically_download_gravatars = false
+      SiteSetting.enable_system_avatars = false
+      SiteSetting.enable_gravatar = false
+      SiteSetting.automatically_refresh_gravatars = false
 
       I18n.locale = :en
     end

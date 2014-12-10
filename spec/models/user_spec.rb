@@ -1145,15 +1145,19 @@ describe User do
     end
   end
 
-  describe "refresh_avatar" do
-    it "enqueues the update_gravatar job when automatically downloading gravatars" do
-      SiteSetting.automatically_download_gravatars = true
+  describe '.refresh_gravatar' do
+    let!(:user) { Fabricate(:user) }
 
-      user = Fabricate(:user)
-
+    it 'enqueues the update_gravatar job when enable gravatar' do
+      SiteSetting.expects(:enable_gravatar?).returns(true)
       Jobs.expects(:enqueue).with(:update_gravatar, anything)
+      user.refresh_gravatar
+    end
 
-      user.refresh_avatar
+    it 'enqueues the system message' do
+      SiteSetting.expects(:enable_gravatar?).returns(false)
+      Jobs.expects(:enqueue).with(:update_gravatar, anything).never
+      user.refresh_gravatar
     end
   end
 

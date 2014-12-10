@@ -5,7 +5,10 @@ class UserAvatar < ActiveRecord::Base
   belongs_to :gravatar_upload, class_name: 'Upload', dependent: :destroy
   belongs_to :custom_upload, class_name: 'Upload', dependent: :destroy
 
+  GRAVATAR_PREFIX = GlobalSetting.try(:gravatar_url) || 'http://www.gravatar.com/avatar'
+
   def contains_upload?(id)
+    id = id.to_i
     gravatar_upload_id == id || custom_upload_id == id
   end
 
@@ -14,7 +17,8 @@ class UserAvatar < ActiveRecord::Base
     email_hash = user.id == -1 ? User.email_hash("info@discourse.org") : user.email_hash
 
     self.last_gravatar_download_attempt = Time.new
-    gravatar_url = "http://www.gravatar.com/avatar/#{email_hash}.png?s=500&d=404"
+
+    gravatar_url = "#{GRAVATAR_PREFIX}/#{email_hash}.png?s=500&d=404"
     tempfile = FileHelper.download(gravatar_url, 1.megabyte, "gravatar")
 
     upload = Upload.create_for(user.id, tempfile, 'gravatar.png', File.size(tempfile.path))
@@ -26,7 +30,7 @@ class UserAvatar < ActiveRecord::Base
     else
       gravatar_upload
     end
-  rescue OpenURI::HTTPError
+  rescue OpenURI::HTTPError, Errno::ETIMEDOUT
     save!
   rescue SocketError
     # skip saving, we are not connected to the net
