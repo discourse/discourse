@@ -19,7 +19,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   _titleChanged: function() {
     var title = this.get('title');
-    if (!Em.empty(title)) {
+    if (!Ember.isEmpty(title)) {
 
       // Note normally you don't have to trigger this, but topic titles can be updated
       // and are sometimes lazily loaded.

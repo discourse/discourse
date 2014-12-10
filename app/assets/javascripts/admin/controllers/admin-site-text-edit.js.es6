@@ -4,7 +4,7 @@ export default Ember.ObjectController.extend({
 
   saveDisabled: function() {
     if (this.get('saving')) { return true; }
-    if ((!this.get('allow_blank')) && Ember.empty(this.get('value'))) { return true; }
+    if ((!this.get('allow_blank')) && Ember.isEmpty(this.get('value'))) { return true; }
     return false;
   }.property('saving', 'value'),
 

@@ -16,7 +16,7 @@ export default Discourse.View.extend(CleansUp, {
     var $this = this.$();
     if (!$this) { return; }
 
-    if (Ember.empty(url)) {
+    if (Ember.isEmpty(url)) {
       $this.css('background-image', '').addClass('no-bg');
     } else {
       $this.css('background-image', "url(" + url + ")").removeClass('no-bg');

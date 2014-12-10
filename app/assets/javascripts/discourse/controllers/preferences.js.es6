@@ -20,7 +20,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   userFields: function() {
     var siteUserFields = this.site.get('user_fields');
-    if (!Ember.empty(siteUserFields)) {
+    if (!Ember.isEmpty(siteUserFields)) {
       var userFields = this.get('user_fields');
       return siteUserFields.filterProperty('editable', true).sortBy('field_type').map(function(uf) {
         var val = userFields ? userFields[uf.get('id').toString()] : null;
@@ -85,9 +85,9 @@ export default ObjectController.extend(CanCheckEmails, {
           userFields = this.get('userFields');
 
       // Update the user fields
-      if (!Em.empty(userFields)) {
+      if (!Ember.isEmpty(userFields)) {
         var modelFields = model.get('user_fields');
-        if (!Em.empty(modelFields)) {
+        if (!Ember.isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
             modelFields[uf.get('field.id').toString()] = uf.get('value');
           });
