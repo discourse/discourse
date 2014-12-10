@@ -4,9 +4,9 @@ var classify = Ember.String.classify;
 var get = Ember.get;
 
 var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin', 'adminFlags',
-                         'user', 'preferences', 'adminEmail', 'adminUsersList'],
-    _dummyRoute,
-    _loadingView;
+                         'user', 'preferences', 'adminEmail', 'adminUsersList'];
+var _dummyRoute;
+var _loadingView;
 
 function loadingResolver(cb) {
   return function(parsedName) {
@@ -150,8 +150,7 @@ export default Ember.DefaultResolver.extend({
   // Try to find a template with slash instead of first underscore, e.g. foo_bar_baz => foo/bar_baz
   findSlashedTemplate: function(parsedName) {
     var decamelized = parsedName.fullNameWithoutType.decamelize();
-    var slashed = decamelized.replace("_", "/");
-    return Ember.TEMPLATES[slashed];
+    return Ember.TEMPLATES[decamelized.replace("_", "/")] || Ember.TEMPLATES[decamelized.replace('.', '/')];
   },
 
   // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
