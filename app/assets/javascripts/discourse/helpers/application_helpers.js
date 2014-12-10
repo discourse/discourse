@@ -1,5 +1,8 @@
 var safe = Handlebars.SafeString;
 
+// TODO: Remove me when ES6ified
+var registerUnbound = require('discourse/helpers/register-unbound', null, null, true).default;
+
 /**
   Bound avatar helper.
 
@@ -56,25 +59,18 @@ Handlebars.registerHelper('age-with-tooltip', function(property, options) {
   return new safe(Discourse.Formatter.autoUpdatingRelativeAge(dt, {title: true}));
 });
 
-/**
-  Display logic for numbers.
-
-  @method number
-  @for Handlebars
-**/
-Handlebars.registerHelper('number', function(property, options) {
-
-  var orig = parseInt(Ember.Handlebars.get(this, property, options), 10);
+registerUnbound('number', function(orig, params) {
+  orig = parseInt(orig, 10);
   if (isNaN(orig)) { orig = 0; }
 
   var title = orig;
-  if (options.hash.numberKey) {
-    title = I18n.t(options.hash.numberKey, { number: orig });
+  if (params.numberKey) {
+    title = I18n.t(params.numberKey, { number: orig });
   }
 
   var classNames = 'number';
-  if (options.hash['class']) {
-    classNames += ' ' + Ember.Handlebars.get(this, options.hash['class'], options);
+  if (params['class']) {
+    classNames += ' ' + params['class'];
   }
   var result = "<span class='" + classNames + "'";
 

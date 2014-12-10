@@ -1,11 +1,3 @@
-/**
-  This view is used for rendering a basic list of topics.
-
-  @class BasicTopicListComponent
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.Component.extend({
   loading: Ember.computed.not('loaded'),
 

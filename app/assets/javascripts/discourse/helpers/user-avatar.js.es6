@@ -1,3 +1,5 @@
+import registerUnbound from 'discourse/helpers/register-unbound';
+
 export function renderAvatar(user, options) {
   options = options || {};
 
@@ -39,9 +41,6 @@ export function renderAvatar(user, options) {
   }
 }
 
-Handlebars.registerHelper('avatar', function(user, options) {
-  if (typeof user === 'string') {
-    user = Ember.Handlebars.get(this, user, options);
-  }
-  return new Handlebars.SafeString(renderAvatar.call(this, user, options.hash));
+registerUnbound('avatar', function(user, params) {
+  return new Handlebars.SafeString(renderAvatar.call(this, user, params));
 });

@@ -14,11 +14,11 @@
   </div>
 {{/if}}
 
-{{#each itemController="notification"}}
-  <div {{bind-attr class=":item :notification read::unread"}}>
-    {{notification-item notification=this scope=scope}}
+{{#each n in model itemController="notification"}}
+  <div {{bind-attr class=":item :notification read::n.unread"}}>
+    {{notification-item notification=n scope=n.scope}}
     <span class="time">
-      {{format-date path="created_at" leaveAgo="true"}}
+      {{format-date n.created_at leaveAgo="true"}}
     </span>
   </div>
 {{/each}}

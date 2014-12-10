@@ -1,3 +1,6 @@
+// TODO: Remove me when ES6ified
+var registerUnbound = require('discourse/helpers/register-unbound', null, null, true).default;
+
 /**
  We always prefix with "js." to select exactly what we want passed
  through to the front end.
@@ -17,26 +20,8 @@ I18n.toHumanSize = function(number, options) {
   return oldI18ntoHumanSize.apply(this, [number, options]);
 };
 
-/**
-  Look up a translation for an i18n key in our dictionary.
-
-  @method i18n
-  @for Handlebars
-**/
-Handlebars.registerHelper('i18n', function(property, options) {
-  // Resolve any properties
-  var params = options.hash,
-      self = this;
-
-  if (options.types[0] !== "STRING") {
-    Em.warn("Using the `{{i18n}}` helper without quotes is deprecated.");
-  }
-
-  _.each(params, function(value, key) {
-    params[key] = Em.Handlebars.get(self, value, options);
-  });
-
-  return I18n.t(property, params);
+registerUnbound('i18n', function(key, params) {
+  return I18n.t(key, params);
 });
 
 /**

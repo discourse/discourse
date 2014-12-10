@@ -58,15 +58,15 @@
 
   {{#if user}}
     <div class="metadata">
-      <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date path="user.last_posted_at" leaveAgo="true"}}</h3>
-      <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date path="user.created_at" leaveAgo="true"}}</h3>
+      <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
+      <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
     </div>
   {{/if}}
 
   {{#if showBadges}}
     <div class="badge-section">
-      {{#each user.featured_user_badges}}
-        {{user-badge badge=badge}}
+      {{#each ub in user.featured_user_badges}}
+        {{user-badge badge=ub.badge}}
       {{/each}}
       {{#if showMoreBadges}}
         {{#link-to 'user.badges' user class="btn more-user-badges"}}
