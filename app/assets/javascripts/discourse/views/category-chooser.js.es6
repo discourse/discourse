@@ -46,7 +46,7 @@ export default ComboboxView.extend({
     var category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
-    if (Em.empty(item.id)) {
+    if (Ember.isEmpty(item.id)) {
       var uncat = Discourse.Category.findUncategorized();
       if (uncat && uncat.get('name') === item.text) {
         category = uncat;
