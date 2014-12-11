@@ -1,20 +1,10 @@
-Handlebars.registerHelper('raw', function(property, options) {
-  var templateName = property + ".raw",
-      template = Discourse.__container__.lookup('template:' + templateName),
-      params = options.hash;
+import registerUnbound from 'discourse/helpers/register-unbound';
 
+registerUnbound('raw', function(templateName, params) {
+  var template = Discourse.__container__.lookup('template:' + templateName + '.raw');
   if (!template) {
     Ember.warn('Could not find raw template: ' + templateName);
     return;
   }
-
-  if (params) {
-    for (var prop in params) {
-      if (options.hashTypes[prop] === "ID") {
-        params[prop] = Ember.get(this, params[prop], options);
-      }
-    }
-  }
-
   return new Handlebars.SafeString(template(params));
 });
