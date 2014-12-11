@@ -1,7 +1,11 @@
-function registerUnbound(name, fn) {
+var get = Discourse.EmberCompatHandlebars.get;
+
+export default function registerUnbound(name, fn) {
   Handlebars.registerHelper(name, function(property, options) {
 
-    property = Discourse.EmberCompatHandlebars.get(this, property, options);
+    if (options.types[0] === "ID") {
+      property = get(this, property, options);
+    }
 
     var params = {},
         hash = options.hash;
@@ -12,7 +16,7 @@ function registerUnbound(name, fn) {
         if (type === "STRING") {
           params[k] = hash[k];
         } else if (type === "ID") {
-          params[k] = options.data.view.getStream(hash[k]).value();
+          params[k] = get(this, hash[k], options);
         }
       });
     }
@@ -20,5 +24,3 @@ function registerUnbound(name, fn) {
     return fn(property, params);
   });
 }
-
-export default registerUnbound;

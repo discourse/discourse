@@ -96,17 +96,12 @@
     return template;
   };
 
-  RawHandlebars.get = function(_this, property, options){
-    var val = property;
-    if (options.types[0] === "ID"){
-      if (options.types && options.data.view) {
-        val = options.data.view.getStream(property).value();
-      } else {
-        val = Em.get(_this, property);
-      }
+  RawHandlebars.get = function(ctx, property, options){
+    if (options.types && options.data.view) {
+      return options.data.view.getStream(property).value();
+    } else {
+      return Ember.get(ctx, property);
     }
-
-    return val;
   };
 
   Discourse.EmberCompatHandlebars = RawHandlebars;
