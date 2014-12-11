@@ -27,20 +27,23 @@ export default Discourse.View.extend({
   }.property('controller.link'),
 
   linkChanged: function() {
+    var self=this;
     if (this.present('controller.link')) {
-      if (!this.capabilities.touch) {
-        var $linkInput = $('#share-link input');
-        $linkInput.val(this.get('controller.link'));
+      Em.run.next(function(){
+        if (!self.capabilities.touch) {
+          var $linkInput = $('#share-link input');
+          $linkInput.val(self.get('controller.link'));
 
-        // Wait for the fade-in transition to finish before selecting the link:
-        window.setTimeout(function() {
-          $linkInput.select().focus();
-        }, 160);
-      } else {
-        var $linkForTouch = $('#share-link .share-for-touch a');
-        $linkForTouch.attr('href', this.get('controller.link'));
-        $linkForTouch.html(this.get('controller.link'));
-      }
+          // Wait for the fade-in transition to finish before selecting the link:
+          window.setTimeout(function() {
+            $linkInput.select().focus();
+          }, 160);
+        } else {
+          var $linkForTouch = $('#share-link .share-for-touch a');
+          $linkForTouch.attr('href',self.get('controller.link'));
+          $linkForTouch.html(self.get('controller.link'));
+        }
+      });
     }
   }.observes('controller.link'),
 
