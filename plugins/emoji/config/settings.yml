@@ -2,3 +2,7 @@ plugins:
   enable_emoji:
     default: true
     client: true
+  emoji_set:
+    default: 'emoji_one'
+    client: true
+    enum: 'EmojiSetSiteSetting'

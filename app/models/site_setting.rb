@@ -7,6 +7,11 @@ class SiteSetting < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :data_type
 
+  after_save do |site_setting|
+    DiscourseEvent.trigger(:site_setting_saved, site_setting)
+    true
+  end
+
   def self.load_settings(file)
     SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
       if opts.delete(:client)
@@ -19,8 +24,10 @@ class SiteSetting < ActiveRecord::Base
 
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
 
-  Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
-    load_settings(file)
+  unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+    Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|
+      load_settings(file)
+    end
   end
 
   client_settings << :available_locales

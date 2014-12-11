@@ -1,25 +1,26 @@
 
 // TODO: Make this a proper ES6 import
 var ComposerView = require('discourse/views/composer').default;
+
 ComposerView.on("initWmdEditor", function(){
   if (!Discourse.SiteSettings.enable_emoji) { return; }
 
-  var template = Handlebars.compile("<div class='autocomplete'>" +
-                                   "<ul>" +
-                                      "{{#each options}}" +
-                                          "<li>" +
-                                            "<a href='#'>" +
-                                            "<img src='{{src}}' class='emoji'> " +
-                                            "{{code}}</a>" +
-                                          "</li>" +
-                                      "{{/each}}" +
-                                   "</ul>" +
-                                "</div>");
+  var template = Handlebars.compile(
+    "<div class='autocomplete'>" +
+      "<ul>" +
+        "{{#each options}}" +
+            "<li>" +
+              "<a href='#'><img src='{{src}}' class='emoji'> {{code}}</a>" +
+            "</li>" +
+        "{{/each}}" +
+      "</ul>" +
+    "</div>"
+  );
 
   $('#wmd-input').autocomplete({
     template: template,
     key: ":",
-    transformComplete: function(v){  return v.code + ":"; },
+    transformComplete: function(v){ return v.code + ":"; },
     dataSource: function(term){
       return new Ember.RSVP.Promise(function(resolve) {
         var full = ":" + term;
