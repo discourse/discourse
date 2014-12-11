@@ -1,22 +1,16 @@
+import registerUnbound from 'discourse/helpers/register-unbound';
+
 export function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch
   return dt.getTime() / 86400000;
 }
 
-/**
-  Converts a date to a coldmap class
-**/
-function coldAgeClass(property, options) {
-  var dt = Discourse.EmberCompatHandlebars.get(this, property, options);
-  var className = (options && options.hash && options.hash.class !== undefined) ? options.hash.class : 'age';
+registerUnbound('cold-age-class', function(dt, params) {
+  var className = params['class'] || 'age';
 
   if (!dt) { return className; }
 
-  var startDate = (options && options.hash && options.hash.startDate) || new Date();
-
-  if (typeof startDate === "string") {
-    startDate = Discourse.EmberCompatHandlebars.get(this, startDate, options);
-  }
+  var startDate = params.startDate || new Date();
 
   // Show heat on age
   var nowDays = daysSinceEpoch(startDate),
@@ -27,7 +21,4 @@ function coldAgeClass(property, options) {
   if (nowDays - epochDays > Discourse.SiteSettings.cold_age_days_low) return className + ' coldmap-low';
 
   return className;
-}
-
-Handlebars.registerHelper('cold-age-class', coldAgeClass);
-export default coldAgeClass;
+});

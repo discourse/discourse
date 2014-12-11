@@ -11,12 +11,13 @@ export default function registerUnbound(name, fn) {
         hash = options.hash;
 
     if (hash) {
+      var self = this;
       Ember.keys(options.hash).forEach(function(k) {
         var type = options.hashTypes[k];
         if (type === "STRING") {
           params[k] = hash[k];
         } else if (type === "ID") {
-          params[k] = get(this, hash[k], options);
+          params[k] = get(self, hash[k], options);
         }
       });
     }

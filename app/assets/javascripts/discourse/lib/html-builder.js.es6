@@ -11,9 +11,6 @@ export function categoryLinkHTML(category, options) {
     if (options.onlyStripe) { categoryOptions.onlyStripe = true; }
     if (options.link !== undefined) { categoryOptions.link = options.link; }
     if (options.extraClasses) { categoryOptions.extraClasses = options.extraClasses; }
-    if (options.categories) {
-      categoryOptions.categories = Em.Handlebars.get(this, options.categories, options);
-    }
   }
   return new Handlebars.SafeString(Discourse.HTML.categoryBadge(category, categoryOptions));
 }
