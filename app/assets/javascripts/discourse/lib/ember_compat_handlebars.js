@@ -97,12 +97,13 @@
   };
 
   RawHandlebars.get = function(_this, property, options){
-    var val;
-
-    if (options.types && options.data.view && options.types[0] === "ID") {
-      val = options.data.view.getStream(property).value();
-    } else {
-      val = Em.get(_this, property);
+    var val = property;
+    if (options.types[0] === "ID"){
+      if (options.types && options.data.view) {
+        val = options.data.view.getStream(property).value();
+      } else {
+        val = Em.get(_this, property);
+      }
     }
 
     return val;
