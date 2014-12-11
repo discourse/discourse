@@ -3,9 +3,6 @@ Handlebars.registerHelper('raw', function(property, options) {
       template = Discourse.__container__.lookup('template:' + templateName),
       params = options.hash;
 
-  // {{raw}} helper is broken!
-  return;
-
   if (!template) {
     Ember.warn('Could not find raw template: ' + templateName);
     return;

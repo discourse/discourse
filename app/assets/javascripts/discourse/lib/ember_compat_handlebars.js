@@ -14,7 +14,7 @@
   };
 
 
-  var RawHandlebars = objectCreate(Handlebars);
+  var RawHandlebars = Handlebars.create();
 
   RawHandlebars.helper = function() {};
   RawHandlebars.helpers = objectCreate(Handlebars.helpers);
@@ -59,7 +59,6 @@
     if ( !(mustache.params.length || mustache.hash)) {
 
       var id = new Handlebars.AST.IdNode([{ part: 'get' }]);
-
       mustache = new Handlebars.AST.MustacheNode([id].concat([mustache.id]), mustache.hash, mustache.escaped);
     }
 
@@ -92,6 +91,7 @@
     var templateSpec = new RawHandlebars.JavaScriptCompiler().compile(environment, options, undefined, true);
 
     var template = RawHandlebars.template(templateSpec);
+    template.isMethod = false;
 
     return template;
   };
