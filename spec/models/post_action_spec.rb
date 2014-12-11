@@ -17,6 +17,12 @@ describe PostAction do
 
   describe "messaging" do
 
+    it "doesn't generate title longer than 255 characters" do
+      topic = create_topic(title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
+      post = create_post(topic: topic)
+      -> { PostAction.act(admin, post, PostActionType.types[:notify_user], message: "WAT") }.should_not raise_error
+    end
+
     it "notify moderators integration test" do
       post = create_post
       mod = moderator

@@ -174,6 +174,8 @@ class PostAction < ActiveRecord::Base
     title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title)
     body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}")
 
+    title = title.truncate(255, separator: /\s/)
+
     opts = {
       archetype: Archetype.private_message,
       title: title,
