@@ -7,7 +7,7 @@ export function daysSinceEpoch(dt) {
   Converts a date to a coldmap class
 **/
 function coldAgeClass(property, options) {
-  var dt = Em.Handlebars.get(this, property, options);
+  var dt = Discourse.EmberCompatHandlebars.get(this, property, options);
   var className = (options && options.hash && options.hash.class !== undefined) ? options.hash.class : 'age';
 
   if (!dt) { return className; }
@@ -15,7 +15,7 @@ function coldAgeClass(property, options) {
   var startDate = (options && options.hash && options.hash.startDate) || new Date();
 
   if (typeof startDate === "string") {
-    startDate = Em.Handlebars.get(this, startDate, options);
+    startDate = Discourse.EmberCompatHandlebars.get(this, startDate, options);
   }
 
   // Show heat on age

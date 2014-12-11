@@ -1,9 +1,7 @@
 function registerUnbound(name, fn) {
   Handlebars.registerHelper(name, function(property, options) {
 
-    if (options.types[0] === "ID") {
-      property = options.data.view.getStream(property).value();
-    }
+    property = Discourse.EmberCompatHandlebars.get(this, property, options);
 
     var params = {},
         hash = options.hash;
