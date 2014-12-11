@@ -3,7 +3,7 @@ Discourse.Emoji = {};
 // bump up this number to expire all emojis
 Discourse.Emoji.ImageVersion = "0"
 
-var emoji = <%= Dir.glob(File.expand_path("../../../public/images/*.png", __FILE__)).map{|f| File.basename(f).split(".")[0]}.inspect %>;
+var _emoji = <%= Emoji.all.map { |e| e["aliases"] }.flatten.inspect %>;
 
 var _extendedEmoji = {};
 Discourse.Dialect.registerEmoji = function(code, url) {
@@ -11,41 +11,39 @@ Discourse.Dialect.registerEmoji = function(code, url) {
 };
 
 Discourse.Emoji.list = function(){
-  var copy = emoji.slice(0);
+  var copy = _emoji.slice(0);
   _.each(_extendedEmoji, function(v,k){
     copy.push(k);
   });
   return copy;
 };
 
-var toSearch;
+var _toSearch;
 
 var search = function(term, options) {
   var maxResults = (options && options["maxResults"]) || -1;
 
-  toSearch = toSearch || emoji.concat(Object.keys(_extendedEmoji));
+  _toSearch = _toSearch || _emoji.concat(Object.keys(_extendedEmoji));
 
-  if(maxResults === 0) {
-    return [];
-  }
+  if(maxResults === 0) { return []; }
 
-  var results = [];
+  var i, results = [];
 
   var done = function(){
     return maxResults > 0 && results.length >= maxResults;
   }
 
-  for (i=0; i < toSearch.length; i++) {
-    if (toSearch[i].indexOf(term) === 0) {
-      results.push(toSearch[i]);
+  for (i=0; i < _toSearch.length; i++) {
+    if (_toSearch[i].indexOf(term) === 0) {
+      results.push(_toSearch[i]);
       if(done()) { break; }
     }
   }
 
   if(!done()){
-    for (i=0; i < toSearch.length; i++) {
-      if (toSearch[i].indexOf(term) > 0) {
-        results.push(toSearch[i]);
+    for (i=0; i < _toSearch.length; i++) {
+      if (_toSearch[i].indexOf(term) > 0) {
+        results.push(_toSearch[i]);
         if(done()) { break; }
       }
     }
@@ -56,20 +54,20 @@ var search = function(term, options) {
 
 Discourse.Emoji.search = search;
 
-
-var emojiHash = {};
-emoji.forEach(function(code){
-  emojiHash[code] = true;
+var _emojiHash = {};
+_emoji.forEach(function(code){
+  _emojiHash[code] = true;
 });
 
 var urlFor = function(code) {
-  var url;
+  var url, set = Discourse.SiteSettings.emoji_set;
+
   if(_extendedEmoji.hasOwnProperty(code)) {
     url = _extendedEmoji[code];
   }
 
-  if(!url && emojiHash.hasOwnProperty(code)) {
-    url = Discourse.getURL('/plugins/emoji/images/' + code + '.png');
+  if(!url && _emojiHash.hasOwnProperty(code)) {
+    url = Discourse.getURL('/plugins/emoji/images/' + set + '/' + code + '.png');
   }
 
   if(url && url[0] !== 'h' && Discourse.CDN) {
@@ -85,15 +83,14 @@ var urlFor = function(code) {
 
 Discourse.Emoji.urlFor = urlFor;
 
-
 Discourse.Emoji.exists = function(code){
- return !!(_extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
+ return !!(_extendedEmoji.hasOwnProperty(code) || _emojiHash.hasOwnProperty(code));
 }
 
 function imageFor(code) {
   var url = urlFor(code);
   if (url) {
-    return ['img', {href: url, title: ':' + code + ':', 'class': 'emoji', alt: code}];
+    return ['img', { href: url, title: ':' + code + ':', 'class': 'emoji', alt: code }];
   }
 }
 
@@ -191,6 +188,4 @@ Discourse.Dialect.registerInline(':', function(text, match, prev) {
   }
 });
 
-
 Discourse.Markdown.whiteListTag('img', 'class', 'emoji');
-
