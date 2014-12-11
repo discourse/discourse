@@ -1688,13 +1688,15 @@ en:
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        users:
-          title: "Export full user list in CSV format."
-        screened_ips:
-          title: "Export full screened IPs list in CSV format."
         success: "Export initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
         button_text: "Export"
+        button_title:
+          user: "Export full user list in CSV format."
+          staff_action: "Export full staff action log in CSV format."
+          screened_email: "Export full screened email list in CSV format."
+          screened_ip: "Export full screened IP list in CSV format."
+          screened_url: "Export full screened URL list in CSV format."
 
       customize:
         title: "Customize"
