@@ -96,6 +96,18 @@
     return template;
   };
 
+  RawHandlebars.get = function(_this, property, options){
+    var val;
+
+    if (options.types && options.data.view && options.types[0] === "ID") {
+      val = options.data.view.getStream(property).value();
+    } else {
+      val = Em.get(_this, property);
+    }
+
+    return val;
+  };
+
   Discourse.EmberCompatHandlebars = RawHandlebars;
 
 })();
