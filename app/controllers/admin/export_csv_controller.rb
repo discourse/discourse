@@ -2,15 +2,10 @@ class Admin::ExportCsvController < Admin::AdminController
 
   skip_before_filter :check_xhr, only: [:show]
 
-  def export_user_list
+  def export_entity
+    params.require(:entity)
     # export csv file in a background thread
-    Jobs.enqueue(:export_csv_file, entity: 'user', user_id: current_user.id)
-    render json: success_json
-  end
-
-  def export_screened_ips_list
-    # export csv file in a background thread
-    Jobs.enqueue(:export_csv_file, entity: 'screened_ips', user_id: current_user.id)
+    Jobs.enqueue(:export_csv_file, entity: params[:entity], user_id: current_user.id)
     render json: success_json
   end
 
