@@ -1,11 +1,3 @@
-/**
-  A data model representing the site (instance of Discourse)
-
-  @class Site
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),

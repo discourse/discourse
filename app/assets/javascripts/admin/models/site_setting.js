@@ -1,11 +1,3 @@
-/**
-  Our data model for interacting with site settings.
-
-  @class SiteSetting
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.SiteSetting = Discourse.Model.extend({
 
   validationMessage: null,

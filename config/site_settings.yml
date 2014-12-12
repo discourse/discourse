@@ -653,8 +653,10 @@ developer:
     default: false
     client: true
   posts_chunksize:
-    client: true
     default: 20
+    min: 1
+  posts_slow_chunksize:
+    default: 10
     min: 1
 
 embedding:
