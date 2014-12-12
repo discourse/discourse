@@ -5,21 +5,21 @@
     <th>{{i18n 'admin.api.user'}}</th>
     <th>&nbsp;</th>
   </tr>
-  {{#each model}}
+  {{#each k in model}}
     <tr>
-      <td class='key'>{{key}}</td>
+      <td class='key'>{{k.key}}</td>
       <td>
-        {{#if user}}
-          {{#link-to 'adminUser' user}}
-            {{avatar user imageSize="small"}}
+        {{#if k.user}}
+          {{#link-to 'adminUser' k.user}}
+            {{avatar k.user imageSize="small"}}
           {{/link-to}}
         {{else}}
           {{i18n 'admin.api.all_users'}}
         {{/if}}
       </td>
       <td>
-        <button class='btn' {{action "regenerateKey" this}}><i class="fa fa-undo"></i>{{i18n 'admin.api.regenerate'}}</button>
-        <button class='btn' {{action "revokeKey" this}}><i class="fa fa-times"></i>{{i18n 'admin.api.revoke'}}</button>
+        <button class='btn' {{action "regenerateKey" k}}><i class="fa fa-undo"></i>{{i18n 'admin.api.regenerate'}}</button>
+        <button class='btn' {{action "revokeKey" k}}><i class="fa fa-times"></i>{{i18n 'admin.api.revoke'}}</button>
       </td>
     </tr>
   {{/each}}

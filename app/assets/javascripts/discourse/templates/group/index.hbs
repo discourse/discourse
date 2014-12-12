@@ -1,21 +1,21 @@
 <div class='user-stream'>
-  {{#each model itemController="group/post"}}
+  {{#each p in model itemController="group/post"}}
     <div class='item'>
       <div class='clearfix info'>
-        {{#link-to 'user' user class="avatar-link"}}<div class='avatar-wrapper'>{{avatar user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
-        <span class='time'>{{format-date created_at leaveAgo="true"}}</span>
+        {{#link-to 'user' p.user class="avatar-link"}}<div class='avatar-wrapper'>{{avatar p.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
+        <span class='time'>{{format-date p.created_at leaveAgo="true"}}</span>
         <span class="title">
-          <a href="{{unbound url}}">{{unbound title}}</a>
+          <a href="{{unbound p.url}}">{{unbound p.title}}</a>
         </span>
-        <span class="category">{{category-link category}}</span>
-        {{#if byName}}
+        <span class="category">{{category-link p.category}}</span>
+        {{#if p.byName}}
           <span class="name">
-            {{unbound byName}}
+            {{unbound p.byName}}
           </span>
         {{/if}}
       </div>
       <p class='excerpt'>
-      {{{unbound cooked}}}
+      {{{unbound p.cooked}}}
       </p>
     </div>
   {{/each}}

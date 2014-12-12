@@ -8,8 +8,8 @@
     <section class='about admins'>
       <h3>{{i18n 'about.our_admins'}}</h3>
 
-      {{#each admins}}
-        {{user-small user=this}}
+      {{#each a in admins}}
+        {{user-small user=a}}
       {{/each}}
       <div class='clearfix'></div>
 
@@ -21,8 +21,8 @@
       <h3>{{i18n 'about.our_moderators'}}</h3>
 
       <div class='users'>
-        {{#each moderators}}
-          {{user-small user=this}}
+        {{#each m in moderators}}
+          {{user-small user=m}}
         {{/each}}
       </div>
       <div class='clearfix'></div>

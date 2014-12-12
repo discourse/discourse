@@ -10,6 +10,7 @@
 //
 
 // Stuff we need to load first
+//= require ./discourse/helpers/i18n
 //= require ./discourse/lib/ember_compat_handlebars
 //= require ./discourse/helpers/register-unbound
 //= require ./discourse/lib/computed

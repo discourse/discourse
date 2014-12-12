@@ -17,20 +17,20 @@
     <td>{{text-field value=filter.skipped_reason placeholderKey="admin.email.logs.filters.skipped_reason_placeholder"}}</td>
   </tr>
 
-  {{#each model}}
+  {{#each l in model}}
     <tr>
-      <td>{{format-date created_at}}</td>
+      <td>{{format-date l.created_at}}</td>
       <td>
-        {{#if user}}
-          {{#link-to 'adminUser' user}}{{avatar user imageSize="tiny"}}{{/link-to}}
-          {{#link-to 'adminUser' user}}{{user.username}}{{/link-to}}
+        {{#if l.user}}
+          {{#link-to 'adminUser' l.user}}{{avatar l.user imageSize="tiny"}}{{/link-to}}
+          {{#link-to 'adminUser' l.user}}{{l.user.username}}{{/link-to}}
         {{else}}
           &mdash;
         {{/if}}
       </td>
-      <td><a href='mailto:{{unbound to_address}}'>{{to_address}}</a></td>
-      <td>{{email_type}}</td>
-      <td>{{skipped_reason}}</td>
+      <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
+      <td>{{l.email_type}}</td>
+      <td>{{l.skipped_reason}}</td>
     </tr>
   {{else}}
     <tr><td colspan="5">{{i18n 'admin.email.logs.none'}}</td></tr>

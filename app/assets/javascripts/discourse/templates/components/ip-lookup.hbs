@@ -60,13 +60,13 @@
                 </tr>
               </thead>
               <tbody>
-                {{#each other_accounts}}
+                {{#each a in other_accounts}}
                   <tr>
-                    <td>{{#link-to "adminUser" this}}{{avatar this usernamePath="user.username" imageSize="small"}}&nbsp;{{username}}{{/link-to}}</td>
-                    <td>{{trustLevel.id}}</td>
-                    <td>{{time_read}}</td>
-                    <td>{{topics_entered}}</td>
-                    <td>{{post_count}}</td>
+                    <td>{{#link-to "adminUser" a}}{{avatar a usernamePath="user.username" imageSize="small"}}&nbsp;{{username}}{{/link-to}}</td>
+                    <td>{{a.trustLevel.id}}</td>
+                    <td>{{a.time_read}}</td>
+                    <td>{{a.topics_entered}}</td>
+                    <td>{{a.post_count}}</td>
                   </tr>
                 {{/each}}
               </tbody>
