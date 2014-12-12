@@ -1,8 +1,3 @@
-var _fieldTypes = [
-      Ember.Object.create({id: 'text', name: I18n.t('admin.user_fields.field_types.text') }),
-      Ember.Object.create({id: 'confirm', name: I18n.t('admin.user_fields.field_types.confirm') })
-    ];
-
 var UserField = Ember.Object.extend({
   destroy: function() {
     var self = this;
@@ -43,11 +38,18 @@ UserField.reopenClass({
   },
 
   fieldTypes: function() {
-    return _fieldTypes;
+    if (!this._fieldTypes) {
+      this._fieldTypes = [
+        Ember.Object.create({id: 'text', name: I18n.t('admin.user_fields.field_types.text') }),
+        Ember.Object.create({id: 'confirm', name: I18n.t('admin.user_fields.field_types.confirm') })
+      ];
+    }
+
+    return this._fieldTypes;
   },
 
   fieldTypeById: function(id) {
-    return _fieldTypes.findBy('id', id);
+    return this.fieldTypes().findBy('id', id);
   }
 });
 

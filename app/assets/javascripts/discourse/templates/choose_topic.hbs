@@ -8,14 +8,14 @@
   {{#if view.noResults}}
     <p>{{i18n 'choose_topic.none_found'}}</p>
   {{else}}
-    {{#each view.topics}}
+    {{#each t in view.topics}}
       <div class='controls'>
         <label class='radio'>
-        <input type='radio' id="choose-topic-{{unbound id}}" name='choose_topic_id' {{action "chooseTopic" this target="view"}}>{{title}}
-        {{#if category.parentCategory}}
-          {{bound-category-link category.parentCategory}}
+        <input type='radio' id="choose-topic-{{unbound t.id}}" name='choose_topic_id' {{action "chooseTopic" t target="view"}}>{{t.title}}
+        {{#if t.category.parentCategory}}
+          {{bound-category-link t.category.parentCategory}}
         {{/if}}
-        {{bound-category-link category}}
+        {{bound-category-link t.category}}
         </label>
       </div>
     {{/each}}

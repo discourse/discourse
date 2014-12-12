@@ -8,8 +8,8 @@
     <section class='field'>
       {{#if subCategories}}
         <label>{{i18n 'categories.subcategories'}}</label>
-        {{#each subCategories}}
-          {{category-badge this}}
+        {{#each s in subCategories}}
+          {{category-badge s}}
         {{/each}}
       {{else}}
         <label>{{i18n 'category.parent'}}</label>

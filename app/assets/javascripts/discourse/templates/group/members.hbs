@@ -3,17 +3,17 @@
     <tr>
       <th colspan="3" class="seen">{{i18n 'last_seen'}}</th>
     </tr>
-  {{#each model}}
+  {{#each m in model}}
   <tr>
       <td class='avatar'>
-        {{avatar this imageSize="large"}}
+        {{avatar m imageSize="large"}}
       </td>
       <td>
-        <h3>{{#link-to 'user' this}}{{username}}{{/link-to}}</h3>
-        <p>{{name}}</p>
+        <h3>{{#link-to 'user' m}}{{m.username}}{{/link-to}}</h3>
+        <p>{{m.name}}</p>
       </td>
       <td>
-        <span class='last-seen-at'>{{bound-date last_seen_at}}</span>
+        <span class='last-seen-at'>{{bound-date m.last_seen_at}}</span>
       </td>
     </tr>
     </div>

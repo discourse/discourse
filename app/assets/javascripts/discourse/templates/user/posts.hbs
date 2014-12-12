@@ -1,28 +1,28 @@
-{{#each model.content}}
-  <div {{bind-attr class=":item hidden deleted moderator_action"}}>
+{{#each p in model.content}}
+  <div {{bind-attr class=":item p.hidden p.deleted moderator_action"}}>
     <div class="clearfix info">
-      <a href="{{unbound usernameUrl}}" class="avatar-link">
+      <a href="{{unbound p.usernameUrl}}" class="avatar-link">
         <div class="avatar-wrapper">
-          {{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}
+          {{avatar p imageSize="large" extraClasses="actor" ignoreTitle="true"}}
         </div>
       </a>
       <span class="time">
-        {{format-date created_at leaveAgo="true"}}
+        {{format-date p.created_at leaveAgo="true"}}
       </span>
       <span class="title">
-        <a href="{{unbound url}}">{{unbound topic_title}}</a>
+        <a href="{{unbound p.url}}">{{unbound p.topic_title}}</a>
       </span>
       <span class="category">
-        {{category-link category}}
+        {{category-link p.category}}
       </span>
-      {{#if deleted}}
+      {{#if p.deleted}}
         <span class="delete-info">
-          <i class="fa fa-trash-o"></i> {{avatar deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{format-date deleted_at leaveAgo="true"}}
+          <i class="fa fa-trash-o"></i> {{avatar p.deleted_by imageSize="tiny" extraClasses="actor" ignoreTitle="true"}} {{format-date p.deleted_at leaveAgo="true"}}
         </span>
       {{/if}}
     </div>
     <p class="excerpt">
-      {{{excerpt}}}
+      {{{p.excerpt}}}
     </p>
   </div>
 {{/each}}

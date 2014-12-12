@@ -140,12 +140,12 @@
 
 {{#if userFields}}
   <section class='details'>
-    {{#each userFields}}
+    {{#each uf in userFields}}
       <div class='display-row'>
-        <div class='field'>{{name}}</div>
+        <div class='field'>{{uf.name}}</div>
         <div class='value'>
-          {{#if value}}
-            {{value}}
+          {{#if uf.value}}
+            {{uf.value}}
           {{else}}
             &mdash;
           {{/if}}

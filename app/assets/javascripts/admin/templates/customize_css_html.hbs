@@ -1,8 +1,8 @@
 <div class='content-list span6'>
   <h3>{{i18n 'admin.customize.css_html.long_title'}}</h3>
   <ul>
-    {{#each model}}
-      <li><a {{action "selectStyle" this}} {{bind-attr class="this.selected:active"}}>{{this.description}}</a></li>
+    {{#each style in model}}
+      <li><a {{action "selectStyle" style}} {{bind-attr class="style.selected:active"}}>{{style.description}}</a></li>
     {{/each}}
   </ul>
   <button {{action "newCustomization"}} class='btn'>
@@ -12,33 +12,31 @@
 
 {{#if selectedItem}}
   <div class='current-style'>
-    {{#with selectedItem}}
-      {{text-field class="style-name" value=name}}
+    {{text-field class="style-name" value=selectedItem.name}}
 
-      <div class='admin-controls'>
-        <ul class="nav nav-pills">
-          <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
-          <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
-          <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
-          <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
-          <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
-          <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
-        </ul>
-      </div>
+    <div class='admin-controls'>
+      <ul class="nav nav-pills">
+        <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
+        <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
+        <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
+        <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
+        <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
+        <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
+      </ul>
+    </div>
 
-      <div class="admin-container">
-        {{#if view.stylesheetActive}}{{aceEditor content=stylesheet mode="scss"}}{{/if}}
-        {{#if view.headerActive}}{{aceEditor content=header mode="html"}}{{/if}}
-        {{#if view.footerActive}}{{aceEditor content=footer mode="html"}}{{/if}}
-        {{#if view.mobileStylesheetActive}}{{aceEditor content=mobile_stylesheet mode="scss"}}{{/if}}
-        {{#if view.mobileHeaderActive}}{{aceEditor content=mobile_header mode="html"}}{{/if}}
-        {{#if view.mobileFooterActive}}{{aceEditor content=mobile_footer mode="html"}}{{/if}}
-      </div>
-    {{/with}}
+    <div class="admin-container">
+      {{#if view.stylesheetActive}}{{aceEditor content=selectedItem.stylesheet mode="scss"}}{{/if}}
+      {{#if view.headerActive}}{{aceEditor content=selectedItem.header mode="html"}}{{/if}}
+      {{#if view.footerActive}}{{aceEditor content=selectedItem.footer mode="html"}}{{/if}}
+      {{#if view.mobileStylesheetActive}}{{aceEditor content=selectedItem.mobile_stylesheet mode="scss"}}{{/if}}
+      {{#if view.mobileHeaderActive}}{{aceEditor content=selectedItem.mobile_header mode="html"}}{{/if}}
+      {{#if view.mobileFooterActive}}{{aceEditor content=selectedItem.mobile_footer mode="html"}}{{/if}}
+    </div>
     <br>
     <div class='status-actions'>
-      <span>{{i18n 'admin.customize.override_default'}} {{view Ember.Checkbox checkedBinding="selectedItem.override_default_style"}}</span>
-      <span>{{i18n 'admin.customize.enabled'}}  {{view Ember.Checkbox checkedBinding="selectedItem.enabled"}}</span>
+      <span>{{i18n 'admin.customize.override_default'}} {{input type="checkbox" checked=selectedItem.override_default_style}}</span>
+      <span>{{i18n 'admin.customize.enabled'}}  {{input type="checkbox" checked=selectedItem.enabled}}</span>
       {{#unless selectedItem.changed}}
       <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
       |

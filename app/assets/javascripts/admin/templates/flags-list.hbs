@@ -42,20 +42,20 @@
           <td class='flaggers'>
             <table>
               <tbody>
-                {{#each flaggedPost.flaggers}}
+                {{#each flagger in flaggedPost.flaggers}}
                   <tr>
                     <td class='avatar'>
-                      {{#link-to 'adminUser' user}}
-                        {{avatar user imageSize="small"}}
+                      {{#link-to 'adminUser' flagger.user}}
+                        {{avatar flagger.user imageSize="small"}}
                       {{/link-to}}
                     </td>
                     <td>
-                      {{#link-to 'adminUser' user}}
-                        {{user.username}}
+                      {{#link-to 'adminUser' flagger.user}}
+                        {{flagger.user.username}}
                       {{/link-to}}
-                      {{format-age flaggedAt}}
+                      {{format-age flagger.flaggedAt}}
                       <br />
-                      {{flagType}}
+                      {{flagger.flagType}}
                     </td>
                   </tr>
                 {{/each}}
@@ -67,17 +67,17 @@
             {{#if adminOldFlagsView}}
               <table>
                 <tbody>
-                  {{#each flaggedPost.flaggers}}
+                  {{#each flagger in flaggedPost.flaggers}}
                     <tr>
                       <td class='avatar'>
-                        {{#link-to 'adminUser' disposedBy}}
-                          {{avatar disposedBy imageSize="small"}}
+                        {{#link-to 'adminUser' flagger.disposedBy}}
+                          {{avatar flagger.disposedBy imageSize="small"}}
                         {{/link-to}}
                       </td>
                       <td>
-                        {{format-age disposedAt}}
-                        {{{dispositionIcon}}}
-                        {{#if tookAction}}
+                        {{format-age flagger.disposedAt}}
+                        {{{flagger.dispositionIcon}}}
+                        {{#if flagger.tookAction}}
                           <i class='fa fa-gavel' title='{{i18n 'admin.flags.took_action'}}'></i>
                         {{/if}}
                       </td>
@@ -101,24 +101,24 @@
           </tr>
         {{/if}}
 
-        {{#each flaggedPost.conversations}}
+        {{#each c in flaggedPost.conversations}}
           <tr class='message'>
             <td></td>
             <td colspan="3">
               <div>
-                {{#if response}}
+                {{#if c.response}}
                   <p>
-                    {{#link-to 'adminUser' response.user}}{{avatar response.user imageSize="small"}}{{/link-to}}&nbsp;{{{response.excerpt}}}
+                    {{#link-to 'adminUser' c.response.user}}{{avatar c.response.user imageSize="small"}}{{/link-to}}&nbsp;{{{c.response.excerpt}}}
                   </p>
-                  {{#if reply}}
+                  {{#if c.reply}}
                     <p>
-                      {{#link-to 'adminUser' reply.user}}{{avatar reply.user imageSize="small"}}{{/link-to}}&nbsp;{{{reply.excerpt}}}
-                      {{#if hasMore}}
-                        <a href="{{unbound permalink}}">{{i18n 'admin.flags.more'}}</a>
+                      {{#link-to 'adminUser' c.reply.user}}{{avatar c.reply.user imageSize="small"}}{{/link-to}}&nbsp;{{{c.reply.excerpt}}}
+                      {{#if c.hasMore}}
+                        <a href="{{unbound c.permalink}}">{{i18n 'admin.flags.more'}}</a>
                       {{/if}}
                     </p>
                   {{/if}}
-                  <a href="{{unbound permalink}}">
+                  <a href="{{unbound c.permalink}}">
                     <button class='btn btn-reply'><i class="fa fa-reply"></i>&nbsp;{{i18n 'admin.flags.reply_message'}}</button>
                   </a>
                 {{/if}}
