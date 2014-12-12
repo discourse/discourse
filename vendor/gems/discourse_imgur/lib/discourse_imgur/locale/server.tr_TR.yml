@@ -1,0 +1,5 @@
+tr_TR:
+  site_settings:
+    enable_imgur: "Yükleme için imgur api'sini etkinleştirin, dosyaları yerel olarak barındırmayın"
+    imgur_client_id: "Imgur.com kullanıcı ID'niz, fotoğraf yükleme işlevi için gerekli"
+    imgur_client_secret: "Imgur.com kullanıcı anahtarınız. Fotoğraf yükleme işlevi için şu an gerekli değil, ama ileride bazı durumlarda gerekli olabilir."
