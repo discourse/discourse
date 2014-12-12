@@ -1523,10 +1523,6 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
-        users:
-          title: "Vie lista käyttäjistä CSV-formaatissa."
-        screened_ips:
-          title: "Vie koko lista seulotuista IP-osoitteista CSV-formaatissa."
         success: "Vienti on käynnissä, saat pian ilmoituksen sen edistymisestä."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
         button_text: "Vie"

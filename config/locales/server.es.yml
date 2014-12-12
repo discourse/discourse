@@ -825,6 +825,8 @@ es:
     min_ban_entries_for_roll_up: "Al hacer clic en el botón Agrupar, se crea un nuevo rango de entradas para banear si hay al menos (N) entradas."
     max_age_unmatched_emails: "Eliminar entradas de email que no coincidan después de (N) días."
     max_age_unmatched_ips: "Eliminar entradas de IP que no coincidan después de (N) días."
+    num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para intervención"
+    num_flags_to_close_topic: "Valor mínimo de reportes activos requerido para pausar un tema automáticamente para intervención"
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
@@ -1132,6 +1134,7 @@ es:
     disagreed: "Gracias por hacérnoslo saber. Estamos revisándolo."
     deferred: "Gracias por hacérnoslo saber. Estamos revisándolo."
     deferred_and_deleted: "Gracias por hacérnoslo saber. Hemos eliminado el post."
+  temporarily_closed_due_to_flags: "Este tema está cerrado temporalmente por un elevado número de denuncias por parte de la comunidad"
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
@@ -1636,3 +1639,25 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
+  static:
+    search_help: |
+      <h2>Consejos</h2>
+      <p>
+      <ul>
+        <li>Se priorizan las coincidencias con el título, por lo que si tienes dudas, busca por títulos</li>
+        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
+        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
+      </ul>
+      </p>
+      <h2>Opciones</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
+      </p>

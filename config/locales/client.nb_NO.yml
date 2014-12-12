@@ -1523,10 +1523,6 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
-        users:
-          title: "Eksporter komplett brukerliste i CSV format."
-        screened_ips:
-          title: "Eksporter komplett liste over filtrerte IP-addresser i CSV format."
         success: "Eksport igangsatt; du vil motta en prosessrapport om kort tid."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
         button_text: "Eksporter"
