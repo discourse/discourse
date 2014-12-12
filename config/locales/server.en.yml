@@ -47,7 +47,7 @@ en:
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
 
-  purge_reason: "Automatically deleted due to being old and unverified"
+  purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
 
   errors:
@@ -660,9 +660,6 @@ en:
     title: "Brief title of this site, used in the title tag."
     site_description: "Describe this site in one sentence, used in the meta description tag."
     contact_email: "Email address of key contact for site. Important notices from discourse.org regarding critical updates may be sent to this address."
-    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -742,6 +739,7 @@ en:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topic list, and when scrolling down to load more topics"
     posts_chunksize: "How many posts are loaded by default on a topic, and when scrolling down to load more posts"
+    posts_slow_chunksize: "Like `posts_chunksize` but for slow platforms (such as Android)"
     site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
@@ -845,7 +843,7 @@ en:
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
-    purge_inactive_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
+    purge_unactivated_users_grace_period_days: "Grace period (in days) before a user who has not activated their account is deleted."
     enable_s3_uploads: "Place uploads on Amazon S3 storage. IMPORTANT: requires valid S3 credentials (both access key id & secret access key)."
     s3_use_iam_profile: 'Use AWS EC2 IAM role to retrieve keys. NOTE: enabling will override "s3 access key id" and "s3 secret access key" settings.'
     s3_upload_bucket: "The Amazon S3 bucket name that files will be uploaded into. WARNING: must be lowercase, no periods, no underscores."
@@ -947,6 +945,9 @@ en:
 
     max_age_unmatched_emails: "Delete unmatched screened email entries after (N) days."
     max_age_unmatched_ips: "Delete unmatched screened IP entries after (N) days."
+
+    num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
+    num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1304,6 +1305,8 @@ en:
     disagreed: "Thanks for letting us know. We're looking into it."
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
+
+  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags"
 
   system_messages:
     post_hidden:
@@ -2181,7 +2184,7 @@ en:
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
         </table>
       </p>
       <p>

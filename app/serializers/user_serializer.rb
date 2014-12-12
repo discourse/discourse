@@ -45,6 +45,7 @@ class UserSerializer < BasicUserSerializer
              :can_edit_email,
              :can_edit_name,
              :stats,
+             :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
              :trust_level,
@@ -66,7 +67,8 @@ class UserSerializer < BasicUserSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
-  staff_attributes :number_of_deleted_posts,
+  staff_attributes :post_count,
+                   :number_of_deleted_posts,
                    :number_of_flagged_posts,
                    :number_of_flags_given,
                    :number_of_suspensions,
@@ -178,6 +180,12 @@ class UserSerializer < BasicUserSerializer
     UserAction.stats(object.id, scope)
   end
 
+  # Needed because 'send_private_message_to_user' will always return false
+  # when the current user is being serialized
+  def can_send_private_messages
+    scope.can_send_private_message?(Discourse.system_user)
+  end
+
   def can_send_private_message_to_user
     scope.can_send_private_message?(object)
   end
@@ -206,6 +214,10 @@ class UserSerializer < BasicUserSerializer
   ###
   ### STAFF ATTRIBUTES
   ###
+
+  def post_count
+    object.user_stat.try(:post_count)
+  end
 
   def number_of_deleted_posts
     Post.with_deleted

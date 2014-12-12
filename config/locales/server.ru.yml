@@ -33,7 +33,7 @@ ru:
   log_in: "Войти"
   via: "%{username} на %{site_name}"
   is_reserved: "зарезервировано"
-  purge_reason: "Автоматически удалить из-за просроченности и непроверенности"
+  purge_reason: "Автоматически удален, как неактивная, неактивированная учетная запись"
   disable_remote_images_download_reason: "Загрузка картинок была отключена из-за недостаточности места на диске."
   errors:
     messages:
@@ -605,9 +605,6 @@ ru:
     title: "Короткое название этого сайта. Будет использоваться в HTML-тэге title."
     site_description: "Короткое описание этого сайта. Будет использоваться в HTML-тэге description."
     contact_email: "Главный адрес электронной почты для переписки по вопросам сайта. Команда Discourse.org может посылать важные уведомления на этот адрес."
-    company_full_name: "DEPRECATED. Not used anymore and will be removed. The full name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_short_name: "DEPRECATED. Not used anymore and will be removed. The short name of the company that runs this site, used in legal documents like /tos and /privacy"
-    company_domain: "DEPRECATED. Not used anymore and will be removed. The domain name owned by the company that runs this site, used in legal documents like /tos and /privacy"
     queue_jobs: "ТОЛЬКО ДЛЯ РАЗРАБОТЧИКОВ! ВНИМАНИЕ! По умолчанию задачи обрабатываются асинхронно в очереди sidekiq. Если настройка выключена, ваш сайт может не работать."
     crawl_images: "Скачивать картинки с других сайтов для автоматического определения их размеров."
     download_remote_images_to_local: "Скачивать картинки, вставленные в сообщения ссылками на другие сайты, и хранить их локально, чтобы предотвратить их изменения или утерю."
@@ -1018,6 +1015,7 @@ ru:
     disagreed: "Спасибо за информацию. Уже рассматриваем."
     deferred: "Спасибо за информацию. Уже рассматриваем."
     deferred_and_deleted: "Спасибо за информацию. Сообщение удалено."
+  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб"
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"

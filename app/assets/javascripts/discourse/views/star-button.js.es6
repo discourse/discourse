@@ -6,7 +6,7 @@ export default ButtonView.extend({
   helpKeyBinding: 'controller.starTooltipKey',
   attributeBindings: ['disabled'],
 
-  shouldRerender: Discourse.View.renderIfChanged('controller.starred'),
+  rerenderTriggers: ['controller.starred'],
 
   click: function() {
     this.get('controller').send('toggleStar');

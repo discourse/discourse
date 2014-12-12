@@ -4,10 +4,14 @@ require_dependency 'system_message'
 module Jobs
 
   class ExportCsvFile < Jobs::Base
-    CSV_USER_ATTRS = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
-    CSV_USER_STATS = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
-    CSV_USER_SSO_ATTRS = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
-    SCREENED_IP_ATTRS = ['ip_address','action_type','match_count','last_match_at','created_at']
+    HEADER_ATTRS_FOR = {}
+    HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
+    HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
+    HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
+    HEADER_ATTRS_FOR['staff_action'] = ['staff_user','action','subject','created_at','details', 'context']
+    HEADER_ATTRS_FOR['screened_email'] = ['email','action','match_count','last_match_at','created_at','ip_address']
+    HEADER_ATTRS_FOR['screened_ip'] = ['ip_address','action','match_count','last_match_at','created_at']
+    HEADER_ATTRS_FOR['screened_url'] = ['domain','action','match_count','last_match_at','created_at']
 
     sidekiq_options retry: false
     attr_accessor :current_user
@@ -20,14 +24,12 @@ module Jobs
       entity = args[:entity]
       @current_user = User.find_by(id: args[:user_id])
 
-
+      export_method = "#{entity}_export".to_sym
       data =
-        if entity == 'user'
-          user_export
-        elsif entity == 'screened_ips'
-          screened_ips_export
+        if respond_to?(export_method)
+          send(export_method)
         else
-          raise Discourse::InvalidParameters.new(:entity) if entity.blank?
+          raise Discourse::InvalidParameters.new(:entity)
         end
 
       if data && data.length > 0
@@ -50,11 +52,31 @@ module Jobs
       end
     end
 
+    def staff_action_export
+      staff_action_data = UserHistory.order('id DESC').to_a
+      staff_action_data.map do |staff_action|
+        get_staff_action_fields(staff_action)
+      end
+    end
 
-    def screened_ips_export
-      screened_ips_data = ScreenedIpAddress.order('id desc').to_a
-      screened_ips_data.map do |screened_ip|
+    def screened_email_export
+      screened_email_data = ScreenedEmail.order('last_match_at desc').to_a
+      screened_email_data.map do |screened_email|
+        get_screened_email_fields(screened_email)
+      end
+    end
+
+    def screened_ip_export
+      screened_ip_data = ScreenedIpAddress.order('id desc').to_a
+      screened_ip_data.map do |screened_ip|
         get_screened_ip_fields(screened_ip)
+      end
+    end
+
+    def screened_url_export
+      screened_url_data = ScreenedUrl.select("domain, sum(match_count) as match_count, max(last_match_at) as last_match_at, min(created_at) as created_at").group(:domain).order('last_match_at DESC').to_a
+      screened_url_data.map do |screened_url|
+        get_screened_url_fields(screened_url)
       end
     end
 
@@ -62,9 +84,9 @@ module Jobs
 
       case entity
         when 'user'
-          header_array = CSV_USER_ATTRS + CSV_USER_STATS
+          header_array = HEADER_ATTRS_FOR['user'] + HEADER_ATTRS_FOR['user_stats']
           if SiteSetting.enable_sso
-            header_array.concat(CSV_USER_SSO_ATTRS)
+            header_array.concat(HEADER_ATTRS_FOR['user_sso'])
           end
           user_custom_fields = UserField.all
           if user_custom_fields.present?
@@ -73,9 +95,9 @@ module Jobs
             end
           end
           header_array.push("group_names")
-        when 'screened_ips'
-          header_array = SCREENED_IP_ATTRS
-      end
+        else
+          header_array = HEADER_ATTRS_FOR[entity]
+        end
 
       header_array
     end
@@ -94,17 +116,17 @@ module Jobs
       def get_user_fields(user)
         user_array = []
 
-        CSV_USER_ATTRS.each do |attr|
+        HEADER_ATTRS_FOR['user'].each do |attr|
           user_array.push(user.attributes[attr])
         end
 
-        CSV_USER_STATS.each do |stat|
+        HEADER_ATTRS_FOR['user_stats'].each do |stat|
           user_array.push(user.user_stat.attributes[stat])
         end
 
         if SiteSetting.enable_sso
           sso = user.single_sign_on_record
-          CSV_USER_SSO_ATTRS.each do |stat|
+          HEADER_ATTRS_FOR['user_sso'].each do |stat|
             field = sso.attributes[stat] if sso
             user_array.push(field)
           end
@@ -119,14 +141,76 @@ module Jobs
         user_array
       end
 
+      def get_staff_action_fields(staff_action)
+        staff_action_array = []
+
+        HEADER_ATTRS_FOR['staff_action'].each do |attr|
+          data =
+            if attr == 'action'
+              UserHistory.actions.key(staff_action.attributes[attr]).to_s
+            elsif attr == 'staff_user'
+              user = User.find_by(id: staff_action.attributes['acting_user_id'])
+              user.username if !user.nil?
+            else
+              staff_action.attributes[attr]
+            end
+
+            staff_action_array.push(data)
+        end
+
+        staff_action_array
+      end
+
+      def get_screened_email_fields(screened_email)
+        screened_email_array = []
+
+        HEADER_ATTRS_FOR['screened_email'].each do |attr|
+          data =
+            if attr == 'action'
+              ScreenedEmail.actions.key(screened_email.attributes['action_type']).to_s
+            else
+              screened_email.attributes[attr]
+            end
+
+          screened_email_array.push(data)
+        end
+
+        screened_email_array
+      end
+
       def get_screened_ip_fields(screened_ip)
         screened_ip_array = []
 
-        SCREENED_IP_ATTRS.each do |attr|
-          screened_ip_array.push(screened_ip.attributes[attr])
+        HEADER_ATTRS_FOR['screened_ip'].each do |attr|
+          data =
+            if attr == 'action'
+              ScreenedIpAddress.actions.key(screened_ip.attributes['action_type']).to_s
+            else
+              screened_ip.attributes[attr]
+            end
+
+          screened_ip_array.push(data)
         end
 
         screened_ip_array
+      end
+
+      def get_screened_url_fields(screened_url)
+        screened_url_array = []
+
+        HEADER_ATTRS_FOR['screened_url'].each do |attr|
+          data =
+            if attr == 'action'
+              action = ScreenedUrl.actions.key(screened_url.attributes['action_type']).to_s
+              action = "do nothing" if action.blank?
+            else
+              screened_url.attributes[attr]
+            end
+
+          screened_url_array.push(data)
+        end
+
+        screened_url_array
       end
 
 

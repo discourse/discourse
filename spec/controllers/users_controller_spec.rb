@@ -1218,7 +1218,7 @@ describe UsersController do
             upload = Fabricate(:upload)
             Upload.expects(:create_for).returns(upload)
             # enqueues the user_image generator job
-            xhr :post, :upload_avatar, username: user.username, file: user_image_url, image_type: "avatar"
+            xhr :post, :upload_user_image, username: user.username, file: user_image_url, image_type: "avatar"
             json = JSON.parse(response.body)
             json['url'].should == "/uploads/default/1/1234567890123456.png"
             json['width'].should == 100
@@ -1292,6 +1292,13 @@ describe UsersController do
         response.should be_success
       end
 
+      it 'returns success' do
+        xhr :put, :pick_avatar, username: user.username, upload_id: 111
+        user.reload.uploaded_avatar_id.should == 111
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json['success'].should == "OK"
+      end
     end
 
   end

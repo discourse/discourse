@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+tr_TR:
+  site_settings:
+    enable_imgur: "Yükleme için imgur api'sini etkinleştirin, dosyaları yerel olarak barındırmayın"
+    imgur_client_id: "Imgur.com kullanıcı ID'niz, fotoğraf yükleme işlevi için gerekli"
+    imgur_client_secret: "Imgur.com kullanıcı anahtarınız. Fotoğraf yükleme işlevi için şu an gerekli değil, ama ileride bazı durumlarda gerekli olabilir."

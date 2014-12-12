@@ -4,13 +4,23 @@ var _dontSearch = false;
 
 export default Em.Controller.extend(Discourse.Presence, {
 
+  contextType: function(key, value){
+    if(arguments.length > 1) {
+      // a bit hacky, consider cleaning this up, need to work through all observers though
+      var context = $.extend({}, this.get('searchContext'));
+      context.type = value;
+      this.set('searchContext', context);
+    }
+    return this.get('searchContext.type');
+  }.property('searchContext'),
+
   contextChanged: function(){
     if (this.get('searchContextEnabled')) {
       _dontSearch = true;
       this.set('searchContextEnabled', false);
       _dontSearch = false;
     }
-  }.observes("searchContext"),
+  }.observes('searchContext'),
 
   searchContextDescription: function(){
     var ctx = this.get('searchContext');
@@ -22,6 +32,8 @@ export default Em.Controller.extend(Discourse.Presence, {
           return I18n.t('search.context.user', {username: Em.get(ctx, 'user.username')});
         case 'category':
           return I18n.t('search.context.category', {category: Em.get(ctx, 'category.name')});
+        case 'private_messages':
+          return I18n.t('search.context.private_messages');
       }
     }
   }.property('searchContext'),

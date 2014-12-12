@@ -1,16 +1,16 @@
 {{#if model.error}}
   <div class="item error">
     {{#if model.forbidden}}
-      {{i18n errors.reasons.forbidden}}
+      {{i18n 'errors.reasons.forbidden'}}
     {{else}}
-      {{i18n errors.desc.unknown}}
+      {{i18n 'errors.desc.unknown'}}
     {{/if}}
   </div>
 {{/if}}
 
 {{#if showDismissButton}}
   <div class='notification-buttons'>
-    <button title="{{i18n user.dismiss_notifications_tooltip}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n user.dismiss_notifications}}</button>
+    <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications-top' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
   </div>
 {{/if}}
 
@@ -27,7 +27,7 @@
   {{#unless canLoadMore}}
     {{#if showDismissButton}}
       <div class='notification-buttons'>
-        <button title="{{i18n user.dismiss_notifications_tooltip}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n user.dismiss_notifications}}</button>
+        <button title="{{i18n 'user.dismiss_notifications_tooltip'}}" id='dismiss-notifications' class='btn notifications-read' {{action "resetNew"}}>{{i18n 'user.dismiss_notifications'}}</button>
       </div>
     {{/if}}
   {{/unless}}

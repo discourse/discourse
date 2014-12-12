@@ -7,17 +7,17 @@
       {{#unless currentUser}}
         {{#if showSignUpButton}}
         <button {{action "showCreateAccount"}} class='btn btn-primary btn-small sign-up-button'>
-          {{i18n sign_up}}
+          {{i18n 'sign_up'}}
         </button>
         {{/if}}
         <button {{action "showLogin"}} class='btn btn-primary btn-small login-button'>
-          {{fa-icon user}} {{i18n log_in}}
+          {{fa-icon user}} {{i18n 'log_in'}}
         </button>
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
-            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n notifications.title}}'>
+            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
               {{fa-icon comment label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}
@@ -38,7 +38,7 @@
                class='icon expand'
                href='#'
                data-dropdown="search-dropdown"
-               title='{{i18n search.title}}'>
+               title='{{i18n 'search.title'}}'>
                {{fa-icon search label="search.title"}}
             </a>
           {{/if}}
@@ -57,13 +57,13 @@
                data-dropdown="site-map-dropdown"
                data-render="renderSiteMap"
                href="#"
-               title='{{i18n site_map}}'
+               title='{{i18n 'site_map'}}'
                id="site-map">
                {{fa-icon bars label="site_map"}}
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n notifications.total_flagged}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
           {{/if}}
         </li>
         {{#if currentUser}}
@@ -72,7 +72,7 @@
                data-dropdown="user-dropdown"
                data-render="renderUserDropdown"
                href="#"
-               title='{{i18n user.avatar.title}}'
+               title='{{i18n 'user.avatar.title'}}'
                id="current-user">
                  {{bound-avatar currentUser "medium"}}
             </a>
@@ -115,7 +115,7 @@
                 {{#if topic.errorLoading}}
                   <span class="error">{{topic.errorTitle}}</span>
                 {{else}}
-                  <span class="loading">{{i18n topic.loading}}</span>
+                  <span class="loading">{{i18n 'topic.loading'}}</span>
                 {{/if}}
               {{/if}}
             </h1>

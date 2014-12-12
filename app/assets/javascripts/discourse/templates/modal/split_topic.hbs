@@ -5,13 +5,13 @@
     </div>
   {{/if}}
 
-  {{{i18n topic.split_topic.instructions count="selectedPostsCount"}}}
+  {{{i18n 'topic.split_topic.instructions' count="selectedPostsCount"}}}
 
   <form>
-    <label>{{i18n topic.split_topic.topic_name}}</label>
+    <label>{{i18n 'topic.split_topic.topic_name'}}</label>
     {{text-field value=topicName placeholderKey="composer.title_placeholder" elementId='split-topic-name'}}
 
-    <label>{{i18n categories.category}}</label>
+    <label>{{i18n 'categories.category'}}</label>
     {{category-chooser value=categoryId}}
   </form>
 

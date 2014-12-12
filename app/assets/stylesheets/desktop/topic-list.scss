@@ -61,10 +61,10 @@
   }
 
   > tbody > tr {
-    &:nth-child(even) {
+    &:nth-child(odd) {
         background-color: darken($secondary, 3%);
     }
-    &:nth-child(odd) {
+    &:nth-child(even) {
         background-color: $secondary;
     }
     &.highlighted {
@@ -159,8 +159,6 @@
     white-space: nowrap;
   }
 }
-
-#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 .topic-list tbody tr.has-excerpt .star {
   vertical-align: top;
@@ -272,6 +270,8 @@
 
 // Misc. stuff
 // --------------------------------------------------
+
+#list-area .top-lists h2 { margin: 5px 0 10px; }
 
 #list-area {
   h2 {

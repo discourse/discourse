@@ -4,8 +4,8 @@
       <tr>
         <th class='user'></th>
         <th class='excerpt'></th>
-        <th class='flaggers'>{{i18n admin.flags.flagged_by}}</th>
-        <th class='flaggers'>{{#if adminOldFlagsView}}{{i18n admin.flags.resolved_by}}{{/if}}</th>
+        <th class='flaggers'>{{i18n 'admin.flags.flagged_by'}}</th>
+        <th class='flaggers'>{{#if adminOldFlagsView}}{{i18n 'admin.flags.resolved_by'}}{{/if}}</th>
       </tr>
     </thead>
     <tbody>
@@ -16,12 +16,12 @@
             {{#if flaggedPost.postAuthorFlagged}}
               {{#if flaggedPost.user}}
                 {{#link-to 'adminUser' flaggedPost.user}}{{avatar flaggedPost.user imageSize="small"}}{{/link-to}}
-                {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n admin.flags.was_edited}}"></i>{{/if}}
+                {{#if flaggedPost.wasEdited}}<i class="fa fa-pencil" title="{{i18n 'admin.flags.was_edited'}}"></i>{{/if}}
               {{/if}}
             {{/if}}
             {{#if adminActiveFlagsView}}
               {{#if flaggedPost.previous_flags_count}}
-                <span title="{{i18n admin.flags.previous_flags_count count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
+                <span title="{{i18n 'admin.flags.previous_flags_count' count=flaggedPost.previous_flags_count}}" class="badge-notification flagged-posts">{{flaggedPost.previous_flags_count}}</span>
               {{/if}}
             {{/if}}
           </td>
@@ -78,7 +78,7 @@
                         {{format-age disposedAt}}
                         {{{dispositionIcon}}}
                         {{#if tookAction}}
-                          <i class='fa fa-gavel' title='{{i18n admin.flags.took_action}}'></i>
+                          <i class='fa fa-gavel' title='{{i18n 'admin.flags.took_action'}}'></i>
                         {{/if}}
                       </td>
                     </tr>
@@ -95,7 +95,7 @@
             <td></td>
             <td colspan="3">
               <div>
-                {{{i18n admin.flags.topic_flagged}}}&nbsp;<a href='{{unbound flaggedPost.url}}' class="btn">{{i18n admin.flags.visit_topic}}</a>
+                {{{i18n 'admin.flags.topic_flagged'}}}&nbsp;<a href='{{unbound flaggedPost.url}}' class="btn">{{i18n 'admin.flags.visit_topic'}}</a>
               </div>
             </td>
           </tr>
@@ -114,12 +114,12 @@
                     <p>
                       {{#link-to 'adminUser' reply.user}}{{avatar reply.user imageSize="small"}}{{/link-to}}&nbsp;{{{reply.excerpt}}}
                       {{#if hasMore}}
-                        <a href="{{unbound permalink}}">{{i18n admin.flags.more}}</a>
+                        <a href="{{unbound permalink}}">{{i18n 'admin.flags.more'}}</a>
                       {{/if}}
                     </p>
                   {{/if}}
                   <a href="{{unbound permalink}}">
-                    <button class='btn btn-reply'><i class="fa fa-reply"></i>&nbsp;{{i18n admin.flags.reply_message}}</button>
+                    <button class='btn btn-reply'><i class="fa fa-reply"></i>&nbsp;{{i18n 'admin.flags.reply_message'}}</button>
                   </a>
                 {{/if}}
               </div>
@@ -130,14 +130,14 @@
         <tr>
           <td colspan="4" class="action">
             {{#if adminActiveFlagsView}}
-              <button title='{{i18n admin.flags.agree_title}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}><i class="fa fa-thumbs-o-up"></i>{{i18n admin.flags.agree}}&hellip;</button>
+              <button title='{{i18n 'admin.flags.agree_title'}}' class='btn' {{action "showAgreeFlagModal" flaggedPost}}><i class="fa fa-thumbs-o-up"></i>{{i18n 'admin.flags.agree'}}&hellip;</button>
               {{#if flaggedPost.postHidden}}
-                <button title='{{i18n admin.flags.disagree_flag_unhide_post_title}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag_unhide_post}}</button>
+                <button title='{{i18n 'admin.flags.disagree_flag_unhide_post_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n 'admin.flags.disagree_flag_unhide_post'}}</button>
               {{else}}
-                <button title='{{i18n admin.flags.disagree_flag_title}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n admin.flags.disagree_flag}}</button>
+                <button title='{{i18n 'admin.flags.disagree_flag_title'}}' class='btn' {{action "disagreeFlags" flaggedPost}}><i class="fa fa-thumbs-o-down"></i>{{i18n 'admin.flags.disagree_flag'}}</button>
               {{/if}}
-              <button title='{{i18n admin.flags.defer_flag_title}}' class='btn' {{action "deferFlags" flaggedPost}}><i class="fa fa-external-link"></i>{{i18n admin.flags.defer_flag}}</button>
-              <button title='{{i18n admin.flags.delete_title}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}><i class="fa fa-trash-o"></i>{{i18n admin.flags.delete}}&hellip;</button>
+              <button title='{{i18n 'admin.flags.defer_flag_title'}}' class='btn' {{action "deferFlags" flaggedPost}}><i class="fa fa-external-link"></i>{{i18n 'admin.flags.defer_flag'}}</button>
+              <button title='{{i18n 'admin.flags.delete_title'}}' class='btn btn-danger' {{action "showDeleteFlagModal" flaggedPost}}><i class="fa fa-trash-o"></i>{{i18n 'admin.flags.delete'}}&hellip;</button>
             {{/if}}
           </td>
         </tr>
@@ -149,5 +149,5 @@
 
   {{loading-spinner condition=view.loading}}
 {{else}}
-  <p>{{i18n admin.flags.no_results}}</p>
+  <p>{{i18n 'admin.flags.no_results'}}</p>
 {{/if}}

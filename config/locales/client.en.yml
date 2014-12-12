@@ -293,6 +293,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "download archive of my posts"
+      new_private_message: "New Private Message"
       private_message: "Private Message"
       private_messages: "Messages"
       activity_stream: "Activity"
@@ -391,7 +392,10 @@ en:
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
-        frequency: "We'll only email you if we haven't seen you recently and you haven't already seen the thing we're emailing you about."
+        frequency:
+          zero: "We'll email you immediately if you haven't read the thing we're emailing you about."
+          one: "We'll only email you if we haven't seen you in the last minute and you haven't read the thing we're emailing you about."
+          other: "We'll only email you if we haven't seen you in the last {{count}} minutes and you haven't read the thing we're emailing you about."
 
       name:
         title: "Name"
@@ -765,6 +769,7 @@ en:
         user: "Search posts by @{{username}}"
         category: "Search the \"{{category}}\" category"
         topic: "Search this topic"
+        private_messages: "Search private messages"
 
     site_map: "go to another topic list or category"
     go_back: 'go back'
@@ -1683,13 +1688,15 @@ en:
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        users:
-          title: "Export full user list in CSV format."
-        screened_ips:
-          title: "Export full screened IPs list in CSV format."
         success: "Export initiated, you will be notified shortly with progress."
         failed: "Export failed. Please check the logs."
         button_text: "Export"
+        button_title:
+          user: "Export full user list in CSV format."
+          staff_action: "Export full staff action log in CSV format."
+          screened_email: "Export full screened email list in CSV format."
+          screened_ip: "Export full screened IP list in CSV format."
+          screened_url: "Export full screened URL list in CSV format."
 
       customize:
         title: "Customize"
@@ -1861,7 +1868,7 @@ en:
           title: "Screened IPs"
           description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
           delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up ban entries?"
+          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
           rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
           rolled_up_no_subnet: "There was nothing to roll up."
           actions:
@@ -1887,6 +1894,7 @@ en:
         create: 'Add Admin User'
         last_emailed: "Last Emailed"
         not_found: "Sorry, that username doesn't exist in our system."
+        id_not_found: "Sorry, that user id doesn't exist in our system."
         active: "Active"
         show_emails: "Show Emails"
         nav:

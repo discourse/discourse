@@ -1,8 +1,10 @@
-export default Ember.Component.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
+
+export default Ember.Component.extend(StringBuffer, {
   tagName: 'li',
   classNameBindings: ['active', 'noGlyph'],
 
-  shouldRerender: Discourse.View.renderIfChanged('content.count', 'count'),
+  rerenderTriggers: ['content.count', 'count'],
   noGlyph: Em.computed.empty('icon'),
 
   active: function() {
@@ -37,7 +39,7 @@ export default Ember.Component.extend({
     return this.get('content.description') || I18n.t("user.filters.all");
   }.property('content.description'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     buffer.push("<a href='" + this.get('url') + "'>");
     var icon = this.get('icon');
     if (icon) {

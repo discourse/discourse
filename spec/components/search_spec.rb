@@ -96,6 +96,59 @@ describe Search do
     end
   end
 
+  context 'private messages' do
+
+    let(:topic) {
+      Fabricate(:topic,
+                  category_id: nil,
+                  archetype: 'private_message')
+    }
+
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:reply) { Fabricate(:post, topic: topic,
+                                   raw: 'hello from mars, we just landed') }
+
+
+
+    it 'searches correctly' do
+
+       expect do
+         Search.execute('mars', type_filter: 'private_messages')
+       end.to raise_error(Discourse::InvalidAccess)
+
+       TopicAllowedUser.create!(user_id: reply.user_id, topic_id: topic.id)
+       TopicAllowedUser.create!(user_id: post.user_id, topic_id: topic.id)
+
+
+       results = Search.execute('mars',
+                                type_filter: 'private_messages',
+                                guardian: Guardian.new(reply.user))
+
+       results.posts.length.should == 1
+
+       # does not leak out
+       results = Search.execute('mars',
+                                type_filter: 'private_messages',
+                                guardian: Guardian.new(Fabricate(:user)))
+
+       results.posts.length.should == 0
+
+       Fabricate(:topic, category_id: nil, archetype: 'private_message')
+       Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
+
+
+       # admin can search everything with correct context
+       results = Search.execute('mars',
+                                type_filter: 'private_messages',
+                                search_context: post.user,
+                                guardian: Guardian.new(Fabricate(:admin)))
+
+       results.posts.length.should == 1
+
+    end
+
+  end
+
   context 'topics' do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic}

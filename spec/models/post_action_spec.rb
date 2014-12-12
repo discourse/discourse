@@ -17,6 +17,12 @@ describe PostAction do
 
   describe "messaging" do
 
+    it "doesn't generate title longer than 255 characters" do
+      topic = create_topic(title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sit amet rutrum neque. Pellentesque suscipit vehicula facilisis. Phasellus lacus sapien, aliquam nec convallis sit amet, vestibulum laoreet ante. Curabitur et pellentesque tortor. Donec non.")
+      post = create_post(topic: topic)
+      -> { PostAction.act(admin, post, PostActionType.types[:notify_user], message: "WAT") }.should_not raise_error
+    end
+
     it "notify moderators integration test" do
       post = create_post
       mod = moderator
@@ -368,6 +374,50 @@ describe PostAction do
 
       post.reload
       post.hidden.should == false
+    end
+
+    it "will automatically close a topic due to large community flagging" do
+      SiteSetting.stubs(:flags_required_to_hide_post).returns(0)
+
+      SiteSetting.stubs(:num_flags_to_close_topic).returns(3)
+      SiteSetting.stubs(:num_flaggers_to_close_topic).returns(2)
+
+      topic = Fabricate(:topic)
+      post1 = create_post(topic: topic)
+      post2 = create_post(topic: topic)
+      post3 = create_post(topic: topic)
+
+      flagger1 = Fabricate(:user)
+      flagger2 = Fabricate(:user)
+
+      # reaching `num_flaggers_to_close_topic` isn't enough
+      [flagger1, flagger2].each do |flagger|
+        PostAction.act(flagger, post1, PostActionType.types[:inappropriate])
+      end
+
+      topic.reload.closed.should == false
+
+      # clean up
+      PostAction.where(post: post1).delete_all
+
+      # reaching `num_flags_to_close_topic` isn't enough
+      [post1, post2, post3].each do |post|
+        PostAction.act(flagger1, post, PostActionType.types[:inappropriate])
+      end
+
+      topic.reload.closed.should == false
+
+      # clean up
+      PostAction.where(post: [post1, post2, post3]).delete_all
+
+      # reaching both should close the topic
+      [flagger1, flagger2].each do |flagger|
+        [post1, post2, post3].each do |post|
+          PostAction.act(flagger, post, PostActionType.types[:inappropriate])
+        end
+      end
+
+      topic.reload.closed.should == true
     end
 
   end

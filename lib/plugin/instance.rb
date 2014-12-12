@@ -25,15 +25,12 @@ class Plugin::Instance
     @assets = []
     @color_schemes = []
 
-    # Automatically include all ES6 JS files
     if @path
-      dir = File.dirname(@path)
-      Dir.glob("#{dir}/assets/javascripts/**/*.js.es6") do |f|
-        relative = f.sub("#{dir}/assets/", "")
-        register_asset(relative)
-      end
+      # Automatically include all ES6 JS and hbs files
+      root_path = "#{File.dirname(@path)}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
+      DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
-
   end
 
   def name
@@ -96,6 +93,11 @@ class Plugin::Instance
         callback.call
       end
     end
+  end
+
+  def listen_for(event_name)
+    return unless self.respond_to?(event_name)
+    DiscourseEvent.on(event_name, &self.method(event_name))
   end
 
   def register_css(style)
@@ -179,7 +181,6 @@ class Plugin::Instance
       Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     end
 
-
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
       target = Rails.root.to_s + "/public/plugins/"
@@ -236,31 +237,7 @@ class Plugin::Instance
 
   def register_assets!
     assets.each do |asset, opts|
-      if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
-        if opts == :admin
-          DiscoursePluginRegistry.admin_javascripts << asset
-        else
-          if opts == :server_side
-            DiscoursePluginRegistry.server_side_javascripts << asset
-          end
-          DiscoursePluginRegistry.javascripts << asset
-        end
-      elsif asset =~ /\.css$|\.scss$/
-        if opts == :mobile
-          DiscoursePluginRegistry.mobile_stylesheets << asset
-        elsif opts == :desktop
-          DiscoursePluginRegistry.desktop_stylesheets << asset
-        elsif opts == :variables
-          DiscoursePluginRegistry.sass_variables << asset
-        else
-          DiscoursePluginRegistry.stylesheets << asset
-        end
-
-      elsif asset =~ /\.hbs$/
-        DiscoursePluginRegistry.handlebars << asset
-      elsif asset =~ /\.js\.handlebars$/
-        DiscoursePluginRegistry.handlebars << asset
-      end
+      DiscoursePluginRegistry.register_asset(asset, opts)
     end
   end
 

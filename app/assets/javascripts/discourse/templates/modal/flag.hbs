@@ -15,20 +15,20 @@
         {{/if}}
       </div>
     {{else}}
-      {{i18n flagging.cant}}
+      {{i18n 'flagging.cant'}}
     {{/each}}
   </form>
 
 </div>
 <div class="modal-footer">
-  <button class='btn btn-primary' {{action "createFlag"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n flagging.submit_tooltip}}">{{{submitText}}}</button>
+  <button class='btn btn-primary' {{action "createFlag"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.submit_tooltip'}}">{{{submitText}}}</button>
 
   {{#if canTakeAction}}
-    <button class='btn btn-danger' {{action "takeAction"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n flagging.take_action_tooltip}}"><i class="fa fa-gavel"></i>{{i18n flagging.take_action}}</button>
+    <button class='btn btn-danger' {{action "takeAction"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.take_action_tooltip'}}"><i class="fa fa-gavel"></i>{{i18n 'flagging.take_action'}}</button>
   {{/if}}
 
   {{#if canDeleteSpammer}}
-    <button class="btn btn-danger" {{action "deleteSpammer" userDetails}} {{bind-attr disabled="submitDisabled"}} title="{{i18n flagging.delete_spammer}}"><i class="fa fa-exclamation-triangle"></i> {{i18n flagging.delete_spammer}}</button>
+    <button class="btn btn-danger" {{action "deleteSpammer" userDetails}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.delete_spammer'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'flagging.delete_spammer'}}</button>
   {{/if}}
-  <span class="hint">{{{i18n flagging.private_reminder}}}</span>
+  <span class="hint">{{{i18n 'flagging.private_reminder'}}}</span>
 </div>

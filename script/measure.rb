@@ -1,4 +1,4 @@
-# using this script to try figure out why Rails 2 is slower that 1.9
+# using this script to try figure out why Ruby 2 is slower that 1.9
 #
 require 'flamegraph'
 

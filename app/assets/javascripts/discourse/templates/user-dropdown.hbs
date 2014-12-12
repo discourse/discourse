@@ -1,13 +1,13 @@
 <section class='d-dropdown' id='user-dropdown'>
   <ul class='user-dropdown-links'>
-    <li>{{#link-to 'user' currentUser class="user-activity-link" }}{{i18n user.profile}}{{/link-to}}</li>
+    <li>{{#link-to 'user' currentUser class="user-activity-link" }}{{i18n 'user.profile'}}{{/link-to}}</li>
     <li>
     {{#link-to 'userPrivateMessages.index' currentUser class='user-messages-link'}}
-      {{i18n user.unread_message_count}}{{#if currentUser.unread_private_messages}} <span class="badge-notification unread-private-messages">{{currentUser.unread_private_messages}}</span>{{/if}}
+      {{i18n 'user.unread_message_count'}}{{#if currentUser.unread_private_messages}} <span class="badge-notification unread-private-messages">{{currentUser.unread_private_messages}}</span>{{/if}}
     {{/link-to}}
     </li>
-    <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n user.bookmarks}}{{/link-to}}</li>
-    <li>{{#link-to 'preferences' currentUser}}{{i18n user.preferences}}{{/link-to}}</li>
-    <li><button {{action "logout"}} class='btn btn-danger right logout'><i class='fa fa-sign-out'></i>{{i18n user.log_out}}</button></li>
+    <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n 'user.bookmarks'}}{{/link-to}}</li>
+    <li>{{#link-to 'preferences' currentUser}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+    <li><button {{action "logout"}} class='btn btn-danger right logout'><i class='fa fa-sign-out'></i>{{i18n 'user.log_out'}}</button></li>
   </ul>
 </section>

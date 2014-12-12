@@ -1,11 +1,3 @@
-/**
-  A data model representing the site (instance of Discourse)
-
-  @class Site
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
@@ -66,7 +58,12 @@ Discourse.Site = Discourse.Model.extend({
 
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
-    if (existingCategory) existingCategory.setProperties(newCategory);
+    if (existingCategory) {
+      // Don't update null permissions
+      if (newCategory.permission === null) { delete newCategory.permission; }
+
+      existingCategory.setProperties(newCategory);
+    }
   }
 });
 

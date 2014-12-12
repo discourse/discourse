@@ -1,12 +1,11 @@
 require_dependency 'guardian'
 require_dependency 'topic_query'
 require_dependency 'filter_best_posts'
-require_dependency 'summarize'
 require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts
+  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields
 
   def initialize(topic_id, user=nil, options={})
@@ -21,7 +20,8 @@ class TopicView
 
     @page = @page.to_i
     @page = 1 if @page.zero?
-    @limit ||= SiteSetting.posts_chunksize
+    @chunk_size = options[:slow_platform] ? SiteSetting.posts_slow_chunksize : SiteSetting.posts_chunksize
+    @limit ||= @chunk_size
 
     setup_filtered_posts
 
@@ -115,7 +115,8 @@ class TopicView
   def summary
     return nil if desired_post.blank?
     # TODO, this is actually quite slow, should be cached in the post table
-    Summarize.new(desired_post.cooked).summary
+    excerpt = desired_post.excerpt(500, strip_links: true, text_entities: true)
+    (excerpt || "").gsub(/\n/, ' ').strip
   end
 
   def image_url
