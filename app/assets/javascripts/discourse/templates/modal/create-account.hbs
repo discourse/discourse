@@ -75,7 +75,7 @@
         {{#if userFields}}
           <div class='user-fields'>
             {{#each f in userFields}}
-              {{user-field field=f.field value=value}}
+              {{user-field field=f.field value=f.value}}
             {{/each}}
           </div>
         {{/if}}
