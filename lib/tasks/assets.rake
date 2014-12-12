@@ -11,6 +11,12 @@ task 'assets:precompile:before' do
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
+  if Rails.configuration.assets.js_compressor == :uglifier
+    ENV["UGLIFY"] = "1"
+  end
+
+  puts "Bundling assets"
+
   # in the past we applied a patch that removed asset postfixes, but it is terrible practice
   # leaving very complicated build issues
   # https://github.com/rails/sprockets-rails/issues/49
@@ -19,46 +25,44 @@ task 'assets:precompile:before' do
   require 'sprockets'
   require 'digest/sha1'
 
-  module ::Sprockets
 
-    def self.redis
-      @redis ||=
-        (
-          redis_url = GlobalSetting.asset_redis_url
-          if redis_url.present?
-            uri = URI.parse(redis_url)
-            options = {}
-            options[:password] = uri.password if uri.password.present?
-            options[:host] = uri.host
-            options[:port] = uri.port || 6379
-            Redis.new(options)
-          else
-            DiscourseRedis.raw_connection
-          end
-        )
-    end
+  # monkey patch asset pipeline not to gzip, compress: false is broken
+  class ::Sprockets::Asset
+    # Save asset to disk.
+    def write_to(filename, options = {})
+      # Gzip contents if filename has '.gz'
+      return if File.extname(filename) == '.gz'
 
-    def self.cache_compiled(type, data)
-      # add cache breaker here if uglifier options change
-      digest = Digest::SHA1.hexdigest(data) << "v1"
-      key = "SPROCKETS_#{type}_#{digest}"
-      if compiled = redis.get(key)
-        redis.expire(key, 1.week)
-      else
-        compiled = yield
-        redis.setex(key, 1.week, compiled)
+      begin
+        FileUtils.mkdir_p File.dirname(filename)
+
+        File.open("#{filename}+", 'wb') do |f|
+          f.write to_s
+        end
+
+        # Atomic write
+        FileUtils.mv("#{filename}+", filename)
+
+        # Set mtime correctly
+        File.utime(mtime, mtime, filename)
+
+        nil
+      ensure
+        # Ensure tmp file gets cleaned up
+        FileUtils.rm("#{filename}+") if File.exist?("#{filename}+")
       end
-      compiled
     end
+
+
+  end
+
+  module ::Sprockets
 
     class UglifierCompressor
 
       def evaluate(context, locals, &block)
-        ::Sprockets.cache_compiled("uglifier", data) do
-           Uglifier.new(:comments => :none,
-                        :screw_ie8 => false,
-                        :output => {max_line_len: 1024}).compile(data)
-        end
+        # monkey patch cause we do this later, no idea how to cleanly disable
+        data
       end
 
     end
@@ -79,7 +83,77 @@ task 'assets:precompile:css' => 'environment' do
   end
 end
 
+def assets_path
+  "#{Rails.root}/public/assets"
+end
+
+def compress_node(from,to)
+  to_path = "#{assets_path}/#{to}"
+
+  source_map_root = (d=File.dirname(from)) == "." ? "/assets" : "/assets/#{d}"
+
+  STDERR.puts `uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '/assets/#{to}.map'`
+end
+
+def compress_ruby(from,to)
+  data = File.read("#{assets_path}/#{from}")
+
+  uglified, map = Uglifier.new(comments: :none,
+                               screw_ie8: false,
+                               source_filename: File.basename(from),
+                               output_filename: File.basename(to)
+                              )
+                          .compile_with_map(data)
+  dest = "#{assets_path}/#{to}"
+
+  File.write(dest, uglified << "\n//# sourceMappingURL=/assets/#{to}.map")
+  File.write(dest + ".map", map)
+end
+
+def gzip(path)
+  STDERR.puts "gzip #{path}"
+  STDERR.puts `gzip -f -k -9 #{path}`
+end
+
+def compress(from,to)
+  if @has_uglifyjs ||= !`which uglifyjs`.empty?
+    compress_node(from,to)
+  else
+    compress_ruby(from,to)
+  end
+end
+
 task 'assets:precompile' => 'assets:precompile:before' do
   # Run after assets:precompile
   Rake::Task["assets:precompile:css"].invoke
+
+  if ENV["UGLIFY"]
+    puts "Compressing Javascript and Generating Source Maps"
+    manifest = Sprockets::Manifest.new(assets_path)
+    manifest.files
+            .select{|k,v| k =~ /\.js$/}
+            .each do |file, info|
+
+        path = "#{assets_path}/#{file}"
+        _file = (d = File.dirname(file)) == "." ? "_#{file}" : "#{d}/_#{File.basename(file)}"
+        _path = "#{assets_path}/#{_file}"
+
+        if File.exists?(_path)
+          STDERR.puts "Skipping: #{file} already compressed"
+        else
+          STDERR.puts "Compressing: #{file}"
+          FileUtils.mv(path, _path)
+          compress(_file,file)
+
+          info["size"] = File.size(path)
+          info["mtime"] = File.mtime(path).iso8601
+          gzip(path)
+        end
+
+    end
+
+    # protected
+    manifest.send :save
+
+  end
 end
