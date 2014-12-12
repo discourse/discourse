@@ -1,8 +1,16 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 ar:
   js:
     number:
       human:
         storage_units:
+          format: '%n %u'
           units:
             byte:
               zero: بايت
@@ -21,6 +29,11 @@ ar:
       long_no_year_no_time: "ش ش ش  ي"
       long_with_year: "ش ش ش  ي,  س س س س  سا:دد  ف"
       long_with_year_no_time: "ش ش ش  ي,  س س س س"
+      long_date_with_year: "ش ش ش  ي,  س س س س"
+      long_date_without_year: "ش ش ش  ي"
+      long_date_with_year_without_time: "ش ش ش  ي,  س س س س"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "ش ش ش  ي,  س س س س"
       tiny:
         half_a_minute: "< 1د"
         less_than_x_seconds:
@@ -30,6 +43,10 @@ ar:
           few: "> %{count}ث"
           many: "> %{count}ث"
           other: "> %{count}ث"
+        date_month: "ش ش ش  ي"
+        date_year: "ش ش ش  ي,  س س س س"
+      medium:
+        date_year: "ش ش ش  ي,  س س س س"
       medium_with_ago:
         x_days:
           zero: "%{count} يوم مضى"
@@ -46,11 +63,13 @@ ar:
       facebook: 'شارك هذا الرابط عن طريق فيس بوك'
       google+: 'شارك هذا الرابط عن طريق جوجل+'
       email: 'شارك هذا الرابط عن طريق البريد الالكتروني'
+    topic_admin_menu: "عمليات المدير"
     edit: 'عدّل العنوان و التصنيف على هذا الموضوع'
     not_implemented: "لم يتم تنفيذ هذه الميزة حتى الآن، نعتذر!"
     no_value: "لا"
     yes_value: "نعم"
     generic_error: "نعتذر، حدث خطأ."
+    generic_error_with_reason: "حدث خطأ : %{error}"
     sign_up: "إشترك"
     log_in: "تسجيل الدخول "
     age: "العمر"
@@ -58,6 +77,7 @@ ar:
     admin_title: "المدير"
     flags_title: "الأعلام"
     show_more: "أعرض المزيد"
+    show_help: "مساعدة"
     links: "روابط"
     links_lowercase: "روابط"
     faq: "التعليمات"
@@ -77,21 +97,28 @@ ar:
     daily: "يومي"
     weekly: "اسبوعي"
     every_two_weeks: "كل اسبوعين"
+    max_of_count: "اقصى {{count}}"
     suggested_topics:
       title: "مواضيع مقترحة"
     about:
       simple_title: "نبذة"
+      title: "عن %{title}"
       stats: "إحصائيات الموقع "
       our_admins: "مدراؤنا"
       our_moderators: "مشرفونا"
       stat:
         all_time: "دائما "
         last_7_days: "آخر 7 أيام "
+      like_count: "اعجابات"
+      topic_count: "مواضيع"
+      post_count: "مشاركات"
+      user_count: "مستخدمين"
     bookmarks:
       not_logged_in: "نعتذر يجب ان تكون متصلا لكي تقوم بإضافة هدا الموضوع للمفضلة"
       created: "لقد نجحت في إضافة الموضوع للمفضلة"
       not_bookmarked: "لقد قمت بقراءة هذه المشاركة مسبقاً. اضغط هنا لحفظها."
       last_read: "هذه آخر مشاركة تمت قرائتها. اضغط هنا لحفظها."
+      remove: "المفضلة"
     click_to_show: "إضغط للعرض."
     preview: "معاينة"
     cancel: "الغاء"
@@ -102,13 +129,30 @@ ar:
     uploading: "يتم الرفع..."
     uploaded: "اكتمل الرفع!"
     enable: "تمكين"
+    disable: "تعطيل"
+    undo: "تراجع"
+    revert: "عكس"
     failed: "فشل"
     choose_topic:
       none_found: "لم يتم العثور على مواضيع."
       title:
         search: "بحث عن موضوع حسب الاسم، رابط أو رقم التعريف(id) :"
         placeholder: "اكتب عنوان الموضوع هنا"
+    user_action:
+      user_posted_topic: "a href='{{userUrl}}'>{{user}}</a> مشاركات<a href='{{topicUrl}}'>هذا الموضوع</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>ك</a> مشاركات<a href='{{topicUrl}}'>هذا الموضوع</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> الرد على<a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>أنت</a> ردودك <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> ردوا على  <a href='{{topicUrl}}'>هذا الموضوع</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>أنت</a> ردك على <a href='{{topicUrl}}'>the topic</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> منشن<a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> منشنك<a href='{{user2Url}}'>you</a>"
+      posted_by_user: "مشاركة  <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "مشاركتك <a href='{{userUrl}}'></a>"
+      sent_by_user: "مرسلة من قبل <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "مرسلة من قبلك <a href='{{userUrl}}'></a>"
     groups:
+      visible: "المجموعة مخفية عن جميع المستخدمين"
       title:
         zero: "مجموعات"
         one: "مجموعات"
@@ -117,9 +161,13 @@ ar:
         many: "مجموعات"
         other: "مجموعات"
       members: "أعضاء "
+      posts: "مشاركات"
       alias_levels:
+        title: "من يستطيع أن يشارك في هذه المجموعة ؟"
         nobody: "لا أحد"
         only_admins: "المسؤولين فقط"
+        mods_and_admins: "فقط المدراء والمشرفون"
+        members_mods_and_admins: "فقط اعضاء المجموعة والمشرفون والمدراء"
         everyone: "الكل"
     user_action_groups:
       '1': "الإعجابات التي قمت بإعطائها"
@@ -135,28 +183,70 @@ ar:
       '12': "العناصر المرسلة"
       '13': "البريد الوارد"
     categories:
+      all: "جميع التصنيفات"
       all_subcategories: "جميع"
-      category: "صنف"
+      no_subcategory: "لا شيء"
+      category: "تصنيف"
       posts: "مشاركات"
       topics: "مواضيع"
       latest: "آخر"
+      latest_by: "الاحدث بـ"
+      toggle_ordering: "تبديل التحكم في الترتيب"
+      subcategories: "تصنيفات فرعية"
+      topic_stats: "عدد المواضيع الجديدة"
+      post_stats: "عدد المواضيع الجديدة"
+    ip_lookup:
+      title: 'جدول العناوين '
+      hostname: Hostname
+      location: الموقع
+      location_not_found: (غيرمعرف)
+      organisation: المنظمات
+      phone: هاتف
+      other_accounts: "حساب آخر بنفس العنوان"
+      delete_other_accounts: "حذف %{count}"
+      username: "إسم المستخدم"
+      trust_level: "TL"
+      read_time: "وقت القراءة"
+      topics_entered: " مواضيع شوهدت"
+      post_count: "# مشاركات"
+      confirm_delete_other_accounts: "هل أنت متأكد أنك تريد حذف هذا الحساب ؟"
     user:
+      said: "{{username}}:"
       profile: "الملف الشخصي"
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive: " تحميل أرشيف مواضيعي"
+      new_private_message: "انشاء رسالة خاصة"
       private_message: "رسائل خاصة"
       private_messages: "الرسائل"
       activity_stream: "النشاط"
       preferences: " التفضيلات"
+      bookmarks: "المفضلة"
       bio: "معلومات عنّي"
       invited_by: "مدعو بواسطة"
       trust_level: "مستوى الثقة"
       notifications: "اشعارات"
+      dismiss_notifications: "جعل الجميع مقروء"
+      dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
+      disable_jump_reply: "لاتذهب الى مشاركة جديدة بعد الرد"
       dynamic_favicon: " (أظهر تنبيهات الرسائل الواردة على فافيكون  (تجريبية "
+      edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
       enable_quoting: "إسمح بإقتباس التعليقات لنصوص البارزة الملقى عليها ضوء"
       change: "تغيير"
+      moderator: "{{user}} لديه صلاحية التعديل"
+      admin: "{{user}} مدير"
+      moderator_tooltip: "هذا المستخدم لديه صلاحية التعديل"
+      admin_tooltip: "هذا المستخدم مدير"
+      suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
+      suspended_reason: "سبب"
+      github_profile: "Github"
+      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (بإسثناء لو قمت بكتم الموضوع او التصنيف)"
+      watched_categories: "متابع"
+      watched_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
+      tracked_categories: "Tracked"
+      tracked_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
+      muted_categories: "كتم"
       change_password:
         success: "(تم ارسال الرسالة)"
         in_progress: "(يتم ارسال رسالة)"

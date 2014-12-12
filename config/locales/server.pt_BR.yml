@@ -33,6 +33,7 @@ pt_BR:
   log_in: "Entrar"
   via: "%{username} via %{site_name}"
   is_reserved: "está reservado"
+  purge_reason: "A conta não verificada, foi excluída."
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   errors:
     messages:
@@ -159,7 +160,7 @@ pt_BR:
       ⏎
       Tem certeza de que você está fornecendo o tempo adequado para outras pessoas também poderem compartilhar seus pontos de vista?⏎
     too_many_replies: "# # # Você está no limite de resposta para este tópico \n \nLamentamos, mas novos usuários estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico. \n \nEm vez de adicionar outra resposta, por favor, considere editar suas respostas anteriores ou visitar outros tópicos. \n"
-    reviving_old_topic: "# # # Reviver este tópico?\n \nA última resposta a este tópico foi a %{dias} atrás. Sua resposta vai levar o tópico para o topo da sua lista e avisar a qualquer um anteriormente envolvido na conversa. \n \nTem certeza de que quer continuar esta velha conversa? \n"
+    reviving_old_topic: "# # # Reviver este tópico?\n \nA última resposta a este tópico foi a %{days} atrás. Sua resposta vai levar o tópico para o topo da sua lista e avisar a qualquer um anteriormente envolvido na conversa. \n \nTem certeza de que quer continuar esta velha conversa? \n"
   activerecord:
     attributes:
       category:
@@ -585,6 +586,9 @@ pt_BR:
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
+    download_remote_images_threshold: "Espaço mínimo necessário para download das imagens ( em % )"
+    disabled_image_download_domains: "Imagens hospedadas nestes domínios nunca serão baixadas. \nLista delimitada por |"
+    ninja_edit_window: "Pelos próximos (n) segundos após a postagem, as edições não terão histórico."
     post_edit_time_limit: "O autor pode editar ou apagar o seu post para (n) minutos após a postagem. Defina como 0 para sempre."
     edit_history_visible_to_public: "Permitir que todos vejam as versões anteriores de uma postagem editada. Quando desativado, somente membros da equipe podem ver o histórico de alterações."
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
@@ -593,21 +597,32 @@ pt_BR:
     category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
     show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
+    add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
     exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
+    post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     logo_url: "O logo à esquerda e acima para seu site eg: http://example.com/logo.png"
     digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
     logo_small_url: "O logo à esquerda e acima pequeno para seu site, visto quando se faz rolagem. eg: http://example.com/logo-small.png"
     favicon_url: "Um favicon para o seu site"
+    mobile_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
+    notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
+    email_subject: "Customizar o formato do assunto dos emails padrões. \nRef https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "Deverá a URL completa para o site (Discourse.base_url) ser http ou https? Não ative isso a MENOS QUE O HTTPS ESTEJA CONFIGURADO E FUNCIONANDO!"
     summary_score_threshold: "A pontuação mínima requerida para uma postagem ser incluída no \"Resuma este tópico\" "
     summary_posts_required: "Mensagens mínimas em um tópico antes de 'Resumir este tópico' ficar habilitado"
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
+    summary_max_results: "Máximo número de posts quando resumidos por Categoria "
+    enable_private_messages: "Permitir usuários de nível 1 a criar e responder mensagens privadas."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
+    long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
+    long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
+    polling_interval: "Com que frequencia os clientes podem solicitar o servidor em milisegundos"
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
+    background_polling_interval: "Com que frequência os clientes podem solicitar o servidor em milisegundos ( em segundo plano )"
     auto_track_topics_after: "Quantos milisegundos esperar antes que um tópico seja automaticamente  rastreado (0 para sempre, -1 para nunca)"
     new_topic_duration_minutes: "Quantos minutos um tópico permanece considerado como novo (-1 para sempre, -2 para desde a última visita)"
     flags_required_to_hide_post: "As postagens vão ser escondidos automaticamente quando o númereo de sinalizações atingir este número (0 para nunca)"
@@ -683,9 +698,20 @@ pt_BR:
     default_external_links_in_new_tab: "Abrir links externos em uma nova guia. Os usuários podem mudar isso em suas preferências."
     public_user_custom_fields: "Uma lista de permissões de campos personalizados para um usuário que pode ser mostrado publicamente."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
+    suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
+    disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
+    enable_names: "Permitir que usuários exibam seus nomes completosPermitir que usuários exibam seus nomes completos"
+    display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
+    invites_per_page: "Mostrar convites padrões no página de usuário"
     short_progress_text_threshold: "Após o número de mensagens em um tópico for acima deste número, a barra de progresso mostrará apenas o número  da mensagem atual. Se você alterar a largura da barra de progresso, você pode precisar alterar este valor."
     default_code_lang: "Realce de sintaxe padrão da linguagem de programação aplicada a blocos de código GitHub (lang-auto, Ruby, Python, etc)"
+    warn_reviving_old_topic_age: "Quando alguém começa a responder a um tópico mais velho do que este número de dias, um aviso será exibido para desencorajar o usuário de reviver uma velha discussão. Desabilite definindo para 0."
+    autohighlight_all_code: "Aplicar código destacando todos os blocos de código pré-formatados, mesmo quando não for específica o idioma"
+    embeddable_host: "Host que pode incorporar os comentários deste fórum do Discourse"
+    feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
+    feed_polling_url: "URL do feed RSS / ATOM para importar"
+    embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
     embed_post_limit: "Número máximo de respostas para embutir"
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
@@ -1000,19 +1026,42 @@ pt_BR:
         Divirta-se durante sua estadia!
 
         [prefs]: %{user_preferences_url}
+    bulk_invite_succeeded:
+      subject_template: "Seus convites foram enviados com sucesso."
+      text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
+    bulk_invite_failed:
+      subject_template: "Seus convites não forma enviados, contate os moderadores."
+    csv_export_succeeded:
+      subject_template: "Dados foram exportados com sucesso"
+    csv_export_failed:
+      subject_template: "Exporte Falhou"
+      text_body_template: "O export falhou, verifique os logs"
     email_reject_trust_level:
+      subject_template: "Mensagem rejeitada"
       text_body_template: |
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou.
 
         Sua conta não tem o nível de confiança necessário para criar novos tópicos para este endereço de e-mail. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
     email_reject_no_account:
       subject_template: "Problema com Email -- Conta Desconhecida"
+      text_body_template: |
+        Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. Não há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.
+    email_reject_empty:
+      subject_template: "Problemas no Email - Mensagem em Branco"
+      text_body_template: |
+        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nós não conseguimos encontrar nenhum conteúdo no e-mail. Tenha certeza que você escreveu alguma coisa no topo do e-mail - nós não conseguimos analisar respostas em linha. Se você está recebendo isto, mas incluiu conteúdo, tente novamente com conteúdo em HTML no seu e-mail (não somente texto).
+    email_reject_parsing:
+      subject_template: "Problemas no Email - Conteúdo desconhecido."
+      text_body_template: |
+        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Não conseguimos encontrar onde sua resposta estava no e-mail. **Tenha certeza de escrever a resposta no topo do e-mail** -- tudo após o início da mensagem respondida é descartado.
     email_reject_post_error:
+      subject_template: "Problemas no email - \"Posting Error\" "
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
 
         Algumas possíveis causas são: formatação complexa, mensagem muito grande, mensagem muito pequena. Por favor tente novamente, ou poste através do site se persistir.
     email_reject_post_error_specified:
+      subject_template: "Problemas no email - \"Posting Error\" "
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
 
@@ -1021,6 +1070,16 @@ pt_BR:
         %{post_error}
 
         Se você puder corrigir, por favor tente novamente.
+    email_reject_reply_key:
+      subject_template: "Problemas no email - Sem endereço para retorno - \"Unknown Reply Key\""
+      text_body_template: |
+        Pedimos desculpas, mas seu email para %{destination} (titled %{former_title}) não foi enviado.
+
+        O endereço de email do destinatário é desconhecido ou inválido, Contate um dos moderadores para relatar esse problema
+    email_reject_destination:
+      subject_template: "Probelmas no Email - Email destinatário desconhecido"
+      text_body_template: |
+        Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nenhum dos endereços de destinatário são reconhecidos pelo fórum. Por favor tenha certeza que o fórum está na linha To: (não CC ou BCC), e que você está enviando para o endereço de e-mail fornecido pelos administradores.
     email_error_notification:
       text_body_template: |
         Erro de autenticação ao baixar e-mails através do servidor POP.
@@ -1247,6 +1306,7 @@ pt_BR:
   guidelines: "Diretrizes"
   privacy: "Privacidade"
   edit_this_page: "Editar esta página"
+  static_topic_first_reply: "Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name} \n"
   guidelines_topic:
     title: "Perguntas frequentes/Diretrizes"
     body: "<a name=\"civilizado\"></a>\n\n## [Este é um lugar civilizado para discussão pública](#civilizado)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que seria um parque público. Nós, também, somos um recurso da comunidade compartilhada &mdash; um lugar para compartilhar habilidades, conhecimentos e interesses através de conversa.\n\nEstas não são regras rígidas e rápidas, apenas auxilia o julgamento humano de nossa comunidade. Use estas diretrizes para manter este, um lugar bem iluminado limpo para o discurso público civilizado.\n\n<a name=\"melhorar\"></a>\n\n## [Melhorar a Discussão](#melhorar)\n\nAjude-nos a fazer deste um ótimo lugar para discussão trabalhando sempre para melhorar a discussão de alguma forma, ainda que pequena. Se você não tiver certeza de que seu post acrescenta à conversa, pense sobre o que você quer dizer e tente novamente mais tarde. \n\nOs tópicos discutidos aqui são importantes para nós, e nós queremos que você aja como se eles fossem são importantes para você, também. Seja respeitoso com os temas e as pessoas que estão discutindo-los, mesmo se você não concordar com algumas das coisas que está sendo dito. \n\nUma forma de melhorar a discussão é descobrindo as que já estão acontecendo. Por favor, passe algum tempo visitando os tópicos aqui antes de responder ou iniciar o seu próprio, você terá uma melhor chance de encontrar outras pessoas que compartilham os seus interesses.\n\n<a name=\"agradavel\"></a>\n\n## [Seja agradável, mesmo quando você discorda](#agradavel)\n\nVocê pode querer responder a algo por discordar com ele. Isso é bom. Mas, lembre-se de _criticar as idéias, não pessoas_. Por favor, evite: \n\n* Xingamentos. \n* Ataques ad hominem. \n* Respondendo a um tom de mensagem, em vez de seu conteúdo real. \n* Instintiva contradição. \n\nEm vez disso, forneça fundamentados contra-argumentos que melhoram a conversa.\n\n<a name=\"participacao\"></a>\n\n## [Suas contagens de Participação](#participacao)\n\nAs conversas que temos aqui define o tom para todos. Ajude-nos a influenciar o futuro da nossa comunidade, optando por se envolver em discussões que fazem deste fórum\

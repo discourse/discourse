@@ -1448,10 +1448,6 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
       export_csv:
-        users:
-          title: "CSV 파일로 사용자 목록 내보내기"
-        screened_ips:
-          title: "CVS 파일로 차단한 IPs 목록 내보내기"
         success: "내보내기가 시작되었습니다. 곧 진행사항을 알려드릴께요."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
         button_text: "내보니기"
