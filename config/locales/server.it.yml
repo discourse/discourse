@@ -33,6 +33,7 @@ it:
   log_in: "Accedi"
   via: "%{username} via %{site_name}"
   is_reserved: "è riservato"
+  purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   errors:
     messages:
@@ -583,10 +584,14 @@ it:
     exclude_rel_nofollow_domains: "Una lista di domini separati da pipe | in cui il nofollow non viene aggiunto (tld.com autorizzerà automaticamente sub.tld.com)"
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
+    onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Controllali con http://iframely.com/debug"
     logo_url: "Il logo mostrato in alto a sinistra del tuo sito, es: http://example.com/logo.png"
     digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. es: http://example.com/logo.png"
+    logo_small_url: "Il logo piccolo che si vede in alto a sinistra del tuo sito, compare quando scorri in basso. es. http://example.com/logo-small.png"
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "Il logo a posizione fissata che si vede in alto a sinistra del tuo sito mobile. Se lasciato vuoto verrà usato `logo_url`. es: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
+    notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
     use_https: "La URL completa del sito (Discourse.base_url) deve essere http o https? NON ATTIVARE SE HTTPS NON E' GIA' CONFIGURATO E FUNZIONANTE!"
     summary_score_threshold: "Il punteggio minimo richiesto affinché un messaggio sia incluso in 'Riassumi Questo Argomento'"

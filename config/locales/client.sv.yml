@@ -1508,10 +1508,6 @@ sv:
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
-        users:
-          title: "Exportera alla användare i CSV format."
-        screened_ips:
-          title: "Exportera alla IP-adresser i CSV format."
         success: "Exporteringen har påbörjats, du kommer snart att få en notifiering över hur det går."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
         button_text: "Exportera"

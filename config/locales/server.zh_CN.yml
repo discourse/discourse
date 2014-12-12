@@ -795,6 +795,8 @@ zh_CN:
     min_ban_entries_for_roll_up: "当点击折叠按钮时，且至少 (N) 条记录时，将会创建一个子网封禁记录"
     max_age_unmatched_emails: "在 (N) 天后删除不匹配的邮件地址。"
     max_age_unmatched_ips: "在 (N) 天后删除不匹配的 IP 记录。"
+    num_flaggers_to_close_topic: "要自动终止一个主题的讨论并介入时所需的最小数量的独立标记者"
+    num_flags_to_close_topic: "要自动终止一个主题的讨论并介入时所需的最小数量的有效标记"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
     disable_emails: "禁止 Discourse 发送任何邮件"
@@ -1104,6 +1106,7 @@ zh_CN:
     disagreed: "感谢通知我们。我们正在了解情况。"
     deferred: "感谢通知我们。我们正在调查情况。"
     deferred_and_deleted: "感谢通知我们。我们已经删除了帖子。"
+  temporarily_closed_due_to_flags: "帖子因为多次社群标记暂时关闭"
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了您的帖子"
@@ -1759,3 +1762,25 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
+  static:
+    search_help: |
+      <h2>小技巧</h2>
+      <p>
+      <ul>
+        <li>匹配有优先级。所以有疑问时，搜索标题</li>
+        <li>独一无二的、不常见的单词将总是产生最好的结果</li>
+        <li>只要有可能，限制您的搜索范围至一个特定的分类、用户或主题</li>
+      </ul>
+      </p>
+      <h2>选项</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的包含“彩虹”的主题，并按最后一个帖子的日期来排序。
+      </p>
