@@ -260,6 +260,7 @@ it:
       mute: "Ignora"
       edit: "Modifica opzioni"
       download_archive: "scarica lo storico dei miei messaggi"
+      new_private_message: "Nuovo Messaggio Privato"
       private_message: "Messaggio privato"
       private_messages: "Messaggi"
       activity_stream: "Attività"
@@ -348,6 +349,10 @@ it:
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "{{provider}} ha autenticato la tua email"
+        frequency:
+          zero: "Se non hai letto quello per cui ti stiamo scrivendo email ti  manderemo immediatamente una email."
+          one: "Se non ti abbiamo visto nell'ultimo minuto e se non hai letto quello che ti stiamo mandando ti manderemo una email."
+          other: "Se non ti abbiamo visto negli ultimi {{count}} minuti e se non hai letto quello per cui ti stiamo scrivendo, ti manderemo email"
       name:
         title: "Nome"
         instructions: "Nome completo (facoltativo)"
@@ -684,6 +689,7 @@ it:
         user: "Cerca messaggi di @{{username}}"
         category: "Cerca nella categoria \"{{category}}\""
         topic: "Cerca in questo argomento"
+        private_messages: "Cerca nei messaggi privati"
     site_map: "vai a un altro elenco di argomenti o categoria"
     go_back: 'indietro'
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
@@ -1517,10 +1523,6 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
-        users:
-          title: "Esporta l'intero elenco utenti in formato CSV."
-        screened_ips:
-          title: "Esposta l'elenco completo di indirizzi IP schermati in formato CSV."
         success: "L'esportazione è stata avviata, ti verrà a breve notificato il progresso del processo."
         failed: "Esportazione fallita. Controlla i log."
         button_text: "Esporta"
@@ -1691,6 +1693,7 @@ it:
           title: "IP scansionati"
           description: 'Gli indirizzi IP che sono sotto controllo. Usa "Permetti" per inserirli nella lista bianca.'
           delete_confirm: "Davvero vuoi rimuovere la regola per %{ip_address}?"
+          roll_up_confirm: "Sei sicuro di volere raggruppare in sottoreti gli indirizzi IP schermati normalmente?"
           rolled_up_some_subnets: "L'elenco di indirizzi IP interdetti sono stati sintetizzati con successo: %{subnets}."
           rolled_up_no_subnet: "Non c'era nulla da sintetizzare."
           actions:
@@ -1714,6 +1717,7 @@ it:
         create: 'Aggiungi Utente Amministratore'
         last_emailed: "Ultima email inviata"
         not_found: "Spiacenti, questo nome utente non esiste nel sistema."
+        id_not_found: "Mi dispiace, nel nostro sistema non esiste questo id utente."
         active: "Attivo"
         show_emails: "Mostre Email"
         nav:

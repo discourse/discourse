@@ -1525,10 +1525,6 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
-        users:
-          title: "Vollständige Benutzerliste im CSV-Format exportieren."
-        screened_ips:
-          title: "Vollständige Liste der überprüften IP-Adressen im CSV-Format exportieren."
         success: "Der Export wurde gestartet. Du wirst in Kürze über den Fortschritt benachrichtigt."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         button_text: "Exportieren"
@@ -1699,6 +1695,7 @@ de:
           title: "Überprüfte IPs"
           description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Whitelist zu setzen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
+          roll_up_confirm: "Möchtest du wirklich die häufig blockierten IP-Adressen zu Subnetzen zusammenfassen?"
           rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
           rolled_up_no_subnet: "Es konnte nichts zusammengefasst werden."
           actions:

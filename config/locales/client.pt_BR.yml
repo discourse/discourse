@@ -247,6 +247,7 @@ pt_BR:
       organisation: Organização
       phone: Telefone
       other_accounts: "Outras contas com esse endereço de IP:"
+      delete_other_accounts: "Excluir %{count}"
       username: "nome de usuário"
       trust_level: "TL"
       read_time: "tempo de leitura"
@@ -349,6 +350,7 @@ pt_BR:
         invalid: "Insira um endereço de email"
         authenticated: "Seu email foi autenticado por {{provider}}"
         frequency:
+          zero: "Não se preocupe, caso você não leia uma mensagem, enviaremos um email para você."
           one: "Vamos lhe enviar emails apenas quando não o virmos há algum tempo e você não tiver visto as coisas que temos enviado"
           other: "Vamos lhe enviar emails apenas se não vimos você nos últimos {{count}} você não tiver visto as coisas que temos enviado"
       name:
@@ -1521,7 +1523,9 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
       export_csv:
+        success: "Exportação iniciada, você será notificado brevemente com o progresso."
         failed: "Falha na exportação. Por favor verifique os logs."
+        button_text: "Exportar"
       customize:
         title: "Personalizar"
         long_title: "Personalizações do Site"
@@ -1734,6 +1738,7 @@ pt_BR:
           regular: 'Usuário no Nível de Confiança 2 (Regular)'
           leader: 'Usuário no Nível de Confiança 3 (Líder)'
           elder: 'Usuário no Nível de Confiança 4 (Ancião)'
+          staff: "Equipe de apoio"
           admins: 'Usuários Administradores'
           moderators: 'Moderadores'
           blocked: 'Usuários Boqueados'

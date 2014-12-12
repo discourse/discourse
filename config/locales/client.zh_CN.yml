@@ -662,6 +662,7 @@ zh_CN:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索“{{category}}”分类"
         topic: "搜索本主题"
+        private_messages: "搜索私信"
     site_map: "去另一个主题列表或分类"
     go_back: '返回'
     not_logged_in_user: '显示当前活动和设置的用户页面'
@@ -975,7 +976,7 @@ zh_CN:
           inappropriate: "同时报告"
           custom_flag: "同时报告"
           bookmark: "同时添加书签"
-          like: "同时赞它"
+          like: "赞"
           vote: "同时投票支持"
         undo:
           off_topic: "撤销报告"
@@ -1455,10 +1456,6 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "您确定要将数据库回滚到之前的工作状态吗？"
       export_csv:
-        users:
-          title: "以 CSV 格式导出所有用户。"
-        screened_ips:
-          title: "以 CSV 格式导出所有 IP。"
         success: "导出开始，您将马上看到进度提示。"
         failed: "导出失败。请检查日志。"
         button_text: "导出"
@@ -1629,6 +1626,7 @@ zh_CN:
           title: "被屏蔽的 IP"
           description: '受监视的 IP 地址，使用“放行”可将 IP 地址加入白名单。'
           delete_confirm: "确定要撤销对 IP 地址为 %{ip_address} 的规则？"
+          roll_up_confirm: "您确定要将常用的 IP 地址归类为子网地址吗？"
           rolled_up_some_subnets: "成功地折叠了 IP 封禁记录至这些子网： %{subnets}。"
           rolled_up_no_subnet: "无法折叠。"
           actions:
