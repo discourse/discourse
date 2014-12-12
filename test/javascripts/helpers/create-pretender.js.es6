@@ -16,7 +16,7 @@ function response(code, obj) {
 }
 
 function success() {
-  return response();
+  return response({ success: true });
 }
 
 export default function() {
