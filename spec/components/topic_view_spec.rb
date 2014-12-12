@@ -25,6 +25,16 @@ describe TopicView do
     lambda { TopicView.new(topic.id, admin) }.should_not raise_error
   end
 
+  context "chunk_size" do
+    it "returns `posts_chunksize` by default" do
+      TopicView.new(topic.id, coding_horror).chunk_size.should == SiteSetting.posts_chunksize
+    end
+
+    it "returns `posts_slow_chunksize` when slow_platform is true" do
+      tv = TopicView.new(topic.id, coding_horror, slow_platform: true)
+      tv.chunk_size.should == SiteSetting.posts_slow_chunksize
+    end
+  end
 
   context "with a few sample posts" do
     let!(:p1) { Fabricate(:post, topic: topic, user: first_poster, percent_rank: 1 )}

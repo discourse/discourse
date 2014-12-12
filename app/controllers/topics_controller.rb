@@ -47,6 +47,7 @@ class TopicsController < ApplicationController
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
     username_filters = opts[:username_filters]
 
+    opts[:slow_platform] = true if request.user_agent =~ /Android/
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     begin
@@ -58,7 +59,7 @@ class TopicsController < ApplicationController
     end
 
     page = params[:page].to_i
-    if (page < 0) || ((page - 1) * SiteSetting.posts_chunksize > @topic_view.topic.highest_post_number)
+    if (page < 0) || ((page - 1) * @topic_view.chunk_size > @topic_view.topic.highest_post_number)
       raise Discourse::NotFound
     end
 

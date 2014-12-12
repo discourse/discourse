@@ -42,8 +42,8 @@ class TopicViewSerializer < ApplicationSerializer
              :has_deleted,
              :actions_summary,
              :expandable_first_post,
-             :is_warning
-
+             :is_warning,
+             :chunk_size
 
   # Define a delegator for each attribute of the topic we want
   attributes(*topic_attributes)
@@ -113,6 +113,9 @@ class TopicViewSerializer < ApplicationSerializer
     result
   end
 
+  def chunk_size
+    object.chunk_size
+  end
 
   def is_warning
     object.topic.private_message? && object.topic.subtype == TopicSubtype.moderator_warning

@@ -5,7 +5,7 @@ require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts
+  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields
 
   def initialize(topic_id, user=nil, options={})
@@ -20,7 +20,8 @@ class TopicView
 
     @page = @page.to_i
     @page = 1 if @page.zero?
-    @limit ||= SiteSetting.posts_chunksize
+    @chunk_size = options[:slow_platform] ? SiteSetting.posts_slow_chunksize : SiteSetting.posts_chunksize
+    @limit ||= @chunk_size
 
     setup_filtered_posts
 
