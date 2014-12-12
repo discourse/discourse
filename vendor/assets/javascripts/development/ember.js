@@ -49586,7 +49586,13 @@ enifed("rsvp/promise",
       _guidKey: guidKey,
 
       _onerror: function (reason) {
-        config.trigger('error', reason);
+        config.async(function(promise) {
+          setTimeout(function() {
+            if (promise._onerror) {
+              config['trigger']('error', reason);
+            }
+          }, 0);
+        }, this);
       },
 
     /**
