@@ -1,0 +1,11 @@
+tr_TR:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Anket seçenekleri"
+  poll:
+    must_contain_poll_options: "anket seçenekleri listesini içermeli"
+    cannot_have_modified_options: "ilk beş dakikadan sonra değişiklik yapılamaz. Değişiklik yapmanız gerekiyorsa, bir moderatör ile iletişime geçin."
+    cannot_add_or_remove_options: "sadece düzenlenebilir, ekleme veya çıkarma yapılamaz. Seçenek ekleme veya çıkarmanız gerekiyorsa, bu konuyu kitlemeli ve yeni bir konu oluşturmalısınız."
+    prefix: "Anket"
+    closed_prefix: "Bitmiş Anket"
