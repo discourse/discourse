@@ -1,0 +1,10 @@
+tr_TR:
+  js:
+    poll:
+      voteCount:
+        other: "%{count} oy"
+      results:
+        show: Sonuçları göster
+        hide: Sonuçları gizle
+      close_poll: "Anketi Bitir"
+      open_poll: "Anket Başlat"
