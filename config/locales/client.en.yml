@@ -94,7 +94,7 @@ en:
           other: "%{count} days ago"
     share:
       topic: 'share a link to this topic'
-      post: 'share a link to post #%{postNumber}'
+      post: 'post #%{postNumber}'
       close: 'close'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
