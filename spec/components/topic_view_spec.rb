@@ -26,13 +26,13 @@ describe TopicView do
   end
 
   context "chunk_size" do
-    it "returns `posts_chunksize` by default" do
-      TopicView.new(topic.id, coding_horror).chunk_size.should == SiteSetting.posts_chunksize
+    it "returns `chunk_size` by default" do
+      TopicView.new(topic.id, coding_horror).chunk_size.should == TopicView.chunk_size
     end
 
-    it "returns `posts_slow_chunksize` when slow_platform is true" do
+    it "returns `slow_chunk_size` when slow_platform is true" do
       tv = TopicView.new(topic.id, coding_horror, slow_platform: true)
-      tv.chunk_size.should == SiteSetting.posts_slow_chunksize
+      tv.chunk_size.should == TopicView.slow_chunk_size
     end
   end
 
@@ -128,8 +128,8 @@ describe TopicView do
       end
 
       it "generates a canonical correctly for paged results" do
-        SiteSetting.stubs(:posts_chunksize).returns(5)
-        TopicView.new(1234, user, post_number: 50).canonical_path.should eql("/1234?page=10")
+        TopicView.new(1234, user, post_number: 10 * TopicView.chunk_size )
+          .canonical_path.should eql("/1234?page=10")
       end
     end
 
@@ -146,7 +146,7 @@ describe TopicView do
         TopicView.any_instance.expects(:find_topic).with(1234).returns(topic)
         TopicView.any_instance.stubs(:filter_posts)
         TopicView.any_instance.stubs(:last_post).returns(p2)
-        SiteSetting.stubs(:posts_chunksize).returns(2)
+        TopicView.stubs(:chunk_size).returns(2)
       end
 
       it "should return the next page" do
@@ -255,7 +255,7 @@ describe TopicView do
     let!(:p3) { Fabricate(:post, topic: topic, user: first_poster)}
 
     before do
-      SiteSetting.posts_chunksize = 3
+      TopicView.stubs(:chunk_size).returns(3)
 
       # Update them to the sort order we're checking for
       [p1, p2, p3, p4, p5, p6, p7].each_with_index do |p, idx|
@@ -299,7 +299,7 @@ describe TopicView do
 
 
     describe '#filter_posts_paged' do
-      before { SiteSetting.stubs(:posts_chunksize).returns(2) }
+      before { TopicView.stubs(:chunk_size).returns(2) }
 
       it 'returns correct posts for all pages' do
         topic_view.filter_posts_paged(1).should == [p1, p2]
@@ -372,7 +372,7 @@ describe TopicView do
       end
 
       context "when 'posts per page' exceeds the number of posts" do
-        before { SiteSetting.stubs(:posts_chunksize).returns(100) }
+        before { TopicView.stubs(:chunk_size).returns(100) }
 
         it 'returns all the posts' do
           near_view = topic_view_near(p5)

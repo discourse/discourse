@@ -622,7 +622,6 @@ tr_TR:
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
     track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi varsayılan ayarlarda devre dışı bırakılmıştır."
     topics_per_page: "Konu listesinde gözüken ve daha fazla konu görmek için sayfa aşağı kaydırıldığında yüklenen konu sayısı"
-    posts_chunksize: "Bir konuda gözüken ve daha fazla gönderi görmek için sayfa aşağı kaydırıldığında yüklenen gönderi sayısı"
     site_contact_username: "Tüm otomatik özel mesajlar bu kullanıcıdan gönderilecek; boş bırakılırsa varsayılan Sistem hesabı kullanılır. "
     send_welcome_message: "Tüm yeni kullanıcılara bir hoşgeldiniz özel mesajı ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."

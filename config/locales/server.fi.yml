@@ -668,7 +668,6 @@ fi:
     share_links: "Mitkä painikkeet näytetään Jaa-valikossa ja missä järjestyksessä."
     track_external_right_clicks: "Seuraa pois sivustolta vieviä linkkejä, jotka avataan hiiren oikealla näppäimellä (esim. avaa uudessa välilehdessä) oletuksena poistettu käytöstä, koska tämä kirjoittaa URL:n uudelleen"
     topics_per_page: "Kuinka monta ketjua ladataan avattaessa ketjulista ja kerrallaan lisää vieritettäessä sivua alaspäin"
-    posts_chunksize: "Kuinka monta viestiä ladataa avattaessa viestiketju ja kerrallaan lisää vieritetäessä sivua alaspäin"
     site_contact_username: "Kaikki automaattiset yksityisviestit lähetetään tämän käyttäjän nimissä; jos jätetään tyhjäksi oletuksena on System-käyttäjä."
     send_welcome_message: "Lähetä kaikille uusille käyttäjille yksityinen tervetuliaisviesti, jossa on pikakäyttöopas."
     suppress_reply_directly_below: "Älä näytä vastausten lukumäärää viestissä, jos ainoa vastaus on seuraavassa viestissä."
