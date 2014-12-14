@@ -668,7 +668,6 @@ es:
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
     topics_per_page: "Cuántos temas se cargan por defecto en la lista de temas y cuando se hace scroll hacia abajo para cargar más temas"
-    posts_chunksize: "Cuantos posts son cargados por default en un tema, y cuando se desplaza hacia abajo para cargar mas posts."
     site_contact_username: "Todos los mensajes privados automatizados serán de este usuario. Si es dejado en blanco, el la cuenta del Sistema por defecto será utilizada."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."

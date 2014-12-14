@@ -739,8 +739,6 @@ en:
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     topics_per_page: "How many topics are loaded by default on the topic list, and when scrolling down to load more topics"
     slow_topics_per_page: "The amount of topics per page on slow devices such as Android"
-    posts_chunksize: "How many posts are loaded by default on a topic, and when scrolling down to load more posts"
-    posts_slow_chunksize: "Like `posts_chunksize` but for slow platforms (such as Android)"
     site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
