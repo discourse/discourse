@@ -158,5 +158,5 @@ window.PagedownCustom.appendButtons.push({
   id: 'wmd-emoji-button',
   description: I18n.t("composer.emoji"),
   execute: showSelector,
-  shortcut: 'e'
+  shortcut: ':'
 });
