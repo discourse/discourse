@@ -5,7 +5,8 @@ class TopicListSerializer < ApplicationSerializer
              :draft,
              :draft_key,
              :draft_sequence,
-             :for_period
+             :for_period,
+             :per_page
 
   has_many :topics, serializer: TopicListItemSerializer, embed: :objects
 
@@ -18,7 +19,7 @@ class TopicListSerializer < ApplicationSerializer
   end
 
   def include_more_topics_url?
-    object.more_topics_url.present? && (object.topics.size == SiteSetting.topics_per_page)
+    object.more_topics_url.present? && (object.topics.size == object.per_page)
   end
 
 end

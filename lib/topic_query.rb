@@ -25,6 +25,7 @@ class TopicQuery
                      status
                      state
                      search
+                     slow_platform
                      ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
@@ -155,15 +156,21 @@ class TopicQuery
 
   protected
 
+    def per_page_setting
+      @options[:slow_platform] ? SiteSetting.slow_topics_per_page : SiteSetting.topics_per_page
+    end
+
     def create_list(filter, options={}, topics = nil)
       topics ||= default_results(options)
       topics = yield(topics) if block_given?
-      TopicList.new(filter, @user, topics, options.merge(@options))
+      list = TopicList.new(filter, @user, topics, options.merge(@options))
+      list.per_page = per_page_setting
+      list
     end
 
     def private_messages_for(user)
       options = @options
-      options.reverse_merge!(per_page: SiteSetting.topics_per_page)
+      options.reverse_merge!(per_page: per_page_setting)
 
       # Start with a list of all topics
       result = Topic.includes(:allowed_users)
@@ -230,7 +237,7 @@ class TopicQuery
     # Create results based on a bunch of default options
     def default_results(options={})
       options.reverse_merge!(@options)
-      options.reverse_merge!(per_page: SiteSetting.topics_per_page)
+      options.reverse_merge!(per_page: per_page_setting)
 
       # Start with a list of all topics
       result = Topic.unscoped
