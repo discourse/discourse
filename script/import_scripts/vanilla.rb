@@ -80,7 +80,12 @@ class ImportScripts::Vanilla < ImportScripts::Base
       puts "", "importing users..."
 
       admin_role_id = @roles.select { |r| r[:name] == "Administrator" }.first[:role_id]
-      moderator_role_id = @roles.select { |r| r[:name] == "Moderator" }.first[:role_id]
+      moderator_role_id = admin_role_id;
+
+      moderator_role = @roles.select { |r| r[:name] == "Moderator" }.first
+      unless moderator_role.nil?
+        moderator_role_id = moderator_role.first[:role_id]
+      end
 
       activities = (@activities || []).reject { |a| a[:activity_user_id] != a[:regarding_user_id] }
 
