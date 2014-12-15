@@ -638,15 +638,9 @@ class User < ActiveRecord::Base
     return if @import_mode
 
     avatar = user_avatar || create_user_avatar
-    gravatar_downloaded = false
 
     if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
-      avatar.update_gravatar!
-      gravatar_downloaded = avatar.gravatar_upload_id
-    end
-
-    if !self.uploaded_avatar_id && gravatar_downloaded
-      self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
+      Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
   end
 

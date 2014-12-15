@@ -1,8 +1,6 @@
 require_dependency 'letter_avatar'
 
 class UserAvatar < ActiveRecord::Base
-  MAX_SIZE = 240
-
   belongs_to :user
   belongs_to :gravatar_upload, class_name: 'Upload', dependent: :destroy
   belongs_to :custom_upload, class_name: 'Upload', dependent: :destroy
