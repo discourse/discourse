@@ -4,15 +4,8 @@
   @param hexValue is a reference to the color's hex value.
   @param brightnessValue is a number from 0 to 255 representing the brightness of the color. See ColorSchemeColor.
   @params valid is a boolean indicating if the input field is a valid color.
-
-  @class Discourse.ColorInputComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
- **/
-Discourse.ColorInputComponent = Ember.Component.extend({
-  layoutName: 'components/color-input',
-
+**/
+export default Ember.Component.extend({
   hexValueChanged: function() {
     var hex = this.get('hexValue');
     if (this.get('valid')) {
@@ -22,11 +15,10 @@ Discourse.ColorInputComponent = Ember.Component.extend({
     }
   }.observes('hexValue', 'brightnessValue', 'valid'),
 
-  didInsertElement: function() {
+  _triggerHexChanged: function() {
     var self = this;
-    this._super();
     Em.run.schedule('afterRender', function() {
       self.hexValueChanged();
     });
-  }
+  }.on('didInsertElement')
 });
