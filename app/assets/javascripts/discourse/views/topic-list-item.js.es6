@@ -17,11 +17,9 @@ export default Discourse.GroupedView.extend({
   },
 
   _highlightIfNeeded: function() {
-    var session = Discourse.Session.current();
-
     // highlight the last topic viewed
-    if (session.get('lastTopicIdViewed') === this.get('content.id')) {
-      session.set('lastTopicIdViewed', null);
+    if (this.session.get('lastTopicIdViewed') === this.get('content.id')) {
+      this.session.set('lastTopicIdViewed', null);
       this.highlight();
     } else if (this.get('content.highlight')) {
       // highlight new topics that have been loaded from the server or the one we just created
