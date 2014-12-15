@@ -637,7 +637,6 @@ zh_CN:
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
     track_external_right_clicks: "追踪外部链接的右键点击（例如：在浏览器新标签打开），缺省是禁用的，因为它会重写URL"
-    topics_per_page: "在主题列表页面，缺省载入多少个主题，以及滚动至什么时候载入更多主题"
     site_contact_username: "论坛给用户发送自动私信时使用的用户名；如果留空将使用默认的系统账户。"
     send_welcome_message: "给所有用户发送快速开始指导的私信"
     suppress_reply_directly_below: "当一个帖子只有一个回复时，不显示帖子回复数量。"

@@ -640,7 +640,6 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
-    topics_per_page: "Liczba tematów ładowanych domyślnie na liście wątków oraz przy doładowaniu wywołanym przewijaniem strony."
     site_contact_username: "Wszystkie automatycznie wysyłane wiadomości prywatne będą pochodzić od wskazanego tu użytkownika. Jeśli puste, zostanie użyte konto System. "
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych wątków"
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."

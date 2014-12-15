@@ -617,7 +617,6 @@ ko:
     post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
     share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
     track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
-    topics_per_page: "토픽 리스트에서 기본으로 보여지는 토픽 수와 스크롤로 인해 더 많은 토픽들이 불려올 때의 수"
     send_welcome_message: "신규 사용자에게 가입 환영 메세지를 보냅니까?"
     suppress_reply_directly_below: "게시글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
     suppress_reply_directly_above: "단 하나의 댓글 위의 게시글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
