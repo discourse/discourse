@@ -662,7 +662,6 @@ fr:
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
     share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écriture de toutes les urls"
-    topics_per_page: "Combien de sujets seront chargés par défaut sur la liste des sujets et lors du défilement vers le bas pour charger des sujets supplémentaires"
     site_contact_username: "Tous les messages privés automatisés le seront depuis cet utilisateur; si non renseigné, le compte par défaut System sera utilisé."
     send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message privé avec un guide de démarrage rapide."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."

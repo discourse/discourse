@@ -657,7 +657,6 @@ he:
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפרסום, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "כמה נושאים נטענים כברירת מחדל ברשימת הנושאים, ומתי גלילה למטה טוענת נושאים נוספים"
     site_contact_username: "כל המסרים האישיים האוטומטיים יהיו ממשתמש זה; אם תשאירו ריק, יעשה שימוש בחשבון ברירת המחדל של המערכת."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
