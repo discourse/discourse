@@ -1,3 +1,5 @@
+import Session from 'discourse/models/session';
+
 export default {
   name: "inject-objects",
   initialize: function(container, application) {
@@ -29,5 +31,13 @@ export default {
     application.inject('route', 'siteSettings', 'site-settings:main');
     application.inject('view', 'siteSettings', 'site-settings:main');
     application.inject('model', 'siteSettings', 'site-settings:main');
+
+    // Inject Session for transient data
+    application.register('session:main', Session.current(), { instantiate: false });
+    application.inject('controller', 'session', 'session:main');
+    application.inject('component', 'session', 'session:main');
+    application.inject('route', 'session', 'session:main');
+    application.inject('view', 'session', 'session:main');
+    application.inject('model', 'session', 'session:main');
   }
 };

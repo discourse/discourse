@@ -1,12 +1,3 @@
-/**
-  Handles the default admin route
-
-  @class AdminDashboardRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-
 export default Discourse.Route.extend({
 
   setupController: function(c) {
@@ -16,8 +7,9 @@ export default Discourse.Route.extend({
   fetchDashboardData: function(c) {
     if( !c.get('dashboardFetchedAt') || moment().subtract(30, 'minutes').toDate() > c.get('dashboardFetchedAt') ) {
       c.set('dashboardFetchedAt', new Date());
+      var versionChecks = this.siteSettings.version_checks;
       Discourse.AdminDashboard.find().then(function(d) {
-        if( Discourse.SiteSettings.version_checks ){
+        if (versionChecks) {
           c.set('versionCheck', Discourse.VersionCheck.create(d.version_check));
         }
         _.each(d.reports,function(report){
