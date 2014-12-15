@@ -144,6 +144,8 @@ class StaffActionLogger
   end
 
   def log_show_emails(users)
+    return if users.blank?
+
     values = []
 
     users.each do |user|
