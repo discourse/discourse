@@ -189,7 +189,8 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
-    this.keyTrapper.bind(binding, function() {
+    this.keyTrapper.bind(binding, function(e) {
+      e.preventDefault();
       $(selector).click();
     });
   },
@@ -250,7 +251,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
         }
         tabLoc.focus();
       }
-      
+
       var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
       if (rgx === null || typeof rgx[1] === 'undefined') {
           this._scrollList($article, direction);
