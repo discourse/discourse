@@ -41,7 +41,7 @@
     float: right;
     color: $primary;
     opacity: 0.5;
-    font-size: 15px;
+    font-size: 1.071em;
   }
 
   a.close:hover {
@@ -73,7 +73,7 @@
 
   .posts-count {
     color: scale-color($tertiary, $lightness: -40%);
-    font-size: 12px;
+    font-size: 0.857em;
   }
 }
 
@@ -93,7 +93,7 @@
   }
   #file-uploading {
     left: 51%;
-    font-size: 12px;
+    font-size: 0.857em;
     color: $primary;
   }
   #draft-status {
@@ -109,13 +109,13 @@
   height: 0;
   background-color: scale-color-diff();
   bottom: 0;
-  font-size: 14px;
+  font-size: 1em;
   position: fixed;
   .toggler {
     width: 15px;
     right: 1px;
     position: absolute;
-    font-size: 15px;
+    font-size: 1.071em;
     color: $primary;
     padding: 0 10px 5px 10px;
     &:before {
@@ -383,7 +383,7 @@
       @include border-radius-all(0);
     }
     #wmd-preview-scroller {
-      font-size: 13px;
+      font-size: 0.929em;
       line-height: 18px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: scroll;

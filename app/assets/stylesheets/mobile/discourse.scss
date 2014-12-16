@@ -23,7 +23,7 @@ body {
     }
     a.star {
       display: inline-block;
-      font-size: 20px;
+      font-size: 1.429em;
       color: scale-color($primary, $lightness: 75%);
       margin-right: 8px;
       margin-top: 4px;
@@ -90,7 +90,7 @@ blockquote {
   vertical-align: middle;
   .topic-status {
     i {
-      font-size: 20px;
+      font-size: 1.429em;
       color: dark-light-diff($secondary, $primary, 40%, -20%);
     }
   }

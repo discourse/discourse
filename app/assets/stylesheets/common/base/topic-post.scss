@@ -4,7 +4,7 @@
    font-weight: bold;
  }
  span {
-   font-size: 13px;
+   font-size: 0.929em;
    padding-right: 8px;
    display: inline-block;
    max-width: 280px;
@@ -125,7 +125,7 @@ aside.quote {
   &.wiki, &.via-email {
     margin-right: 5px;
     i.fa {
-      font-size: 14px;
+      font-size: 1em;
     }
   }
   &.wiki {
@@ -159,7 +159,7 @@ kbd
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
   display: inline-block;
-  font-size: 12px;
+  font-size: 0.857em;
   line-height: 1.4;
   margin: 0 .1em;
   padding: .1em .6em;

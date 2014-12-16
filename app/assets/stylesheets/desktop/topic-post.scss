@@ -10,7 +10,7 @@
 }
 
 h1 .topic-statuses .topic-status i {
-  font-size: 20px;
+  font-size: 1.429em;
   vertical-align: middle;
 }
 
@@ -31,7 +31,7 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   z-index: 400;
-  font-size: 13px;
+  font-size: 0.929em;
   float: right;
   margin: 1px 25px 0 0;
   color: scale-color($primary, $lightness: 50%);
@@ -135,7 +135,7 @@ nav.post-controls {
   }
 
   button {
-    font-size: 16px;
+    font-size: 1.143em;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
@@ -291,7 +291,7 @@ nav.post-controls {
   .topic-meta-data h5 {
     position: absolute;
     z-index: 1;
-    font-size: 13px;
+    font-size: 0.929em;
     a {
       font-weight: bold;
       color: scale-color($primary, $lightness: 30%);
@@ -338,7 +338,7 @@ a.star {
     margin: 1px 0 2px 0;
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -348,7 +348,7 @@ a.star {
   }
 
   span.domain {
-    font-size: 10px;
+    font-size: 0.714em;
     color: scale-color($primary, $lightness: 50%);
   }
 
@@ -447,7 +447,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.286em;
         line-height: 52px;
       }
     }
@@ -488,7 +488,7 @@ a.star {
   }
 
    .title {
-    font-size: 14px; line-height: 8px;
+    font-size: 1em; line-height: 8px;
    }
 }
 
@@ -557,7 +557,7 @@ video {
 
   a.star {
     margin: 0 7px 20px 2px;
-    font-size: 17px;
+    font-size: 1.214em;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
   }
   a.star.starred {color: $danger !important;}
@@ -648,7 +648,7 @@ a.mention {
 }
 
 .deleted-user-avatar {
-  font-size: 36px;
+  font-size: 2.571em;
 }
 
 .info-line {
@@ -708,7 +708,7 @@ blockquote > *:last-child {
 
   ul {margin: 0;}
   li {margin-bottom: 10px;}
-  i {font-size: 12px;}
+  i {font-size: 0.857em;}
 
   .reply-new {
     padding-left: 27px;
@@ -808,8 +808,8 @@ $topic-avatar-width: 45px;
   border: 1px solid scale-color-diff();
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
-  span {font-size: 12px;}
-  .title {font-weight: bold; display: block; font-size: 14px;}
+  span {font-size: 0.857em;}
+  .title {font-weight: bold; display: block; font-size: 1em;}
 }
 .dropdown-menu a {
   display: block;
@@ -844,7 +844,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 18px;
+  font-size: 1.286em;
 }
 
 .open > .dropdown-menu {
@@ -879,14 +879,14 @@ $topic-avatar-width: 45px;
     margin-top: 10px;
   }
   p {
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 25px;
+    font-size: 1.786em;
     color: $primary;
     margin-bottom: 5px;
     i {
@@ -974,7 +974,7 @@ a.attachment:before {
     position: absolute;
     left: 767px;
     color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
-    font: 90px/1 FontAwesome;
+    font: 6.429em/1 FontAwesome;
     content: "\f014";
     z-index: -5;
 }
@@ -993,7 +993,7 @@ a.attachment:before {
  .post-info  {
    display: inline-block;
    float: right;
-   font-size: 13px;
+   font-size: 0.929em;
    margin-top: 1px;
    a {color: scale-color($primary, $lightness: 50%);}
  }
@@ -1013,7 +1013,7 @@ span.highlighted {
   position: absolute;
   right: -2px;
   top: 13px;
-  font-size: 8px;
+  font-size: 0.571em;
 }
 
 .read-state.read {

@@ -2,7 +2,7 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-html {font-size: 14px/19px;}
+html {font-size: $base-font-size/$base-line-height;}
 
 @include medium-width {
   body {
@@ -110,7 +110,7 @@ body {
     padding: 0 2px 0 0;
     margin: 0;
     i {
-        font-size: 15px;
+        font-size: 1.071em;
           }
   }
 
@@ -165,7 +165,7 @@ body {
     margin: 0 0 18px;
   }
   label, input, button, select, textarea {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: normal;
     line-height: 18px;
   }
@@ -180,7 +180,7 @@ body {
     display: inline-block;
     padding: 4px;
     margin-bottom: 9px;
-    font-size: 13px;
+    font-size: 0.929em;
     line-height: 18px;
     color: $primary;
   }
@@ -190,7 +190,7 @@ body {
       height: 18px;
       padding: 4px;
       margin-bottom: 9px;
-      font-size: 13px;
+      font-size: 0.929em;
       line-height: 18px;
       color: $primary;
     }
