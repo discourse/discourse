@@ -28,7 +28,7 @@ nav.post-controls {
 
 button {
   border: none;
-  font-size: 17px;
+  font-size: 1.214em;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
@@ -167,7 +167,7 @@ a.star {
     margin: 0 0 3px 0;
     color: $primary;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -282,7 +282,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.286em;
         line-height: 52px;
       }
     }
@@ -308,12 +308,12 @@ a.star {
     }
 
    a.badge-category, a.badge-category-parent {
-    font-size: 10px;
+    font-size: 0.714em;
     vertical-align: top;
     }
 
    .title {
-    font-size: 14px; line-height: 8px;
+    font-size: 1em; line-height: 8px;
   }
 
 }
@@ -416,7 +416,7 @@ background-color: scale-color($danger, $lightness: 75%);
 }
 
 .deleted-user-avatar {
-  font-size: 36px;
+  font-size: 2.571em;
 }
 
 span.btn-text {display: none;}
@@ -470,7 +470,7 @@ span.highlighted {
   }
   .post-info {
     float: right;
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }
   }
