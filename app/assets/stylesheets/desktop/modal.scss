@@ -66,14 +66,14 @@ animation: modal .25s;
 .modal-header {
   border-bottom: 1px solid scale-color-diff();
   h3 {
-    font-size: 20px;
+    font-size: 1.429em;
     padding: 10px 15px 7px;
   }
   .close {margin: 10px;}
 }
 .close {
   float: right;
-  font-size: 20px;
+  font-size: 1.429em;
   text-decoration: none;
   color: scale-color($primary, $lightness: 35%);
   cursor: pointer;

@@ -8,7 +8,7 @@
   #navigation-bar {
     .has-icon span:before {
       margin-right: 4px;
-      font: 15px/0.9 "FontAwesome";
+      font: 1.071em/0.9 "FontAwesome";
     }
     .has-icon .starred:before {
       content: "\f005";
@@ -44,24 +44,24 @@
   th {
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
-    font-size: 14px;
+    font-size: 1em;
     button i.fa {color: scale-color($primary, $lightness: 50%);}
 
   }
   td {
     color: scale-color($primary, $lightness: 50%);
-    font-size: 14px;
+    font-size: 1em;
   }
 
   .main-link {
-    font-size: 16px;
+    font-size: 1.143em;
     a.title {
       padding: 15px 0;
     }
   }
 
   .topic-excerpt {
-    font-size: 13px;
+    font-size: 0.929em;
     margin-top: 8px;
     color: scale-color($primary, $lightness: 50%);
     word-wrap: break-word;
@@ -74,7 +74,7 @@
   .topic-status {
     margin-right: 4px;
     padding: 0;
-    font-size: 15px;
+    font-size: 1.071em;
     &:last-of-type {
       margin-right: 0;
     }
@@ -141,7 +141,7 @@
         padding: 2px;
         vertical-align: bottom;
         line-height: 24px;
-        &.value { text-align: right; font-size: 20px; }
+        &.value { text-align: right; font-size: 1.429em; }
         &.unit  { text-align: left; }
       }
     }
@@ -169,7 +169,7 @@
   }
   .category-dropdown-button {
     border-left: 1px solid rgba(0,0,0,0.15);
-    font-size: 16px;
+    font-size: 1.143em;
     width: 10px;
     text-align: center;
 
@@ -190,7 +190,7 @@ clear: both;
     padding: 0;
     border: 0;
     color: scale-color($danger, $lightness: 20%);
-    font-size: 13px;
+    font-size: 0.929em;
     cursor: default;
   }
 }
@@ -198,7 +198,7 @@ clear: both;
 .topic-list {
   .alert {
     margin-bottom: 0;
-    font-size: 14px;
+    font-size: 1em;
   }
   .spinner {
     margin-top: 40px;
@@ -227,7 +227,7 @@ ol.category-breadcrumb {
   z-index: 100;
 
   a.badge-category {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: bold;
     float: none;
     line-height: 19px;
@@ -263,7 +263,7 @@ ol.category-breadcrumb {
     outline: 0;
     background: transparent;
     border: 0;
-    font-size: 20px;
+    font-size: 1.429em;
     padding: 5px 10px 0 10px;
   }
 

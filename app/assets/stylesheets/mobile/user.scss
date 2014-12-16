@@ -236,7 +236,7 @@
 
   .secondary {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
-    font-size: 13px;
+    font-size: 0.929em;
       .btn { padding: 3px 12px; }
 
       dl dd {
@@ -270,13 +270,13 @@
       background-color: rgba($primary, .9);
 
       h1 {
-        font-size: 30px;
+        font-size: 2.143em;
         font-weight: normal;
         margin: 10px 0 0 0;
       }
 
       h2 {
-        font-size: 17px;
+        font-size: 1.214em;
         font-weight: normal;
         margin-top: 10px;
         max-width: 100%;
@@ -287,7 +287,7 @@
 
       h3 {
         font-weight: normal;
-        font-size: 14px;
+        font-size: 1em;
         margin: 5px 0;
         i:not(:first-of-type) {
           margin-left: 10px;
@@ -391,11 +391,11 @@
         }
 
         h1 {
-          font-size: 20px;
+          font-size: 1.429em;
         }
 
         h2 {
-          font-size: 15px;
+          font-size: 1.071em;
           margin-top: 4px;
         }
 
@@ -411,7 +411,7 @@
     padding: 0 10px;
     .excerpt {
       margin: 5px 0;
-      font-size: 13px;
+      font-size: 0.929em;
       word-wrap: break-word;
       color: $primary;
     }
@@ -444,7 +444,7 @@
       font-size: 11px;
     }
     .delete-info i {
-      font-size: 14px;
+      font-size: 1em;
     }
     .avatar-link {
       float: left;
@@ -452,7 +452,7 @@
     }
     .title {
       display: block;
-      font-size: 14px;
+      font-size: 1em;
       max-width: 80%;
       white-space: nowrap;
       overflow: hidden;
@@ -460,7 +460,7 @@
     }
     .name {
       display: inline-block;
-      font-size: 14px;
+      font-size: 1em;
       max-width: 400px;
       white-space: nowrap;
       overflow: hidden;
@@ -496,7 +496,7 @@
       // common/base/header.scss
       .fa, .icon {
         color: scale-color($primary, $lightness: 50%);
-        font-size: 24px;
+        font-size: 1.714em;
       }
     }
   }

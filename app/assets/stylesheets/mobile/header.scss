@@ -44,7 +44,7 @@
   .heading {
     color: $primary;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -58,7 +58,7 @@
   
   input[type='text'] {
     width: 265px;
-    font-size: 16px;
+    font-size: 1.143em;
   }
 
   &#user-dropdown {
@@ -78,7 +78,7 @@
 }
 
 .search-link .topic-statuses .topic-status i {
-  font-size: 14px;
+  font-size: 1em;
 }
 
 .d-dropdown#search-dropdown .heading {
