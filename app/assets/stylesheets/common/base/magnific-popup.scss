@@ -287,7 +287,7 @@ button {
   color: $controls-color;
 
   font-style: normal;
-  font-size: 28px;
+  font-size: 2em;
   font-family: Arial, Baskerville, monospace;
 
   &:hover,
@@ -324,7 +324,7 @@ button {
   top: 0;
   right: 0;
   color: $controls-text-color;
-  font-size: 12px;
+  font-size: 0.857em;
   line-height: 18px;
 }
 
@@ -489,7 +489,7 @@ button {
     small {
       color: $caption-subtitle-color;
       display: block;
-      font-size: 12px;
+      font-size: 0.857em;
       line-height: 14px;
     }
     figure {

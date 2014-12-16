@@ -29,7 +29,7 @@
   }
 
   #topic-title h1 a.edit-topic {
-    font-size: 15px;
+    font-size: .9em;
     position: absolute;
     margin-right: 8px;
     margin-left: 0;
@@ -52,7 +52,7 @@
   }
 
   #topic-title .star {
-    font-size: 20px;
+    font-size: 1.429em;
     margin-top: 6px;
     margin-left: 6px;
   }
@@ -65,7 +65,7 @@
   .topic-meta-data-inside {
     margin-top: -22px;
     float: left;
-    font-size: 12px;
+    font-size: 0.857em;
   }
   .post-info a {
     color: #B3B3B3;
@@ -98,7 +98,7 @@
   }
 
   .reply-new i {
-    font-size: 12px;
+    font-size: 0.857em;
     margin-left: 5px;
     background: none repeat scroll 0% 0% #FFF;
     border: 1px solid #E6E6E6;
@@ -123,7 +123,7 @@
   .dropdown-menu .icon {
     margin-top: 3px;
     float: right;
-    font-size: 18px;
+    font-size: 1.286em;
   }
 
   .topic-list th, .topic-list td {
@@ -151,14 +151,14 @@
   #share-link .link {
     margin-right: 2px;
     float: left;
-    font-size: 20px;
+    font-size: 1.429em;
   }
 
   #share-link .social-link {
     margin-right: 2px;
     margin-left: 8px;
     float: right;
-    font-size: 22px;
+    font-size: 1.571em;
   }
 
   body .radio input[type="radio"], body .checkbox input[type="checkbox"] {
@@ -173,7 +173,7 @@
 
   .modal-header .close {
     float: left;
-    font-size: 20px;
+    font-size: 1.429em;
     margin: 10px 10px 0px;
     text-decoration: none;
     color: #B3B3B3;
@@ -216,7 +216,7 @@
     height: 13px;
     left: 13px;
     position: absolute;
-    font-size: 15px;
+    font-size: 1.071em;
     color: #333;
     text-decoration: none;
     right: auto;
@@ -252,14 +252,14 @@
 
   #navigation-bar .has-icon span:before {
     margin-left: 4px;
-    font: 15px/0.9 "FontAwesome";
+    font: 1.071em/0.9 "FontAwesome";
   }
 
   .list-controls .btn {
     float: left;
     margin-right: 8px;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 1.143em;
     font-weight: normal;
   }
 
@@ -290,7 +290,7 @@
   }
 
   .category-dropdown-menu a.badge-category {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: bold;
     padding: 4px 0px;
     float: none;
@@ -308,7 +308,7 @@
     float: left;
     color: #333;
     opacity: 0.5;
-    font-size: 15px;
+    font-size: 1.071em;
   }
 
   #topic-progress {
