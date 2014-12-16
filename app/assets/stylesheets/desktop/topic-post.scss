@@ -486,10 +486,6 @@ a.star {
     border-radius: 0;
     margin-top: 10px;
   }
-
-   .title {
-    font-size: 1em; line-height: 8px;
-   }
 }
 
 span.post-count {
@@ -557,7 +553,6 @@ video {
 
   a.star {
     margin: 0 7px 20px 2px;
-    font-size: 1.214em;
     color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
   }
   a.star.starred {color: $danger !important;}
