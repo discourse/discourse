@@ -89,10 +89,12 @@
       <div class="controls">
         {{bound-avatar model "large"}}
         {{#if allowAvatarUpload}}
-          <button {{action "showAvatarSelector"}} class="btn pad-left no-text"><i class="fa fa-pencil"></i></button>
-        {{else}} {{#unless ssoOverridesAvatar}}
-          <a href="//gravatar.com/emails" target="_blank" title="{{i18n 'user.change_avatar.gravatar_title'}}" class="btn no-text"><i class="fa fa-pencil"></i></a>
-        {{/unless}} {{/if}}
+          <button {{action "showAvatarSelector"}} class="btn pad-left no-text">{{fa-icon "pencil"}}</button>
+        {{else}}
+          {{#unless ssoOverridesAvatar}}
+            <a href="//gravatar.com/emails" target="_blank" title="{{i18n 'user.change_avatar.gravatar_title'}}" class="btn no-text">{{fa-icon "pencil"}}</a>
+          {{/unless}}
+        {{/if}}
       </div>
     </div>
 
