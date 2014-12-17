@@ -29,12 +29,12 @@
             {{#if can_view_edit_history}}
               <a href class="{{unbound view.historyHeat}}" {{action "showHistory" this}} title="{{i18n 'post.last_edited_on'}} {{raw-date updated_at}}">
                 {{editCount}}
-                <i class='fa fa-pencil'></i>
+                {{fa-icon "pencil"}}
               </a>
             {{else}}
               <span class="{{unbound view.historyHeat}}" title="{{i18n 'post.last_edited_on'}} {{raw-date updated_at}}">
                 {{editCount}}
-                <i class='fa fa-pencil'></i>
+                {{fa-icon "pencil"}}
               </span>
             {{/if}}
           </div>
@@ -50,15 +50,15 @@
           {{/if}}
         {{/unboundIf}}
         {{#unboundIf showUserReplyTab}}
-        <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
-          {{#if loadingReplyHistory}}
-          {{i18n 'loading'}}
-          {{else}}
-          <i class="fa fa-mail-forward"></i>
-          {{avatar reply_to_user imageSize="tiny"}}
-          <span>{{reply_to_user.username}}</span>
-          {{/if}}
-        </a>
+          <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
+            {{#if loadingReplyHistory}}
+              {{i18n 'loading'}}
+            {{else}}
+              {{fa-icon "mail-forward"}}
+              {{avatar reply_to_user imageSize="tiny"}}
+              <span>{{reply_to_user.username}}</span>
+            {{/if}}
+          </a>
         {{/unboundIf}}
         <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>

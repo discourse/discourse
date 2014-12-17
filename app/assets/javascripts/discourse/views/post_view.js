@@ -7,7 +7,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'selected',
                       'post.hidden:post-hidden',
                       'post.deleted',
-                      'byTopicCreator:topic-creator',
+                      'post.topicOwner:topic-owner',
                       'groupNameClass',
                       'post.wiki:wiki'],
   postBinding: 'content',

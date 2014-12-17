@@ -60,7 +60,7 @@ Discourse.Post = Discourse.Model.extend({
     );
   }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
-  byTopicCreator: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
+  topicOwner: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
