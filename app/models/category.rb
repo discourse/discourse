@@ -32,8 +32,6 @@ class Category < ActiveRecord::Base
                    length: { in: 1..50 }
   validate :parent_category_validator
 
-  # before_validation :ensure_slug
-  # before_save :ensure_slug
   validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
