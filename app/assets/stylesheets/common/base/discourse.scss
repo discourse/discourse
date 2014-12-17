@@ -12,12 +12,15 @@
 }
 
 big {
-  font-size: 2em;
+  font-size: 28px;
 }
 
 small {
-  font-size: 0.714em;
+  font-size: 9px;
 }
+
+//setting a static limit on big and small prevents nesting abuse
+
 
 blockquote {
   background-color: scale-color-diff();
