@@ -173,7 +173,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
     ComposerView.trigger("initWmdEditor");
 
-    var template = this.container.lookupFactory('view:user-selector').templateFunction();
+    var template = this.container.lookup('template:user-selector-autocomplete.raw');
     $wmdInput.data('init', true);
     $wmdInput.autocomplete({
       template: template,
@@ -181,7 +181,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
         return userSearch({
           term: term,
           topicId: self.get('controller.controllers.topic.model.id'),
-          include_groups: true
+          includeGroups: true
         });
       },
       key: "@",

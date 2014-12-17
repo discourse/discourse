@@ -39,5 +39,9 @@ export default {
     application.inject('route', 'session', 'session:main');
     application.inject('view', 'session', 'session:main');
     application.inject('model', 'session', 'session:main');
+
+    // Inject currentUser. Components only for now to prevent any breakage
+    application.register('current-user:main', Discourse.User.current(), { instantiate: false });
+    application.inject('component', 'currentUser', 'current-user:main');
   }
 };
