@@ -9,8 +9,7 @@ html {
   color: $primary;
   font-family: $base-font-family;
   font-size: $base-font-size;
-  // font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  // this does not work, see https://meta.discourse.org/t/x/23193/11
+  line-height: $base-line-height;
   background-color: $secondary;
   overflow-y: scroll;
 }
