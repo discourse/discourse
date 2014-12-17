@@ -1,3 +1,5 @@
+import { outputExportResult } from 'admin/lib/export-result';
+
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
 
@@ -7,12 +9,16 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
         // feeling lazy
         window.location.reload();
       });
+    },
+
+    exportScreenedEmailList: function(subject) {
+      Discourse.ExportCsv.exportScreenedEmailList().then(outputExportResult);
     }
   },
 
   show: function() {
     var self = this;
-    this.set('loading', true);
+    self.set('loading', true);
     Discourse.ScreenedEmail.findAll().then(function(result) {
       self.set('model', result);
       self.set('loading', false);

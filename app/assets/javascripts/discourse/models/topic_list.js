@@ -171,7 +171,7 @@ Discourse.TopicList.reopenClass({
 
   from: function(result, filter, params) {
     var topicList = Discourse.TopicList.create({
-      inserted: Em.A(),
+      inserted: [],
       filter: filter,
       params: params || {},
       topics: Discourse.TopicList.topicsFrom(result),
@@ -181,7 +181,8 @@ Discourse.TopicList.reopenClass({
       draft_sequence: result.topic_list.draft_sequence,
       draft: result.topic_list.draft,
       for_period: result.topic_list.for_period,
-      loaded: true
+      loaded: true,
+      per_page: result.topic_list.per_page
     });
 
     if (result.topic_list.filtered_category) {
@@ -212,7 +213,7 @@ Discourse.TopicList.reopenClass({
 
         // Try to use the cached version if it exists and is greater than the topics per page
         if (cachedList && (cachedList.get('filter') === filter) &&
-            (cachedList.get('topics.length') || 0) > Discourse.SiteSettings.topics_per_page &&
+            (cachedList.get('topics.length') || 0) > cachedList.get('per_page') &&
             _.isEqual(cachedList.get('listParams'), filterParams)) {
           cachedList.set('loaded', true);
 

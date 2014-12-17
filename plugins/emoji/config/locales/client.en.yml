@@ -2,6 +2,12 @@ en:
   js:
     composer:
       emoji: "Emoji :smile: CTRL+ E"
+
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
+
   admin_js:
     admin:
       site_settings:

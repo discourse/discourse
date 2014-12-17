@@ -8,7 +8,10 @@ if Rails.env.production?
     /^ActionController::UnknownFormat/,
 
     # suppress trackback spam bots
-    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ })
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
+
+    # API calls, TODO fix this in rails
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ })
   ]
 end
 

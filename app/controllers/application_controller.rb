@@ -51,6 +51,10 @@ class ApplicationController < ActionController::Base
     @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent))
   end
 
+  def slow_platform?
+    request.user_agent =~ /Android/
+  end
+
   def set_layout
     use_crawler_layout? ? 'crawler' : 'application'
   end

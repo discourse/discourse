@@ -1,7 +1,7 @@
 module("Discourse.PostStream");
 
 var buildStream = function(id, stream) {
-  var topic = Discourse.Topic.create({id: id});
+  var topic = Discourse.Topic.create({id: id, chunk_size: 5});
   var ps = topic.get('postStream');
   if (stream) {
     ps.set('stream', stream);
@@ -20,7 +20,6 @@ test('defaults', function() {
   blank(postStream.get('posts'), "there are no posts in a stream by default");
   ok(!postStream.get('loaded'), "it has never loaded");
   present(postStream.get('topic'));
-
 });
 
 test('appending posts', function() {
@@ -182,7 +181,6 @@ test("loading", function() {
 });
 
 test("nextWindow", function() {
-  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
@@ -199,7 +197,6 @@ test("nextWindow", function() {
 });
 
 test("previousWindow", function() {
-  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');

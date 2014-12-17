@@ -88,7 +88,7 @@
     padding: 10px 30px 10px 15px;
     background-color: dark-light-diff($secondary, $primary, 10%, -15%);
     li > a {
-      font-size: 14px;
+      font-size: 1em;
     }
     border-bottom: 1px solid scale-color-diff();
 
@@ -108,7 +108,7 @@
     }
     p {
       color: darken($primary, 40%);;
-      font-size: 13px;
+      font-size: 0.929em;
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -133,14 +133,14 @@
   .modal-footer {
     .btn {
       text-align: left;
-      font-size: 18px;
+      font-size: 1.286em;
       line-height: 20px;
       width: 310px;
       margin-bottom: 10px;
       display: block;
       margin-left: 0;
       .topic-title {
-        font-size: 13px;
+        font-size: 0.929em;
         font-weight: normal;
       }
       &.btn-reply-here {
@@ -163,7 +163,7 @@
     .btn {
       font-weight: normal;
       text-align: left;
-      font-size: 14px;
+      font-size: 1em;
       line-height: 20px;
       margin-bottom: 10px;
       display: inline-block;

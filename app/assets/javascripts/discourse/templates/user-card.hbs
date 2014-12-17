@@ -1,3 +1,4 @@
+{{#if controller.visible}}
 <div class="card-content">
   {{#link-to 'user' user}}{{bound-avatar avatar "huge"}}{{/link-to}}
 
@@ -75,3 +76,4 @@
     </div>
   {{/if}}
 </div>
+{{/if}}

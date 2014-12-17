@@ -1527,10 +1527,6 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
-        users:
-          title: "Exporter la liste des utilisateurs dans un fichier CSV."
-        screened_ips:
-          title: "Exporter la liste complète des adresses IP sous surveillance dans un fichier CSV."
         success: "L'export a commencé, vous serez notifié prochainement de sa progression."
         failed: "L'export a échoué. Veuillez consulter les logs."
         button_text: "Exporter"

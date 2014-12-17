@@ -465,6 +465,11 @@ export default DiscourseController.extend({
 
   canEdit: function() {
     return this.get("model.action") === "edit" && Discourse.User.current().get("can_edit");
-  }.property("model.action")
+  }.property("model.action"),
+
+  visible: function() {
+    var state = this.get('model.composeState');
+    return state && state !== 'closed';
+  }.property('model.composeState')
 
 });

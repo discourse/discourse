@@ -154,7 +154,9 @@ basic:
   topics_per_page:
     default: 30
     min: 1
-    client: true
+  slow_topics_per_page:
+    default: 15
+    min: 1
   show_subcategory_list:
     default: false
     client: true
@@ -653,8 +655,10 @@ developer:
     default: false
     client: true
   posts_chunksize:
-    client: true
     default: 20
+    min: 1
+  posts_slow_chunksize:
+    default: 10
     min: 1
 
 embedding:

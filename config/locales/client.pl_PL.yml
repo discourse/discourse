@@ -372,6 +372,8 @@ pl_PL:
         ok: "Otrzymasz potwierdzenie emailem"
         invalid: "Podaj poprawny adres email"
         authenticated: "Twój email został potwierdzony przez {{provider}}"
+        frequency:
+          zero: "Otrzymasz email natychmiast jeśli nie widziałeś rzeczy na temat której wysyłamy email."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -1582,10 +1584,6 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
-        users:
-          title: "Eksportuj listę użytkowników do pliku CSV."
-        screened_ips:
-          title: "Eksportuj listę obserwowanych IP do pliku CSV."
         success: "Rozpoczęto eksport, wkrótce otrzymasz powiadomienie z informacją o postępie."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
         button_text: "Eksportuj"

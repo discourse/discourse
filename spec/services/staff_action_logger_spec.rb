@@ -33,6 +33,20 @@ describe StaffActionLogger do
     end
   end
 
+  describe "log_show_emails" do
+    it "logs the user history" do
+      -> { logger.log_show_emails([admin]) }.should change(UserHistory, :count).by(1)
+    end
+
+    it "doesn't raise an exception with nothing to log" do
+      -> { logger.log_show_emails([]) }.should_not raise_error
+    end
+
+    it "doesn't raise an exception with nil input" do
+      -> { logger.log_show_emails(nil) }.should_not raise_error
+    end
+  end
+
   describe 'log_post_deletion' do
     let(:deleted_post) { Fabricate(:post) }
 

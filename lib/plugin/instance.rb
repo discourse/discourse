@@ -95,6 +95,11 @@ class Plugin::Instance
     end
   end
 
+  def listen_for(event_name)
+    return unless self.respond_to?(event_name)
+    DiscourseEvent.on(event_name, &self.method(event_name))
+  end
+
   def register_css(style)
     @styles ||= []
     @styles << style

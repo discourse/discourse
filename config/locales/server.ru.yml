@@ -33,6 +33,7 @@ ru:
   log_in: "Войти"
   via: "%{username} на %{site_name}"
   is_reserved: "зарезервировано"
+  purge_reason: "Автоматически удален, как неактивная, неактивированная учетная запись"
   disable_remote_images_download_reason: "Загрузка картинок была отключена из-за недостаточности места на диске."
   errors:
     messages:
@@ -1014,6 +1015,7 @@ ru:
     disagreed: "Спасибо за информацию. Уже рассматриваем."
     deferred: "Спасибо за информацию. Уже рассматриваем."
     deferred_and_deleted: "Спасибо за информацию. Сообщение удалено."
+  temporarily_closed_due_to_flags: "Эта тема временно закрыта из-за большого количества жалоб"
   system_messages:
     post_hidden:
       subject_template: "Сообщение скрыто по причине поступления множественных жалоб"

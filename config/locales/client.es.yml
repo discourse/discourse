@@ -1523,10 +1523,6 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
-        users:
-          title: "Exportar lista completa de usuarios en formato CSV"
-        screened_ips:
-          title: "Exportar lista completa de IPs vifiladas en formato CSV"
         success: "Exportación iniciada, serás notificado dentro de poco sobre el progreso."
         failed: "Exportación fallida, revisa los logs."
         button_text: "Exportar"
@@ -1697,6 +1693,7 @@ es:
           title: "IPs bloqueadas"
           description: 'Direcciones IP que están siendo vigiladas. Usa "Permitir" para añadir direcciones IP preaprobadas.'
           delete_confirm: "Estás seguro que quieres remover el bloqueo para %{ip_address}?"
+          roll_up_confirm: "¿Estás seguro de que quieres agrupar las IPs vistas con frecuencia en subredes?"
           rolled_up_some_subnets: "Se han agrupado con éxito las entradas de IP baneadas a estos rangos: %{subnets}."
           rolled_up_no_subnet: "No había nada para agrupar."
           actions:
