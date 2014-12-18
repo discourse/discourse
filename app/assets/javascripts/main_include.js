@@ -51,6 +51,7 @@
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class
 //= require ./discourse/helpers/loading-spinner
+//= require ./discourse/helpers/category-link
 
 //= require ./discourse/dialects/dialect
 //= require_tree ./discourse/dialects
