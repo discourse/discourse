@@ -1,17 +1,17 @@
 <div class="modal-body flag-modal">
 
   <form>
-    {{#each flagsAvailable itemController="flag-action-type"}}
+    {{#each f in flagsAvailable itemController="flag-action-type"}}
       <div class='controls'>
         <label class='radio'>
-          <input type='radio' id="radio_{{unbound name_key}}" {{action "changePostActionType" this}} name='post_action_type_index'> <strong>{{formattedName}}</strong>
-          {{#if showDescription}}
-            <div class='description'>{{{description}}}</div>
+          <input type='radio' id="radio_{{unbound f.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <strong>{{f.formattedName}}</strong>
+          {{#if f.showDescription}}
+            <div class='description'>{{{f.description}}}</div>
           {{/if}}
         </label>
-        {{#if showMessageInput}}
-          {{textarea name="message" class="flag-message" placeholder=customPlaceholder value=message}}
-          <div {{bind-attr class=":custom-message-length customMessageLengthClasses"}}>{{customMessageLength}}</div>
+        {{#if f.showMessageInput}}
+          {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
+          <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
         {{/if}}
       </div>
     {{else}}

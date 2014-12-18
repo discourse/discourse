@@ -210,8 +210,8 @@
       {{plugin-outlet "user_custom_preferences"}}
     </div>
 
-    {{#each userFields}}
-      {{user-field field=field value=value}}
+    {{#each uf in userFields}}
+      {{user-field field=uf.field value=uf.value}}
     {{/each}}
 
     <div class="control-group category">

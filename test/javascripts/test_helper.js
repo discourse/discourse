@@ -20,7 +20,6 @@
 //= require pretender
 
 //= require ../../app/assets/javascripts/locales/i18n
-//= require ../../app/assets/javascripts/discourse/helpers/i18n_helpers
 //= require ../../app/assets/javascripts/locales/en
 
 // Pagedown customizations

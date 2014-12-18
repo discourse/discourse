@@ -22,9 +22,10 @@ export default Ember.Component.extend({
   ratioText: function() {
     var ratio = this.get('ratio');
 
-    if (ratio > Discourse.SiteSettings.topic_post_like_heat_high) { return 'high'; }
-    if (ratio > Discourse.SiteSettings.topic_post_like_heat_medium) { return 'med'; }
-    if (ratio > Discourse.SiteSettings.topic_post_like_heat_low) { return 'low'; }
+    var settings = this.siteSettings;
+    if (ratio > settings.topic_post_like_heat_high) { return 'high'; }
+    if (ratio > settings.topic_post_like_heat_medium) { return 'med'; }
+    if (ratio > settings.topic_post_like_heat_low) { return 'low'; }
     return '';
   }.property('ratio'),
 

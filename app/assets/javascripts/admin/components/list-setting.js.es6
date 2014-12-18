@@ -3,16 +3,8 @@
 
   @param settingValue is a reference to SiteSetting.value.
   @param choices is a reference to SiteSetting.choices
-
-  @class Discourse.ListSettingComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
- **/
-
-Discourse.ListSettingComponent = Ember.Component.extend({
-  tagName: 'div',
-
+**/
+export default Ember.Component.extend({
 
   _select2FormatSelection: function(selectedObject, jqueryWrapper, htmlEscaper) {
     var text = selectedObject.text;
@@ -22,9 +14,8 @@ Discourse.ListSettingComponent = Ember.Component.extend({
     return htmlEscaper(text);
   },
 
-  didInsertElement: function(){
-
-    var select2_options = {
+  _initializeSelect2: function(){
+    var options = {
       multiple: false,
       separator: "|",
       tokenSeparators: ["|"],
@@ -35,24 +26,27 @@ Discourse.ListSettingComponent = Ember.Component.extend({
 
     var settingName = this.get('settingName');
     if (typeof settingName === 'string' && settingName.indexOf('colors') > -1) {
-      select2_options.formatSelection = this._select2FormatSelection;
+      options.formatSelection = this._select2FormatSelection;
     }
-    this.$("input").select2(select2_options).on("change", function(obj) {
-        this.set("settingValue", obj.val.join("|"));
-        this.refreshSortables();
-      }.bind(this));
+
+    var self = this;
+    this.$("input").select2(options).on("change", function(obj) {
+      self.set("settingValue", obj.val.join("|"));
+      self.refreshSortables();
+    });
 
     this.refreshSortables();
-  },
+  }.on('didInsertElement'),
 
   refreshOnReset: function() {
     this.$("input").select2("val", this.get("settingValue").split("|"));
   }.observes("settingValue"),
 
   refreshSortables: function() {
+    var self = this;
     this.$("ul.select2-choices").sortable().on('sortupdate', function() {
-      this.$("input").select2("onSortEnd");
-    }.bind(this));
+      self.$("input").select2("onSortEnd");
+    });
   }
 });
 

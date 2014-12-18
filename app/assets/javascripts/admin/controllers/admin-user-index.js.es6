@@ -19,7 +19,7 @@ export default ObjectController.extend(CanCheckEmails, {
     var siteUserFields = this.site.get('user_fields'),
         userFields = this.get('user_fields');
 
-    if (!Ember.empty(siteUserFields)) {
+    if (!Ember.isEmpty(siteUserFields)) {
       return siteUserFields.map(function(uf) {
         var value = userFields ? userFields[uf.get('id').toString()] : null;
         return {name: uf.get('name'), value: value};

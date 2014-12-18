@@ -1,13 +1,13 @@
 <table>
-  {{#each poll.options}}
-    <tr {{bind-attr class=checked:active}} {{action "selectOption" option}}>
+  {{#each po poll.options}}
+    <tr {{bind-attr class=po.checked:active}} {{action "selectOption" po.option}}>
       <td class="radio">
-        <input type="radio" name="poll" {{bind-attr checked=checked disabled=controller.disableRadio}}>
+        <input type="radio" name="poll" {{bind-attr checked=po.checked disabled=controller.disableRadio}}>
       </td>
       <td class="option">
-        <div class="option">{{{option}}}</div>
+        <div class="option">{{{po.option}}}</div>
         {{#if controller.showResults}}
-          <div class="result">{{i18n 'poll.voteCount' count=votes}}</div>
+          <div class="result">{{i18n 'poll.voteCount' count=po.votes}}</div>
         {{/if}}
       </td>
     </tr>

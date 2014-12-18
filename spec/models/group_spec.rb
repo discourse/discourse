@@ -27,6 +27,12 @@ describe Group do
       group.name = "this is_a_name"
       group.valid?.should == false
     end
+
+    it "is invalid for case-insensitive existing names" do
+      build(:group, name: 'this_is_a_name').save
+      group.name = 'This_Is_A_Name'
+      group.valid?.should == false
+    end
   end
 
   def real_admins

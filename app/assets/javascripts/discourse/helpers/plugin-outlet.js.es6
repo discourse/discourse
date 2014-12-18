@@ -89,10 +89,8 @@ export default function(connectionName, options) {
 
   var self = this;
   if (_connectorCache[connectionName]) {
-    var view,
-        childViews = _connectorCache[connectionName].map(function(vc) {
-          return vc.create({ context: self });
-        });
+    var view;
+    var childViews = _connectorCache[connectionName];
 
     // If there is more than one view, create a container. Otherwise
     // just shove it in.

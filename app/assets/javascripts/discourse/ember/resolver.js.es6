@@ -4,9 +4,9 @@ var classify = Ember.String.classify;
 var get = Ember.get;
 
 var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin', 'adminFlags',
-                         'user', 'preferences', 'adminEmail', 'adminUsersList'],
-    _dummyRoute,
-    _loadingView;
+                         'user', 'preferences', 'adminEmail', 'adminUsersList'];
+var _dummyRoute;
+var _loadingView;
 
 function loadingResolver(cb) {
   return function(parsedName) {
@@ -138,20 +138,24 @@ export default Ember.DefaultResolver.extend({
   },
 
   findTemplate: function(parsedName) {
-    return this._super(parsedName) || this.findSlashedTemplate(parsedName) || this.findAdminTemplate(parsedName) || this.findUnderscoredTemplate(parsedName);
+    var withoutType = parsedName.fullNameWithoutType,
+        slashedType = withoutType.replace(/\./g, '/'),
+        decamelized = withoutType.decamelize(),
+        templates = Ember.TEMPLATES;
+
+    return this._super(parsedName) ||
+           templates[slashedType] ||
+           templates[withoutType] ||
+           templates[decamelized.replace(/\./, '/')] ||
+           templates[decamelized.replace(/\_/, '/')] ||
+           this.findAdminTemplate(parsedName) ||
+           this.findUnderscoredTemplate(parsedName);
   },
 
   findUnderscoredTemplate: function(parsedName) {
     var decamelized = parsedName.fullNameWithoutType.decamelize();
     var underscored = decamelized.replace(/\-/g, "_");
     return Ember.TEMPLATES[underscored];
-  },
-
-  // Try to find a template with slash instead of first underscore, e.g. foo_bar_baz => foo/bar_baz
-  findSlashedTemplate: function(parsedName) {
-    var decamelized = parsedName.fullNameWithoutType.decamelize();
-    var slashed = decamelized.replace("_", "/");
-    return Ember.TEMPLATES[slashed];
   },
 
   // Try to find a template within a special admin namespace, e.g. adminEmail => admin/templates/email
@@ -161,7 +165,7 @@ export default Ember.DefaultResolver.extend({
     if (decamelized.indexOf('admin') === 0) {
       decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
       decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
-      decamelized = decamelized.replace(/\./, '_');
+      decamelized = decamelized.replace(/\./g, '_');
       var dashed = decamelized.replace(/_/g, '-');
       return Ember.TEMPLATES[decamelized] || Ember.TEMPLATES[dashed];
     }

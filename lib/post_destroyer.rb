@@ -54,8 +54,9 @@ class PostDestroyer
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
     end
-    @post.topic.recover! if @post.post_number == 1
-    @post.topic.update_statistics
+    topic = Topic.with_deleted.find @post.topic_id
+    topic.recover! if @post.post_number == 1
+    topic.update_statistics
   end
 
   def staff_recovered

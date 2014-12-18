@@ -2,8 +2,6 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-html {font-size: $base-font-size/$base-line-height;}
-
 @include medium-width {
   body {
     min-width: $medium-width;

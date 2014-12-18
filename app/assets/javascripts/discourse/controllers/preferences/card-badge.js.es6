@@ -3,7 +3,7 @@ import BadgeSelectController from "discourse/mixins/badge-select-controller";
 export default Ember.ArrayController.extend(BadgeSelectController, {
   filteredList: function() {
     return this.get('model').filter(function(b) {
-      return !Em.empty(b.get('badge.image'));
+      return !Ember.isEmpty(b.get('badge.image'));
     });
   }.property('model'),
 

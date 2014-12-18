@@ -24,7 +24,7 @@ Discourse.DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse
 
     loadingComplete: function() {
       this.controllerFor('discovery').set('loading', false);
-      if (!Discourse.Session.currentProp('topicListScrollPosition')) {
+      if (!this.session.get('topicListScrollPosition')) {
         this._scrollTop();
       }
     },

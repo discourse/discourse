@@ -41,16 +41,16 @@
         {{#link-to "discovery.categories"}}{{i18n 'filters.categories.title'}}{{/link-to}}
       </li>
 
-      {{#each categories itemController='site-map-category'}}
+      {{#each c in categories itemController='site-map-category'}}
         <li class="category">
-          {{category-link this allowUncategorized=true showParent=true}}
+          {{category-link c allowUncategorized=true showParent=true}}
 
-          {{#if unreadTotal}}
-            <a href={{unbound url}} class='badge badge-notification'>{{unreadTotal}}</a>
+          {{#if c.unreadTotal}}
+            <a href={{unbound c.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
           {{/if}}
 
-          {{#if showTopicCount}}
-            <b class="topics-count">{{unbound topic_count}}</b>
+          {{#if c.showTopicCount}}
+            <b class="topics-count">{{unbound c.topic_count}}</b>
           {{/if}}
         </li>
       {{/each}}
