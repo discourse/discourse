@@ -24,7 +24,7 @@ required:
     default: ''
     type: email
   notification_email:
-    default: 'info@unconfigured.discourse.org'
+    default: 'noreply@unconfigured.discourse.org'
     type: email
   site_contact_username:
     default: ''
