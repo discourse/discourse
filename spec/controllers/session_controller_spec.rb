@@ -432,7 +432,7 @@ describe SessionController do
     end
 
     context 'do nothing to system username' do
-      let(:user) { User.find(-1) }
+      let(:user) { Discourse.system_user }
 
       it 'generates no token for system username' do
         lambda { xhr :post, :forgot_password, login: user.username}.should_not change(EmailToken, :count)
