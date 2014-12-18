@@ -18,7 +18,8 @@ Discourse.SyntaxHighlighting = {
   apply: function($elem) {
     var selector = Discourse.SiteSettings.autohighlight_all_code ? 'pre code' : 'pre code[class]';
     $(selector, $elem).each(function(i, e) {
-      return $LAB.script("/javascripts/highlight.pack.js").wait(function() {
+      var base = Discourse.BaseUri === '/' ? '' : Discourse.BaseUri;
+      return $LAB.script(base + "/javascripts/highlight.pack.js").wait(function() {
         return hljs.highlightBlock(e);
       });
     });

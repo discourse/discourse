@@ -1,0 +1,55 @@
+# The Postgres database. If you are using an externally hosted database, remove this section and
+# adjust the DB environment variables in the discourse section and/or config/database.yml
+db:
+  image: postgres:9.3
+  ports:
+    - "5432"
+
+# Redis. If using externally hosted redis, remove this and adjust DISOURSE_REDIS_HOST in the discourse section.
+redis:
+  image: redis:2.8
+  ports:
+    - "6379"
+  # volumes:
+  #   - tmp/redis/data/:/data
+  # command: redis-server --appendonly yes
+
+# the discourse server itself.
+discourse:
+  build: .
+  command: bash -c 'rm -f /opt/discourse/tmp/pids/server.pid && echo ${RAILS_RELATIVE_URL_ROOT:-/} > /opt/discourse/tmp/root && bundle exec rails s'
+  volumes:
+    - .:/opt/discourse
+  ports:
+    - "3000:3000"
+  links:
+    - db
+    - redis
+  environment:
+    RAILS_ENV: development
+    DISCOURSE_REDIS_HOST: redis
+    # Important: make sure RAILS_RELATIVE_URL_ROOT is NOT set when running rake autospec.
+    #    RAILS_RELATIVE_URL_ROOT: /discourse
+    # DISCOURSE_CDN_URL:
+    DISCOURSE_DB_HOST: db
+    DISCOURSE_DB_USERNAME: postgres
+    DISCOURSE_DB_NAME: discourse_development
+    # on linux, change this to 127.0.0.1:3000
+    # on mac, use `boot2docker ip` to find your ip
+    #    DISCOURSE_HOSTNAME: 192.168.59.103:3000
+    # set to true if not using nginx
+    #    DISCOURSE_SERVE_STATIC_ASSETS: false
+
+# The nginx server for serving static assets, SSL, access logging, etc. This is optional and can be
+# removed.  The nginx container mounts the /opt/discourse filesystem from the discourse container
+# and the config/nginx-docker-start.sh script is then used to create nginx.conf and start nginx. See
+# it for details.
+nginx:
+  image: nginx:1.7.8
+  ports:
+    - "80:80"
+  volumes_from:
+    - discourse
+  links:
+    - discourse
+  command: /opt/discourse/config/nginx-docker-start.sh

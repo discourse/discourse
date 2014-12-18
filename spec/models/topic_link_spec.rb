@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 describe TopicLink do
+  before(:all) do
+    RateLimiter.disable
+  end
+
+  after(:all) do
+    RateLimiter.enable
+  end
 
   it { is_expected.to validate_presence_of :url }
 
@@ -55,7 +62,7 @@ http://b.com/#{'a'*500}
       other_topic.posts.create(user: user, raw: "some content for the first post")
       other_post = other_topic.posts.create(user: user, raw: "some content for the second post")
 
-      url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}"
+      url = "http://#{test_uri.host}#{test_uri.path}/t/#{other_topic.slug}/#{other_topic.id}/#{other_post.post_number}"
       invalid_url = "http://#{test_uri.host}/t/#{other_topic.slug}/9999999999999999999999999999999"
 
       topic.posts.create(user: user, raw: 'initial post')
@@ -87,7 +94,7 @@ http://b.com/#{'a'*500}
         # ensure other_topic has a post
         post
 
-        url = "http://#{test_uri.host}/t/#{other_topic.slug}/#{other_topic.id}"
+        url = "http://#{test_uri.host}#{test_uri.path}/t/#{other_topic.slug}/#{other_topic.id}"
 
         topic.posts.create(user: user, raw: 'initial post')
         linked_post = topic.posts.create(user: user, raw: "Link to another topic: #{url}")
@@ -245,7 +252,7 @@ http://b.com/#{'a'*500}
       TopicLink.extract_from(post)
       reflection = other_topic.topic_links.first
 
-      expect(reflection.url).to eq("http://#{alternate_uri.host}:5678/t/unique-topic-name/#{topic.id}")
+      expect(reflection.url).to eq("http://#{alternate_uri.host}:5678#{alternate_uri.path}/t/unique-topic-name/#{topic.id}")
     end
   end
 
