@@ -917,10 +917,12 @@ tr_TR:
         other: "(yazarı tarafından geri alınan gönderi,  %{count} saat içinde otomatik olarak silinecek.)"
       expand_collapse: "aç/kapat"
       gap:
+        one: "1 gizlenmiş gönderi"
         other: "{{count}} gizlenmiş gönderi"
       more_links: "{{count}} daha..."
       unread: "Gönderi okunmamış"
       has_replies:
+        one: "Cevap"
         other: "Cevaplar"
       errors:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
