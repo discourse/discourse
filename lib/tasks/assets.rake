@@ -93,7 +93,8 @@ def compress_node(from,to)
 
   source_map_root = (d=File.dirname(from)) == "." ? "/assets" : "/assets/#{d}"
 
-  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '/assets/#{to}.map'"
+  root = Discourse.base_uri
+  cmd = "uglifyjs '#{assets_path}/#{from}' -p relative -c -m -o '#{to_path}' --source-map-root '#{source_map_root}' --source-map '#{assets_path}/#{to}.map' --source-map-url '#{root}/assets/#{to}.map'"
 
 
   STDERR.puts cmd

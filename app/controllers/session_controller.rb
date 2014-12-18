@@ -47,7 +47,7 @@ class SessionController < ApplicationController
     raise "User #{params[:session_id]} not found" if user.blank?
 
     log_on_user(user)
-    redirect_to "/"
+    redirect_to "#{Discourse.base_uri}/"
   end
 
   def sso_login

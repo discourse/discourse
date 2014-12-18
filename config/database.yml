@@ -1,6 +1,9 @@
 development:
   adapter: postgresql
   database: discourse_development
+  host: db
+  username: postgres
+
   min_messages: warning
   pool: 5
   timeout: 5000
@@ -9,7 +12,8 @@ development:
     ### If you change this setting you will need to
     ###   - restart sidekiq if you change this setting
     ###   - rebake all to posts using: `RAILS_ENV=production bundle exec rake posts:rebake`
-    - "localhost"
+    # - "localhost"
+    - "192.168.59.103"
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -17,6 +21,9 @@ development:
 test:
   adapter: postgresql
   database: discourse_test
+  host: db
+  username: postgres
+
   min_messages: warning
   pool: 5
   timeout: 5000
