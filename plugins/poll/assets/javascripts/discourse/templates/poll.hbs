@@ -1,5 +1,5 @@
 <table>
-  {{#each po poll.options}}
+  {{#each po in poll.options}}
     <tr {{bind-attr class=po.checked:active}} {{action "selectOption" po.option}}>
       <td class="radio">
         <input type="radio" name="poll" {{bind-attr checked=po.checked disabled=controller.disableRadio}}>
