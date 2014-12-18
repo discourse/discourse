@@ -67,4 +67,6 @@ Discourse::Application.configure do
     config.developer_emails = emails.split(",").map(&:strip)
   end
 
+
+  config.action_controller.relative_url_root = '/discuss'
 end
