@@ -10,14 +10,25 @@
 </div>
 
 <%- content_for(:no_ember_head) do %>
+  <%= script "preload_store" %>
+  <%= script "locales/#{I18n.locale}" %>
   <%= script "vendor" %>
+  <%= script "application" %>
+  <%- if staff? %>
+    <%= script "admin"%>
+  <%- end %>
+
+  <%= render_google_universal_analytics_code %>
+
 <%- end %>
+
+<%= render :partial => "common/discourse_javascript" %>
 
 <script language="javascript">
   (function() {
     function activateAccount() {
       $('#activate-account-button').prop('disabled', true);
-      $.ajax("/users/hp").then(function(hp) {
+      Discourse.ajax("/users/hp").then(function(hp) {
         $('#password_confirmation').val(hp.value);
         $('#challenge').val(hp.challenge.split("").reverse().join(""));
         $('#activate-account-form').submit();
@@ -38,3 +49,4 @@
     });
   })();
 </script>
+<%= render_google_analytics_code %>

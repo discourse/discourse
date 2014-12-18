@@ -441,16 +441,18 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId) {
     var url;
-
+    var base = Discourse.BaseUri === '/' ? '' : Discourse.BaseUri;
     if (uploadedAvatarId) {
-      url = "/user_avatar/" +
+      url = base +
+           "/user_avatar" +
             Discourse.BaseUrl +
             "/" +
             username.toLowerCase() +
             "/{size}/" +
             uploadedAvatarId + ".png";
     } else {
-      url = "/letter_avatar/" +
+      url = base +
+            "/letter_avatar/" +
             username.toLowerCase() +
             "/{size}/" +
             Discourse.LetterAvatarVersion + ".png";

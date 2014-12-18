@@ -385,11 +385,11 @@ class User < ActiveRecord::Base
     return letter_avatar_template(username) if !uploaded_avatar_id
     id = uploaded_avatar_id
     username ||= ""
-    "/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+    "#{Discourse.base_uri}/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
   end
 
   def self.letter_avatar_template(username)
-    "/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar::VERSION}.png"
+    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar::VERSION}.png"
   end
 
   def avatar_template

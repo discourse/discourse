@@ -25,7 +25,7 @@ class InvitesController < ApplicationController
       end
     end
 
-    redirect_to "/"
+    redirect_to "#{Discourse.base_uri}/"
   end
 
   def create
@@ -83,7 +83,7 @@ class InvitesController < ApplicationController
       end
     end
 
-    redirect_to "/"
+    redirect_to "#{Discourse.base_uri}/"
   end
 
   def destroy
