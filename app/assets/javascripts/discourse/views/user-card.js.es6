@@ -86,7 +86,7 @@ export default Discourse.View.extend(CleansUp, {
             position.top += target.height() + 8;
           }
 
-          position.top -= $('#main-outlet').offset().top;
+          position.top -= $('#main').offset().top;
           self.$().css(position);
         }
       }
