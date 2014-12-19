@@ -32,7 +32,7 @@
             {{#if c.subcategories}}
               <div class='subcategories'>
                 {{#each s in c.subcategories}}
-                  {{category-link s showParent=true onlyStripe=true}}
+                  {{category-link s showParent="true" onlyStripe="true"}}
                   {{#if s.unreadTopics}}
                     <a href={{unbound s.unreadUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count=s.unreadTopics}}'>{{unbound s.unreadTopics}}</a>
                   {{/if}}

@@ -1,29 +1,13 @@
-var compiled;
-
-function templateFunction() {
-  compiled = compiled || Handlebars.compile(
-    "<div class='autocomplete'>" +
-      "<ul>" +
-      "{{#each options}}" +
-        "<li>" +
-            "<a href=''>{{this.name}}</a>" +
-        "</li>" +
-      "{{/each}}" +
-      "</ul>" +
-      "</div>"
-  );
-  return compiled;
-}
-
-export default Em.Component.extend({
+export default Ember.Component.extend({
   placeholder: function(){
     return I18n.t(this.get("placeholderKey"));
   }.property("placeholderKey"),
 
-  didInsertElement: function() {
+  _initializeAutocomplete: function() {
     var self = this;
     var selectedGroups;
 
+    var template = this.container.lookup('template:group-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
       onChangeItems: function(items){
@@ -45,7 +29,7 @@ export default Em.Component.extend({
           });
         });
       },
-      template: templateFunction()
+      template: template
     });
-  }
+  }.on('didInsertElement')
 });
