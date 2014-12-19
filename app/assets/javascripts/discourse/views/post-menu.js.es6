@@ -13,6 +13,18 @@ export var Button = function(action, label, icon, opts) {
   this.opts = this.opts || opts || {};
 };
 
+function animateHeart($elem, start, end, complete) {
+  $elem.stop()
+       .css('textIndent', start)
+       .animate({ textIndent: end }, {
+          complete: complete,
+          step: function(now) {
+            $(this).css('-webkit-transform','scale('+now+')');
+          },
+          duration: 300
+        }, 'linear');
+}
+
 Button.prototype.render = function(buffer) {
   var opts = this.opts;
 
@@ -36,7 +48,6 @@ export default Discourse.View.extend(StringBuffer, {
 
   rerenderTriggers: [
     'post.deleted_at',
-    'post.flagsAvailable.@each',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
@@ -201,7 +212,20 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   clickLike: function(post) {
-    this.get('controller').send('toggleLike', post);
+    var $heart = this.$('.fa-heart'),
+        controller = this.get('controller');
+
+    var acted = post.get('actionByName.like.acted');
+    if (acted) {
+      controller.send('toggleLike', post);
+    } else {
+      animateHeart($heart, 1.0, 1.5, function() {
+        animateHeart($heart, 1.5, 1.0, function() {
+          controller.send('toggleLike', post);
+        });
+      });
+    }
+
   },
 
   // Flag button
