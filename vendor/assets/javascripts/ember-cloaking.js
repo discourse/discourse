@@ -318,7 +318,7 @@
         this._childViews.clear();
       }
 
-      if (!this._elementCreated || this._scheduled) return;
+      if (this._scheduled) return;
       this._scheduled = true;
       this.set('_containedView', cv);
       Ember.run.schedule('render', this, this.updateChildView);
