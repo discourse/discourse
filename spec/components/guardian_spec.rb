@@ -62,6 +62,13 @@ describe Guardian do
       Guardian.new(user).post_can_act?(post, :off_topic, taken_actions: {PostActionType.types[:spam] => 1}).should be_falsey
     end
 
+    it "returns false for notify_user if private messages are disabled" do
+      SiteSetting.stubs(:enable_private_messages).returns(false)
+      user.trust_level = TrustLevel[2]
+      Guardian.new(user).post_can_act?(post, :notify_user).should be_falsey
+      Guardian.new(user).post_can_act?(post, :notify_moderators).should be_falsey
+    end
+
     describe "trust levels" do
       it "returns true for a new user liking something" do
         user.trust_level = TrustLevel[0]
