@@ -15,7 +15,7 @@
 {{/if}}
 
 {{#each n in model itemController="notification"}}
-  <div {{bind-attr class=":item :notification read::n.unread"}}>
+  <div {{bind-attr class=":item :notification n.read::unread"}}>
     {{notification-item notification=n scope=n.scope}}
     <span class="time">
       {{format-date n.created_at leaveAgo="true"}}
