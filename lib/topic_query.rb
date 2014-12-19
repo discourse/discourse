@@ -157,7 +157,7 @@ class TopicQuery
   protected
 
     def per_page_setting
-      @options[:slow_platform] ? 30 : 15
+      @options[:slow_platform] ? 15 : 30
     end
 
     def create_list(filter, options={}, topics = nil)
