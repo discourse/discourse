@@ -130,6 +130,10 @@
   section.field {
     margin-bottom: 20px;
   }
+  section.field .field-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
 }
 
 .reply-where-modal {
