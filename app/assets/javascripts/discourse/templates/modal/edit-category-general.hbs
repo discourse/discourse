@@ -4,6 +4,11 @@
     {{text-field value=name placeholderKey="category.name_placeholder" maxlength="50"}}
   </section>
 
+  <section class='field'>
+    <label>{{i18n 'category.slug'}}</label>
+    {{text-field value=slug placeholderKey="category.slug_placeholder" maxlength="255"}}
+  </section>
+
   {{#if canSelectParentCategory}}
     <section class='field'>
       {{#if subCategories}}

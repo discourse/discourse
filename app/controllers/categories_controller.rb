@@ -95,6 +95,18 @@ class CategoriesController < ApplicationController
     end
   end
 
+  def update_slug
+    @category = Category.find(params[:category_id].to_i)
+    guardian.ensure_can_edit!(@category)
+    @category.slug = params[:slug].to_s
+
+    if @category.save
+      render json: success_json
+    else
+      render_json_error(@category)
+    end
+  end
+
   def set_notifications
     category_id = params[:category_id].to_i
     notification_level = params[:notification_level].to_i
@@ -129,6 +141,7 @@ class CategoriesController < ApplicationController
         end
 
         params.permit(*required_param_keys,
+                        :slug,
                         :position,
                         :email_in,
                         :email_in_allow_strangers,

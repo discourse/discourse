@@ -192,6 +192,14 @@ describe Category do
     end
   end
 
+  describe 'customized slug' do
+    let(:category) { Fabricate(:slug_diff_category) }
+
+    it 'can be created' do
+      category.slug_for_url.should == "custom-slug"
+    end
+  end
+
   describe 'description_text' do
     it 'correctly generates text description as needed' do
       c = Category.new
