@@ -146,9 +146,9 @@ export default ObjectController.extend(ModalFunctionality, {
 
       }).catch(function(error) {
         if (error && error.responseText) {
-          self.flash($.parseJSON(error.responseText).errors[0]);
+          self.flash($.parseJSON(error.responseText).errors[0], 'error');
         } else {
-          self.flash(I18n.t('generic_error'));
+          self.flash(I18n.t('generic_error'), 'error');
         }
         self.set('saving', false);
       });

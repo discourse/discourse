@@ -325,6 +325,7 @@ Discourse::Application.routes.draw do
   post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
   post "category/:category_id/notifications" => "categories#set_notifications"
+  put "category/:category_id/slug" => "categories#update_slug"
 
   get "c/:id/show" => "categories#show"
   get "c/:category.rss" => "list#category_feed", format: :rss
