@@ -249,6 +249,10 @@ class Guardian
     @can_see_emails
   end
 
+  def can_export_admin_entity?(user)
+    user.staff?
+  end
+
   private
 
   def is_my_own?(obj)

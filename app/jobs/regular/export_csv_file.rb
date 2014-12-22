@@ -5,6 +5,7 @@ module Jobs
 
   class ExportCsvFile < Jobs::Base
     HEADER_ATTRS_FOR = {}
+    HEADER_ATTRS_FOR['user_archive'] = ['raw','like_count','reply_count','created_at']
     HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
@@ -18,10 +19,16 @@ module Jobs
 
     def initialize
       @file_name = ""
+      @entity_type = "admin"
     end
 
     def execute(args)
       entity = args[:entity]
+
+      if entity == "user_archive"
+        @entity_type = "user"
+      end
+
       @current_user = User.find_by(id: args[:user_id])
 
       export_method = "#{entity}_export".to_sym
@@ -39,6 +46,13 @@ module Jobs
       end
 
       notify_user
+    end
+
+    def user_archive_export
+      user_archive_data = Post.where(user_id: @current_user.id).select(HEADER_ATTRS_FOR['user_archive']).with_deleted.to_a
+      user_archive_data.map do |user_archive|
+        get_user_archive_fields(user_archive)
+      end
     end
 
     def user_export
@@ -111,6 +125,16 @@ module Jobs
           group_names.push(group.name)
         end
         return group_names
+      end
+
+      def get_user_archive_fields(user_archive)
+        user_archive_array = []
+
+        HEADER_ATTRS_FOR['user_archive'].each do |attr|
+          user_archive_array.push(user_archive.attributes[attr])
+        end
+
+        user_archive_array
       end
 
       def get_user_fields(user)
@@ -234,7 +258,11 @@ module Jobs
       def notify_user
         if @current_user
           if @file_name != "" && File.exists?("#{ExportCsv.base_directory}/#{@file_name}")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/admin/export_csv/#{@file_name}", file_name: @file_name)
+            if @entity_type == "admin"
+              SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/system/#{@file_name}", file_name: @file_name)
+            else
+              SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@current_user.username}/#{@file_name}", file_name: @file_name)
+            end
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end
