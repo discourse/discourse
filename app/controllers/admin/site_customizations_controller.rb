@@ -54,7 +54,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
       params.require(:site_customization)
             .permit(:name, :stylesheet, :header, :footer,
                     :mobile_stylesheet, :mobile_header, :mobile_footer,
-                    :position, :enabled, :key, :override_default_style,
+                    :position, :enabled, :key,
                     :stylesheet_baked)
     end
 

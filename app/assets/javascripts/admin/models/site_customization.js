@@ -7,7 +7,7 @@
   @module Discourse
 **/
 Discourse.SiteCustomization = Discourse.Model.extend({
-  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'override_default_style'],
+  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer'],
 
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
@@ -26,7 +26,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
     return changed;
 
-  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'originals'),
+  }.property('enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'originals'),
 
   startTrackingChanges: function() {
     var self = this;
@@ -51,8 +51,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       footer: this.footer,
       mobile_stylesheet: this.mobile_stylesheet,
       mobile_header: this.mobile_header,
-      mobile_footer: this.mobile_footer,
-      override_default_style: this.override_default_style
+      mobile_footer: this.mobile_footer
     };
 
     var siteCustomization = this;

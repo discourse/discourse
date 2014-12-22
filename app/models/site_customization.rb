@@ -100,12 +100,6 @@ class SiteCustomization < ActiveRecord::Base
     end
   end
 
-  def self.override_default_style(preview_style)
-    preview_style ||= enabled_style_key
-    style = lookup_style(preview_style)
-    style.override_default_style if style
-  end
-
   def self.lookup_style(key)
     return if key.blank?
 
