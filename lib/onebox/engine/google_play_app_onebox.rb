@@ -10,7 +10,7 @@ module Onebox
       private
 
       def data
-        {
+        result = {
           link: link,
           title: raw.css(".document-title div").inner_text,
           developer: raw.css(".document-subtitle.primary").inner_text,
@@ -18,6 +18,10 @@ module Onebox
           description: raw.css(".text-body div").inner_text,
           price: raw.css(".price.buy meta[itemprop=price]").first["content"]
         }
+        if result[:price].to_i <= 0 then
+            result[:price] = "Free"
+        end
+        result
       end
     end
   end
