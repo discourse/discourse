@@ -90,7 +90,7 @@
         <div id='topic-bottom'></div>
 
         {{#loading-spinner condition=postStream.loadingFilter}}
-          {{#if postStream.loadedAllPosts}}
+          {{#if loadedAllPosts}}
 
             {{view 'topic-closing' topic=model}}
             {{view 'topic-footer-buttons' topic=model}}
