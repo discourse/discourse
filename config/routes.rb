@@ -164,15 +164,6 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :export_csv, constraints: AdminConstraint.new do
-      collection do
-        get "export_entity" => "export_csv#export_entity"
-      end
-      member do
-        get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
-      end
-    end
-
     resources :badges, constraints: AdminConstraint.new do
       collection do
         get "types" => "badges#badge_types"
@@ -440,6 +431,13 @@ Discourse::Application.routes.draw do
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
+
+  resources :export_csv do
+    collection do
+      get "export_entity" => "export_csv#export_entity"
+    end
+  end
+  get "export_csv/:entity/:file_id" => "export_csv#show", constraints: {entity: USERNAME_ROUTE_FORMAT, file_id: /[^\/]+/}
 
   get "onebox" => "onebox#show"
 

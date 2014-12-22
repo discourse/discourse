@@ -1,5 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import { outputExportResult } from 'discourse/lib/export-result';
 
 export default ObjectController.extend(CanCheckEmails, {
   indexStream: false,
@@ -51,6 +52,10 @@ export default ObjectController.extend(CanCheckEmails, {
       Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
+    },
+
+    exportUserArchive: function() {
+      Discourse.ExportCsv.exportUserArchive().then(outputExportResult);
     }
   }
 });

@@ -186,6 +186,12 @@
           </li>
         </ul>
       {{/if}}
+
+      {{#if viewingSelf}}
+        <div class='user-archive'>
+          <button {{action "exportUserArchive"}} class="btn" title="{{i18n 'user.download_archive'}}">{{fa-icon "download"}} {{i18n 'user.download_archive'}}</button>
+        </div>
+      {{/if}}
     </section>
 
     <section class='user-right'>

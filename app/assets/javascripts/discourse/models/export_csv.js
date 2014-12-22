@@ -10,12 +10,21 @@ Discourse.ExportCsv = Discourse.Model.extend({});
 
 Discourse.ExportCsv.reopenClass({
   /**
+  Exports user archive
+
+  @method export_user_archive
+  **/
+  exportUserArchive: function() {
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'user', entity: 'user_archive'}});
+  },
+
+  /**
     Exports user list
 
     @method export_user_list
   **/
   exportUserList: function() {
-    return Discourse.ajax("/admin/export_csv/export_entity.json", {data: {entity: 'user'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'user'}});
   },
 
   /**
@@ -24,7 +33,7 @@ Discourse.ExportCsv.reopenClass({
     @method export_staff_action_logs
   **/
   exportStaffActionLogs: function() {
-    return Discourse.ajax("/admin/export_csv/export_entity.json", {data: {entity: 'staff_action'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'staff_action'}});
   },
 
   /**
@@ -33,7 +42,7 @@ Discourse.ExportCsv.reopenClass({
     @method export_screened_email_list
   **/
   exportScreenedEmailList: function() {
-    return Discourse.ajax("/admin/export_csv/export_entity.json", {data: {entity: 'screened_email'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'screened_email'}});
   },
 
   /**
@@ -42,7 +51,7 @@ Discourse.ExportCsv.reopenClass({
     @method export_screened_ip_list
   **/
   exportScreenedIpList: function() {
-    return Discourse.ajax("/admin/export_csv/export_entity.json", {data: {entity: 'screened_ip'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'screened_ip'}});
   },
 
   /**
@@ -51,6 +60,6 @@ Discourse.ExportCsv.reopenClass({
     @method export_screened_url_list
   **/
   exportScreenedUrlList: function() {
-    return Discourse.ajax("/admin/export_csv/export_entity.json", {data: {entity: 'screened_url'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'screened_url'}});
   }
 });
