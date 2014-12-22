@@ -41,6 +41,20 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
+  postStreamLoadedAllPostsChanged: function(){
+    // hold back rendering 1 run loop for every transition.
+    var self = this;
+    var loaded = this.get('postStream.loadedAllPosts');
+    this.set('loadedAllPosts', false);
+
+    if(loaded){
+      Em.run.next(function(){
+        self.set('loadedAllPosts',true);
+      });
+    }
+
+  }.observes('postStream', 'postStream.loadedAllPosts'),
+
   show_deleted: function(key, value) {
     var postStream = this.get('postStream');
     if (!postStream) { return; }
