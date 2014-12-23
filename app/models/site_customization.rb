@@ -35,6 +35,7 @@ class SiteCustomization < ActiveRecord::Base
     remove_from_cache!
     if stylesheet_changed? || mobile_stylesheet_changed?
       MessageBus.publish "/file-change/#{key}", SecureRandom.hex
+      MessageBus.publish "/file-change/#{SiteCustomization::ENABLED_KEY}", SecureRandom.hex
     end
     MessageBus.publish "/header-change/#{key}", header if header_changed?
     MessageBus.publish "/footer-change/#{key}", footer if footer_changed?
