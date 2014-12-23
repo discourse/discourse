@@ -1,5 +1,4 @@
-
-var _groups = [
+var groups = [
   {
     name: "emoticons",
     icons: ["smile","smiley","grinning","blush","relaxed","wink","heart_eyes","kissing_heart","kissing_closed_eyes","kissing","kissing_smiling_eyes","stuck_out_tongue_winking_eye","stuck_out_tongue_closed_eyes","stuck_out_tongue","flushed","grin","pensive","relieved","unamused","disappointed","persevere","cry","joy","sob","sleepy","disappointed_relieved","cold_sweat","sweat_smile","sweat","weary","tired_face","fearful","scream","angry","rage","triumph","confounded","laughing","yum","mask","sunglasses","sleeping","dizzy_face","astonished","worried","frowning","anguished","smiling_imp","imp","open_mouth","grimacing","neutral_face","confused","hushed","no_mouth","innocent","smirk","expressionless","man_with_gua_pi_mao","man_with_turban","cop","construction_worker","guardsman","baby","boy","girl","man","woman","older_man","older_woman","person_with_blond_hair","angel","princess","smiley_cat","smile_cat","heart_eyes_cat","kissing_cat","smirk_cat","scream_cat","crying_cat_face","joy_cat","pouting_cat","japanese_ogre","japanese_goblin","see_no_evil","hear_no_evil","speak_no_evil","skull","alien","poop","fire","sparkles","star2","dizzy","boom","anger","sweat_drops","droplet","zzz","dash","ear","eyes","nose","tongue","lips","thumbsup","thumbsdown","ok_hand","punch","fist","v","wave","raised_hand","open_hands","point_up_2","point_down","point_right","point_left","raised_hands","pray","point_up","clap","muscle","walking","runner","dancer","couple","family","two_men_holding_hands","two_women_holding_hands","couplekiss","couple_with_heart","dancers","ok_woman","no_good","information_desk_person","raising_hand","massage","haircut","nail_care","bride_with_veil","person_with_pouting_face","person_frowning","bow","tophat","crown","womans_hat","athletic_shoe","mans_shoe","sandal","high_heel","boot","shirt","necktie","womans_clothes","dress","running_shirt_with_sash","jeans","kimono","bikini","briefcase","handbag","pouch","purse","eyeglasses","ribbon","closed_umbrella","lipstick","yellow_heart","blue_heart","purple_heart","green_heart","heart","broken_heart","heartpulse","heartbeat","two_hearts","sparkling_heart","revolving_hearts","cupid","love_letter","kiss","ring","gem","bust_in_silhouette","busts_in_silhouette","speech_balloon","footprints","thought_balloon"]
@@ -27,29 +26,29 @@ var _groups = [
 ];
 
 // scrub groups
-_groups.forEach(function(group){
+groups.forEach(function(group){
   group.icons = _.reject(group.icons, function(obj){
     return !Discourse.Emoji.exists(obj);
   });
 });
 
 // export so others can modify
-Discourse.Emoji.groups = _groups;
+Discourse.Emoji.groups = groups;
 
 var closeSelector = function(){
   $('.emoji-modal, .emoji-modal-wrapper').remove();
   $('body, textarea').off('keydown.emoji');
 };
 
-var _ungroupedIcons;
+var ungroupedIcons;
 
 var toolbar = function(selected){
 
-  if(!_ungroupedIcons){
-    _ungroupedIcons = [];
+  if(!ungroupedIcons){
+    ungroupedIcons = [];
     var groupedIcons = {};
 
-    _.each(_groups, function(group){
+    _.each(groups, function(group){
       _.each(group.icons, function(icon){
         groupedIcons[icon] = true;
       });
@@ -58,16 +57,16 @@ var toolbar = function(selected){
     var emojis = Discourse.Emoji.list();
     _.each(emojis,function(emoji){
       if(groupedIcons[emoji] !== true){
-        _ungroupedIcons.push(emoji);
+        ungroupedIcons.push(emoji);
       }
     });
 
-    if(_ungroupedIcons.length > 0){
-      _groups.push({name: 'ungrouped', icons: _ungroupedIcons});
+    if(ungroupedIcons.length > 0){
+      groups.push({name: 'ungrouped', icons: ungroupedIcons});
     }
   }
 
-  return _.map(_groups, function(g, i){
+  return _.map(groups, function(g, i){
     var row = {src: Discourse.Emoji.urlFor(g.icons[0]), groupId: i};
     if(i===selected){
       row.selected = true;
@@ -111,9 +110,10 @@ var bindEvents = function(page,offset){
 var render = function(page, offset){
   var rows = [];
   var row = [];
-  var icons = _groups[page].icons;
+  var icons = groups[page].icons;
+  var max = offset + PER_PAGE;
 
-  for(var i=offset; i<(offset+PER_PAGE); i++){
+  for(var i=offset; i<max; i++){
     if(!icons[i]){ break; }
     if(row.length === PER_ROW){
       rows.push(row);
@@ -127,14 +127,14 @@ var render = function(page, offset){
     toolbarItems: toolbar(page),
     rows: rows,
     prevDisabled: offset === 0,
-    nextDisabled: (offset + PER_PAGE + 1) > icons.length
+    nextDisabled: (max + 1) > icons.length
   };
 
   $('body .emoji-modal').remove();
-  var rendered = Ember.TEMPLATES["javascripts/emoji-toolbar.raw"](model);
+  var rendered = Ember.TEMPLATES["emoji-toolbar.raw"](model);
   $('body').append(rendered);
 
-  bindEvents(page,offset);
+  bindEvents(page, offset);
 };
 
 var showSelector = function(){

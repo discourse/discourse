@@ -9,7 +9,7 @@ end
 def download_emojis_for(set, url_template, options={})
   puts "Downloading emojis for #{set}..."
 
-  path = "plugins/emoji/public/images/#{set}"
+  path = "public/images/emoji/#{set}"
   FileUtils.rm_rf(path) rescue nil
   FileUtils.mkdir_p(path) rescue nil
 
@@ -41,7 +41,7 @@ GOOGLE_EMOJIS = {35=>1, 48=>2, 49=>3, 50=>4, 51=>5, 52=>6, 53=>7, 54=>8, 55=>9, 
 def download_google_emojis(url_template)
   puts "Downloading emojis for google..."
 
-  path = "plugins/emoji/public/images/google"
+  path = "public/images/google"
   FileUtils.rm_rf(path) rescue nil
   FileUtils.mkdir_p(path) rescue nil
 

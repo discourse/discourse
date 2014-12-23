@@ -12,14 +12,15 @@
 // Stuff we need to load first
 //= require ./discourse/helpers/i18n
 //= require ./discourse/lib/ember_compat_handlebars
-//= require ./discourse/helpers/register-unbound
 //= require ./discourse/lib/computed
+//= require ./discourse/helpers/register-unbound
 //= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins
 //= require ./discourse/lib/markdown
 //= require ./discourse/lib/search-for-term
-//= require ./discourse/views/view
-//= require ./discourse/views/container
+//= require ./discourse/lib/user-search
+//= require ./discourse/lib/autocomplete
+//= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action
@@ -30,6 +31,8 @@
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object
 //= require ./discourse/controllers/navigation/default
+//= require ./discourse/views/view
+//= require ./discourse/views/container
 //= require ./discourse/views/modal_body_view
 //= require ./discourse/views/flag
 //= require ./discourse/views/combo-box
@@ -38,6 +41,7 @@
 //= require ./discourse/views/notifications-button
 //= require ./discourse/views/topic-notifications-button
 //= require ./discourse/views/pagedown-preview
+//= require ./discourse/views/composer
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/build-topic-route
 //= require ./discourse/routes/restricted-user
@@ -52,8 +56,9 @@
 //= require ./discourse/helpers/cold-age-class
 //= require ./discourse/helpers/loading-spinner
 //= require ./discourse/helpers/category-link
-
 //= require ./discourse/dialects/dialect
+//= require ./discourse/lib/emoji/emoji
+
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
 //= require_tree ./discourse/lib

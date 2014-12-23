@@ -268,8 +268,8 @@ module BackupRestore
     end
 
     def extract_uploads
-      log "Extracting uploads..."
       if `tar --list --file #{@tar_filename} | grep 'uploads/'`.present?
+        log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
           `tar --extract --keep-newer-files --file #{@tar_filename} uploads/`
         end

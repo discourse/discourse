@@ -36,6 +36,9 @@
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
   Discourse.LetterAvatarVersion = <%= LetterAvatar::VERSION %>;
+  PreloadStore.get("customEmoji").forEach(function(emoji) {
+    Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
+  });
   Discourse.Router = Ember.Router.extend({ location: 'discourse-location' });
   Discourse.Route.mapRoutes();
   Discourse.start();

@@ -73,17 +73,6 @@ describe Admin::BackupsController do
         response.should be_success
       end
 
-      # it "catches OperationRunningError exception" do
-      #   BackupRestore.expects(:is_operation_running?).returns(true)
-
-      #   xhr :post, :create
-
-      #   response.should be_success
-
-      #   json = JSON.parse(response.body)
-      #   json["message"].should_not == nil
-      # end
-
     end
 
     describe ".cancel" do

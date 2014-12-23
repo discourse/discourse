@@ -125,6 +125,7 @@ Discourse::Application.routes.draw do
       resources :site_text, constraints: AdminConstraint.new
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
+      resources :emojis, constraints: AdminConstraint.new
     end
 
     resources :color_schemes, constraints: AdminConstraint.new

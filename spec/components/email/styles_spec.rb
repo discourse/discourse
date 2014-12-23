@@ -31,7 +31,7 @@ describe Email::Styles do
     end
 
     it "adds a width and height to images with an emoji path" do
-      frag = basic_fragment("<img src='/plugins/emoji/fish.png' class='emoji'>")
+      frag = basic_fragment("<img src='/images/emoji/fish.png' class='emoji'>")
       expect(frag.at("img")["width"]).to eq("20")
       expect(frag.at("img")["height"]).to eq("20")
     end

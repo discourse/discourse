@@ -1029,6 +1029,9 @@ en:
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
+    enable_emoji: "Enable emoji"
+    emoji_set: "How would you like your emoji?"
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -1088,6 +1091,11 @@ en:
 
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
+
+  emoji:
+    errors:
+      name_already_exists: "Sorry, the name '%{name}' is already used by another emoji."
+      error_while_storing_emoji: "Sorry, there has been an error while storing the emoji."
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
