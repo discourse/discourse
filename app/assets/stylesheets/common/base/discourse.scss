@@ -91,10 +91,12 @@ body {
   ul.breadcrumb {
     margin: 0 10px 0 10px;
   }
+
 .message {
     @include border-radius-all(8px);
     background-color: $secondary;
     padding: 14px;
+
     h2 {
       margin-bottom: 20px;
     }
@@ -113,8 +115,9 @@ body {
       }
     }
   }
-    .clear-transitions {
-    @include transition(none !important);
+
+  .clear-transitions {
+    transition:none !important;
   }
 
 .tip {

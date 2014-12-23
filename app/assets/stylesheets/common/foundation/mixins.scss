@@ -69,14 +69,6 @@
   transition-delay: 0s;
 }
 
-// Transitions
-// --------------------------------------------------
-
-@mixin transition($transition-property, $transition-time, $method) {
-    transition: $transition-property $transition-time $method;
-}
-
-
 //
 // --------------------------------------------------
 
