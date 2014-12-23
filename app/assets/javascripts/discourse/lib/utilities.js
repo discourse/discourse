@@ -297,7 +297,11 @@ Discourse.Utilities = {
 
         // the error message is provided by the server
         case 422:
-          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          if (data.jqXHR.responseJSON.message) {
+            bootbox.alert(data.jqXHR.responseJSON.message);
+          } else {
+            bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          }
           return;
       }
     }

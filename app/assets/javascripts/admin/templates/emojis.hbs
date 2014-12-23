@@ -1,0 +1,30 @@
+<div class='emoji'>
+  <h2>{{i18n 'admin.emoji.title'}}</h2>
+
+  <p class="desc">{{i18n 'admin.emoji.help'}}</p>
+
+  <p>{{emoji-uploader done="emojiUploaded"}}</p>
+
+  {{#if controller}}
+    <div class="span8">
+      <table id="custom_emoji">
+        <thead>
+          <tr>
+            <th>{{i18n "admin.emoji.image"}}</th>
+            <th>{{i18n "admin.emoji.name"}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each e in controller}}
+            <tr>
+              <th><img class="emoji" src="{{unbound e.url}}" title="{{unbound e.name}}"></th>
+              <th>:{{e.name}}:</th>
+              <th><button {{action "destroy" e}} class='btn btn-danger no-text pull-right'>{{fa-icon 'trash-o'}} </button></th>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/if}}
+</div>

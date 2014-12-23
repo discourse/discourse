@@ -1,4 +1,3 @@
-
 // TODO: Make this a proper ES6 import
 var ComposerView = require('discourse/views/composer').default;
 

@@ -255,6 +255,7 @@ class ApplicationController < ActionController::Base
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
       store_preloaded("banner", banner_json)
+      store_preloaded("customEmoji", custom_emoji)
     end
 
     def preload_current_user_data
@@ -281,7 +282,6 @@ class ApplicationController < ActionController::Base
     end
 
     def banner_json
-
       json = ApplicationController.banner_json_cache["json"]
 
       unless json
@@ -291,6 +291,11 @@ class ApplicationController < ActionController::Base
       end
 
       json
+    end
+
+    def custom_emoji
+      serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
+      MultiJson.dump(serializer)
     end
 
     def render_json_error(obj)

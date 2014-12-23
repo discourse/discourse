@@ -20,15 +20,17 @@ export default Em.Mixin.create({
       url: this.get('uploadUrl'),
       dataType: "json",
       fileInput: $upload,
-      formData: { image_type: this.get('type') },
       dropZone: this.$(),
       pasteZone: this.$()
     });
 
     $upload.on('fileuploadsubmit', function (e, data) {
-      var result = Discourse.Utilities.validateUploadedFiles(data.files, true);
-      self.setProperties({ uploadProgress: 0, uploading: result });
-      return result;
+      var isValid = Discourse.Utilities.validateUploadedFiles(data.files, true);
+      var form = { image_type: self.get('type') };
+      if (self.get("data")) { form = $.extend(form, self.get("data")); }
+      data.formData = form;
+      self.setProperties({ uploadProgress: 0, uploading: isValid });
+      return isValid;
     });
 
     $upload.on("fileuploadprogressall", function(e, data) {
@@ -40,7 +42,11 @@ export default Em.Mixin.create({
       if(data.result.url) {
         self.uploadDone(data);
       } else {
-        bootbox.alert(I18n.t('post.errors.upload'));
+        if (data.result.message) {
+          bootbox.alert(data.result.message);
+        } else {
+          bootbox.alert(I18n.t('post.errors.upload'));
+        }
       }
     });
 

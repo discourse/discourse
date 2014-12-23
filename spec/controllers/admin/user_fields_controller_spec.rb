@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::UserFieldsController do
 
   it "is a subclass of AdminController" do
-    (Admin::ApiController < Admin::AdminController).should == true
+    (Admin::UserFieldsController < Admin::AdminController).should == true
   end
 
   context "when logged in" do

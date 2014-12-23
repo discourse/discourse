@@ -163,7 +163,7 @@ module Email
           img.remove
         end
 
-        if img['src'] =~ /plugins\/emoji/
+        if img['src'] =~ /images\/emoji/
           img.replace img['title']
         end
       end
