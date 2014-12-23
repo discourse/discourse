@@ -82,6 +82,13 @@
   }
 }
 
+@mixin fade-soft($time: 1s) {
+  -webkit-transition: opacity $time ease-in-out;
+      -ms-transition: opacity $time ease-in-out;
+          transition: opacity $time ease-in-out;
+
+}
+
 @mixin visible {
   opacity: 1;
   visibility: visible;
