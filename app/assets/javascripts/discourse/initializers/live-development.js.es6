@@ -15,10 +15,9 @@ export default {
         if (!$(self).data('orig')) {
           $(self).data('orig', self.href);
         }
-        var orig = $(self).data('orig'),
-            sp = orig.split(".css?");
+        var orig = $(self).data('orig');
 
-        self.href = sp[0] + ".css?" + data;
+        self.href = orig.replace(/v=.*/, "v=" + data);
       });
     });
 
