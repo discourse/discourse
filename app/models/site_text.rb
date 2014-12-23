@@ -13,6 +13,10 @@ class SiteText < ActiveRecord::Base
     SiteText.text_for_cache.clear
   end
 
+  after_destroy do
+    SiteText.text_for_cache.clear
+  end
+
   def self.formats
     @formats ||= Enum.new(:plain, :markdown, :html, :css)
   end
