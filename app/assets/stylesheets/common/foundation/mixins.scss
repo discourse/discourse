@@ -52,15 +52,6 @@
   background-image: linear-gradient(to bottom, $start-color, $end-color);
 }
 
-// Transition
-
-@mixin transition($transition) {
-  .discourse-no-touch & {
-    -webkit-transition: #{$transition};
-            transition: #{$transition};
-  }
-}
-
 // Visibility
 // --------------------------------------------------
 
@@ -72,34 +63,24 @@
   }
 }
 
-@mixin fades-in($time: 0.5s) {
-  opacity: 0;
-  visibility: hidden;
-  .discourse-no-touch & {
-    -webkit-transition: visibility 0s linear $time, opacity $time linear;
-        -ms-transition: visibility 0s linear $time, opacity $time linear;
-            transition: visibility 0s linear $time, opacity $time linear;
-  }
-}
-
-@mixin fade-soft($time: 1s) {
-  -webkit-transition: opacity $time ease-in-out;
-      -ms-transition: opacity $time ease-in-out;
-          transition: opacity $time ease-in-out;
-
-}
-
 @mixin visible {
   opacity: 1;
   visibility: visible;
-  -webkit-transition-delay: 0s;
-          transition-delay: 0s;
+  transition-delay: 0s;
 }
+
+// Transitions
+// --------------------------------------------------
+
+@mixin transition($transition-property, $transition-time, $method) {
+    transition: $transition-property $transition-time $method;
+}
+
 
 //
 // --------------------------------------------------
 
-// Unselectable
+// Unselectable (avoids unwanted selections with iPad, touch laptops, etc)
 
 @mixin unselectable {
   -webkit-user-select: none;

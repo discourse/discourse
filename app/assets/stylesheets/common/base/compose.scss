@@ -136,7 +136,6 @@ div.ac-wrap {
 #reply-control {
   .composer-loading {
     position: absolute;
-    @include fades-in(0.25s);
     left: 45%;
     top: 20%;
   }

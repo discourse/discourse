@@ -40,9 +40,8 @@ h1 .topic-statuses .topic-status i {
 .gutter {
   .reply-new {
     .discourse-no-touch & {
-     opacity:0;
-     @include transition(opacity linear 0.4s);
-
+      opacity:0;
+      @include transition(opacity 0.7s ease-in-out);
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -51,7 +50,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-      @include fade-soft(1s);
+      @include transition(opacity 0.7s ease-in-out);
     }
     .discourse-touch & {opacity: 1;}
   }
