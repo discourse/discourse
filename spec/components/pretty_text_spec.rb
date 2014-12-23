@@ -298,4 +298,9 @@ describe PrettyText do
   end
 
 
+  it 'can escape *' do
+    PrettyText.cook("***a***a").should match_html("<p><strong><em>a</em></strong>a</p>")
+    PrettyText.cook("***\\****a").should match_html("<p><strong><em>*</em></strong>a</p>")
+  end
+
 end
