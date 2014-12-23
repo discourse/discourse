@@ -20,15 +20,15 @@ class Emoji
   end
 
   def self.all
-    @all ||= standard | custom
+    Discourse.cache.fetch("all", family: "emoji") { standard | custom }
   end
 
   def self.standard
-    @standard ||= load_standard
+    Discourse.cache.fetch("standard", family: "emoji") { load_standard }
   end
 
   def self.custom
-    @custom ||= load_custom
+    Discourse.cache.fetch("custom", family: "emoji") { load_custom }
   end
 
   def self.create_from_path(path)
@@ -61,8 +61,7 @@ class Emoji
   end
 
   def self.clear_cache
-    @custom = nil
-    @all = nil
+    Discourse.cache.delete_by_family("emoji")
   end
 
   def self.db_file
