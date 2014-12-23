@@ -81,6 +81,14 @@ module PrettyText
       end
     end
 
+    # custom emojis
+    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    ctx.eval(emoji.result)
+
+    Emoji.custom.each do |emoji|
+      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
+    end
+
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
       DiscoursePluginRegistry.server_side_javascripts.each do |ssjs|
@@ -92,14 +100,6 @@ module PrettyText
           ctx.load(ssjs)
         end
       end
-    end
-
-    # custom emojis
-    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
-    ctx.eval(emoji.result)
-
-    Emoji.custom.each do |emoji|
-      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
     end
 
     ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.hbs') {|f| f.read}
