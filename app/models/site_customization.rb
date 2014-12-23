@@ -1,14 +1,12 @@
 require_dependency 'sass/discourse_sass_compiler'
 require_dependency 'sass/discourse_stylesheets'
+require_dependency 'distributed_cache'
 
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
-  # placing this in uploads to ease deployment rules
-  CACHE_PATH = 'uploads/stylesheet-cache'
-  @lock = Mutex.new
+  @cache = DistributedCache.new('site_customization')
 
   before_create do
-    self.position ||= (SiteCustomization.maximum(:position) || 0) + 1
     self.enabled ||= false
     self.key ||= SecureRandom.uuid
     true
@@ -34,13 +32,9 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   after_save do
-    File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath) && stylesheet_changed?
-    File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile)) && mobile_stylesheet_changed?
     remove_from_cache!
     if stylesheet_changed? || mobile_stylesheet_changed?
-      ensure_stylesheets_on_disk!
-      # TODO: this is broken now because there's mobile stuff too
-      MessageBus.publish "/file-change/#{key}", stylesheet_hash
+      MessageBus.publish "/file-change/#{key}", SecureRandom.hex
     end
     MessageBus.publish "/header-change/#{key}", header if header_changed?
     MessageBus.publish "/footer-change/#{key}", footer if footer_changed?
@@ -48,93 +42,83 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   after_destroy do
-    File.delete(stylesheet_fullpath) if File.exists?(stylesheet_fullpath)
-    File.delete(stylesheet_fullpath(:mobile)) if File.exists?(stylesheet_fullpath(:mobile))
-    self.remove_from_cache!
+    remove_from_cache!
   end
 
   def self.enabled_key
     ENABLED_KEY.dup << RailsMultisite::ConnectionManagement.current_db
   end
 
-  def self.enabled_style_key
-    @cache ||= {}
-    preview_style = @cache[enabled_key]
-    return if preview_style == :none
-    return preview_style if preview_style
-
-    @lock.synchronize do
-      style = find_by(enabled: true)
-      if style
-        @cache[enabled_key] = style.key
-      else
-        @cache[enabled_key] = :none
-        nil
-      end
-    end
+  def self.enabled_stylesheet_contents(target=:desktop)
+    @cache["enabled_stylesheet_#{target}"] ||= where(enabled: true)
+      .order(:name)
+      .pluck(target == :desktop ? :stylesheet_baked : :mobile_stylesheet_baked)
+      .compact
+      .join("\n")
   end
 
-  def self.custom_stylesheet(preview_style, target=:desktop)
-    preview_style ||= enabled_style_key
-    style = lookup_style(preview_style)
-    style.stylesheet_link_tag(target).html_safe if style
-  end
-
-  def self.custom_header(preview_style, target=:desktop)
-    preview_style ||= enabled_style_key
-    style = lookup_style(preview_style)
-    if style && ((target != :mobile && style.header) || (target == :mobile && style.mobile_header))
-      target == :mobile ? style.mobile_header.html_safe : style.header.html_safe
+  def self.stylesheet_contents(key, target)
+    if key == ENABLED_KEY
+      enabled_stylesheet_contents(target)
     else
-      ""
+      where(key: key)
+        .pluck(target == :mobile ? :mobile_stylesheet_baked : :stylesheet_baked)
+        .first
     end
   end
 
-  def self.custom_footer(preview_style, target=:dekstop)
-    preview_style ||= enabled_style_key
-    style = lookup_style(preview_style)
-    if style && ((target != :mobile && style.footer) || (target == :mobile && style.mobile_footer))
-      target == :mobile ? style.mobile_footer.html_safe : style.footer.html_safe
+  def self.custom_stylesheet(preview_style=nil, target=:desktop)
+    preview_style ||= ENABLED_KEY
+    if preview_style == ENABLED_KEY
+      stylesheet_link_tag(ENABLED_KEY, target, enabled_stylesheet_contents(target))
     else
-      ""
+      lookup_field(preview_style, target, :stylesheet_link_tag)
     end
   end
 
-  def self.lookup_style(key)
+  def self.custom_header(preview_style=nil, target=:desktop)
+    preview_style ||= ENABLED_KEY
+    lookup_field(preview_style, target, :header)
+  end
+
+  def self.custom_footer(preview_style=nil, target=:dekstop)
+    preview_style ||= ENABLED_KEY
+    lookup_field(preview_style,target,:footer)
+  end
+
+  def self.lookup_field(key, target, field)
     return if key.blank?
 
-    # cache is cross site resiliant cause key is secure random
-    @cache ||= {}
-    ensure_cache_listener
-    style = @cache[key]
-    return style if style
+    cache_key = key + target.to_s + field.to_s;
 
-    @lock.synchronize do
-      style = find_by(key: key)
-      style.ensure_stylesheets_on_disk! if style
-      @cache[key] = style
-    end
-  end
+    lookup = @cache[cache_key]
+    return lookup.html_safe if lookup
 
-  def self.ensure_cache_listener
-    unless @subscribed
-      klass = self
-      MessageBus.subscribe("/site_customization") do |msg|
-        message = msg.data
-        klass.remove_from_cache!(message["key"], false)
+    styles =
+      if key == ENABLED_KEY
+        order(:name).where(enabled:true).to_a
+      else
+        [find_by(key: key)].compact
       end
 
-      @subscribed = true
-    end
+    val =
+      if styles.present?
+        styles.map do |style|
+          lookup = target == :mobile ? "mobile_#{field}" : field
+          style.send(lookup)
+        end.compact.join("\n")
+      end
+
+    (@cache[cache_key] = val || "").html_safe
   end
 
   def self.remove_from_cache!(key, broadcast = true)
     MessageBus.publish('/site_customization', key: key) if broadcast
-    if @cache
-      @lock.synchronize do
-        @cache[key] = nil
-      end
-    end
+    clear_cache!
+  end
+
+  def self.clear_cache!
+    @cache.clear
   end
 
   def remove_from_cache!
@@ -142,53 +126,25 @@ class SiteCustomization < ActiveRecord::Base
     self.class.remove_from_cache!(key)
   end
 
-  def stylesheet_hash(target=:desktop)
-    Digest::MD5.hexdigest( target == :mobile ? mobile_stylesheet : stylesheet )
-  end
-
-  def cache_fullpath
-    "#{Rails.root}/public/#{CACHE_PATH}"
-  end
-
-  def ensure_stylesheets_on_disk!
-    [[:desktop, 'stylesheet_baked'], [:mobile, 'mobile_stylesheet_baked']].each do |target, baked_attr|
-      path = stylesheet_fullpath(target)
-      dir = cache_fullpath
-      FileUtils.mkdir_p(dir)
-      unless File.exists?(path)
-        File.open(path, "w") do |f|
-          f.puts self.send(baked_attr)
-        end
-      end
-    end
-  end
-
-  def stylesheet_filename(target=:desktop)
-    target == :desktop ? "/#{self.key}.css" : "/#{target}_#{self.key}.css"
-  end
-
-  def stylesheet_fullpath(target=:desktop)
-    "#{cache_fullpath}#{stylesheet_filename(target)}"
+  def mobile_stylesheet_link_tag
+    stylesheet_link_tag(:mobile)
   end
 
   def stylesheet_link_tag(target=:desktop)
-    return mobile_stylesheet_link_tag if target == :mobile
-    return "" unless stylesheet.present?
-    return @stylesheet_link_tag if @stylesheet_link_tag
-    ensure_stylesheets_on_disk!
-    @stylesheet_link_tag = link_css_tag "/#{CACHE_PATH}#{stylesheet_filename}?#{stylesheet_hash}"
+    content = target == :mobile ? mobile_stylesheet : stylesheet
+    SiteCustomization.stylesheet_link_tag(key, target, content)
   end
 
-  def mobile_stylesheet_link_tag
-    return "" unless mobile_stylesheet.present?
-    return @mobile_stylesheet_link_tag if @mobile_stylesheet_link_tag
-    ensure_stylesheets_on_disk!
-    @mobile_stylesheet_link_tag = link_css_tag "/#{CACHE_PATH}#{stylesheet_filename(:mobile)}?#{stylesheet_hash(:mobile)}"
+  def self.stylesheet_link_tag(key, target, content)
+    return "" unless content.present?
+
+    hash = Digest::MD5.hexdigest(content)
+    link_css_tag "/site_customizations/#{key}.css?target=#{target}&v=#{hash}"
   end
 
-  def link_css_tag(href)
+  def self.link_css_tag(href)
     href = (GlobalSetting.cdn_url || "") + href
-    %Q{<link class="custom-css" rel="stylesheet" href="#{href}" type="text/css" media="all">}
+    %Q{<link class="custom-css" rel="stylesheet" href="#{href}" type="text/css" media="all">}.html_safe
   end
 end
 

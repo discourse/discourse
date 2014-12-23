@@ -2,6 +2,10 @@ require 'spec_helper'
 
 describe SiteCustomization do
 
+  before do
+    SiteCustomization.clear_cache!
+  end
+
   let :user do
     Fabricate(:user)
   end
@@ -23,168 +27,69 @@ describe SiteCustomization do
     s.key.should_not == nil
   end
 
-  context 'caching' do
+  it 'can enable more than one style at once' do
+    c1 = SiteCustomization.create!(name: '2', user_id: user.id, header: 'World',
+                              enabled: true, mobile_header: 'hi', footer: 'footer',
+                              stylesheet: '.hello{.world {color: blue;}}')
 
-    context 'enabled style' do
-      before do
-        @customization = customization
-      end
+    SiteCustomization.create!(name: '1', user_id: user.id, header: 'Hello',
+                              enabled: true, mobile_footer: 'mfooter',
+                              mobile_stylesheet: '.hello{margin: 1px;}',
+                              stylesheet: 'p{width: 1px;}'
+                             )
 
-      it 'finds no style when none enabled' do
-        SiteCustomization.enabled_style_key.should == nil
-      end
+    SiteCustomization.custom_header.should == "Hello\nWorld"
+    SiteCustomization.custom_header(nil, :mobile).should == "hi"
+    SiteCustomization.custom_footer(nil, :mobile).should == "mfooter"
+    SiteCustomization.custom_footer.should == "footer"
 
+    desktop_css = SiteCustomization.custom_stylesheet
+    desktop_css.should =~ Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=desktop")
 
-      it 'finds the enabled style' do
-        @customization.enabled = true
-        @customization.save
-        SiteCustomization.enabled_style_key.should == @customization.key
-      end
+    mobile_css = SiteCustomization.custom_stylesheet(nil, :mobile)
+    mobile_css.should =~  Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=mobile")
 
-      it 'finds no enabled style on other sites' do
-        @customization.enabled = true
-        @customization.save
+    SiteCustomization.enabled_stylesheet_contents.should =~ /\.hello \.world/
 
-        RailsMultisite::ConnectionManagement.expects(:current_db).returns("foo").twice
-        # the mocking is tricky, lets remove the record so we can properly pretend we are on another db
-        #  this bypasses the before / after stuff
-        SiteCustomization.exec_sql('delete from site_customizations')
+    # cache expiry
+    c1.enabled = false
+    c1.save
 
-        SiteCustomization.enabled_style_key.should == nil
-      end
-    end
+    SiteCustomization.custom_stylesheet.should_not == desktop_css
+    SiteCustomization.enabled_stylesheet_contents.should_not =~ /\.hello \.world/
+  end
 
-    it 'ensure stylesheet is on disk on first fetch' do
-      c = customization
-      c.remove_from_cache!
-      File.delete(c.stylesheet_fullpath)
-      File.delete(c.stylesheet_fullpath(:mobile))
+  it 'should be able to look up stylesheets by key' do
+    c = SiteCustomization.create!(name: '2', user_id: user.id,
+                              enabled: true,
+                              stylesheet: '.hello{.world {color: blue;}}',
+                              mobile_stylesheet: '.world{.hello{color: black;}}')
 
-      SiteCustomization.custom_stylesheet(c.key)
-      File.exists?(c.stylesheet_fullpath).should == true
-      File.exists?(c.stylesheet_fullpath(:mobile)).should == true
-    end
-
-    context '#custom_stylesheet' do
-      it 'should allow me to lookup a filename containing my preview stylesheet' do
-        SiteCustomization.custom_stylesheet(customization.key).should ==
-          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/#{customization.key}.css?#{customization.stylesheet_hash}\" type=\"text/css\" media=\"all\">"
-      end
-
-      it "should return blank link tag for mobile if mobile_stylesheet is blank" do
-        SiteCustomization.custom_stylesheet(customization.key, :mobile).should == ""
-      end
-
-      it "should return link tag for mobile custom stylesheet" do
-        SiteCustomization.custom_stylesheet(customization_with_mobile.key, :mobile).should ==
-          "<link class=\"custom-css\" rel=\"stylesheet\" href=\"/uploads/stylesheet-cache/mobile_#{customization_with_mobile.key}.css?#{customization_with_mobile.stylesheet_hash(:mobile)}\" type=\"text/css\" media=\"all\">"
-      end
-    end
-
-    context '#custom_header' do
-      it "returns empty string when there is no custom header" do
-        c = SiteCustomization.create!(customization_params.merge(header: ''))
-        SiteCustomization.custom_header(c.key).should == ''
-      end
-
-      it "can return the custom header html" do
-        SiteCustomization.custom_header(customization.key).should == customization_params[:header]
-      end
-
-      it "returns empty string for mobile header when there's no custom mobile header" do
-        SiteCustomization.custom_header(customization.key, :mobile).should == ''
-      end
-
-      it "can return the custom mobile header html" do
-        SiteCustomization.custom_header(customization_with_mobile.key, :mobile).should == customization_with_mobile.mobile_header
-      end
-    end
-
-    it 'should fix stylesheet files after changing the stylesheet' do
-      old_file = customization.stylesheet_fullpath
-      original = SiteCustomization.custom_stylesheet(customization.key)
-
-      File.exists?(old_file).should == true
-      customization.stylesheet = "div { clear:both; }"
-      customization.save
-
-      SiteCustomization.custom_stylesheet(customization.key).should_not == original
-    end
-
-    it 'should fix mobile stylesheet files after changing the mobile_stylesheet' do
-      old_file = customization_with_mobile.stylesheet_fullpath(:mobile)
-      original = SiteCustomization.custom_stylesheet(customization_with_mobile.key, :mobile)
-
-      File.exists?(old_file).should == true
-      customization_with_mobile.mobile_stylesheet = "div { clear:both; }"
-      customization_with_mobile.save
-
-      SiteCustomization.custom_stylesheet(customization_with_mobile.key).should_not == original
-    end
-
-    it 'should delete old stylesheet files after deleting' do
-      old_file = customization.stylesheet_fullpath
-      customization.ensure_stylesheets_on_disk!
-      customization.destroy
-      File.exists?(old_file).should == false
-    end
-
-    it 'should delete old mobile stylesheet files after deleting' do
-      old_file = customization_with_mobile.stylesheet_fullpath(:mobile)
-      customization_with_mobile.ensure_stylesheets_on_disk!
-      customization_with_mobile.destroy
-      File.exists?(old_file).should == false
-    end
-
-    it 'should nuke old revs out of the cache' do
-      old_style = SiteCustomization.custom_stylesheet(customization.key)
-
-      customization.stylesheet = "hello worldz"
-      customization.save
-      SiteCustomization.custom_stylesheet(customization.key).should_not == old_style
-    end
-
-    it 'should nuke old revs out of the cache for mobile too' do
-      old_style = SiteCustomization.custom_stylesheet(customization_with_mobile.key)
-
-      customization_with_mobile.mobile_stylesheet = "hello worldz"
-      customization_with_mobile.save
-      SiteCustomization.custom_stylesheet(customization.key, :mobile).should_not == old_style
-    end
-
-
-    it 'should compile scss' do
-      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '$black: #000; #a { color: $black; }', header: '')
-      s = c.stylesheet_baked.gsub(' ', '').gsub("\n", '')
-      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should == true
-    end
-
-    it 'should compile mobile scss' do
-      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: '$black: #000; #a { color: $black; }', mobile_header: '')
-      s = c.mobile_stylesheet_baked.gsub(' ', '').gsub("\n", '')
-      (s.include?("#a{color:#000;}") || s.include?("#a{color:black;}")).should == true
-    end
-
-    it 'should allow including discourse styles' do
-      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '@import "desktop";', mobile_stylesheet: '@import "mobile";')
-      c.stylesheet_baked.should_not =~ /Syntax error/
-      c.stylesheet_baked.length.should > 1000
-      c.mobile_stylesheet_baked.should_not =~ /Syntax error/
-      c.mobile_stylesheet_baked.length.should > 1000
-    end
-
-    it 'should provide an awesome error on failure' do
-      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", header: '')
-      c.stylesheet_baked.should =~ /Syntax error/
-      c.mobile_stylesheet_baked.should_not be_present
-    end
-
-    it 'should provide an awesome error on failure for mobile too' do
-      c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", mobile_header: '')
-      c.mobile_stylesheet_baked.should =~ /Syntax error/
-      c.stylesheet_baked.should_not be_present
-    end
+    SiteCustomization.custom_stylesheet(c.key, :mobile).should =~ Regexp.new("#{c.key}.css\\?target=mobile")
+    SiteCustomization.custom_stylesheet(c.key).should =~ Regexp.new("#{c.key}.css\\?target=desktop")
 
   end
+
+
+  it 'should allow including discourse styles' do
+    c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '@import "desktop";', mobile_stylesheet: '@import "mobile";')
+    c.stylesheet_baked.should_not =~ /Syntax error/
+    c.stylesheet_baked.length.should be > 1000
+    c.mobile_stylesheet_baked.should_not =~ /Syntax error/
+    c.mobile_stylesheet_baked.length.should be > 1000
+  end
+
+  it 'should provide an awesome error on failure' do
+    c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", header: '')
+    c.stylesheet_baked.should =~ /Syntax error/
+    c.mobile_stylesheet_baked.should_not be_present
+  end
+
+  it 'should provide an awesome error on failure for mobile too' do
+    c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", mobile_header: '')
+    c.mobile_stylesheet_baked.should =~ /Syntax error/
+    c.stylesheet_baked.should_not be_present
+  end
+
 
 end
