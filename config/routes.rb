@@ -26,6 +26,7 @@ Discourse::Application.routes.draw do
   resources :about
 
   get "site" => "site#index"
+  get "site_customizations/:key" => "site_customizations#show"
 
   resources :forums
   get "srv/status" => "forums#status"

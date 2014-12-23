@@ -11,7 +11,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
 
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
-  }.property('selected', 'name'),
+  }.property('selected', 'name', 'enabled'),
 
   changed: function() {
     var self = this;
