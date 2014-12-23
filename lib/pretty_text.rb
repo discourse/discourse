@@ -94,6 +94,14 @@ module PrettyText
       end
     end
 
+    # custom emojis
+    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    ctx.eval(emoji.result)
+
+    Emoji.custom.each do |emoji|
+      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
+    end
+
     ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.hbs') {|f| f.read}
     ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.hbs') {|f| f.read}
     ctx.eval("HANDLEBARS_TEMPLATES = {
