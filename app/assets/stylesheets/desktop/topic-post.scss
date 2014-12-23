@@ -51,7 +51,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-      @include transition(opacity linear 0.4s);
+      @include fade-soft(1s);
     }
     .discourse-touch & {opacity: 1;}
   }
