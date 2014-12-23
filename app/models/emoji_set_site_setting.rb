@@ -5,6 +5,8 @@ class EmojiSetSiteSetting < EnumSiteSetting
   # fix the URLs when changing the site setting
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if site_setting.name.to_s == "emoji_set" && site_setting.value_changed?
+      Emoji.clear_cache
+
       before = "/images/emoji/#{site_setting.value_was}/"
       after = "/images/emoji/#{site_setting.value}/"
 
