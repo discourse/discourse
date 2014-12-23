@@ -5,7 +5,7 @@
   &:hover .meta {
     background: $primary;
     opacity: 1;
-    @include transition(opacity .5s);
+    transition: opacity .5s;
   }
 }
 
@@ -20,7 +20,7 @@
   color: $secondary;
   background: $primary;
   opacity: 0;
-  @include transition(opacity .2s);
+  transition: opacity .2s;
 
   span {
     float: left;

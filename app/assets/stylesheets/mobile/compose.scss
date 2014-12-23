@@ -41,7 +41,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       color: $danger;
     }
   }
-  @include transition(height 0.4s ease);
+  transition: height 0.4s ease;
   width: 100%;
   z-index: 1039;
   height: 0;
@@ -137,7 +137,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
         box-sizing: border-box;
       }
       .wmd-controls {
-        @include transition(top 0.3s ease);
+        transition: top 0.3s ease;
         top: 110px;
       }
     }
@@ -218,7 +218,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
-    @include transition(top 0.3s ease);
+    transition: top 0.3s ease;
     top: 120px;
   }
 }
