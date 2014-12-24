@@ -56,6 +56,7 @@
 //= require ./discourse/helpers/cold-age-class
 //= require ./discourse/helpers/loading-spinner
 //= require ./discourse/helpers/category-link
+//= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
 
@@ -69,4 +70,3 @@
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes
 //= require_tree ./discourse/initializers
-
