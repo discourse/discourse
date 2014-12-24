@@ -219,7 +219,6 @@ td.flaggers td {
       border: 1px solid scale-color-diff();
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
-      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
 
       li.select2-search-choice {
