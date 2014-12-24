@@ -1,8 +1,7 @@
 require "spec_helper"
 
 describe ExportCsvController do
-
-  let(:export_filename) { "export_b6a2bc87.csv" }
+  let(:export_filename) { "export_999.csv" }
 
 
   context "while logged in as normal user" do
@@ -23,23 +22,24 @@ describe ExportCsvController do
 
     describe ".download" do
       it "uses send_file to transmit the export file" do
+        file = CsvExportLog.create(export_type: "user", user_id: @user.id)
+        file_name = "export_#{file.id}.csv"
         controller.stubs(:render)
-        export = ExportCsv.new()
-        ExportCsv.expects(:get_download_path).with(export_filename).returns(export)
+        export = CsvExportLog.new()
+        CsvExportLog.expects(:get_download_path).with(file_name).returns(export)
         subject.expects(:send_file).with(export)
-        get :show, entity: "username", file_id: export_filename
+        get :show, id: file_name
         response.should be_success
       end
 
-      it "returns 404 when the normal user tries to access admin export file" do
-        controller.stubs(:render)
-        get :show, entity: "system", file_id: export_filename
-        response.should_not be_success
+      it "returns 404 when the user tries to export another user's csv file" do
+        get :show, id: export_filename
+        response.should be_not_found
       end
 
       it "returns 404 when the export file does not exist" do
-        ExportCsv.expects(:get_download_path).returns(nil)
-        get :show, entity: "username", file_id: export_filename
+        CsvExportLog.expects(:get_download_path).returns(nil)
+        get :show, id: export_filename
         response.should be_not_found
       end
     end
@@ -59,17 +59,19 @@ describe ExportCsvController do
 
     describe ".download" do
       it "uses send_file to transmit the export file" do
+        file = CsvExportLog.create(export_type: "admin", user_id: @admin.id)
+        file_name = "export_#{file.id}.csv"
         controller.stubs(:render)
-        export = ExportCsv.new()
-        ExportCsv.expects(:get_download_path).with(export_filename).returns(export)
+        export = CsvExportLog.new()
+        CsvExportLog.expects(:get_download_path).with(file_name).returns(export)
         subject.expects(:send_file).with(export)
-        get :show, entity: "system", file_id: export_filename
+        get :show, id: file_name
         response.should be_success
       end
 
       it "returns 404 when the export file does not exist" do
-        ExportCsv.expects(:get_download_path).returns(nil)
-        get :show, entity: "system", file_id: export_filename
+        CsvExportLog.expects(:get_download_path).returns(nil)
+        get :show, id: export_filename
         response.should be_not_found
       end
     end
