@@ -47,6 +47,7 @@ aside.quote {
     /* blockquote is underneath this and has top margin */
     .avatar { margin-right: 7px; }
     img { margin-top: -4px; }
+    @include unselectable;
   }
 
   // blockquote is docked within aside for content
