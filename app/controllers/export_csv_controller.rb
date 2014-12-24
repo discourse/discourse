@@ -15,14 +15,14 @@ class ExportCsvController < ApplicationController
 
   # download
   def show
-    params.require(:entity)
-    params.require(:file_id)
-    if params[:entity] == "system"
-      guardian.ensure_can_export_admin_entity!(current_user)
-    end
+    params.require(:id)
+    filename = params.fetch(:id)
+    export_id = filename.split('_')[1].split('.')[0]
+    export_initiated_by_user_id = 0
+    export_initiated_by_user_id = CsvExportLog.where(id: export_id)[0].user_id unless CsvExportLog.where(id: export_id).empty?
+    export_csv_path = CsvExportLog.get_download_path(filename)
 
-    filename = params.fetch(:file_id)
-    if export_csv_path = ExportCsv.get_download_path(filename)
+    if export_csv_path && export_initiated_by_user_id == current_user.id
       send_file export_csv_path
     else
       render nothing: true, status: 404

@@ -436,8 +436,10 @@ Discourse::Application.routes.draw do
     collection do
       get "export_entity" => "export_csv#export_entity"
     end
+    member do
+      get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
+    end
   end
-  get "export_csv/:entity/:file_id" => "export_csv#show", constraints: {entity: USERNAME_ROUTE_FORMAT, file_id: /[^\/]+/}
 
   get "onebox" => "onebox#show"
 
