@@ -12,8 +12,11 @@
   &.visible {
     display: block;
   }
-  input[type=text], .share-for-touch .overflow-ellipsis {
+  input[type=text] {
     width: 96%;
+  }
+  .share-for-touch .overflow-ellipsis {
+    clear: both;
   }
   .share-for-touch {
     margin: 14px 0;
