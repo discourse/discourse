@@ -136,13 +136,7 @@ div.ac-wrap {
 #reply-control {
   .composer-loading {
     position: absolute;
-    left: 45%;
+    left: 48%;
     top: 20%;
-  }
-  &.composer-loading {
-    .spinner {
-      z-index: 1000;
-      @include visible;
-    }
   }
 }
