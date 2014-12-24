@@ -292,7 +292,7 @@ en:
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
-      download_archive: "Download archive of my posts"
+      download_archive: "Download My Posts"
       new_private_message: "New Private Message"
       private_message: "Private Message"
       private_messages: "Messages"
@@ -494,7 +494,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
           uploading: "Uploading..."
-          success: "File uploaded successfully, you will be notified shortly with progress."
+          success: "File uploaded successfully, you will be notified via private message when the process is complete."
           error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
@@ -1695,7 +1695,7 @@ en:
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        success: "Export initiated, you will be notified shortly with progress."
+        success: "Export initiated, you will be notified via private message when the process is complete."
         failed: "Export failed. Please check the logs."
         button_text: "Export"
         button_title:

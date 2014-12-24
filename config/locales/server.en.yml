@@ -1481,17 +1481,17 @@ en:
         ```
 
     csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
+      subject_template: "Data export complete"
       text_body_template: |
-        The data export was successful.
+        Your data export was successful! :dvd:
 
-        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
+        <a class="attachment" href="%{download_link}">%{file_name}</a>
 
-        <small>CSV file download link will expire after 48 hours.</small>
+        The above download link will be valid for 48 hours.
 
     csv_export_failed:
-      subject_template: "Export failed"
-      text_body_template: "The export has failed. Please check the logs."
+      subject_template: "Data export failed"
+      text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
     email_reject_trust_level:
       subject_template: "Email issue -- Insufficient Trust Level"
