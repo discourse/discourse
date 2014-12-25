@@ -599,15 +599,12 @@ button {
 // Scale navigation arrows and reduce padding from sides
 @media all and (max-width: 900px) {
   .mfp-arrow {
-    -webkit-transform: scale(0.75);
     transform: scale(0.75);
   }
   .mfp-arrow-left {
-    -webkit-transform-origin: 0;
     transform-origin: 0;
   }
   .mfp-arrow-right {
-    -webkit-transform-origin: 100%;
     transform-origin: 100%;
   }
   .mfp-container {

@@ -19,7 +19,7 @@ function animateHeart($elem, start, end, complete) {
        .animate({ textIndent: end }, {
           complete: complete,
           step: function(now) {
-            $(this).css('-webkit-transform','scale('+now+')');
+            $(this).css('transform','scale('+now+')');
           },
           duration: 150
         }, 'linear');
