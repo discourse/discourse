@@ -2,9 +2,11 @@
 // --------------------------
 
 @mixin fa-icon-rotate($degrees, $rotation) {
-          transform: rotate($degrees);
+    transform: rotate($degrees);
+    -webkit-transform: rotate($degrees);
 }
 
 @mixin fa-icon-flip($horiz, $vert, $rotation) {
-          transform: scale($horiz, $vert);
+    transform: scale($horiz, $vert);
+    -webkit-transform: scale($horiz, $vert);
 }
