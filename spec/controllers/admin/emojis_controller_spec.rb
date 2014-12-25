@@ -29,7 +29,7 @@ describe Admin::EmojisController do
 
     context '.create' do
 
-      before { Emoji.expects(:all).returns([custom_emoji]) }
+      before { Emoji.expects(:custom).returns([custom_emoji]) }
 
       context 'name already exist' do
         it "throws an error" do

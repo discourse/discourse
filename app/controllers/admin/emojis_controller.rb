@@ -14,7 +14,7 @@ class Admin::EmojisController < Admin::AdminController
                .downcase
 
     # check the name doesn't already exist
-    if Emoji.all.detect { |e| e.name == name }
+    if Emoji.custom.detect { |e| e.name == name }
       render json: failed_json.merge(message: I18n.t("emoji.errors.name_already_exists", name: name)), status: 422
     else
       if emoji = Emoji.create_for(file, name)
