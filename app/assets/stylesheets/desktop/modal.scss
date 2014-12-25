@@ -31,6 +31,11 @@
 
 //fade in and animate up
 
+@-webkit-keyframes modal {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
 @keyframes fade {
     from {opacity: 0}
     to {opacity: 1}
