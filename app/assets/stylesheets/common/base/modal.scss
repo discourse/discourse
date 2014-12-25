@@ -38,6 +38,12 @@
     from {opacity: 0}
     to {opacity: .8}
 }
+
+@-webkit-keyframes fade {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
 .modal-outer-container {
   display:table;
   width:100%;

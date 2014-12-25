@@ -25,20 +25,8 @@
 }
 
 .modal.in {
-    -webkit-animation: modal .25s;
-    animation: modal .25s;
-}
-
-//fade in and animate up
-
-@-webkit-keyframes modal {
-  from {opacity: 0}
-  to {opacity: 1}
-}
-
-@keyframes fade {
-    from {opacity: 0}
-    to {opacity: 1}
+    -webkit-animation: fade .25s;
+    animation: fade .25s;
 }
 
 .modal-body {

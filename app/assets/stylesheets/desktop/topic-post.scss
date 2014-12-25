@@ -525,8 +525,7 @@ video {
 
 .star, .badge-wrapper, i,  .topic-link:not(.loading) {
   -webkit-animation: fadein .7s;
-  animation-duration: .7s;
-  animation-name: fadein;
+  animation: fadein .7s;
 }
 
   .topic-statuses {
