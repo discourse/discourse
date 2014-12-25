@@ -197,18 +197,20 @@ SQL
   end
 
   def ensure_slug
-    if name.present?
-      self.name.strip!
-      self.slug = Slug.for(name)
+    return unless name.present?
 
-      return if self.slug.blank?
+    self.name.strip!
 
-      # If a category with that slug already exists, set the slug to nil so the category can be found
-      # another way.
-      category = Category.where(slug: self.slug, parent_category_id: parent_category_id)
-      category = category.where("id != ?", id) if id.present?
-      self.slug = '' if category.exists?
-    end
+    # Use the optional slug params. If not provided, use default generator.
+    self.slug = Slug.for(slug) unless self.slug.blank?
+    self.slug = Slug.for(name) if self.slug.blank?
+    return if self.slug.blank?
+
+    # If a category with that slug already exists, set the slug to nil so the category can be found
+    # another way.
+    category = Category.where(slug: self.slug, parent_category_id: parent_category_id)
+    category = category.where("id != ?", id) if id.present?
+    self.slug = '' if category.exists?
   end
 
   def slug_for_url
