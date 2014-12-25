@@ -331,7 +331,11 @@ Discourse.AdminUser = Discourse.User.extend({
         data: formData
       }).then(function(data) {
         if (data.deleted) {
-          document.location = location;
+          if (/^\/admin\/users\/list\//.test(location)) {
+            document.location = location;
+          } else {
+            document.location = "/admin/users/list/active";
+          }
         } else {
           bootbox.alert(I18n.t("admin.user.delete_failed"));
           if (data.user) {
