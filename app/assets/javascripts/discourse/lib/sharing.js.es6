@@ -9,8 +9,10 @@
       // This id must be present in the `share_links` site setting too
       id: 'twitter',
 
-      // The icon that will be displayed
-      iconClass: 'fa-twitter-square',
+      // The icon that will be displayed, choose between font awesome class name `faIcon` and custom HTML `htmlIcon`.
+      // When both provided, prefer `faIcon`
+      faIcon: 'fa-twitter-square'
+      htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
       generateUrl: function(link, title) {
