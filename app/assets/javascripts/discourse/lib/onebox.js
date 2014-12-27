@@ -32,7 +32,7 @@ Discourse.Onebox = {
     if ($elem.data('onebox-loaded')) return;
     if ($elem.hasClass('loading-onebox')) return;
 
-    var url = e.href;
+    var url = $elem.attr('href');
 
     // Unless we're forcing a refresh...
     if (!refresh) {

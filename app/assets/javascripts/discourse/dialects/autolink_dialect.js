@@ -3,7 +3,7 @@
   a hrefs for them.
 **/
 var urlReplacerArgs = {
-  matcher: /^((?:https?:(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
+  matcher: /^((?:https?|(?:\/{1,3}|[a-z0-9%])|www\d{0,3}[.])(?:[^\s()<>]+|\([^\s()<>]+\))+(?:\([^\s()<>]+\)|[^`!()\[\]{};:'".,<>?«»“”‘’\s]))/gm,
   spaceOrTagBoundary: true,
 
   emitter: function(matches) {
@@ -23,3 +23,4 @@ var urlReplacerArgs = {
 
 Discourse.Dialect.inlineRegexp(_.merge({start: 'http'}, urlReplacerArgs));
 Discourse.Dialect.inlineRegexp(_.merge({start: 'www'}, urlReplacerArgs));
+Discourse.Dialect.inlineRegexp(_.merge({start: '//'}, urlReplacerArgs));
