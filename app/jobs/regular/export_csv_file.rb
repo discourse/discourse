@@ -5,7 +5,7 @@ module Jobs
 
   class ExportCsvFile < Jobs::Base
     HEADER_ATTRS_FOR = {}
-    HEADER_ATTRS_FOR['user_archive'] = ['raw','like_count','reply_count','created_at']
+    HEADER_ATTRS_FOR['user_archive'] = ['topic_id','post_number','id','raw','like_count','reply_count','created_at']
     HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
