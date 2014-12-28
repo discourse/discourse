@@ -45,6 +45,7 @@ module Jobs
         write_csv_file(data, header)
       end
 
+    ensure
       notify_user
     end
 
@@ -241,7 +242,7 @@ module Jobs
       def set_file_path
         @file = CsvExportLog.create(export_type: @entity_type, user_id: @current_user.id)
         @file_name = "export_#{@file.id}.csv"
-        
+
         # ensure directory exists
         dir = File.dirname("#{CsvExportLog.base_directory}/#{@file_name}")
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
