@@ -16,6 +16,46 @@ describe Admin::ScreenedIpAddressesController do
       JSON.parse(response.body).should be_a(Array)
     end
 
+    it 'can load multiple pages' do
+      ipaddr = IPAddr.new "1.2.3.4"
+      # Create 200 to bump off the first page
+      200.times do
+        Fabricate(:screened_ip_address, ip_address: ipaddr.to_s, match_count: 2).save
+        ipaddr = ipaddr.succ
+      end
+      # Create one to be on the top
+      first_record = Fabricate(:screened_ip_address, ip_address: "42.42.42.4", match_count: 3)
+      first_record.save
+      # Create one to be on the bottom
+      last_record = Fabricate(:screened_ip_address, ip_address: "42.42.42.5", match_count: 1)
+      last_record.save
+
+      # This should get first_record and 199 of the 200 records
+      response1 = xhr :get, :index
+      response1.should be_success
+      result = JSON.parse(response1.body)
+      result.should be_a(Array)
+      result.length.should == 200
+      result.first["id"].should == first_record.id
+
+      # This should get the last of the 200 and last_record
+      response2 = xhr :get, :index, after: "#{result.last["match_count"]},#{result.last["id"]}"
+      response2.should be_success
+      result2 = JSON.parse(response2.body)
+      result2.length.should == 2
+      result2[0]["match_count"].should == 2
+      IPAddr.new(result2[0]["ip_address"]).succ.should == ipaddr
+      result2.last["id"].should == last_record.id
+
+      # No duplicates are returned
+      #
+      # To fail this test: comment out the length check, and change
+      #     where!('id > ?', id)
+      # to
+      #     where!('id >= ?', id)
+      (result & result2).should be_blank
+    end
+
   end
 
   describe 'roll_up' do
