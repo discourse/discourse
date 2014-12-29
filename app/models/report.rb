@@ -46,7 +46,7 @@ class Report
   end
 
   def self.report_visits(report)
-    basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date
+    basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date.change(hour: 24)
   end
 
   def self.report_signups(report)
