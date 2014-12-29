@@ -49,6 +49,14 @@ describe Jobs::EnqueueDigestEmails do
       end
     end
 
+    context "suspended user" do
+      let!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
+
+      it "doesn't return users who are suspended" do
+        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(suspended_user.id).should == false
+      end
+    end
+
     context 'visited the site this week' do
       let(:user_visited_this_week) { Fabricate(:active_user, last_seen_at: 6.days.ago) }
       let(:user_visited_this_week_email_always) { Fabricate(:active_user, last_seen_at: 6.days.ago, email_always: true) }
