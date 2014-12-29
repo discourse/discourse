@@ -143,20 +143,12 @@ class StaffActionLogger
     }))
   end
 
-  def log_show_emails(users)
+  def log_show_emails(users, opts={})
     return if users.blank?
-
-    values = []
-
-    users.each do |user|
-      values << "(#{@admin.id}, #{UserHistory.actions[:check_email]}, #{user.id}, current_timestamp, current_timestamp)"
-    end
-
-    # bulk insert
-    UserHistory.exec_sql <<-SQL
-      INSERT INTO user_histories (acting_user_id, action, target_user_id, created_at, updated_at)
-      VALUES #{values.join(",")}
-    SQL
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:check_email],
+      details: users.map { |u| "[#{u.id}] #{u.username}"}.join("\n")
+    }))
   end
 
   def log_impersonate(user, opts={})
