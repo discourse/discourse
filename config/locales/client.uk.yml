@@ -35,7 +35,6 @@ uk:
           other: "днів тому: %{count}"
     share:
       topic: 'поширити посилання на цю тему'
-      post: 'поширити посилання на допис #%{postNumber}'
       close: 'сховати'
       twitter: 'поширити це посилання в Twitter'
       facebook: 'поширити це посилання в Facebook'
@@ -174,7 +173,6 @@ uk:
       profile: "Профіль"
       mute: "Mute"
       edit: "Редагувати налаштування"
-      download_archive: "звантажити архів з моїми дописами"
       private_message: "Приватне повідомлення"
       private_messages: "Повідомлення"
       activity_stream: "Активність"
@@ -1352,7 +1350,6 @@ uk:
         title: 'Дії'
         star: '<b>f</b> Позначити тему зірочкою'
         share_post: '<b>s</b> Поширити допис'
-        reply_topic: '<b>shift r</b> Відповісти на тему'
         reply_post: '<b>r</b> Відповісти на допис'
         quote_post: '<b>q</b> Цитувати допис'
         like: '<b>l</b> Вподобати допис'

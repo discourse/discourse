@@ -68,7 +68,6 @@ ja:
           other: "%{count} 日前"
     share:
       topic: 'このトピックのリンクをシェアする'
-      post: 'ポスト #%{postNumber} のリンクをシェアする'
       close: '閉じる'
       twitter: 'Twitter でこのリンクを共有する'
       facebook: 'Facebook でこのリンクを共有する'
@@ -224,7 +223,6 @@ ja:
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
-      download_archive: "ポストのアーカイブをダウンロード"
       private_message: "プライベートメッセージ"
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
@@ -372,7 +370,6 @@ ja:
           none: "あなたはまだ誰も招待していません。"
           text: "ファイルからまとめて招待をする"
           uploading: "アップロード中..."
-          success: "ファイル通常にアップされていました。"
           error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
         title: "パスワード"
@@ -380,7 +377,6 @@ ja:
         common: "このパスワードは他の人が使用している可能性があります。"
         ok: "パスワード OK。"
         instructions: "%{count} 文字以上の長さにしてください。"
-      associated_accounts: "関連アカウント"
       ip_address:
         title: "最終 IP アドレス"
       registration_ip_address:
@@ -1683,7 +1679,6 @@ ja:
         back: '<b>u</b> 戻る'
         up_down: '<b>k</b>/<b>j</b> トピック・投稿 &uarr; &darr;移動'
         open: '<b>o</b> or <b>Enter</b> トピックへ'
-        next_prev: '<b>shift j</b>/<b>shift k</b> 次・前の選択へ移動'
       application:
         title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
@@ -1698,9 +1693,7 @@ ja:
       actions:
         title: '操作'
         star: '<b>f</b> お気に入りトピック'
-        share_topic: '<b>shift s</b> トピックをシェアする'
         share_post: '<b>s</b> 投稿をシェアする'
-        reply_topic: '<b>shift r</b> トピックに返信'
         reply_post: '<b>r</b> 投稿に返信'
         quote_post: '<b>q</b> 投稿を引用する'
         like: '<b>l</b> 投稿を「いいね！」する'
