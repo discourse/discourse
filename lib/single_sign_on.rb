@@ -23,7 +23,7 @@ class SingleSignOn
     parsed = Rack::Utils.parse_query(payload)
     if sso.sign(parsed["sso"]) != parsed["sig"]
       diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
-      if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n]/m
+      if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n\/+]/m
         raise RuntimeError, "The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9 and = characters. Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64 #{diags}"
       else
         raise RuntimeError, "Bad signature for payload #{diags}"
