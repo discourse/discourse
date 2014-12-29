@@ -33,13 +33,13 @@ describe Admin::UsersController do
           end
         end
 
-        it "logs an enty for all email shown" do
+        it "logs only 1 enty" do
           UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == 0
 
           xhr :get, :index, show_emails: "true"
           data = ::JSON.parse(response.body)
 
-          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == data.length
+          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == 1
         end
 
       end
