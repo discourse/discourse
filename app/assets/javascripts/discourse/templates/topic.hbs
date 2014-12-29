@@ -9,7 +9,7 @@
     <div id='topic-title'>
       <div class='container'>
         {{#if showStarButton}}
-          <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href='#' {{bind-attr title="starTooltip"}}></a>
+          <a {{bind-attr class=":star starred:starred"}} {{action "toggleStar"}} href {{bind-attr title="starTooltip"}}></a>
         {{/if}}
 
         <div class="title-wrapper">
@@ -43,7 +43,7 @@
               {{/if}}
 
               {{#if details.can_edit}}
-                <a href='#' {{action "editTopic"}} class='edit-topic' title='{{i18n 'edit'}}'>{{fa-icon pencil}}</a>
+                <a href {{action "editTopic"}} class='edit-topic' title='{{i18n 'edit'}}'>{{fa-icon pencil}}</a>
               {{/if}}
             </h1>
 
