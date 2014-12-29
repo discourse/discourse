@@ -647,13 +647,14 @@ button {
 }
 
 
-
 .mfp-zoom-in {
   /* start state */
   .mfp-content {
     opacity: 0;
     transition: all 0.2s ease-in-out;
-    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+            transform: scale(0.8);
   }
 
   &.mfp-bg {
@@ -665,7 +666,9 @@ button {
   &.mfp-ready {
     .mfp-content {
       opacity: 1;
-      transform: scale(1);
+      -webkit-transform: scale(1);
+          -ms-transform: scale(1);
+              transform: scale(1);
     }
     &.mfp-bg {
       opacity: 0.8;
@@ -676,7 +679,9 @@ button {
   &.mfp-removing {
 
     .mfp-content {
-      transform: scale(0.8);
+      -webkit-transform: scale(0.8);
+          -ms-transform: scale(0.8);
+              transform: scale(0.8);
       opacity: 0;
     }
     &.mfp-bg {
