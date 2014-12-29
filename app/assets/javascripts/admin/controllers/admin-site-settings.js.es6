@@ -1,11 +1,3 @@
-/**
-  This controller supports the interface for SiteSettings.
-
-  @class AdminSiteSettingsController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.ArrayController.extend(Discourse.Presence, {
   filter: null,
   onlyOverridden: false,
