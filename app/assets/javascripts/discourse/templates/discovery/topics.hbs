@@ -37,31 +37,7 @@
   {{#if hasTopics}}
     <table class='topic-list'>
       <thead>
-        <tr>
-          {{#if currentUser}}
-          <th class='star'>
-            {{#if canBulkSelect}}
-            <button class='btn bulk-select' {{action "toggleBulkSelect"}} title="{{i18n 'topics.bulk.toggle'}}"><i class='fa fa-list'></i></button>
-            {{/if}}
-          </th>
-          {{/if}}
-          {{#sortable-heading class="default"}} {{i18n 'topic.title'}} {{/sortable-heading}}
-          {{#unless controller.hideCategory}}
-            {{#sortable-heading sortBy="category" action="changeSort" order=order ascending=ascending}}
-              {{i18n 'category_title'}}
-            {{/sortable-heading}}
-          {{/unless}}
-          {{#sortable-heading class="posters"}} {{i18n 'users'}} {{/sortable-heading}}
-          {{#sortable-heading sortBy="posts" number=true action="changeSort" order=order ascending=ascending}}
-            {{i18n 'posts'}}
-          {{/sortable-heading}}
-          {{#sortable-heading sortBy="views" number=true action="changeSort" order=order ascending=ascending}}
-            {{i18n 'views'}}
-          {{/sortable-heading}}
-          {{#sortable-heading sortBy="activity" number=true action="changeSort" order=order ascending=ascending}}
-            {{i18n 'activity'}}
-          {{/sortable-heading}}
-        </tr>
+        {{topic-list-header currentUser=currentUser canBulkSelect=canBulkSelect changeSort="changeSort" toggleBulkSelect="toggleBulkSelect" hideCategory=hideCategory order=order ascending=ascending}}
       </thead>
       <tbody>
         {{each content in topics itemController="topic-list-item" itemView="topic-list-item"}}
