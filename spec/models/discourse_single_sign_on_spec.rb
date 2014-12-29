@@ -34,6 +34,20 @@ describe DiscourseSingleSignOn do
     parsed.custom_fields["b.b"].should == "B.b"
   end
 
+  it "can do round trip parsing correctly" do
+    sso = SingleSignOn.new
+    sso.sso_secret = "test"
+    sso.name = "sam saffron"
+    sso.username = "sam"
+    sso.email = "sam@sam.com"
+
+    sso = SingleSignOn.parse(sso.payload, "test")
+
+    sso.name.should == "sam saffron"
+    sso.username.should == "sam"
+    sso.email.should == "sam@sam.com"
+  end
+
   it "can lookup or create user when name is blank" do
     # so we can create system messages
     Fabricate(:admin)

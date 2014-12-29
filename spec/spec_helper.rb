@@ -110,8 +110,11 @@ Spork.prefork do
   end
 
   def freeze_time(now=Time.now)
-    DateTime.stubs(:now).returns(DateTime.parse(now.to_s))
-    Time.stubs(:now).returns(Time.parse(now.to_s))
+    datetime = DateTime.parse(now.to_s)
+    time = Time.parse(now.to_s)
+
+    DateTime.stubs(:now).returns(datetime)
+    Time.stubs(:now).returns(time)
   end
 
   def file_from_fixtures(filename)
