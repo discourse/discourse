@@ -24,7 +24,7 @@ export default Ember.Component.extend(StringBuffer, {
     className += options.order || "";
 
     var sortIcon = "";
-    if(this.get("order") === options.order){
+    if(this.get("order") === options.order && options.sortable){
       className += " sorting";
       sortIcon = " <i class='fa fa-chevron-" + (this.get('ascending') ? 'up' : 'down') +  "'></i>";
     }
