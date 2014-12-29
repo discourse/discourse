@@ -43,7 +43,6 @@ var closeSelector = function(){
 var ungroupedIcons;
 
 var toolbar = function(selected){
-
   if(!ungroupedIcons){
     ungroupedIcons = [];
     var groupedIcons = {};
@@ -108,6 +107,9 @@ var bindEvents = function(page,offset){
 };
 
 var render = function(page, offset){
+  localStorage.emojiPage = page;
+  localStorage.emojiOffset = offset;
+
   var rows = [];
   var row = [];
   var icons = groups[page].icons;
@@ -144,7 +146,9 @@ var showSelector = function(){
     closeSelector();
   });
 
-  render(0,0);
+  var page = parseInt(localStorage.emojiPage) || 0;
+  var offset = parseInt(localStorage.emojiOffset) || 0;
+  render(page, offset);
 
   $('body, textarea').on('keydown.emoji', function(e){
     if(e.which === 27){
