@@ -15,12 +15,17 @@ describe Report do
       let(:user) { Fabricate(:user) }
 
       before do
+        user.user_visits.create(visited_at: 1.hour.ago)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago)
       end
 
       it "returns a report with data" do
         report.data.should be_present
+      end
+
+      it "return today's visit" do
+        report.data.select { |v| v[:x].today? }.should be_present
       end
     end
   end
