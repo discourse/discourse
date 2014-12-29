@@ -192,6 +192,20 @@ describe Category do
     end
   end
 
+  describe 'custom slug can be provided' do
+    it 'has the custom value' do
+      c = Fabricate(:category, name: "Cats", slug: "cats-category")
+      c.slug.should eq("cats-category")
+    end
+
+    it 'fails if custom slug is duplicate with existing' do
+      c1 = Fabricate(:category, name: "Cats", slug: "cats")
+      c2 = Fabricate.build(:category, name: "More Cats", slug: "cats")
+      c2.should_not be_valid
+      c2.errors[:slug].should be_present
+    end
+  end
+
   describe 'description_text' do
     it 'correctly generates text description as needed' do
       c = Category.new
@@ -281,6 +295,16 @@ describe Category do
         @topic.category.should == @category
         @category.topic.should == @topic
       end
+    end
+  end
+
+  describe "update" do
+    it "should enforce uniqueness of slug" do
+      Fabricate(:category, slug: "the-slug")
+      c2 = Fabricate(:category, slug: "different-slug")
+      c2.slug = "the-slug"
+      c2.should_not be_valid
+      c2.errors[:slug].should be_present
     end
   end
 
