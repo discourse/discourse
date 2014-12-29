@@ -39,7 +39,6 @@ pt_BR:
     messages:
       too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
       invalid_boolean: "Boleano inválido."
-      taken: "já foi tomado"
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
   bulk_invite:
@@ -1031,11 +1030,6 @@ pt_BR:
       text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
     bulk_invite_failed:
       subject_template: "Seus convites não forma enviados, contate os moderadores."
-    csv_export_succeeded:
-      subject_template: "Dados foram exportados com sucesso"
-    csv_export_failed:
-      subject_template: "Exporte Falhou"
-      text_body_template: "O export falhou, verifique os logs"
     email_reject_trust_level:
       subject_template: "Mensagem rejeitada"
       text_body_template: |

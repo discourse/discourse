@@ -84,7 +84,6 @@ pt_BR:
           other: "%{count} dias atrás"
     share:
       topic: 'compartilhe o link desse tópico'
-      post: 'compartilhe o link da resposta #%{postNumber}'
       close: 'fechar'
       twitter: 'compartilhe este link no Twitter'
       facebook: 'compartilhe este link no Facebook'
@@ -259,7 +258,6 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
-      download_archive: "baixar o arquivo das minhas mensagens"
       new_private_message: "Nova mensagem privada"
       private_message: "Mensagem Privada"
       private_messages: "Mensagens"
@@ -441,7 +439,6 @@ pt_BR:
           none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
           uploading: "Subindo..."
-          success: "Arquivo enviado com sucesso, você será notificado em breve sobre o progresso."
           error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
         title: "Senha"
@@ -449,7 +446,6 @@ pt_BR:
         common: "Essa senha é muito comum."
         ok: "A sua senha parece boa."
         instructions: "Deve ter pelo menos %{count} caracteres."
-      associated_accounts: "Contas associadas"
       ip_address:
         title: "Último endereço IP"
       registration_ip_address:
@@ -1523,7 +1519,6 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
       export_csv:
-        success: "Exportação iniciada, você será notificado brevemente com o progresso."
         failed: "Falha na exportação. Por favor verifique os logs."
         button_text: "Exportar"
       customize:
@@ -2010,7 +2005,6 @@ pt_BR:
         back: '<b>u</b> Voltar'
         up_down: '<b>k</b>/<b>j</b> Move seleção &uarr; &darr;'
         open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Sessão próxima/anterior'
       application:
         title: 'Aplicação'
         create: '<b>c</b> Criar um tópico novo'
@@ -2025,11 +2019,8 @@ pt_BR:
       actions:
         title: 'Ações'
         star: '<b>f</b> Tópico favorito'
-        pin_unpin_topic: '<b>shift p</b> Fixar/Desfixar o tópico'
-        share_topic: '<b>shift s</b> Compartilhar tópico'
         share_post: '<b>s</b> Compartilhar mensagem'
         reply_as_new_topic: '<b>t</b> Responder como tópico linkado'
-        reply_topic: '<b>shift r</b> Responder ao tópico'
         reply_post: '<b>r</b> Responder a mensagem'
         quote_post: '<b>q</b> Citar resposta'
         like: '<b>l</b> Curtir a mensagem'

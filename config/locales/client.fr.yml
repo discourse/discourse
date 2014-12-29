@@ -84,7 +84,6 @@ fr:
           other: "Il y a %{count} jours"
     share:
       topic: 'partager ce sujet'
-      post: 'partager le message n° %{postNumber}'
       close: 'fermer'
       twitter: 'partager ce lien sur Twitter'
       facebook: 'partager ce lien sur Facebook'
@@ -259,7 +258,6 @@ fr:
       profile: "Profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
-      download_archive: "télécharger une archive de mes messages"
       new_private_message: "Nouveau Message Privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -441,7 +439,6 @@ fr:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
           uploading: "Envoi en cours..."
-          success: "Ficher téléchargé avec succès, vous recevrez bientôt une notification avec la progression."
           error: "Il y a eu une erreur lors de l'envoi de '{{filename}}': {{message}}"
       password:
         title: "Mot de passe"
@@ -449,7 +446,6 @@ fr:
         common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
-      associated_accounts: "Comptes associés"
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -1527,9 +1523,14 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
-        success: "L'export a commencé, vous serez notifié prochainement de sa progression."
         failed: "L'export a échoué. Veuillez consulter les logs."
         button_text: "Exporter"
+        button_title:
+          user: "Exporter la liste des utilisateurs dans un fichier CSV."
+          staff_action: "Exporter la liste des actions du staff dans un fichier CSV."
+          screened_email: "Exporter la liste des emails sous surveillance dans un fichier CSV."
+          screened_ip: "Exporter la liste complète des adresses IP sous surveillance dans un fichier CSV."
+          screened_url: "Exporter toutes les URL affichées vers un fichier CSV"
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -2019,7 +2020,6 @@ fr:
         back: '<b>u</b> Retour'
         up_down: '<b>k</b>/<b>j</b> Déplacer la sélection &uarr; &darr;'
         open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Suivante/précédente section'
       application:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
@@ -2034,11 +2034,8 @@ fr:
       actions:
         title: 'Actions'
         star: '<b>f</b> Sujet Favoris'
-        pin_unpin_topic: '<b>shift p</b> Épingler/De-épingler le sujet'
-        share_topic: '<b>shift s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'
         reply_as_new_topic: '<b>t</b> Répondre en créant un sujet lié'
-        reply_topic: '<b>shift r</b> Répondre au sujet'
         reply_post: '<b>r</b> Répondre à un message'
         quote_post: '<b>q</b> Citer un message'
         like: '<b>l</b> Aimer un message'

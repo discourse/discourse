@@ -100,7 +100,7 @@ pl_PL:
           other: "%{count} dni temu"
     share:
       topic: 'udostępnij odnośnik do tego tematu'
-      post: 'udostępnij odnośnik do wpisu #%{postNumber}'
+      post: 'wpis #%{postNumber}'
       close: 'zamknij'
       twitter: 'udostępnij ten odnośnik na Twitterze'
       facebook: 'udostępnij ten odnośnik na Facebooku'
@@ -282,7 +282,6 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
-      download_archive: "pobierz archiwum moich wpisów"
       new_private_message: "Nowa Prywatna Wiadomość"
       private_message: "Prywatna wiadomość"
       private_messages: "Wiadomości"
@@ -374,6 +373,8 @@ pl_PL:
         authenticated: "Twój email został potwierdzony przez {{provider}}"
         frequency:
           zero: "Otrzymasz email natychmiast jeśli nie widziałeś rzeczy na temat której wysyłamy email."
+          one: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatniej minuty i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
+          other: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatnich  {{count}} minut i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -466,7 +467,6 @@ pl_PL:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
           uploading: "Wysyłanie…"
-          success: "Plik został przesłany pomyślnie, wkrótce dostaniesz powiadomienie z postępem."
           error: "Podczas przesyłania wystąpił błąd '{{filename}}': {{message}}"
       password:
         title: "Hasło"
@@ -474,7 +474,6 @@ pl_PL:
         common: "To hasło jest zbyt popularne."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
-      associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -1584,9 +1583,14 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
-        success: "Rozpoczęto eksport, wkrótce otrzymasz powiadomienie z informacją o postępie."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
         button_text: "Eksportuj"
+        button_title:
+          user: "Eksportuj listę wszystkich użytkowników do formatu CSV."
+          staff_action: "Eksportuj log zmian wykonanych przez zespół do formatu CSV."
+          screened_email: "Eksportuj listę monitorowanych adresów email do formatu CSV."
+          screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
+          screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
@@ -1754,6 +1758,7 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adres IP który teraz oglądasz. Użyj "Zezwól" aby dodać do białej listy adresów IP.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
+          roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
           rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
           rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
@@ -2083,7 +2088,6 @@ pl_PL:
         back: '<b>u</b> wstecz'
         up_down: '<b>k</b>/<b>j</b> zaznacz &uarr; &darr;'
         open: '<b>o</b> lub <b>Enter</b> otwórz wybrany temat'
-        next_prev: '<b>shift j</b>/<b>shift k</b> następna/poprzednia sekcja'
       application:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
@@ -2098,11 +2102,8 @@ pl_PL:
       actions:
         title: 'Operacje'
         star: '<b>f</b> oznacz temat gwiazdką'
-        pin_unpin_topic: '<b>shift p</b> przypnij/odepnij temat'
-        share_topic: '<b>shift s</b> udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
         reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
-        reply_topic: '<b>shift r</b> odpowiedz w temacie'
         reply_post: '<b>r</b> odpowiedz na wpis'
         quote_post: '<b>q</b> cytuj wpis'
         like: '<b>l</b> polub wpis'

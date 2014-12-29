@@ -84,7 +84,6 @@ it:
           other: "%{count} giorni fa"
     share:
       topic: 'Condividi un link a questa conversazione'
-      post: 'Condividi un collegamento al messaggio n°%{postNumber}'
       close: 'chiudi'
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
@@ -259,7 +258,6 @@ it:
       profile: "Profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
-      download_archive: "scarica lo storico dei miei messaggi"
       new_private_message: "Nuovo Messaggio Privato"
       private_message: "Messaggio privato"
       private_messages: "Messaggi"
@@ -441,7 +439,6 @@ it:
           none: "Non hai ancora invitato nessuno qui. Puoi inviare inviti individuali, o invitare un gruppo di persone caricando un <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>file di invito di massa</a>."
           text: "Invito di Massa da File"
           uploading: "In caricamento..."
-          success: "Il file è stato caricato correttamente, verrai notificato a breve con i progressi."
           error: "Si è verificato un errore durante il caricamento {{filename}}': {{message}}"
       password:
         title: "Password"
@@ -449,7 +446,6 @@ it:
         common: "Questa password è troppo comune."
         ok: "La password è adeguata"
         instructions: "Minimo %{count} caratteri."
-      associated_accounts: "Account associati"
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -1523,9 +1519,10 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
-        success: "L'esportazione è stata avviata, ti verrà a breve notificato il progresso del processo."
         failed: "Esportazione fallita. Controlla i log."
         button_text: "Esporta"
+        button_title:
+          user: "Esporta l'intero elenco di utenti in formato CSV."
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
@@ -2016,7 +2013,6 @@ it:
         back: '<b>u</b> Indietro'
         up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
         open: '<b>o</b> o <b>Invio</b> Apri l''argomento selezionato'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Sezione prossima/precedente '
       application:
         title: 'Applicazione'
         create: '<b>c</b> Crea un nuovo argomento'
@@ -2031,11 +2027,8 @@ it:
       actions:
         title: 'Azioni'
         star: '<b>f</b> Aggiungi l''argomento ai preferiti'
-        pin_unpin_topic: '<b>shift p</b> Appunta/Spunta argomento'
-        share_topic: '<b>shift s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
         reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
-        reply_topic: '<b>shift r</b> Rispondi all''argomento'
         reply_post: '<b>r</b> Rispondi al messaggio'
         quote_post: '<b>q</b> Cita messaggio'
         like: '<b>l</b> Metti "Mi piace" al messaggio'
