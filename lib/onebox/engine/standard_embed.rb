@@ -1,10 +1,9 @@
 module Onebox
   module Engine
     module StandardEmbed
-
       def raw
         return @raw if @raw
-        response = fetch_response(url)
+        response = Onebox::Helpers.fetch_response(url)
         html_doc = Nokogiri::HTML(response.body)
 
         # Determine if we should use OEmbed or OpenGraph
@@ -12,7 +11,7 @@ module Onebox
         if oembed_alternate
           # If the oembed request fails, we can still try the opengraph below.
           begin
-            @raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(fetch_response(oembed_alternate['href']).body))
+            @raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_alternate['href']).body))
           rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
             @raw = nil
           end
@@ -59,38 +58,6 @@ module Onebox
 
         og
       end
-
-      def fetch_response(location, limit = 5, domain = nil,headers=nil)
-        raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
-
-        uri = URI(location)
-        if !uri.host
-          uri = URI("#{domain}#{location}")
-        end
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.open_timeout = Onebox.options.connect_timeout
-        http.read_timeout = Onebox.options.timeout
-        if uri.is_a?(URI::HTTPS)
-          http.use_ssl = true
-          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        end
-
-        response = http.request_get(uri.request_uri,headers)
-
-        cookie = response.get_fields('set-cookie')
-        if (cookie)
-          header = {'cookie' => cookie.join("")}
-        end
-        header = nil unless header.is_a? Hash
-
-        case response
-        when Net::HTTPSuccess     then response
-        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1, "#{uri.scheme}://#{uri.host}",header)
-        else
-          response.error!
-        end
-      end
-
     end
   end
 end
