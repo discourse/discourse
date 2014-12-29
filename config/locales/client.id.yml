@@ -68,7 +68,6 @@ id:
           other: "%{count} hari yang lalu"
     share:
       topic: 'share link ke topik ini'
-      post: 'share link ke post #%{postNumber}'
       close: 'tutup'
       twitter: 'share link ini di Twitter'
       facebook: 'share link ini di Facebook'
@@ -188,7 +187,6 @@ id:
     user:
       profile: "Profil"
       edit: "Ubah Preferensi"
-      download_archive: "download arsip postingan saya"
       private_message: "Private Message"
       private_messages: "Messages"
       activity_stream: "Activity"

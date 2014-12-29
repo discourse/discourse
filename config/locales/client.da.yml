@@ -84,7 +84,6 @@ da:
           other: "%{count} dage siden"
     share:
       topic: 'del et link til dette emne'
-      post: 'del et link til dette indlæg'
       close: 'luk'
       twitter: 'del dette link på Twitter'
       facebook: 'del dette link på Facebook'
@@ -251,7 +250,6 @@ da:
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
-      download_archive: "download arkiv med alle mine indlæg"
       private_message: "Private beskeder"
       private_messages: "Beskeder"
       activity_stream: "Aktivitet"
@@ -407,7 +405,6 @@ da:
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
-          success: "Filen er uploadet uden problemer, du vil snart blive notificeret om hvordan det går."
           error: "Der var en fejl ved upload af filen '{{filename}}': {{message}}"
       password:
         title: "Adgangskode"
@@ -1888,9 +1885,7 @@ da:
       actions:
         title: 'Handlinger'
         star: '<b>f</b> Markér emne som favorit'
-        share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del opslag'
-        reply_topic: '<b>shift r</b> Svar på emnet'
         reply_post: '<b>r</b> Svar på kommentaren'
         quote_post: '<b>q</b> Citer emne'
         like: '<b>l</b> Like indlæg'

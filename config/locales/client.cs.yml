@@ -100,7 +100,6 @@ cs:
           other: "před %{count} dny"
     share:
       topic: 'sdílet odkaz na toto téma'
-      post: 'sdílet odkaz na příspěvek #%{postNumber}'
       close: 'zavřít'
       twitter: 'sdílet odkaz na Twitteru'
       facebook: 'sdílet odkaz na Facebooku'
@@ -280,7 +279,6 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
-      download_archive: "stáhnout archiv mých příspěvků"
       private_message: "Soukromé zprávy"
       private_messages: "Zprávy"
       activity_stream: "Aktivita"
@@ -456,7 +454,6 @@ cs:
           none: "Zatím jste nikoho nepozval. Můžete poslat individuální pozvánku nebo pozvat skupinu lidí naráz pomocí <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrání souboru</a>."
           text: "Hromadné pozvání s pomocí souboru"
           uploading: "Nahrávám..."
-          success: "Soubor byl úspěšně nahrán. Budete informováni o dalším postupu."
           error: "Nastala chyba při nahrávání '{{filename}}': {{message}}"
       password:
         title: "Heslo"
@@ -464,7 +461,6 @@ cs:
         common: "Toto heslo je používané moc často."
         ok: "Vaše heslo je v pořádku."
         instructions: "Alespo %{count} znaků."
-      associated_accounts: "Přidružené účty"
       ip_address:
         title: "Poslední IP adresa"
       registration_ip_address:
@@ -1943,7 +1939,6 @@ cs:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Následující/předchozí výběr'
       application:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
@@ -1958,11 +1953,8 @@ cs:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
-        pin_unpin_topic: '<b>shift p</b> Připnout/Odepnout téma'
-        share_topic: '<b>shift s</b> Sdílet téma'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Odpovědět v propojeném tématu'
-        reply_topic: '<b>shift r</b> Odpovědět na téma'
         reply_post: '<b>r</b> Odpovědět na příspěvek'
         quote_post: '<b>q</b> Citovat příspěvek'
         like: '<b>l</b> Like post'

@@ -84,7 +84,6 @@ fi:
           other: "%{count} päivää sitten"
     share:
       topic: 'jaa linkki tähän ketjuun'
-      post: 'jaa linkki viestiin #%{postNumber}'
       close: 'sulje'
       twitter: 'jaa tämä linkki Twitterissä'
       facebook: 'jaa tämä linkki Facebookissa'
@@ -259,7 +258,6 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
-      download_archive: "lataa arkisto viesteistäsi"
       new_private_message: "Uusi yksityisviesti"
       private_message: "Yksityisviesti"
       private_messages: "Viestit"
@@ -441,7 +439,6 @@ fi:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
           uploading: "Lähettää..."
-          success: "Tiedoston lähettäminen onnistui, saat pikaisesti ilmoituksen edistymisestä."
           error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
       password:
         title: "Salasana"
@@ -449,7 +446,6 @@ fi:
         common: "Annettu salasana on liian yleinen."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
-      associated_accounts: "Liittyvät käyttäjätilit"
       ip_address:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
@@ -1523,7 +1519,6 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
-        success: "Vienti on käynnissä, saat pian ilmoituksen sen edistymisestä."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
         button_text: "Vie"
       customize:
@@ -2015,7 +2010,6 @@ fi:
         back: '<b>u</b> Takaisin'
         up_down: '<b>k</b>/<b>j</b> Siirrä valintaa &uarr; &darr;'
         open: '<b>o</b> tai <b>Enter</b> Avaa valittu ketju'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Seuraava/edellinen osio'
       application:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
@@ -2030,11 +2024,8 @@ fi:
       actions:
         title: 'Toiminnot'
         star: '<b>f</b> Merkitse ketju tähdellä'
-        pin_unpin_topic: '<b>shift p</b> Kiinnitä ketju/poista kiinnitys'
-        share_topic: '<b>shift s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'
         reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'
-        reply_topic: '<b>shift r</b> Vastaa ketjuun'
         reply_post: '<b>r</b> Vastaa viestiin'
         quote_post: '<b>q</b> Lainaa viesti'
         like: '<b>l</b> Tykkää viestistä'

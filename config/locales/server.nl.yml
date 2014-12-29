@@ -780,11 +780,6 @@ nl:
         Geniet van je verblijf!
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
-    csv_export_succeeded:
-      subject_template: "Data Export succesvol afgerond."
-    csv_export_failed:
-      subject_template: "Export mislukt"
-      text_body_template: "De export is mislukt. Bekijk de logbestanden."
     too_many_spam_flags:
       subject_template: "Account geblokkeerd"
       text_body_template: |

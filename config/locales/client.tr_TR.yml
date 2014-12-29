@@ -68,12 +68,11 @@ tr_TR:
           other: "%{count} gün önce"
     share:
       topic: 'bu konunun bağlantısını paylaşın'
-      post: '#%{postNumber}başlığın bağlantısını paylaşın'
       close: 'kapat'
       twitter: 'bu bağlantıyı Twitter''da paylaşın'
       facebook: 'bu bağlantıyı Facebook''da paylaşın'
       google+: 'bu bağlantıyı Google+''da paylaşın'
-      email: 'bu bağlantıyı email ile gönderin'
+      email: 'bu bağlantıyı e-posta ile gönderin'
     topic_admin_menu: "konuyla alakalı admin aksiyonları"
     edit: 'bu konunun başlığını ve kategorisini düzenleyin'
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
@@ -91,11 +90,11 @@ tr_TR:
     show_help: "yardım"
     links: "Bağlantılar"
     links_lowercase: "bağlantılar"
-    faq: "SSS"
-    guidelines: "Yönerge"
-    privacy_policy: "Gizlilik Politikası"
-    privacy: "Gizlilik"
-    terms_of_service: "Hizmet Kullanım Koşulları"
+    faq: "SSS/Yönergeler"
+    guidelines: "Yönergeler"
+    privacy_policy: "Gizlilik İlkeleri"
+    privacy: "Gizlilik İlkeleri"
+    terms_of_service: "Üyelik Sözleşmesi"
     mobile_view: "Mobil Görüntüleme"
     desktop_view: "Masaüstü Görüntüleme"
     you: "Siz"
@@ -138,7 +137,7 @@ tr_TR:
       other: "{{count}} okunmamış konular."
     topic_count_new:
       other: "{{count}} yeni konular."
-    click_to_show: "Görüntülemek için tıkla."
+    click_to_show: "Görüntülemek için tıklayın."
     preview: "önizleme"
     cancel: "iptal"
     save: "Değişiklikleri Kaydet"
@@ -207,7 +206,7 @@ tr_TR:
       posts: "Gönderiler"
       topics: "Konular"
       latest: "En Son"
-      latest_by: "göre sonuncu"
+      latest_by: "son gönderen"
       toggle_ordering: "sıralama kontrolünü aç/kapa"
       subcategories: "Alt kategoriler"
       topic_stats: "Yeni konu sayısı"
@@ -235,13 +234,12 @@ tr_TR:
       said: "{{username}}:"
       profile: "Profil"
       mute: "Sustur"
-      edit: "Tercihleri Düzenle"
-      download_archive: "gönderilerimin arşivini indir"
+      edit: "Ayarları Düzenle"
       new_private_message: "Yeni Özel Mesaj"
       private_message: "Özel Mesaj"
       private_messages: "Mesajlar"
       activity_stream: "Aktivite"
-      preferences: "Tercihler"
+      preferences: "Ayarlar"
       bookmarks: "İşaretlenenler"
       bio: "Hakkımda"
       invited_by: "Tarafından Davet Edildi"
@@ -262,7 +260,7 @@ tr_TR:
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_reason: "Neden:"
       github_profile: "Github"
-      mailing_list_mode: "Her yeni gönderi için email alın (susturduğunuz konu ve kategorilerdekiler hariç)"
+      mailing_list_mode: "Her yeni gönderi için e-posta alın (susturduğunuz konu ve kategorilerdekiler hariç)"
       watched_categories: "Gözlendi"
       watched_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konu yanında belirecek. "
       tracked_categories: "Takip edildi"
@@ -286,11 +284,11 @@ tr_TR:
         mine: "Benimkiler"
         unread: "Okunmamışlar"
       change_password:
-        success: "(email gönderildi)"
-        in_progress: "(email yollanıyor)"
+        success: "(e-posta gönderildi)"
+        in_progress: "(e-posta yollanıyor)"
         error: "(hata)"
-        action: "Şifre Sıfırlama Emaili Yolla"
-        set_password: "Şifre Belirle"
+        action: "Parola Sıfırlama E-postası Yolla"
+        set_password: "Parola Belirle"
       change_about:
         title: "Hakkımda'yı Değiştir"
       change_username:
@@ -300,10 +298,10 @@ tr_TR:
         error: "Kullanıcı adınızı değiştirirken bir hata oluştu."
         invalid: "Bu kullanıcı adı geçersiz. Sadece sayı ve harf içermelidir."
       change_email:
-        title: "Email Adresinizi Değiştirin"
-        taken: "Üzgünüz, bu email müsait değil."
-        error: "Email adresinizi değiştirirken bir hata oluştu. Belki bu adres zaten kullanımdadır?"
-        success: "Adresinize bir email gönderdik. Lütfen onaylama talimatlarını uygulayınız."
+        title: "E-posta Adresinizi Değiştirin"
+        taken: "Üzgünüz, bu e-posta müsait değil."
+        error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki bu adres zaten kullanımdadır?"
+        success: "Adresinize bir e-posta gönderdik. Lütfen onaylama talimatlarını uygulayınız."
       change_avatar:
         title: "Avatarınızı değiştirin"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
@@ -321,15 +319,15 @@ tr_TR:
         title: "Kullanıcı Kartı Arkaplanı"
         instructions: "Profil arkaplanları ortalanacak ve genişlikleri 590px olacak. "
       email:
-        title: "Email"
-        instructions: "Kimseye gösterilmedi"
-        ok: "Onay için size email atacağız"
-        invalid: "Lütfen geçerli bir email adresini giriniz"
-        authenticated: "Email adresiniz {{provider}} tarafından doğrulanmıştır"
+        title: "E-posta"
+        instructions: "Kimseye gösterilmeyecek"
+        ok: "Onay için size e-posta atacağız"
+        invalid: "Lütfen geçerli bir e-posta adresini giriniz"
+        authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
         frequency:
-          zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk email yollayacağız."
-          one: "Sadece, son bir dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size email yollayacağız."
-          other: "Sadece, son {{count}} dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size email yollayacağız."
+          zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk e-posta yollayacağız."
+          one: "Sadece, son bir dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size e-posta yollayacağız."
+          other: "Sadece, son {{count}} dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size e-posta yollayacağız."
       name:
         title: "İsim"
         instructions: "Adınız ve soyadınız (zorunlu değil)"
@@ -340,38 +338,38 @@ tr_TR:
         instructions: "Özgün, boşluksuz ve kısa"
         short_instructions: "Kişiler sizden @{{username}} olarak bahsedebilirler"
         available: "Kullanıcı adınız müsait"
-        global_match: "Email kayıtlı kullanıcı adıyla eşleşiyor"
+        global_match: "E-posta kayıtlı kullanıcı adıyla eşleşiyor"
         global_mismatch: "Zaten mevcut. {{suggestion}} deneyin?"
         not_available: "Müsait değil. {{suggestion}} deneyin?"
         too_short: "Kullanıcı adınız çok kısa"
         too_long: "Kullanıcı adınız çok uzun"
         checking: "Kullanıcı adı müsait mi kontrol ediliyor..."
-        enter_email: 'Kullanıcı adı bulundu; eşleşen email adresini girin'
-        prefilled: "Email bu kullanıcı adı ile eşleşiyor"
+        enter_email: 'Kullanıcı adı bulundu; eşleşen e-posta adresini girin'
+        prefilled: "E-posta bu kullanıcı adı ile eşleşiyor"
       locale:
         title: "Arayüz dili"
         instructions: "Kullanıcı arayüzünün dili. Sayfayı yenilediğiniz zaman değişecektir."
         default: "(varsayılan)"
       password_confirmation:
-        title: "Tekrar Şifre"
+        title: "Tekrar Parola"
       last_posted: "Son Gönderi"
-      last_emailed: "Son Email Atılan"
-      last_seen: "Bakılmış"
+      last_emailed: "Son E-posta Atılan"
+      last_seen: "Görülmüş"
       created: "Katıldı"
       log_out: "Çıkış Yap"
       location: "Yer"
       card_badge:
         title: "Kullanıcı Kartı Rozeti"
       website: "Web Sayfası"
-      email_settings: "Email"
+      email_settings: "E-posta"
       email_digests:
-        title: "Siteyi ziyaret etmediğiniz zamanlar, yeni olayların özetini içeren bir email yolla:"
+        title: "Siteyi ziyaret etmediğiniz zamanlar, yeni olayların özetini içeren bir e-posta yolla:"
         daily: "günlük"
         weekly: "haftalık"
         bi_weekly: "her iki haftada bir"
-      email_direct: "Birisi gönderinize cevap verdiği, sizden alıntı yaptığı ya da sizden @username bahsettiği zaman email alın"
-      email_private_messages: "Biri size özel mesaj yolladığında email alın"
-      email_always: "Sayfada aktif olduğum anlarda da email bildirimleri yollamaya devam et"
+      email_direct: "Birisi gönderinize cevap verdiği, sizden alıntı yaptığı ya da sizden @username bahsettiği zaman e-posta alın"
+      email_private_messages: "Biri size özel mesaj yolladığında e-posta alın"
+      email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"
       other_settings: "Diğer"
       categories_settings: "Kategoriler"
       new_topic_duration:
@@ -414,15 +412,13 @@ tr_TR:
           none: "Henüz kimseyi buraya davet etmediniz. Tek tek davetiye gönderebilirsiniz, ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>toplu bir davetiye dosyası yükleyerek</a> birçok kişiyi aynı anda davet edebilirsiniz. "
           text: "Dosyadan Toplu Davet Gönder"
           uploading: "Yükleniyor..."
-          success: "Dosya yüklemesi başarılı, kısa bir süre içerisinde işlem durumuyla ilgili bir bildirim alacaksınız."
           error: "'{{filename}}' yüklenirken bir hata oluştu: {{message}}"
       password:
-        title: "Şifre"
-        too_short: "Şifreniz çok kısa."
-        common: "Bu şifre çok yaygın."
-        ok: "Şifreniz uygun gözüküyor."
+        title: "Parola"
+        too_short: "Parolanız çok kısa."
+        common: "Bu parola çok yaygın."
+        ok: "Parolanız uygun gözüküyor."
         instructions: "En az %{count} karakter."
-      associated_accounts: "İlgili hesaplar"
       ip_address:
         title: "Son IP Adresi"
       registration_ip_address:
@@ -492,46 +488,46 @@ tr_TR:
       title: "Özel Mesaj"
       invite: "Diğerlerini Davet Et..."
       remove_allowed_user: "Bu özel mesajdan {{name}} isimli kullanıcıyı çıkarmak istediğinize emin misiniz?"
-    email: 'Email'
+    email: 'E-posta'
     username: 'Kullanıcı Adı'
-    last_seen: 'Bakılmış'
+    last_seen: 'Görülmüş'
     created: 'Oluşturuldu'
     created_lowercase: 'oluşturuldu'
     trust_level: 'Güven Seviyesi'
-    search_hint: 'kullanıcı adı, email veya IP adresi'
+    search_hint: 'kullanıcı adı, e-posta veya IP adresi'
     create_account:
       title: "Yeni Hesap Oluştur"
-      failed: "Bir şeyler ters gitti. Bu email adına daha önce bir kayıt oluşturulmuş olabilir, şifremi unuttum bağlantısını dene."
+      failed: "Bir şeyler ters gitti. Bu e-posta adına daha önce bir kayıt oluşturulmuş olabilir, parolamı unuttum bağlantısını dene."
     forgot_password:
-      title: "Şifremi Unuttum"
-      action: "Şifremi unuttum"
-      invite: "Kullanıcı adınızı ya da email adresinizi girin, size şifre sıfırlama emaili yollayalım."
-      reset: "Şifre Sıfırla"
-      complete_username: " <b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir email alacaksınız."
-      complete_email: " <b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir email alacaksınız."
-      complete_username_found: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulduk, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir email alacaksınız."
-      complete_email_found: "<b>%{email}</b> adresi ile eşleşen bir hesap bulduk, kısa bir süre içerisinde şifrenizi nasıl sıfırlayacağınızı açıklayan bir email alacaksınız."
+      title: "Parolamı Unuttum"
+      action: "Parolamı unuttum"
+      invite: "Kullanıcı adınızı ya da e-posta adresinizi girin, size parola sıfırlama e-postası yollayalım."
+      reset: "Parola Sıfırla"
+      complete_username: " <b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
+      complete_email: " <b>%{email}</b> adresi ile eşleşen bir hesap bulunması durumunda, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
+      complete_username_found: "<b>%{username}</b> kullanıcı adı ile eşleşen bir hesap bulduk, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
+      complete_email_found: "<b>%{email}</b> adresi ile eşleşen bir hesap bulduk, kısa bir süre içerisinde parolanızı nasıl sıfırlayacağınızı açıklayan bir e-posta alacaksınız."
       complete_username_not_found: "Hiçbir hesap kullanıcı adı <b>%{username}</b> ile eşleşmiyor"
       complete_email_not_found: "Hiçbir hesap <b>%{email}</b> adresi ile eşleşmiyor"
     login:
       title: "Giriş Yap"
       username: "Kullanıcı"
-      password: "Şifre"
-      email_placeholder: "email veya kullanıcı adı"
+      password: "Parola"
+      email_placeholder: "e-posta veya kullanıcı adı"
       caps_lock_warning: "Caps Lock açık"
       error: "Bilinmeyen hata"
-      blank_username_or_password: "Lütfen email adresinizi ya da kullanıcı adınızı, ve şifrenizi girin."
-      reset_password: 'Şifre Sıfırlama'
+      blank_username_or_password: "Lütfen e-posta adresinizi ya da kullanıcı adınızı, ve parolanızı girin."
+      reset_password: 'Parola Sıfırlama'
       logging_in: "Giriş yapılıyor..."
       or: "Veya"
       authenticating: "Kimlik doğrulanıyor ..."
-      awaiting_confirmation: "Hesabınız aktive edilmemiş. Yeni bir aktivasyon emaili almak için şifremi unuttum bağlantısını kullanabilirsiniz. "
-      awaiting_approval: "Hesabınız henüz bir görevli tarafından onaylanmadı. Onaylandığında email ile haberdar edileceksiniz."
+      awaiting_confirmation: "Hesabınız etkinleştirilmemiş. Yeni bir etkinleştirme e-postası almak için parolamı unuttum bağlantısını kullanabilirsiniz. "
+      awaiting_approval: "Hesabınız henüz bir görevli tarafından onaylanmadı. Onaylandığında e-posta ile haberdar edileceksiniz."
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
-      not_activated: "Henüz giriş yapamazsınız. Hesabınızı aktive etmek için lütfen daha önceden <b>{{sentTo}}</b> adresine yollanan aktivasyon emailindeki açıklamaları okuyun."
+      not_activated: "Henüz giriş yapamazsınız. Hesabınızı etkinleştirmek için lütfen daha önceden <b>{{sentTo}}</b> adresine yollanan etkinleştirme e-postasındaki açıklamaları okuyun."
       not_allowed_from_ip_address: "Bu IP adresiyle giriş yapamazsınız."
-      resend_activation_email: "Aktivasyon emailini tekrar yollamak için buraya tıklayın. "
-      sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir aktivasyon emaili yolladık. Bu emailin size ulaşması bir kaç dakika sürebilir; spam klasörüzü kontrol etmeyi unutmayın."
+      resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
+      sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir etkinleştirme e-postası yolladık. Bu e-postanın size ulaşması bir kaç dakika sürebilir; spam klasörüzü kontrol etmeyi unutmayın."
       google:
         title: "Google ile"
         message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
@@ -577,7 +573,7 @@ tr_TR:
       create_pm: "Özel Mesaj"
       title: "Ya da Ctrl+Enter'a bas"
       users_placeholder: "Kullanıcı ekle"
-      title_placeholder: "Tek kısa bir cümlede açılamak gerekirse bu tartışmanın konusu nedir?"
+      title_placeholder: "Kısa bir cümlede açılamak gerekirse bu tartışmanın konusu nedir?"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
       reply_placeholder: "Buraya yazın. Markdown veya BBCode kullanarak biçimlendirin. Resmi yüklemek için sürükleyip bırakın ya da yapıştırın."
@@ -633,7 +629,7 @@ tr_TR:
       replied: "<i title='cevapladı' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='cevapladı' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='düzenledi' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked: "<i title='beğendi' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='özel mesaj' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='özel mesaj' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='davetiyeni kabul etti' class='fa fa-user'></i><p><span>{{username}}</span> davetiyeni kabul etti</p>"
@@ -665,10 +661,10 @@ tr_TR:
         private_messages: "Özel mesajlarda ara"
     site_map: "başka bir konu listesine veya kategoriye git"
     go_back: 'geri dön'
-    not_logged_in_user: 'güncel aktivitelerin ve tercihlerin özetinin bulunduğu kullanıcı sayfası'
+    not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
     starred:
-      title: 'Yıldız'
+      title: 'Yıldızla'
       help:
         star: 'bu konuyu yıldızlılar listenize ekleyin'
         unstar: 'bu konuyu yıldızlılar listenizden çıkarın'
@@ -700,11 +696,11 @@ tr_TR:
         category: "{{category}} konusu yok."
         top: "Popüler bir konu yok."
         educate:
-          new: '<p>Yeni konularınız burada belirir.</p><p>Varsayılan ayarlarda, son 2 gün içerisinde yaratılan konular yeni sayılır ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> işaretiyle gösterilir.</p><p>Dilerseniz bu ayarları <a href="%{userPrefsUrl}">seçenekler</a>sayfanızdan düzenleyebilirsiniz.</p>'
-          unread: '<p> Okunmamış konularınız burada belirecek. </p><p> Varsayılan ayarlarda, şu durumlarda konular okunmamış sayılır ve okunmamışların sayısı <span class="badge new-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu oluşturduysanız</li><li>Konuyu cevapladıysanız</li><li>Konuyu 4 dakikadan uzun bir süre okuduysanız</li></ul><p> Ya da, konunun altında bulunan bildirim kontrol bölümünden, konuyu Takip Edildi veya Gözlendi diye işaretlediyseniz.</p><p>Bu ayarları <a href="%{userPrefsUrl}">seçenekler</a> sayfasından değiştirebilirsiniz.</p>'
+          new: '<p>Yeni konularınız burada belirir.</p><p>Varsayılan ayarlarda, son 2 gün içerisinde yaratılan konular yeni sayılır ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> işaretiyle gösterilir.</p><p>Dilerseniz bu ayarları <a href="%{userPrefsUrl}">ayarlar</a>sayfanızdan düzenleyebilirsiniz.</p>'
+          unread: '<p> Okunmamış konularınız burada belirecek. </p><p> Varsayılan ayarlarda, şu durumlarda konular okunmamış sayılır ve okunmamışların sayısı <span class="badge new-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu oluşturduysanız</li><li>Konuyu cevapladıysanız</li><li>Konuyu 4 dakikadan uzun bir süre okuduysanız</li></ul><p> Ya da, konunun altında bulunan bildirim kontrol bölümünden, konuyu Takip Edildi veya Gözlendi diye işaretlediyseniz.</p><p>Bu ayarları <a href="%{userPrefsUrl}">ayarlar</a> sayfasından değiştirebilirsiniz.</p>'
           starred: '<p>Yıldızlanan konularınız burada belirir.</p><p>Konuları yıldızlamak ya da yıldızlarını kaldırmak için şunları kullanın:</p><ul><li>konu başlıklarının yanında bulunan <i class="fa fa-star"></i> butonunu</li><li>Her konunun en alt kısmında bulunan Yıldız butonunu</li></ul>'
       bottom:
-        latest: "Daha fazla son bir konu yok."
+        latest: "Daha fazla son konu yok."
         hot: "Daha fazla sıcak bir konu yok."
         posted: "Daha fazla konu yok."
         read: "Daha fazla okunmuş konu yok."
@@ -749,7 +745,7 @@ tr_TR:
       options: "Konu Seçenekleri"
       show_links: "Bu konunun içindeki bağlantıları göster. "
       toggle_information: "konu ayrıntılarını aç/kapa"
-      read_more_in_category: " Daha fazla okumak mı istiyorsunuz? {{catLink}} veya {{latestLink}} categorilerindeki diğer konulara göz atabilirsiniz."
+      read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}bilirsiniz."
       read_more: "Daha fazla okumak mı istiyorsunuz? {{catLink}} ya da {{latestLink}}."
       read_more_MF: "Kalan { UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış</a> } other { <a href='/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{and } false {} other{}} <a href='/new'># yeni</a> konu} } var, veya {CATEGORY, select, true { {catLink}} false {{latestLink}} kategorilerindeki diğer {} konulara göz atabilirsiniz }."
       browse_all_categories: Bütün kategorilere göz at
@@ -818,7 +814,7 @@ tr_TR:
         open: "Konuyu Aç"
         close: "Konuyu Kapat"
         auto_close: "Otomatik Kapatma"
-        make_banner: "Manşet Konusu"
+        make_banner: "Manşet Konusu Yap"
         remove_banner: "Manşet Konusunu Kaldır"
         unpin: "Konuyu Başa Tutturma"
         pin: "Konuyu Başa Tuttur"
@@ -847,18 +843,18 @@ tr_TR:
       automatically_add_to_groups_required: "Bu davet şu gruplara erişimi de içerir: (<b>Gerekli</b>, sadece adminler için)"
       invite_private:
         title: 'Özel Mesajlaşmaya Davet Et'
-        email_or_username: "Davet edilenin Emaili veya Kullanıcı Adı"
-        email_or_username_placeholder: "email veya kullanıcı adı"
+        email_or_username: "Davet edilenin E-postası veya Kullanıcı Adı"
+        email_or_username_placeholder: "e-posta veya kullanıcı adı"
         action: "Davet et"
         success: "O kullanıcıyı bu özel mesajlaşmaya katılması için davet ettik. "
         error: "Üzgünüz, kullanıcı davet edilirken bir hata oluştu."
         group_name: "grup adı"
       invite_reply:
         title: 'Davet et'
-        action: 'E-Posta ile davet et'
+        action: 'E-posta ile davet et'
         help: 'arkadaşlarınıza davet gönderin ki tek bir tık ile bu konuyu cevaplayabilsinler'
-        to_topic: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak hemen konuya katılıp cevap yazabilmesi için kısa bir email göndereceğiz."
-        to_forum: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak katılabilmesi için kısa bir email göndereceğiz. "
+        to_topic: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak hemen konuya katılıp cevap yazabilmesi için kısa bir e-posta göndereceğiz."
+        to_forum: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak katılabilmesi için kısa bir e-posta göndereceğiz. "
         email_placeholder: 'isim@örnek.com'
         success: " <b>{{email}}</b> adresine bir davet emaili attık. Davetiniz kabul edildiğinde size bir bildirim göndereceğiz. Kullanıcı sayfanızdaki davetiyeler sekmesinden davetlerinizi takip edebilirsiniz."
         error: "Üzgünüz, o kişiyi davet edemedik. Zaten kullanıcı olabilir mi?"
@@ -908,7 +904,7 @@ tr_TR:
       post_number: "gönderi {{number}}"
       in_reply_to: "cevapla"
       last_edited_on: "gönderinin en son düzenlenme tarihi"
-      reply_as_new_topic: "Bağlantılı Konu oluşturarak Cevapla"
+      reply_as_new_topic: "Bağlantılı Konu Oluşturarak Cevapla"
       continue_discussion: "{{postLink}} Gönderisinden tartışmaya devam ediliyor:"
       follow_quote: "alıntılanan mesaja git"
       show_full: "Gönderinin Tamamını Göster"
@@ -926,8 +922,8 @@ tr_TR:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
-        attachment_too_large: "Üzgünüz, yükleyeme çalıştığınız dosya çok büyük (maksimum {{max_size_kb}}kb olabilir)"
-        file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (maksimum boyut {{max_size_kb}}kb)"
+        attachment_too_large: "Üzgünüz, yükleyeme çalıştığınız dosya çok büyük (en fazla {{max_size_kb}}kb olabilir)"
+        file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (en fazla boyut {{max_size_kb}}kb)"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemiyorlar."
@@ -937,7 +933,7 @@ tr_TR:
         confirm: "Gönderinizden vazgeçtiğinize emin misiniz?"
         no_value: "Hayır, kalsın"
         yes_value: "Evet, vazgeç"
-      via_email: "bu gönderi email ile iletildi"
+      via_email: "bu gönderi e-posta ile iletildi"
       wiki:
         about: "bu gönderi bir wiki; acemi kullanıcılar düzenleyebilir"
       archetypes:
@@ -976,7 +972,7 @@ tr_TR:
           inappropriate: "Bir de bayrakla"
           custom_flag: "Bir de bayrakla"
           bookmark: "Bir de işaretle"
-          like: "Bir de beğen"
+          like: "Sen de beğen"
           vote: "Bir de oyla"
         undo:
           off_topic: "Bayrağı geri al"
@@ -1019,7 +1015,7 @@ tr_TR:
           bookmark:
             other: "Siz ve {{count}} diğer kişi bu gönderiyi işaretledi"
           like:
-            other: "Siz ve {{count}} diğer kişi bunu beğendi"
+            other: "Siz ve {{count}} başka kişi bunu beğendi"
           vote:
             other: "Siz ve {{count}} kişi bu gönderiyi oyladı"
         by_others:
@@ -1089,7 +1085,7 @@ tr_TR:
       badge_colors: "Rozet renkleri"
       background_color: "Arka plan rengi"
       foreground_color: "Ön plan rengi"
-      name_placeholder: "Maksimum bir ya da iki kelime"
+      name_placeholder: "En fazla bir ya da iki kelime"
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinize emin misiniz?"
       delete_error: "Kategoriyi silinirken bir hata oluştu."
@@ -1101,9 +1097,9 @@ tr_TR:
       images: "Resimler"
       auto_close_label: "Şu kadar süreden sonra konuları otomatik olarak kapat: "
       auto_close_units: "saat"
-      email_in: "Özel gelen-email adresi:"
-      email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan email kabul et"
-      email_in_disabled: "Email üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. Email üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
+      email_in: "Özel gelen e-posta adresi:"
+      email_in_allow_strangers: "Hesabı olmayan, anonim kullanıcılardan e-posta kabul et"
+      email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"emailla" ayarını etkinleştir'
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
@@ -1111,7 +1107,7 @@ tr_TR:
       this_year: "bu yıl"
       position: "pozisyon"
       default_position: "Varsayılan Pozisyon"
-      position_disabled: "Kategoriler aktiflik sıralarına göre görünecekler. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
+      position_disabled: "Kategoriler etkinlik sıralarına göre görünecekler. Listelerdeki kategorilerin sıralamalarını kontrol edebilmek için,"
       position_disabled_click: '"sabitlenmiş kategori pozisyonları" ayarını etklinleştirin.'
       parent: "Üst Kategori"
       notifications:
@@ -1134,7 +1130,7 @@ tr_TR:
       take_action: "Aksiyon Al"
       notify_action: 'Özel mesaj'
       delete_spammer: "Spamciyi Sil"
-      delete_confirm: "Bu kullanıcının <b>%{posts}</b> gönderisini ve <b>%{topics}</b> konusunu silmek, hesabını kapatmak, kullandığı IP Adresi <b>%{ip_address}</b> üzerinden hesap açılmasını engellemek, ve  <b>%{email}</b> email adresini kalıcı engellenenler listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spamci olduğuna emin misiniz?"
+      delete_confirm: "Bu kullanıcının <b>%{posts}</b> gönderisini ve <b>%{topics}</b> konusunu silmek, hesabını kapatmak, kullandığı IP Adresi <b>%{ip_address}</b> üzerinden hesap açılmasını engellemek, ve  <b>%{email}</b> e-posta adresini kalıcı engellenenler listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spamci olduğuna emin misiniz?"
       yes_delete_spammer: "Evet, Spamciyi Sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -1178,8 +1174,8 @@ tr_TR:
         help: "Bu başlık arşive kaldırıldı; donduruldu ve değiştirilemez"
       invisible:
         help: "Bu konu listelenmemiş; konu listelerinde görünmeyecek, ve sadece doğrudan bağlantı aracılığıyla erişilebilecek"
-    posts: "Gönderiler"
-    posts_lowercase: "gönderiler"
+    posts: "Gönderi"
+    posts_lowercase: "gönderi"
     posts_long: "bu konuda {{number}} gönderi var"
     posts_likes_MF: |
       Bu konuda {ratio, select,
@@ -1188,21 +1184,21 @@ tr_TR:
         high {beğeni/gönderi oranı aşırı yüksek}
         other {}} {count, plural, one {1 gönderi} other {# gönderi}} var
     original_post: "Ana Gönderi"
-    views: "Görüntülemeler"
-    views_lowercase: "görüntülemeler"
+    views: "Görüntüleme"
+    views_lowercase: "görüntüleme"
     replies: "Cevaplar"
     views_long: "bu konu {{number}} defa görüntülendi"
     activity: "Aktivite"
-    likes: "Beğeniler"
-    likes_lowercase: "beğeniler"
+    likes: "Beğeni"
+    likes_lowercase: "beğeni"
     likes_long: "bu konuda {{number}} beğeni var"
-    users: "Kullanıcılar"
-    users_lowercase: "kullanıcılar"
+    users: "Kullanıcı"
+    users_lowercase: "kullanıcı"
     category_title: "Kategori"
     history: "Geçmiş"
     changed_by: "Yazan {{author}}"
     raw_email:
-      title: "Ham Email"
+      title: "Ham e-posta"
       not_available: "Müsait değil!"
     categories_list: "Kategori Listesi"
     filters:
@@ -1254,7 +1250,7 @@ tr_TR:
         help: "{{categoryName}} kategorisindeki en son konular"
       top:
         title: "En Popüler"
-        help: "geçtiğimiz yıl, ay, hafta veya gündeki en aktif başlıklar"
+        help: "geçtiğimiz yıl, ay, hafta veya gündeki en etkin başlıklar"
         yearly:
           title: "Yılın En Popülerleri"
         monthly:
@@ -1321,7 +1317,7 @@ tr_TR:
       flags:
         title: "Bayraklar"
         old: "Eski"
-        active: "Aktif"
+        active: "Etkin"
         agree: "Onayla"
         agree_title: "Bu bayrağı geçerli ve doğru olarak onayla"
         agree_flag_modal_title: "Onayla ve..."
@@ -1391,7 +1387,7 @@ tr_TR:
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
       api:
         generate_master: "Master API Anahtarı üret"
-        none: "Şu aktif API anahtarı bulunmuyor."
+        none: "Şu etkin API anahtarı bulunmuyor."
         user: "Kullanıcı"
         title: "API"
         key: "API Anahtarı"
@@ -1456,9 +1452,14 @@ tr_TR:
             title: "Veritabanını calışan son haline geri al."
             confirm: "Veri tabanını  çalışan bir önceki versyonuna geri almak istediğinizden emin misiniz?"
       export_csv:
-        success: "Dışa aktarım başlatıldı, kısa süre içinde gelişmelerden haberdar edileceksiniz."
         failed: "Dışa aktarırken hata oluştu. Lütfen kayıtları kontrol edin."
         button_text: "Dışa aktar"
+        button_title:
+          user: "Tüm kullanıcı listesini CSV formatında dışa aktar."
+          staff_action: "Tüm görevli aksiyonları logunu CSV formatında dışa aktar."
+          screened_email: "Tüm taranmış e-postalar listesini CSV formatında dışa aktar."
+          screened_ip: "Tüm taranmış IPler listesini CSV formatında dışa aktar."
+          screened_url: "Tüm taranmış URLler listesini CSV formatında dışa aktar."
       customize:
         title: "Özelleştir"
         long_title: "Site Özelleştirmeleri"
@@ -1530,25 +1531,25 @@ tr_TR:
             name: 'wiki'
             description: "wiki gönderilerinin arka plan rengi."
       email:
-        title: "Email"
+        title: "E-posta"
         settings: "Ayarlar"
         all: "Hepsi"
-        sending_test: "Test emaili gönderiliyor..."
+        sending_test: "Test e-postası gönderiliyor..."
         error: "<b>HATA</b> - %{server_error}"
-        test_error: "Test emailinin gönderilmesinde sorun yaşandı. Lütfen email ayarlarınızı tekrar kontrol edin, yer sağlayıcınızın email bağlantılarını bloke etmediğinden emin olun, ve tekrar deneyin."
+        test_error: "Test e-postasının gönderilmesinde sorun yaşandı. Lütfen e-posta ayarlarınızı tekrar kontrol edin, yer sağlayıcınızın e-posta bağlantılarını bloke etmediğinden emin olun, ve tekrar deneyin."
         sent: "Gönderildi"
         skipped: "Atlandı"
         sent_at: "Gönderildiği Zaman"
         time: "Zaman"
         user: "Kullanıcı"
-        email_type: "Email Tipi"
+        email_type: "E-posta Tipi"
         to_address: "Gönderi Adresi"
-        test_email_address: "test için email adresi"
-        send_test: "Test Emaili Gönder"
+        test_email_address: "test için e-posta adresi"
+        send_test: "Test E-postası Gönder"
         sent_test: "gönderildi!"
         delivery_method: "Gönderme Metodu"
         preview_digest: "Özeti Önizle"
-        preview_digest_desc: "Aktif olmayan kullanıcılara gönderilen haftalık özet emaillarının içeriğini özleyin"
+        preview_digest_desc: "Etkin olmayan kullanıcılara gönderilen haftalık özet e-postalarının içeriğini özleyin"
         refresh: "Yenile"
         format: "Format"
         html: "html"
@@ -1607,14 +1608,14 @@ tr_TR:
             unsuspend_user: "kullanıcıyı uzaklaştırma"
             grant_badge: "rozet ver"
             revoke_badge: "rozeti iptal et"
-            check_email: "emaili kontrol et"
+            check_email: "e-posta kontrol et"
             delete_topic: "konuyu sil"
             delete_post: "gönderiyi sil"
             impersonate: "rolüne gir"
         screened_emails:
-          title: "Taranmış Emaillar"
-          description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki email adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."
-          email: "Email Adresi"
+          title: "Taranmış E-postalar"
+          description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."
+          email: "E-posta Adresi"
           actions:
             allow: "İzin ver"
         screened_urls:
@@ -1648,14 +1649,14 @@ tr_TR:
       users:
         title: 'Kullanıcılar'
         create: 'Admin Kullanıcısı Ekle'
-        last_emailed: "Son Email Gönderilen"
+        last_emailed: "Son E-posta Gönderilen"
         not_found: "Üzgünüz, o kullanıcıadı sistemde yok."
         id_not_found: "Üzgünüz, o kullanıcı adı sistemimizde bulunmuyor."
-        active: "Aktif"
-        show_emails: "Emailleri Göster"
+        active: "Etkin"
+        show_emails: "E-postaları Göster"
         nav:
           new: "Yeni"
-          active: "Aktif"
+          active: "Etkin"
           pending: "Bekleyen"
           staff: 'Görevli'
           suspended: 'Uzaklaştırılmış'
@@ -1667,7 +1668,7 @@ tr_TR:
         reject_selected:
           other: "kullanıcıları ({{count}}) reddet"
         titles:
-          active: 'Aktif Kullanıcılar'
+          active: 'Etkin Kullanıcılar'
           new: 'Yeni Kullanıcılar'
           pending: 'Gözden Geçirilmeyi Bekleyen Kullanıcılar'
           newuser: 'Güven Seviyesi 0 (Yeni Kullanıcı) olan Kullanıcılar'
@@ -1687,7 +1688,7 @@ tr_TR:
           other: "Reddedilemeyen %{count}  kullanıcılar."
         not_verified: "Onaylanmayan"
         check_email:
-          title: "Bu kullanıcının email adresini ortaya çıkar"
+          title: "Bu kullanıcının e-posta adresini ortaya çıkar"
           text: "Göster"
       user:
         suspend_failed: "Bu kullanıcı uzaklaştırılırken bir şeyler ters gitti {{error}}"
@@ -1736,7 +1737,7 @@ tr_TR:
         flags_given_received_count: 'Alınan / Verilen Bayraklar'
         approve: 'Onayla'
         approved_by: "onaylayan"
-        approve_success: "Kullanıcı onaylandı ve aktivasyon bilgilerini içeren bir email yollandı."
+        approve_success: "Kullanıcı onaylandı ve etkinleştirme bilgilerini içeren bir e-posta yollandı."
         approve_bulk_success: "Tebrikler! Seçilen tüm kullanıcılar onaylandı ve bilgilendirildi."
         time_read: "Okunma Zamanı"
         delete: "Kullanıcıyı Sil"
@@ -1748,20 +1749,20 @@ tr_TR:
         cant_delete_all_too_many_posts:
           other: "Tüm gönderileri silemezsiniz çünkü kullanıcının %{count} 'ten daha fazla gönderisi var. (delete_all_posts_max)"
         delete_confirm: "Bu kullanıcıyı silmek istediğinize EMİN misiniz? İşlem geri alınamaz!"
-        delete_and_block: "Sil ve bu email ve IP adresini <b>engelle</b>"
+        delete_and_block: "Sil ve bu e-posta ve IP adresini <b>engelle</b>"
         delete_dont_block: "Sadece sil"
         deleted: "Kullanıcı silinmiş."
         delete_failed: "Kullanıcı silinirken bir hata oluştu. Kullanıcıyı silmeye çalışmadan önce tüm gönderilerin silindiğinden emin olun. "
-        send_activation_email: "Aktivasyon Emaili Yolla"
-        activation_email_sent: "Aktivasyon emaili yollandı."
-        send_activation_email_failed: "Tekrar aktivasyon emaili gönderilirken bir sorun yaşandı. %{error}"
-        activate: "Hesabı Aktifleştir"
-        activate_failed: "Kullanıcı aktifleştirilirken bir sorun yaşandı."
+        send_activation_email: "Etkinleştirme E-postası Yolla"
+        activation_email_sent: "Etkinleştirme e-postası yollandı."
+        send_activation_email_failed: "Tekrar etkinleştirme e-postası gönderilirken bir sorun yaşandı. %{error}"
+        activate: "Hesabı Etkinleştir"
+        activate_failed: "Kullanıcı etkinleştirilirken bir sorun yaşandı."
         deactivate_account: "Hesabı Deaktive Et"
         deactivate_failed: "Kullanıcı deaktive edilirken bir sorun yaşandı."
         unblock_failed: 'Kullanıcının engeli kaldırılırken bir sorun yaşandı.'
         block_failed: 'Kullanıcı engellenirken bir sorun yaşandı.'
-        deactivate_explanation: "Deaktive edilmiş bir kullanıcı emailini tekrar doğrulamalı."
+        deactivate_explanation: "Deaktive edilmiş bir kullanıcı e-postasını tekrar doğrulamalı."
         suspended_explanation: "Uzaklaştırılmış kullanıcılar sisteme giriş yapamaz."
         block_explanation: "Engellenmiş bir kullanıcı gönderi oluşturamaz veya konu başlatamaz."
         trust_level_change_failed: "Kullanıcının güven seviyesi değiştirilirken bir sorun yaşandı."
@@ -1802,7 +1803,7 @@ tr_TR:
           external_id: "Harici ID"
           external_username: "Kullanıcı adı"
           external_name: "İsim"
-          external_email: "Email"
+          external_email: "E-posta"
           external_avatar_url: "Avatar URL"
       user_fields:
         title: "Kullanıcı Alanları"
@@ -1844,7 +1845,7 @@ tr_TR:
           basic: 'Basit Kurulum'
           users: 'Kullanıcılar'
           posting: 'Gönderiliyor'
-          email: 'Email'
+          email: 'E-posta'
           files: 'Dosyalar'
           trust: 'Güven Seviyeleri'
           security: 'Güvenlik'
@@ -1931,18 +1932,17 @@ tr_TR:
         title: 'Şuraya Geç'
         home: '<b>g</b>, <b>h</b> Anasayfa (En Son)'
         latest: '<b>g</b>, <b>l</b> En Son'
-        new: 'Yeni'
-        unread: 'Okunmamış'
+        new: '<b>g</b>, <b>n</b> Yeni'
+        unread: '<b>g</b>, <b>u</b> Okunmamış'
         starred: '<b>g</b>, <b>f</b> Yıldızlı'
-        categories: 'Kategoriler'
+        categories: '<b>g</b>, <b>c</b> Kategoriler'
         top: '<b>g</b>, <b>t</b> En Popüler'
       navigation:
         title: 'Navigasyon'
         jump: '<b>#</b> # numaralı gönderiye git'
-        back: 'Geri'
+        back: '<b>u</b> Geri'
         up_down: '<b>k</b>/<b>j</b> seçileni taşı &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Seçili konuyu aç'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Sonraki/önceki bölüm'
       application:
         title: 'Uygulama'
         create: '<b>c</b> Yeni konu aç'
@@ -1950,18 +1950,15 @@ tr_TR:
         site_map_menu: '<b>=</b> Site menüsünü aç'
         user_profile_menu: '<b>p</b> Kullanıcı menüsünü aç'
         show_incoming_updated_topics: '<b>.</b> Güncellenmiş konuları göster'
-        search: 'Arama'
+        search: '<b>/</b> Arama'
         help: '<b>?</b> Klavye yardımını göster'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Yeni/Gönderleri Yoksay'
         dismiss_topics: '<b>x</b>, <b>t</b> Konuları Yoksay'
       actions:
         title: 'Aksiyonlar'
         star: '<b>f</b> Konuyu yıldızla'
-        pin_unpin_topic: '<b>shift p</b> Konuyu başa tuttur / tutturma'
-        share_topic: '<b>shift s</b> Konuyu paylaş'
         share_post: '<b>s</b> Gönderiyi paylaş'
         reply_as_new_topic: '<b>t</b> Bağlantılı konu olarak cevapla'
-        reply_topic: '<b>shift r</b> Konuya cevap yaz'
         reply_post: '<b>r</b> Gönderiyi cevapla'
         quote_post: '<b>q</b> Gönderiyi alıntıla'
         like: '<b>l</b> Gönderiyi beğen'
@@ -2061,7 +2058,7 @@ tr_TR:
           name: İlk alıntı
           description: Bir kullanıcıyı alıntıladı
         read_guidelines:
-          name: Yönergeleri oku
+          name: Yönergeler okundu
           description: <a href="/guidelines">Topluluk yönergelerini</a> oku
         reader:
           name: Okuyucu

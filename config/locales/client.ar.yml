@@ -57,7 +57,6 @@ ar:
           other: "%{count} يوم مضى"
     share:
       topic: 'ضع رابطاً في هذا الموضوع.'
-      post: 'ضع رابطاً في المشاركة #%{postNumber}'
       close: 'اغلق'
       twitter: 'شارك هذا الرابط عن طريق تويتر'
       facebook: 'شارك هذا الرابط عن طريق فيس بوك'
@@ -215,7 +214,6 @@ ar:
       profile: "الملف الشخصي"
       mute: "كتم"
       edit: "تعديل التفضيلات"
-      download_archive: " تحميل أرشيف مواضيعي"
       new_private_message: "انشاء رسالة خاصة"
       private_message: "رسائل خاصة"
       private_messages: "الرسائل"
@@ -247,10 +245,21 @@ ar:
       tracked_categories: "Tracked"
       tracked_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
       muted_categories: "كتم"
+      muted_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
+      delete_account: "حذف الحساب"
+      delete_account_confirm: "هل انت متاكد من انك تريد حذف هذا المستخدم؟ هذا الإجراء دائماً!"
+      deleted_yourself: "حسابك تم حذفه بنجاح"
+      unread_message_count: "الرسائل"
+      admin_delete: "حذف"
+      staff_counters:
+        deleted_posts: "حذف جميع المشاركات"
+      messages:
+        all: "الكل"
       change_password:
         success: "(تم ارسال الرسالة)"
         in_progress: "(يتم ارسال رسالة)"
         error: "(خطأ)"
+        set_password: " إعادة تعين الرمز السري"
       change_about:
         title: "تعديل معلومات عنّي"
       change_username:
@@ -264,6 +273,15 @@ ar:
         taken: "نأسف، البريد الالكتروني غير متاح."
         error: "حدث خطأ عند تغيير البريد الالكتروني. ربما يكون هذا البريد مستخدم من قبل؟"
         success: "تم ارسال رسالة الى البريد الكتروني. يرجى اتباع تعليمات التأكيد."
+      change_avatar:
+        title: "غير صورتك الشخصية"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
+        refresh_gravatar_title: "حدّث Gravatar"
+        letter_based: "الصورة الافتراضية "
+        uploaded_avatar: "تخصيص صورة"
+        uploaded_avatar_empty: "اضافة صورة "
+        upload_title: "رفع صورتك "
+        upload_picture: "رفع الصورة"
       email:
         title: "بريد الكتروني"
       name:
@@ -294,29 +312,46 @@ ar:
       new_topic_duration:
         label: " \nإعتبر الوضوع جديد حين"
         not_viewed: "لم تقم بالاطلاع عليهم حتى الان."
+        last_here: "تم انشائها منذ آخر زيارة لك"
+      auto_track_topics: "تلقائيا متابعة المواضيع التي دخلتها "
       auto_track_options:
         never: "ابداً"
         always: "دائما"
       invited:
+        search: "نوع البحث عن الدعوات"
         title: "دعوة"
         user: "المستخدمين المدعويين"
         none: ".لم تقم بدعوة أي شخص إلى هنا حتى الأن"
+        truncated: "اظهار اوائل  {{count}} المدعويين"
         redeemed: "دعوات مستخدمة"
         redeemed_at: "مستخدمة"
         pending: "دعوات قيد الإنتضار"
         topics_entered: " مواضيع شوهدت"
         posts_read_count: "مشاركات شوهدت"
+        expired: "الدعوة انتهت صلاحيتها "
         rescind: "حذف"
         rescinded: "الدعوة حذفت"
+        reinvite: "اعادة ارسال الدعوة"
+        reinvited: "اعادة ارسال الدعوة"
         time_read: "وقت القراءة"
         days_visited: "أيام الزيارة"
         account_age_days: "عمر العضوية بالأيام"
+        create: "ارسال دعوة"
+        bulk_invite:
+          none: "لم تقم بدعوة اي احد حتى الان. تستطيع ارسال دعوة , أو ارسال عدة دعوات عن طريق<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          text: "الدعوة من ملف"
+          uploading: "جاري الرقع..."
+          error: "كان هناك مشكلة في رفع الملف  '{{filename}}': {{message}}"
       password:
         title: "كلمة المرور"
         too_short: "كلمة المرور قصيرة جداً"
+        common: "كلمة المرور هذه شائعة "
         ok: "كلمة المرور هذة تعتبر جيدة."
+        instructions: "على الاقل %{count} حرف"
       ip_address:
         title: "أخر عنوان أيبي"
+      registration_ip_address:
+        title: "ايبي مسجل"
       avatar:
         title: "صورة العرض"
       title:
@@ -329,7 +364,26 @@ ar:
         private_message: "رسالة خاصة"
         the_topic: "موضوع جديد"
     loading: "يتم التحميل..."
+    errors:
+      prev_page: "محاولة تحميل"
+      reasons:
+        network: "خطأ في الشبكة"
+        server: "خطأ في السيرفر"
+        forbidden: "غير مصرح"
+        unknown: "خطأ"
+      desc:
+        network: "الرجاء التحقق من اتصالك"
+        network_fixed: "يبدوا أنه رجع"
+        server: "رقم الخطأ: {{status}}"
+        forbidden: "ليس لديك الصلاحية"
+        unknown: "حدث خطأ ما"
+      buttons:
+        back: "الرجوع"
+        again: "أعد المحاولة"
+        fixed: "تحميل"
     close: "اغلاق"
+    assets_changed_confirm: "هناك تغيير في الصفحة, هل تريد التحديث للحصول على أحدث نسخة ؟"
+    logout: "تم تسجيل خروجك"
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -337,25 +391,45 @@ ar:
     month_desc: 'المواضيع المكتوبة خلال 30 يوم الماضية'
     week: 'أسبوع'
     week_desc: ' المواضيع التي كتبت خلال 7 أيام الماضية'
+    day: 'يوم'
     first_post: الموضوع الأول
     mute: كتم
     unmute: إلغاء الكتم
     last_post: أخر مشاركة
+    last_post_lowercase: أخر مشاركة
+    summary:
+      enabled_description: "أنت تنظر الى ملخص لهذا الموضوع , مشاركات مثيرة للإهتمام بحسب رأي المجتمع"
+      description: "هناك  <b>{{count}}</b> ردود"
+      description_time: "هناك  <b>{{count}}</b> ردود مع تقدير وقت القراءة <b>{{readingTime}} دقائق</b>."
+      enable: 'لخّص هذا الموضوع'
+      disable: 'عرض جميع المشاركات'
+    deleted_filter:
+      enabled_description: "هذا الموضوع يحوي على مشاركات محذوفة تم اخفائها "
+      disabled_description: "المشاركات المحذوفة في هذا الموضوع  ممكن مشاهدتها "
+      enable: "إخفاء المشاركات المحذوفة"
+      disable: "عرض المشاركات المحذوفة"
     private_message_info:
       title: " رسالة خاصة"
       invite: " إستدعي الأخرين"
+      remove_allowed_user: "هل تريد حقا ازالة  {{name}} من الرسائل الخاصة ?"
     email: 'البريد الإلكتروني'
     username: 'إسم المستخدم'
     last_seen: 'شوهدت'
     created: 'مكتوبة'
+    created_lowercase: 'منشأة'
     trust_level: 'مستوى التقة'
+    search_hint: 'اسم مستخدم, بريد الكتروني او ايبي'
     create_account:
       title: "إنشاء حساب جديد"
+      failed: "حدث خطأ ما, ربما بريدك الالكتروني مسجل مسبقا, جرب رابط نسيان كلمة المرور "
     forgot_password:
       title: "نسيت الرمز السري"
-      action: "لقد نسيت رمزي  السري"
+      action: "نسيت كلمة المرور"
+      invite: "ادخل اسم مستخدمك او بريدك الالكتروني وسنقوم بإرسال اعاذة ضبط كلمة المرور على بريدك"
       reset: " إعادة تعين الرمز السري"
+      complete_username: "اذا كان اسم المسنخدم موجود  <b>%{username}</b>, سيتم ارسال رسالة لبريدك لإعادة ضبط كلمة المرور "
     login:
+      title: "تسجيل دخول"
       username: "المستخدم"
       password: "الرمز السري"
       email_placeholder: "البريد الإلكتروني أو إسم المستخدم"

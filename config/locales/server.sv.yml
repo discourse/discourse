@@ -28,7 +28,6 @@ sv:
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
       invalid_boolean: "Ogiltigt boolean."
-      taken: "används redan"
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
   bulk_invite:
@@ -450,6 +449,13 @@ sv:
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
+    errors:
+      invalid_email: "Felaktig e-postadress."
+      invalid_username: "Det finns ingen användare med detta användarnamn."
+      invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
+      invalid_integer_min: "Värdet måste vara %{max} eller större."
+      invalid_integer_max: "Värdet får inte vara större än %{max}."
+      invalid_integer: "Värdet måste vara ett heltal."
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
@@ -512,6 +518,10 @@ sv:
       subject_template: "Välkommen till %{site_name}!"
     welcome_invite:
       subject_template: "Välkommen till %{site_name}!"
+    restore_succeeded:
+      text_body_template: "Återställningen lyckades."
+    restore_failed:
+      subject_template: "Återställningen misslyckades"
     too_many_spam_flags:
       subject_template: "Nytt konto blockerat"
     blocked_by_staff:
@@ -600,6 +610,8 @@ sv:
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
+  page_not_found:
+    see_more: "Mer"
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"
