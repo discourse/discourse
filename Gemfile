@@ -117,7 +117,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 gem 'fastimage'
-gem 'fog', '1.22.1', require: false
+gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 
 gem 'email_reply_parser'
