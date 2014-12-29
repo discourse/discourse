@@ -6,22 +6,18 @@ export default Ember.Component.extend(StringBuffer, {
   hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault', 'topic.is_warning'),
   rerenderTriggers: ['topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'],
 
-  watchClick: function(){
-    var self = this;
+  click: function() {
+    var topic = this.get('topic');
 
-    this.$('a').click(function(){
-      var topic = self.get('topic');
+    // only pin unpin for now
+    if (topic.get('pinned')) {
+      topic.clearPin();
+    } else {
+      topic.rePin();
+    }
 
-      // only pin unpin for now
-      if (topic.get('pinned')) {
-        topic.clearPin();
-      } else {
-        topic.rePin();
-      }
-
-      return false;
-    });
-  }.on('didInsertElement'),
+    return false;
+  },
 
   canAct: function() {
     return Discourse.User.current() && !this.get('disableActions');
