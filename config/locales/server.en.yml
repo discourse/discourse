@@ -1852,6 +1852,10 @@ en:
 
   edit_this_page: "Edit this page"
 
+  csv_export:
+    boolean_yes: "Yes"
+    boolean_no: "No"
+
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
 
