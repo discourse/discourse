@@ -84,7 +84,6 @@ nb_NO:
           other: "%{count} dager siden"
     share:
       topic: 'del en lenke til dette emnet'
-      post: 'del en lenke til innlegg #%{postNumber}'
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
@@ -259,7 +258,6 @@ nb_NO:
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
-      download_archive: "last ned arkiv av mine innlegg"
       new_private_message: "Ny Privat Melding"
       private_message: "Privat melding"
       private_messages: "Meldinger"
@@ -345,7 +343,7 @@ nb_NO:
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
       email:
         title: "E-post"
-        instructions: "Aldri vist i offentlighet"
+        instructions: "Blir aldri vist offentlig"
         ok: "Vi sender deg en email for å bekrefte"
         invalid: "Vennligst gi en gyldig email-addresse"
         authenticated: "Din email har blitt autentisert av {{provider}}"
@@ -441,7 +439,6 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
           uploading: "Laster opp..."
-          success: "Filen har blitt lastet opp. Du vil bli varslet om kort tid om fremgangen."
           error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
@@ -449,7 +446,6 @@ nb_NO:
         common: "Det passordet er for vanlig."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
-      associated_accounts: "Tilknyttede kontoer"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
@@ -1523,9 +1519,14 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
-        success: "Eksport igangsatt; du vil motta en prosessrapport om kort tid."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
         button_text: "Eksporter"
+        button_title:
+          user: "Eksporter full medlemsliste i CSV format."
+          staff_action: "Eksporter full handligslogg i CSV format."
+          screened_email: "Eksporter komplett liste over filtrerte epostadresser i CSV format."
+          screened_ip: "Eksporter komplett liste over filtrerte IP-addresser i CSV format."
+          screened_url: "Eksporter komplett liste over filtrerte URL'er i CSV format."
       customize:
         title: "Tilpasse"
         long_title: "Nettstedstilpasninger"
@@ -2015,7 +2016,6 @@ nb_NO:
         back: '<b>u</b> Tilbake'
         up_down: '<b>k</b>/<b>j</b> Flytt markering &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Åpne valgt emne'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Neste/forrige seksjon'
       application:
         title: 'Applikasjon'
         create: '<b>c</b> Opprett nytt emne'
@@ -2030,11 +2030,8 @@ nb_NO:
       actions:
         title: 'Handlinger'
         star: '<b>f</b> Legg emne i favoritter'
-        pin_unpin_topic: '<b>shift p</b> Fastsett/Løsgjør emne'
-        share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del innlegg'
         reply_as_new_topic: '<b>t</b> Svar med lenket emne'
-        reply_topic: '<b>shift r</b> Svar på emne'
         reply_post: '<b>r</b> Svar på innlegg'
         quote_post: '<b>q</b> Siter innlegg'
         like: '<b>l</b> Lik innlegg'

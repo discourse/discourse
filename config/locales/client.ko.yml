@@ -68,7 +68,6 @@ ko:
           other: "%{count}일 전"
     share:
       topic: '토픽을 공유합니다.'
-      post: '#%{postNumber} 게시물을 공유합니다.'
       close: '닫기'
       twitter: 'twitter로 공유'
       facebook: 'Facebook으로 공유'
@@ -235,7 +234,6 @@ ko:
       profile: "프로필"
       mute: "알림 끄기"
       edit: "환경 설정 편집"
-      download_archive: "내 게시물을 아카이브로 다운로드"
       private_message: "개인 메시지"
       private_messages: "메시지"
       activity_stream: "활동"
@@ -407,7 +405,6 @@ ko:
           none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
           uploading: "업로드 중..."
-          success: "파일이 성공적으로 업로드되었습니다. 곧 진행 상황을 알려드리겠습니다."
           error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
@@ -415,7 +412,6 @@ ko:
         common: "That password is too common."
         ok: "적절한 암호입니다."
         instructions: "글자 수가 %{count}자 이상이어야 합니다."
-      associated_accounts: "관련된 계정"
       ip_address:
         title: "마지막 IP 주소"
       registration_ip_address:
@@ -1448,7 +1444,6 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "정말로 이전 작업 상태로 데이터베이스를 롤백하시겠습니까?"
       export_csv:
-        success: "내보내기가 시작되었습니다. 곧 진행사항을 알려드릴께요."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
         button_text: "내보니기"
       customize:
@@ -1925,7 +1920,6 @@ ko:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> 선택된 게시글 이동 &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> 선택한 토픽에 들어갑니다.'
-        next_prev: '<b>shift j</b>/<b>shift k</b> 다음/이전 섹션'
       application:
         title: 'Application'
         create: '<b>c</b> 새 토픽을 만듭니다.'
@@ -1940,11 +1934,8 @@ ko:
       actions:
         title: 'Actions'
         star: '<b>f</b> 별표시 토픽'
-        pin_unpin_topic: '<b>Shift + p</b> 핀고정/핀해제'
-        share_topic: '<b>shift s</b> 토픽 공유'
         share_post: '<b>s</b> 게시글 공유'
         reply_as_new_topic: '<b>t</b> 링크된 토픽으로 답글 작성하기'
-        reply_topic: '<b>shift r</b> 토픽에 답변 달기'
         reply_post: '<b>r</b> 게시글에 답글 달기'
         quote_post: '<b>q</b> 인용 글'
         like: '<b>l</b> Like post'

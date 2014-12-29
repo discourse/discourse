@@ -68,7 +68,6 @@ zh_TW:
           other: "%{count} 天前"
     share:
       topic: '在此話題內分享連結'
-      post: '在文章 #%{postNumber} 內分享連結'
       close: '關閉'
       twitter: '在 Twitter 分享此連結'
       facebook: '在 Facebook 分享此連結'
@@ -223,12 +222,20 @@ zh_TW:
       location_not_found: (unknown)
       organisation: 組織
       phone: 電話
+      other_accounts: "其他帳號正在使用相同 IP 地址"
+      delete_other_accounts: "刪除 %{count}"
+      username: "用戶名稱"
+      trust_level: "TL"
+      read_time: "閱讀時間"
+      topics_entered: "已閱讀的討論話題"
+      post_count: "# 文章"
+      confirm_delete_other_accounts: "你確定要刪除這些帳號?"
     user:
       said: "{{username}}："
       profile: "基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
-      download_archive: "下載我的文章存檔"
+      new_private_message: "新私人訊息"
       private_message: "私人訊息"
       private_messages: "訊息"
       activity_stream: "活動"
@@ -265,6 +272,7 @@ zh_TW:
       deleted_yourself: "你的帳號已成功刪除"
       delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
       unread_message_count: "訊息"
+      admin_delete: "刪除"
       staff_counters:
         flags_given: "有幫助的投訴"
         flagged_posts: "已投訴的文章"
@@ -312,13 +320,32 @@ zh_TW:
         instructions: "背景會被置中，且默認寬度為850px。"
       email:
         title: "電子郵件"
+        instructions: "我們不會公開您的電子郵件信箱。"
+        ok: "我們將寄一封確認郵件給您。"
+        invalid: "請輸入有效的電子郵件地址。"
+        authenticated: "你的 Email 已由 {{provider}} 驗證完成。"
+        frequency:
+          zero: "如果您沒有閱讀過重要通知，我們會立即發送電子郵件給您。"
+          one: "如果您沒有閱讀過重要通知，我們只會在您沒有登入網站時才會發送電子郵件給您。"
+          other: "如果您沒有閱讀過重要通知，我們只會在您最近 {{count}} 分鐘內沒有登入網站時才會發送電子郵件給您。"
       name:
         title: "名稱"
+        instructions: "您的全名 (選填)。"
+        too_short: "你的名稱太短。"
+        ok: "你的名稱符合要求。"
       username:
         title: "用戶名稱"
+        instructions: "獨一無二，沒有空白，夠短。"
+        short_instructions: "其他人可以輸入 @{{username}} 提到你。"
+        available: "你的用戶名稱可以使用。"
+        global_match: "電子郵件地址與註冊的用戶名稱相符。"
         global_mismatch: "已經註冊過了，請試試看 {{suggestion}}？"
         not_available: "無法使用，請試試看 {{suggestion}}？"
+        too_short: "你的用戶名稱太短。"
+        too_long: "你的用戶名稱太長。"
         checking: "正在檢查用戶名稱是否已經有人使用..."
+        enter_email: '找到用戶名稱，請輸入相符的電子郵件地址。'
+        prefilled: "電子郵件地址與此註冊的用戶名稱相符。"
       locale:
         title: "界面語言"
         instructions: "使用者介面的語言，當頁面重新整理的時候會更換成你的設定。"
@@ -385,7 +412,6 @@ zh_TW:
           none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳邀請名單</a>一次邀請一群人。"
           text: "從檔案大量邀請"
           uploading: "正在上傳..."
-          success: "檔案已成功上傳，你很快就會收到進度通知。"
           error: "上傳 '{{filename}}' 時發生問題：{{message}}"
       password:
         title: "密碼"
@@ -393,7 +419,6 @@ zh_TW:
         common: "此密碼太簡單。"
         ok: "你的密碼符合要求。"
         instructions: "至少 %{count} 個字。"
-      associated_accounts: "關聯的帳號"
       ip_address:
         title: "最近的 IP 位址"
       registration_ip_address:
@@ -429,6 +454,8 @@ zh_TW:
         fixed: "載入頁面"
     close: "關閉"
     assets_changed_confirm: "此網站剛剛已更新，你要重整頁面以獲得最新版本嗎？"
+    logout: "已登出"
+    refresh: "重新整理"
     read_only_mode:
       enabled: "管理員開啟了唯讀模式。你可以繼續瀏覽網站，但一些互動功能可能無法使用。"
       login_disabled: "在唯讀模式下不能登入"
@@ -542,6 +569,8 @@ zh_TW:
       reply_here: "在此回覆"
       reply: "回覆"
       cancel: "取消"
+      create_topic: "發表話題"
+      create_pm: "私人訊息"
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
@@ -612,7 +641,10 @@ zh_TW:
       title_with_attachments: "加入一張圖片或一個檔案"
       from_my_computer: "從我的電腦"
       from_the_web: "從網站"
+      remote_tip: "圖片連結"
+      remote_tip_with_attachments: "圖片或文件連結 ({{authorized_extensions}})"
       local_tip: "按此從你的電腦選擇圖片"
+      local_tip_with_attachments: "從你的裝置中選擇圖片或文件（支援的格式： ({{authorized_extensions}})）。"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       hint_for_supported_browsers: "( 你也可以將圖片拖放或貼上至編輯器內直接上傳 )"
       uploading: "正在上傳"
@@ -626,6 +658,7 @@ zh_TW:
         user: "搜尋 @{{username}} 的文章"
         category: "搜尋 \"{{category}}\" 分類"
         topic: "搜尋此討論話題"
+        private_messages: "查詢私人訊息"
     site_map: "到另一個討論話題列表或分類"
     go_back: '返回'
     not_logged_in_user: '用戶頁面包含目前活動及喜好的總結'
@@ -678,6 +711,7 @@ zh_TW:
         top: "沒有更多精選討論話題。"
     topic:
       filter_to: "在討論話題裡顯示 {{post_count}} 文章"
+      create: '新討論話題'
       create_long: '建立新討論話題'
       private_message: '建立私人訊息'
       list: '討論話題'
@@ -761,10 +795,13 @@ zh_TW:
           description: "未讀和新文章的數量將會出現在私訊旁。你只會在別人標記您 @name 或回覆您的主題時才會被提醒。"
         tracking:
           title: "追蹤"
+          description: "未讀和新文章的數量將出現在討論話題旁。您只會在別人@您或回覆您的主題時才會收到通知。"
         regular:
           title: "普通"
+          description: "只有當有人@您或者回覆您的文章時，您才會收到通知。"
         regular_pm:
           title: "一般"
+          description: "只有當有人@您或者用私人訊息回覆您的文章時，您才會收到通知。"
         muted_pm:
           title: "靜音"
           description: "你將不會收到任何關於此私人訊息的通知，此討論話題也不會出現在你的未讀清單裡。"
@@ -825,6 +862,7 @@ zh_TW:
       filters:
         n_posts:
           other: "{{count}} 則文章"
+        cancel: "取消過濾"
       split_topic:
         title: "移至新討論話題"
         action: "移至新討論話題"
@@ -885,6 +923,7 @@ zh_TW:
         edit: "抱歉，編輯你的文章時發生錯誤，請再試一次。"
         upload: "抱歉，上傳你的檔案時發生錯誤，請再試一次。"
         attachment_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
+        file_too_large: "抱歉，你想上傳的檔案太大 (最大限制為 {{max_size_kb}} kb)。"
         too_many_uploads: "抱歉，一次只能上傳一個檔案。"
         upload_not_authorized: "抱歉，你想上傳的是不允許的檔案 (允許的副檔名: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "抱歉，新用戶不可上傳圖片。"
@@ -1034,6 +1073,7 @@ zh_TW:
       general: '一般'
       settings: '設定'
       delete: '刪除分類'
+      create: '新分類'
       save: '儲存分類'
       creation_error: 建立分類時發生錯誤。
       save_error: 儲存分類時發生錯誤。
@@ -1073,14 +1113,19 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
+          description: "您將會自動監視這些分類中的所有新主題。您會收到新文章或新主題的通知，未讀和新文章數量將出現在每個主題後。"
         tracking:
           title: "追蹤"
+          description: "您將會自動追蹤這些分類中的所有新主題。未讀和新文章數量將出現在每個主題後。"
         regular:
           title: "一般"
+          description: "只有當有人@您或回覆您的文章時，您才會收到通知。"
         muted:
           title: "靜音"
           description: "你將不會收到這些分類中的新討論話題通知，它們也不會出現在你的未讀欄內。"
     flagging:
+      title: '感謝幫助社群遠離邪惡！'
+      private_reminder: '標記是不公開的，<b>只有</b> 工作人員才可看到'
       action: '投訴文章'
       take_action: "執行動作"
       notify_action: '通知'
@@ -1092,11 +1137,18 @@ zh_TW:
       submit_tooltip: "送出私人投訴"
       take_action_tooltip: "使其立刻達到投訴門檻，不用等待更多社群投訴"
       cant: "抱歉，你目前無法投訴此文章。"
+      formatted_name:
+        off_topic: "離題內容"
+        inappropriate: "不當內容"
+        spam: "垃圾內容"
+      custom_placeholder_notify_user: "請具體說明出有建設性且溫和的意見。"
+      custom_placeholder_notify_moderators: "讓我們知道您的意見，並請盡可能地提供相關連結和例子。"
       custom_message:
         at_least: "請至少輸入 {{n}} 個字"
         more: "還需要 {{n}} 個字..."
         left: "還剩下 {{n}} 個字"
     flagging_topic:
+      title: "感謝幫助社群遠離邪惡！"
       action: "投訴討論話題"
       notify_action: "Notify"
     topic_map:
@@ -1120,9 +1172,17 @@ zh_TW:
         help: "此討論話題已置頂，將顯示在它所屬分類的討論話題列表的最上方"
       archived:
         help: "此討論話題已封存，已被凍結無法再修改"
+      invisible:
+        help: "此討論話題已隱藏，將不會出現在討論話題列表，只能以直接連結開啟。"
     posts: "文章"
     posts_lowercase: "文章"
     posts_long: "此討論話題有 {{number}} 篇文章"
+    posts_likes_MF: |
+      這個主題有 {count, plural, one {1 篇文章} other {# 篇文章}}，{ratio, select,
+      low {並被很多人按讚了}
+      med {並被非常多人按讚了}
+      high {並被特別多人按讚了}
+      other {}}
     original_post: "原始文章"
     views: "觀看"
     views_lowercase: "觀看"
@@ -1137,6 +1197,9 @@ zh_TW:
     category_title: "分類"
     history: "歷史"
     changed_by: "作者 {{author}}"
+    raw_email:
+      title: "原始 Email"
+      not_available: "不可使用"
     categories_list: "分類清單"
     filters:
       with_topics: "%{filter} 討論話題"
@@ -1201,6 +1264,7 @@ zh_TW:
         this_week: "本週"
         today: "今天"
         other_periods: "看更多精選討論話題"
+    browser_update: '抱歉，<a href="http://www.discourse.org/faq/#browser">您的瀏覽器版本太舊，無法正常訪問該站點。</a>。請<a href="http://browsehappy.com">升級您的瀏覽器</a>。'
     permission_types:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
@@ -1264,7 +1328,9 @@ zh_TW:
         agree_flag: "同意投訴"
         agree_flag_title: "同意投訴且不更動文章"
         defer_flag: "延遲"
+        defer_flag_title: "移除標記；不需處理。"
         delete: "刪除"
+        delete_title: "刪除此標記文章。"
         delete_post_defer_flag: "刪除文章並且延緩檢舉"
         delete_post_defer_flag_title: "刪除文章，如果刪除的是討論話題的第一則文章，討論話題也將一併刪除"
         delete_post_agree_flag: "刪除文章並且同意檢舉"
@@ -1387,10 +1453,19 @@ zh_TW:
             confirm: "你確定要回溯資料庫到以前的工作階段?"
       export_csv:
         failed: "匯出失敗。請觀看紀錄。"
+        button_text: "匯出"
+        button_title:
+          user: "以 CSV 格式匯出用戶清單"
+          staff_action: "以 CSV 格式匯出所有工作人員操作紀錄"
+          screened_email: "以 CSV 格式匯出所有已顯示的電子郵件列表"
+          screened_ip: "以 CSV 格式匯出所有已顯示的 IP 列表"
+          screened_url: "以 CSV 格式匯出所有已顯示的 URL 列表"
       customize:
         title: "客製化"
         long_title: "網站客製化"
+        css: "CSS"
         header: "標頭"
+        footer: "頁尾"
         override_default: "不要保含標準樣式"
         enabled: "已啟用?"
         preview: "預覽"
@@ -1460,6 +1535,7 @@ zh_TW:
         settings: "設定"
         all: "所有"
         sending_test: "傳送測試郵件"
+        error: "<b>錯誤</b> - %{server_error}"
         test_error: "發送測試電子郵件時遇到錯誤。請檢查你輸入的電子郵件地址，並確認網路提供者沒有封鎖郵件的發送，然後再試一次。"
         sent: "送出"
         skipped: "跳過"
@@ -1473,6 +1549,7 @@ zh_TW:
         sent_test: "已送出!"
         delivery_method: "傳送方式"
         preview_digest: "預覽文摘"
+        preview_digest_desc: "預覽每周寄送給不活躍用戶的摘要郵件內容。"
         refresh: "重新整理"
         format: "格式"
         html: "html"
@@ -1534,6 +1611,7 @@ zh_TW:
             check_email: "檢查電子郵件"
             delete_topic: "刪除討論話題"
             delete_post: "刪除文章"
+            impersonate: "檢視"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"
@@ -1549,6 +1627,9 @@ zh_TW:
           title: "過濾的 IP 位址"
           description: '受監控的 IP 位址，使用 "允許" 將 IP 位址加入白名單。'
           delete_confirm: "你確定要刪除 %{ip_address} 的規則嗎?"
+          roll_up_confirm: "您確定要將常用的 IP 地址歸類為子網域位址嗎？"
+          rolled_up_some_subnets: "成功地 roll up 了 IP 封鎖記錄至這些子網域： %{subnets}。"
+          rolled_up_no_subnet: "無法 roll up"
           actions:
             block: "封鎖"
             do_nothing: "允許"
@@ -1557,23 +1638,30 @@ zh_TW:
             label: "新增:"
             ip_address: "IP 位址"
             add: "加入"
+          roll_up:
+            text: "Roll up"
+            title: "如果有至少 'min_ban_entries_for_roll_up' 個記錄，建立一個子網域封鎖記錄"
         logster:
           title: "錯誤紀錄"
       impersonate:
         title: "檢視角度"
+        help: "使用此工具以用戶的檢視角度進行除錯。完成後將需登出。"
       users:
         title: '用戶'
         create: '新增管理員'
         last_emailed: "最近寄出電子郵件"
         not_found: "抱歉，系統裡無此用戶名稱。"
+        id_not_found: "抱歉，系統裡無此用戶名稱。"
         active: "啟用的"
         show_emails: "顯示電子郵件"
         nav:
           new: "新用戶"
           active: "啟用的"
           pending: "申請中"
+          staff: '管理員'
           suspended: '已停權'
           blocked: '已封鎖'
+          suspect: '嫌疑'
         approved: "已批准？"
         approved_selected:
           other: "批准用戶 ({{count}})"
@@ -1588,10 +1676,12 @@ zh_TW:
           regular: '信任等級 2 的使用者（成員）'
           leader: '信任等級 3 的使用者（正規）'
           elder: '信任等級 4 的使用者（領導者）'
+          staff: "管理員"
           admins: '管理員'
           moderators: '板主'
           blocked: '已封鎖的用戶'
           suspended: '已停權的用戶'
+          suspect: '嫌疑使用者'
         reject_successful:
           other: "成功拒絕 %{count} 個用戶。"
         reject_failures:
@@ -1853,7 +1943,6 @@ zh_TW:
         back: '<b>u</b> 返回'
         up_down: '<b>k</b>/<b>j</b> 移動選區 &uarr; &darr;'
         open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'
-        next_prev: '<b>shift j</b>/<b>shift k</b> 下一個/上一個選區'
       application:
         title: 'Application'
         create: '<b>c</b> 表示新討論話題'
@@ -1868,10 +1957,8 @@ zh_TW:
       actions:
         title: '行動'
         star: '<b>f</b> 收藏討論話題'
-        share_topic: '<b>shift s</b> 分享討論話題'
         share_post: '<b>s</b> 分享文章'
         reply_as_new_topic: '<b>t</b> 回覆為關聯主題'
-        reply_topic: '<b>shift r</b> 回覆討論話題'
         reply_post: '<b>r</b> 回覆文章'
         quote_post: '<b>q</b> 引用文章'
         like: '<b>l</b> 按讚'

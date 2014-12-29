@@ -84,7 +84,6 @@ sq:
           other: "%{count} ditë më parë"
     share:
       topic: 'shpërnda një lidhje tek kjo temë'
-      post: 'shpërnda një lidhje tek tema #%{postNumber}'
       close: 'mbylle'
       twitter: 'shpërndaje këtë lidhe në Twitter'
       facebook: 'shpërndaje këtë lidhje ne Facebook'
@@ -251,7 +250,6 @@ sq:
       profile: "Profili"
       mute: "Mute"
       edit: "Ndrysho Preferencat"
-      download_archive: "shkarko arkivin e postimeve të mia"
       private_message: "Mesazhet Private"
       private_messages: "Mesazhet"
       activity_stream: "Aktiviteti"
@@ -413,7 +411,6 @@ sq:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për Ftesat në Grup"
           uploading: "Duke ngarkuar..."
-          success: "File uploaded successfully, you will be notified shortly with progress."
           error: "There was an error uploading '{{filename}}': {{message}}"
       password:
         title: "Fjalëkalimi"
@@ -421,7 +418,6 @@ sq:
         common: "Ky fjalëkalim është shumë i përdorur."
         ok: "Fjalëkalimi është i pranueshëm."
         instructions: "Të paktën %{count} karaktere."
-      associated_accounts: "Associated accounts"
       ip_address:
         title: "Adresa IP e Fundit"
       registration_ip_address:
@@ -1970,7 +1966,6 @@ sq:
         back: '<b>u</b> Mbrapa'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
       application:
         title: 'Aplikacion'
         create: '<b>c</b> Filloni një diskutim të ri'
@@ -1985,11 +1980,8 @@ sq:
       actions:
         title: 'Actions'
         star: '<b>f</b> Star topic'
-        pin_unpin_topic: '<b>shift p</b> Pin/Unpin temën'
-        share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Reply as linked topic'
-        reply_topic: '<b>shift r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
