@@ -28,6 +28,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
 
     if ((filter === undefined || filter.length < 1) && !this.get('onlyOverridden')) {
       this.set('model', this.get('allSiteSettings'));
+      this.transitionToRoute("adminSiteSettings");
       return;
     }
 
@@ -50,20 +51,19 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
       });
       if (matches.length > 0) {
         matchesGroupedByCategory[0].siteSettings.pushObjects(matches);
-        matchesGroupedByCategory.pushObject({
-          nameKey: settingsCategory.nameKey,
-          name: settingsCategory.name,
-          siteSettings: matches});
       }
     });
 
     this.set('model', matchesGroupedByCategory);
+    this.transitionToRoute("adminSiteSettingsCategory", "all_results");
   }, 250).observes('filter', 'onlyOverridden'),
 
   actions: {
     clearFilter: function() {
-      this.set('filter', '');
-      this.set('onlyOverridden', false);
+      this.setProperties({
+        filter: '',
+        onlyOverridden: false
+      });
     }
   }
 
