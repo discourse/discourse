@@ -32,7 +32,7 @@ class Category < ActiveRecord::Base
                    length: { in: 1..50 }
   validate :parent_category_validator
 
-  before_validation :ensure_slug
+  validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
@@ -196,18 +196,23 @@ SQL
 
   end
 
+  def duplicate_slug?
+    Category.where(slug: self.slug, parent_category_id: parent_category_id).where.not(id: id).any?
+  end
+
   def ensure_slug
     if name.present?
       self.name.strip!
-      self.slug = Slug.for(name)
 
-      return if self.slug.blank?
-
-      # If a category with that slug already exists, set the slug to nil so the category can be found
-      # another way.
-      category = Category.where(slug: self.slug, parent_category_id: parent_category_id)
-      category = category.where("id != ?", id) if id.present?
-      self.slug = '' if category.exists?
+      if slug.present?
+        # custom slug
+        errors.add(:slug, "is already in use") if duplicate_slug?
+      else
+        # auto slug
+        self.slug = Slug.for(name)
+        return if self.slug.blank?
+        self.slug = '' if duplicate_slug?
+      end
     end
   end
 
