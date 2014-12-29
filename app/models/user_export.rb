@@ -1,7 +1,7 @@
-class CsvExportLog < ActiveRecord::Base
+class UserExport < ActiveRecord::Base
 
   def self.get_download_path(filename)
-    path = File.join(CsvExportLog.base_directory, filename)
+    path = File.join(UserExport.base_directory, filename)
     if File.exists?(path)
       return path
     else
@@ -10,15 +10,15 @@ class CsvExportLog < ActiveRecord::Base
   end
 
   def self.remove_old_exports
-    expired_exports = CsvExportLog.where('created_at < ?', 2.days.ago).to_a
+    expired_exports = UserExport.where('created_at < ?', 2.days.ago).to_a
     expired_exports.map do |expired_export|
       file_name = "export_#{expired_export.id}.csv"
-      file_path = "#{CsvExportLog.base_directory}/#{file_name}"
-      
+      file_path = "#{UserExport.base_directory}/#{file_name}"
+
       if File.exist?(file_path)
         File.delete(file_path)
       end
-      CsvExportLog.find(expired_export.id).destroy
+      UserExport.find(expired_export.id).destroy
     end
   end
 
@@ -30,7 +30,7 @@ end
 
 # == Schema Information
 #
-# Table name: csv_export_logs
+# Table name: user_exports
 #
 #  id          :integer          not null, primary key
 #  export_type :string(255)      not null
