@@ -421,7 +421,12 @@ Discourse.Dialect = {
       // just give up if there's no stop tag in this or any next block
       args.stop.lastIndex = block.length - trailing.length;
       if (!args.stop.exec(block) && lastChance()) { return; }
-      if (leading.length > 0) { result.push(['p'].concat(this.processInline(leading))); }
+      if (leading.length > 0) {
+        var parsedLeading = this.processBlock(MD.mk_block(leading), []);
+        if (parsedLeading && parsedLeading[0]) {
+          result.push(parsedLeading[0]);
+        }
+      }
       if (trailing.length > 0) {
         next.unshift(MD.mk_block(trailing, block.trailing,
           block.lineNumber + countLines(leading) + (match[2] ? match[2].length : 0) - trailing.length));

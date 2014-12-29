@@ -398,6 +398,8 @@ test("Code Blocks", function() {
   cooked("    [quote]test[/quote]",
          "<pre><code>[quote]test[/quote]</code></pre>",
          "it does not parse other block types in markdown code blocks");
+
+  cooked("## a\nb\n```\nc\n```", "<h2>a</h2>\n\n<p><pre><code class=\"lang-auto\">c</code></pre></p>", "it handles headings with code blocks after them.");
 });
 
 test("sanitize", function() {
