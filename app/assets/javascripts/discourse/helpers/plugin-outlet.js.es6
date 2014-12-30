@@ -77,7 +77,7 @@ function buildConnectorCache() {
       // We are going to add it back with the proper template
       _connectorCache[outletName].removeObject(viewClass);
     } else {
-      viewClass = Em.View;
+      viewClass = Em.View.extend({ classNames: [outletName + '-outlet'] });
     }
     _connectorCache[outletName].pushObject(viewClass.extend(mixin));
   });
@@ -87,7 +87,6 @@ function buildConnectorCache() {
 export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
-  var self = this;
   if (_connectorCache[connectionName]) {
     var view;
     var childViews = _connectorCache[connectionName];
@@ -104,7 +103,6 @@ export default function(connectionName, options) {
     delete options.fn;  // we don't need the default template since we have a connector
     return Ember.Handlebars.helpers.view.call(this, view, options);
   } else if (options.fn) {
-
     // If a block is passed, render its content.
     return Ember.Handlebars.helpers.view.call(this,
               Ember.View.extend({

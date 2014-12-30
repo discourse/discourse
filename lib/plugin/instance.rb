@@ -174,12 +174,12 @@ class Plugin::Instance
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
     end
-    unless assets.blank?
-      register_assets!
-      # TODO possibly amend this to a rails engine
-      Rails.configuration.assets.paths << auto_generated_path
-      Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-    end
+
+    register_assets! unless assets.blank?
+
+    # TODO possibly amend this to a rails engine
+    Rails.configuration.assets.paths << auto_generated_path
+    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
 
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
