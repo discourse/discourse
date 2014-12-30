@@ -14,7 +14,7 @@ describe Report do
     context "with visits" do
       let(:user) { Fabricate(:user) }
 
-      before do
+      before(:each) do
         user.user_visits.create(visited_at: 1.hour.ago)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago)
@@ -24,7 +24,7 @@ describe Report do
         report.data.should be_present
       end
 
-      it "return today's visit" do
+      it "returns today's visit" do
         report.data.select { |v| v[:x].today? }.should be_present
       end
     end
@@ -43,7 +43,8 @@ describe Report do
       end
 
       context "with #{pluralized}" do
-        before do
+        before(:each) do
+          Timecop.freeze
           fabricator = case arg
           when :signup
             :user
@@ -52,18 +53,42 @@ describe Report do
           else
             arg
           end
-          Fabricate(fabricator, created_at: 25.hours.ago)
+          Fabricate(fabricator)
           Fabricate(fabricator, created_at: 1.hours.ago)
           Fabricate(fabricator, created_at: 1.hours.ago)
+          Fabricate(fabricator, created_at: 1.day.ago)
+          Fabricate(fabricator, created_at: 2.days.ago)
+          Fabricate(fabricator, created_at: 30.days.ago)
+          Fabricate(fabricator, created_at: 35.days.ago)
         end
+        after(:each) { Timecop.return }
 
-        it 'returns correct data' do
-          report.data[0][:y].should == 1
-          report.data[1][:y].should == 2
+        context 'returns a report with data'
+          it 'with 30 days data' do
+            report.data.count.should == 4
+          end
+
+          it 'has correct data sorted as asc' do
+            report.data[0][:y].should == 1 # 30.days.ago
+            report.data[1][:y].should == 1 # 2.days.ago
+            report.data[2][:y].should == 1 # 1.day.ago
+            report.data[3][:y].should == 3 # today
+          end
+
+          it "returns today's data" do
+            report.data.select { |v| v[:x].today? }.should be_present
+          end
+
+          it 'returns total data' do
+            report.total.should == 7
+          end
+
+          it "returns previous 30 day's data" do
+            report.prev30Days.should == 1
+          end
         end
       end
     end
-  end
 
   describe 'private messages' do
     let(:report) { Report.find('user_to_user_private_messages') }
@@ -149,5 +174,4 @@ describe Report do
       end
     end
   end
-
 end

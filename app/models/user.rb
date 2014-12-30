@@ -531,7 +531,7 @@ class User < ActiveRecord::Base
   end
 
   def self.count_by_signup_date(start_date, end_date)
-    where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+    where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
 

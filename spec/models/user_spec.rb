@@ -6,6 +6,25 @@ describe User do
   it { should validate_presence_of :username }
   it { should validate_presence_of :email }
 
+  describe '#count_by_signup_date' do
+    before(:each) do
+      User.destroy_all
+      Timecop.freeze
+      Fabricate(:user)
+      Fabricate(:user, created_at: 1.day.ago)
+      Fabricate(:user, created_at: 1.day.ago)
+      Fabricate(:user, created_at: 2.days.ago)
+      Fabricate(:user, created_at: 4.days.ago)
+    end
+    after(:each) { Timecop.return }
+    let(:signups_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1} }
+
+    it 'collect closed interval signups' do
+      User.count_by_signup_date(2.days.ago, Time.now).should include(signups_by_day)
+      User.count_by_signup_date(2.days.ago, Time.now).should_not include({4.days.ago.to_date => 1})
+    end
+  end
+
   context '.enqueue_welcome_message' do
     let(:user) { Fabricate(:user) }
 
