@@ -268,7 +268,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
-  _scrollList: function($article, direction) {
+  _scrollList: function($article) {
     // Try to keep the article on screen
     var scrollPos = $article.position().top - ($(window).height() * 0.5);
     if (scrollPos < 0) { scrollPos = 0; }
