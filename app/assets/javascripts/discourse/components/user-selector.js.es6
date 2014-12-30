@@ -25,6 +25,7 @@ export default TextField.extend({
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
+        term = term.replace(/[^a-zA-Z0-9_]/, '');
         return userSearch({
           term: term,
           topicId: self.get('topicId'),

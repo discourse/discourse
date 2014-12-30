@@ -114,7 +114,7 @@ class TopicCreator
     @topic.subtype = TopicSubtype.user_to_user unless @topic.subtype
 
     unless @opts[:target_usernames].present? || @opts[:target_group_names].present?
-      @topic.errors.add(:archetype, :cant_send_pm)
+      @topic.errors.add(:base, :no_user_selected)
       @errors = @topic.errors
       raise ActiveRecord::Rollback.new
     end
@@ -150,7 +150,7 @@ class TopicCreator
 
   def check_can_send_permission!(topic,item)
     unless @guardian.can_send_private_message?(item)
-      topic.errors.add(:archetype, :cant_send_pm)
+      topic.errors.add(:base, :cant_send_pm)
       @errors = topic.errors
       raise ActiveRecord::Rollback.new
     end
