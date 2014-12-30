@@ -33,7 +33,9 @@ export default Ember.Component.extend(StringBuffer, {
       className += " num";
     }
 
-    buffer.push("<th data-sort-order='" + options.order + "' class='"+ className +"'>" + I18n.t(options.name) + sortIcon + "</th>");
+    var name = options.forceName || I18n.t(options.name);
+
+    buffer.push("<th data-sort-order='" + options.order + "' class='"+ className +"'>" + name + sortIcon + "</th>");
   },
 
   renderString: function(buffer){
