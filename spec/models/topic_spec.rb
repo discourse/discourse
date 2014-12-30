@@ -1232,6 +1232,26 @@ describe Topic do
     end
   end
 
+  describe '#listable_count_per_day' do
+    before(:each) do
+      Timecop.freeze
+      Fabricate(:topic)
+      Fabricate(:topic, created_at: 1.day.ago)
+      Fabricate(:topic, created_at: 1.day.ago)
+      Fabricate(:topic, created_at: 2.days.ago)
+      Fabricate(:topic, created_at: 4.days.ago)
+    end
+    after(:each) do
+      Timecop.return
+    end
+    let(:listable_topics_count_per_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.utc.to_date => 1 } }
+
+    it 'collect closed interval listable topics count' do
+      Topic.listable_count_per_day(2.days.ago, Time.now).should include(listable_topics_count_per_day)
+      Topic.listable_count_per_day(2.days.ago, Time.now).should_not include({4.days.ago.to_date => 1})
+    end
+  end
+
   describe '#secure_category?' do
     let(:category){ Category.new }
 

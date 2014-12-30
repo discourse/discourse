@@ -1,21 +1,41 @@
 require 'spec_helper'
 
 describe UserVisit do
+  let(:user) { Fabricate(:user) }
+  let(:other_user) { Fabricate(:user) }
+
   it 'can ensure consistency' do
-    u = Fabricate(:user)
-    u.update_visit_record!(2.weeks.ago.to_date)
-    u.last_seen_at = 2.weeks.ago
-    u.save
-    u.update_visit_record!(1.day.ago.to_date)
+    user.update_visit_record!(2.weeks.ago.to_date)
+    user.last_seen_at = 2.weeks.ago
+    user.save
+    user.update_visit_record!(1.day.ago.to_date)
 
-    u.reload
-    u.user_stat.days_visited.should == 2
+    user.reload
+    user.user_stat.days_visited.should == 2
 
-    u.user_stat.days_visited = 1
-    u.save
+    user.user_stat.days_visited = 1
+    user.save
     UserVisit.ensure_consistency!
 
-    u.reload
-    u.user_stat.days_visited.should == 2
+    user.reload
+    user.user_stat.days_visited.should == 2
+  end
+
+  describe '#by_day' do
+    before(:each) do
+      Timecop.freeze
+      user.user_visits.create(visited_at: Time.now)
+      user.user_visits.create(visited_at: 1.day.ago)
+      other_user.user_visits.create(visited_at: 1.day.ago)
+      user.user_visits.create(visited_at: 2.days.ago)
+      user.user_visits.create(visited_at: 4.days.ago)
+    end
+    after(:each) { Timecop.return }
+    let(:visits_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.to_date => 1 } }
+
+    it 'collect closed interval visits' do
+      UserVisit.by_day(2.days.ago, Time.now).should include(visits_by_day)
+      UserVisit.by_day(2.days.ago, Time.now).should_not include({4.days.ago.to_date => 1})
+    end
   end
 end
