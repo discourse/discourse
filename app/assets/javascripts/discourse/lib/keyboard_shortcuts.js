@@ -1,76 +1,71 @@
-/**
-  Keyboard Shortcut related functions.
+var PATH_BINDINGS = {
+      'g h': '/',
+      'g l': '/latest',
+      'g n': '/new',
+      'g u': '/unread',
+      'g f': '/starred',
+      'g c': '/categories',
+      'g t': '/top'
+    },
 
-  @class KeyboardShortcuts
-  @namespace Discourse
-  @module Discourse
-**/
+    SELECTED_POST_BINDINGS = {
+      'b': 'toggleBookmark',
+      'd': 'deletePost',
+      'e': 'editPost',
+      'l': 'toggleLike',
+      'r': 'replyToPost',
+      '!': 'showFlags',
+      't': 'replyAsNewTopic'
+    },
+
+    CLICK_BINDINGS = {
+      // star topic
+      'f': '#topic-footer-buttons button.star, .topic-list tr.topic-list-item.selected a.star',
+
+      'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
+      'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
+      'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
+      'm w': 'div.notification-options li[data-id="3"] a',                      // mark topic as watching
+      'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
+      'x t': '#dismiss-topics,#dismiss-topics-top',                             //dismiss topics
+      '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
+      'n': '#user-notifications',                                               // open notifications menu
+      'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
+      'shift+r': '#topic-footer-buttons button.create',                         // reply to topic
+      'shift+s': '#topic-footer-buttons button.share',                          // share topic
+      's': '.topic-post.selected a.post-date'                                   // share post
+    },
+
+    FUNCTION_BINDINGS = {
+      'c': 'createTopic',                                         // create new topic
+      'home': 'goToFirstPost',
+      '#': 'toggleProgress',
+      'end': 'goToLastPost',
+      'shift+j': 'nextSection',
+      'j': 'selectDown',
+      'shift+k': 'prevSection',
+      'shift+p': 'pinUnpinTopic',
+      'k': 'selectUp',
+      'u': 'goBack',
+      '/': 'showSearch',
+      '=': 'showSiteMap',                                             // open site map menu
+      'p': 'showCurrentUser',                                         // open current user menu
+      'ctrl+f': 'showBuiltinSearch',
+      'command+f': 'showBuiltinSearch',
+      '?': 'showHelpModal',                                          // open keyboard shortcut help
+      'q': 'quoteReply'
+    };
+
+
 Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
-  PATH_BINDINGS: {
-    'g h': '/',
-    'g l': '/latest',
-    'g n': '/new',
-    'g u': '/unread',
-    'g f': '/starred',
-    'g c': '/categories',
-    'g t': '/top'
-  },
-
-  SELECTED_POST_BINDINGS: {
-    'b': 'toggleBookmark',
-    'd': 'deletePost',
-    'e': 'editPost',
-    'l': 'toggleLike',
-    'r': 'replyToPost',
-    '!': 'showFlags',
-    't': 'replyAsNewTopic'
-  },
-
-  CLICK_BINDINGS: {
-    // star topic
-    'f': '#topic-footer-buttons button.star, .topic-list tr.topic-list-item.selected a.star',
-
-    'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
-    'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
-    'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
-    'm w': 'div.notification-options li[data-id="3"] a',                      // mark topic as watching
-    'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
-    'x t': '#dismiss-topics,#dismiss-topics-top',                             //dismiss topics
-    '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
-    'n': '#user-notifications',                                               // open notifications menu
-    'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
-    'shift+r': '#topic-footer-buttons button.create',                         // reply to topic
-    'shift+s': '#topic-footer-buttons button.share',                          // share topic
-    's': '.topic-post.selected a.post-date'                                   // share post
-  },
-
-  FUNCTION_BINDINGS: {
-    'c': 'createTopic',                                         // create new topic
-    'home': 'goToFirstPost',
-    '#': 'toggleProgress',
-    'end': 'goToLastPost',
-    'shift+j': 'nextSection',
-    'j': 'selectDown',
-    'shift+k': 'prevSection',
-    'shift+p': 'pinUnpinTopic',
-    'k': 'selectUp',
-    'u': 'goBack',
-    '/': 'showSearch',
-    '=': 'showSiteMap',                                             // open site map menu
-    'p': 'showCurrentUser',                                         // open current user menu
-    'ctrl+f': 'showBuiltinSearch',
-    'command+f': 'showBuiltinSearch',
-    '?': 'showHelpModal',                                          // open keyboard shortcut help
-    'q': 'quoteReply'
-  },
-
   bindEvents: function(keyTrapper, container) {
     this.keyTrapper = keyTrapper;
     this.container = container;
-    _.each(this.PATH_BINDINGS, this._bindToPath, this);
-    _.each(this.CLICK_BINDINGS, this._bindToClick, this);
-    _.each(this.SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
-    _.each(this.FUNCTION_BINDINGS, this._bindToFunction, this);
+
+    _.each(PATH_BINDINGS, this._bindToPath, this);
+    _.each(CLICK_BINDINGS, this._bindToClick, this);
+    _.each(SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
+    _.each(FUNCTION_BINDINGS, this._bindToFunction, this);
   },
 
   quoteReply: function(){
@@ -190,8 +185,20 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   _bindToClick: function(selector, binding) {
     binding = binding.split(',');
     this.keyTrapper.bind(binding, function(e) {
-      if (e) { e.preventDefault(); }
-      $(selector).click();
+      var $sel = $(selector);
+
+      // Special case: We're binding to enter.
+      if (e && e.keyCode === 13) {
+        // Binding to enter should only be effective when there is something
+        // to select.
+        if ($sel.length === 0) {
+          return;
+        }
+
+        // If effective, prevent default.
+        e.preventDefault();
+      }
+      $sel.click();
     });
   },
 
@@ -214,7 +221,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     if($selected.length !== 0){ //boundries check
       // loop is not allowed
       if (direction === -1 && index === 0) { return; }
-      if (direction === 1 && index === ($articles.size()-1) ) { return;}  
+      if (direction === 1 && index === ($articles.size()-1) ) { return; }
     }
 
     // if nothing is selected go to the first post on screen
