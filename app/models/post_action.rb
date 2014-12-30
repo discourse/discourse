@@ -39,6 +39,13 @@ class PostAction < ActiveRecord::Base
     nil
   end
 
+  def self.flag_count_by_date(start_date, end_date)
+    where('created_at >= ? and created_at <= ?', start_date, end_date)
+      .where(post_action_type_id: PostActionType.flag_types.values)
+      .group('date(created_at)').order('date(created_at)')
+      .count
+  end
+
   def self.update_flagged_posts_count
     posts_flagged_count = PostAction.active
                                     .flags
@@ -92,7 +99,7 @@ class PostAction < ActiveRecord::Base
 
   def self.count_per_day_for_type(post_action_type, since_days_ago=30)
     unscoped.where(post_action_type_id: post_action_type)
-            .where('created_at > ?', since_days_ago.days.ago)
+            .where('created_at >= ?', since_days_ago.days.ago)
             .group('date(created_at)')
             .order('date(created_at)')
             .count

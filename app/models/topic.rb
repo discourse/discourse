@@ -352,7 +352,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.listable_count_per_day(start_date, end_date)
-    listable_topics.where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+    listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
