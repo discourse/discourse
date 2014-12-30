@@ -261,26 +261,18 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
 
       var rgx = new RegExp("post-cloak-(\\d+)").exec($article.parent()[0].id);
       if (rgx === null || typeof rgx[1] === 'undefined') {
-          this._scrollList($article, direction);
+        this._scrollList($article, direction);
       } else {
-          Discourse.URL.jumpToPost(rgx[1]);
+        Discourse.URL.jumpToPost(rgx[1]);
       }
     }
   },
 
   _scrollList: function($article, direction) {
-    var $document = $(document),
-        distToElement = $article.position().top + $article.height() - $(window).height() - $document.scrollTop();
-
-    // cut some bottom slack
-    distToElement += 40;
-
-    // don't scroll backwards, its silly
-    if((direction > 0 && distToElement < 0) || (direction < 0 && distToElement > 0)) {
-      return;
-    }
-
-    $('html, body').scrollTop($document.scrollTop() + distToElement);
+    // Try to keep the article on screen
+    var scrollPos = $article.position().top - ($(window).height() * 0.5);
+    if (scrollPos < 0) { scrollPos = 0; }
+    $('html, body').scrollTop(scrollPos);
   },
 
   _findArticles: function() {
