@@ -77,7 +77,7 @@ function buildConnectorCache() {
       // We are going to add it back with the proper template
       _connectorCache[outletName].removeObject(viewClass);
     } else {
-      viewClass = Em.View.extend({ classNames: [outletName + '-outlet'] });
+      viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
     }
     _connectorCache[outletName].pushObject(viewClass.extend(mixin));
   });
