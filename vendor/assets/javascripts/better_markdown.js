@@ -1186,15 +1186,14 @@
                     this,
                     text.substr( m.index ), m, previous_nodes || [] );
 
-          if(!res){
-            // fallback
+          // If no inline code executed, fallback
+          if (!res) {
             var fn = this.dialect.inline[m[1][0]];
-            if(fn) {
+            if (fn) {
               res = fn.call(
                     this,
                     text.substr( m.index ), m, previous_nodes || [] );
             }
-
           }
         }
         // Default for now to make dev easier. just slurp special and output it.

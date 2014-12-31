@@ -150,6 +150,10 @@ test("Links", function() {
   cooked("[Link](http://www.example.com) (with an outer \"description\")",
          "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
          "it doesn't consume closing parens as part of the url");
+
+  cooked("[ul][1]\n\n[1]: http://eviltrout.com",
+         "<p><a href=\"http://eviltrout.com\">ul</a></p>",
+         "it can use `ul` as a link name");
 });
 
 test("simple quotes", function() {
