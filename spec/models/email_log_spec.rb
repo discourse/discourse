@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe EmailLog do
 
-  it { should belong_to :user }
-  it { should validate_presence_of :to_address }
-  it { should validate_presence_of :email_type }
+  it { is_expected.to belong_to :user }
+  it { is_expected.to validate_presence_of :to_address }
+  it { is_expected.to validate_presence_of :email_type }
 
   let(:user) { Fabricate(:user) }
 
   context 'after_create' do
     context 'with user' do
       it 'updates the last_emailed_at value for the user' do
-        lambda {
+        expect {
           user.email_logs.create(email_type: 'blah', to_address: user.email)
           user.reload
-        }.should change(user, :last_emailed_at)
+        }.to change(user, :last_emailed_at)
       end
 
       it "doesn't update last_emailed_at if skipped is true" do
@@ -30,7 +30,7 @@ describe EmailLog do
     it "counts sent emails" do
       user.email_logs.create(email_type: 'blah', to_address: user.email)
       user.email_logs.create(email_type: 'blah', to_address: user.email, skipped: true)
-      described_class.count_per_day(1.day.ago, Time.now).first[1].should == 1
+      expect(described_class.count_per_day(1.day.ago, Time.now).first[1]).to eq 1
     end
   end
 

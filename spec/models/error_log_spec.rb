@@ -25,7 +25,7 @@ describe ErrorLog do
     it "creates a non empty file on first call" do
       ErrorLog.clear_all!
       ErrorLog.add_row!(hello: "world")
-      File.exists?(ErrorLog.filename).should == true
+      expect(File.exists?(ErrorLog.filename)).to eq true
     end
   end
 
@@ -38,7 +38,7 @@ describe ErrorLog do
       ErrorLog.each do |h|
         i += 1
       end
-      i.should == 2
+      expect(i).to eq 2
     end
 
     it "is able to skip rows" do
@@ -51,7 +51,7 @@ describe ErrorLog do
       ErrorLog.skip(3) do |h|
         i += 1
       end
-      i.should == 1
+      expect(i).to eq 1
     end
   end
 

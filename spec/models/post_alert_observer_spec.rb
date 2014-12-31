@@ -13,10 +13,10 @@ describe PostAlertObserver do
   context 'liking' do
     context 'when liking a post' do
       it 'creates a notification' do
-        lambda {
+        expect {
           PostAction.act(evil_trout, post, PostActionType.types[:like])
           # one like (welcome badge deferred)
-        }.should change(Notification, :count).by(1)
+        }.to change(Notification, :count).by(1)
       end
     end
 
@@ -26,18 +26,18 @@ describe PostAlertObserver do
       end
 
       it 'removes a notification' do
-        lambda {
+        expect {
           PostAction.remove_act(evil_trout, post, PostActionType.types[:like])
-        }.should change(Notification, :count).by(-1)
+        }.to change(Notification, :count).by(-1)
       end
     end
   end
 
   context 'when editing a post' do
     it 'notifies a user of the revision' do
-      lambda {
+      expect {
         post.revise(evil_trout, { raw: "world is the new body of the message" })
-      }.should change(post.user.notifications, :count).by(1)
+      }.to change(post.user.notifications, :count).by(1)
     end
 
     context "edit notifications are disabled" do
@@ -46,15 +46,15 @@ describe PostAlertObserver do
 
 
       it 'notifies a user of the revision made by another user' do
-        lambda {
+        expect {
           post.revise(evil_trout, { raw: "world is the new body of the message" })
-        }.should change(post.user.notifications, :count).by(1)
+        }.to change(post.user.notifications, :count).by(1)
       end
 
       it 'does not notifiy a user of the revision made by the system user' do
-        lambda {
+        expect {
           post.revise(Discourse.system_user, { raw: "world is the new body of the message" })
-        }.should_not change(post.user.notifications, :count)
+        }.not_to change(post.user.notifications, :count)
       end
 
     end
@@ -71,20 +71,20 @@ describe PostAlertObserver do
     end
 
     it "won't notify someone who can't see the post" do
-      lambda {
+      expect {
         Guardian.any_instance.expects(:can_see?).with(instance_of(Post)).returns(false)
         mention_post
         PostAlerter.new.after_create_post(mention_post)
         PostAlerter.new.after_save_post(mention_post)
-      }.should_not change(evil_trout.notifications, :count)
+      }.not_to change(evil_trout.notifications, :count)
     end
 
     it 'creates like notifications' do
       other_user = Fabricate(:user)
       topic.allowed_users << user << other_user
-      lambda {
+      expect {
         PostAction.act(other_user, mention_post, PostActionType.types[:like])
-      }.should change(user.notifications, :count)
+      }.to change(user.notifications, :count)
     end
   end
 

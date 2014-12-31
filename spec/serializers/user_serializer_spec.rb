@@ -11,7 +11,7 @@ describe UserSerializer do
     let(:untrusted_attributes) { %i{bio_raw bio_cooked bio_excerpt location website profile_background card_background} }
 
     it "doesn't serialize untrusted attributes" do
-      untrusted_attributes.each { |attr| json.should_not have_key(attr) }
+      untrusted_attributes.each { |attr| expect(json).not_to have_key(attr) }
     end
   end
 
@@ -21,7 +21,7 @@ describe UserSerializer do
     let(:json) { serializer.as_json }
 
     it "produces json" do
-      json.should be_present
+      expect(json).to be_present
     end
 
     context "with `enable_names` true" do
@@ -30,7 +30,7 @@ describe UserSerializer do
       end
 
       it "has a name" do
-        json[:name].should be_present
+        expect(json[:name]).to be_present
       end
     end
 
@@ -40,7 +40,7 @@ describe UserSerializer do
       end
 
       it "has a name" do
-        json[:name].should be_blank
+        expect(json[:name]).to be_blank
       end
     end
 
@@ -102,13 +102,13 @@ describe UserSerializer do
 
     it "doesn't serialize the fields by default" do
       json[:custom_fields]
-      json[:custom_fields].should be_empty
+      expect(json[:custom_fields]).to be_empty
     end
 
     it "serializes the fields listed in public_user_custom_fields site setting" do
       SiteSetting.stubs(:public_user_custom_fields).returns('public_field')
-      json[:custom_fields]['public_field'].should == user.custom_fields['public_field']
-      json[:custom_fields]['secret_field'].should == nil
+      expect(json[:custom_fields]['public_field']).to eq(user.custom_fields['public_field'])
+      expect(json[:custom_fields]['secret_field']).to eq(nil)
     end
   end
 end

@@ -12,15 +12,15 @@ describe Jobs::UserEmail do
   let(:mailer) { Mail::Message.new(to: user.email) }
 
   it "raises an error when there is no user" do
-    lambda { Jobs::UserEmail.new.execute(type: :digest) }.should raise_error(Discourse::InvalidParameters)
+    expect { Jobs::UserEmail.new.execute(type: :digest) }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "raises an error when there is no type" do
-    lambda { Jobs::UserEmail.new.execute(user_id: user.id) }.should raise_error(Discourse::InvalidParameters)
+    expect { Jobs::UserEmail.new.execute(user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "raises an error when the type doesn't exist" do
-    lambda { Jobs::UserEmail.new.execute(type: :no_method, user_id: user.id) }.should raise_error(Discourse::InvalidParameters)
+    expect { Jobs::UserEmail.new.execute(type: :no_method, user_id: user.id) }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "doesn't call the mailer when the user is missing" do
@@ -34,7 +34,7 @@ describe Jobs::UserEmail do
       UserNotifications.expects(:authorize_email).returns(mailer)
       Email::Sender.any_instance.expects(:send)
       Jobs::UserEmail.new.execute(type: :authorize_email, user_id: user.id, to_address: 'jake@adventuretime.ooo')
-      mailer.to.should == ['jake@adventuretime.ooo']
+      expect(mailer.to).to eq(['jake@adventuretime.ooo'])
     end
   end
 

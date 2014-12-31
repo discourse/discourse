@@ -6,8 +6,8 @@ describe UserAction do
     ActiveRecord::Base.observers.enable :all
   end
 
-  it { should validate_presence_of :action_type }
-  it { should validate_presence_of :user_id }
+  it { is_expected.to validate_presence_of :action_type }
+  it { is_expected.to validate_presence_of :user_id }
 
   describe 'lists' do
 
@@ -51,18 +51,18 @@ describe UserAction do
     it 'includes the events correctly' do
       mystats = stats_for_user(user)
       expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
-      mystats.should == expecting
-      stream_count(user).should == 4
+      expect(mystats).to eq(expecting)
+      expect(stream_count(user)).to eq(4)
 
       other_stats = stats_for_user
       expecting = [UserAction::NEW_TOPIC]
-      stream_count.should == 1
+      expect(stream_count).to eq(1)
 
-      other_stats.should == expecting
+      expect(other_stats).to eq(expecting)
 
       public_topic.trash!(user)
-      stats_for_user.should == []
-      stream_count.should == 0
+      expect(stats_for_user).to eq([])
+      expect(stream_count).to eq(0)
 
       # groups
       category = Fabricate(:category, read_restricted: true)
@@ -71,8 +71,8 @@ describe UserAction do
       public_topic.category = category
       public_topic.save
 
-      stats_for_user.should == []
-      stream_count.should == 0
+      expect(stats_for_user).to eq([])
+      expect(stream_count).to eq(0)
 
       group = Fabricate(:group)
       u = Fabricate(:coding_horror)
@@ -82,8 +82,8 @@ describe UserAction do
       category.set_permissions(group => :full)
       category.save
 
-      stats_for_user(u).should == [UserAction::NEW_TOPIC]
-      stream_count(u).should == 1
+      expect(stats_for_user(u)).to eq([UserAction::NEW_TOPIC])
+      expect(stream_count(u)).to eq(1)
 
       # duplicate should not exception out
       log_test_action
@@ -94,8 +94,8 @@ describe UserAction do
       public_post.revise(admin, { category_id: category2.id})
 
       action = UserAction.stream(user_id: public_topic.user_id, guardian: Guardian.new)[0]
-      action.acting_user_id.should == admin.id
-      action.action_type.should == UserAction::EDIT
+      expect(action.acting_user_id).to eq(admin.id)
+      expect(action.action_type).to eq(UserAction::EDIT)
     end
 
   end
@@ -116,7 +116,7 @@ describe UserAction do
 
     it "creates a new stream entry" do
       PostAction.act(liker, post, PostActionType.types[:like])
-      likee_stream.count.should == @old_count + 1
+      expect(likee_stream.count).to eq(@old_count + 1)
     end
 
     context "successful like" do
@@ -127,14 +127,14 @@ describe UserAction do
       end
 
       it 'should result in correct data assignment' do
-        @liker_action.should_not == nil
-        @likee_action.should_not == nil
-        likee.user_stat.reload.likes_received.should == 1
-        liker.user_stat.reload.likes_given.should == 1
+        expect(@liker_action).not_to eq(nil)
+        expect(@likee_action).not_to eq(nil)
+        expect(likee.user_stat.reload.likes_received).to eq(1)
+        expect(liker.user_stat.reload.likes_given).to eq(1)
 
         PostAction.remove_act(liker, post, PostActionType.types[:like])
-        likee.user_stat.reload.likes_received.should == 0
-        liker.user_stat.reload.likes_given.should == 0
+        expect(likee.user_stat.reload.likes_received).to eq(0)
+        expect(liker.user_stat.reload.likes_given).to eq(0)
       end
 
     end
@@ -147,7 +147,7 @@ describe UserAction do
 
       it "doesn't add the entry to the stream" do
         PostAction.act(liker, post, PostActionType.types[:like])
-        likee_stream.count.should_not == @old_count + 1
+        expect(likee_stream.count).not_to eq(@old_count + 1)
       end
 
     end
@@ -169,13 +169,13 @@ describe UserAction do
         @action = @post.user.user_actions.find_by(action_type: UserAction::NEW_TOPIC)
       end
       it 'should exist' do
-        @action.should_not == nil
-        @action.created_at.should be_within(1).of(@post.topic.created_at)
+        expect(@action).not_to eq(nil)
+        expect(@action.created_at).to be_within(1).of(@post.topic.created_at)
       end
     end
 
     it 'should not log a post user action' do
-      @post.user.user_actions.find_by(action_type: UserAction::REPLY).should == nil
+      expect(@post.user.user_actions.find_by(action_type: UserAction::REPLY)).to eq(nil)
     end
 
 
@@ -189,16 +189,16 @@ describe UserAction do
       end
 
       it 'should log user actions correctly' do
-        @response.user.user_actions.find_by(action_type: UserAction::REPLY).should_not == nil
-        @post.user.user_actions.find_by(action_type: UserAction::RESPONSE).should_not == nil
-        @mentioned.user_actions.find_by(action_type: UserAction::MENTION).should_not == nil
-        @post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count.should == 1
+        expect(@response.user.user_actions.find_by(action_type: UserAction::REPLY)).not_to eq(nil)
+        expect(@post.user.user_actions.find_by(action_type: UserAction::RESPONSE)).not_to eq(nil)
+        expect(@mentioned.user_actions.find_by(action_type: UserAction::MENTION)).not_to eq(nil)
+        expect(@post.user.user_actions.joins(:target_post).where('posts.post_number = 2').count).to eq(1)
       end
 
       it 'should not log a double notification for a post edit' do
         @response.raw = "here it goes again"
         @response.save!
-        @response.user.user_actions.where(action_type: UserAction::REPLY).count.should == 1
+        expect(@response.user.user_actions.where(action_type: UserAction::REPLY).count).to eq(1)
       end
 
     end
@@ -213,13 +213,13 @@ describe UserAction do
     end
 
     it 'should create a bookmark action correctly' do
-      @action.action_type.should == UserAction::BOOKMARK
-      @action.target_post_id.should == @post.id
-      @action.acting_user_id.should == @user.id
-      @action.user_id.should == @user.id
+      expect(@action.action_type).to eq(UserAction::BOOKMARK)
+      expect(@action.target_post_id).to eq(@post.id)
+      expect(@action.acting_user_id).to eq(@user.id)
+      expect(@action.user_id).to eq(@user.id)
 
       PostAction.remove_act(@user, @post, PostActionType.types[:bookmark])
-      @user.user_actions.find_by(action_type: UserAction::BOOKMARK).should == nil
+      expect(@user.user_actions.find_by(action_type: UserAction::BOOKMARK)).to eq(nil)
     end
   end
 
@@ -283,9 +283,9 @@ describe UserAction do
 
       actions = UserAction.all.to_a
 
-      actions.length.should == 1
-      actions.first.action_type.should == UserAction::STAR
-      actions.first.user_id.should == post.user.id
+      expect(actions.length).to eq(1)
+      expect(actions.first.action_type).to eq(UserAction::STAR)
+      expect(actions.first.user_id).to eq(post.user.id)
     end
   end
 
@@ -312,7 +312,7 @@ describe UserAction do
       UserAction.synchronize_target_topic_ids
 
       action.reload
-      action.target_topic_id.should == post.topic_id
+      expect(action.target_topic_id).to eq(post.topic_id)
     end
   end
 end
