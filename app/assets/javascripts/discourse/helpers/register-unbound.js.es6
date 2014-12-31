@@ -26,6 +26,6 @@ export default function registerUnbound(name, fn) {
       }
     }
 
-    return fn(property, params);
+    return fn.apply(this,[property, params]);
   });
 }
