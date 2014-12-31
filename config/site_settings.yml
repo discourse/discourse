@@ -192,10 +192,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   twitter_consumer_secret:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   enable_facebook_logins:
     client: true
     default: false
@@ -204,16 +204,16 @@ login:
     regex: "^\\d+$"
   facebook_app_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_github_logins:
     client: true
     default: false
   github_client_id:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   github_client_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_sso:
     client: true
     default: false
@@ -411,7 +411,7 @@ email:
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
   reply_by_email_address: ''
-    regex: "%{reply_key}"
+    regex: "^.*%{reply_key}.*$"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
