@@ -1697,6 +1697,7 @@ en:
       export_csv:
         success: "Export initiated, you will be notified via private message when the process is complete."
         failed: "Export failed. Please check the logs."
+        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
         button_title:
           user: "Export full user list in CSV format."
