@@ -5,9 +5,7 @@ class ExportCsvController < ApplicationController
   def export_entity
     params.require(:entity)
     params.require(:entity_type)
-    if params[:entity_type] == "admin"
-      guardian.ensure_can_export_admin_entity!(current_user)
-    end
+    guardian.ensure_can_export_entity!(params[:entity_type])
 
     Jobs.enqueue(:export_csv_file, entity: params[:entity], user_id: current_user.id)
     render json: success_json
