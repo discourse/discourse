@@ -410,8 +410,9 @@ email:
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
-  reply_by_email_address: ''
-    regex: "^.*%{reply_key}.*$"
+  reply_by_email_address:
+    default: ''
+    regex: "%{reply_key}"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
