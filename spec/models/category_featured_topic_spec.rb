@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe CategoryFeaturedTopic do
 
-  it { should belong_to :category }
-  it { should belong_to :topic }
+  it { is_expected.to belong_to :category }
+  it { is_expected.to belong_to :topic }
 
   context 'feature_topics_for' do
     let(:user)           { Fabricate(:user) }
@@ -21,7 +21,7 @@ describe CategoryFeaturedTopic do
       _uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
 
       CategoryFeaturedTopic.feature_topics_for(category)
-      CategoryFeaturedTopic.count.should == 1
+      expect(CategoryFeaturedTopic.count).to be(1)
 
     end
 
@@ -29,7 +29,7 @@ describe CategoryFeaturedTopic do
       invisible_post = PostCreator.create(user, raw: "Don't look at this post because it's awful.", title: "not visible to anyone", category: category.id)
       invisible_post.topic.update_status('visible', false, Fabricate(:admin))
       CategoryFeaturedTopic.feature_topics_for(category)
-      CategoryFeaturedTopic.count.should == 1
+      expect(CategoryFeaturedTopic.count).to be(1)
     end
   end
 

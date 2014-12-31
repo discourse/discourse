@@ -11,12 +11,12 @@ describe UserHistory do
 
       it "returns all records for admins" do
         records = described_class.staff_action_records(Fabricate(:admin)).to_a
-        records.size.should == 2
+        expect(records.size).to eq(2)
       end
 
       it "doesn't return records to moderators that only admins should see" do
         records = described_class.staff_action_records(Fabricate(:moderator)).to_a
-        records.should == [@change_trust_level]
+        expect(records).to eq([@change_trust_level])
       end
     end
   end

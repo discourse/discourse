@@ -14,7 +14,7 @@ describe TopicViewItem do
     TopicViewItem.create!(topic_id: 1, ip_address: "1.1.1.1", viewed_at: 1.day.ago)
     add(1, "1.1.1.1")
 
-    TopicViewItem.count.should == 3
+    expect(TopicViewItem.count).to eq(3)
   end
 
   it "increases a users view count" do
@@ -24,7 +24,7 @@ describe TopicViewItem do
     add(1,  "1.1.1.1", user.id)
 
     user.user_stat.reload
-    user.user_stat.topics_entered.should == 1
+    expect(user.user_stat.topics_entered).to eq(1)
   end
 
 end

@@ -15,23 +15,23 @@ describe Group do
 
     it "is invalid for blank" do
       group.name = ""
-      group.valid?.should == false
+      expect(group.valid?).to eq false
     end
 
     it "is valid for a longer name" do
       group.name = "this_is_a_name"
-      group.valid?.should == true
+      expect(group.valid?).to eq true
     end
 
     it "is invalid for non names" do
       group.name = "this is_a_name"
-      group.valid?.should == false
+      expect(group.valid?).to eq false
     end
 
     it "is invalid for case-insensitive existing names" do
       build(:group, name: 'this_is_a_name').save
       group.name = 'This_Is_A_Name'
-      group.valid?.should == false
+      expect(group.valid?).to eq false
     end
   end
 
@@ -54,52 +54,52 @@ describe Group do
 
     Group.refresh_automatic_groups!(:admins, :staff, :moderators)
 
-    real_admins.should == [admin.id]
-    real_moderators.should == [moderator.id]
-    real_staff.sort.should == [moderator.id,admin.id].sort
+    expect(real_admins).to eq [admin.id]
+    expect(real_moderators).to eq [moderator.id]
+    expect(real_staff.sort).to eq [moderator.id,admin.id].sort
 
     admin.admin = false
     admin.save
 
     Group.refresh_automatic_group!(:admins)
-    real_admins.should == []
+    expect(real_admins).to be_empty
 
     moderator.revoke_moderation!
 
     admin.grant_admin!
-    real_admins.should == [admin.id]
-    real_staff.should == [admin.id]
+    expect(real_admins).to eq [admin.id]
+    expect(real_staff).to eq [admin.id]
 
     admin.revoke_admin!
-    real_admins.should == []
-    real_staff.should == []
+    expect(real_admins).to be_empty
+    expect(real_staff).to be_empty
 
     admin.grant_moderation!
-    real_moderators.should == [admin.id]
-    real_staff.should == [admin.id]
+    expect(real_moderators).to eq [admin.id]
+    expect(real_staff).to eq [admin.id]
 
     admin.revoke_moderation!
-    real_admins.should == []
-    real_staff.should == []
+    expect(real_admins).to be_empty
+    expect(real_staff).to eq []
   end
 
   it "Correctly updates automatic trust level groups" do
     user = Fabricate(:user)
-    Group[:trust_level_0].user_ids.should include user.id
+    expect(Group[:trust_level_0].user_ids).to include user.id
 
     user.change_trust_level!(TrustLevel[1])
 
-    Group[:trust_level_1].user_ids.should include user.id
+    expect(Group[:trust_level_1].user_ids).to include user.id
 
     user.change_trust_level!(TrustLevel[2])
 
-    Group[:trust_level_1].user_ids.should include user.id
-    Group[:trust_level_2].user_ids.should include user.id
+    expect(Group[:trust_level_1].user_ids).to include user.id
+    expect(Group[:trust_level_2].user_ids).to include user.id
 
     user2 = Fabricate(:coding_horror)
     user2.change_trust_level!(TrustLevel[3])
 
-    Group[:trust_level_2].user_ids.sort.should == [-1, user.id, user2.id].sort
+    expect(Group[:trust_level_2].user_ids.sort).to eq [-1, user.id, user2.id].sort
   end
 
   it "Correctly updates all automatic groups upon request" do
@@ -112,26 +112,25 @@ describe Group do
     Group.refresh_automatic_groups!
 
     groups = Group.includes(:users).to_a
-    groups.count.should == Group::AUTO_GROUPS.count
+    expect(groups.count).to eq Group::AUTO_GROUPS.count
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:admins]}
-    g.users.count.should == 2
-    g.user_count.should == 2
+    expect(g.users.count).to eq 2
+    expect(g.user_count).to eq 2
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:staff]}
-    g.users.count.should == 2
-    g.user_count.should == 2
-
+    expect(g.users.count).to eq 2
+    expect(g.user_count).to eq 2
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_1]}
     # admin, system and user
-    g.users.count.should == 3
-    g.user_count.should == 3
+    expect(g.users.count).to eq 3
+    expect(g.user_count).to eq 3
 
     g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_2]}
     # system and user
-    g.users.count.should == 2
-    g.user_count.should == 2
+    expect(g.users.count).to eq 2
+    expect(g.user_count).to eq 2
 
   end
 
@@ -149,12 +148,12 @@ describe Group do
     # no side effects please
     g.usernames = usernames
     g.reload
-    g.users.count.should == 1
+    expect(g.users.count).to eq 1
 
     g.usernames = usernames
     g.save!
 
-    g.usernames.split(",").sort.should == usernames.split(",").sort
+    expect(g.usernames.split(",").sort).to eq usernames.split(",").sort
   end
 
   it "correctly destroys groups" do
@@ -166,31 +165,31 @@ describe Group do
 
     g.destroy
 
-    User.where(id: u1.id).count.should == 1
-    GroupUser.where(group_id: g.id).count.should == 0
+    expect(User.where(id: u1.id).count).to eq 1
+    expect(GroupUser.where(group_id: g.id).count).to eq 0
   end
 
 
   it "has custom fields" do
     group = Fabricate(:group)
-    group.custom_fields["a"].should == nil
+    expect(group.custom_fields["a"]).to be_nil
 
     group.custom_fields["hugh"] = "jackman"
     group.custom_fields["jack"] = "black"
     group.save
 
     group = Group.find(group.id)
-    group.custom_fields.should == {"hugh" => "jackman", "jack" => "black"}
+    expect(group.custom_fields).to eq({"hugh" => "jackman", "jack" => "black"})
   end
 
   it "allows you to lookup a new group by name" do
     group = Fabricate(:group)
-    group.id.should == Group[group.name].id
-    group.id.should == Group[group.name.to_sym].id
+    expect(group.id).to eq Group[group.name].id
+    expect(group.id).to eq Group[group.name.to_sym].id
   end
 
   it "can find desired groups correctly" do
-    Group.desired_trust_level_groups(2).sort.should == [10,11,12]
+    expect(Group.desired_trust_level_groups(2).sort).to eq [10,11,12]
   end
 
 
@@ -198,11 +197,11 @@ describe Group do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
 
-    user.groups.map(&:name).sort.should == ["trust_level_0","trust_level_1", "trust_level_2"]
+    expect(user.groups.map(&:name).sort).to eq ["trust_level_0","trust_level_1", "trust_level_2"]
 
     Group.user_trust_level_change!(user.id, 0)
     user.reload
-    user.groups.map(&:name).sort.should == ["trust_level_0"]
+    expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
   end
 
 end

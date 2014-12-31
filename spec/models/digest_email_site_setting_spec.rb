@@ -3,16 +3,16 @@ require 'spec_helper'
 describe DigestEmailSiteSetting do
   describe 'valid_value?' do
     it 'returns true for a valid value as an int' do
-      DigestEmailSiteSetting.valid_value?(1).should == true
+      expect(DigestEmailSiteSetting.valid_value?(1)).to eq true
     end
 
     it 'returns true for a valid value as a string' do
-      DigestEmailSiteSetting.valid_value?('1').should == true
+      expect(DigestEmailSiteSetting.valid_value?('1')).to eq true
     end
 
     it 'returns false for an invalid value' do
-      DigestEmailSiteSetting.valid_value?(1.5).should == false
-      DigestEmailSiteSetting.valid_value?('7 dogs').should == false
+      expect(DigestEmailSiteSetting.valid_value?(1.5)).to eq false
+      expect(DigestEmailSiteSetting.valid_value?('7 dogs')).to eq false
     end
   end
 end

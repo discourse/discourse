@@ -4,7 +4,7 @@ describe Jobs::ExportCsvFile do
 
   context '.execute' do
     it 'raises an error when the entity is missing' do
-      lambda { Jobs::ExportCsvFile.new.execute(user_id: "1") }.should raise_error(Discourse::InvalidParameters)
+      expect { Jobs::ExportCsvFile.new.execute(user_id: "1") }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -27,7 +27,7 @@ describe Jobs::ExportCsvFile do
 
     user = to_hash(user_list_export.find{|u| u[0] == user.id})
 
-    user["external_id"].should == "123"
-    user["external_email"].should == "test@test.com"
+    expect(user["external_id"]).to eq("123")
+    expect(user["external_email"]).to eq("test@test.com")
   end
 end

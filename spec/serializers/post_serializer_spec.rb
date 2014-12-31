@@ -30,16 +30,16 @@ describe PostSerializer do
     end
 
     it "displays the correct info" do
-      visible_actions_for(actor).sort.should == [:like,:notify_user,:spam,:vote]
-      visible_actions_for(post.user).sort.should == [:like,:vote]
-      visible_actions_for(nil).sort.should == [:like,:vote]
-      visible_actions_for(admin).sort.should == [:like,:notify_user,:spam,:vote]
+      expect(visible_actions_for(actor).sort).to eq([:like,:notify_user,:spam,:vote])
+      expect(visible_actions_for(post.user).sort).to eq([:like,:vote])
+      expect(visible_actions_for(nil).sort).to eq([:like,:vote])
+      expect(visible_actions_for(admin).sort).to eq([:like,:notify_user,:spam,:vote])
     end
 
     it "can't flag your own post to notify yourself" do
       serializer = PostSerializer.new(post, scope: Guardian.new(post.user), root: false)
       notify_user_action = serializer.actions_summary.find { |a| a[:id] == PostActionType.types[:notify_user] }
-      notify_user_action[:can_act].should == false
+      expect(notify_user_action[:can_act]).to eq(false)
     end
   end
 
@@ -55,10 +55,10 @@ describe PostSerializer do
 
     it "serializes correctly" do
       [:name, :username, :display_username, :avatar_template, :user_title, :trust_level].each do |attr|
-        subject[attr].should be_nil
+        expect(subject[attr]).to be_nil
       end
       [:moderator, :staff, :yours].each do |attr|
-        subject[attr].should == false
+        expect(subject[attr]).to eq(false)
       end
     end
   end
@@ -71,12 +71,12 @@ describe PostSerializer do
 
     it "returns the display_username it when `enable_names` is on" do
       SiteSetting.stubs(:enable_names).returns(true)
-      json[:display_username].should be_present
+      expect(json[:display_username]).to be_present
     end
 
     it "doesn't return the display_username it when `enable_names` is off" do
       SiteSetting.stubs(:enable_names).returns(false)
-      json[:display_username].should be_blank
+      expect(json[:display_username]).to be_blank
     end
   end
 
@@ -95,7 +95,7 @@ describe PostSerializer do
 
       it "includes the raw post for everyone" do
         [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
-          serialized_post_for_user(user)[:raw].should == raw
+          expect(serialized_post_for_user(user)[:raw]).to eq(raw)
         end
       end
     end
@@ -104,21 +104,21 @@ describe PostSerializer do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "shows the raw post only if authorized to see it" do
-        serialized_post_for_user(nil)[:raw].should == nil
-        serialized_post_for_user(Fabricate(:user))[:raw].should == nil
+        expect(serialized_post_for_user(nil)[:raw]).to eq(nil)
+        expect(serialized_post_for_user(Fabricate(:user))[:raw]).to eq(nil)
 
-        serialized_post_for_user(user)[:raw].should == raw
-        serialized_post_for_user(Fabricate(:moderator))[:raw].should == raw
-        serialized_post_for_user(Fabricate(:admin))[:raw].should == raw
+        expect(serialized_post_for_user(user)[:raw]).to eq(raw)
+        expect(serialized_post_for_user(Fabricate(:moderator))[:raw]).to eq(raw)
+        expect(serialized_post_for_user(Fabricate(:admin))[:raw]).to eq(raw)
       end
 
       it "can view edit history only if authorized" do
-        serialized_post_for_user(nil)[:can_view_edit_history].should == false
-        serialized_post_for_user(Fabricate(:user))[:can_view_edit_history].should == false
+        expect(serialized_post_for_user(nil)[:can_view_edit_history]).to eq(false)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_view_edit_history]).to eq(false)
 
-        serialized_post_for_user(user)[:can_view_edit_history].should == true
-        serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history].should == true
-        serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history].should == true
+        expect(serialized_post_for_user(user)[:can_view_edit_history]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history]).to eq(true)
       end
     end
 
@@ -127,7 +127,7 @@ describe PostSerializer do
 
       it "can view edit history" do
         [nil, user, Fabricate(:user), Fabricate(:moderator), Fabricate(:admin)].each do |user|
-          serialized_post_for_user(user)[:can_view_edit_history].should == true
+          expect(serialized_post_for_user(user)[:can_view_edit_history]).to eq(true)
         end
       end
     end
@@ -136,12 +136,12 @@ describe PostSerializer do
       let(:post) { Fabricate.build(:post, raw: raw, user: user, wiki: true, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached]) }
 
       it "can view edit history only if authorized" do
-        serialized_post_for_user(nil)[:can_view_edit_history].should == false
-        serialized_post_for_user(Fabricate(:user))[:can_view_edit_history].should == false
+        expect(serialized_post_for_user(nil)[:can_view_edit_history]).to eq(false)
+        expect(serialized_post_for_user(Fabricate(:user))[:can_view_edit_history]).to eq(false)
 
-        serialized_post_for_user(user)[:can_view_edit_history].should == true
-        serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history].should == true
-        serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history].should == true
+        expect(serialized_post_for_user(user)[:can_view_edit_history]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:moderator))[:can_view_edit_history]).to eq(true)
+        expect(serialized_post_for_user(Fabricate(:admin))[:can_view_edit_history]).to eq(true)
       end
     end
 
