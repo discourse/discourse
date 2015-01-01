@@ -3,15 +3,19 @@
 // --------------------------------------------------
 
 .d-header {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
 
   #site-logo {
     max-width: 122px;
   }
 
-  .panel {
-    margin-right: 20px;
+  // some protection for text-only site titles
+  .title {
+    margin-left: 20px;
+    max-width: 135px;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: clip;
+    display: block; // table causes clipping fail oddities here
   }
 
   .icons {
@@ -28,6 +32,7 @@
     display:none;
   }
 }
+
 #main-outlet {
   padding-top: 60px;
 }
@@ -55,7 +60,7 @@
     top: 0;
     right: 25px;
   }
-  
+
   input[type='text'] {
     width: 265px;
     font-size: 1.143em;

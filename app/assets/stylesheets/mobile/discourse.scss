@@ -106,14 +106,9 @@ blockquote {
   width: 90%;
 }
 
-// if the logo is text, it can't be too big or small width devices have issues
+// somehow the image logo assumption inherits margins from earlier in the CSS stack
+// we must remove margins for text site titles
 h2#site-text-logo
 {
-  max-width: 135px;
-  max-height: 1em;
-  overflow: hidden;
-  padding: 0;
-  margin: 5px 0 0 0;
-  text-overflow: clip;
-  white-space: nowrap;
+  margin: 0;
 }
