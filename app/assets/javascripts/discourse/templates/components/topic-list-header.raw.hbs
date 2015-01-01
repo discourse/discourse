@@ -6,7 +6,7 @@
   </th>
 {{/if}}
 {{raw "components/topic-list-header-column" order='default' name='topic.title'}}
-{{#unless parent.hideCategory}}
+{{#unless hideCategory}}
   {{raw "components/topic-list-header-column" sortable='true' order='category' name='category_title'}}
 {{/unless}}
 {{raw "components/topic-list-header-column" order='posters' name='users'}}
