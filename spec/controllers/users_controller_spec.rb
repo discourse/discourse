@@ -218,7 +218,6 @@ describe UsersController do
       end
 
       context 'success' do
-
         it 'has an email token' do
           lambda { xhr :put, :change_email, username: user.username, email: new_email }.should change(EmailToken, :count)
         end
@@ -226,6 +225,54 @@ describe UsersController do
         it 'enqueues an email authorization' do
           Jobs.expects(:enqueue).with(:user_email, has_entries(type: :authorize_email, user_id: user.id, to_address: new_email))
           xhr :put, :change_email, username: user.username, email: new_email
+        end
+      end
+
+      context 'with confirmed flag' do
+        it 'raises an error without an email parameter' do
+          lambda { xhr :put, :change_email, username: user.username, confirmed: 'true' }.should raise_error(ActionController::ParameterMissing)
+        end
+
+        it "raises an error if you can't edit the user's email" do
+          Guardian.any_instance.expects(:can_edit_email?).with(user).returns(false)
+          xhr :put, :change_email, username: user.username, email: new_email, confirmed: 'true'
+          response.should be_forbidden
+        end
+
+        context 'when the new email address is taken' do
+          let!(:other_user) { Fabricate(:coding_horror) }
+          it 'raises an error' do
+            lambda { xhr :put, :change_email, username: user.username, email: other_user.email, confirmed: 'true' }.should raise_error(Discourse::InvalidParameters)
+          end
+
+          it 'raises an error if there is whitespace too' do
+            lambda { xhr :put, :change_email, username: user.username, email: other_user.email + ' ', confirmed: 'true' }.should raise_error(Discourse::InvalidParameters)
+          end
+        end
+
+        context 'when new email is different case of existing email' do
+          let!(:other_user) { Fabricate(:user, email: 'case.insensitive@gmail.com')}
+
+          it 'raises an error' do
+            lambda { xhr :put, :change_email, username: user.username, email: other_user.email.upcase, confirmed: 'true' }.should raise_error(Discourse::InvalidParameters)
+          end
+        end
+
+        context 'success' do
+          it 'does not have an email token' do
+            lambda { xhr :put, :change_email, username: user.username, email: new_email, confirmed: 'true' }.should_not change(EmailToken, :count)
+          end
+
+          it 'does not enqueue an email authorization' do
+            Jobs.expects(:enqueue).with(:user_email, has_entries(type: :authorize_email, user_id: user.id, to_address: new_email)).never
+            xhr :put, :change_email, username: user.username, email: new_email, confirmed: 'true'
+          end
+
+          it 'updates the email' do
+            xhr :put, :change_email, username: user.username, email: new_email, confirmed: 'true'
+            json = JSON.parse(response.body)
+            json['email'].should == new_email
+          end
         end
       end
     end

@@ -281,7 +281,7 @@ class UsersController < ApplicationController
   end
 
   def password_reset
-    expires_now()
+    expires_now
 
     if EmailToken.valid_token_format?(params[:token])
       @user = EmailToken.confirm(params[:token])
@@ -342,22 +342,33 @@ class UsersController < ApplicationController
       raise Discourse::InvalidParameters.new(:email)
     end
 
-    email_token = user.email_tokens.create(email: lower_email)
-    Jobs.enqueue(
-      :user_email,
-      to_address: lower_email,
-      type: :authorize_email,
-      user_id: user.id,
-      email_token: email_token.token
-    )
+    if params[:confirmed] == "true"
+      user.email = lower_email
+      user.save!
 
-    render nothing: true
+      render json: {
+        id: user.id,
+        email: user.email
+      }
+    else
+      email_token = user.email_tokens.create(email: lower_email)
+
+      Jobs.enqueue(
+        :user_email,
+        to_address: lower_email,
+        type: :authorize_email,
+        user_id: user.id,
+        email_token: email_token.token
+      )
+
+      render json: success_json
+    end
   rescue RateLimiter::LimitExceeded
     render_json_error(I18n.t("rate_limiter.slow_down"))
   end
 
   def authorize_email
-    expires_now()
+    expires_now
     if @user = EmailToken.confirm(params[:token])
       log_on_user(@user)
     else
@@ -583,7 +594,8 @@ class UsersController < ApplicationController
         :email,
         :password,
         :username,
-        :active
+        :active,
+        :confirmed
       ).merge(ip_address: request.ip, registration_ip_address: request.ip)
     end
 
