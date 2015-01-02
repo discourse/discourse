@@ -126,10 +126,6 @@ uk:
         is_invalid: "is invalid; try to be a little more descriptive"
         has_already_been_used: "вже було використано"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "Даруйте, Ви не можете надіслати приватне повідомлення цьому користувачу."
         user:
           attributes:
             ip_address:

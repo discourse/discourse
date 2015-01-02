@@ -84,6 +84,7 @@ de:
           other: "vor %{count} Tagen"
     share:
       topic: 'Teile einen Link zu diesem Thema'
+      post: 'Beitrag #%{postNumber}'
       close: 'Schließen'
       twitter: 'diesen Link auf Twitter teilen'
       facebook: 'diesen Link auf Facebook teilen'
@@ -258,6 +259,7 @@ de:
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
+      download_archive: "Meine Beiträge herunterladen"
       new_private_message: "Neue private Nachricht"
       private_message: "Private Nachricht"
       private_messages: "Nachrichten"
@@ -439,6 +441,7 @@ de:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
           uploading: "Wird hochgeladen..."
+          success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine private Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
       password:
         title: "Passwort"
@@ -446,6 +449,7 @@ de:
         common: "Das Passwort wird zu häufig verwendet."
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "Mindestens %{count} Zeichen."
+      associated_accounts: "Anmeldeinformationen"
       ip_address:
         title: "Letzte IP-Adresse"
       registration_ip_address:
@@ -573,7 +577,12 @@ de:
       github:
         title: "mit GitHub"
         message: "Authentifiziere mit GitHub (stelle sicher, dass keine Pop-up-Blocker aktiviert sind)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Dies ist eine offizielle Warnung."
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saving_draft_tip: "speichere"
@@ -1521,6 +1530,7 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
+        success: "Der Export wurde gestartet. Du erhältst eine private Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         button_text: "Exportieren"
         button_title:
@@ -1998,6 +2008,13 @@ de:
             with_post: <span class="username">%{username}</span> für Beitrag in %{link}
             with_post_time: <span class="username">%{username}</span> für Beitrag in %{link} um <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> um <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Neues Emoji hinzufügen, dass für alle verfügbar sein wird. (Tipp: per Drag & Drop kannst du gleichzeitig mehrere Dateien hinzufügen)"
+        add: "Neues Emoji hinzufügen"
+        name: "Name"
+        image: "Bild"
+        delete_confirm: "Möchtest du wirklich das %{name}: Emoji löschen?"
     lightbox:
       download: "herunterladen"
     search_help:
@@ -2019,6 +2036,7 @@ de:
         back: '<b>u</b> Zurück'
         up_down: '<b>k</b>/<b>j</b> Auswahl &uarr; &darr; bewegen'
         open: '<b>o</b> oder <b>↵ Eingabe</b> Ausgewähltes Thema anzeigen'
+        next_prev: '<b>⇧ Umsch</b> + <b>J</b> / <b>⇧ Umsch</b> + <b>K</b> Nächster/vorheriger Abschnitt'
       application:
         title: 'Anwendung'
         create: '<b>c</b> Neues Thema erstellen'
@@ -2033,8 +2051,11 @@ de:
       actions:
         title: 'Aktionen'
         star: '<b>f</b> Thema favorisieren'
+        pin_unpin_topic: '<b>⇧ Umsch</b> + <b>p</b> Thema anheften/loslösen'
+        share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
         reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
+        reply_topic: '<b>⇧ Umsch</b> + <b>r</b> Auf Thema antworten'
         reply_post: '<b>r</b> Auf Beitrag antworten'
         quote_post: '<b>q</b> Beitrag zitieren'
         like: '<b>l</b> Beitrag gefällt mir'

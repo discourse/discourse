@@ -68,6 +68,7 @@ zh_CN:
           other: "%{count}日前"
     share:
       topic: '分享本主题的链接'
+      post: '#%{postNumber} 楼'
       close: '关闭'
       twitter: '分享这个链接到 Twitter'
       facebook: '分享这个链接到 Facebook'
@@ -235,6 +236,7 @@ zh_CN:
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
+      download_archive: "下载我的帖子"
       new_private_message: "新私信"
       private_message: "私信"
       private_messages: "消息"
@@ -412,6 +414,7 @@ zh_CN:
           none: "你没有邀请过任何人。你可以发送个人邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传一个批量邀请文件</a>一次性邀请一批人。"
           text: "通过文件批量邀请"
           uploading: "上传中……"
+          success: "文件成功上传，当操作完成后你将被私信通知。"
           error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
         title: "密码"
@@ -419,6 +422,7 @@ zh_CN:
         common: "你设置的密码太常见了。"
         ok: "你设置的密码符合要求。"
         instructions: "至少需要 %{count} 个字符。"
+      associated_accounts: "登录"
       ip_address:
         title: "最后使用的 IP 地址"
       registration_ip_address:
@@ -546,7 +550,12 @@ zh_CN:
       github:
         title: "使用 GitHub 帐号登录"
         message: "正使用 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+    apple_international: "Apple/国际化"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "这是一个正式的警告。"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中"
@@ -1452,6 +1461,7 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "你确定要将数据库回滚到之前的工作状态吗？"
       export_csv:
+        success: "导出开始，当操作完成后你将被私信通知。"
         failed: "导出失败。请检查日志。"
         button_text: "导出"
         button_title:
@@ -1922,6 +1932,13 @@ zh_CN:
             with_post: <span class="username">%{username}</span>因 %{link} 帖子
             with_post_time: <span class="username">%{username}</span>因在<span class="time">%{time}</span>时的 %{link} 帖子
             with_time: <span class="username">%{username}</span>在<span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "增加所有人可用的 emoji。（高端技巧：一次性拖进多个文件）"
+        add: "增加新的 Emoji"
+        name: "姓名"
+        image: "图片"
+        delete_confirm: "你确定要删除 :%{name}: emoji 么？"
     lightbox:
       download: "下载"
     search_help:
@@ -1943,6 +1960,7 @@ zh_CN:
         back: '<b>u</b> 返回'
         up_down: '<b>k</b> 和 <b>j</b> 移动选择焦点 &uarr; &darr;'
         open: '<b>o</b> 或者 <b>Enter</b> 打开选中的主题'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 下一个/前一个段落'
       application:
         title: '应用'
         create: '<b>c</b> 创建一个新主题'
@@ -1957,8 +1975,11 @@ zh_CN:
       actions:
         title: '动作'
         star: '<b>f</b> 收藏主题'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
+        share_topic: '<b>shift</b>+<b>s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
         reply_as_new_topic: '<b>t</b> 回复为联结主题'
+        reply_topic: '<b>shift</b>+<b>r</b> 回复主题'
         reply_post: '<b>r</b> 回复帖子'
         quote_post: '<b>q</b> 引用帖子'
         like: '<b>l</b> 赞帖子'

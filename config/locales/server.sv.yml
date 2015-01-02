@@ -134,10 +134,6 @@ sv:
         is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
         has_already_been_used: "har redan använts"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "Tyvärr, du kan inte skicka ett privat meddelande till den användaren."
         user:
           attributes:
             password:

@@ -282,6 +282,7 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
+      download_archive: "Pobierz moje wpisy"
       new_private_message: "Nowa Prywatna Wiadomość"
       private_message: "Prywatna wiadomość"
       private_messages: "Wiadomości"
@@ -467,6 +468,7 @@ pl_PL:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
           uploading: "Wysyłanie…"
+          success: "Plik został przesłany pomyślnie, dostaniesz powiadomienie gdy proces zostanie zakończony."
           error: "Podczas przesyłania wystąpił błąd '{{filename}}': {{message}}"
       password:
         title: "Hasło"
@@ -474,6 +476,7 @@ pl_PL:
         common: "To hasło jest zbyt popularne."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
+      associated_accounts: "Powiązane konta"
       ip_address:
         title: "Ostatni adres IP"
       registration_ip_address:
@@ -601,7 +604,12 @@ pl_PL:
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "To jest oficjalne ostrzeżenie."
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saving_draft_tip: "zapisywanie"
@@ -1583,6 +1591,7 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
+        success: "Rozpoczęto eksport: dostaniesz powiadomienie gdy proces zostanie zakończony."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
         button_text: "Eksportuj"
         button_title:
@@ -2067,6 +2076,13 @@ pl_PL:
             with_post: <span class="username">%{username}</span> za wpis w %{link}
             with_post_time: <span class="username">%{username}</span> za wpis w %{link} o <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Dodawanie nowych emoji.  (PROTIP: przeciągnij i upuść wiele plików)"
+        add: "Dodaj nowe Emoji"
+        name: "Nazwa"
+        image: "Grafika"
+        delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
     lightbox:
       download: "pobierz"
     search_help:
@@ -2088,6 +2104,7 @@ pl_PL:
         back: '<b>u</b> wstecz'
         up_down: '<b>k</b>/<b>j</b> zaznacz &uarr; &darr;'
         open: '<b>o</b> lub <b>Enter</b> otwórz wybrany temat'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> następna/poprzednia sekcja'
       application:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
@@ -2102,8 +2119,11 @@ pl_PL:
       actions:
         title: 'Operacje'
         star: '<b>f</b> oznacz temat gwiazdką'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
+        share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
         reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
+        reply_topic: '<b>shift</b>+<b>r</b> Odpowiedz w temacie'
         reply_post: '<b>r</b> odpowiedz na wpis'
         quote_post: '<b>q</b> cytuj wpis'
         like: '<b>l</b> polub wpis'
