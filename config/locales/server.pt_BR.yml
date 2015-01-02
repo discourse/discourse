@@ -178,8 +178,6 @@ pt_BR:
             base:
               warning_requires_pm: "Você só pode anexar avisos em mensagens privadas."
               too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
-            archetype:
-              cant_send_pm: "Desculpe, não podes enviar uma mensagem particular para esse utilizador."
         user:
           attributes:
             password:
@@ -997,34 +995,8 @@ pt_BR:
         Usuários novos possuem limitações por segurança. Conforme você participa, ganhará a confiança da comunidade, se tornará um cidadão, e todas essas limitações serão automaticamente removidas. Em [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) altos suficientes, você ganhará até mesmo novas abilidades para nos ajudar a cuidar da nossa comunidade juntos.
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por participar de %{site_name}, e bem-vindo!
-
-        %{new_user_tips}
-
-        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) sempre.
-
-        Diverta-se durante sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por aceitar o seu convite para %{site_name}, e bem-vindo!
-
-        Geramos automaticamente um nome de usuário para você: **%{username}**, mas poderá alterá-lo quantas vezes quiser visitando [o seu perfil de usuário][prefs].
-
-        Para entrar outra vez, escolha uma das opções:
-
-        1. Utilize uma das credenciais disponíveis -- ela deve ser do **mesmo endereço de email** pelo qual você recebeu o convite original. Caso contrário não poderemos saber se é você!
-
-        2. Crie uma senha única para %{site_name} no [seu perfil de usuário][prefs].
-
-        %{new_user_tips}
-
-        Acreditamos num [comportamento civilizado na comunidade](%{base_url}/faq) em todos os momentos.
-
-        Divirta-se durante sua estadia!
-
-        [prefs]: %{user_preferences_url}
     bulk_invite_succeeded:
       subject_template: "Seus convites foram enviados com sucesso."
       text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
@@ -1227,21 +1199,6 @@ pt_BR:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Você foi aprovado no %{site_name}!"
-      text_body_template: |
-        Bem vindo ao %{site_name}!
-
-        Um membro da equipe aprovou a sua conta em %{site_name}.
-
-        Clique no link abaixo para confirmar e ativar sua nova conta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se o link acima não é clicável, tente copiar e colá-lo na barra de endereços do seu navegador.
-
-        %{new_user_tips}
-
-        Acreditamos no [comportamento da comunidade civilizada](%{base_url}/guidelines)  em todos os momentos.
-
-        Aproveite a sua estadia!
     signup:
       subject_template: "[%{site_name}] Ativar a sua nova conta"
       text_body_template: |

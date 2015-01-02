@@ -38,7 +38,6 @@ sq:
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
-      taken: "është i zënë"
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
   bulk_invite:
@@ -195,8 +194,6 @@ sq:
             base:
               warning_requires_pm: "You can only attach warnings to private messages."
               too_many_users: "You can only send warnings to one user at a time."
-            archetype:
-              cant_send_pm: "Na vjen keq, por nuk mund të dërgoni mesazh privat këtij anëtari."
         user:
           attributes:
             password:
@@ -1214,34 +1211,8 @@ sq:
         New users are somewhat limited for safety reasons. As you participate here, you'll gain the trust of the community, become a full citizen, and those limitations will automatically be removed. At a high enough [trust level](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), you'll gain even more abilities to help us manage our community together.
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
-      text_body_template: |
-        Thanks for joining %{site_name}, and welcome!
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
-      text_body_template: |
-        Thanks for accepting your invitation to %{site_name} -- welcome!
-
-        We've automatically generated a username for you: **%{username}**, but you can change it any time by visiting [your user profile][prefs].
-
-        To log in again, either:
-
-        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
       text_body_template: "The backup was successful.\nVisit the [admin > backup section](/admin/backups) to download your new backup."
@@ -1281,17 +1252,6 @@ sq:
         ```
         %{logs}
         ```
-    csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
-      text_body_template: |
-        The data export was successful.
-
-        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>CSV file download link will expire after 48 hours.</small>
-    csv_export_failed:
-      subject_template: "Export failed"
-      text_body_template: "The export has failed. Please check the logs."
     email_reject_trust_level:
       subject_template: "Email issue -- Insufficient Trust Level"
       text_body_template: |
@@ -1530,21 +1490,6 @@ sq:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Welcome to %{site_name}!
-
-        A staff member approved your account on %{site_name}.
-
-        Click the following link to confirm and activate your new account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |

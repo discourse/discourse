@@ -258,6 +258,7 @@ fr:
       profile: "Profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
+      download_archive: "Télécharger mes messages"
       new_private_message: "Nouveau Message Privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -439,6 +440,7 @@ fr:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
           uploading: "Envoi en cours..."
+          success: "Le fichier a été correctement importé. Vous serez averti par message privé lorsque le traitement sera terminé."
           error: "Il y a eu une erreur lors de l'envoi de '{{filename}}': {{message}}"
       password:
         title: "Mot de passe"

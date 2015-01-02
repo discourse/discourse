@@ -38,7 +38,6 @@ ko:
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
       invalid_boolean: "잘못된 값"
-      taken: "이미 사용 중."
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
   bulk_invite:
@@ -194,8 +193,6 @@ ko:
             base:
               warning_requires_pm: "개인 메시지를 통해 경고를 보낼 수 있습니다."
               too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
-            archetype:
-              cant_send_pm: "그 사용자에게 개인 메세지를 보낼 수 없습니다."
         user:
           attributes:
             password:
@@ -924,14 +921,6 @@ ko:
       subject_template: "포럼 신고로 인한 게시글 숨김"
     welcome_user:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name} 사이트에 오신것을 환영합니다!
-
-        %{new_user_tips}
-
-        저희는 [커뮤니티 행동 방침](%{base_url}/guidelines)을 잘 따라주실 것을 믿습니다.
-
-        다시한번 환영합니다!
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
     backup_succeeded:
@@ -943,9 +932,6 @@ ko:
       text_body_template: "복구 성공하였습니다."
     restore_failed:
       subject_template: "복구 실패"
-    csv_export_failed:
-      subject_template: "추출 실패"
-      text_body_template: "내보내기가 실패했습니다. 로그를 확인해주세요"
     email_reject_no_account:
       subject_template: "이메일 문제 -- 모르는 계정"
     email_reject_empty:

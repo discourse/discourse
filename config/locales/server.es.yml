@@ -39,7 +39,6 @@ es:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
-      taken: "Ya ha sido tomado"
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
   bulk_invite:
@@ -196,8 +195,6 @@ es:
             base:
               warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privado."
               too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
-            archetype:
-              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
         user:
           attributes:
             password:
@@ -1158,34 +1155,8 @@ es:
         \ Para cambiar como mantienes un rastro de los temas, o de la definición de nuevo, mira [tus preferencias de usuario](/my/preferences).\n\n## ¿Por qué no puedo ver ciertas cosas?\n\nNuevos usuarios están de alguna manera limitados por razones de seguridad. Conforme participes aquí, ganaras la confianza de la comunidad, conviértete en un ciudadano completo, y esas limitaciones serán automáticamente removidas. A un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficiente, ganaras aún más habilidades para ayudarnos a administrar juntos nuestra comunidad.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        ¡Gracias por unirte a %{site_name}! ¡Bienvenido!
-
-        %{new_user_tips}
-
-        Creemos en un [comportamiento civilizado de la comunidad](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta tu estancia!
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        Gracias por aceptar tu invitación a %{site_name} -- ¡bienvenido!
-
-        Hemos generado automáticamente un nombre de usuario por ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [tu perfil de usuario][prefs].
-
-        Para iniciar sesión otra vez, puedes:
-
-        1. Iniciar sesión usando cualquier método que desees -- pero debe de resolver a la **misma dirección e-mail** que tu recibiste en tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tu!
-
-        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
-
-        %{new_user_tips}
-
-        Creemos en un [comportamiento civilizado de la comunidad](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta tu estancia!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: "La copia de seguridad fue exitosa.\nVisita la [sección admin > copia de seguridad](/admin/backups) para descargar tu nueva copia de seguridad."
@@ -1225,17 +1196,6 @@ es:
         ```
         %{logs}
         ```
-    csv_export_succeeded:
-      subject_template: "La exportación de datos se completó satisfactoriamente"
-      text_body_template: |
-        Los datos fueron exportados exitosamente.
-
-        Descarga el archivo CSV: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>El enlace de descarga al archivo CSV expirara después de 48 horas.</small>
-    csv_export_failed:
-      subject_template: "La exportación falló"
-      text_body_template: "La exportación ha fallado. Por favor revisa los logs."
     email_reject_trust_level:
       subject_template: "Error con el email -- insuficiente nivel de confianza"
       text_body_template: |
@@ -1464,21 +1424,6 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Tú solicitud ha sido aprobada en %{site_name}!"
-      text_body_template: |
-        ¡Bienvenido a %{site_name}!
-
-        Un miembro del staff aprobó tu cuenta en %{site_name}.
-
-        Da clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Si el enlace de arriba no es clicleable, trata copiando y pegandolo en la barra de direcciones de tu navegador web.
-
-        %{new_user_tips}
-
-        Creemos en un [comportamiento civilizado de la comunidad](%{base_url}/guidelines) en todo momento.
-
-        ¡Disfruta tu estancia!
     signup:
       subject_template: "[%{site_name}] Activa tu nueva cuenta"
       text_body_template: |

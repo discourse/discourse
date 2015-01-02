@@ -144,10 +144,6 @@ ja:
         is_invalid: "は不正です。もう少し説明を追加してください"
         has_already_been_used: "は既に使用中です"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "申し訳ありませんが、このユーザにはプライベートメッセージを送信できません。"
         user:
           attributes:
             password:
