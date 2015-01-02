@@ -7,11 +7,11 @@
     <%= render partial: "layouts/head" %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
-    <meta name="fragment" content="!">
+      <meta name="fragment" content="!">
     <%- end %>
 
     <%- if shared_session_key %>
-    <meta name="shared_session_key" content="<%= shared_session_key %>">
+      <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
     <%= script "preload_store" %>
