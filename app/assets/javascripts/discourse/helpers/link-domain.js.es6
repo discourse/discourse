@@ -1,5 +1,6 @@
-Handlebars.registerHelper('link-domain', function(property, options) {
-  var link = Em.get(this, property, options);
+import registerUnbound from 'discourse/helpers/register-unbound';
+
+registerUnbound('link-domain', function(link) {
   if (link) {
     var internal = Em.get(link, 'internal'),
         hasTitle = (!Em.isEmpty(Em.get(link, 'title')));
