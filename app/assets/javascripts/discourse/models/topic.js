@@ -357,6 +357,18 @@ Discourse.Topic.reopenClass({
   },
 
   update: function(topic, props) {
+    props = JSON.parse(JSON.stringify(props)) || {};
+
+    // Annoyingly, empty arrays are not sent across the wire. This
+    // allows us to make a distinction between arrays that were not
+    // sent and arrays that we specifically want to be empty.
+    Object.keys(props).forEach(function(k) {
+      var v = props[k];
+      if (v instanceof Array && v.length === 0) {
+        props[k + '_empty_array'] = true;
+      }
+    });
+
     return Discourse.ajax(topic.get('url'), { type: 'PUT', data: props }).then(function(result) {
 
       // The title can be cleaned up server side
