@@ -198,6 +198,11 @@ describe Category do
       c.slug.should eq("cats-category")
     end
 
+    it 'and be sanitized' do
+      c = Fabricate(:category, name: 'Cats', slug: '  invalid slug')
+      c.slug.should == 'invalid-slug'
+    end
+
     it 'fails if custom slug is duplicate with existing' do
       c1 = Fabricate(:category, name: "Cats", slug: "cats")
       c2 = Fabricate.build(:category, name: "More Cats", slug: "cats")
