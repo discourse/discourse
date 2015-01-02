@@ -163,6 +163,39 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     this.trigger('previewRefreshed', $wmdPreview);
   },
 
+  _applyEmojiAutocomplete: function() {
+    if (!this.siteSettings.enable_emoji) { return; }
+
+    var template = this.container.lookup('template:emoji-selector-autocomplete.raw');
+    $('#wmd-input').autocomplete({
+      template: template,
+      key: ":",
+      transformComplete: function(v){ return v.code + ":"; },
+      dataSource: function(term){
+        return new Ember.RSVP.Promise(function(resolve) {
+          var full = ":" + term;
+          term = term.toLowerCase();
+
+          if (term === "") {
+            return resolve(["smile", "smiley", "wink", "sunny", "blush"]);
+          }
+
+          if (Discourse.Emoji.translations[full]) {
+            return resolve([Discourse.Emoji.translations[full]]);
+          }
+
+          var options = Discourse.Emoji.search(term, {maxResults: 5});
+
+          return resolve(options);
+        }).then(function(list) {
+          return list.map(function(i) {
+            return {code: i, src: Discourse.Emoji.urlFor(i)};
+          });
+        });
+      }
+    });
+  },
+
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
@@ -172,6 +205,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
 
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
     ComposerView.trigger("initWmdEditor");
+    this._applyEmojiAutocomplete();
 
     var template = this.container.lookup('template:user-selector-autocomplete.raw');
     $wmdInput.data('init', true);
