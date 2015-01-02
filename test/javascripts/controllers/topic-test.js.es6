@@ -28,8 +28,8 @@ test("editingMode", function() {
   topicController.set('model.details.can_edit', true);
   topicController.send('editTopic');
   ok(topicController.get('editingTopic'), "calling editTopic enables editing if the user can edit");
-  equal(topicController.get('newTitle'), topic.get('title'));
-  equal(topicController.get('newCategoryId'), topic.get('category_id'));
+  equal(topicController.get('buffered.title'), topic.get('title'));
+  equal(topicController.get('buffered.category_id'), topic.get('category_id'));
 
   topicController.send('cancelEditingTopic');
   ok(!topicController.get('editingTopic'), "cancelling edit mode reverts the property value");

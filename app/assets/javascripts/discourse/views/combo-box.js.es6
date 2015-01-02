@@ -63,7 +63,7 @@ export default Discourse.View.extend({
     this.rerender();
   }.observes('content.@each'),
 
-  didInsertElement: function() {
+  _initializeCombo: function() {
     var $elem = this.$(),
         self = this;
 
@@ -75,10 +75,15 @@ export default Discourse.View.extend({
 
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
+    var castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
-      self.set('value', $(e.target).val());
+      var val = $(e.target).val();
+      if (val.length && castInteger) {
+        val = parseInt(val, 10);
+      }
+      self.set('value', val);
     });
-  },
+  }.on('didInsertElement'),
 
   willClearRender: function() {
     var elementId = "s2id_" + this.$().attr('id');

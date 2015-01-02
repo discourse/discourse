@@ -463,13 +463,10 @@ Discourse.Composer = Discourse.Model.extend({
 
     // Update the title if we've changed it
     if (this.get('title') && post.get('post_number') === 1) {
-      var topic = this.get('topic');
-      topic.setProperties({
+      Discourse.Topic.update(this.get('topic'), {
         title: this.get('title'),
-        fancy_title: Handlebars.Utils.escapeExpression(this.get('title')),
-        category_id: parseInt(this.get('categoryId'), 10)
+        category_id: this.get('categoryId')
       });
-      topic.save();
     }
 
     post.setProperties({

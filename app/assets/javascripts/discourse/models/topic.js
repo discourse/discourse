@@ -202,23 +202,6 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  // Save any changes we've made to the model
-  save: function() {
-    // Don't save unless we can
-    if (!this.get('details.can_edit')) return;
-
-    var data = { title: this.get('title') };
-
-    if(this.get('category')){
-      data.category_id = this.get('category.id');
-    }
-
-    return Discourse.ajax(this.get('url'), {
-      type: 'PUT',
-      data: data
-    });
-  },
-
   /**
     Invite a user to this topic
 
@@ -371,6 +354,17 @@ Discourse.Topic.reopenClass({
       });
       result.set('actionByName', lookup);
     }
+  },
+
+  update: function(topic, props) {
+    return Discourse.ajax(topic.get('url'), { type: 'PUT', data: props }).then(function(result) {
+
+      // The title can be cleaned up server side
+      props.title = result.basic_topic.title;
+      props.fancy_title = result.basic_topic.fancy_title;
+
+      topic.setProperties(props);
+    });
   },
 
   create: function() {
