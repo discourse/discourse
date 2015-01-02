@@ -2,6 +2,7 @@ require_dependency 'topic_view'
 require_dependency 'promotion'
 require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
+require_dependency 'discourse_event'
 
 class TopicsController < ApplicationController
   include UrlHelper
@@ -133,6 +134,8 @@ class TopicsController < ApplicationController
       first_post = topic.ordered_posts.first
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
     end
+
+    DiscourseEvent.trigger(:topic_saved, topic, params)
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)

@@ -111,9 +111,12 @@ describe HasCustomFields do
       db_item = CustomFieldsTestItem.find(test_item.id)
       db_item.custom_fields.should == {"a" => ["b", "c", "d"]}
 
-      db_item.custom_fields["a"] = ["c", "d"]
+      db_item.custom_fields.update('a' => ['c', 'd'])
       db_item.save
       db_item.custom_fields.should == {"a" => ["c", "d"]}
+
+      db_item.custom_fields.delete('a')
+      db_item.custom_fields.should == {}
 
     end
 

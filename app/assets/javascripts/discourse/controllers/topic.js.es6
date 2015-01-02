@@ -264,6 +264,9 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
           props = this.get('buffered.buffer');
 
       Discourse.Topic.update(this.get('model'), props).then(function() {
+        // Note we roll back on success here because `update` saves
+        // the properties to the topic.
+        self.rollbackBuffer();
         self.set('editingTopic', false);
       }).catch(function(error) {
         if (error && error.responseText) {
@@ -271,10 +274,6 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
         } else {
           bootbox.alert(I18n.t('generic_error'));
         }
-      }).finally(function() {
-        // Note we even roll back on success here because `update` saves
-        // the properties to the topic.
-        self.rollbackBuffer();
       });
     },
 
