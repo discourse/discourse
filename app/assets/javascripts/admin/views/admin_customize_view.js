@@ -26,7 +26,17 @@ Discourse.AdminCustomizeView = Discourse.View.extend({
     selectStylesheet:       function() { this.set('selected', 'stylesheet'); },
     selectMobileHeader:     function() { this.set('selected', 'mobileHeader'); },
     selectMobileFooter:     function() { this.set('selected', 'mobileFooter'); },
-    selectMobileStylesheet: function() { this.set('selected', 'mobileStylesheet'); }
+    selectMobileStylesheet: function() { this.set('selected', 'mobileStylesheet'); },
+    toggleMaximize: function() {
+      this.set("maximized", !this.get("maximized"));
+
+      Em.run.scheduleOnce('afterRender', this, function(){
+        $('.ace-wrapper').each(function(){
+          $(this).data("editor").resize();
+        });
+      });
+
+    },
   },
 
   didInsertElement: function() {

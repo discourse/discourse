@@ -35,18 +35,19 @@ Discourse.AceEditorView = Discourse.View.extend({
 
   didInsertElement: function() {
 
-    var aceEditorView = this;
+    var self = this;
 
     var initAce = function() {
-      aceEditorView.editor = ace.edit(aceEditorView.$('.ace')[0]);
-      aceEditorView.editor.setTheme("ace/theme/chrome");
-      aceEditorView.editor.setShowPrintMargin(false);
-      aceEditorView.editor.getSession().setMode("ace/mode/" + (aceEditorView.get('mode')));
-      aceEditorView.editor.on("change", function() {
-        aceEditorView.skipContentChangeEvent = true;
-        aceEditorView.set('content', aceEditorView.editor.getSession().getValue());
-        aceEditorView.skipContentChangeEvent = false;
+      self.editor = ace.edit(self.$('.ace')[0]);
+      self.editor.setTheme("ace/theme/chrome");
+      self.editor.setShowPrintMargin(false);
+      self.editor.getSession().setMode("ace/mode/" + (self.get('mode')));
+      self.editor.on("change", function() {
+        self.skipContentChangeEvent = true;
+        self.set('content', self.editor.getSession().getValue());
+        self.skipContentChangeEvent = false;
       });
+      self.$().data('editor', self.editor);
     };
 
     if (window.ace) {

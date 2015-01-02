@@ -33,10 +33,6 @@ td.flaggers td {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
-
-    .ace-wrapper {
-      height: 400px;
-    }
   }
 
   .view-options {
@@ -460,6 +456,28 @@ section.details {
 
 // Customise area
 .customize {
+  .admin-footer {
+    margin-top: 20px;
+  }
+  .current-style.maximized {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100000;
+    background-color: white;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    .wrapper {
+      position: absolute;
+      top: 20px;
+      bottom: 10px;
+      left: 20px;
+      right: 20px;
+    }
+  }
   .nav.nav-pills {
     margin-left: 10px;
   }
@@ -470,6 +488,13 @@ section.details {
     margin-bottom: 10px;
   }
   .current-style {
+    .nav.nav-pills{
+      position: relative;
+    }
+    .toggle-maximize {
+      position: absolute;
+      right: -5px;
+    }
     .delete-link {
       margin-left: 15px;
       margin-top: 5px;
@@ -487,6 +512,21 @@ section.details {
       position: relative;
       height: 400px;
       width: 100%;
+    }
+    &.maximized {
+      .admin-container {
+        position: absolute;
+        bottom: 50px;
+        top: 80px;
+        width: 100%;
+      }
+      .admin-footer {
+        position: absolute;
+        bottom: 10px;
+      }
+      .ace-wrapper {
+        height: 100%;
+      }
     }
     .ace_editor {
       position: absolute;
