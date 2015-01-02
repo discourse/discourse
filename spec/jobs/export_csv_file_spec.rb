@@ -8,16 +8,16 @@ describe Jobs::ExportCsvFile do
     end
   end
 
-  let :user_header do
+  let :user_list_header do
     Jobs::ExportCsvFile.new.get_header('user')
   end
 
-  let :user_export do
-    Jobs::ExportCsvFile.new.user_export
+  let :user_list_export do
+    Jobs::ExportCsvFile.new.user_list_export
   end
 
   def to_hash(row)
-    Hash[*user_header.zip(row).flatten]
+    Hash[*user_list_header.zip(row).flatten]
   end
 
   it 'exports sso data' do
@@ -25,10 +25,9 @@ describe Jobs::ExportCsvFile do
     user = Fabricate(:user)
     user.create_single_sign_on_record(external_id: "123", last_payload: "xxx", external_email: 'test@test.com')
 
-    user = to_hash(user_export.find{|u| u[0] == user.id})
+    user = to_hash(user_list_export.find{|u| u[0] == user.id})
 
     user["external_id"].should == "123"
     user["external_email"].should == "test@test.com"
   end
 end
-
