@@ -24,6 +24,7 @@ module Jobs
 
     def execute(args)
       entity = args[:entity]
+      @file_name = entity
 
       if entity == "user_archive"
         @entity_type = "user"
@@ -56,12 +57,12 @@ module Jobs
       end
     end
 
-    def user_export
+    def user_list_export
       query = ::AdminUserIndexQuery.new
       user_data = query.find_users_query.to_a
       user_data.map do |user|
         group_names = get_group_names(user).join(';')
-        user_array = get_user_fields(user)
+        user_array = get_user_list_fields(user)
         user_array.push(group_names) if group_names != ''
         user_array
       end
@@ -168,7 +169,7 @@ module Jobs
         user_archive_array
       end
 
-      def get_user_fields(user)
+      def get_user_list_fields(user)
         user_array = []
 
         HEADER_ATTRS_FOR['user'].each do |attr|
@@ -271,7 +272,8 @@ module Jobs
 
       def set_file_path
         @file = UserExport.create(export_type: @entity_type, user_id: @current_user.id)
-        @file_name = "export_#{@file.id}.csv"
+        file_name_prefix = @file_name.split('_').join('-')
+        @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
         # ensure directory exists
         dir = File.dirname("#{UserExport.base_directory}/#{@file_name}")
