@@ -1,7 +1,8 @@
 import ObjectController from 'discourse/controllers/object';
+import BufferedContent from 'discourse/mixins/buffered-content';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
-export default ObjectController.extend(Discourse.SelectedPostsCount, {
+export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedContent, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
@@ -235,11 +236,6 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.set('allPostsSelected', false);
     },
 
-    /**
-      Toggle a participant for filtering
-
-      @method toggleParticipant
-    **/
     toggleParticipant: function(user) {
       this.get('postStream').toggleParticipant(Em.get(user, 'username'));
     },
@@ -247,17 +243,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     editTopic: function() {
       if (!this.get('details.can_edit')) return false;
 
-      this.setProperties({
-        editingTopic: true,
-        newTitle: this.get('title'),
-        newCategoryId: this.get('category_id')
-      });
+      this.set('editingTopic', true);
       return false;
     },
 
-    // close editing mode
     cancelEditingTopic: function() {
       this.set('editingTopic', false);
+      this.rollbackBuffer();
     },
 
     toggleMultiSelect: function() {
@@ -265,39 +257,25 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     },
 
     finishedEditingTopic: function() {
-      if (this.get('editingTopic')) {
+      if (!this.get('editingTopic')) { return; }
 
-        var topic = this.get('model');
+      // save the modifications
+      var self = this,
+          props = this.get('buffered.buffer');
 
-        // Topic title hasn't been sanitized yet, so the template shouldn't trust it.
-        this.set('topicSaving', true);
-
-        // manually update the titles & category
-        var backup = topic.setPropertiesBackup({
-          title: this.get('newTitle'),
-          category_id: parseInt(this.get('newCategoryId'), 10),
-          fancy_title: this.get('newTitle')
-        });
-
-        // save the modifications
-        var self = this;
-        topic.save().then(function(result){
-          // update the title if it has been changed (cleaned up) server-side
-          topic.setProperties(Em.getProperties(result.basic_topic, 'title', 'fancy_title'));
-          self.set('topicSaving', false);
-        }, function(error) {
-          self.setProperties({ editingTopic: true, topicSaving: false });
-          topic.setProperties(backup);
-          if (error && error.responseText) {
-            bootbox.alert($.parseJSON(error.responseText).errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
-        });
-
-        // close editing mode
+      Discourse.Topic.update(this.get('model'), props).then(function() {
         self.set('editingTopic', false);
-      }
+      }).catch(function(error) {
+        if (error && error.responseText) {
+          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
+      }).finally(function() {
+        // Note we even roll back on success here because `update` saves
+        // the properties to the topic.
+        self.rollbackBuffer();
+      });
     },
 
     toggledSelectedPost: function(post) {
