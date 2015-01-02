@@ -68,7 +68,13 @@ module Jobs
     end
 
     def staff_action_export
-      staff_action_data = UserHistory.order('id DESC').to_a
+      if @current_user.admin?
+        staff_action_data = UserHistory.only_staff_actions.order('id DESC').to_a
+      else
+        # moderator
+        staff_action_data = UserHistory.where(admin_only: false).only_staff_actions.order('id DESC').to_a
+      end
+
       staff_action_data.map do |staff_action|
         get_staff_action_fields(staff_action)
       end
