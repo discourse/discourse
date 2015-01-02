@@ -1,18 +1,19 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
-
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend({
   classNameBindings: ['containerClass'],
-  rerenderTriggers: ['condition'],
 
   containerClass: function() {
     return (this.get('size') === 'small') ? 'inline-spinner' : undefined;
   }.property('size'),
 
-  renderString: function(buffer) {
+  render: function(buffer) {
     if (this.get('condition')) {
       buffer.push('<div class="spinner ' + this.get('size') + '"}}></div>');
     } else {
       return this._super();
     }
-  }
+  },
+
+  _conditionChanged: function() {
+    this.rerender();
+  }.observes('condition')
 });
