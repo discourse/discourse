@@ -201,18 +201,19 @@ SQL
   end
 
   def ensure_slug
-    if name.present?
-      self.name.strip!
+    return unless name.present?
 
-      if slug.present?
-        # custom slug
-        errors.add(:slug, "is already in use") if duplicate_slug?
-      else
-        # auto slug
-        self.slug = Slug.for(name)
-        return if self.slug.blank?
-        self.slug = '' if duplicate_slug?
-      end
+    self.name.strip!
+
+    if slug.present?
+      # santized custom slug
+      self.slug = Slug.for(slug)
+      errors.add(:slug, 'is already in use') if duplicate_slug?
+    else
+      # auto slug
+      self.slug = Slug.for(name)
+      return if self.slug.blank?
+      self.slug = '' if duplicate_slug?
     end
   end
 

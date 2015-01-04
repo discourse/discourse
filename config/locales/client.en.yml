@@ -1281,6 +1281,8 @@ en:
       delete: 'Delete Category'
       create: 'New Category'
       save: 'Save Category'
+      slug: 'Category Slug'
+      slug_placeholder: '(Optional) dashed-words for url'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"
