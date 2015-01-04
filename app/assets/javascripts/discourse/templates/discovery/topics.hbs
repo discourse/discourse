@@ -37,10 +37,10 @@
   {{#if hasTopics}}
     <table class='topic-list'>
       <thead>
-        {{topic-list-header currentUser=currentUser canBulkSelect=canBulkSelect changeSort="changeSort" toggleBulkSelect="toggleBulkSelect" hideCategory=hideCategory order=order ascending=ascending}}
+        {{topic-list-header currentUser=currentUser canBulkSelect=canBulkSelect changeSort="changeSort" toggleBulkSelect="toggleBulkSelect" hideCategory=hideCategory order=order ascending=ascending bulkSelectEnabled=bulkSelectEnabled}}
       </thead>
       <tbody>
-        {{each content in topics itemController="topic-list-item" itemView="topic-list-item"}}
+        {{each content in topics itemView="topic-list-item"}}
       </tbody>
     </table>
   {{/if}}

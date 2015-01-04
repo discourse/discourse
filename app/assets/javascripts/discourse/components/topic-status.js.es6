@@ -3,7 +3,6 @@ import StringBuffer from 'discourse/mixins/string-buffer';
 export default Ember.Component.extend(StringBuffer, {
   classNames: ['topic-statuses'],
 
-  hasDisplayableStatus: Em.computed.or('topic.archived','topic.closed', 'topic.pinned', 'topic.unpinned', 'topic.invisible', 'topic.archetypeObject.notDefault', 'topic.is_warning'),
   rerenderTriggers: ['topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'],
 
   click: function() {
@@ -24,7 +23,6 @@ export default Ember.Component.extend(StringBuffer, {
   }.property('disableActions'),
 
   renderString: function(buffer) {
-    if (!this.get('hasDisplayableStatus')) { return; }
 
     var self = this;
 
@@ -36,9 +34,6 @@ export default Ember.Component.extend(StringBuffer, {
 
       buffer.push("<" + startTag + " title='" + title + "' class='topic-status'><i class='fa fa-" + name + "'></i></" + endTag + ">");
     };
-
-    // Allow a plugin to add a custom icon to a topic
-    this.trigger('addCustomIcon', buffer);
 
     renderIconIf('topic.is_warning', 'envelope', 'warning');
     renderIconIf('topic.closed', 'lock', 'locked');
