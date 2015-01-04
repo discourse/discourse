@@ -30,12 +30,6 @@ export default Ember.Component.extend({
       // Without a topic list, we assume it's loaded always.
       this.set('loaded', true);
     }
-  },
-
-  actions: {
-    clickedPosts: function(data) {
-      this.sendAction('postsAction', data);
-    }
   }
 
 });

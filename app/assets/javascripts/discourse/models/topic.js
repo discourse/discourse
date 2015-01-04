@@ -330,7 +330,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('excerpt'),
 
   readLastPost: Discourse.computed.propertyEqual('last_read_post_number', 'highest_post_number'),
-  canCleanPin: Em.computed.and('pinned', 'readLastPost')
+  canClearPin: Em.computed.and('pinned', 'readLastPost')
 
 });
 

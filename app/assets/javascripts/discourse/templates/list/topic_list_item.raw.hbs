@@ -1,0 +1,33 @@
+{{#if controller.bulkSelectEnabled}}
+<td class='star'>
+      <input type="checkbox" class="bulk-select">
+</td>
+{{/if}}
+<td class='main-link clearfix' colspan="{{titleColSpan}}">
+  {{raw "topic-status" topic=content}}
+  {{topic-link content}}
+  {{#if controller.showTopicPostBadges}}
+    {{raw "topic-post-badges" unread=content.unread newPosts=content.displayNewPosts unseen=content.unseen url=content.lastUnreadUrl}}
+  {{/if}}
+
+  {{raw "list/topic-excerpt" topic=content}}
+</td>
+
+{{#unless controller.hideCategory}}
+  {{#unless content.isPinnedUncategorized}}
+    {{raw "list/category-column" category=content.category}}
+  {{/unless}}
+{{/unless}}
+
+{{#if controller.showPosters}}
+  {{raw "list/posters-column" posters=content.posters}}
+{{/if}}
+
+{{#if controller.showParticipants}}
+  {{raw "list/posters-column" posters=content.participants}}
+{{/if}}
+
+{{raw "list/posts-count-column" topic=content}}
+<td class="num views {{content.viewsHeat}}">{{number content.views numberKey="views_long"}}</td>
+
+{{raw "list/activity-column" topic=content class="num" tagName="td"}}

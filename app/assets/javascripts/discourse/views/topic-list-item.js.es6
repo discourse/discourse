@@ -1,9 +1,28 @@
-export default Discourse.GroupedView.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
+
+export default Discourse.View.extend(StringBuffer, {
+  rerenderTriggers: ['controller.bulkSelectEnabled'],
   tagName: 'tr',
-  templateName: 'list/topic_list_item',
+  rawTemplate: 'list/topic_list_item.raw',
   classNameBindings: ['controller.checked', 'content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('content.id'),
+  titleColSpan: function(){
+    return (!this.get('controller.hideCategory') &&
+             this.get('content.isPinnedUncategorized') ? 2 : 1);
+  }.property(),
+
+  click: function(e){
+    var target = $(e.target);
+
+    if(target.hasClass('posts-map')){
+      if(target.prop('tagName') !== 'A'){
+        target = target.find('a');
+      }
+      this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('content'), position: target.offset()});
+      return false;
+    }
+  },
 
   highlight: function() {
     var $topic = this.$();

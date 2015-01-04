@@ -3,7 +3,10 @@ import StringBuffer from 'discourse/mixins/string-buffer';
 export default Ember.Component.extend(StringBuffer, {
   tagName: 'tr',
 
-  rerenderTriggers: ['order', 'ascending'],
+  rerenderTriggers: ['order', 'ascending', 'bulkSelectEnabled'],
+  toggleInTitle: function(){
+    return !this.get('bulkSelectEnabled') && this.get('canBulkSelect');
+  }.property('bulkSelectEnabled'),
 
   rawTemplate: 'components/topic-list-header.raw',
 
