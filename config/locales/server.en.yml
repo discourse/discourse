@@ -599,7 +599,7 @@ en:
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "Enter a site contact email address so new users or users who can't log in, as well as other webmasters and system administrators, can reach you. Update it in <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_missing: "Enter a site contact email address so new users or users who can't log in, as well as other webmasters and system administrators, can reach you for urgent matters. Update it in <a href='/admin/site_settings'>Site Settings</a>."
     contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
     title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
