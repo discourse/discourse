@@ -30,7 +30,7 @@ Discourse.ExportCsv.reopenClass({
     @method export_user_list
   **/
   exportUserList: function() {
-    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'user'}});
+    return Discourse.ajax("/export_csv/export_entity.json", {data: {entity_type: 'admin', entity: 'user_list'}});
   },
 
   /**

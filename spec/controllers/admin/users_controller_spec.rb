@@ -460,6 +460,7 @@ describe Admin::UsersController do
 
     context ".invite_admin" do
       it 'should invite admin' do
+        Jobs.expects(:enqueue).with(:user_email, anything).returns(true)
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
         response.should be_success
 
@@ -467,6 +468,14 @@ describe Admin::UsersController do
         u.name.should == "Bill"
         u.username.should == "bill22"
         u.admin.should == true
+      end
+
+      it "doesn't send the email with send_email falsy" do
+        Jobs.expects(:enqueue).with(:user_email, anything).never
+        xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
+        response.should be_success
+        json = ::JSON.parse(response.body)
+        json["password_url"].should be_present
       end
     end
 

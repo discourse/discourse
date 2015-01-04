@@ -203,4 +203,42 @@ describe CategoriesController do
 
   end
 
+  describe 'update_slug' do
+    it 'requires the user to be logged in' do
+      lambda { xhr :put, :update_slug, category_id: 'category'}.should raise_error(Discourse::NotLoggedIn)
+    end
+
+    describe 'logged in' do
+      let(:valid_attrs) { {id: @category.id, slug: 'fff'} }
+
+      before do
+        @user = log_in(:admin)
+        @category = Fabricate(:happy_category, user: @user)
+      end
+
+      it 'rejects blank' do
+        xhr :put, :update_slug, category_id: @category.id, slug: nil
+        response.status.should == 422
+      end
+
+      it 'accepts valid custom slug' do
+        xhr :put, :update_slug, category_id: @category.id, slug: 'valid-slug'
+        response.should be_success
+        category = Category.find(@category.id)
+        category.slug.should == 'valid-slug'
+      end
+
+      it 'accepts not well formed custom slug' do
+        xhr :put, :update_slug, category_id: @category.id, slug: ' valid slug'
+        response.should be_success
+        category = Category.find(@category.id)
+        category.slug.should == 'valid-slug'
+      end
+
+      it 'rejects invalid custom slug' do
+        xhr :put, :update_slug, category_id: @category.id, slug: '  '
+        response.status.should == 422
+      end
+    end
+  end
 end

@@ -83,44 +83,31 @@ describe ComposerMessagesFinder do
     let(:finder) { ComposerMessagesFinder.new(user, composerAction: 'createTopic') }
     let(:user) { Fabricate(:user) }
 
-    context "a user who we haven't checked for an avatar yet" do
-      it "returns no avatar message" do
-        finder.check_avatar_notification.should be_blank
+    context "success" do
+      let!(:message) { finder.check_avatar_notification }
+
+      it "returns an avatar upgrade message" do
+        message.should be_present
+      end
+
+      it "creates a notified_about_avatar log" do
+        UserHistory.exists_for_user?(user, :notified_about_avatar).should == true
       end
     end
 
-    context "a user who has been checked for a custom avatar" do
-      before do
-        UserHistory.create!(action: UserHistory.actions[:checked_for_custom_avatar], target_user_id: user.id )
-      end
+    it "doesn't return notifications for new users" do
+      user.trust_level = TrustLevel[0]
+      finder.check_avatar_notification.should be_blank
+    end
 
-      context "success" do
-        let!(:message) { finder.check_avatar_notification }
+    it "doesn't return notifications for users who have custom avatars" do
+      user.uploaded_avatar_id = 1
+      finder.check_avatar_notification.should be_blank
+    end
 
-        it "returns an avatar upgrade message" do
-          message.should be_present
-        end
-
-        it "creates a notified_about_avatar log" do
-          UserHistory.exists_for_user?(user, :notified_about_avatar).should == true
-        end
-      end
-
-      it "doesn't return notifications for new users" do
-        user.trust_level = TrustLevel[0]
-        finder.check_avatar_notification.should be_blank
-      end
-
-      it "doesn't return notifications for users who have custom avatars" do
-        user.uploaded_avatar_id = 1
-        finder.check_avatar_notification.should be_blank
-      end
-
-      it "doesn't notify users who have been notified already" do
-        UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: user.id )
-        finder.check_avatar_notification.should be_blank
-      end
-
+    it "doesn't notify users who have been notified already" do
+      UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: user.id )
+      finder.check_avatar_notification.should be_blank
     end
   end
 

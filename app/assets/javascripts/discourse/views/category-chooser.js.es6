@@ -7,6 +7,7 @@ export default ComboboxView.extend({
   overrideWidths: true,
   dataAttributes: ['id', 'description_text'],
   valueBinding: Ember.Binding.oneWay('source'),
+  castInteger: true,
 
   content: function() {
     var scopedCategoryId = this.get('scopedCategoryId');
