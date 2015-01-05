@@ -606,7 +606,7 @@ en:
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
     access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated private messages from, such as the new user welcome, flag warnings, etc. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
+    notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
 
   content_types:
     education_new_reply:
