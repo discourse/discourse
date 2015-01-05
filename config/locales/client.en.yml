@@ -1620,13 +1620,17 @@ en:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "add users"
+        selector_placeholder: "enter username"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        name: "Name"
+        add: "Add"
+        add_members: "Add members"
 
       api:
         generate_master: "Generate Master API Key"

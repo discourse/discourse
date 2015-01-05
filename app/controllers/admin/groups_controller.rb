@@ -1,13 +1,17 @@
 class Admin::GroupsController < Admin::AdminController
+
   def index
     groups = Group.order(:name)
+
     if search = params[:search]
       search = search.to_s
-      groups = groups.where("name ilike ?", "%#{search}%")
+      groups = groups.where("name ILIKE ?", "%#{search}%")
     end
+
     if params[:ignore_automatic].to_s == "true"
       groups = groups.where(automatic: false)
     end
+
     render_serialized(groups, BasicGroupSerializer)
   end
 
@@ -15,45 +19,13 @@ class Admin::GroupsController < Admin::AdminController
     render nothing: true
   end
 
-  def refresh_automatic_groups
-    Group.refresh_automatic_groups!
-    render json: success_json
-  end
-
-  def update_patch(group)
-    raise Discourse::InvalidAccess.new("automatic groups do not permit membership changes") if group.automatic
-
-    if actions = params[:changes]
-      Array(actions[:add]).each do |username|
-        if user = User.find_by_username(username)
-          group.add(user)
-        end
-      end
-      Array(actions[:delete]).each do |username|
-        if user = User.find_by_username(username)
-          group.remove(user)
-        end
-      end
-    end
-
-    render json: success_json
-  end
-
-  def update_put(group)
-    payload = params[:group]
-
-    group.alias_level = payload[:alias_level].to_i if payload[:alias_level].present?
-    group.visible = payload[:visible] == "true"
-
-    if group.automatic
-      # group rename & membership changes are ignored/prohibited for automatic groups
-    else
-      group.usernames = payload[:usernames] if payload[:usernames]
-      group.name = payload[:name] if payload[:name]
-    end
+  def create
+    group = Group.new
+    group.name = (params[:name] || '').strip
+    group.visible = params[:visible] == "true"
 
     if group.save
-      render json: success_json
+      render_serialized(group, BasicGroupSerializer)
     else
       render_json_error group
     end
@@ -62,20 +34,13 @@ class Admin::GroupsController < Admin::AdminController
   def update
     group = Group.find(params[:id].to_i)
 
-    if request.patch?
-      update_patch(group)
-    else
-      update_put(group)
-    end
-  end
+    group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
+    group.visible = params[:visible] == "true"
+    # group rename is ignored for automatic groups
+    group.name = params[:name] if params[:name] && !group.automatic
 
-  def create
-    group = Group.new
-    group.name = (params[:group][:name] || '').strip
-    group.usernames = params[:group][:usernames] if params[:group][:usernames]
-    group.visible = params[:group][:visible] == "true"
     if group.save
-      render_serialized(group, BasicGroupSerializer)
+      render json: success_json
     else
       render_json_error group
     end
@@ -83,6 +48,7 @@ class Admin::GroupsController < Admin::AdminController
 
   def destroy
     group = Group.find(params[:id].to_i)
+
     if group.automatic
       can_not_modify_automatic
     else
@@ -91,9 +57,48 @@ class Admin::GroupsController < Admin::AdminController
     end
   end
 
+  def refresh_automatic_groups
+    Group.refresh_automatic_groups!
+    render json: success_json
+  end
+
+  def add_members
+    group = Group.find(params.require(:group_id).to_i)
+    usernames = params.require(:usernames)
+
+    return can_not_modify_automatic if group.automatic
+
+    usernames.split(",").each do |username|
+      if user = User.find_by_username(username)
+        group.add(user)
+      end
+    end
+
+    if group.save
+      render json: success_json
+    else
+      render_json_error(group)
+    end
+  end
+
+  def remove_member
+    group = Group.find(params.require(:group_id).to_i)
+    user_id = params.require(:user_id).to_i
+
+    return can_not_modify_automatic if group.automatic
+
+    group.users.delete(user_id)
+
+    if group.save
+      render json: success_json
+    else
+      render_json_error(group)
+    end
+  end
+
   protected
 
-  def can_not_modify_automatic
-    render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
-  end
+    def can_not_modify_automatic
+      render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
+    end
 end

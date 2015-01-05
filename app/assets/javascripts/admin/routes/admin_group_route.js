@@ -8,16 +8,10 @@ Discourse.AdminGroupRoute = Discourse.Route.extend({
     return group;
   },
 
-  afterModel: function(model) {
-    var self = this;
-    return model.findMembers().then(function(members) {
-      self.set('_members', members);
-    });
-  },
-
   setupController: function(controller, model) {
-    controller.set('model', model);
-    controller.set('members', this.get('_members'));
+    controller.set("model", model);
+    model.findMembers();
   }
+
 });
 
