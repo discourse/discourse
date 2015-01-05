@@ -11,6 +11,10 @@ export default Ember.Component.extend({
     return !!this.get('changeSort');
   }.property(),
 
+  showLikes: function(){
+    return this.get('order') === "likes";
+  }.property(),
+
   click: function(e){
     var self = this;
     var on = function(sel, callback){
