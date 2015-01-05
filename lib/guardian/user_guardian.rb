@@ -55,4 +55,8 @@ module UserGuardian
     user.trust_level == TrustLevel[0] && anonymous?
   end
 
+  def can_see_staff_info?(user)
+    user && is_staff?
+  end
+
 end

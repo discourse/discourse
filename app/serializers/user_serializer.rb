@@ -68,11 +68,6 @@ class UserSerializer < BasicUserSerializer
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
   staff_attributes :post_count,
-                   :number_of_deleted_posts,
-                   :number_of_flagged_posts,
-                   :number_of_flags_given,
-                   :number_of_suspensions,
-                   :number_of_warnings,
                    :can_be_deleted,
                    :can_delete_all_posts
 
@@ -217,38 +212,6 @@ class UserSerializer < BasicUserSerializer
 
   def post_count
     object.user_stat.try(:post_count)
-  end
-
-  def number_of_deleted_posts
-    Post.with_deleted
-        .where(user_id: object.id)
-        .where(user_deleted: false)
-        .where.not(deleted_by_id: object.id)
-        .where.not(deleted_at: nil)
-        .count
-  end
-
-  def number_of_flagged_posts
-    Post.with_deleted
-        .where(user_id: object.id)
-        .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                             .where(disagreed_at: nil)
-                             .select(:post_id))
-        .count
-  end
-
-  def number_of_flags_given
-    PostAction.where(user_id: object.id)
-              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-              .count
-  end
-
-  def number_of_warnings
-    object.warnings.count
-  end
-
-  def number_of_suspensions
-    UserHistory.for(object, :suspend_user).count
   end
 
   def can_be_deleted

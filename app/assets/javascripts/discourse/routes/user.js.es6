@@ -45,7 +45,10 @@ export default Discourse.Route.extend({
   },
 
   afterModel: function() {
-    return this.modelFor('user').findDetails();
+    var user = this.modelFor('user');
+    return user.findDetails().then(function() {
+      return user.findStaffInfo();
+    });
   },
 
   serialize: function(model) {
