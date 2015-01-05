@@ -84,6 +84,7 @@ es:
           other: "hace %{count} días"
     share:
       topic: 'comparte un enlace a este tema'
+      post: 'post #%{postNumber}'
       close: 'cerrar'
       twitter: 'comparte este enlace en Twitter'
       facebook: 'comparte este enlace en Facebook'
@@ -258,6 +259,7 @@ es:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferencias"
+      download_archive: "Descargar mis posts"
       new_private_message: "Nuevo Mensaje Privado"
       private_message: "Mensaje Privado"
       private_messages: "Mensajes"
@@ -439,6 +441,7 @@ es:
           none: "No has invitado a nadie todavía. Puede enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
           text: "Archivo de Invitación en Masa"
           uploading: "Subiendo..."
+          success: "Archivo subido correctamente, serás notificado cuando el proceso se haya completado."
           error: "Hubo un error al subir '{{filename}}': {{message}}"
       password:
         title: "Contraseña"
@@ -446,6 +449,7 @@ es:
         common: "Esa contraseña es demasiado común."
         ok: "Tu contraseña es válida."
         instructions: "Debe contener al menos %{count} caracteres."
+      associated_accounts: "Inicios de sesión"
       ip_address:
         title: "Última dirección IP"
       registration_ip_address:
@@ -573,7 +577,12 @@ es:
       github:
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
+    apple_international: "Apple/Internacional"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Ésta es una advertencia oficial."
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saving_draft_tip: "guardando"
@@ -1519,6 +1528,7 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
+        success: "Exportación comenzada, se te notificará a través de un mensaje privado cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
         button_text: "Exportar"
         button_title:
@@ -1996,10 +2006,17 @@ es:
             with_post: <span class="username">%{username}</span> por publicar en %{link}
             with_post_time: <span class="username">%{username}</span> por publicar en %{link} el <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> el <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Añade nuevos emojis que estarán disponibles para todos. (CONSEJO: arrasta varios archivos a la vez)"
+        add: "Añadir nuevo Emoji"
+        name: "Nombre"
+        image: "Imagen"
+        delete_confirm: "¿Estás seguro de querer eliminar el emoji :%{name}:?"
     lightbox:
       download: "descargar"
     search_help:
-      title: 'Buscar Ayuda'
+      title: 'Ayuda para búsquedas'
     keyboard_shortcuts_help:
       title: 'Atajos de teclado'
       jump_to:
@@ -2017,6 +2034,7 @@ es:
         back: '<b>u</b> Atrás'
         up_down: '<b>k</b>/<b>j</b> Desplazar selección &uarr; &darr;'
         open: '<b>o</b> or <b>Entrar</b> Abrir tema seleccionado'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Siguiente/anterior sección'
       application:
         title: 'Aplicación'
         create: '<b>c</b> Crear un tema nuevo'
@@ -2031,8 +2049,11 @@ es:
       actions:
         title: 'Acciones'
         star: '<b>f</b> Añadir tema a favoritos'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
+        share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'
         reply_as_new_topic: '<b>t</b> Responder como un tema enlazado.'
+        reply_topic: '<b>shift</b>+<b>r</b> Responder al tema'
         reply_post: '<b>r</b> Responder al post'
         quote_post: '<b>q</b> Citar post'
         like: '<b>l</b> Me gusta el post'

@@ -39,7 +39,6 @@ he:
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: את/ה הקשת %{length}."
       invalid_boolean: "בוליאני לא חוקי."
-      taken: "כבר נשלח"
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
   bulk_invite:
@@ -187,8 +186,6 @@ he:
             base:
               warning_requires_pm: "את/ה יכולים להוסיף אזהרות רק למסרים פרטיים."
               too_many_users: "את/ה יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
-            archetype:
-              cant_send_pm: "סליחה, אינך יכול לשלוח הודעה פרטית למשתמש הזה."
         user:
           attributes:
             password:
@@ -1094,14 +1091,6 @@ he:
       subject_template: "הודעה הוסתרה בעקבות סימון"
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
-      text_body_template: |
-        תודה שהצטרפת ל%{site_name}, וברוכ/ה הבא/ה!
-
-        %{new_user_tips}
-
-        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
-
-        תהנו מהביקור!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
     backup_succeeded:
@@ -1143,16 +1132,6 @@ he:
 
         %{logs}
         ```
-    csv_export_succeeded:
-      subject_template: "יצוא המידע הושלם בהצלחה"
-      text_body_template: |
-        ייצוא המידע הסתיים בהצלחה.
-        הורדה של קובץ ה-CSV: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>הקישור להודת קובץ ה-CSV יפוג לאחר 48 שעות</small>
-    csv_export_failed:
-      subject_template: "הייצוא נכשל"
-      text_body_template: "תהליך הייצוא נכשל. בדוק את הלוגים."
     email_reject_trust_level:
       subject_template: "בעיית דוא\"ל - היעדר רמת אמון מספקת"
       text_body_template: |
@@ -1391,20 +1370,6 @@ he:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        ברוכים הבאים ל%{site_name}!
-
-        מישהו מהצוות שלנו אישר את החשבון שלך ב%{site_name}.
-
-        הקישו על הקישור הזה כדי להפעיל את החשבון החדש: %{base_url}/users/activate-account/%{email_token}
-
-        אם הקישור אינו בר-הקלקה, נסו להעתיק ולהדביק אותו אל שורת הכתובות בדפדפן שלכם.
-
-        %{new_user_tips}
-
-        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
-
-        מקווים שתהנו מהביקור!
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |
