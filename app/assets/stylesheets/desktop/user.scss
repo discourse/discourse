@@ -114,14 +114,13 @@
 .user-main {
   margin-bottom: 50px;
 
+  .group-membership .ac-wrap {
+    float: left;
+    margin-right: 10px;
+  }
+
   table.group-members {
-    width: 100%;
-    p {
-      max-width: 600px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    margin-top: 20px;
     th.seen {
       text-align: right;
     }
@@ -129,12 +128,13 @@
       width: 60px;
     }
     td {
-      img {
-        margin-right: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      span.fullname {
+        margin-right: 50px;
       }
       span.last-seen-at {
         float: right;
-        color: $primary;
       }
     }
   }

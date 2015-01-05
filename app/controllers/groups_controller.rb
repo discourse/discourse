@@ -32,6 +32,30 @@ class GroupsController < ApplicationController
     render_serialized(members.to_a, GroupUserSerializer)
   end
 
+  # for PATCH requests
+  def update
+    guardian.ensure_can_edit!(the_group)
+
+    added_users = []
+    if actions = params[:changes]
+      Array(actions[:add]).each do |username|
+        if user = User.find_by_username(username)
+          unless user.belongs_to_group?(the_group)
+            the_group.add(user)
+            added_users << user
+          end
+        end
+      end
+      Array(actions[:delete]).each do |username|
+        if user = User.find_by_username(username)
+          the_group.remove(user)
+        end
+      end
+    end
+
+    render_serialized(added_users, GroupUserSerializer)
+  end
+
   private
 
   def find_group(param_name)
@@ -41,4 +65,7 @@ class GroupsController < ApplicationController
     group
   end
 
+  def the_group
+    @the_group ||= find_group(:id)
+  end
 end

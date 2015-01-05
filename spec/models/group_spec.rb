@@ -204,4 +204,25 @@ describe Group do
     expect(user.groups.map(&:name).sort).to eq ["trust_level_0"]
   end
 
+  context "group management" do
+    let(:group) {Fabricate(:group)}
+
+    it "by default has no managers" do
+      group.managers.should be_empty
+    end
+
+    it "multiple managers can be appointed" do
+      u1, u2 = Fabricate(:user), Fabricate(:user)
+      u1.managed_groups.should be_empty
+      group.appoint_manager(u1)
+      group.appoint_manager(u2)
+      group.managers.should eq ([u1, u2])
+    end
+
+    it "manager has authority to edit membership" do
+      u = Fabricate(:user)
+      group.appoint_manager(u)
+      Guardian.new(u).can_edit?(group).should be_truthy
+    end
+  end
 end

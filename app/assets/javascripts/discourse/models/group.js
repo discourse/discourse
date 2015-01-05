@@ -16,12 +16,14 @@ Discourse.Group = Discourse.Model.extend({
     }
   }.property('user_count'),
 
-  findMembers: function() {
+  findMembers: function(opts) {
+    opts = opts || {};
     if (Em.isEmpty(this.get('name'))) { return Ember.RSVP.resolve([]); }
 
-    return Discourse.ajax('/groups/' + this.get('name') + '/members').then(function(result) {
-      return result.map(function(u) { return Discourse.User.create(u) });
-    });
+    return Discourse.ajax(
+      '/groups/' + this.get('name') + '/members.json', {data: opts}).then(function(result) {
+        return result.map(function(u) { return Discourse.User.create(u) });
+      });
   },
 
   destroy: function(){
@@ -37,13 +39,21 @@ Discourse.Group = Discourse.Model.extend({
              usernames: this.get('usernames') } };
   },
 
-  createWithUsernames: function(usernames){
-    var self = this,
-        json = this.asJSON();
-    json.group.usernames = usernames;
+  addMembers: function(usernames) {
+    var payload = {changes: {add: usernames}};
 
-    return Discourse.ajax("/admin/groups", {type: "POST", data: json}).then(function(resp) {
-      self.set('id', resp.basic_group.id);
+    return Discourse.ajax("/groups/" + this.get('name'), {
+      type: "PATCH",
+      data: payload
+    });
+  },
+
+  removeMember: function(username) {
+    var payload = {changes: {delete: username}};
+
+    return Discourse.ajax("/groups/" + this.get('name'), {
+      type: "PATCH",
+      data: payload
     });
   },
 
