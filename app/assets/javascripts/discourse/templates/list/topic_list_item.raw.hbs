@@ -10,7 +10,9 @@
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
   {{/if}}
 
-  {{raw "list/topic-excerpt" topic=topic}}
+  {{#if expandPinned}}
+    {{raw "list/topic-excerpt" topic=topic}}
+  {{/if}}
 </td>
 
 {{#unless controller.hideCategory}}

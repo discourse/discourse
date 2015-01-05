@@ -22,6 +22,23 @@ export default Discourse.View.extend(StringBuffer, {
     return this.get('topic.op_like_count') > 0;
   },
 
+  expandPinned: function(){
+    var pinned = this.get('topic.pinned');
+    if(!pinned){
+      return false;
+    }
+
+    if(this.get('controller.expandGloballyPinned') && this.get('topic.pinned_globally')){
+      return true;
+    }
+
+    if(this.get('controller.expandAllPinned')){
+      return true;
+    }
+
+    return false;
+  }.property(),
+
   click: function(e){
     var target = $(e.target);
 
