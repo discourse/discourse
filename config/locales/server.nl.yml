@@ -190,8 +190,6 @@ nl:
             base:
               warning_requires_pm: "Je kunt alleen waarschuwingen aan privéberichten toevoegen."
               too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
-            archetype:
-              cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
         user:
           attributes:
             password:
@@ -770,14 +768,6 @@ nl:
       subject_template: "Bericht van %{site_name}: je bericht is verborgen wegens meldingen uit de community"
     welcome_user:
       subject_template: "Welkom bij %{site_name}!"
-      text_body_template: |
-        Fijn dat je lid bent geworden van %{site_name} en welkom!
-
-        %{new_user_tips}
-
-        We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/guidelines).
-
-        Geniet van je verblijf!
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
     too_many_spam_flags:

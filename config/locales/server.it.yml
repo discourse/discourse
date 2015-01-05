@@ -39,7 +39,6 @@ it:
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
-      taken: "già preso"
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
   bulk_invite:
@@ -182,8 +181,6 @@ it:
             base:
               warning_requires_pm: "Puoi allegare solo avvertimenti ai messaggi privati."
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
-            archetype:
-              cant_send_pm: "Spriacenti, non puoi mandare un messaggio privato a quell'utente."
         user:
           attributes:
             password:
@@ -662,6 +659,7 @@ it:
     enable_github_logins: "Abilita l'autenticazione via Github, richiede github_client_id e github_client_secret"
     github_client_id: "Client id per autenticazione Github, ottenibile da https://github.com/settings/applications"
     github_client_secret: "Client secret per autenticazione Github, ottenibile da https://github.com/settings/applications"
+    allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da tenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     backup_daily: "Crea automaticamente un backup del sito una volta al giorno."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: Assicurati che sia un bucket privato."
@@ -895,14 +893,6 @@ it:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: |
-        Grazie per esserti unito a %{site_name}, e benvenuto!
-
-        %{new_user_tips}
-
-        Noi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).
-
-        Buona permanenza!
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
@@ -935,11 +925,6 @@ it:
       text_body_template: "Il tuo invito di massa è stato processato, %{sent} inviti spediti."
     bulk_invite_failed:
       subject_template: "Invito di massa processato con errori"
-    csv_export_succeeded:
-      subject_template: "Esportazione dati completata con successo"
-    csv_export_failed:
-      subject_template: "Esportazione fallita"
-      text_body_template: "Esportazione fallita. Controlla i log."
     email_reject_trust_level:
       subject_template: "Problema email -- Livello Esperienza insufficente"
       text_body_template: |
@@ -1093,22 +1078,6 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: |+
-        Benvenuto su %{site_name}!
-
-        Un membro dello staff ha approvato il tuo account su %{site_name}.
-
-        Clicca sul link che segue per confermare e attivare il tuo nuovo account:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Se il link qui sopra non è cliccabile, prova a copiarlo e a incollarlo nella barra degli indirizzi del tuo browser.
-
-        %{new_user_tips}
-
-        Noi crediamo in [civilized community behavior](%{base_url}/guidelines) da sempre.
-
-        Buona permanenza!
-
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |

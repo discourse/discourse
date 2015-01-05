@@ -33,12 +33,12 @@ pl_PL:
   log_in: "Logowanie"
   via: "%{username} z %{site_name}"
   is_reserved: "jest zarezerwowana"
+  purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   errors:
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
-      taken: "jest już zajęty"
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
   bulk_invite:
@@ -181,8 +181,8 @@ pl_PL:
             base:
               warning_requires_pm: "Ostrzeżenie można dołączać jedynie do prywatnych wiadomości."
               too_many_users: "Jedno ostrzeżenie możesz wysłać tylko do pojedynczego użytkownika."
-            archetype:
-              cant_send_pm: "Przepraszamy, nie możesz wysłać prywatnej wiadomości do tego użytkownika."
+              cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości temu użytkownikowi."
+              no_user_selected: "Musisz wybrać poprawnego użytkownika,"
         user:
           attributes:
             password:
@@ -401,6 +401,7 @@ pl_PL:
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Coś innego"
       email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -646,6 +647,7 @@ pl_PL:
     enable_badges: "Włącz system odznak"
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
+    invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Publiczna rejestracja jest wyłączona: wszyscy nowi użytkownicy muszą zostać zaproszeni przez innych użytkowników lub zespół."
     min_password_length: "Minimalna długość hasła."
     enable_yahoo_logins: "Enable Yahoo authentication"
@@ -786,18 +788,8 @@ pl_PL:
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
     welcome_user:
       subject_template: "Witaj na %{site_name}!"
-      text_body_template: |
-        Dziękujemy za rejestrację, witamy na %{site_name}!
-
-        %{new_user_tips}
-
-        Doceniamy cywilizowane zachowanie zgodne z  [wytycznymi społeczności](%{base_url}/guidelines).
-
-        Miłego korzystania!
     welcome_invite:
       subject_template: "Witaj na %{site_name}!"
-      text_body_template: "Dziękujemy za przyjęcie zaproszenia do %{site_name} – witamy!\n\nTwoja automatycznie wygenerowana nazwa użytkownika: **%{username}**. Możesz ją zmienić w każdej chwili w [swoich ustawieniach][prefs].\n\nAby zalogować się:\n\nA) Zaloguj się przyciskiem logowania przez zewnętrzny serwis. Pamiętaj, aby podpięty pod wybrany serwis adres e-mail **był taki sam** jak ten na który dostałeś swoje zaproszenie. W przeciwnym wypadku nie będziemy mogli stwierdzić, że ty to Ty! \n\nB) Stwórz unikalne hasło w [swoich ustawieniach][prefs] i zaloguj się przy jego pomocy.\n\n%{new_user_tips}\n\nWierzymy w [cywilizowane zachowanie](%{base_url}/guidelines) jako podstawę naszej społeczności.\n\n\
-        Miłego uczestnictwa! \n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Kopia zapasowa jest gotowa"
       text_body_template: "Kopia zapasowa została wykonana pomyślnie.\nOdwiedź [admin > kopie zapasowe](/admin/backups) aby ją pobrać."

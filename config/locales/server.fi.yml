@@ -39,7 +39,6 @@ fi:
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
       invalid_boolean: "Totuusarvomuuttuja ei kelpaa"
-      taken: "on jo varattu"
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
   bulk_invite:
@@ -196,8 +195,6 @@ fi:
             base:
               warning_requires_pm: "Voit liittää varoituksia vain yksityisviesteihin."
               too_many_users: "Voit lähettää varoituksia vain yhdelle käyttäjälle kerrallaan."
-            archetype:
-              cant_send_pm: "Pahoittelut, et voi lähettää tälle käyttäjälle yksityisviestiä."
         user:
           attributes:
             password:
@@ -1229,34 +1226,8 @@ fi:
         Uusien käyttäjien oikeuksia rajoitetaan turvallisussyistä. Osallistumalla ansaitset yhteisön luottamuksen ja rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
-      text_body_template: |
-        Kiitos liittymisestä sivustolle %{site_name}, ja tervetuloa!
-
-        %{new_user_tips}
-
-        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
-
-        Toivottavasti viihdyt!
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
-      text_body_template: |
-        Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
-
-        Olemme luoneet sinulle automaattisesti käyttäjänimen: **%{username}**, mutta voit vaihtaa sen koska hyvänsä [käyttäjäprofiilistasi][prefs].
-
-        Kirjautuaksesi sisään uudestaan, joko:
-
-        1. Kirjaudu sisään millä metodilla haluat -- kunhan se on yhdistetty **samaan sähköpostiosoitteeseen,** kuin jonne vastaanotit alkuperäisen kutsun. Muuten emme voi tietää, että se todella olet sinä!
-
-        2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
-
-        %{new_user_tips}
-
-        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
-
-        Toivottavasti viihdyt!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
       text_body_template: "Varmuuskopiointi onnistui.\nVoit ladata varmuuskopioin avaamalla valikon [ylläpito > varmuuskopiot](/admin/backups)."
@@ -1296,17 +1267,6 @@ fi:
         ```
         %{logs}
         ```
-    csv_export_succeeded:
-      subject_template: "Datan vieminen suoritettu onnistuneesti"
-      text_body_template: |
-        Datan vienti onnistui.
-
-        Lataa CSV-tiedosto: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>Linkki CSV-tiedostoon vanhenee 48 tunnin kuluttua.</small>
-    csv_export_failed:
-      subject_template: "Vienti epäonnistui"
-      text_body_template: "Vienti on epäonnistunut. Tarkista loki-tiedostot."
     email_reject_trust_level:
       subject_template: "Sähköpostiongelma -- Riittämätön luottamustaso"
       text_body_template: |
@@ -1547,21 +1507,6 @@ fi:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
-      text_body_template: |
-        Tervetuloa sivustolle %{site_name}!
-
-        Henkilökunnan edustaja on hyväksynyt tilisi sivustolla %{site_name}.
-
-        Klikkaa alla olevaa linkkiä vahvistaaksesi ja aktivoidaksesi uuden tilisit:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Jos linkkiä ei voi klikata, yritä kopioida ja liittää se selaimen osoiteriville.
-
-        %{new_user_tips}
-
-        Me uskomme [sivistyneeseen kanssakäyntiin](%{base_url}/guidelines).
-
-        Toivottavasti viihdyt!
     signup:
       subject_template: "[%{site_name}] Vahvista uusi tilisi"
       text_body_template: |

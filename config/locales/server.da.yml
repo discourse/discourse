@@ -187,8 +187,6 @@ da:
             base:
               warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
-            archetype:
-              cant_send_pm: "Beklager, du kan ikke sende en privat besked til den bruger."
         user:
           attributes:
             password:

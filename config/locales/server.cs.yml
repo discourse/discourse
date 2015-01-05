@@ -197,8 +197,6 @@ cs:
             base:
               warning_requires_pm: "Varování můžete přidat pouze k soukromým zprávám."
               too_many_users: "Varování můžete najednou poslat pouze jednomu uživateli."
-            archetype:
-              cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
         user:
           attributes:
             password:
@@ -786,34 +784,8 @@ cs:
         Noví uživatelé mají z bezpečnostních důvodů trochu omezená práva. Čím víc se do komunity zapojíte, tím větší důvěryhodnost získáte a všechny omezení se automaticky odstraní. Na dostatečně vysoké [důvěryhodnosti](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) můžete získat i moderátorská oprávnění.
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
-      text_body_template: |
-        Děkujeme, že jste se připojili na %{site_name} a vítáme vám na našem diskuzním fóru!
-
-        %{new_user_tips}
-
-        Věříme v [civilizované komunitní chování](%{base_url}/guidelines) za všech okolností.
-
-        Užijte si naše fórum!
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
-      text_body_template: |
-        Díky za přijmutí pozvánky na %{site_name} -- vítejte!
-
-        Automaticky jsme vám vytvořili uživatelské jméno **%{username}**, ale můžete si ho změnit [na svém profilu][prefs].
-
-        Pro příští přihlášení, buď:
-
-        1. Přihlaste se libovolnou metodou -- ale musíte použít stejnou **emailovou adresu** na kterou jste dostali pozvánku. Jinak nedokážeme rozpoznat, že jste to vy.
-
-        2. V [nastavení][prefs] si vyplňte heslo, které budeme moct pro přihlášení použít.
-
-        %{new_user_tips}
-
-        Věříme v [civilizovanou komunitu](%{base_url}/guidelines).
-
-        Užijte si to tu!
-
-        [prefs]: %{user_preferences_url}
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -935,21 +907,6 @@ cs:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Byli jste schváleni na %{site_name}!"
-      text_body_template: |
-        Vítejte na %{site_name}!
-
-        Moderátor potvrdil vaši registraci na %{site_name}.
-
-        Na následujícím odkazu můžete aktivovat váš nový účet:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Jestli se vám na odkaz nedaří kliknout, zkopírujte si ho a vložte ho do adresní řádky internetového prohlížeče.
-
-        %{new_user_tips}
-
-        Věříme v [civilizovanou komunitu](%{base_url}/guidelines).
-
-        Užijte si to tu!
     signup:
       subject_template: "[%{site_name}] Aktivujte svůj nový účet"
       text_body_template: |

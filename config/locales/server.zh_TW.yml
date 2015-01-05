@@ -6,6 +6,16 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_TW:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -126,10 +136,6 @@ zh_TW:
         is_invalid: "無效，請嘗試寫得更明確"
         has_already_been_used: "已經被使用"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
         user:
           attributes:
             password:
