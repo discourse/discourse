@@ -176,11 +176,11 @@ class AdminDashboardData
   end
 
   def site_contact_username_check
-    I18n.t('dashboard.site_contact_username_warning') if SiteSetting.site_contact_username.blank?
+    I18n.t('dashboard.site_contact_username_warning') if !SiteSetting.site_contact_username.present? || SiteSetting.site_contact_username == SiteSetting.defaults[:site_contact_username]
   end
 
   def notification_email_check
-    I18n.t('dashboard.notification_email_warning') if SiteSetting.notification_email.blank?
+    I18n.t('dashboard.notification_email_warning') if !SiteSetting.notification_email.present? || SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
   end
 
   def ruby_version_check
