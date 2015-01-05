@@ -11,14 +11,14 @@ describe Post do
     Fabricate.build(:post, args)
   end
 
-  it { should validate_presence_of :raw }
+  it { is_expected.to validate_presence_of :raw }
 
   # Min/max body lengths, respecting padding
-  it { should_not allow_value("x").for(:raw) }
-  it { should_not allow_value("x" * (SiteSetting.max_post_length + 1)).for(:raw) }
-  it { should_not allow_value((" " * SiteSetting.min_post_length) + "x").for(:raw) }
+  it { is_expected.not_to allow_value("x").for(:raw) }
+  it { is_expected.not_to allow_value("x" * (SiteSetting.max_post_length + 1)).for(:raw) }
+  it { is_expected.not_to allow_value((" " * SiteSetting.min_post_length) + "x").for(:raw) }
 
-  it { should rate_limit }
+  it { is_expected.to rate_limit }
 
   let(:topic) { Fabricate(:topic) }
   let(:post_args) do
@@ -32,14 +32,14 @@ describe Post do
         2.times do |t|
           Fabricate(:post, created_at: t.seconds.from_now)
         end
-        Post.by_newest.first.created_at.should > Post.by_newest.last.created_at
+        expect(Post.by_newest.first.created_at).to be > Post.by_newest.last.created_at
       end
     end
 
     describe '#with_user' do
       it 'gives you a user' do
         Fabricate(:post, user: Fabricate.build(:user))
-        Post.with_user.first.user.should be_a User
+        expect(Post.with_user.first.user).to be_a User
       end
     end
 
@@ -56,7 +56,7 @@ describe Post do
       end
 
       it "doesn't create a new revision when deleted" do
-        post.revisions.count.should == 0
+        expect(post.revisions.count).to eq(0)
       end
 
       describe "recovery" do
@@ -66,7 +66,7 @@ describe Post do
         end
 
         it "doesn't create a new revision when recovered" do
-          post.revisions.count.should == 0
+          expect(post.revisions.count).to eq(0)
         end
       end
     end
@@ -95,11 +95,11 @@ describe Post do
       PostAction.act(user, post, PostActionType.types[:off_topic])
 
       post.reload
-      post.is_flagged?.should == true
+      expect(post.is_flagged?).to eq(true)
 
       PostAction.remove_act(user, post, PostActionType.types[:off_topic])
       post.reload
-      post.is_flagged?.should == false
+      expect(post.is_flagged?).to eq(false)
     end
   end
 
@@ -114,32 +114,32 @@ describe Post do
     let(:post_with_two_classy_images) { post_with_body("<img src='http://discourse.org/logo.png' class='classy'> <img src='http://bbc.co.uk/sherlock.jpg' class='classy'>", newuser) }
 
     it "returns 0 images for an empty post" do
-      Fabricate.build(:post).image_count.should == 0
+      expect(Fabricate.build(:post).image_count).to eq(0)
     end
 
     it "finds images from markdown" do
-      post_one_image.image_count.should == 1
+      expect(post_one_image.image_count).to eq(1)
     end
 
     it "finds images from HTML" do
-      post_two_images.image_count.should == 2
+      expect(post_two_images.image_count).to eq(2)
     end
 
     it "doesn't count avatars as images" do
-      post_with_avatars.image_count.should == 0
+      expect(post_with_avatars.image_count).to eq(0)
     end
 
     it "doesn't count favicons as images" do
-      post_with_favicon.image_count.should == 0
+      expect(post_with_favicon.image_count).to eq(0)
     end
 
     it "doesn't count thumbnails as images" do
-      post_with_thumbnail.image_count.should == 0
+      expect(post_with_thumbnail.image_count).to eq(0)
     end
 
     it "doesn't count whitelisted images" do
       Post.stubs(:white_listed_image_classes).returns(["classy"])
-      post_with_two_classy_images.image_count.should == 0
+      expect(post_with_two_classy_images.image_count).to eq(0)
     end
 
     context "validation" do
@@ -150,26 +150,26 @@ describe Post do
 
       context 'newuser' do
         it "allows a new user to post below the limit" do
-          post_one_image.should be_valid
+          expect(post_one_image).to be_valid
         end
 
         it "doesn't allow more than the maximum" do
-          post_two_images.should_not be_valid
+          expect(post_two_images).not_to be_valid
         end
 
         it "doesn't allow a new user to edit their post to insert an image" do
           post_no_images.user.trust_level = TrustLevel[0]
           post_no_images.save
-          -> {
+          expect {
             post_no_images.revise(post_no_images.user, { raw: post_two_images.raw })
             post_no_images.reload
-          }.should_not change(post_no_images, :raw)
+          }.not_to change(post_no_images, :raw)
         end
       end
 
       it "allows more images from a not-new account" do
         post_two_images.user.trust_level = TrustLevel[1]
-        post_two_images.should be_valid
+        expect(post_two_images).to be_valid
       end
 
     end
@@ -183,11 +183,11 @@ describe Post do
     let(:post_two_attachments) { post_with_body('<a class="attachment" href="/uploads/default/2/20947092.log">errors.log</a> <a class="attachment" href="/uploads/default/3/283572385.3ds">model.3ds</a>', newuser) }
 
     it "returns 0 attachments for an empty post" do
-      Fabricate.build(:post).attachment_count.should == 0
+      expect(Fabricate.build(:post).attachment_count).to eq(0)
     end
 
     it "finds attachments from HTML" do
-      post_two_attachments.attachment_count.should == 2
+      expect(post_two_attachments.attachment_count).to eq(2)
     end
 
     context "validation" do
@@ -198,26 +198,26 @@ describe Post do
 
       context 'newuser' do
         it "allows a new user to post below the limit" do
-          post_one_attachment.should be_valid
+          expect(post_one_attachment).to be_valid
         end
 
         it "doesn't allow more than the maximum" do
-          post_two_attachments.should_not be_valid
+          expect(post_two_attachments).not_to be_valid
         end
 
         it "doesn't allow a new user to edit their post to insert an attachment" do
           post_no_attachments.user.trust_level = TrustLevel[0]
           post_no_attachments.save
-          -> {
+          expect {
             post_no_attachments.revise(post_no_attachments.user, { raw: post_two_attachments.raw })
             post_no_attachments.reload
-          }.should_not change(post_no_attachments, :raw)
+          }.not_to change(post_no_attachments, :raw)
         end
       end
 
       it "allows more attachments from a not-new account" do
         post_two_attachments.user.trust_level = TrustLevel[1]
-        post_two_attachments.should be_valid
+        expect(post_two_attachments).to be_valid
       end
 
     end
@@ -233,40 +233,40 @@ describe Post do
 
     describe "raw_links" do
       it "returns a blank collection for a post with no links" do
-        no_links.raw_links.should be_blank
+        expect(no_links.raw_links).to be_blank
       end
 
       it "finds a link within markdown" do
-        one_link.raw_links.should == ["http://www.imdb.com/name/nm2225369"]
+        expect(one_link.raw_links).to eq(["http://www.imdb.com/name/nm2225369"])
       end
 
       it "can find two links from html" do
-        two_links.raw_links.should == ["http://disneyland.disney.go.com/", "http://reddit.com"]
+        expect(two_links.raw_links).to eq(["http://disneyland.disney.go.com/", "http://reddit.com"])
       end
 
       it "can find three links without markup" do
-        three_links.raw_links.should == ["http://discourse.org", "http://discourse.org/another_url", "http://www.imdb.com/name/nm2225369"]
+        expect(three_links.raw_links).to eq(["http://discourse.org", "http://discourse.org/another_url", "http://www.imdb.com/name/nm2225369"])
       end
     end
 
     describe "linked_hosts" do
       it "returns blank with no links" do
-        no_links.linked_hosts.should be_blank
+        expect(no_links.linked_hosts).to be_blank
       end
 
       it "returns the host and a count for links" do
-        two_links.linked_hosts.should == {"disneyland.disney.go.com" => 1, "reddit.com" => 1}
+        expect(two_links.linked_hosts).to eq({"disneyland.disney.go.com" => 1, "reddit.com" => 1})
       end
 
       it "it counts properly with more than one link on the same host" do
-        three_links.linked_hosts.should == {"discourse.org" => 1, "www.imdb.com" => 1}
+        expect(three_links.linked_hosts).to eq({"discourse.org" => 1, "www.imdb.com" => 1})
       end
     end
 
     describe "total host usage" do
 
       it "has none for a regular post" do
-        no_links.total_hosts_usage.should be_blank
+        expect(no_links.total_hosts_usage).to be_blank
       end
 
       context "with a previous host" do
@@ -280,7 +280,7 @@ describe Post do
         end
 
         it "contains the new post's links, PLUS the previous one" do
-          two_links.total_hosts_usage.should == {'disneyland.disney.go.com' => 2, 'reddit.com' => 1}
+          expect(two_links.total_hosts_usage).to eq({'disneyland.disney.go.com' => 2, 'reddit.com' => 1})
         end
 
       end
@@ -298,19 +298,19 @@ describe Post do
     let(:post_with_mentions) { post_with_body("hello @#{newuser.username} how are you doing?", newuser) }
 
     it "returns 0 links for an empty post" do
-      Fabricate.build(:post).link_count.should == 0
+      expect(Fabricate.build(:post).link_count).to eq(0)
     end
 
     it "returns 0 links for a post with mentions" do
-      post_with_mentions.link_count.should == 0
+      expect(post_with_mentions.link_count).to eq(0)
     end
 
     it "finds links from markdown" do
-      post_one_link.link_count.should == 1
+      expect(post_one_link.link_count).to eq(1)
     end
 
     it "finds links from HTML" do
-      post_two_links.link_count.should == 2
+      expect(post_two_links.link_count).to eq(2)
     end
 
     context "validation" do
@@ -321,17 +321,17 @@ describe Post do
 
       context 'newuser' do
         it "returns true when within the amount of links allowed" do
-          post_one_link.should be_valid
+          expect(post_one_link).to be_valid
         end
 
         it "doesn't allow more links than allowed" do
-          post_two_links.should_not be_valid
+          expect(post_two_links).not_to be_valid
         end
       end
 
       it "allows multiple images for basic accounts" do
         post_two_links.user.trust_level = TrustLevel[1]
-        post_two_links.should be_valid
+        expect(post_two_links).to be_valid
       end
 
     end
@@ -345,37 +345,37 @@ describe Post do
 
       it "returns an empty array with no matches" do
         post = Fabricate.build(:post, post_args.merge(raw: "Hello Jake and Finn!"))
-        post.raw_mentions.should == []
+        expect(post.raw_mentions).to eq([])
       end
 
       it "returns lowercase unique versions of the mentions" do
         post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake"))
-        post.raw_mentions.should == ['jake', 'finn']
+        expect(post.raw_mentions).to eq(['jake', 'finn'])
       end
 
       it "ignores pre" do
         post = Fabricate.build(:post, post_args.merge(raw: "<pre>@Jake</pre> @Finn"))
-        post.raw_mentions.should == ['finn']
+        expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "catches content between pre tags" do
         post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre> @Finn <pre></pre>"))
-        post.raw_mentions.should == ['finn']
+        expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "ignores code" do
         post = Fabricate.build(:post, post_args.merge(raw: "@Jake `@Finn`"))
-        post.raw_mentions.should == ['jake']
+        expect(post.raw_mentions).to eq(['jake'])
       end
 
       it "ignores quotes" do
         post = Fabricate.build(:post, post_args.merge(raw: "[quote=\"Evil Trout\"]@Jake[/quote] @Finn"))
-        post.raw_mentions.should == ['finn']
+        expect(post.raw_mentions).to eq(['finn'])
       end
 
       it "handles underscore in username" do
         post = Fabricate.build(:post, post_args.merge(raw: "@Jake @Finn @Jake_Old"))
-        post.raw_mentions.should == ['jake', 'finn', 'jake_old']
+        expect(post.raw_mentions).to eq(['jake', 'finn', 'jake_old'])
       end
 
     end
@@ -393,11 +393,11 @@ describe Post do
         end
 
         it "allows a new user to have newuser_max_mentions_per_post mentions" do
-          post_with_one_mention.should be_valid
+          expect(post_with_one_mention).to be_valid
         end
 
         it "doesn't allow a new user to have more than newuser_max_mentions_per_post mentions" do
-          post_with_two_mentions.should_not be_valid
+          expect(post_with_two_mentions).not_to be_valid
         end
       end
 
@@ -409,12 +409,12 @@ describe Post do
 
         it "allows vmax_mentions_per_post mentions" do
           post_with_one_mention.user.trust_level = TrustLevel[1]
-          post_with_one_mention.should be_valid
+          expect(post_with_one_mention).to be_valid
         end
 
         it "doesn't allow to have more than max_mentions_per_post mentions" do
           post_with_two_mentions.user.trust_level = TrustLevel[1]
-          post_with_two_mentions.should_not be_valid
+          expect(post_with_two_mentions).not_to be_valid
         end
       end
 
@@ -425,11 +425,11 @@ describe Post do
 
   context 'validation' do
     it 'validates our default post' do
-      Fabricate.build(:post, post_args).should be_valid
+      expect(Fabricate.build(:post, post_args)).to be_valid
     end
 
     it 'treate blank posts as invalid' do
-      Fabricate.build(:post, raw: "").should_not be_valid
+      expect(Fabricate.build(:post, raw: "")).not_to be_valid
     end
   end
 
@@ -439,24 +439,24 @@ describe Post do
     let(:post) { post_with_body(raw) }
 
     it "returns a value" do
-      post.raw_hash.should be_present
+      expect(post.raw_hash).to be_present
     end
 
     it "returns blank for a nil body" do
       post.raw = nil
-      post.raw_hash.should be_blank
+      expect(post.raw_hash).to be_blank
     end
 
     it "returns the same value for the same raw" do
-      post.raw_hash.should == post_with_body(raw).raw_hash
+      expect(post.raw_hash).to eq(post_with_body(raw).raw_hash)
     end
 
     it "returns a different value for a different raw" do
-      post.raw_hash.should_not == post_with_body("something else").raw_hash
+      expect(post.raw_hash).not_to eq(post_with_body("something else").raw_hash)
     end
 
     it "returns a different value with different text case" do
-      post.raw_hash.should_not == post_with_body("THIS is OUR TEST post BODy").raw_hash
+      expect(post.raw_hash).not_to eq(post_with_body("THIS is OUR TEST post BODy").raw_hash)
     end
   end
 
@@ -466,15 +466,15 @@ describe Post do
     let(:first_version_at) { post.last_version_at }
 
     it 'has no revision' do
-      post.revisions.size.should == 0
-      first_version_at.should be_present
-      post.revise(post.user, { raw: post.raw }).should == false
+      expect(post.revisions.size).to eq(0)
+      expect(first_version_at).to be_present
+      expect(post.revise(post.user, { raw: post.raw })).to eq(false)
     end
 
     describe 'with the same body' do
 
       it "doesn't change version" do
-        lambda { post.revise(post.user, { raw: post.raw }); post.reload }.should_not change(post, :version)
+        expect { post.revise(post.user, { raw: post.raw }); post.reload }.not_to change(post, :version)
       end
 
     end
@@ -490,34 +490,34 @@ describe Post do
         # ninja edit
         post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
-        post.version.should == 1
-        post.public_version.should == 1
-        post.revisions.size.should == 0
-        post.last_version_at.to_i.should == first_version_at.to_i
+        expect(post.version).to eq(1)
+        expect(post.public_version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+        expect(post.last_version_at.to_i).to eq(first_version_at.to_i)
 
         # revision much later
         post.revise(post.user, { raw: 'another updated body' }, revised_at: revised_at)
         post.reload
-        post.version.should == 2
-        post.public_version.should == 2
-        post.revisions.size.should == 1
-        post.last_version_at.to_i.should == revised_at.to_i
+        expect(post.version).to eq(2)
+        expect(post.public_version).to eq(2)
+        expect(post.revisions.size).to eq(1)
+        expect(post.last_version_at.to_i).to eq(revised_at.to_i)
 
         # new edit window
         post.revise(post.user, { raw: 'yet another updated body' }, revised_at: revised_at + 10.seconds)
         post.reload
-        post.version.should == 2
-        post.public_version.should == 2
-        post.revisions.size.should == 1
-        post.last_version_at.to_i.should == revised_at.to_i
+        expect(post.version).to eq(2)
+        expect(post.public_version).to eq(2)
+        expect(post.revisions.size).to eq(1)
+        expect(post.last_version_at.to_i).to eq(revised_at.to_i)
 
         # after second window
         post.revise(post.user, { raw: 'yet another, another updated body' }, revised_at: new_revised_at)
         post.reload
-        post.version.should == 3
-        post.public_version.should == 3
-        post.revisions.size.should == 2
-        post.last_version_at.to_i.should == new_revised_at.to_i
+        expect(post.version).to eq(3)
+        expect(post.public_version).to eq(3)
+        expect(post.revisions.size).to eq(2)
+        expect(post.last_version_at.to_i).to eq(new_revised_at.to_i)
       end
 
     end
@@ -536,13 +536,13 @@ describe Post do
       let!(:result) { post.revise(changed_by, { raw: 'updated body' }) }
 
       it 'acts correctly' do
-        result.should == true
-        post.raw.should == 'updated body'
-        post.invalidate_oneboxes.should == true
-        post.version.should == 2
-        post.public_version.should == 2
-        post.revisions.size.should == 1
-        post.revisions.first.user.should be_present
+        expect(result).to eq(true)
+        expect(post.raw).to eq('updated body')
+        expect(post.invalidate_oneboxes).to eq(true)
+        expect(post.version).to eq(2)
+        expect(post.public_version).to eq(2)
+        expect(post.revisions.size).to eq(1)
+        expect(post.revisions.first.user).to be_present
       end
 
       context 'second poster posts again quickly' do
@@ -552,9 +552,9 @@ describe Post do
           post.revise(changed_by, { raw: 'yet another updated body' }, revised_at: post.updated_at + 10.seconds)
           post.reload
 
-          post.version.should == 2
-          post.public_version.should == 2
-          post.revisions.size.should == 1
+          expect(post.version).to eq(2)
+          expect(post.public_version).to eq(2)
+          expect(post.revisions.size).to eq(1)
         end
 
       end
@@ -569,15 +569,15 @@ describe Post do
     let(:post) { Fabricate(:post, post_args) }
 
     it "has correct info set" do
-      post.user_deleted?.should == false
-      post.post_number.should be_present
-      post.excerpt.should be_present
-      post.post_type.should == Post.types[:regular]
-      post.revisions.should be_blank
-      post.cooked.should be_present
-      post.external_id.should be_present
-      post.quote_count.should == 0
-      post.replies.should be_blank
+      expect(post.user_deleted?).to eq(false)
+      expect(post.post_number).to be_present
+      expect(post.excerpt).to be_present
+      expect(post.post_type).to eq(Post.types[:regular])
+      expect(post.revisions).to be_blank
+      expect(post.cooked).to be_present
+      expect(post.external_id).to be_present
+      expect(post.quote_count).to eq(0)
+      expect(post.replies).to be_blank
     end
 
     describe 'extract_quoted_post_numbers' do
@@ -588,13 +588,13 @@ describe Post do
       it "finds the quote when in the same topic" do
         reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id}\"]hello[/quote]"
         reply.extract_quoted_post_numbers
-        reply.quoted_post_numbers.should == [post.post_number]
+        expect(reply.quoted_post_numbers).to eq([post.post_number])
       end
 
       it "doesn't find the quote in a different topic" do
         reply.raw = "[quote=\"EvilTrout, post:#{post.post_number}, topic:#{post.topic_id+1}\"]hello[/quote]"
         reply.extract_quoted_post_numbers
-        reply.quoted_post_numbers.should be_blank
+        expect(reply.quoted_post_numbers).to be_blank
       end
 
     end
@@ -608,25 +608,25 @@ describe Post do
       let!(:reply) { PostCreator.new(other_user, raw: reply_text, topic_id: topic.id, reply_to_post_number: post.post_number ).create }
 
       it 'has a quote' do
-        reply.quote_count.should == 1
+        expect(reply.quote_count).to eq(1)
       end
 
       it 'has a reply to the user of the original user' do
-        reply.reply_to_user.should == post.user
+        expect(reply.reply_to_user).to eq(post.user)
       end
 
       it 'increases the reply count of the parent' do
         post.reload
-        post.reply_count.should == 1
+        expect(post.reply_count).to eq(1)
       end
 
       it 'increases the reply count of the topic' do
         topic.reload
-        topic.reply_count.should == 1
+        expect(topic.reply_count).to eq(1)
       end
 
       it 'is the child of the parent post' do
-        post.replies.should == [reply]
+        expect(post.replies).to eq([reply])
       end
 
 
@@ -634,7 +634,7 @@ describe Post do
         reply.raw = 'updated raw'
         reply.save
         post.reload
-        post.reply_count.should == 1
+        expect(post.reply_count).to eq(1)
       end
 
       context 'a multi-quote reply' do
@@ -645,9 +645,9 @@ describe Post do
         end
 
         it 'has the correct info set' do
-          multi_reply.quote_count.should == 2
-          post.replies.include?(multi_reply).should == true
-          reply.replies.include?(multi_reply).should == true
+          expect(multi_reply.quote_count).to eq(2)
+          expect(post.replies.include?(multi_reply)).to eq(true)
+          expect(reply.replies.include?(multi_reply)).to eq(true)
         end
       end
 
@@ -662,7 +662,7 @@ describe Post do
 
     it "returns the OP and posts above the threshold in summary mode" do
       SiteSetting.stubs(:summary_percent_filter).returns(66)
-      Post.summary.order(:post_number).should == [p1, p2]
+      expect(Post.summary.order(:post_number)).to eq([p1, p2])
     end
 
   end
@@ -676,7 +676,7 @@ describe Post do
       let!(:p3) { Fabricate(:post, post_args) }
 
       it 'defaults to created order' do
-        Post.regular_order.should == [p1, p2, p3]
+        expect(Post.regular_order).to eq([p1, p2, p3])
       end
     end
   end
@@ -689,24 +689,24 @@ describe Post do
     let!(:p4) { Fabricate(:post, post_args.merge(reply_to_post_number: p2.post_number)) }
 
     it "returns the posts in reply to this post" do
-      p4.reply_history.should == [p1, p2]
-      p4.reply_history(1).should == [p2]
-      p3.reply_history.should be_blank
-      p2.reply_history.should == [p1]
+      expect(p4.reply_history).to eq([p1, p2])
+      expect(p4.reply_history(1)).to eq([p2])
+      expect(p3.reply_history).to be_blank
+      expect(p2.reply_history).to eq([p1])
     end
 
   end
 
   describe 'urls' do
     it 'no-ops for empty list' do
-      Post.urls([]).should == {}
+      expect(Post.urls([])).to eq({})
     end
 
     # integration test -> should move to centralized integration test
     it 'finds urls for posts presented' do
       p1 = Fabricate(:post)
       p2 = Fabricate(:post)
-      Post.urls([p1.id, p2.id]).should == {p1.id => p1.url, p2.id => p2.url}
+      expect(Post.urls([p1.id, p2.id])).to eq({p1.id => p1.url, p2.id => p2.url})
     end
   end
 
@@ -714,15 +714,15 @@ describe Post do
     it "adds details" do
       post = Fabricate.build(:post)
       post.add_detail("key", "value")
-      post.post_details.size.should == 1
-      post.post_details.first.key.should == "key"
-      post.post_details.first.value.should == "value"
+      expect(post.post_details.size).to eq(1)
+      expect(post.post_details.first.key).to eq("key")
+      expect(post.post_details.first.value).to eq("value")
     end
 
     it "can find a post by a detail" do
       detail = Fabricate(:post_detail)
       post   = detail.post
-      Post.find_by_detail(detail.key, detail.value).id.should == post.id
+      expect(Post.find_by_detail(detail.key, detail.value).id).to eq(post.id)
     end
   end
 
@@ -732,21 +732,21 @@ describe Post do
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
-      post.cooked.should =~ /nofollow/
+      expect(post.cooked).to match(/nofollow/)
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
       SiteSetting.stubs(:tl3_links_no_follow).returns(false)
       post.user.trust_level = 3
       post.save
-      post.cooked.should_not =~ /nofollow/
+      expect(post.cooked).not_to match(/nofollow/)
     end
 
     it "when tl3_links_no_follow is true, should add nofollow for trust level 3 and higher" do
       SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
-      post.cooked.should =~ /nofollow/
+      expect(post.cooked).to match(/nofollow/)
     end
   end
 
@@ -763,36 +763,36 @@ describe Post do
     it "correctly detects host spam" do
       post = Fabricate(:post, raw: "hello from my site http://www.somesite.com http://#{GlobalSetting.hostname} http://#{RailsMultisite::ConnectionManagement.current_hostname}")
 
-      post.total_hosts_usage.should == {"www.somesite.com" => 1}
+      expect(post.total_hosts_usage).to eq({"www.somesite.com" => 1})
       post.acting_user.trust_level = 0
 
-      post.has_host_spam?.should == false
+      expect(post.has_host_spam?).to eq(false)
 
       SiteSetting.newuser_spam_host_threshold = 1
 
-      post.has_host_spam?.should == true
+      expect(post.has_host_spam?).to eq(true)
 
       SiteSetting.white_listed_spam_host_domains = "bla.com|boo.com | somesite.com "
-      post.has_host_spam?.should == false
+      expect(post.has_host_spam?).to eq(false)
     end
   end
 
   it "has custom fields" do
     post = Fabricate(:post)
-    post.custom_fields["a"].should == nil
+    expect(post.custom_fields["a"]).to eq(nil)
 
     post.custom_fields["Tommy"] = "Hanks"
     post.custom_fields["Vincent"] = "Vega"
     post.save
 
     post = Post.find(post.id)
-    post.custom_fields.should == {"Tommy" => "Hanks", "Vincent" => "Vega"}
+    expect(post.custom_fields).to eq({"Tommy" => "Hanks", "Vincent" => "Vega"})
   end
 
   describe "#rebake!" do
     it "will rebake a post correctly" do
       post = create_post
-      post.baked_at.should_not == nil
+      expect(post.baked_at).not_to eq(nil)
       first_baked = post.baked_at
       first_cooked = post.cooked
 
@@ -803,9 +803,9 @@ describe Post do
 
       result = post.rebake!
 
-      post.baked_at.should_not == first_baked
-      post.cooked.should == first_cooked
-      result.should == true
+      expect(post.baked_at).not_to eq(first_baked)
+      expect(post.cooked).to eq(first_cooked)
+      expect(result).to eq(true)
     end
   end
 
@@ -816,12 +816,12 @@ describe Post do
       Post.rebake_old(100)
 
       post.reload
-      post.baked_at.should be > 1.day.ago
+      expect(post.baked_at).to be > 1.day.ago
 
       baked = post.baked_at
       Post.rebake_old(100)
       post.reload
-      post.baked_at.should == baked
+      expect(post.baked_at).to eq(baked)
     end
   end
 
@@ -835,7 +835,7 @@ describe Post do
       post.update_columns(hidden: true, hidden_at: Time.now, hidden_reason_id: 1)
       post.reload
 
-      post.hidden.should == true
+      expect(post.hidden).to eq(true)
 
       post.expects(:publish_change_to_clients!).with(:acted)
 
@@ -844,8 +844,8 @@ describe Post do
       post.reload
       hidden_topic.reload
 
-      post.hidden.should == false
-      hidden_topic.visible.should == true
+      expect(post.hidden).to eq(false)
+      expect(hidden_topic.visible).to eq(true)
     end
   end
 
@@ -862,8 +862,8 @@ describe Post do
     second_post.reload
     hidden_topic.reload
 
-    second_post.hidden.should == false
-    hidden_topic.visible.should == false
+    expect(second_post.hidden).to eq(false)
+    expect(hidden_topic.visible).to eq(false)
   end
 
 end

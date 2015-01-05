@@ -8,7 +8,7 @@ describe ApiKey do
 
   it { is_expected.to validate_presence_of :key }
 
-  pending 'validates uniqueness of user_id' do
+  skip 'validates uniqueness of user_id' do
     Fabricate(:api_key)
     is_expected.to validate_uniqueness_of(:user_id)
   end

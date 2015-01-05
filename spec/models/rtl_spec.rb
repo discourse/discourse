@@ -13,13 +13,13 @@ describe RTL do
         before { user.stubs(:locale).returns('he') }
 
         it 'returns rtl class' do
-          RTL.new(user).css_class.should == 'rtl'
+          expect(RTL.new(user).css_class).to eq('rtl')
         end
       end
 
       context 'user locale is not RTL' do
         it 'returns empty class' do
-          RTL.new(user).css_class.should == ''
+          expect(RTL.new(user).css_class).to eq('')
         end
       end
 
@@ -32,7 +32,7 @@ describe RTL do
         before { SiteSetting.stubs(:default_locale).returns('he') }
 
         it 'returns rtl class' do
-          RTL.new(user).css_class.should == 'rtl'
+          expect(RTL.new(user).css_class).to eq('rtl')
         end
       end
 
@@ -43,7 +43,7 @@ describe RTL do
           before { user.stubs(:locale).returns('he') }
 
           it 'returns empty class' do
-            RTL.new(user).css_class.should == ''
+            expect(RTL.new(user).css_class).to eq('')
           end
         end
       end

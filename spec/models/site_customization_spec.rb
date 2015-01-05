@@ -24,7 +24,7 @@ describe SiteCustomization do
 
   it 'should set default key when creating a new customization' do
     s = SiteCustomization.create!(name: 'my name', user_id: user.id)
-    s.key.should_not == nil
+    expect(s.key).not_to eq(nil)
   end
 
   it 'can enable more than one style at once' do
@@ -38,25 +38,25 @@ describe SiteCustomization do
                               stylesheet: 'p{width: 1px;}'
                              )
 
-    SiteCustomization.custom_header.should == "Hello\nWorld"
-    SiteCustomization.custom_header(nil, :mobile).should == "hi"
-    SiteCustomization.custom_footer(nil, :mobile).should == "mfooter"
-    SiteCustomization.custom_footer.should == "footer"
+    expect(SiteCustomization.custom_header).to eq("Hello\nWorld")
+    expect(SiteCustomization.custom_header(nil, :mobile)).to eq("hi")
+    expect(SiteCustomization.custom_footer(nil, :mobile)).to eq("mfooter")
+    expect(SiteCustomization.custom_footer).to eq("footer")
 
     desktop_css = SiteCustomization.custom_stylesheet
-    desktop_css.should =~ Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=desktop")
+    expect(desktop_css).to match(Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=desktop"))
 
     mobile_css = SiteCustomization.custom_stylesheet(nil, :mobile)
-    mobile_css.should =~  Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=mobile")
+    expect(mobile_css).to match(Regexp.new("#{SiteCustomization::ENABLED_KEY}.css\\?target=mobile"))
 
-    SiteCustomization.enabled_stylesheet_contents.should =~ /\.hello \.world/
+    expect(SiteCustomization.enabled_stylesheet_contents).to match(/\.hello \.world/)
 
     # cache expiry
     c1.enabled = false
     c1.save
 
-    SiteCustomization.custom_stylesheet.should_not == desktop_css
-    SiteCustomization.enabled_stylesheet_contents.should_not =~ /\.hello \.world/
+    expect(SiteCustomization.custom_stylesheet).not_to eq(desktop_css)
+    expect(SiteCustomization.enabled_stylesheet_contents).not_to match(/\.hello \.world/)
   end
 
   it 'should be able to look up stylesheets by key' do
@@ -65,30 +65,30 @@ describe SiteCustomization do
                               stylesheet: '.hello{.world {color: blue;}}',
                               mobile_stylesheet: '.world{.hello{color: black;}}')
 
-    SiteCustomization.custom_stylesheet(c.key, :mobile).should =~ Regexp.new("#{c.key}.css\\?target=mobile")
-    SiteCustomization.custom_stylesheet(c.key).should =~ Regexp.new("#{c.key}.css\\?target=desktop")
+    expect(SiteCustomization.custom_stylesheet(c.key, :mobile)).to match(Regexp.new("#{c.key}.css\\?target=mobile"))
+    expect(SiteCustomization.custom_stylesheet(c.key)).to match(Regexp.new("#{c.key}.css\\?target=desktop"))
 
   end
 
 
   it 'should allow including discourse styles' do
     c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '@import "desktop";', mobile_stylesheet: '@import "mobile";')
-    c.stylesheet_baked.should_not =~ /Syntax error/
-    c.stylesheet_baked.length.should be > 1000
-    c.mobile_stylesheet_baked.should_not =~ /Syntax error/
-    c.mobile_stylesheet_baked.length.should be > 1000
+    expect(c.stylesheet_baked).not_to match(/Syntax error/)
+    expect(c.stylesheet_baked.length).to be > 1000
+    expect(c.mobile_stylesheet_baked).not_to match(/Syntax error/)
+    expect(c.mobile_stylesheet_baked.length).to be > 1000
   end
 
   it 'should provide an awesome error on failure' do
     c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", header: '')
-    c.stylesheet_baked.should =~ /Syntax error/
-    c.mobile_stylesheet_baked.should_not be_present
+    expect(c.stylesheet_baked).to match(/Syntax error/)
+    expect(c.mobile_stylesheet_baked).not_to be_present
   end
 
   it 'should provide an awesome error on failure for mobile too' do
     c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", mobile_header: '')
-    c.mobile_stylesheet_baked.should =~ /Syntax error/
-    c.stylesheet_baked.should_not be_present
+    expect(c.mobile_stylesheet_baked).to match(/Syntax error/)
+    expect(c.stylesheet_baked).not_to be_present
   end
 
 
