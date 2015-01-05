@@ -280,6 +280,14 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
+  togglePinnedForUser: function() {
+    if (this.get('pinned')) {
+      this.clearPin();
+    } else {
+      this.rePin();
+    }
+  },
+
   /**
     Re-pins a topic with a cleared pin
 
