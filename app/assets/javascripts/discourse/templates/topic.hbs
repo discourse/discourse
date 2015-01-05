@@ -23,6 +23,8 @@
               {{category-chooser valueAttribute="id" value=buffered.category_id source=buffered.category_id}}
             {{/if}}
 
+            {{plugin-outlet "edit-topic"}}
+
             <button class='btn btn-primary btn-small no-text' {{action "finishedEditingTopic"}}>{{fa-icon check}}</button>
             <button class='btn btn-small no-text' {{action "cancelEditingTopic"}}>{{fa-icon times}}</button>
           {{else}}
@@ -48,6 +50,7 @@
                 {{bound-category-link category.parentCategory}}
               {{/if}}
               {{bound-category-link category}}
+              {{plugin-outlet "topic-category"}}
             {{/unless}}
           {{/if}}
         </div>
