@@ -111,7 +111,7 @@ class DiscourseStylesheets
   end
 
   def stylesheet_cdnpath
-    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws#{Discourse.current_hostname}"
+    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{Discourse.current_hostname}"
   end
 
   def stylesheet_relpath
