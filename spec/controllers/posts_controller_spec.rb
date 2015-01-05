@@ -799,4 +799,26 @@ describe PostsController do
 
   end
 
+  describe "view raw" do
+    describe "by ID" do
+      it "can be viewed by anonymous" do
+        post = Fabricate(:post, raw: "123456789")
+        xhr :get, :markdown_id, id: post.id
+        response.should be_success
+        response.body.should == "123456789"
+      end
+    end
+
+    describe "by post number" do
+      it "can be viewed by anonymous" do
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
+        post.save
+        xhr :get, :markdown_num, topic_id: topic.id, post_number: 1
+        response.should be_success
+        response.body.should == "123456789"
+      end
+    end
+  end
+
 end
