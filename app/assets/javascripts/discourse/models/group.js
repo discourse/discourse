@@ -56,7 +56,7 @@ Discourse.Group = Discourse.Model.extend({
     }).then(function() {
       // reload member list
       self.findMembers();
-    })
+    });
   },
 
   asJSON: function() {
@@ -79,8 +79,8 @@ Discourse.Group = Discourse.Model.extend({
   },
 
   destroy: function(){
-    if (!this.get('id')) { return };
-    return Discourse.ajax("/admin/groups/" + this.get('id'), {type: "DELETE"});
+    if (!this.get('id')) { return; }
+    return Discourse.ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
   },
 
   findPosts: function(opts) {
