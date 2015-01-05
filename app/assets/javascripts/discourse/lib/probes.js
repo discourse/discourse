@@ -138,13 +138,35 @@
        return;
      }
 
-     pre = document.createElement("pre");
+     var div = document.createElement("div");
+     div.id = "__probes_wrapper";
+     div.setAttribute("style", "position: fixed; bottom: 25px; left: 50px; z-index: 99999; border: 1px solid #777; padding: 10px; background-color: rgba(255,255,255, 0.8);");
 
+     pre = document.createElement("pre");
+     pre.setAttribute("style", "margin:0 0 5px;");
      pre.textContent = text;
      pre.innerText = text;
-     pre.setAttribute("style", "position: fixed; bottom: 25px; left: 50px; z-index: 99999; border: 1px solid #777; padding: 10px; background-color: rgba(255,255,255, 0.8);");
      pre.id = "__probes";
-     body.appendChild(pre);
+
+     div.appendChild(pre);
+
+     var a = document.createElement('a');
+     a.href = "";
+     a.innerText = "clear";
+     a.addEventListener("click", function(e){
+        for(var prop in window.probes){
+          var probe = window.probes[prop];
+          if(probe && probe.count){
+            delete window.probes[prop];
+          }
+        }
+        displayProbes();
+        e.preventDefault();
+     });
+
+     div.appendChild(a);
+
+     body.appendChild(div);
   };
 
 
