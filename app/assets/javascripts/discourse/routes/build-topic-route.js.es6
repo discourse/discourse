@@ -53,6 +53,7 @@ export default function(filter, extras) {
         category: null,
         period: periods.findBy('id', periodId),
         selected: [],
+        expandGloballyPinned: true
       };
 
       var params = model.get('params');

@@ -7,7 +7,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :archetype,
              :last_poster_username,
              :category_id,
-             :op_like_count
+             :op_like_count,
+             :pinned_globally
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects

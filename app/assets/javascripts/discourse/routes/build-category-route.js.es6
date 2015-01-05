@@ -82,6 +82,7 @@ export default function(filter, params) {
         noSubcategories: params && !!params.no_subcategories,
         order: topics.get('params.order'),
         ascending: topics.get('params.ascending'),
+        expandAllPinned: true
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));
