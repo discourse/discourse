@@ -10,31 +10,57 @@ describe Admin::GroupsController do
     (Admin::GroupsController < Admin::AdminController).should == true
   end
 
-  it "produces valid json for groups" do
-    group = Fabricate.build(:group, name: "test")
-    group.add(@admin)
-    group.save
+  context ".index" do
 
-    xhr :get, :index
-    response.status.should == 200
-    ::JSON.parse(response.body).keep_if{|r| r["id"] == group.id}.should == [{
-      "id"=>group.id,
-      "name"=>group.name,
-      "user_count"=>1,
-      "automatic"=>false,
-      "alias_level"=>0,
-      "visible"=>true
-    }]
+    it "produces valid json for groups" do
+      group = Fabricate.build(:group, name: "test")
+      group.add(@admin)
+      group.save
+
+      xhr :get, :index
+      response.status.should == 200
+      ::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }.should == [{
+        "id"=>group.id,
+        "name"=>group.name,
+        "user_count"=>1,
+        "automatic"=>false,
+        "alias_level"=>0,
+        "visible"=>true
+      }]
+    end
+
   end
 
-  it "is able to refresh automatic groups" do
-    Group.expects(:refresh_automatic_groups!).returns(true)
+  context ".create" do
 
-    xhr :post, :refresh_automatic_groups
-    response.status.should == 200
+    it "strip spaces on the group name" do
+      xhr :post, :create, name: " bob "
+
+      response.status.should == 200
+
+      groups = Group.where(name: "bob").to_a
+
+      groups.count.should == 1
+      groups[0].name.should == "bob"
+    end
+
   end
 
-  context '.destroy' do
+  context ".update" do
+
+    it "ignore name change on automatic group" do
+      xhr :put, :update, id: 1, name: "WAT", visible: "true"
+      response.should be_success
+
+      group = Group.find(1)
+      group.name.should_not == "WAT"
+      group.visible.should == true
+    end
+
+  end
+
+  context ".destroy" do
+
     it "returns a 422 if the group is automatic" do
       group = Fabricate(:group, automatic: true)
       xhr :delete, :destroy, id: group.id
@@ -48,97 +74,61 @@ describe Admin::GroupsController do
       response.status.should == 200
       Group.where(id: group.id).count.should == 0
     end
+
   end
 
-  context '.create' do
-    let(:usernames) { @admin.username }
+  context ".refresh_automatic_groups" do
 
-    it "is able to create a group" do
-      xhr :post, :create, group: {
-        usernames: usernames,
-        name: "bob"
-      }
+    it "is able to refresh automatic groups" do
+      Group.expects(:refresh_automatic_groups!).returns(true)
 
+      xhr :post, :refresh_automatic_groups
       response.status.should == 200
-
-      groups = Group.where(name: "bob").to_a
-
-      groups.count.should == 1
-      groups[0].usernames.should == usernames
-      groups[0].name.should == "bob"
     end
 
-    it "strips spaces from group name" do
-      lambda {
-        xhr :post, :create, group: {
-          usernames: usernames,
-          name: " bob "
-        }
-      }.should_not raise_error()
-      Group.where(name: "bob").count.should == 1
-    end
   end
 
-  context '.update' do
-    let (:group) { Fabricate(:group) }
+  context ".add_members" do
 
-    it "is able to update group members" do
+    it "cannot add members to automatic groups" do
+      xhr :put, :add_members, group_id: 1, usernames: "l77t"
+      response.status.should == 422
+    end
+
+    it "is able to add several members to a group" do
       user1 = Fabricate(:user)
       user2 = Fabricate(:user)
+      group = Fabricate(:group)
 
-      xhr :put, :update, id: group.id, name: 'fred', group: {
-            name: 'fred',
-            usernames: "#{user1.username},#{user2.username}"
-          }
+      xhr :put, :add_members, group_id: group.id, usernames: [user1.username, user2.username].join(",")
 
+      response.should be_success
       group.reload
       group.users.count.should == 2
-      group.name.should == 'fred'
     end
 
-    context 'incremental' do
-      before do
-        @user1 = Fabricate(:user)
-        group.add(@user1)
-        group.reload
-      end
-
-      it "can make incremental adds" do
-        user2 = Fabricate(:user)
-        xhr :patch, :update, id: group.id, changes: {add: user2.username}
-        response.status.should == 200
-        group.reload
-        group.users.count.should eq(2)
-      end
-
-      it "succeeds silently when adding non-existent users" do
-        xhr :patch, :update, id: group.id, changes: {add: "nosuchperson"}
-        response.status.should == 200
-        group.reload
-        group.users.count.should eq(1)
-      end
-
-      it "can make incremental deletes" do
-        xhr :patch, :update, id: group.id, changes: {delete: @user1.username}
-        response.status.should == 200
-        group.reload
-        group.users.count.should eq(0)
-      end
-
-      it "succeeds silently when removing non-members" do
-        user2 = Fabricate(:user)
-        xhr :patch, :update, id: group.id, changes: {delete: user2.username}
-        response.status.should == 200
-        group.reload
-        group.users.count.should eq(1)
-      end
-
-      it "cannot patch automatic groups" do
-        auto_group = Fabricate(:group, name: "auto_group", automatic: true)
-
-        xhr :patch, :update, id: auto_group.id, changes: {add: "bob"}
-        response.status.should == 403
-      end
-    end
   end
+
+  context ".remove_member" do
+
+    it "cannot remove members from automatic groups" do
+      xhr :put, :remove_member, group_id: 1, user_id: 42
+      response.status.should == 422
+    end
+
+    it "is able to remove a member" do
+      group = Fabricate(:group)
+      user = Fabricate(:user)
+      group.add(user)
+      group.save
+
+      xhr :delete, :remove_member, group_id: group.id, user_id: user.id
+
+      response.should be_success
+      group.reload
+      group.users.count.should == 0
+    end
+
+  end
+
 end

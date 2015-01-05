@@ -46,7 +46,8 @@ Discourse::Application.routes.draw do
       collection do
         post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
       end
-      get "users"
+      delete "members" => "groups#remove_member"
+      put "members" => "groups#add_members"
     end
 
     resources :users, id: USERNAME_ROUTE_FORMAT do

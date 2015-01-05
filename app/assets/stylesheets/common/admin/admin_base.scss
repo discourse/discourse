@@ -161,6 +161,26 @@ td.flaggers td {
   }
 }
 
+.groups, .badges {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+
+    & > div {
+      margin-top: 10px;
+    }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+    }
+  }
+}
+
 .site-settings-nav {
   width: 18.018%;
   margin-top: 30px;
@@ -378,25 +398,10 @@ section.details {
   }
 
   .form-horizontal {
-    label {
-      font-weight: bold;
-    }
-    & > div {
-      margin-top: 10px;
-    }
     .delete-link {
       margin-left: 15px;
       margin-top: 5px;
     }
-
-    input, textarea, select {
-      width: 350px;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-    }
-
     textarea {
       height: 200px;
     }
@@ -451,6 +456,26 @@ section.details {
       color: $danger;
       font-weight: bold;
     }
+  }
+}
+
+// Groups area
+.groups {
+  .ac-wrap {
+    width: 100% !important;
+    .item {
+      width: 190px;
+      margin-right: 0 !important;
+    }
+  }
+  .next, .previous {
+    color: #333 !important;
+    &.disabled {
+      color: #aaa !important;
+    }
+  }
+  .btn.add {
+    margin-top: 7px;
   }
 }
 
