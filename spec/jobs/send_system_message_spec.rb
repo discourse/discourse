@@ -4,11 +4,11 @@ require 'jobs/regular/send_system_message'
 describe Jobs::SendSystemMessage do
 
   it "raises an error without a user_id" do
-    lambda { Jobs::SendSystemMessage.new.execute(message_type: 'welcome_invite') }.should raise_error(Discourse::InvalidParameters)
+    expect { Jobs::SendSystemMessage.new.execute(message_type: 'welcome_invite') }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "raises an error without a message_type" do
-    lambda { Jobs::SendSystemMessage.new.execute(user_id: 1234) }.should raise_error(Discourse::InvalidParameters)
+    expect { Jobs::SendSystemMessage.new.execute(user_id: 1234) }.to raise_error(Discourse::InvalidParameters)
   end
 
   context 'with valid parameters' do
