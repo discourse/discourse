@@ -7,6 +7,6 @@ describe Jobs::CrawlTopicLink do
   let(:job) { Jobs::CrawlTopicLink.new }
 
   it "needs a topic_link_id" do
-    -> { job.execute({}) }.should raise_error(Discourse::InvalidParameters)
+    expect { job.execute({}) }.to raise_error(Discourse::InvalidParameters)
   end
 end

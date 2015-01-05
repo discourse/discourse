@@ -10,7 +10,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user_no_digests) { Fabricate(:active_user, email_digests: false, last_emailed_at: 8.days.ago, last_seen_at: 10.days.ago) }
 
       it "doesn't return users with email disabled" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_no_digests.id).should == false
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_no_digests.id)).to eq(false)
       end
     end
 
@@ -36,7 +36,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user_emailed_recently) { Fabricate(:active_user, last_emailed_at: 6.days.ago) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id).should == false
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_emailed_recently.id)).to eq(false)
       end
 
     end
@@ -45,7 +45,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:inactive_user) { Fabricate(:user, active: false) }
 
       it "doesn't return users who have been emailed recently" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(inactive_user.id).should == false
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(inactive_user.id)).to eq(false)
       end
     end
 
@@ -53,7 +53,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:suspended_user) { Fabricate(:user, suspended_till: 1.week.from_now, suspended_at: 1.day.ago) }
 
       it "doesn't return users who are suspended" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(suspended_user.id).should == false
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(suspended_user.id)).to eq(false)
       end
     end
 
@@ -63,12 +63,12 @@ describe Jobs::EnqueueDigestEmails do
 
       it "doesn't return users who have been emailed recently" do
         user = user_visited_this_week
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id).should == false
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
       end
 
       it "does return users who have been emailed recently but have email_always set" do
         user = user_visited_this_week_email_always
-        Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id).should == true
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(true)
       end
     end
 
@@ -76,7 +76,7 @@ describe Jobs::EnqueueDigestEmails do
       let!(:user) { Fabricate(:active_user) }
 
       it "returns the user" do
-        Jobs::EnqueueDigestEmails.new.target_user_ids.should == [user.id]
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids).to eq([user.id])
       end
     end
 

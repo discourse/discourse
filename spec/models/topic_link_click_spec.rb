@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe TopicLinkClick do
 
-  it { should belong_to :topic_link }
-  it { should belong_to :user }
-  it { should validate_presence_of :topic_link_id }
+  it { is_expected.to belong_to :topic_link }
+  it { is_expected.to belong_to :user }
+  it { is_expected.to validate_presence_of :topic_link_id }
 
   def test_uri
     URI.parse('http://test.host')
@@ -19,7 +19,7 @@ describe TopicLinkClick do
     end
 
     it 'has 0 clicks at first' do
-      @topic_link.clicks.should == 0
+      expect(@topic_link.clicks).to eq(0)
     end
 
     context 'create' do
@@ -28,16 +28,16 @@ describe TopicLinkClick do
       end
 
       it 'creates the forum topic link click' do
-        TopicLinkClick.count.should == 1
+        expect(TopicLinkClick.count).to eq(1)
       end
 
       it 'has 0 clicks at first' do
         @topic_link.reload
-        @topic_link.clicks.should == 1
+        expect(@topic_link.clicks).to eq(1)
       end
 
       it 'serializes and deserializes the IP' do
-        TopicLinkClick.first.ip_address.to_s.should == '192.168.1.1'
+        expect(TopicLinkClick.first.ip_address.to_s).to eq('192.168.1.1')
       end
 
     end
@@ -48,15 +48,15 @@ describe TopicLinkClick do
         let(:click) { TopicLinkClick.create_from(url: "url that doesn't exist", post_id: @post.id, ip: '127.0.0.1') }
 
         it "returns nil" do
-          click.should == nil
+          expect(click).to eq(nil)
         end
       end
 
       context 'clicking on your own link' do
         it "should not record the click" do
-          lambda {
+          expect {
             TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.0', user_id: @post.user_id)
-          }.should_not change(TopicLinkClick, :count)
+          }.not_to change(TopicLinkClick, :count)
         end
       end
 
@@ -67,14 +67,14 @@ describe TopicLinkClick do
         end
 
         it 'creates a click' do
-          @click.should be_present
-          @click.topic_link.should == @topic_link
-          @url.should == @topic_link.url
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@url).to eq(@topic_link.url)
         end
 
         context "clicking again" do
           it "should not record the click due to rate limiting" do
-            -> { TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1') }.should_not change(TopicLinkClick, :count)
+            expect { TopicLinkClick.create_from(url: @topic_link.url, post_id: @post.id, ip: '127.0.0.1') }.not_to change(TopicLinkClick, :count)
           end
         end
       end
@@ -84,19 +84,19 @@ describe TopicLinkClick do
 
         it 'returns the url' do
           url = TopicLinkClick.create_from(url: '/relative-url', post_id: @post.id, ip: '127.0.0.1')
-          url.should == "/relative-url"
+          expect(url).to eq("/relative-url")
         end
 
         it 'finds a protocol relative urls with a host' do
           url = "//#{host}/relative-url"
           redirect = TopicLinkClick.create_from(url: url)
-          redirect.should == url
+          expect(redirect).to eq(url)
         end
 
         it "returns the url if it's on our host" do
           url = "http://#{host}/relative-url"
           redirect = TopicLinkClick.create_from(url: url)
-          redirect.should == url
+          expect(redirect).to eq(url)
         end
       end
 
@@ -107,9 +107,9 @@ describe TopicLinkClick do
         end
 
         it 'creates a click' do
-          @click.should be_present
-          @click.topic_link.should == @topic_link
-          @url.should == 'https://twitter.com'
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@url).to eq('https://twitter.com')
         end
       end
 
@@ -120,9 +120,9 @@ describe TopicLinkClick do
         end
 
         it 'creates a click' do
-          @click.should be_present
-          @click.topic_link.should == @topic_link
-          @url.should == @topic_link.url
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@url).to eq(@topic_link.url)
         end
 
       end

@@ -11,14 +11,14 @@ describe UserVisit do
     user.update_visit_record!(1.day.ago.to_date)
 
     user.reload
-    user.user_stat.days_visited.should == 2
+    expect(user.user_stat.days_visited).to eq(2)
 
     user.user_stat.days_visited = 1
     user.save
     UserVisit.ensure_consistency!
 
     user.reload
-    user.user_stat.days_visited.should == 2
+    expect(user.user_stat.days_visited).to eq(2)
   end
 
   describe '#by_day' do
@@ -34,8 +34,8 @@ describe UserVisit do
     let(:visits_by_day) { {1.day.ago.to_date => 2, 2.days.ago.to_date => 1, Time.now.to_date => 1 } }
 
     it 'collect closed interval visits' do
-      UserVisit.by_day(2.days.ago, Time.now).should include(visits_by_day)
-      UserVisit.by_day(2.days.ago, Time.now).should_not include({4.days.ago.to_date => 1})
+      expect(UserVisit.by_day(2.days.ago, Time.now)).to include(visits_by_day)
+      expect(UserVisit.by_day(2.days.ago, Time.now)).not_to include({4.days.ago.to_date => 1})
     end
   end
 end

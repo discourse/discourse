@@ -23,7 +23,7 @@ describe Jobs::Tl3Promotions do
     def create_leader_user
       user = Fabricate(:user, trust_level: TrustLevel[2])
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(true)
-      Promotion.new(user).review_tl2.should == true
+      expect(Promotion.new(user).review_tl2).to eq(true)
       user
     end
 
@@ -40,7 +40,7 @@ describe Jobs::Tl3Promotions do
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
       run_job
-      user.reload.trust_level.should == TrustLevel[2]
+      expect(user.reload.trust_level).to eq(TrustLevel[2])
     end
 
     it "doesn't demote if user was promoted recently" do
@@ -52,7 +52,7 @@ describe Jobs::Tl3Promotions do
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(true)
       run_job
-      user.reload.trust_level.should == TrustLevel[3]
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
 
     it "doesn't demote if user hasn't lost requirements (low water mark)" do
@@ -64,7 +64,7 @@ describe Jobs::Tl3Promotions do
       TrustLevel3Requirements.any_instance.stubs(:requirements_met?).returns(false)
       TrustLevel3Requirements.any_instance.stubs(:requirements_lost?).returns(false)
       run_job
-      user.reload.trust_level.should == TrustLevel[3]
+      expect(user.reload.trust_level).to eq(TrustLevel[3])
     end
 
   end

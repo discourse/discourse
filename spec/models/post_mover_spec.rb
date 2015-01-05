@@ -36,14 +36,14 @@ describe PostMover do
     context "errors" do
 
       it "raises an error when one of the posts doesn't exist" do
-        lambda { topic.move_posts(user, [1003], title: "new testing topic name") }.should raise_error(Discourse::InvalidParameters)
+        expect { topic.move_posts(user, [1003], title: "new testing topic name") }.to raise_error(Discourse::InvalidParameters)
       end
 
       it "raises an error and does not create a topic if no posts were moved" do
         Topic.count.tap do |original_topic_count|
-          lambda {
+          expect {
             topic.move_posts(user, [], title: "new testing topic name")
-          }.should raise_error(Discourse::InvalidParameters)
+          }.to raise_error(Discourse::InvalidParameters)
 
           expect(Topic.count).to eq original_topic_count
         end
@@ -61,41 +61,41 @@ describe PostMover do
         let!(:new_topic) { topic.move_posts(user, [p2.id, p4.id], title: "new testing topic name", category_id: category.id) }
 
         it "works correctly" do
-          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
+          expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
 
-          new_topic.should be_present
-          new_topic.featured_user1_id.should == another_user.id
-          new_topic.like_count.should == 1
+          expect(new_topic).to be_present
+          expect(new_topic.featured_user1_id).to eq(another_user.id)
+          expect(new_topic.like_count).to eq(1)
 
-          new_topic.category.should == category
-          topic.featured_user1_id.should be_blank
-          new_topic.posts.by_post_number.should =~ [p2, p4]
+          expect(new_topic.category).to eq(category)
+          expect(topic.featured_user1_id).to be_blank
+          expect(new_topic.posts.by_post_number).to match_array([p2, p4])
 
           new_topic.reload
-          new_topic.posts_count.should == 2
-          new_topic.highest_post_number.should == 2
-          new_topic.last_post_user_id.should == new_topic.posts.last.user_id
+          expect(new_topic.posts_count).to eq(2)
+          expect(new_topic.highest_post_number).to eq(2)
+          expect(new_topic.last_post_user_id).to eq(new_topic.posts.last.user_id)
           expect(new_topic.last_posted_at).to be_present
 
           p2.reload
-          p2.sort_order.should == 1
-          p2.post_number.should == 1
-          p2.topic_links.first.topic_id.should == new_topic.id
+          expect(p2.sort_order).to eq(1)
+          expect(p2.post_number).to eq(1)
+          expect(p2.topic_links.first.topic_id).to eq(new_topic.id)
 
           p4.reload
-          p4.post_number.should == 2
-          p4.sort_order.should == 2
+          expect(p4.post_number).to eq(2)
+          expect(p4.sort_order).to eq(2)
 
           topic.reload
-          topic.featured_user1_id.should be_blank
-          topic.like_count.should == 0
-          topic.posts_count.should == 2
-          topic.posts.by_post_number.should =~ [p1, p3]
-          topic.highest_post_number.should == p3.post_number
+          expect(topic.featured_user1_id).to be_blank
+          expect(topic.like_count).to eq(0)
+          expect(topic.posts_count).to eq(2)
+          expect(topic.posts.by_post_number).to match_array([p1, p3])
+          expect(topic.highest_post_number).to eq(p3.post_number)
 
           # both the like and was_liked user actions should be correct
           action = UserAction.find_by(user_id: another_user.id)
-          action.target_topic_id.should == new_topic.id
+          expect(action.target_topic_id).to eq(new_topic.id)
         end
       end
 
@@ -106,43 +106,43 @@ describe PostMover do
         let!(:moved_to) { topic.move_posts(user, [p2.id, p4.id], destination_topic_id: destination_topic.id)}
 
         it "works correctly" do
-          moved_to.should == destination_topic
+          expect(moved_to).to eq(destination_topic)
 
           # Check out new topic
           moved_to.reload
-          moved_to.posts_count.should == 3
-          moved_to.highest_post_number.should == 3
-          moved_to.featured_user1_id.should == another_user.id
-          moved_to.like_count.should == 1
-          moved_to.category_id.should == SiteSetting.uncategorized_category_id
+          expect(moved_to.posts_count).to eq(3)
+          expect(moved_to.highest_post_number).to eq(3)
+          expect(moved_to.featured_user1_id).to eq(another_user.id)
+          expect(moved_to.like_count).to eq(1)
+          expect(moved_to.category_id).to eq(SiteSetting.uncategorized_category_id)
 
           # Posts should be re-ordered
           p2.reload
-          p2.sort_order.should == 2
-          p2.post_number.should == 2
-          p2.topic_id.should == moved_to.id
-          p2.reply_count.should == 1
-          p2.reply_to_post_number.should == nil
+          expect(p2.sort_order).to eq(2)
+          expect(p2.post_number).to eq(2)
+          expect(p2.topic_id).to eq(moved_to.id)
+          expect(p2.reply_count).to eq(1)
+          expect(p2.reply_to_post_number).to eq(nil)
 
           p4.reload
-          p4.post_number.should == 3
-          p4.sort_order.should == 3
-          p4.topic_id.should == moved_to.id
-          p4.reply_count.should == 0
-          p4.reply_to_post_number.should == 2
+          expect(p4.post_number).to eq(3)
+          expect(p4.sort_order).to eq(3)
+          expect(p4.topic_id).to eq(moved_to.id)
+          expect(p4.reply_count).to eq(0)
+          expect(p4.reply_to_post_number).to eq(2)
 
           # Check out the original topic
           topic.reload
-          topic.posts_count.should == 2
-          topic.highest_post_number.should == 3
-          topic.featured_user1_id.should be_blank
-          topic.like_count.should == 0
-          topic.posts_count.should == 2
-          topic.posts.by_post_number.should =~ [p1, p3]
-          topic.highest_post_number.should == p3.post_number
+          expect(topic.posts_count).to eq(2)
+          expect(topic.highest_post_number).to eq(3)
+          expect(topic.featured_user1_id).to be_blank
+          expect(topic.like_count).to eq(0)
+          expect(topic.posts_count).to eq(2)
+          expect(topic.posts.by_post_number).to match_array([p1, p3])
+          expect(topic.highest_post_number).to eq(p3.post_number)
 
           # Should update last reads
-          TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number.should == p3.post_number
+          expect(TopicUser.find_by(user_id: user.id, topic_id: topic.id).last_read_post_number).to eq(p3.post_number)
         end
       end
 
@@ -151,36 +151,36 @@ describe PostMover do
         let!(:new_topic) { topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name") }
 
         it "copies the OP, doesn't delete it" do
-          new_topic.should be_present
+          expect(new_topic).to be_present
           new_topic.posts.reload
-          new_topic.posts.by_post_number.first.raw.should == p1.raw
+          expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
 
           new_topic.reload
-          new_topic.posts_count.should == 2
-          new_topic.highest_post_number.should == 2
+          expect(new_topic.posts_count).to eq(2)
+          expect(new_topic.highest_post_number).to eq(2)
 
           # First post didn't move
           p1.reload
-          p1.sort_order.should == 1
-          p1.post_number.should == 1
+          expect(p1.sort_order).to eq(1)
+          expect(p1.post_number).to eq(1)
           p1.topic_id == topic.id
-          p1.reply_count.should == 0
+          expect(p1.reply_count).to eq(0)
 
           # New first post
           new_first = new_topic.posts.where(post_number: 1).first
-          new_first.reply_count.should == 1
+          expect(new_first.reply_count).to eq(1)
 
           # Second post is in a new topic
           p2.reload
-          p2.post_number.should == 2
-          p2.sort_order.should == 2
+          expect(p2.post_number).to eq(2)
+          expect(p2.sort_order).to eq(2)
           p2.topic_id == new_topic.id
-          p2.reply_to_post_number.should == 1
-          p2.reply_count.should == 0
+          expect(p2.reply_to_post_number).to eq(1)
+          expect(p2.reply_count).to eq(0)
 
           topic.reload
-          topic.posts.by_post_number.should =~ [p1, p3, p4]
-          topic.highest_post_number.should == p4.post_number
+          expect(topic.posts.by_post_number).to match_array([p1, p3, p4])
+          expect(topic.highest_post_number).to eq(p4.post_number)
         end
 
       end
@@ -195,26 +195,26 @@ describe PostMover do
         it "works correctly" do
           destination_deleted_reply.trash!
 
-          moved_to.should == destination_topic
+          expect(moved_to).to eq(destination_topic)
 
           # Check out new topic
           moved_to.reload
-          moved_to.posts_count.should == 3
-          moved_to.highest_post_number.should == 4
+          expect(moved_to.posts_count).to eq(3)
+          expect(moved_to.highest_post_number).to eq(4)
 
           # Posts should be re-ordered
           p2.reload
-          p2.sort_order.should == 3
-          p2.post_number.should == 3
-          p2.topic_id.should == moved_to.id
-          p2.reply_count.should == 1
-          p2.reply_to_post_number.should == nil
+          expect(p2.sort_order).to eq(3)
+          expect(p2.post_number).to eq(3)
+          expect(p2.topic_id).to eq(moved_to.id)
+          expect(p2.reply_count).to eq(1)
+          expect(p2.reply_to_post_number).to eq(nil)
 
           p4.reload
-          p4.post_number.should == 4
-          p4.sort_order.should == 4
-          p4.topic_id.should == moved_to.id
-          p4.reply_to_post_number.should == p2.post_number
+          expect(p4.post_number).to eq(4)
+          expect(p4.sort_order).to eq(4)
+          expect(p4.topic_id).to eq(moved_to.id)
+          expect(p4.reply_to_post_number).to eq(p2.post_number)
         end
       end
 

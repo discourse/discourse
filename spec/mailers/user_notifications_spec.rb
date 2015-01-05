@@ -20,7 +20,7 @@ describe UserNotifications do
       reply3.hidden = true
       reply3.save
 
-      UserNotifications.get_context_posts(reply4, nil).count.should == 1
+      expect(UserNotifications.get_context_posts(reply4, nil).count).to eq(1)
     end
   end
 
@@ -29,10 +29,10 @@ describe UserNotifications do
     subject { UserNotifications.signup(user) }
 
     it "works" do
-      subject.to.should == [user.email]
-      subject.subject.should be_present
-      subject.from.should == [SiteSetting.notification_email]
-      subject.body.should be_present
+      expect(subject.to).to eq([user.email])
+      expect(subject.subject).to be_present
+      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(subject.body).to be_present
     end
 
   end
@@ -42,10 +42,10 @@ describe UserNotifications do
     subject { UserNotifications.forgot_password(user) }
 
     it "works" do
-      subject.to.should == [user.email]
-      subject.subject.should be_present
-      subject.from.should == [SiteSetting.notification_email]
-      subject.body.should be_present
+      expect(subject.to).to eq([user.email])
+      expect(subject.subject).to be_present
+      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(subject.body).to be_present
     end
 
   end
@@ -57,7 +57,7 @@ describe UserNotifications do
     context "without new topics" do
 
       it "doesn't send the email" do
-        subject.to.should be_blank
+        expect(subject.to).to be_blank
       end
 
     end
@@ -70,11 +70,11 @@ describe UserNotifications do
       end
 
       it "works" do
-        subject.to.should == [user.email]
-        subject.subject.should be_present
-        subject.from.should == [SiteSetting.notification_email]
-        subject.html_part.body.to_s.should be_present
-        subject.text_part.body.to_s.should be_present
+        expect(subject.to).to eq([user.email])
+        expect(subject.subject).to be_present
+        expect(subject.from).to eq([SiteSetting.notification_email])
+        expect(subject.html_part.body.to_s).to be_present
+        expect(subject.text_part.body.to_s).to be_present
       end
 
     end
@@ -100,32 +100,32 @@ describe UserNotifications do
       expect(mail.subject).to match(/India/)
 
       # 2 respond to links cause we have 1 context post
-      mail.html_part.to_s.scan(/To respond/).count.should == 2
+      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(2)
 
       # 1 unsubscribe
-      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
-      tu.last_emailed_post_number.should == response.post_number
+      expect(tu.last_emailed_post_number).to eq(response.post_number)
 
       # in mailing list mode user_replies is not sent through
       response.user.mailing_list_mode = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
       if rails_master?
-        mail.message.class.should == ActionMailer::Base::NullMail
+        expect(mail.message.class).to eq(ActionMailer::Base::NullMail)
       else
-        mail.class.should == ActionMailer::Base::NullMail
+        expect(mail.class).to eq(ActionMailer::Base::NullMail)
       end
 
       response.user.mailing_list_mode = nil
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
       if rails_master?
-        mail.message.class.should_not == ActionMailer::Base::NullMail
+        expect(mail.message.class).not_to eq(ActionMailer::Base::NullMail)
       else
-        mail.class.should_not == ActionMailer::Base::NullMail
+        expect(mail.class).not_to eq(ActionMailer::Base::NullMail)
       end
     end
   end
@@ -151,14 +151,14 @@ describe UserNotifications do
       expect(mail.subject).not_to match(/Uncategorized/)
 
       # 2 respond to links cause we have 1 context post
-      mail.html_part.to_s.scan(/To respond/).count.should == 2
+      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(2)
 
       # 1 unsubscribe link
-      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(post.topic_id, response.user)
-      tu.last_emailed_post_number.should == response.post_number
+      expect(tu.last_emailed_post_number).to eq(response.post_number)
     end
   end
 
@@ -180,14 +180,14 @@ describe UserNotifications do
       expect(mail.subject).to match("[PM]")
 
       # 1 respond to link
-      mail.html_part.to_s.scan(/To respond/).count.should == 1
+      expect(mail.html_part.to_s.scan(/To respond/).count).to eq(1)
 
       # 1 unsubscribe link
-      mail.html_part.to_s.scan(/To unsubscribe/).count.should == 1
+      expect(mail.html_part.to_s.scan(/To unsubscribe/).count).to eq(1)
 
       # side effect, topic user is updated with post number
       tu = TopicUser.get(topic.id, response.user)
-      tu.last_emailed_post_number.should == response.post_number
+      expect(tu.last_emailed_post_number).to eq(response.post_number)
     end
   end
 
