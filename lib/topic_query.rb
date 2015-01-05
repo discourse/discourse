@@ -220,7 +220,7 @@ class TopicQuery
       end
 
       if sort_column == 'op_likes'
-        return result.order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
+        return result.includes(:first_post).order("(SELECT like_count FROM posts p3 WHERE p3.topic_id = topics.id AND p3.post_number = 1) #{sort_dir}")
       end
 
       result.order("topics.#{sort_column} #{sort_dir}")

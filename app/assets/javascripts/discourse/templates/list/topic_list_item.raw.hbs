@@ -38,6 +38,15 @@
   {{/if}}
 {{/if}}
 
+{{#if controller.showOpLikes}}
+<td class="num likes">
+  {{#if hasOpLikes}}
+  <a href='{{topic.summaryUrl}}'>
+    {{number topic.op_like_count}} <i class='fa fa-heart'></i></td>
+  </a>
+  {{/if}}
+{{/if}}
+
 <td class="num views {{topic.viewsHeat}}">{{number topic.views numberKey="views_long"}}</td>
 
 {{raw "list/activity-column" topic=topic class="num" tagName="td"}}

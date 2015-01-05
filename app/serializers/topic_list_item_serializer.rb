@@ -6,7 +6,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :has_summary,
              :archetype,
              :last_poster_username,
-             :category_id
+             :category_id,
+             :op_like_count
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -21,6 +22,10 @@ class TopicListItemSerializer < ListableTopicSerializer
     object.posters || []
   end
 
+  def op_like_count
+    object.first_post && object.first_post.like_count
+  end
+
   def last_poster_username
     posters.find { |poster| poster.user.id == object.last_post_user_id }.try(:user).try(:username)
   end
@@ -31,6 +36,10 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def include_participants?
     object.private_message?
+  end
+
+  def include_op_like_count?
+    object.association(:first_post).loaded?
   end
 
 end

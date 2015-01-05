@@ -18,6 +18,10 @@ export default Discourse.View.extend(StringBuffer, {
     return this.get('topic.like_count') > 0;
   },
 
+  hasOpLikes: function(){
+    return this.get('topic.op_like_count') > 0;
+  },
+
   click: function(e){
     var target = $(e.target);
 
