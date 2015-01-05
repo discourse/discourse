@@ -4,30 +4,31 @@
 </td>
 {{/if}}
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
-  {{raw "topic-status" topic=content}}
-  {{topic-link content}}
+  {{raw "topic-status" topic=topic}}
+  {{topic-link topic}}
   {{#if controller.showTopicPostBadges}}
-    {{raw "topic-post-badges" unread=content.unread newPosts=content.displayNewPosts unseen=content.unseen url=content.lastUnreadUrl}}
+    {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
   {{/if}}
 
-  {{raw "list/topic-excerpt" topic=content}}
+  {{raw "list/topic-excerpt" topic=topic}}
 </td>
 
 {{#unless controller.hideCategory}}
-  {{#unless content.isPinnedUncategorized}}
-    {{raw "list/category-column" category=content.category}}
+  {{#unless topic.isPinnedUncategorized}}
+    {{raw "list/category-column" category=topic.category}}
   {{/unless}}
 {{/unless}}
 
 {{#if controller.showPosters}}
-  {{raw "list/posters-column" posters=content.posters}}
+  {{raw "list/posters-column" posters=topic.posters}}
 {{/if}}
+
+{{raw "list/posts-count-column" topic=topic}}
 
 {{#if controller.showParticipants}}
-  {{raw "list/posters-column" posters=content.participants}}
+  {{raw "list/posters-column" posters=topic.participants}}
 {{/if}}
 
-{{raw "list/posts-count-column" topic=content}}
-<td class="num views {{content.viewsHeat}}">{{number content.views numberKey="views_long"}}</td>
+<td class="num views {{topic.viewsHeat}}">{{number topic.views numberKey="views_long"}}</td>
 
-{{raw "list/activity-column" topic=content class="num" tagName="td"}}
+{{raw "list/activity-column" topic=topic class="num" tagName="td"}}

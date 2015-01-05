@@ -6,7 +6,6 @@ var controllerOpts = {
   bulkSelectEnabled: false,
   selected: [],
   period: null,
-  showPosters: true,
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
   showTopicPostBadges: Em.computed.not('controllers.discovery/topics.new'),

@@ -5,9 +5,14 @@
 {{/if}}
 {{raw "components/topic-list-header-column" order='default' name='topic.title' showBulkToggle=toggleInTitle}}
 {{#unless hideCategory}}
-  {{raw "components/topic-list-header-column" sortable='true' order='category' name='category_title'}}
+  {{raw "components/topic-list-header-column" sortable=sortable order='category' name='category_title'}}
 {{/unless}}
-{{raw "components/topic-list-header-column" order='posters' name='users'}}
-{{raw "components/topic-list-header-column" sortable='true' number='true' order='posts' name='posts'}}
-{{raw "components/topic-list-header-column" sortable='true' number='true' order='views' name='views'}}
-{{raw "components/topic-list-header-column" sortable='true' number='true' order='activity' name='activity'}}
+{{#if showPosters}}
+  {{raw "components/topic-list-header-column" order='posters' name='users'}}
+{{/if}}
+{{raw "components/topic-list-header-column" sortable=sortable number='true' order='posts' name='posts'}}
+{{#if showParticipants}}
+  {{raw "components/topic-list-header-column" order='participants' name='users'}}
+{{/if}}
+{{raw "components/topic-list-header-column" sortable=sortable number='true' order='views' name='views'}}
+{{raw "components/topic-list-header-column" sortable=sortable number='true' order='activity' name='activity'}}

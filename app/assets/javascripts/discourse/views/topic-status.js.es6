@@ -25,7 +25,7 @@ export default Ember.Object.extend({
       results.push({icon: 'thumb-tack', key: 'pinned'});
     }
 
-    if(topic.get('unpinnned')){
+    if(topic.get('unpinned')){
       results.push({icon: 'thumb-tack unpinned', key: 'unpinned'});
     }
 

@@ -101,7 +101,10 @@ Discourse.User = Discourse.Model.extend({
     @property path
     @type {String}
   **/
-  path: Discourse.computed.url('username_lower', "/users/%@"),
+  path: function(){
+    return Discourse.getURL('/users/' + this.get('username_lower'));
+    // no need to observe, requires a hard refresh to update
+  }.property(),
 
   /**
     Path to this user's administration
