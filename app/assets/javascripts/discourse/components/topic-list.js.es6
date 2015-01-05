@@ -6,6 +6,8 @@ export default Ember.Component.extend({
 
   _observeHideCategory: function(){
     this.addObserver('hideCategory', this.rerender);
+    this.addObserver('order', this.rerender);
+    this.addObserver('ascending', this.rerender);
   }.on('init'),
 
   toggleInTitle: function(){

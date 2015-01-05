@@ -142,15 +142,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
-
-if rails_master?
-  # native casting
-  gem 'pg', '0.18.0.pre20141117110243'
-else
-  # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
-  gem 'pg', '0.15.1'
-end
-
+gem 'pg'
 gem 'pry-rails', require: false
 gem 'rake'
 
