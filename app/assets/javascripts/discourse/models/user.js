@@ -353,6 +353,14 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  findStaffInfo: function() {
+    if (!Discourse.User.currentProp("staff")) { return Ember.RSVP.resolve(null); }
+    var self = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/staff-info.json").then(function(info) {
+      self.setProperties(info);
+    });
+  },
+
   avatarTemplate: function() {
     return Discourse.User.avatarTemplate(this.get('username'), this.get('uploaded_avatar_id'));
   }.property('uploaded_avatar_id', 'username'),

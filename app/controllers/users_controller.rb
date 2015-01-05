@@ -512,6 +512,19 @@ class UsersController < ApplicationController
     render json: success_json
   end
 
+  def staff_info
+    @user = fetch_user_from_params
+    guardian.ensure_can_see_staff_info!(@user)
+
+    result = {}
+
+    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
+      result[info] = @user.send(info)
+    end
+
+    render json: result
+  end
+
   private
 
     def honeypot_value

@@ -803,6 +803,38 @@ class User < ActiveRecord::Base
     end
   end
 
+  def number_of_deleted_posts
+    Post.with_deleted
+        .where(user_id: self.id)
+        .where(user_deleted: false)
+        .where.not(deleted_by_id: self.id)
+        .where.not(deleted_at: nil)
+        .count
+  end
+
+  def number_of_flagged_posts
+    Post.with_deleted
+        .where(user_id: self.id)
+        .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                             .where(disagreed_at: nil)
+                             .select(:post_id))
+        .count
+  end
+
+  def number_of_flags_given
+    PostAction.where(user_id: self.id)
+              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+              .count
+  end
+
+  def number_of_warnings
+    self.warnings.count
+  end
+
+  def number_of_suspensions
+    UserHistory.for(self, :suspend_user).count
+  end
+
   private
 
   def previous_visit_at_update_required?(timestamp)
