@@ -3,6 +3,10 @@ export default Ember.Component.extend({
   tagName: 'table',
   classNames: ['topic-list'],
 
+  _observeHideCategory: function(){
+    this.addObserver('hideCategory', this.rerender);
+  }.on('init'),
+
   toggleInTitle: function(){
     return !this.get('bulkSelectEnabled') && this.get('canBulkSelect');
   }.property('bulkSelectEnabled'),
@@ -13,11 +17,11 @@ export default Ember.Component.extend({
 
   showLikes: function(){
     return this.get('order') === "likes";
-  }.property(),
+  }.property('order'),
 
   showOpLikes: function(){
     return this.get('order') === "op_likes";
-  }.property(),
+  }.property('order'),
 
   click: function(e){
     var self = this;
