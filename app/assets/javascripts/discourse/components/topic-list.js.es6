@@ -2,6 +2,7 @@
 export default Ember.Component.extend({
   tagName: 'table',
   classNames: ['topic-list'],
+  showTopicPostBadges: true,
 
   _observeHideCategory: function(){
     this.addObserver('hideCategory', this.rerender);
