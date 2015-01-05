@@ -95,6 +95,10 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(1);
   }.property('url'),
 
+  summaryUrl: function () {
+    return this.urlForPostNumber(1) + (this.get('has_summary') ? "?filter=summary" : "");
+  }.property('url'),
+
   lastPosterUrl: function() {
     return Discourse.getURL("/users/") + this.get("last_poster.username");
   }.property('last_poster'),

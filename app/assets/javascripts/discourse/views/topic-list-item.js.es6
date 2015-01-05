@@ -14,6 +14,10 @@ export default Discourse.View.extend(StringBuffer, {
 
   topic: Em.computed.alias("content"),
 
+  hasLikes: function(){
+    return this.get('topic.like_count') > 0;
+  },
+
   click: function(e){
     var target = $(e.target);
 
