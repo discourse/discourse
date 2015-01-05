@@ -80,8 +80,8 @@ export default function(filter, params) {
         period: periods.findBy('id', periodId),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
-        order: model.get('params.order'),
-        ascending: model.get('params.ascending'),
+        order: topics.get('params.order'),
+        ascending: topics.get('params.ascending'),
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));
