@@ -41,7 +41,6 @@ class AdminDashboardData
       send_consumer_email_check,
       title_check,
       site_description_check,
-      access_password_removal,
       site_contact_username_check,
       notification_email_check
     ].compact
@@ -187,19 +186,4 @@ class AdminDashboardData
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
-  # TODO: generalize this method of putting i18n keys with expiry in redis
-  #       that should be reported on the admin dashboard:
-  def access_password_removal
-    if i18n_key = $redis.get(AdminDashboardData.access_password_removal_key)
-      I18n.t(i18n_key)
-    end
-  end
-
-  def self.report_access_password_removal
-    $redis.setex access_password_removal_key, 172_800, 'dashboard.access_password_removal'
-  end
-
-  def self.access_password_removal_key
-    'dash-data:access_password_removal'
-  end
 end
