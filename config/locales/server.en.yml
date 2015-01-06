@@ -1945,7 +1945,13 @@ en:
       *   Don’t divert a topic by changing it midstream.
       *   Don’t sign your posts &mdash; every post has your profile information attached to it.
 
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a New Topic.
+      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
+
+      <a name="operated"></a>
+
+      ## [Operated By You](#operated)
+
+      This site is operated by your [friendly local staff](/staff) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss it! If you have a critical or urgent issue that isn't covered by a meta topic or flag, contact us via the [staff page](/staff).
 
       <a name="stealing"></a>
 
@@ -1959,9 +1965,6 @@ en:
 
       Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
 
-      ## [Operated By You](#operated)
-
-      This site is operated by your [friendly local staff](/staff) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss it! If you have a critical or urgent issue that isn't covered by a meta topic or flag, contact us via the [staff page](/staff).
 
   tos_topic:
     title: "Terms of Service"
