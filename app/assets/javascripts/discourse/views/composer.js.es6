@@ -63,12 +63,18 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
   resize: function() {
     var self = this;
     Em.run.scheduleOnce('afterRender', function() {
-      if (self.movePanels) {
-        var h = $('#reply-control').height() || 0;
-        self.movePanels.apply(self, [h + "px"]);
+      var h = $('#reply-control').height() || 0;
+      self.movePanels.apply(self, [h + "px"]);
+
+      // Figure out the size of the fields
+      var $fields = self.$('.composer-fields'),
+          pos = $fields.position();
+
+      if (pos) {
+        self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
     });
-  }.observes('model.composeState'),
+  }.observes('model.composeState', 'model.action'),
 
   keyUp: function() {
     var controller = this.get('controller');
@@ -103,11 +109,12 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
   _enableResizing: function() {
     var $replyControl = $('#reply-control'),
         self = this;
+
     $replyControl.DivResizer({
-      resize: this.resize,
+      resize: this.resize.bind(self),
       onDrag: function (sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    afterTransition($replyControl, this.resize);
+    afterTransition($replyControl, this.resize.bind(self));
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
   }.on('didInsertElement'),
