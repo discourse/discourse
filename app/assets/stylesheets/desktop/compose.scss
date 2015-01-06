@@ -330,13 +330,6 @@
   margin-bottom: 10px;
 }
 
-#reply-control.edit-title.private-message {
-  .wmd-controls {
-    transition: top 0.3s ease;
-    top: 140px;
-  }
-}
-
 #reply-control {
   &.hide-preview {
     .wmd-controls {
