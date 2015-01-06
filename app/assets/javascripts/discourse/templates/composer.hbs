@@ -65,7 +65,6 @@ so I'm going to stop rendering it until we figure out what's up
                   {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
                   {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
                 </div>
-                {{plugin-outlet "composer-fields"}}
                 {{#if model.archetype.hasOptions}}
                   <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
                 {{/if}}
@@ -73,6 +72,7 @@ so I'm going to stop rendering it until we figure out what's up
               {{/unless}}
             </div>
           {{/if}}
+          {{plugin-outlet "composer-fields"}}
         </div>
 
         <div class='wmd-controls'>
