@@ -78,6 +78,8 @@ class PostsController < ApplicationController
   def create_post(params)
     post_creator = PostCreator.new(current_user, params)
     post = post_creator.create
+    DiscourseEvent.trigger(:topic_saved, post.topic, params)
+
     if post_creator.errors.present?
       # If the post was spam, flag all the user's posts as spam
       current_user.flag_linked_posts_as_spam if post_creator.spam?
@@ -400,7 +402,6 @@ class PostsController < ApplicationController
       permitted << :embed_url
     end
 
-
     params.require(:raw)
     result = params.permit(*permitted).tap do |whitelisted|
       whitelisted[:image_sizes] = params[:image_sizes]
@@ -413,6 +414,9 @@ class PostsController < ApplicationController
       params.permit(:is_warning)
       result[:is_warning] = (params[:is_warning] == "true")
     end
+
+    # Enable plugins to whitelist additional parameters they might need
+    DiscourseEvent.trigger(:permit_post_params, result, params)
 
     result
   end

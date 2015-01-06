@@ -371,6 +371,12 @@ Discourse.Topic.reopenClass({
   update: function(topic, props) {
     props = JSON.parse(JSON.stringify(props)) || {};
 
+    // We support `category_id` and `categoryId` for compatibility
+    if (typeof props.categoryId !== "undefined") {
+      props.category_id = props.categoryId;
+      delete props.categoryId;
+    }
+
     // Annoyingly, empty arrays are not sent across the wire. This
     // allows us to make a distinction between arrays that were not
     // sent and arrays that we specifically want to be empty.
