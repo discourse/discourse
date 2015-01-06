@@ -1,4 +1,4 @@
-Discourse.Route.buildRoutes(function() {
+export default function() {
   this.resource('admin', function() {
     this.route('dashboard', { path: '/' });
     this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
@@ -60,4 +60,4 @@ Discourse.Route.buildRoutes(function() {
     });
 
   });
-});
+}
