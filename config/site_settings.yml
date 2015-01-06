@@ -21,6 +21,7 @@ required:
   site_description:
     default: ''
   contact_email:
+    client: true
     default: ''
     type: email
   notification_email:
