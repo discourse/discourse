@@ -218,6 +218,9 @@
     h3 {
       display: inline-block;
       font-size: 1.286em;
+      i {
+        margin-right: 5px;
+      }
       a[href] {
         color: $primary;
       }
@@ -311,10 +314,6 @@ button.dismiss-read {
     line-height: 1.5em;
     font-size: 1.5em;
   }
-}
-
-.category-name {
-  display: block;
 }
 
 .category-logo {
