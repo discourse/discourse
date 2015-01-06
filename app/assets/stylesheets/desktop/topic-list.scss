@@ -183,19 +183,6 @@
       background-color: $secondary;
       }
   }
-  th .toggle-admin {
-    position: absolute;
-    padding: 3px 8px;
-    font-size: 0.857em;
-    right: -35px;
-    top: 4px;
-  }
-  th.latest, td.latest {
-    padding-left: 12px;
-  }
-  th.num {
-    width: 45px;
-  }
   th.stats {
     width: 90px;
   }
@@ -212,7 +199,6 @@
     }
   }
   .category{
-    position: relative;
     width: 45%;
 
     h3 {
@@ -228,19 +214,11 @@
     .subcategories {
       margin-top: 10px;
     }
-    .featured-users {
-      float: right;
-      margin-right: 13px;
-    }
     .category-description {
       margin-top: 10px;
     }
     .clear-badge {
       color: $primary;
-    }
-    .badge-category.bigger {
-      padding: 6px 10px;
-      font-size: 1em;
     }
   }
 
