@@ -134,6 +134,7 @@ Discourse.Post = Discourse.Model.extend({
   save: function(complete, error) {
     var self = this;
     if (!this.get('newPost')) {
+
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
@@ -155,17 +156,9 @@ Discourse.Post = Discourse.Model.extend({
     } else {
 
       // We're saving a post
-      var data = {
-        raw: this.get('raw'),
-        topic_id: this.get('topic_id'),
-        is_warning: this.get('is_warning'),
-        reply_to_post_number: this.get('reply_to_post_number'),
-        category: this.get('category'),
-        archetype: this.get('archetype'),
-        title: this.get('title'),
-        image_sizes: this.get('imageSizes'),
-        target_usernames: this.get('target_usernames'),
-      };
+      var data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
+      data.reply_to_post_number = this.get('reply_to_post_number');
+      data.image_sizes = this.get('imageSizes');
 
       var metaData = this.get('metaData');
       // Put the metaData into the request

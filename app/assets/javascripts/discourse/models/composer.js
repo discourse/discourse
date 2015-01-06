@@ -1,12 +1,3 @@
-/**
-  A data model for representing the composer's current state
-
-  @class Composer
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-
 var CLOSED = 'closed',
     SAVING = 'saving',
     OPEN = 'open',
@@ -17,7 +8,23 @@ var CLOSED = 'closed',
     PRIVATE_MESSAGE = 'privateMessage',
     REPLY = 'reply',
     EDIT = 'edit',
-    REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic";
+    REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
+
+    // When creating, these fields are moved into the post model from the composer model
+    _create_serializer = {
+      raw: 'reply',
+      title: 'title',
+      category: 'categoryId',
+      topic_id: 'topic.id',
+      is_warning: 'isWarning',
+      archetype: 'archetypeId',
+      target_usernames: 'targetUsernames'
+    },
+
+    _edit_topic_serializer = {
+      title: 'topic.title',
+      categoryId: 'topic.category.id'
+    };
 
 Discourse.Composer = Discourse.Model.extend({
 
@@ -410,10 +417,11 @@ Discourse.Composer = Discourse.Model.extend({
 
     // If we are editing a post, load it.
     if (opts.action === EDIT && opts.post) {
-      this.setProperties({
-        title: this.get('topic.title'),
-        loading: true
-      });
+
+      var topicProps = this.serialize(_edit_topic_serializer);
+      topicProps.loading = true;
+
+      this.setProperties(topicProps);
 
       Discourse.Post.load(opts.post.get('id')).then(function(result) {
         composer.setProperties({
@@ -463,10 +471,10 @@ Discourse.Composer = Discourse.Model.extend({
 
     // Update the title if we've changed it
     if (this.get('title') && post.get('post_number') === 1) {
-      Discourse.Topic.update(this.get('topic'), {
-        title: this.get('title'),
-        category_id: this.get('categoryId')
-      });
+
+      var topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
+
+      Discourse.Topic.update(this.get('topic'), topicProps);
     }
 
     post.setProperties({
@@ -494,6 +502,21 @@ Discourse.Composer = Discourse.Model.extend({
     });
   },
 
+  serialize: function(serializer, dest) {
+    if (!dest) {
+      dest = {};
+    }
+
+    var self = this;
+    Object.keys(serializer).forEach(function(f) {
+      var val = self.get(serializer[f]);
+      if (typeof val !== 'undefined') {
+        Ember.set(dest, f, val);
+      }
+    });
+    return dest;
+  },
+
   // Create a new Post
   createPost: function(opts) {
     var post = this.get('post'),
@@ -504,11 +527,6 @@ Discourse.Composer = Discourse.Model.extend({
 
     // Build the post object
     var createdPost = Discourse.Post.create({
-      raw: this.get('reply'),
-      title: this.get('title'),
-      category: this.get('categoryId'),
-      topic_id: this.get('topic.id'),
-      is_warning: this.get('isWarning'),
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
@@ -517,17 +535,17 @@ Discourse.Composer = Discourse.Model.extend({
       user_id: currentUser.get('id'),
       uploaded_avatar_id: currentUser.get('uploaded_avatar_id'),
       user_custom_fields: currentUser.get('custom_fields'),
-      archetype: this.get('archetypeId'),
       post_type: Discourse.Site.currentProp('post_types.regular'),
-      target_usernames: this.get('targetUsernames'),
-      actions_summary: Em.A(),
+      actions_summary: [],
       moderator: currentUser.get('moderator'),
       admin: currentUser.get('admin'),
       yours: true,
       newPost: true,
     });
 
-    if(post) {
+    this.serialize(_create_serializer, createdPost);
+
+    if (post) {
       createdPost.setProperties({
         reply_to_post_number: post.get('post_number'),
         reply_to_user: {
@@ -696,6 +714,20 @@ Discourse.Composer.reopenClass({
       });
     }
     return composer;
+  },
+
+  serializeToTopic: function(fieldName, property) {
+    if (!property) { property = fieldName; }
+    _edit_topic_serializer[fieldName] = property;
+  },
+
+  serializeOnCreate: function(fieldName, property) {
+    if (!property) { property = fieldName; }
+    _create_serializer[fieldName] = property;
+  },
+
+  serializedFieldsForCreate: function() {
+    return Object.keys(_create_serializer);
   },
 
   // The status the compose view can have

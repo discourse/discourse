@@ -135,7 +135,6 @@ export default DiscourseController.extend({
     var composer = this.get('model'),
         self = this;
 
-
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
       this.set('model.isWarning', false);
@@ -344,8 +343,8 @@ export default DiscourseController.extend({
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
 
-            composerModel.set('composeState', Discourse.Composer.OPEN);
-            return resolve();
+          composerModel.set('composeState', Discourse.Composer.OPEN);
+          return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.
