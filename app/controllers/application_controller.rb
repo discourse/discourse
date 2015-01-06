@@ -171,13 +171,22 @@ class ApplicationController < ActionController::Base
 
   def inject_preview_style
     style = request['preview-style']
-    if style.blank?
-      session[:preview_style] = nil
-    elsif style == "default"
-      session[:preview_style] = ""
+
+    if style.nil?
+      session[:preview_style] = cookies[:preview_style]
     else
-      session[:preview_style] = style
+      cookies.delete(:preview_style)
+
+      if style.blank? || style == 'default'
+        session[:preview_style] = nil
+      else
+        session[:preview_style] = style
+        if request['sticky']
+          cookies[:preview_style] = style
+        end
+      end
     end
+
   end
 
   def disable_customization
