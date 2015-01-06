@@ -14,6 +14,11 @@ export default Ember.ArrayController.extend({
     this.get('controllers.group.name');
   }.property('name'),
 
+  members: function() {
+    var group = this.get('controllers.group').model;
+    return group.findMembers();
+  }.property(),
+
   removeMember: function(user) {
     var self = this;
     var group = this.get('controllers.group').model;
