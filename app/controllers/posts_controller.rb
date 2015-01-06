@@ -78,7 +78,6 @@ class PostsController < ApplicationController
   def create_post(params)
     post_creator = PostCreator.new(current_user, params)
     post = post_creator.create
-    DiscourseEvent.trigger(:topic_saved, post.topic, params)
 
     if post_creator.errors.present?
       # If the post was spam, flag all the user's posts as spam
@@ -86,6 +85,7 @@ class PostsController < ApplicationController
       [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
 
     else
+      DiscourseEvent.trigger(:topic_saved, post.topic, params)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
       [true, MultiJson.dump(post_serializer)]
