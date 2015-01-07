@@ -441,7 +441,7 @@ describe Category do
   describe "#url" do
     it "builds a url for normal categories" do
       category = Fabricate(:category, name: "cats")
-      expect(category.url).to eq "/category/cats"
+      expect(category.url).to eq "/c/cats"
     end
 
     describe "for subcategories" do
@@ -449,7 +449,7 @@ describe Category do
         parent_category = Fabricate(:category, name: "parent")
         subcategory = Fabricate(:category, name: "child",
                                 parent_category_id: parent_category.id)
-        expect(subcategory.url).to eq "/category/parent/child"
+        expect(subcategory.url).to eq "/c/parent/child"
       end
     end
   end

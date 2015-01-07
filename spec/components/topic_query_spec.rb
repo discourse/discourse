@@ -84,7 +84,7 @@ describe TopicQuery do
 
       list = TopicQuery.new(moderator, category: diff_category.slug).list_latest
       list.topics.size.should == 1
-      list.preload_key.should == "topic_list_category/different-category/l/latest"
+      list.preload_key.should == "topic_list_c/different-category/l/latest"
 
       # Defaults to no category filter when slug does not exist
       TopicQuery.new(moderator, category: 'made up slug').list_latest.topics.size.should == 2
