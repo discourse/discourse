@@ -2,6 +2,9 @@ class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
+  # used for serialization
+  attr_accessor :post_action_data
+
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)
         .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",

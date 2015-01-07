@@ -46,6 +46,20 @@ class TopicList
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user.present?
 
+    post_action_type =
+      if @current_user.present?
+        if @opts[:filter].present?
+          if @opts[:filter] == "bookmarked"
+            PostActionType.types[:bookmark]
+          elsif @opts[:filter] == "liked"
+            PostActionType.types[:like]
+          end
+        end
+      end
+
+    # Data for bookmarks or likes
+    post_action_lookup = PostAction.lookup_for(@current_user, @topics, post_action_type) if post_action_type
+
     # Create a lookup for all the user ids we need
     user_ids = []
     @topics.each do |ft|
@@ -56,6 +70,11 @@ class TopicList
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
+
+      if ft.user_data && post_action_lookup && actions = post_action_lookup[ft.id]
+        ft.user_data.post_action_data = {post_action_type => actions}
+      end
+
       ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
       ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.topic_list = self

@@ -260,7 +260,7 @@ class ListController < ApplicationController
       min_posts: params[:min_posts],
       max_posts: params[:max_posts],
       status: params[:status],
-      bookmarked: params[:bookmarked].present?,
+      filter: params[:filter],
       state: params[:state],
       search: params[:search]
     }
