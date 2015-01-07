@@ -1,8 +1,8 @@
 {{~#if view.renderDiv ~}}
 <div class='topic-statuses'>
 {{/if ~}}
-{{~#each view.statuses ~}}
-<{{openTag}} title='{{title}}' class='topic-status'><i class='fa fa-{{icon}}'></i></{{closeTag}}>
+{{~#each status in view.statuses ~}}
+<{{status.openTag}} title='{{status.title}}' class='topic-status'><i class='fa fa-{{status.icon}}'></i></{{status.closeTag}}>
 {{~/each}}
 {{~#if view.renderDiv ~}}
 </div>
