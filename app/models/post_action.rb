@@ -80,6 +80,23 @@ class PostAction < ActiveRecord::Base
     user_actions
   end
 
+  def self.lookup_for(user, topics, post_action_type_id)
+    return if topics.blank?
+
+    map = {}
+    PostAction.where(user_id: user.id, post_action_type_id: post_action_type_id, deleted_at: nil)
+              .references(:post)
+              .includes(:post)
+              .where('posts.topic_id in (?)', topics.map(&:id))
+              .order('posts.topic_id, posts.post_number')
+              .pluck('posts.topic_id, posts.post_number')
+              .each do |topic_id, post_number|
+                (map[topic_id] ||= []) << post_number
+    end
+
+    map
+  end
+
   def self.active_flags_counts_for(collection)
     return {} if collection.blank?
 

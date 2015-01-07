@@ -26,7 +26,7 @@ class TopicQuery
                      state
                      search
                      slow_platform
-                     bookmarked
+                     filter
                      ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
@@ -311,16 +311,24 @@ class TopicQuery
         end
       end
 
-      if options[:bookmarked] && @user
-        result = result.where('topics.id IN (SELECT pp.topic_id
+      if (filter=options[:filter]) && @user
+        action =
+          if filter == "bookmarked"
+            PostActionType.types[:bookmark]
+          elsif filter == "liked"
+            PostActionType.types[:like]
+          end
+        if action
+          result = result.where('topics.id IN (SELECT pp.topic_id
                                 FROM post_actions pa
                                 JOIN posts pp ON pp.id = pa.post_id
                                 WHERE pa.user_id = :user_id AND
-                                      pa.post_action_type_id = :bookmarked AND
+                                      pa.post_action_type_id = :action AND
                                       pa.deleted_at IS NULL
                              )', user_id: @user.id,
-                                 bookmarked: PostActionType.types[:bookmark]
+                                 action: action
                              )
+        end
       end
 
       result = result.where('topics.deleted_at IS NULL') if require_deleted_clause

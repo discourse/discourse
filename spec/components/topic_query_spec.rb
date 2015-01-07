@@ -40,9 +40,28 @@ describe TopicQuery do
 
   end
 
+  context 'bookmarks' do
+    it "filters and returns bookmarks correctly" do
+      post = Fabricate(:post)
+      reply = Fabricate(:post, topic_id: post.topic_id)
+
+      post2 = Fabricate(:post)
+
+      PostAction.act(user, post, PostActionType.types[:bookmark])
+      PostAction.act(user, reply, PostActionType.types[:bookmark])
+      TopicUser.change(user, post.topic, notification_level: 1)
+      TopicUser.change(user, post2.topic, notification_level: 1)
+
+      query = TopicQuery.new(user, filter: 'bookmarked').list_latest
+
+      query.topics.length.should == 1
+      query.topics.first.user_data.post_action_data.should == {PostActionType.types[:bookmark] => [1,2]}
+    end
+  end
+
   context 'deleted filter' do
     it "filters deleted topics correctly" do
-      topic = Fabricate(:topic, deleted_at: 1.year.ago)
+      _topic = Fabricate(:topic, deleted_at: 1.year.ago)
 
       TopicQuery.new(admin, status: 'deleted').list_latest.topics.size.should == 1
       TopicQuery.new(moderator, status: 'deleted').list_latest.topics.size.should == 1
