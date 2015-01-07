@@ -22,9 +22,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   .toggle-preview { display:none; }
   .preview-wrapper { display:none; }
-  .mobile-file-upload {
-    text-decoration: underline;
-  }
   #mobile-uploader { display: none; }
   #draft-status, #file-uploading, .mobile-file-upload {
     float: right;
@@ -62,7 +59,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     }
   }
   a.cancel {
-    text-decoration: underline;
     padding-left: 7px;
     float: left;
     margin-top: 6px;
