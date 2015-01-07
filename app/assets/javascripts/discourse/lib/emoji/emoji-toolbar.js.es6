@@ -110,8 +110,8 @@ var render = function(page, offset){
   localStorage.emojiPage = page;
   localStorage.emojiOffset = offset;
 
-  var rows = [];
-  var row = [];
+  var toolbarItems = toolbar(page);
+  var rows = [], row = [];
   var icons = groups[page].icons;
   var max = offset + PER_PAGE;
 
@@ -126,7 +126,7 @@ var render = function(page, offset){
   rows.push(row);
 
   var model = {
-    toolbarItems: toolbar(page),
+    toolbarItems: toolbarItems,
     rows: rows,
     prevDisabled: offset === 0,
     nextDisabled: (max + 1) > icons.length
