@@ -25,11 +25,11 @@ You can also specify custom CSS and custom HTML headers/footers to further custo
 ```
 <div id="top-navbar" class="container">
 <span id="top-navbar-links" style="height:20px;">
-  <a href="http://example.com">Home</a> | 
-  <a href="http://example.com/about/">About</a> | 
-  <a href="http://example.com/news/">News</a> | 
-  <a href="http://example.com/products/">Products</a> | 
-  <a href="http://blog.example.com/blog">Blog</a> | 
+  <a href="http://example.com">Home</a> |
+  <a href="http://example.com/about/">About</a> |
+  <a href="http://example.com/news/">News</a> |
+  <a href="http://example.com/products/">Products</a> |
+  <a href="http://blog.example.com/blog">Blog</a> |
   <a href="http://forums.example.com/">Forums</a>
 </span>
 </div>
@@ -39,8 +39,8 @@ You can also specify custom CSS and custom HTML headers/footers to further custo
 
 Staff members are official representatives of this community. There are two kinds of Staff:
 
-1. **Admins**, who can do anything and configure anything on this site. 
-2. **Moderators**, who can edit all posts and users, but cannot add categories or change any site settings. 
+1. **Admins**, who can do anything and configure anything on this site.
+2. **Moderators**, who can edit all posts and users, but cannot add categories or change any site settings.
 
 You may want to grant other users staff abilities &ndash; to do so click the admin button :wrench: on their user page, then look for the grant buttons.
 
@@ -69,7 +69,7 @@ If you want to get extra-fancy you can also [set up single-sign on](https://meta
 
 Email is required for new account signups and notifications. **Test your email to make sure it is configured correctly!**  Visit [the admin email settings](/admin/email), then enter an email address in the "email address to test" field and click <kbd>send test email</kbd>.
 
-- You got the test email? Great! **Read that email closely**, it has important email deliverability tips. 
+- You got the test email? Great! **Read that email closely**, it has important email deliverability tips.
 - You didn't get the test email? This means your users probably aren't getting any signup or notification emails either.
 
 Email deliverability can be hard. We strongly recommend using dedicated email services like [Mandrill](http://mandrill.com), [MailGun](http://www.mailgun.com/), or [MailJet](http://www.mailjet.com/), which offer generous free plans that work fine for most communities.
@@ -106,13 +106,13 @@ We strongly recommend sticking with this homepage for small and medium communiti
 
 You can change the homepage to the Categories list by editing `top menu` in the [Basic Setup](/admin/site_settings/category/basic) site settings. Change it from the default of
 
-`latest|new|unread|starred|top|categories`
+`latest|new|unread|top|categories`
 
 to
 
-`categories|latest|new|unread|starred|top`
+`categories|latest|new|unread|top`
 
-That is, move categories from the far right to the far left -- that leftmost top menu item is your default homepage. 
+That is, move categories from the far right to the far left -- that leftmost top menu item is your default homepage.
 
 ### Build Your Own FAQ
 
@@ -128,7 +128,7 @@ However, if you want to set up a more detailed FAQ dealing with the specifics of
 
 4. Paste that URL into the `faq url` setting in the admin site settings. This links your topic from the hamburger FAQ menu entry at the top right of every page.
 
-Now you have a community FAQ for your site that is collaboratively editable, and linked from every page on the site. 
+Now you have a community FAQ for your site that is collaboratively editable, and linked from every page on the site.
 
 ### Categories
 
@@ -157,7 +157,7 @@ Basic image uploads work fine out of the box stored locally, provided you have a
 
 If your discussion area is be open to the public, new visitors will arrive that are initially strangers to the community. Discourse has a [trust system](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) where users can, over time, earn the trust of the community and gain abilities to assist in governing their community.
 
-Discourse is designed to offer safe defaults for public communities, even with no active moderation. 
+Discourse is designed to offer safe defaults for public communities, even with no active moderation.
 
 > **0 (new) &rarr; 1 (basic) &rarr; 2 (member) &rarr; 3 (regular) &rarr; 4 (leader)**
 
@@ -185,7 +185,7 @@ Out of the box, Discourse defaults to [Creative Commons licensing](https://creat
 > Your users will always retain copyright on their posts, and will always grant the site owner enough rights to include their content on the site.
 >
 > Who is allowed to republish the content posted on this forum?
-> 
+>
 > 1. Only the author
 > 2. Author and the owner of this forum
 > 3. Anybody\*
@@ -211,7 +211,7 @@ One way to get people to visit your site is to invite them via email. You can do
 
 - The Invite button at the bottom of the topic.
 - The Invite area on your profile page.
- 
+
 The invite area on your profile page also includes advanced Staff methods of [sending bulk invites](https://meta.discourse.org/t/sending-bulk-user-invites/16468), and [inviting users into groups](https://meta.discourse.org/t/invite-individual-users-to-a-group/15544).
 
 ### Maintenance
@@ -225,8 +225,8 @@ The invite area on your profile page also includes advanced Staff methods of [se
 - Some other things you might eventually want to set up:
    - [Automatic daily backups](https://meta.discourse.org/t/configure-automatic-backups-for-discourse/14855)
    - [HTTPS support](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847)
-   - [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857) 
-   - [Reply via Email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003)   
+   - [Content Delivery Network support](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857)
+   - [Reply via Email](https://meta.discourse.org/t/set-up-reply-via-email-support/14003)
    - [Import and Export your data](https://meta.discourse.org/t/move-your-discourse-instance-to-a-different-server/15721)
    - [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
    - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)

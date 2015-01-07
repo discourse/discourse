@@ -83,7 +83,7 @@ basic:
     client: true
     refresh: true
     type: list
-    default: 'latest|new|unread|starred|top|categories'
+    default: 'latest|new|unread|top|categories'
     choices:
      - latest
      - new
