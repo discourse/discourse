@@ -328,6 +328,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       this.get('content').toggleStatus('closed');
     },
 
+    recoverTopic: function() {
+      this.get('content').recover();
+    },
+
     makeBanner: function() {
       this.get('content').makeBanner();
     },
