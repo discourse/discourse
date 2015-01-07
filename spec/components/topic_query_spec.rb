@@ -285,27 +285,6 @@ describe TopicQuery do
 
   end
 
-  context 'list_starred' do
-
-    let(:topic) { Fabricate(:topic) }
-
-    it "returns no results when the user hasn't starred any topics" do
-      topic_query.list_starred.topics.should be_blank
-    end
-
-    context 'with a starred topic' do
-
-      before do
-        topic.toggle_star(user, true)
-      end
-
-      it "returns the topic after it has been starred" do
-        topic_query.list_starred.topics.should == [topic]
-      end
-    end
-
-  end
-
   context 'list_new' do
 
     context 'without a new topic' do
@@ -386,11 +365,6 @@ describe TopicQuery do
       end
 
       context "but interacted with" do
-        it "is not included if starred" do
-          other_users_topic.toggle_star(user, true)
-
-          topics.should be_blank
-        end
 
         it "is not included if read" do
           TopicUser.update_last_read(user, other_users_topic.id, 0, 0)

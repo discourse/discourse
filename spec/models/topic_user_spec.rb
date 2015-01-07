@@ -20,14 +20,14 @@ describe TopicUser do
   let(:topic_new_user) { TopicUser.get(topic, new_user)}
   let(:yesterday) { DateTime.now.yesterday }
 
+  def ensure_topic_user
+    TopicUser.change(user, topic, last_emailed_post_number: 1)
+  end
 
   describe "unpinned" do
 
-    before do
-      TopicUser.change(user, topic, {starred_at: yesterday})
-    end
-
     it "defaults to blank" do
+      ensure_topic_user
       topic_user.cleared_pinned_at.should be_blank
     end
 
@@ -37,19 +37,19 @@ describe TopicUser do
 
     it 'should be set to tracking if auto_track_topics is enabled' do
       user.update_column(:auto_track_topics_after_msecs, 0)
-      TopicUser.change(user, topic, {starred_at: yesterday})
+      ensure_topic_user
       TopicUser.get(topic, user).notification_level.should == TopicUser.notification_levels[:tracking]
     end
 
     it 'should reset regular topics to tracking topics if auto track is changed' do
-      TopicUser.change(user, topic, {starred_at: yesterday})
+      ensure_topic_user
       user.auto_track_topics_after_msecs = 0
       user.save
       topic_user.notification_level.should == TopicUser.notification_levels[:tracking]
     end
 
     it 'should be set to "regular" notifications, by default on non creators' do
-      TopicUser.change(user, topic, {starred_at: yesterday})
+      ensure_topic_user
       TopicUser.get(topic,user).notification_level.should == TopicUser.notification_levels[:regular]
     end
 
@@ -195,37 +195,20 @@ describe TopicUser do
 
   describe 'change a flag' do
 
-    it 'creates a forum topic user record' do
-      user; topic
-
-      lambda {
-        TopicUser.change(user, topic.id, starred: true)
-      }.should change(TopicUser, :count).by(1)
-    end
-
     it "only inserts a row once, even on repeated calls" do
 
       topic; user
 
       lambda {
-        TopicUser.change(user, topic.id, starred: true)
-        TopicUser.change(user, topic.id, starred: false)
-        TopicUser.change(user, topic.id, starred: true)
+        TopicUser.change(user, topic.id, total_msecs_viewed: 1)
+        TopicUser.change(user, topic.id, total_msecs_viewed: 2)
+        TopicUser.change(user, topic.id, total_msecs_viewed: 3)
       }.should change(TopicUser, :count).by(1)
-    end
-
-    it 'triggers the observer callbacks when updating' do
-      UserActionObserver.instance.expects(:after_save).twice
-      3.times { TopicUser.change(user, topic.id, starred: true) }
     end
 
     describe 'after creating a row' do
       before do
-        TopicUser.change(user, topic.id, starred: true)
-      end
-
-      it 'has the correct starred value' do
-        TopicUser.get(topic, user).should be_starred
+        ensure_topic_user
       end
 
       it 'has a lookup' do

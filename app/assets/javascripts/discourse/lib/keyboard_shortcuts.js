@@ -3,7 +3,6 @@ var PATH_BINDINGS = {
       'g l': '/latest',
       'g n': '/new',
       'g u': '/unread',
-      'g f': '/starred',
       'g c': '/categories',
       'g t': '/top'
     },
