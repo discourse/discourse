@@ -38,7 +38,18 @@
     };
   };
 
-  stringCompatHelper("each");
+  // #each .. in support
+  RawHandlebars.registerHelper('each', function(localName,inKeyword,contextName,options){
+    var list = Em.get(this, contextName);
+    var output = [];
+    var innerContext = Object.create(this);
+    for (var i=0; i<list.length; i++) {
+      innerContext[localName] = list[i];
+      output.push(options.fn(innerContext));
+    }
+    return output.join('');
+  });
+
   stringCompatHelper("if");
   stringCompatHelper("unless");
   stringCompatHelper("with");
