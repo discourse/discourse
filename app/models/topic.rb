@@ -141,13 +141,6 @@ class Topic < ActiveRecord::Base
            WHERE #{condition[0]})", condition[1])
   }
 
-  # Helps us limit how many topics can be starred in a day
-  class StarLimiter < RateLimiter
-    def initialize(user)
-      super(user, "starred:#{Date.today}", SiteSetting.max_stars_per_day, 1.day.to_i)
-    end
-  end
-
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
 
@@ -612,27 +605,6 @@ class Topic < ActiveRecord::Base
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
-  # Enable/disable the star on the topic
-  def toggle_star(user, starred)
-    Topic.transaction do
-      TopicUser.change(user, id, {starred: starred}.merge( starred ? {starred_at: DateTime.now, unstarred_at: nil} : {unstarred_at: DateTime.now}))
-
-      # Update the star count
-      exec_sql "UPDATE topics
-                SET star_count = (SELECT COUNT(*)
-                                  FROM topic_users AS ftu
-                                  WHERE ftu.topic_id = topics.id
-                                    AND ftu.starred = true)
-                WHERE id = ?", id
-
-      if starred
-        StarLimiter.new(user).performed!
-      else
-        StarLimiter.new(user).rollback!
-      end
-    end
-  end
-
   def make_banner!(user)
     # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
@@ -660,10 +632,6 @@ class Topic < ActiveRecord::Base
       html: post.cooked,
       key: self.id
     }
-  end
-
-  def self.starred_counts_per_day(sinceDaysAgo=30)
-    TopicUser.starred_since(sinceDaysAgo).by_date_starred.count
   end
 
   # Even if the slug column in the database is null, topic.slug will return something:

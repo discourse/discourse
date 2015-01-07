@@ -36,23 +36,11 @@ body {
     }
   }
   #main {
-    .fa-star.starred {
-      color: $danger;
-    }
     a.star {
       color: dark-light-diff($secondary, $primary, 80%, -20%);
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
-      }
-      &.starred {
-        color: $danger;
-        @include hover {
-          opacity: 1;
-          &:before {
-            content: "\f005";
-          }
-        }
       }
       @include hover {
         opacity: 0.6;

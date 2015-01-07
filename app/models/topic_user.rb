@@ -2,9 +2,6 @@ class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
-  scope :starred_since, lambda { |sinceDaysAgo| where('starred_at > ?', sinceDaysAgo.days.ago) }
-  scope :by_date_starred, -> { group('date(starred_at)').order('date(starred_at)') }
-
   scope :tracking, lambda { |topic_id|
     where(topic_id: topic_id)
         .where("COALESCE(topic_users.notification_level, :regular) >= :tracking",
@@ -86,8 +83,6 @@ class TopicUser < ActiveRecord::Base
 
       TopicUser.transaction do
         attrs = attrs.dup
-        attrs[:starred_at] = DateTime.now if attrs[:starred_at].nil? && attrs[:starred]
-
         if attrs[:notification_level]
           attrs[:notifications_changed_at] ||= DateTime.now
           attrs[:notifications_reason_id] ||= TopicUser.notification_reasons[:user_changed]

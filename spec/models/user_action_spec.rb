@@ -257,38 +257,6 @@ describe UserAction do
 
   end
 
-  describe 'synchronize_starred' do
-    it 'corrects out of sync starred' do
-      post = Fabricate(:post)
-      post.topic.toggle_star(post.user, true)
-      UserAction.delete_all
-
-      UserAction.log_action!(
-        action_type: UserAction::STAR,
-        user_id: post.user.id,
-        acting_user_id: post.user.id,
-        target_topic_id: 99,
-        target_post_id: -1,
-      )
-
-      UserAction.log_action!(
-        action_type: UserAction::STAR,
-        user_id: Fabricate(:user).id,
-        acting_user_id: post.user.id,
-        target_topic_id: post.topic_id,
-        target_post_id: -1,
-      )
-
-      UserAction.synchronize_starred
-
-      actions = UserAction.all.to_a
-
-      expect(actions.length).to eq(1)
-      expect(actions.first.action_type).to eq(UserAction::STAR)
-      expect(actions.first.user_id).to eq(post.user.id)
-    end
-  end
-
   describe 'synchronize_target_topic_ids' do
     it 'correct target_topic_id' do
       post = Fabricate(:post)

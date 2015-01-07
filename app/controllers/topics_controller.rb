@@ -166,14 +166,6 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
-  def star
-    @topic = Topic.find_by(id: params[:topic_id].to_i)
-    guardian.ensure_can_see!(@topic)
-
-    @topic.toggle_star(current_user, params[:starred] == 'true')
-    render nothing: true
-  end
-
   def mute
     toggle_mute
   end

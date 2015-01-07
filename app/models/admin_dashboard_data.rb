@@ -11,7 +11,6 @@ class AdminDashboardData
     'users_by_trust_level',
     'likes',
     'bookmarks',
-    'starred',
     'emails',
     'user_to_user_private_messages',
     'system_private_messages',

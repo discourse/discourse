@@ -29,7 +29,6 @@ class TopicViewSerializer < ApplicationSerializer
   attributes :draft,
              :draft_key,
              :draft_sequence,
-             :starred,
              :posted,
              :unpinned,
              :pinned_globally,
@@ -144,11 +143,6 @@ class TopicViewSerializer < ApplicationSerializer
   def has_topic_user?
     object.topic_user.present?
   end
-
-  def starred
-    object.topic_user.starred?
-  end
-  alias_method :include_starred?, :has_topic_user?
 
   def highest_post_number
     object.highest_post_number

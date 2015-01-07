@@ -91,13 +91,7 @@ class Report
     end
   end
 
-  def self.report_starred(report)
-    basic_report_about report, Topic, :starred_counts_per_day, default_days
-    add_counts report, TopicUser.where(starred: true), 'topic_users.starred_at'
-  end
-
   # Post action counts:
-
   def self.report_flags(report)
     basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date
     add_counts report, PostAction.where(post_action_type_id: PostActionType.flag_types.values), 'post_actions.created_at'

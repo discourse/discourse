@@ -551,12 +551,6 @@ video {
     line-height: 1.3em;
   }
 
-  a.star {
-    margin: 0 7px 20px 2px;
-    color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
-  }
-  a.star.starred {color: $danger !important;}
-
   .topic-statuses {
     margin-top: -2px;
   }

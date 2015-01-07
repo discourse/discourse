@@ -436,47 +436,8 @@ describe TopicsController do
         @topic = Fabricate(:topic, user: log_in)
       end
 
-      it "changes the user's starred flag when the parameter is present" do
-        Topic.any_instance.expects(:toggle_mute).with(@topic.user)
-        xhr :put, :mute, topic_id: @topic.id, starred: 'true'
-      end
-
-      it "removes the user's starred flag when the parameter is not true" do
-        Topic.any_instance.expects(:toggle_mute).with(@topic.user)
-        xhr :put, :unmute, topic_id: @topic.id, starred: 'false'
-      end
-
     end
 
-  end
-
-  describe 'star' do
-
-    it 'needs you to be logged in' do
-      lambda { xhr :put, :star, topic_id: 1, starred: true }.should raise_error(Discourse::NotLoggedIn)
-    end
-
-    describe 'when logged in' do
-      before do
-        @topic = Fabricate(:topic, user: log_in)
-      end
-
-      it "ensures the user can see the topic" do
-        Guardian.any_instance.expects(:can_see?).with(@topic).returns(false)
-        xhr :put, :star, topic_id: @topic.id, starred: 'true'
-        response.should be_forbidden
-      end
-
-      it "changes the user's starred flag when the parameter is present" do
-        Topic.any_instance.expects(:toggle_star).with(@topic.user, true)
-        xhr :put, :star, topic_id: @topic.id, starred: 'true'
-      end
-
-      it "removes the user's starred flag when the parameter is not true" do
-        Topic.any_instance.expects(:toggle_star).with(@topic.user, false)
-        xhr :put, :star, topic_id: @topic.id, starred: 'false'
-      end
-    end
   end
 
   describe 'recover' do

@@ -18,36 +18,6 @@ body {
     }
   }
   #main {
-    .fa-star.starred {
-      color: $danger;
-    }
-    a.star {
-      display: inline-block;
-      font-size: 1.429em;
-      color: scale-color($primary, $lightness: 75%);
-      margin-right: 8px;
-      margin-top: 4px;
-      &:before {
-        font-family: "FontAwesome";
-        content: "\f005";
-      }
-      &.starred {
-        color: $danger;
-        @include hover {
-          opacity: 1;
-          &:before {
-            content: "\f005";
-          }
-        }
-      }
-      @include hover {
-        opacity: 0.6;
-      }
-
-      &:active {
-        opacity: 1;
-      }
-    }
     img.avatar {
       &.header {
         width: 45px;
