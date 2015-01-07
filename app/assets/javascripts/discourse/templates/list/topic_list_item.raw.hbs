@@ -13,6 +13,15 @@
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
+
+  {{#if topic.bookmarked_post_numbers}}
+  <div class='bookmarks'>
+    <i class='fa fa-bookmark'></i>
+    {{#each postNumber in topic.bookmarked_post_numbers}}
+    <a href='{{topic.url}}/{{postNumber}}'>#{{postNumber}}</a>
+    {{/each}}
+  </div>
+  {{/if}}
 </td>
 
 {{#unless controller.hideCategory}}
