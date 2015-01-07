@@ -11,14 +11,14 @@
         </button>
         {{/if}}
         <button {{action "showLogin"}} class='btn btn-primary btn-small login-button'>
-          {{fa-icon user}} {{i18n 'log_in'}}
+          {{fa-icon "user"}} {{i18n 'log_in'}}
         </button>
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
             <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
-              {{fa-icon comment label="notifications.title"}}
+              {{fa-icon "comment" label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}
               <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
@@ -31,7 +31,7 @@
         <li>
           {{#if loginRequired}}
             <a id='search-button' class='icon expand' href='#' aria-hidden="true" {{action "showLogin"}}>
-              {{fa-icon search}}
+              {{fa-icon "search"}}
             </a>
           {{else}}
             <a id='search-button'
@@ -39,7 +39,7 @@
                href='#'
                data-dropdown="search-dropdown"
                title='{{i18n 'search.title'}}'>
-               {{fa-icon search label="search.title"}}
+               {{fa-icon "search" label="search.title"}}
             </a>
           {{/if}}
         </li>
@@ -50,7 +50,7 @@
                aria-hidden="true"
                id="site-map"
                {{action "showLogin"}}>
-               {{fa-icon bars}}
+               {{fa-icon "bars"}}
             </a>
           {{else}}
             <a class='icon'
@@ -59,7 +59,7 @@
                href="#"
                title='{{i18n 'site_map'}}'
                id="site-map">
-               {{fa-icon bars label="site_map"}}
+               {{fa-icon "bars" label="site_map"}}
             </a>
           {{/if}}
           {{#if currentUser.site_flagged_posts_count}}
@@ -102,7 +102,7 @@
           <div class="title-wrapper">
             <h1>
               {{#if showPrivateMessageGlyph}}
-                <span class="private-message-glyph">{{fa-icon envelope}}</span>
+                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
               {{/if}}
 
               {{#if topic.details.loaded}}
