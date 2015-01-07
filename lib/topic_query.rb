@@ -26,6 +26,7 @@ class TopicQuery
                      state
                      search
                      slow_platform
+                     bookmarked
                      ).map(&:to_sym)
 
   # Maps `order` to a columns in `topics`
@@ -308,6 +309,18 @@ class TopicQuery
             require_deleted_clause = false
           end
         end
+      end
+
+      if options[:bookmarked] && @user
+        result = result.where('topics.id IN (SELECT pp.topic_id
+                                FROM post_actions pa
+                                JOIN posts pp ON pp.id = pa.post_id
+                                WHERE pa.user_id = :user_id AND
+                                      pa.post_action_type_id = :bookmarked AND
+                                      pa.deleted_at IS NULL
+                             )', user_id: @user.id,
+                                 bookmarked: PostActionType.types[:bookmark]
+                             )
       end
 
       result = result.where('topics.deleted_at IS NULL') if require_deleted_clause
