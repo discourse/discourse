@@ -143,6 +143,24 @@
   .posts {
     width: 65px;
   }
+
+  .post-actions {
+    clear: both;
+    width: auto;
+    color: scale-color($primary, $lightness: 50%);
+    text-align: left;
+    font-size: 12px;
+    margin-top: 5px;
+    .fa {
+      margin-right: 2px;
+    }
+    a {
+      font-size: 11px;
+      color: scale-color($primary, $lightness: 50%);
+      margin-right: 3px;
+      line-height: 20px;
+    }
+  }
   .activity {
     width: 60px;
     &:lang(zh_CN) {
