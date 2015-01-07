@@ -8,7 +8,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :category_id,
              :op_like_count,
              :pinned_globally,
-             :bookmarked_post_numbers
+             :bookmarked_post_numbers,
+             :liked_post_numbers
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -30,9 +31,21 @@ class TopicListItemSerializer < ListableTopicSerializer
   end
 
   def include_bookmarked_post_numbers?
+    include_post_action? :bookmark
+  end
+
+  def include_liked_post_numbers?
+    include_post_action? :like
+  end
+
+  def include_post_action?(action)
     object.user_data &&
       object.user_data.post_action_data &&
-      object.user_data.post_action_data.key?(PostActionType.types[:bookmark])
+      object.user_data.post_action_data.key?(PostActionType.types[action])
+  end
+
+  def liked_post_numbers
+    object.user_data.post_action_data[PostActionType.types[:like]]
   end
 
   def bookmarked_post_numbers

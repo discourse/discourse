@@ -9,19 +9,11 @@
   {{#if controller.showTopicPostBadges}}
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}
   {{/if}}
-
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
-
-  {{#if topic.bookmarked_post_numbers}}
-  <div class='bookmarks'>
-    <i class='fa fa-bookmark'></i>
-    {{#each postNumber in topic.bookmarked_post_numbers}}
-    <a href='{{topic.url}}/{{postNumber}}'>#{{postNumber}}</a>
-    {{/each}}
-  </div>
-  {{/if}}
+  {{raw "list/action-list" topic=topic postNumbers=topic.bookmarked_post_numbers className="bookmarks" icon="bookmark"}}
+  {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
 </td>
 
 {{#unless controller.hideCategory}}
