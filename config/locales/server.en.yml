@@ -1298,10 +1298,10 @@ en:
       other: "%{count} flags waiting to be handled"
 
   flag_reasons:
-    off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
-    spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
-    notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
+    off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
+    spam: "Your post was flagged as **spam**: the community feels it is an advertisement that is is overly promotional in nature instead of being useful or relevant to the topic as expected."
+    notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
