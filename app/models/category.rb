@@ -369,7 +369,7 @@ SQL
   def url
     url = @@url_cache[self.id]
     unless url
-      url = "/category"
+      url = "/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
       url.freeze
