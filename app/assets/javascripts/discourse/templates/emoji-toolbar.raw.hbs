@@ -1,13 +1,13 @@
 <div class='emoji-modal'>
   <ul class='toolbar'>
-    {{#each toolbarItems}}<li><a {{#if selected}}class='selected'{{/if}} data-group-id='{{groupId}}'><img src='{{src}}' class='emoji'></a></li>{{/each}}
+    {{#each item in toolbarItems}}<li><a {{#if item.selected}}class='selected'{{/if}} data-group-id='{{item.groupId}}'><img src='{{item.src}}' class='emoji'></a></li>{{/each}}
   </ul>
   <div class='emoji-table-wrapper'>
   <table class='emoji-page'>
-    {{#each rows}}
+    {{#each row in rows}}
       <tr>
-        {{#each this}}
-          <td><a title='{{title}}'><img src='{{src}}' class='emoji'></a></td>
+        {{#each item in row}}
+          <td><a title='{{item.title}}'><img src='{{item.src}}' class='emoji'></a></td>
         {{/each}}
       </tr>
     {{/each}}
@@ -18,16 +18,16 @@
   <div class='nav'>
     <span class='prev'>
       {{#if prevDisabled}}
-        <i class='fa fa-fast-backward'></i>
+        {{fa-icon "fast-backward"}}
       {{else}}
-        <a><i class='fa fa-fast-backward'></i></a>
+        <a>{{fa-icon "fast-backward"}}</a>
       {{/if}}
     </span>
     <span class='next'>
       {{#if nextDisabled}}
-        <i class='fa fa-fast-forward'></i>
+        {{fa-icon "fast-forward"}}
       {{else}}
-        <a><i class='fa fa-fast-forward'></i></a>
+        <a>{{fa-icon "fast-forward"}}</a>
       {{/if}}
     </span>
   </div>
