@@ -75,9 +75,15 @@ describe Guardian do
         Guardian.new(user).post_can_act?(post, :like).should be_truthy
       end
 
-      it "returns false for a new user flagging something as spam" do
+      it "returns false for a new user flagging a standard post as spam" do
         user.trust_level = TrustLevel[0]
         Guardian.new(user).post_can_act?(post, :spam).should be_falsey
+      end
+
+      it "returns true for a new user flagging a private message as spam" do
+        post.topic.archetype = Archetype.private_message
+        user.trust_level = TrustLevel[0]
+        Guardian.new(user).post_can_act?(post, :spam).should be_truthy
       end
 
       it "returns false for a new user flagging something as off topic" do

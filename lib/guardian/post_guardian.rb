@@ -13,7 +13,8 @@ module PostGuardian
       return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
 
       # we allow flagging for trust level 1 and higher
-      (is_flag && @user.has_trust_level?(TrustLevel[1]) && not(already_did_flagging)) ||
+      # always allowed for private messages
+      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
