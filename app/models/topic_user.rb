@@ -229,7 +229,60 @@ class TopicUser < ActiveRecord::Base
     end
   end
 
+  def self.update_post_action_cache(opts={})
+    user_id = opts[:user_id]
+    topic_id = opts[:topic_id]
+    action_type = opts[:post_action_type]
+
+    action_type_name = "liked" if action_type == :like
+    action_type_name = "bookmarked" if action_type == :bookmark
+
+    raise ArgumentError, "action_type" if action_type && !action_type_name
+
+    unless action_type_name
+      update_post_action_cache(opts.merge(post_action_type: :like))
+      update_post_action_cache(opts.merge(post_action_type: :bookmark))
+      return
+    end
+
+    builder = SqlBuilder.new <<SQL
+    UPDATE topic_users tu
+    SET #{action_type_name} = x.state
+    FROM (
+      SELECT CASE WHEN EXISTS (
+        SELECT 1
+        FROM post_actions pa
+        JOIN posts p on p.id = pa.post_id
+        JOIN topics t ON t.id = p.topic_id
+        WHERE pa.deleted_at IS NULL AND
+              p.deleted_at IS NULL AND
+              t.deleted_at IS NULL AND
+              pa.post_action_type_id = :action_type_id AND
+              tu2.topic_id = t.id AND
+              tu2.user_id = pa.user_id
+        LIMIT 1
+      ) THEN true ELSE false END state, tu2.topic_id, tu2.user_id
+      FROM topic_users tu2
+      /*where*/
+    ) x
+    WHERE x.topic_id = tu.topic_id AND x.user_id = tu.user_id AND x.state != tu.#{action_type_name}
+SQL
+
+    if user_id
+      builder.where("tu2.user_id = :user_id", user_id: user_id)
+    end
+
+    if topic_id
+      builder.where("tu2.topic_id = :topic_id", topic_id: topic_id)
+    end
+
+    builder.exec(action_type_id: PostActionType.types[action_type])
+  end
+
   def self.ensure_consistency!(topic_id=nil)
+
+    update_post_action_cache
+
     # TODO this needs some reworking, when we mark stuff skipped
     # we up these numbers so they are not in-sync
     # the simple fix is to add a column here, but table is already quite big

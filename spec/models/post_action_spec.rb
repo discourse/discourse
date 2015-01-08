@@ -140,11 +140,18 @@ describe PostAction do
   describe "update_counters" do
 
     it "properly updates topic counters" do
+      # we need this to test it
+      TopicUser.change(codinghorror, post.topic, posted: true)
+
       PostAction.act(moderator, post, PostActionType.types[:like])
       PostAction.act(codinghorror, second_post, PostActionType.types[:like])
 
       post.topic.reload
       expect(post.topic.like_count).to eq(2)
+
+      tu = TopicUser.get(post.topic, codinghorror)
+      expect(tu.liked).to be true
+
     end
 
   end

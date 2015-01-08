@@ -384,7 +384,16 @@ class PostAction < ActiveRecord::Base
       Post.where(id: post_id).update_all ["#{column} = ?", count]
     end
 
+
     topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
+
+    # topic_user
+    if [:like,:bookmark].include? post_action_type_key
+      TopicUser.update_post_action_cache(user_id: user_id,
+                                         topic_id: topic_id,
+                                         post_action_type: post_action_type_key)
+    end
+
     topic_count = Post.where(topic_id: topic_id).sum(column)
     Topic.where(id: topic_id).update_all ["#{column} = ?", topic_count]
 

@@ -4,7 +4,12 @@ export default Discourse.View.extend(StringBuffer, {
   rerenderTriggers: ['controller.bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
   rawTemplate: 'list/topic_list_item.raw',
-  classNameBindings: ['controller.checked', 'content.archived', ':topic-list-item', 'content.hasExcerpt:has-excerpt'],
+  classNameBindings: ['controller.checked',
+                      'content.archived',
+                      ':topic-list-item',
+                      'content.hasExcerpt:has-excerpt',
+                      'content.liked:liked',
+                      'content.bookmarked:bookmarked'],
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('content.id'),
   titleColSpan: function(){

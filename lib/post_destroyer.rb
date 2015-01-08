@@ -89,6 +89,7 @@ class PostDestroyer
       end
       update_associated_category_latest_topic
       update_user_counts
+      TopicUser.update_post_action_cache(topic_id: @post.topic_id)
     end
 
     @post.publish_change_to_clients! :deleted if @post.topic
