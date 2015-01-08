@@ -1,4 +1,7 @@
+require_dependency 'topic_list_responder'
+
 class ListController < ApplicationController
+  include TopicListResponder
 
   skip_before_filter :check_xhr
 
@@ -75,7 +78,7 @@ class ListController < ApplicationController
         end
       end
 
-      respond(list)
+      respond_with_list(list)
     end
 
     define_method("category_#{filter}") do
@@ -118,7 +121,7 @@ class ListController < ApplicationController
       url_prefix = "topics" unless action == :topics_by
       list.more_topics_url = url_for(construct_next_url_with(list_opts, url_prefix))
       list.prev_topics_url = url_for(construct_prev_url_with(list_opts, url_prefix))
-      respond(list)
+      respond_with_list(list)
     end
   end
 
@@ -168,7 +171,7 @@ class ListController < ApplicationController
         @title = I18n.t("js.filters.top.#{period}.title")
       end
 
-      respond(list)
+      respond_with_list(list)
     end
 
     define_method("category_top_#{period}") do
@@ -185,25 +188,6 @@ class ListController < ApplicationController
   end
 
   protected
-
-  def respond(list)
-    discourse_expires_in 1.minute
-
-    list.draft_key = Draft::NEW_TOPIC
-    list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-    list.draft = Draft.get(current_user, list.draft_key, list.draft_sequence) if current_user
-
-    respond_to do |format|
-      format.html do
-        @list = list
-        store_preloaded(list.preload_key, MultiJson.dump(TopicListSerializer.new(list, scope: guardian)))
-        render 'list'
-      end
-      format.json do
-        render_serialized(list, TopicListSerializer)
-      end
-    end
-  end
 
   def next_page_params(opts = nil)
     page_params(opts).merge(page: params[:page].to_i + 1)
