@@ -5,11 +5,27 @@ export default Discourse.View.extend(StringBuffer, {
   tagName: 'tr',
   rawTemplate: 'list/topic_list_item.raw',
   classNameBindings: ['controller.checked',
-                      'content.archived',
                       ':topic-list-item',
-                      'content.hasExcerpt:has-excerpt',
-                      'content.liked:liked',
-                      'content.bookmarked:bookmarked'],
+                      'unboundClassNames'
+       ],
+
+  unboundClassNames: function(){
+    var classes = [];
+    var topic = this.get('topic');
+
+    if(topic.get('hasExcerpt')){
+      classes.push('has-excerpt');
+    }
+
+    _.each(['liked', 'archived', 'bookmarked'],function(name){
+      if(topic.get(name)){
+        classes.push(name);
+      }
+    });
+
+    return classes.join(' ');
+  }.property(),
+
   attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('content.id'),
   titleColSpan: function(){
