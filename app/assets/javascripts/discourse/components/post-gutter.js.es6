@@ -33,11 +33,11 @@ export default Em.Component.extend({
 
       buffer.push("<ul class='post-links'>");
       toRender.forEach(function(l) {
-        var direction = Em.get(l, 'reflection') ? 'left' : 'right',
+        var direction = Em.get(l, 'reflection') ? 'inbound' : 'outbound',
             clicks = Em.get(l, 'clicks');
 
-        buffer.push("<li><a href='" + Em.get(l, 'url') + "' class='track-link'>");
-        /* suppress both left and right arrow for now */
+        buffer.push("<li><a href='" + Em.get(l, 'url') + "' class='track-link " + direction + "'>");
+
         var title = Em.get(l, 'title');
         if (!Em.isEmpty(title)) {
           buffer.push(Handlebars.Utils.escapeExpression(title));
