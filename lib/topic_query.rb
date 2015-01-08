@@ -150,19 +150,39 @@ class TopicQuery
         .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  def create_list(filter, options={}, topics = nil)
+    topics ||= default_results(options)
+    topics = yield(topics) if block_given?
+    list = TopicList.new(filter, @user, topics, options.merge(@options))
+    list.per_page = per_page_setting
+    list
+  end
+
+  def latest_results(options={})
+    result = default_results(options)
+    result = remove_muted_categories(result, @user, exclude: options[:category])
+    result
+  end
+
+  def unread_results(options={})
+    result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
+    .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
+
+    suggested_ordering(result, options)
+  end
+
+  def new_results(options={})
+    result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
+    result = remove_muted_categories(result, @user, exclude: options[:category])
+    suggested_ordering(result, options)
+  end
+
   protected
 
     def per_page_setting
       @options[:slow_platform] ? 15 : 30
     end
 
-    def create_list(filter, options={}, topics = nil)
-      topics ||= default_results(options)
-      topics = yield(topics) if block_given?
-      list = TopicList.new(filter, @user, topics, options.merge(@options))
-      list.per_page = per_page_setting
-      list
-    end
 
     def private_messages_for(user)
       options = @options
@@ -349,12 +369,6 @@ class TopicQuery
       result
     end
 
-    def latest_results(options={})
-      result = default_results(options)
-      result = remove_muted_categories(result, @user, exclude: options[:category])
-      result
-    end
-
     def remove_muted_categories(list, user, opts=nil)
       category_id = get_category_id(opts[:exclude]) if opts
       if user
@@ -375,19 +389,6 @@ class TopicQuery
       list
     end
 
-
-    def unread_results(options={})
-      result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
-                         .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
-
-      suggested_ordering(result, options)
-    end
-
-    def new_results(options={})
-      result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
-      result = remove_muted_categories(result, @user, exclude: options[:category])
-      suggested_ordering(result, options)
-    end
 
     def random_suggested(topic, count, excluded_topic_ids=[])
       result = default_results(unordered: true, per_page: count).where(closed: false, archived: false)
