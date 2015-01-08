@@ -846,7 +846,6 @@ end
 #  like_count                    :integer          default(0), not null
 #  incoming_link_count           :integer          default(0), not null
 #  bookmark_count                :integer          default(0), not null
-#  star_count                    :integer          default(0), not null
 #  category_id                   :integer
 #  visible                       :boolean          default(TRUE), not null
 #  moderator_posts_count         :integer          default(0), not null

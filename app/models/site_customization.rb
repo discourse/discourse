@@ -157,13 +157,11 @@ end
 #  name                    :string(255)      not null
 #  stylesheet              :text
 #  header                  :text
-#  position                :integer          not null
 #  user_id                 :integer          not null
 #  enabled                 :boolean          not null
 #  key                     :string(255)      not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  override_default_style  :boolean          default(FALSE), not null
 #  stylesheet_baked        :text             default(""), not null
 #  mobile_stylesheet       :text
 #  mobile_header           :text
