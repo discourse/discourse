@@ -135,7 +135,7 @@ class TopicsController < ApplicationController
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
     end
 
-    DiscourseEvent.trigger(:topic_saved, topic, params)
+    DiscourseEvent.trigger(:topic_saved, topic, params, current_user)
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
