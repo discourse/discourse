@@ -84,4 +84,78 @@ describe GroupsController do
       expect(members.map{ |m| m['username'] }).to eq(usernames[3..4])
     end
   end
+
+
+  describe "membership edit permission" do
+    it "refuses membership changes to unauthorized users" do
+      Guardian.any_instance.stubs(:can_edit?).with(group).returns(false)
+
+      xhr :put, :add_members, group_id: group.name, usernames: "bob"
+      response.should be_forbidden
+
+      xhr :delete, :remove_member, group_id: group.name, username: "bob"
+      response.should be_forbidden
+    end
+
+    it "cannot add members to automatic groups" do
+      Guardian.any_instance.stubs(:is_admin?).returns(true)
+      auto_group = Fabricate(:group, name: "auto_group", automatic: true)
+
+      xhr :put, :add_members, group_id: group.name, usernames: "bob"
+      response.should be_forbidden
+    end
+  end
+
+  describe "membership edits" do
+    before do
+      @user1 = Fabricate(:user)
+      group.add(@user1)
+      group.reload
+
+      Guardian.any_instance.stubs(:can_edit?).with(group).returns(true)
+    end
+
+    it "can make incremental adds" do
+      user2 = Fabricate(:user)
+      xhr :put, :add_members, group_id: group.name, usernames: user2.username
+
+      response.should be_success
+      group.reload
+      group.users.count.should eq(2)
+    end
+
+    it "succeeds silently when adding non-existent users" do
+      xhr :put, :add_members, group_id: group.name, usernames: "nosuchperson"
+
+      response.should be_success
+      group.reload
+      group.users.count.should eq(1)
+    end
+
+    it "succeeds silently when adding duplicate users" do
+      xhr :put, :add_members, group_id: group.name, usernames: @user1.username
+
+      response.should be_success
+      group.reload
+      group.users.should eq([@user1])
+    end
+
+    it "can make incremental deletes" do
+      xhr :delete, :remove_member, group_id: group.name, username: @user1.username
+
+      response.should be_success
+      group.reload
+      group.users.count.should eq(0)
+    end
+
+    it "succeeds silently when removing non-members" do
+      user2 = Fabricate(:user)
+      xhr :delete, :remove_member, group_id: group.name, username: user2.username
+
+      response.should be_success
+      group.reload
+      group.users.count.should eq(1)
+    end
+  end
+
 end
