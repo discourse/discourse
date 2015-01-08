@@ -151,6 +151,7 @@ describe PostAction do
 
       tu = TopicUser.get(post.topic, codinghorror)
       expect(tu.liked).to be true
+      expect(tu.bookmarked).to be false
 
     end
 
