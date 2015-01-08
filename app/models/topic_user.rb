@@ -276,11 +276,9 @@ end
 #
 #  user_id                  :integer          not null
 #  topic_id                 :integer          not null
-#  starred                  :boolean          default(FALSE), not null
 #  posted                   :boolean          default(FALSE), not null
 #  last_read_post_number    :integer
 #  highest_seen_post_number :integer
-#  starred_at               :datetime
 #  last_visited_at          :datetime
 #  first_visited_at         :datetime
 #  notification_level       :integer          default(1), not null
@@ -288,7 +286,6 @@ end
 #  notifications_reason_id  :integer
 #  total_msecs_viewed       :integer          default(0), not null
 #  cleared_pinned_at        :datetime
-#  unstarred_at             :datetime
 #  id                       :integer          not null, primary key
 #  last_emailed_post_number :integer
 #
