@@ -12,26 +12,26 @@ describe BadgesController do
     it 'should return a list of all badges' do
       get :index, format: :json
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["badges"].length.should == Badge.count
+      expect(parsed["badges"].length).to eq(Badge.count)
     end
   end
 
   context 'show' do
     it "should return a badge" do
       get :show, id: badge.id, format: :json
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["badge"].should be_present
+      expect(parsed["badge"]).to be_present
     end
 
     it "should mark the notification as viewed" do
       log_in_user(user)
       user_badge = BadgeGranter.grant(badge, user)
-      user_badge.notification.read.should == false
+      expect(user_badge.notification.read).to eq(false)
       get :show, id: badge.id, format: :json
-      user_badge.notification.reload.read.should == true
+      expect(user_badge.notification.reload.read).to eq(true)
     end
   end
 end

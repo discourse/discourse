@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::UserFieldsController do
 
   it "is a subclass of AdminController" do
-    (Admin::UserFieldsController < Admin::AdminController).should == true
+    expect(Admin::UserFieldsController < Admin::AdminController).to eq(true)
   end
 
   context "when logged in" do
@@ -11,10 +11,10 @@ describe Admin::UserFieldsController do
 
     context '.create' do
       it "creates a user field" do
-        -> {
+        expect {
           xhr :post, :create, {user_field: {name: 'hello', description: 'hello desc', field_type: 'text'} }
-          response.should be_success
-        }.should change(UserField, :count).by(1)
+          expect(response).to be_success
+        }.to change(UserField, :count).by(1)
       end
     end
 
@@ -23,9 +23,9 @@ describe Admin::UserFieldsController do
 
       it "returns a list of user fields" do
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['user_fields'].should be_present
+        expect(json['user_fields']).to be_present
       end
     end
 
@@ -33,10 +33,10 @@ describe Admin::UserFieldsController do
       let!(:user_field) { Fabricate(:user_field) }
 
       it "deletes the user field" do
-        -> {
+        expect {
           xhr :delete, :destroy, id: user_field.id
-          response.should be_success
-        }.should change(UserField, :count).by(-1)
+          expect(response).to be_success
+        }.to change(UserField, :count).by(-1)
       end
     end
 
@@ -45,10 +45,10 @@ describe Admin::UserFieldsController do
 
       it "updates the user field" do
         xhr :put, :update, id: user_field.id, user_field: {name: 'fraggle', field_type: 'confirm', description: 'muppet'}
-        response.should be_success
+        expect(response).to be_success
         user_field.reload
-        user_field.name.should == 'fraggle'
-        user_field.field_type.should == 'confirm'
+        expect(user_field.name).to eq('fraggle')
+        expect(user_field.field_type).to eq('confirm')
       end
     end
   end

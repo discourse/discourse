@@ -22,10 +22,10 @@ describe SiteCustomizationsController do
                              )
 
     get :show, key: SiteCustomization::ENABLED_KEY, format: :css, target: 'mobile'
-    response.body.should =~ /\.a1.*\.a2/m
+    expect(response.body).to match(/\.a1.*\.a2/m)
 
     get :show, key: SiteCustomization::ENABLED_KEY, format: :css
-    response.body.should =~ /\.b1.*\.b2/m
+    expect(response.body).to match(/\.b1.*\.b2/m)
   end
 
   it 'can deliver specific css' do
@@ -37,9 +37,9 @@ describe SiteCustomizationsController do
                              )
 
     get :show, key: c.key, format: :css, target: 'mobile'
-    response.body.should =~ /\.a1/
+    expect(response.body).to match(/\.a1/)
 
     get :show, key: c.key, format: :css
-    response.body.should =~ /\.b1/
+    expect(response.body).to match(/\.b1/)
   end
 end

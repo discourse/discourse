@@ -8,15 +8,15 @@ describe SessionController do
     it "does not work when not in development mode" do
       Rails.env.stubs(:development?).returns(false)
       get :become, session_id: user.username
-      response.should_not be_redirect
-      session[:current_user_id].should be_blank
+      expect(response).not_to be_redirect
+      expect(session[:current_user_id]).to be_blank
     end
 
     it "works in developmenet mode" do
       Rails.env.stubs(:development?).returns(true)
       get :become, session_id: user.username
-      response.should be_redirect
-      session[:current_user_id].should == user.id
+      expect(response).to be_redirect
+      expect(session[:current_user_id]).to eq(user.id)
     end
   end
 
@@ -58,11 +58,11 @@ describe SessionController do
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
 
-      response.should redirect_to('/')
+      expect(response).to redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-      logged_on_user.email.should == user.email
-      logged_on_user.single_sign_on_record.external_id.should == "abc"
-      logged_on_user.single_sign_on_record.external_username.should == 'sam'
+      expect(logged_on_user.email).to eq(user.email)
+      expect(logged_on_user.single_sign_on_record.external_id).to eq("abc")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
     end
 
     it 'allows you to create an admin account' do
@@ -78,7 +78,7 @@ describe SessionController do
       get :sso_login, Rack::Utils.parse_query(sso.payload)
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-      logged_on_user.admin.should == true
+      expect(logged_on_user.admin).to eq(true)
 
     end
 
@@ -92,24 +92,24 @@ describe SessionController do
       sso.custom_fields["shop_name"] = "Sam"
 
       get :sso_login, Rack::Utils.parse_query(sso.payload)
-      response.should redirect_to('/a/')
+      expect(response).to redirect_to('/a/')
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
       # ensure nothing is transient
       logged_on_user = User.find(logged_on_user.id)
 
-      logged_on_user.admin.should == false
-      logged_on_user.email.should == 'bob@bob.com'
-      logged_on_user.name.should == 'Sam Saffron'
-      logged_on_user.username.should == 'sam'
+      expect(logged_on_user.admin).to eq(false)
+      expect(logged_on_user.email).to eq('bob@bob.com')
+      expect(logged_on_user.name).to eq('Sam Saffron')
+      expect(logged_on_user.username).to eq('sam')
 
-      logged_on_user.single_sign_on_record.external_id.should == "666"
-      logged_on_user.single_sign_on_record.external_username.should == 'sam'
-      logged_on_user.active.should == true
-      logged_on_user.custom_fields["shop_url"].should == "http://my_shop.com"
-      logged_on_user.custom_fields["shop_name"].should == "Sam"
-      logged_on_user.custom_fields["bla"].should == nil
+      expect(logged_on_user.single_sign_on_record.external_id).to eq("666")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+      expect(logged_on_user.active).to eq(true)
+      expect(logged_on_user.custom_fields["shop_url"]).to eq("http://my_shop.com")
+      expect(logged_on_user.custom_fields["shop_name"]).to eq("Sam")
+      expect(logged_on_user.custom_fields["bla"]).to eq(nil)
     end
 
     it 'allows login to existing account with valid nonce' do
@@ -123,16 +123,16 @@ describe SessionController do
       get :sso_login, Rack::Utils.parse_query(sso.payload)
 
       user.single_sign_on_record.reload
-      user.single_sign_on_record.last_payload.should == sso.unsigned_payload
+      expect(user.single_sign_on_record.last_payload).to eq(sso.unsigned_payload)
 
-      response.should redirect_to('/hello/world')
+      expect(response).to redirect_to('/hello/world')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
 
-      user.id.should == logged_on_user.id
+      expect(user.id).to eq(logged_on_user.id)
 
       # nonce is bad now
       get :sso_login, Rack::Utils.parse_query(sso.payload)
-      response.code.should == '500'
+      expect(response.code).to eq('500')
     end
 
     it 'can act as an SSO provider' do
@@ -148,7 +148,7 @@ describe SessionController do
 
       get :sso_provider, Rack::Utils.parse_query(sso.payload)
 
-      response.should redirect_to("/login")
+      expect(response).to redirect_to("/login")
 
       user = Fabricate(:user, password: "frogs", active: true, admin: true)
       EmailToken.update_all(confirmed: true)
@@ -156,18 +156,18 @@ describe SessionController do
       xhr :post, :create, login: user.username, password: "frogs", format: :json
 
       location = response.header["Location"]
-      location.should =~ /^http:\/\/somewhere.over.rainbow\/sso/
+      expect(location).to match(/^http:\/\/somewhere.over.rainbow\/sso/)
 
       payload = location.split("?")[1]
 
       sso2 = SingleSignOn.parse(payload, "topsecret")
 
-      sso2.email.should == user.email
-      sso2.name.should == user.name
-      sso2.username.should == user.username
-      sso2.external_id.should == user.id.to_s
-      sso2.admin.should == true
-      sso2.moderator.should == false
+      expect(sso2.email).to eq(user.email)
+      expect(sso2.name).to eq(user.name)
+      expect(sso2.username).to eq(user.username)
+      expect(sso2.external_id).to eq(user.id.to_s)
+      expect(sso2.admin).to eq(true)
+      expect(sso2.moderator).to eq(false)
 
     end
 
@@ -196,18 +196,18 @@ describe SessionController do
       it 'stores the external attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
         @user.single_sign_on_record.reload
-        @user.single_sign_on_record.external_username.should == @sso.username
-        @user.single_sign_on_record.external_email.should == @sso.email
-        @user.single_sign_on_record.external_name.should == @sso.name
+        expect(@user.single_sign_on_record.external_username).to eq(@sso.username)
+        expect(@user.single_sign_on_record.external_email).to eq(@sso.email)
+        expect(@user.single_sign_on_record.external_name).to eq(@sso.name)
       end
 
       it 'overrides attributes' do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        logged_on_user.username.should == @suggested_username
-        logged_on_user.email.should == "#{@reversed_username}@garbage.org"
-        logged_on_user.name.should == @suggested_name
+        expect(logged_on_user.username).to eq(@suggested_username)
+        expect(logged_on_user.email).to eq("#{@reversed_username}@garbage.org")
+        expect(logged_on_user.name).to eq(@suggested_name)
       end
 
       it 'does not change matching attributes for an existing account' do
@@ -218,9 +218,9 @@ describe SessionController do
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
 
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        logged_on_user.username.should == @user.username
-        logged_on_user.name.should == @user.name
-        logged_on_user.email.should == @user.email
+        expect(logged_on_user.username).to eq(@user.username)
+        expect(logged_on_user.name).to eq(@user.name)
+        expect(logged_on_user.email).to eq(@user.email)
       end
 
       it 'does not change attributes for unchanged external attributes' do
@@ -231,9 +231,9 @@ describe SessionController do
 
         get :sso_login, Rack::Utils.parse_query(@sso.payload)
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        logged_on_user.username.should == @user.username
-        logged_on_user.email.should == @user.email
-        logged_on_user.name.should == @user.name
+        expect(logged_on_user.username).to eq(@user.username)
+        expect(logged_on_user.email).to eq(@user.email)
+        expect(logged_on_user.name).to eq(@user.name)
       end
     end
   end
@@ -249,13 +249,13 @@ describe SessionController do
       end
 
       it "raises an error when the login isn't present" do
-        lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
       end
 
       describe 'invalid password' do
         it "should return an error with an invalid password" do
           xhr :post, :create, login: user.username, password: 'sssss'
-          ::JSON.parse(response.body)['error'].should be_present
+          expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
 
@@ -263,7 +263,7 @@ describe SessionController do
         it "should return an error with an invalid password if too long" do
           User.any_instance.expects(:confirm_password?).never
           xhr :post, :create, login: user.username, password: ('s' * (User.max_password_length + 1))
-          ::JSON.parse(response.body)['error'].should be_present
+          expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
 
@@ -272,7 +272,7 @@ describe SessionController do
           User.any_instance.stubs(:suspended?).returns(true)
           User.any_instance.stubs(:suspended_till).returns(2.days.from_now)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          ::JSON.parse(response.body)['error'].should be_present
+          expect(::JSON.parse(response.body)['error']).to be_present
         end
       end
 
@@ -290,9 +290,9 @@ describe SessionController do
 
           user.reload
 
-          session[:current_user_id].should == user.id
-          user.auth_token.should be_present
-          cookies[:_t].should == user.auth_token
+          expect(session[:current_user_id]).to eq(user.id)
+          expect(user.auth_token).to be_present
+          expect(cookies[:_t]).to eq(user.auth_token)
         end
       end
 
@@ -300,7 +300,7 @@ describe SessionController do
         it 'fails' do
           SiteSetting.stubs(:enable_local_logins).returns(false)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          response.status.to_i.should == 500
+          expect(response.status.to_i).to eq(500)
         end
       end
 
@@ -311,7 +311,7 @@ describe SessionController do
         end
 
         it 'sets a session id' do
-          session[:current_user_id].should == user.id
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
@@ -321,7 +321,7 @@ describe SessionController do
         end
 
         it 'sets a session id' do
-          session[:current_user_id].should == user.id
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
 
@@ -331,12 +331,12 @@ describe SessionController do
 
         it "strips spaces from the username" do
           xhr :post, :create, login: username, password: 'myawesomepassword'
-          ::JSON.parse(response.body)['error'].should_not be_present
+          expect(::JSON.parse(response.body)['error']).not_to be_present
         end
 
         it "strips spaces from the email" do
           xhr :post, :create, login: email, password: 'myawesomepassword'
-          ::JSON.parse(response.body)['error'].should_not be_present
+          expect(::JSON.parse(response.body)['error']).not_to be_present
         end
       end
 
@@ -351,7 +351,7 @@ describe SessionController do
           end
 
           it "doesn't log in the user" do
-            session[:current_user_id].should be_blank
+            expect(session[:current_user_id]).to be_blank
           end
 
           it "shows the 'not approved' error message" do
@@ -368,7 +368,7 @@ describe SessionController do
           end
 
           it 'sets a session id' do
-            session[:current_user_id].should == user.id
+            expect(session[:current_user_id]).to eq(user.id)
           end
         end
       end
@@ -384,22 +384,22 @@ describe SessionController do
           User.any_instance.stubs(:admin?).returns(true)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(permitted_ip_address)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          session[:current_user_id].should == user.id
+          expect(session[:current_user_id]).to eq(user.id)
         end
 
         it 'returns an error for admin not at the ip address' do
           User.any_instance.stubs(:admin?).returns(true)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          JSON.parse(response.body)['error'].should be_present
-          session[:current_user_id].should_not == user.id
+          expect(JSON.parse(response.body)['error']).to be_present
+          expect(session[:current_user_id]).not_to eq(user.id)
         end
 
         it 'is successful for non-admin not at the ip address' do
           User.any_instance.stubs(:admin?).returns(false)
           ActionDispatch::Request.any_instance.stubs(:remote_ip).returns("111.234.23.12")
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          session[:current_user_id].should == user.id
+          expect(session[:current_user_id]).to eq(user.id)
         end
       end
     end
@@ -411,7 +411,7 @@ describe SessionController do
 
       it "doesn't log in the user" do
         post_login
-        session[:current_user_id].should be_blank
+        expect(session[:current_user_id]).to be_blank
       end
 
       it "shows the 'not activated' error message" do
@@ -441,24 +441,24 @@ describe SessionController do
     end
 
     it 'removes the session variable' do
-      session[:current_user_id].should be_blank
+      expect(session[:current_user_id]).to be_blank
     end
 
 
     it 'removes the auth token cookie' do
-      cookies[:_t].should be_blank
+      expect(cookies[:_t]).to be_blank
     end
   end
 
   describe '.forgot_password' do
 
     it 'raises an error without a username parameter' do
-      lambda { xhr :post, :forgot_password }.should raise_error(ActionController::ParameterMissing)
+      expect { xhr :post, :forgot_password }.to raise_error(ActionController::ParameterMissing)
     end
 
     context 'for a non existant username' do
       it "doesn't generate a new token for a made up username" do
-        lambda { xhr :post, :forgot_password, login: 'made_up'}.should_not change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: 'made_up'}.not_to change(EmailToken, :count)
       end
 
       it "doesn't enqueue an email" do
@@ -473,11 +473,11 @@ describe SessionController do
       it "returns a 500 if local logins are disabled" do
         SiteSetting.enable_local_logins = false
         xhr :post, :forgot_password, login: user.username
-        response.code.to_i.should == 500
+        expect(response.code.to_i).to eq(500)
       end
 
       it "generates a new token for a made up username" do
-        lambda { xhr :post, :forgot_password, login: user.username}.should change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: user.username}.to change(EmailToken, :count)
       end
 
       it "enqueues an email" do
@@ -490,7 +490,7 @@ describe SessionController do
       let(:user) { Discourse.system_user }
 
       it 'generates no token for system username' do
-        lambda { xhr :post, :forgot_password, login: user.username}.should_not change(EmailToken, :count)
+        expect { xhr :post, :forgot_password, login: user.username}.not_to change(EmailToken, :count)
       end
 
       it 'enqueues no email' do
@@ -504,7 +504,7 @@ describe SessionController do
     context "when not logged in" do
       it "retuns 404" do
         xhr :get, :current
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
 
@@ -513,10 +513,10 @@ describe SessionController do
 
       it "returns the JSON for the user" do
         xhr :get, :current
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['current_user'].should be_present
-        json['current_user']['id'].should == user.id
+        expect(json['current_user']).to be_present
+        expect(json['current_user']['id']).to eq(user.id)
       end
     end
   end

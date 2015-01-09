@@ -16,7 +16,7 @@ describe ListController do
     (Discourse.anonymous_filters - [:categories]).each do |filter|
       context "#{filter}" do
         before { xhr :get, filter }
-        it { should respond_with(:success) }
+        it { is_expected.to respond_with(:success) }
       end
     end
 
@@ -30,9 +30,9 @@ describe ListController do
       p = create_post
 
       xhr :get, :latest, format: :json, topic_ids: "#{p.topic_id}"
-      response.should be_success
+      expect(response).to be_success
       parsed = JSON.parse(response.body)
-      parsed["topic_list"]["topics"].length.should == 1
+      expect(parsed["topic_list"]["topics"].length).to eq(1)
     end
 
   end
@@ -43,8 +43,8 @@ describe ListController do
 
       it 'renders RSS' do
         get "#{filter}_feed", format: :rss
-        response.should be_success
-        response.content_type.should == 'application/rss+xml'
+        expect(response).to be_success
+        expect(response.content_type).to eq('application/rss+xml')
       end
 
     end
@@ -62,7 +62,7 @@ describe ListController do
           xhr :get, :category_latest, category: category.slug
         end
 
-        it { should_not respond_with(:success) }
+        it { is_expected.not_to respond_with(:success) }
       end
 
       context 'with access to see the category' do
@@ -70,7 +70,7 @@ describe ListController do
           xhr :get, :category_latest, category: category.slug
         end
 
-        it { should respond_with(:success) }
+        it { is_expected.to respond_with(:success) }
       end
 
       context 'with a link that includes an id' do
@@ -78,7 +78,7 @@ describe ListController do
           xhr :get, :category_latest, category: "#{category.id}-#{category.slug}"
         end
 
-        it { should respond_with(:success) }
+        it { is_expected.to respond_with(:success) }
       end
 
       context 'another category exists with a number at the beginning of its name' do
@@ -89,10 +89,10 @@ describe ListController do
           xhr :get, :category_latest, category: other_category.slug
         end
 
-        it { should respond_with(:success) }
+        it { is_expected.to respond_with(:success) }
 
         it 'uses the correct category' do
-          assigns(:category).should == other_category
+          expect(assigns(:category)).to eq(other_category)
         end
       end
 
@@ -104,7 +104,7 @@ describe ListController do
             xhr :get, :category_latest, parent_category: category.slug, category: sub_category.slug
           end
 
-          it { should respond_with(:success) }
+          it { is_expected.to respond_with(:success) }
         end
 
         context 'when child is requested with the wrong parent' do
@@ -112,7 +112,7 @@ describe ListController do
             xhr :get, :category_latest, parent_category: 'not_the_right_slug', category: sub_category.slug
           end
 
-          it { should_not respond_with(:success) }
+          it { is_expected.not_to respond_with(:success) }
         end
 
       end
@@ -120,8 +120,8 @@ describe ListController do
       describe 'feed' do
         it 'renders RSS' do
           get :category_feed, category: category.slug, format: :rss
-          response.should be_success
-          response.content_type.should == 'application/rss+xml'
+          expect(response).to be_success
+          expect(response.content_type).to eq('application/rss+xml')
         end
       end
     end
@@ -132,7 +132,7 @@ describe ListController do
 
     it "should respond with a list" do
       xhr :get, :topics_by, username: @user.username
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -142,13 +142,13 @@ describe ListController do
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
       xhr :get, :private_messages, username: @user.username
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
       xhr :get, :private_messages, username: @user.username
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -158,13 +158,13 @@ describe ListController do
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
       xhr :get, :private_messages_sent, username: @user.username
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
       xhr :get, :private_messages_sent, username: @user.username
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -174,19 +174,19 @@ describe ListController do
     it "raises an error when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(false)
       xhr :get, :private_messages_unread, username: @user.username
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     it "succeeds when can_see_private_messages? is false " do
       Guardian.any_instance.expects(:can_see_private_messages?).returns(true)
       xhr :get, :private_messages_unread, username: @user.username
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
   context 'read' do
     it 'raises an error when not logged in' do
-      lambda { xhr :get, :read }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :get, :read }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -195,32 +195,32 @@ describe ListController do
         xhr :get, :read
       end
 
-      it { should respond_with(:success) }
+      it { is_expected.to respond_with(:success) }
     end
   end
 
   describe "best_periods_for" do
 
     it "returns yearly for more than 180 days" do
-      ListController.best_periods_for(nil).should == [:yearly]
-      ListController.best_periods_for(180.days.ago).should == [:yearly]
+      expect(ListController.best_periods_for(nil)).to eq([:yearly])
+      expect(ListController.best_periods_for(180.days.ago)).to eq([:yearly])
     end
 
     it "includes monthly when less than 180 days and more than 35 days" do
       (35...180).each do |date|
-        ListController.best_periods_for(date.days.ago).should == [:monthly, :yearly]
+        expect(ListController.best_periods_for(date.days.ago)).to eq([:monthly, :yearly])
       end
     end
 
     it "includes weekly when less than 35 days and more than 8 days" do
       (8...35).each do |date|
-        ListController.best_periods_for(date.days.ago).should == [:weekly, :monthly, :yearly]
+        expect(ListController.best_periods_for(date.days.ago)).to eq([:weekly, :monthly, :yearly])
       end
     end
 
     it "includes daily when less than 8 days" do
       (0...8).each do |date|
-        ListController.best_periods_for(date.days.ago).should == [:daily, :weekly, :monthly, :yearly]
+        expect(ListController.best_periods_for(date.days.ago)).to eq([:daily, :weekly, :monthly, :yearly])
       end
     end
 

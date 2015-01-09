@@ -7,12 +7,12 @@ shared_examples 'finding and showing post' do
   it 'ensures the user can see the post' do
     Guardian.any_instance.expects(:can_see?).with(post).returns(false)
     xhr :get, action, params
-    response.should be_forbidden
+    expect(response).to be_forbidden
   end
 
   it 'succeeds' do
     xhr :get, action, params
-    response.should be_success
+    expect(response).to be_success
   end
 
   context "deleted post" do
@@ -22,32 +22,32 @@ shared_examples 'finding and showing post' do
 
     it "can't find deleted posts as an anonymous user" do
       xhr :get, action, params
-      response.status.should == 404
+      expect(response.status).to eq(404)
     end
 
     it "can't find deleted posts as a regular user" do
       log_in(:user)
       xhr :get, action, params
-      response.status.should == 404
+      expect(response.status).to eq(404)
     end
 
     it "can find posts as a moderator" do
       log_in(:moderator)
       xhr :get, action, params
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "can find posts as a admin" do
       log_in(:admin)
       xhr :get, action, params
-      response.should be_success
+      expect(response).to be_success
     end
   end
 end
 
 shared_examples 'action requires login' do |method, action, params|
   it 'raises an exception when not logged in' do
-    lambda { xhr method, action, params }.should raise_error(Discourse::NotLoggedIn)
+    expect { xhr method, action, params }.to raise_error(Discourse::NotLoggedIn)
   end
 end
 
@@ -61,10 +61,10 @@ describe PostsController do
 
     it 'returns the cooked conent' do
       xhr :get, :cooked, id: 1234
-      response.should be_success
+      expect(response).to be_success
       json = ::JSON.parse(response.body)
-      json.should be_present
-      json['cooked'].should == 'wat'
+      expect(json).to be_present
+      expect(json['cooked']).to eq('wat')
     end
   end
 
@@ -80,7 +80,7 @@ describe PostsController do
 
         xhr :get, :raw_email, id: post.id
 
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can view raw email" do
@@ -88,9 +88,9 @@ describe PostsController do
 
         xhr :get, :raw_email, id: post.id
 
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['raw_email'].should == 'email_content'
+        expect(json['raw_email']).to eq('email_content')
       end
 
     end
@@ -108,10 +108,10 @@ describe PostsController do
       new_post = create_post
       xhr :get, :show, {id: new_post.id}
       parsed = JSON.parse(response.body)
-      parsed["topic_slug"].should == new_post.topic.slug
-      parsed["moderator"].should == false
-      parsed["username"].should == new_post.user.username
-      parsed["cooked"].should == new_post.cooked
+      expect(parsed["topic_slug"]).to eq(new_post.topic.slug)
+      expect(parsed["moderator"]).to eq(false)
+      expect(parsed["username"]).to eq(new_post.user.username)
+      expect(parsed["cooked"]).to eq(new_post.cooked)
     end
   end
 
@@ -160,14 +160,14 @@ describe PostsController do
 
         xhr :delete, :destroy, id: post.id
 
-        response.status.should == 422
-        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_delete?).with(post).returns(false)
         xhr :delete, :destroy, id: post.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "uses a PostDestroyer" do
@@ -191,7 +191,7 @@ describe PostsController do
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_recover_post?).with(post).returns(false)
         xhr :put, :recover, post_id: post.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "recovers a post correctly" do
@@ -201,7 +201,7 @@ describe PostsController do
         PostDestroyer.new(user, post).destroy
         xhr :put, :recover, post_id: post.id
         post.reload
-        post.deleted_at.should == nil
+        expect(post.deleted_at).to eq(nil)
       end
 
     end
@@ -217,17 +217,17 @@ describe PostsController do
       let!(:post2) { Fabricate(:post, topic_id: post1.topic_id, user: poster, post_number: 3, reply_to_post_number: post1.post_number) }
 
       it "raises invalid parameters no post_ids" do
-        lambda { xhr :delete, :destroy_many }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :delete, :destroy_many }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises invalid parameters with missing ids" do
-        lambda { xhr :delete, :destroy_many, post_ids: [12345] }.should raise_error(Discourse::InvalidParameters)
+        expect { xhr :delete, :destroy_many, post_ids: [12345] }.to raise_error(Discourse::InvalidParameters)
       end
 
       it "raises an error when the user doesn't have permission to delete the posts" do
         Guardian.any_instance.expects(:can_delete?).with(instance_of(Post)).returns(false)
         xhr :delete, :destroy_many, post_ids: [post1.id, post2.id]
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "deletes the post" do
@@ -278,8 +278,8 @@ describe PostsController do
 
         xhr :put, :update, update_params
 
-        response.status.should == 422
-        JSON.parse(response.body)['errors'].should include(I18n.t('too_late_to_edit'))
+        expect(response.status).to eq(422)
+        expect(JSON.parse(response.body)['errors']).to include(I18n.t('too_late_to_edit'))
       end
 
       it 'passes the image sizes through' do
@@ -294,15 +294,15 @@ describe PostsController do
 
       it "raises an error when the post parameter is missing" do
         update_params.delete(:post)
-        lambda {
+        expect {
           xhr :put, :update, update_params
-        }.should raise_error(ActionController::ParameterMissing)
+        }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to see the post" do
         Guardian.any_instance.expects(:can_edit?).with(post).at_least_once.returns(false)
         xhr :put, :update, update_params
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "calls revise with valid parameters" do
@@ -331,7 +331,7 @@ describe PostsController do
         Guardian.any_instance.expects(:can_see?).with(post).returns(false).once
 
         xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'creates a bookmark' do
@@ -361,7 +361,7 @@ describe PostsController do
 
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can wiki a post" do
@@ -370,7 +370,7 @@ describe PostsController do
         xhr :put, :wiki, post_id: post.id, wiki: 'true'
 
         post.reload
-        post.wiki.should == true
+        expect(post.wiki).to eq(true)
       end
 
       it "can unwiki a post" do
@@ -380,7 +380,7 @@ describe PostsController do
         xhr :put, :wiki, post_id: wikied_post.id, wiki: 'false'
 
         wikied_post.reload
-        wikied_post.wiki.should == false
+        expect(wikied_post.wiki).to eq(false)
       end
 
     end
@@ -400,7 +400,7 @@ describe PostsController do
 
         xhr :put, :post_type, post_id: post.id, post_type: 2
 
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can change the post type" do
@@ -409,7 +409,7 @@ describe PostsController do
         xhr :put, :post_type, post_id: post.id, post_type: 2
 
         post.reload
-        post.post_type.should == 2
+        expect(post.post_type).to eq(2)
       end
 
     end
@@ -429,7 +429,7 @@ describe PostsController do
 
         xhr :put, :rebake, post_id: post.id
 
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can rebake the post" do
@@ -437,7 +437,7 @@ describe PostsController do
 
         xhr :put, :rebake, post_id: post.id
 
-        response.should be_success
+        expect(response).to be_success
       end
 
     end
@@ -457,13 +457,13 @@ describe PostsController do
         master_key = ApiKey.create_master_key.key
 
         xhr :post, :create, {api_username: user.username, api_key: master_key, raw: raw, title: title, wpid: 1}
-        response.should be_success
+        expect(response).to be_success
         original = response.body
 
         xhr :post, :create, {api_username: user.username_lower, api_key: master_key, raw: raw, title: title, wpid: 2}
-        response.should be_success
+        expect(response).to be_success
 
-        response.body.should == original
+        expect(response.body).to eq(original)
       end
     end
 
@@ -474,19 +474,19 @@ describe PostsController do
       let(:new_post) { Fabricate.build(:post, user: user) }
 
       it "raises an exception without a raw parameter" do
-	      lambda { xhr :post, :create }.should raise_error(ActionController::ParameterMissing)
+	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
       end
 
       it 'calls the post creator' do
         PostCreator.any_instance.expects(:create).returns(new_post)
         xhr :post, :create, {raw: 'test'}
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns JSON of the post' do
         PostCreator.any_instance.expects(:create).returns(new_post)
         xhr :post, :create, {raw: 'test'}
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
 
       it 'protects against dupes' do
@@ -494,10 +494,10 @@ describe PostsController do
         title = "this is a title #{SecureRandom.hash}"
 
         xhr :post, :create, {raw: raw, title: title, wpid: 1}
-        response.should be_success
+        expect(response).to be_success
 
         xhr :post, :create, {raw: raw, title: title, wpid: 2}
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       context "errors" do
@@ -513,7 +513,7 @@ describe PostsController do
         it "does not succeed" do
           xhr :post, :create, {raw: 'test'}
           User.any_instance.expects(:flag_linked_posts_as_spam).never
-          response.should_not be_success
+          expect(response).not_to be_success
         end
 
         it "it triggers flag_linked_posts_as_spam when the post creator returns spam" do
@@ -619,19 +619,19 @@ describe PostsController do
 
       it "ensures anonymous cannot see the revisions" do
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "ensures regular user cannot see the revisions" do
         u = log_in(:user)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "ensures staff can see the revisions" do
         log_in(:admin)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "ensures poster can see the revisions" do
@@ -639,13 +639,13 @@ describe PostsController do
         post = Fabricate(:post, user: user, version: 3)
         pr = Fabricate(:post_revision, user: user, post: post)
         xhr :get, :revisions, post_id: pr.post_id, revision: pr.number
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "ensures trust level 4 can see the revisions" do
         log_in(:trust_level_4)
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_success
+        expect(response).to be_success
       end
 
     end
@@ -656,7 +656,7 @@ describe PostsController do
 
       it "ensures anyone can see the revisions" do
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_success
+        expect(response).to be_success
       end
 
     end
@@ -670,7 +670,7 @@ describe PostsController do
 
       it "also work on deleted post" do
         xhr :get, :revisions, post_id: deleted_post_revision.post_id, revision: deleted_post_revision.number
-        response.should be_success
+        expect(response).to be_success
       end
     end
 
@@ -684,7 +684,7 @@ describe PostsController do
 
       it "also work on deleted topic" do
         xhr :get, :revisions, post_id: post_revision.post_id, revision: post_revision.number
-        response.should be_success
+        expect(response).to be_success
       end
     end
 
@@ -696,15 +696,15 @@ describe PostsController do
     it "raises an error when you can't see the post" do
       Guardian.any_instance.expects(:can_see?).with(post).returns(false)
       xhr :get, :expand_embed, id: post.id
-      response.should_not be_success
+      expect(response).not_to be_success
     end
 
     it "retrieves the body when you can see the post" do
       Guardian.any_instance.expects(:can_see?).with(post).returns(true)
       TopicEmbed.expects(:expanded_for).with(post).returns("full content")
       xhr :get, :expand_embed, id: post.id
-      response.should be_success
-      ::JSON.parse(response.body)['cooked'].should == "full content"
+      expect(response).to be_success
+      expect(::JSON.parse(response.body)['cooked']).to eq("full content")
     end
   end
 
@@ -718,13 +718,13 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to see the flagged posts" do
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(false)
         xhr :get, :flagged_posts, username: "system"
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can see the flagged posts when authorized" do
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
         xhr :get, :flagged_posts, username: "system"
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "only shows agreed and deferred flags" do
@@ -745,9 +745,9 @@ describe PostsController do
 
         Guardian.any_instance.expects(:can_see_flagged_posts?).returns(true)
         xhr :get, :flagged_posts, username: user.username
-        response.should be_success
+        expect(response).to be_success
 
-        JSON.parse(response.body).length.should == 2
+        expect(JSON.parse(response.body).length).to eq(2)
       end
 
     end
@@ -764,13 +764,13 @@ describe PostsController do
       it "raises an error if the user doesn't have permission to see the deleted posts" do
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(false)
         xhr :get, :deleted_posts, username: "system"
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "can see the deleted posts when authorized" do
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
         xhr :get, :deleted_posts, username: "system"
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "only shows posts deleted by other users" do
@@ -786,12 +786,12 @@ describe PostsController do
 
         Guardian.any_instance.expects(:can_see_deleted_posts?).returns(true)
         xhr :get, :deleted_posts, username: user.username
-        response.should be_success
+        expect(response).to be_success
 
         data = JSON.parse(response.body)
-        data.length.should == 1
-        data[0]["id"].should == post_deleted_by_admin.id
-        data[0]["deleted_by"]["id"].should == admin.id
+        expect(data.length).to eq(1)
+        expect(data[0]["id"]).to eq(post_deleted_by_admin.id)
+        expect(data[0]["deleted_by"]["id"]).to eq(admin.id)
       end
 
     end

@@ -17,12 +17,12 @@ describe StaticController do
       end
 
       it 'renders the static file if present' do
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "renders the file" do
-        response.should render_template('static/show')
-        assigns(:page).should == 'faq'
+        expect(response).to render_template('static/show')
+        expect(assigns(:page)).to eq('faq')
       end
     end
 
@@ -33,7 +33,7 @@ describe StaticController do
         context "when #{setting_name} site setting is NOT set" do
           it "renders the #{id} page" do
             expect(subject).to render_template("static/show")
-            assigns(:page).should == id
+            expect(assigns(:page)).to eq(id)
           end
         end
 
@@ -50,20 +50,20 @@ describe StaticController do
     context "with a missing file" do
       it "should respond 404" do
         xhr :get, :show, id: 'does-not-exist'
-        response.response_code.should == 404
+        expect(response.response_code).to eq(404)
       end
     end
 
     it 'should redirect to / when logged in and path is /login' do
       log_in
       xhr :get, :show, id: 'login'
-      response.should redirect_to '/'
+      expect(response).to redirect_to '/'
     end
 
     it "should display the login template when login is required" do
       SiteSetting.stubs(:login_required).returns(true)
       xhr :get, :show, id: 'login'
-      response.should be_success
+      expect(response).to be_success
     end
   end
 

@@ -11,7 +11,7 @@ describe Admin::VersionsController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::VersionsController < Admin::AdminController).should == true
+    expect(Admin::VersionsController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -21,16 +21,16 @@ describe Admin::VersionsController do
 
     describe 'show' do
       subject { xhr :get, :show }
-      it { should be_success }
+      it { is_expected.to be_success }
 
       it 'should return the currently available version' do
         json = JSON.parse(subject.body)
-        json['latest_version'].should == '1.2.33'
+        expect(json['latest_version']).to eq('1.2.33')
       end
 
       it "should return the installed version" do
         json = JSON.parse(subject.body)
-        json['installed_version'].should == Discourse::VERSION::STRING
+        expect(json['installed_version']).to eq(Discourse::VERSION::STRING)
       end
     end
   end

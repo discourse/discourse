@@ -10,37 +10,37 @@ describe TopicsController do
 
     it "returns the JSON in the format our wordpress plugin needs" do
       xhr :get, :wordpress, topic_id: topic.id, best: 3
-      response.should be_success
+      expect(response).to be_success
       json = ::JSON.parse(response.body)
-      json.should be_present
+      expect(json).to be_present
 
       # The JSON has the data the wordpress plugin needs
-      json['id'].should == topic.id
-      json['posts_count'].should == 2
-      json['filtered_posts_count'].should == 2
+      expect(json['id']).to eq(topic.id)
+      expect(json['posts_count']).to eq(2)
+      expect(json['filtered_posts_count']).to eq(2)
 
       # Posts
-      json['posts'].size.should == 1
+      expect(json['posts'].size).to eq(1)
       post = json['posts'][0]
-      post['id'].should == p2.id
-      post['username'].should == user.username
-      post['avatar_template'].should == "#{Discourse.base_url_no_prefix}#{user.avatar_template}"
-      post['name'].should == user.name
-      post['created_at'].should be_present
-      post['cooked'].should == p2.cooked
+      expect(post['id']).to eq(p2.id)
+      expect(post['username']).to eq(user.username)
+      expect(post['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{user.avatar_template}")
+      expect(post['name']).to eq(user.name)
+      expect(post['created_at']).to be_present
+      expect(post['cooked']).to eq(p2.cooked)
 
       # Participants
-      json['participants'].size.should == 1
+      expect(json['participants'].size).to eq(1)
       participant = json['participants'][0]
-      participant['id'].should == user.id
-      participant['username'].should == user.username
-      participant['avatar_template'].should == "#{Discourse.base_url_no_prefix}#{user.avatar_template}"
+      expect(participant['id']).to eq(user.id)
+      expect(participant['username']).to eq(user.username)
+      expect(participant['avatar_template']).to eq("#{Discourse.base_url_no_prefix}#{user.avatar_template}")
     end
   end
 
   context 'move_posts' do
     it 'needs you to be logged in' do
-      lambda { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :move_posts, topic_id: 111, title: 'blah', post_ids: [1,2,3] }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'moving to a new topic' do
@@ -49,13 +49,13 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without postIds" do
-        lambda { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :move_posts, topic_id: topic.id, title: 'blah' }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to move the posts" do
         Guardian.any_instance.expects(:can_move_posts?).returns(false)
         xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [1,2,3]
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       context 'success' do
@@ -67,10 +67,10 @@ describe TopicsController do
         end
 
         it "returns success" do
-          response.should be_success
+          expect(response).to be_success
           result = ::JSON.parse(response.body)
-          result['success'].should == true
-          result['url'].should be_present
+          expect(result['success']).to eq(true)
+          expect(result['url']).to be_present
         end
       end
 
@@ -83,10 +83,10 @@ describe TopicsController do
         end
 
         it "returns JSON with a false success" do
-          response.should be_success
+          expect(response).to be_success
           result = ::JSON.parse(response.body)
-          result['success'].should == false
-          result['url'].should be_blank
+          expect(result['success']).to eq(false)
+          expect(result['url']).to be_blank
         end
       end
     end
@@ -127,10 +127,10 @@ describe TopicsController do
         end
 
         it "returns success" do
-          response.should be_success
+          expect(response).to be_success
           result = ::JSON.parse(response.body)
-          result['success'].should == true
-          result['url'].should be_present
+          expect(result['success']).to eq(true)
+          expect(result['url']).to be_present
         end
       end
 
@@ -143,10 +143,10 @@ describe TopicsController do
         end
 
         it "returns JSON with a false success" do
-          response.should be_success
+          expect(response).to be_success
           result = ::JSON.parse(response.body)
-          result['success'].should == false
-          result['url'].should be_blank
+          expect(result['success']).to eq(false)
+          expect(result['url']).to be_blank
         end
       end
     end
@@ -154,7 +154,7 @@ describe TopicsController do
 
   context "merge_topic" do
     it 'needs you to be logged in' do
-      lambda { xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345 }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'moving to a new topic' do
@@ -163,13 +163,13 @@ describe TopicsController do
       let(:topic) { p1.topic }
 
       it "raises an error without destination_topic_id" do
-        lambda { xhr :post, :merge_topic, topic_id: topic.id }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :merge_topic, topic_id: topic.id }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the user doesn't have permission to merge" do
         Guardian.any_instance.expects(:can_move_posts?).returns(false)
         xhr :post, :merge_topic, topic_id: 111, destination_topic_id: 345
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       let(:dest_topic) { Fabricate(:topic) }
@@ -183,10 +183,10 @@ describe TopicsController do
         end
 
         it "returns success" do
-          response.should be_success
+          expect(response).to be_success
           result = ::JSON.parse(response.body)
-          result['success'].should == true
-          result['url'].should be_present
+          expect(result['success']).to eq(true)
+          expect(result['url']).to be_present
         end
       end
 
@@ -197,14 +197,14 @@ describe TopicsController do
 
   context 'change_post_owners' do
     it 'needs you to be logged in' do
-      lambda { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3] }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3] }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'forbidden to moderators' do
       let!(:moderator) { log_in(:moderator) }
       it 'correctly denies' do
         xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3]
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
     end
 
@@ -213,7 +213,7 @@ describe TopicsController do
 
       it 'correctly denies' do
         xhr :post, :change_post_owners, topic_id: 111, username: 'user_a', post_ids: [1,2,3]
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
     end
 
@@ -224,21 +224,21 @@ describe TopicsController do
       let(:p1) { Fabricate(:post, topic_id: topic.id) }
 
       it "raises an error with a parameter missing" do
-        lambda { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1,2,3] }.should raise_error(ActionController::ParameterMissing)
-        lambda { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a' }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1,2,3] }.to raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a' }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "calls PostRevisor" do
         PostRevisor.any_instance.expects(:revise!)
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
-        response.should be_success
+        expect(response).to be_success
       end
 
       it "changes the user" do
         old_user = p1.user
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
         p1.reload
-        old_user.should_not == p1.user
+        expect(old_user).not_to eq(p1.user)
       end
 
       # Make sure that p1.reload isn't changing the user for us
@@ -246,8 +246,8 @@ describe TopicsController do
         old_user = p1.user
         # xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
         p1.reload
-        p1.user.should_not == nil
-        old_user.should == p1.user
+        expect(p1.user).not_to eq(nil)
+        expect(old_user).to eq(p1.user)
       end
 
       let(:p2) { Fabricate(:post, topic_id: topic.id) }
@@ -256,8 +256,8 @@ describe TopicsController do
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id, p2.id]
         p1.reload
         p2.reload
-        p1.user.should_not == nil
-        p1.user.should == p2.user
+        expect(p1.user).not_to eq(nil)
+        expect(p1.user).to eq(p2.user)
       end
     end
   end
@@ -268,21 +268,21 @@ describe TopicsController do
     let(:raw) { 'this body is long enough to search for' }
 
     it "requires a title" do
-      -> { xhr :get, :similar_to, raw: raw }.should raise_error(ActionController::ParameterMissing)
+      expect { xhr :get, :similar_to, raw: raw }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "requires a raw body" do
-      -> { xhr :get, :similar_to, title: title }.should raise_error(ActionController::ParameterMissing)
+      expect { xhr :get, :similar_to, title: title }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "raises an error if the title length is below the minimum" do
       SiteSetting.stubs(:min_title_similar_length).returns(100)
-      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "raises an error if the body length is below the minimum" do
       SiteSetting.stubs(:min_body_similar_length).returns(100)
-      -> { xhr :get, :similar_to, title: title, raw: raw }.should raise_error(Discourse::InvalidParameters)
+      expect { xhr :get, :similar_to, title: title, raw: raw }.to raise_error(Discourse::InvalidParameters)
     end
 
     describe "minimum_topics_similar" do
@@ -326,7 +326,7 @@ describe TopicsController do
 
   context 'clear_pin' do
     it 'needs you to be logged in' do
-      lambda { xhr :put, :clear_pin, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :clear_pin, topic_id: 1 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -336,7 +336,7 @@ describe TopicsController do
       it "fails when the user can't see the topic" do
         Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
         xhr :put, :clear_pin, topic_id: topic.id
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       describe 'when the user can see the topic' do
@@ -347,7 +347,7 @@ describe TopicsController do
 
         it "succeeds" do
           xhr :put, :clear_pin, topic_id: topic.id
-          response.should be_success
+          expect(response).to be_success
         end
       end
 
@@ -357,7 +357,7 @@ describe TopicsController do
 
   context 'status' do
     it 'needs you to be logged in' do
-      lambda { xhr :put, :status, topic_id: 1, status: 'visible', enabled: true }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :status, topic_id: 1, status: 'visible', enabled: true }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -369,19 +369,19 @@ describe TopicsController do
       it "raises an exception if you can't change it" do
         Guardian.any_instance.expects(:can_moderate?).with(@topic).returns(false)
         xhr :put, :status, topic_id: @topic.id, status: 'visible', enabled: 'true'
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'requires the status parameter' do
-        lambda { xhr :put, :status, topic_id: @topic.id, enabled: true }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :status, topic_id: @topic.id, enabled: true }.to raise_error(ActionController::ParameterMissing)
       end
 
       it 'requires the enabled parameter' do
-        lambda { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :status, topic_id: @topic.id, status: 'visible' }.to raise_error(ActionController::ParameterMissing)
       end
 
       it 'raises an error with a status not in the whitelist' do
-        lambda { xhr :put, :status, topic_id: @topic.id, status: 'title', enabled: 'true' }.should raise_error(Discourse::InvalidParameters)
+        expect { xhr :put, :status, topic_id: @topic.id, status: 'title', enabled: 'true' }.to raise_error(Discourse::InvalidParameters)
       end
 
       it 'calls update_status on the forum topic with false' do
@@ -401,7 +401,7 @@ describe TopicsController do
   context 'delete_timings' do
 
     it 'needs you to be logged in' do
-      lambda { xhr :delete, :destroy_timings, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :delete, :destroy_timings, topic_id: 1 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -424,11 +424,11 @@ describe TopicsController do
   describe 'mute/unmute' do
 
     it 'needs you to be logged in' do
-      lambda { xhr :put, :mute, topic_id: 99}.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :mute, topic_id: 99}.to raise_error(Discourse::NotLoggedIn)
     end
 
     it 'needs you to be logged in' do
-      lambda { xhr :put, :unmute, topic_id: 99}.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :unmute, topic_id: 99}.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -442,7 +442,7 @@ describe TopicsController do
 
   describe 'recover' do
     it "won't allow us to recover a topic when we're not logged in" do
-      lambda { xhr :put, :recover, topic_id: 1 }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :recover, topic_id: 1 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -452,7 +452,7 @@ describe TopicsController do
         it "raises an exception when the user doesn't have permission to delete the topic" do
           Guardian.any_instance.expects(:can_recover_topic?).with(topic).returns(false)
           xhr :put, :recover, topic_id: topic.id
-          response.should be_forbidden
+          expect(response).to be_forbidden
         end
       end
 
@@ -464,7 +464,7 @@ describe TopicsController do
         it 'succeeds' do
           PostDestroyer.any_instance.expects(:recover)
           xhr :put, :recover, topic_id: topic.id
-          response.should be_success
+          expect(response).to be_success
         end
       end
     end
@@ -473,7 +473,7 @@ describe TopicsController do
 
   describe 'delete' do
     it "won't allow us to delete a topic when we're not logged in" do
-      lambda { xhr :delete, :destroy, id: 1 }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :delete, :destroy, id: 1 }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -483,7 +483,7 @@ describe TopicsController do
         it "raises an exception when the user doesn't have permission to delete the topic" do
           Guardian.any_instance.expects(:can_delete?).with(topic).returns(false)
           xhr :delete, :destroy, id: topic.id
-          response.should be_forbidden
+          expect(response).to be_forbidden
         end
       end
 
@@ -495,7 +495,7 @@ describe TopicsController do
         it 'succeeds' do
           PostDestroyer.any_instance.expects(:destroy)
           xhr :delete, :destroy, id: topic.id
-          response.should be_success
+          expect(response).to be_success
         end
 
       end
@@ -508,18 +508,18 @@ describe TopicsController do
 
     it "returns JSON for the slug" do
       xhr :get, :id_for_slug, slug: topic.slug
-      response.should be_success
+      expect(response).to be_success
       json = ::JSON.parse(response.body)
-      json.should be_present
-      json['topic_id'].should == topic.id
-      json['url'].should == topic.url
-      json['slug'].should == topic.slug
+      expect(json).to be_present
+      expect(json['topic_id']).to eq(topic.id)
+      expect(json['url']).to eq(topic.url)
+      expect(json['slug']).to eq(topic.slug)
     end
 
     it "returns invalid access if the user can't see the topic" do
       Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
       xhr :get, :id_for_slug, slug: topic.slug
-      response.should_not be_success
+      expect(response).not_to be_success
     end
   end
 
@@ -531,12 +531,12 @@ describe TopicsController do
 
     it 'shows a topic correctly' do
       xhr :get, :show, topic_id: topic.id, slug: topic.slug
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'return 404 for an invalid page' do
       xhr :get, :show, topic_id: topic.id, slug: topic.slug, page: 2
-      response.code.should == "404"
+      expect(response.code).to eq("404")
     end
 
     it 'can find a topic given a slug in the id param' do
@@ -572,14 +572,14 @@ describe TopicsController do
     end
 
     it 'records a view' do
-      lambda { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.should change(TopicViewItem, :count).by(1)
+      expect { xhr :get, :show, topic_id: topic.id, slug: topic.slug }.to change(TopicViewItem, :count).by(1)
     end
 
     it 'records incoming links' do
       user = Fabricate(:user)
       get :show, topic_id: topic.id, slug: topic.slug, u: user.username
 
-      IncomingLink.count.should == 1
+      expect(IncomingLink.count).to eq(1)
     end
 
     it 'records redirects' do
@@ -590,7 +590,7 @@ describe TopicsController do
       get :show, topic_id: topic.id, slug: topic.slug
 
       link = IncomingLink.first
-      link.referer.should == 'http://twitter.com'
+      expect(link.referer).to eq('http://twitter.com')
     end
 
     it 'tracks a visit for all html requests' do
@@ -602,7 +602,7 @@ describe TopicsController do
     context 'consider for a promotion' do
       let!(:user) { log_in(:coding_horror) }
       let(:promotion) do
-        result = mock
+        result = double
         Promotion.stubs(:new).with(user).returns(result)
         result
       end
@@ -662,7 +662,7 @@ describe TopicsController do
           expect(response).to be_successful
           topic.reload
           # free test, only costs a reload
-          topic.views.should == 1
+          expect(topic.views).to eq(1)
         end
 
         it 'returns 403 for an invalid key' do
@@ -678,14 +678,14 @@ describe TopicsController do
 
     it 'renders rss of the topic' do
       get :feed, topic_id: topic.id, slug: 'foo', format: :rss
-      response.should be_success
-      response.content_type.should == 'application/rss+xml'
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
     end
   end
 
   describe 'update' do
     it "won't allow us to update a topic when we're not logged in" do
-      lambda { xhr :put, :update, topic_id: 1, slug: 'xyz' }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :update, topic_id: 1, slug: 'xyz' }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -698,7 +698,7 @@ describe TopicsController do
         it "raises an exception when the user doesn't have permission to update the topic" do
           Guardian.any_instance.expects(:can_edit?).with(@topic).returns(false)
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
-          response.should be_forbidden
+          expect(response).to be_forbidden
         end
       end
 
@@ -709,14 +709,14 @@ describe TopicsController do
 
         it 'succeeds' do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title
-          response.should be_success
-          ::JSON.parse(response.body)['basic_topic'].should be_present
+          expect(response).to be_success
+          expect(::JSON.parse(response.body)['basic_topic']).to be_present
         end
 
         it 'allows a change of title' do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'This is a new title for the topic'
           @topic.reload
-          @topic.title.should == 'This is a new title for the topic'
+          expect(@topic.title).to eq('This is a new title for the topic')
         end
 
         it 'triggers a change of category' do
@@ -732,7 +732,7 @@ describe TopicsController do
         it "returns errors when the rate limit is exceeded" do
           EditRateLimiter.any_instance.expects(:performed!).raises(RateLimiter::LimitExceeded.new(60))
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'This is a new title for the topic'
-          response.should_not be_success
+          expect(response).not_to be_success
         end
 
         it "returns errors with invalid categories" do
@@ -755,7 +755,7 @@ describe TopicsController do
           it "can add a category to an uncategorized topic" do
             Topic.any_instance.expects(:change_category_to_id).with(456).returns(true)
             xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: 456
-            response.should be_success
+            expect(response).to be_success
           end
         end
 
@@ -773,17 +773,17 @@ describe TopicsController do
 
         xhr :post, :invite, topic_id: topic.id, email: 'hiro@from.heros', group_ids: "#{group.id}"
 
-        response.should be_success
+        expect(response).to be_success
 
         invite = Invite.find_by(email: 'hiro@from.heros')
         groups = invite.groups.to_a
-        groups.count.should == 1
-        groups[0].id.should == group.id
+        expect(groups.count).to eq(1)
+        expect(groups[0].id).to eq(group.id)
       end
     end
 
     it "won't allow us to invite toa topic when we're not logged in" do
-      lambda { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe 'when logged in' do
@@ -792,13 +792,13 @@ describe TopicsController do
       end
 
       it 'requires an email parameter' do
-        lambda { xhr :post, :invite, topic_id: @topic.id }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :post, :invite, topic_id: @topic.id }.to raise_error(ActionController::ParameterMissing)
       end
 
       describe 'without permission' do
         it "raises an exception when the user doesn't have permission to invite to the topic" do
           xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          response.should be_forbidden
+          expect(response).to be_forbidden
         end
       end
 
@@ -810,15 +810,15 @@ describe TopicsController do
 
         it 'should work as expected' do
           xhr :post, :invite, topic_id: @topic.id, user: 'jake@adventuretime.ooo'
-          response.should be_success
-          ::JSON.parse(response.body).should == {'success' => 'OK'}
-          Invite.where(invited_by_id: admin.id).count.should == 1
+          expect(response).to be_success
+          expect(::JSON.parse(response.body)).to eq({'success' => 'OK'})
+          expect(Invite.where(invited_by_id: admin.id).count).to eq(1)
         end
 
         it 'should fail on shoddy email' do
           xhr :post, :invite, topic_id: @topic.id, user: 'i_am_not_an_email'
-          response.should_not be_success
-          ::JSON.parse(response.body).should == {'failed' => 'FAILED'}
+          expect(response).not_to be_success
+          expect(::JSON.parse(response.body)).to eq({'failed' => 'FAILED'})
         end
 
       end
@@ -830,15 +830,15 @@ describe TopicsController do
   describe 'autoclose' do
 
     it 'needs you to be logged in' do
-      -> {
+      expect {
         xhr :put, :autoclose, topic_id: 99, auto_close_time: '24', auto_close_based_on_last_post: false
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     it 'needs you to be an admin or mod' do
       user = log_in
       xhr :put, :autoclose, topic_id: 99, auto_close_time: '24', auto_close_based_on_last_post: false
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     describe 'when logged in' do
@@ -851,8 +851,8 @@ describe TopicsController do
         Topic.any_instance.expects(:set_auto_close).with("24", @admin)
         xhr :put, :autoclose, topic_id: @topic.id, auto_close_time: '24', auto_close_based_on_last_post: true
         json = ::JSON.parse(response.body)
-        json.should have_key('auto_close_at')
-        json.should have_key('auto_close_hours')
+        expect(json).to have_key('auto_close_at')
+        expect(json).to have_key('auto_close_hours')
       end
 
       it "can remove a topic's auto close time" do
@@ -868,7 +868,7 @@ describe TopicsController do
     it 'needs you to be a staff member' do
       log_in
       xhr :put, :make_banner, topic_id: 99
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     describe 'when logged in' do
@@ -878,7 +878,7 @@ describe TopicsController do
         Topic.any_instance.expects(:make_banner!)
 
         xhr :put, :make_banner, topic_id: topic.id
-        response.should be_success
+        expect(response).to be_success
       end
 
     end
@@ -890,7 +890,7 @@ describe TopicsController do
     it 'needs you to be a staff member' do
       log_in
       xhr :put, :remove_banner, topic_id: 99
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
 
     describe 'when logged in' do
@@ -900,7 +900,7 @@ describe TopicsController do
         Topic.any_instance.expects(:remove_banner!)
 
         xhr :put, :remove_banner, topic_id: topic.id
-        response.should be_success
+        expect(response).to be_success
       end
 
     end
@@ -909,7 +909,7 @@ describe TopicsController do
 
   describe "bulk" do
     it 'needs you to be logged in' do
-      lambda { xhr :put, :bulk }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :bulk }.to raise_error(Discourse::NotLoggedIn)
     end
 
     describe "when logged in" do
@@ -918,15 +918,15 @@ describe TopicsController do
       let(:topic_ids) { [1,2,3] }
 
       it "requires a list of topic_ids or filter" do
-        lambda { xhr :put, :bulk, operation: operation }.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :bulk, operation: operation }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires an operation param" do
-        lambda { xhr :put, :bulk, topic_ids: topic_ids}.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :bulk, topic_ids: topic_ids}.to raise_error(ActionController::ParameterMissing)
       end
 
       it "requires a type field for the operation param" do
-        lambda { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.should raise_error(ActionController::ParameterMissing)
+        expect { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.to raise_error(ActionController::ParameterMissing)
       end
 
       it "delegates work to `TopicsBulkAction`" do
@@ -941,7 +941,7 @@ describe TopicsController do
 
   describe 'reset_new' do
     it 'needs you to be logged in' do
-      lambda { xhr :put, :reset_new }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :put, :reset_new }.to raise_error(Discourse::NotLoggedIn)
     end
 
     let(:user) { log_in(:user) }
@@ -953,7 +953,7 @@ describe TopicsController do
 
       xhr :put, :reset_new
       user.reload
-      user.user_stat.new_since.to_date.should_not == old_date.to_date
+      expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
 
     end
 
