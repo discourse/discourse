@@ -13,6 +13,15 @@ export default Ember.Object.extend({
       results.push({icon: 'envelope', key: 'warning'});
     }
 
+    if(topic.get('bookmarked')){
+      var url = topic.get('url');
+      var postNumbers = topic.get('bookmarked_post_numbers');
+      if(postNumbers && postNumbers[0] > 1) {
+        url += '/' + postNumbers[0];
+      }
+      results.push({icon: 'bookmark', key: 'bookmarked', href: url});
+    }
+
     if(topic.get('closed')){
       results.push({icon: 'lock', key: 'locked'});
     }

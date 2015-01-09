@@ -1367,6 +1367,8 @@ en:
     topic_statuses:
       warning:
         help: "This is an official warning."
+      bookmarked:
+        help: "You bookmarked this topic"
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
