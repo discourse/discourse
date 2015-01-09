@@ -60,5 +60,21 @@ describe Slug do
     Slug.for("习近平:中企承建港口电站等助斯里兰卡发展").should == "xi-jin-ping-zhong-qi-cheng-jian-gang-kou-dian-zhan-deng-zhu-si-li-lan-qia-fa-zhan"
   end
 
+  describe 'handles suppress slug site settings' do
+    before do
+      SiteSetting.suppress_slug = true
+    end
+    after do
+      SiteSetting.suppress_slug = false
+    end
+
+    it 'disable slug' do
+      Slug.for("hello world").should == ''
+    end
+
+    it '.safe_for generates slug anyway' do
+      Slug.safe_for("hello world").should == 'hello-world'
+    end
+  end
 end
 

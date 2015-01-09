@@ -3,7 +3,16 @@
 
 module Slug
 
+  # Generates slug according to site setting
   def self.for(string)
+    return '' if SiteSetting.suppress_slug
+
+    self.safe_for(string)
+  end
+
+  # Ignores the suppress site setting, always try to generate something useful
+  # If custom slug is passed, this method should be used
+  def self.safe_for(string)
     slug = string.gsub("'", "").parameterize
     slug.gsub!("_", "-")
     # TODO review if ja should use this
