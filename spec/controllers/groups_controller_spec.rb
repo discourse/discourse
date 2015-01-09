@@ -69,7 +69,7 @@ describe GroupsController do
     end
 
     # Pending until we fix group truncation
-    pending "ensures that membership can be paginated" do
+    skip "ensures that membership can be paginated" do
       5.times { group.add(Fabricate(:user)) }
       usernames = group.users.map{ |m| m['username'] }.sort
 
