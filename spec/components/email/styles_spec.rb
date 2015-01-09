@@ -100,7 +100,7 @@ describe Email::Styles do
   context "rewriting protocol relative URLs to the forum" do
     it "doesn't rewrite a url to another site" do
       frag = html_fragment('<a href="//youtube.com/discourse">hello</a>')
-      frag.at('a')['href'].should == "//youtube.com/discourse"
+      expect(frag.at('a')['href']).to eq("//youtube.com/discourse")
     end
 
     context "without https" do
@@ -110,17 +110,17 @@ describe Email::Styles do
 
       it "rewrites the href to have http" do
         frag = html_fragment('<a href="//test.localhost/discourse">hello</a>')
-        frag.at('a')['href'].should == "http://test.localhost/discourse"
+        expect(frag.at('a')['href']).to eq("http://test.localhost/discourse")
       end
 
       it "rewrites the href for attachment files to have http" do
         frag = html_fragment('<a class="attachment" href="//try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt">attachment_file.txt</a>')
-        frag.at('a')['href'].should == "http://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt"
+        expect(frag.at('a')['href']).to eq("http://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt")
       end
 
       it "rewrites the src to have http" do
         frag = html_fragment('<img src="//test.localhost/blah.jpg">')
-        frag.at('img')['src'].should == "http://test.localhost/blah.jpg"
+        expect(frag.at('img')['src']).to eq("http://test.localhost/blah.jpg")
       end
     end
 
@@ -131,17 +131,17 @@ describe Email::Styles do
 
       it "rewrites the forum URL to have https" do
         frag = html_fragment('<a href="//test.localhost/discourse">hello</a>')
-        frag.at('a')['href'].should == "https://test.localhost/discourse"
+        expect(frag.at('a')['href']).to eq("https://test.localhost/discourse")
       end
 
       it "rewrites the href for attachment files to have https" do
         frag = html_fragment('<a class="attachment" href="//try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt">attachment_file.txt</a>')
-        frag.at('a')['href'].should == "https://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt"
+        expect(frag.at('a')['href']).to eq("https://try-discourse.global.ssl.fastly.net/uploads/default/368/40b610b0aa90cfcf.txt")
       end
 
       it "rewrites the src to have https" do
         frag = html_fragment('<img src="//test.localhost/blah.jpg">')
-        frag.at('img')['src'].should == "https://test.localhost/blah.jpg"
+        expect(frag.at('img')['src']).to eq("https://test.localhost/blah.jpg")
       end
     end
 

@@ -17,9 +17,9 @@ describe DistributedMemoizer do
   end
 
   it "returns the value of a block" do
-    memoize do
+    expect(memoize do
       "abc"
-    end.should == "abc"
+    end).to eq("abc")
   end
 
   it "return the old value once memoized" do
@@ -28,9 +28,9 @@ describe DistributedMemoizer do
       "abc"
     end
 
-    memoize do
+    expect(memoize do
       "world"
-    end.should == "abc"
+    end).to eq("abc")
   end
 
   it "memoizes correctly when used concurrently" do
@@ -47,8 +47,8 @@ describe DistributedMemoizer do
     end
 
     threads.each(&:join)
-    results.uniq.length.should == 1
-    results.count.should == 5
+    expect(results.uniq.length).to eq(1)
+    expect(results.count).to eq(5)
 
   end
 

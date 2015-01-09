@@ -10,19 +10,19 @@ describe IpAddressFormatValidator do
     it "should not add an error for #{arg}" do
       record.ip_address = arg
       validate
-      record.errors[:ip_address].should_not be_present
+      expect(record.errors[:ip_address]).not_to be_present
     end
   end
 
   it 'should add an error for nil IP address' do
     record.ip_address = nil
     validate
-    record.errors[:ip_address].should be_present
+    expect(record.errors[:ip_address]).to be_present
   end
 
   it 'should add an error for invalid IP address' do
     record.ip_address = '99.99.99'
     validate
-    record.errors[:ip_address].should be_present
+    expect(record.errors[:ip_address]).to be_present
   end
 end

@@ -25,44 +25,44 @@ describe SuggestedTopicsBuilder do
       builder.splice_results([fake_topic(3,1)], :high)
       builder.splice_results([fake_topic(4,1)], :high)
 
-      builder.results.map(&:id).should == [3,4,2]
+      expect(builder.results.map(&:id)).to eq([3,4,2])
 
       # we have 2 items in category 1
-      builder.category_results_left.should == 3
+      expect(builder.category_results_left).to eq(3)
     end
 
     it "inserts using default approach for non high priority" do
       builder.splice_results([fake_topic(2,2)], :high)
       builder.splice_results([fake_topic(3,1)], :low)
 
-      builder.results.map(&:id).should == [2,3]
+      expect(builder.results.map(&:id)).to eq([2,3])
     end
 
     it "inserts multiple results and puts topics in the correct order" do
       builder.splice_results([fake_topic(2,1), fake_topic(3,2), fake_topic(4,1)], :high)
-      builder.results.map(&:id).should == [2,4,3]
+      expect(builder.results.map(&:id)).to eq([2,4,3])
     end
   end
 
   it "has the correct defaults" do
-    builder.excluded_topic_ids.include?(topic.id).should == true
-    builder.results_left.should == 5
-    builder.size.should == 0
-    builder.should_not be_full
+    expect(builder.excluded_topic_ids.include?(topic.id)).to eq(true)
+    expect(builder.results_left).to eq(5)
+    expect(builder.size).to eq(0)
+    expect(builder).not_to be_full
   end
 
   it "returns full correctly" do
     builder.stubs(:results_left).returns(0)
-    builder.should be_full
+    expect(builder).to be_full
   end
 
   context "adding results" do
 
     it "adds nothing with nil results" do
       builder.add_results(nil)
-      builder.results_left.should == 5
-      builder.size.should == 0
-      builder.should_not be_full
+      expect(builder.results_left).to eq(5)
+      expect(builder.size).to eq(0)
+      expect(builder).not_to be_full
     end
 
     context "adding topics" do
@@ -74,11 +74,11 @@ describe SuggestedTopicsBuilder do
       end
 
       it "added the result correctly" do
-        builder.size.should == 1
-        builder.results_left.should == 4
-        builder.should_not be_full
-        builder.excluded_topic_ids.include?(topic.id).should == true
-        builder.excluded_topic_ids.include?(other_topic.id).should == true
+        expect(builder.size).to eq(1)
+        expect(builder.results_left).to eq(4)
+        expect(builder).not_to be_full
+        expect(builder.excluded_topic_ids.include?(topic.id)).to eq(true)
+        expect(builder.excluded_topic_ids.include?(other_topic.id)).to eq(true)
       end
 
     end
@@ -90,8 +90,8 @@ describe SuggestedTopicsBuilder do
 
       it "adds archived and closed, but not invisible topics" do
         builder.add_results(Topic)
-        builder.size.should == 2
-        builder.should_not be_full
+        expect(builder.size).to eq(2)
+        expect(builder).not_to be_full
       end
     end
 
@@ -99,10 +99,10 @@ describe SuggestedTopicsBuilder do
       let!(:category) { Fabricate(:category) }
 
       it "doesn't add a category definition topic" do
-        category.topic_id.should be_present
+        expect(category.topic_id).to be_present
         builder.add_results(Topic)
-        builder.size.should == 0
-        builder.should_not be_full
+        expect(builder.size).to eq(0)
+        expect(builder).not_to be_full
       end
     end
 

@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Onebox::Engine::DiscourseLocalOnebox do
   it "matches for a topic url" do
     url = "#{Discourse.base_url}/t/hot-topic"
-    Onebox.has_matcher?(url).should == true
-    Onebox::Matcher.new(url).oneboxed.should == described_class
+    expect(Onebox.has_matcher?(url)).to eq(true)
+    expect(Onebox::Matcher.new(url).oneboxed).to eq(described_class)
   end
 
   it "matches for a post url" do
     url = "#{Discourse.base_url}/t/hot-topic/23/2"
-    Onebox.has_matcher?(url).should == true
-    Onebox::Matcher.new(url).oneboxed.should == described_class
+    expect(Onebox.has_matcher?(url)).to eq(true)
+    expect(Onebox::Matcher.new(url).oneboxed).to eq(described_class)
   end
 
   context "for a link to a post" do
@@ -19,27 +19,27 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns a link if post isn't found" do
       url = "#{Discourse.base_url}/t/not-exist/3/2"
-      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
     it "returns a link if not allowed to see the post" do
       url = "#{Discourse.base_url}#{post2.url}"
       Guardian.any_instance.stubs(:can_see?).returns(false)
-      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
     it "returns a link if post is hidden" do
       hidden_post = Fabricate(:post, topic: post.topic, post_number: 2, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
       url = "#{Discourse.base_url}#{hidden_post.url}"
-      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
       url = "#{Discourse.base_url}#{post2.url}"
       Guardian.any_instance.stubs(:can_see?).returns(true)
       html = Onebox.preview(url).to_s
-      html.should include(post2.user.username)
-      html.should include(post2.excerpt)
+      expect(html).to include(post2.user.username)
+      expect(html).to include(post2.excerpt)
     end
   end
 
@@ -51,21 +51,21 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns a link if topic isn't found" do
       url = "#{Discourse.base_url}/t/not-found/123"
-      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
     it "returns a link if not allowed to see the post" do
       url = "#{topic.url}"
       Guardian.any_instance.stubs(:can_see?).returns(false)
-      Onebox.preview(url).to_s.should == "<a href='#{url}'>#{url}</a>"
+      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
       url = "#{topic.url}"
       Guardian.any_instance.stubs(:can_see?).returns(true)
       html = Onebox.preview(url).to_s
-      html.should include(topic.posts.first.user.username)
-      html.should include("topic-info")
+      expect(html).to include(topic.posts.first.user.username)
+      expect(html).to include("topic-info")
     end
   end
 end

@@ -32,12 +32,12 @@ describe ComposerMessagesFinder do
 
       it "returns a message for a user who has not posted any topics" do
         user.expects(:created_topic_count).returns(9)
-        finder.check_education_message.should be_present
+        expect(finder.check_education_message).to be_present
       end
 
       it "returns no message when the user has posted enough topics" do
         user.expects(:created_topic_count).returns(10)
-        finder.check_education_message.should be_blank
+        expect(finder.check_education_message).to be_blank
       end
     end
 
@@ -50,12 +50,12 @@ describe ComposerMessagesFinder do
 
       it "returns a message for a user who has not posted any topics" do
         user.expects(:post_count).returns(9)
-        finder.check_education_message.should be_present
+        expect(finder.check_education_message).to be_present
       end
 
       it "returns no message when the user has posted enough topics" do
         user.expects(:post_count).returns(10)
-        finder.check_education_message.should be_blank
+        expect(finder.check_education_message).to be_blank
       end
     end
   end
@@ -68,12 +68,12 @@ describe ComposerMessagesFinder do
 
       it "has no message when `posted_too_much_in_topic?` is false" do
         user.expects(:posted_too_much_in_topic?).returns(false)
-        finder.check_new_user_many_replies.should be_blank
+        expect(finder.check_new_user_many_replies).to be_blank
       end
 
       it "has a message when a user has posted too much" do
         user.expects(:posted_too_much_in_topic?).returns(true)
-        finder.check_new_user_many_replies.should be_present
+        expect(finder.check_new_user_many_replies).to be_present
       end
     end
 
@@ -87,27 +87,27 @@ describe ComposerMessagesFinder do
       let!(:message) { finder.check_avatar_notification }
 
       it "returns an avatar upgrade message" do
-        message.should be_present
+        expect(message).to be_present
       end
 
       it "creates a notified_about_avatar log" do
-        UserHistory.exists_for_user?(user, :notified_about_avatar).should == true
+        expect(UserHistory.exists_for_user?(user, :notified_about_avatar)).to eq(true)
       end
     end
 
     it "doesn't return notifications for new users" do
       user.trust_level = TrustLevel[0]
-      finder.check_avatar_notification.should be_blank
+      expect(finder.check_avatar_notification).to be_blank
     end
 
     it "doesn't return notifications for users who have custom avatars" do
       user.uploaded_avatar_id = 1
-      finder.check_avatar_notification.should be_blank
+      expect(finder.check_avatar_notification).to be_blank
     end
 
     it "doesn't notify users who have been notified already" do
       UserHistory.create!(action: UserHistory.actions[:notified_about_avatar], target_user_id: user.id )
-      finder.check_avatar_notification.should be_blank
+      expect(finder.check_avatar_notification).to be_blank
     end
   end
 
@@ -127,11 +127,11 @@ describe ComposerMessagesFinder do
 
     it "does not give a message for new topics" do
       finder = ComposerMessagesFinder.new(user, composerAction: 'createTopic')
-      finder.check_sequential_replies.should be_blank
+      expect(finder.check_sequential_replies).to be_blank
     end
 
     it "does not give a message without a topic id" do
-      ComposerMessagesFinder.new(user, composerAction: 'reply').check_sequential_replies.should be_blank
+      expect(ComposerMessagesFinder.new(user, composerAction: 'reply').check_sequential_replies).to be_blank
     end
 
     context "reply" do
@@ -140,39 +140,39 @@ describe ComposerMessagesFinder do
 
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
-        finder.check_sequential_replies.should be_blank
+        expect(finder.check_sequential_replies).to be_blank
       end
 
       it "doesn't notify a user it has already notified about sequential replies" do
         UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id )
-        finder.check_sequential_replies.should be_blank
+        expect(finder.check_sequential_replies).to be_blank
       end
 
 
       it "will notify you if it hasn't in the current topic" do
         UserHistory.create!(action: UserHistory.actions[:notified_about_sequential_replies], target_user_id: user.id, topic_id: topic.id+1 )
-        finder.check_sequential_replies.should be_present
+        expect(finder.check_sequential_replies).to be_present
       end
 
       it "doesn't notify a user who has less than the `sequential_replies_threshold` threshold posts" do
         SiteSetting.stubs(:sequential_replies_threshold).returns(5)
-        finder.check_sequential_replies.should be_blank
+        expect(finder.check_sequential_replies).to be_blank
       end
 
       it "doesn't notify a user if another user posted" do
         Fabricate(:post, topic: topic, user: Fabricate(:user))
-        finder.check_sequential_replies.should be_blank
+        expect(finder.check_sequential_replies).to be_blank
       end
 
       context "success" do
         let!(:message) { finder.check_sequential_replies }
 
         it "returns a message" do
-          message.should be_present
+          expect(message).to be_present
         end
 
         it "creates a notified_about_sequential_replies log" do
-          UserHistory.exists_for_user?(user, :notified_about_sequential_replies).should == true
+          expect(UserHistory.exists_for_user?(user, :notified_about_sequential_replies)).to eq(true)
         end
 
       end
@@ -199,11 +199,11 @@ describe ComposerMessagesFinder do
 
     it "does not give a message for new topics" do
       finder = ComposerMessagesFinder.new(user, composerAction: 'createTopic')
-      finder.check_dominating_topic.should be_blank
+      expect(finder.check_dominating_topic).to be_blank
     end
 
     it "does not give a message without a topic id" do
-      ComposerMessagesFinder.new(user, composerAction: 'reply').check_dominating_topic.should be_blank
+      expect(ComposerMessagesFinder.new(user, composerAction: 'reply').check_dominating_topic).to be_blank
     end
 
     context "reply" do
@@ -211,53 +211,53 @@ describe ComposerMessagesFinder do
 
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "does not notify if the `summary_posts_required` has not been reached" do
         SiteSetting.stubs(:summary_posts_required).returns(100)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "doesn't notify a user it has already notified in this topic" do
         UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id, target_user_id: user.id )
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "notifies a user if the topic is different" do
         UserHistory.create!(action: UserHistory.actions[:notified_about_dominating_topic], topic_id: topic.id+1, target_user_id: user.id )
-        finder.check_dominating_topic.should be_present
+        expect(finder.check_dominating_topic).to be_present
       end
 
       it "doesn't notify a user if the topic has less than `summary_posts_required` posts" do
         SiteSetting.stubs(:summary_posts_required).returns(5)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "doesn't notify a user if they've posted less than the percentage" do
         SiteSetting.stubs(:dominating_topic_minimum_percent).returns(100)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "doesn't notify you if it's your own topic" do
         topic.update_column(:user_id, user.id)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       it "doesn't notify you in a private message" do
         topic.update_columns(category_id: nil, archetype: Archetype.private_message)
-        finder.check_dominating_topic.should be_blank
+        expect(finder.check_dominating_topic).to be_blank
       end
 
       context "success" do
         let!(:message) { finder.check_dominating_topic }
 
         it "returns a message" do
-          message.should be_present
+          expect(message).to be_present
         end
 
         it "creates a notified_about_dominating_topic log" do
-          UserHistory.exists_for_user?(user, :notified_about_dominating_topic).should == true
+          expect(UserHistory.exists_for_user?(user, :notified_about_dominating_topic)).to eq(true)
         end
 
       end
@@ -270,8 +270,8 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:topic) }
 
     it "does not give a message without a topic id" do
-      described_class.new(user, composerAction: 'createTopic').check_reviving_old_topic.should be_blank
-      described_class.new(user, composerAction: 'reply').check_reviving_old_topic.should be_blank
+      expect(described_class.new(user, composerAction: 'createTopic').check_reviving_old_topic).to be_blank
+      expect(described_class.new(user, composerAction: 'reply').check_reviving_old_topic).to be_blank
     end
 
     context "a reply" do
@@ -282,12 +282,12 @@ describe ComposerMessagesFinder do
 
         it "does not notify if last post is recent" do
           topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
 
         it "notifies if last post is old" do
           topic = Fabricate(:topic, last_posted_at: 181.days.ago)
-          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should_not be_blank
+          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).not_to be_blank
         end
       end
 
@@ -298,12 +298,12 @@ describe ComposerMessagesFinder do
 
         it "does not notify if last post is new" do
           topic = Fabricate(:topic, last_posted_at: 1.hour.ago)
-          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
 
         it "does not notify if last post is old" do
           topic = Fabricate(:topic, last_posted_at: 365.days.ago)
-          described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic.should be_blank
+          expect(described_class.new(user, composerAction: 'reply', topic_id: topic.id).check_reviving_old_topic).to be_blank
         end
       end
     end

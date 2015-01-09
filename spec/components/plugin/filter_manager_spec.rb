@@ -13,23 +13,23 @@ describe Plugin::FilterManager do
       context + result + 2
     end
 
-    instance.apply(:added_numbers, 1, 0).should == 5
+    expect(instance.apply(:added_numbers, 1, 0)).to eq(5)
   end
 
   it "should raise an exception if wrong arity is passed in" do
-    lambda do
+    expect do
       instance.register(:test) do
       end
-    end.should raise_exception
+    end.to raise_exception
   end
 
   it "should return the original if no filters exist" do
-    instance.apply(:foo, nil, 42).should == 42
+    expect(instance.apply(:foo, nil, 42)).to eq(42)
   end
 
   it "should raise an exception if no block is passed in" do
-    lambda do
+    expect do
       instance.register(:test)
-    end.should raise_exception
+    end.to raise_exception
   end
 end

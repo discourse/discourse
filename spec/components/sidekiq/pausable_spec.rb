@@ -4,8 +4,8 @@ require_dependency 'sidekiq/pausable'
 describe Sidekiq do
   it "can pause and unpause" do
     Sidekiq.pause!
-    Sidekiq.paused?.should == true
+    expect(Sidekiq.paused?).to eq(true)
     Sidekiq.unpause!
-    Sidekiq.paused?.should == false
+    expect(Sidekiq.paused?).to eq(false)
   end
 end

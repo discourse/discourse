@@ -24,21 +24,21 @@ describe FlagQuery do
       PostAction.act(user2, post2, PostActionType.types[:spam])
 
       posts, topics, users = FlagQuery.flagged_posts_report(admin, "")
-      posts.count.should == 2
+      expect(posts.count).to eq(2)
       first = posts.first
 
-      users.count.should == 5
-      first[:post_actions].count.should == 2
+      expect(users.count).to eq(5)
+      expect(first[:post_actions].count).to eq(2)
 
-      topics.count.should == 2
+      expect(topics.count).to eq(2)
 
       second = posts[1]
 
-      second[:post_actions].count.should == 3
-      second[:post_actions].first[:permalink].should == mod_message.related_post.topic.relative_url
+      expect(second[:post_actions].count).to eq(3)
+      expect(second[:post_actions].first[:permalink]).to eq(mod_message.related_post.topic.relative_url)
 
       posts, users = FlagQuery.flagged_posts_report(admin, "", 1)
-      posts.count.should == 1
+      expect(posts.count).to eq(1)
 
       # chuck post in category a mod can not see and make sure its missing
       category = Fabricate(:category)
@@ -49,7 +49,7 @@ describe FlagQuery do
 
       posts, users = FlagQuery.flagged_posts_report(moderator, "")
 
-      posts.count.should == 1
+      expect(posts.count).to eq(1)
     end
   end
 end

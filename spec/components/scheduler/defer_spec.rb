@@ -40,7 +40,7 @@ describe Scheduler::Defer do
       s == "good"
     end
 
-    s.should == "good"
+    expect(s).to eq("good")
   end
 
   it "can queue jobs properly" do
@@ -54,7 +54,7 @@ describe Scheduler::Defer do
       s == "good"
     end
 
-    s.should == "good"
+    expect(s).to eq("good")
   end
 
 end

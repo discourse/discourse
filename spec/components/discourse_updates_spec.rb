@@ -26,14 +26,14 @@ describe DiscourseUpdates do
         before { stub_data(Discourse::VERSION::STRING, 0, false, 12.hours.ago) }
 
         it 'returns all the version fields' do
-          subject['latest_version'].should == Discourse::VERSION::STRING
-          subject['missing_versions_count'].should == 0
-          subject['critical_updates'].should == false
-          subject['installed_version'].should == Discourse::VERSION::STRING
+          expect(subject['latest_version']).to eq(Discourse::VERSION::STRING)
+          expect(subject['missing_versions_count']).to eq(0)
+          expect(subject['critical_updates']).to eq(false)
+          expect(subject['installed_version']).to eq(Discourse::VERSION::STRING)
         end
 
         it 'returns the timestamp of the last version check' do
-          subject['updated_at'].should be_within_one_second_of(12.hours.ago)
+          expect(subject['updated_at']).to be_within_one_second_of(12.hours.ago)
         end
       end
 
@@ -41,14 +41,14 @@ describe DiscourseUpdates do
         before { stub_data('0.9.0', 2, false, 12.hours.ago) }
 
         it 'returns all the version fields' do
-          subject['latest_version'].should == '0.9.0'
-          subject['missing_versions_count'].should == 2
-          subject['critical_updates'].should == false
-          subject['installed_version'].should == Discourse::VERSION::STRING
+          expect(subject['latest_version']).to eq('0.9.0')
+          expect(subject['missing_versions_count']).to eq(2)
+          expect(subject['critical_updates']).to eq(false)
+          expect(subject['installed_version']).to eq(Discourse::VERSION::STRING)
         end
 
         it 'returns the timestamp of the last version check' do
-          subject['updated_at'].should be_within_one_second_of(12.hours.ago)
+          expect(subject['updated_at']).to be_within_one_second_of(12.hours.ago)
         end
       end
     end
@@ -57,18 +57,18 @@ describe DiscourseUpdates do
       before { stub_data(nil, nil, false, nil) }
 
       it 'returns the installed version' do
-        subject['installed_version'].should == Discourse::VERSION::STRING
+        expect(subject['installed_version']).to eq(Discourse::VERSION::STRING)
       end
 
       it 'indicates that version check has not been performed' do
-        subject.should have_key('updated_at')
-        subject['updated_at'].should == nil
+        expect(subject).to have_key('updated_at')
+        expect(subject['updated_at']).to eq(nil)
       end
 
       it 'does not return latest version info' do
-        subject.should_not have_key('latest_version')
-        subject.should_not have_key('missing_versions_count')
-        subject.should_not have_key('critical_updates')
+        expect(subject).not_to have_key('latest_version')
+        expect(subject).not_to have_key('missing_versions_count')
+        expect(subject).not_to have_key('critical_updates')
       end
 
       it 'queues a version check' do
@@ -87,11 +87,11 @@ describe DiscourseUpdates do
         end
 
         it 'reports 0 missing versions' do
-          subject['missing_versions_count'].should == 0
+          expect(subject['missing_versions_count']).to eq(0)
         end
 
         it 'reports that a version check will be run soon' do
-          subject['version_check_pending'].should == true
+          expect(subject['version_check_pending']).to eq(true)
         end
       end
 
@@ -119,11 +119,11 @@ describe DiscourseUpdates do
       end
 
       it 'reports 0 missing versions' do
-        subject['missing_versions_count'].should == 0
+        expect(subject['missing_versions_count']).to eq(0)
       end
 
       it 'reports that a version check will be run soon' do
-        subject['version_check_pending'].should == true
+        expect(subject['version_check_pending']).to eq(true)
       end
     end
 
