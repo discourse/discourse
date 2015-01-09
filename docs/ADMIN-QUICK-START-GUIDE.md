@@ -23,15 +23,13 @@ To quickly give your Discourse a distinctive look, without having to edit or und
 You can also specify custom CSS and custom HTML headers/footers to further customize the look. One common request is a navigation header that takes you back to the parent site. Here is some example HTML to put in [**Customize, CSS/HTML**](/admin/customize/css_html) under "Header":
 
 ```
-<div id="top-navbar" class="container">
-<span id="top-navbar-links" style="height:20px;">
+<div id="top-navbar" class="container" style="padding:5px 0 0 5px">
   <a href="http://example.com">Home</a> |
   <a href="http://example.com/about/">About</a> |
   <a href="http://example.com/news/">News</a> |
   <a href="http://example.com/products/">Products</a> |
   <a href="http://blog.example.com/blog">Blog</a> |
   <a href="http://forums.example.com/">Forums</a>
-</span>
 </div>
 ```
 
@@ -196,7 +194,7 @@ Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0]
 
 ### Building Your Community
 
-Be patient! Building communities is hard. Before launching, be sure to:
+Be patient; building communities is hard. Before launching, be sure to:
 
 1. Define your community's purpose in a pinned or banner topic.
 2. Seed the discussion with interesting topics.
@@ -231,7 +229,7 @@ The invite area on your profile page also includes advanced Staff methods of [se
    - [Change the domain name](https://meta.discourse.org/t/how-do-i-change-the-domain-name/16098)
    - [Multiple Discourse instances on the same server](https://meta.discourse.org/t/multisite-configuration-with-docker/14084)
    - [Import old content from vBulletin, PHPbb, Vanilla, Drupal, BBPress, etc](https://github.com/discourse/discourse/tree/master/script/import_scripts)
-   - Embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](http://eviltrout.com/2014/01/22/embedding-discourse.html)?
+   - Embed Discourse [in your WordPress install](https://github.com/discourse/wp-discourse), or [on your static HTML site](http://eviltrout.com/2014/01/22/embedding-discourse.html)
 
 ### Need more Help?
 
