@@ -680,11 +680,11 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
-    logo_url: "The logo image at the top left of your site eg: http://example.com/logo.png"
+    logo_url: "The logo image at the top left of your site; if left blank, the site title text will be shown."
     digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
-    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. eg: http://example.com/logo-small.png"
+    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, the site title text will be used."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
