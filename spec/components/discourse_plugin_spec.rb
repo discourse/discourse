@@ -16,7 +16,7 @@ describe DiscoursePlugin do
 
   describe ".mixins" do
     it "finds its mixins" do
-      TestPlugin.mixins.should == [TestPlugin::TestMixin]
+      expect(TestPlugin.mixins).to eq([TestPlugin::TestMixin])
     end
   end
 

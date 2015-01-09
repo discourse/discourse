@@ -18,7 +18,7 @@ describe DistributedMutex do
       end
     end.map(&:join)
 
-    x.should == 10
+    expect(x).to eq(10)
   end
 
   it "handles auto cleanup correctly" do
@@ -33,17 +33,17 @@ describe DistributedMutex do
     end
 
     # no longer than a second
-    Time.now.to_i.should <= start + 1
+    expect(Time.now.to_i).to be <= start + 1
   end
 
   it "maintains mutex semantics" do
     m = DistributedMutex.new("test_mutex_key")
 
-    lambda {
+    expect {
       m.synchronize do
         m.synchronize{}
       end
-    }.should raise_error(ThreadError)
+    }.to raise_error(ThreadError)
   end
 
 end

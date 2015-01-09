@@ -14,12 +14,12 @@ describe SystemMessage do
     let(:topic) { post.topic }
 
     it 'should create a post correctly' do
-      post.should be_present
-      post.should be_valid
-      topic.should be_private_message
-      topic.should be_valid
-      topic.subtype.should == TopicSubtype.system_message
-      topic.allowed_users.include?(user).should == true
+      expect(post).to be_present
+      expect(post).to be_valid
+      expect(topic).to be_private_message
+      expect(topic).to be_valid
+      expect(topic.subtype).to eq(TopicSubtype.system_message)
+      expect(topic.allowed_users.include?(user)).to eq(true)
     end
   end
 

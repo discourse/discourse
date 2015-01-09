@@ -25,7 +25,7 @@ describe "S3Helper" do
   let(:file) { file_from_fixtures(filename) }
 
   it "ensures the bucket name isn't blank" do
-    -> { S3Helper.new("") }.should raise_error(Discourse::InvalidParameters)
+    expect { S3Helper.new("") }.to raise_error(Discourse::InvalidParameters)
   end
 
   describe ".upload" do

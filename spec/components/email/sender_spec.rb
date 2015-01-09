@@ -29,19 +29,19 @@ describe Email::Sender do
 
   context "host_for" do
     it "defaults to localhost" do
-      Email::Sender.host_for(nil).should == "localhost"
+      expect(Email::Sender.host_for(nil)).to eq("localhost")
     end
 
     it "returns localhost for a weird host" do
-      Email::Sender.host_for("this is not a real host").should == "localhost"
+      expect(Email::Sender.host_for("this is not a real host")).to eq("localhost")
     end
 
     it "parses hosts from urls" do
-      Email::Sender.host_for("http://meta.discourse.org").should == "meta.discourse.org"
+      expect(Email::Sender.host_for("http://meta.discourse.org")).to eq("meta.discourse.org")
     end
 
     it "downcases hosts" do
-      Email::Sender.host_for("http://ForumSite.com").should == "forumsite.com"
+      expect(Email::Sender.host_for("http://ForumSite.com")).to eq("forumsite.com")
     end
 
   end
@@ -144,7 +144,7 @@ describe Email::Sender do
     end
 
     it 'should have the current user_id' do
-      @email_log.user_id.should == user.id
+      expect(@email_log.user_id).to eq(user.id)
     end
 
 

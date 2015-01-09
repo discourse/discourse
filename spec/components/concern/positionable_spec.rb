@@ -28,24 +28,24 @@ describe Positionable do
         Topic.exec_sql("insert into test_items(id,position) values(#{i}, #{i})")
       end
 
-      positions.should == [0,1,2,3,4]
+      expect(positions).to eq([0,1,2,3,4])
       TestItem.find(3).move_to(0)
-      positions.should == [3,0,1,2,4]
-      TestItem.pluck(:position).sort.should == [0,1,2,3,4]
+      expect(positions).to eq([3,0,1,2,4])
+      expect(TestItem.pluck(:position).sort).to eq([0,1,2,3,4])
 
       TestItem.find(3).move_to(1)
-      positions.should == [0,3,1,2,4]
+      expect(positions).to eq([0,3,1,2,4])
 
       # this is somewhat odd, but when there is no such position, not much we can do
       TestItem.find(1).move_to(5)
-      positions.should == [0,3,2,4,1]
+      expect(positions).to eq([0,3,2,4,1])
 
-      TestItem.pluck(:position).sort.should == [0,1,2,3,4]
+      expect(TestItem.pluck(:position).sort).to eq([0,1,2,3,4])
 
       item = TestItem.new
       item.id = 7
       item.save
-      item.position.should == 5
+      expect(item.position).to eq(5)
     end
   end
 end

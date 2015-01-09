@@ -12,15 +12,15 @@ describe AvatarLookup do
     end
 
     it 'returns nil if user_id does not exists' do
-      @avatar_lookup[0].should == nil
+      expect(@avatar_lookup[0]).to eq(nil)
     end
 
     it 'returns nil if user_id is nil' do
-      @avatar_lookup[nil].should == nil
+      expect(@avatar_lookup[nil]).to eq(nil)
     end
 
     it 'returns user if user_id exists' do
-      @avatar_lookup[user.id].should eq(user)
+      expect(@avatar_lookup[user.id]).to eq(user)
     end
   end
 end

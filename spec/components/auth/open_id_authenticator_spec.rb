@@ -14,12 +14,12 @@ describe Auth::OpenIdAuthenticator do
     user = Fabricate(:user)
     response = OpenStruct.new(identity_url: 'abc')
     result = auth.after_authenticate(info: {email: user.email}, extra: {response: response})
-    result.user.should == user
+    expect(result.user).to eq(user)
   end
 
   it "raises an exception when email is missing" do
     auth = Auth::OpenIdAuthenticator.new("test", "id", trusted: true)
     response = OpenStruct.new(identity_url: 'abc')
-    -> { auth.after_authenticate(info: {}, extra: { response: response }) }.should raise_error(Discourse::InvalidParameters)
+    expect { auth.after_authenticate(info: {}, extra: { response: response }) }.to raise_error(Discourse::InvalidParameters)
   end
 end

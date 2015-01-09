@@ -15,8 +15,8 @@ describe TopicsBulkAction do
 
       tu = TopicUser.find_by(user_id: post1.user_id, topic_id: post1.topic_id)
 
-      tu.last_read_post_number.should == 3
-      tu.highest_seen_post_number.should == 3
+      expect(tu.last_read_post_number).to eq(3)
+      expect(tu.highest_seen_post_number).to eq(3)
     end
   end
 
@@ -25,7 +25,7 @@ describe TopicsBulkAction do
 
     it "raises an error with an invalid operation" do
       tba = TopicsBulkAction.new(user, [1], type: 'rm_root')
-      -> { tba.perform! }.should raise_error(Discourse::InvalidParameters)
+      expect { tba.perform! }.to raise_error(Discourse::InvalidParameters)
     end
   end
 
@@ -37,9 +37,9 @@ describe TopicsBulkAction do
       it "changes the category and returns the topic_id" do
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
-        topic_ids.should == [topic.id]
+        expect(topic_ids).to eq([topic.id])
         topic.reload
-        topic.category.should == category
+        expect(topic.category).to eq(category)
       end
     end
 
@@ -48,9 +48,9 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_edit?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_category', category_id: category.id)
         topic_ids = tba.perform!
-        topic_ids.should == []
+        expect(topic_ids).to eq([])
         topic.reload
-        topic.category.should_not == category
+        expect(topic.category).not_to eq(category)
       end
     end
   end
@@ -73,7 +73,7 @@ describe TopicsBulkAction do
       tba = TopicsBulkAction.new(moderator, [topic.id], type: 'delete')
       tba.perform!
       topic.reload
-      topic.should be_trashed
+      expect(topic).to be_trashed
     end
   end
 
@@ -84,8 +84,8 @@ describe TopicsBulkAction do
       it "updates the notification level" do
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
         topic_ids = tba.perform!
-        topic_ids.should == [topic.id]
-        TopicUser.get(topic, topic.user).notification_level.should == 2
+        expect(topic_ids).to eq([topic.id])
+        expect(TopicUser.get(topic, topic.user).notification_level).to eq(2)
       end
     end
 
@@ -94,8 +94,8 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_see?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'change_notification_level', notification_level_id: 2)
         topic_ids = tba.perform!
-        topic_ids.should == []
-        TopicUser.get(topic, topic.user).should be_blank
+        expect(topic_ids).to eq([])
+        expect(TopicUser.get(topic, topic.user)).to be_blank
       end
     end
   end
@@ -109,9 +109,9 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_create?).returns(true)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'close')
         topic_ids = tba.perform!
-        topic_ids.should == [topic.id]
+        expect(topic_ids).to eq([topic.id])
         topic.reload
-        topic.should be_closed
+        expect(topic).to be_closed
       end
     end
 
@@ -120,9 +120,9 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_moderate?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'close')
         topic_ids = tba.perform!
-        topic_ids.should be_blank
+        expect(topic_ids).to be_blank
         topic.reload
-        topic.should_not be_closed
+        expect(topic).not_to be_closed
       end
     end
   end
@@ -136,9 +136,9 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_create?).returns(true)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
         topic_ids = tba.perform!
-        topic_ids.should == [topic.id]
+        expect(topic_ids).to eq([topic.id])
         topic.reload
-        topic.should be_archived
+        expect(topic).to be_archived
       end
     end
 
@@ -147,9 +147,9 @@ describe TopicsBulkAction do
         Guardian.any_instance.expects(:can_moderate?).returns(false)
         tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'archive')
         topic_ids = tba.perform!
-        topic_ids.should be_blank
+        expect(topic_ids).to be_blank
         topic.reload
-        topic.should_not be_archived
+        expect(topic).not_to be_archived
       end
     end
   end

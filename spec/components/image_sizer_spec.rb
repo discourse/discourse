@@ -9,19 +9,19 @@ describe ImageSizer do
   end
 
   it 'returns the same dimensions when smaller than the maximums' do
-    ImageSizer.resize(400, 200).should == [400, 200]
+    expect(ImageSizer.resize(400, 200)).to eq([400, 200])
   end
 
   it 'returns nil if the width is nil' do
-    ImageSizer.resize(nil, 100).should == nil
+    expect(ImageSizer.resize(nil, 100)).to eq(nil)
   end
 
   it 'returns nil if the height is nil' do
-    ImageSizer.resize(100, nil).should == nil
+    expect(ImageSizer.resize(100, nil)).to eq(nil)
   end
 
   it 'works with string parameters' do
-    ImageSizer.resize('100', '101').should == [100, 101]
+    expect(ImageSizer.resize('100', '101')).to eq([100, 101])
   end
 
   describe 'when larger than the maximum width' do
@@ -31,11 +31,11 @@ describe ImageSizer do
     end
 
     it 'returns the maxmimum width if larger than the maximum' do
-      @w.should == 500
+      expect(@w).to eq(500)
     end
 
     it 'resizes the height retaining the aspect ratio' do
-      @h.should == 102
+      expect(@h).to eq(102)
     end
 
   end
@@ -47,11 +47,11 @@ describe ImageSizer do
     end
 
     it 'returns the maxmimum height if larger than the maximum' do
-      @h.should == 500
+      expect(@h).to eq(500)
     end
 
     it 'resizes the width retaining the aspect ratio' do
-      @w.should == 102
+      expect(@w).to eq(102)
     end
 
   end
@@ -63,8 +63,8 @@ describe ImageSizer do
     end
 
     it 'resizes both dimensions retaining the aspect ratio' do
-      @h.should == 500
-      @w.should == 333
+      expect(@h).to eq(500)
+      expect(@w).to eq(333)
     end
 
   end
