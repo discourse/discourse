@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ScreenedIpAddressesController do
 
   it "is a subclass of AdminController" do
-    (Admin::ScreenedIpAddressesController < Admin::AdminController).should == true
+    expect(Admin::ScreenedIpAddressesController < Admin::AdminController).to eq(true)
   end
 
   let!(:user) { log_in(:admin) }
@@ -12,8 +12,8 @@ describe Admin::ScreenedIpAddressesController do
 
     it 'returns JSON' do
       xhr :get, :index
-      response.should be_success
-      JSON.parse(response.body).should be_a(Array)
+      expect(response).to be_success
+      expect(JSON.parse(response.body)).to be_a(Array)
     end
 
   end
@@ -32,11 +32,11 @@ describe Admin::ScreenedIpAddressesController do
       SiteSetting.stubs(:min_ban_entries_for_roll_up).returns(3)
 
       xhr :post, :roll_up
-      response.should be_success
+      expect(response).to be_success
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.3.0/24").first
-      subnet.should be_present
-      subnet.match_count.should == 3
+      expect(subnet).to be_present
+      expect(subnet.match_count).to eq(3)
     end
 
     it "rolls up 1.2.*.* entries" do
@@ -52,11 +52,11 @@ describe Admin::ScreenedIpAddressesController do
       SiteSetting.stubs(:min_ban_entries_for_roll_up).returns(5)
 
       xhr :post, :roll_up
-      response.should be_success
+      expect(response).to be_success
 
       subnet = ScreenedIpAddress.where(ip_address: "1.2.0.0/16").first
-      subnet.should be_present
-      subnet.match_count.should == 6
+      expect(subnet).to be_present
+      expect(subnet.match_count).to eq(6)
     end
 
   end

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::SiteSettingsController do
 
   it "is a subclass of AdminController" do
-    (Admin::SiteSettingsController < Admin::AdminController).should == true
+    expect(Admin::SiteSettingsController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -14,12 +14,12 @@ describe Admin::SiteSettingsController do
     context 'index' do
       it 'returns success' do
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns JSON' do
         xhr :get, :index
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
     end
 

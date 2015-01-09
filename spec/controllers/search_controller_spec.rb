@@ -12,11 +12,11 @@ describe SearchController do
       my_post = Fabricate(:post, raw: 'this is my really awesome post')
       xhr :get, :query, term: 'awesome', include_blurb: true
 
-      response.should be_success
+      expect(response).to be_success
       data = JSON.parse(response.body)
-      data['posts'][0]['id'].should == my_post.id
-      data['posts'][0]['blurb'].should == 'this is my really awesome post'
-      data['topics'][0]['id'].should == my_post.topic_id
+      expect(data['posts'][0]['id']).to eq(my_post.id)
+      expect(data['posts'][0]['blurb']).to eq('this is my really awesome post')
+      expect(data['topics'][0]['id']).to eq(my_post.topic_id)
     end
   end
 
@@ -64,15 +64,15 @@ describe SearchController do
   context "search context" do
 
     it "raises an error with an invalid context type" do
-      lambda {
+      expect {
         xhr :get, :query, term: 'test', search_context: {type: 'security', id: 'hole'}
-      }.should raise_error(Discourse::InvalidParameters)
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "raises an error with a missing id" do
-      lambda {
+      expect {
         xhr :get, :query, term: 'test', search_context: {type: 'user'}
-      }.should raise_error(Discourse::InvalidParameters)
+      }.to raise_error(Discourse::InvalidParameters)
     end
 
     context "with a user" do
@@ -82,7 +82,7 @@ describe SearchController do
       it "raises an error if the user can't see the context" do
         Guardian.any_instance.expects(:can_see?).with(user).returns(false)
         xhr :get, :query, term: 'test', search_context: {type: 'user', id: user.username}
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
 

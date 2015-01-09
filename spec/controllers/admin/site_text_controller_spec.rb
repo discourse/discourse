@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::SiteTextController do
 
   it "is a subclass of AdminController" do
-    (Admin::SiteTextController < Admin::AdminController).should == true
+    expect(Admin::SiteTextController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -16,12 +16,12 @@ describe Admin::SiteTextController do
 
       it 'returns success' do
         xhr :get, :show, id: text_type
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns JSON' do
         xhr :get, :show, id: text_type
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
     end
   end
