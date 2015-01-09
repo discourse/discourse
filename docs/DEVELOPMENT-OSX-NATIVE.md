@@ -46,7 +46,7 @@ RVM (below) can automatically install homebrew for you with the autolibs setting
 
 So, you will need to install Homebrew separately, based on the instructions at the website above, and then run the following from the command line:
 
-    brew tap homebrew/versions # roughly the same to adding a repo to apt/sources.list
+    brew tap homebrew/dups # roughly the same to adding a repo to apt/sources.list
     brew install apple-gcc42
     gcc-4.2 -v # Test that it's installed and available
 
