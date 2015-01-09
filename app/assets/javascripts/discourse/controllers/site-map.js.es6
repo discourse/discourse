@@ -1,4 +1,6 @@
 export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
+  needs: ['application'],
+
   showBadgesLink: function(){return Discourse.SiteSettings.enable_badges;}.property(),
   showAdminLinks: Em.computed.alias('currentUser.staff'),
   flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),
@@ -22,8 +24,8 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
   }.property(),
 
   categories: function() {
-    var hideUncategorized = !Discourse.SiteSettings.allow_uncategorized_topics,
-        showSubcatList = Discourse.SiteSettings.show_subcategory_list,
+    var hideUncategorized = !this.siteSettings.allow_uncategorized_topics,
+        showSubcatList = this.siteSettings.show_subcategory_list,
         isStaff = Discourse.User.currentProp('staff');
     return Discourse.Category.list().reject(function(c) {
       if (showSubcatList && c.get('parent_category_id')) { return true; }
@@ -34,7 +36,7 @@ export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
 
   actions: {
     keyboardShortcuts: function(){
-      Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
+      this.get('controllers.application').send('showKeyboardShortcutsHelp');
     },
     toggleMobileView: function() {
       Discourse.Mobile.toggleMobileView();

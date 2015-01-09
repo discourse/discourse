@@ -1,6 +1,8 @@
 var oldMobileView;
 
 moduleFor("controller:site-map", "controller:site-map", {
+  needs: ['controller:application'],
+
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
   },
@@ -77,7 +79,7 @@ test("categories", function() {
   var categoryListStub = ["category1", "category2"];
   sandbox.stub(Discourse.Category, "list").returns(categoryListStub);
 
-  var controller = this.subject();
+  var controller = this.subject({ siteSettings: Discourse.SiteSettings });
   deepEqual(controller.get("categories"), categoryListStub, "returns the list of categories");
 });
 
