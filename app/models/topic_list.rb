@@ -44,10 +44,10 @@ class TopicList
     @topics = @topics_input.to_a
 
     # Attach some data for serialization to each topic
-    @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user.present?
+    @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
 
     post_action_type =
-      if @current_user.present?
+      if @current_user
         if @opts[:filter].present?
           if @opts[:filter] == "bookmarked"
             PostActionType.types[:bookmark]
@@ -56,6 +56,11 @@ class TopicList
           end
         end
       end
+
+    # Include bookmarks if you have bookmarked topics
+    if @current_user && !post_action_type
+      post_action_type = PostActionType.types[:bookmark] if @topic_lookup.any?{|_,tu| tu && tu.bookmarked}
+    end
 
     # Data for bookmarks or likes
     post_action_lookup = PostAction.lookup_for(@current_user, @topics, post_action_type) if post_action_type
