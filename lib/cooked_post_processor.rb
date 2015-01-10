@@ -264,7 +264,7 @@ class CookedPostProcessor
   end
 
   def available_disk_space
-    100 - `df -l . | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
+    100 - `df -l #{Rails.root}/public/uploads | tail -1 | tr -s ' ' | cut -d ' ' -f 5`.to_i
   end
 
   def dirty?
