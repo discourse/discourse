@@ -640,11 +640,6 @@ nl:
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
-    starred:
-      title: 'Ster'
-      help:
-        star: 'Voeg dit topic toe aan je favorietenlijst'
-        unstar: 'Verwijder dit topic uit je favorietenlijst'
     topics:
       bulk:
         reset_read: "markeer als ongelezen"
@@ -664,7 +659,6 @@ nl:
           one: "Je hebt <b>1</b> topic geselecteerd."
           other: "Je hebt <b>{{count}}</b> topics geselecteerd."
       none:
-        starred: "Je hebt nog geen favoriete topics."
         unread: "Je hebt geen ongelezen topics."
         new: "Je hebt geen nieuwe topics."
         read: "Je hebt nog geen topics gelezen."
@@ -680,7 +674,6 @@ nl:
         read: "Er zijn geen gelezen topics meer."
         new: "Er zijn geen nieuwe topics meer."
         unread: "Er zijn geen ongelezen topics meer."
-        starred: "Er zijn geen topics met een ster meer."
         category: "Er zijn geen topics meer in {{category}}."
         top: "Er zijn geen top-topics meer."
     topic:
@@ -1185,9 +1178,6 @@ nl:
       hot:
         title: "Populair"
         help: "een selectie van de meest populaire topics"
-      starred:
-        title: "Met ster"
-        help: "topics die je met een ster hebt gemarkeerd"
       read:
         title: "Gelezen"
         help: "topics die je hebt gelezen, in de volgorde wanneer je ze voor het laatst gelezen hebt"
@@ -1353,7 +1343,6 @@ nl:
         edit: "Wijzig groepen"
         refresh: "Herlaad"
         new: "Nieuw"
-        selector_placeholder: "voeg leden toe"
         name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         group_members: "Groepsleden"
@@ -1850,7 +1839,6 @@ nl:
         latest: '<b>g</b>, <b>l</b> Laatste'
         new: '<b>g</b>, <b>n</b> Nieuw'
         unread: '<b>g</b>, <b>u</b> Ongelezen'
-        starred: '<b>g</b>, <b>f</b> Ster'
         categories: '<b>g</b>, <b>c</b> Categoriën'
         top: '<b>g</b>, <b>t</b> Top'
       navigation:
@@ -1866,7 +1854,6 @@ nl:
         search: '<b>/</b> Zoek'
       actions:
         title: 'Acties'
-        star: '<b>f</b> Markeer topic met ster'
         share_post: '<b>s</b> Deel bericht'
         reply_post: '<b>shift r</b> Reageer op topic'
         quote_post: '<b>q</b> Citeer bericht'

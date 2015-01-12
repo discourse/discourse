@@ -699,11 +699,6 @@ de:
     go_back: 'zurückgehen'
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
     current_user: 'zu deiner Benutzerseite gehen'
-    starred:
-      title: 'Favorisieren'
-      help:
-        star: 'Füge dieses Thema deinen Favoriten hinzu'
-        unstar: 'Entferne dieses Thema aus deinen Favoriten'
     topics:
       bulk:
         reset_read: "Gelesene zurücksetzen"
@@ -723,7 +718,6 @@ de:
           one: "Du hast <b>ein</b> Thema ausgewählt."
           other: "Du hast <b>{{count}}</b> Themen ausgewählt."
       none:
-        starred: "Du hast noch keine Themen zu deinen Favoriten hinzugefügt."
         unread: "Du hast alle Themen gelesen."
         new: "Es gibt für dich keine neuen Themen."
         read: "Du hast noch keine Themen gelesen."
@@ -737,7 +731,6 @@ de:
           unread: '<p>Hier werden deine ungelesenen Themen angezeigt.</p><p>Die Anzahl der ungelesenen Beiträge wird als <span class="badge new-posts badge-notification">1</span> neben den Themen angezeigt.<br/>
 
             Standardmäßig werden Themen als ungelesen angesehen, wenn du:</p><ul><li>das Thema erstellt hast</li><li>auf das Thema geantwortet hast</li><li>das Thema länger als 4 Minuten gelesen hast</li></ul><p>Außerdem werden jene Themen berücksichtigt, die du in den Benachrichtigungseinstellungen am Ende eines jeden Themas ausdrücklich auf Beobachten oder Verfolgen gesetzt hast.</p><p>Du kannst das in deinen <a href="%{userPrefsUrl}">Einstellungen</a> ändern.</p>'
-          starred: '<p>Hier werden deine favorisierten Themen angezeigt.</p><p>Zum Ändern deiner Favoriten benutze:</p><ul><li>den <i class="fa fa-star"></i> neben jedem Thementitel</li><li>die Schaltfläche „Favorisieren“ am Ende eines jeden Themas</li></ul>'
       bottom:
         latest: "Das waren die aktuellen Themen."
         hot: "Das waren alle beliebten Themen."
@@ -745,7 +738,6 @@ de:
         read: "Das waren alle gelesenen Themen."
         new: "Das waren alle neuen Themen."
         unread: "Das waren alle ungelesen Themen."
-        starred: "Das waren alle favorisierten Themen."
         category: "Das waren alle Themen in der Kategorie „{{category}}“."
         top: "Das waren alle angesagten Themen."
     topic:
@@ -1147,6 +1139,8 @@ de:
       delete: 'Kategorie löschen'
       create: 'Neue Kategorie'
       save: 'Kategorie speichern'
+      slug: 'Sprechender Name für URL'
+      slug_placeholder: '(Optional) mit Bindestrich getrennte Wörter für URL'
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
@@ -1283,9 +1277,6 @@ de:
       hot:
         title: "Beliebt"
         help: "eine Auswahl der beliebtesten Themen"
-      starred:
-        title: "Favorisiert"
-        help: "Themen, die du als Favoriten markiert hast"
       read:
         title: "Gelesen"
         help: "Themen, die du gelesen hast; werden in der Reihenfolge angezeigt, in der du diese gelesen hast"
@@ -1456,13 +1447,17 @@ de:
         edit: "Gruppen bearbeiten"
         refresh: "Aktualisieren"
         new: "Neu"
-        selector_placeholder: "Benutzer hinzufügen"
+        selector_placeholder: "Benutzername eingeben"
         name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
         delete_confirm: "Diese Gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
+        delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
+        name: "Name"
+        add: "Hinzufügen"
+        add_members: "Mitglieder hinzufügen"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -1532,6 +1527,7 @@ de:
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine private Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
+        rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
         button_text: "Exportieren"
         button_title:
           user: "Vollständige Benutzerliste im CSV-Format exportieren."
@@ -2027,7 +2023,6 @@ de:
         latest: '<b>g</b>, <b>l</b> Aktuell'
         new: '<b>g</b>, <b>n</b> Neu'
         unread: '<b>g</b>, <b>u</b> Ungelesen'
-        starred: '<b>g</b>, <b>f</b> Favorisiert'
         categories: '<b>g</b>, <b>c</b> Kategorien'
         top: '<b>g</b>, <b>t</b> Anfang'
       navigation:
@@ -2050,7 +2045,6 @@ de:
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
       actions:
         title: 'Aktionen'
-        star: '<b>f</b> Thema favorisieren'
         pin_unpin_topic: '<b>⇧ Umsch</b> + <b>p</b> Thema anheften/loslösen'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'

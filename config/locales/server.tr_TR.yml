@@ -39,6 +39,7 @@ tr_TR:
     messages:
       too_long_validation: "%{max} karakter ile limitli; siz %{length} karakter girdiniz."
       invalid_boolean: "Geçersiz boolean değeri."
+      taken: "daha önce alındı. (grup isimleri büyük/küçük harfe duyarlıdır)"
     embed:
       load_from_remote: "Gönderi yüklenirken bir hata oluştu."
   bulk_invite:
@@ -175,6 +176,8 @@ tr_TR:
             base:
               warning_requires_pm: "Özel mesajlara sadece uyarı ekleyebilirsiniz. "
               too_many_users: "Uyarıları aynı anda sadece bir kişiye gönderebilirsiniz."
+              cant_send_pm: "Üzgünüz, seçtiğiniz kullanıcıya özel mesaj gönderemezsiniz."
+              no_user_selected: "Geçerli bir kullanıcı seçmelisiniz."
         user:
           attributes:
             password:
@@ -491,15 +494,7 @@ tr_TR:
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısız sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. config/discourse.conf dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere gözatın</a>.'
-    default_logo_warning: "Sitenizdeki logo resimlerini henüz kişiselleştirmemişsiniz.  <a href='/admin/site_settings'>Site Ayarları</a> sayfasında logo_url, logo_small_url, ve favicon_url bağlantılarını güncelleyin."
-    contact_email_missing: "Siteniz için bir iletişim e-postası girmediniz. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasında iletişim e-postanızı güncelleyin."
-    contact_email_invalid: "Siteniz için girilen iletişim e-postası geçersiz. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasında iletişim e-postanızı güncelleyin."
-    title_nag: "Site Ayarları başlığı hala varsayılan değerinde. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasından kendi sitenizin başlıyla güncelleyin."
-    site_description_missing: "site_description ayarı boş bırakılmış. <a href='/admin/site_settings'>Site Ayarları</a> sayfasında bu forumla ilgili kısa bir açıklama yazın. "
     consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, emaillarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
-    access_password_removal: "Siteniz artık kaldırılmış olan access_password ayarını kullanıyordu. Yerine etkinleştirilen login_required ve must_approve_users ayarları kullanılmalı. Bu ayarları <a href='/admin/site_settings'>Site Ayarları</a> sayfasından değiştirebilirsiniz. <a href='/admin/users/list/pending'>Bekleyen Kullanıcılar listesinden kullanıcıları onayladığınızdan</a> emin olun. (Bu mesaj 2 gün sonra kaybolacak.)"
-    site_contact_username_warning: "site_contact_username ayarı boş bırakılmış. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin. Sistem mesajlarını gönderen kişi olarak gözükecek adminin kullanıcı adını girin. "
-    notification_email_warning: "notification_email ayarı boş bırakılmış. Lütfen, <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
   content_types:
     education_new_reply:
       title: "Yeni Kullanıcı Eğitimi: İlk Cevaplar"
@@ -548,9 +543,6 @@ tr_TR:
     allow_duplicate_topic_titles: "Aynı başlık ile birden çok konu açılmasına izin ver."
     unique_posts_mins: "Kullanıcının aynı içerikle yeni bir gönderi oluşturmadan önce geçmesi gereken dakika"
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
-    title: "Sayfa başlığı etiketinde kullanılacak, sitenin kısa başlığı. "
-    site_description: "Açıklama etiketinde kullanılacak, sitenin bir cümlelik açıklaması. "
-    contact_email: "Siteye ait ana iletişim e-postası. Discourse.org'dan, kritik güncellemelerle ilgili önemli bildiriler bu adrese gönderilebilir."
     queue_jobs: "SADECE YAZILIMCILAR İÇİN! UYARI! Aksi gerekmediği takdirde sidekiq işlerini hep otomatik sıraya koydurtun. Bu özellik devre dışı bırakılırsa, siteniz düzgün çalışmayacaktır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
@@ -570,11 +562,8 @@ tr_TR:
     post_excerpt_maxlength: "Gönderi alıntısının / özetinin en fazla uzunluğu."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
     onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
-    logo_url: "Sitenizin sol üstünde yer alan logo örn: http://example.com/logo.png"
     digest_logo_url: "Sitenizin özet e-postalarının üst kısmında kullanılacak logo. Boş bırakılırsa `logo_url` kullanılacak. örn: http://example.com/logo.png"
-    logo_small_url: "Sitenizin sol üstünde yer alacak, sayfayı aşağı kaydırdığınızda gözükecek küçük logo. Örnek: http://example.com/logo-small.png "
     favicon_url: "Site favikonunuz. Bakın; http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Mobil sitenizin sol üstünde yer alacak sabit pozisyonlu logo. Boş bırakılırsa, `logo_url` kullanılacak. örn: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
@@ -618,7 +607,6 @@ tr_TR:
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
     track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi varsayılan ayarlarda devre dışı bırakılmıştır."
-    site_contact_username: "Tüm otomatik özel mesajlar bu kullanıcıdan gönderilecek; boş bırakılırsa varsayılan Sistem hesabı kullanılır. "
     send_welcome_message: "Tüm yeni kullanıcılara bir hoşgeldiniz özel mesajı ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."
     suppress_reply_directly_above: "Bu gönderinin direk üstünde sadece tek bir cevap varsa, gönderideki açılabilir hangi-cevaba-istinaden-cevapla bölümünü gösterme."
@@ -648,7 +636,6 @@ tr_TR:
     max_username_length: "Kullanıcı adında olabilecek en fazla karakter sayısı. UYARI: HALİHAZIRDA BUNDAN DAHA UZUN BİR KULLANICI ADINA SAHİP OLAN KULLANICILAR SİTEYE GİRİŞ YAPAMAYACAKLAR. "
     min_password_length: "En az parola uzunluğu."
     block_common_passwords: "En çok kullanılan 10,000 parola arasında yer alan parolalara izin verme."
-    enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (Not: davetiye sistemini devre dışı bırakır)"
     enable_sso_provider: " /session/sso_provider son noktasında Discourse SSO uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
     sso_secret: "SSO bilgisinin şifrelemesi/deşifre edilmesi için kullanılan gizli string, 10 karakter veya daha uzun olması gerekli"
@@ -840,6 +827,8 @@ tr_TR:
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, adminden yeni konular oluşturmasını isteyen bir uyarı mesajı göster. "
     vacuum_db_days: "Geçiş sonra DB alanı geri kazanmak için TAM VAKUM ANALİZİ'ni çalıştırın (devre dışı bırakmak için 0 girin)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların eklenti indirebilmesini önle. DİKKAT: Bu ayar, eklenti olarak gönderilen resim-dışı site içeriklerinin de çalışmasını engelleyebilir."
+    enable_emoji: "Emojiyi aktifleştir"
+    emoji_set: "Emojinizi nasıl isterdiniz?"
     errors:
       invalid_email: "Geçersiz e-posta adresi."
       invalid_username: "Bu kullanıcı adı ile bir kullanıcı bulunmuyor."
@@ -890,6 +879,10 @@ tr_TR:
       other: "%{count} gönderiyi var olan konulardan birine taşıdım: %{topic_link}"
   change_owner:
     post_revision_text: "Sahiplik %{old_user} hesabından %{new_user} hesabına aktarıldı"
+  emoji:
+    errors:
+      name_already_exists: "Üzgünüz, '%{name}' ismi zaten bir başka emoji tarafından kullanılıyor."
+      error_while_storing_emoji: "Üzgünüz, emoji kaydedilirken bir hata oluştu."
   topic_statuses:
     archived_enabled: "Konu şimdi arşivlendi. Donduruldu ve herhangi bir şekilde değişiklik yapılamaz."
     archived_disabled: "Konu şimdi arşivden çıkarıldı. Artık donmuş değil, değiştirilebilir."
@@ -928,7 +921,6 @@ tr_TR:
     errors: "%{errors}"
     not_available: "Uygun değil. Bunu denemeye ne dersiniz? %{suggestion}"
     something_already_taken: "Bir şeyler ters gitti. Kullanıcı adı veya e-posta zaten kayıtlı olabilir. Parolamı Unuttum bağlantısını deneyin."
-    omniauth_error: "Üzgünüz, %{strategy} hesabınız doğrulanırken bir hata oluştu. Doğrulama işlemini onaylamamış olabilir misiniz?"
     omniauth_error_unknown: "Girişiniz yapılırken bir şeyler ters gitti, lütfen tekrar deneyin."
     new_registrations_disabled: "Şu an yeni hesap oluşturulamıyor. "
     password_too_long: "Parolalar maksimum 200 karakter olabilir."
@@ -1019,11 +1011,6 @@ tr_TR:
     how_to_disable: '"Bayraklarla ilgili bilgilendirme süresi" ayarından bu hatırlatma e-postasının gönderimini devre dışı bırakabilir ya da sıklığını değiştirebilirsiniz. '
     subject_template:
       other: "İlgilenilmesi gereken %{count} bayrak var"
-  flag_reasons:
-    off_topic: "Gönderiniz **konu-dışı** olarak bayraklandı: topluluk, gönderinizin konu başlığı ve ilk gönderi ile tanımlanan konu içeriğiyle uyuşmadığını düşünüyor."
-    inappropriate: "Gönderiniz **uygunsuz** olarak bayraklandı: topluluk gönderinizin saldırgan, kaba ya da [topluluk yönergelerine](/guidelines) aykırı olduğu fikrinde."
-    spam: "Gönderiniz **spam** olarak bayraklandı: topluluk, gönderinizin reklam içerikli olduğunu ve mevcut konuya alakası ya da faydası olmadığını düşünüyor."
-    notify_moderators: "Gönderiniz **moderatör kontrolü için** bayraklandı: topluluk, gönderinizin moderatör tarafından müdahale gerektiren bir içerik barındırdığını düşünüyor."
   flags_dispositions:
     agreed: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Bir sorun olduğu konusunda size katılıyoruz ve ilgileniyoruz."
     agreed_and_deleted: "Bizi bilgilendirdiğiniz için teşekkür ederiz. Bir sorun olduğu konusunda size katılıyoruz, gönderiyi kaldırdık. "
@@ -1106,8 +1093,38 @@ tr_TR:
         Güvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. En yüksek [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
+      text_body_template: |
+        %{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!
+
+        %{new_user_tips}
+
+        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
+
+        (Eğer yeni bir kullanıcı olarak [yetkili üyelerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplayabilirsiniz.)
+
+        Ziyaretinizin keyfini çıkarın!
     welcome_invite:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
+      text_body_template: |
+        %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz!
+
+        Sizin için otomatik olarak bir kullanıcı adı oluşturduk: **%{username}**, ancak [kullanıcı profiliniz][prefs] kısmını ziyaret ederek istediğiniz zaman bu kullanıcı adını değiştirebilirsiniz.
+
+        Tekrar giriş yapmak için, ya:
+
+        1. İstediğiniz yöntemle giriş yapın -- ancak davetiyeyi aldığınız **aynı eposta adresine** bağlı olmalı. Yoksa sizi eşleştirmemiz mümkün değil.
+
+        2. Ya da [kullanıcı profiliniz][prefs] kısmından yeni bir şifre oluşturun ve o şifre ile giriş yapın.
+
+        %{new_user_tips}
+
+        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
+
+        (Eğer yeni bir kullanıcı olarak [yetkili üyelerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplayabilirsiniz.)
+
+        Ziyaretinizin keyfini çıkarın!
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
@@ -1146,6 +1163,17 @@ tr_TR:
         %{logs}
 
         ```
+    csv_export_succeeded:
+      subject_template: "Dışarı veri aktarımı tamamlandı"
+      text_body_template: |
+        Dışarı veri aktarımı başarılı :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        Bu bağlantı 48 saat boyunca geçerli olacak.
+    csv_export_failed:
+      subject_template: "Dışarı veri aktarımı başarısız oldu"
+      text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir yetkili ile temasa geçin."
     email_reject_trust_level:
       subject_template: "E-posta sorunu -- Yetersiz Güven Seviyesi"
       text_body_template: "Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.\n\nBu e-posta adresine yeni gönderiler oluşturmanız için, hesabınız yeterli güven seviyesine sahip değil. Bir hata olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.\n \n"
@@ -1381,6 +1409,7 @@ tr_TR:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
+      text_body_template: "%{site_name} sitesine hoşgeldiniz! \n\n%{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı. \n\nAşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: \n%{base_url}/users/activate-account/%{email_token} \n\nEğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz. \n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.\n\n(Eğer yeni bir kullanıcı olarak [yetkili üyelerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplayabilirsiniz.)\n\nZiyaretinizin keyfini çıkarın!\n"
     signup:
       subject_template: "[%{site_name}] Yeni hesabınızı etkinleştirin"
       text_body_template: |
@@ -1439,102 +1468,13 @@ tr_TR:
   guidelines: "Yönergeler"
   privacy: "Gizlilik İlkeleri"
   edit_this_page: "Bu sayfayı düzenle"
+  csv_export:
+    boolean_yes: "Evet"
+    boolean_no: "Hayır"
   static_topic_first_reply: |2
      %{page_name} sayfasının içeriğini değiştirmek için bu konuya ait ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Yönergeler"
-    body: |
-      <a name="civilized"></a>
-
-      ## [This is a Civilized Place for Public Discussion](#civilized)
-
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
-
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
-
-      <a name="improve"></a>
-
-      ## [Improve the Discussion](#improve)
-
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
-
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
-
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
-
-      Instead, provide reasoned counter-arguments that improve the conversation.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s try to leave our park better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a New Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Üyelik Sözleşmesi"
     body: |

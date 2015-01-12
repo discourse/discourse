@@ -527,15 +527,7 @@ pt:
     s3_backup_config_warning: 'O servidor está configurado para carregar cópias de segurança para s3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando o seu gestor de pacotes preferido ou aceda a <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para descarregar a última versão</a>.'
     failing_emails_warning: 'Há %{num_failed_jobs} tarefas de envio de emails que falharam. Verifique o ficheiro config/discourse.conf e assegure-se que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
-    default_logo_warning: "Não personalizou as imagens do logótipo para o seu sítio. Atualize logo_url, logo_small_url, e favicon_url mas <a href='/admin/site_settings'>Configurações do Sítio</a>."
-    contact_email_missing: "Não forneceu um email de contacto do seu sítio. Por favor atualize o contact_email nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
-    contact_email_invalid: "O email de contacto do sítio é inválido. Por favor atualize o contact_email nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
-    title_nag: "A configuração do título nas Configurações do Sítio ainda estão no valor padrão. Por favor atualize com o título do seu sítio em <a href='/admin/site_settings'>Configurações do Sítio</a>."
-    site_description_missing: "A definição site_description está em branco. Escreva uma breve descrição do fórum nas <a href='/admin/site_settings'> Configurações do Sítio</a>."
     consumer_email_warning: "O seu sítio está configurado para usar Gmail (ou outro serviço de email)<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>O Gmail limita a quantidade de emails que pode enviar</a>. Considere usar um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
-    access_password_removal: "O seu sítio estava a usar a definição access_password, que foi removida. As definições login_required e must_approve_users foram ativadas e devem ser usadas como substituição. Pode alterá-las em <a href='/admin/site_settings'>Configurações do Sítio</a>. Certifique-se de <a href='/admin/users/list/pending'>aprovar os utilizadores na lista de Utilizadores Pendentes</a>. (Esta mensagem desaparecerá após 2 dias.)"
-    site_contact_username_warning: "A definição site_contact_username está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Sítio</a>. Configure-a para o nome de utilizador de um administrador que será o remetente das mensagens do sistema."
-    notification_email_warning: "A definição notification_email está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Sítio</a>."
   content_types:
     education_new_reply:
       title: "Educação do Novo Utilizador: Primeiras Respostas"
@@ -584,9 +576,6 @@ pt:
     allow_duplicate_topic_titles: "Permitir tópicos com títulos idênticos e duplicados."
     unique_posts_mins: "Quantos minutos antes que um utilizador possa criar uma mensagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando um utilizador começar a escrever as primeiras (n) novas mensagens, mostrar o painel pop-up de educação do novo utilizador no editor."
-    title: "Breve título deste sítio, usado na etiqueta do título."
-    site_description: "Descrever este sítio numa frase, usada na etiqueta de descrição meta."
-    contact_email: "Endereço de email da pessoa principal a contactar sobre este sítio. Avisos importantes sobre o discourse.org em relação a atualizações críticas podem ser enviadas para este endereço."
     queue_jobs: "PROGRAMADORES APENAS! AVISO! Por defeito, fila de trabalhos no sidekiq. Se não estiver ativa, o seu sítio irá ficar corrompido."
     crawl_images: "Recuperar imagens de URLs remotos para inserir o comprimento e largura corretos."
     download_remote_images_to_local: "Converter imagens remotas em imagens locais ao descarregá-las; isto previne imagens corrompidas."
@@ -606,11 +595,8 @@ pt:
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     post_onebox_maxlength: "Tamanho máximo de uma mensagem Discourse de caixa única, em caracteres."
     onebox_domains_whitelist: "Lista de domínios que permitem colocar em caixa única; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
-    logo_url: "Imagem do logótipo no canto superior esquerdo do seu sítio ex: http://exemplo.com/logo.png"
     digest_logo_url: "Logótipo alternativo usado no topo do resumo de email do seu sítio. Se for deixado em branco `logo_url` será usado. ex: http://exemplo.com/logo.png"
-    logo_small_url: "A pequena imagem do logótipo no canto superior esquerdo do seu sítio, visível quando arrastado para baixo. ex: http://exemplo.com/logo-pequeno.png"
     favicon_url: "Um favicon para o seu sítio, veja http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "A imagem do logótipo com posição fixa usada no canto superior esquerdo do seu sítio móvel. Se deixado em branco, `logo_url` será usado. ex: eg: http://exemplo.com/caregamentos/padrao/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "Para: endereço de email usado ao enviar emails essenciais do sistema. O domínio especificado aqui deverá ter SPF, DKIM e registos PTR inversos configurados corretamente para a chegada do email."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -654,7 +640,6 @@ pt:
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     track_external_right_clicks: "Acompanhar cliques externos que são clicados com o botão direito (ex: abrir num novo separador) desativado por padrão pois este reescreve URLs"
-    site_contact_username: "Todas as mensagens privadas automatizadas serão deste utilizador; se deixado em branco a conta padrão do Sistema será usada."
     send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem privada de boas-vindas com um guia de inicio rápido."
     suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível quando há apenas uma única resposta diretamente abaixo desta publicação."
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
@@ -684,7 +669,6 @@ pt:
     max_username_length: "Tamanho máximo do nome de utilizador, em caracteres. AVISO: QUAISQUER UTILIZADORES COM NOMES MAIORES QUE ISTO SERÃO PROIBIDOS DE ACEDER AO SÍTIO."
     min_password_length: "Tamanho mínimo da palavra-passe."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
-    enable_sso: "Permitir uma inscrição única através de um sítio externo (Nota: desativa convites)"
     enable_sso_provider: "Implementa o protocolo SSO para o Discourse em /session/sso_provider endpoint, requer que sso_secret esteja configurado"
     sso_url: "URL da inscrição única"
     sso_secret: "String secreta usada para encriptar/desencriptar informação, certifique-se que são 10 ou mais caracteres"
@@ -978,7 +962,6 @@ pt:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo de errado ocorreu, talvez o nome de utilizador ou o email já estejam registados. Tente a hiperligação Esqueci a minha palavra-passe."
-    omniauth_error: "Pedimos desculpe, ocorreu um erro ao autorizar a sua conta %{strategy}. Talvez não tenha aprovado a  sua autorização?"
     omniauth_error_unknown: "Algo ocorreu ao processar o seu início de sessão, por favor tente novamente."
     new_registrations_disabled: "Neste momento não é permitido novo registo de contas."
     password_too_long: "As palavras-passe estão limitadas a 200 caracteres."
@@ -1085,11 +1068,6 @@ pt:
     subject_template:
       one: "1 sinalização à espera de ser tratada"
       other: "%{count} sinalizações à espera de serem tratadas"
-  flag_reasons:
-    off_topic: "A sua mensagem foi sinalizada como **fora do contexto**: a comunidade pensa que não se enquadra neste tópico, conforme o seu título e a sua primeira mensagem."
-    inappropriate: "A sua mensagem foi sinalizada como **inapropriada**: a comunidade pensa que é ofensiva, abusiva ou que é uma violação das [diretrizes da comunidade](/guidelines)."
-    spam: "A sua mensagem foi sinalizada como **spam**: a comunidade pensa que é um anúncio, sem utilidade ou relevância para este tópico, e  promocional na sua natureza."
-    notify_moderators: "A sua mensagem foi sinalizada **para atenção do moderador**: a comunidade pensa que algo na sua mensagem requer intervenção do moderador."
   flags_dispositions:
     agreed: "Obrigado por nos informar. Concordamos que existe um problema e estamos a analisá-lo."
     agreed_and_deleted: "Obrigado por nos informar. Concordamos que existe um problema e removemos a mensagem."
@@ -1120,8 +1098,38 @@ pt:
         59\">\n\nNão se preocupe em falhar uma resposta  – irá receber emails com respostas diretas (e mensagens privadas) se não estiver online quando estas chegam.\n\n## Quando são as conversações consideradas novas?\n\nPor defeito, todas as conversações com menos de dois dias são consideradas novas, e qualquer conversação onde ainda não tenha participado (respondido, criado, ou lido por um extenso período) irão ser automaticamente acompanhadas. \n\nVerá o indicador numérico e o indicador azul (novo) junto desses tópicos:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPode alterar o estado individual das notificações de um tópico através do controlo no final do tópico (também pode ser definido por categoria). Para mudar a maneira como os tópicos são acompanhados, ou a definição de novo, consulte [as suas preferências](/my/preferences).\n\n## Porque não posso fazer certas coisas?\n\nNovos utilizadores estão um pouco limitados por razões de segurança. À medida que for participando, irá ganhar confiança por parte da comunidade, tornar-se um cidadão completo e essas limitações serão automaticamente removidas. Com um [nível de confiança] suficientemente alto (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), irá ganhar ainda mais capacidades para ajudar-nos a gerir a comunidade em conjunto.\n"
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
+      text_body_template: |
+        Bem-vindo e obrigado por se juntar a %{site_name}!
+
+        %{new_user_tips}
+
+        Acreditamos num constante [comportamento comunitário civilizador](%{base_url}/guidelines).
+
+        (Se necessitar de entrar em contacto privado com [os responsáveis do fórum](/about) na qualidade de novo utilizador, basta responder a esta mensagem privada.)
+
+        Desfrute da sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
+      text_body_template: |
+        Obrigado por ter aceite o convite para %{site_name} -- bem-vindo!
+
+        Nós gerámos, automaticamente um nome de utilizador para si: **%{username}**, mas pode alterá-lo a qualquer momento no [seu perfil de utilizador][prefs].
+
+        Para iniciar a sessão novamente, pode:
+
+        1. Iniciar a sessão utilizando um qualquer método preferido -- desde que faça referência ao **mesmo endereço eletrónico** através do qual recebeu o convite inicial. De outro modo, nós não poderemos saber se é a mesma pessoa!!
+
+        2. Criar uma palavra-passe única para [o seu perfil de utilizador][prefs], e utilizá-la para iniciar a sessão.
+
+        %{new_user_tips}
+
+        Nós acreditamos num constante [comportamento civilizado da comunidade](%{base_url/guidelines).
+
+        (Se precisar de entrar em contacto privado com os [membros da equipa](/sobre) como um novo utilizador, basta responder a esta mensagem privada.)
+
+        Desfrute da sua estadia!
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Cópia de segurança completa corretamente"
       text_body_template: "A cópia de segurança foi feita corretamente.\nVisite a [admin > secção de cópias de segurança](/admin/backups) para descarregar a sua nova cópia de segurança."
@@ -1411,6 +1419,23 @@ pt:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Foi aprovado no %{site_name}!"
+      text_body_template: |
+        Bem-vindo a %{nome_do_sítio}!
+
+        Um elemento da equipa de gestão aprovou a sua conta em %{nome_do_sítio}.
+
+        Clique na seguinte ligação para confirmar e ativar a sua nova conta:
+        %{url_base}/utilizadores/ativar_conta/%{mensagem_de_correio_eletrónico_de_símbolo}
+
+        Se esta ligação não estiver disponível, experimente copiá-la e colá-la na barra de endereços do seu navegador da internet.
+
+        %{dicas_para_novo_utilizador}
+
+        Acreditamos no [comportamento_civilizado_da_comunidade](%{url_base}/indicações) em todas as circunstâncias.
+
+        (Se necessitar de entrar em contacto em privado com [membros_da_equipa](/sobre) na qualidade de novo utilizador, basta que responda a esta mensagem privada.)
+
+        Desfrute da sua estadia!
     signup:
       subject_template: "[%{site_name}] Ativar a sua nova conta"
       text_body_template: |
@@ -1476,11 +1501,6 @@ pt:
     Edite a primeira mensagem neste tópico para alterar os conteúdos da página %{page_name}.
   guidelines_topic:
     title: "FAQ/Diretrizes"
-    body: "<a name=\"civilized\"></a>\n\n## [Isto é um Local Civilizado para Debate](#civilizado)\n\nPor favor trate este fórum de discussão com o mesmo respeito que faria num parque público. Nós somos também uma comunidade de partilha de recursos &mdash; um local para partilhar habilidades, conhecimento e interesses através de conversações.\n\nEstas não são regras rígidas e rápidas, meramente para ajuda do julgamento humano da nossa comunidade. Utilize estas diretrizes para manter este local limpo para debates públicos civilizados.\n\n<a name=\"improve\"></a>\n\n## [Melhorar o Debate](#melhorar)\n\nAjude-nos a fazer deste um óptimo local para discussões ao trabalhar constantemente para melhorar de alguma maneira, mesmo que pequena. Se não tem a certeza que a sua mensagem adiciona algo à conversação, pense novamente no que quer dizer e tente novamente mais tarde. \n\nOs tópicos discutidos aqui importam-nos, e nós queremos agir como se também fossem importantes para si. Seja respeitador dos tópicos e das pessoas que o debatem, mesmo que discorde do que está a ser dito. \n\nUma maneira de melhorar o debate é descobrindo os que já estão a ocorrer. Por favor perca algum tempo a pesquisar os tópicos existentes aqui antes de responder ou começar um novo, e terá melhores hipóteses de conhecer outros que partilhem os mesmos interesses que você. \n\n<a name=\"agreeable\"></a>\n\n## [Seja Agradável, Mesmo Quando Não Concorde](#agradável)\n\n\
-      Pode desejar responder a algo ao discordar do mesmo. Não há qualquer problema nisso. Mas lembre-se de _criticar ideias, não pessoas_. Por favor, evite:\n\n*Chamar Nomes.\n*Adicionar ataques pessoais.\n* Responder ao tom de uma mensagem e não ao seu conteúdo.\n*Contradições instintivas\n\nPelo contrário, forneça contra-argumentos que melhorem a conversação.\n\n<a name=\"participate\"></a>\n\n## [A Sua Participação Conta](#participe)\n\nAs conversações que temos aqui definem o tom para toda a gente. Ajude-nos a influenciar o futuro da comunidade ao escolher comprometer-se nos debates que tornam este fórum um local interessante para se estar &mdash; e evite os que não o fazem.\n\nO Discourse fornece ferramentas que permitem que a comunidade identifique as melhores (e piores) contribuições: favoritos, marcadores, gostos, sinalizações, respostas, edições, e por aí adiante. Utilize estas ferramentas para melhorar a sua própria experiência e de todos os outros também.\n   \nVamos tentar deixar o nosso parque melhor do que quando o encontrámos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se vir um Problema, Sinalize-o](#sinalize-problemas)\n\nOs moderadores têm uma autoridade especial; estes são responsáveis por este fórum. Assim como você o é. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, não apenas zeladores ou polícias.\n\nQuando vir mau comportamento, não responda. O reconhecimento encoraja o mau comportamento,\
-      \ consome a sua energia e gasta o tempo de todos. Apenas sinalize-o. Se houver sinalizações suficientes, ações irão ser tomadas, seja automaticamente ou por intervenção dos moderadores.\n\nDe maneira a manter a ordem da comunidade, os moderadores reservam-se ao direito de remover qualquer conteúdo e qualquer conta de utilizador por qualquer razão em qualquer altura. Os moderadores não prevêem novas mensagens em qualquer maneira; os moderadores e os operadores do sítio não têm qualquer responsabilidade por qualquer conteúdo publicado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Seja sempre civilizado](#seja-civilizado)\n\nNada estraga mais uma conversação saudável do que insolências:\n\n*Seja civilizado. Não publique nada que uma pessoa sensata consideraria ofensiva, abusiva ou de ódio.\n*Mantenha-o limpo. Não publique nada obsceno ou sexualmente explicito.\n*Respeite os outros. Não assedie ou magoe ninguém, não personifique pessoas, e não exponha as suas informações pessoais.\n*Respeite o fórum. Não publique spam ou qualquer outra coisa que vandalize o fórum.\n\nEstes não são termos concretos com definições precisas &mdash; evite até a _aparência_ de qualquer uma destas coisas. Se não tem certeza, pergunte-se a si próprio como se sentiria se a sua mensagem fosse capa no New York Times.\n\nEste é um fórum público, e motores de pesquisa indexam estes debates. Mantenha a linguagem, hiperligações e imagens seguras para família\
-      \ e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o Organizado](#manter-organizado)\n\nFaça o esforço para colocar as coisas no local certo, para que possamos passar mais tempo a debater e menos a limpar. Por isso:\n\n*Não comece um tópico na categoria errada.\n*Não cruze mensagens sobre o mesmo tema em múltiplos tópicos.\n*Não publique respostas sem conteúdo.\n*Não desvie um tópico ao mudar o seu centro de atenção.\n*Não assine as suas mensagens &mdash;  qualquer mensagem tem a sua informação de perfil anexada à mesma.\n\nEm vez de publicar “+1” ou “Concordo”, utilize o botão Gosto. Em vez de levar um tópico existente para uma direção completamente diferente, utilize Responder como Novo Tópico.\n\n<a name=\"stealing\"></a>\n\n## [Publique Apenas As Suas Próprias Coisas](#roubo)\n\nNão pode publicar nada digital que pertença a qualquer outra pessoa, sem a sua permissão. Não pode publicar descrições de, hiperligações a, ou métodos para roubar propriedade intelectual de outras pessoas (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei.  \n\n<a name=\"tos\"></a>\n\n## [Termos de Serviço](#tds)\n\nSim, a legalidade é chata, mas temos que nos proteger &ndash;  e por extensão, protegê-lo a si e aos seus dados &ndash; contra companheiros inimigos. Temos os [Termos de Serviço](/tds)  que descrevem o seu (e o nosso) comportamento e direitos relativamente a conteúdo, privacidade e leis. Para usar este serviço\
-      \ tem que concordar em cumprir os nossos [TDS](/tds).\n"
   tos_topic:
     title: "Termos de Serviço"
     body: "Os seguintes termos e condições governam todo o uso do sítio %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do sítio, incluindo mas não limitado a,  %{company_domain} Software do Fórum, %{company_domain} Suporte do Fórum e serviço de alojamento %{company_domain} (\"Alojamento\"), (em conjunto, o Sítio). O Sítio é propriedade e operado por %{company_full_name} (\"%{company_name}\"). O Sítio oferecido está sujeito à sua aprovação sem nenhuma modificação de todos os termos e condições contidos aqui e todas as outras regras de operação políticas (incluindo, sem limitação, %{company_domain}’s [Política de Privacidade](/privacy) e [Diretrizes da Comunidade](/faq)) e procedimentos que possam ser publicados de tempos em tempos neste Sítio por %{company_name} (coletivamente, the \"Acordo\").\n\nPor favor leia este Acordo com cuidado antes de aceder ou usar o Sítio. Ao aceder ou usar qualquer parte do Sítio, concorda em estar limitado pelos termos e condições deste acordo. Se não concorda com todos os termos e condições deste acordo, então não deve aceder ao Sítio ou usar qualquer um dos serviços.  Se estes termos e condições são considerados uma oferta de %{company_name}, a sua aceitação é expressamente limitada a estes termos. O Sítio está disponível apenas a indíviduos que têm pelo menos 13 anos de idade.\n\n<a name=\"1\"></a>\n\n## [1. A Sua Conta %{company_domain} ](#1)\n\nSe criar uma conta\
