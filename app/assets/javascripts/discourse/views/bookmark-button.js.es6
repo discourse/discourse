@@ -16,7 +16,7 @@ export default ButtonView.extend({
   },
 
   renderIcon: function(buffer) {
-    var className = this.get("controller.bookmarked") ? "fa-bookmark" : "fa-bookmark-o";
-    buffer.push("<i class='fa " + className + "'></i>");
+    var className = this.get("controller.bookmarked") ? "bookmarked" : "";
+    buffer.push("<i class='fa fa-bookmark " + className + "'></i>");
   }
 });
