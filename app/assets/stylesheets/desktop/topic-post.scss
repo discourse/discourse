@@ -98,7 +98,6 @@ nav.post-controls {
   .show-replies {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
     padding: 8px 15px;
-    padding-bottom: 20px;
     margin-left: 0;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
