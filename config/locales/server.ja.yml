@@ -397,15 +397,7 @@ ja:
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
     failing_emails_warning: '%{num_failed_jobs}個のメールジョブが失敗しています。config/environments/production.rb ファイルを確認して config.action_mailer の設定が正しいか確認してください。<a href="/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを確認</a>。'
-    default_logo_warning: "サイトのロゴ画像をカスタマイズしていません。<a href='/admin/site_settings'>サイトの設定</a>において logo_url, logo_small_url, favicon_url を更新してください。"
-    contact_email_missing: "サイトの連絡先メールアドレスが設定されていません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
-    contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
-    title_nag: "サイトのタイトルがデフォルトのままになっています。<a href='/admin/site_settings'>サイトの設定</a>において正しいサイトのタイトルを設定してください。"
-    site_description_missing: "サイトの site_description 設定が空欄になっています。<a href='/admin/site_settings'>サイトの設定</a>においてこのフォーラムに関する簡単な説明文を追加してください。"
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
-    access_password_removal: "現在サイトは access_password 設定を利用していますが、この設定は廃止されたため代わりに login_required と must_approve_users 設定を利用してください。<a href='/admin/site_settings'>サイトの設定</a>にて変更ができます。この際、<a href='/admin/users/list/pending'>保留中リストのユーザを承認</a>してください。(このメッセージは2日後に削除されます)"
-    site_contact_username_warning: "site_contact_username 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にてシステムメッセージの送信者となる管理者のユーザ名を設定してください。"
-    notification_email_warning: "notification_email 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にて正しい値を設定してください。"
   content_types:
     education_new_reply:
       title: "新規ユーザ支援: 初めての回答"
@@ -523,7 +515,6 @@ ja:
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error: "あなたの %{strategy} アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください。"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
   user:
     username:
@@ -540,11 +531,6 @@ ja:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
-  flag_reasons:
-    off_topic: "あなたの投稿やトピックは「関係ない話題」としてフラグされています。"
-    inappropriate: "あなたの投稿は「不適切」にフラグされています。誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。"
-    spam: "あなたの投稿は「スパム」にフラグされています。営利目的、宣伝目的の書き込みの可能性がある。"
-    notify_moderators: "あなたの投稿は「管理人に通知」にフラグされています。管理人の確認が必要の内容を含んでいる"
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"

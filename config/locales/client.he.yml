@@ -690,11 +690,6 @@ he:
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
     current_user: 'לך לעמוד המשתמש שלך'
-    starred:
-      title: 'כוכב'
-      help:
-        star: 'הוספת נושא זה לרשימת הכוכבים שלך'
-        unstar: 'הסרת נושא זה מרשימת הכוכבים שלך'
     topics:
       bulk:
         reset_read: "איפוס נקראו"
@@ -714,7 +709,6 @@ he:
           one: "בחרת נושא <b>אחד</b>."
           other: "בחרת <b>{{count}}</b> נושאים."
       none:
-        starred: "טרם סימנתם נושאים בכוכבית."
         unread: "אין לך נושאים שלא נקראו."
         new: "אין לך נושאים חדשים."
         read: "עדיין לא קראת אף נושא."
@@ -726,7 +720,6 @@ he:
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן.</p><p> כברירת מחדל, נושאים נחשבים חדשים ויופיעו עם האינדיקציה <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> חדש </span> אם הם נוצרו ב-2 הימים האחרונים. .</p><p> תוכלו לשנות זאת ב <a href="%{userPrefsUrl}">העדפות </a>.</p>'
           unread: '<p> הנושאים הלא-נקראים שלך מופיעים כאן.</p><p>כברירת מחדל נושאים נחשבים ככאלה שלא נקראו ויוצגו כ- <span class="badge new-posts badge-notification">1</span> אם את/ה:</p><ul><li> יצרת את הנושא</li></ul><p>או אם כיוונתם את הנושא הזה להיות תחת מעקב או צפייה באמצעות כפתור ההתראות שבתחתית כל נושא. </p><p> את/ה יכולים לשנות זאת ב<a href="%{userPrefsUrl}">העדפות</a>.</p>'
-          starred: '<p>הנושאים שסימנת למעקב מופיעים כאן.</p><p>כדי לבטל סימון השתמשו ב:</p><ul><li>ה<i class="fa fa-star"></i> שלצד כל כותרת נושא </li><li>לחצן הכפתור שבתחתית כל נושא</li></ul>'
       bottom:
         latest: "אין עוד נושאים מדוברים."
         hot: "אין עוד נושאים חמים."
@@ -734,7 +727,6 @@ he:
         read: "אין עוד נושאים שנקראו."
         new: "אין עוד נושאים חדשים."
         unread: "אין עוד נושאים שלא נקראו."
-        starred: "אין עוד נושאים עם כוכבים."
         category: "אין עוד נושאים בקטגוריה {{category}}."
         top: "אין עוד נושאים מובילים."
     topic:
@@ -1272,9 +1264,6 @@ he:
       hot:
         title: "חם"
         help: "מבחר הנושאים החמים ביותר"
-      starred:
-        title: "כוכב"
-        help: "נושאים שסימנת בכוכב"
       read:
         title: "נקרא"
         help: "נושאים שקראת, לפי סדר קריאתם"
@@ -1445,7 +1434,6 @@ he:
         edit: "ערוך קבוצות"
         refresh: "רענן"
         new: "חדש"
-        selector_placeholder: "הוסף משתמשים"
         name_placeholder: "שם הקבוצה, ללא רווחים, בזהה לחוקי שם המשתמש"
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
@@ -2001,7 +1989,6 @@ he:
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
-        starred: '<b>g</b>, <b>f</b> Starred'
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
       navigation:
@@ -2023,7 +2010,6 @@ he:
         dismiss_topics: '<b>x</b>, <b>t</b> שחרור נושאים'
       actions:
         title: 'פעולות'
-        star: '<b>f</b> סמן נושא בכוכב'
         share_post: '<b>s</b> שיתוף הודעה'
         reply_as_new_topic: '<b>t</b> תגובה כנושא מקושר'
         reply_post: '<b>r</b> להגיב להודעה'

@@ -690,11 +690,6 @@ pt_BR:
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
     current_user: 'ir para a sua página de usuário'
-    starred:
-      title: 'Favorito'
-      help:
-        star: 'adiciona este tópico na sua lista de favoritos'
-        unstar: 'remove este tópico da sua lista de favoritos'
     topics:
       bulk:
         reset_read: "Redefinir Lido"
@@ -714,7 +709,6 @@ pt_BR:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
       none:
-        starred: "Você não tem tópicos favoritos."
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
         read: "Você ainda não leu nenhum tópico."
@@ -726,7 +720,6 @@ pt_BR:
         educate:
           new: '<p>Seus novos tópicos aparecerão aqui.</p><p>Por padrão, tópicos são considerados novos e irão mostrar um indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
           unread: '<p>Seus tópicos não lidos aparecerão aqui.</p><p>Por padrão, tópicos são considerados não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu para o tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente marcou o tópico para Acompanhar ou Assistir via o controle de notificação na parte de baixo de cada tópico.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          starred: '<p>Seus tópicos favoritos aparecem aqui.</p><p>Para marcar ou desmarcar ou um tópico como favorito, use:</p><ul><li>a <i class="fa fa-star"></i> próxima ao título de qualquer tópico</li><li>o botão de Estrela no final de cada tópico</li></ul>'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -734,7 +727,6 @@ pt_BR:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
-        starred: "Não há mais nehum tópico favorito."
         category: "Não há mais tópicos na categoria {{category}}."
         top: "Não há mais tópicos em alta."
     topic:
@@ -1272,9 +1264,6 @@ pt_BR:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
-      starred:
-        title: "Favoritos"
-        help: "tópicos favoritos"
       read:
         title: "Lido"
         help: "tópicos que você leu"
@@ -1445,7 +1434,6 @@ pt_BR:
         edit: "Editar Grupos"
         refresh: "Atualizar"
         new: "Novo"
-        selector_placeholder: "adicionar usuários"
         name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
@@ -1996,7 +1984,6 @@ pt_BR:
         latest: '<b>g</b>, <b>l</b> Últimos'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não Lidos'
-        starred: '<b>g</b>, <b>f</b> Marcados'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Topo'
       navigation:
@@ -2018,7 +2005,6 @@ pt_BR:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
       actions:
         title: 'Ações'
-        star: '<b>f</b> Tópico favorito'
         share_post: '<b>s</b> Compartilhar mensagem'
         reply_as_new_topic: '<b>t</b> Responder como tópico linkado'
         reply_post: '<b>r</b> Responder a mensagem'

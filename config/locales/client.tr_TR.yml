@@ -68,6 +68,7 @@ tr_TR:
           other: "%{count} gün önce"
     share:
       topic: 'bu konunun bağlantısını paylaşın'
+      post: '%{postNumber} nolu gönderi'
       close: 'kapat'
       twitter: 'bu bağlantıyı Twitter''da paylaşın'
       facebook: 'bu bağlantıyı Facebook''da paylaşın'
@@ -235,6 +236,7 @@ tr_TR:
       profile: "Profil"
       mute: "Sustur"
       edit: "Ayarları Düzenle"
+      download_archive: "Gönderilerimi İndir"
       new_private_message: "Yeni Özel Mesaj"
       private_message: "Özel Mesaj"
       private_messages: "Mesajlar"
@@ -412,6 +414,7 @@ tr_TR:
           none: "Henüz kimseyi buraya davet etmediniz. Tek tek davetiye gönderebilirsiniz, ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>toplu bir davetiye dosyası yükleyerek</a> birçok kişiyi aynı anda davet edebilirsiniz. "
           text: "Dosyadan Toplu Davet Gönder"
           uploading: "Yükleniyor..."
+          success: "Dosya başarıyla yüklendi, işlem tamamlandığında özel mesajla bilgilendirileceksiniz."
           error: "'{{filename}}' yüklenirken bir hata oluştu: {{message}}"
       password:
         title: "Parola"
@@ -419,6 +422,7 @@ tr_TR:
         common: "Bu parola çok yaygın."
         ok: "Parolanız uygun gözüküyor."
         instructions: "En az %{count} karakter."
+      associated_accounts: "Girişler"
       ip_address:
         title: "Son IP Adresi"
       registration_ip_address:
@@ -546,7 +550,12 @@ tr_TR:
       github:
         title: "GitHub ile"
         message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
+    apple_international: "Apple/Uluslararası"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Bu resmi bir uyarıdır."
       posting_not_on_topic: "Hangi konuyu cevaplamak istiyorsun?"
       saving_draft_tip: "kaydediliyor"
@@ -663,11 +672,6 @@ tr_TR:
     go_back: 'geri dön'
     not_logged_in_user: 'güncel aktivitelerin ve ayarların özetinin bulunduğu kullanıcı sayfası'
     current_user: 'kendi kullanıcı sayfana git'
-    starred:
-      title: 'Yıldızla'
-      help:
-        star: 'bu konuyu yıldızlılar listenize ekleyin'
-        unstar: 'bu konuyu yıldızlılar listenizden çıkarın'
     topics:
       bulk:
         reset_read: "Okunmuşları Sıfırla"
@@ -686,7 +690,6 @@ tr_TR:
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
       none:
-        starred: "Yıldızlı konunuz yok."
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok"
         read: "Henüz herhangi bir konu okumadınız."
@@ -698,7 +701,6 @@ tr_TR:
         educate:
           new: '<p>Yeni konularınız burada belirir.</p><p>Varsayılan ayarlarda, son 2 gün içerisinde yaratılan konular yeni sayılır ve <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">yeni</span> işaretiyle gösterilir.</p><p>Dilerseniz bu ayarları <a href="%{userPrefsUrl}">ayarlar</a>sayfanızdan düzenleyebilirsiniz.</p>'
           unread: '<p> Okunmamış konularınız burada belirecek. </p><p> Varsayılan ayarlarda, şu durumlarda konular okunmamış sayılır ve okunmamışların sayısı <span class="badge new-posts badge-notification">1</span> gösterilir: </p><ul><li>Konuyu oluşturduysanız</li><li>Konuyu cevapladıysanız</li><li>Konuyu 4 dakikadan uzun bir süre okuduysanız</li></ul><p> Ya da, konunun altında bulunan bildirim kontrol bölümünden, konuyu Takip Edildi veya Gözlendi diye işaretlediyseniz.</p><p>Bu ayarları <a href="%{userPrefsUrl}">ayarlar</a> sayfasından değiştirebilirsiniz.</p>'
-          starred: '<p>Yıldızlanan konularınız burada belirir.</p><p>Konuları yıldızlamak ya da yıldızlarını kaldırmak için şunları kullanın:</p><ul><li>konu başlıklarının yanında bulunan <i class="fa fa-star"></i> butonunu</li><li>Her konunun en alt kısmında bulunan Yıldız butonunu</li></ul>'
       bottom:
         latest: "Daha fazla son konu yok."
         hot: "Daha fazla sıcak bir konu yok."
@@ -706,7 +708,6 @@ tr_TR:
         read: "Daha fazla okunmuş konu yok."
         new: "Daha fazla yeni konu yok."
         unread: "Daha fazla okunmamış konu yok."
-        starred: "Daha fazla yıldızlı konu yok."
         category: "Daha fazla {{category}} konusu yok."
         top: "Daha fazla popüler konu yok"
     topic:
@@ -1075,6 +1076,8 @@ tr_TR:
       delete: 'Kategoriyi Sil'
       create: 'Yeni Kategori'
       save: 'Kategoriyi Kaydet'
+      slug: 'Kategori Anahtarı'
+      slug_placeholder: '(Opsiyonel) url için tire ile ayırılmış kelimeler'
       creation_error: Kategori oluşturulurken hata oluştu.
       save_error: Kategori kaydedilirken hata oluştu.
       name: "Kategori Adı"
@@ -1210,9 +1213,6 @@ tr_TR:
       hot:
         title: "Sıcak"
         help: "en sıcak konulardan bir derleme"
-      starred:
-        title: "Yıldızlı"
-        help: "yıldızladığınız konular"
       read:
         title: "Okunmuş"
         help: "okuduğunuz başlıklar, okunma sırasına göre"
@@ -1378,7 +1378,6 @@ tr_TR:
         edit: "Grupları Düzenle"
         refresh: "Yenile"
         new: "Yeni"
-        selector_placeholder: "kullanıcıları ekle"
         name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
         about: "Grup üyeliğinizi ve isimleri burada düzenleyin"
         group_members: "Grup üyeleri"
@@ -1452,7 +1451,9 @@ tr_TR:
             title: "Veritabanını calışan son haline geri al."
             confirm: "Veri tabanını  çalışan bir önceki versyonuna geri almak istediğinizden emin misiniz?"
       export_csv:
+        success: "Dışarı aktarma başlatıldı, işlem tamamlandığında özel mesajla bilgilendirileceksiniz."
         failed: "Dışa aktarırken hata oluştu. Lütfen kayıtları kontrol edin."
+        rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
         button_text: "Dışa aktar"
         button_title:
           user: "Tüm kullanıcı listesini CSV formatında dışa aktar."
@@ -1922,6 +1923,13 @@ tr_TR:
             with_post: '<span class="username">%{username}</span> buradaki gönderi için %{link} '
             with_post_time: <span class="username">%{username}</span> %{link} gönderisi için <span class="time">%{time}</span> zamanında
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Herkese açık yeni bir emoji ekle. (PROTIP: birden çok dosyayı tek seferde sürükleyip bırakabilirsiniz)"
+        add: "Yeni Emoji Ekle"
+        name: "İsim"
+        image: "Resim"
+        delete_confirm: ":%{name}: emojisini silmek istediğinize emin misiniz?"
     lightbox:
       download: "indir"
     search_help:
@@ -1934,7 +1942,6 @@ tr_TR:
         latest: '<b>g</b>, <b>l</b> En Son'
         new: '<b>g</b>, <b>n</b> Yeni'
         unread: '<b>g</b>, <b>u</b> Okunmamış'
-        starred: '<b>g</b>, <b>f</b> Yıldızlı'
         categories: '<b>g</b>, <b>c</b> Kategoriler'
         top: '<b>g</b>, <b>t</b> En Popüler'
       navigation:
@@ -1943,6 +1950,7 @@ tr_TR:
         back: '<b>u</b> Geri'
         up_down: '<b>k</b>/<b>j</b> seçileni taşı &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Seçili konuyu aç'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Sonraki/önceki bölüm'
       application:
         title: 'Uygulama'
         create: '<b>c</b> Yeni konu aç'
@@ -1956,9 +1964,11 @@ tr_TR:
         dismiss_topics: '<b>x</b>, <b>t</b> Konuları Yoksay'
       actions:
         title: 'Aksiyonlar'
-        star: '<b>f</b> Konuyu yıldızla'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Konuyu başa tuttur / tutturma'
+        share_topic: '<b>shift</b>+<b>s</b> Konuyu paylaş'
         share_post: '<b>s</b> Gönderiyi paylaş'
         reply_as_new_topic: '<b>t</b> Bağlantılı konu olarak cevapla'
+        reply_topic: '<b>shift</b>+<b>r</b> Konuya cevap yaz'
         reply_post: '<b>r</b> Gönderiyi cevapla'
         quote_post: '<b>q</b> Gönderiyi alıntıla'
         like: '<b>l</b> Gönderiyi beğen'

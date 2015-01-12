@@ -520,15 +520,7 @@ pt_BR:
     s3_backup_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá até as <a href="/admin/site_settings">Configurações</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes preferido ou acesse <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para fazer download da última versão</a>.'
     failing_emails_warning: 'Há %{num_failed_jobs} processos de e-mail que falharam. Verifique se o seu arquivo config/discourse.conf e garanta que as configurações do servidor de e-mail estão corretas. <a href="/sidekiq/retries" target="_blank"> Veja os processos com falha no Sidekiq</ a>.'
-    default_logo_warning: "Você não personalizou as imagens do logo para seu site. Atualize logo_url, logo_small_url, e favicon_url nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    contact_email_missing: "Você não forneceu um email de contato do site. Por favor atualize o contact_email nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    contact_email_invalid: "O email de contato do site é inválido. Por favor atualize o contact_email nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    title_nag: "A configuração do título nas Configurações do Site ainda estão no valor padrão. Por favor atualize com título do seu site em <a href='/admin/site_settings'>Configurações do Site</a>."
-    site_description_missing: "A definição site_description está em branco. Escreva uma breve descrição do fórum nas <a href='/admin/site_settings'> Configurações do Site</a>."
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
-    access_password_removal: "Seu site estava usando a definição access_password, que foi removida. As definições login_required e must_approve_users foram ativadas e devem ser usadas em substituição. Você pode alterá-las em <a href='/admin/site_settings'>Configurações do Site</a>. Certifique-se de <a href='/admin/users/list/pending'>aprovar os usuários na lista de Usuários Pendentes</a>. (Esta mensagem desaparecerá depois de 2 dias.)"
-    site_contact_username_warning: "A definição site_contact_username está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Site</a>. Coloque um nome de usuário de um usuário administrador o qual será o remetente das mensagens do sistema."
-    notification_email_warning: "A definição notification_email está em branco. Por favor atualize-a nas <a href='/admin/site_settings'>Configurações do Site</a>."
   content_types:
     education_new_reply:
       title: "Educação do Usuário Novo: Primeiras Respostas"
@@ -577,9 +569,6 @@ pt_BR:
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
-    title: "Breve título deste site, utilizado na tag title."
-    site_description: "Descreva este site em uma frase, usada na meta tag description."
-    contact_email: "Endereço de email ou chave de contato para o site. Avisos importantes do discourse.org em relação a atualizações críticas vão ser enviadas para esse endereço."
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
@@ -598,11 +587,8 @@ pt_BR:
     exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
-    logo_url: "O logo à esquerda e acima para seu site eg: http://example.com/logo.png"
     digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
-    logo_small_url: "O logo à esquerda e acima pequeno para seu site, visto quando se faz rolagem. eg: http://example.com/logo-small.png"
     favicon_url: "Um favicon para o seu site"
-    mobile_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -783,7 +769,6 @@ pt_BR:
     errors: "%{errors}"
     not_available: "Não disponível. Tente %{suggestion}?"
     something_already_taken: "Algo deu errado, talvez o nome de usuário ou o email já estejam registrados. Tente o link Esqueci minha Senha."
-    omniauth_error: "Desculpe, Houve um erro ao autorizar a sua conta %{strategy}. Talvez você não tenha aprovado a autorização?"
     omniauth_error_unknown: "Algo deu errado no processamento do seu login, por favor tente novamente."
     new_registrations_disabled: "Novas contas não são permitidas neste momento."
     password_too_long: "Senhas são limitadas a 200 caracteres."
@@ -910,11 +895,6 @@ pt_BR:
       other: "Essas sinalizações foram submetidos mais de %{count} horas."
     please_review: "Por favor, revise eles."
     post_number: "mensagem"
-  flag_reasons:
-    off_topic: "Sua postagem foi sinalizada como ***off-topic**: a comunidade pensa que ela não se encaixa nesse tópico, atualmente definido pelo título e sua primeira postagem."
-    inappropriate: "A sua mensagem foi marcado como **inapropriado**: a comunidade pensa que é ofensivo, abusivo, ou uma violação das [diretrizes da comunidade](/guidelines)."
-    spam: "Sua postagem foi sinalizada como **spam*: a comunidade pensa que isso é uma propaganda não necessária ou relevante ao tópico, promocional por natureza."
-    notify_moderators: "Sua postagem foi sinalizada **para a atenção da moderação**: a comunidade pensa algo sobre a postagem que precisa a intervenção da moderação."
   flags_dispositions:
     agreed: "Obrigado por nos avisar. Concordamos que há um problema e nós estamos olhando para ele."
     agreed_and_deleted: "Obrigado por nos avisar. Concordamos que há um problema e nós removemos o post."
@@ -924,6 +904,20 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
+      text_body_template: |
+        Olá,
+
+        Esta é uma mensagem automática do % {site_name} para informá-lo que o seu post foi ocultado.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Vários membros da comunidade assinalaram este post antes de ser escondido, então por favor, pense em como você pode rever seu post para refletir seu feedback. ** Você pode editar seu post depois de %{edit_delay} minutos, e será automaticamente desocultado. ** Isto irá aumentar o seu nível de confiança.
+
+        No entanto, se o post é escondido pela comunidade uma segunda vez, ele permanecerá escondido até ser manipuladas pela staff - e pode haver outras medidas, incluindo a possibilidade de suspensão da sua conta.
+
+        Para informações adicionais, por favor consulte a nossas [diretrizes da comunidade] (%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Esta mensagem privada tem algumas dicas para te ajudar a começar.
@@ -1260,9 +1254,6 @@ pt_BR:
   static_topic_first_reply: "Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name} \n"
   guidelines_topic:
     title: "Perguntas frequentes/Diretrizes"
-    body: "<a name=\"civilizado\"></a>\n\n## [Este é um lugar civilizado para discussão pública](#civilizado)\n\nPor favor, trate este fórum de discussão com o mesmo respeito que seria um parque público. Nós, também, somos um recurso da comunidade compartilhada &mdash; um lugar para compartilhar habilidades, conhecimentos e interesses através de conversa.\n\nEstas não são regras rígidas e rápidas, apenas auxilia o julgamento humano de nossa comunidade. Use estas diretrizes para manter este, um lugar bem iluminado limpo para o discurso público civilizado.\n\n<a name=\"melhorar\"></a>\n\n## [Melhorar a Discussão](#melhorar)\n\nAjude-nos a fazer deste um ótimo lugar para discussão trabalhando sempre para melhorar a discussão de alguma forma, ainda que pequena. Se você não tiver certeza de que seu post acrescenta à conversa, pense sobre o que você quer dizer e tente novamente mais tarde. \n\nOs tópicos discutidos aqui são importantes para nós, e nós queremos que você aja como se eles fossem são importantes para você, também. Seja respeitoso com os temas e as pessoas que estão discutindo-los, mesmo se você não concordar com algumas das coisas que está sendo dito. \n\nUma forma de melhorar a discussão é descobrindo as que já estão acontecendo. Por favor, passe algum tempo visitando os tópicos aqui antes de responder ou iniciar o seu próprio, você terá uma melhor chance de encontrar outras pessoas que compartilham os seus interesses.\n\n<a name=\"agradavel\"></a>\n\n## [Seja agradável, mesmo quando você discorda](#agradavel)\n\nVocê pode querer responder a algo por discordar com ele. Isso é bom. Mas, lembre-se de _criticar as idéias, não pessoas_. Por favor, evite: \n\n* Xingamentos. \n* Ataques ad hominem. \n* Respondendo a um tom de mensagem, em vez de seu conteúdo real. \n* Instintiva contradição. \n\nEm vez disso, forneça fundamentados contra-argumentos que melhoram a conversa.\n\n<a name=\"participacao\"></a>\n\n## [Suas contagens de Participação](#participacao)\n\nAs conversas que temos aqui define o tom para todos. Ajude-nos a influenciar o futuro da nossa comunidade, optando por se envolver em discussões que fazem deste fórum\
-      \ um lugar interessante para ser &mdash; e evitando aqueles que não o fazem.\n\nDiscourse fornece ferramentas que permitem a comunidade a identificar coletivamente as melhores (e piores) contribuições: favoritos, marcadores, gostos, sinalizações, respostas, edições, e assim por diante. Use essas ferramentas para melhorar a sua própria experiência, e todos os outros também.\n\nVamos tentar deixar o nosso parque melhor do que o encontramos.\n\n<a name=\"sinalize-problemas\"></a>\n\n## [Se você vê um problema, sinalize ele](#sinalize-problemas)\n\nModeradores têm autoridade especial; eles são responsáveis   por este fórum. Mas assim como você. Com a sua ajuda, os moderadores podem ser facilitadores da comunidade, e não apenas zeladores ou da polícia.\n\nQuando você vê um mau comportamento, não responda. Ele estimula o mau comportamento, reconhecendo-o, consome sua energia, e disperdiça o tempo de todos. _Apenas sinalize ele_. Se acumularem sinalizadores suficiente, serão tomadas medidas, de forma automática ou por intervenção do moderador.\n\nA fim de manter a nossa comunidade, os moderadores se reservam o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo, a qualquer momento. Moderadores não pré-visualizam novas mensagens de qualquer forma; moderadores e operadores de sites não assumem nenhuma responsabilidade por qualquer conteúdo postado pela comunidade.\n\n<a name=\"seja-civilizado\"></a>\n\n## [Seja sempre Civilizado](#seja-civilizad)\n\nNada sabota uma conversa saudável como grosseria: \n\n* Seja civilizado. Não publique qualquer coisa que uma pessoa razoável consideraria ofensivo, abusivo, ou o discurso de ódio. \n* Mantenha-o limpo. Não publique nada obsceno ou sexualmente explícito. \n* Respeite o outro. Não assedie ou xingue ninguém, personifique pessoas, ou exponha a sua informação privada.\n* Respeite nosso fórum. Não publique spam ou de outro modo vandalizar o fórum. \n\nEstes não são termos concretos com definições precisas &mdash; evitar até mesmo a _aparência_ de qualquer uma dessas coisas. Se você não tiver certeza, pergunte-se como você se sentiria se seu post foi destaque\
-      \ na primeira página do New York Times. \n\nEste é um fórum público, e motores de busca indexam essas discussões. Mantenha a língua, links, e imagens seguro para a família e amigos.\n\n<a name=\"mantenha-arrumado\"></a>\n\n## [Mantenha-o arrumado](#mantenha-arrumado)\n\nFaça um esforço para colocar as coisas no lugar certo, para que possamos passar mais tempo discutindo e menos fazendo limpeza. Assim: \n\n* Não comece um tópico na categoria errada. \n* Não poste a mesma coisa em vários tópicos. \n* Não poste respostas que não tenham a ver com o conteúdo. \n* Não desvie um tópico, alterando-o no meio do caminho. \n* Não assine suas mensagens &mdash; cada post tem suas informações de perfil ligado a ele. \n\nAo invés de postar \"+1\" ou \"Concordo\", use o botão Like. Ao invés de tomar um tópico existente em uma direção radicalmente diferente, use Resposta como um Novo Tópico.\n\n<a name=\"roubar\"></a>\n\n## [Poste apenas as tuas coisas](#roubar)\n\nVocê não pode postar qualquer coisa digital que pertence a outra pessoa sem permissão. Você não pode postar descrições, links ou métodos para roubar a propriedade intelectual de alguém (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei.\n\n<a name=\"tos\"></a>\n\n## [Termos de Serviço](#tos)\n\nSim, juridiquês é chato, mas temos de nos proteger &ndash; e por extensão, você e seus dados &ndash; contra pessoas hostis. Nós temos um [Termos de Serviço] (/tos) descrevendo o seu (e nosso) comportamento e direitos relacionados a conteúdo, privacidade e leis. Para utilizar este serviço, você deve concordar em respeitar os nosso [TOS] (/tos).\n"
   tos_topic:
     title: "Termos de Serviço"
     body: "Os seguintes termos e condições regem todo o uso do site %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do site, incluindo, mas não limitado a, o Software do Fórum do %{company_domain}, o Fóruns de Suporte do %{company_domain} e o serviço de hospedagem (\"hosting\") do %{company_domain}, (em conjunto, o site). O site é propriedade e operada por %{company_full_name} (\"%{company_name}\"). O Site é oferecido sujeito à sua aceitação, sem modificação de todos os termos e condições contidos neste documento e todas as outras regras operacionais, políticas (incluindo, sem limitação, a [Política de Privacidade](/privacy) e [Regras da Comunidade ](/faq)) e procedimentos do %{company_domain} que possam ser publicadas de tempos em tempos neste site por %{company_name}  (coletivamente, o \"Contrato\").\n\nPor favor, leia este Contrato cuidadosamente antes de acessar ou utilizar o site. Ao acessar ou utilizar qualquer parte do web site, você concorda em ficar vinculado aos termos e condições deste acordo. Se você não concordar com todos os termos e condições deste contrato, então você não pode acessar o site ou utilizar qualquer serviço. Se estes termos e condições são consideradas uma oferta por %{company_name}, a aceitação é expressamente limitada a estes termos. O site está disponível apenas para indivíduos que são pelo menos 13 anos de idade.\n\n<a name=\"1\"></a>\n\n## [1. Sua conta %{company_domain}](#1)\n\nSe você criar uma conta no site, você é responsável por manter a segurança da sua conta e você é totalmente responsável por todas as atividades que ocorrem sob a conta. Você deve notificar imediatamente %{company_name} de qualquer uso não autorizado de sua conta ou qualquer outra violação de segurança. %{company_name} não será responsável por quaisquer atos ou omissões por você, incluindo quaisquer danos de qualquer tipo incorridos como resultado de tais atos ou omissões.\n\n<a name=\"2\"></a>\n\n## [2. Responsabilidade de Contribuintes](#2)\n\nSe você postar o material no site, postar links no site, ou de outra forma (ou permitir que terceiros o fazem) material disponível por meio do\

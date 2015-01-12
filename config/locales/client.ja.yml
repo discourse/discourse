@@ -601,11 +601,6 @@ ja:
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクチビティと設定ページ'
     current_user: 'ユーザページに移動'
-    starred:
-      title: 'お気に入り'
-      help:
-        star: 'このトピックをお気に入りリストに追加する'
-        unstar: 'このトピックをお気に入りリストから削除'
     topics:
       bulk:
         reset_read: "未読に設定"
@@ -624,7 +619,6 @@ ja:
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
       none:
-        starred: "お気に入りトピックがありません。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -636,7 +630,6 @@ ja:
         educate:
           new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
           unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
-          starred: 'お気に入りトピックはここに表示されます。トピックをお気に入りに追加するにはトピック左側にある★マークをクリックしてください。'
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -644,7 +637,6 @@ ja:
         read: "未読トピックは以上です。"
         new: "新規トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        starred: "お気に入りトピックはありません。"
         category: "{{category}} トピックは以上です。"
         top: "トップトピックはありません。"
     topic:
@@ -1101,9 +1093,6 @@ ja:
       hot:
         title: "ホット"
         help: "話題のトピック"
-      starred:
-        title: "お気に入り"
-        help: "お気に入りトピック"
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
@@ -1245,7 +1234,6 @@ ja:
         edit: "グループの編集"
         refresh: "リフレッシュ"
         new: "新規"
-        selector_placeholder: "ユーザの追加"
         name_placeholder: "グループ名を入力 (ユーザ名同様にスペースなし)"
         about: "グループメンバーとグループ名を編集"
         group_members: "グループメンバー"
@@ -1670,7 +1658,6 @@ ja:
         latest: '<b>g</b>, <b>l</b> 最新'
         new: '<b>g</b>, <b>n</b> 新規'
         unread: '<b>g</b>, <b>u</b> 未読'
-        starred: '<b>g</b>, <b>f</b> お気に入り'
         categories: '<b>g</b>, <b>c</b> カテゴリ'
         top: '<b>g</b>, <b>t</b> トップ'
       navigation:
@@ -1692,7 +1679,6 @@ ja:
         dismiss_topics: 'Dismiss Topics'
       actions:
         title: '操作'
-        star: '<b>f</b> お気に入りトピック'
         share_post: '<b>s</b> 投稿をシェアする'
         reply_post: '<b>r</b> 投稿に返信'
         quote_post: '<b>q</b> 投稿を引用する'

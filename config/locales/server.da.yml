@@ -490,15 +490,7 @@ da:
     s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
     failing_emails_warning: 'Der er %{num_failed_jobs} mislykkede e-mail-jobs. Kontrollér din config/discourse.conf-fil og kontrollér at e-mail-serverens indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede jobs i Sidekiq</a>.'
-    default_logo_warning: "Du har ikke tilpasset sitets logoer. Opdatér logo_url, logo_small_url, og favicon_url under <a href='/admin/site_settings'>indstillinger</a>."
-    contact_email_missing: "Du har ikke angivet en e-mail-adresse for dit site. Opdatér venligst contact_email under <a href='/admin/site_settings'>indstillinger</a>."
-    contact_email_invalid: "Sitets e-mail-adresse er ugyldig. Opdatér venligst contact_email under <a href='/admin/site_settings'>indstillinger</a>."
-    title_nag: "Sitets titel er stadig sat til standardværdien.. Opdatér den venligst med sitets title under <a href='/admin/site_settings'>indstillinger</a>."
-    site_description_missing: "Indstillingen site_description er tom. Skriv en kort beskrivelse af forummet under <a href='/admin/site_settings'>indstillinger</a>."
     consumer_email_warning: "Dit site er konfigureret til at bruge Gmail (eller en anden offentlig e-mail-tjeneste) til at sende e-mail. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail har en  grænse for, hvor mange mails du kan sende</a>. Overvej at bruge en e-mail-udbyder som mandrill.com for at sikre at din mail bliver leveret."
-    access_password_removal: "Dit site brugte indstillingen access_password setting, som er blevet fjernet. Indstillingerne login_required og must_approve_users er blevet aktiveret i stedet. Du kan ændre dem under <a href='/admin/site_settings'>indstillinger</a>. Husk at <a href='/admin/users/list/pending'>godkende brugere som afventer godkendelse</a>. (Denne besked forsvinder efter 2 dage.)"
-    site_contact_username_warning: "Indstillingen site_contact_username er tom. Opdatér den venligst under <a href='/admin/site_settings'>indstillinger</a>. Sæt den til brugernavnet på en admin-bruger som skal stå som afsender af systembeskeder."
-    notification_email_warning: "Indstillingen notification_email er tom. Opdatér den venligst under <a href='/admin/site_settings'>indstillinger</a>."
   content_types:
     education_new_reply:
       title: "Uddannelse af nye brugere: Første svar"
@@ -641,7 +633,6 @@ da:
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
-    omniauth_error: "Beklager, der opstod en fejl ved autorisationen af din %{strategy}-konto. Måske har du ikke godkendt autorisationen?"
     omniauth_error_unknown: "Noget gik galt ved behandlingen af dit login, prøv venligst igen."
   user:
     username:

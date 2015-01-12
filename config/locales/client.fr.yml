@@ -84,6 +84,7 @@ fr:
           other: "Il y a %{count} jours"
     share:
       topic: 'partager ce sujet'
+      post: 'message #%{postNumber}'
       close: 'fermer'
       twitter: 'partager ce lien sur Twitter'
       facebook: 'partager ce lien sur Facebook'
@@ -448,6 +449,7 @@ fr:
         common: "Ce mot de passe est trop commun."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
+      associated_accounts: "Pseudos"
       ip_address:
         title: "Dernières adresses IP"
       registration_ip_address:
@@ -575,7 +577,12 @@ fr:
       github:
         title: "via GitHub"
         message: "Authentification via GitHub (assurez-vous que les popups ne soient pas bloquées)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Ceci est un avertissement officiel."
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saving_draft_tip: "sauvegarde…"
@@ -692,11 +699,6 @@ fr:
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
     current_user: 'voir la page de l''utilisateur'
-    starred:
-      title: 'Favori'
-      help:
-        star: 'ajouter ce sujet à vos favoris'
-        unstar: 'enlever ce sujet de vos favoris'
     topics:
       bulk:
         reset_read: "Réinitialiser la lecture"
@@ -716,7 +718,6 @@ fr:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
       none:
-        starred: "Vous n'avez pas de sujets favoris."
         unread: "Vous n'avez aucun sujet non lu."
         new: "Vous n'avez aucun nouveau sujet."
         read: "Vous n'avez lu aucun sujet pour le moment."
@@ -732,7 +733,6 @@ fr:
           unread: '<p>Vos sujets non-lus apparaissent ici</p><p>Par défaut, les sujets sont considérés comme non-lus et affichent le nombre de messages non-lus <span class="badge new-posts badge-notification">1</span> sont ceux:</p>
 
             <ul><li>Que vous avez crées</li><li>Auxquels vous avez répondu</li><li>Que vous avez lu plus de 4 minutes</li></ul><p>Ou que vous avez explicitement suivis ou surveillés</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
-          starred: '<p>Vos sujets favoris apparaissent ici.</p><p>Pour ajouter ou retirer un favoris :</p><ul><li>Cliquez sur <i class="fa fa-star"></i> à coté du titre du sujet</li><li>Via le bouton <kbd>Favoris</kbd> en bas de chaque sujet</li></ul>'
       bottom:
         latest: "Il n'y a plus de sujet à lire."
         hot: "Il n'y a plus de sujet populaire à lire."
@@ -740,7 +740,6 @@ fr:
         read: "Il n'y a plus de sujet à lire."
         new: "Il n'y a plus de nouveau sujet."
         unread: "Il n'y a plus de sujet à lire."
-        starred: "Il n'y a pas plus de sujet favoris."
         category: "Il n'y a plus de sujet sur {{category}} à lire."
         top: "Il n'y a plus de meilleurs sujets."
     topic:
@@ -1142,6 +1141,7 @@ fr:
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       save: 'Enregistrer la catégorie'
+      slug: 'Identifiant de la catégorie'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
       name: "Nom de la catégorie"
@@ -1278,9 +1278,6 @@ fr:
       hot:
         title: "Populaires"
         help: "un selection de sujets populaires"
-      starred:
-        title: "Favoris"
-        help: "vos sujets favoris"
       read:
         title: "Lus"
         help: "sujets que vous avez lus, dans l'ordre de dernière lecture"
@@ -1451,13 +1448,16 @@ fr:
         edit: "Éditer les groupes"
         refresh: "Actualiser"
         new: "Nouveau"
-        selector_placeholder: "ajouter des utilisateurs"
+        selector_placeholder: "entrer le nom d'utilisateur"
         name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les pseudos"
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
+        name: "Nom"
+        add: "Ajouter"
+        add_members: "Ajouter des membres"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -1525,6 +1525,7 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
+        success: "L'exportation a été initialisé. Vous serez averti par message privé lorsque le traitement sera terminé."
         failed: "L'export a échoué. Veuillez consulter les logs."
         button_text: "Exporter"
         button_title:
@@ -2001,6 +2002,13 @@ fr:
             with_post: <span class="username">%{username}</span> pour son message dans %{link}
             with_post_time: <span class="username">%{username}</span> pour son message dans %{link} à <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> à <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Ajouter un nouvel emoji qui sera disponible pour tout le monde. (Conseil: glisser-déposer plusieurs fichiers en même temps)"
+        add: "Ajouter un nouvel emoji"
+        name: "Nom"
+        image: "Image"
+        delete_confirm: "Etes vous sûr de vouloir supprimer l'emoji :%{name}: ?"
     lightbox:
       download: "télécharger"
     search_help:
@@ -2013,7 +2021,6 @@ fr:
         latest: '<b>g</b>, <b>l</b> Récents'
         new: '<b>g</b>, <b>n</b> Nouveau'
         unread: '<b>g</b>, <b>u</b> Non lus'
-        starred: '<b>g</b>, <b>f</b> Favoris'
         categories: '<b>g</b>, <b>c</b> Catégories'
         top: '<b>g</b>, <b>t</b> Haut'
       navigation:
@@ -2022,6 +2029,7 @@ fr:
         back: '<b>u</b> Retour'
         up_down: '<b>k</b>/<b>j</b> Déplacer la sélection &uarr; &darr;'
         open: '<b>o</b> ou <b>Entrée</b> Ouvrir le sujet sélectionné'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Section Suivante/précédente'
       application:
         title: 'Application'
         create: '<b>c</b> Créer un nouveau sujet'
@@ -2035,9 +2043,11 @@ fr:
         dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
       actions:
         title: 'Actions'
-        star: '<b>f</b> Sujet Favoris'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Épingler/De-épingler le sujet'
+        share_topic: '<b>shift</b>+<b>s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'
         reply_as_new_topic: '<b>t</b> Répondre en créant un sujet lié'
+        reply_topic: '<b>shift</b>+<b>r</b> Répondre au sujet'
         reply_post: '<b>r</b> Répondre à un message'
         quote_post: '<b>q</b> Citer un message'
         like: '<b>l</b> Aimer un message'

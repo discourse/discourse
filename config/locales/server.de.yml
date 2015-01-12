@@ -196,6 +196,7 @@ de:
             base:
               warning_requires_pm: "Du kannst eine Warnung nur an eine Nachricht zugleich anhängen."
               too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
+              cant_send_pm: "Entschuldigung, Sie können diesem Nutzer keine private Nachricht schicken."
               no_user_selected: "Sie müssen einen gültigen Benutzer auswählen."
         user:
           attributes:
@@ -519,15 +520,9 @@ de:
     s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens einer der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key or s3_backup_bucket ist nicht festgelegt. Gehe Sie zu <a href="/admin/site_settings">den Seiteneinstellungen</a> und aktualisieren Sie die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe "Wie konfiguriere ich das Hochladen von Bildern zu S3?" um mehr darüber zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Mails nicht versendet werden. Bitte überprüfe die Mailserver-Einstellungen in config/discourse.conf. Siehe auch: <a href="/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq</a>.'
-    default_logo_warning: "Das Logo der Seite wurde noch nicht angepasst. Bitte bearbeite dieses in den <a href='/admin/site_settings'>Einstellungen</a> (siehe logo_url, logo_small_url und favicon_url)."
-    contact_email_missing: "Du hast noch keine Kontaktadresse für Deine Seite angegeben. Bitte trage diese in den <a href='/admin/site_settings'>Einstellungen</a> ein."
-    contact_email_invalid: "Die Kontakt E-Mail-Adresse ist ungültig. Bitte bearbeite diese in den <a href='/admin/site_settings'>Einstellungen</a>."
-    title_nag: "Der Titel der Seite wurde noch nicht angepasst. Bitte bearbeite diesen in den <a href='/admin/site_settings'>Einstellungen</a>."
-    site_description_missing: "Die site_description Einstellung ist leer. Erstelle eine kurze Beschreibung des Forums in den <a href='/admin/site_settings'>Einstellungen</a>."
+    title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
+    site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
-    access_password_removal: "Deine Seite hat die Einstellung access_password verwendet, welche entfernt wurde. Die Einstellungen login_required und must_approve_users wurden eingeschalten und werden sofort verwendet. Du kannst diese in <a href='/admin/site_settings'>den Einstellungen</a> wechseln. Stelle sicher, <a href='/admin/users/list/pending'>dass die Benutzer in der Warteliste</a> aktiviert werden. (Diese Meldung wird in 2 Tagen nicht mehr angezeigt.)"
-    site_contact_username_warning: "Die Einstellung site_contact_username ist leer. Bitte ändere diese in <a href='/admin/site_settings'>den Einstellungen</a>. Setzte einen Benutzernamen eines Administrators, welcher als Sender der Systemnachrichten verwendet werden soll."
-    notification_email_warning: "Die Einstellung notification_email ist leer. Bitte ändere diese in <a href='/admin/site_settings'>den Einstellungen</a>."
   content_types:
     education_new_reply:
       title: "Hilfe: Erste Beiträge"
@@ -576,9 +571,6 @@ de:
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor sobald ein Nutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
-    title: "Kurzer Titel dieser Seite, der im Title-Tag verwendet wird."
-    site_description: "Beschreibe diese Seite in einem Satz. Diese Beschreibung wird im \"description\" Meta-Tag verwendet."
-    contact_email: "E-Mail-Adresse eines zentralen Ansprechpartners der Webseite. Wichtige Benachrichtigungen von discourse.org bezüglich kritischer Updates werden an diese Adresse gesendet."
     queue_jobs: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze Sidekiq zur Ausführung von Jobs. Wenn dies abgeschaltet wird, dann wird die Seite nicht mehr richtig funktionieren!"
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
@@ -598,11 +590,8 @@ de:
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
-    logo_url: "Die Logo-Grafik oben links auf deiner Seite, zum Beispiel: http://example.com/logo.png"
     digest_logo_url: "Alternatives Logo, das oben in E-Mail-Zusammenfassungen verwendet wird. Wenn leer wird `logo_url` verwendet. Zum Beispiel: http://example.com/logo.png "
-    logo_small_url: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Zum Beispiel: http://example.com/logo-small.png"
     favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Die statische Logo-Grafik oben links auf deiner Seite für mobile Geräte. Wenn leer wird `logo_url` benutzt. Zum Beispiel: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
@@ -646,7 +635,6 @@ de:
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
-    site_contact_username: "Absender für alle automatisch versendeten privaten Nachrichten. Bei fehlender Angabe wird das Standardkonto \"system\" verwendet."
     send_welcome_message: "Sende allen neuen Nutzern eine private Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
@@ -676,7 +664,6 @@ de:
     max_username_length: "Maximale Länge für Benutzernamen in Zeichen. WARNUNG: EXISTIERENDE BENUTZER, DEREN BENUTZERNAMEN LÄNGER SIND, WERDEN DIE WEBSITE NICHT MEHR BENUTZEN KÖNNEN."
     min_password_length: "Minimale Länge des Passworts."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
-    enable_sso: "Aktiviere Single-Sign-On mittels einer externen Seite (Anm.: Deaktiviert Einladungen)"
     enable_sso_provider: "Aktiviere das Discourse SSO Protokoll unter /session/sso_provider - dazu muss sso_secret gesetzt sein."
     sso_url: "URL des Single Sign On Endpunkts"
     sso_secret: "Geheime Zeichenkette, die für die Ver-/Entschlüsselung von SSO-Informationen verwendet wird. Stell sicher, dass er 10 Zeichen oder länger ist."
@@ -783,7 +770,10 @@ de:
     reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
     disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
     short_email_length: "Kurze E-Mail-Länge in Bytes"
+    pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
+    pop3_polling_port: "Der Port für die POP3-Anfrage."
+    pop3_polling_host: "Der Host für die POP3-Anfrage nach E-Mails."
     pop3_polling_username: "Der Benutzername für das POP3-Konto zum Abfragen von E-Mails."
     pop3_polling_password: "Das Passwort für das POP3-Konto zum Abfragen von E-Mails."
     email_in: "Erlaube Benutzern neue Themen per E-Mail (benötigt POP3 polling) zu erstellen. Konfiguriere die Adressen im Reiter „Einstellungen“ für jede Kategorie."
@@ -925,7 +915,6 @@ de:
     errors: "%{errors}"
     not_available: " Nicht verfügbar. Versuche %{suggestion}?"
     something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."
-    omniauth_error: "Entschuldigung, bei der Autorisierung deines %{strategy} Kontos ist ein Fehler aufgetreten. Hast du die Autorisierung möglicherweise aus Versehen abgelehnt?"
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
@@ -1023,11 +1012,6 @@ de:
     subject_template:
       one: "Eine Markierung wartet auf Bearbeitung"
       other: "%{count} Markierungen warten auf Bearbeitung"
-  flag_reasons:
-    off_topic: "Dein Beitrag wurde als **Thema verfehlt** gemeldet: Die Community glaubt, dass er nicht zum Thema passt, wie es durch den Titel und den ersten Beitrag definiert wurde."
-    inappropriate: "Dein Betrag wurde als **unangemessen** geflaggt: Die Community denkt, dass er beleidigend oder eine Verletzung der [der Richtlinien](/guidelines) ist."
-    spam: "Dein Beitrag wurde als **Spam** geflaggt: Die Community denkt, dass es sich um Werbung handelt und nicht nützlich oder Themen-relevant ist."
-    notify_moderators: "Dein Beitrag wurde als **for moderator attention** markiert: Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Moderator erfordert."
   flags_dispositions:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
