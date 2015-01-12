@@ -5,7 +5,7 @@
   <div class="names">
     <span>
       <h1 {{bind-attr class="staff new_user"}}>
-        {{#link-to 'user' user}}{{username}}{{{user.statusIcon}}}{{/link-to}}
+        {{#link-to 'user' user}}{{username}} {{user-status user}}{{/link-to}}
       </h1>
 
       {{#if user.name}}
