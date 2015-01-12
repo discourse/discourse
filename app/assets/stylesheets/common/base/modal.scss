@@ -26,22 +26,22 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  -webkit-animation: fade .25s;
-  animation: fade .25s;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  -webkit-animation: fade .3s;
+  animation: fade .3s;
+  opacity: .9;
+  filter: alpha(opacity=90);
 }
 
 //fade in
 
 @keyframes fade {
-    from {opacity: 0}
-    to {opacity: .8}
+  from {opacity: 0}
+  to {opacity: .9}
 }
 
 @-webkit-keyframes fade {
   from {opacity: 0}
-  to {opacity: 1}
+  to {opacity: .9}
 }
 
 .modal-outer-container {
