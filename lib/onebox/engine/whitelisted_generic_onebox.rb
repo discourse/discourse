@@ -16,6 +16,7 @@ module Onebox
       def self.default_whitelist
         %w(23hq.com
           500px.com
+          8tracks.com
           about.com
           answers.com
           ask.com
@@ -243,25 +244,25 @@ module Onebox
 
 
         if video_url
-          # opengraph support multiple elements (videos, images ,etc). 
+          # opengraph support multiple elements (videos, images ,etc).
           # We attempt to find a video element with the type of video/mp4
           # and generate a native <video> element for it.
 
           if (@raw.metadata && @raw.metadata[:"video:type"])
             video_type =  @raw.metadata[:"video:type"]
-            if video_type.include? "video/mp4"            #find if there is a video with type 
-              if video_type.size > 1                      #if more then one video item based on provided video_type
-                ind = video_type.find_index("video/mp4")  #get the first video index with type video/mp4
-                video_url  = @raw.metadata[:video][ind]   #update video_url 
-              end 
-              
-              attr = append_attribute(:width, attr, video) 
+            if video_type.include? "video/mp4"            # find if there is a video with type
+              if video_type.size > 1                      # if more then one video item based on provided video_type
+                ind = video_type.find_index("video/mp4")  # get the first video index with type video/mp4
+                video_url  = @raw.metadata[:video][ind]   # update video_url
+              end
+
+              attr = append_attribute(:width, attr, video)
               attr = append_attribute(:height, attr, video)
-              
+
               # html_v1 = %Q(<video #{attr} title="#{data[:title]}" controls="" ><source src="#{video_url}"></video>)
 
               site_name_and_title  =  ( ("<span style='color:#fff;background:#9B9B9B;border-radius:3px;padding:3px;margin-right: 5px;'>" + CGI::escapeHTML(@raw.metadata[:site_name][0].to_s) + '</span> ') + CGI::escapeHTML((@raw.title || @raw.description).to_s) )
-              
+
               orig_url = @raw.url
               html_v2 = %Q(
                 <div style='position:relative;padding-top:29px;'>
@@ -271,7 +272,7 @@ module Onebox
                 )
               html = html_v2
 
-            else 
+            else
 
               html = "<iframe src=\"#{video_url}\" frameborder=\"0\" title=\"#{data[:title]}\""
               append_attribute(:width, html, video)
