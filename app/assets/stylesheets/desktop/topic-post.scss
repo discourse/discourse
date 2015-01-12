@@ -735,7 +735,6 @@ $topic-avatar-width: 45px;
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
-
   }
 }
 .topic-avatar {
