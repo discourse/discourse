@@ -254,7 +254,7 @@ describe Email::MessageBuilder do
 
     it "cleans up aliases in the from_alias arg" do
       builder = Email::MessageBuilder.new(to_address, from_alias: "Finn: the Dog, <3", from: finn_email)
-      builder.build_args[:from].should == "Finn the Dog 3 <#{finn_email}>"
+      expect(builder.build_args[:from]).to eq("Finn the Dog 3 <#{finn_email}>")
     end
 
     it "cleans up the email_site_title" do

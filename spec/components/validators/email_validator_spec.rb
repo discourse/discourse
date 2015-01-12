@@ -10,13 +10,13 @@ describe EmailValidator do
     it "doesn't add an error when email doesn't match a blocked email" do
       ScreenedEmail.stubs(:should_block?).with(record.email).returns(false)
       validate
-      record.errors[:email].should_not be_present
+      expect(record.errors[:email]).not_to be_present
     end
 
     it "adds an error when email matches a blocked email" do
       ScreenedEmail.stubs(:should_block?).with(record.email).returns(true)
       validate
-      record.errors[:email].should be_present
+      expect(record.errors[:email]).to be_present
     end
   end
 

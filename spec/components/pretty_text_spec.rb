@@ -17,35 +17,36 @@ describe PrettyText do
       end
 
       it "produces a quote even with new lines in it" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd\n[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "should produce a quote" do
-        PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:123, topic:456, full:true\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"123\" data-topic=\"456\" data-full=\"true\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
       it "trims spaces on quote params" do
-        PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]").should match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
+        expect(PrettyText.cook("[quote=\"EvilTrout, post:555, topic: 666\"]ddd[/quote]")).to match_html "<aside class=\"quote\" data-post=\"555\" data-topic=\"666\"><div class=\"title\">\n<div class=\"quote-controls\"></div>\n<img width=\"20\" height=\"20\" src=\"http://test.localhost/uploads/default/avatars/42d/57c/46ce7ee487/40.png\" class=\"avatar\">EvilTrout:</div>\n<blockquote><p>ddd</p></blockquote></aside>"
       end
 
     end
 
     it "should handle 3 mentions in a row" do
-      PrettyText.cook('@hello @hello @hello').should match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
+      expect(PrettyText.cook('@hello @hello @hello')).to match_html "<p><span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span> <span class=\"mention\">@hello</span></p>"
     end
 
     it "should sanitize the html" do
-      PrettyText.cook("<script>alert(42)</script>").should match_html "<p></p>"
+      expect(PrettyText.cook("<script>alert(42)</script>")).to match_html "<p></p>"
     end
 
     it 'should allow for @mentions to have punctuation' do
-      PrettyText.cook("hello @bob's @bob,@bob; @bob\"").should
-        match_html "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
+      expect(PrettyText.cook("hello @bob's @bob,@bob; @bob\"")).to match_html(
+        "<p>hello <span class=\"mention\">@bob</span>'s <span class=\"mention\">@bob</span>,<span class=\"mention\">@bob</span>; <span class=\"mention\">@bob</span>\"</p>"
+      )
     end
 
     # see: https://github.com/sparklemotion/nokogiri/issues/1173
     skip 'allows html entities correctly' do
-      PrettyText.cook("&aleph;&pound;&#162;").should == "<p>&aleph;&pound;&#162;</p>"
+      expect(PrettyText.cook("&aleph;&pound;&#162;")).to eq("<p>&aleph;&pound;&#162;</p>")
     end
 
   end
@@ -57,27 +58,27 @@ describe PrettyText do
     end
 
     it "should inject nofollow in all user provided links" do
-      PrettyText.cook('<a href="http://cnn.com">cnn</a>').should =~ /nofollow/
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow/)
     end
 
     it "should not inject nofollow in all local links" do
-      (PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).should == true
+      expect(PrettyText.cook("<a href='#{Discourse.base_url}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow in all subdomain links" do
-      (PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).should == true
+      expect(PrettyText.cook("<a href='#{Discourse.base_url.sub('http://', 'http://bla.')}/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow for foo.com" do
-      (PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).should == true
+      expect(PrettyText.cook("<a href='http://foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow for bar.foo.com" do
-      (PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).should == true
+      expect(PrettyText.cook("<a href='http://bar.foo.com/test.html'>cnn</a>") !~ /nofollow/).to eq(true)
     end
 
     it "should not inject nofollow if omit_nofollow option is given" do
-      (PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).should == true
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>', omit_nofollow: true) !~ /nofollow/).to eq(true)
     end
   end
 
@@ -85,79 +86,79 @@ describe PrettyText do
 
     it "sanitizes attempts to inject invalid attributes" do
       spinner = "<a href=\"http://thedailywtf.com/\" data-bbcode=\"' class='fa fa-spin\">WTF</a>"
-      PrettyText.excerpt(spinner, 20).should match_html spinner
+      expect(PrettyText.excerpt(spinner, 20)).to match_html spinner
 
       spinner = %q{<a href="http://thedailywtf.com/" title="' class=&quot;fa fa-spin&quot;&gt;&lt;img src='http://thedailywtf.com/Resources/Images/Primary/logo.gif"></a>}
-      PrettyText.excerpt(spinner, 20).should match_html spinner
+      expect(PrettyText.excerpt(spinner, 20)).to match_html spinner
     end
 
     context "images" do
 
       it "should dump images" do
-        PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100).should == "[image]"
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif'>",100)).to eq("[image]")
       end
 
       it "should keep alt tags" do
-        PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100).should == "[car]"
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' alt='car' title='my big car'>",100)).to eq("[car]")
       end
 
       it "should keep title tags" do
-        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100).should == "[car]"
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>",100)).to eq("[car]")
       end
 
       it "should convert images to markdown if the option is set" do
-        PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true).should == "![car](http://cnn.com/a.gif)"
+        expect(PrettyText.excerpt("<img src='http://cnn.com/a.gif' title='car'>", 100, markdown_images: true)).to eq("![car](http://cnn.com/a.gif)")
       end
 
       it "should keep spoilers" do
-        PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100).should match_html "<span class='spoiler'>[image]</span>"
-        PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100).should match_html "<span class='spoiler'>spoiler</span>"
+        expect(PrettyText.excerpt("<div class='spoiler'><img src='http://cnn.com/a.gif'></div>", 100)).to match_html "<span class='spoiler'>[image]</span>"
+        expect(PrettyText.excerpt("<span class='spoiler'>spoiler</div>", 100)).to match_html "<span class='spoiler'>spoiler</span>"
       end
 
       it "should remove meta informations" do
-        PrettyText.excerpt(wrapped_image, 100).should match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
+        expect(PrettyText.excerpt(wrapped_image, 100)).to match_html "<a href='//localhost:3000/uploads/default/4399/33691397e78b4d75.png' class='lightbox' title='Screen Shot 2014-04-14 at 9.47.10 PM.png'>[image]</a>"
       end
     end
 
     it "should have an option to strip links" do
-      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true).should == "cnn"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100, strip_links: true)).to eq("cnn")
     end
 
     it "should preserve links" do
-      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100).should match_html "<a href='http://cnn.com'>cnn</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",100)).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
     it "should deal with special keys properly" do
-      PrettyText.excerpt("<pre><b></pre>",100).should == ""
+      expect(PrettyText.excerpt("<pre><b></pre>",100)).to eq("")
     end
 
     it "should truncate stuff properly" do
-      PrettyText.excerpt("hello world",5).should == "hello&hellip;"
-      PrettyText.excerpt("<p>hello</p><p>world</p>",6).should == "hello w&hellip;"
+      expect(PrettyText.excerpt("hello world",5)).to eq("hello&hellip;")
+      expect(PrettyText.excerpt("<p>hello</p><p>world</p>",6)).to eq("hello w&hellip;")
     end
 
     it "should insert a space between to Ps" do
-      PrettyText.excerpt("<p>a</p><p>b</p>",5).should == "a b"
+      expect(PrettyText.excerpt("<p>a</p><p>b</p>",5)).to eq("a b")
     end
 
     it "should strip quotes" do
-      PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom",5).should == "boom"
+      expect(PrettyText.excerpt("<aside class='quote'><p>a</p><p>b</p></aside>boom",5)).to eq("boom")
     end
 
     it "should not count the surrounds of a link" do
-      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3).should match_html "<a href='http://cnn.com'>cnn</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",3)).to match_html "<a href='http://cnn.com'>cnn</a>"
     end
 
     it "uses an ellipsis instead of html entities if provided with the option" do
-      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2, text_entities: true).should match_html "<a href='http://cnn.com'>cn...</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>", 2, text_entities: true)).to match_html "<a href='http://cnn.com'>cn...</a>"
     end
 
     it "should truncate links" do
-      PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2).should match_html "<a href='http://cnn.com'>cn&hellip;</a>"
+      expect(PrettyText.excerpt("<a href='http://cnn.com'>cnn</a>",2)).to match_html "<a href='http://cnn.com'>cn&hellip;</a>"
     end
 
     it "doesn't extract empty quotes as links" do
-      PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a.should be_empty
+      expect(PrettyText.extract_links("<aside class='quote'>not a linked quote</aside>\n").to_a).to be_empty
     end
 
     def extract_urls(text)
@@ -165,15 +166,15 @@ describe PrettyText do
     end
 
     it "should be able to extract links" do
-      extract_urls("<a href='http://cnn.com'>http://bla.com</a>").should == ["http://cnn.com"]
+      expect(extract_urls("<a href='http://cnn.com'>http://bla.com</a>")).to eq(["http://cnn.com"])
     end
 
     it "should extract links to topics" do
-      extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>").should == ["/t/topic/321"]
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
     end
 
     it "should extract links to posts" do
-      extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>").should == ["/t/topic/1234/4567"]
+      expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
     end
 
     it "should not extract links inside quotes" do
@@ -186,37 +187,38 @@ describe PrettyText do
         <a href='http://body_and_quote.com'>http://useless2.com</a>
         ")
 
-      links.map{|l| [l.url, l.is_quote]}.to_a.sort.should ==
+      expect(links.map{|l| [l.url, l.is_quote]}.to_a.sort).to eq(
         [["http://body_only.com",false],
          ["http://body_and_quote.com", false],
          ["/t/topic/1234",true]
         ].sort
+      )
     end
 
     it "should not preserve tags in code blocks" do
-      PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100).should == "&lt;h3&gt;Hours&lt;/h3&gt;"
+      expect(PrettyText.excerpt("<pre><code class='handlebars'>&lt;h3&gt;Hours&lt;/h3&gt;</code></pre>",100)).to eq("&lt;h3&gt;Hours&lt;/h3&gt;")
     end
 
     it "should handle nil" do
-      PrettyText.excerpt(nil,100).should == ''
+      expect(PrettyText.excerpt(nil,100)).to eq('')
     end
 
     it "handles span excerpt at the beginning of a post" do
-      PrettyText.excerpt("<span class='excerpt'>hi</span> test",100).should == 'hi'
+      expect(PrettyText.excerpt("<span class='excerpt'>hi</span> test",100)).to eq('hi')
       post = Fabricate(:post, raw: "<span class='excerpt'>hi</span> test")
-      post.excerpt.should == "hi"
+      expect(post.excerpt).to eq("hi")
     end
 
     it "ignores max excerpt length if a span excerpt is specified" do
       two_hundred = "123456789 " * 20 + "."
       text =  two_hundred + "<span class='excerpt'>#{two_hundred}</span>" + two_hundred
-      PrettyText.excerpt(text, 100).should == two_hundred
+      expect(PrettyText.excerpt(text, 100)).to eq(two_hundred)
       post = Fabricate(:post, raw: text)
-      post.excerpt.should == two_hundred
+      expect(post.excerpt).to eq(two_hundred)
     end
 
     it "unescapes html entities when we want text entities" do
-      PrettyText.excerpt("&#39;", 500, text_entities: true).should == "'"
+      expect(PrettyText.excerpt("&#39;", 500, text_entities: true)).to eq("'")
     end
 
   end
@@ -255,17 +257,17 @@ describe PrettyText do
     it "adds base url to relative links" do
       html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
       output = make_abs_string(html)
-      output.should == "<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>"
+      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
     end
 
     it "doesn't change external absolute links" do
       html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
-      make_abs_string(html).should == html
+      expect(make_abs_string(html)).to eq(html)
     end
 
     it "doesn't change internal absolute links" do
       html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
-      make_abs_string(html).should == html
+      expect(make_abs_string(html)).to eq(html)
     end
 
     it "can tolerate invalid URLs" do
@@ -283,11 +285,11 @@ describe PrettyText do
 
     it "doesn't change HTML when there's no wrapped image" do
       html = "<img src=\"wat.png\">"
-      strip_image_wrapping(html).should == html
+      expect(strip_image_wrapping(html)).to eq(html)
     end
 
     it "strips the metadata" do
-      strip_image_wrapping(wrapped_image).should match_html "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
+      expect(strip_image_wrapping(wrapped_image)).to match_html "<div class=\"lightbox-wrapper\"><a href=\"//localhost:3000/uploads/default/4399/33691397e78b4d75.png\" class=\"lightbox\" title=\"Screen Shot 2014-04-14 at 9.47.10 PM.png\"><img src=\"//localhost:3000/uploads/default/_optimized/bd9/b20/bbbcd6a0c0_655x500.png\" width=\"655\" height=\"500\"></a></div>"
     end
   end
 
@@ -299,8 +301,8 @@ describe PrettyText do
 
 
   it 'can escape *' do
-    PrettyText.cook("***a***a").should match_html("<p><strong><em>a</em></strong>a</p>")
-    PrettyText.cook("***\\****a").should match_html("<p><strong><em>*</em></strong>a</p>")
+    expect(PrettyText.cook("***a***a")).to match_html("<p><strong><em>a</em></strong>a</p>")
+    expect(PrettyText.cook("***\\****a")).to match_html("<p><strong><em>*</em></strong>a</p>")
   end
 
 end

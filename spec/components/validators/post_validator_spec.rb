@@ -64,7 +64,7 @@ describe Validators::PostValidator do
 
       it "should not add an error" do
         validator.unique_post_validator(post)
-        post.errors.count.should == 0
+        expect(post.errors.count).to eq(0)
       end
     end
 
@@ -81,7 +81,7 @@ describe Validators::PostValidator do
       it "should not add an error if post.skip_unique_check is true" do
         post.skip_unique_check = true
         validator.unique_post_validator(post)
-        post.errors.count.should == 0
+        expect(post.errors.count).to eq(0)
       end
     end
   end
