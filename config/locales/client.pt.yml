@@ -143,6 +143,7 @@ pt:
       topic_count: "Tópicos"
       post_count: "Mensagens"
       user_count: "Utilizadores"
+      contact: "Contacte-nos"
     bookmarks:
       not_logged_in: "Pedimos desculpa, é necessário ter sessão iniciada para marcar mensagens"
       created: "adicionou esta mensagem aos marcadores"
@@ -699,11 +700,6 @@ pt:
     go_back: 'voltar atrás'
     not_logged_in_user: 'página de utilizador com resumo da atividade atual e preferências  '
     current_user: 'ir para a sua página de utilizador'
-    starred:
-      title: 'Favoritos'
-      help:
-        star: 'adicionar este tópico à sua lista de favoritos'
-        unstar: 'remover este tópico da sua lista de favoritos'
     topics:
       bulk:
         reset_read: "Repor Leitura"
@@ -723,7 +719,6 @@ pt:
           one: "Selecionou  <b>1</b> tópico."
           other: "Selecionou <b>{{count}}</b> tópicos."
       none:
-        starred: "Não tem tópicos favoritos."
         unread: "Tem tópicos não lidos."
         new: "Não tem novos tópicos."
         read: "Ainda não leu nenhum tópico."
@@ -735,7 +730,6 @@ pt:
         educate:
           new: '<p>Os seus novos tópicos aparecem aqui.</p><p>Por defeito, os tópicos são considerados novos e mostrarão o indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> caso tenham sido criados nos últimos 2 dias.</p><p>Pode alterar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
           unread: '<p>Os seus tópicos não lidos aparecem aqui.</p><p>Por defeito, os tópicos são considerados não lidos e aparecem nas contagens de não lidos <span class="badge new-posts badge-notification">1</span> Se:</p><ul><li>Criou o tópico</li><li>Respondeu ao tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou, se definiu explicitamente o tópico para acompanhar ou vigiar através do controlo de notificações que se encontra na parte inferior de cada tópico.</p><p> Pode alterar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          starred: '<p>Os seus tópicos favoritos aparecem aqui.</p><p>Para remover a estrela de um tópico, use:</p><ul><li>o <i class="fa fa-star"></i> mais próxima do título de qualquer tópico</li><li>O botão de Estrela na parte final de cada tópico</li></ul>'
       bottom:
         latest: "Não existem mais tópicos recentes."
         hot: "Não existem mais tópicos quentes."
@@ -743,7 +737,6 @@ pt:
         read: "Não existem mais tópicos lidos."
         new: "Não existem mais tópicos novos."
         unread: "Não existem mais tópicos não lidos."
-        starred: "Não existem mais tópicos favoritos."
         category: "Não existem mais tópicos na categoria {{category}}."
         top: "Não existem mais tópicos recentes."
     topic:
@@ -1145,6 +1138,8 @@ pt:
       delete: 'Eliminar Categoria'
       create: 'Nova Categoria'
       save: 'Guardar Categoria'
+      slug: 'Título da Categoria'
+      slug_placeholder: '(Opcional) palavras com travessão no URL'
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
       name: "Nome da Categoria"
@@ -1230,6 +1225,8 @@ pt:
     topic_statuses:
       warning:
         help: "Este é um aviso oficial."
+      bookmarked:
+        help: "Adicionou este tópico aos marcadores"
       locked:
         help: "Este tópico está fechado; já não são aceites novas respostas"
       unpinned:
@@ -1281,9 +1278,6 @@ pt:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
-      starred:
-        title: "Favoritos"
-        help: "tópicos que marcou como favoritos"
       read:
         title: "Lido"
         help: "tópicos que leu, na ordem que os leu"
@@ -1454,13 +1448,17 @@ pt:
         edit: "Editar Grupos"
         refresh: "Atualizar"
         new: "Novo"
-        selector_placeholder: "adicionar utilizadores"
+        selector_placeholder: "insira o nome de utilizador"
         name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
+        delete_member_confirm: "Remova o '%{username}' do grupo '%{group}'?"
+        name: "Nome"
+        add: "Adicionar"
+        add_members: "Adicionar membros"
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."
@@ -1530,6 +1528,7 @@ pt:
       export_csv:
         success: "Exportação iniciada, será notificado através de mensagem privada quando o processo ficar concluído."
         failed: "A exportação falhou. Por favor verifique os registos dos logs."
+        rate_limit_error: "As mensagens podem ser descarregadas uma vez por dia. Por favor, tente novamente amanhã."
         button_text: "Exportar"
         button_title:
           user: "Exportar lista total de utilizadores em formato CSV."
@@ -2025,7 +2024,6 @@ pt:
         latest: '<b>g</b>, <b>l</b> Recentes'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não lido'
-        starred: '<b>g</b>, <b>f</b> Favoritos'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Os Melhores'
       navigation:
@@ -2048,7 +2046,7 @@ pt:
         dismiss_topics: '<b>x</b>, <b>t</b> Destituir Tópicos'
       actions:
         title: 'Ações'
-        star: '<b>f</b> Adicionar tópico aos favoritos'
+        bookmark_topic: '<b>f</b> Adicionar tópico aos marcadores'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Tópico Fixado/Desafixado'
         share_topic: '<b>shift</b>+<b>s</b> Partilhar tópico'
         share_post: '<b>s</b> Partilhar mensagem'

@@ -643,11 +643,6 @@ da:
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
     current_user: 'gå til brugerside'
-    starred:
-      title: 'Favorit'
-      help:
-        star: 'tilføj dette emne til din favorit-liste'
-        unstar: 'fjern dette emne fra din favorit-liste'
     topics:
       bulk:
         reset_read: "Nulstil \"læst\""
@@ -675,8 +670,6 @@ da:
         hot: "Der er ingen populære emner."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
-        educate:
-          starred: '<p>Dine favoritemner optræder her.</p><p>For at gøre et emne til favorit, kan du brug: :</p><ul><li><i class="fa fa-star"></i> ved siden af emnets titel</li><li>stjerne-knappen ved bunden af hvert emne</li></ul>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -684,7 +677,6 @@ da:
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
         unread: "Der er ikke flere ulæste emner."
-        starred: "Der er ikke flere favorit-emner."
         category: "Der er ikke flere emner i kategorien {{category}}."
         top: "Der er ikke flere top emner"
     topic:
@@ -1187,9 +1179,6 @@ da:
       hot:
         title: "Populære"
         help: "de mest populære emner"
-      starred:
-        title: "Favoritter"
-        help: "emner du har markeret som favoritter"
       read:
         title: "Læste"
         help: "emner du har læst"
@@ -1356,7 +1345,6 @@ da:
         edit: "Redigér grupper"
         refresh: "Genindlæs"
         new: "Nye"
-        selector_placeholder: "tilføj brugere"
         name_placeholder: "Gruppenavn, ingen mellemrum, på samme måde som brugernavne"
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
@@ -1871,7 +1859,6 @@ da:
         latest: '<b>g</b>, <b>l</b> Seneste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ulæste'
-        starred: '<b>g</b>, <b>f</b> Favoritter'
         categories: '<b>g</b>, <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
@@ -1884,7 +1871,6 @@ da:
         search: '<b>/</b> Søg'
       actions:
         title: 'Handlinger'
-        star: '<b>f</b> Markér emne som favorit'
         share_post: '<b>s</b> Del opslag'
         reply_post: '<b>r</b> Svar på kommentaren'
         quote_post: '<b>q</b> Citer emne'

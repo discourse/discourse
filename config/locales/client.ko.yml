@@ -655,11 +655,6 @@ ko:
     go_back: '돌아가기'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: '사용자 페이지로 이동'
-    starred:
-      title: '즐겨찾기'
-      help:
-        star: '즐겨찾기로 이 토픽을 추가'
-        unstar: '즐겨찾기에서 이 토픽을 제거'
     topics:
       bulk:
         reset_read: "읽기 초기화"
@@ -678,7 +673,6 @@ ko:
         selected:
           other: "<b>{{count}}</b>개의 토픽이 선택되었습니다."
       none:
-        starred: "별을 받은 토픽이 없습니다."
         unread: "읽지 않은 토픽이 없습니다."
         new: "읽을 새로운 토픽이 없습니다."
         read: "아직 어떠한 토픽도 읽지 않았습니다."
@@ -690,7 +684,6 @@ ko:
         educate:
           new: '<p>새로운 토픽은 여기에서 볼 수 있습니다.</p><p>기본 설정으로 2일 이내에 생성된 토픽은 새로운 것으로 간주되며 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> 표시가 나타납니다.</p><p><a href="%{userPrefsUrl}">환경설정</a>에서 설정을 변경 할 수 있습니다.</p>'
           unread: '<p>읽지 않은 토픽은 여기에서 볼 수 있습니다.</p><p>기본 설정으로 다음과 같은 경우 토픽은 읽지 않은 것으로 간주되며 읽지 않은 개수 <span class="badge new-posts badge-notification">1</span> 가 표시됩니다.</p><ul><li>토픽을 만든 경우</li><li>토픽에 리플을 단 경우</li><li>토픽을 4분 이상 읽은 경우</li></ul><p>또는 각 토픽 아래에 있는 알림 설정에서 해당 토픽을 추적하거나 지켜보도록 설정한 경우</p><p><a href="%{userPrefsUrl}">환경설정</a>에서 설정을 변경 할 수 있습니다.</p>'
-          starred: '<p>즐겨찾기한 토픽은 여기에서 볼 수 있습니다.</p><p>즐겨찾기를 하거나 취소하는 방법 :</p><ul><li>토픽 주제 옆에 <i class="fa fa-star"></i>를 누른다.</li><li>각 토픽 아래에 표시된 별표 버튼을 누른다.</li></ul>'
       bottom:
         latest: "더 이상 읽을 최신 토픽이 없습니다"
         hot: "더 이상 읽을 인기있는 토픽이 없습니다"
@@ -698,7 +691,6 @@ ko:
         read: "더 이상 읽을 토픽이 없습니다"
         new: "더 이상 읽을 새로운 토픽이 없습니다."
         unread: "더 이상 읽지 않은 토픽이 없습니다"
-        starred: "더 이상 읽을 즐겨찾기 토픽이 없습니다"
         category: "더 이상 {{category}}에 토픽이 없습니다"
         top: "더 이상 인기 토픽이 없습니다."
     topic:
@@ -1067,6 +1059,8 @@ ko:
       delete: '카테고리 삭제'
       create: '새 카테고리'
       save: '카테고리 저장'
+      slug: '카테고리 Slug'
+      slug_placeholder: '(Optional) dashed-words for url'
       creation_error: 카테고리 생성 중 오류가 발생했습니다.
       save_error: 카테고리 저장 중 오류가 발생했습니다.
       name: "카테고리 이름"
@@ -1202,9 +1196,6 @@ ko:
       hot:
         title: "인기 있는 글"
         help: "가장 인기있는 토픽 중 하나를 선택"
-      starred:
-        title: "즐겨찾기"
-        help: "즐겨찾기로 표시한 게시글"
       read:
         title: "읽기"
         help: "마지막으로 순서대로 읽은 토픽"
@@ -1370,7 +1361,6 @@ ko:
         edit: "그룹 수정"
         refresh: "새로고침"
         new: "새로운"
-        selector_placeholder: "사용자 추가"
         name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
@@ -1911,7 +1901,6 @@ ko:
         latest: '<b>g</b>, <b>l</b> 최신'
         new: '<b>g</b>, <b>n</b> 새로운'
         unread: '<b>g</b>, <b>u</b> 읽지 않은'
-        starred: '<b>g</b>, <b>f</b> 즐겨찾기'
         categories: '<b>g</b>, <b>c</b> 카테고리'
         top: '<b>g</b>, <b>t</b> 인기'
       navigation:
@@ -1933,7 +1922,6 @@ ko:
         dismiss_topics: '<b>x</b>, <b>t</b> 토픽 무시하기'
       actions:
         title: 'Actions'
-        star: '<b>f</b> 별표시 토픽'
         share_post: '<b>s</b> 게시글 공유'
         reply_as_new_topic: '<b>t</b> 링크된 토픽으로 답글 작성하기'
         reply_post: '<b>r</b> 게시글에 답글 달기'

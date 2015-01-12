@@ -690,11 +690,6 @@ fi:
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
     current_user: 'siirry omalle käyttäjäsivullesi'
-    starred:
-      title: 'Merkitse tähdellä'
-      help:
-        star: 'lisää tämä ketju tähdellisten listaan'
-        unstar: 'poista tämä ketju tähdellisten listalta'
     topics:
       bulk:
         reset_read: "Palauta lukutila"
@@ -714,7 +709,6 @@ fi:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
       none:
-        starred: "Et ole merkinnyt ketjuja tähdellä."
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
@@ -726,7 +720,6 @@ fi:
         educate:
           new: '<p>Uudet ketjut ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkki, kun ne on luotu edellisen kahden päivän aikana.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
           unread: '<p>Lukemattomat viestit ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan lukemattomiksi ja niiden yhteydessä näytetään <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua enemmän, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurantaan tai tarkkailuun ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
-          starred: '<p>Tähdelliset ketjut ilmestyvät tähän.</p><p>Merkitäksesi ketjun tähdellä, klikkaa:</p><ul><li><i class="fa fa-star"></i> ketjun otsikon vierestä</li><li>Merkitse tähdellä-painiketta ketjun lopussa</li></ul>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -734,7 +727,6 @@ fi:
         read: "Luettuja ketjuja ei ole enempää."
         new: "Uusia ketjuja ei ole enempää."
         unread: "Lukemattomia ketjuja ei ole enempää."
-        starred: "Tähdellisiä ketjuja ei ole enempää."
         category: "Alueen {{category}} ketjuja ei ole enempää."
         top: "Huippuketjuja ei ole enempää."
     topic:
@@ -1272,9 +1264,6 @@ fi:
       hot:
         title: "Kuuma"
         help: "valikoima kuumimpia ketjuja"
-      starred:
-        title: "Tähdelliset"
-        help: "tähdellä merkitsemäsi ketjut"
       read:
         title: "Luetut"
         help: "lukemasi ketjut, lukemisjärjestyksessä"
@@ -1445,7 +1434,6 @@ fi:
         edit: "Muokkaa ryhmiä"
         refresh: "Lataa uudelleen"
         new: "Uusi"
-        selector_placeholder: "lisää käyttäjiä"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samt säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
@@ -2001,7 +1989,6 @@ fi:
         latest: '<b>g</b>,<b>l</b> Tuoreimmat'
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'
-        starred: '<b>g</b>, <b>f</b> Tähdelliset'
         categories: '<b>g</b>, <b>c</b> Alueet'
         top: '<b>g</b>, <b>t</b> Ylös'
       navigation:
@@ -2023,7 +2010,6 @@ fi:
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
       actions:
         title: 'Toiminnot'
-        star: '<b>f</b> Merkitse ketju tähdellä'
         share_post: '<b>s</b> Jaa viesti'
         reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'
         reply_post: '<b>r</b> Vastaa viestiin'

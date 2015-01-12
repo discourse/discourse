@@ -103,9 +103,11 @@ zh_TW:
     errors:
       can_not_modify_automatic: "你無法修改自動群組"
     default_names:
+      everyone: "所有人"
       admins: "管理員"
       moderators: "板主"
       staff: "工作人員"
+      trust_level_0: "信任等級 0"
       trust_level_1: "信任等級 1"
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
@@ -136,6 +138,12 @@ zh_TW:
         is_invalid: "無效，請嘗試寫得更明確"
         has_already_been_used: "已經被使用"
       models:
+        topic:
+          attributes:
+            base:
+              too_many_users: "你只能同時傳送警告給一位用戶。"
+              cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
+              no_user_selected: "你必須選擇有效用戶。"
         user:
           attributes:
             password:
@@ -175,6 +183,12 @@ zh_TW:
       title: "新用戶"
     basic:
       title: "初級用戶"
+    regular:
+      title: "成員"
+    leader:
+      title: "一般用戶"
+    elder:
+      title: "領先用戶"
   rate_limiter:
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
@@ -400,10 +414,6 @@ zh_TW:
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
     github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
     failing_emails_warning: '%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中檢視失敗的任務</a>。'
-    default_logo_warning: "你沒有自訂你的網站 logo。請在<a href='/admin/site_settings'>網站設定</a>中更改 logo_url, logo_small_url 及 favicon_url。"
-    contact_email_missing: "你沒有為網站指定一個聯絡電郵。請在<a href='/admin/site_settings'>網站設定</a>中設定 contact_email。"
-    contact_email_invalid: "網站聯絡電郵不正確。請在<a href='/admin/site_settings'>網站設定</a>修改。"
-    title_nag: "正在使用預設的網站標題。請在<a href='/admin/site_settings'>網站設定</a>更改你的網站標題。"
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
   content_types:
     education_new_reply:
@@ -446,9 +456,6 @@ zh_TW:
     uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容文章的間隔時間"
-    title: "網站的簡短標題，用於 HTML 的標題（ title ）"
-    site_description: "用簡短的文字描述這個論壇，將使用在 meta description 標籤內"
-    contact_email: "網站關鍵聯絡人的 Email，discourse.org 可能將把重要的更新通知用此 Email 進行聯絡"
     queue_jobs: "如果失敗佇列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
@@ -461,13 +468,13 @@ zh_TW:
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
     post_excerpt_maxlength: "文章摘要的最大文字長度"
-    logo_url: "你的網站左上方的Logo圖片，例如 http://example.com/logo.png"
     favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     use_https: "使用 SSL 安全套接層來瀏覽本站嗎？"
     summary_posts_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小的文章的數量"
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當用戶點擊 \"此話題的摘要\"，顯示前面多少 % 的文章"
+    enable_private_messages: "允許信任等級 1 之用戶建立私人訊息和私下交流"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
     auto_track_topics_after: "經過多少毫秒之後一個討論話題就會被自動追蹤的全域預設值，用戶可以覆寫此設定 ( 0 為總是，-1 為永不 )"
@@ -505,7 +512,6 @@ zh_TW:
     login_required: "需要登入才能進入網站，不允許匿名操作"
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
-    enable_sso: "啟用單一登入（single sign on）( 注意：禁用邀請功能 )"
     sso_url: "單點登入 URL 入口點"
     sso_secret: "用於加解密 SSO 訊息的密鑰字串，請確認在 10 個字元以上"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
@@ -548,8 +554,12 @@ zh_TW:
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設等級 (0-4)"
+    tl3_links_no_follow: "禁止從信任等級 3 之用戶所發表的連結中刪除 rel=nofollow 標籤"
     min_trust_to_create_topic: "建立話題最低所需的信任等級"
     min_trust_to_edit_wiki_post: "編輯被標示為維基的文章所需之最低信任等級。"
+    newuser_max_links: "新用戶可添加多少連結於一篇文章中"
+    newuser_max_images: "新用戶可添加多少張圖片於一篇文章中"
+    newuser_max_attachments: "新用戶可添加多少附件於一篇文章中"
     title_fancy_entities: "轉換討論話題標題中的 HTML 實體"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
     tos_url: "如果你想要使用一個部署在某個地方的服務條款文檔，那麼請在此填寫其完整URL地址。"
@@ -566,6 +576,7 @@ zh_TW:
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "EMail 摘要中顯示的最大話題數量"
     digest_min_excerpt_length: "EMail 摘要中每篇文章最少顯示的字元數量"
+    default_external_links_in_new_tab: "以新分頁開啟所有外部連結，用戶可於個人偏好設定更改設定。"
     detect_custom_avatars: "是否檢測用會上傳了自訂的個人圖示"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
@@ -639,7 +650,6 @@ zh_TW:
     errors: "%{errors}"
     not_available: "不可用，試試 %{suggestion}？"
     something_already_taken: "出了一些問題，可能此用戶名或電子郵箱已經被註冊。試試 忘記密碼 連結吧。"
-    omniauth_error: "抱歉，在給你的 %{strategy} 帳號授權時發生了錯誤。有可能你沒有批准授權申請？"
     omniauth_error_unknown: "在處理你的登入過程中發生了錯誤，請重試。"
     new_registrations_disabled: "現在不允許註冊新的帳戶"
   user:
@@ -677,10 +687,6 @@ zh_TW:
   flags_reminder:
     please_review: "請再次確認。"
     post_number: "文章"
-  flag_reasons:
-    off_topic: "你的文章被標記為 **離題**：社群認為它不切合主題，也就是該討論話題的標題和首篇文章所述之內容。"
-    spam: "你的文章被標記為 **垃圾內容**：我們認為這是一則廣告，和討論話題無關只是促銷資訊。"
-    notify_moderators: "你的文章被投訴 **需要板主注意**：社群認為文章中某些部分需要板主介入干涉。"
   system_messages:
     post_hidden:
       subject_template: "因為社群投訴而被隱藏的文章"

@@ -672,11 +672,6 @@ zh_CN:
     go_back: '返回'
     not_logged_in_user: '显示当前活动和设置的用户页面'
     current_user: '去你的用户页面'
-    starred:
-      title: '收藏'
-      help:
-        star: '将此主题加入你的收藏列表'
-        unstar: '将此主题从你的收藏列表中移除'
     topics:
       bulk:
         reset_read: "设为未读"
@@ -695,7 +690,6 @@ zh_CN:
         selected:
           other: "你已经选择了 <b>{{count}}</b>个主题"
       none:
-        starred: "你没有收藏任何主题。"
         unread: "你没有未阅主题。"
         new: "你没有新主题可读。"
         read: "你尚未阅读任何主题。"
@@ -707,7 +701,6 @@ zh_CN:
         educate:
           new: '<p>这里是你的新主题。</p><p>默认情况下，最近两天创建的主题是新主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
           unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
-          starred: '<p>你收藏的主题会出现在这里。</p><p>要收藏主题或者取消，请使用 <i class="fa fa-star"></p><ul><li>在主题标题的右边</i> </li><li>主题底部的星标按钮</li></ul>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -715,7 +708,6 @@ zh_CN:
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
         unread: "没有更多未阅主题可看了。"
-        starred: "没有更多收藏主题可看了。"
         category: "没有更多 {{category}} 分类的主题了。"
         top: "没有更多最佳主题了。"
     topic:
@@ -1084,6 +1076,8 @@ zh_CN:
       delete: '删除分类'
       create: '新分类'
       save: '保存分类'
+      slug: '分类 Slug'
+      slug_placeholder: '（可选）用于 url 的用-分割的单词'
       creation_error: 创建此分类时发生了错误。
       save_error: 在保存此分类时发生了错误。
       name: "分类名称"
@@ -1219,9 +1213,6 @@ zh_CN:
       hot:
         title: "热门"
         help: "最近最受欢迎的主题"
-      starred:
-        title: "收藏"
-        help: "你收藏的主题"
       read:
         title: "已阅"
         help: "你已经阅读过的主题"
@@ -1387,13 +1378,17 @@ zh_CN:
         edit: "编辑群组"
         refresh: "刷新"
         new: "新群组"
-        selector_placeholder: "添加用户"
+        selector_placeholder: "输入用户名"
         name_placeholder: "组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
         delete_confirm: "删除这个小组吗？"
         delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
+        delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
+        name: "名字"
+        add: "添加"
+        add_members: "添加成员"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有活动的 API 密钥。"
@@ -1463,6 +1458,7 @@ zh_CN:
       export_csv:
         success: "导出开始，当操作完成后你将被私信通知。"
         failed: "导出失败。请检查日志。"
+        rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
         button_text: "导出"
         button_title:
           user: "以CSV格式导出所有用户列表"
@@ -1951,7 +1947,6 @@ zh_CN:
         latest: '<b>g</b> 然后 <b>l</b> 最新内容'
         new: '<b>g</b> 然后 <b>n</b> 新主题'
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
-        starred: '<b>g</b> 然后 <b>f</b> 收藏的主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
         top: '<b>g</b>, <b>t</b> 顶部'
       navigation:
@@ -1974,7 +1969,6 @@ zh_CN:
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
       actions:
         title: '动作'
-        star: '<b>f</b> 收藏主题'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
         share_topic: '<b>shift</b>+<b>s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
