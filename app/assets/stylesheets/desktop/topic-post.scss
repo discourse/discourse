@@ -243,8 +243,8 @@ nav.post-controls {
   }
 
   .topic-avatar {
-     width: 45px;
-     padding-left: 15px;
+    padding-left: 15px;
+    padding-top: 0;
   }
 
   // bottom means "reply expansion" below a post
@@ -645,16 +645,6 @@ blockquote {
   padding: 12px;
   a.mention {background: darken(scale-color-diff(), 10%);}
 }
-
-// we assume blockquotes have their own margins, so all blockquotes
-// will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
-}
-
 
 /* quotes with attribution */
 .quote {

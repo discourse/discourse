@@ -349,11 +349,6 @@
     bottom: 48px;
     top: 50px;
 
-    // this removes the topmost margin;
-    // if we don't have this, all posts would have extra space at the top
-    #wmd-preview > *:first-child {
-      margin-top: 0 !important;
-    }
 
     #wmd-input, #wmd-preview-scroller, #wmd-preview {
       box-sizing: border-box;
