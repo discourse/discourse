@@ -7,7 +7,7 @@ describe Admin::GroupsController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::GroupsController < Admin::AdminController).should == true
+    expect(Admin::GroupsController < Admin::AdminController).to eq(true)
   end
 
   context ".index" do
@@ -18,15 +18,15 @@ describe Admin::GroupsController do
       group.save
 
       xhr :get, :index
-      response.status.should == 200
-      ::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }.should == [{
+      expect(response.status).to eq(200)
+      expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
         "name"=>group.name,
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
         "visible"=>true
-      }]
+      }])
     end
 
   end
@@ -36,12 +36,12 @@ describe Admin::GroupsController do
     it "strip spaces on the group name" do
       xhr :post, :create, name: " bob "
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
 
       groups = Group.where(name: "bob").to_a
 
-      groups.count.should == 1
-      groups[0].name.should == "bob"
+      expect(groups.count).to eq(1)
+      expect(groups[0].name).to eq("bob")
     end
 
   end
@@ -50,11 +50,11 @@ describe Admin::GroupsController do
 
     it "ignore name change on automatic group" do
       xhr :put, :update, id: 1, name: "WAT", visible: "true"
-      response.should be_success
+      expect(response).to be_success
 
       group = Group.find(1)
-      group.name.should_not == "WAT"
-      group.visible.should == true
+      expect(group.name).not_to eq("WAT")
+      expect(group.visible).to eq(true)
     end
 
   end
@@ -64,15 +64,15 @@ describe Admin::GroupsController do
     it "returns a 422 if the group is automatic" do
       group = Fabricate(:group, automatic: true)
       xhr :delete, :destroy, id: group.id
-      response.status.should == 422
-      Group.where(id: group.id).count.should == 1
+      expect(response.status).to eq(422)
+      expect(Group.where(id: group.id).count).to eq(1)
     end
 
     it "is able to destroy a non-automatic group" do
       group = Fabricate(:group)
       xhr :delete, :destroy, id: group.id
-      response.status.should == 200
-      Group.where(id: group.id).count.should == 0
+      expect(response.status).to eq(200)
+      expect(Group.where(id: group.id).count).to eq(0)
     end
 
   end
@@ -83,7 +83,7 @@ describe Admin::GroupsController do
       Group.expects(:refresh_automatic_groups!).returns(true)
 
       xhr :post, :refresh_automatic_groups
-      response.status.should == 200
+      expect(response.status).to eq(200)
     end
 
   end
@@ -92,7 +92,7 @@ describe Admin::GroupsController do
 
     it "cannot add members to automatic groups" do
       xhr :put, :add_members, group_id: 1, usernames: "l77t"
-      response.status.should == 422
+      expect(response.status).to eq(422)
     end
 
     it "is able to add several members to a group" do
@@ -102,9 +102,9 @@ describe Admin::GroupsController do
 
       xhr :put, :add_members, group_id: group.id, usernames: [user1.username, user2.username].join(",")
 
-      response.should be_success
+      expect(response).to be_success
       group.reload
-      group.users.count.should == 2
+      expect(group.users.count).to eq(2)
     end
 
   end
@@ -113,7 +113,7 @@ describe Admin::GroupsController do
 
     it "cannot remove members from automatic groups" do
       xhr :put, :remove_member, group_id: 1, user_id: 42
-      response.status.should == 422
+      expect(response.status).to eq(422)
     end
 
     it "is able to remove a member" do
@@ -124,9 +124,9 @@ describe Admin::GroupsController do
 
       xhr :delete, :remove_member, group_id: group.id, user_id: user.id
 
-      response.should be_success
+      expect(response).to be_success
       group.reload
-      group.users.count.should == 0
+      expect(group.users.count).to eq(0)
     end
 
   end

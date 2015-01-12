@@ -11,10 +11,10 @@ describe UserBadgesController do
       UserBadge.create(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
 
       xhr :get, :index, badge_id: badge.id
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["topics"].should == nil
-      parsed["user_badges"][0]["post_id"].should == nil
+      expect(parsed["topics"]).to eq(nil)
+      expect(parsed["user_badges"][0]["post_id"]).to eq(nil)
     end
   end
 
@@ -28,25 +28,25 @@ describe UserBadgesController do
     it 'returns user_badges for a user' do
       xhr :get, :username, username: user.username
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["user_badges"].length.should == 1
+      expect(parsed["user_badges"].length).to eq(1)
     end
 
     it 'returns user_badges for a badge' do
       xhr :get, :index, badge_id: badge.id
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["user_badges"].length.should == 1
+      expect(parsed["user_badges"].length).to eq(1)
     end
 
     it 'includes counts when passed the aggregate argument' do
       xhr :get, :username, username: user.username, grouped: true
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
-      parsed["user_badges"].first.has_key?('count').should == true
+      expect(parsed["user_badges"].first.has_key?('count')).to eq(true)
     end
   end
 
@@ -58,7 +58,7 @@ describe UserBadgesController do
     it 'does not allow regular users to grant badges' do
       log_in_user Fabricate(:user)
       xhr :post, :create, badge_id: badge.id, username: user.username
-      response.status.should == 403
+      expect(response.status).to eq(403)
     end
 
     it 'grants badges from staff' do
@@ -66,26 +66,26 @@ describe UserBadgesController do
       log_in_user admin
       StaffActionLogger.any_instance.expects(:log_badge_grant).once
       xhr :post, :create, badge_id: badge.id, username: user.username
-      response.status.should == 200
+      expect(response.status).to eq(200)
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      user_badge.should be_present
-      user_badge.granted_by.should eq(admin)
+      expect(user_badge).to be_present
+      expect(user_badge.granted_by).to eq(admin)
     end
 
     it 'does not grant badges from regular api calls' do
       Fabricate(:api_key, user: user)
       xhr :post, :create, badge_id: badge.id, username: user.username, api_key: user.api_key.key
-      response.status.should == 403
+      expect(response.status).to eq(403)
     end
 
     it 'grants badges from master api calls' do
       api_key = Fabricate(:api_key)
       StaffActionLogger.any_instance.expects(:log_badge_grant).never
       xhr :post, :create, badge_id: badge.id, username: user.username, api_key: api_key.key, api_username: "system"
-      response.status.should == 200
+      expect(response.status).to eq(200)
       user_badge = UserBadge.find_by(user: user, badge: badge)
-      user_badge.should be_present
-      user_badge.granted_by.should eq(Discourse.system_user)
+      expect(user_badge).to be_present
+      expect(user_badge.granted_by).to eq(Discourse.system_user)
     end
   end
 
@@ -94,15 +94,15 @@ describe UserBadgesController do
 
     it 'checks that the user is authorized to revoke a badge' do
       xhr :delete, :destroy, id: user_badge.id
-      response.status.should == 403
+      expect(response.status).to eq(403)
     end
 
     it 'revokes the badge' do
       log_in :admin
       StaffActionLogger.any_instance.expects(:log_badge_revoke).once
       xhr :delete, :destroy, id: user_badge.id
-      response.status.should == 200
-      UserBadge.find_by(id: user_badge.id).should == nil
+      expect(response.status).to eq(200)
+      expect(UserBadge.find_by(id: user_badge.id)).to eq(nil)
     end
   end
 end
