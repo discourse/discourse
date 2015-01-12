@@ -300,14 +300,6 @@ nav.post-controls {
   .arrow {color: scale-color($primary, $lightness: 50%);}
 }
 
-.bottom-round nav.post-controls .show-replies {
-  background: scale-color-diff();
-  margin-bottom: 0;
-  padding-bottom: 8px;
-  &:hover {background: scale-color-diff();
-  }
-}
-
 .post-action {
   .relative-date {
     margin-left: 5px;
