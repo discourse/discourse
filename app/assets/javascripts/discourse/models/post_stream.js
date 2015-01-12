@@ -667,6 +667,32 @@ Discourse.PostStream = Em.Object.extend({
     return closest;
   },
 
+  // Find a postId for a postNumber, respecting gaps
+  findPostIdForPostNumber: function(postNumber) {
+    var count = 1,
+        stream = this.get('stream'),
+        beforeLookup = this.get('gaps.before'),
+        streamLength = stream.length;
+
+    for (var i=0; i<streamLength; i++) {
+      var pid = stream[i];
+
+      // See if there are posts before this post
+      if (beforeLookup) {
+        var before = beforeLookup[pid];
+        if (before) {
+          for (var j=0; j<before.length; j++) {
+            if (count === postNumber) { return pid; }
+            count++;
+          }
+        }
+      }
+
+      if (count === postNumber) { return pid; }
+      count++;
+    }
+  },
+
   /**
     @private
 
