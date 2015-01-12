@@ -318,9 +318,9 @@ class TopicQuery
           result = result.where('topics.closed')
         when 'archived'
           result = result.where('topics.archived')
-        when 'visible'
+        when 'listed'
           result = result.where('topics.visible')
-        when 'invisible'
+        when 'unlisted'
           result = result.where('NOT topics.visible')
         when 'deleted'
           guardian = Guardian.new(@user)
