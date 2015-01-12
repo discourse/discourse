@@ -4,7 +4,7 @@ require_dependency 'single_sign_on'
 describe Admin::UsersController do
 
   it 'is a subclass of AdminController' do
-    (Admin::UsersController < Admin::AdminController).should == true
+    expect(Admin::UsersController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -15,12 +15,12 @@ describe Admin::UsersController do
     context '.index' do
       it 'returns success' do
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns JSON' do
         xhr :get, :index
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
 
       context 'when showing emails' do
@@ -29,17 +29,17 @@ describe Admin::UsersController do
           xhr :get, :index, show_emails: "true"
           data = ::JSON.parse(response.body)
           data.each do |user|
-            user["email"].should be_present
+            expect(user["email"]).to be_present
           end
         end
 
         it "logs only 1 enty" do
-          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == 0
+          expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(0)
 
           xhr :get, :index, show_emails: "true"
           data = ::JSON.parse(response.body)
 
-          UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count.should == 1
+          expect(UserHistory.where(action: UserHistory.actions[:check_email], acting_user_id: @user.id).count).to eq(1)
         end
 
       end
@@ -49,14 +49,14 @@ describe Admin::UsersController do
       context 'an existing user' do
         it 'returns success' do
           xhr :get, :show, id: @user.username
-          response.should be_success
+          expect(response).to be_success
         end
       end
 
       context 'an existing user' do
         it 'returns success' do
           xhr :get, :show, id: 'foobar'
-          response.should_not be_success
+          expect(response).not_to be_success
         end
       end
     end
@@ -111,7 +111,7 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_approve?).with(evil_trout).returns(false)
         xhr :put, :approve, user_id: evil_trout.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'calls approve' do
@@ -129,13 +129,13 @@ describe Admin::UsersController do
       it 'raises an error unless the user can revoke access' do
         Guardian.any_instance.expects(:can_revoke_admin?).with(@another_admin).returns(false)
         xhr :put, :revoke_admin, user_id: @another_admin.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'updates the admin flag' do
         xhr :put, :revoke_admin, user_id: @another_admin.id
         @another_admin.reload
-        @another_admin.should_not be_admin
+        expect(@another_admin).not_to be_admin
       end
     end
 
@@ -147,18 +147,18 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_grant_admin?).with(@another_user).returns(false)
         xhr :put, :grant_admin, user_id: @another_user.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 404 if the username doesn't exist" do
         xhr :put, :grant_admin, user_id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'updates the admin flag' do
         xhr :put, :grant_admin, user_id: @another_user.id
         @another_user.reload
-        @another_user.should be_admin
+        expect(@another_user).to be_admin
       end
     end
 
@@ -170,18 +170,18 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_change_primary_group?).with(@another_user).returns(false)
         xhr :put, :primary_group, user_id: @another_user.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 404 if the user doesn't exist" do
         xhr :put, :primary_group, user_id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "changes the user's primary group" do
         xhr :put, :primary_group, user_id: @another_user.id, primary_group_id: 2
         @another_user.reload
-        @another_user.primary_group_id.should == 2
+        expect(@another_user.primary_group_id).to eq(2)
       end
     end
 
@@ -193,20 +193,20 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_change_trust_level?).with(@another_user).returns(false)
         xhr :put, :trust_level, user_id: @another_user.id
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       it "returns a 404 if the username doesn't exist" do
         xhr :put, :trust_level, user_id: 123123
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       it "upgrades the user's trust level" do
         StaffActionLogger.any_instance.expects(:log_trust_level_change).with(@another_user, @another_user.trust_level, 2).once
         xhr :put, :trust_level, user_id: @another_user.id, level: 2
         @another_user.reload
-        @another_user.trust_level.should == 2
-        response.should be_success
+        expect(@another_user.trust_level).to eq(2)
+        expect(response).to be_success
       end
 
       it "raises no error when demoting a user below their current trust level (locks trust level)" do
@@ -217,9 +217,9 @@ describe Admin::UsersController do
         stat.save!
         @another_user.update_attributes(trust_level: TrustLevel[1])
         xhr :put, :trust_level, user_id: @another_user.id, level: TrustLevel[0]
-        response.should be_success
+        expect(response).to be_success
         @another_user.reload
-        @another_user.trust_level_locked.should == true
+        expect(@another_user.trust_level_locked).to eq(true)
       end
     end
 
@@ -231,13 +231,13 @@ describe Admin::UsersController do
       it 'raises an error unless the user can revoke access' do
         Guardian.any_instance.expects(:can_revoke_moderation?).with(@moderator).returns(false)
         xhr :put, :revoke_moderation, user_id: @moderator.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'updates the moderator flag' do
         xhr :put, :revoke_moderation, user_id: @moderator.id
         @moderator.reload
-        @moderator.moderator.should_not == true
+        expect(@moderator.moderator).not_to eq(true)
       end
     end
 
@@ -249,18 +249,18 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_grant_moderation?).with(@another_user).returns(false)
         xhr :put, :grant_moderation, user_id: @another_user.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 404 if the username doesn't exist" do
         xhr :put, :grant_moderation, user_id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it 'updates the moderator flag' do
         xhr :put, :grant_moderation, user_id: @another_user.id
         @another_user.reload
-        @another_user.moderator.should == true
+        expect(@another_user.moderator).to eq(true)
       end
     end
 
@@ -283,10 +283,10 @@ describe Admin::UsersController do
         Guardian.any_instance.stubs(:can_delete_user?).returns(true)
         UserDestroyer.any_instance.stubs(:destroy).returns(true)
         xhr :delete, :reject_bulk, users: [reject_me.id, reject_me_too.id]
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['success'].to_i.should == 2
-        json['failed'].to_i.should == 0
+        expect(json['success'].to_i).to eq(2)
+        expect(json['failed'].to_i).to eq(0)
       end
 
       context 'failures' do
@@ -298,19 +298,19 @@ describe Admin::UsersController do
           UserDestroyer.any_instance.stubs(:destroy).with(reject_me, anything).returns(false)
           UserDestroyer.any_instance.stubs(:destroy).with(reject_me_too, anything).returns(true)
           xhr :delete, :reject_bulk, users: [reject_me.id, reject_me_too.id]
-          response.should be_success
+          expect(response).to be_success
           json = ::JSON.parse(response.body)
-          json['success'].to_i.should == 1
-          json['failed'].to_i.should == 1
+          expect(json['success'].to_i).to eq(1)
+          expect(json['failed'].to_i).to eq(1)
         end
 
         it 'reports failure due to a user still having posts' do
           UserDestroyer.any_instance.expects(:destroy).with(reject_me, anything).raises(UserDestroyer::PostsExistError)
           xhr :delete, :reject_bulk, users: [reject_me.id]
-          response.should be_success
+          expect(response).to be_success
           json = ::JSON.parse(response.body)
-          json['success'].to_i.should == 0
-          json['failed'].to_i.should == 1
+          expect(json['success'].to_i).to eq(0)
+          expect(json['failed'].to_i).to eq(1)
         end
       end
     end
@@ -323,12 +323,12 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_delete_user?).with(@delete_me).returns(false)
         xhr :delete, :destroy, id: @delete_me.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 403 if the user doesn't exist" do
         xhr :delete, :destroy, id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       context "user has post" do
@@ -343,13 +343,13 @@ describe Admin::UsersController do
 
         it "returns an error" do
           xhr :delete, :destroy, id: @delete_me.id
-          response.should be_forbidden
+          expect(response).to be_forbidden
         end
 
         it "doesn't return an error if delete_posts == true" do
           UserDestroyer.any_instance.expects(:destroy).with(@user, has_entry('delete_posts' => true)).returns(true)
           xhr :delete, :destroy, id: @delete_me.id, delete_posts: true
-          response.should be_success
+          expect(response).to be_success
         end
 
       end
@@ -367,9 +367,9 @@ describe Admin::UsersController do
 
       it "returns success" do
         xhr :put, :activate, user_id: @reg_user.id
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['success'].should == "OK"
+        expect(json['success']).to eq("OK")
       end
     end
 
@@ -380,14 +380,14 @@ describe Admin::UsersController do
 
       it "returns success" do
         xhr :put, :log_out, user_id: @reg_user.id
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json['success'].should == "OK"
+        expect(json['success']).to eq("OK")
       end
 
       it "returns 404 when user_id does not exist" do
         xhr :put, :log_out, user_id: 123123
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
 
@@ -400,12 +400,12 @@ describe Admin::UsersController do
         Guardian.any_instance.expects(:can_block_user?).with(@reg_user).returns(false)
         UserBlocker.expects(:block).never
         xhr :put, :block, user_id: @reg_user.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 403 if the user doesn't exist" do
         xhr :put, :block, user_id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "punishes the user for spamming" do
@@ -422,12 +422,12 @@ describe Admin::UsersController do
       it "raises an error when the user doesn't have permission" do
         Guardian.any_instance.expects(:can_unblock_user?).with(@reg_user).returns(false)
         xhr :put, :unblock, user_id: @reg_user.id
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "returns a 403 if the user doesn't exist" do
         xhr :put, :unblock, user_id: 123123
-        response.should be_forbidden
+        expect(response).to be_forbidden
       end
 
       it "punishes the user for spamming" do
@@ -462,20 +462,20 @@ describe Admin::UsersController do
       it 'should invite admin' do
         Jobs.expects(:enqueue).with(:user_email, anything).returns(true)
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com'
-        response.should be_success
+        expect(response).to be_success
 
         u = User.find_by(email: 'bill@bill.com')
-        u.name.should == "Bill"
-        u.username.should == "bill22"
-        u.admin.should == true
+        expect(u.name).to eq("Bill")
+        expect(u.username).to eq("bill22")
+        expect(u.admin).to eq(true)
       end
 
       it "doesn't send the email with send_email falsy" do
         Jobs.expects(:enqueue).with(:user_email, anything).never
         xhr :post, :invite_admin, name: 'Bill', username: 'bill22', email: 'bill@bill.com', send_email: '0'
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json["password_url"].should be_present
+        expect(json["password_url"]).to be_present
       end
     end
 
@@ -507,12 +507,12 @@ describe Admin::UsersController do
     sso.email = "bob2@bob.com"
 
     xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
-    response.should be_success
+    expect(response).to be_success
 
     user.reload
-    user.email.should == "bob2@bob.com"
-    user.name.should == "Bill"
-    user.username.should == "Hokli"
+    expect(user.email).to eq("bob2@bob.com")
+    expect(user.name).to eq("Bill")
+    expect(user.username).to eq("Hokli")
 
   end
 

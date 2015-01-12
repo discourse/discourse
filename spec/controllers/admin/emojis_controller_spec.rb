@@ -10,7 +10,7 @@ describe Admin::EmojisController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::EmojisController < Admin::AdminController).should == true
+    expect(Admin::EmojisController < Admin::AdminController).to eq(true)
   end
 
   context "when logged in" do
@@ -20,10 +20,10 @@ describe Admin::EmojisController do
       it "returns a list of custom emojis" do
         Emoji.expects(:custom).returns([custom_emoji])
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
         json = ::JSON.parse(response.body)
-        json[0]['name'].should == custom_emoji.name
-        json[0]['url'].should == custom_emoji.url
+        expect(json[0]['name']).to eq(custom_emoji.name)
+        expect(json[0]['url']).to eq(custom_emoji.url)
       end
     end
 
@@ -34,7 +34,7 @@ describe Admin::EmojisController do
       context 'name already exist' do
         it "throws an error" do
           xhr :post, :create, { name: "hello", file: "" }
-          response.should_not be_success
+          expect(response).not_to be_success
         end
       end
 
@@ -42,7 +42,7 @@ describe Admin::EmojisController do
         it "throws an error" do
           Emoji.expects(:create_for).returns(nil)
           xhr :post, :create, { name: "garbage", file: "" }
-          response.should_not be_success
+          expect(response).not_to be_success
         end
       end
 
@@ -57,10 +57,10 @@ describe Admin::EmojisController do
         it "creates a custom emoji" do
           Emoji.expects(:create_for).returns(custom_emoji2)
           xhr :post, :create, { name: "hello2", file: ""}
-          response.should be_success
+          expect(response).to be_success
           json = ::JSON.parse(response.body)
-          json['name'].should == custom_emoji2.name
-          json['url'].should == custom_emoji2.url
+          expect(json['name']).to eq(custom_emoji2.name)
+          expect(json['url']).to eq(custom_emoji2.url)
         end
 
       end
@@ -71,7 +71,7 @@ describe Admin::EmojisController do
         custom_emoji.expects(:remove)
         Emoji.expects(:custom).returns([custom_emoji])
         xhr :delete, :destroy, id: "hello"
-        response.should be_success
+        expect(response).to be_success
       end
     end
   end

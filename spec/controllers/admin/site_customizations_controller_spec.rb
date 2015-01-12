@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::SiteCustomizationsController do
 
   it "is a subclass of AdminController" do
-    (Admin::UsersController < Admin::AdminController).should == true
+    expect(Admin::UsersController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -15,24 +15,24 @@ describe Admin::SiteCustomizationsController do
       it 'returns success' do
         SiteCustomization.create!(name: 'my name', user_id: Fabricate(:user).id, header: "my awesome header", stylesheet: "my awesome css")
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns JSON' do
         xhr :get, :index
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
     end
 
     context ' .create' do
       it 'returns success' do
         xhr :post, :create, site_customization: {name: 'my test name'}
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'returns json' do
         xhr :post, :create, site_customization: {name: 'my test name'}
-        ::JSON.parse(response.body).should be_present
+        expect(::JSON.parse(response.body)).to be_present
       end
 
       it 'logs the change' do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::EmailController do
 
   it "is a subclass of AdminController" do
-    (Admin::EmailController < Admin::AdminController).should == true
+    expect(Admin::EmailController < Admin::AdminController).to eq(true)
   end
 
   let!(:user) { log_in(:admin) }
@@ -33,7 +33,7 @@ describe Admin::EmailController do
     end
 
     subject { response }
-    it { should be_success }
+    it { is_expected.to be_success }
   end
 
   context '.skipped' do
@@ -42,12 +42,12 @@ describe Admin::EmailController do
     end
 
     subject { response }
-    it { should be_success }
+    it { is_expected.to be_success }
   end
 
   context '.test' do
     it 'raises an error without the email parameter' do
-      lambda { xhr :post, :test }.should raise_error(ActionController::ParameterMissing)
+      expect { xhr :post, :test }.to raise_error(ActionController::ParameterMissing)
     end
 
     context 'with an email address' do
@@ -62,7 +62,7 @@ describe Admin::EmailController do
 
   context '.preview_digest' do
     it 'raises an error without the last_seen_at parameter' do
-      lambda { xhr :get, :preview_digest }.should raise_error(ActionController::ParameterMissing)
+      expect { xhr :get, :preview_digest }.to raise_error(ActionController::ParameterMissing)
     end
 
     it "previews the digest" do
