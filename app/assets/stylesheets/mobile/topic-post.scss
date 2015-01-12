@@ -292,6 +292,7 @@ a.star {
 #topic-footer-buttons {
   border-top: 1px solid scale-color-diff();
   padding: 20px 10px 0 10px;
+  .fa-bookmark.bookmarked { color: $tertiary; }
 }
 
 /* this is to force the drop-down notification state description para below the button */
