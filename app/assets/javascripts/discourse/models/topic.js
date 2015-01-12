@@ -181,14 +181,17 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('word_count'),
 
   toggleBookmark: function() {
-    var topic = this;
-    topic.toggleProperty('bookmarked');
-    return Discourse.ajax({
-      url: "" + (this.get('url')) + "/bookmark",
+    var self = this, firstPost = this.get("postStream.posts")[0];
+
+    this.toggleProperty('bookmarked');
+    if (this.get("postStream.firstPostPresent")) { firstPost.toggleProperty("bookmarked"); }
+
+    return Discourse.ajax('/t/' + this.get('id') + '/bookmark', {
       type: 'PUT',
-      data: { bookmarked: topic.get('bookmarked') ? true : false }
+      data: { bookmarked: self.get('bookmarked') }
     }).then(null, function (error) {
-      topic.toggleProperty('bookmarked');
+      self.toggleProperty('bookmarked');
+      if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
 
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors);

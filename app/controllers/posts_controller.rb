@@ -248,13 +248,13 @@ class PostsController < ApplicationController
 
   def bookmark
     post = find_post_from_params
-    if current_user
-      if params[:bookmarked] == "true"
-        PostAction.act(current_user, post, PostActionType.types[:bookmark])
-      else
-        PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
-      end
+
+    if params[:bookmarked] == "true"
+      PostAction.act(current_user, post, PostActionType.types[:bookmark])
+    else
+      PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end
+
     render nothing: true
   end
 

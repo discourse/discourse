@@ -7,8 +7,14 @@ class PostActionType < ActiveRecord::Base
     end
 
     def types
-      @types ||= Enum.new(:bookmark, :like, :off_topic, :inappropriate, :vote,
-                          :notify_user, :notify_moderators, :spam)
+      @types ||= Enum.new(:bookmark,
+                          :like,
+                          :off_topic,
+                          :inappropriate,
+                          :vote,
+                          :notify_user,
+                          :notify_moderators,
+                          :spam)
     end
 
     def auto_action_flag_types

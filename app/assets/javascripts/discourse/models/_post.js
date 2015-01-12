@@ -68,17 +68,6 @@ Discourse.Post = Discourse.Model.extend({
     return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');
   }.property("user_id"),
 
-  bookmarkedChanged: function() {
-    Discourse.Post.bookmark(this.get('id'), this.get('bookmarked'))
-             .then(null, function (error) {
-               if (error && error.responseText) {
-                 bootbox.alert($.parseJSON(error.responseText).errors[0]);
-               } else {
-                 bootbox.alert(I18n.t('generic_error'));
-               }
-             });
-  }.observes('bookmarked'),
-
   wikiChanged: function() {
     var data = { wiki: this.get("wiki") };
     this._updatePost("wiki", data);
@@ -421,6 +410,28 @@ Discourse.Post = Discourse.Model.extend({
 
   unhide: function () {
     return Discourse.ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
+  },
+
+  toggleBookmark: function() {
+    var self = this;
+
+    this.toggleProperty("bookmarked");
+    if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
+
+    return Discourse.ajax("/posts/" + this.get("id") + "/bookmark", {
+      type: 'PUT',
+      data: { bookmarked: this.get("bookmarked") }
+    }).then(null, function (error) {
+
+      self.toggleProperty("bookmarked");
+      if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
+
+      if (error && error.responseText) {
+        bootbox.alert($.parseJSON(error.responseText).errors[0]);
+      } else {
+        bootbox.alert(I18n.t('generic_error'));
+      }
+    });
   }
 });
 
@@ -491,10 +502,6 @@ Discourse.Post.reopenClass({
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
-  },
-
-  bookmark: function(postId, bookmarked) {
-    return Discourse.ajax("/posts/" + postId + "/bookmark", { type: 'PUT', data: { bookmarked: bookmarked } });
   }
 
 });
