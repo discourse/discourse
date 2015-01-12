@@ -213,8 +213,11 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
         alert(I18n.t("bookmarks.not_bookmarked"));
         return;
       }
-      post.toggleProperty('bookmarked');
-      return false;
+      if (post) {
+        return post.toggleBookmark();
+      } else {
+        return this.get("model").toggleBookmark();
+      }
     },
 
     jumpTop: function() {
@@ -547,15 +550,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
 
   // Receive notifications for this topic
   subscribe: function() {
-
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    var bus = Discourse.MessageBus;
-
     var topicController = this;
-    bus.subscribe("/topic/" + (this.get('id')), function(data) {
+    Discourse.MessageBus.subscribe("/topic/" + this.get('id'), function(data) {
       var topic = topicController.get('model');
+
       if (data.notification_level_change) {
         topic.set('details.notification_level', data.notification_level_change);
         topic.set('details.notifications_reason_id', data.notifications_reason_id);

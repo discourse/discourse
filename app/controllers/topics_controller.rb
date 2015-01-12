@@ -25,7 +25,8 @@ class TopicsController < ApplicationController
                                           :autoclose,
                                           :bulk,
                                           :reset_new,
-                                          :change_post_owners]
+                                          :change_post_owners,
+                                          :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
 
@@ -208,6 +209,19 @@ class TopicsController < ApplicationController
     guardian.ensure_can_moderate!(topic)
 
     topic.remove_banner!(current_user)
+
+    render nothing: true
+  end
+
+  def bookmark
+    topic = Topic.find_by(id: params[:topic_id])
+    first_post = topic.ordered_posts.first
+
+    if params[:bookmarked] == "true"
+      PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
+    else
+      PostAction.remove_act(current_user, first_post, PostActionType.types[:bookmark])
+    end
 
     render nothing: true
   end

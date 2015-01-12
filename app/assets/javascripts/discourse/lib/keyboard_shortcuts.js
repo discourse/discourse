@@ -18,15 +18,13 @@ var PATH_BINDINGS = {
     },
 
     CLICK_BINDINGS = {
-      // star topic
-      'f': '#topic-footer-buttons button.star, .topic-list tr.topic-list-item.selected a.star',
-
+      'f': '#topic-footer-buttons button.bookmark',                             // bookmark topic
       'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
       'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
       'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
       'm w': 'div.notification-options li[data-id="3"] a',                      // mark topic as watching
       'x r': '#dismiss-new,#dismiss-new-top,#dismiss-posts,#dismiss-posts-top', // dismiss new/posts
-      'x t': '#dismiss-topics,#dismiss-topics-top',                             //dismiss topics
+      'x t': '#dismiss-topics,#dismiss-topics-top',                             // dismiss topics
       '.': '.alert.alert-info.clickable',                                       // show incoming/updated topics
       'n': '#user-notifications',                                               // open notifications menu
       'o,enter': '.topic-list tr.selected a.title',                             // open selected topic
@@ -36,7 +34,7 @@ var PATH_BINDINGS = {
     },
 
     FUNCTION_BINDINGS = {
-      'c': 'createTopic',                                         // create new topic
+      'c': 'createTopic',                                                       // create new topic
       'home': 'goToFirstPost',
       '#': 'toggleProgress',
       'end': 'goToLastPost',
@@ -47,11 +45,11 @@ var PATH_BINDINGS = {
       'k': 'selectUp',
       'u': 'goBack',
       '/': 'showSearch',
-      '=': 'showSiteMap',                                             // open site map menu
-      'p': 'showCurrentUser',                                         // open current user menu
+      '=': 'showSiteMap',                                                       // open site map menu
+      'p': 'showCurrentUser',                                                   // open current user menu
       'ctrl+f': 'showBuiltinSearch',
       'command+f': 'showBuiltinSearch',
-      '?': 'showHelpModal',                                          // open keyboard shortcut help
+      '?': 'showHelpModal',                                                     // open keyboard shortcut help
       'q': 'quoteReply'
     };
 

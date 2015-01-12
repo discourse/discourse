@@ -2229,7 +2229,7 @@ en:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
-        star: '<b>f</b> Star topic'
+        bookmark_topic: '<b>f</b> Bookmark topic'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
         share_topic: '<b>shift</b>+<b>s</b> Share topic'
         share_post: '<b>s</b> Share post'

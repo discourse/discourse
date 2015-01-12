@@ -280,7 +280,6 @@ SQL
   end
 
   def self.ensure_consistency!(topic_id=nil)
-
     update_post_action_cache
 
     # TODO this needs some reworking, when we mark stuff skipped
