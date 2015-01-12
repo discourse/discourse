@@ -3,8 +3,8 @@
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
 Vagrant.configure("2") do |config|
-  config.vm.box = 'discourse-0.9.9.13'
-  config.vm.box_url = "https://d3fvb7b7auiut8.cloudfront.net/discourse-0.9.9.13.box"
+  config.vm.box= "edgibbs/discourse-0.9.9.15.box"
+  config.vm.box_url = "https://vagrantcloud.com/edgibbs/discourse-0.9.9.15.box"
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.
