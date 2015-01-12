@@ -3,10 +3,13 @@ import ButtonView from 'discourse/views/button';
 export default ButtonView.extend({
   classNames: ['bookmark'],
   textKey: 'bookmarked.title',
-  helpKeyBinding: 'controller.bookmarkTooltipKey',
   attributeBindings: ['disabled'],
 
   rerenderTriggers: ['controller.bookmarked'],
+
+  helpKey: function() {
+    return this.get("controller.bookmarked") ? "bookmarked.help.unbookmark" : "bookmarked.help.bookmark";
+  }.property("controller.bookmarked"),
 
   click: function() {
     this.get('controller').send('toggleBookmark');

@@ -161,6 +161,12 @@ en:
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_email}."
 
+    bookmarked:
+      title: "Bookmark"
+      help:
+        bookmark: "Click to bookmark this topic"
+        unbookmark: "Click to remove bookmark to this topic"
+
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
       created: "you've bookmarked this post"
