@@ -5,7 +5,9 @@
     <title><%=SiteSetting.title%></title>
     <meta name="description" content="">
     <%= render partial: "layouts/head" %>
-    <%= raw SiteText.text_for(:head) %>
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+    <%- end %>
     <%= yield(:no_js_head) %>
   </head>
   <body>
