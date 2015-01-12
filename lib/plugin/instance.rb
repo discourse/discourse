@@ -37,6 +37,13 @@ class Plugin::Instance
     metadata.name
   end
 
+  def add_to_serializer(serializer, attr, &block)
+    klass = "#{serializer.to_s.classify}Serializer".constantize
+
+    klass.attributes(attr)
+    klass.send(:define_method, attr, &block)
+  end
+
   # will make sure all the assets this plugin needs are registered
   def generate_automatic_assets!
     paths = []
