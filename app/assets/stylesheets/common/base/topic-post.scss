@@ -173,3 +173,12 @@ kbd
 
   * * { display: none; }
 }
+
+// we assume blockquotes have their own margins, so all blockquotes
+// will remove margins from first (top) and last (bottom) child elements
+blockquote > *:first-child {
+  margin-top: 0 !important;
+}
+blockquote > *:last-child {
+  margin-bottom: 0 !important;
+}

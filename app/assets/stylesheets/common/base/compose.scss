@@ -140,3 +140,12 @@ div.ac-wrap {
     top: 20%;
   }
 }
+
+// this removes the topmost margin from the first element in the topic post
+// if we don't do this, all posts would have extra space at the top
+#wmd-preview > *:first-child {
+  margin-top: 0;
+}
+.cooked > *:first-child {
+  margin-top: 0;
+}
