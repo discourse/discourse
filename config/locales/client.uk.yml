@@ -485,11 +485,6 @@ uk:
     go_back: 'повернутися назад'
     not_logged_in_user: 'сторінка користувача з підсумком поточної діяльності та налаштуваннями'
     current_user: 'перейти до Вашої сторінки користувача'
-    starred:
-      title: 'Позначити зірочкою'
-      help:
-        star: 'додати цю тему до Вашого списку позначених зірочкою'
-        unstar: 'видалити цю тему із Вашого списку позначених зірочкою'
     topics:
       bulk:
         reset_read: "Reset Read"
@@ -515,7 +510,6 @@ uk:
         read: "Більше немає прочитаних тем."
         new: "Більше немає нових тем."
         unread: "Більше немає непрочитаних тем."
-        starred: "Більше немає тем, позначених зірочкою."
         category: "Більше немає тем в категорії {{category}}."
         top: "There are no more top topics."
     topic:
@@ -863,9 +857,6 @@ uk:
       hot:
         title: "Гарячі"
         help: "добірка найгарячіших тем"
-      starred:
-        title: "Із зірочкою"
-        help: "теми, які Ви позначили зірочкою"
       read:
         title: "Прочитані"
         help: "теми, які Ви прочитали, у порядку, в якому Ви їх читали востаннє"
@@ -990,7 +981,6 @@ uk:
         edit: "Редагувати групи"
         refresh: "Оновити"
         new: "Новий"
-        selector_placeholder: "додати користувачів"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
@@ -1348,7 +1338,6 @@ uk:
         search: '<b>/</b> Пошук'
       actions:
         title: 'Дії'
-        star: '<b>f</b> Позначити тему зірочкою'
         share_post: '<b>s</b> Поширити допис'
         reply_post: '<b>r</b> Відповісти на допис'
         quote_post: '<b>q</b> Цитувати допис'

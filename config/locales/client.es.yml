@@ -699,11 +699,6 @@ es:
     go_back: 'volver'
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
-    starred:
-      title: 'Favoritos'
-      help:
-        star: 'añadir este tema a tu lista de favoritos'
-        unstar: 'quitar este tema de tu lista de favoritos'
     topics:
       bulk:
         reset_read: "Restablecer leídos"
@@ -723,7 +718,6 @@ es:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
       none:
-        starred: "No tienes temas favoritos."
         unread: "No hay temas que sigas y que no hayas leído ya."
         new: "No tienes temas nuevos por leer."
         read: "Todavía no has leído ningún tema."
@@ -735,7 +729,6 @@ es:
         educate:
           new: '<p>Tus nuevos temas aparecerán aquí.</p><p>Por defecto, los temas son considerados nuevos y mostrarán un indicador: <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nuevo</span> si son creados en los 2 últimos días.</p><p>Puedes cambiar esto en tus <a href="%{userPrefsUrl}">preferencias</a>.</p>'
           unread: '<p>Tus temas sin leer aparecerán aquí.</p><p>Por defecto, los temas son considerados no leídos y mostrán contadores de post sin leer <span class="badge new-posts badge-notification">1</span> si:</p><ul><li>Creaste el tema</li><li>Respondiste al tema</li><li>Leíste el tema durante más de 4 minutos</li></ul><p>O si has establecido específicamente el tema a Seguir o Vigilar en el control de notificaciones al pie de cada tema.</p><p>Puedes cambiar esto en tus <a href="%{userPrefsUrl}">preferencias</a>.</p>'
-          starred: '<p>Tus temas favoritos aparecerán aquí.</p><p>Para marcar o desmarcar como favorito un tema, usa:</p><ul><li>la <i class="fa fa-star"></i> al lado de cada tema</li><li>el botón en forma de estrella al pie de cada tema</li></ul>'
       bottom:
         latest: "No hay más temas recientes para leer."
         hot: "No hay más temas calientes."
@@ -743,7 +736,6 @@ es:
         read: "No hay más temas leídos."
         new: "No hay más nuevos temas."
         unread: "No hay más temas que no hayas leído."
-        starred: "No hay más temas que hayas marcado como favorito."
         category: "No hay más temas en la categoría {{category}}."
         top: "No hay más temas en el top más vistos."
     topic:
@@ -1145,6 +1137,8 @@ es:
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       save: 'Guardar categoria'
+      slug: 'Slug de la categoría para URL'
+      slug_placeholder: '(Opcional) palabras-por-guiones para URL'
       creation_error: Se ha producido un error al crear la categoría.
       save_error: Ha ocurrido un error al guardar la categoría
       name: "Nombre de la categoría"
@@ -1281,9 +1275,6 @@ es:
       hot:
         title: "Popular"
         help: "una selección de los temas más populares"
-      starred:
-        title: "Favoritos"
-        help: "temas que has marcado como favoritos"
       read:
         title: "Leídos"
         help: "temas que ya has leído"
@@ -1320,21 +1311,21 @@ es:
           other: "{{categoryName}} ({{count}})"
         help: "temas recientes en la categoría {{categoryName}}"
       top:
-        title: "Lo mejor"
+        title: "Top"
         help: "los temas más con más actividad del último año, mes, semana, o día"
         yearly:
-          title: "Lo mejor del año"
+          title: "Top del año"
         monthly:
-          title: "Lo mejor del mes"
+          title: "Top del mes"
         weekly:
-          title: "Lo mejor de la semana"
+          title: "Top de la semana"
         daily:
-          title: "Lo mejor del día"
+          title: "Top del día"
         this_year: "Este año"
         this_month: "Este mes"
         this_week: "Esta semana"
         today: "Hoy"
-        other_periods: "ver más de los mejores temas"
+        other_periods: "ver más temas top"
     browser_update: 'Desafortunadamente, <a href="http://www.discourse.org/faq/#browser">tu navegador es demasiado antiguo para funcionar en este sitio</a>. Por favor <a href="http://browsehappy.com">actualízalo</a>.'
     permission_types:
       full: "Crear / Responder / Ver"
@@ -1454,13 +1445,17 @@ es:
         edit: "Editar grupos"
         refresh: "Actualizar"
         new: "Nuevo"
-        selector_placeholder: "añadir usuarios"
+        selector_placeholder: "introduce nombre de usuario"
         name_placeholder: "Nombre del grupo, sin espacios, al igual que la regla del nombre usuario"
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
         delete_confirm: "Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
+        delete_member_confirm: "¿Eliminar a '%{username}' del grupo '%{group}'?"
+        name: "Nombre"
+        add: "Añadir"
+        add_members: "Añadir miembros"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
@@ -1530,6 +1525,7 @@ es:
       export_csv:
         success: "Exportación comenzada, se te notificará a través de un mensaje privado cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
+        rate_limit_error: "Los posts se pueden descargar una vez al día, por favor, prueba otra vez mañana."
         button_text: "Exportar"
         button_title:
           user: "Exportar la lista completa de usuarios en formato CSV."
@@ -2025,7 +2021,6 @@ es:
         latest: '<b>g</b>, <b>l</b> Recientes'
         new: '<b>g</b>, <b>n</b> Nuevos'
         unread: '<b>g</b>, <b>u</b> No leídos'
-        starred: '<b>g</b>, <b>f</b> Favoritos'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Arriba'
       navigation:
@@ -2048,7 +2043,6 @@ es:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
       actions:
         title: 'Acciones'
-        star: '<b>f</b> Añadir tema a favoritos'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
         share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'

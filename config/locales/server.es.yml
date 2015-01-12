@@ -39,6 +39,7 @@ es:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
+      taken: "ya ha sido escogido. (los nombres de grupos no distinguen mayúsculas o minúsculas)"
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
   bulk_invite:
@@ -195,6 +196,8 @@ es:
             base:
               warning_requires_pm: "Solamente puedes enviar advertencias por mensajes privado."
               too_many_users: "Solamente puedes enviar advertencias a un usuario a la vez."
+              cant_send_pm: "Lo sentimos, no puedes enviar un mensaje privado a este usuario."
+              no_user_selected: "Debes seleccionar un usuario válido."
         user:
           attributes:
             password:
@@ -537,15 +540,10 @@ es:
     s3_backup_config_warning: 'El servidor está configurado para permitir subir las copias de seguridad a s3, pero al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_backup_bucket. Ve a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
-    default_logo_warning: "No has personalizado los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    contact_email_missing: "No has proporcionado un email de contacto para tu sitio. Por favor, actualiza contact_email en los <a href='/admin/site_settings'>Ajustes del sitio</a>."
-    contact_email_invalid: "La dirección email de contacto es inválida. Por favor actualiza contact_email en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    title_nag: "El título Site Setting todavía está configurado al valor predeterminado. Por favor actualízalo con el título de tu sitio en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    site_description_missing: "La site_description configuración está vacía. Escribe una breve descripción de este foro en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    default_logo_warning: "Establece los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_invalid: "La dirección email de contacto es inválida. Actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    title_nag: "Introduce un nombre de tu sitio. Actualiza el nombre en <a href='/admin/site_settings'>Configuración del Sitio</a>."
     consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
-    access_password_removal: "Tu sitio estaba usando la opción access_password , que ha sido eliminada. Las opciones login_required y must_approve_users han sido habilitadas, que deberían ser usadas en lugar de la anterior. Las puedes cambiar en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Asegúrate <a href='/admin/users/list/pending'>de aprobar los usuarios en la lista de Usuarios Pendientes</a>. (Este mensaje desaparecerá en 2 días.)"
-    site_contact_username_warning: "La site_contact_username configuración está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>. Configúrala al nombre de usuario de un administrador quien debe ser el enviador de mensajes de sistema."
-    notification_email_warning: "La configuración notification_email está vacía. Por favor actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
@@ -594,9 +592,8 @@ es:
     allow_duplicate_topic_titles: "Permitir temas con títulos idénticos, duplicados."
     unique_posts_mins: "¿Cuántos minutos deben pasar antes de que un usuario pueda publicar el mismo contenido de nuevo?"
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
-    title: "Título breve de este sitio, utilizado en la etiqueta title."
-    site_description: "Describe este sitio en una frase, se utiliza en la etiqueta meta description."
-    contact_email: "Dirección de correo electrónico del contacto principal para el sitio. Las noticias de importancia desde discourse.org con actualizaciones críticas se enviarán a esta dirección."
+    title: "El nombre de este sitio, utilizado en la etiqueta title."
+    site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -616,11 +613,8 @@ es:
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
-    logo_url: "La imagen de logo que irá arriba a la izquierda de tu sitio. Ejemplo: http://example.com/logo.png"
     digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Si se deja en blanco, se utilizará `logo_url`. Ejemplo: http://example.com/logo.png"
-    logo_small_url: "La imagen del logo pequeño que irá arriba a la izquierda de tu sitio y se verá cuando se haga scroll hacia abajo. Ejemplo: http://example.com/logo-small.png"
     favicon_url: "Un favicon para tu sitio, mira http://es.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "La imagen del logo en posición fija que irá arriba a la izquierda para la vista móvil de tu sitio. Si se deja en blanco, se utilizará `logo_url`. Ejemplo: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
@@ -664,7 +658,6 @@ es:
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
-    site_contact_username: "Todos los mensajes privados automatizados serán de este usuario. Si es dejado en blanco, el la cuenta del Sistema por defecto será utilizada."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
@@ -694,7 +687,6 @@ es:
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS LARGOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
-    enable_sso: "Habilitar el single sign on a través de un sitio externo (Nota: deshabilita las invitaciones)"
     enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
     sso_secret: "Cadena secreta utilizada para cifrar/descifrar la información del SSO, asegúrate de que es de 10 caracteres o más"
@@ -886,6 +878,8 @@ es:
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
+    enable_emoji: "Habilitar emoji"
+    emoji_set: "¿De qué tipo os gustan los emoji?"
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -938,6 +932,10 @@ es:
       other: "He movido %{count} posts al tema: %{topic_link}"
   change_owner:
     post_revision_text: "Se ha transferido la propiedad de %{old_user} a %{new_user}"
+  emoji:
+    errors:
+      name_already_exists: "Lo sentimos, el nombre '%{name}' ya está en uso por otro emoji."
+      error_while_storing_emoji: "Lo sentimos, ha habido un error mientras se guardaba el emoji."
   topic_statuses:
     archived_enabled: "Este tema está ahora archivado. Se paraliza y no puede ser cambiado en ningún modo."
     archived_disabled: "Este tema se ha desarchivado. Se desparaliza y ahora puede ser cambiado."
@@ -982,7 +980,6 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. Prueba %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el email ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
-    omniauth_error: "Lo sentimos, ha habido un error autorizando tu cuenta %{strategy}. ¿Quizás no has aprobado la autorización?"
     omniauth_error_unknown: "Algo ha salido mal procesando tu inicio de sesión, por favor, vuelve a intentarlo."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres"
@@ -1118,11 +1115,6 @@ es:
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
-  flag_reasons:
-    off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta al asunto del tema, definido actualmente por su título y primer post."
-    inappropriate: "Tu post ha sido reportado como **inapropiado**: la comunidad piensa que puede ser ofensivo, abusivo, o que supone una violación de las [directrices de la comunidad](/guidelines)."
-    spam: "Tu post fue reportado como **spam**: la comunidad piensa que se trata de un anuncio publiciario, no útil o de nula relevancia para el tema, sino de naturaleza promocional."
-    notify_moderators: "Tu post ha sido reportado **a moderación**: la comunidad piensa que algo sobre tu post requiere la intervención de un moderador."
   flags_dispositions:
     agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
@@ -1155,8 +1147,38 @@ es:
         \ Para cambiar como mantienes un rastro de los temas, o de la definición de nuevo, mira [tus preferencias de usuario](/my/preferences).\n\n## ¿Por qué no puedo ver ciertas cosas?\n\nNuevos usuarios están de alguna manera limitados por razones de seguridad. Conforme participes aquí, ganaras la confianza de la comunidad, conviértete en un ciudadano completo, y esas limitaciones serán automáticamente removidas. A un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficiente, ganaras aún más habilidades para ayudarnos a administrar juntos nuestra comunidad.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
+      text_body_template: |
+        ¡Gracias por unirte a %{site_name}! ¡Bienvenido!
+
+        %{new_user_tips}
+
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
+
+        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
+
+        ¡Disfruta de tu estancia!
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
+      text_body_template: |
+        Gracias por aceptar tu invitación a %{site_name} -- ¡bienvenido!
+
+        Hemos generado automáticamente un nombre de usuario por ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [tu perfil de usuario][prefs].
+
+        Para iniciar sesión otra vez, puedes:
+
+        1. Iniciar sesión usando cualquier método que desees -- pero debe de resolver a la **misma dirección e-mail** que tu recibiste en tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tu!
+
+        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
+
+        %{new_user_tips}
+
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
+
+        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
+
+        ¡Disfruta de tu estancia!
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: "La copia de seguridad fue exitosa.\nVisita la [sección admin > copia de seguridad](/admin/backups) para descargar tu nueva copia de seguridad."
@@ -1196,6 +1218,17 @@ es:
         ```
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "Exportación de datos completada"
+      text_body_template: |
+        ¡La exportación de datos se ha completado con éxito! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        El enlace de descarga de arriba será válido durante 48 horas.
+    csv_export_failed:
+      subject_template: "La exportación de datos falló"
+      text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
     email_reject_trust_level:
       subject_template: "Error con el email -- insuficiente nivel de confianza"
       text_body_template: |
@@ -1424,6 +1457,23 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Tú solicitud ha sido aprobada en %{site_name}!"
+      text_body_template: |
+        ¡Bienvenido a %{site_name}!
+
+        Un miembro del staff aprobó tu cuenta en %{site_name}.
+
+        Haz clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Si no puedes hacer clic en el enlace, intenta copiándolo y pegándolo en la barra de direcciones de tu navegador.
+
+        %{new_user_tips}
+
+        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/faq).
+
+        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
+
+        ¡Disfruta de tu estancia!
     signup:
       subject_template: "[%{site_name}] Activa tu nueva cuenta"
       text_body_template: |
@@ -1482,102 +1532,13 @@ es:
   guidelines: "Directrices"
   privacy: "Privacidad"
   edit_this_page: "Edita esta página"
+  csv_export:
+    boolean_yes: "Sí"
+    boolean_no: "No"
   static_topic_first_reply: |
     Edita el primer post de este tema para cambiar el contenido de la página %{page_name}.
   guidelines_topic:
     title: "Preguntas Frecuentes / Directrices"
-    body: |
-      <a name="civilized"></a>
-
-      ## [Este es un Lugar Civilizado para Debate Público](#civilized)
-
-      Por favor trata a este foro de discusión con el mismo respeto que un parque público. Nosotros también somos una comunidad compartida de recursos &mdash; un lugar donde compartimos habilidades, conocimiento e intereses a través de las conversaciones actuales.
-
-      Estas no son reglas rápidas y duras, meramente ayudan al juicio humano de nuestra comunidad. Usa estas reglas para para mantener un lugar limpio y bien iluminado para el debate público y civilizado.
-
-      <a name="improve"></a>
-
-      ## [Mejora el debate](#improve)
-
-      Ayúdanos a hacer este un gran lugar para la discusión, tratando de mejorar la discusión de alguna manera, aunque sea pequeña. Si no estás seguro que tu post añade algo a la conversación, piensa sobre lo que quieres decir y trata después de nuevo.
-
-      Los temas debatidos aquí nos importan, y queremos que ti también te importen. Se respetoso de los temas y de la gente que debate en ellos, incluso si tu difieres con algo de lo que se dijo.
-
-      Una manera de mejorar la discusión es descubrir temas que ya estén ocurriendo. Por favor pasa algo de tiempo navegando los temas aquí antes de responder o iniciar un tema nuevo, de esta manera tendrás una mejor oportunidad de conocer a otras personas que comparten tus intereses.
-
-      <a name="agreeable"></a>
-
-      ## [Se Amable, Incluso Cuando Tu Difieras](#agreeable)
-
-      Tal vez desees responder a algo en lo que no estés de acuerdo. Está bien. Pero, recuerda _critica ideas, no personas_. Por favor evita:
-
-      * Insultar u ofender.
-      * Ataques personales.
-      * Responder a un tema por su autor en lugar de su contenido.
-      * Contradicción exabrupto.
-
-      En lugar de eso, provee contra argumentos razonados que mejoren la conversación.
-
-      <a name="participate"></a>
-
-      ## [Tu participación cuenta](#participate)
-
-      Las conversaciones que nosotros tenemos aquí ajuntan el tono para todos. Ayúdanos a influir en el futuro de esta comunidad escogiendo entablar in discusiones que hagan este foro un lugar interesante para estar &mdash; y evita a aquellos que no.
-
-      Discourse provee herramientas que permiten a la comunidad a identificar colectivamente las mejores (y peores) contribuciones: favoritos, marcadores, 'me gusta', reportes, ediciones, entre otros. Usa estas herramientas para mejorar tu propia experiencia, y también la de todos los demás.
-
-      Vamos a tratar de dejar nuestro parque mejor de lo que lo encontramos.
-
-      <a name="flag-problems"></a>
-
-      ## [Si ves un problema, repórtalo](#flag-problems)
-
-      Moderadores tienen autoridad especial; ellos son responsable de este foro. Pero tu también lo eres. Con tu ayuda, los moderadores pueden ser facilitadores de la comunidad, no solamente conserjes o policías.
-
-      Cuando tú veas un mal comportamiento, no respondas. Solo fomenta el mal comportamiento reconociéndolo, consume tu energía, y desperdicia el tiempo de todos. _Solo repórtalo_. Si suficientes reportes son adquiridos, serán tomadas medidas, ya sean automáticas o por la intervención de un moderador.
-
-      Con el fin de mantener nuestra comunidad, los moderadores se reservan el derecho de remover cualquier contenido y cualquier cuenta de usuario por cualquier motivo, en cualquier momento. Los moderadores no ven por adelantado ningún nuevo post de ninguna manera; los moderadores y los operadores del sitio no son responsables por ningún contenido publicado por la comunidad.
-
-      <a name="be-civil"></a>
-
-      ## [Siempre se civilizado](#be-civil)
-
-      Nada sabotea una sana conversación como la rudeza:
-
-      * Se civilizado. No publiques nada que una persona razonable consideraría ofensivo, abusivo, o de odio.
-      * Mantenlo limpio. No publiques nada obsceno o sexualmente explícito.
-      * Respeta a los otros. No acoses o molestes a alguien, imites a personas, o expongas su información privada.
-      * Respeta nuestro foro. No publiques spam o cometas actos vandálicos en el foro.
-
-      Estos no son términos concretos con definiciones precisas &mdash; evita incluso la _aparición_ de cualquiera de estas cosas. Si no estás seguro, pregúntate a ti mismo como te sentirías si tu post apareciera en la portada del New York Times.
-
-      Este es un foro público, y los motores de búsqueda indexan estas discusiones. Mantén el lenguaje, los enlaces e imágenes seguras para las familias y amigos.
-
-      <a name="keep-tidy"></a>
-
-      ## [Mantenlo ordenado](#keep-tidy)
-
-      Has un esfuerzo para poner las cosas en su lugar, así podemos pasar más tiempo discutiendo y menos limpiando. Así que:
-
-      * No inicies un nuevo tema en la categoría incorrecta.
-      * No publiques la misma cosa en múltiples temas.
-      * No publiques respuestas sin contenido.
-      * No diverjas un tema cambiando el centro de atención.
-      * No firmes tus posts &mdash; cada post tiene tu información de perfil adjuntado.
-
-      En lugar de publicar “+1” o “Concuerdo”, usa el botón de 'me gusta'. En vez de tomar un tema existente en una dirección radicalmente diferente, usa Responder como Nuevo Tema.
-
-      <a name="stealing"></a>
-
-      ## [Publica solo tus propias cosas](#stealing)
-
-      No publiques ningún medio digital que le pertenezca a alguien más sin su permiso. No publiques descripciones, enlaces o métodos para robar la propiedad intelectual de alguien más (software video, audio, imágenes), o cualquier otro que rompa las leyes.
-
-      <a name="tos"></a>
-
-      ## [Términos de Servicio](#tos)
-
-      Si, la jerga legal es aburrida, pero debemos de protegernos &ndash; y por extensión, a ti y tus datos &ndash; contra personas hostiles. Tenemos [Términos de Servicio] tu (y nuestro) comportamiento y derechos relacionados al contenido, privacidad y leyes. Para usar este servicio, debes de aceptar y seguir nuestros [Términos de Servicio](/tos).
   tos_topic:
     title: "Términos de Servicio"
   privacy_topic:

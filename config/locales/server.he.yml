@@ -39,6 +39,7 @@ he:
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: את/ה הקשת %{length}."
       invalid_boolean: "בוליאני לא חוקי."
+      taken: "כבר תפוס. (שמות קבוצות באנגלית אינן מבדילות בין אותיות גדולות וקטנות)"
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
   bulk_invite:
@@ -186,6 +187,8 @@ he:
             base:
               warning_requires_pm: "את/ה יכולים להוסיף אזהרות רק למסרים פרטיים."
               too_many_users: "את/ה יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
+              cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה פרטית למשתמש זה."
+              no_user_selected: "עליכם לבחור משתמש/ת חוקיים."
         user:
           attributes:
             password:
@@ -527,15 +530,7 @@ he:
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
-    default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "You haven't provided a contact email for your site. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
-    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
   content_types:
     education_new_reply:
       title: "New User Education: First Replies"
@@ -584,9 +579,6 @@ he:
     allow_duplicate_topic_titles: "אשר/י נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) ההודעות הראשונות שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור ההודעות."
-    title: "כותרת קצרה של אתר זה, תשמש בתיוג הכותרת (title tag)."
-    site_description: "תארו אתר זה בעזרת משפט אחד, ישמש בתגית התיאור (meta description tag)."
-    contact_email: "כתובת הדוא\"ל של דמות מפתח באתר. הודעות חשובות מטעם discourse.org בנוגע לעדכונים חשובים ישלחו לכתובת זו."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "אחזור תמונות מכתובת URL רחוקה כדי להכניס את מימדי האורך והרוחב הנכונים."
     download_remote_images_to_local: "המרת תמונות מרחוק לתמונות מקומיות באמצעות הורדות; למניעת שגיאות של תמונות חסרות"
@@ -606,11 +598,8 @@ he:
     post_excerpt_maxlength: "אורך מקסימלי של פרסום קטע / סיכום."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
-    logo_url: "סמליל (לוגו) שיופיע בפינה שמאלית העליונה של האתר שלך. לדוגמא: http://example.com/logo.png"
     digest_logo_url: "הסמליל (לוגו) האלטרנטיבי שיופיע בראש מייל התקציר של האתר שלך. אם תשאירו משבצת זו ריק יופיע שם 'logo_url' במקום. לדוגמא: http://example.com/logo.png"
-    logo_small_url: "סמליל (לוגו) שיופיע בפינה השמאלית העליונה של האתר שלך, נראה כאשר גוללים למטה. לדוגמא: http://example.com/logo-small.png"
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "המיקום הקבוע של תמונת הסמליל (לוגו) המשתמשת בפינה השמאלית העליונה של האתר שלכם המותאם למכשירים ניידים. אם תשאירו משבצת זו ריקה, 'logo_url' יופיע במקום. לדוגמא: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -654,7 +643,6 @@ he:
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפרסום, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    site_contact_username: "כל המסרים האישיים האוטומטיים יהיו ממשתמש זה; אם תשאירו ריק, יעשה שימוש בחשבון ברירת המחדל של המערכת."
     send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
@@ -684,7 +672,6 @@ he:
     max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
-    enable_sso: "אפשרו התחברות יחידה באמצעות אתר חיצוני (הערה: מבטל אפשרות להזמנות)"
     enable_sso_provider: "ליישם את פרוטוקול SSO של Discourse בנקודת הסיום /session/sso, זה דורש כיוון של sso_secret."
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
@@ -810,6 +797,8 @@ he:
     min_ban_entries_for_roll_up: "בעת לחיצה על לחצן הגלילה למעלה, ייוצר איסור כניסת משנה (subnet ben entry) חדשה אם יש לפחות (N) ערכים."
     max_age_unmatched_emails: "מחק ערכי דוא\"ל לא תואמים שמוצגים לאחר (N) ימים."
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
+    num_flaggers_to_close_topic: "מספר מינימלי של מסמנים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
+    num_flags_to_close_topic: "מספר מינימלי של סימונים פעילים שנדרש כדי להשהות באופן אוטומטי את היכולת להתערב בנושא"
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
@@ -874,6 +863,8 @@ he:
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו הודעה המבקשת מן המנהלים/מנהלות ליצור עוד נושאים."
     vacuum_db_days: "הריצו VACUUM FULL ANALYZE כדי להשיב שטח בסיס הנתונים אחרי העברות (כוונו ל-0 כדי לנטרל)"
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
+    enable_emoji: "אפשרו emoji"
+    emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."
@@ -926,6 +917,10 @@ he:
       other: "העברתי %{count} הודעות לנושא קיים: %{topic_link}"
   change_owner:
     post_revision_text: "בעלות הועברה מהמשתמש %{old_user} אל %{new_user}"
+  emoji:
+    errors:
+      name_already_exists: "מצטערים, השם '%{name}' כבר תפוס על ידי emoji אחר."
+      error_while_storing_emoji: "מצטער, היתה שגיאה בזמן שמירת ה-emoji."
   topic_statuses:
     archived_enabled: "הנושא הזה נכנס לארכיון. הוא קפוא ולא ניתן לשינוי בכל דרך."
     archived_disabled: "הנושא הזה הוצא מהארכיון. הוא כבר לא קפוא, וניתן לשינוי."
@@ -970,7 +965,6 @@ he:
     errors: "%{errors}"
     not_available: "לא זמין. נסה %{suggestion}?"
     something_already_taken: "משהו השתבש, אולי שם המשתמש או כתובת הדאור האלקטרוני כבר בשימוש. נסה את קישור שכחתי סיסמה."
-    omniauth_error: "סליחה, הייתה שגיאה באישור חשבון ה-%{strategy} שלך. אולי לא אישרת לנו לחבר אותך דרכו?"
     omniauth_error_unknown: "משהו השתבש במהלך עיבוד ההתחברות שלך, אנא נסה שנית."
     new_registrations_disabled: "הוספת חשבונות חדשים אינה מותרת בעת זו."
     password_too_long: "סיסמאות מוגבלות ל-200 תווים."
@@ -1075,22 +1069,44 @@ he:
     subject_template:
       one: "סימון אחד ממתין לטיפול"
       other: "%{count} סימונים ממתינים לטיפול"
-  flag_reasons:
-    off_topic: "הפרסום שלך סומן כ**מחוץ לנושא**: הקהילה מאמינה שהוא אינו תואם לנושא, כפי שהוא מוגדר כרגע בכותרת ובפרסום הראשון שבו."
-    inappropriate: "הפרסום שלך סומן כ**בלתי ראוי**: הקהילה חושבת שהוא מעליב, פוגעני או מפר את [הכללים המנחים](/guidelines)."
-    spam: "הפרסום שלך סומן כ**ספאם**: הקהילה חושבת שהוא פרסום, לא שימושי או לא רלוונטי לנושא, אבל מקדם מכירות בטבעו."
-    notify_moderators: "הפרסום שלך סומן **לתשומת ליבם של מנחים**: הקהילה חושבת שמשהו בפרסום הזה דורש התייחסות של מנחה."
   flags_dispositions:
     agreed: "תודה שעדכנת אותנו. אנחנו מסכימים שיש כאן בעיה ואנחנו מנסים לבדוק את העניין."
     agreed_and_deleted: "תודה שעדכנת אותנו. אנחנו מסכימים שישנה בעיה והסרנו את הפרסום."
     disagreed: "תודה שעדכנת אותנו. אנחנו בודקים את זה."
     deferred: "תודה שעדכנתםאותנו. אנחנו בודקים את העניין."
     deferred_and_deleted: "תודה שעדכנתם אותנו. הסרנו את הפרסום."
+  temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר גדול של סימונים מצד הקהילה"
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
+      text_body_template: |
+        שלום,
+
+        זוהי הודעה אוטומטית מ%{site_name} שנועדה לידע אותך שפרסום שלך הוסתר.
+
+        {base_url}%{url}
+
+        %{flag_reason}
+
+        כמה חברים בקהילה סימנו את הפרסום הזה לפני שהוא הוסתר, לכן אנא שקלו כיצד תוכלו לשנות את הפרסום בצורה שתתמודד עם המשוב שלהם.
+        ** תוכלו לערוך את הפרסום המדובר לאחר %{edit_delay} דקות, והוא יוצג מחדש באופן אוטומטי.**
+        פעולה זו תעלה את רמות האמון שלך במערכת.
+
+        בכל אופן, אם פרסום זה יוסתר על ידי הקהילה בפעם השניה, הוא ישאר במצב זה עד שיגיע לטיפול חבר/ת צוות - ופעולות נוספות עשויות להינקט, כולל אפשרות תיאורטית להשהיית חשבון המשתמש שלך בפורום.
+
+        להדרכה נוספת אנא פנו למסמך ה[קווים המנחים של הקהילה שלנו](%{base_url}/guidelines).
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
+      text_body_template: |
+        תודה שהצטרפת אל %{site_name} וברוך/ברוכה הבא/ה!
+
+        %{new_user_tips}
+
+        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
+
+        (אם אתם זקוקים לתקשר באופן פרטי עם [חברי צוות](/about) כמשתמשים חדשים, פשוט השיבו למסר הפרטי הזה.)
+
+        תכייפו!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
     backup_succeeded:
@@ -1132,6 +1148,17 @@ he:
 
         %{logs}
         ```
+    csv_export_succeeded:
+      subject_template: "יצוא הנתונים הושלם"
+      text_body_template: |
+        יצוא הנתונים שלכם הסתיים בהצלחה! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a>
+
+        קישור זה יהיה זמין במשך 48 שעות.
+    csv_export_failed:
+      subject_template: "ייצוא הנתונים נכשל"
+      text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_trust_level:
       subject_template: "בעיית דוא\"ל - היעדר רמת אמון מספקת"
       text_body_template: |
@@ -1370,6 +1397,23 @@ he:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
+      text_body_template: |
+        ברוכים הבאים אל %{site_name}!
+
+        חבר/ה בצוות שלנו אישר את חשבונך ב%{site_name}.
+
+        הקישו על הקישור הבא כדי לאשר ולהפעיל את חשבון המשתמש/ת החדש שלכם:
+        %{base_url}/users/activate-account/%{email_token}
+
+        אם לא ניתן להקליק על הקישור, נסו להעתיק ולהדביר אותו אל שורת הכתובת בדפדפן שלכם.
+
+        %{new_user_tips}
+
+        אנחנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
+
+        (אם אתם צריכים לתקשר באופן פרטי עם [אנשי הצוות](/about) שלנו, כמשתמשים חדשים פשוט שלחו תגובה להודעה זו)
+
+        תהנו!
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |
@@ -1428,14 +1472,13 @@ he:
   guidelines: "קווים מנחים"
   privacy: "פרטיות"
   edit_this_page: "עריכת עמוד זה"
+  csv_export:
+    boolean_yes: "כן"
+    boolean_no: "לא"
   static_topic_first_reply: |
     ערכו את הפרסום הראשון בנושא זהכדי לשנות את התוכנים של העמוד %{page_name}.
   guidelines_topic:
     title: "שאלות נפוצות / כללים מנחים"
-    body: "<a name=\"civilized\"></a>\n\n## [זהו מקום מתורבת לדיון ציבורי](#civilized)\n\nאנא התייחסו לפורום הדיון ביחס של כבוד, בדומה לאופן בו הייתם נוהגים בפארק ציבורי. גם אנחנו משאב קהילתי משותף  &mdash; מקום כדי לחלוק יכולות, ידע ותחומי עניין תוך כדי שיחה מתפתחת.\n\nאלו אינם חוקים קשים ומהירים, אלא כלי עזר שנועדו לסייע להכרעות אנושיות במסגרת הקהילות שלנו. השתמשו בכללים המנחים הללו כדי לשמוש על הזירה הזו כמקום נקי, מואר ומאפשר שיח ציבורי מתורבת.\n<a name=\"improve\"></a>\n\n## [שפרו את הדיון](#improve)\n\nסייעו לנו להפוך פורום זה למקום מעולה לדיון באמצעות עבודה מתמדת על שיפור הדיון בדרך כל שהיא, גם אם בעזרת תרומה קטנה או צנועה. אם אינם בטוחים אם הפרסום שלכם תורם לשיחה, חשבו שוב מה בעצם ברצונכם לומר ונסו שוב מאוחר יותר.\n\nהנושאים שנדונים כאן חשובים לנו, ואנו רוצים שתנהגו כלפיהם ככאלה שחשובים גם לכם. לכן, נהגו בכבוד לנושאים ולאנשים אשר דנים בהם, גם אם אינכם מסכימים אם חלק מהדברים שנאמרים.\n\nאחת הדרכים לשפר את הדיון היא באמצעות גילוי נושאים שלגביהם כבר מתנהל דיון. אנא השקיעו מזמנים כדי ללגלוש בין הנושאים כאן לפני שתשיבו או תפתחו נושאים חדשים משלכם, וכך גם תגדילו את הסיכויים לפגוש אחרים להכיר אחרים שחולקים אותם תחומי עניין.\n.\n\n<a name=\"agreeable\"></a>\n\n## [נטו להסכמה, גם אם אינם מסכימים](#agreeable)\n\nאתם עשויים לרצות להגיב באי הסכמה למשהו שתראו כאן. זה בסדר, א-ב-ל זכרו _לבקר את הרעיונות, לא את האנשים_. אנא המנעו מ:\n\n* הדבקת כינויים או שמות.\n* מתקפות לגופו של אדם.\n* תגובה לטון הכתיבה בפרסום כלשהוא, במקום לתוכן הממשי שלו.\n* סתירה אינסטנקטיבית.\n\nבמקום כל אלו הגיבו בטיעוני נגד אשר משפרים את השיחה.\n\
-      \n<a name=\"participate\"></a>\n\n## [ההשתתפות שלכם נחשבת](#participate)\n\nהשיחה שאנחנו מנהלים כאן משפיעה על כל חברי הקהילה. עזרו לנו להשפיע על עתיד הקהילה באמצעות הצטרפות לדיונים אשר יעשו את הפורום הזה מקום מעניין יותר לשהות בו  &mdash; והתעלמו מכאלו שלא עושים כך.\n\nמערכת Discourse כוללת כלים אשר מאפשרים לקהילה לזהות באופן קולקטיבי את התרומות הטובות ביותר (והגרועות ביותר): פרסומים מועדפים, סימניות, לייקים, סימונים, תגובות, עריכות וכן הלאה. השתמשו בכל הכלים הללו כדי לשפר את החוויה האישית שלכם, וגם את זו של כולם.\n\nבואו ננסה להשאיר את הפארק טוב יותר מכפי שמצאנו אותו.\n\n<a name=\"flag-problems\"></a>\n\n## [אם נתקלתם בבעיה, סמנו אותה](#flag-problems)\n\nלמנחים יש סמכות מיוחדת; הם אחראים לפורום הזה. אבל גם את/ה. בעזרתך מנחים יכולים כמדריכים לדיון, ולא רק כשומרים או שוטרים.\n\nכאשר אתם נתקלים בהתנהגות פסולה, אל תגיבו אליה. זה יעודד את ההתנהגות הרעה על ידי מתן הכרה, יגזול מכם אנרגיה ויבזבז זןמ לכולם. _פשוט סמנו אותה_. אם מספיק יועברו מספיק סימונים, תינקט פעולה, באופן אוטומטי או על ידי התערבות של מנחה. \n\nבכדי לתחזק את הקהילה שלנו, שמורה למנחים הזכות להסיר תוכן או חשבונות משתמש מכל סיבה בכל זמן. מנחים לא מאשרים הודעות לפני פרסום בדרך כלשהיא; המנחים ומפעילי האתר אינו נושאים באחריות כלשהיא לתוכן שפורסם על ידי הקהילה.\n\n\n<a name=\"be-civil\"></a>\n\n## [נהגו כאזרחים]](#be-civil)\nאין משהו שפוגע ביכולת לנהל שיחה טובה כמו גסות רוח:\n\n* נהגו כאזרחים טובים. אל תפרסמו שום דבר שאדם סביר היה מחשיב פוגעני, מעליב או טקסט שנאה.\n* כתבו נקי. אל תפרסמו שום דבר מגונה או מיני מפורש.\n* כבדו זה את זו. המנעו מלהטריד\
-      \ או לגרום צער לאחרים, מלהתחזות לאחרים או לחשוף את פרטיהם האישיים.\n* כבדו את הפורום שלנו. אל תפרסמו ספאם או כל פעולה ונדליסטית אחרת לפורום.\n\nאלו אינן כללים ברורים עם הגדרות מדוייקות &mdash; המנו אפילו מ_חזות_ של משהו מהדברים הללו. אם אינכם בטוחים, שאלו את עצמכם איך הייתם מרגישים לו אחד מהפרסומים שלכם היה מופיע על העמוד הראשון של הניו-יורק טיימס (או עיתון מכובד אחר, לבחירתכם).\n\nזהו פורום פומבי ומנועי חיפוש מאנדקסים דיונים אלו. הקפידו על השפה, הקישורים והתמונות בטוחים ומותאמים למשפחה וחברים.\n\n<a name=\"keep-tidy\"></a>\n\n## [שמרו על סדר ונקיון](#keep-tidy)\n\nעשו מאמץ למקום דברים במקום הנכון, כך שנוכל להשקיע יותר זמן בדיון ופחות בסידור וניקיון. לכן\n\n* אל תתחילו נושא בקטגוריה שאינה מתאימה.\n* אל תפרסמו במקביל את אותו הדבר בכמה נושאים שונים.\n* אל תפרסמו תגובות ללא תוכן.\n* אל תפגעו בנושא באצמעות שינויו באמצע הדיון.\n* אל תוסיפו חתימה בהודעות שלכם &mdash; כל פרטי הפרופיל שלכם יוצמדו לכל פרסום שלכם.\n\nבמקום לפרסם \"1+\" או \"אני מסכים/מסכימה, השתמשו בכפתור הלייק. במקום לקחת נושא בדיון לכיוון שונה בצורה קיצונית, השתמש ב\"תגובה כנושא חדשה\".\n\n<a name=\"stealing\"></a>\n\n## [פרסמו רק חומר שלכם](#stealing)\n\nאינם יכולים לפרסם שום תוכן דיגיטלי ששייך למישהו אחר ללא רשותם. אינכם יכולים לפרסם תיאור, קישורים או דרכים לגנוב את הקניין הרוחני של מישהו אחר (ובכלל זה תוכנה, וידאו, שמע, תמונות) או כדי לעבור על כל חוק אחר.\n\n\n<a name=\"tos\"></a>\n\n## [תנאי השימוש](#tos)\n\nכן, חוק ומשפט יכולים להיות משעממים, אבל עלינו להגן על עצמנו &ndash; ובהמשך לכך גם עליך ועל המידע שלך &ndash; מחבר'ה לא נחמדים. יש\
-      \ לנו [תנאי שימוש] (/tos) אשר מתארים את ההתנהגות והזכויות שלך ושלנו ביחס לתוכן, פרטיות וחוקים. כדי להשתמש בשירות [אתם חייבים להסכים לציית לכללים אלו(/tos).\n"
   tos_topic:
     title: "תנאי השימוש"
     body: "הכללים והתנאים הבאים חלים על כל שימוש באתר %{company_domain} וכל התוכן, השירותים והמוצרים הזמנים בו או דרכו, כולל, ולא רק, תוכנת הפורום %{company_domain, פורום התמיכה של %{company_domain ושירותי האירוח של %{company_domain (\"אירוח\") (להלן, \"האתר\"). האתר הוא בבעלות ומופעל על ידי %{company_full_name} (\"%{company_name}\").. האתר נתון להסכמתך ללא שינוי של כל הכללים והתנאים הכלולים כאן וכל כלל ומדיניות (כולל, וללא מגבלה,  [מדיניות הפרטיות] (/privacy)של %{company_domain} ו[כללי ההתנהגות הקהילתיים] (/faq)ונהלים אשר אשויים להתפרסם מעת לעת באתר זה על ידי %{company_name} (להלן, \"ההסכם\").\n\nאנא קראו הסכם זה בזהירות לפני גישה או שימוש באתר. בגישה או שימוש בכל חלק של האתר, הנכם מסכימים להיות מחוייבים לכללים והתנאים שבהסכם זה. אם אינכם מסכימים לכל הכללים והתנאים של הסכם זה, אז אינכם רשאים לגשת לאתר או להשתמש באיזהשהו שירות. אם הכללים והתנאים האלה נחשבים הצעה מטעם %{company_name}, קבלתה מוגבלת לכללים אלה. האתר זמין רק ליחידים בני 13 ומעלה.\n\n<a name=\"1\"></a>\n\n## [1. חשבון %{company_domain} שלך](#1)\n \nאם את/ה יוצרים חשבון באתר, את/ה אחראים לתחזר את האבטחה של החשבון שלך ואתם נושאים באחריות המלאה לכל הפעילויות שיתבצעו תחת החשבון. אתם חייבים ליידע באופן מיידי את %{company_name} על כל שימוש לא מאושר שנעשה בחשבונך או כל פרצה אחרת. %{company_name} לא יהיו אחראיים לפעולה כל שהיא או למחדל שלך, כולל כל סוג של נזק שיגרם כתוצאה מפעיולות כאלה או מחדלים.\n\n<a name=\"2\"></a>\n\n## [2. אחריות התורמים](#2)\n\nאם אתם מפרסמים חומר לאתר, מפרסמים קישורים באתר, או הופכים (או מאפשר לכל צד שלישי אחר להפוך) חומר לזמין\

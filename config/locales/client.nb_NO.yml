@@ -690,11 +690,6 @@ nb_NO:
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
     current_user: 'go til din brukerside'
-    starred:
-      title: 'Favoritt'
-      help:
-        star: 'legg dette emnet i favorittlisten din'
-        unstar: 'fjern dette emnet fra favorittlisten din'
     topics:
       bulk:
         reset_read: "Nullstill lest"
@@ -714,7 +709,6 @@ nb_NO:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
       none:
-        starred: "Du har ingen favorittemner."
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
@@ -726,7 +720,6 @@ nb_NO:
         educate:
           new: '<p>Dine nye emner vises her.</p><p>Som standard anses emner som nye, og vil ha indikatoren <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> hvis emnet ble opprettet de siste 2 dagene</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
           unread: '<p>Dine uleste emner vises her.</p><p>Som standard anses emner som uleste, og vil vise antall uleste <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du eksplisitt har satt emnet som Sporet eller Fulgt via varslingskontrollene under hvert emne.</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
-          starred: '<p>Dine favorittemner vises her.</p><p>For å legge til eller fjerne favoritter, bruk følgende:</p><ul><li><i class="fa fa-star"></i> ved siden av emnets tittel</li><li>Favorittknappen under hvert emne</li></ul>'
       bottom:
         latest: "Det er ikke noen siste emner igjen å lese."
         hot: "Det er ikke noen populære emner igjen å lese."
@@ -734,7 +727,6 @@ nb_NO:
         read: "Det er ikke noen leste emner igjen å lese."
         new: "Det er ikke noen nye emner igjen å lese."
         unread: "Det er ikke noen uleste emner igjen å lese."
-        starred: "Det er ingen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
         top: "Det er ingen flere populære emner."
     topic:
@@ -1272,9 +1264,6 @@ nb_NO:
       hot:
         title: "Populære"
         help: "et utvalg av de mest populære emnene"
-      starred:
-        title: "Favoritter"
-        help: "emner i dine favoritter"
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du har lest dem"
@@ -1445,7 +1434,6 @@ nb_NO:
         edit: "Rediger Grupper"
         refresh: "Last inn på nytt"
         new: "Ny"
-        selector_placeholder: "legg til brukere"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
@@ -2007,7 +1995,6 @@ nb_NO:
         latest: '<b>g</b>, <b>l</b> Siste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ules'
-        starred: '<b>g</b>, <b>f</b> Favoritter'
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Topp'
       navigation:
@@ -2029,7 +2016,6 @@ nb_NO:
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis Emner'
       actions:
         title: 'Handlinger'
-        star: '<b>f</b> Legg emne i favoritter'
         share_post: '<b>s</b> Del innlegg'
         reply_as_new_topic: '<b>t</b> Svar med lenket emne'
         reply_post: '<b>r</b> Svar på innlegg'

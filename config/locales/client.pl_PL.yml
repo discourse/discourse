@@ -726,11 +726,6 @@ pl_PL:
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
-    starred:
-      title: 'Oznacz'
-      help:
-        star: 'oznacz ten temat gwiazdką'
-        unstar: 'usuń ten temat z listy oznaczonych gwiazdką'
     topics:
       bulk:
         reset_read: "Wyzeruj przeczytane"
@@ -751,7 +746,6 @@ pl_PL:
           few: "Zaznaczono <b>{{count}}</b> tematy."
           other: "Zaznaczono <b>{{count}}</b> tematów."
       none:
-        starred: "Nie posiadasz oznaczonych tematów."
         unread: "Nie masz nieprzeczytanych tematów."
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
@@ -765,7 +759,6 @@ pl_PL:
           unread: '<p>Pojawią się tu tematy oznaczone licznikiem <span class="badge new-posts badge-notification">1</span> nieprzeczytanych wpisów.</p>
 
             <p>Domyślnie, jako nieprzeczytane rozumiane są tematy:</p><ul><li>twojego autorstwa</li><li>te w których są twoje odpowiedzi </li><li>czytane przez ciebie dłużej niż 4 minuty</li></ul><p>Znajdą się tu też te, którym ręcznie przyznano status Śledzony lub Obserwowany przyciskiem znajdującym się na końcu każdego tematu.</p><p>Możesz zmienić te zachowania w swoich <a href="%{userPrefsUrl}">ustawieniach</a>.</p>'
-          starred: '<p>Pojawią się tu oznaczone przez ciebie tematy.</p> <p>Aby oznaczyć lub odznaczyć temat kliknij na <i class="fa fa-star"></i> gdy tylko takową zobaczysz &hellip;</p><ul><li>na górze, obok tytułu każdego tematu</li><li>na końcu tematu, przyciskiem <kbd>Oznacz</kbd> </li><li>po lewej stronie na dowolnej liście tematów</li>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         hot: "Nie ma więcej gorących tematów."
@@ -773,7 +766,6 @@ pl_PL:
         read: "Nie ma więcej przeczytanych tematów."
         new: "Nie ma więcej nowych tematów."
         unread: "Nie ma więcej nieprzeczytanych tematów."
-        starred: "Nie ma więcej oznaczonych tematów."
         category: "Nie ma więcej tematów w kategorii {{category}}."
         top: "Nie ma już więcej najlepszych tematów."
     topic:
@@ -1208,6 +1200,8 @@ pl_PL:
       delete: 'Usuń kategorię'
       create: 'Nowa kategoria'
       save: 'Zapisz kategorię'
+      slug: 'Slug kategorii'
+      slug_placeholder: '(opcjonalne) słowa-z-myślnikiem dla URLi'
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       name: "Nazwa kategorii"
@@ -1339,9 +1333,6 @@ pl_PL:
       hot:
         title: "Gorące"
         help: "wybrane najbardziej gorące tematy"
-      starred:
-        title: "Oznaczone"
-        help: "twoje oznaczone tematy"
       read:
         title: "Przeczytane"
         help: "tematy które przeczytałeś, w kolejności od ostatnio przeczytanych"
@@ -1517,13 +1508,17 @@ pl_PL:
         edit: "Edytuj grupy"
         refresh: "Odśwież"
         new: "Nowa"
-        selector_placeholder: "dodaj użytkowników"
+        selector_placeholder: "nazwa użytkownika"
         name_placeholder: "Nazwa grupy: bez spacji, takie same zasady jak przy nazwie użytkownika"
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
         delete_confirm: "Usunąć tę grupę?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
+        delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}' ?"
+        name: "Nazwa"
+        add: "Dodaj"
+        add_members: "Dodaj członków"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -1593,6 +1588,7 @@ pl_PL:
       export_csv:
         success: "Rozpoczęto eksport: dostaniesz powiadomienie gdy proces zostanie zakończony."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
+        rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
         button_text: "Eksportuj"
         button_title:
           user: "Eksportuj listę wszystkich użytkowników do formatu CSV."
@@ -2095,7 +2091,6 @@ pl_PL:
         latest: '<b>g</b>, <b>l</b> Ostatnie'
         new: '<b>g</b>, <b>n</b> Nowe'
         unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
-        starred: '<b>g</b>, <b>f</b> Ulubione'
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Popularne'
       navigation:
@@ -2118,7 +2113,6 @@ pl_PL:
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
       actions:
         title: 'Operacje'
-        star: '<b>f</b> oznacz temat gwiazdką'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
         share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'

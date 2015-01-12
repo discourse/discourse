@@ -493,15 +493,7 @@ ko:
     s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
     failing_emails_warning: '%{num_failed_jobs} 개의 이메일 잡이 실패하였습니다. config.action_mailer 설정이 정확한지 config/environments/production.rb 파일을 체크해보세요.'
-    default_logo_warning: "당신은 사이트의 커스텀 로고를 사용하지 않고 있습니다. logo_url, logo_small_url, 와 favicon_url 를 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정하세요."
-    contact_email_missing: "당신의 사이트에 연락가능한 이메일을 설정하지 않았습니다. contact_email 을 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정해주세요."
-    contact_email_invalid: "이 사이트의 연락가능한 이메일이 부정확 합니다. contact_email 을 <a href='/admin/site_settings'>사이트 설정</a> 에서 업데이트 해주세요."
-    title_nag: "이 사이트의 타이틀이 아직 기본 값 입니다. <a href='/admin/site_settings'>사이트 설정</a> 에서 사이트의 타이틀을 업데이트 해주세요."
-    site_description_missing: "이 사이트의 사이트 설명이 공백입니다. 간단한 설명을 작성해주세요. <a href='/admin/site_settings'>사이트 설정</a>."
     consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
-    access_password_removal: "이 사이트는 이미 삭제된 설정인 access_password 을 사용하고 있습니다. 대신 사용해야만 하는 login_required 와 must_approve_users settings 이 활성화 되어있습니다. <a href='/admin/site_settings'>사이트 설정</a> 에서 변경할 수 있습니다. <a href='/admin/users/list/pending'>대기중인 사용자 리스트에서 사용자들을 승인하세요.</a> (이 메시지는 2일 뒤 사라집니다.)"
-    site_contact_username_warning: "사이트의 site_contact_username 설정이 공백입니다. <a href='/admin/site_settings'>사이트 설정</a> 에서 업데이트 해주세요. 이 값을 시스템 메시지를 보낼 운영자의 사용자 이름으로 설정하세요."
-    notification_email_warning: "notification_email 설정이 공백입니다. <a href='/admin/site_settings'>사이트 설정</a>에서 업데이트 해주세요."
   content_types:
     education_new_reply:
       title: "새로운 사용자 교육: 첫번째 답글들"
@@ -550,9 +542,6 @@ ko:
     allow_duplicate_topic_titles: "같은 제목의 동일한 토픽을 허용한다."
     unique_posts_mins: "같은 컨텐츠를 다시 포스트 할 수 있는 기간(분)"
     educate_until_posts: "새로운 사용자가 포스트를 작성할 시 포스트 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 포스트 개수"
-    title: "title 태그에 쓰일, 이 싸이트의 짧은 제목"
-    site_description: "이 사이트를 한 문장으로 설명해 주세요. meta description 태그에 사용됩니다."
-    contact_email: "이 사이트에 대한 주 이메일 주소. discourse.org로부터 중요한 업데이트에 대한 정보가 이 메일 주소로 보내질 것입니다."
     queue_jobs: "오직 개발자만!! 주의!! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경한다. 이미지가 깨지는 것을 막을 수 있다."
@@ -572,11 +561,8 @@ ko:
     post_excerpt_maxlength: "게시글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 포스트에 허용되는 최대 글자수"
     onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야한다. http://iframely.com/debug를 통해 테스트해볼 수 있다."
-    logo_url: "사이트의 왼쪽 상단에 로고 이미지.  예: http://example.com/logo.png"
     digest_logo_url: "요약 이메일 발송시 사용될 로고. 공백으로 남겨두면 `logo_url`이 사용됩니다. 예: http://example.com/logo.png"
-    logo_small_url: "토픽 리스트에서 스크롤다운 할 때 사용되는 작은 로고. 예: http://example.com/logo-small.png"
     favicon_url: "이 사이트의 favicon, 참고 http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "모바일 사이트 좌상단에 고정되어 있는 로고 이미지. 만약 설정하지 않는다면 `logo_url`설정 값이 사용된다. eg: http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
     email_custom_headers: "커스텀 이메일 해더의 pipe-delimited"
@@ -637,7 +623,6 @@ ko:
     login_required: "게시글을 읽으려면 인증(로그인)이 필요함"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
-    enable_sso: "외부 사이트를 통한 SSO(Single Sign On)을 허용. (초대 기능을 사용할 수 없음)"
     sso_url: "SSO endpoint의 URL"
     sso_secret: "SSO 정보를 encrypt/decrypt할 때 사용할 문자열.  (10글자 이상이어야 함)"
     sso_overrides_email: "내부에서 사용되는 이메일을 SSO로부터 부여받은 외부 이메일로 사용. (주의 : 내부에서 사용되는 이메일 표준화로 인해 불일치가 발생할 수 있)"
@@ -866,7 +851,6 @@ ko:
     errors: "%{errors}"
     not_available: "불가능합니다. %{suggestion}"
     something_already_taken: "뭔가가 이상합니다. 아마도 계정의 아이디 또는 이메일이 이미 등록된것 같습니다. 비밀번호 찾기 링크를 이용해주세요."
-    omniauth_error: "죄송합니다, 당신의 계정을 인증하는데 문제가 있습니다. 이미 인증이 되었나요?"
     omniauth_error_unknown: "로그인에 문제가 있습니다. 다시 시도해주세요."
     new_registrations_disabled: "지금은 새로 가입할 수 없습니다."
     password_too_long: "비밀번호는 200글자 이내만 허용됩니다."

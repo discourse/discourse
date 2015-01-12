@@ -39,6 +39,7 @@ pl_PL:
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
+      taken: "jest już w użyciu. (nazwy grup nie są wrażliwe na małe i wielkie litery)"
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
   bulk_invite:
@@ -485,7 +486,7 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba oznaczonych tematów"
     users_by_trust_level:
-      title: "Użytkowników na poziom zaufania"
+      title: "Użytkownicy wg poziomu zaufania"
       xaxis: "Poziom zaufania"
       yaxis: "Liczba użytkowników"
     emails:
@@ -544,14 +545,8 @@ pl_PL:
     s3_config_warning: 'Serwer jest skonfigurowany by przesyłać pliki na s3, ale przynajmniej jedno z następujących ustawień nie jest ustawione: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik config/discourse.conf i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
-    default_logo_warning: "Nie ustawiłeś loga dla Twojego serwisu. Zmień logo_url, logo_small_url i favicon_url w <a href='/admin/site_settings'>ustawieniach serwisu</a>."
-    contact_email_missing: "Nie podałeś kontaktowego adresu email dla Twojego serwisu. Podaj contact_email w <a href='/admin/site_settings'>ustawieniach serwisu</a>."
-    contact_email_invalid: "Ustawiony adres kontaktowy serwisu jest nieprawidłowy. Zmień contact_email w <a href='/admin/site_settings'>ustawieniach serwisu</a>."
-    title_nag: "Ustawienie serwisu title nadal ma domyślną wartość. Zmień ją na tytuł Twojego serwisu w <a href='/admin/site_settings'>ustawieniach serwisu</a>."
-    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
+    title_nag: "Wprowadź nazwę swojej strony. Zaktualizuj tytuł w <a href='/admin/site_settings'>Ustawieniach strony</a>."
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
-    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
   content_types:
     education_new_reply:
       title: "Edukacja nowych użytkowników: Pierwsze odpowiedzi"
@@ -582,6 +577,7 @@ pl_PL:
       description: "Kod HTML jaki zostanie dołączony na górze każdej strony (po nagłówku, przed nawigacją lub tytułem tematu)."
     bottom:
       title: "Stopka każdej strony"
+      description: "Kod HTML, który zostanie załączony przed tagiem </body>."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -599,9 +595,7 @@ pl_PL:
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
-    title: "Tytuł tego serwisu, używany w tagu title."
-    site_description: "Opis serwisu w jednym zdaniu, używany w tagu meta description."
-    contact_email: "Adres email kogoś, z kim należy się kontaktować w kwestii serwisu. Istotne informacje z discourse.org dotyczące krytycznych aktualizacji mogą być wysyłane pod ten adres."
+    site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
@@ -616,11 +610,8 @@ pl_PL:
     show_subcategory_list: "Po wejściu do kategorii, zamiast listy tematów wyświetlaj listę podkategorii."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
-    logo_url: "Logo widoczne w górnym lewym rogu serwisu, np: http://example.com/logo.png"
     digest_logo_url: "Alternatywne logo używane w biuletynie email. Jeśli puste, zostanie użyta wartość z pola `logo_url`, np: http://example.com/logo.png"
-    logo_small_url: "Małe logo widoczne w górnym lewym rogu serwisu, widoczne po przewinięciu strony, np: http://example.com/logo-small.png"
     favicon_url: "Favicon serwisu. Więcej informacji: http://pl.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Statyczne logo widoczne w górnym lewym rogu mobilnej wersji serwisu, np: http://example.com/uploads/default/logo.png Jeśli puste, zostanie użyta grafika z pola `logo_url`. "
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -641,7 +632,6 @@ pl_PL:
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
-    site_contact_username: "Wszystkie automatycznie wysyłane wiadomości prywatne będą pochodzić od wskazanego tu użytkownika. Jeśli puste, zostanie użyte konto System. "
     topics_per_period_in_top_summary: "Liczba tematów wyświetlanych w domyślnym podsumowaniu najbardziej popularnych wątków"
     topics_per_period_in_top_page: "Liczba tematów wyświetlanych w widoku 'Pokaż więcej'  na ekranie popularnych wątków."
     enable_badges: "Włącz system odznak"
@@ -649,7 +639,9 @@ pl_PL:
     force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Publiczna rejestracja jest wyłączona: wszyscy nowi użytkownicy muszą zostać zaproszeni przez innych użytkowników lub zespół."
+    login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
     min_password_length: "Minimalna długość hasła."
+    allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_yahoo_logins: "Enable Yahoo authentication"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
@@ -660,10 +652,14 @@ pl_PL:
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
     github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
+    maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
+    backup_daily: "Automatycznie utwórz raz dziennie kopie zapasową strony."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
+    default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
+    default_trust_level: "Domyślny poziom zaufania (0-4) dla wszystkich nowych użytkowników."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
     newuser_max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla nowych użytkowników)."
     max_mentions_per_post: "Maksymalna liczba powiadomień poprzez @nazwę w jednym wpisie (dla wszystkich)."
@@ -675,14 +671,23 @@ pl_PL:
     privacy_policy_url: "If you have a Privacy Policy document hosted elsewhere that you want to use, provide the full URL here."
     newuser_spam_host_threshold: "How many times a new user can post a link to the same host within their `newuser_spam_host_posts` posts before being considered spam."
     staff_like_weight: "O ile większą wagę mają mieć polubienia przyznawane przez członków zespołu?"
+    reply_by_email_enabled: "Włącz możliwość odpowiadania na wpisy poprzez email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
+    pop3_polling_ssl: "Używaj SSL podczas łączenia z serwerem POP3. (Rekomendowane)"
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
+    allow_uploaded_avatars: "Zezwól użytkownikom przesyłanie własnych avatarów."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
     default_external_links_in_new_tab: "Otwieraj zewnętrzne odnośniki w nowej karcie. Użytkownicy mogą zmienić to ustawienie w swoich preferencjach."
+    allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
+    enable_names: "Zezwól na wyświetlanie imienia i nazwiska użytkowników. Wyłącz, aby ukryć te dane."
+    errors:
+      invalid_email: "Nieprawidłowy adres email."
+      invalid_username: "Użytkownik o takiej nazwie nie istnieje."
+      invalid_string: "Nieprawidłowa wartość."
   notification_types:
     mentioned: "%{display_username} wspomina o Tobie w %{link}"
     liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
@@ -733,7 +738,6 @@ pl_PL:
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
-    omniauth_error: "Przepraszamy, wystąpił błąd podczas uwierzytelniania Twojego konta %{strategy}. Może nie zaakceptowałeś uwierzytelnienia?"
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
     password_too_long: "Hasła są ograniczone do 200 znaków."
     close_window: "Uwierzytelnianie zakończone. Aby kontynuować, zamknij to okno."
@@ -779,10 +783,6 @@ pl_PL:
       one: "1 flaga oczekuje na reakcję"
       few: "%{count} flagi oczekują na reakcję"
       other: "%{count} flagi oczekują na reakcję"
-  flag_reasons:
-    off_topic: "Twój wpis został oznaczony jako **nie-na-temat**: społeczność uważa, że nie pasuje on do tematu zdefiniowanego przez tytuł i treść pierwszego wpisu w wątku."
-    spam: "Twój wpis został oznaczony jako **spam**: społeczność uważa, że jest to nieprzydatna reklama bez związku z tematem."
-    notify_moderators: "Twój wpis został oznaczony jako **wymagający uwagi moderatora**: społeczność uważa, że wpis wymaga interwencji moderatorów."
   system_messages:
     post_hidden:
       subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
