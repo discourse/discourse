@@ -13,10 +13,10 @@ describe Plugin::Metadata do
 some_ruby
 TEXT
 
-      metadata.name.should == "plugin-name"
-      metadata.about.should == "about: my plugin"
-      metadata.version.should == "0.1"
-      metadata.authors.should == "Frank Zappa"
+      expect(metadata.name).to eq("plugin-name")
+      expect(metadata.about).to eq("about: my plugin")
+      expect(metadata.version).to eq("0.1")
+      expect(metadata.authors).to eq("Frank Zappa")
     end
   end
 

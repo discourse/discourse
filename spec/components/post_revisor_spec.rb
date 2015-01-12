@@ -15,10 +15,10 @@ describe PostRevisor do
 
     describe 'with the same body' do
       it "doesn't change version" do
-        lambda {
-          subject.revise!(post.user, { raw: post.raw }).should == false
+        expect {
+          expect(subject.revise!(post.user, { raw: post.raw })).to eq(false)
           post.reload
-        }.should_not change(post, :version)
+        }.not_to change(post, :version)
       end
     end
 
@@ -28,11 +28,11 @@ describe PostRevisor do
         subject.revise!(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 10.seconds)
         post.reload
 
-        post.version.should == 1
-        post.public_version.should == 1
-        post.revisions.size.should == 0
-        post.last_version_at.should == first_version_at
-        subject.category_changed.should be_blank
+        expect(post.version).to eq(1)
+        expect(post.public_version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+        expect(post.last_version_at).to eq(first_version_at)
+        expect(subject.category_changed).to be_blank
       end
     end
 
@@ -47,20 +47,20 @@ describe PostRevisor do
       end
 
       it "doesn't update a category" do
-        subject.category_changed.should be_blank
+        expect(subject.category_changed).to be_blank
       end
 
       it 'updates the versions' do
-        post.version.should == 2
-        post.public_version.should == 2
+        expect(post.version).to eq(2)
+        expect(post.public_version).to eq(2)
       end
 
       it 'creates a new revision' do
-        post.revisions.size.should == 1
+        expect(post.revisions.size).to eq(1)
       end
 
       it "updates the last_version_at" do
-        post.last_version_at.to_i.should == revised_at.to_i
+        expect(post.last_version_at.to_i).to eq(revised_at.to_i)
       end
 
       describe "new edit window" do
@@ -71,16 +71,16 @@ describe PostRevisor do
         end
 
         it "doesn't create a new version if you do another" do
-          post.version.should == 2
-          post.public_version.should == 2
+          expect(post.version).to eq(2)
+          expect(post.public_version).to eq(2)
         end
 
         it "doesn't change last_version_at" do
-          post.last_version_at.to_i.should == revised_at.to_i
+          expect(post.last_version_at.to_i).to eq(revised_at.to_i)
         end
 
         it "doesn't update a category" do
-          subject.category_changed.should be_blank
+          expect(subject.category_changed).to be_blank
         end
 
         context "after second window" do
@@ -93,12 +93,12 @@ describe PostRevisor do
           end
 
           it "does create a new version after the edit window" do
-            post.version.should == 3
-            post.public_version.should == 3
+            expect(post.version).to eq(3)
+            expect(post.public_version).to eq(3)
           end
 
           it "does create a new version after the edit window" do
-            post.last_version_at.to_i.should == new_revised_at.to_i
+            expect(post.last_version_at.to_i).to eq(new_revised_at.to_i)
           end
         end
       end
@@ -115,7 +115,7 @@ describe PostRevisor do
       let(:new_description) { "this is my new description." }
 
       it "should have no description by default" do
-        category.description.should be_blank
+        expect(category.description).to be_blank
       end
 
       context "one paragraph description" do
@@ -125,11 +125,11 @@ describe PostRevisor do
         end
 
         it "returns the changed category info" do
-          subject.category_changed.should == category
+          expect(subject.category_changed).to eq(category)
         end
 
         it "updates the description of the category" do
-          category.description.should == new_description
+          expect(category.description).to eq(new_description)
         end
       end
 
@@ -140,11 +140,11 @@ describe PostRevisor do
         end
 
         it "returns the changed category info" do
-          subject.category_changed.should == category
+          expect(subject.category_changed).to eq(category)
         end
 
         it "updates the description of the category" do
-          category.description.should == new_description
+          expect(category.description).to eq(new_description)
         end
       end
 
@@ -156,11 +156,11 @@ describe PostRevisor do
         end
 
         it "puts the description back to nothing" do
-          category.description.should be_blank
+          expect(category.description).to be_blank
         end
 
         it "returns the changed category info" do
-          subject.category_changed.should == category
+          expect(subject.category_changed).to eq(category)
         end
       end
 
@@ -186,11 +186,11 @@ describe PostRevisor do
       end
 
       it "allows an admin to insert images into a new user's post" do
-        post.errors.should be_blank
+        expect(post.errors).to be_blank
       end
 
       it "marks the admin as the last updater" do
-        post.last_editor_id.should == changed_by.id
+        expect(post.last_editor_id).to eq(changed_by.id)
       end
 
     end
@@ -204,7 +204,7 @@ describe PostRevisor do
       end
 
       it "doesn't allow images to be inserted" do
-        post.errors.should be_present
+        expect(post.errors).to be_present
       end
 
     end
@@ -215,34 +215,34 @@ describe PostRevisor do
       let!(:result) { subject.revise!(changed_by, { raw: "lets update the body" }) }
 
       it 'returns true' do
-        result.should == true
+        expect(result).to eq(true)
       end
 
       it 'updates the body' do
-        post.raw.should == "lets update the body"
+        expect(post.raw).to eq("lets update the body")
       end
 
       it 'sets the invalidate oneboxes attribute' do
-        post.invalidate_oneboxes.should == true
+        expect(post.invalidate_oneboxes).to eq(true)
       end
 
       it 'increased the versions' do
-        post.version.should == 2
-        post.public_version.should == 2
+        expect(post.version).to eq(2)
+        expect(post.public_version).to eq(2)
       end
 
       it 'has the new revision' do
-        post.revisions.size.should == 1
+        expect(post.revisions.size).to eq(1)
       end
 
       it "saved the user who made the change in the revisions" do
-        post.revisions.first.user_id.should == changed_by.id
+        expect(post.revisions.first.user_id).to eq(changed_by.id)
       end
 
       it "updates the word count" do
-        post.word_count.should == 4
+        expect(post.word_count).to eq(4)
         post.topic.reload
-        post.topic.word_count.should == 4
+        expect(post.topic.word_count).to eq(4)
       end
 
       context 'second poster posts again quickly' do
@@ -253,9 +253,9 @@ describe PostRevisor do
         end
 
         it 'is a ninja edit, because the second poster posted again quickly' do
-          post.version.should == 2
-          post.public_version.should == 2
-          post.revisions.size.should == 1
+          expect(post.version).to eq(2)
+          expect(post.public_version).to eq(2)
+          expect(post.revisions.size).to eq(1)
         end
       end
     end
@@ -279,7 +279,7 @@ describe PostRevisor do
     it "doesn't strip starting whitespaces" do
       subject.revise!(post.user, { raw: "    <-- whitespaces -->    " })
       post.reload
-      post.raw.should == "    <-- whitespaces -->"
+      expect(post.raw).to eq("    <-- whitespaces -->")
     end
 
   end

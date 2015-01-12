@@ -25,45 +25,45 @@ describe "A record validated with QualityTitleValidator" do
 
   it "allows a regular title with a few ascii characters" do
     topic.title = valid_title
-    topic.should be_valid
+    expect(topic).to be_valid
   end
 
   it "allows non ascii" do
     topic.title = "Iñtërnâtiônàlizætiøn"
-    topic.should be_valid
+    expect(topic).to be_valid
   end
 
   it 'allows Chinese characters' do
     topic.title = '现在发现使用中文标题没法发帖子了'
-    topic.should be_valid
+    expect(topic).to be_valid
   end
 
   it "allows anything in a private message" do
     topic.stubs(:private_message? => true)
     [short_title, long_title, xxxxx_title].each do |bad_title|
       topic.title = bad_title
-      topic.should be_valid
+      expect(topic).to be_valid
     end
   end
 
   it "strips a title when identifying length" do
     topic.title = short_title.center(SiteSetting.min_topic_title_length + 1, ' ')
-    topic.should_not be_valid
+    expect(topic).not_to be_valid
   end
 
   it "doesn't allow a long title" do
     topic.title = long_title
-    topic.should_not be_valid
+    expect(topic).not_to be_valid
   end
 
   it "doesn't allow a short title" do
     topic.title = short_title
-    topic.should_not be_valid
+    expect(topic).not_to be_valid
   end
 
   it "doesn't allow a title of one repeated character" do
     topic.title = xxxxx_title
-    topic.should_not be_valid
+    expect(topic).not_to be_valid
   end
 
   # describe "with a name" do

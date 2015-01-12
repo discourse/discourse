@@ -49,10 +49,10 @@ describe CookedPostProcessor do
 
       it "works" do
         # adds the width from the image sizes provided when no dimension is provided
-        cpp.html.should =~ /src="http:\/\/foo.bar\/image.png" width="111" height="222"/
+        expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
         # adds the width from the image sizes provided
-        cpp.html.should =~ /src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/
-        cpp.should be_dirty
+        expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
+        expect(cpp).to be_dirty
       end
 
     end
@@ -65,8 +65,8 @@ describe CookedPostProcessor do
       it "adds the width and height to images that don't have them" do
         FastImage.expects(:size).returns([123, 456])
         cpp.post_process_images
-        cpp.html.should =~ /width="123" height="456"/
-        cpp.should be_dirty
+        expect(cpp.html).to match(/width="123" height="456"/)
+        expect(cpp).to be_dirty
       end
 
     end
@@ -90,10 +90,10 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        cpp.html.should match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
+        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
 <span class="filename">logo.png</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
 </div></a></div>'
-        cpp.should be_dirty
+        expect(cpp).to be_dirty
       end
 
     end
@@ -117,10 +117,10 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        cpp.html.should match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" title="WAT" width="690" height="1380"><div class="meta">
+        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" title="WAT" width="690" height="1380"><div class="meta">
        <span class="filename">WAT</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
        </div></a></div>'
-        cpp.should be_dirty
+        expect(cpp).to be_dirty
       end
 
     end
@@ -133,10 +133,10 @@ describe CookedPostProcessor do
 
       it "adds a topic image if there's one in the post" do
         FastImage.stubs(:size)
-        post.topic.image_url.should == nil
+        expect(post.topic.image_url).to eq(nil)
         cpp.post_process_images
         post.topic.reload
-        post.topic.image_url.should be_present
+        expect(post.topic.image_url).to be_present
       end
 
     end
@@ -149,7 +149,7 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
 
     it "does not extract images inside oneboxes or quotes" do
-      cpp.extract_images.length.should == 0
+      expect(cpp.extract_images.length).to eq(0)
     end
 
   end
@@ -161,7 +161,7 @@ describe CookedPostProcessor do
 
     it "returns the size" do
       image_sizes = { "http://my.discourse.org/image.png" => { "width" => 111, "height" => 222 } }
-      cpp.get_size_from_image_sizes("/image.png", image_sizes).should == [111, 222]
+      expect(cpp.get_size_from_image_sizes("/image.png", image_sizes)).to eq([111, 222])
     end
 
   end
@@ -185,7 +185,7 @@ describe CookedPostProcessor do
       SiteSetting.stubs(:crawl_images?).returns(true)
       FastImage.expects(:size).returns([200, 400])
       cpp.get_size("http://foo.bar/image3.png")
-      cpp.get_size("http://foo.bar/image3.png").should == [200, 400]
+      expect(cpp.get_size("http://foo.bar/image3.png")).to eq([200, 400])
     end
 
     context "when crawl_images is disabled" do
@@ -194,7 +194,7 @@ describe CookedPostProcessor do
 
       it "doesn't call FastImage" do
         FastImage.expects(:size).never
-        cpp.get_size("http://foo.bar/image1.png").should == nil
+        expect(cpp.get_size("http://foo.bar/image1.png")).to eq(nil)
       end
 
       it "is always allowed to crawl our own images" do
@@ -202,7 +202,7 @@ describe CookedPostProcessor do
         store.expects(:has_been_uploaded?).returns(true)
         Discourse.expects(:store).returns(store)
         FastImage.expects(:size).returns([100, 200])
-        cpp.get_size("http://foo.bar/image2.png").should == [100, 200]
+        expect(cpp.get_size("http://foo.bar/image2.png")).to eq([100, 200])
       end
 
     end
@@ -215,19 +215,19 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
 
     it "validates HTTP(s) urls" do
-      cpp.is_valid_image_url?("http://domain.com").should == true
-      cpp.is_valid_image_url?("https://domain.com").should == true
+      expect(cpp.is_valid_image_url?("http://domain.com")).to eq(true)
+      expect(cpp.is_valid_image_url?("https://domain.com")).to eq(true)
     end
 
     it "doesn't validate other urls" do
-      cpp.is_valid_image_url?("ftp://domain.com").should == false
-      cpp.is_valid_image_url?("ftps://domain.com").should == false
-      cpp.is_valid_image_url?("/tmp/image.png").should == false
-      cpp.is_valid_image_url?("//domain.com").should == false
+      expect(cpp.is_valid_image_url?("ftp://domain.com")).to eq(false)
+      expect(cpp.is_valid_image_url?("ftps://domain.com")).to eq(false)
+      expect(cpp.is_valid_image_url?("/tmp/image.png")).to eq(false)
+      expect(cpp.is_valid_image_url?("//domain.com")).to eq(false)
     end
 
     it "doesn't throw an exception with a bad URI" do
-      cpp.is_valid_image_url?("http://do<main.com").should == nil
+      expect(cpp.is_valid_image_url?("http://do<main.com")).to eq(nil)
     end
 
   end
@@ -238,17 +238,17 @@ describe CookedPostProcessor do
     let(:cpp) { CookedPostProcessor.new(post) }
 
     it "returns the filename of the src when there is no upload" do
-      cpp.get_filename(nil, "http://domain.com/image.png").should == "image.png"
+      expect(cpp.get_filename(nil, "http://domain.com/image.png")).to eq("image.png")
     end
 
     it "returns the original filename of the upload when there is an upload" do
       upload = build(:upload, { original_filename: "upload.jpg" })
-      cpp.get_filename(upload, "http://domain.com/image.png").should == "upload.jpg"
+      expect(cpp.get_filename(upload, "http://domain.com/image.png")).to eq("upload.jpg")
     end
 
     it "returns a generic name for pasted images" do
       upload = build(:upload, { original_filename: "blob.png" })
-      cpp.get_filename(upload, "http://domain.com/image.png").should == I18n.t('upload.pasted_image_filename')
+      expect(cpp.get_filename(upload, "http://domain.com/image.png")).to eq(I18n.t('upload.pasted_image_filename'))
     end
 
   end
@@ -266,11 +266,11 @@ describe CookedPostProcessor do
     end
 
     it "is dirty" do
-      cpp.should be_dirty
+      expect(cpp).to be_dirty
     end
 
     it "inserts the onebox without wrapping p" do
-      cpp.html.should match_html "<div>GANGNAM STYLE</div>"
+      expect(cpp.html).to match_html "<div>GANGNAM STYLE</div>"
     end
 
   end
@@ -282,7 +282,7 @@ describe CookedPostProcessor do
 
     it "uses schemaless url for uploads" do
       cpp.optimize_urls
-      cpp.html.should match_html '<a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a>
+      expect(cpp.html).to match_html '<a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a>
        <img src="//test.localhost/uploads/default/1/1234567890123456.jpg"><a href="http://www.google.com">Google</a>
        <img src="http://foo.bar/image.png">'
     end
@@ -292,7 +292,7 @@ describe CookedPostProcessor do
       it "uses schemaless CDN url for uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        cpp.html.should match_html '<a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a>
+        expect(cpp.html).to match_html '<a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a>
        <img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><a href="http://www.google.com">Google</a>
        <img src="http://foo.bar/image.png">'
       end
@@ -365,7 +365,7 @@ describe CookedPostProcessor do
     it "does nothing when there's enough disk space" do
       SiteSetting.expects(:download_remote_images_threshold).returns(20)
       SiteSetting.expects(:download_remote_images_to_local).never
-      cpp.disable_if_low_on_disk_space.should == false
+      expect(cpp.disable_if_low_on_disk_space).to eq(false)
     end
 
     context "when there's not enough disk space" do
@@ -375,8 +375,8 @@ describe CookedPostProcessor do
       it "disables download_remote_images_threshold and send a notification to the admin" do
         StaffActionLogger.any_instance.expects(:log_site_setting_change).once
         SystemMessage.expects(:create_from_system_user).with(Discourse.site_contact_user, :download_remote_images_disabled).once
-        cpp.disable_if_low_on_disk_space.should == true
-        SiteSetting.download_remote_images_to_local.should == false
+        expect(cpp.disable_if_low_on_disk_space).to eq(true)
+        expect(SiteSetting.download_remote_images_to_local).to eq(false)
       end
 
     end
@@ -391,12 +391,12 @@ describe CookedPostProcessor do
 
     it "is true when the image is inside a link" do
       img = doc.css("img#linked_image").first
-      cpp.is_a_hyperlink?(img).should == true
+      expect(cpp.is_a_hyperlink?(img)).to eq(true)
     end
 
     it "is false when the image is not inside a link" do
       img = doc.css("img#standard_image").first
-      cpp.is_a_hyperlink?(img).should == false
+      expect(cpp.is_a_hyperlink?(img)).to eq(false)
     end
 
   end

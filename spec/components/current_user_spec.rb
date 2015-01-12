@@ -7,7 +7,7 @@ describe CurrentUser do
     EmailToken.confirm(user.auth_token)
 
     env = Rack::MockRequest.env_for("/test", "HTTP_COOKIE" => "_t=#{user.auth_token};")
-    CurrentUser.lookup_from_env(env).should == user
+    expect(CurrentUser.lookup_from_env(env)).to eq(user)
   end
 
 end

@@ -9,13 +9,13 @@ describe Cache do
 
   it "supports fixnum" do
     cache.write("num", 1)
-    cache.read("num").should == 1
+    expect(cache.read("num")).to eq(1)
   end
 
   it "supports hash" do
     hash = {a: 1, b: [1,2,3]}
     cache.write("hash", hash)
-    cache.read("hash").should == hash
+    expect(cache.read("hash")).to eq(hash)
   end
 
   it "can be cleared" do
@@ -23,7 +23,7 @@ describe Cache do
     cache.write("hello1", "world")
     cache.clear
 
-    cache.read("hello0").should == nil
+    expect(cache.read("hello0")).to eq(nil)
   end
 
   it "can delete by family" do
@@ -32,8 +32,8 @@ describe Cache do
 
     cache.delete_by_family("my_family")
 
-    cache.fetch("key").should == nil
-    cache.fetch("key2").should == nil
+    expect(cache.fetch("key")).to eq(nil)
+    expect(cache.fetch("key2")).to eq(nil)
 
   end
 
@@ -43,7 +43,7 @@ describe Cache do
     end
 
     cache.delete("key")
-    cache.fetch("key").should == nil
+    expect(cache.fetch("key")).to eq(nil)
   end
 
   #TODO yuck on this mock
@@ -64,7 +64,7 @@ describe Cache do
     r = cache.fetch "key" do
       "bob"
     end
-    r.should == "bob"
+    expect(r).to eq("bob")
   end
 
   it "can fetch existing correctly" do
@@ -73,6 +73,6 @@ describe Cache do
     r = cache.fetch "key" do
       "bob"
     end
-    r.should == "bill"
+    expect(r).to eq("bill")
   end
 end

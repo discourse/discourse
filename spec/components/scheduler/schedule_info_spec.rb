@@ -28,29 +28,29 @@ describe Scheduler::ScheduleInfo do
     end
 
     it "is a scheduled job" do
-      RandomJob.should be_scheduled
+      expect(RandomJob).to be_scheduled
     end
 
     it 'starts off invalid' do
-      @info.valid?.should == false
+      expect(@info.valid?).to eq(false)
     end
 
     it 'will have a due date in the next 5 minutes if it was blank' do
       @info.schedule!
-      @info.valid?.should == true
-      @info.next_run.should be_within(5.minutes).of(Time.now.to_i)
+      expect(@info.valid?).to eq(true)
+      expect(@info.next_run).to be_within(5.minutes).of(Time.now.to_i)
     end
 
     it 'will have a due date within the next hour if it just ran' do
       @info.prev_run = Time.now.to_i
       @info.schedule!
-      @info.valid?.should == true
-      @info.next_run.should be_within(1.hour * manager.random_ratio).of(Time.now.to_i + 1.hour)
+      expect(@info.valid?).to eq(true)
+      expect(@info.next_run).to be_within(1.hour * manager.random_ratio).of(Time.now.to_i + 1.hour)
     end
 
     it 'is invalid if way in the future' do
       @info.next_run = Time.now.to_i + 1.year
-      @info.valid?.should == false
+      expect(@info.valid?).to eq(false)
     end
   end
 
@@ -75,22 +75,22 @@ describe Scheduler::ScheduleInfo do
     end
 
     it "is a scheduled job" do
-      DailyJob.should be_scheduled
+      expect(DailyJob).to be_scheduled
     end
 
     it "starts off invalid" do
-      @info.valid?.should == false
+      expect(@info.valid?).to eq(false)
     end
 
     skip "will have a due date at the appropriate time if blank" do
-      @info.next_run.should == nil
+      expect(@info.next_run).to eq(nil)
       @info.schedule!
-      @info.valid?.should == true
+      expect(@info.valid?).to eq(true)
     end
 
     it 'is invalid if way in the future' do
       @info.next_run = Time.now.to_i + 1.year
-      @info.valid?.should == false
+      expect(@info.valid?).to eq(false)
     end
   end
 
