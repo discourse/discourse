@@ -7,12 +7,7 @@
   @module Discourse
 **/
 Discourse.SiteCustomization = Discourse.Model.extend({
-  trackedProperties: [
-    'enabled', 'name',
-    'stylesheet', 'header', 'footer',
-    'mobile_stylesheet', 'mobile_header', 'mobile_footer',
-    'head_tag', 'body_tag'
-  ],
+  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer'],
 
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
@@ -30,10 +25,8 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     if (changed) { this.set('savingStatus', ''); }
 
     return changed;
-  }.property('enabled', 'name', 'originals',
-    'stylesheet', 'header', 'footer',
-    'mobile_stylesheet', 'mobile_header', 'mobile_footer',
-    'head_tag', 'body_tag'),
+
+  }.property('enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'originals'),
 
   startTrackingChanges: function() {
     var self = this;
@@ -50,7 +43,6 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   save: function() {
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving',true);
-
     var data = {
       name: this.name,
       enabled: this.enabled,
@@ -59,9 +51,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       footer: this.footer,
       mobile_stylesheet: this.mobile_stylesheet,
       mobile_header: this.mobile_header,
-      mobile_footer: this.mobile_footer,
-      head_tag: this.head_tag,
-      body_tag: this.body_tag
+      mobile_footer: this.mobile_footer
     };
 
     var siteCustomization = this;
