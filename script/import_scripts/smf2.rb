@@ -7,6 +7,7 @@ require 'tsort'
 require 'set'
 require 'optparse'
 require 'etc'
+require 'open3'
 
 class ImportScripts::Smf2 < ImportScripts::Base
 
@@ -28,19 +29,21 @@ class ImportScripts::Smf2 < ImportScripts::Base
   attr_reader :options
 
   def initialize(options)
+    if options.timezone.nil?
+      $stderr.puts "No source timezone given and autodetection from PHP failed."
+      $stderr.puts "Use -t option to specify correct source timezone:"
+      $stderr.puts options.usage
+      exit 1
+    end
+
     super()
     @options = options
 
     begin
-      timezone = `php -i`.lines.each do |line|
-        key, *vals = line.split(' => ').map(&:strip)
-        break vals[0] if key == 'Default timezone'
-      end
-      Time.zone = timezone
-    rescue Errno::ENOENT
-      $stderr.puts "Cannot autodetect PHP timezone setting, php not found in $PATH"
+      Time.zone = options.timezone
     rescue ArgumentError
-      $stderr.puts "Cannot set timezone '#{timezone}' (from PHP)"
+      $stderr.puts "Timezone name '#{options.timezone}' is invalid."
+      exit 1
     end
 
     if options.database.blank?
@@ -515,6 +518,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       self.host ||= 'localhost'
       self.username ||= Etc.getlogin
       self.prefix ||= 'smf_'
+      self.timezone ||= get_php_timezone
     end
 
     def usage
@@ -527,8 +531,19 @@ class ImportScripts::Smf2 < ImportScripts::Base
     attr_accessor :database
     attr_accessor :prefix
     attr_accessor :smfroot
+    attr_accessor :timezone
 
     private
+
+    def get_php_timezone
+      phpinfo, status = Open3.capture2('phpnope', '-i')
+      phpinfo.lines.each do |line|
+        key, *vals = line.split(' => ').map(&:strip)
+        break vals[0] if key == 'Default timezone'
+      end
+    rescue Errno::ENOENT
+      $stderr.puts "Error: PHP CLI executable not found"
+    end
 
     def read_smf_settings
       settings = File.join(self.smfroot, 'Settings.php')
@@ -555,6 +570,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         o.on('-p [PASS]', :OPTIONAL, 'MySQL password. Without argument, reads password from STDIN.') {|s| self.password = s || :ask }
         o.on('-d DBNAME', :REQUIRED, 'Name of SMF database') {|s| self.database = s }
         o.on('-f PREFIX', :REQUIRED, "Table names prefix [\"#{self.prefix}\"]") {|s| self.prefix = s }
+        o.on('-t TIMEZONE', :REQUIRED, 'Timezone used by SMF2 [auto-detected from PHP]') {|s| self.timezone = s }
       end
     end
 
