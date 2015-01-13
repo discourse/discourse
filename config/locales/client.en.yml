@@ -1381,13 +1381,13 @@ en:
         help: "This topic is archived; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
-        help: "This topic is unpinned; it will display in default order"
+        help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
         help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
         title: "Pinned"
-        help: "This topic is pinned; it will display at the top of its category"
+        help: "This topic is pinned for you; it will display at the top of its category"
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
