@@ -110,7 +110,7 @@ export default Discourse.View.extend(StringBuffer, {
       }
     }
 
-    if(post.get("bookmarked")){
+    if (post.get("bookmarked")) {
       hiddenButtons.removeObject("bookmark");
     }
 
