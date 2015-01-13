@@ -214,7 +214,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
         return;
       }
       if (post) {
-        return post.toggleBookmark();
+        return post.toggleBookmark().catch(function(error) {
+          if (error && error.responseText) {
+            bootbox.alert($.parseJSON(error.responseText).errors[0]);
+          } else {
+            bootbox.alert(I18n.t('generic_error'));
+          }
+        });
       } else {
         return this.get("model").toggleBookmark();
       }
