@@ -20,8 +20,6 @@
           <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
           <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
           <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
-          <li><a {{bind-attr class="view.headTagActive:active"}} {{action "selectHeadTag" target="view"}} title="{{i18n 'admin.customize.head_tag.title'}}">{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.head_tag.text'}}</a></li>
-          <li><a {{bind-attr class="view.bodyTagActive:active"}} {{action "selectBodyTag" target="view"}} title="{{i18n 'admin.customize.body_tag.title'}}">{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}</a></li>
           <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
           <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
           <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
@@ -39,8 +37,6 @@
         {{#if view.stylesheetActive}}{{aceEditor content=selectedItem.stylesheet mode="scss"}}{{/if}}
         {{#if view.headerActive}}{{aceEditor content=selectedItem.header mode="html"}}{{/if}}
         {{#if view.footerActive}}{{aceEditor content=selectedItem.footer mode="html"}}{{/if}}
-        {{#if view.headTagActive}}{{aceEditor content=selectedItem.head_tag mode="html"}}{{/if}}
-        {{#if view.bodyTagActive}}{{aceEditor content=selectedItem.body_tag mode="html"}}{{/if}}
         {{#if view.mobileStylesheetActive}}{{aceEditor content=selectedItem.mobile_stylesheet mode="scss"}}{{/if}}
         {{#if view.mobileHeaderActive}}{{aceEditor content=selectedItem.mobile_header mode="html"}}{{/if}}
         {{#if view.mobileFooterActive}}{{aceEditor content=selectedItem.mobile_footer mode="html"}}{{/if}}

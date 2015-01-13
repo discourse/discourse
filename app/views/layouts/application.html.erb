@@ -22,9 +22,7 @@
       <%= script "admin"%>
     <%- end %>
 
-    <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
-    <%- end %>
+    <%= raw SiteText.text_for(:head) %>
 
     <%= render_google_universal_analytics_code %>
 
@@ -89,8 +87,6 @@
 
     <%= render_google_analytics_code %>
 
-    <%- unless customization_disabled? %>
-      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
-    <%- end %>
+    <%= raw SiteText.text_for(:bottom) %>
   </body>
 </html>

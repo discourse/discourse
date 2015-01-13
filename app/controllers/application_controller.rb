@@ -274,7 +274,10 @@ class ApplicationController < ActionController::Base
     end
 
     def custom_html_json
-      data = { footer: SiteCustomization.custom_footer(session[:preview_style]) }
+      data = {
+        top: SiteText.text_for(:top),
+        footer: SiteCustomization.custom_footer(session[:preview_style])
+      }
 
       if DiscoursePluginRegistry.custom_html
         data.merge! DiscoursePluginRegistry.custom_html

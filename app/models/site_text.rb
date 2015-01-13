@@ -25,6 +25,9 @@ class SiteText < ActiveRecord::Base
   add_text_type :education_new_topic, default_18n_key: 'education.new-topic'
   add_text_type :education_new_reply, default_18n_key: 'education.new-reply'
   add_text_type :login_required_welcome_message, default_18n_key: 'login_required.welcome_message'
+  add_text_type :top, allow_blank: true, format: :html
+  add_text_type :bottom, allow_blank: true, format: :html
+  add_text_type :head, allow_blank: true, format: :html
 
   def site_text_type
     @site_text_type ||= SiteText.find_text_type(text_type)
