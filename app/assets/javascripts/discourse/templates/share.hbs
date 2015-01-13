@@ -1,17 +1,20 @@
 {{#if controller.link}}
-<h3>{{view.title}}</h3>
+  <h3>{{view.title}}</h3>
 
-{{#if date}}
-  <span class="date">{{displayDate}}</span>
-{{/if}}
+  {{#if date}}
+    <span class="date">{{displayDate}}</span>
+  {{/if}}
 
-<div>
-  <input type='text' />
-  <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
-</div>
+  <div>
+    <input type='text' />
+    <div class="share-for-touch"><div class="overflow-ellipsis"><a></a></div></div>
+  </div>
 
-{{each s in shareLinks itemView='share-link'}}
-<div class='link'>
-  <a href {{action "close"}} title='{{i18n 'share.close'}}'><i class="fa fa-times-circle"></i></a>
-</div>
+  {{#each s in sources}}
+    {{share-source source=s title=title action="share"}}
+  {{/each}}
+
+  <div class='link'>
+    <a href {{action "close"}} title='{{i18n 'share.close'}}'>{{fa-icon "times-circle"}}</a>
+  </div>
 {{/if}}

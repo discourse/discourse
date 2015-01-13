@@ -59,6 +59,7 @@
 //= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
+//= require ./discourse/lib/sharing
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
