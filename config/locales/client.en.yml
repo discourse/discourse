@@ -376,10 +376,10 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
 
       change_avatar:
-        title: "Change your avatar"
+        title: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "Refresh your Gravatar"
-        letter_based: "System assigned avatar"
+        letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
@@ -518,7 +518,7 @@ en:
       registration_ip_address:
         title: "Registration IP Address"
       avatar:
-        title: "Avatar"
+        title: "Profile Picture"
       title:
         title: "Title"
 
@@ -1842,7 +1842,7 @@ en:
           do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
+          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -2073,7 +2073,7 @@ en:
           external_username: "Username"
           external_name: "Name"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
+          external_avatar_url: "Profile Picture URL"
 
       user_fields:
         title: "User Fields"
