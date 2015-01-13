@@ -1,7 +1,8 @@
-import DiscourseController from 'discourse/controllers/controller';
+import Sharing from 'discourse/lib/sharing';
 
-export default DiscourseController.extend({
+export default Ember.Controller.extend({
   needs: ['topic'],
+  title: Ember.computed.alias('controllers.topic.title'),
 
   displayDate: function() {
     return Discourse.Formatter.longDateNoYear(new Date(this.get('date')));
@@ -14,20 +15,17 @@ export default DiscourseController.extend({
       return false;
     },
 
-    sharePopup: function(target, url) {
-      window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + Discourse.ShareLink.popupHeight(target));
-      return false;
+    share: function(source) {
+      var url = source.generateUrl(this.get('link'), this.get('title'));
+      if (source.shouldOpenInPopup) {
+        window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + (source.popupHeight || 315));
+      } else {
+        window.open(url, '_blank');
+      }
     }
   },
 
-  shareLinks: function() {
-    return Discourse.SiteSettings.share_links.split('|').map(function(i) {
-      if( Discourse.ShareLink.supportedTargets.indexOf(i) >= 0 ) {
-        return Discourse.ShareLink.create({target: i, link: this.get('link'), topicTitle: this.get('controllers.topic.title')});
-      } else {
-        return null;
-      }
-    }, this).compact();
-  }.property('link')
-
+  sources: function() {
+    return Sharing.activeSources();
+  }.property()
 });
