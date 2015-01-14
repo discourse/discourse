@@ -351,10 +351,8 @@ cs:
         error: "Nastala chyba při změně emailové adresy. Není tato adresa již používaná?"
         success: "Na zadanou adresu jsme zaslali email. Následujte, prosím, instrukce v tomto emailu."
       change_avatar:
-        title: "Změna avataru"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
         refresh_gravatar_title: "Obnovit Gravatar"
-        letter_based: "Systémem přidělený avarar"
         uploaded_avatar: "Vlastní obrázek"
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
@@ -478,8 +476,6 @@ cs:
         title: "Poslední IP adresa"
       registration_ip_address:
         title: "Registrační IP adresa"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titul"
       filters:
@@ -1280,13 +1276,11 @@ cs:
         help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
       unpinned:
         title: "Nepřipnuté"
-        help: "Toto téme není připnuté; bude se zobrazovat v běžném pořadí"
       pinned_globally:
         title: "Připnuté globálně"
         help: "Toto téma je připnuto globálně, zobrazí se na vršku všech seznamů"
       pinned:
         title: "Připnuto"
-        help: "toto téma je připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
       archived:
         help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
     posts: "Příspěvků"
@@ -1683,7 +1677,6 @@ cs:
           do_nothing: "nedělat nic"
         staff_actions:
           title: "Akce moderátorů"
-          instructions: "Filtrujte klikem na uživatelská jména a akce. Klikem na avatar přejdete na profil uživatele."
           clear_filters: "Zobrazit vše"
           staff_user: "Moderátor"
           target_user: "Cílový uživatel"
@@ -1876,7 +1869,6 @@ cs:
           external_username: "Uživatelské jméno"
           external_name: "Jméno"
           external_email: "Email"
-          external_avatar_url: "URL avararu"
       user_fields:
         save: "Uložit"
         edit: "Upravit"

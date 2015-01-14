@@ -326,10 +326,8 @@ pt_BR:
         error: "Houve um erro ao alterar seu email. Talvez ele já esteja sendo usado neste forum?"
         success: "Enviamos um email para esse endereço. Por favor, siga as instruções de confirmação."
       change_avatar:
-        title: "Alterar seu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
         refresh_gravatar_title: "Atualizar o Gravatar"
-        letter_based: "Avatar dado pelo sistema"
         uploaded_avatar: "Foto pessoal"
         uploaded_avatar_empty: "Adicionar foto pessoal"
         upload_title: "Enviar sua foto"
@@ -450,8 +448,6 @@ pt_BR:
         title: "Último endereço IP"
       registration_ip_address:
         title: "Endereço IP de Registro"
-      avatar:
-        title: "Avatar"
       title:
         title: "Título"
       filters:
@@ -1217,13 +1213,11 @@ pt_BR:
         help: "Este tópico está fechado; não serão aceitas mais respostas"
       unpinned:
         title: "Não fixo"
-        help: "Esse tópico não está fixo; ele será mostrado na ordem padrão"
       pinned_globally:
         title: "Fixo Globalmente"
         help: "Esse tópico está fixo; ele será mostrado no topo de todas as listas"
       pinned:
         title: "Fixo"
-        help: "Este tópico está fixo; irá ser mostrado no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
@@ -1632,7 +1626,6 @@ pt_BR:
           do_nothing: "não fazer nada"
         staff_actions:
           title: "Ações do Staff"
-          instructions: "Clique nos nomes de usuário e nas ações para filtrar a lista. Clique nos avatares para ir para as páginas dos usuários."
           clear_filters: "Mostrar Tudo"
           staff_user: "Usuário do Staff"
           target_user: "Usuário Destino"
@@ -1854,7 +1847,6 @@ pt_BR:
           external_username: "Usuário"
           external_name: "Nome"
           external_email: "Email"
-          external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de Usuários"
         help: "Adicionar campos que seus usuários podem preencher."

@@ -143,6 +143,8 @@ fr:
       topic_count: "Sujets"
       post_count: "Nombre de messages"
       user_count: "Nombre d'utilisateurs"
+      contact: "Nous contacter"
+      contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter: %{contact_email}."
     bookmarks:
       not_logged_in: "désolé, vous devez être connecté pour placer des message dans vos signets"
       created: "vous avez placé ce message dans vos signets"
@@ -328,10 +330,8 @@ fr:
         error: "Il y a eu une erreur lors du changement d'adresse de courriel. Cette adresse est peut-être déjà utilisée ?"
         success: "Nous avons envoyé un courriel à cette adresse. Merci de suivre les instructions."
       change_avatar:
-        title: "Modifier votre avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basé sur"
         refresh_gravatar_title: "Actualiser votre Gravatar"
-        letter_based: "Avatar par défaut"
         uploaded_avatar: "Avatar personnalisé"
         uploaded_avatar_empty: "Ajouter une avatar personnalisé"
         upload_title: "Envoyer votre avatar"
@@ -454,8 +454,6 @@ fr:
         title: "Dernières adresses IP"
       registration_ip_address:
         title: "Adresse IP d'enregistrement"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titre"
       filters:
@@ -1142,6 +1140,7 @@ fr:
       create: 'Nouvelle catégorie'
       save: 'Enregistrer la catégorie'
       slug: 'Identifiant de la catégorie'
+      slug_placeholder: '(Facultatif) insérer tirets entre mots dans url'
       creation_error: Il y a eu une erreur lors de la création de la catégorie.
       save_error: Il y a eu une erreur lors de la sauvegarde de la catégorie.
       name: "Nom de la catégorie"
@@ -1227,17 +1226,17 @@ fr:
     topic_statuses:
       warning:
         help: "Ceci est un avertissement officiel."
+      bookmarked:
+        help: "Vous avez ajouté ce sujet à vos signets"
       locked:
         help: "Ce sujet est fermé; il n'accepte plus de nouvelles réponses"
       unpinned:
         title: "Désépinglé"
-        help: "Ce sujet est désépinglé; il sera affiché dans l'ordre par défaut"
       pinned_globally:
         title: "Épingler globalement"
         help: "Ce sujet est épinglé globalement; il s'affichera en haut de toutes les listes de sujets"
       pinned:
         title: "Épingler"
-        help: "Ce sujet est épinglé; il s'affichera en haut de sa catégorie"
       archived:
         help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
       invisible:
@@ -1455,6 +1454,7 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
+        delete_member_confirm: "Enlever '%{username}' du groupe '%{group}'?"
         name: "Nom"
         add: "Ajouter"
         add_members: "Ajouter des membres"
@@ -1527,6 +1527,7 @@ fr:
       export_csv:
         success: "L'exportation a été initialisé. Vous serez averti par message privé lorsque le traitement sera terminé."
         failed: "L'export a échoué. Veuillez consulter les logs."
+        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
         button_text: "Exporter"
         button_title:
           user: "Exporter la liste des utilisateurs dans un fichier CSV."
@@ -1657,7 +1658,6 @@ fr:
           do_nothing: "ne rien faire"
         staff_actions:
           title: "Actions des modérateurs"
-          instructions: "Cliquez sur les pseudos et les actions pour filtrer la liste. Cliquez sur les avatars pour aller aux pages des utilisateurs."
           clear_filters: "Tout Afficher"
           staff_user: "Membre de l'équipe des modérateurs"
           target_user: "Utilisateur cible"
@@ -1884,7 +1884,6 @@ fr:
           external_username: "Pseudo"
           external_name: "Nom"
           external_email: "Courriel"
-          external_avatar_url: "URL Avatar"
       user_fields:
         title: "Champs utilisateurs"
         help: "Ajouter des champs que vos utilisateurs pourront remplir."
@@ -2043,6 +2042,7 @@ fr:
         dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
       actions:
         title: 'Actions'
+        bookmark_topic: '<b>f</b> Ajouter ce sujet à vos signets'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Épingler/De-épingler le sujet'
         share_topic: '<b>shift</b>+<b>s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'

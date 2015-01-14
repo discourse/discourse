@@ -321,10 +321,8 @@ nl:
         error: "Het veranderen van je e-mailadres is mislukt. Misschien is deze al in gebruik?"
         success: "We hebben een mail gestuurd naar dat adres. Volg de bevestigingsinstructies in die mail."
       change_avatar:
-        title: "Wijzig je avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, gebaseerd op"
         refresh_gravatar_title: "Laad je Gravatar opnieuw"
-        letter_based: "Automatisch toegewezen avatar"
         uploaded_avatar: "Eigen afbeelding"
         uploaded_avatar_empty: "Voeg een eigen afbeelding toe"
         upload_title: "Upload je afbeelding"
@@ -420,8 +418,6 @@ nl:
         title: "Laatste IP-adres"
       registration_ip_address:
         title: "Registratie IP-adres"
-      avatar:
-        title: "Profielfoto"
       title:
         title: "Titel"
       filters:
@@ -1135,13 +1131,11 @@ nl:
         help: "Deze topic is gesloten; reageren is niet meer mogelijk"
       unpinned:
         title: "Niet vastgepind"
-        help: "Deze topic is niet langer vastgepind en zal weer normaal in de lijst getoond worden"
       pinned_globally:
         title: "Globaal vastgepind"
         help: "Deze topic is globaal vastgepind en zal bovenaan alle topiclijsten getoond worden"
       pinned:
         title: "Vastgepind"
-        help: "Deze topic is vastgepind en zal bovenaan de categorie getoond worden"
       archived:
         help: "Deze topic is gearchiveerd en kan niet meer gewijzigd worden"
     posts: "Berichten"
@@ -1536,7 +1530,6 @@ nl:
           do_nothing: "doe niets"
         staff_actions:
           title: "Stafacties"
-          instructions: "Klik op gebruikersnamen en acties om te filteren. Klik op avatars om naar de gebruikerspagina te gaan."
           clear_filters: "Bekijk alles"
           staff_user: "Staflid"
           target_user: "Selecteer gebruiker"
@@ -1742,7 +1735,6 @@ nl:
           external_username: "Gebruikersnaam"
           external_name: "Naam"
           external_email: "E-mail"
-          external_avatar_url: "URL voor profielfoto"
       user_fields:
         title: "Gebruikersvelden"
         create: "Maak gebruikersveld"

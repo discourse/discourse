@@ -144,6 +144,7 @@ pt:
       post_count: "Mensagens"
       user_count: "Utilizadores"
       contact: "Contacte-nos"
+      contact_info: "No caso de ter um problema critico ou assunto urgente que afete este site, por favor, contacte-nos em %{contact_email}."
     bookmarks:
       not_logged_in: "Pedimos desculpa, é necessário ter sessão iniciada para marcar mensagens"
       created: "adicionou esta mensagem aos marcadores"
@@ -329,10 +330,8 @@ pt:
         error: "Ocorreu um erro ao alterar o email. Talvez esse endereço já esteja a ser utilizado neste fórum?"
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
       change_avatar:
-        title: "Altere o seu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
         refresh_gravatar_title: "Atualize o seu Gravatar"
-        letter_based: "Avatar atribuído pelo sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
@@ -455,8 +454,6 @@ pt:
         title: "Último endereço IP"
       registration_ip_address:
         title: "Endereço IP de registo"
-      avatar:
-        title: "Avatar"
       title:
         title: "Título"
       filters:
@@ -1231,13 +1228,11 @@ pt:
         help: "Este tópico está fechado; já não são aceites novas respostas"
       unpinned:
         title: "Desafixado"
-        help: "Este tópico está desafixado; será mostrado na ordem pré-definida"
       pinned_globally:
         title: "Fixado Globalmente"
         help: "Este tópico está fixado globalmente; será mostrado no topo de todas as listas"
       pinned:
         title: "Fixado"
-        help: "Este tópico está fixado; será mostrada no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
@@ -1659,7 +1654,6 @@ pt:
           do_nothing: "não fazer nada"
         staff_actions:
           title: "Ações do Pessoal"
-          instructions: "Selecione os nomes de utilizador e as ações para filtrar a lista. Clique nos avatars para ir para as páginas dos utilizadores."
           clear_filters: "Mostrar Tudo"
           staff_user: "Utilizador do Pessoal"
           target_user: "Utilizador Destino"
@@ -1887,7 +1881,6 @@ pt:
           external_username: "Nome de Utilizador"
           external_name: "Nome"
           external_email: "Email"
-          external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de utilizador"
         help: "Adicione campos que os seus utilizadores poderão preencher."

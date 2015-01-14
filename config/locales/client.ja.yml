@@ -58,7 +58,7 @@ ja:
           other: "%{count} 時間"
         x_days:
           other: "%{count} 日"
-        date_year: "MMM D, 'YY"
+        date_year: "YYYY年MM月D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -82,7 +82,7 @@ ja:
     sign_up: "サインアップ"
     log_in: "サインイン"
     age: "経過"
-    joined: "参加者"
+    joined: "参加時刻"
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
@@ -132,7 +132,7 @@ ja:
     topic_count_unread:
       other: "{{count}} 未読トピック"
     topic_count_new:
-      other: "{{count}} 新しいトピック."
+      other: "{{count}} 新しいトピック"
     click_to_show: "クリックして表示"
     preview: "プレビュー"
     cancel: "キャンセル"
@@ -286,10 +286,8 @@ ja:
         error: "メールアドレス変更中にエラーが発生しました。既にこのアドレスが使われているのかもしれません。"
         success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
       change_avatar:
-        title: "アバターの変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "グラバターを更新する"
-        letter_based: "システムアバター"
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
@@ -315,7 +313,7 @@ ja:
       last_posted: "最終投稿"
       last_emailed: "最終メール"
       last_seen: "最終アクティビティ"
-      created: "作成"
+      created: "参加時刻"
       log_out: "サインアウト"
       location: "所在地"
       website: "ウェブサイト"
@@ -378,11 +376,9 @@ ja:
         ok: "パスワード OK。"
         instructions: "%{count} 文字以上の長さにしてください。"
       ip_address:
-        title: "最終 IP アドレス"
+        title: "最近使用したIPアドレス"
       registration_ip_address:
-        title: "IPアドレスの登録"
-      avatar:
-        title: "アバター"
+        title: "登録したときのIPアドレス"
       title:
         title: "タイトル"
       filters:
@@ -427,7 +423,7 @@ ja:
     first_post: 最初のポスト
     mute: ミュート
     unmute: ミュート解除
-    last_post: 最終ポスト
+    last_post: 最終投稿時刻
     last_post_lowercase: 最後の投稿
     summary:
       enabled_description: "トピックのまとめを表示されています。"
@@ -843,6 +839,7 @@ ja:
         edit: "申し訳ありませんが、ポスト編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
         attachment_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        file_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
         upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
@@ -1057,13 +1054,11 @@ ja:
         help: "このトピックは終了しています。新たに回答を投稿することはできません\""
       unpinned:
         title: "ピン留め解除しました"
-        help: "このトピックはピン留めされていません；既定の順番に表示されます。"
       pinned_globally:
         title: "全サイト的にピン留めされました"
         help: "このトピックは全サイト的にピン留めされました；全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
-        help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       archived:
         help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
     posts: "投稿"
@@ -1403,7 +1398,6 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名やアクションをクリックするとリストをフィルタできます。アバターをクリックするとユーザページに移動します。"
           clear_filters: "全てを表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
@@ -1588,7 +1582,6 @@ ja:
           external_username: "ユーザ名"
           external_name: "名前"
           external_email: "メール"
-          external_avatar_url: "アバターURL"
       site_settings:
         show_overriden: '上書き部分のみ表示'
         title: '設定'
@@ -1693,12 +1686,12 @@ ja:
         mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
     badges:
       title: バッジ
-      allow_title: "バッヂををタイトルとして使用しますか？"
+      allow_title: "バッジをタイトルとして使用しますか？"
       multiple_grant: "何度も受け取ることができますか？"
       badge_count:
         other: "%{count} バッジ"
       more_badges:
-        other: "+%{count} もっと"
+        other: "バッジを全て見る（全%{count}個）"
       granted:
         other: "%{count} つバッジを付与されました"
       select_badge_for_title: タイトルとして使用するバッジを選択
@@ -1727,13 +1720,13 @@ ja:
           description: 「いいね！」を受けました
         nice_post:
           name: 良いポスト
-          description: 10人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 10人に「いいね！」をされました。このバッジは何度でももらえます。
         good_post:
           name: 良い投稿！
-          description: 25人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 25人に「いいね！」をされました。このバッジは何度でももらえます。
         great_post:
           name: 素晴らしい投稿！
-          description: 50人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 50人に「いいね！」をされました。このバッジは何度でももらえます。
         nice_topic:
           name: ナイストピック
         good_topic:
