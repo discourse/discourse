@@ -117,7 +117,7 @@
               {{#if email}}
                 {{email}}
               {{else}}
-                <button class="btn btn-primary" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+                {{d-button action="checkEmail" icon="envelope-o" label="admin.users.check_email.text" class="btn-primary"}}
               {{/if}}
             </dd>
           {{/if}}
@@ -130,10 +130,7 @@
             </dd>
           {{/if}}
           {{#if canDeleteUser}}
-            <button class="btn btn-danger" {{action "adminDelete"}}>
-              <i class="fa fa-exclamation-triangle"></i>
-              {{i18n 'user.admin_delete'}}
-            </button>
+            {{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
           {{/if}}
         </dl>
         {{plugin-outlet "user-profile-secondary"}}
@@ -192,7 +189,7 @@
 
       {{#if viewingSelf}}
         <div class='user-archive'>
-          <button {{action "exportUserArchive"}} class="btn" title="{{i18n 'user.download_archive'}}">{{fa-icon "download"}} {{i18n 'user.download_archive'}}</button>
+          {{d-button action="exportUserArchive" label="user.download_archive" icon="download"}}
         </div>
       {{/if}}
     </section>

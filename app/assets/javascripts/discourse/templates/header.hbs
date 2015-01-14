@@ -6,13 +6,9 @@
     <div class='panel clearfix'>
       {{#unless currentUser}}
         {{#if showSignUpButton}}
-        <button {{action "showCreateAccount"}} class='btn btn-primary btn-small sign-up-button'>
-          {{i18n 'sign_up'}}
-        </button>
+          {{d-button action="showCreateAccount" class="btn-primary btn-small sign-up-button" label="sign_up"}}
         {{/if}}
-        <button {{action "showLogin"}} class='btn btn-primary btn-small login-button'>
-          {{fa-icon "user"}} {{i18n 'log_in'}}
-        </button>
+        {{d-button action="showLogin" class="btn-primary btn-small login-button" icon="user" label="log_in"}}
       {{/unless}}
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
