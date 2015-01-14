@@ -1,5 +1,4 @@
 // This route is used for retrieving a topic based on params
-
 export default Discourse.Route.extend({
 
   setupController: function(controller, params) {
@@ -15,6 +14,7 @@ export default Discourse.Route.extend({
     // I sincerely hope no topic gets this many posts
     if (params.nearPost === "last") { params.nearPost = 999999999; }
 
+    var self = this;
     postStream.refresh(params).then(function () {
 
       // TODO we are seeing errors where closest post is null and this is exploding
@@ -28,13 +28,13 @@ export default Discourse.Route.extend({
       topicController.setProperties({
         currentPost: closest,
         enteredAt: new Date().getTime().toString(),
-        highlightOnInsert: closest
       });
 
       topicProgressController.setProperties({
         progressPosition: progress,
         expanded: false
       });
+      self.appEvents.trigger('post:highlight', closest);
       Discourse.URL.jumpToPost(closest);
 
       if (topic.present('draft')) {

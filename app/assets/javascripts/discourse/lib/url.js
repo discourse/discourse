@@ -2,7 +2,7 @@
 var jumpScheduled = false,
     rewrites = [];
 
-Discourse.URL = Em.Object.createWithMixins({
+Discourse.URL = Ember.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
@@ -210,10 +210,10 @@ Discourse.URL = Em.Object.createWithMixins({
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
         var closest = opts.nearPost || 1;
 
+        var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
             currentPost: closest,
-            highlightOnInsert: closest,
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),
@@ -221,7 +221,7 @@ Discourse.URL = Em.Object.createWithMixins({
               progressController = container.lookup('controller:topic-progress');
 
           progressController.set('progressPosition', progress);
-          Discourse.PostView.considerHighlighting(topicController, closest);
+          self.appEvents.trigger('post:highlight', closest);
         }).then(function() {
           Discourse.URL.jumpToPost(closest);
         });

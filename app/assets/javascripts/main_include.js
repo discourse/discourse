@@ -10,6 +10,7 @@
 //
 
 // Stuff we need to load first
+//= require ./discourse/lib/app-events
 //= require ./discourse/helpers/i18n
 //= require ./discourse/lib/ember_compat_handlebars
 //= require ./discourse/lib/computed

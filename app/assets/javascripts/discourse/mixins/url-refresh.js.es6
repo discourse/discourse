@@ -4,16 +4,9 @@
 //
 // This is useful if you want to get around Ember's default
 // behavior of not refreshing when navigating to the same place.
-export default Em.Mixin.create({
-  _initURLRefresh: function() {
-    this.appEvents.on('url:refresh', this, '_urlRefresh');
-  }.on('didInsertElement'),
 
-  _tearDownURLRefresh: function() {
-    this.appEvents.off('url:refresh', this, '_urlRefresh');
-  }.on('willDestroyElement'),
+import { createViewListener } from 'discourse/lib/app-events';
 
-  _urlRefresh: function() {
-    this.get('controller').send('refresh');
-  }
+export default createViewListener('url:refresh', function() {
+  this.get('controller').send('refresh');
 });

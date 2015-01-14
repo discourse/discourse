@@ -1,6 +1,6 @@
 var DAY = 60 * 50 * 1000;
 
-Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
+var PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNames: ['topic-post', 'clearfix'],
   templateName: 'post',
   classNameBindings: ['postTypeClass',
@@ -175,11 +175,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   actions: {
-    /**
-      Toggle the replies this post is a reply to
-
-      @method showReplyHistory
-    **/
+    // Toggle the replies this post is a reply to
     toggleReplyHistory: function(post) {
 
       var replyHistory = post.get('replyHistory'),
@@ -203,7 +199,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
         }
 
         Em.run.next(function() {
-          Discourse.PostView.highlight(replyPostNumber);
+          PostView.highlight(replyPostNumber);
           $(window).scrollTop(self.$().position().top - offsetFromTop);
         });
         return;
@@ -267,15 +263,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
     this._showLinkCounts();
 
-    // Track this post
     Discourse.ScreenTrack.current().track(this.$().prop('id'), postNumber);
-
-    // Highlight the post if required
-    if (postNumber > 1) {
-      Discourse.PostView.considerHighlighting(this.get('controller'), postNumber);
-    }
-
-    // Add syntax highlighting
     Discourse.SyntaxHighlighting.apply($post);
     Discourse.Lightbox.apply($post);
 
@@ -307,27 +295,4 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   }.observes('controller.searchHighlight', 'cooked')
 });
 
-function highlight(postNumber) {
-  var $contents = $('#post_' + postNumber +' .topic-body'),
-      origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
-
-  $contents.data("orig-color", origColor)
-    .addClass('highlighted')
-    .stop()
-    .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
-      $contents.removeClass('highlighted');
-      $contents.css({'background-color': ''});
-    });
-}
-
-Discourse.PostView.reopenClass({
-  considerHighlighting: function(controller, postNumber) {
-    var highlightNumber = controller.get('highlightOnInsert');
-
-    // If we're meant to highlight a post
-    if (highlightNumber === postNumber) {
-      controller.set('highlightOnInsert', null);
-      Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
-    }
-  }
-});
+export default PostView;

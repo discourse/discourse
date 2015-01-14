@@ -1,4 +1,5 @@
 import PollController from "discourse/plugins/poll/controllers/poll";
+import PostView from "discourse/views/post";
 
 var Poll = Discourse.Model.extend({
   post: null,
@@ -71,7 +72,7 @@ export default {
   name: 'poll',
 
   initialize: function() {
-    Discourse.PostView.reopen({
+    PostView.reopen({
       createPollUI: function($post) {
         var post = this.get('post');
 
