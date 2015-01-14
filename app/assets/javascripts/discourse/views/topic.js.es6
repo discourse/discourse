@@ -1,6 +1,7 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
+import { listenForViewEvent } from 'discourse/lib/app-events';
 
-export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
+var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
@@ -157,3 +158,22 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     }
   }.property('topicTrackingState.messageCount')
 });
+
+function highlight(postNumber) {
+  var $contents = $('#post_' + postNumber +' .topic-body'),
+      origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+  $contents.data("orig-color", origColor)
+    .addClass('highlighted')
+    .stop()
+    .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+      $contents.removeClass('highlighted');
+      $contents.css({'background-color': ''});
+    });
+}
+
+listenForViewEvent(TopicView, 'post:highlight', function(postNumber) {
+  Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
+});
+
+export default TopicView;
