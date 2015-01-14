@@ -6,7 +6,7 @@ module Jobs
   class ExportCsvFile < Jobs::Base
     HEADER_ATTRS_FOR = {}
     HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
-    HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
+    HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
     HEADER_ATTRS_FOR['staff_action'] = ['staff_user','action','subject','created_at','details', 'context']
@@ -105,8 +105,8 @@ module Jobs
     def get_header(entity)
 
       case entity
-        when 'user'
-          header_array = HEADER_ATTRS_FOR['user'] + HEADER_ATTRS_FOR['user_stats']
+        when 'user_list'
+          header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats']
           if SiteSetting.enable_sso
             header_array.concat(HEADER_ATTRS_FOR['user_sso'])
           end
@@ -172,7 +172,7 @@ module Jobs
       def get_user_list_fields(user)
         user_array = []
 
-        HEADER_ATTRS_FOR['user'].each do |attr|
+        HEADER_ATTRS_FOR['user_list'].each do |attr|
           user_array.push(user.attributes[attr])
         end
 
