@@ -317,10 +317,8 @@ da:
         error: "Der opstod en fejl i forbindelse med skift af din e-mail-adresse. Måske er adressen allerede i brug?"
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
       change_avatar:
-        title: "Skift dit profil billede"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
         refresh_gravatar_title: "Gendindlæs dit profil billede"
-        letter_based: "System genereret profil billede"
         uploaded_avatar: "Brugerdefineret profil billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
         upload_title: "Upload dit profil billede"
@@ -415,8 +413,6 @@ da:
         title: "Sidste IP-adresse"
       registration_ip_address:
         title: "Registrerings IP adresse"
-      avatar:
-        title: "Profil billede"
       title:
         title: "Titel"
       filters:
@@ -1135,13 +1131,11 @@ da:
         help: "emnet er låst; det modtager ikke flere svar"
       unpinned:
         title: "Ikke fastgjort"
-        help: "Dette emne er ikke fastgjort; det vil blive vist i sin normale rækkefølge"
       pinned_globally:
         title: "Fastgjort globalt"
         help: "Dette emne er fastgjort globalt; det vil blive vist øverst på alle lister"
       pinned:
         title: "Fastgjort"
-        help: "emnet er fastgjort; det vises i toppen af sin kategori"
       archived:
         help: "emnet er arkiveret; det er frosset og kan ikke ændres"
     posts: "Indlæg"
@@ -1536,7 +1530,6 @@ da:
           do_nothing: "gør intet"
         staff_actions:
           title: "Handlinger"
-          instructions: "Klik på brugernavne og handlinger for at filtrere listen. Klik på avatarer for at gå til brugersider."
           clear_filters: "Vis alt"
           staff_user: "Bruger"
           target_user: "Bruger"
@@ -1750,7 +1743,6 @@ da:
           external_username: "Brugernavn"
           external_name: "Navn"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         help: "Tilføj felter, som dine brugere kan udfylde"
         create: "Opret brugerfelt"

@@ -351,10 +351,8 @@ pl_PL:
         error: "Wystąpił błąd podczas próby zmiany twojego adresu email. Być może ten email jest już zarejestrowany?"
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres email."
       change_avatar:
-        title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
         refresh_gravatar_title: "Zaktualizuj swój Gravatar"
-        letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wyślij swoją grafikę"
@@ -481,8 +479,6 @@ pl_PL:
         title: "Ostatni adres IP"
       registration_ip_address:
         title: "Adres IP rejestracji"
-      avatar:
-        title: "Awatar"
       title:
         title: "Tytuł"
       filters:
@@ -1292,13 +1288,11 @@ pl_PL:
         help: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
       unpinned:
         title: "Nieprzypięty"
-        help: "Temat nie jest przypięty. Będzie wyświetlany w normalnej kolejności."
       pinned_globally:
         title: "Przypięty globalnie"
         help: "Temat przypięty globalnie. Będzie wyświetlany na początku wszystkich list."
       pinned:
         title: "Przypięty"
-        help: "Temat przypięty. Będzie wyświetlany na początku swojej kategorii."
       archived:
         help: "Ten temat został zarchiwizowany i nie można go zmieniać"
       invisible:
@@ -1719,7 +1713,6 @@ pl_PL:
           do_nothing: "nic nie rób"
         staff_actions:
           title: "Działania obsługi"
-          instructions: "Kliknij na użytkowniku lub akcji aby wyfiltrować listę. Kliknij awatar aby przejść na stronę użytkownika."
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik obsługi"
           target_user: "Użytkownik będący Obiektem"
@@ -1954,7 +1947,6 @@ pl_PL:
           external_username: "Nazwa użytkownika"
           external_name: "Nazwa"
           external_email: "Email"
-          external_avatar_url: "URL awatara"
       user_fields:
         title: "Pola użytkownika"
         help: "Dodaj pola które użytkownicy mogą wypełnić."
