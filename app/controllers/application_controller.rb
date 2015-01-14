@@ -275,7 +275,7 @@ class ApplicationController < ActionController::Base
 
     def custom_html_json
       data = {
-        top: SiteText.text_for(:top),
+        top: SiteCustomization.custom_top(session[:preview_style]),
         footer: SiteCustomization.custom_footer(session[:preview_style])
       }
 

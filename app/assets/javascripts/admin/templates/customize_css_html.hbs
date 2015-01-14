@@ -17,12 +17,22 @@
 
       <div class='admin-controls'>
         <ul class="nav nav-pills">
-          <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "selectStylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
-          <li><a {{bind-attr class="view.headerActive:active"}} {{action "selectHeader" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
-          <li><a {{bind-attr class="view.footerActive:active"}} {{action "selectFooter" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
-          <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "selectMobileStylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
-          <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "selectMobileHeader" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
-          <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "selectMobileFooter" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
+          {{#if view.mobile}}
+            <li><a {{bind-attr class="view.mobileStylesheetActive:active"}} {{action "select" "mobile_stylesheet" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</a></li>
+            <li><a {{bind-attr class="view.mobileHeaderActive:active"}} {{action "select" "mobile_header" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</a></li>
+            <li><a {{bind-attr class="view.mobileTopActive:active"}} {{action "select" "mobile_top" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.top'}}</a></li>
+            <li><a {{bind-attr class="view.mobileFooterActive:active"}} {{action "select" "mobile_footer" target="view"}}>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</a></li>
+          {{else}}
+            <li><a {{bind-attr class="view.stylesheetActive:active"}} {{action "select" "stylesheet" target="view"}}>{{i18n 'admin.customize.css'}}</a></li>
+            <li><a {{bind-attr class="view.headerActive:active"}} {{action "select" "header" target="view"}}>{{i18n 'admin.customize.header'}}</a></li>
+            <li><a {{bind-attr class="view.topActive:active"}} {{action "select" "top" target="view"}}>{{i18n 'admin.customize.top'}}</a></li>
+            <li><a {{bind-attr class="view.footerActive:active"}} {{action "select" "footer" target="view"}}>{{i18n 'admin.customize.footer'}}</a></li>
+            <li><a {{bind-attr class="view.headTagActive:active"}} {{action "select" "head_tag" target="view"}} title="{{i18n 'admin.customize.head_tag.title'}}">{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.head_tag.text'}}</a></li>
+            <li><a {{bind-attr class="view.bodyTagActive:active"}} {{action "select" "body_tag" target="view"}} title="{{i18n 'admin.customize.body_tag.title'}}">{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}</a></li>
+          {{/if}}
+          <li class='toggle-mobile'>
+            <a {{bind-attr class="view.mobile:active"}} {{action "toggleMobile" target="view"}}>{{fa-icon "mobile"}}</a>
+          </li>
           <li class='toggle-maximize'><a {{action "toggleMaximize" target="view"}}>
             {{#if view.maximized}}
               {{fa-icon "compress"}}
@@ -36,14 +46,18 @@
       <div class="admin-container">
         {{#if view.stylesheetActive}}{{aceEditor content=selectedItem.stylesheet mode="scss"}}{{/if}}
         {{#if view.headerActive}}{{aceEditor content=selectedItem.header mode="html"}}{{/if}}
+        {{#if view.topActive}}{{aceEditor content=selectedItem.top mode="html"}}{{/if}}
         {{#if view.footerActive}}{{aceEditor content=selectedItem.footer mode="html"}}{{/if}}
+        {{#if view.headTagActive}}{{aceEditor content=selectedItem.head_tag mode="html"}}{{/if}}
+        {{#if view.bodyTagActive}}{{aceEditor content=selectedItem.body_tag mode="html"}}{{/if}}
         {{#if view.mobileStylesheetActive}}{{aceEditor content=selectedItem.mobile_stylesheet mode="scss"}}{{/if}}
         {{#if view.mobileHeaderActive}}{{aceEditor content=selectedItem.mobile_header mode="html"}}{{/if}}
+        {{#if view.mobileTopActive}}{{aceEditor content=selectedItem.mobile_top mode="html"}}{{/if}}
         {{#if view.mobileFooterActive}}{{aceEditor content=selectedItem.mobile_footer mode="html"}}{{/if}}
       </div>
       <div class='admin-footer'>
         <div class='status-actions'>
-          <span>{{i18n 'admin.customize.enabled'}}  {{input type="checkbox" checked=selectedItem.enabled}}</span>
+          <span>{{i18n 'admin.customize.enabled'}} {{input type="checkbox" checked=selectedItem.enabled}}</span>
           {{#unless selectedItem.changed}}
           <a class='preview-link' {{bind-attr href="selectedItem.previewUrl"}} target='_blank' title="{{i18n 'admin.customize.explain_preview'}}">{{i18n 'admin.customize.preview'}}</a>
           |

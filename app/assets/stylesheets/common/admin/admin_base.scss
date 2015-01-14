@@ -516,6 +516,11 @@ section.details {
     .nav.nav-pills{
       position: relative;
     }
+    .toggle-mobile {
+      position: absolute;
+      right: 35px;
+      font-size: 20px;
+    }
     .toggle-maximize {
       position: absolute;
       right: -5px;
