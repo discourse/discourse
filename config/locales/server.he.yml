@@ -804,7 +804,6 @@ he:
     disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בייטים"
     short_email_length: "אורכו של דוא\"ל קצר בבייטים (Bytes)"
-    enable_email_names: "אפשרו הצגת שם מלא של משתמש בדוא\"ל. נטרלו אפשרות זו כדי להסתיר את השם המלא בדוא\"ל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
     pop3_polling_period_mins: "משך הזמן בדקות בין בדיקת הדוא\"ל בחשבון ה-POP3. הערה: דורש אתחול."

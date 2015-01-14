@@ -100,6 +100,7 @@ ru:
           other: "%{count} дней назад"
     share:
       topic: 'поделиться ссылкой на тему'
+      post: 'ссылка на сообщение #%{postNumber}'
       close: 'закрыть'
       twitter: 'поделиться ссылкой через Twitter'
       facebook: 'поделиться ссылкой через Facebook'
@@ -159,6 +160,7 @@ ru:
       topic_count: "Темы"
       post_count: "Сообщения"
       user_count: "Пользователи"
+      contact: "Контакты"
     bookmarks:
       not_logged_in: "пожалуйста, войдите, чтобы добавлять сообщения в закладки"
       created: "вы добавили это сообщение в закладки"
@@ -281,6 +283,7 @@ ru:
       profile: "Профиль"
       mute: "Отключить"
       edit: "Настройки"
+      download_archive: "Скачать архив сообщений"
       new_private_message: "Новое Личное Сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
@@ -349,10 +352,8 @@ ru:
         error: "Произошла ошибка. Возможно, этот e-mail уже используется?"
         success: "На указанныю почту отправлено письмо с инструкциями."
       change_avatar:
-        title: "Изменить свой аватар"
         gravatar: "На основе <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
         refresh_gravatar_title: "Обновить ваш Gravatar"
-        letter_based: "Аватар, назначенный системой"
         uploaded_avatar: "Собственный аватар"
         uploaded_avatar_empty: "Добавить собственный аватар"
         upload_title: "Загрузка собственного аватара"
@@ -469,12 +470,11 @@ ru:
         common: "Пароль слишком короткий."
         ok: "Допустимый пароль."
         instructions: "Не менее %{count} символов."
+      associated_accounts: "Связанные аккаунты"
       ip_address:
         title: "Последний IP адрес"
       registration_ip_address:
         title: "IP адрес регистрации"
-      avatar:
-        title: "Аватар"
       title:
         title: "Заголовок"
       filters:
@@ -596,7 +596,12 @@ ru:
       github:
         title: "с помощью GitHub"
         message: "Вход с помощью учетной записи GitHub (всплывающие окна должны быть разрешены)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Это официальное предупреждение."
       posting_not_on_topic: "В какой теме вы хотите ответить?"
       saving_draft_tip: "сохранение"
@@ -1185,6 +1190,8 @@ ru:
       delete: 'Удалить раздел'
       create: 'Создать Раздел'
       save: 'Сохранить раздел'
+      slug: 'Ссылка Категории'
+      slug_placeholder: '(Опция) дефисы в url'
       creation_error: При создании нового раздела возникла ошибка.
       save_error: При сохранении раздела возникла ошибка.
       name: "Название раздела"
@@ -1271,17 +1278,17 @@ ru:
     topic_statuses:
       warning:
         help: "Это официальное предупреждение."
+      bookmarked:
+        help: "Вы добавили тему в Избранное "
       locked:
         help: "Тема закрыта; в ней больше нельзя отвечать"
       unpinned:
         title: "Откреплена"
-        help: "Эта тема откреплена и будет отображаться в обычном порядке"
       pinned_globally:
         title: "Закреплена глобально"
         help: "Эта тема закреплена глобально и будет отображаться в начале всех списков"
       pinned:
         title: "Закреплена"
-        help: "Тема закреплена и будет показана вверху списка тем соответствующего раздела"
       archived:
         help: "Тема заархивирована и не может быть изменена"
       invisible:
@@ -1497,12 +1504,17 @@ ru:
         edit: "Изменить группы"
         refresh: "Обновить"
         new: "Новые"
+        selector_placeholder: "введите имя пользователя"
         name_placeholder: "Название группы, без пробелов, по тем же правилам, что и для псевдонимов."
         about: "Здесь можно редактировать группы и имена групп"
         group_members: "Участники группы"
         delete: "Удалить"
         delete_confirm: "Удалить данную группу?"
         delete_failed: "Невозможно удалить группу. Если это автоматически созданная группа, то она не может быть удалена."
+        delete_member_confirm: "Удалить '%{username}' из '%{group}'?"
+        name: "Имя"
+        add: "Добавить"
+        add_members: "Добавить участников"
       api:
         generate_master: "Сгенерировать ключ API"
         none: "Отсутствует ключ API."
@@ -1695,7 +1707,6 @@ ru:
           do_nothing: "ничего не делать"
         staff_actions:
           title: "Действия персонала"
-          instructions: "Клиекните по псевдониму или действиям для фильтрации списка. Кликните по аватарам для перехода на страницы пользователей."
           clear_filters: "Показать все"
           staff_user: "Персонал"
           target_user: "Целевой пользователь"
@@ -1929,7 +1940,6 @@ ru:
           external_username: "Псевдоним"
           external_name: "Имя"
           external_email: "E-mail"
-          external_avatar_url: "URL-адрес аватарки"
       user_fields:
         title: "Поля пользователя"
         help: "Добавить поля, которые пользователи смогут заполнять."
@@ -2047,6 +2057,12 @@ ru:
             with_post: <span class="username">%{username}</span> за сообщение в %{link}
             with_post_time: <span class="username">%{username}</span> за сообщение в %{link} в <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> в <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        add: "Добавить новый"
+        name: "Имя"
+        image: "Изображение"
+        delete_confirm: "Вы уверены, что хотите удалить :%{name}:?"
     lightbox:
       download: "загрузить"
     search_help:
@@ -2080,6 +2096,7 @@ ru:
         dismiss_topics: '<b>x</b>, <b>t</b> Отложить темы'
       actions:
         title: 'Действия'
+        bookmark_topic: '<b>f</b> Добавить в Избранное'
         share_post: '<b>s</b> Поделиться сообщением'
         reply_as_new_topic: '<b>t</b> Ответить в новой связанной теме'
         reply_post: '<b>r</b> Ответить на сообщение'

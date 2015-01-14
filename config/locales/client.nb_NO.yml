@@ -326,10 +326,8 @@ nb_NO:
         error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
         success: "Vi har sendt en e-post til den adressen. Vennligst følg meldingens instruksjoner for bekreftelse."
       change_avatar:
-        title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         refresh_gravatar_title: "Oppdater din Gravatar"
-        letter_based: "Systemtildelt avatar"
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
@@ -450,8 +448,6 @@ nb_NO:
         title: "Siste IP-adresse"
       registration_ip_address:
         title: "Registreringens IP-adresse."
-      avatar:
-        title: "Profilbilde"
       title:
         title: "Tittel"
       filters:
@@ -1217,13 +1213,11 @@ nb_NO:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       unpinned:
         title: "Løsgjort"
-        help: "Dette emnet er ikke lenger fastsatt; det vil vises i standard rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
         help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
         title: "Fastsatt"
-        help: "dette emnet er fastsatt; det vil vises på toppen av sin kategori"
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
@@ -1638,7 +1632,6 @@ nb_NO:
           do_nothing: "ikke gjør noe"
         staff_actions:
           title: "Personalhandlinger"
-          instructions: "Trykk på brukernavn og handlinger for å filtrere. Trykk på profilbilder for å gå til brukersider."
           clear_filters: "Vis alt"
           staff_user: "Personale"
           target_user: "Målbruker"
@@ -1865,7 +1858,6 @@ nb_NO:
           external_username: "Brukernavn"
           external_name: "Navn"
           external_email: "E-post"
-          external_avatar_url: "URL til profilbilde"
       user_fields:
         title: "Brukerfelter"
         help: "Legg til felt som dine brukere kan fylle ut."

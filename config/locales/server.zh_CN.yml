@@ -793,7 +793,6 @@ zh_CN:
     disable_emails: "禁止 Discourse 发送任何邮件"
     strip_images_from_short_emails: "从邮件中除去小于 2800 比特的图片"
     short_email_length: "短邮件地址长度（以比特作为单位）"
-    enable_email_names: "允许在邮件中显示用户全名。禁用将在邮件中隐藏全名。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
     pop3_polling_ssl: "连接至 POP3 服务器时使用 SSL。（推荐）"
     pop3_polling_period_mins: "查询用于邮件的 POP3 账户的间隔（以分钟计）。注意：需要重新启动。"

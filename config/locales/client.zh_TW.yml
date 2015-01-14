@@ -304,10 +304,8 @@ zh_TW:
         error: "修改你的電子郵件地址時發生錯誤，可能此電子郵件地址已經有人使用?"
         success: "我們已經寄出一封郵件至此電子郵件地址，請遵照說明進行確認。"
       change_avatar:
-        title: "修改你的頭像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "重新整理你的 Gravatar 頭像"
-        letter_based: "系統分配的頭像"
         uploaded_avatar: "自訂圖片"
         uploaded_avatar_empty: "新增一張自訂圖片"
         upload_title: "上傳你的圖片"
@@ -426,8 +424,6 @@ zh_TW:
         title: "最近的 IP 位址"
       registration_ip_address:
         title: "註冊之 IP 位址"
-      avatar:
-        title: "頭像"
       title:
         title: "標題"
       filters:
@@ -1162,13 +1158,11 @@ zh_TW:
         help: "此討論話題已關閉，不再接受回覆"
       unpinned:
         title: "取消釘選"
-        help: "此討論話題已取消置頂，將會以預設順序顯示。"
       pinned_globally:
         title: "全區置頂"
         help: "此討論話題已全區置頂，將顯示在所有討論話題列表的最上方"
       pinned:
         title: "已釘選"
-        help: "此討論話題已置頂，將顯示在它所屬分類的討論話題列表的最上方"
       archived:
         help: "此討論話題已封存，已被凍結無法再修改"
       invisible:
@@ -1582,7 +1576,6 @@ zh_TW:
           do_nothing: "無動作"
         staff_actions:
           title: "工作人員動作"
-          instructions: "按用戶名稱與動作進行過濾，按用戶的頭像開啟他的用戶頁面。"
           clear_filters: "全部顯示"
           staff_user: "工作人員用戶"
           target_user: "目標用戶"
@@ -1803,7 +1796,6 @@ zh_TW:
           external_username: "用戶名稱"
           external_name: "名稱"
           external_email: "電子郵件"
-          external_avatar_url: "頭像 URL"
       user_fields:
         title: "使用者欄位"
         help: "增加欄位讓你的使用者可以填寫"
