@@ -22,8 +22,8 @@
 
             {{plugin-outlet "edit-topic"}}
 
-            <button class='btn btn-primary btn-small no-text' {{action "finishedEditingTopic"}}>{{fa-icon "check"}}</button>
-            <button class='btn btn-small no-text' {{action "cancelEditingTopic"}}>{{fa-icon "times"}}</button>
+            {{d-button action="finishedEditingTopic" class="btn-primary btn-small no-text" icon="check"}}
+            {{d-button action="cancelEditingTopic" class="btn-small no-text" icon="times"}}
           {{else}}
             <h1>
               {{#unless is_warning}}
@@ -118,10 +118,10 @@
           <div>{{message}}</div>
           {{#if noRetry}}
             {{#unless currentUser}}
-              <button {{action "showLogin"}} class='btn btn-primary topic-retry'>{{fa-icon "user"}} {{i18n 'log_in'}}</button>
+              {{d-button action="showLogin" class="btn-primary topic-retry" icon="user" label="log_in"}}
             {{/unless}}
           {{else}}
-            <button class="btn btn-primary topic-retry" {{action "retryLoading"}}>{{fa-icon "refresh"}} {{i18n 'errors.buttons.again'}}</button>
+            {{d-button action="retryLoading" class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
           {{/if}}
         </div>
         {{loading-spinner condition=retrying}}

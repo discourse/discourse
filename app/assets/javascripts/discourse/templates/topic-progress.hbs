@@ -1,16 +1,19 @@
 {{#if expanded}}
   <nav id='topic-progress-expanded'>
-    <button {{action "jumpTop"}} {{bind-attr disabled=jumpTopDisabled}} class='btn full no-text'>
-      <i class="fa fa-caret-up"></i>
-      {{i18n 'topic.progress.go_top'}}
-    </button>
+    {{d-button action="jumpTop"
+               disabled=jumpTopDisabled
+               class="full no-text"
+               icon="caret-up"
+               label="topic.progress.go_top"}}
     <div class='jump-form'>
-      {{input value=toPostIndex}} <button {{action "jumpPost"}} class='btn'>{{i18n 'topic.progress.go'}}</button>
+      {{input value=toPostIndex}}
+      {{d-button action="jumpPost" label="topic.progress.go"}}
     </div>
-    <button {{action "jumpBottom"}} {{bind-attr disabled=jumpBottomDisabled}} class='btn full no-text jump-bottom'>
-      {{i18n 'topic.progress.go_bottom'}}
-      <i class="fa fa-caret-down"></i>
-    </button>
+    {{d-button action="jumpBottom"
+               disabled=jumpBottomDisabled
+               class="full no-text jump-bottom"
+               icon="caret-down"
+               label="topic.progress.go_bottom"}}
   </nav>
 {{/if}}
 <nav id='topic-progress' title="{{i18n 'topic.progress.title'}}" {{bind-attr class="hideProgress:hidden"}}>
