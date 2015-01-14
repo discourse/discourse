@@ -9,7 +9,7 @@ describe Jobs::ExportCsvFile do
   end
 
   let :user_list_header do
-    Jobs::ExportCsvFile.new.get_header('user')
+    Jobs::ExportCsvFile.new.get_header('user_list')
   end
 
   let :user_list_export do
