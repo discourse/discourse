@@ -53,7 +53,7 @@ describe Scheduler::Manager do
   describe '#sync' do
 
     it 'increases' do
-      Scheduler::Manager.seq.should == Scheduler::Manager.seq - 1
+      expect(Scheduler::Manager.seq).to eq(Scheduler::Manager.seq - 1)
     end
   end
 
@@ -62,7 +62,7 @@ describe Scheduler::Manager do
     it 'should nuke missing jobs' do
       $redis.zadd Scheduler::Manager.queue_key, Time.now.to_i - 1000, "BLABLA"
       manager.tick
-      $redis.zcard(Scheduler::Manager.queue_key).should == 0
+      expect($redis.zcard(Scheduler::Manager.queue_key)).to eq(0)
 
     end
 
@@ -81,7 +81,7 @@ describe Scheduler::Manager do
       manager.reschedule_orphans!
 
       info = manager.schedule_info(Testing::SuperLongJob)
-      info.next_run.should <= Time.now.to_i
+      expect(info.next_run).to be <= Time.now.to_i
     end
 
     it 'should only run pending job once' do
@@ -100,19 +100,19 @@ describe Scheduler::Manager do
         end
       end.map(&:join)
 
-      Testing::RandomJob.runs.should == 1
+      expect(Testing::RandomJob.runs).to eq(1)
 
       info = manager.schedule_info(Testing::RandomJob)
-      info.prev_run.should be <= Time.now.to_i
-      info.prev_duration.should be > 0
-      info.prev_result.should == "OK"
+      expect(info.prev_run).to be <= Time.now.to_i
+      expect(info.prev_duration).to be > 0
+      expect(info.prev_result).to eq("OK")
     end
 
   end
 
   describe '#discover_schedules' do
     it 'Discovers Testing::RandomJob' do
-      Scheduler::Manager.discover_schedules.should include(Testing::RandomJob)
+      expect(Scheduler::Manager.discover_schedules).to include(Testing::RandomJob)
     end
   end
 
@@ -122,8 +122,8 @@ describe Scheduler::Manager do
       manager.remove(Testing::RandomJob)
       manager.ensure_schedule!(Testing::RandomJob)
 
-      manager.next_run(Testing::RandomJob)
-        .should be_within(5.minutes.to_i).of(Time.now.to_i + 5.minutes)
+      expect(manager.next_run(Testing::RandomJob))
+        .to be_within(5.minutes.to_i).of(Time.now.to_i + 5.minutes)
     end
   end
 end

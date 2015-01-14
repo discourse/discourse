@@ -100,7 +100,7 @@ pl_PL:
           other: "%{count} dni temu"
     share:
       topic: 'udostępnij odnośnik do tego tematu'
-      post: 'udostępnij odnośnik do wpisu #%{postNumber}'
+      post: 'wpis #%{postNumber}'
       close: 'zamknij'
       twitter: 'udostępnij ten odnośnik na Twitterze'
       facebook: 'udostępnij ten odnośnik na Facebooku'
@@ -282,7 +282,7 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
-      download_archive: "pobierz archiwum moich wpisów"
+      download_archive: "Pobierz moje wpisy"
       new_private_message: "Nowa Prywatna Wiadomość"
       private_message: "Prywatna wiadomość"
       private_messages: "Wiadomości"
@@ -351,10 +351,8 @@ pl_PL:
         error: "Wystąpił błąd podczas próby zmiany twojego adresu email. Być może ten email jest już zarejestrowany?"
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres email."
       change_avatar:
-        title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
         refresh_gravatar_title: "Zaktualizuj swój Gravatar"
-        letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wyślij swoją grafikę"
@@ -374,6 +372,8 @@ pl_PL:
         authenticated: "Twój email został potwierdzony przez {{provider}}"
         frequency:
           zero: "Otrzymasz email natychmiast jeśli nie widziałeś rzeczy na temat której wysyłamy email."
+          one: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatniej minuty i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
+          other: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatnich  {{count}} minut i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -466,7 +466,7 @@ pl_PL:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
           uploading: "Wysyłanie…"
-          success: "Plik został przesłany pomyślnie, wkrótce dostaniesz powiadomienie z postępem."
+          success: "Plik został przesłany pomyślnie, dostaniesz powiadomienie gdy proces zostanie zakończony."
           error: "Podczas przesyłania wystąpił błąd '{{filename}}': {{message}}"
       password:
         title: "Hasło"
@@ -479,8 +479,6 @@ pl_PL:
         title: "Ostatni adres IP"
       registration_ip_address:
         title: "Adres IP rejestracji"
-      avatar:
-        title: "Awatar"
       title:
         title: "Tytuł"
       filters:
@@ -602,7 +600,12 @@ pl_PL:
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "To jest oficjalne ostrzeżenie."
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
       saving_draft_tip: "zapisywanie"
@@ -719,11 +722,6 @@ pl_PL:
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
-    starred:
-      title: 'Oznacz'
-      help:
-        star: 'oznacz ten temat gwiazdką'
-        unstar: 'usuń ten temat z listy oznaczonych gwiazdką'
     topics:
       bulk:
         reset_read: "Wyzeruj przeczytane"
@@ -744,7 +742,6 @@ pl_PL:
           few: "Zaznaczono <b>{{count}}</b> tematy."
           other: "Zaznaczono <b>{{count}}</b> tematów."
       none:
-        starred: "Nie posiadasz oznaczonych tematów."
         unread: "Nie masz nieprzeczytanych tematów."
         new: "Nie masz nowych tematów."
         read: "You haven't read any topics yet."
@@ -758,7 +755,6 @@ pl_PL:
           unread: '<p>Pojawią się tu tematy oznaczone licznikiem <span class="badge new-posts badge-notification">1</span> nieprzeczytanych wpisów.</p>
 
             <p>Domyślnie, jako nieprzeczytane rozumiane są tematy:</p><ul><li>twojego autorstwa</li><li>te w których są twoje odpowiedzi </li><li>czytane przez ciebie dłużej niż 4 minuty</li></ul><p>Znajdą się tu też te, którym ręcznie przyznano status Śledzony lub Obserwowany przyciskiem znajdującym się na końcu każdego tematu.</p><p>Możesz zmienić te zachowania w swoich <a href="%{userPrefsUrl}">ustawieniach</a>.</p>'
-          starred: '<p>Pojawią się tu oznaczone przez ciebie tematy.</p> <p>Aby oznaczyć lub odznaczyć temat kliknij na <i class="fa fa-star"></i> gdy tylko takową zobaczysz &hellip;</p><ul><li>na górze, obok tytułu każdego tematu</li><li>na końcu tematu, przyciskiem <kbd>Oznacz</kbd> </li><li>po lewej stronie na dowolnej liście tematów</li>'
       bottom:
         latest: "Nie ma więcej najnowszych tematów."
         hot: "Nie ma więcej gorących tematów."
@@ -766,7 +762,6 @@ pl_PL:
         read: "Nie ma więcej przeczytanych tematów."
         new: "Nie ma więcej nowych tematów."
         unread: "Nie ma więcej nieprzeczytanych tematów."
-        starred: "Nie ma więcej oznaczonych tematów."
         category: "Nie ma więcej tematów w kategorii {{category}}."
         top: "Nie ma już więcej najlepszych tematów."
     topic:
@@ -1201,6 +1196,8 @@ pl_PL:
       delete: 'Usuń kategorię'
       create: 'Nowa kategoria'
       save: 'Zapisz kategorię'
+      slug: 'Slug kategorii'
+      slug_placeholder: '(opcjonalne) słowa-z-myślnikiem dla URLi'
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       name: "Nazwa kategorii"
@@ -1291,13 +1288,11 @@ pl_PL:
         help: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
       unpinned:
         title: "Nieprzypięty"
-        help: "Temat nie jest przypięty. Będzie wyświetlany w normalnej kolejności."
       pinned_globally:
         title: "Przypięty globalnie"
         help: "Temat przypięty globalnie. Będzie wyświetlany na początku wszystkich list."
       pinned:
         title: "Przypięty"
-        help: "Temat przypięty. Będzie wyświetlany na początku swojej kategorii."
       archived:
         help: "Ten temat został zarchiwizowany i nie można go zmieniać"
       invisible:
@@ -1332,9 +1327,6 @@ pl_PL:
       hot:
         title: "Gorące"
         help: "wybrane najbardziej gorące tematy"
-      starred:
-        title: "Oznaczone"
-        help: "twoje oznaczone tematy"
       read:
         title: "Przeczytane"
         help: "tematy które przeczytałeś, w kolejności od ostatnio przeczytanych"
@@ -1510,13 +1502,17 @@ pl_PL:
         edit: "Edytuj grupy"
         refresh: "Odśwież"
         new: "Nowa"
-        selector_placeholder: "dodaj użytkowników"
+        selector_placeholder: "nazwa użytkownika"
         name_placeholder: "Nazwa grupy: bez spacji, takie same zasady jak przy nazwie użytkownika"
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
         delete_confirm: "Usunąć tę grupę?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
+        delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}' ?"
+        name: "Nazwa"
+        add: "Dodaj"
+        add_members: "Dodaj członków"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -1584,9 +1580,16 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
-        success: "Rozpoczęto eksport, wkrótce otrzymasz powiadomienie z informacją o postępie."
+        success: "Rozpoczęto eksport: dostaniesz powiadomienie gdy proces zostanie zakończony."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
+        rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
         button_text: "Eksportuj"
+        button_title:
+          user: "Eksportuj listę wszystkich użytkowników do formatu CSV."
+          staff_action: "Eksportuj log zmian wykonanych przez zespół do formatu CSV."
+          screened_email: "Eksportuj listę monitorowanych adresów email do formatu CSV."
+          screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
+          screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
@@ -1710,7 +1713,6 @@ pl_PL:
           do_nothing: "nic nie rób"
         staff_actions:
           title: "Działania obsługi"
-          instructions: "Kliknij na użytkowniku lub akcji aby wyfiltrować listę. Kliknij awatar aby przejść na stronę użytkownika."
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik obsługi"
           target_user: "Użytkownik będący Obiektem"
@@ -1754,6 +1756,7 @@ pl_PL:
           title: "Ekranowane adresy IP"
           description: 'Adres IP który teraz oglądasz. Użyj "Zezwól" aby dodać do białej listy adresów IP.'
           delete_confirm: "Czy na pewno chcesz usunąć regułę dla %{ip_address}?"
+          roll_up_confirm: "Czy na pewno chcesz zgrupować monitorowane IP w podsieci?"
           rolled_up_some_subnets: "Pomyślnie zwinięto ban IP dla podsieci: %{subnets}."
           rolled_up_no_subnet: "Brak pozycji do zwinięcia."
           actions:
@@ -1944,7 +1947,6 @@ pl_PL:
           external_username: "Nazwa użytkownika"
           external_name: "Nazwa"
           external_email: "Email"
-          external_avatar_url: "URL awatara"
       user_fields:
         title: "Pola użytkownika"
         help: "Dodaj pola które użytkownicy mogą wypełnić."
@@ -2062,6 +2064,13 @@ pl_PL:
             with_post: <span class="username">%{username}</span> za wpis w %{link}
             with_post_time: <span class="username">%{username}</span> za wpis w %{link} o <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> o <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Dodawanie nowych emoji.  (PROTIP: przeciągnij i upuść wiele plików)"
+        add: "Dodaj nowe Emoji"
+        name: "Nazwa"
+        image: "Grafika"
+        delete_confirm: "Jesteś pewny(-a), że chcesz usunąć emoji :%{name}: ?"
     lightbox:
       download: "pobierz"
     search_help:
@@ -2074,7 +2083,6 @@ pl_PL:
         latest: '<b>g</b>, <b>l</b> Ostatnie'
         new: '<b>g</b>, <b>n</b> Nowe'
         unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
-        starred: '<b>g</b>, <b>f</b> Ulubione'
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Popularne'
       navigation:
@@ -2083,7 +2091,7 @@ pl_PL:
         back: '<b>u</b> wstecz'
         up_down: '<b>k</b>/<b>j</b> zaznacz &uarr; &darr;'
         open: '<b>o</b> lub <b>Enter</b> otwórz wybrany temat'
-        next_prev: '<b>shift j</b>/<b>shift k</b> następna/poprzednia sekcja'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> następna/poprzednia sekcja'
       application:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
@@ -2097,12 +2105,11 @@ pl_PL:
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
       actions:
         title: 'Operacje'
-        star: '<b>f</b> oznacz temat gwiazdką'
-        pin_unpin_topic: '<b>shift p</b> przypnij/odepnij temat'
-        share_topic: '<b>shift s</b> udostępnij temat'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
+        share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
         reply_as_new_topic: '<b>t</b> odpowiedz w nowym temacie'
-        reply_topic: '<b>shift r</b> odpowiedz w temacie'
+        reply_topic: '<b>shift</b>+<b>r</b> Odpowiedz w temacie'
         reply_post: '<b>r</b> odpowiedz na wpis'
         quote_post: '<b>q</b> cytuj wpis'
         like: '<b>l</b> polub wpis'

@@ -13,14 +13,14 @@ describe UserActionsController do
 
       xhr :get, :index, username: post.user.username
 
-      response.status.should == 200
+      expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
       actions = parsed["user_actions"]
-      actions.length.should == 1
+      expect(actions.length).to eq(1)
       action = actions[0]
-      action["acting_name"].should == post.user.name
-      action["email"].should == nil
-      action["post_number"].should == 1
+      expect(action["acting_name"]).to eq(post.user.name)
+      expect(action["email"]).to eq(nil)
+      expect(action["post_number"]).to eq(1)
     end
   end
 end

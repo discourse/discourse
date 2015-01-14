@@ -95,6 +95,10 @@ Discourse.Topic = Discourse.Model.extend({
     return this.urlForPostNumber(1);
   }.property('url'),
 
+  summaryUrl: function () {
+    return this.urlForPostNumber(1) + (this.get('has_summary') ? "?filter=summary" : "");
+  }.property('url'),
+
   lastPosterUrl: function() {
     return Discourse.getURL("/users/") + this.get("last_poster.username");
   }.property('last_poster'),
@@ -168,14 +172,6 @@ Discourse.Topic = Discourse.Model.extend({
            .then(function () { self.set('archetype', 'regular'); });
   },
 
-  starTooltipKey: function() {
-    return this.get('starred') ? 'starred.help.unstar' : 'starred.help.star';
-  }.property('starred'),
-
-  starTooltip: function() {
-    return I18n.t(this.get('starTooltipKey'));
-  }.property('starTooltipKey'),
-
   estimatedReadingTime: function() {
     var wordCount = this.get('word_count');
     if (!wordCount) return;
@@ -184,38 +180,24 @@ Discourse.Topic = Discourse.Model.extend({
     return Math.floor(wordCount / 500.0);
   }.property('word_count'),
 
-  toggleStar: function() {
-    var topic = this;
-    topic.toggleProperty('starred');
-    return Discourse.ajax({
-      url: "" + (this.get('url')) + "/star",
+  toggleBookmark: function() {
+    var self = this, firstPost = this.get("postStream.posts")[0];
+
+    this.toggleProperty('bookmarked');
+    if (this.get("postStream.firstPostPresent")) { firstPost.toggleProperty("bookmarked"); }
+
+    return Discourse.ajax('/t/' + this.get('id') + '/bookmark', {
       type: 'PUT',
-      data: { starred: topic.get('starred') ? true : false }
+      data: { bookmarked: self.get('bookmarked') }
     }).then(null, function (error) {
-      topic.toggleProperty('starred');
+      self.toggleProperty('bookmarked');
+      if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
 
       if (error && error.responseText) {
         bootbox.alert($.parseJSON(error.responseText).errors);
       } else {
         bootbox.alert(I18n.t('generic_error'));
       }
-    });
-  },
-
-  // Save any changes we've made to the model
-  save: function() {
-    // Don't save unless we can
-    if (!this.get('details.can_edit')) return;
-
-    var data = { title: this.get('title') };
-
-    if(this.get('category')){
-      data.category_id = this.get('category.id');
-    }
-
-    return Discourse.ajax(this.get('url'), {
-      type: 'PUT',
-      data: data
     });
   },
 
@@ -297,6 +279,14 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
+  togglePinnedForUser: function() {
+    if (this.get('pinned')) {
+      this.clearPin();
+    } else {
+      this.rePin();
+    }
+  },
+
   /**
     Re-pins a topic with a cleared pin
 
@@ -347,7 +337,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('excerpt'),
 
   readLastPost: Discourse.computed.propertyEqual('last_read_post_number', 'highest_post_number'),
-  canCleanPin: Em.computed.and('pinned', 'readLastPost')
+  canClearPin: Em.computed.and('pinned', 'readLastPost')
 
 });
 
@@ -371,6 +361,35 @@ Discourse.Topic.reopenClass({
       });
       result.set('actionByName', lookup);
     }
+  },
+
+  update: function(topic, props) {
+    props = JSON.parse(JSON.stringify(props)) || {};
+
+    // We support `category_id` and `categoryId` for compatibility
+    if (typeof props.categoryId !== "undefined") {
+      props.category_id = props.categoryId;
+      delete props.categoryId;
+    }
+
+    // Annoyingly, empty arrays are not sent across the wire. This
+    // allows us to make a distinction between arrays that were not
+    // sent and arrays that we specifically want to be empty.
+    Object.keys(props).forEach(function(k) {
+      var v = props[k];
+      if (v instanceof Array && v.length === 0) {
+        props[k + '_empty_array'] = true;
+      }
+    });
+
+    return Discourse.ajax(topic.get('url'), { type: 'PUT', data: props }).then(function(result) {
+
+      // The title can be cleaned up server side
+      props.title = result.basic_topic.title;
+      props.fancy_title = result.basic_topic.fancy_title;
+
+      topic.setProperties(props);
+    });
   },
 
   create: function() {

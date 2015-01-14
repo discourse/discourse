@@ -9,15 +9,12 @@ Discourse.SiteSetting = Discourse.Model.extend({
   **/
   enabled: function(key, value) {
 
-    if (arguments.length === 1) {
-      // get the boolean value of the setting
-      if (this.blank('value')) return false;
-      return this.get('value') === 'true';
-
-    } else {
-      // set the boolean value of the setting
+    if (arguments.length > 1) {
       this.set('value', value ? 'true' : 'false');
     }
+
+    if (this.blank('value')) return false;
+    return this.get('value') === 'true';
 
   }.property('value'),
 

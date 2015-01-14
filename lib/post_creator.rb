@@ -20,6 +20,14 @@ class PostCreator
   #   created_at              - Post creation time (optional)
   #   auto_track              - Automatically track this topic if needed (default true)
   #   custom_fields           - Custom fields to be added to the post, Hash (default nil)
+  #   post_type               - Whether this is a regular post or moderator post.
+  #   no_bump                 - Do not cause this post to bump the topic.
+  #   cooking_options         - Options for rendering the text
+  #   cook_method             - Method of cooking the post.
+  #                               :regular - Pass through Markdown parser and strip bad HTML
+  #                               :raw_html - Perform no processing
+  #   via_email               - Mark this post as arriving via email
+  #   raw_email               - Full text of arriving email (to store)
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -33,7 +41,6 @@ class PostCreator
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
   #     meta_data             - Topic meta data hash
-  #     cooking_options       - Options for rendering the text
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user

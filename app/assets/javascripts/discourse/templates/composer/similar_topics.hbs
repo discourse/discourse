@@ -2,7 +2,7 @@
 <h3>{{i18n 'composer.similar_topics'}}</h3>
 
 <ul class='topics'>
-  {{#each similarTopics}}
-    <li>{{topic-link this}} <span class='posts-count'>({{{i18n 'topic.filters.n_posts' count="posts_count"}}})</span></li>
+  {{#each t in similarTopics}}
+    <li>{{topic-link t}} <span class='posts-count'>({{{i18n 'topic.filters.n_posts' count=t.posts_count}}})</span></li>
   {{/each}}
 </ul>

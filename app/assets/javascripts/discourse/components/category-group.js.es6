@@ -1,22 +1,8 @@
-// Compile and memoize a template
-var compiled;
-function templateFunction() {
-  compiled = compiled || Handlebars.compile("<div class='autocomplete'>" +
-                                "<ul>" +
-                                "{{#each options}}" +
-                                  "<li>" +
-                                      "{{category-link-raw this allowUncategorized=true}}" +
-                                  "</li>" +
-                                  "{{/each}}" +
-                                "</ul>" +
-                              "</div>");
-  return compiled;
-}
-
 export default Ember.Component.extend({
 
-  didInsertElement: function(){
+  _initializeAutocomplete: function(){
     var self = this;
+    var template = this.container.lookup('template:category-group-autocomplete.raw');
 
     this.$('input').autocomplete({
       items: this.get('categories'),
@@ -37,10 +23,11 @@ export default Ember.Component.extend({
         });
         self.set("categories", categories);
       },
-      template: templateFunction(),
+      template: template,
       transformComplete: function(category) {
         return Discourse.HTML.categoryBadge(category, {allowUncategorized: true});
       }
     });
-  }
+  }.on('didInsertElement')
+
 });

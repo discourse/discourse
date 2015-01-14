@@ -13,6 +13,18 @@ export var Button = function(action, label, icon, opts) {
   this.opts = this.opts || opts || {};
 };
 
+function animateHeart($elem, start, end, complete) {
+  $elem.stop()
+       .css('textIndent', start)
+       .animate({ textIndent: end }, {
+          complete: complete,
+          step: function(now) {
+            $(this).css('transform','scale('+now+')');
+          },
+          duration: 150
+        }, 'linear');
+}
+
 Button.prototype.render = function(buffer) {
   var opts = this.opts;
 
@@ -36,7 +48,6 @@ export default Discourse.View.extend(StringBuffer, {
 
   rerenderTriggers: [
     'post.deleted_at',
-    'post.flagsAvailable.@each',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
@@ -99,7 +110,7 @@ export default Discourse.View.extend(StringBuffer, {
       }
     }
 
-    if(post.get("bookmarked")){
+    if (post.get("bookmarked")) {
       hiddenButtons.removeObject("bookmark");
     }
 
@@ -201,7 +212,23 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   clickLike: function(post) {
-    this.get('controller').send('toggleLike', post);
+    var $heart = this.$('.fa-heart'),
+        controller = this.get('controller'),
+        $likeButton = this.$('button[data-action=like]');
+
+    var acted = post.get('actionByName.like.acted');
+    if (acted) {
+      controller.send('toggleLike', post);
+      $likeButton.removeClass('has-like').addClass('like');
+    } else {
+      var scale = [1.0, 1.5];
+      animateHeart($heart, scale[0], scale[1], function() {
+        animateHeart($heart, scale[1], scale[0], function() {
+          controller.send('toggleLike', post);
+          $likeButton.removeClass('like').addClass('has-like');
+        });
+      });
+    }
   },
 
   // Flag button

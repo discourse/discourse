@@ -6,13 +6,9 @@
     margin-top: 5px;
     }
 
-  h1 {
-    a.edit-topic {
-      font-size: 17px;
-      display: inline-block;
-      vertical-align: top;
-      position: relative;
-      }
-  }
+  a.edit-topic i { font-size: 0.8em; }
+}
 
+.topic-title-outlet {
+  clear: both;
 }

@@ -61,8 +61,11 @@
           </section>
 
           <div class="primary-textual">
-            <h1>{{username}} {{{statusIcon}}}</h1>
+            <h1>{{username}} {{user-status model}}</h1>
             <h2>{{name}}</h2>
+            {{#if title}}
+              <h3>{{title}}</h3>
+            {{/if}}
             <h3>
             {{#if location}}{{fa-icon "map-maker"}}{{location}}{{/if}}
             {{#if websiteName}}
@@ -79,7 +82,7 @@
               {{#if isSuspended}}
                 <div class='suspended'>
                   {{fa-icon "ban"}}
-                  <b>{{i18n 'user.suspended_notice' date="suspendedTillDate"}}</b><br/>
+                  <b>{{i18n 'user.suspended_notice' date=suspendedTillDate}}</b><br/>
                   <b>{{i18n 'user.suspended_reason'}}</b> {{suspend_reason}}
                 </div>
               {{/if}}
@@ -121,8 +124,8 @@
           {{#if custom_groups}}
             <dt>{{i18n 'groups.title' count=custom_groups.length}}</dt>
             <dd class='groups'>
-              {{#each custom_groups}}
-                <span>{{#link-to 'group' this class="group-link"}}{{name}}{{/link-to}}</span>
+              {{#each group in custom_groups}}
+                <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
             </dd>
           {{/if}}
@@ -185,6 +188,12 @@
             {{/link-to}}
           </li>
         </ul>
+      {{/if}}
+
+      {{#if viewingSelf}}
+        <div class='user-archive'>
+          <button {{action "exportUserArchive"}} class="btn" title="{{i18n 'user.download_archive'}}">{{fa-icon "download"}} {{i18n 'user.download_archive'}}</button>
+        </div>
       {{/if}}
     </section>
 

@@ -24,12 +24,12 @@ describe PostCreator do
     it "can be created with auto tracking disabled" do
       p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
       # must be 0 otherwise it will think we read the topic which is clearly untrue
-      TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count.should == 0
+      expect(TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count).to eq(0)
     end
 
     it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
-      lambda { creator.create }.should raise_error(Discourse::InvalidAccess)
+      expect { creator.create }.to raise_error(Discourse::InvalidAccess)
     end
 
 
@@ -59,7 +59,7 @@ describe PostCreator do
 
       it "doesn't return true for spam" do
         creator.create
-        creator.spam?.should == false
+        expect(creator.spam?).to eq(false)
       end
 
       it "does not notify on system messages" do
@@ -70,8 +70,8 @@ describe PostCreator do
         end
         # don't notify on system messages they introduce too much noise
         channels = messages.map(&:channel)
-        channels.find{|s| s =~ /unread/}.should == nil
-        channels.find{|s| s =~ /new/}.should == nil
+        expect(channels.find{|s| s =~ /unread/}).to eq(nil)
+        expect(channels.find{|s| s =~ /new/}).to eq(nil)
       end
 
       it "generates the correct messages for a secure topic" do
@@ -92,7 +92,7 @@ describe PostCreator do
 
 
         # 2 for topic, one to notify of new topic another for tracking state
-        messages.map{|m| m.channel}.sort.should == [ "/new",
+        expect(messages.map{|m| m.channel}.sort).to eq([ "/new",
                                                      "/users/#{admin.username}",
                                                      "/users/#{admin.username}",
                                                      "/unread/#{admin.id}",
@@ -101,10 +101,10 @@ describe PostCreator do
                                                      "/latest",
                                                      "/topic/#{created_post.topic_id}",
                                                      "/topic/#{created_post.topic_id}"
-                                                   ].sort
+                                                   ].sort)
         admin_ids = [Group[:admins].id]
 
-        messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}.should == false
+        expect(messages.any?{|m| m.group_ids != admin_ids && m.user_ids != [admin.id]}).to eq(false)
       end
 
       it 'generates the correct messages for a normal topic' do
@@ -115,18 +115,18 @@ describe PostCreator do
         end
 
         latest = messages.find{|m| m.channel == "/latest"}
-        latest.should_not == nil
+        expect(latest).not_to eq(nil)
 
         latest = messages.find{|m| m.channel == "/new"}
-        latest.should_not == nil
+        expect(latest).not_to eq(nil)
 
         read = messages.find{|m| m.channel == "/unread/#{p.user_id}"}
-        read.should_not == nil
+        expect(read).not_to eq(nil)
 
         user_action = messages.find{|m| m.channel == "/users/#{p.user.username}"}
-        user_action.should_not == nil
+        expect(user_action).not_to eq(nil)
 
-        messages.length.should == 5
+        expect(messages.length).to eq(5)
       end
 
       it 'extracts links from the post' do
@@ -158,11 +158,11 @@ describe PostCreator do
       end
 
       it 'assigns a category when supplied' do
-        creator_with_category.create.topic.category.should == category
+        expect(creator_with_category.create.topic.category).to eq(category)
       end
 
       it 'adds  meta data from the post' do
-        creator_with_meta_data.create.topic.meta_data['hello'].should == 'world'
+        expect(creator_with_meta_data.create.topic.meta_data['hello']).to eq('world')
       end
 
       it 'passes the image sizes through' do
@@ -175,27 +175,27 @@ describe PostCreator do
 
         # ensure topic user is correct
         topic_user = first_post.user.topic_users.find_by(topic_id: first_post.topic_id)
-        topic_user.should be_present
-        topic_user.should be_posted
-        topic_user.last_read_post_number.should == first_post.post_number
-        topic_user.highest_seen_post_number.should == first_post.post_number
+        expect(topic_user).to be_present
+        expect(topic_user).to be_posted
+        expect(topic_user.last_read_post_number).to eq(first_post.post_number)
+        expect(topic_user.highest_seen_post_number).to eq(first_post.post_number)
 
         user2 = Fabricate(:coding_horror)
-        user2.user_stat.topic_reply_count.should == 0
+        expect(user2.user_stat.topic_reply_count).to eq(0)
 
-        first_post.user.user_stat.reload.topic_reply_count.should == 0
+        expect(first_post.user.user_stat.reload.topic_reply_count).to eq(0)
 
         PostCreator.new(user2, topic_id: first_post.topic_id, raw: "this is my test post 123").create
 
-        first_post.user.user_stat.reload.topic_reply_count.should == 0
+        expect(first_post.user.user_stat.reload.topic_reply_count).to eq(0)
 
-        user2.user_stat.reload.topic_reply_count.should == 1
+        expect(user2.user_stat.reload.topic_reply_count).to eq(1)
       end
 
       it 'sets topic excerpt if first post, but not second post' do
         first_post = creator.create
         topic = first_post.topic.reload
-        topic.excerpt.should be_present
+        expect(topic.excerpt).to be_present
         expect {
           PostCreator.new(first_post.user, topic_id: first_post.topic_id, raw: "this is the second post").create
           topic.reload
@@ -211,7 +211,7 @@ describe PostCreator do
           PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
           topic.reload
 
-          topic.auto_close_at.should be_within(1.second).of(auto_close_time)
+          expect(topic.auto_close_at).to be_within(1.second).of(auto_close_time)
         end
 
         it "updates topic's auto close date when it's based on last post" do
@@ -221,7 +221,7 @@ describe PostCreator do
           PostCreator.new(topic.user, topic_id: topic.id, raw: "this is a second post").create
           topic.reload
 
-          topic.auto_close_at.should_not be_within(1.second).of(auto_close_time)
+          expect(topic.auto_close_at).not_to be_within(1.second).of(auto_close_time)
         end
 
       end
@@ -232,7 +232,7 @@ describe PostCreator do
       it 'ensures the user can auto-close the topic, but ignores auto-close param silently' do
         Guardian.any_instance.stubs(:can_moderate?).returns(false)
         post = PostCreator.new(user, basic_topic_params.merge(auto_close_time: 2)).create
-        post.topic.auto_close_at.should == nil
+        expect(post.topic.auto_close_at).to eq(nil)
       end
     end
   end
@@ -251,7 +251,7 @@ describe PostCreator do
 
       it "returns true for another post with the same content" do
         new_creator = PostCreator.new(user, basic_topic_params)
-        new_creator.create.should be_present
+        expect(new_creator.create).to be_present
       end
     end
 
@@ -271,28 +271,28 @@ describe PostCreator do
         response_1 = create_post(raw: dupe, user: first.user, topic_id: first.topic_id)
         response_2 = create_post(raw: dupe, user: first.user, topic_id: second.topic_id)
 
-        response_1.errors.count.should == 0
-        response_2.errors.count.should == 1
+        expect(response_1.errors.count).to eq(0)
+        expect(response_2.errors.count).to eq(1)
       end
 
       it "returns blank for another post with the same content" do
         creator.create
         new_post_creator.create
-        new_post_creator.errors.should be_present
+        expect(new_post_creator.errors).to be_present
       end
 
       it "returns a post for admins" do
         creator.create
         user.admin = true
         new_post_creator.create
-        new_post_creator.errors.should be_blank
+        expect(new_post_creator.errors).to be_blank
       end
 
       it "returns a post for moderators" do
         creator.create
         user.moderator = true
         new_post_creator.create
-        new_post_creator.errors.should be_blank
+        expect(new_post_creator.errors).to be_blank
       end
     end
 
@@ -312,8 +312,8 @@ describe PostCreator do
     it "does not create the post" do
       GroupMessage.stubs(:create)
       creator.create
-      creator.errors.should be_present
-      creator.spam?.should == true
+      expect(creator.errors).to be_present
+      expect(creator.spam?).to eq(true)
     end
 
     it "sends a message to moderators" do
@@ -332,15 +332,15 @@ describe PostCreator do
 
     it 'ensures the user can create the post' do
       Guardian.any_instance.expects(:can_create?).with(Post, topic).returns(false)
-      lambda { creator.create }.should raise_error(Discourse::InvalidAccess)
+      expect { creator.create }.to raise_error(Discourse::InvalidAccess)
     end
 
     context 'success' do
       it 'create correctly' do
         post = creator.create
-        Post.count.should == 1
-        Topic.count.should == 1
-        post.reply_to_post_number.should == 4
+        expect(Post.count).to eq(1)
+        expect(Topic.count).to eq(1)
+        expect(post.reply_to_post_number).to eq(4)
       end
 
     end
@@ -376,18 +376,18 @@ describe PostCreator do
 
     it 'acts correctly' do
       # It's not a warning
-      post.topic.warning.should be_blank
+      expect(post.topic.warning).to be_blank
 
-      post.topic.archetype.should == Archetype.private_message
-      post.topic.subtype.should == TopicSubtype.user_to_user
-      post.topic.topic_allowed_users.count.should == 3
+      expect(post.topic.archetype).to eq(Archetype.private_message)
+      expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
+      expect(post.topic.topic_allowed_users.count).to eq(3)
 
       # PMs can't have a category
-      post.topic.category.should == nil
+      expect(post.topic.category).to eq(nil)
 
       # does not notify an unrelated user
-      unrelated.notifications.count.should == 0
-      post.topic.subtype.should == TopicSubtype.user_to_user
+      expect(unrelated.notifications.count).to eq(0)
+      expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
 
       # if an admin replies they should be added to the allowed user list
       admin = Fabricate(:admin)
@@ -395,7 +395,7 @@ describe PostCreator do
                          topic_id: post.topic_id)
 
       post.topic.reload
-      post.topic.topic_allowed_users.where(user_id: admin.id).count.should == 1
+      expect(post.topic.topic_allowed_users.where(user_id: admin.id).count).to eq(1)
     end
   end
 
@@ -414,26 +414,26 @@ describe PostCreator do
       # Invalid archetype
       creator = PostCreator.new(user, base_args)
       creator.create
-      creator.errors.should be_present
+      expect(creator.errors).to be_present
 
       # Too many users
       creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message,
                                                       target_usernames: [target_user1.username, target_user2.username].join(',')))
       creator.create
-      creator.errors.should be_present
+      expect(creator.errors).to be_present
 
       # Success
       creator = PostCreator.new(user, base_args.merge(archetype: Archetype.private_message))
       post = creator.create
-      creator.errors.should be_blank
+      expect(creator.errors).to be_blank
 
       topic = post.topic
-      topic.should be_present
-      topic.warning.should be_present
-      topic.subtype.should == TopicSubtype.moderator_warning
-      topic.warning.user.should == target_user1
-      topic.warning.created_by.should == user
-      target_user1.warnings.count.should == 1
+      expect(topic).to be_present
+      expect(topic.warning).to be_present
+      expect(topic.subtype).to eq(TopicSubtype.moderator_warning)
+      expect(topic.warning.user).to eq(target_user1)
+      expect(topic.warning.created_by).to eq(user)
+      expect(target_user1.warnings.count).to eq(1)
     end
   end
 
@@ -456,15 +456,15 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
-      post.topic.archetype.should == Archetype.private_message
-      post.topic.topic_allowed_users.count.should == 1
-      post.topic.topic_allowed_groups.count.should == 1
+      expect(post.topic.archetype).to eq(Archetype.private_message)
+      expect(post.topic.topic_allowed_users.count).to eq(1)
+      expect(post.topic.topic_allowed_groups.count).to eq(1)
 
       # does not notify an unrelated user
-      unrelated.notifications.count.should == 0
-      post.topic.subtype.should == TopicSubtype.user_to_user
-      target_user1.notifications.count.should == 1
-      target_user2.notifications.count.should == 1
+      expect(unrelated.notifications.count).to eq(0)
+      expect(post.topic.subtype).to eq(TopicSubtype.user_to_user)
+      expect(target_user1.notifications.count).to eq(1)
+      expect(target_user2.notifications.count).to eq(1)
     end
   end
 
@@ -485,8 +485,8 @@ describe PostCreator do
     end
 
     it 'acts correctly' do
-      topic.created_at.should be_within(10.seconds).of(created_at)
-      post.created_at.should be_within(10.seconds).of(created_at)
+      expect(topic.created_at).to be_within(10.seconds).of(created_at)
+      expect(post.created_at).to be_within(10.seconds).of(created_at)
     end
   end
 
@@ -494,7 +494,7 @@ describe PostCreator do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
       creator.create
-      creator.errors.should == nil
+      expect(creator.errors).to eq(nil)
     end
   end
 
@@ -502,10 +502,10 @@ describe PostCreator do
     it "has a word count" do
       creator = PostCreator.new(user, title: 'some inspired poetry for a rainy day', raw: 'mary had a little lamb, little lamb, little lamb. mary had a little lamb')
       post = creator.create
-      post.word_count.should == 14
+      expect(post.word_count).to eq(14)
 
       post.topic.reload
-      post.topic.word_count.should == 14
+      expect(post.topic.word_count).to eq(14)
     end
   end
 
@@ -519,19 +519,19 @@ describe PostCreator do
                                 title: 'Reviews of Science Ovens',
                                 raw: 'Did you know that you can use microwaves to cook your dinner? Science!')
       creator.create
-      TopicEmbed.where(embed_url: embed_url).exists?.should == true
+      expect(TopicEmbed.where(embed_url: embed_url).exists?).to eq(true)
     end
   end
 
   describe "read credit for creator" do
     it "should give credit to creator" do
       post = create_post
-      PostTiming.find_by(topic_id: post.topic_id,
+      expect(PostTiming.find_by(topic_id: post.topic_id,
                          post_number: post.post_number,
-                         user_id: post.user_id).msecs.should be > 0
+                         user_id: post.user_id).msecs).to be > 0
 
-      TopicUser.find_by(topic_id: post.topic_id,
-                        user_id: post.user_id).last_read_post_number.should == 1
+      expect(TopicUser.find_by(topic_id: post.topic_id,
+                        user_id: post.user_id).last_read_post_number).to eq(1)
     end
   end
 
@@ -541,13 +541,13 @@ describe PostCreator do
 
       creator = PostCreator.new(user, {title: "my test title 123", raw: "I should not be allowed to post"} )
       creator.create
-      creator.errors.count.should be > 0
+      expect(creator.errors.count).to be > 0
     end
   end
 
   it "doesn't strip starting whitespaces" do
     post = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " }).create
-    post.raw.should == "    <-- whitespaces -->"
+    expect(post.raw).to eq("    <-- whitespaces -->")
   end
 
 end

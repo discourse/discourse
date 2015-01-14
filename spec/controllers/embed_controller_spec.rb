@@ -7,13 +7,13 @@ describe EmbedController do
 
   it "is 404 without an embed_url" do
     get :comments
-    response.should_not be_success
+    expect(response).not_to be_success
   end
 
   it "raises an error with a missing host" do
     SiteSetting.stubs(:embeddable_host).returns(nil)
     get :comments, embed_url: embed_url
-    response.should_not be_success
+    expect(response).not_to be_success
   end
 
   context "with a host" do
@@ -23,7 +23,7 @@ describe EmbedController do
 
     it "raises an error with no referer" do
       get :comments, embed_url: embed_url
-      response.should_not be_success
+      expect(response).not_to be_success
     end
 
     context "success" do
@@ -33,8 +33,8 @@ describe EmbedController do
       end
 
       after do
-        response.should be_success
-        response.headers['X-Frame-Options'].should == "ALLOWALL"
+        expect(response).to be_success
+        expect(response.headers['X-Frame-Options']).to eq("ALLOWALL")
       end
 
       it "tells the topic retriever to work when no previous embed is found" do

@@ -90,7 +90,23 @@ Discourse.Route.reopenClass({
 
   mapRoutes: function() {
     Discourse.Router.map(function() {
-      routeBuilder.call(this);
+      var router = this;
+
+      if (routeBuilder) {
+        Ember.warn("The Discourse `routeBuilder` is deprecated. Export a `route-map` instead");
+        routeBuilder.call(router);
+      }
+
+      // If a module is defined as `route-map` in discourse or a plugin, its routes
+      // will be built automatically.
+      Ember.keys(requirejs._eak_seen).forEach(function(key) {
+        if (/route-map$/.test(key)) {
+          var module = require(key, null, null, true);
+          if (!module) { throw new Error(key + ' must export a map function.'); }
+          module.default.call(router);
+        }
+      });
+
       this.route('unknown', {path: '*path'});
     });
   },

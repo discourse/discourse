@@ -104,8 +104,8 @@ end
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.6.0.beta.2'
-gem 'handlebars-source', '1.3.0'
+gem 'ember-source', '1.9.0.beta.4'
+gem 'handlebars-source', '2.0.0'
 gem 'barber'
 
 gem 'message_bus'
@@ -117,7 +117,7 @@ gem 'fast_xs'
 
 gem 'fast_xor'
 gem 'fastimage'
-gem 'fog', '1.22.1', require: false
+gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 
 gem 'email_reply_parser'
@@ -142,15 +142,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
-
-if rails_master?
-  # native casting
-  gem 'pg', '0.18.0.pre20141117110243'
-else
-  # while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
-  gem 'pg', '0.15.1'
-end
-
+gem 'pg'
 gem 'pry-rails', require: false
 gem 'rake'
 
@@ -230,7 +222,7 @@ gem 'lru_redux'
 gem 'htmlentities', require: false
 
 # IMPORTANT: mini profiler monkey patches, so it better be required last
-#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
@@ -245,6 +237,9 @@ gem 'rbtrace', require: false, platform: :mri
 gem 'ruby-readability', require: false
 
 gem 'simple-rss', require: false
+
+# TODO mri_22 should be here, but bundler was real slow to pick it up
+# not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
 gem 'memory_profiler', require: false, platform: :mri_21

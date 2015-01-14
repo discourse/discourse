@@ -74,7 +74,7 @@ function organizeResults(r, options) {
 
 export default function userSearch(options) {
   var term = options.term || "",
-      includeGroups = !!options.include_groups,
+      includeGroups = options.includeGroups,
       topicId = options.topicId;
 
 

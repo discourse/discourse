@@ -320,12 +320,15 @@ class Admin::UsersController < Admin::AdminController
     user.email_tokens.update_all  confirmed: true
 
     email_token = user.email_tokens.create(email: user.email)
-    Jobs.enqueue(:user_email,
+
+    unless params[:send_email] == '0' || params[:send_email] == 'false'
+      Jobs.enqueue( :user_email,
                     type: :account_created,
                     user_id: user.id,
                     email_token: email_token.token)
+    end
 
-    render json: success_json
+    render json: success_json.merge!(password_url: "#{Discourse.base_url}/users/password-reset/#{email_token.token}")
 
   end
 

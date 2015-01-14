@@ -5,7 +5,7 @@ describe EmailController do
   context '.preferences_redirect' do
 
     it 'requires you to be logged in' do
-      lambda { get :preferences_redirect }.should raise_error(Discourse::NotLoggedIn)
+      expect { get :preferences_redirect }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -13,7 +13,7 @@ describe EmailController do
 
       it 'redirects to your user preferences' do
         get :preferences_redirect
-        response.should redirect_to("/users/#{user.username}/preferences")
+        expect(response).to redirect_to("/users/#{user.username}/preferences")
       end
     end
 
@@ -30,7 +30,7 @@ describe EmailController do
       end
 
       it 'subscribes the user' do
-        user.email_digests.should == true
+        expect(user.email_digests).to eq(true)
       end
     end
 
@@ -47,11 +47,11 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should == false
+        expect(user.email_digests).to eq(false)
       end
 
       it "sets the appropriate instance variables" do
-        assigns(:success).should be_present
+        expect(assigns(:success)).to be_present
       end
     end
 
@@ -61,7 +61,7 @@ describe EmailController do
       end
 
       it "sets the appropriate instance variables" do
-        assigns(:success).should be_blank
+        expect(assigns(:success)).to be_blank
       end
     end
 
@@ -74,12 +74,12 @@ describe EmailController do
       end
 
       it 'does not unsubscribe the user' do
-        user.email_digests.should == true
+        expect(user.email_digests).to eq(true)
       end
 
       it 'sets the appropriate instance variables' do
-        assigns(:success).should be_blank
-        assigns(:different_user).should be_present
+        expect(assigns(:success)).to be_blank
+        expect(assigns(:different_user)).to be_present
       end
     end
 
@@ -92,17 +92,17 @@ describe EmailController do
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should == false
+        expect(user.email_digests).to eq(false)
       end
 
       it 'sets the appropriate instance variables' do
-        assigns(:success).should be_present
+        expect(assigns(:success)).to be_present
       end
     end
 
     it "sets not_found when the key didn't match anything" do
       get :unsubscribe, key: 'asdfasdf'
-      assigns(:not_found).should == true
+      expect(assigns(:not_found)).to eq(true)
     end
 
   end

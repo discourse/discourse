@@ -28,7 +28,7 @@ describe Auth::GoogleOAuth2Authenticator do
 
       result = authenticator.after_authenticate(hash)
 
-      result.user.id.should == user.id
+      expect(result.user.id).to eq(user.id)
     end
 
     it 'can create a proper result for non existing users' do
@@ -50,8 +50,8 @@ describe Auth::GoogleOAuth2Authenticator do
       authenticator = described_class.new
       result = authenticator.after_authenticate(hash)
 
-      result.user.should == nil
-      result.extra_data[:name].should == "Jane Doe"
+      expect(result.user).to eq(nil)
+      expect(result.extra_data[:name]).to eq("Jane Doe")
     end
   end
 

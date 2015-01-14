@@ -1,7 +1,6 @@
 # Like a hash, just does its best to stay in sync across the farm
 # On boot all instances are blank, but they populate as various processes
 # fill it up
-#
 
 require 'weakref'
 
@@ -31,9 +30,9 @@ class DistributedCache
         hash = current.hash(message.site_id)
 
         case payload["op"]
-          when "set" then hash[payload["key"]] = payload["value"]
+          when "set"    then hash[payload["key"]] = payload["value"]
           when "delete" then hash.delete(payload["key"])
-          when "clear" then hash.clear
+          when "clear"  then hash.clear
         end
 
       rescue WeakRef::RefError
@@ -64,7 +63,7 @@ class DistributedCache
   def self.publish(hash, message)
     message[:origin] = hash.object_id
     message[:hash_key] = hash.key
-    MessageBus.publish(channel_name, message, {user_ids: [-1]})
+    MessageBus.publish(channel_name, message, { user_ids: [-1] })
   end
 
   def self.set(hash, key, value)
@@ -72,11 +71,11 @@ class DistributedCache
   end
 
   def self.delete(hash, key)
-    publish(hash, { op: :delete, key: key})
+    publish(hash, { op: :delete, key: key })
   end
 
   def self.clear(hash)
-    publish(hash, {op: :clear})
+    publish(hash, { op: :clear })
   end
 
   def self.register(hash)
@@ -92,7 +91,6 @@ class DistributedCache
     @key = key
     @data = {}
   end
-
 
   def []=(k,v)
     k = k.to_s if Symbol === k
@@ -115,7 +113,6 @@ class DistributedCache
     DistributedCache.clear(self)
     hash.clear
   end
-
 
   def hash(db = nil)
     db ||= RailsMultisite::ConnectionManagement.current_db

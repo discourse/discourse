@@ -1,25 +1,25 @@
-{{#each model.content}}
-  <div {{bind-attr class=":item hidden deleted moderator_action"}}>
+{{#each item in model.content}}
+  <div {{bind-attr class=":item item.hidden item.deleted item.moderator_action"}}>
     <div class='clearfix info'>
-      <a href="{{unbound userUrl}}" data-user-card="{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
-      <span class='time'>{{format-date path="created_at"}}</span>
+      <a href="{{unbound item.userUrl}}" data-user-card="{{unbound item.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar item imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div></a>
+      <span class='time'>{{format-date item.created_at}}</span>
       <span class="title">
-        <a href="{{unbound postUrl}}">{{unbound title}}</a>
+        <a href="{{unbound item.postUrl}}">{{unbound item.title}}</a>
       </span>
-      <span class="category">{{category-link category}}</span>
+      <span class="category">{{category-link item.category}}</span>
     </div>
-    <p class='excerpt'>{{{unbound excerpt}}}</p>
-    {{#each children}}
+    <p class='excerpt'>{{{unbound item.excerpt}}}</p>
+    {{#each child in item.children}}
       <div class='child-actions'>
-        <i class="icon {{unbound icon}}"></i>
-        {{#each items}}
-          {{#if removableBookmark}}
-            <button class="btn btn-default remove-bookmark" {{action "removeBookmark" this}}>
+        <i class="icon {{unbound child.icon}}"></i>
+        {{#each grandChild in child.items}}
+          {{#if grandChild.removableBookmark}}
+            <button class="btn btn-default remove-bookmark" {{action "removeBookmark" grandChild}}>
               {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
             </button>
           {{/if}}
-          <a href="{{unbound userUrl}}" data-user-card="{{unbound username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar this imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
-          {{#if edit_reason}} &mdash; <span class="edit-reason">{{unbound edit_reason}}</span>{{/if}}
+          <a href="{{unbound grandChild.userUrl}}" data-user-card="{{unbound grandChild.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+          {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{unbound grandChild.edit_reason}}</span>{{/if}}
         {{/each}}
       </div>
     {{/each}}

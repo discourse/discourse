@@ -7,7 +7,7 @@ describe VersionMailer do
     before { SiteSetting.stubs(:contact_email).returns('') }
 
     it "doesn't send the email" do
-      subject.to.should be_blank
+      expect(subject.to).to be_blank
     end
   end
 
@@ -15,10 +15,10 @@ describe VersionMailer do
     before { SiteSetting.stubs(:contact_email).returns('me@example.com') }
 
     it "works" do
-      subject.to.should == ['me@example.com']
-      subject.subject.should be_present
-      subject.from.should == [SiteSetting.notification_email]
-      subject.body.should be_present
+      expect(subject.to).to eq(['me@example.com'])
+      expect(subject.subject).to be_present
+      expect(subject.from).to eq([SiteSetting.notification_email])
+      expect(subject.body).to be_present
     end
 
   end

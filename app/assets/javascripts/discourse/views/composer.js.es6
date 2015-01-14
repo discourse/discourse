@@ -63,12 +63,18 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
   resize: function() {
     var self = this;
     Em.run.scheduleOnce('afterRender', function() {
-      if (self.movePanels) {
-        var h = $('#reply-control').height() || 0;
-        self.movePanels.apply(self, [h + "px"]);
+      var h = $('#reply-control').height() || 0;
+      self.movePanels.apply(self, [h + "px"]);
+
+      // Figure out the size of the fields
+      var $fields = self.$('.composer-fields'),
+          pos = $fields.position();
+
+      if (pos) {
+        self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
     });
-  }.observes('model.composeState'),
+  }.observes('model.composeState', 'model.action'),
 
   keyUp: function() {
     var controller = this.get('controller');
@@ -103,11 +109,12 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
   _enableResizing: function() {
     var $replyControl = $('#reply-control'),
         self = this;
+
     $replyControl.DivResizer({
-      resize: this.resize,
+      resize: this.resize.bind(self),
       onDrag: function (sizePx) { self.movePanels.apply(self, [sizePx]); }
     });
-    afterTransition($replyControl, this.resize);
+    afterTransition($replyControl, this.resize.bind(self));
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
   }.on('didInsertElement'),
@@ -163,6 +170,39 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     this.trigger('previewRefreshed', $wmdPreview);
   },
 
+  _applyEmojiAutocomplete: function() {
+    if (!this.siteSettings.enable_emoji) { return; }
+
+    var template = this.container.lookup('template:emoji-selector-autocomplete.raw');
+    $('#wmd-input').autocomplete({
+      template: template,
+      key: ":",
+      transformComplete: function(v){ return v.code + ":"; },
+      dataSource: function(term){
+        return new Ember.RSVP.Promise(function(resolve) {
+          var full = ":" + term;
+          term = term.toLowerCase();
+
+          if (term === "") {
+            return resolve(["smile", "smiley", "wink", "sunny", "blush"]);
+          }
+
+          if (Discourse.Emoji.translations[full]) {
+            return resolve([Discourse.Emoji.translations[full]]);
+          }
+
+          var options = Discourse.Emoji.search(term, {maxResults: 5});
+
+          return resolve(options);
+        }).then(function(list) {
+          return list.map(function(i) {
+            return {code: i, src: Discourse.Emoji.urlFor(i)};
+          });
+        });
+      }
+    });
+  },
+
   initEditor: function() {
     // not quite right, need a callback to pass in, meaning this gets called once,
     // but if you start replying to another topic it will get the avatars wrong
@@ -172,8 +212,9 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
 
     $LAB.script(assetPath('defer/html-sanitizer-bundle'));
     ComposerView.trigger("initWmdEditor");
+    this._applyEmojiAutocomplete();
 
-    var template = this.container.lookupFactory('view:user-selector').templateFunction();
+    var template = this.container.lookup('template:user-selector-autocomplete.raw');
     $wmdInput.data('init', true);
     $wmdInput.autocomplete({
       template: template,
@@ -181,7 +222,7 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
         return userSearch({
           term: term,
           topicId: self.get('controller.controllers.topic.model.id'),
-          include_groups: true
+          includeGroups: true
         });
       },
       key: "@",

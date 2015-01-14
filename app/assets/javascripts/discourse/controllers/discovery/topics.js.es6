@@ -7,6 +7,9 @@ var controllerOpts = {
   selected: [],
   period: null,
 
+  canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
+  showTopicPostBadges: Em.computed.not('controllers.discovery/topics.new'),
+
   redirectedReason: Em.computed.alias('currentUser.redirected_to_top_reason'),
 
   order: 'default',
@@ -162,7 +165,7 @@ var controllerOpts = {
 
     var split = this.get('filter').split('/');
 
-    if (split[0] !== 'new' && split[0] !== 'unread' && split[0] !== 'starred') { return; }
+    if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 
     return I18n.t("topics.none.educate." + split[0], {
       userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"

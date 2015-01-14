@@ -5,7 +5,8 @@ module Jobs
 
   class ExportCsvFile < Jobs::Base
     HEADER_ATTRS_FOR = {}
-    HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
+    HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
+    HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
     HEADER_ATTRS_FOR['staff_action'] = ['staff_user','action','subject','created_at','details', 'context']
@@ -16,15 +17,12 @@ module Jobs
     sidekiq_options retry: false
     attr_accessor :current_user
 
-    def initialize
-      @file_name = ""
-    end
-
     def execute(args)
-      entity = args[:entity]
+      @entity = args[:entity]
+      @file_name = @entity
       @current_user = User.find_by(id: args[:user_id])
 
-      export_method = "#{entity}_export".to_sym
+      export_method = "#{@entity}_export".to_sym
       data =
         if respond_to?(export_method)
           send(export_method)
@@ -34,26 +32,39 @@ module Jobs
 
       if data && data.length > 0
         set_file_path
-        header = get_header(entity)
-        write_csv_file(data, header)
+        write_csv_file(data)
       end
 
+    ensure
       notify_user
     end
 
-    def user_export
+    def user_archive_export
+      user_archive_data = Post.includes(:topic => :category).where(user_id: @current_user.id).select('topic_id','post_number','raw','like_count','reply_count','created_at').order('created_at').with_deleted.to_a
+      user_archive_data.map do |user_archive|
+        get_user_archive_fields(user_archive)
+      end
+    end
+
+    def user_list_export
       query = ::AdminUserIndexQuery.new
       user_data = query.find_users_query.to_a
       user_data.map do |user|
         group_names = get_group_names(user).join(';')
-        user_array = get_user_fields(user)
+        user_array = get_user_list_fields(user)
         user_array.push(group_names) if group_names != ''
         user_array
       end
     end
 
     def staff_action_export
-      staff_action_data = UserHistory.order('id DESC').to_a
+      if @current_user.admin?
+        staff_action_data = UserHistory.only_staff_actions.order('id DESC').to_a
+      else
+        # moderator
+        staff_action_data = UserHistory.where(admin_only: false).only_staff_actions.order('id DESC').to_a
+      end
+
       staff_action_data.map do |staff_action|
         get_staff_action_fields(staff_action)
       end
@@ -80,11 +91,11 @@ module Jobs
       end
     end
 
-    def get_header(entity)
+    def get_header
 
-      case entity
-        when 'user'
-          header_array = HEADER_ATTRS_FOR['user'] + HEADER_ATTRS_FOR['user_stats']
+      case @entity
+        when 'user_list'
+          header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats']
           if SiteSetting.enable_sso
             header_array.concat(HEADER_ATTRS_FOR['user_sso'])
           end
@@ -96,7 +107,7 @@ module Jobs
           end
           header_array.push("group_names")
         else
-          header_array = HEADER_ATTRS_FOR[entity]
+          header_array = HEADER_ATTRS_FOR[@entity]
         end
 
       header_array
@@ -113,10 +124,44 @@ module Jobs
         return group_names
       end
 
-      def get_user_fields(user)
+      def get_user_archive_fields(user_archive)
+        user_archive_array = []
+        topic_data = user_archive.topic
+        user_archive = user_archive.as_json
+        if topic_data.nil?
+          # deleted topic
+          topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id'])
+        end
+        category = topic_data.category
+        sub_category = "-"
+        if category
+          category_name = category.name
+          if !category.parent_category_id.nil?
+            # sub category
+            category_name = Category.find_by(id: category.parent_category_id).name
+            sub_category = category.name
+          end
+        else
+          # PM
+          category_name = "-"
+        end
+        is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
+        url = "#{Discourse.base_url}/t/#{topic_data.slug}/#{topic_data.id}/#{user_archive['post_number']}"
+
+        topic_hash = {"post" => user_archive['raw'], "topic_title" => topic_data.title, "category" => category_name, "sub_category" => sub_category, "is_pm" => is_pm, "url" => url}
+        user_archive.merge!(topic_hash)
+
+        HEADER_ATTRS_FOR['user_archive'].each do |attr|
+          user_archive_array.push(user_archive[attr])
+        end
+
+        user_archive_array
+      end
+
+      def get_user_list_fields(user)
         user_array = []
 
-        HEADER_ATTRS_FOR['user'].each do |attr|
+        HEADER_ATTRS_FOR['user_list'].each do |attr|
           user_array.push(user.attributes[attr])
         end
 
@@ -215,26 +260,31 @@ module Jobs
 
 
       def set_file_path
-        @file_name = "export_#{SecureRandom.hex(4)}.csv"
+        file_name_prefix = @file_name.split('_').join('-')
+        @file = UserExport.create(export_type: file_name_prefix, user_id: @current_user.id)
+        @file_name = "#{file_name_prefix}-#{@file.id}.csv"
+
         # ensure directory exists
-        dir = File.dirname("#{ExportCsv.base_directory}/#{@file_name}")
+        dir = File.dirname("#{UserExport.base_directory}/#{@file_name}")
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       end
 
-      def write_csv_file(data, header)
+      def write_csv_file(data)
         # write to CSV file
-        CSV.open(File.expand_path("#{ExportCsv.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
-          csv << header
+        CSV.open(File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
+          csv << get_header
           data.each do |value|
             csv << value
           end
         end
+        # compress CSV file
+        `gzip --best #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 
       def notify_user
         if @current_user
-          if @file_name != "" && File.exists?("#{ExportCsv.base_directory}/#{@file_name}")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/admin/export_csv/#{@file_name}", file_name: @file_name)
+          if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz")
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end

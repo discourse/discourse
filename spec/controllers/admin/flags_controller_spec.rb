@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::FlagsController do
 
   it "is a subclass of AdminController" do
-    (Admin::FlagsController < Admin::AdminController).should == true
+    expect(Admin::FlagsController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -16,8 +16,8 @@ describe Admin::FlagsController do
         xhr :get, :index
 
         data = ::JSON.parse(response.body)
-        data["users"].should == []
-        data["posts"].should == []
+        expect(data["users"]).to eq([])
+        expect(data["posts"]).to eq([])
       end
 
       it 'returns a valid json payload when some thing is flagged' do

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Admin::ApiController do
 
   it "is a subclass of AdminController" do
-    (Admin::ApiController < Admin::AdminController).should == true
+    expect(Admin::ApiController < Admin::AdminController).to eq(true)
   end
 
   let!(:user) { log_in(:admin) }
@@ -11,7 +11,7 @@ describe Admin::ApiController do
   context '.index' do
     it "succeeds" do
       xhr :get, :index
-      response.should be_success
+      expect(response).to be_success
     end
   end
 
@@ -20,8 +20,8 @@ describe Admin::ApiController do
 
     it "returns 404 when there is no key" do
       xhr :put, :regenerate_key, id: 1234
-      response.should_not be_success
-      response.status.should == 404
+      expect(response).not_to be_success
+      expect(response.status).to eq(404)
     end
 
     it "delegates to the api key's `regenerate!` method" do
@@ -35,8 +35,8 @@ describe Admin::ApiController do
 
     it "returns 404 when there is no key" do
       xhr :delete, :revoke_key, id: 1234
-      response.should_not be_success
-      response.status.should == 404
+      expect(response).not_to be_success
+      expect(response.status).to eq(404)
     end
 
     it "delegates to the api key's `regenerate!` method" do
@@ -47,9 +47,9 @@ describe Admin::ApiController do
 
   context '.create_master_key' do
     it "creates a record" do
-      lambda {
+      expect {
         xhr :post, :create_master_key
-      }.should change(ApiKey, :count).by(1)
+      }.to change(ApiKey, :count).by(1)
     end
   end
 

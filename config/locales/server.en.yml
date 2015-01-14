@@ -54,7 +54,7 @@ en:
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
-      taken: "has already been taken"
+      taken: "has already been taken. (group names are case insensitive)"
     embed:
       load_from_remote: "There was an error loading that post."
 
@@ -231,8 +231,8 @@ en:
             base:
               warning_requires_pm: "You can only attach warnings to private messages."
               too_many_users: "You can only send warnings to one user at a time."
-            archetype:
               cant_send_pm: "Sorry, you cannot send a private message to that user."
+              no_user_selected: "You must select a valid user."
         user:
           attributes:
             password:
@@ -598,15 +598,14 @@ en:
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
-    default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "You haven't provided a contact email for your site. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
+    default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_missing: "Enter a site contact email address so you can be reached you urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
+    title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
+    site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    access_password_removal: "Your site was using the access_password setting, which has been removed. The login_required and must_approve_users settings have been enabled, which should be used instead. You can change them in the <a href='/admin/site_settings'>Site Settings</a>. Be sure to <a href='/admin/users/list/pending'>approve users in the Pending Users list</a>. (This message will go away after 2 days.)"
-    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
+    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated private messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
+    notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
 
   content_types:
     education_new_reply:
@@ -657,9 +656,9 @@ en:
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
-    title: "Brief title of this site, used in the title tag."
-    site_description: "Describe this site in one sentence, used in the meta description tag."
-    contact_email: "Email address of key contact for site. Important notices from discourse.org regarding critical updates may be sent to this address."
+    title: "The name of this site, as used in the title tag."
+    site_description: "Describe this site in one sentence, as used in the meta description tag."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications only, as well as on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -681,11 +680,11 @@ en:
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
     onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
 
-    logo_url: "The logo image at the top left of your site eg: http://example.com/logo.png"
+    logo_url: "The logo image at the top left of your site; if left blank, the site title text will be shown."
     digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
-    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. eg: http://example.com/logo-small.png"
+    logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, `logo_url` will be used. eg: http://example.com/uploads/default/logo.png"
+    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, the site title text will be used."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -737,10 +736,7 @@ en:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    topics_per_page: "How many topics are loaded by default on the topic list, and when scrolling down to load more topics"
-    posts_chunksize: "How many posts are loaded by default on a topic, and when scrolling down to load more posts"
-    posts_slow_chunksize: "Like `posts_chunksize` but for slow platforms (such as Android)"
-    site_contact_username: "All automated private messages will be from this user; if left blank the default System account will be used."
+    site_contact_username: "A valid staff username to send all automated private messages from. If left blank the default System account will be used."
     send_welcome_message: "Send all new users a welcome private message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
@@ -784,7 +780,7 @@ en:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
-    enable_sso: "Enable single sign on via an external site (Note: disables invites)"
+    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in if not properly configured when enabled; also disables invites)"
     enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
@@ -957,8 +953,6 @@ en:
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Short email length in Bytes"
 
-    enable_email_names: "Allow showing user full name in emails. Disable to hide full name in emails."
-
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
@@ -1032,6 +1026,9 @@ en:
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
+    enable_emoji: "Enable emoji"
+    emoji_set: "How would you like your emoji?"
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -1092,6 +1089,11 @@ en:
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
 
+  emoji:
+    errors:
+      name_already_exists: "Sorry, the name '%{name}' is already used by another emoji."
+      error_while_storing_emoji: "Sorry, there has been an error while storing the emoji."
+
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -1137,7 +1139,7 @@ en:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
+    omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
@@ -1294,10 +1296,10 @@ en:
       other: "%{count} flags waiting to be handled"
 
   flag_reasons:
-    off_topic: "Your post was flagged as **off-topic**: the community thinks it does not fit into the topic, as currently defined by the title and the first post."
-    inappropriate: "Your post was flagged as **inappropriate**: the community thinks it is offensive, abusive, or a violation of [the community guidelines](/guidelines)."
-    spam: "Your post was flagged as **spam**: the community thinks it is an advertisement, not useful or relevant to the topic, but promotional in nature."
-    notify_moderators: "Your post was flagged **for moderator attention**: the community thinks something about the post requires moderator intervention."
+    off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
+    inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
+    spam: "Your post was flagged as **spam**: the community feels it is an advertisement, something that is overly promotional in nature instead of being useful or relevant to the topic as expected."
+    notify_moderators: "Your post was flagged **for moderator attention**: the community feels something about the post requires manual intervention by a staff member."
 
   flags_dispositions:
     agreed: "Thanks for letting us know. We agree there is an issue and we're looking into it."
@@ -1405,6 +1407,8 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
+        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
+
         Enjoy your stay!
 
     welcome_invite:
@@ -1423,6 +1427,8 @@ en:
         %{new_user_tips}
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+
+        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
 
         Enjoy your stay!
 
@@ -1476,17 +1482,17 @@ en:
         ```
 
     csv_export_succeeded:
-      subject_template: "Data Export completed successfully"
+      subject_template: "Data export complete"
       text_body_template: |
-        The data export was successful.
+        Your data export was successful! :dvd:
 
-        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
+        <a class="attachment" href="%{download_link}">%{file_name}</a>
 
-        <small>CSV file download link will expire after 48 hours.</small>
+        The above download link will be valid for 48 hours.
 
     csv_export_failed:
-      subject_template: "Export failed"
-      text_body_template: "The export has failed. Please check the logs."
+      subject_template: "Data export failed"
+      text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
     email_reject_trust_level:
       subject_template: "Email issue -- Insufficient Trust Level"
@@ -1776,6 +1782,8 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
+        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
+
         Enjoy your stay!
 
     signup:
@@ -1846,6 +1854,10 @@ en:
   privacy: "Privacy"
 
   edit_this_page: "Edit this page"
+
+  csv_export:
+    boolean_yes: "Yes"
+    boolean_no: "No"
 
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
@@ -1931,7 +1943,7 @@ en:
       *   Don’t divert a topic by changing it midstream.
       *   Don’t sign your posts &mdash; every post has your profile information attached to it.
 
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a New Topic.
+      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
 
       <a name="stealing"></a>
 
@@ -1939,11 +1951,18 @@ en:
 
       You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
 
+      <a name="operated"></a>
+
+      ## [Powered by You](#power)
+
+      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
+
       <a name="tos"></a>
 
       ## [Terms of Service](#tos)
 
       Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
+
 
   tos_topic:
     title: "Terms of Service"

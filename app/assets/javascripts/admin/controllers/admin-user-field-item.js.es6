@@ -50,7 +50,7 @@ export default Ember.ObjectController.extend(BufferedContent, {
 
     cancel: function() {
       var id = this.get('id');
-      if (Ember.empty(id)) {
+      if (Ember.isEmpty(id)) {
         this.get('controllers.admin-user-fields').send('destroy', this.get('model'));
       } else {
         this.rollbackBuffer();

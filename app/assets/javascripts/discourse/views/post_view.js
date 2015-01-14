@@ -7,7 +7,7 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
                       'selected',
                       'post.hidden:post-hidden',
                       'post.deleted',
-                      'byTopicCreator:topic-creator',
+                      'post.topicOwner:topic-owner',
                       'groupNameClass',
                       'post.wiki:wiki'],
   postBinding: 'content',
@@ -45,8 +45,13 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   // If the cooked content changed, add the quote controls
   cookedChanged: function() {
-    Em.run.scheduleOnce('afterRender', this, '_insertQuoteControls');
+    Em.run.scheduleOnce('afterRender', this, '_cookedWasChanged');
   }.observes('post.cooked'),
+
+  _cookedWasChanged: function() {
+    this.trigger('postViewUpdated', this.$());
+    this._insertQuoteControls();
+  },
 
   mouseUp: function(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {

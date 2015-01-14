@@ -3,19 +3,17 @@ export default Em.Component.extend({
 
   render: function(buffer) {
     var category = this.get('category'),
-        logoUrl = category.get('logo_url');
+        logoUrl = category.get('logo_url'),
+        categoryUrl = Discourse.getURL('/c/') + Discourse.Category.slugFor(category),
+        categoryName = Handlebars.Utils.escapeExpression(category.get('name'));
 
-    if (category.get('read_restricted')) {
-      buffer.push("<i class='fa fa-group'></i> ");
-    }
+    if (category.get('read_restricted')) { buffer.push("<i class='fa fa-group'></i>"); }
 
-    buffer.push("<a href='" + Discourse.getURL('/c/') + Discourse.Category.slugFor(category) + "'>");
+    buffer.push("<a href='" + categoryUrl + "'>");
+    buffer.push("<span class='category-name'>" + categoryName + "</span>");
 
-    var noLogo = Em.isEmpty(logoUrl);
-    buffer.push(Handlebars.Utils.escapeExpression(category.get('name')));
-    if (!noLogo) {
-      buffer.push("<br><img src='" + logoUrl + "' class='category-logo'>");
-    }
+    if (!Em.isEmpty(logoUrl)) { buffer.push("<img src='" + logoUrl + "' class='category-logo'>"); }
+
     buffer.push("</a>");
   }
 });

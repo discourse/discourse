@@ -4,7 +4,7 @@ require 'tempfile'
 describe GlobalSetting::EnvProvider do
   it "can detect keys from env" do
     ENV['DISCOURSE_BLA'] = '1'
-    GlobalSetting::EnvProvider.new.keys.should include(:bla)
+    expect(GlobalSetting::EnvProvider.new.keys).to include(:bla)
   end
 end
 describe GlobalSetting::FileProvider do
@@ -20,13 +20,13 @@ describe GlobalSetting::FileProvider do
 
     provider = GlobalSetting::FileProvider.from(f.path)
 
-    provider.lookup(:a,"").should == 1000
-    provider.lookup(:b,"").should == "10 # = 00"
-    provider.lookup(:c,"").should == "10 # = 00"
-    provider.lookup(:d,"bob").should == nil
-    provider.lookup(:e,"bob").should == "bob"
+    expect(provider.lookup(:a,"")).to eq 1000
+    expect(provider.lookup(:b,"")).to eq "10 # = 00"
+    expect(provider.lookup(:c,"")).to eq "10 # = 00"
+    expect(provider.lookup(:d,"bob")).to eq nil
+    expect(provider.lookup(:e,"bob")).to eq "bob"
 
-    provider.keys.sort.should == [:a, :b, :c, :d]
+    expect(provider.keys.sort).to eq [:a, :b, :c, :d]
 
     f.unlink
   end
@@ -38,7 +38,7 @@ describe GlobalSetting::FileProvider do
 
     provider = GlobalSetting::FileProvider.from(f.path)
 
-    provider.lookup(:a,"").should == 500
+    expect(provider.lookup(:a,"")).to eq 500
 
     f.unlink
   end

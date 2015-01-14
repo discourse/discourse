@@ -10,7 +10,7 @@
 }
 
 h1 .topic-statuses .topic-status i {
-  font-size: 20px;
+  font-size: 0.8em;
   vertical-align: middle;
 }
 
@@ -31,7 +31,7 @@ h1 .topic-statuses .topic-status i {
 
 .reply-to-tab {
   z-index: 400;
-  font-size: 13px;
+  font-size: 0.929em;
   float: right;
   margin: 1px 25px 0 0;
   color: scale-color($primary, $lightness: 50%);
@@ -40,9 +40,8 @@ h1 .topic-statuses .topic-status i {
 .gutter {
   .reply-new {
     .discourse-no-touch & {
-     opacity:0;
-     @include transition(opacity linear 0.4s);
-
+      opacity:0;
+      transition: opacity 0.7s ease-in-out;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -51,7 +50,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-      @include transition(opacity linear 0.4s);
+      transition: opacity 0.7s ease-in-out;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -82,7 +81,7 @@ nav.post-controls {
 
   span.badge-posts {
     margin-right: 5px;
-    @include transition(all linear 0.15s);
+    transition: all linear 0.15s;
 
   }
 
@@ -99,7 +98,6 @@ nav.post-controls {
   .show-replies {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
     padding: 8px 15px;
-    padding-bottom: 20px;
     margin-left: 0;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
@@ -135,13 +133,14 @@ nav.post-controls {
   }
 
   button {
-    font-size: 16px;
+    font-size: 1.143em;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
     border: none;
     margin-left: 3px;
-    @include transition(all linear 0.15s);
+    transition: all linear 0.15s;
+
          &:hover {
           background: scale-color-diff();
           color: $primary;
@@ -244,8 +243,8 @@ nav.post-controls {
   }
 
   .topic-avatar {
-     width: 45px;
-     padding-left: 15px;
+    padding-left: 15px;
+    padding-top: 0;
   }
 
   // bottom means "reply expansion" below a post
@@ -291,21 +290,13 @@ nav.post-controls {
   .topic-meta-data h5 {
     position: absolute;
     z-index: 1;
-    font-size: 13px;
+    font-size: 0.929em;
     a {
       font-weight: bold;
       color: scale-color($primary, $lightness: 30%);
     }
   }
   .arrow {color: scale-color($primary, $lightness: 50%);}
-}
-
-.bottom-round nav.post-controls .show-replies {
-  background: scale-color-diff();
-  margin-bottom: 0;
-  padding-bottom: 8px;
-  &:hover {background: scale-color-diff();
-  }
 }
 
 .post-action {
@@ -338,7 +329,7 @@ a.star {
     margin: 1px 0 2px 0;
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -348,7 +339,7 @@ a.star {
   }
 
   span.domain {
-    font-size: 10px;
+    font-size: 0.714em;
     color: scale-color($primary, $lightness: 50%);
   }
 
@@ -447,7 +438,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.286em;
         line-height: 52px;
       }
     }
@@ -464,7 +455,7 @@ a.star {
     outline: 0;
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-star {margin-right: 5px;}
+    .fa-bookmark.bookmarked { color: $tertiary; }
   }
 }
 
@@ -486,10 +477,6 @@ a.star {
     border-radius: 0;
     margin-top: 10px;
   }
-
-   .title {
-    font-size: 14px; line-height: 8px;
-   }
 }
 
 span.post-count {
@@ -514,11 +501,12 @@ video {
   max-height: 500px;
 }
 
-@keyframes fadein {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
 @-webkit-keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadein {
     from {opacity: 0;}
     to {opacity: 1;}
 }
@@ -528,8 +516,7 @@ video {
 
 .star, .badge-wrapper, i,  .topic-link:not(.loading) {
   -webkit-animation: fadein .7s;
-  animation-duration: .7s;
-  animation-name: fadein;
+  animation: fadein .7s;
 }
 
   .topic-statuses {
@@ -554,13 +541,6 @@ video {
     font-size: 1.6em;
     line-height: 1.3em;
   }
-
-  a.star {
-    margin: 0 7px 20px 2px;
-    font-size: 17px;
-    color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
-  }
-  a.star.starred {color: $danger !important;}
 
   .topic-statuses {
     margin-top: -2px;
@@ -648,7 +628,7 @@ a.mention {
 }
 
 .deleted-user-avatar {
-  font-size: 36px;
+  font-size: 2.571em;
 }
 
 .info-line {
@@ -665,16 +645,6 @@ blockquote {
   padding: 12px;
   a.mention {background: darken(scale-color-diff(), 10%);}
 }
-
-// we assume blockquotes have their own margins, so all blockquotes
-// will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
-}
-
 
 /* quotes with attribution */
 .quote {
@@ -708,7 +678,7 @@ blockquote > *:last-child {
 
   ul {margin: 0;}
   li {margin-bottom: 10px;}
-  i {font-size: 12px;}
+  i {font-size: 0.857em;}
 
   .reply-new {
     padding-left: 27px;
@@ -755,7 +725,6 @@ $topic-avatar-width: 45px;
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
-
   }
 }
 .topic-avatar {
@@ -808,8 +777,8 @@ $topic-avatar-width: 45px;
   border: 1px solid scale-color-diff();
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
-  span {font-size: 12px;}
-  .title {font-weight: bold; display: block; font-size: 14px;}
+  span {font-size: 0.857em;}
+  .title {font-weight: bold; display: block; font-size: 1em;}
 }
 .dropdown-menu a {
   display: block;
@@ -818,7 +787,7 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: 18px;
   color: $primary;
-  @include transition(all linear .15s);
+  transition: all linear .15s;
 
   & > div {
     margin-left: 26px;
@@ -844,7 +813,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 18px;
+  font-size: 1.286em;
 }
 
 .open > .dropdown-menu {
@@ -879,14 +848,14 @@ $topic-avatar-width: 45px;
     margin-top: 10px;
   }
   p {
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 25px;
+    font-size: 1.786em;
     color: $primary;
     margin-bottom: 5px;
     i {
@@ -974,7 +943,7 @@ a.attachment:before {
     position: absolute;
     left: 767px;
     color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
-    font: 90px/1 FontAwesome;
+    font: 6.429em/1 FontAwesome;
     content: "\f014";
     z-index: -5;
 }
@@ -993,7 +962,7 @@ a.attachment:before {
  .post-info  {
    display: inline-block;
    float: right;
-   font-size: 13px;
+   font-size: 0.929em;
    margin-top: 1px;
    a {color: scale-color($primary, $lightness: 50%);}
  }
@@ -1013,12 +982,12 @@ span.highlighted {
   position: absolute;
   right: -2px;
   top: 13px;
-  font-size: 8px;
+  font-size: 0.571em;
 }
 
 .read-state.read {
   opacity: 0;
-  @include transition(opacity ease-out 1s);
+  transition: opacity ease-out 1s;
 }
 
 

@@ -11,10 +11,10 @@
 
       {{outlet "modalBody"}}
 
-      {{#each errors}}
+      {{#each error in errors}}
         <div class="alert alert-error">
           <button class="close" data-dismiss="alert">×</button>
-          {{this}}
+          {{error}}
         </div>
       {{/each}}
 

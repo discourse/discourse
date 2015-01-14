@@ -1,11 +1,3 @@
-/**
-  Handles a gap between posts with a click to load more
-
-  @class PostGapComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.Component.extend({
   classNameBindings: [':gap', 'gap::hidden'],
 

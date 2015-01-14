@@ -19,10 +19,10 @@ describe TopicStatusUpdate do
 
     TopicStatusUpdate.new(post.topic, admin).update!("autoclosed", true)
 
-    post.topic.posts.count.should == 2
+    expect(post.topic.posts.count).to eq(2)
 
     tu = TopicUser.find_by(user_id: user.id)
-    tu.last_read_post_number.should == 2
+    expect(tu.last_read_post_number).to eq(2)
   end
 
   it "adds an autoclosed message" do
@@ -30,7 +30,7 @@ describe TopicStatusUpdate do
 
     TopicStatusUpdate.new(topic, admin).update!("autoclosed", true)
 
-    topic.posts.last.raw.should == I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0)
+    expect(topic.posts.last.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0))
   end
 
   it "adds an autoclosed message based on last post" do
@@ -39,7 +39,7 @@ describe TopicStatusUpdate do
 
     TopicStatusUpdate.new(topic, admin).update!("autoclosed", true)
 
-    topic.posts.last.raw.should == I18n.t("topic_statuses.autoclosed_enabled_lastpost_minutes", count: 0)
+    expect(topic.posts.last.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_lastpost_minutes", count: 0))
   end
 
 end

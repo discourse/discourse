@@ -15,13 +15,13 @@
     float: right;
     margin-left: 8px;
     margin-bottom: 10px;
-    font-size: 16px;
+    font-size: 1.143em;
     font-weight: normal;
   }
 
   a.badge-category {
     padding: 3px 12px;
-    font-size: 16px;
+    font-size: 1.143em;
 
     &.category-dropdown-button {
       height: 24px;
@@ -45,7 +45,7 @@
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
+  a.title:visited:not(.badge-notification), .fa-bookmark {color: scale-color($primary, $lightness: 35%);}
   th,
   td {
     padding: 12px 5px;
@@ -143,10 +143,28 @@
   .posts {
     width: 65px;
   }
+
+  .post-actions {
+    clear: both;
+    width: auto;
+    color: scale-color($primary, $lightness: 50%);
+    text-align: left;
+    font-size: 12px;
+    margin-top: 5px;
+    .fa {
+      margin-right: 2px;
+    }
+    a {
+      font-size: 11px;
+      color: scale-color($primary, $lightness: 50%);
+      margin-right: 3px;
+      line-height: 20px;
+    }
+  }
   .activity {
     width: 60px;
     &:lang(zh_CN) {
-      width: 70px;
+      width: 80px;
     }
     span {
       cursor: pointer;
@@ -168,7 +186,7 @@
 .topic-list.categories {
   a.title {
     color: $tertiary;
-    font-size: 13px;
+    font-size: 0.929em;
   }
   a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
 
@@ -183,19 +201,6 @@
       background-color: $secondary;
       }
   }
-  th .toggle-admin {
-    position: absolute;
-    padding: 3px 8px;
-    font-size: 12px;
-    right: -35px;
-    top: 4px;
-  }
-  th.latest, td.latest {
-    padding-left: 12px;
-  }
-  th.num {
-    width: 45px;
-  }
   th.stats {
     width: 90px;
   }
@@ -204,7 +209,7 @@
     padding: 8px;
   }
   .last-user-info {
-    font-size: 12px;
+    font-size: 0.857em;
   }
   .has-description {
     td.category {
@@ -212,12 +217,14 @@
     }
   }
   .category{
-    position: relative;
     width: 45%;
 
     h3 {
       display: inline-block;
-      font-size: 18px;
+      font-size: 1.286em;
+      i {
+        margin-right: 5px;
+      }
       a[href] {
         color: $primary;
       }
@@ -225,35 +232,26 @@
     .subcategories {
       margin-top: 10px;
     }
-    .featured-users {
-      float: right;
-      margin-right: 13px;
-    }
     .category-description {
       margin-top: 10px;
     }
     .clear-badge {
       color: $primary;
     }
-    .badge-category.bigger {
-      padding: 6px 10px;
-      font-size: 14px;
-    }
   }
 
   .featured-topic {
     margin: 10px 0 0;
-    font-size: 13px;
     /* topic status glyphs */
     i {
       color: scale-color($primary, $lightness: 50%) !important;
-      font-size: 13px;
+      font-size: 0.929em;
     }
     a.last-posted-at, a.last-posted-at:visited {
       color: scale-color($primary, $lightness: 50%);
     }
     .badge {
-      font-size: 10px;
+      font-size: 0.714em;
       top: -1px;
     }
   }
@@ -312,6 +310,7 @@ button.dismiss-read {
     font-size: 1.5em;
   }
 }
+
 .category-logo {
   max-height: 150px;
   float: left;
@@ -326,7 +325,7 @@ and (max-width : 850px) {
 
   .nav-pills {
     > li > a {
-      font-size: 14px;
+      font-size: 1em;
       padding: 5px 10px ;
       }
   }
@@ -335,7 +334,7 @@ and (max-width : 850px) {
     padding: 0 5px;
 
     .btn {
-        font-size: 14px
+        font-size: 1em
       }
 
     .category-dropdown-menu {
@@ -343,7 +342,7 @@ and (max-width : 850px) {
       }
 
     a.badge-category {
-        font-size: 14px;
+        font-size: 1em;
       }
 
   }
@@ -365,14 +364,14 @@ and (max-width : 850px) {
      }
    th, td {
       padding: 12px 2px;
-      font-size: 13px;
+      font-size: 0.929em;
      }
     .star {
       padding: 12px 5px;
       width: auto;
       }
     .main-link {
-      font-size: 15px;
+      font-size: 1.071em;
       padding: 12px 8px 12px 0px;
       }
 

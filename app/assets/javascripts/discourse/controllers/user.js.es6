@@ -51,6 +51,10 @@ export default ObjectController.extend(CanCheckEmails, {
       Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
+    },
+
+    exportUserArchive: function() {
+      Discourse.ExportCsv.exportUserArchive();
     }
   }
 });

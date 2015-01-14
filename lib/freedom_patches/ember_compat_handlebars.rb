@@ -4,10 +4,6 @@
 module Barber
   class EmberCompatPrecompiler < Barber::Precompiler
 
-    def self.call(template)
-      "Handlebars.template(#{compile(template)})"
-    end
-
     def sources
       [handlebars, precompiler]
     end
@@ -18,7 +14,7 @@ module Barber
       #{File.read(Rails.root + "app/assets/javascripts/discourse/lib/ember_compat_handlebars.js")}
       var Barber = {
         precompile: function(string) {
-          return Discourse.EmberCompatHandlebars.precompile(string).toString();
+          return Discourse.EmberCompatHandlebars.precompile(string,false).toString();
         }
       };
 END

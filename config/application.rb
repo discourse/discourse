@@ -167,3 +167,11 @@ module Discourse
 
   end
 end
+
+if defined?(PhusionPassenger)
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    if forked
+      Discourse.after_fork
+    end
+  end
+end

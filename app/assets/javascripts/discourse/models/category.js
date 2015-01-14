@@ -58,6 +58,7 @@ Discourse.Category = Discourse.Model.extend({
     return Discourse.ajax(url, {
       data: {
         name: this.get('name'),
+        slug: this.get('slug'),
         color: this.get('color'),
         text_color: this.get('text_color'),
         secure: this.get('secure'),

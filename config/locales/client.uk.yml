@@ -35,7 +35,6 @@ uk:
           other: "днів тому: %{count}"
     share:
       topic: 'поширити посилання на цю тему'
-      post: 'поширити посилання на допис #%{postNumber}'
       close: 'сховати'
       twitter: 'поширити це посилання в Twitter'
       facebook: 'поширити це посилання в Facebook'
@@ -174,7 +173,6 @@ uk:
       profile: "Профіль"
       mute: "Mute"
       edit: "Редагувати налаштування"
-      download_archive: "звантажити архів з моїми дописами"
       private_message: "Приватне повідомлення"
       private_messages: "Повідомлення"
       activity_stream: "Активність"
@@ -232,7 +230,6 @@ uk:
         error: "При зміні адреси електронної пошти сталася помилка. Можливо, ця адреса вже використовується?"
         success: "Ми надсілали листа на цю скриньку. Будь ласка, виконайте інструкції щодо підтердження."
       change_avatar:
-        title: "Зміна аватарки"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, враховуючи"
         uploaded_avatar: "Інше зображення"
         uploaded_avatar_empty: "Додати інше зображення"
@@ -306,8 +303,6 @@ uk:
         title: "Остання IP-адреса"
       registration_ip_address:
         title: "IP Адреса Реєстрації"
-      avatar:
-        title: "Аватарка"
       title:
         title: "Назва"
       filters:
@@ -487,11 +482,6 @@ uk:
     go_back: 'повернутися назад'
     not_logged_in_user: 'сторінка користувача з підсумком поточної діяльності та налаштуваннями'
     current_user: 'перейти до Вашої сторінки користувача'
-    starred:
-      title: 'Позначити зірочкою'
-      help:
-        star: 'додати цю тему до Вашого списку позначених зірочкою'
-        unstar: 'видалити цю тему із Вашого списку позначених зірочкою'
     topics:
       bulk:
         reset_read: "Reset Read"
@@ -517,7 +507,6 @@ uk:
         read: "Більше немає прочитаних тем."
         new: "Більше немає нових тем."
         unread: "Більше немає непрочитаних тем."
-        starred: "Більше немає тем, позначених зірочкою."
         category: "Більше немає тем в категорії {{category}}."
         top: "There are no more top topics."
     topic:
@@ -841,7 +830,6 @@ uk:
         title: "Не закріплені"
       pinned:
         title: "Закріплені"
-        help: "цю тему закріплено; вона буде відображатися вгорі своєї категорії"
       archived:
         help: "цю тему заархівовано; вона заморожена і її не можна змінити"
     posts: "Дописи"
@@ -865,9 +853,6 @@ uk:
       hot:
         title: "Гарячі"
         help: "добірка найгарячіших тем"
-      starred:
-        title: "Із зірочкою"
-        help: "теми, які Ви позначили зірочкою"
       read:
         title: "Прочитані"
         help: "теми, які Ви прочитали, у порядку, в якому Ви їх читали востаннє"
@@ -992,7 +977,6 @@ uk:
         edit: "Редагувати групи"
         refresh: "Оновити"
         new: "Новий"
-        selector_placeholder: "додати користувачів"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
@@ -1145,7 +1129,6 @@ uk:
           do_nothing: "do nothing"
         staff_actions:
           title: "Дії персоналу"
-          instructions: "Натисніть ім'я користувача або дію, щоб відфільтрувати список. Натисніть аватарку, щоб перейти до сторінки користувача."
           clear_filters: "Показати все"
           staff_user: "Член персоналу"
           target_user: "Target User"
@@ -1350,9 +1333,7 @@ uk:
         search: '<b>/</b> Пошук'
       actions:
         title: 'Дії'
-        star: '<b>f</b> Позначити тему зірочкою'
         share_post: '<b>s</b> Поширити допис'
-        reply_topic: '<b>shift r</b> Відповісти на тему'
         reply_post: '<b>r</b> Відповісти на допис'
         quote_post: '<b>q</b> Цитувати допис'
         like: '<b>l</b> Вподобати допис'

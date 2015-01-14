@@ -531,7 +531,7 @@ class User < ActiveRecord::Base
   end
 
   def self.count_by_signup_date(start_date, end_date)
-    where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+    where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
 
@@ -638,15 +638,9 @@ class User < ActiveRecord::Base
     return if @import_mode
 
     avatar = user_avatar || create_user_avatar
-    gravatar_downloaded = false
 
     if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
-      avatar.update_gravatar!
-      gravatar_downloaded = avatar.gravatar_upload_id
-    end
-
-    if !self.uploaded_avatar_id && gravatar_downloaded
-      self.update_column(:uploaded_avatar_id, avatar.gravatar_upload_id)
+      Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
   end
 
@@ -807,6 +801,38 @@ class User < ActiveRecord::Base
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end
+  end
+
+  def number_of_deleted_posts
+    Post.with_deleted
+        .where(user_id: self.id)
+        .where(user_deleted: false)
+        .where.not(deleted_by_id: self.id)
+        .where.not(deleted_at: nil)
+        .count
+  end
+
+  def number_of_flagged_posts
+    Post.with_deleted
+        .where(user_id: self.id)
+        .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
+                             .where(disagreed_at: nil)
+                             .select(:post_id))
+        .count
+  end
+
+  def number_of_flags_given
+    PostAction.where(user_id: self.id)
+              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
+              .count
+  end
+
+  def number_of_warnings
+    self.warnings.count
+  end
+
+  def number_of_suspensions
+    UserHistory.for(self, :suspend_user).count
   end
 
   private

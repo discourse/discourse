@@ -10,7 +10,7 @@ class Group < ActiveRecord::Base
   after_save :destroy_deletions
 
   validate :name_format_validator
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: false
 
   AUTO_GROUPS = {
     :everyone => 0,

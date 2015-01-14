@@ -1,6 +1,4 @@
-<%- unless SiteCustomization.override_default_style(session[:preview_style]) %>
-  <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
-<%- end %>
+<%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>

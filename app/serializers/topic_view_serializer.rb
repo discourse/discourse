@@ -29,7 +29,6 @@ class TopicViewSerializer < ApplicationSerializer
   attributes :draft,
              :draft_key,
              :draft_sequence,
-             :starred,
              :posted,
              :unpinned,
              :pinned_globally,
@@ -43,7 +42,8 @@ class TopicViewSerializer < ApplicationSerializer
              :actions_summary,
              :expandable_first_post,
              :is_warning,
-             :chunk_size
+             :chunk_size,
+             :bookmarked
 
   # Define a delegator for each attribute of the topic we want
   attributes(*topic_attributes)
@@ -145,11 +145,6 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic_user.present?
   end
 
-  def starred
-    object.topic_user.starred?
-  end
-  alias_method :include_starred?, :has_topic_user?
-
   def highest_post_number
     object.highest_post_number
   end
@@ -207,6 +202,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_expandable_first_post?
     object.topic.expandable_first_post?
+  end
+
+  def bookmarked
+    object.topic_user.try(:bookmarked)
   end
 
 end

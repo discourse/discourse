@@ -20,9 +20,19 @@ class ListableTopicSerializer < BasicTopicSerializer
              :closed,
              :archived,
              :is_warning,
-             :notification_level
+             :notification_level,
+             :bookmarked,
+             :liked
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
+  def liked
+    object.user_data && object.user_data.liked
+  end
+
+  def bookmarked
+    object.user_data && object.user_data.bookmarked
+  end
 
   def include_last_poster?
     object.include_last_poster

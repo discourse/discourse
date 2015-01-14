@@ -20,7 +20,7 @@
   padding-top: 14px;
   margin-bottom: 10px;
   .star {
-    font-size: 20px;
+    font-size: 1.429em;
     margin-top: 6px;
     margin-right: 6px;
   }
@@ -74,7 +74,7 @@ a.reply-new {
     background: $secondary;
     padding: 1.5px 3px;
     border-radius: 20px;
-    @include transition(all linear .15s);
+    transition: all linear .15s;
     margin-left: -20px;
   }
 }
@@ -91,7 +91,7 @@ a:hover.reply-new {
   width: 60%;
   margin-left: auto;
   margin-right: auto;
-  font-size: 24px;
+  font-size: 1.714em;
   text-align: center;
   line-height: 1.1em;
 
@@ -140,7 +140,7 @@ a:hover.reply-new {
       display: block;
       margin-top: 2px;
       margin-bottom: 2px;
-      font-size: 18px;
+      font-size: 1.286em;
     }
   }
   .jump-form {
@@ -150,7 +150,7 @@ a:hover.reply-new {
       height: 20px;
       text-align: center;
       margin-bottom: 0;
-      font-size: 16px;
+      font-size: 1.143em;
     }
     button.btn {
       float: right;
@@ -195,7 +195,7 @@ a:hover.reply-new {
   }
   h4 {
     display: inline;
-    font-size: 18px;
+    font-size: 1.286em;
     line-height: 15px;
   }
   .bg {
@@ -205,7 +205,7 @@ a:hover.reply-new {
     width: 0;
     border-right: 1px solid  scale-color-diff();
     background-color:  dark-light-diff($success, $secondary, 60%, -35%);
-    @include transition(width .75s);
+    transition: width .75s;
 
   }
 }
@@ -236,7 +236,7 @@ a:hover.reply-new {
   bottom: 0;
   position: fixed;
   width: 100%;
-  font-size: 15px;
+  font-size: 1.071em;
   z-index: 495
 }
 

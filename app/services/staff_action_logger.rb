@@ -79,7 +79,7 @@ class StaffActionLogger
     }))
   end
 
-  SITE_CUSTOMIZATION_LOGGED_ATTRS = ['stylesheet', 'header', 'position', 'enabled', 'key', 'override_default_style']
+  SITE_CUSTOMIZATION_LOGGED_ATTRS = ['stylesheet', 'header', 'position', 'enabled', 'key']
 
   def log_site_customization_change(old_record, site_customization_params, opts={})
     raise Discourse::InvalidParameters.new('site_customization_params is nil') unless site_customization_params
@@ -143,18 +143,12 @@ class StaffActionLogger
     }))
   end
 
-  def log_show_emails(users)
-    values = []
-
-    users.each do |user|
-      values << "(#{@admin.id}, #{UserHistory.actions[:check_email]}, #{user.id}, current_timestamp, current_timestamp)"
-    end
-
-    # bulk insert
-    UserHistory.exec_sql <<-SQL
-      INSERT INTO user_histories (acting_user_id, action, target_user_id, created_at, updated_at)
-      VALUES #{values.join(",")}
-    SQL
+  def log_show_emails(users, opts={})
+    return if users.blank?
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:check_email],
+      details: users.map { |u| "[#{u.id}] #{u.username}"}.join("\n")
+    }))
   end
 
   def log_impersonate(user, opts={})

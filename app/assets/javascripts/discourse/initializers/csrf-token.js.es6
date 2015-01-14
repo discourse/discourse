@@ -1,17 +1,17 @@
-/**
-  Append our CSRF token to AJAX requests when necessary.
-**/
+//  Append our CSRF token to AJAX requests when necessary.
 export default {
   name: "csrf-token",
-  initialize: function() {
-    var session = Discourse.Session;
+  after: 'inject-objects',
+  initialize: function(container) {
+
+    var session = container.lookup('session:main');
 
     // Add a CSRF token to all AJAX requests
-    session.currentProp('csrfToken', $('meta[name=csrf-token]').attr('content'));
+    session.set('csrfToken', $('meta[name=csrf-token]').attr('content'));
 
     $.ajaxPrefilter(function(options, originalOptions, xhr) {
       if (!options.crossDomain) {
-        xhr.setRequestHeader('X-CSRF-Token', session.currentProp('csrfToken'));
+        xhr.setRequestHeader('X-CSRF-Token', session.get('csrfToken'));
       }
     });
   }

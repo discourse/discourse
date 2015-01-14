@@ -16,6 +16,8 @@ Discourse.Lightbox = {
         $e.magnificPopup({
           type: "image",
           closeOnContentClick: false,
+          removalDelay: 300,
+          mainClass: "mfp-zoom-in",
 
           callbacks: {
             open: function() {

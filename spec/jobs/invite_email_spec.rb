@@ -6,7 +6,7 @@ describe Jobs::InviteEmail do
   context '.execute' do
 
     it 'raises an error when the invite_id is missing' do
-      lambda { Jobs::InviteEmail.new.execute({}) }.should raise_error(Discourse::InvalidParameters)
+      expect { Jobs::InviteEmail.new.execute({}) }.to raise_error(Discourse::InvalidParameters)
     end
 
     context 'with an invite id' do

@@ -35,8 +35,8 @@ Spork.prefork do
   # let's not run seed_fu every test
   SeedFu.quiet = true if SeedFu.respond_to? :quiet
 
-  SiteSetting.enable_system_avatars = false
   SiteSetting.automatically_download_gravatars = false
+
   SeedFu.seed
 
   RSpec.configure do |config|
@@ -90,7 +90,6 @@ Spork.prefork do
       end
 
       # very expensive IO operations
-      SiteSetting.enable_system_avatars = false
       SiteSetting.automatically_download_gravatars = false
 
       I18n.locale = :en
@@ -111,8 +110,11 @@ Spork.prefork do
   end
 
   def freeze_time(now=Time.now)
-    DateTime.stubs(:now).returns(DateTime.parse(now.to_s))
-    Time.stubs(:now).returns(Time.parse(now.to_s))
+    datetime = DateTime.parse(now.to_s)
+    time = Time.parse(now.to_s)
+
+    DateTime.stubs(:now).returns(datetime)
+    Time.stubs(:now).returns(time)
   end
 
   def file_from_fixtures(filename)

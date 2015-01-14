@@ -172,7 +172,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     isTransitioning = false;
 
     var topic = this.modelFor('topic');
-    Discourse.Session.currentProp('lastTopicIdViewed', parseInt(topic.get('id'), 10));
+    this.session.set('lastTopicIdViewed', parseInt(topic.get('id'), 10));
     this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 

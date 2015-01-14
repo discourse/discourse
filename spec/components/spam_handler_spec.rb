@@ -19,7 +19,7 @@ describe SpamHandler do
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0])
 
       Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[1])
-      -> { Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0]) }.should raise_error(ActiveRecord::RecordInvalid)
+      expect { Fabricate(:user, ip_address: "42.42.42.42", trust_level: TrustLevel[0]) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "doesn't limit registrations since there is a TL2+ user with that IP" do

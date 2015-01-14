@@ -1185,6 +1185,16 @@
           res = this.dialect.inline[ m[1] ].call(
                     this,
                     text.substr( m.index ), m, previous_nodes || [] );
+
+          // If no inline code executed, fallback
+          if (!res) {
+            var fn = this.dialect.inline[m[1][0]];
+            if (fn) {
+              res = fn.call(
+                    this,
+                    text.substr( m.index ), m, previous_nodes || [] );
+            }
+          }
         }
         // Default for now to make dev easier. just slurp special and output it.
         res = res || [ m[1].length, m[1] ];

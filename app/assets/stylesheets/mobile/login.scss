@@ -2,7 +2,7 @@
 
 .btn-social {
   width: 250px;
-  font-size: 16px;
+  font-size: 1.143em;
 }
 
 #login-buttons {
@@ -17,7 +17,7 @@
     color: scale-color($primary, $lightness: 35%);
   }
   label { float: left; display: block; }
-  textarea, input, select {font-size: 16px; clear: left; margin-top: 0; }
+  textarea, input, select {font-size: 1.143em; clear: left; margin-top: 0; }
   td { padding: 4px; }
 }
 

@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe UserStat do
 
-  it { should belong_to :user }
+  it { is_expected.to belong_to :user }
 
   it "is created automatically when a user is created" do
     user = Fabricate(:evil_trout)
-    user.user_stat.should be_present
+    expect(user.user_stat).to be_present
 
     # It populates the `new_since` field by default
-    user.user_stat.new_since.should be_present
+    expect(user.user_stat.new_since).to be_present
   end
 
   context '#update_view_counts' do
@@ -20,7 +20,7 @@ describe UserStat do
     context 'topics_entered' do
       context 'without any views' do
         it "doesn't increase the user's topics_entered" do
-          lambda { UserStat.update_view_counts; stat.reload }.should_not change(stat, :topics_entered)
+          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :topics_entered)
         end
       end
 
@@ -35,14 +35,14 @@ describe UserStat do
         it "adds one to the topics entered" do
           UserStat.update_view_counts
           stat.reload
-          stat.topics_entered.should == 1
+          expect(stat.topics_entered).to eq(1)
         end
 
         it "won't record a second view as a different topic" do
           TopicViewItem.add(topic.id, '127.0.0.1', user.id)
           UserStat.update_view_counts
           stat.reload
-          stat.topics_entered.should == 1
+          expect(stat.topics_entered).to eq(1)
         end
 
       end
@@ -51,7 +51,7 @@ describe UserStat do
     context 'posts_read_count' do
       context 'without any post timings' do
         it "doesn't increase the user's posts_read_count" do
-          lambda { UserStat.update_view_counts; stat.reload }.should_not change(stat, :posts_read_count)
+          expect { UserStat.update_view_counts; stat.reload }.not_to change(stat, :posts_read_count)
         end
       end
 
@@ -68,7 +68,7 @@ describe UserStat do
         it "increases posts_read_count" do
           UserStat.update_view_counts
           stat.reload
-          stat.posts_read_count.should == 1
+          expect(stat.posts_read_count).to eq(1)
         end
       end
     end
@@ -83,14 +83,14 @@ describe UserStat do
       stat.expects(:last_seen_cached).returns(nil)
       stat.update_time_read!
       stat.reload
-      stat.time_read.should == 0
+      expect(stat.time_read).to eq(0)
     end
 
     it 'makes a change if time read is below threshold' do
       stat.expects(:last_seen_cached).returns(Time.now - 10)
       stat.update_time_read!
       stat.reload
-      stat.time_read.should == 10
+      expect(stat.time_read).to eq(10)
     end
 
     it 'makes no change if time read is above threshold' do
@@ -98,7 +98,7 @@ describe UserStat do
       stat.expects(:last_seen_cached).returns(t)
       stat.update_time_read!
       stat.reload
-      stat.time_read.should == 0
+      expect(stat.time_read).to eq(0)
     end
 
   end

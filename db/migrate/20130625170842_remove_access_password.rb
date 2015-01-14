@@ -5,7 +5,6 @@ class RemoveAccessPassword < ActiveRecord::Migration
       execute "DELETE FROM site_settings where name='access_password'"
       SiteSetting.login_required = true
       SiteSetting.must_approve_users = true
-      AdminDashboardData.report_access_password_removal rescue nil
     end
   end
 

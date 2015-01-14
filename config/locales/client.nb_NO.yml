@@ -84,7 +84,6 @@ nb_NO:
           other: "%{count} dager siden"
     share:
       topic: 'del en lenke til dette emnet'
-      post: 'del en lenke til innlegg #%{postNumber}'
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
@@ -259,7 +258,6 @@ nb_NO:
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
-      download_archive: "last ned arkiv av mine innlegg"
       new_private_message: "Ny Privat Melding"
       private_message: "Privat melding"
       private_messages: "Meldinger"
@@ -328,10 +326,8 @@ nb_NO:
         error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
         success: "Vi har sendt en e-post til den adressen. Vennligst følg meldingens instruksjoner for bekreftelse."
       change_avatar:
-        title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         refresh_gravatar_title: "Oppdater din Gravatar"
-        letter_based: "Systemtildelt avatar"
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
@@ -345,7 +341,7 @@ nb_NO:
         instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
       email:
         title: "E-post"
-        instructions: "Aldri vist i offentlighet"
+        instructions: "Blir aldri vist offentlig"
         ok: "Vi sender deg en email for å bekrefte"
         invalid: "Vennligst gi en gyldig email-addresse"
         authenticated: "Din email har blitt autentisert av {{provider}}"
@@ -441,7 +437,6 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
           uploading: "Laster opp..."
-          success: "Filen har blitt lastet opp. Du vil bli varslet om kort tid om fremgangen."
           error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
@@ -449,13 +444,10 @@ nb_NO:
         common: "Det passordet er for vanlig."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
-      associated_accounts: "Tilknyttede kontoer"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
         title: "Registreringens IP-adresse."
-      avatar:
-        title: "Profilbilde"
       title:
         title: "Tittel"
       filters:
@@ -694,11 +686,6 @@ nb_NO:
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
     current_user: 'go til din brukerside'
-    starred:
-      title: 'Favoritt'
-      help:
-        star: 'legg dette emnet i favorittlisten din'
-        unstar: 'fjern dette emnet fra favorittlisten din'
     topics:
       bulk:
         reset_read: "Nullstill lest"
@@ -718,7 +705,6 @@ nb_NO:
           one: "Du har valgt <b>1</b> emne."
           other: "Du har valgt <b>{{count}}</b> emner."
       none:
-        starred: "Du har ingen favorittemner."
         unread: "Du har ingen uleste emner å lese."
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
@@ -730,7 +716,6 @@ nb_NO:
         educate:
           new: '<p>Dine nye emner vises her.</p><p>Som standard anses emner som nye, og vil ha indikatoren <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> hvis emnet ble opprettet de siste 2 dagene</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
           unread: '<p>Dine uleste emner vises her.</p><p>Som standard anses emner som uleste, og vil vise antall uleste <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du eksplisitt har satt emnet som Sporet eller Fulgt via varslingskontrollene under hvert emne.</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
-          starred: '<p>Dine favorittemner vises her.</p><p>For å legge til eller fjerne favoritter, bruk følgende:</p><ul><li><i class="fa fa-star"></i> ved siden av emnets tittel</li><li>Favorittknappen under hvert emne</li></ul>'
       bottom:
         latest: "Det er ikke noen siste emner igjen å lese."
         hot: "Det er ikke noen populære emner igjen å lese."
@@ -738,7 +723,6 @@ nb_NO:
         read: "Det er ikke noen leste emner igjen å lese."
         new: "Det er ikke noen nye emner igjen å lese."
         unread: "Det er ikke noen uleste emner igjen å lese."
-        starred: "Det er ingen favorittemner igjen å lese."
         category: "Det er ikke noen {{category}} emner igjen."
         top: "Det er ingen flere populære emner."
     topic:
@@ -1229,13 +1213,11 @@ nb_NO:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       unpinned:
         title: "Løsgjort"
-        help: "Dette emnet er ikke lenger fastsatt; det vil vises i standard rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
         help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
         title: "Fastsatt"
-        help: "dette emnet er fastsatt; det vil vises på toppen av sin kategori"
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
@@ -1276,9 +1258,6 @@ nb_NO:
       hot:
         title: "Populære"
         help: "et utvalg av de mest populære emnene"
-      starred:
-        title: "Favoritter"
-        help: "emner i dine favoritter"
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du har lest dem"
@@ -1449,7 +1428,6 @@ nb_NO:
         edit: "Rediger Grupper"
         refresh: "Last inn på nytt"
         new: "Ny"
-        selector_placeholder: "legg til brukere"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
@@ -1523,9 +1501,14 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
-        success: "Eksport igangsatt; du vil motta en prosessrapport om kort tid."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
         button_text: "Eksporter"
+        button_title:
+          user: "Eksporter full medlemsliste i CSV format."
+          staff_action: "Eksporter full handligslogg i CSV format."
+          screened_email: "Eksporter komplett liste over filtrerte epostadresser i CSV format."
+          screened_ip: "Eksporter komplett liste over filtrerte IP-addresser i CSV format."
+          screened_url: "Eksporter komplett liste over filtrerte URL'er i CSV format."
       customize:
         title: "Tilpasse"
         long_title: "Nettstedstilpasninger"
@@ -1649,7 +1632,6 @@ nb_NO:
           do_nothing: "ikke gjør noe"
         staff_actions:
           title: "Personalhandlinger"
-          instructions: "Trykk på brukernavn og handlinger for å filtrere. Trykk på profilbilder for å gå til brukersider."
           clear_filters: "Vis alt"
           staff_user: "Personale"
           target_user: "Målbruker"
@@ -1876,7 +1858,6 @@ nb_NO:
           external_username: "Brukernavn"
           external_name: "Navn"
           external_email: "E-post"
-          external_avatar_url: "URL til profilbilde"
       user_fields:
         title: "Brukerfelter"
         help: "Legg til felt som dine brukere kan fylle ut."
@@ -2006,7 +1987,6 @@ nb_NO:
         latest: '<b>g</b>, <b>l</b> Siste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ules'
-        starred: '<b>g</b>, <b>f</b> Favoritter'
         categories: '<b>g</b>, <b>c</b> Kategorier'
         top: '<b>g</b>, <b>t</b> Topp'
       navigation:
@@ -2015,7 +1995,6 @@ nb_NO:
         back: '<b>u</b> Tilbake'
         up_down: '<b>k</b>/<b>j</b> Flytt markering &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Åpne valgt emne'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Neste/forrige seksjon'
       application:
         title: 'Applikasjon'
         create: '<b>c</b> Opprett nytt emne'
@@ -2029,12 +2008,8 @@ nb_NO:
         dismiss_topics: '<b>x</b>, <b>t</b> Avvis Emner'
       actions:
         title: 'Handlinger'
-        star: '<b>f</b> Legg emne i favoritter'
-        pin_unpin_topic: '<b>shift p</b> Fastsett/Løsgjør emne'
-        share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del innlegg'
         reply_as_new_topic: '<b>t</b> Svar med lenket emne'
-        reply_topic: '<b>shift r</b> Svar på emne'
         reply_post: '<b>r</b> Svar på innlegg'
         quote_post: '<b>q</b> Siter innlegg'
         like: '<b>l</b> Lik innlegg'

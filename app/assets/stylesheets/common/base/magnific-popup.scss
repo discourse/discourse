@@ -287,7 +287,7 @@ button {
   color: $controls-color;
 
   font-style: normal;
-  font-size: 28px;
+  font-size: 2em;
   font-family: Arial, Baskerville, monospace;
 
   &:hover,
@@ -324,7 +324,7 @@ button {
   top: 0;
   right: 0;
   color: $controls-text-color;
-  font-size: 12px;
+  font-size: 0.857em;
   line-height: 18px;
 }
 
@@ -489,7 +489,7 @@ button {
     small {
       color: $caption-subtitle-color;
       display: block;
-      font-size: 12px;
+      font-size: 0.857em;
       line-height: 14px;
     }
     figure {
@@ -599,16 +599,16 @@ button {
 // Scale navigation arrows and reduce padding from sides
 @media all and (max-width: 900px) {
   .mfp-arrow {
-    -webkit-transform: scale(0.75);
     transform: scale(0.75);
+    -webkit-transform: scale(0.75);
   }
   .mfp-arrow-left {
-    -webkit-transform-origin: 0;
     transform-origin: 0;
+    -webkit-transform-origin: 0;
   }
   .mfp-arrow-right {
-    -webkit-transform-origin: 100%;
     transform-origin: 100%;
+    -webkit-transform-origin: 100%;
   }
   .mfp-container {
     padding-left: $popup-padding-left-mobile;
@@ -646,6 +646,49 @@ button {
   }
 }
 
+
+.mfp-zoom-in {
+  /* start state */
+  .mfp-content {
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+    -webkit-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+            transform: scale(0.8);
+  }
+
+  &.mfp-bg {
+    opacity: 0;
+    transition: all 0.3s ease-out;
+  }
+
+  /* animate in */
+  &.mfp-ready {
+    .mfp-content {
+      opacity: 1;
+      -webkit-transform: scale(1);
+          -ms-transform: scale(1);
+              transform: scale(1);
+    }
+    &.mfp-bg {
+      opacity: 0.8;
+    }
+  }
+
+  /* animate out */
+  &.mfp-removing {
+
+    .mfp-content {
+      -webkit-transform: scale(0.8);
+          -ms-transform: scale(0.8);
+              transform: scale(0.8);
+      opacity: 0;
+    }
+    &.mfp-bg {
+      opacity: 0;
+    }
+  }
+}
 
 .mfp-force-scrollbars {
   &.mfp-wrap {

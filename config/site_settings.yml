@@ -21,10 +21,11 @@ required:
   site_description:
     default: ''
   contact_email:
+    client: true
     default: ''
     type: email
   notification_email:
-    default: 'info@unconfigured.discourse.org'
+    default: 'noreply@unconfigured.discourse.org'
     type: email
   site_contact_username:
     default: ''
@@ -82,7 +83,7 @@ basic:
     client: true
     refresh: true
     type: list
-    default: 'latest|new|unread|starred|top|categories'
+    default: 'latest|new|unread|top|categories'
     choices:
      - latest
      - new
@@ -151,10 +152,6 @@ basic:
   fixed_category_positions:
     client: true
     default: false
-  topics_per_page:
-    default: 30
-    min: 1
-    client: true
   show_subcategory_list:
     default: false
     client: true
@@ -196,10 +193,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   twitter_consumer_secret:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   enable_facebook_logins:
     client: true
     default: false
@@ -208,16 +205,16 @@ login:
     regex: "^\\d+$"
   facebook_app_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_github_logins:
     client: true
     default: false
   github_client_id:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   github_client_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_sso:
     client: true
     default: false
@@ -393,6 +390,13 @@ posting:
     default: ''
     refresh: true
     type: list
+  enable_emoji:
+    default: true
+    client: true
+  emoji_set:
+    default: 'emoji_one'
+    client: true
+    enum: 'EmojiSetSiteSetting'
 
 email:
   email_time_window_mins:
@@ -407,7 +411,9 @@ email:
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
-  reply_by_email_address: ''
+  reply_by_email_address:
+    default: ''
+    regex: "%{reply_key}"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
@@ -426,7 +432,6 @@ email:
   disable_emails: false
   strip_images_from_short_emails: true
   short_email_length: 2800
-  enable_email_names: true
 
 files:
   max_image_size_kb:
@@ -652,12 +657,6 @@ developer:
   verbose_localization:
     default: false
     client: true
-  posts_chunksize:
-    default: 20
-    min: 1
-  posts_slow_chunksize:
-    default: 10
-    min: 1
 
 embedding:
   embeddable_host: ''

@@ -94,7 +94,7 @@ en:
           other: "%{count} days ago"
     share:
       topic: 'share a link to this topic'
-      post: 'share a link to post #%{postNumber}'
+      post: 'post #%{postNumber}'
       close: 'close'
       twitter: 'share this link on Twitter'
       facebook: 'share this link on Facebook'
@@ -158,6 +158,14 @@ en:
       topic_count: "Topics"
       post_count: "Posts"
       user_count: "Users"
+      contact: "Contact Us"
+      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_email}."
+
+    bookmarked:
+      title: "Bookmark"
+      help:
+        bookmark: "Click to bookmark this topic"
+        unbookmark: "Click to remove bookmark to this topic"
 
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
@@ -292,7 +300,7 @@ en:
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
-      download_archive: "download archive of my posts"
+      download_archive: "Download My Posts"
       new_private_message: "New Private Message"
       private_message: "Private Message"
       private_messages: "Messages"
@@ -368,10 +376,10 @@ en:
         success: "We've sent an email to that address. Please follow the confirmation instructions."
 
       change_avatar:
-        title: "Change your avatar"
+        title: "Change your profile picture"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "Refresh your Gravatar"
-        letter_based: "System assigned avatar"
+        letter_based: "System assigned profile picture"
         uploaded_avatar: "Custom picture"
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
@@ -494,7 +502,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
           uploading: "Uploading..."
-          success: "File uploaded successfully, you will be notified shortly with progress."
+          success: "File uploaded successfully, you will be notified via private message when the process is complete."
           error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
@@ -504,13 +512,13 @@ en:
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
 
-      associated_accounts: "Associated accounts"
+      associated_accounts: "Logins"
       ip_address:
         title: "Last IP Address"
       registration_ip_address:
         title: "Registration IP Address"
       avatar:
-        title: "Avatar"
+        title: "Profile Picture"
       title:
         title: "Title"
 
@@ -646,7 +654,14 @@ en:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
 
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
+
     composer:
+      emoji: "Emoji :smile:"
+
       add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving"
@@ -776,12 +791,6 @@ en:
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
 
-    starred:
-      title: 'Star'
-      help:
-        star: 'add this topic to your starred list'
-        unstar: 'remove this topic from your starred list'
-
     topics:
       bulk:
         reset_read: "Reset Read"
@@ -802,7 +811,6 @@ en:
           other: "You have selected <b>{{count}}</b> topics."
 
       none:
-        starred: "You have no starred topics."
         unread: "You have no unread topics."
         new: "You have no new topics."
         read: "You haven't read any topics yet."
@@ -814,7 +822,6 @@ en:
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          starred: '<p>Your starred topics appear here.</p><p>To star or unstar a topic, use:</p><ul><li>the <i class="fa fa-star"></i> next to any topic title</li><li>the Star button at the bottom of each topic</li></ul>'
       bottom:
         latest: "There are no more latest topics."
         hot: "There are no more hot topics."
@@ -822,7 +829,6 @@ en:
         read: "There are no more read topics."
         new: "There are no more new topics."
         unread: "There are no more unread topics."
-        starred: "There are no more starred topics."
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
 
@@ -1274,6 +1280,8 @@ en:
       delete: 'Delete Category'
       create: 'New Category'
       save: 'Save Category'
+      slug: 'Category Slug'
+      slug_placeholder: '(Optional) dashed-words for url'
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       name: "Category Name"
@@ -1365,19 +1373,21 @@ en:
     topic_statuses:
       warning:
         help: "This is an official warning."
+      bookmarked:
+        help: "You bookmarked this topic"
       locked:
         help: "This topic is closed; it no longer accepts new replies"
       archived:
         help: "This topic is archived; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
-        help: "This topic is unpinned; it will display in default order"
+        help: "This topic is unpinned for you; it will display in regular order"
       pinned_globally:
         title: "Pinned Globally"
         help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
         title: "Pinned"
-        help: "This topic is pinned; it will display at the top of its category"
+        help: "This topic is pinned for you; it will display at the top of its category"
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
@@ -1422,9 +1432,6 @@ en:
       hot:
         title: "Hot"
         help: "a selection of the hottest topics"
-      starred:
-        title: "Starred"
-        help: "topics you starred"
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
@@ -1611,13 +1618,17 @@ en:
         edit: "Edit Groups"
         refresh: "Refresh"
         new: "New"
-        selector_placeholder: "add users"
+        selector_placeholder: "enter username"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+        name: "Name"
+        add: "Add"
+        add_members: "Add members"
 
       api:
         generate_master: "Generate Master API Key"
@@ -1688,8 +1699,9 @@ en:
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        success: "Export initiated, you will be notified shortly with progress."
+        success: "Export initiated, you will be notified via private message when the process is complete."
         failed: "Export failed. Please check the logs."
+        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
         button_title:
           user: "Export full user list in CSV format."
@@ -1703,7 +1715,14 @@ en:
         long_title: "Site Customizations"
         css: "CSS"
         header: "Header"
+        top: "Top"
         footer: "Footer"
+        head_tag:
+          text: "</head>"
+          title: "HTML that will be inserted before the </head> tag"
+        body_tag:
+          text: "</body>"
+          title: "HTML that will be inserted before the </body> tag"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"
@@ -1824,7 +1843,7 @@ en:
           do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
+          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -2055,7 +2074,7 @@ en:
           external_username: "Username"
           external_name: "Name"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
+          external_avatar_url: "Profile Picture URL"
 
       user_fields:
         title: "User Fields"
@@ -2179,6 +2198,14 @@ en:
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
 
+      emoji:
+        title: "Emoji"
+        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        add: "Add New Emoji"
+        name: "Name"
+        image: "Image"
+        delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
+
     lightbox:
       download: "download"
 
@@ -2193,7 +2220,6 @@ en:
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
-        starred: '<b>g</b>, <b>f</b> Starred'
         categories: '<b>g</b>, <b>c</b> Categories'
         top: '<b>g</b>, <b>t</b> Top'
       navigation:
@@ -2202,7 +2228,7 @@ en:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
       application:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
@@ -2216,12 +2242,12 @@ en:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
-        star: '<b>f</b> Star topic'
-        pin_unpin_topic: '<b>shift p</b> Pin/Unpin topic'
-        share_topic: '<b>shift s</b> Share topic'
+        bookmark_topic: '<b>f</b> Bookmark topic'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
+        share_topic: '<b>shift</b>+<b>s</b> Share topic'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Reply as linked topic'
-        reply_topic: '<b>shift r</b> Reply to topic'
+        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'
