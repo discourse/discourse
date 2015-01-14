@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ExportCsvController do
-  let(:export_filename) { "user-archive-999.csv" }
+  let(:export_filename) { "user-archive-999.csv.gz" }
 
 
   context "while logged in as normal user" do
@@ -30,7 +30,7 @@ describe ExportCsvController do
     describe ".download" do
       it "uses send_file to transmit the export file" do
         file = UserExport.create(export_type: "user", user_id: @user.id)
-        file_name = "user-archive-#{file.id}.csv"
+        file_name = "user-archive-#{file.id}.csv.gz"
         controller.stubs(:render)
         export = UserExport.new()
         UserExport.expects(:get_download_path).with(file_name).returns(export)
@@ -74,7 +74,7 @@ describe ExportCsvController do
     describe ".download" do
       it "uses send_file to transmit the export file" do
         file = UserExport.create(export_type: "admin", user_id: @admin.id)
-        file_name = "screened-email-#{file.id}.csv"
+        file_name = "screened-email-#{file.id}.csv.gz"
         controller.stubs(:render)
         export = UserExport.new()
         UserExport.expects(:get_download_path).with(file_name).returns(export)

@@ -288,12 +288,14 @@ module Jobs
             csv << value
           end
         end
+        # compress CSV file
+        `gzip --best #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 
       def notify_user
         if @current_user
-          if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}", file_name: @file_name)
+          if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz")
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end
