@@ -203,7 +203,6 @@ Discourse.URL = Em.Object.createWithMixins({
 
         var container = Discourse.__container__,
             topicController = container.lookup('controller:topic'),
-            topicProgressController = container.lookup('controller:topic-progress'),
             opts = {},
             postStream = topicController.get('postStream');
 
@@ -218,8 +217,10 @@ Discourse.URL = Em.Object.createWithMixins({
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),
-              progress = postStream.progressIndexOfPost(closestPost);
-          topicProgressController.set('progressPosition', progress);
+              progress = postStream.progressIndexOfPost(closestPost),
+              progressController = container.lookup('controller:topic-progress');
+
+          progressController.set('progressPosition', progress);
           Discourse.PostView.considerHighlighting(topicController, closest);
         }).then(function() {
           Discourse.URL.jumpToPost(closest);

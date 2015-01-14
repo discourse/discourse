@@ -307,28 +307,27 @@ Discourse.PostView = Discourse.GroupedView.extend(Ember.Evented, {
   }.observes('controller.searchHighlight', 'cooked')
 });
 
+function highlight(postNumber) {
+  var $contents = $('#post_' + postNumber +' .topic-body'),
+      origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+  $contents.data("orig-color", origColor)
+    .addClass('highlighted')
+    .stop()
+    .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+      $contents.removeClass('highlighted');
+      $contents.css({'background-color': ''});
+    });
+}
+
 Discourse.PostView.reopenClass({
-  highlight: function(postNumber){
-    var $contents = $('#post_' + postNumber +' .topic-body'),
-        origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
-
-    $contents.data("orig-color", origColor);
-    $contents
-      .addClass('highlighted')
-      .stop()
-      .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
-        $contents.removeClass('highlighted');
-        $contents.css({'background-color': ''});
-      });
-  },
-
   considerHighlighting: function(controller, postNumber) {
     var highlightNumber = controller.get('highlightOnInsert');
 
     // If we're meant to highlight a post
     if (highlightNumber === postNumber) {
       controller.set('highlightOnInsert', null);
-      this.highlight(postNumber);
+      Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
     }
   }
 });
