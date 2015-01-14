@@ -17,22 +17,12 @@ module Jobs
     sidekiq_options retry: false
     attr_accessor :current_user
 
-    def initialize
-      @file_name = ""
-      @entity_type = "admin"
-    end
-
     def execute(args)
-      entity = args[:entity]
-      @file_name = entity
-
-      if entity == "user_archive"
-        @entity_type = "user"
-      end
-
+      @entity = args[:entity]
+      @file_name = @entity
       @current_user = User.find_by(id: args[:user_id])
 
-      export_method = "#{entity}_export".to_sym
+      export_method = "#{@entity}_export".to_sym
       data =
         if respond_to?(export_method)
           send(export_method)
@@ -42,8 +32,7 @@ module Jobs
 
       if data && data.length > 0
         set_file_path
-        header = get_header(entity)
-        write_csv_file(data, header)
+        write_csv_file(data)
       end
 
     ensure
@@ -102,9 +91,9 @@ module Jobs
       end
     end
 
-    def get_header(entity)
+    def get_header
 
-      case entity
+      case @entity
         when 'user_list'
           header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats']
           if SiteSetting.enable_sso
@@ -118,7 +107,7 @@ module Jobs
           end
           header_array.push("group_names")
         else
-          header_array = HEADER_ATTRS_FOR[entity]
+          header_array = HEADER_ATTRS_FOR[@entity]
         end
 
       header_array
@@ -271,8 +260,8 @@ module Jobs
 
 
       def set_file_path
-        @file = UserExport.create(export_type: @entity_type, user_id: @current_user.id)
         file_name_prefix = @file_name.split('_').join('-')
+        @file = UserExport.create(export_type: file_name_prefix, user_id: @current_user.id)
         @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
         # ensure directory exists
@@ -280,10 +269,10 @@ module Jobs
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       end
 
-      def write_csv_file(data, header)
+      def write_csv_file(data)
         # write to CSV file
         CSV.open(File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
-          csv << header
+          csv << get_header
           data.each do |value|
             csv << value
           end
