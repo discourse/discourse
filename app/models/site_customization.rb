@@ -77,14 +77,11 @@ class SiteCustomization < ActiveRecord::Base
     end
   end
 
-  def self.custom_header(preview_style=nil, target=:desktop)
-    preview_style ||= ENABLED_KEY
-    lookup_field(preview_style, target, :header)
-  end
-
-  def self.custom_footer(preview_style=nil, target=:dekstop)
-    preview_style ||= ENABLED_KEY
-    lookup_field(preview_style,target,:footer)
+  %i{header top footer head_tag body_tag}.each do |name|
+    define_singleton_method("custom_#{name}") do |preview_style=nil, target=:desktop|
+      preview_style ||= ENABLED_KEY
+      lookup_field(preview_style, target, name)
+    end
   end
 
   def self.lookup_field(key, target, field)
@@ -95,20 +92,18 @@ class SiteCustomization < ActiveRecord::Base
     lookup = @cache[cache_key]
     return lookup.html_safe if lookup
 
-    styles =
-      if key == ENABLED_KEY
-        order(:name).where(enabled:true).to_a
-      else
-        [find_by(key: key)].compact
-      end
+    styles = if key == ENABLED_KEY
+      order(:name).where(enabled:true).to_a
+    else
+      [find_by(key: key)].compact
+    end
 
-    val =
-      if styles.present?
-        styles.map do |style|
-          lookup = target == :mobile ? "mobile_#{field}" : field
-          style.send(lookup)
-        end.compact.join("\n")
-      end
+    val = if styles.present?
+      styles.map do |style|
+        lookup = target == :mobile ? "mobile_#{field}" : field
+        style.send(lookup)
+      end.compact.join("\n")
+    end
 
     (@cache[cache_key] = val || "").html_safe
   end

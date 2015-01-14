@@ -1715,7 +1715,14 @@ en:
         long_title: "Site Customizations"
         css: "CSS"
         header: "Header"
+        top: "Top"
         footer: "Footer"
+        head_tag:
+          text: "</head>"
+          title: "HTML that will be inserted before the </head> tag"
+        body_tag:
+          text: "</body>"
+          title: "HTML that will be inserted before the </body> tag"
         override_default: "Do not include standard style sheet"
         enabled: "Enabled?"
         preview: "preview"
