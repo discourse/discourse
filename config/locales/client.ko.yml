@@ -125,6 +125,8 @@ ko:
       topic_count: "토픽"
       post_count: "게시글"
       user_count: "사용자"
+      contact: "Contact Us"
+      contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_email}로 연락주시기 바랍니다."
     bookmarks:
       not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
@@ -301,10 +303,8 @@ ko:
         error: "이메일 변경 중 오류가 발생했습니다. 이미 사용 중인 이메일인지 확인해주세요."
         success: "이메일 발송이 완료되었습니다. 확인하신 후 절차에 따라주세요."
       change_avatar:
-        title: "아바타 변경"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a> 기반"
         refresh_gravatar_title: "Gravatar 새로고침"
-        letter_based: "자동 생성된 아바타"
         uploaded_avatar: "커스텀 사진"
         uploaded_avatar_empty: "커스텀 사진 추가"
         upload_title: "프로필 사진 업로드"
@@ -416,8 +416,6 @@ ko:
         title: "마지막 IP 주소"
       registration_ip_address:
         title: "IP Address 등록"
-      avatar:
-        title: "아바타"
       title:
         title: "호칭"
       filters:
@@ -1149,13 +1147,11 @@ ko:
         help: "이 토픽은 폐쇄되었습니다. 더 이상 새 답글을 받을 수 없습니다."
       unpinned:
         title: "핀 제거"
-        help: "이 토픽은 핀 제거 되었습니다. 목록에서 기본적인 순서대로 표시됩니다."
       pinned_globally:
         title: "핀 지정됨 (전역적)"
         help: "이 토픽은 전역적으로 핀 지정 되었습니다. 모든 목록의 최상위에 표시됩니다."
       pinned:
         title: "핀 지정됨"
-        help: "이 토픽은 고정되었습니다. 카테고리의 상단에 표시됩니다."
       archived:
         help: "이 토픽은 보관중입니다. 고정되어 변경이 불가능합니다."
       invisible:
@@ -1559,7 +1555,6 @@ ko:
           do_nothing: "아무것도 하지 않음"
         staff_actions:
           title: "스태프 기록"
-          instructions: "사용자 이름을 클릭하고 리스트를 필터링하세요. 아바타를 클릭하여 사용자 페이지로 이동합니다."
           clear_filters: "전체 보기"
           staff_user: "스태프 사용자"
           target_user: "타겟 사용자"
@@ -1771,7 +1766,6 @@ ko:
           external_username: "아이디"
           external_name: "Name"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "사용자 필드"
         help: "사용자가 입력할 수 있는 필드를 추가"

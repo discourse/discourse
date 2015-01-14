@@ -274,10 +274,8 @@ ar:
         error: "حدث خطأ عند تغيير البريد الالكتروني. ربما يكون هذا البريد مستخدم من قبل؟"
         success: "تم ارسال رسالة الى البريد الكتروني. يرجى اتباع تعليمات التأكيد."
       change_avatar:
-        title: "غير صورتك الشخصية"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "حدّث Gravatar"
-        letter_based: "الصورة الافتراضية "
         uploaded_avatar: "تخصيص صورة"
         uploaded_avatar_empty: "اضافة صورة "
         upload_title: "رفع صورتك "
@@ -352,8 +350,6 @@ ar:
         title: "أخر عنوان أيبي"
       registration_ip_address:
         title: "ايبي مسجل"
-      avatar:
-        title: "صورة العرض"
       title:
         title: "عنوان"
       filters:

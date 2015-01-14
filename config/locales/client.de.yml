@@ -328,10 +328,8 @@ de:
         error: "Beim Ändern der E-Mail-Adresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
       change_avatar:
-        title: "Deinen Avatar ändern"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
-        letter_based: "Automatisch generierter Avatar"
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
@@ -454,8 +452,6 @@ de:
         title: "Letzte IP-Adresse"
       registration_ip_address:
         title: "IP-Adresse bei Registrierung"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titel"
       filters:
@@ -1226,17 +1222,17 @@ de:
     topic_statuses:
       warning:
         help: "Dies ist eine offizielle Warnung."
+      bookmarked:
+        help: "Du hast in diesem Thema ein Lesezeichen gesetzt."
       locked:
         help: "Dieses Thema ist geschlossen; Antworten sind nicht mehr möglich"
       unpinned:
         title: "Losgelöst"
-        help: "Dieses Thema ist losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
         help: "Dieses Thema ist global angeheftet; es wird immer am Anfang aller Listen auftauchen"
       pinned:
         title: "Angeheftet"
-        help: "Dieses Thema ist angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       invisible:
@@ -1658,7 +1654,6 @@ de:
           do_nothing: "nichts tun"
         staff_actions:
           title: "Mitarbeiter-Aktionen"
-          instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf Avatare, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Mitarbeiter"
           target_user: "Betroffener Benutzer"
@@ -1886,7 +1881,6 @@ de:
           external_username: "Benutzername"
           external_name: "Name"
           external_email: "E-Mail"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "Benutzerfelder"
         help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
@@ -2045,6 +2039,7 @@ de:
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
       actions:
         title: 'Aktionen'
+        bookmark_topic: '<b>f</b> Lesezeichen auf Thema setzen'
         pin_unpin_topic: '<b>⇧ Umsch</b> + <b>p</b> Thema anheften/loslösen'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'

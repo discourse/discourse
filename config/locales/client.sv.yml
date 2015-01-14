@@ -326,10 +326,8 @@ sv:
         error: "Det uppstod ett problem under bytet av din e-post. Är kanske adressen redan upptagen?"
         success: "Vi har skickat ett mail till den adressen. Var god följ bekräftelseinstruktionerna."
       change_avatar:
-        title: "Ändra din avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserat på"
         refresh_gravatar_title: "Uppdatera din Gravatar"
-        letter_based: "Avatar tilldelad av systemet"
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
@@ -450,8 +448,6 @@ sv:
         title: "Senaste IP-adress"
       registration_ip_address:
         title: "IP-adress vid registrering"
-      avatar:
-        title: "Profilbild"
       title:
         title: "Titel"
       filters:
@@ -1217,13 +1213,11 @@ sv:
         help: "Det här ämnet är stängt; det går inte längre att svara på inlägg"
       unpinned:
         title: "Avklistrat"
-        help: "Det här ämnet är avklistrat, det kommer att visas i standard ordningen"
       pinned_globally:
         title: "Klistrat Globalt"
         help: "Det här ämnet är klistrat globalt; det kommer att visas högst upp i alla listor"
       pinned:
         title: "Klistrat"
-        help: "Det här ämnet är klistrat; det kommer att visas högst upp i sin kategori"
       archived:
         help: "Det här ämnet är arkiverat; det är fryst och kan inte ändras"
       invisible:
@@ -1638,7 +1632,6 @@ sv:
           do_nothing: "gör ingenting"
         staff_actions:
           title: "Personalåtgärder"
-          instructions: "Klicka på användarnamn och åtgärder för att filtrera listan. Klicka på avatarer för att gå till användarsidor."
           clear_filters: "Visa allt"
           staff_user: "Personalmedlem"
           target_user: "Målanvändare"

@@ -537,6 +537,7 @@ fr:
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier config/discourse.conf et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Regarder les processus en échec dans  Sidekiq</a>.'
     default_logo_warning: "Changez le logo de votre site. Mettez à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
     contact_email_invalid: "L'email de contact du site est invalide. Mettez-le à jour dans les <a href='/admin/site_settings'>paramètre du site</a>."
+    title_nag: "Saisissez le nom de votre site. Modifier le titre sous <a href='/admin/site_settings'>Paramètres du site</a>."
     consumer_email_warning: "Votre site est configuré pour envoyer les courriels en utilisant Gmail (ou un autre site de courriels pour utilisateur standard). <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi de courriels afin d'assurer une meilleure délivrabilité."
   content_types:
     education_new_reply:
@@ -812,7 +813,6 @@ fr:
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
     short_email_length: "Taille des courriels courts en Octets"
-    enable_email_names: "Autoriser l'affichage des noms complets des utilisateurs dans les courriels. Décochez-le pour cacher les noms complets dans les courriels."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
     pop3_polling_period_mins: "La période en minute entre chaque vérification du compte POP3 des courriels.\nNote: nécessite un redémarrage de la machine."
