@@ -12,7 +12,7 @@
   <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
   <%- end %>
-  <%= yield(:no_js_head) %>
+  <%= yield(:no_ember_head) %>
 </head>
 <body>
 <%- unless customization_disabled? %>

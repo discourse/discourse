@@ -48,7 +48,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def failure
     flash[:error] = I18n.t("login.omniauth_error")
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
 

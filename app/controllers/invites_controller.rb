@@ -163,7 +163,7 @@ class InvitesController < ApplicationController
   def ensure_new_registrations_allowed
     unless SiteSetting.allow_new_registrations
       flash[:error] = I18n.t('login.new_registrations_disabled')
-      render layout: 'no_js'
+      render layout: 'no_ember'
       false
     end
   end
