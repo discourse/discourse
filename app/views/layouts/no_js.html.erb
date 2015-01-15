@@ -1,30 +1,43 @@
 <!DOCTYPE html>
 <html lang="<%= SiteSetting.default_locale %>">
-  <head>
-    <meta charset="utf-8">
-    <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
-    <%= render partial: "layouts/head" %>
-    <%- unless customization_disabled? %>
+<head>
+  <meta charset="utf-8">
+  <title><%=SiteSetting.title%></title>
+  <meta name="description" content="">
+  <%= render partial: "layouts/head" %>
+  <%= render partial: "common/special_font_face" %>
+  <%= render partial: "common/discourse_stylesheet" %>
+  <%= discourse_csrf_tags %>
+
+  <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
-    <%- end %>
-    <%= yield(:no_js_head) %>
-    <style>
-        img { max-width: 100%; width: auto; height: auto; }
-    </style>
-  </head>
-  <body>
-    <%- unless customization_disabled? %>
-      <%= SiteCustomization.custom_header(session[:preview_style]) %>
-    <%- end %>
-    <header>
-        <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-    </header>
-    <div id="main-outlet" class="container">
-      <%= yield %>
+  <%- end %>
+  <%= yield(:no_js_head) %>
+</head>
+<body>
+<%- unless customization_disabled? %>
+    <%= SiteCustomization.custom_header(session[:preview_style]) %>
+<%- end %>
+<section id='main'>
+  <header class="d-header">
+    <div class="container">
+      <div class="contents">
+        <div class="row">
+          <div class="title span13">
+            <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
+          </div>
+          <% unless current_user %>
+              <div class='panel clearfix'>
+                <a href="/login" class='btn btn-primary btn-small'><i class="fa fa-user"></i><%= I18n.t('log_in') %></a>
+              </div>
+          <% end %>
+        </div>
+      </div>
     </div>
-    <footer class="container">
-      <p><%= t 'powered_by_html' %></p>
-    </footer>
-  </body>
+  </header>
+  <div id="main-outlet" class="container">
+    <%= yield %>
+  </div>
+</section>
+</body>
 </html>
