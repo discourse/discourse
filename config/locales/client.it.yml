@@ -326,10 +326,8 @@ it:
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
       change_avatar:
-        title: "Cambia il tuo avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
-        letter_based: "Avatar assegnato dal sistema"
         uploaded_avatar: "Immagine personalizzata"
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
@@ -450,8 +448,6 @@ it:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
         title: "Indirizzo IP di Registrazione"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titolo"
       filters:
@@ -1217,13 +1213,11 @@ it:
         help: "Questo argomento è chiuso; non sono ammesse nuove risposte"
       unpinned:
         title: "Spuntato"
-        help: "Questo argomento è spuntato; verrà mostrato con l'ordinamento di default"
       pinned_globally:
         title: "In Evidenza Globalmente"
         help: "Questo argomento è in evidenza globalmente; verrà mostrato in cima ad ogni lista"
       pinned:
         title: "In Evidenza"
-        help: "Questo argomento è in evidenza; verrà mostrato in cima alla sua categoria"
       archived:
         help: "Questo argomento è archiviato; è bloccato e non può essere modificato"
       invisible:
@@ -1634,7 +1628,6 @@ it:
           do_nothing: "non fare nulla"
         staff_actions:
           title: "Azioni Staff"
-          instructions: "Clicca sui nomi degli utenti e sulle azioni per filtrare la lista. Clicca sugli avatar per andare alle pagine degli utenti."
           clear_filters: "Mostra Tutto"
           staff_user: "Utente"
           target_user: "Destinatario"
@@ -1862,7 +1855,6 @@ it:
           external_username: "Nome utente"
           external_name: "Nome"
           external_email: "Email"
-          external_avatar_url: "URL dell'Avatar"
       user_fields:
         title: "Campi Utente"
         help: "Tutti i campi che i tuoi utenti possono riempire."

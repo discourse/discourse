@@ -10,7 +10,9 @@
 //
 
 // Stuff we need to load first
+//= require ./discourse/lib/app-events
 //= require ./discourse/helpers/i18n
+//= require ./discourse/helpers/fa-icon
 //= require ./discourse/lib/ember_compat_handlebars
 //= require ./discourse/lib/computed
 //= require ./discourse/helpers/register-unbound
@@ -59,6 +61,7 @@
 //= require ./discourse/lib/export-result
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
+//= require ./discourse/lib/sharing
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers

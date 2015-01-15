@@ -143,6 +143,8 @@ es:
       topic_count: "Temas"
       post_count: "Posts"
       user_count: "Usuarios"
+      contact: "Contáctanos"
+      contact_info: "En caso de error crítico o asunto urgente con respecto a este sitio, por favor, contáctanos a %{contact_email}."
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has marcado este post como favorito"
@@ -328,10 +330,8 @@ es:
         error: "Ha ocurrido un error al cambiar tu email. ¿Tal vez esa dirección ya está en uso?"
         success: "Te hemos enviado un e-mail a esa dirección. Por favor sigue las instrucciones de confirmación."
       change_avatar:
-        title: "Cambiar tu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basado en"
         refresh_gravatar_title: "Actualizar tu Gravatar"
-        letter_based: "Avatar asignado por el sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Añade una foto personalizada"
         upload_title: "Sube tu foto"
@@ -396,7 +396,7 @@ es:
       email_private_messages: "Recibe un e-mail cuando alguien te envíe un mensaje privado"
       email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"
       other_settings: "Otros"
-      categories_settings: "Categorias"
+      categories_settings: "Categorías"
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
         not_viewed: "no los has visto todavía"
@@ -454,8 +454,6 @@ es:
         title: "Última dirección IP"
       registration_ip_address:
         title: "Dirección IP de Registro"
-      avatar:
-        title: "Avatar"
       title:
         title: "Título"
       filters:
@@ -692,8 +690,8 @@ es:
       post_format: "#{{post_number}} por {{username}}"
       context:
         user: "Buscar posts por @{{username}}"
-        category: "Buscar la categoría \"{{category}}\""
-        topic: "Buscar este tema"
+        category: "Buscar en la categoría \"{{category}}\""
+        topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes privados"
     site_map: "ir a otra lista de temas o categoría"
     go_back: 'volver'
@@ -1136,7 +1134,7 @@ es:
       settings: 'Ajustes'
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
-      save: 'Guardar categoria'
+      save: 'Guardar categoría'
       slug: 'Slug de la categoría para URL'
       slug_placeholder: '(Opcional) palabras-por-guiones para URL'
       creation_error: Se ha producido un error al crear la categoría.
@@ -1152,7 +1150,7 @@ es:
       name_placeholder: "Debe ser corto y conciso."
       color_placeholder: "Cualquier color web"
       delete_confirm: "¿Estás seguro de que quieres eliminar esta categoría?"
-      delete_error: "Ha ocurrido un error al borrar la categoria"
+      delete_error: "Ha ocurrido un error al borrar la categoría."
       list: "Lista de categorías"
       no_description: "Por favor, añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
@@ -1165,7 +1163,7 @@ es:
       email_in_allow_strangers: "Aceptar emails de usuarios anónimos sin cuenta"
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
-      allow_badges_label: "Permitir conceder distintivos en esta categoria"
+      allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
       add_permission: "Añadir permisos"
       this_year: "este año"
@@ -1224,17 +1222,17 @@ es:
     topic_statuses:
       warning:
         help: "Ésta es una advertencia oficial."
+      bookmarked:
+        help: "Has guardado en marcadores este tema."
       locked:
         help: "este tema está cerrado; ya no aceptan nuevas respuestas"
       unpinned:
         title: "Deseleccionado como destacado"
-        help: "Este tema ha sido deseleccionado como destacado; se mostrará en el orden por defecto "
       pinned_globally:
         title: "Destacado globalmente"
         help: "Este tema ha sido destacado globalmente, se mostrará en la parte superior de todas las listas"
       pinned:
         title: "Destacado"
-        help: "este tema está destacado; se mostrará en la parte superior de su categoría"
       archived:
         help: "este tema está archivado; está congelado y no puede ser cambiado"
       invisible:
@@ -1656,7 +1654,6 @@ es:
           do_nothing: "no hacer nada"
         staff_actions:
           title: "Acciones del staff"
-          instructions: "Haz clic en nombres de usuario y acciones para filtrar la lista. Haz clic en los avatares para ir a las páginas de los usuarios."
           clear_filters: "Mostrar todo"
           staff_user: "Usuario administrador"
           target_user: "Usuario enfocado"
@@ -1884,7 +1881,6 @@ es:
           external_username: "Nombre de usuario"
           external_name: "Nombre"
           external_email: "Email"
-          external_avatar_url: "URL del avatar"
       user_fields:
         title: "Campos de Usuario"
         help: "Añadir campos que tus usuarios pueden llenar."
@@ -2021,7 +2017,7 @@ es:
         latest: '<b>g</b>, <b>l</b> Recientes'
         new: '<b>g</b>, <b>n</b> Nuevos'
         unread: '<b>g</b>, <b>u</b> No leídos'
-        categories: '<b>g</b>, <b>c</b> Categorias'
+        categories: '<b>g</b>, <b>c</b> Categorías'
         top: '<b>g</b>, <b>t</b> Arriba'
       navigation:
         title: 'Navegación'
@@ -2043,6 +2039,7 @@ es:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
       actions:
         title: 'Acciones'
+        bookmark_topic: '<b>f</b> Guardar tema en marcadores'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
         share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'

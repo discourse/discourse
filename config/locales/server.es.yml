@@ -541,9 +541,13 @@ es:
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
     default_logo_warning: "Establece los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_missing: "Introduce una dirección de correo electrónico de contacto para que te puedan llegar mensajes urgentes sobre tu sitio. Actualízalo en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     contact_email_invalid: "La dirección email de contacto es inválida. Actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
     title_nag: "Introduce un nombre de tu sitio. Actualiza el nombre en <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    site_description_missing: "Introduce una breve descripción sobre tu sitio que aparecerá en los resultados de búsqueda. Actualiza site_description en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
+    site_contact_username_warning: "Introduce el nombre de un usuario administrador o moderador simpático desde donde se enviarán importantes mensajes privados automáticos. Actualiza site_contact_username en <a href='/admin/site_settings'>Ajustes del sitio</a>."
+    notification_email_warning: "Las notificaciones por email no están siendo enviadas desde una dirección de correo electrónico válida en tu dominio; la entrega de emails será errática y poco fiable. Por favor, establece para notification_email una dirección de correo electrónico local válida en <a href='/admin/site_settings'>Ajustes del sitio</a>."
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
@@ -819,7 +823,6 @@ es:
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."
     strip_images_from_short_emails: "Remover imágenes de e-mails que tengan un tamaño menor a 2800 Bytes"
     short_email_length: "e-mail corto longitud en Bytes"
-    enable_email_names: "Permitir mostrar nombres completos de usuarios en e-mails. Inhabilitar para esconder nombres completos en e-mails."
     pop3_polling_enabled: "Poll vía POP3 para respuestas de e-mail."
     pop3_polling_ssl: "Usar SSL mientras se conecta al servidor POP3. (Recomendado)"
     pop3_polling_period_mins: "El período en minutos entre revisiones de correo de la cuenta POP3. NOTA: requiere reiniciar."

@@ -26,18 +26,18 @@ export default Discourse.Route.extend(ShowFooter, {
     },
 
     removeBookmark: function(userAction) {
-      var self = this;
-      Discourse.Post.bookmark(userAction.get('post_id'), false)
-               .then(function() {
-                  // remove the user action from the stream
-                  self.modelFor("user").get("stream").remove(userAction);
-                  // update the counts
-                  self.modelFor("user").get("stats").forEach(function (stat) {
-                    if (stat.get("action_type") === userAction.action_type) {
-                      stat.decrementProperty("count");
-                    }
-                  });
-                });
+      var user = this.modelFor('user');
+      Discourse.Post.updateBookmark(userAction.get('post_id'), false)
+        .then(function() {
+          // remove the user action from the stream
+          user.get('stream').remove(userAction);
+          // update the counts
+          user.get('stats').forEach(function (stat) {
+            if (stat.get("action_type") === userAction.action_type) {
+              stat.decrementProperty("count");
+            }
+          });
+        });
     },
 
   }

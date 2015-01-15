@@ -1,11 +1,12 @@
 import Session from 'discourse/models/session';
+import AppEvents from 'discourse/lib/app-events';
 
 export default {
   name: "inject-objects",
   initialize: function(container, application) {
 
     // Inject appEvents everywhere
-    var appEvents = Ember.Object.createWithMixins(Ember.Evented);
+    var appEvents = AppEvents.create();
     application.register('app-events:main', appEvents, { instantiate: false });
 
     application.inject('controller', 'appEvents', 'app-events:main');

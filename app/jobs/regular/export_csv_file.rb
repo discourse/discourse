@@ -6,7 +6,7 @@ module Jobs
   class ExportCsvFile < Jobs::Base
     HEADER_ATTRS_FOR = {}
     HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
-    HEADER_ATTRS_FOR['user'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
+    HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
     HEADER_ATTRS_FOR['user_stats'] = ['topics_entered','posts_read_count','time_read','topic_count','post_count','likes_given','likes_received']
     HEADER_ATTRS_FOR['user_sso'] = ['external_id','external_email', 'external_username', 'external_name', 'external_avatar_url']
     HEADER_ATTRS_FOR['staff_action'] = ['staff_user','action','subject','created_at','details', 'context']
@@ -17,22 +17,12 @@ module Jobs
     sidekiq_options retry: false
     attr_accessor :current_user
 
-    def initialize
-      @file_name = ""
-      @entity_type = "admin"
-    end
-
     def execute(args)
-      entity = args[:entity]
-      @file_name = entity
-
-      if entity == "user_archive"
-        @entity_type = "user"
-      end
-
+      @entity = args[:entity]
+      @file_name = @entity
       @current_user = User.find_by(id: args[:user_id])
 
-      export_method = "#{entity}_export".to_sym
+      export_method = "#{@entity}_export".to_sym
       data =
         if respond_to?(export_method)
           send(export_method)
@@ -42,8 +32,7 @@ module Jobs
 
       if data && data.length > 0
         set_file_path
-        header = get_header(entity)
-        write_csv_file(data, header)
+        write_csv_file(data)
       end
 
     ensure
@@ -102,11 +91,11 @@ module Jobs
       end
     end
 
-    def get_header(entity)
+    def get_header
 
-      case entity
-        when 'user'
-          header_array = HEADER_ATTRS_FOR['user'] + HEADER_ATTRS_FOR['user_stats']
+      case @entity
+        when 'user_list'
+          header_array = HEADER_ATTRS_FOR['user_list'] + HEADER_ATTRS_FOR['user_stats']
           if SiteSetting.enable_sso
             header_array.concat(HEADER_ATTRS_FOR['user_sso'])
           end
@@ -118,7 +107,7 @@ module Jobs
           end
           header_array.push("group_names")
         else
-          header_array = HEADER_ATTRS_FOR[entity]
+          header_array = HEADER_ATTRS_FOR[@entity]
         end
 
       header_array
@@ -172,7 +161,7 @@ module Jobs
       def get_user_list_fields(user)
         user_array = []
 
-        HEADER_ATTRS_FOR['user'].each do |attr|
+        HEADER_ATTRS_FOR['user_list'].each do |attr|
           user_array.push(user.attributes[attr])
         end
 
@@ -271,8 +260,8 @@ module Jobs
 
 
       def set_file_path
-        @file = UserExport.create(export_type: @entity_type, user_id: @current_user.id)
         file_name_prefix = @file_name.split('_').join('-')
+        @file = UserExport.create(export_type: file_name_prefix, user_id: @current_user.id)
         @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
         # ensure directory exists
@@ -280,20 +269,22 @@ module Jobs
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       end
 
-      def write_csv_file(data, header)
+      def write_csv_file(data)
         # write to CSV file
         CSV.open(File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
-          csv << header
+          csv << get_header
           data.each do |value|
             csv << value
           end
         end
+        # compress CSV file
+        `gzip -5 #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 
       def notify_user
         if @current_user
-          if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}", file_name: @file_name)
+          if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz")
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end

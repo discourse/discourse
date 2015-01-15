@@ -317,10 +317,8 @@ sq:
         error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga dikush tjetër?"
         success: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
       change_avatar:
-        title: "Ndryshoni maskën tuaj"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
         refresh_gravatar_title: "Rifresko Gravatar tuaj"
-        letter_based: "Foto caktuar nga Sistemi"
         uploaded_avatar: "Foto personalizuar"
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarni foton tuaj"
@@ -422,8 +420,6 @@ sq:
         title: "Adresa IP e Fundit"
       registration_ip_address:
         title: "Adresa IP e rregjistrimit"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titulli"
       filters:
@@ -1185,13 +1181,11 @@ sq:
         help: "This topic is closed; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
-        help: "This topic is unpinned; it will display in default order"
       pinned_globally:
         title: "Pinned Globally"
         help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
         title: "Pinned"
-        help: "This topic is pinned; it will display at the top of its category"
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
@@ -1598,7 +1592,6 @@ sq:
           do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -1815,7 +1808,6 @@ sq:
           external_username: "Pseudonimi"
           external_name: "Emri"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "User Fields"
         help: "Add fields that your users can fill out."

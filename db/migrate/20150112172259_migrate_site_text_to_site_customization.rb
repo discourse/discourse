@@ -11,7 +11,7 @@ class MigrateSiteTextToSiteCustomization < ActiveRecord::Migration
         '#{SecureRandom.uuid}',
         now(),
         now(),
-        (SELECT value FROM site_texts WHERE text_type = 'top' LIMIT 1),
+        (SELECT value FROM site_texts WHERE text_type = 'head' LIMIT 1),
         (SELECT value FROM site_texts WHERE text_type = 'bottom' LIMIT 1)
       )
     SQL

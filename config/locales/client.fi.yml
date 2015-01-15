@@ -326,10 +326,8 @@ fi:
         error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä sama sähköpostiosoite on jo käytössä?"
         success: "Annettuun osoitteeseen on lähetetty viesti. Seuraa sen ohjeita sähköpostiosoitteen varmentamiseksi."
       change_avatar:
-        title: "Vaihda avatarisi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
         refresh_gravatar_title: "Päivitä Gravatar"
-        letter_based: "Järjestelmän luoma avatar"
         uploaded_avatar: "Oma kuva"
         uploaded_avatar_empty: "Lisää oma kuva"
         upload_title: "Lataa oma kuva"
@@ -450,8 +448,6 @@ fi:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
         title: "IP osoite rekisteröityessä"
-      avatar:
-        title: "Avatar"
       title:
         title: "Otsikko"
       filters:
@@ -1217,13 +1213,11 @@ fi:
         help: "Tämä ketju on suljettu; siihen ei voi enää vastata."
       unpinned:
         title: "Kiinnitys poistettu"
-        help: "Ketjun kiinnitys on poistettu; se näytetään oletusjärjestyksessä."
       pinned_globally:
         title: "Kiinnitetty koko palstalle"
         help: "Tämä ketju on nyt kiinnitetty koko palstalle; se näytetään kaikkien listausten ylimpänä"
       pinned:
         title: "Kiinnitetty"
-        help: "Tämä ketju on nostettu; se näytetään alueensa ensimmäisenä"
       archived:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       invisible:
@@ -1632,7 +1626,6 @@ fi:
           do_nothing: "älä tee mitään"
         staff_actions:
           title: "Henkilökunnan toimet"
-          instructions: "Klikkaa käyttäjänimiä tai toimintoja suodattaaksesi listaa. Klikkaa avataria siirtyäksesi käyttäjäsivulle."
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
           target_user: "Kohteena ollut käyttäjä"
@@ -1859,7 +1852,6 @@ fi:
           external_username: "Käyttäjätunnus"
           external_name: "Nimi"
           external_email: "Sähköposti"
-          external_avatar_url: "Avatarin URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."

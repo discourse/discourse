@@ -305,10 +305,8 @@ zh_CN:
         error: "抱歉在修改你的电子邮箱时发生了错误，可能此邮箱已经被使用了？"
         success: "我们已经发送了一封确认信到此邮箱地址，请按照邮箱内指示完成确认。"
       change_avatar:
-        title: "修改头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
         refresh_gravatar_title: "刷新你的头像"
-        letter_based: "系统指定的头像"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
@@ -427,8 +425,6 @@ zh_CN:
         title: "最后使用的 IP 地址"
       registration_ip_address:
         title: "注册 IP 地址"
-      avatar:
-        title: "头像"
       title:
         title: "头衔"
       filters:
@@ -1166,13 +1162,11 @@ zh_CN:
         help: "本主题已关闭；不再接受新的回复"
       unpinned:
         title: "解除置顶"
-        help: "主题已经解除置顶；它将以默认顺序显示"
       pinned_globally:
         title: "全局置顶"
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       pinned:
         title: "置顶"
-        help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       archived:
         help: "本主题已归档；即已经冻结，无法修改"
       invisible:
@@ -1589,7 +1583,6 @@ zh_CN:
           do_nothing: "无操作"
         staff_actions:
           title: "管理人员操作"
-          instructions: "点击用户名和操作可以过滤列表。点击头像可以访问用户个人页面。"
           clear_filters: "显示全部"
           staff_user: "管理人员"
           target_user: "目标用户"
@@ -1810,7 +1803,6 @@ zh_CN:
           external_username: "用户名"
           external_name: "名字"
           external_email: "电子邮件"
-          external_avatar_url: "头像 URL"
       user_fields:
         title: "用户属性"
         help: "增加用户能填写的字段。"

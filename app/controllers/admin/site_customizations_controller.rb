@@ -52,8 +52,9 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
     def site_customization_params
       params.require(:site_customization)
-            .permit(:name, :stylesheet, :header, :footer,
-                    :mobile_stylesheet, :mobile_header, :mobile_footer,
+            .permit(:name, :stylesheet, :header, :top, :footer,
+                    :mobile_stylesheet, :mobile_header, :mobile_top, :mobile_footer,
+                    :head_tag, :body_tag,
                     :position, :enabled, :key,
                     :stylesheet_baked)
     end

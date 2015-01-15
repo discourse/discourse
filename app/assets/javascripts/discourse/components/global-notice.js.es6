@@ -10,6 +10,10 @@ export default Ember.Component.extend(StringBuffer, {
       notices.push(I18n.t("read_only_mode.enabled"));
     }
 
+    if (this.siteSettings.disable_emails) {
+      notices.push(I18n.t("emails_are_disabled"));
+    }
+
     if (Discourse.User.currentProp('admin') && this.siteSettings.show_create_topics_notice) {
       var topic_count = 0,
           post_count = 0;

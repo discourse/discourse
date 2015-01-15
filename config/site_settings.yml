@@ -88,7 +88,6 @@ basic:
      - latest
      - new
      - unread
-     - starred
      - top
      - categories
      - read
@@ -429,10 +428,11 @@ email:
     enum: 'TrustLevelSetting'
   email_prefix: ''
   email_site_title: ''
-  disable_emails: false
+  disable_emails:
+    default: false
+    client: true
   strip_images_from_short_emails: true
   short_email_length: 2800
-  enable_email_names: true
 
 files:
   max_image_size_kb:

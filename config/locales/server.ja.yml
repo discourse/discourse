@@ -105,6 +105,7 @@ ja:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
     default_names:
+      everyone: "みなさん"
       admins: "管理者"
       moderators: "モデレータ"
       staff: "スタッフ"

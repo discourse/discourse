@@ -734,7 +734,6 @@ ko:
     levenshtein_distance_spammer_emails: "스패머 메일을 체크할 때, 허용할 다른 글자 개수(fuzzy match)"
     reply_by_email_enabled: "이메일을 통해 토픽에 댓글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
-    enable_email_names: "이메일에서 사용자의 전체 이름을 보여준다."
     pop3_polling_enabled: "POP3를 이용한 이메일 설문조사"
     pop3_polling_period_mins: "이메일을 받기 위해 POP3S 계정을 체크하는 분 단위 NOTE: 재시동 필요."
     pop3_polling_port: "이메일 설문조사를 위한 POP3 포트번호 "

@@ -326,10 +326,8 @@ he:
         error: "הייתה שגיאה בשינוי כתובת הדואר האלקטרוני שלך. אולי היא תפוסה?"
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עקוב אחרי הוראות האישור שם."
       change_avatar:
-        title: "שנה את האווטר שלך"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, מבוסס על"
         refresh_gravatar_title: "רענון האווטר שלכם"
-        letter_based: "אווטר שהוגדרר על ידי המערכת"
         uploaded_avatar: "תמונה אישית"
         uploaded_avatar_empty: "הוסף תמונה אישית"
         upload_title: "העלה את התמונה שלך"
@@ -450,8 +448,6 @@ he:
         title: "כתובת IP אחרונה"
       registration_ip_address:
         title: "כתובת IP בהרשמה"
-      avatar:
-        title: "אוואטר"
       title:
         title: "כותרת"
       filters:
@@ -1217,13 +1213,11 @@ he:
         help: "הנושא הזה נעול, הוא לא מקבל יותר תגובות חדשות"
       unpinned:
         title: "הורד מנעיצה"
-        help: "הנושא הזה אינו נעוץ. הוא יוצג לפי סדר ברירת המחדל"
       pinned_globally:
         title: "נעוץ גלובאלית"
         help: "הנושא הזה נעוץ גלובאלית; הוא יוצג בראש כל הרשימות"
       pinned:
         title: "נעוץ"
-        help: "הנושא הזה נעוץ; הוא יוצג בראש הקטגוריה שלו"
       archived:
         help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
       invisible:
@@ -1632,7 +1626,6 @@ he:
           do_nothing: "עשה כלום"
         staff_actions:
           title: "פעולות צוות"
-          instructions: "לחץ על שמות משתמש ופעולות כדי לסנן את הרשימה. לחץ על אוואטרים כדי ללכת לעמוד המשתמש."
           clear_filters: "הראה הכל"
           staff_user: "משתמש חבר צוות"
           target_user: "משתמש מטרה"
@@ -1859,7 +1852,6 @@ he:
           external_username: "שם משתמש"
           external_name: "שם"
           external_email: "כתובת דוא\"ל"
-          external_avatar_url: "כתובת URL של אווטר"
       user_fields:
         title: "שדות משתמש/ת"
         help: "הוסיפו שדות שהמשתמשים שלכם יכולים למלא."
