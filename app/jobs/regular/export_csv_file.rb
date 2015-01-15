@@ -260,8 +260,12 @@ module Jobs
 
 
       def set_file_path
-        file_name_prefix = @file_name.split('_').join('-')
-        @file = UserExport.create(export_type: file_name_prefix, user_id: @current_user.id)
+        if @entity == "user_archive"
+          file_name_prefix = "#{@file_name.split('_').join('-')}-#{current_user.username}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+        else
+          file_name_prefix = "#{@file_name.split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+        end
+        @file = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
         @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
         # ensure directory exists

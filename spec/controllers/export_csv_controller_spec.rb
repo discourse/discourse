@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe ExportCsvController do
-  let(:export_filename) { "user-archive-999.csv.gz" }
+  let(:export_filename) { "user-archive-codinghorror-150115-234817-999.csv.gz" }
 
 
   context "while logged in as normal user" do
@@ -16,7 +16,7 @@ describe ExportCsvController do
 
       it "should not enqueue export job if rate limit is reached" do
         Jobs::ExportCsvFile.any_instance.expects(:execute).never
-        UserExport.create(export_type: "user", user_id: @user.id)
+        UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: @user.id)
         xhr :post, :export_entity, entity: "user_archive", entity_type: "user"
         expect(response).not_to be_success
       end
@@ -29,8 +29,8 @@ describe ExportCsvController do
 
     describe ".download" do
       it "uses send_file to transmit the export file" do
-        file = UserExport.create(export_type: "user", user_id: @user.id)
-        file_name = "user-archive-#{file.id}.csv.gz"
+        file = UserExport.create(file_name: "user-archive-codinghorror-150116-003249", user_id: @user.id)
+        file_name = "user-archive-codinghorror-150116-003249-#{file.id}.csv.gz"
         controller.stubs(:render)
         export = UserExport.new()
         UserExport.expects(:get_download_path).with(file_name).returns(export)
@@ -65,7 +65,7 @@ describe ExportCsvController do
 
       it "should not rate limit export for staff" do
         Jobs.expects(:enqueue).with(:export_csv_file, has_entries(entity: "staff_action", user_id: @admin.id))
-        UserExport.create(export_type: "admin", user_id: @admin.id)
+        UserExport.create(file_name: "screened-email-150116-010145", user_id: @admin.id)
         xhr :post, :export_entity, entity: "staff_action", entity_type: "admin"
         expect(response).to be_success
       end
@@ -73,8 +73,8 @@ describe ExportCsvController do
 
     describe ".download" do
       it "uses send_file to transmit the export file" do
-        file = UserExport.create(export_type: "admin", user_id: @admin.id)
-        file_name = "screened-email-#{file.id}.csv.gz"
+        file = UserExport.create(file_name: "screened-email-150116-010145", user_id: @admin.id)
+        file_name = "screened-email-150116-010145-#{file.id}.csv.gz"
         controller.stubs(:render)
         export = UserExport.new()
         UserExport.expects(:get_download_path).with(file_name).returns(export)
