@@ -312,7 +312,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def logon_after_password_reset
@@ -363,18 +363,18 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('change_email.error')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def account_created
     @message = session['user_created_message']
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def activate_account
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def perform_account_activation
@@ -392,7 +392,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('activation.already_done')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def send_activation_email
