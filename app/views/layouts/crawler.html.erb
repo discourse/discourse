@@ -9,6 +9,7 @@
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
     <%- end %>
     <%= yield :head %>
+    <meta name="viewport" content="width=720, minimum-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   </head>
   <body>
     <%- unless customization_disabled? %>
