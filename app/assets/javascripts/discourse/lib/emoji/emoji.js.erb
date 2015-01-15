@@ -7,6 +7,7 @@ var emoji = <%= Emoji.standard.map(&:name).flatten.inspect %>;
 
 var extendedEmoji = {};
 Discourse.Dialect.registerEmoji = function(code, url) {
+  code = code.toLowerCase();
   extendedEmoji[code] = url;
 };
 
@@ -53,12 +54,12 @@ var search = function(term, options) {
 Discourse.Emoji.search = search;
 
 var emojiHash = {};
-emoji.forEach(function(code){
-  emojiHash[code] = true;
-});
+emoji.forEach(function(code){ emojiHash[code] = true; });
 
 var urlFor = function(code) {
   var url, set = Discourse.SiteSettings.emoji_set;
+
+  code = code.toLowerCase();
 
   if(extendedEmoji.hasOwnProperty(code)) {
     url = extendedEmoji[code];
@@ -82,10 +83,12 @@ var urlFor = function(code) {
 Discourse.Emoji.urlFor = urlFor;
 
 Discourse.Emoji.exists = function(code){
- return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
+  code = code.toLowerCase();
+  return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
 }
 
 function imageFor(code) {
+  code = code.toLowerCase();
   var url = urlFor(code);
   if (url) {
     return ['img', { href: url, title: ':' + code + ':', 'class': 'emoji', alt: code }];
@@ -145,7 +148,7 @@ Object.keys(translations).forEach(function (t) {
 });
 
 function escapeRegExp(s) {
-  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return s.replace(/[-/\\^$*+?.()|[\]{}]/gi, '\\$&');
 }
 
 var translationColonRegexp = new RegExp(Object.keys(translationsWithColon).map(function (t) {

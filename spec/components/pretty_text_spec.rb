@@ -299,7 +299,6 @@ describe PrettyText do
     end
   end
 
-
   it 'can escape *' do
     expect(PrettyText.cook("***a***a")).to match_html("<p><strong><em>a</em></strong>a</p>")
     expect(PrettyText.cook("***\\****a")).to match_html("<p><strong><em>*</em></strong>a</p>")
