@@ -50,6 +50,8 @@ var controllerOpts = {
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
       Discourse.TopicList.find(filter).then(function(list) {
+        Discourse.TopicList.hideUniformCategory(list, self.get('category'));
+
         self.setProperties({ model: list, selected: [] });
 
         var tracking = Discourse.TopicTrackingState.current();

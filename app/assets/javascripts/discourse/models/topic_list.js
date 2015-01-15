@@ -1,12 +1,3 @@
-/**
-  A data model representing a list of topics
-
-  @class TopicList
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-
 function finderFor(filter, params) {
   return function() {
     var url = Discourse.getURL("/") + filter + ".json";
@@ -264,6 +255,12 @@ Discourse.TopicList.reopenClass({
     return PreloadStore.getAndRemove("topic_list_" + filter, finderFor(filter, params)).then(function(result) {
       return Discourse.TopicList.from(result, filter, params);
     });
+  },
+
+  // Sets `hideCategory` if all topics in the last have a particular category
+  hideUniformCategory: function(list, category) {
+    var hideCategory = !list.get('topics').any(function (t) { return t.get('category') !== category; });
+    list.set('hideCategory', hideCategory);
   }
 
 });
