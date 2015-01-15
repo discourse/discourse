@@ -7,7 +7,7 @@ export default Em.Component.extend({
         categoryUrl = Discourse.getURL('/c/') + Discourse.Category.slugFor(category),
         categoryName = Handlebars.Utils.escapeExpression(category.get('name'));
 
-    if (category.get('read_restricted')) { buffer.push("<i class='fa fa-group'></i>"); }
+    if (category.get('read_restricted')) { buffer.push("<i class='fa fa-lock'></i>"); }
 
     buffer.push("<a href='" + categoryUrl + "'>");
     buffer.push("<span class='category-name'>" + categoryName + "</span>");

@@ -111,7 +111,7 @@ Discourse.HTML = {
     }
 
     if (restricted) {
-      html += "><div><i class='fa fa-group'></i> " + name + "</div></" + elem + ">";
+      html += "><div><i class='fa fa-lock'></i> " + name + "</div></" + elem + ">";
     } else {
       html += ">" + name + "</" + elem + ">";
     }
@@ -121,9 +121,9 @@ Discourse.HTML = {
       if (!parent) { parent = category; }
 
       categoryStyle = Discourse.HTML.categoryStyle(opts.onlyStripe ? category : parent) || '';
-      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + categoryStyle + 
+      html = "<span class='badge-wrapper'><" + elem + " class='badge-category-parent" + extraClasses + "' style=\"" + categoryStyle +
              "\" href=\"" + (opts.link === false ? '' : url) + "\"><span class='category-name'>" +
-             (Em.get(parent, 'read_restricted') ? "<i class='fa fa-group'></i> " : "") +
+             (Em.get(parent, 'read_restricted') ? "<i class='fa fa-lock'></i> " : "") +
              Em.get(parent, 'name') + "</span></" + elem + ">" +
              html + "</span>";
     }

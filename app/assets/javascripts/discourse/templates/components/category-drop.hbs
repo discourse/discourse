@@ -1,7 +1,7 @@
 {{#if category}}
   <a href="#" {{action "expand"}} class="badge-category" {{bind-attr style="badgeStyle"}}>
     {{#if category.read_restricted}}
-      <i class='fa fa-group'></i>
+      <i class='fa fa-lock'></i>
     {{/if}}
     {{category.name}}
   </a>
