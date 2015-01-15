@@ -158,6 +158,12 @@ describe TopicView do
       it 'returns the two posters with their counts' do
         expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2], [coding_horror.id, 1]])
       end
+
+      it "doesn't return counts for posts with authors who have been deleted" do
+        p2.user_id = nil
+        p2.save!
+        expect(topic_view.post_counts_by_user.to_a).to match_array([[first_poster.id, 2]])
+      end
     end
 
     context '.participants' do
