@@ -12,7 +12,7 @@ class UserExport < ActiveRecord::Base
   def self.remove_old_exports
     expired_exports = UserExport.where('created_at < ?', 2.days.ago).to_a
     expired_exports.map do |expired_export|
-      file_name = "#{expired_export.export_type}-#{expired_export.id}.csv.gz"
+      file_name = "#{expired_export.file_name}-#{expired_export.id}.csv.gz"
       file_path = "#{UserExport.base_directory}/#{file_name}"
 
       if File.exist?(file_path)
@@ -33,7 +33,7 @@ end
 # Table name: user_exports
 #
 #  id          :integer          not null, primary key
-#  export_type :string(255)      not null
+#  file_name   :string(255)      not null
 #  user_id     :integer          not null
 #  created_at  :datetime
 #  updated_at  :datetime
