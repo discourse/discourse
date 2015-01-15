@@ -26,6 +26,6 @@ export default Ember.Component.extend({
   },
 
   click: function() {
-    this.sendAction();
+    this.sendAction("action", this.get("actionParam"));
   }
 });
