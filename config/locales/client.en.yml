@@ -103,7 +103,7 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
-    emails_are_disabled: "Administrators have disabled emails."
+    emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
