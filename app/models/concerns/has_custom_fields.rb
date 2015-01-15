@@ -117,7 +117,7 @@ module HasCustomFields
       array_fields.each do |field_name, fields|
         if fields.length == dup[field_name].length &&
             fields.map{|f| f.value} == dup[field_name]
-          dup.delete(f.name)
+          dup.delete(field_name)
         else
           fields.each{|f| f.destroy }
         end

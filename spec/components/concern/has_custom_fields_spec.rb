@@ -115,6 +115,14 @@ describe HasCustomFields do
       db_item.save
       expect(db_item.custom_fields).to eq({"a" => ["c", "d"]})
 
+      # It can be updated to the exact same value
+      db_item.custom_fields.update('a' => ['c'])
+      db_item.save
+      expect(db_item.custom_fields).to eq({"a" => "c"})
+      db_item.custom_fields.update('a' => ['c'])
+      db_item.save
+      expect(db_item.custom_fields).to eq({"a" => "c"})
+
       db_item.custom_fields.delete('a')
       expect(db_item.custom_fields).to eq({})
 
