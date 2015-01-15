@@ -54,9 +54,7 @@ export default function(filter, params) {
           extras = { cached: this.isPoppedState(transition) };
 
       return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
-        // If all the categories are the same, we can hide them
-        var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
-        list.set('hideCategory', hideCategory);
+        Discourse.TopicList.hideUniformCategory(list, model);
         self.set('topics', list);
       });
     },
