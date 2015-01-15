@@ -278,7 +278,7 @@ module Jobs
           end
         end
         # compress CSV file
-        `gzip --best #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
+        `gzip -5 #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 
       def notify_user
