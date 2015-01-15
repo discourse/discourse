@@ -8,7 +8,6 @@ export default DiscoveryController.extend({
 
   actions: {
     refresh: function() {
-      var self = this;
 
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
@@ -17,7 +16,17 @@ export default DiscoveryController.extend({
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
-      Discourse.CategoryList.list('categories').then(function(list) {
+
+      var parentCategory = this.get('model.parentCategory');
+      var promise;
+      if (parentCategory) {
+        promise = Discourse.CategoryList.listForParent(parentCategory);
+      } else {
+        promise = Discourse.CategoryList.list();
+      }
+
+      var self = this;
+      promise.then(function(list) {
         self.set('model', list);
         self.send('loadingComplete');
       });
