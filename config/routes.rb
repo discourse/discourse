@@ -273,6 +273,9 @@ Discourse::Application.routes.draw do
     get 'members'
     get 'posts'
     get 'counts'
+
+    put "members" => "groups#add_members"
+    delete "members/:username" => "groups#remove_member"
   end
 
   # In case people try the wrong URL
