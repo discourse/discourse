@@ -254,7 +254,6 @@ nav.post-controls {
       opacity: 0;
     }
   }
-  &.bottom .arrow { float: right; }
   &.bottom {
     margin-top: -11px;
     .row {
@@ -273,7 +272,7 @@ nav.post-controls {
   }
 
   .post-date { color: scale-color($primary, $lightness: 50%); }
-  .fa-arrow-up { margin-left: 5px; }
+  .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
   .row {
     border-top: 1px solid darken(scale-color-diff(), 10%);
   }
