@@ -1029,6 +1029,22 @@ describe User do
     end
   end
 
+  context "group management" do
+    let!(:user) { Fabricate(:user) }
+
+    it "by default has no managed groups" do
+      expect(user.managed_groups).to be_empty
+    end
+
+    it "can manage multiple groups" do
+      3.times do |i|
+        g = Fabricate(:group, name: "group_#{i}")
+        g.appoint_manager(user)
+      end
+      expect(user.managed_groups.count).to eq(3)
+    end
+  end
+
   describe "should_be_redirected_to_top" do
     let!(:user) { Fabricate(:user) }
 
