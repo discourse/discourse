@@ -11,7 +11,7 @@
       {{poster-name post=this}}
       {{#if view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n 'topic.jump_reply_up'}}"><i class='fa fa-arrow-up'></i></a>{{/if}}
       {{#unless view.parentView.previousPost}}<a href='{{unbound url}}' class="post-info arrow" title="{{i18n 'topic.jump_reply_down'}}"><i class='fa fa-arrow-down'></i></a>{{/unless}}
-      <div class='post-info post-date'>{{age-with-tooltip created_at}}</div>
+      <a href='{{unbound url}}'><div class='post-info post-date'>{{age-with-tooltip created_at}}</div></a>
     </div>
     {{{unbound cooked}}}
 
