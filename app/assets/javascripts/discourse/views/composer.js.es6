@@ -73,6 +73,13 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
       if (pos) {
         self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
+
+      // get the submit panel height
+      pos = self.$('.submit-panel').position();
+      if (pos) {
+        self.$('.wmd-controls').css('bottom', h - pos.top + 7);
+      }
+
     });
   }.observes('model.composeState', 'model.action'),
 
