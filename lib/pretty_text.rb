@@ -82,7 +82,7 @@ module PrettyText
     end
 
     # custom emojis
-    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    emoji = ERB.new(File.read(File.dirname(__FILE__)+"/../app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
     ctx.eval(emoji.result)
 
     Emoji.custom.each do |emoji|
