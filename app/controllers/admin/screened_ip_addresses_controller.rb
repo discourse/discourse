@@ -3,7 +3,15 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
   before_filter :fetch_screened_ip_address, only: [:update, :destroy]
 
   def index
-    screened_ip_addresses = ScreenedIpAddress.limit(200).order('match_count desc').to_a
+    query = ScreenedIpAddress.limit(200).order('match_count desc, id asc')
+    if params[:after]
+      m = params[:after].match /(\d+),(\d+)/
+      return render_json_error I18n.t('errors.messages.bad_format') unless m
+      count, id = m[1], m[2]
+      query.where!('match_count <= ?', count)
+      query.where!('id > ?', id)
+    end
+    screened_ip_addresses = query.to_a
     render_serialized(screened_ip_addresses, ScreenedIpAddressSerializer)
   end
 

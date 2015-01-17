@@ -55,6 +55,7 @@ en:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
       taken: "has already been taken. (group names are case insensitive)"
+      bad_format: "Invalid input format."
     embed:
       load_from_remote: "There was an error loading that post."
 
