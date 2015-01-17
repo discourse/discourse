@@ -7,15 +7,21 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
 
-    # super annoying empty JS errors in the form of
+    # some old browsers don't define the JavaScript console
     #
-    # Script error.
-    # Url:
-    # Line: 0
-    # Column: 0
-    # Window Location: http://discourse.codinghorror.com/t/the-god-login/2924/19
+    # 'console' is undefined
+    # Url: http://discourse-cdn.codinghorror.com/assets/vendor-0dbc6e71b0ee5428574e3562afe91ef1.js
+    # Line: 16
+    # Window Location: http://discourse.codinghorror.com/t/the-non-programming-programmer/120/2
     #
-    /(?m)\AScript error\..*?Line: 0.*?Column: 0/,
+    /^'console' is undefined/,
+
+    # ignore any empty JS errors that contain blanks or zeros for line and column fields
+    #
+    # Line:
+    # Column:
+    #
+    /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
     # suppress trackback spam bots
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
