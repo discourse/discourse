@@ -185,7 +185,11 @@ class User < ActiveRecord::Base
     Jobs.enqueue(:send_system_message, user_id: id, message_type: message_type)
   end
 
-  def change_username(new_username)
+  def change_username(new_username, actor=nil)
+    if actor && actor != self
+      StaffActionLogger.new(actor).log_username_change(self, self.username, new_username)
+    end
+
     self.username = new_username
     save
   end

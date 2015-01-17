@@ -1863,6 +1863,7 @@ en:
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+            change_username: "change username"
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"

@@ -100,6 +100,16 @@ class StaffActionLogger
     }))
   end
 
+  def log_username_change(user, old_username, new_username, opts={})
+    raise Discourse::InvalidParameters.new('user is nil') unless user
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:change_username],
+      target_user_id: user.id,
+      previous_value: old_username,
+      new_value: new_username
+    }))
+  end
+
   def log_user_suspend(user, reason, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user
     UserHistory.create( params(opts).merge({
