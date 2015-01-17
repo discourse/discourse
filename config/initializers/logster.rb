@@ -7,6 +7,16 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
 
+    # super annoying empty JS errors in the form of
+    #
+    # Script error.
+    # Url:
+    # Line: 0
+    # Column: 0
+    # Window Location: http://discourse.codinghorror.com/t/the-god-login/2924/19
+    #
+    /^Script error.\nUrl: \nLine: 0?\n/,
+
     # suppress trackback spam bots
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
 
