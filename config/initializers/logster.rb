@@ -9,13 +9,13 @@ if Rails.env.production?
 
     # super annoying empty JS errors in the form of
     #
-    # Script error.
-    # Url:
-    # Line: 0
-    # Column: 0
+    # Script error.  (OR single space OR nothing)
+    # Url: 
+    # Line: 0        (OR no number, just a space)
+    # Column: 0      (OR no number, just a space)
     # Window Location: http://discourse.codinghorror.com/t/the-god-login/2924/19
     #
-    /(?m)\AScript error\..*?Line: 0.*?Column: 0/,
+    /(?m)\A(Script error\.| |)\nUrl: [^\n ]*\nLine: 0?\nColumn: 0?\n/m,
 
     # suppress trackback spam bots
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
