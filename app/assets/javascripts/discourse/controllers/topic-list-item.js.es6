@@ -23,9 +23,7 @@ export default Ember.ObjectController.extend({
   }.property('controllers.discovery/topics.selected.length'),
 
   titleColSpan: function() {
-    // Uncategorized pinned topics will span the title and category column in the topic list.
-    return (!this.get('controllers.discovery/topics.hideCategory') &&
-             this.get('model.isPinnedUncategorized') ? 2 : 1);
+    return (!this.get('controllers.discovery/topics.hideCategory'));
   }.property('controllers.discovery/topics.hideCategory', 'model.isPinnedUncategorized'),
 
   hideCategory: function() {
