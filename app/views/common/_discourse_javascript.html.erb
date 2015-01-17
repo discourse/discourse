@@ -51,5 +51,6 @@ if (!window.HaltDiscourse) {
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
 } else {
   $('html').addClass('no-js').removeClass('js');
+  document.getElementById('noscript').style.display = "block";
 }
 </script>
