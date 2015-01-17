@@ -49,6 +49,13 @@ module Email
 
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/\[\/?email-indent\]/, '')
 
+      # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
+      # These are the links we add when a user uploads a file or image.
+      # Ideally we would parse general markdown into plain text, but that is almost an intractable problem.
+      url_prefix = Discourse.base_url
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<a class="attachment" href="(\/uploads\/default\/[^"]+)">([^<]*)<\/a>/, '[\2]('+url_prefix+'\1)')
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![]('+url_prefix+'\1)')
+
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
       # Set up the email log
