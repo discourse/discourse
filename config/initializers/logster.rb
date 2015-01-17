@@ -15,7 +15,7 @@ if Rails.env.production?
     # Column: 0
     # Window Location: http://discourse.codinghorror.com/t/the-god-login/2924/19
     #
-    /^Script error.\nUrl: \nLine: 0?\n/,
+    /(?m)\AScript error\..*?Line: 0.*?Column: 0/,
 
     # suppress trackback spam bots
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
