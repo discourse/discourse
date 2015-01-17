@@ -58,6 +58,8 @@ var $buo = function() {
   // shift the body down to make room for our notification div
   document.body.style.marginTop = (div.clientHeight) + "px";
 
+  // Signal to Discourse to stop
+  window.HaltDiscourse = true;
 };
 
 $bu=$buo();

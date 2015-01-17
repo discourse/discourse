@@ -100,8 +100,13 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     @method start
   **/
   start: function() {
-
-    $('noscript').remove();
+    if (window.HaltDiscourse) {
+      // Browser is too old to run Discourse. Don't start.
+      // see browser-update.js
+      return;
+    } else {
+      $('#noscript').remove();
+    }
 
     // Load any ES6 initializers
     Ember.keys(requirejs._eak_seen).forEach(function(key) {

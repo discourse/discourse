@@ -36,7 +36,8 @@
   </head>
 
   <body>
-    <noscript data-path="<%= request.env['PATH_INFO'] %>">
+    <!-- nb: first step in start() is to delete this -->
+    <div id="noscript">
       <header class="d-header">
         <div class="container">
           <div class="contents">
@@ -49,14 +50,12 @@
         </div>
       </header>
       <div id="main-outlet" class="container">
-        <!-- preload-content: -->
         <%= yield %>
-        <!-- :preload-content -->
       </div>
       <footer id='noscript-footer'>
         <p><%= t 'powered_by_html' %></p>
       </footer>
-    </noscript>
+    </div><!--end noscript div-->
 
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
 
