@@ -16,7 +16,7 @@ END
     raise "Invalid host_names in database.yml"
   end
 
-  if !Dir.glob(File.join(Rails.root,'public','assets','application*.js')).present?
+  if !ENV["TEATRO"] && !Dir.glob(File.join(Rails.root,'public','assets','application*.js')).present?
     puts <<END
 
       Assets have not been precompiled. Please run the following command
