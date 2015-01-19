@@ -146,6 +146,8 @@ module Email
       return nil if object.nil?
 
       if object.charset
+        # convert UTF8 charset to UTF-8
+        object.charset = object.charset.gsub(/utf8/i, "UTF-8") if object.charset.downcase == "utf8"
         object.body.decoded.force_encoding(object.charset).encode("UTF-8").to_s
       else
         object.body.to_s
