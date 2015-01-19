@@ -11,7 +11,6 @@ class AdminDashboardData
     'users_by_trust_level',
     'likes',
     'bookmarks',
-    'starred',
     'emails',
     'user_to_user_private_messages',
     'system_private_messages',
@@ -41,7 +40,6 @@ class AdminDashboardData
       send_consumer_email_check,
       title_check,
       site_description_check,
-      access_password_removal,
       site_contact_username_check,
       notification_email_check
     ].compact
@@ -176,30 +174,15 @@ class AdminDashboardData
   end
 
   def site_contact_username_check
-    I18n.t('dashboard.site_contact_username_warning') if SiteSetting.site_contact_username.blank?
+    I18n.t('dashboard.site_contact_username_warning') if !SiteSetting.site_contact_username.present? || SiteSetting.site_contact_username == SiteSetting.defaults[:site_contact_username]
   end
 
   def notification_email_check
-    I18n.t('dashboard.notification_email_warning') if SiteSetting.notification_email.blank?
+    I18n.t('dashboard.notification_email_warning') if !SiteSetting.notification_email.present? || SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
   end
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
-  # TODO: generalize this method of putting i18n keys with expiry in redis
-  #       that should be reported on the admin dashboard:
-  def access_password_removal
-    if i18n_key = $redis.get(AdminDashboardData.access_password_removal_key)
-      I18n.t(i18n_key)
-    end
-  end
-
-  def self.report_access_password_removal
-    $redis.setex access_password_removal_key, 172_800, 'dashboard.access_password_removal'
-  end
-
-  def self.access_password_removal_key
-    'dash-data:access_password_removal'
-  end
 end

@@ -6,6 +6,7 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    CFPropertyList (2.2.8)
     actionmailer (4.1.8)
       actionpack (= 4.1.8)
       actionview (= 4.1.8)
@@ -41,11 +42,11 @@ GEM
       activerecord (>= 2.3.0)
       rake (>= 0.8.7)
     arel (5.0.1.20140414130214)
-    barber (0.4.2)
+    barber (0.5.0)
       ember-source
       execjs
-      handlebars-source
-    better_errors (2.0.0)
+      handlebars-source (>= 1.0.0.rc.4)
+    better_errors (2.1.0)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
@@ -77,11 +78,11 @@ GEM
       handlebars-source
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (1.6.0.beta.2)
-      handlebars-source (~> 1.0)
+    ember-source (1.9.0.beta.4)
+      handlebars-source (~> 2.0)
     erubis (2.7.0)
-    eventmachine (1.0.3)
-    excon (0.39.6)
+    eventmachine (1.0.4)
+    excon (0.42.1)
     execjs (2.2.2)
     exifr (1.1.3)
     fabrication (2.9.8)
@@ -98,28 +99,76 @@ GEM
     fast_xs (0.8.0)
     fastimage (1.6.3)
       addressable (~> 2.3, >= 2.3.5)
-    ffi (1.9.5)
-    flamegraph (0.0.9)
+    ffi (1.9.6)
+    fission (0.5.0)
+      CFPropertyList (~> 2.2)
+    flamegraph (0.1.0)
       fast_stack
-    fog (1.22.1)
-      fog-brightbox
-      fog-core (~> 1.22)
+    fog (1.26.0)
+      fog-atmos
+      fog-brightbox (~> 0.4)
+      fog-core (~> 1.27, >= 1.27.1)
+      fog-ecloud
       fog-json
+      fog-profitbricks
+      fog-radosgw (>= 0.0.2)
+      fog-sakuracloud (>= 0.0.4)
+      fog-softlayer
+      fog-storm_on_demand
+      fog-terremark
+      fog-vmfusion
+      fog-voxel
+      fog-xml (~> 0.1.1)
       ipaddress (~> 0.5)
       nokogiri (~> 1.5, >= 1.5.11)
-    fog-brightbox (0.5.1)
+    fog-atmos (0.1.0)
+      fog-core
+      fog-xml
+    fog-brightbox (0.7.1)
       fog-core (~> 1.22)
       fog-json
-      inflecto
-    fog-core (1.24.0)
+      inflecto (~> 0.0.2)
+    fog-core (1.27.2)
       builder
       excon (~> 0.38)
       formatador (~> 0.2)
       mime-types
       net-scp (~> 1.1)
       net-ssh (>= 2.1.3)
+    fog-ecloud (0.0.2)
+      fog-core
+      fog-xml
     fog-json (1.0.0)
       multi_json (~> 1.0)
+    fog-profitbricks (0.0.1)
+      fog-core
+      fog-xml
+      nokogiri
+    fog-radosgw (0.0.3)
+      fog-core (>= 1.21.0)
+      fog-json
+      fog-xml (>= 0.0.1)
+    fog-sakuracloud (0.1.1)
+      fog-core
+      fog-json
+    fog-softlayer (0.3.26)
+      fog-core
+      fog-json
+    fog-storm_on_demand (0.1.0)
+      fog-core
+      fog-json
+    fog-terremark (0.0.3)
+      fog-core
+      fog-xml
+    fog-vmfusion (0.0.1)
+      fission
+      fog-core
+    fog-voxel (0.0.2)
+      fog-core
+      fog-xml
+    fog-xml (0.1.1)
+      fog-core
+      nokogiri (~> 1.5, >= 1.5.11)
     foreman (0.75.0)
       dotenv (~> 0.11.1)
       thor (~> 0.19.1)
@@ -129,12 +178,12 @@ GEM
     given_core (3.5.4)
       sorcerer (>= 0.3.7)
     guess_html_encoding (0.0.9)
-    handlebars-source (1.3.0)
+    handlebars-source (2.0.0)
     hashie (3.3.1)
     highline (1.6.21)
     hike (1.2.3)
     hiredis (0.5.2)
-    htmlentities (4.3.2)
+    htmlentities (4.3.3)
     i18n (0.6.11)
     image_optim (0.9.1)
       exifr (~> 1.1.3)
@@ -196,7 +245,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (~> 1.2)
-    oj (2.10.2)
+    oj (2.11.1)
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
@@ -222,7 +271,7 @@ GEM
     omniauth-twitter (1.0.1)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
-    onebox (1.5.5)
+    onebox (1.5.6)
       moneta (~> 0.7)
       multi_json (~> 1.7)
       mustache (~> 0.99)
@@ -230,7 +279,7 @@ GEM
     openid-redis-store (0.0.2)
       redis
       ruby-openid
-    pg (0.15.1)
+    pg (0.18.0)
     polyglot (0.3.5)
     progress (3.0.1)
     pry (0.10.1)
@@ -273,8 +322,8 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     raindrops (0.13.0)
-    rake (10.4.0)
-    rake-compiler (0.9.3)
+    rake (10.4.2)
+    rake-compiler (0.9.4)
       rake
     rb-fsevent (0.9.4)
     rb-inotify (0.9.5)
@@ -284,7 +333,7 @@ GEM
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
     redcarpet (3.1.2)
-    redis (3.1.0)
+    redis (3.2.0)
     redis-namespace (1.5.1)
       redis (~> 3.0, >= 3.0.4)
     ref (1.0.5)
@@ -414,7 +463,7 @@ DEPENDENCIES
   certified
   email_reply_parser
   ember-rails
-  ember-source (= 1.6.0.beta.2)
+  ember-source (= 1.9.0.beta.4)
   eventmachine
   fabrication (= 2.9.8)
   fakeweb (~> 1.3.0)
@@ -423,10 +472,10 @@ DEPENDENCIES
   fast_xs
   fastimage
   flamegraph
-  fog (= 1.22.1)
+  fog (= 1.26.0)
   foreman
   gctools
-  handlebars-source (= 1.3.0)
+  handlebars-source (= 2.0.0)
   highline
   hiredis
   htmlentities
@@ -454,7 +503,7 @@ DEPENDENCIES
   omniauth-twitter
   onebox
   openid-redis-store
-  pg (= 0.15.1)
+  pg
   pry-nav
   pry-rails
   puma

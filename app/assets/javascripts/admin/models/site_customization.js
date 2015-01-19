@@ -7,11 +7,16 @@
   @module Discourse
 **/
 Discourse.SiteCustomization = Discourse.Model.extend({
-  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'override_default_style'],
+  trackedProperties: [
+    'enabled', 'name',
+    'stylesheet', 'header', 'top', 'footer',
+    'mobile_stylesheet', 'mobile_header', 'mobile_top', 'mobile_footer',
+    'head_tag', 'body_tag'
+  ],
 
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
-  }.property('selected', 'name'),
+  }.property('selected', 'name', 'enabled'),
 
   changed: function() {
     var self = this;
@@ -25,8 +30,10 @@ Discourse.SiteCustomization = Discourse.Model.extend({
     if (changed) { this.set('savingStatus', ''); }
 
     return changed;
-
-  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'footer', 'mobile_stylesheet', 'mobile_header', 'mobile_footer', 'originals'),
+  }.property('enabled', 'name', 'originals',
+    'stylesheet', 'header', 'top', 'footer',
+    'mobile_stylesheet', 'mobile_header', 'mobile_top', 'mobile_footer',
+    'head_tag', 'body_tag'),
 
   startTrackingChanges: function() {
     var self = this;
@@ -43,16 +50,20 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   save: function() {
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving',true);
+
     var data = {
       name: this.name,
       enabled: this.enabled,
       stylesheet: this.stylesheet,
       header: this.header,
+      top: this.top,
       footer: this.footer,
       mobile_stylesheet: this.mobile_stylesheet,
       mobile_header: this.mobile_header,
+      mobile_top: this.mobile_top,
       mobile_footer: this.mobile_footer,
-      override_default_style: this.override_default_style
+      head_tag: this.head_tag,
+      body_tag: this.body_tag
     };
 
     var siteCustomization = this;

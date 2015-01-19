@@ -8,6 +8,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   loggedIn: false,
 
   canLoginLocal: Discourse.computed.setting('enable_local_logins'),
+  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
 
   resetForm: function() {
     this.set('authenticate', null);
@@ -72,9 +73,16 @@ export default DiscourseController.extend(ModalFunctionality, {
           self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
+          var destinationUrl = $.cookie('destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+          if (self.get('loginRequired') && destinationUrl) {
+            // redirect client to the original URL
+            $.cookie('destination_url', null);
+            $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
+          } else {
+            $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+          }
           $hidden_login_form.submit();
         }
 

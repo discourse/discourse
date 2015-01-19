@@ -146,7 +146,7 @@ module Email
       return nil if object.nil?
 
       if object.charset
-        object.body.decoded.force_encoding(object.charset).encode("UTF-8").to_s
+        object.body.decoded.force_encoding(object.charset.gsub(/utf8/i, "UTF-8")).encode("UTF-8").to_s
       else
         object.body.to_s
       end

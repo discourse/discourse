@@ -84,7 +84,6 @@ da:
           other: "%{count} dage siden"
     share:
       topic: 'del et link til dette emne'
-      post: 'del et link til dette indlæg'
       close: 'luk'
       twitter: 'del dette link på Twitter'
       facebook: 'del dette link på Facebook'
@@ -251,7 +250,6 @@ da:
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
-      download_archive: "download arkiv med alle mine indlæg"
       private_message: "Private beskeder"
       private_messages: "Beskeder"
       activity_stream: "Aktivitet"
@@ -319,10 +317,8 @@ da:
         error: "Der opstod en fejl i forbindelse med skift af din e-mail-adresse. Måske er adressen allerede i brug?"
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
       change_avatar:
-        title: "Skift dit profil billede"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
         refresh_gravatar_title: "Gendindlæs dit profil billede"
-        letter_based: "System genereret profil billede"
         uploaded_avatar: "Brugerdefineret profil billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
         upload_title: "Upload dit profil billede"
@@ -407,7 +403,6 @@ da:
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
-          success: "Filen er uploadet uden problemer, du vil snart blive notificeret om hvordan det går."
           error: "Der var en fejl ved upload af filen '{{filename}}': {{message}}"
       password:
         title: "Adgangskode"
@@ -418,8 +413,6 @@ da:
         title: "Sidste IP-adresse"
       registration_ip_address:
         title: "Registrerings IP adresse"
-      avatar:
-        title: "Profil billede"
       title:
         title: "Titel"
       filters:
@@ -646,11 +639,6 @@ da:
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
     current_user: 'gå til brugerside'
-    starred:
-      title: 'Favorit'
-      help:
-        star: 'tilføj dette emne til din favorit-liste'
-        unstar: 'fjern dette emne fra din favorit-liste'
     topics:
       bulk:
         reset_read: "Nulstil \"læst\""
@@ -678,8 +666,6 @@ da:
         hot: "Der er ingen populære emner."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
-        educate:
-          starred: '<p>Dine favoritemner optræder her.</p><p>For at gøre et emne til favorit, kan du brug: :</p><ul><li><i class="fa fa-star"></i> ved siden af emnets titel</li><li>stjerne-knappen ved bunden af hvert emne</li></ul>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -687,7 +673,6 @@ da:
         read: "Der er ikke flere læste emner."
         new: "Der er ikke flere nye emner."
         unread: "Der er ikke flere ulæste emner."
-        starred: "Der er ikke flere favorit-emner."
         category: "Der er ikke flere emner i kategorien {{category}}."
         top: "Der er ikke flere top emner"
     topic:
@@ -1146,13 +1131,11 @@ da:
         help: "emnet er låst; det modtager ikke flere svar"
       unpinned:
         title: "Ikke fastgjort"
-        help: "Dette emne er ikke fastgjort; det vil blive vist i sin normale rækkefølge"
       pinned_globally:
         title: "Fastgjort globalt"
         help: "Dette emne er fastgjort globalt; det vil blive vist øverst på alle lister"
       pinned:
         title: "Fastgjort"
-        help: "emnet er fastgjort; det vises i toppen af sin kategori"
       archived:
         help: "emnet er arkiveret; det er frosset og kan ikke ændres"
     posts: "Indlæg"
@@ -1190,9 +1173,6 @@ da:
       hot:
         title: "Populære"
         help: "de mest populære emner"
-      starred:
-        title: "Favoritter"
-        help: "emner du har markeret som favoritter"
       read:
         title: "Læste"
         help: "emner du har læst"
@@ -1359,7 +1339,6 @@ da:
         edit: "Redigér grupper"
         refresh: "Genindlæs"
         new: "Nye"
-        selector_placeholder: "tilføj brugere"
         name_placeholder: "Gruppenavn, ingen mellemrum, på samme måde som brugernavne"
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
@@ -1551,7 +1530,6 @@ da:
           do_nothing: "gør intet"
         staff_actions:
           title: "Handlinger"
-          instructions: "Klik på brugernavne og handlinger for at filtrere listen. Klik på avatarer for at gå til brugersider."
           clear_filters: "Vis alt"
           staff_user: "Bruger"
           target_user: "Bruger"
@@ -1765,7 +1743,6 @@ da:
           external_username: "Brugernavn"
           external_name: "Navn"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         help: "Tilføj felter, som dine brugere kan udfylde"
         create: "Opret brugerfelt"
@@ -1874,7 +1851,6 @@ da:
         latest: '<b>g</b>, <b>l</b> Seneste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ulæste'
-        starred: '<b>g</b>, <b>f</b> Favoritter'
         categories: '<b>g</b>, <b>c</b> Kategorier'
       navigation:
         title: 'Navigation'
@@ -1887,10 +1863,7 @@ da:
         search: '<b>/</b> Søg'
       actions:
         title: 'Handlinger'
-        star: '<b>f</b> Markér emne som favorit'
-        share_topic: '<b>shift s</b> Del emne'
         share_post: '<b>s</b> Del opslag'
-        reply_topic: '<b>shift r</b> Svar på emnet'
         reply_post: '<b>r</b> Svar på kommentaren'
         quote_post: '<b>q</b> Citer emne'
         like: '<b>l</b> Like indlæg'

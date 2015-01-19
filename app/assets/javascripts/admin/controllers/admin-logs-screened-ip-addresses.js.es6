@@ -1,4 +1,4 @@
-import { outputExportResult } from 'admin/lib/export-result';
+import { outputExportResult } from 'discourse/lib/export-result';
 
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,

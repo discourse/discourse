@@ -14,6 +14,13 @@ export default Ember.Mixin.create({
     this.renderString(buffer);
   },
 
+  renderString: function(buffer){
+    var template = Discourse.__container__.lookup('template:' + this.rawTemplate);
+    if (template) {
+      buffer.push(template(this));
+    }
+  },
+
   _rerenderString: function() {
     var buffer = [];
     this.renderString(buffer);

@@ -51,10 +51,10 @@ export default DiscourseController.extend(ModalFunctionality, {
     // Validate required fields
     var userFields = this.get('userFields');
     if (userFields) { userFields = userFields.filterProperty('field.required'); }
-    if (!Ember.empty(userFields)) {
+    if (!Ember.isEmpty(userFields)) {
       var anyEmpty = userFields.any(function(uf) {
         var val = uf.get('value');
-        return !val || Ember.empty(val);
+        return !val || Ember.isEmpty(val);
       });
       if (anyEmpty) { return true; }
     }
@@ -336,7 +336,7 @@ export default DiscourseController.extend(ModalFunctionality, {
           userFields = this.get('userFields');
 
       // Add the userfields to the data
-      if (!Em.empty(userFields)) {
+      if (!Ember.isEmpty(userFields)) {
         attrs.userFields = {};
         userFields.forEach(function(f) {
           attrs.userFields[f.get('field.id')] = f.get('value');

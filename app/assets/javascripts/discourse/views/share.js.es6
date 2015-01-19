@@ -1,11 +1,3 @@
-/**
-  This view is used for rendering the "share" interface for a post
-
-  @class ShareView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.View.extend({
   templateName: 'share',
   elementId: 'share-link',

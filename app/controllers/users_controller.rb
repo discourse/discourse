@@ -88,10 +88,14 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    result = user.change_username(params[:new_username])
+    # TODO proper error surfacing (result is a Model#save call)
+    result = user.change_username(params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render nothing: true
+    render json: {
+      id: user.id,
+      username: user.username
+    }
   end
 
   def check_emails
@@ -309,7 +313,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def logon_after_password_reset
@@ -360,18 +364,18 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('change_email.error')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def account_created
     @message = session['user_created_message']
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def activate_account
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def perform_account_activation
@@ -389,7 +393,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('activation.already_done')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def send_activation_email
@@ -507,6 +511,19 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
+  end
+
+  def staff_info
+    @user = fetch_user_from_params
+    guardian.ensure_can_see_staff_info!(@user)
+
+    result = {}
+
+    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
+      result[info] = @user.send(info)
+    end
+
+    render json: result
   end
 
   private

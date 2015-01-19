@@ -1,22 +1,21 @@
-
 <div class="modal-body">
   <div>
     <ul class='badge-groupings'>
-    {{#each workingCopy}}
-    <li>
-    {{#if editing}}
-      {{input value=this.name}}
-      <button {{action "save" this}}><i class="fa fa-check"></i></button>
-    {{else}}
-      {{this.name}}
-    {{/if}}
-    <div class='actions'>
-    <button {{action "edit" this}}><i class="fa fa-pencil"></i></button>
-    <button {{action "up" this}}><i class="fa fa-toggle-up"></i></button>
-    <button {{action "down" this}}><i class="fa fa-toggle-down"></i></button>
-    <button {{action "delete" this}}><i class="fa fa-times"></i></button>
-    </div>
-    </li>
+    {{#each wc in workingCopy}}
+      <li>
+        {{#if wc.editing}}
+          {{input value=wc.name}}
+          <button {{action "save" wc}}><i class="fa fa-check"></i></button>
+        {{else}}
+          {{wc.name}}
+        {{/if}}
+        <div class='actions'>
+          <button {{action "edit" wc}}><i class="fa fa-pencil"></i></button>
+          <button {{action "up" wc}}><i class="fa fa-toggle-up"></i></button>
+          <button {{action "down" wc}}><i class="fa fa-toggle-down"></i></button>
+          <button {{action "delete" wc}}><i class="fa fa-times"></i></button>
+        </div>
+      </li>
     {{/each}}
     </ul>
   </div>

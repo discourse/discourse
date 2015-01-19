@@ -37,80 +37,80 @@ describe UserSearch do
 
     # normal search
     results = search_for(user1.name.split(" ").first)
-    results.size.should == 1
-    results.first.should == user1
+    expect(results.size).to eq(1)
+    expect(results.first).to eq(user1)
 
     # lower case
     results = search_for(user1.name.split(" ").first.downcase)
-    results.size.should == 1
-    results.first.should == user1
+    expect(results.size).to eq(1)
+    expect(results.first).to eq(user1)
 
     #  username
     results = search_for(user4.username)
-    results.size.should == 1
-    results.first.should == user4
+    expect(results.size).to eq(1)
+    expect(results.first).to eq(user4)
 
     # case insensitive
     results = search_for(user4.username.upcase)
-    results.size.should == 1
-    results.first.should == user4
+    expect(results.size).to eq(1)
+    expect(results.first).to eq(user4)
 
     # substrings
     # only staff members see suspended users in results
     results = search_for("mr")
-    results.size.should == 5
-    results.should_not include(user6)
-    search_for("mr", searching_user: user1).size.should == 5
+    expect(results.size).to eq(5)
+    expect(results).not_to include(user6)
+    expect(search_for("mr", searching_user: user1).size).to eq(5)
 
     results = search_for("mr", searching_user: admin)
-    results.size.should == 6
-    results.should include(user6)
-    search_for("mr", searching_user: moderator).size.should == 6
+    expect(results.size).to eq(6)
+    expect(results).to include(user6)
+    expect(search_for("mr", searching_user: moderator).size).to eq(6)
 
     results = search_for("mrb", searching_user: admin)
-    results.size.should == 3
+    expect(results.size).to eq(3)
 
 
     results = search_for("MR", searching_user: admin)
-    results.size.should == 6
+    expect(results.size).to eq(6)
 
     results = search_for("MRB", searching_user: admin, limit: 2)
-    results.size.should == 2
+    expect(results.size).to eq(2)
 
     # topic priority
     results = search_for("mrb", topic_id: topic.id)
-    results.first.should == user1
+    expect(results.first).to eq(user1)
 
 
     results = search_for("mrb", topic_id: topic2.id)
-    results[1].should == user2
+    expect(results[1]).to eq(user2)
 
     results = search_for("mrb", topic_id: topic3.id)
-    results[1].should == user5
+    expect(results[1]).to eq(user5)
 
     # When searching by name is enabled, it returns the record
     SiteSetting.enable_names = true
     results = search_for("Tarantino")
-    results.size.should == 1
+    expect(results.size).to eq(1)
 
     results = search_for("coding")
-    results.size.should == 0
+    expect(results.size).to eq(0)
 
     results = search_for("z")
-    results.size.should == 0
+    expect(results.size).to eq(0)
 
     # When searching by name is disabled, it will not return the record
     SiteSetting.enable_names = false
     results = search_for("Tarantino")
-    results.size.should == 0
+    expect(results.size).to eq(0)
 
     # find an exact match first
     results = search_for("mrB")
-    results.first.should == user1
+    expect(results.first).to eq(user1)
 
     # don't return inactive users
     results = search_for("Ghost")
-    results.should be_blank
+    expect(results).to be_blank
   end
 
 end

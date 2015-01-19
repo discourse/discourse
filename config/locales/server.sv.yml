@@ -28,7 +28,6 @@ sv:
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
       invalid_boolean: "Ogiltigt boolean."
-      taken: "används redan"
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
   bulk_invite:
@@ -135,10 +134,6 @@ sv:
         is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
         has_already_been_used: "har redan använts"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "Tyvärr, du kan inte skicka ett privat meddelande till den användaren."
         user:
           attributes:
             password:
@@ -387,10 +382,6 @@ sv:
     queue_size_warning: 'Antalet köade jobb är %{queue_size}, vilket är högt. Det skulle kunna indikera ett problem med Sidekiq-processen/-erna, eller så kanske du behöver lägga till fler Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till s3, men minst en av följande inställningar är inte satt: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå till <a href="/admin/site_settings">Inställningar</a> och uppdatera dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    default_logo_warning: "Du har inte valt egna logotyper för din sida. Uppdatera logo_url, logo_small_url, och favicon_url under <a href='/admin/site_settings'>Inställningar</a>."
-    contact_email_missing: "Du har inte lagt till en kontaktadress för din sida. Vänligen uppdatera contact_email under <a href='/admin/site_settings'>Inställningar</a>."
-    contact_email_invalid: "Sidans kontaktadress är ogiltig. Vänligen uppdatera contact_email under <a href='/admin/site_settings'>Inställningar</a>."
-    title_nag: "Inställningen för titel är fortfarande satt till standardvärdet. Vänligen uppdatera den med din sidas titel under <a href='/admin/site_settings'>Inställningar</a>."
     consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
   content_types:
     education_new_reply:
@@ -450,6 +441,13 @@ sv:
     faq_url: "Om du har en FAQ någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     privacy_policy_url: "Om du har ett dokument med en integritetspolicy någon annanstans som du vill använda, skriv den fullständiga URL:en här."
     default_digest_email_frequency: "Hur ofta användare får emailutskick som standard. De kan ändra detta val under sina inställningar."
+    errors:
+      invalid_email: "Felaktig e-postadress."
+      invalid_username: "Det finns ingen användare med detta användarnamn."
+      invalid_integer_min_max: "Värdet måste vara mellan %{min} och %{max}."
+      invalid_integer_min: "Värdet måste vara %{max} eller större."
+      invalid_integer_max: "Värdet får inte vara större än %{max}."
+      invalid_integer: "Värdet måste vara ett heltal."
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
     liked: "%{display_username} liked your post in %{link}"
@@ -491,7 +489,6 @@ sv:
     errors: "%{errors}"
     not_available: "Not available. Try %{suggestion}?"
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your %{strategy} account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
   user:
     username:
@@ -512,6 +509,10 @@ sv:
       subject_template: "Välkommen till %{site_name}!"
     welcome_invite:
       subject_template: "Välkommen till %{site_name}!"
+    restore_succeeded:
+      text_body_template: "Återställningen lyckades."
+    restore_failed:
+      subject_template: "Återställningen misslyckades"
     too_many_spam_flags:
       subject_template: "Nytt konto blockerat"
     blocked_by_staff:
@@ -600,6 +601,8 @@ sv:
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: "Välkommen till %{site_name}!\n\nKlicka på följande länk för att bekräfta och aktivera ditt nya konto:\n%{base_url}/users/activate-account/%{email_token}\n\nOm länken ovan inte går att klicka på kan du kopiera och klistra in länken i adressfältet i din webbläsare. \n"
+  page_not_found:
+    see_more: "Mer"
   deleted: 'raderad'
   upload:
     pasted_image_filename: "Inklistrad bild"

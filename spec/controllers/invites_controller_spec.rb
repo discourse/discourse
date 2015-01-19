@@ -5,9 +5,9 @@ describe InvitesController do
   context '.destroy' do
 
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         delete :destroy, email: 'jake@adventuretime.ooo'
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -17,15 +17,15 @@ describe InvitesController do
 
 
       it 'raises an error when the email is missing' do
-        lambda { delete :destroy }.should raise_error(ActionController::ParameterMissing)
+        expect { delete :destroy }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the email cannot be found" do
-        lambda { delete :destroy, email: 'finn@adventuretime.ooo' }.should raise_error(Discourse::InvalidParameters)
+        expect { delete :destroy, email: 'finn@adventuretime.ooo' }.to raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when the invite is not yours' do
-        lambda { delete :destroy, email: another_invite.email }.should raise_error(Discourse::InvalidParameters)
+        expect { delete :destroy, email: another_invite.email }.to raise_error(Discourse::InvalidParameters)
       end
 
       it "destroys the invite" do
@@ -39,9 +39,9 @@ describe InvitesController do
 
   context '.create' do
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         post :create, email: 'jake@adventuretime.ooo'
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -50,7 +50,7 @@ describe InvitesController do
       it "fails if you can't invite to the forum" do
         log_in
         post :create, email: email
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       it "fails for normal user if invite email already exists" do
@@ -58,15 +58,15 @@ describe InvitesController do
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
         post :create, email: invite.email
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       it "allows admins to invite to groups" do
         group = Fabricate(:group)
         log_in(:admin)
         post :create, email: email, group_names: group.name
-        response.should be_success
-        Invite.find_by(email: email).invited_groups.count.should == 1
+        expect(response).to be_success
+        expect(Invite.find_by(email: email).invited_groups.count).to eq(1)
       end
 
       it "allows admin to send multiple invites to same email" do
@@ -74,7 +74,7 @@ describe InvitesController do
         invite = Invite.invite_by_email("invite@example.com", user)
         invite.reload
         post :create, email: invite.email
-        response.should be_success
+        expect(response).to be_success
       end
     end
 
@@ -88,11 +88,11 @@ describe InvitesController do
       end
 
       it "redirects to the root" do
-        response.should redirect_to("/")
+        expect(response).to redirect_to("/")
       end
 
       it "should not change the session" do
-        session[:current_user_id].should be_blank
+        expect(session[:current_user_id]).to be_blank
       end
     end
 
@@ -105,11 +105,11 @@ describe InvitesController do
       end
 
       it "redirects to the root" do
-        response.should redirect_to("/")
+        expect(response).to redirect_to("/")
       end
 
       it "should not change the session" do
-        session[:current_user_id].should be_blank
+        expect(session[:current_user_id]).to be_blank
       end
     end
 
@@ -133,11 +133,11 @@ describe InvitesController do
           end
 
           it 'logs in the user' do
-            session[:current_user_id].should == user.id
+            expect(session[:current_user_id]).to eq(user.id)
           end
 
           it 'redirects to the first topic the user was invited to' do
-            response.should redirect_to(topic.relative_url)
+            expect(response).to redirect_to(topic.relative_url)
           end
         end
 
@@ -179,9 +179,9 @@ describe InvitesController do
 
   context '.create_disposable_invite' do
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         post :create, email: 'jake@adventuretime.ooo'
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in as normal user' do
@@ -190,7 +190,7 @@ describe InvitesController do
       it "does not create disposable invitation" do
         log_in
         post :create_disposable_invite, email: user.email
-        response.should_not be_success
+        expect(response).not_to be_success
       end
     end
 
@@ -202,29 +202,29 @@ describe InvitesController do
 
       it "creates disposable invitation" do
         post :create_disposable_invite, email: user.email
-        response.should be_success
-        Invite.where(invited_by_id: user.id).count.should == 1
+        expect(response).to be_success
+        expect(Invite.where(invited_by_id: user.id).count).to eq(1)
       end
 
       it "creates multiple disposable invitations" do
         post :create_disposable_invite, email: user.email, quantity: 10
-        response.should be_success
-        Invite.where(invited_by_id: user.id).count.should == 10
+        expect(response).to be_success
+        expect(Invite.where(invited_by_id: user.id).count).to eq(10)
       end
 
       it "allows group invite" do
         group = Fabricate(:group)
         post :create_disposable_invite, email: user.email, group_names: group.name
-        response.should be_success
-        Invite.find_by(invited_by_id: user.id).invited_groups.count.should == 1
+        expect(response).to be_success
+        expect(Invite.find_by(invited_by_id: user.id).invited_groups.count).to eq(1)
       end
 
       it "allows multiple group invite" do
         group_1 = Fabricate(:group, name: "security")
         group_2 = Fabricate(:group, name: "support")
         post :create_disposable_invite, email: user.email, group_names: "security,support"
-        response.should be_success
-        Invite.find_by(invited_by_id: user.id).invited_groups.count.should == 2
+        expect(response).to be_success
+        expect(Invite.find_by(invited_by_id: user.id).invited_groups.count).to eq(2)
       end
 
     end
@@ -239,11 +239,11 @@ describe InvitesController do
       end
 
       it "redirects to the root" do
-        response.should redirect_to("/")
+        expect(response).to redirect_to("/")
       end
 
       it "should not change the session" do
-        session[:current_user_id].should be_blank
+        expect(session[:current_user_id]).to be_blank
       end
     end
 
@@ -271,7 +271,7 @@ describe InvitesController do
         end
 
         it 'logs in user' do
-          session[:current_user_id].should == user.id
+          expect(session[:current_user_id]).to eq(user.id)
         end
 
       end
@@ -283,9 +283,9 @@ describe InvitesController do
   context '.resend_invite' do
 
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         delete :resend_invite, email: 'first_name@example.com'
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -294,15 +294,15 @@ describe InvitesController do
       let(:another_invite) { Fabricate(:invite, email: 'last_name@example.com') }
 
       it 'raises an error when the email is missing' do
-        lambda { post :resend_invite }.should raise_error(ActionController::ParameterMissing)
+        expect { post :resend_invite }.to raise_error(ActionController::ParameterMissing)
       end
 
       it "raises an error when the email cannot be found" do
-        lambda { post :resend_invite, email: 'first_name@example.com' }.should raise_error(Discourse::InvalidParameters)
+        expect { post :resend_invite, email: 'first_name@example.com' }.to raise_error(Discourse::InvalidParameters)
       end
 
       it 'raises an error when the invite is not yours' do
-        lambda { post :resend_invite, email: another_invite.email }.should raise_error(Discourse::InvalidParameters)
+        expect { post :resend_invite, email: another_invite.email }.to raise_error(Discourse::InvalidParameters)
       end
 
       it "resends the invite" do
@@ -316,9 +316,9 @@ describe InvitesController do
 
   context '.check_csv_chunk' do
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         post :check_csv_chunk
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -330,7 +330,7 @@ describe InvitesController do
       it "fails if you can't bulk invite to the forum" do
         log_in
         post :check_csv_chunk, resumableChunkNumber: resumableChunkNumber, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
     end
@@ -339,9 +339,9 @@ describe InvitesController do
 
   context '.upload_csv_chunk' do
     it 'requires you to be logged in' do
-      lambda {
+      expect {
         post :upload_csv_chunk
-      }.should raise_error(Discourse::NotLoggedIn)
+      }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'while logged in' do
@@ -361,13 +361,13 @@ describe InvitesController do
       it "fails if you can't bulk invite to the forum" do
         log_in
         post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
-        response.should_not be_success
+        expect(response).not_to be_success
       end
 
       it "allows admins to bulk invite" do
         log_in(:admin)
         post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
-        response.should be_success
+        expect(response).to be_success
       end
 
     end

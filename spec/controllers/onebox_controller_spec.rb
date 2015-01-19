@@ -19,11 +19,11 @@ describe OneboxController do
     end
 
     it 'returns success' do
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'returns the onebox response in the body' do
-      response.body.should == body
+      expect(response.body).to eq(body)
     end
 
   end
@@ -33,13 +33,13 @@ describe OneboxController do
     it "returns 404 if the onebox is nil" do
       Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(nil)
       xhr :get, :show, url: url
-      response.response_code.should == 404
+      expect(response.response_code).to eq(404)
     end
 
     it "returns 404 if the onebox is an empty string" do
       Oneboxer.expects(:preview).with(url, invalidate_oneboxes: false).returns(" \t ")
       xhr :get, :show, url: url
-      response.response_code.should == 404
+      expect(response.response_code).to eq(404)
     end
 
   end

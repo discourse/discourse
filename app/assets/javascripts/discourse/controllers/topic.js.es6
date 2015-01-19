@@ -1,7 +1,8 @@
 import ObjectController from 'discourse/controllers/object';
+import BufferedContent from 'discourse/mixins/buffered-content';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 
-export default ObjectController.extend(Discourse.SelectedPostsCount, {
+export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedContent, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
@@ -19,7 +20,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   _titleChanged: function() {
     var title = this.get('title');
-    if (!Em.empty(title)) {
+    if (!Ember.isEmpty(title)) {
 
       // Note normally you don't have to trigger this, but topic titles can be updated
       // and are sometimes lazily loaded.
@@ -40,6 +41,20 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     }
 
   }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
+
+  postStreamLoadedAllPostsChanged: function(){
+    // hold back rendering 1 run loop for every transition.
+    var self = this;
+    var loaded = this.get('postStream.loadedAllPosts');
+    this.set('loadedAllPosts', false);
+
+    if(loaded){
+      Em.run.next(function(){
+        self.set('loadedAllPosts',true);
+      });
+    }
+
+  }.observes('postStream', 'postStream.loadedAllPosts'),
 
   show_deleted: function(key, value) {
     var postStream = this.get('postStream');
@@ -198,8 +213,17 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
         alert(I18n.t("bookmarks.not_bookmarked"));
         return;
       }
-      post.toggleProperty('bookmarked');
-      return false;
+      if (post) {
+        return post.toggleBookmark().catch(function(error) {
+          if (error && error.responseText) {
+            bootbox.alert($.parseJSON(error.responseText).errors[0]);
+          } else {
+            bootbox.alert(I18n.t('generic_error'));
+          }
+        });
+      } else {
+        return this.get("model").toggleBookmark();
+      }
     },
 
     jumpTop: function() {
@@ -221,11 +245,6 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
       this.set('allPostsSelected', false);
     },
 
-    /**
-      Toggle a participant for filtering
-
-      @method toggleParticipant
-    **/
     toggleParticipant: function(user) {
       this.get('postStream').toggleParticipant(Em.get(user, 'username'));
     },
@@ -233,17 +252,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     editTopic: function() {
       if (!this.get('details.can_edit')) return false;
 
-      this.setProperties({
-        editingTopic: true,
-        newTitle: this.get('title'),
-        newCategoryId: this.get('category_id')
-      });
+      this.set('editingTopic', true);
       return false;
     },
 
-    // close editing mode
     cancelEditingTopic: function() {
       this.set('editingTopic', false);
+      this.rollbackBuffer();
     },
 
     toggleMultiSelect: function() {
@@ -251,39 +266,24 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
     },
 
     finishedEditingTopic: function() {
-      if (this.get('editingTopic')) {
+      if (!this.get('editingTopic')) { return; }
 
-        var topic = this.get('model');
+      // save the modifications
+      var self = this,
+          props = this.get('buffered.buffer');
 
-        // Topic title hasn't been sanitized yet, so the template shouldn't trust it.
-        this.set('topicSaving', true);
-
-        // manually update the titles & category
-        var backup = topic.setPropertiesBackup({
-          title: this.get('newTitle'),
-          category_id: parseInt(this.get('newCategoryId'), 10),
-          fancy_title: this.get('newTitle')
-        });
-
-        // save the modifications
-        var self = this;
-        topic.save().then(function(result){
-          // update the title if it has been changed (cleaned up) server-side
-          topic.setProperties(Em.getProperties(result.basic_topic, 'title', 'fancy_title'));
-          self.set('topicSaving', false);
-        }, function(error) {
-          self.setProperties({ editingTopic: true, topicSaving: false });
-          topic.setProperties(backup);
-          if (error && error.responseText) {
-            bootbox.alert($.parseJSON(error.responseText).errors[0]);
-          } else {
-            bootbox.alert(I18n.t('generic_error'));
-          }
-        });
-
-        // close editing mode
+      Discourse.Topic.update(this.get('model'), props).then(function() {
+        // Note we roll back on success here because `update` saves
+        // the properties to the topic.
+        self.rollbackBuffer();
         self.set('editingTopic', false);
-      }
+      }).catch(function(error) {
+        if (error && error.responseText) {
+          bootbox.alert($.parseJSON(error.responseText).errors[0]);
+        } else {
+          bootbox.alert(I18n.t('generic_error'));
+        }
+      });
     },
 
     toggledSelectedPost: function(post) {
@@ -335,6 +335,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
     toggleClosed: function() {
       this.get('content').toggleStatus('closed');
+    },
+
+    recoverTopic: function() {
+      this.get('content').recover();
     },
 
     makeBanner: function() {
@@ -552,15 +556,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, {
 
   // Receive notifications for this topic
   subscribe: function() {
-
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    var bus = Discourse.MessageBus;
-
     var topicController = this;
-    bus.subscribe("/topic/" + (this.get('id')), function(data) {
+    Discourse.MessageBus.subscribe("/topic/" + this.get('id'), function(data) {
       var topic = topicController.get('model');
+
       if (data.notification_level_change) {
         topic.set('details.notification_level', data.notification_level_change);
         topic.set('details.notifications_reason_id', data.notifications_reason_id);

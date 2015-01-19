@@ -2,8 +2,8 @@
   {{#loading-spinner condition=loadingNotifications}}
     {{#if content}}
       <ul>
-        {{#each itemController="notification"}}
-          {{notification-item notification=this scope=scope}}
+        {{#each n in model itemController="notification"}}
+          {{notification-item notification=n scope=n.scope}}
         {{/each}}
         <li class="read last">
           <a href="/my/notifications">{{i18n 'notifications.more'}}&hellip;</a>

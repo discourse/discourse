@@ -21,7 +21,7 @@ export default DiscourseController.extend({
     var usernames = this.get('model.targetUsernames');
 
     // We need exactly one user to issue a warning
-    if (Em.empty(usernames) || usernames.split(',').length !== 1) {
+    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1) {
       return false;
     }
     return this.get('model.creatingPrivateMessage');
@@ -134,7 +134,6 @@ export default DiscourseController.extend({
   save: function(force) {
     var composer = this.get('model'),
         self = this;
-
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
@@ -336,18 +335,16 @@ export default DiscourseController.extend({
 
         // If we're already open, we don't have to do anything
         if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
-            composerModel.get('draftKey') === opts.draftKey &&
-            composerModel.action === opts.action) {
+            composerModel.get('draftKey') === opts.draftKey) {
           return resolve();
         }
 
         // If it's the same draft, just open it up again.
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
-            composerModel.get('draftKey') === opts.draftKey &&
-            composerModel.action === opts.action) {
+            composerModel.get('draftKey') === opts.draftKey) {
 
-            composerModel.set('composeState', Discourse.Composer.OPEN);
-            return resolve();
+          composerModel.set('composeState', Discourse.Composer.OPEN);
+          return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.

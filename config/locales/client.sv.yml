@@ -84,7 +84,6 @@ sv:
           other: "%{count} dagar sedan"
     share:
       topic: 'dela en länk till denna tråd'
-      post: 'dela en länk till inlägg'
       close: 'stäng'
       twitter: 'dela denna länk på Twitter'
       facebook: 'dela denna länk på Facebook'
@@ -259,7 +258,6 @@ sv:
       profile: "Profil"
       mute: "Dämpa"
       edit: "Redigera inställningar"
-      download_archive: "ladda ned ett arkiv med mina inlägg"
       new_private_message: "Nytt Privat Meddelande"
       private_message: "Privat meddelande"
       private_messages: "Meddelanden"
@@ -328,10 +326,8 @@ sv:
         error: "Det uppstod ett problem under bytet av din e-post. Är kanske adressen redan upptagen?"
         success: "Vi har skickat ett mail till den adressen. Var god följ bekräftelseinstruktionerna."
       change_avatar:
-        title: "Ändra din avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserat på"
         refresh_gravatar_title: "Uppdatera din Gravatar"
-        letter_based: "Avatar tilldelad av systemet"
         uploaded_avatar: "Anpassad bild"
         uploaded_avatar_empty: "Lägg till en anpassad bild"
         upload_title: "Ladda upp din bild"
@@ -441,7 +437,6 @@ sv:
           none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"
           uploading: "Laddar upp..."
-          success: "Uppladdning av filen lyckades"
           error: "Det blev ett fel vid uppladdning av '{{filename}}': {{message}}"
       password:
         title: "Lösenord"
@@ -449,13 +444,10 @@ sv:
         common: "Det lösenordet är för vanligt."
         ok: "Ditt lösenord ser bra ut."
         instructions: "Måste vara minst %{count} tecken lång."
-      associated_accounts: "Kopplade konton"
       ip_address:
         title: "Senaste IP-adress"
       registration_ip_address:
         title: "IP-adress vid registrering"
-      avatar:
-        title: "Profilbild"
       title:
         title: "Titel"
       filters:
@@ -502,7 +494,7 @@ sv:
     first_post: Första inlägget
     mute: Dämpa
     unmute: Avdämpa
-    last_post: Sista inlägget
+    last_post: Senaste inlägg
     last_post_lowercase: senaste inlägg
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
@@ -694,11 +686,6 @@ sv:
     go_back: 'gå tillbaka'
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
-    starred:
-      title: 'Stjärnmarkera'
-      help:
-        star: 'stjärnmarkera denna tråd'
-        unstar: 'ta bort stjärnmarkering från denna tråd'
     topics:
       bulk:
         reset_read: "Återställ Lästa"
@@ -718,7 +705,6 @@ sv:
           one: "Du har markerat <b>1</b> diskussion."
           other: "Du har markerat <b>{{count}}</b> diskussioner."
       none:
-        starred: "Det finns inga fler stjärnmärkta trådar."
         unread: "Du har inga olästa trådar att läsa."
         new: "Du har inga nya trådar att läsa."
         read: "Du har inte läst några trådar än."
@@ -730,7 +716,6 @@ sv:
         educate:
           new: '<p>Dina nya trådar hamnar här.</p><p>Som standard är trådar sedda som nya och kommer att visa en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator om de skapats de senaste 2 dagarna.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
           unread: '<p>Dina olästa trådar hamnar här</p><p>Som standard är trådar sedda som olästa och kommer att visa antal olästa <span class="badge new-posts badge-notification">1</span> om du:</p><ul><li>Skapade tråden</li><li>Svarade på tråden</li><li>Läst tråden längre än 4 minuter</li></ul><p>Eller om du explicit har satt tråden till Följd eller Sedd via notifieringspanelen längst ned i varje tråd.</p><p>Du kan ändra detta i dina <a href="%{userPrefsUrl}">inställningar</a>.</p>'
-          starred: '<p>Dina stjärnmarkerade trådar hamnar här.</p><p>För att stjärnmarkera eller avstjärnmarkera en tråd, använd:</p><ul><li><i class="fa fa-star"></i> brevid varje trådtitel</li><li>Stjärnknappen längst ned i varje tråd</li></ul>'
       bottom:
         latest: "Det finns inga fler senaste trådar att läsa."
         hot: "Det finns inga fler heta trådar att läsa."
@@ -738,13 +723,12 @@ sv:
         read: "Det finns inga fler lästa trådar att läsa."
         new: "Det finns inga fler nya trådar att läsa."
         unread: "Det finns inga fler oläsa trådar att läsa."
-        starred: "Det finns inga fler stjärnmärkta trådar."
         category: "Det finns inga fler {{category}}-trådar."
         top: "Det finns inga fler topptrådar."
     topic:
       filter_to: "{{post_count}} inlägg i tråd"
       create: 'Ny tråd'
-      create_long: 'Skapa en nytt Tråd'
+      create_long: 'Skapa en ny tråd'
       private_message: 'Starta en privat konversation'
       list: 'Trådar'
       new: 'ny tråd'
@@ -1011,6 +995,9 @@ sv:
         unhide: "Visa"
       actions:
         flag: 'Flaga'
+        defer_flags:
+          one: "Skjut upp"
+          other: "Skjut upp"
         it_too:
           off_topic: "Flagga det också"
           spam: "Flagga det också"
@@ -1216,6 +1203,9 @@ sv:
     topic_map:
       title: "Sammanfattning av tråd"
       links_shown: "visa alla {{totalLinks}} länkar..."
+      clicks:
+        one: "1 klick"
+        other: "%{count} klick"
     topic_statuses:
       warning:
         help: "Det här är en officiell varning."
@@ -1223,13 +1213,11 @@ sv:
         help: "Det här ämnet är stängt; det går inte längre att svara på inlägg"
       unpinned:
         title: "Avklistrat"
-        help: "Det här ämnet är avklistrat, det kommer att visas i standard ordningen"
       pinned_globally:
         title: "Klistrat Globalt"
         help: "Det här ämnet är klistrat globalt; det kommer att visas högst upp i alla listor"
       pinned:
         title: "Klistrat"
-        help: "Det här ämnet är klistrat; det kommer att visas högst upp i sin kategori"
       archived:
         help: "Det här ämnet är arkiverat; det är fryst och kan inte ändras"
       invisible:
@@ -1270,9 +1258,6 @@ sv:
       hot:
         title: "Hett"
         help: "ett urval av de hetaste trådarna"
-      starred:
-        title: "Stjärnmärkt"
-        help: "trådar du stjärnmärkt"
       read:
         title: "Lästa"
         help: "trådar du har läst, i den ordningen du senast läste dem"
@@ -1367,6 +1352,8 @@ sv:
           30_days_ago: "30 dagar sedan"
           all: "Alla"
           view_table: "tabell"
+          view_chart: "Stapeldiagram"
+          refresh_report: "Uppdatera rapport"
           start_date: "Startdatum"
           end_date: "Slutdatum"
       commits:
@@ -1385,9 +1372,11 @@ sv:
         agree_flag_restore_post_title: "Återställ detta inlägg"
         agree_flag: "Godkänn flaggning"
         agree_flag_title: "Godkänn flaggning och behåll inlägget oförändrat"
+        defer_flag: "Skjut upp"
         defer_flag_title: "Ta bort den här flaggan; den kräver ingen åtgärd för tillfället."
         delete: "Ta bort"
         delete_title: "Ta bort inlägget som den här flaggan refererar till."
+        delete_post_defer_flag: "Ta bort inlägg och skjut upp flagga"
         delete_post_defer_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
         delete_post_agree_flag: "Ta bort inlägg och godkänn flaggning."
         delete_post_agree_flag_title: "Ta bort inlägg; om det är det första inlägget, ta bort ämnet"
@@ -1401,8 +1390,13 @@ sv:
         clear_topic_flags: "Klar"
         clear_topic_flags_title: "Tråden har undersökts och eventuella problem har lösts. Klicka på klar för att ta bort flaggorna."
         more: "(mer svar...)"
+        dispositions:
+          agreed: "Godkände"
+          disagreed: "Godkände ej"
+          deferred: "Sköt upp"
         flagged_by: "Flaggad av"
         resolved_by: "Löst av"
+        took_action: "Agerade"
         system: "System"
         error: "Någonting gick snett"
         reply_message: "Svara"
@@ -1434,7 +1428,6 @@ sv:
         edit: "Edit Groups"
         refresh: "uppdatera"
         new: "Ny"
-        selector_placeholder: "add users"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Gruppmedlemmar"
@@ -1508,9 +1501,14 @@ sv:
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
-        success: "Exporteringen har påbörjats, du kommer snart att få en notifiering över hur det går."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
         button_text: "Exportera"
+        button_title:
+          user: "Exportera alla användare i CSV-format"
+          staff_action: "Exportera medarbetarloggen i CSV-format."
+          screened_email: "Exportera hela e-postlistan i CSV-format."
+          screened_ip: "Exportera hela IP-listan i CSV-format."
+          screened_url: "Exportera hela URL-listan i CSV-format."
       customize:
         title: "Anpassa"
         long_title: "Sidanpassningar"
@@ -1555,8 +1553,10 @@ sv:
             name: 'sekundär'
             description: 'Den huvudsakliga bakgrundsfärgen, och textfärgen på vissa knappar.'
           tertiary:
+            name: 'tertiär'
             description: 'Länkar, några knappar, notiser, och accentfärger.'
           quaternary:
+            name: "kvartär"
             description: "Navigationslänkar."
           header_background:
             name: "Bakgrund för sidhuvud"
@@ -1566,9 +1566,12 @@ sv:
             description: "Text och ikoner i sidans sidhuvud."
           highlight:
             name: 'highlight'
+            description: 'Bakgrundsfärgen på markerade element på sidan, som inlägg och ämnen.'
           danger:
             name: 'fara'
+            description: 'Markeringsfärg när man tar bort inlägg eller ämnen.'
           success:
+            name: 'lyckades'
             description: 'Används för att indikera att en åtgärd lyckades.'
           love:
             name: 'älska'
@@ -1609,6 +1612,7 @@ sv:
             title: "filter"
             user_placeholder: "användarnamn"
             address_placeholder: "namn@exempel.se"
+            type_placeholder: "Sammanfattning, registrering..."
             reply_key_placeholder: "svara knapp"
             skipped_reason_placeholder: "anledning"
       logs:
@@ -1628,7 +1632,6 @@ sv:
           do_nothing: "gör ingenting"
         staff_actions:
           title: "Personalåtgärder"
-          instructions: "Klicka på användarnamn och åtgärder för att filtrera listan. Klicka på avatarer för att gå till användarsidor."
           clear_filters: "Visa allt"
           staff_user: "Personalmedlem"
           target_user: "Målanvändare"
@@ -1697,8 +1700,10 @@ sv:
           new: "Ny"
           active: "Aktiv"
           pending: "Avvaktande"
+          staff: 'Medarbetare'
           suspended: 'Avstängd'
           blocked: 'Blockerad'
+          suspect: 'Misstänkt'
         approved: "Godkänd?"
         approved_selected:
           one: "godkänd användare"
@@ -1712,10 +1717,15 @@ sv:
           pending: 'Användare under granskning'
           newuser: 'Användare på Förtroendenivå 0 (ny användare)'
           basic: 'Användare på Förtroendenivå 1 (grundnivå)'
+          regular: 'Användare på förtroendenivå 2 (Medlem)'
+          leader: 'Användare på förtroendenivå 3 (Stammis)'
+          elder: 'Användare på förtroendenivå 4 (ledare)'
+          staff: "Medarbetare"
           admins: 'Admin-användare'
           moderators: 'Moderatorer'
           blocked: 'Blockerade användare'
           suspended: 'Avstängda användare'
+          suspect: 'Misstänkta användare'
         reject_successful:
           one: "1 användare har avvisats."
           other: "%{count} användare har avvisats."
@@ -1770,6 +1780,7 @@ sv:
         flags_given_count: Givna Flaggnignar
         flags_received_count: Mottagna Flaggningar
         warnings_received_count: Varningar Mottagningar
+        flags_given_received_count: 'Flaggor utdelade / mottagna'
         approve: 'Godkänn'
         approved_by: "godkänd av"
         approve_success: "Användaren är godkänd och ett email kommer att skickas med aktiveringsinstruktioner."
@@ -1788,6 +1799,7 @@ sv:
           other: "Kan inte radera alla inlägg, då användaren har fler än %{count} inlägg. (delete_all_posts_max)"
         delete_confirm: "Är du SÄKER på att du vill radera den användaren? Detta är permanent!"
         delete_and_block: "Radera och <b>blockera</b> denna e-post och IP-adress"
+        delete_dont_block: "Radera enbart"
         deleted: "Användaren har raderats."
         delete_failed: "Ett problem uppstod då användaren skulle raderas. Kontrollera att alla inlägg är borttagna innan du försöker radera användaren."
         send_activation_email: "Skicka aktiveringsmail"
@@ -1814,7 +1826,16 @@ sv:
           visits: "besök"
           days: "dagar"
           topics_replied_to: "Trådar svarade på"
+          topics_viewed: "Besökta Ämnen"
+          topics_viewed_all_time: "Besökta Ämnen (totalt)"
+          posts_read: "Lästa Inlägg"
+          posts_read_all_time: "Lästa Inlägg (totalt)"
           flagged_posts: "flaggade inlägg"
+          flagged_by_users: "Användare som flaggade"
+          likes_given: "Utdelade Gillningar"
+          likes_received: "Mottagna Gillningar"
+          likes_received_days: "Mottagna Gillningar: unika dagar"
+          likes_received_users: "Mottagna Gillningar: unika användare"
         sso:
           external_id: "Externt ID"
           external_username: "Användarnamn"
@@ -1887,6 +1908,7 @@ sv:
     lightbox:
       download: "ladda ned"
     keyboard_shortcuts_help:
+      title: 'Snabbkommandon'
       jump_to:
         title: 'Hoppa till'
       navigation:
@@ -1897,8 +1919,8 @@ sv:
         create: '<b>s</b> Skapa en ny tråd'
         notifications: '<b>n</b> Öppna notifikationer'
         search: 'Sök'
+        help: '<b>?</b> Öppna tangentbordshjälp'
       actions:
-        star: '<b>f</b> stjärnmärk tråd'
         like: 'Gilla inlägg'
         flag: '<b>!</b> flagga inlägg'
         bookmark: '<b>b</b> bokmärk inlägg'

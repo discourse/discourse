@@ -2,12 +2,12 @@ require 'spec_helper'
 require 'digest/sha1'
 
 describe Upload do
-  it { should belong_to :user }
+  it { is_expected.to belong_to :user }
 
-  it { should have_many :post_uploads }
-  it { should have_many :posts }
+  it { is_expected.to have_many :post_uploads }
+  it { is_expected.to have_many :posts }
 
-  it { should have_many :optimized_images }
+  it { is_expected.to have_many :optimized_images }
 
   let(:upload) { build(:upload) }
   let(:thumbnail) { build(:optimized_image, upload: upload) }
@@ -44,7 +44,7 @@ describe Upload do
       OptimizedImage.expects(:create_for).returns(thumbnail)
       upload.create_thumbnail!(100, 100)
       upload.reload
-      upload.optimized_images.count.should == 1
+      expect(upload.optimized_images.count).to eq(1)
     end
 
   end
@@ -56,7 +56,7 @@ describe Upload do
     it "does not create another upload if it already exists" do
       Upload.expects(:find_by).with(sha1: image_sha1).returns(upload)
       Upload.expects(:save).never
-      Upload.create_for(user_id, image, image_filename, image_filesize).should == upload
+      expect(Upload.create_for(user_id, image, image_filename, image_filesize)).to eq(upload)
     end
 
     it "fix image orientation" do
@@ -75,13 +75,13 @@ describe Upload do
       FileHelper.expects(:is_image?).returns(true)
       Upload.expects(:save).never
       upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
-      upload.errors.size.should > 0
+      expect(upload.errors.size).to be > 0
     end
 
     it "does not compute width & height for non-image" do
       FastImage.any_instance.expects(:size).never
       upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
-      upload.errors.size.should > 0
+      expect(upload.errors.size).to be > 0
     end
 
     it "saves proper information" do
@@ -91,13 +91,13 @@ describe Upload do
 
       upload = Upload.create_for(user_id, image, image_filename, image_filesize)
 
-      upload.user_id.should == user_id
-      upload.original_filename.should == image_filename
-      upload.filesize.should == image_filesize
-      upload.sha1.should == image_sha1
-      upload.width.should == 244
-      upload.height.should == 66
-      upload.url.should == url
+      expect(upload.user_id).to eq(user_id)
+      expect(upload.original_filename).to eq(image_filename)
+      expect(upload.filesize).to eq(image_filesize)
+      expect(upload.sha1).to eq(image_sha1)
+      expect(upload.width).to eq(244)
+      expect(upload.height).to eq(66)
+      expect(upload.url).to eq(url)
     end
 
     context "when svg is authorized" do
@@ -111,12 +111,12 @@ describe Upload do
 
         upload = Upload.create_for(user_id, image_svg, image_svg_filename, image_svg_filesize)
 
-        upload.user_id.should == user_id
-        upload.original_filename.should == image_svg_filename
-        upload.filesize.should == image_svg_filesize
-        upload.width.should == 100
-        upload.height.should == 50
-        upload.url.should == url
+        expect(upload.user_id).to eq(user_id)
+        expect(upload.original_filename).to eq(image_svg_filename)
+        expect(upload.filesize).to eq(image_svg_filesize)
+        expect(upload.width).to eq(100)
+        expect(upload.height).to eq(50)
+        expect(upload.url).to eq(url)
       end
 
     end

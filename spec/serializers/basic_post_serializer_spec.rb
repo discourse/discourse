@@ -12,12 +12,12 @@ describe BasicPostSerializer do
 
     it "returns the name it when `enable_names` is true" do
       SiteSetting.stubs(:enable_names?).returns(true)
-      json[:name].should be_present
+      expect(json[:name]).to be_present
     end
 
     it "doesn't return the name it when `enable_names` is false" do
       SiteSetting.stubs(:enable_names?).returns(false)
-      json[:name].should be_blank
+      expect(json[:name]).to be_blank
     end
 
   end

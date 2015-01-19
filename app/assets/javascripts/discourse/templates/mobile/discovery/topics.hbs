@@ -4,22 +4,21 @@
       {{top-period-chooser period=period}}
     </div>
   {{/if}}
+
+  {{#if topicTrackingState.hasIncoming}}
+    <div class='alert alert-info' {{action "showInserted"}}>
+      {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+      {{i18n 'click_to_show'}}
+    </div>
+  {{/if}}
+
   {{#if hasTopics}}
-    <table class='topic-list'>
-      {{#if topicTrackingState.hasIncoming}}
-        <tbody>
-          <tr>
-            <td>
-              <div class='alert alert-info' {{action "showInserted"}}>
-                {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
-                {{i18n 'click_to_show'}}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      {{/if}}
-      {{collection contentBinding="topics" tagName="tbody" itemView="topic-list-item"}}
-    </table>
+    {{topic-list
+        skipHeader=true
+        showPosters=true
+        currentUser=currentUser
+        hideCategory=hideCategory
+        topics=topics}}
   {{/if}}
 </div>
 

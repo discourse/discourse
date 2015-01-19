@@ -1,11 +1,3 @@
-/**
-  A data model for containing a list of categories
-
-  @class CategoryList
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.CategoryList = Ember.ArrayProxy.extend({
   init: function() {
     this.set('content', []);
@@ -50,7 +42,8 @@ Discourse.CategoryList.reopenClass({
     var self = this;
     return Discourse.ajax('/categories.json?parent_category_id=' + category.get('id')).then(function(result) {
       return Discourse.CategoryList.create({
-        categories: self.categoriesFrom(result)
+        categories: self.categoriesFrom(result),
+        parentCategory: category
       });
     });
   },

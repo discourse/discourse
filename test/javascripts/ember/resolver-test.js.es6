@@ -4,7 +4,8 @@ var originalTemplates, originalMobileViewFlag;
 var resolver = DiscourseResolver.create();
 
 function lookupTemplate(name, expectedTemplate, message) {
-  var result = resolver.resolveTemplate(resolver.parseName(name));
+  var parseName = resolver.parseName(name);
+  var result = resolver.resolveTemplate(parseName);
   equal(result, expectedTemplate, message);
 }
 

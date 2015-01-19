@@ -80,7 +80,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize(from, to, width, height, allow_animation=false)
     # NOTE: ORDER is important!
-    instructions = if allow_animation
+    instructions = if allow_animation && from =~ /\.GIF$/i
       %W{
         #{from}
         -coalesce

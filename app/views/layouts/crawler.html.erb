@@ -5,28 +5,23 @@
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
-    <%= raw SiteText.text_for(:head) %>
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+    <%- end %>
     <%= yield :head %>
+    <style>
+        img { max-width: 100%; width: auto; height: auto; }
+    </style>
   </head>
   <body>
     <%- unless customization_disabled? %>
       <%= SiteCustomization.custom_header(session[:preview_style]) %>
     <%- end %>
-    <header class="d-header">
-      <div class="container">
-        <div class="contents">
-          <div class="row">
-            <div class="title span13">
-              <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-            </div>
-          </div>
-        </div>
-      </div>
+    <header>
+        <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
     </header>
     <div id="main-outlet" class="container">
-      <!-- preload-content: -->
       <%= yield %>
-      <!-- :preload-content -->
     </div>
     <footer class="container">
       <p><%= t 'powered_by_html' %></p>

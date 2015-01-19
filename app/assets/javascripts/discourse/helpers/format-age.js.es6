@@ -1,4 +1,6 @@
-Handlebars.registerHelper('format-age', function(property, options) {
-  var dt = new Date(Ember.Handlebars.get(this, property, options));
+import registerUnbound from 'discourse/helpers/register-unbound';
+
+registerUnbound('format-age', function(dt) {
+  dt = new Date(dt);
   return new Handlebars.SafeString(Discourse.Formatter.autoUpdatingRelativeAge(dt));
 });

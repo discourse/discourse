@@ -1,4 +1,4 @@
-var define, requireModule, require, requirejs;
+var define, requireModule, require, requirejs, hasModule;
 
 (function() {
   var registry = {}, seen = {}, state = {};
@@ -31,6 +31,10 @@ var define, requireModule, require, requirejs;
       exports: exports
     };
   }
+
+  hasModule = function(name){
+    return !!registry[name];
+  };
 
   requirejs = require = requireModule = function(name) {
     if (state[name] !== FAILED &&

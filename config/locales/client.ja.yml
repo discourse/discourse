@@ -58,7 +58,7 @@ ja:
           other: "%{count} 時間"
         x_days:
           other: "%{count} 日"
-        date_year: "MMM D, 'YY"
+        date_year: "YYYY年MM月D日"
       medium_with_ago:
         x_minutes:
           other: "%{count} 分前"
@@ -68,7 +68,6 @@ ja:
           other: "%{count} 日前"
     share:
       topic: 'このトピックのリンクをシェアする'
-      post: 'ポスト #%{postNumber} のリンクをシェアする'
       close: '閉じる'
       twitter: 'Twitter でこのリンクを共有する'
       facebook: 'Facebook でこのリンクを共有する'
@@ -83,7 +82,7 @@ ja:
     sign_up: "サインアップ"
     log_in: "サインイン"
     age: "経過"
-    joined: "参加者"
+    joined: "参加時刻"
     admin_title: "管理者"
     flags_title: "フラグ"
     show_more: "もっと見る"
@@ -133,7 +132,7 @@ ja:
     topic_count_unread:
       other: "{{count}} 未読トピック"
     topic_count_new:
-      other: "{{count}} 新しいトピック."
+      other: "{{count}} 新しいトピック"
     click_to_show: "クリックして表示"
     preview: "プレビュー"
     cancel: "キャンセル"
@@ -224,7 +223,6 @@ ja:
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
-      download_archive: "ポストのアーカイブをダウンロード"
       private_message: "プライベートメッセージ"
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
@@ -288,10 +286,8 @@ ja:
         error: "メールアドレス変更中にエラーが発生しました。既にこのアドレスが使われているのかもしれません。"
         success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
       change_avatar:
-        title: "アバターの変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "グラバターを更新する"
-        letter_based: "システムアバター"
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
@@ -317,7 +313,7 @@ ja:
       last_posted: "最終投稿"
       last_emailed: "最終メール"
       last_seen: "最終アクティビティ"
-      created: "作成"
+      created: "参加時刻"
       log_out: "サインアウト"
       location: "所在地"
       website: "ウェブサイト"
@@ -372,7 +368,6 @@ ja:
           none: "あなたはまだ誰も招待していません。"
           text: "ファイルからまとめて招待をする"
           uploading: "アップロード中..."
-          success: "ファイル通常にアップされていました。"
           error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
         title: "パスワード"
@@ -380,13 +375,10 @@ ja:
         common: "このパスワードは他の人が使用している可能性があります。"
         ok: "パスワード OK。"
         instructions: "%{count} 文字以上の長さにしてください。"
-      associated_accounts: "関連アカウント"
       ip_address:
-        title: "最終 IP アドレス"
+        title: "最近使用したIPアドレス"
       registration_ip_address:
-        title: "IPアドレスの登録"
-      avatar:
-        title: "アバター"
+        title: "登録したときのIPアドレス"
       title:
         title: "タイトル"
       filters:
@@ -431,7 +423,7 @@ ja:
     first_post: 最初のポスト
     mute: ミュート
     unmute: ミュート解除
-    last_post: 最終ポスト
+    last_post: 最終投稿時刻
     last_post_lowercase: 最後の投稿
     summary:
       enabled_description: "トピックのまとめを表示されています。"
@@ -605,11 +597,6 @@ ja:
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクチビティと設定ページ'
     current_user: 'ユーザページに移動'
-    starred:
-      title: 'お気に入り'
-      help:
-        star: 'このトピックをお気に入りリストに追加する'
-        unstar: 'このトピックをお気に入りリストから削除'
     topics:
       bulk:
         reset_read: "未読に設定"
@@ -628,7 +615,6 @@ ja:
         selected:
           other: "あなたは <b>{{count}}</b> トピックを選択しました。"
       none:
-        starred: "お気に入りトピックがありません。"
         unread: "未読トピックはありません。"
         new: "新着トピックはありません。"
         read: "またトピックを一つも読んでいません。"
@@ -640,7 +626,6 @@ ja:
         educate:
           new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
           unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
-          starred: 'お気に入りトピックはここに表示されます。トピックをお気に入りに追加するにはトピック左側にある★マークをクリックしてください。'
       bottom:
         latest: "最新のトピックは以上です。"
         hot: "ホットなトピックは以上です。"
@@ -648,7 +633,6 @@ ja:
         read: "未読トピックは以上です。"
         new: "新規トピックは以上です。"
         unread: "未読のトピックは以上です。"
-        starred: "お気に入りトピックはありません。"
         category: "{{category}} トピックは以上です。"
         top: "トップトピックはありません。"
     topic:
@@ -855,6 +839,7 @@ ja:
         edit: "申し訳ありませんが、ポスト編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
         attachment_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)。"
+        file_too_large: "申し訳ありませんが、アップロード対象ファイルが大きすぎます (最大サイズは {{max_size_kb}}kb)"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
         upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
@@ -1069,13 +1054,11 @@ ja:
         help: "このトピックは終了しています。新たに回答を投稿することはできません\""
       unpinned:
         title: "ピン留め解除しました"
-        help: "このトピックはピン留めされていません；既定の順番に表示されます。"
       pinned_globally:
         title: "全サイト的にピン留めされました"
         help: "このトピックは全サイト的にピン留めされました；全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
-        help: "このトピックは固定されています。常にカテゴリのトップに表示されます"
       archived:
         help: "このトピックはアーカイブされています。凍結状態のため一切の変更ができません"
     posts: "投稿"
@@ -1105,9 +1088,6 @@ ja:
       hot:
         title: "ホット"
         help: "話題のトピック"
-      starred:
-        title: "お気に入り"
-        help: "お気に入りトピック"
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
@@ -1249,7 +1229,6 @@ ja:
         edit: "グループの編集"
         refresh: "リフレッシュ"
         new: "新規"
-        selector_placeholder: "ユーザの追加"
         name_placeholder: "グループ名を入力 (ユーザ名同様にスペースなし)"
         about: "グループメンバーとグループ名を編集"
         group_members: "グループメンバー"
@@ -1419,7 +1398,6 @@ ja:
           do_nothing: "何もしない"
         staff_actions:
           title: "スタッフ操作"
-          instructions: "ユーザ名やアクションをクリックするとリストをフィルタできます。アバターをクリックするとユーザページに移動します。"
           clear_filters: "全てを表示する"
           staff_user: "スタッフユーザ"
           target_user: "対象ユーザ"
@@ -1604,7 +1582,6 @@ ja:
           external_username: "ユーザ名"
           external_name: "名前"
           external_email: "メール"
-          external_avatar_url: "アバターURL"
       site_settings:
         show_overriden: '上書き部分のみ表示'
         title: '設定'
@@ -1674,7 +1651,6 @@ ja:
         latest: '<b>g</b>, <b>l</b> 最新'
         new: '<b>g</b>, <b>n</b> 新規'
         unread: '<b>g</b>, <b>u</b> 未読'
-        starred: '<b>g</b>, <b>f</b> お気に入り'
         categories: '<b>g</b>, <b>c</b> カテゴリ'
         top: '<b>g</b>, <b>t</b> トップ'
       navigation:
@@ -1683,7 +1659,6 @@ ja:
         back: '<b>u</b> 戻る'
         up_down: '<b>k</b>/<b>j</b> トピック・投稿 &uarr; &darr;移動'
         open: '<b>o</b> or <b>Enter</b> トピックへ'
-        next_prev: '<b>shift j</b>/<b>shift k</b> 次・前の選択へ移動'
       application:
         title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
@@ -1697,10 +1672,7 @@ ja:
         dismiss_topics: 'Dismiss Topics'
       actions:
         title: '操作'
-        star: '<b>f</b> お気に入りトピック'
-        share_topic: '<b>shift s</b> トピックをシェアする'
         share_post: '<b>s</b> 投稿をシェアする'
-        reply_topic: '<b>shift r</b> トピックに返信'
         reply_post: '<b>r</b> 投稿に返信'
         quote_post: '<b>q</b> 投稿を引用する'
         like: '<b>l</b> 投稿を「いいね！」する'
@@ -1714,12 +1686,12 @@ ja:
         mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
     badges:
       title: バッジ
-      allow_title: "バッヂををタイトルとして使用しますか？"
+      allow_title: "バッジをタイトルとして使用しますか？"
       multiple_grant: "何度も受け取ることができますか？"
       badge_count:
         other: "%{count} バッジ"
       more_badges:
-        other: "+%{count} もっと"
+        other: "バッジを全て見る（全%{count}個）"
       granted:
         other: "%{count} つバッジを付与されました"
       select_badge_for_title: タイトルとして使用するバッジを選択
@@ -1748,13 +1720,13 @@ ja:
           description: 「いいね！」を受けました
         nice_post:
           name: 良いポスト
-          description: 10人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 10人に「いいね！」をされました。このバッジは何度でももらえます。
         good_post:
           name: 良い投稿！
-          description: 25人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 25人に「いいね！」をされました。このバッジは何度でももらえます。
         great_post:
           name: 素晴らしい投稿！
-          description: 50人に「いいね！」をされました。このバッヂは何度でもらえます。
+          description: 50人に「いいね！」をされました。このバッジは何度でももらえます。
         nice_topic:
           name: ナイストピック
         good_topic:

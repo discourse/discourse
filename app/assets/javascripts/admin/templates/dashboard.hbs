@@ -57,7 +57,6 @@
         {{ render 'admin_report_counts' likes }}
         {{ render 'admin_report_counts' flags }}
         {{ render 'admin_report_counts' bookmarks }}
-        {{ render 'admin_report_counts' starred }}
         {{ render 'admin_report_counts' emails }}
       {{/unless}}
     </table>
@@ -119,7 +118,7 @@
         </p>
         <p class="actions">
           <small>{{i18n 'admin.dashboard.last_checked'}}: {{problemsTimestamp}}</small>
-          <button {{action "refreshProblems"}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n 'admin.dashboard.refresh_problems'}}</button>
+          {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
         </p>
       </div>
       <div class="clearfix"></div>
@@ -131,7 +130,7 @@
         <div class="problem-messages">
           <p>
             {{i18n 'admin.dashboard.no_problems'}}
-            <button {{action "refreshProblems"}} class="btn btn-small"><i class="fa fa-refresh"></i>{{i18n 'admin.dashboard.refresh_problems'}}</button>
+            {{d-button action="refreshProblems" class="btn-small" icon="refresh" label="admin.dashboard.refresh_problems"}}
           </p>
         </div>
         <div class="clearfix"></div>
@@ -176,12 +175,12 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{#each top_traffic_sources.data}}
+        {{#each s in top_traffic_sources.data}}
           <tbody>
             <tr>
-              <td class="title">{{domain}}</td>
-              <td class="value">{{num_clicks}}</td>
-              <td class="value">{{num_topics}}</td>
+              <td class="title">{{s.domain}}</td>
+              <td class="value">{{s.num_clicks}}</td>
+              <td class="value">{{s.num_topics}}</td>
             </tr>
           </tbody>
         {{/each}}
@@ -199,12 +198,12 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{#each top_referrers.data}}
+        {{#each r in top_referrers.data}}
           <tbody>
             <tr>
-              <td class="title">{{#link-to 'adminUser' this}}{{unbound username}}{{/link-to}}</td>
-              <td class="value">{{num_clicks}}</td>
-              <td class="value">{{num_topics}}</td>
+              <td class="title">{{#link-to 'adminUser' r}}{{unbound r.username}}{{/link-to}}</td>
+              <td class="value">{{r.num_clicks}}</td>
+              <td class="value">{{r.num_topics}}</td>
             </tr>
           </tbody>
         {{/each}}

@@ -31,20 +31,23 @@ export default Discourse.View.extend(StringBuffer, {
     buffer.push("</button>");
     buffer.push("<ul class='dropdown-menu'>");
 
-    var self = this;
-    this.get('dropDownContent').forEach(function(row) {
-      var id = row.id,
-          title = row.title,
-          iconClass = row.styleClasses,
-          description = row.description,
-          className = (self.get('activeItem') === id ? 'disabled': '');
+    var contents = this.get('dropDownContent');
+    if (contents) {
+      var self = this;
+      contents.forEach(function(row) {
+        var id = row.id,
+            title = row.title,
+            iconClass = row.styleClasses,
+            description = row.description,
+            className = (self.get('activeItem') === id ? 'disabled': '');
 
-      buffer.push("<li data-id=\"" + id + "\" class=\"" + className + "\"><a href>");
-      buffer.push("<span class='icon " + iconClass + "'></span>");
-      buffer.push("<div><span class='title'>" + title + "</span>");
-      buffer.push("<span>" + description + "</span></div>");
-      buffer.push("</a></li>");
-    });
+        buffer.push("<li data-id=\"" + id + "\" class=\"" + className + "\"><a href>");
+        buffer.push("<span class='icon " + iconClass + "'></span>");
+        buffer.push("<div><span class='title'>" + title + "</span>");
+        buffer.push("<span>" + description + "</span></div>");
+        buffer.push("</a></li>");
+      });
+    }
 
     buffer.push("</ul>");
 

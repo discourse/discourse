@@ -29,8 +29,7 @@ export default Ember.ObjectController.extend({
       }
       this.set('toPostIndex', postIndex);
       var stream = this.get('postStream'),
-          idStream = stream.get('stream'),
-          postId = idStream[postIndex - 1];
+          postId = stream.findPostIdForPostNumber(postIndex);
 
       if (!postId) {
         Em.Logger.warn("jump-post code broken - requested an index outside the stream array");

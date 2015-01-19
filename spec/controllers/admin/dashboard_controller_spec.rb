@@ -8,7 +8,7 @@ describe Admin::DashboardController do
   end
 
   it "is a subclass of AdminController" do
-    (Admin::DashboardController < Admin::AdminController).should == true
+    expect(Admin::DashboardController < Admin::AdminController).to eq(true)
   end
 
   context 'while logged in as an admin' do
@@ -17,7 +17,7 @@ describe Admin::DashboardController do
     context '.index' do
       it 'should be successful' do
         xhr :get, :index
-        response.should be_successful
+        expect(response).to be_successful
       end
 
       context 'version checking is enabled' do
@@ -28,7 +28,7 @@ describe Admin::DashboardController do
         it 'returns discourse version info' do
           xhr :get, :index
           json = JSON.parse(response.body)
-          json['version_check'].should be_present
+          expect(json['version_check']).to be_present
         end
       end
 
@@ -40,7 +40,7 @@ describe Admin::DashboardController do
         it 'does not return discourse version info' do
           xhr :get, :index
           json = JSON.parse(response.body)
-          json['version_check'].should_not be_present
+          expect(json['version_check']).not_to be_present
         end
       end
     end
@@ -49,7 +49,7 @@ describe Admin::DashboardController do
       it 'should be successful' do
         AdminDashboardData.stubs(:fetch_problems).returns([])
         xhr :get, :problems
-        response.should be_successful
+        expect(response).to be_successful
       end
 
       context 'when there are no problems' do
@@ -60,7 +60,7 @@ describe Admin::DashboardController do
         it 'returns an empty array' do
           xhr :get, :problems
           json = JSON.parse(response.body)
-          json['problems'].size.should == 0
+          expect(json['problems'].size).to eq(0)
         end
       end
 
@@ -72,9 +72,9 @@ describe Admin::DashboardController do
         it 'returns an array of strings' do
           xhr :get, :problems
           json = JSON.parse(response.body)
-          json['problems'].size.should == 2
-          json['problems'][0].should be_a(String)
-          json['problems'][1].should be_a(String)
+          expect(json['problems'].size).to eq(2)
+          expect(json['problems'][0]).to be_a(String)
+          expect(json['problems'][1]).to be_a(String)
         end
       end
     end

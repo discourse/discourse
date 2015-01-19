@@ -84,7 +84,6 @@ pt_BR:
           other: "%{count} dias atrás"
     share:
       topic: 'compartilhe o link desse tópico'
-      post: 'compartilhe o link da resposta #%{postNumber}'
       close: 'fechar'
       twitter: 'compartilhe este link no Twitter'
       facebook: 'compartilhe este link no Facebook'
@@ -259,7 +258,6 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
-      download_archive: "baixar o arquivo das minhas mensagens"
       new_private_message: "Nova mensagem privada"
       private_message: "Mensagem Privada"
       private_messages: "Mensagens"
@@ -328,10 +326,8 @@ pt_BR:
         error: "Houve um erro ao alterar seu email. Talvez ele já esteja sendo usado neste forum?"
         success: "Enviamos um email para esse endereço. Por favor, siga as instruções de confirmação."
       change_avatar:
-        title: "Alterar seu avatar"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
         refresh_gravatar_title: "Atualizar o Gravatar"
-        letter_based: "Avatar dado pelo sistema"
         uploaded_avatar: "Foto pessoal"
         uploaded_avatar_empty: "Adicionar foto pessoal"
         upload_title: "Enviar sua foto"
@@ -441,7 +437,6 @@ pt_BR:
           none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
           uploading: "Subindo..."
-          success: "Arquivo enviado com sucesso, você será notificado em breve sobre o progresso."
           error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
         title: "Senha"
@@ -449,13 +444,10 @@ pt_BR:
         common: "Essa senha é muito comum."
         ok: "A sua senha parece boa."
         instructions: "Deve ter pelo menos %{count} caracteres."
-      associated_accounts: "Contas associadas"
       ip_address:
         title: "Último endereço IP"
       registration_ip_address:
         title: "Endereço IP de Registro"
-      avatar:
-        title: "Avatar"
       title:
         title: "Título"
       filters:
@@ -694,11 +686,6 @@ pt_BR:
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
     current_user: 'ir para a sua página de usuário'
-    starred:
-      title: 'Favorito'
-      help:
-        star: 'adiciona este tópico na sua lista de favoritos'
-        unstar: 'remove este tópico da sua lista de favoritos'
     topics:
       bulk:
         reset_read: "Redefinir Lido"
@@ -718,7 +705,6 @@ pt_BR:
           one: "Você selecionou <b>1</b> tópico."
           other: "Você selecionou <b>{{count}}</b> tópicos."
       none:
-        starred: "Você não tem tópicos favoritos."
         unread: "Não há nenhum tópico não lido."
         new: "Não há tópicos novos."
         read: "Você ainda não leu nenhum tópico."
@@ -730,7 +716,6 @@ pt_BR:
         educate:
           new: '<p>Seus novos tópicos aparecerão aqui.</p><p>Por padrão, tópicos são considerados novos e irão mostrar um indicador <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">novo</span> se eles foram criados nos últimos 2 dias.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
           unread: '<p>Seus tópicos não lidos aparecerão aqui.</p><p>Por padrão, tópicos são considerados não lidos e irão mostrar contadores <span class="badge new-posts badge-notification">1</span> se você:</p><ul><li>Criou o tópico</li><li>Respondeu para o tópico</li><li>Leu o tópico por mais de 4 minutos</li></ul><p>Ou se você explicitamente marcou o tópico para Acompanhar ou Assistir via o controle de notificação na parte de baixo de cada tópico.</p><p>Você pode mudar isto nas suas <a href="%{userPrefsUrl}">preferências</a>.</p>'
-          starred: '<p>Seus tópicos favoritos aparecem aqui.</p><p>Para marcar ou desmarcar ou um tópico como favorito, use:</p><ul><li>a <i class="fa fa-star"></i> próxima ao título de qualquer tópico</li><li>o botão de Estrela no final de cada tópico</li></ul>'
       bottom:
         latest: "Não há mais tópicos recentes."
         hot: "Não mais tópicos quentes."
@@ -738,7 +723,6 @@ pt_BR:
         read: "Não há mais tópicos lidos."
         new: "Não há mais tópicos novos."
         unread: "Não há mais tópicos não lidos."
-        starred: "Não há mais nehum tópico favorito."
         category: "Não há mais tópicos na categoria {{category}}."
         top: "Não há mais tópicos em alta."
     topic:
@@ -1229,13 +1213,11 @@ pt_BR:
         help: "Este tópico está fechado; não serão aceitas mais respostas"
       unpinned:
         title: "Não fixo"
-        help: "Esse tópico não está fixo; ele será mostrado na ordem padrão"
       pinned_globally:
         title: "Fixo Globalmente"
         help: "Esse tópico está fixo; ele será mostrado no topo de todas as listas"
       pinned:
         title: "Fixo"
-        help: "Este tópico está fixo; irá ser mostrado no topo da sua categoria"
       archived:
         help: "Este tópico está arquivado; está congelado e não pode ser alterado"
       invisible:
@@ -1276,9 +1258,6 @@ pt_BR:
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
-      starred:
-        title: "Favoritos"
-        help: "tópicos favoritos"
       read:
         title: "Lido"
         help: "tópicos que você leu"
@@ -1449,7 +1428,6 @@ pt_BR:
         edit: "Editar Grupos"
         refresh: "Atualizar"
         new: "Novo"
-        selector_placeholder: "adicionar usuários"
         name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
@@ -1523,7 +1501,6 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
       export_csv:
-        success: "Exportação iniciada, você será notificado brevemente com o progresso."
         failed: "Falha na exportação. Por favor verifique os logs."
         button_text: "Exportar"
       customize:
@@ -1649,7 +1626,6 @@ pt_BR:
           do_nothing: "não fazer nada"
         staff_actions:
           title: "Ações do Staff"
-          instructions: "Clique nos nomes de usuário e nas ações para filtrar a lista. Clique nos avatares para ir para as páginas dos usuários."
           clear_filters: "Mostrar Tudo"
           staff_user: "Usuário do Staff"
           target_user: "Usuário Destino"
@@ -1871,7 +1847,6 @@ pt_BR:
           external_username: "Usuário"
           external_name: "Nome"
           external_email: "Email"
-          external_avatar_url: "URL do Avatar"
       user_fields:
         title: "Campos de Usuários"
         help: "Adicionar campos que seus usuários podem preencher."
@@ -2001,7 +1976,6 @@ pt_BR:
         latest: '<b>g</b>, <b>l</b> Últimos'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não Lidos'
-        starred: '<b>g</b>, <b>f</b> Marcados'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Topo'
       navigation:
@@ -2010,7 +1984,6 @@ pt_BR:
         back: '<b>u</b> Voltar'
         up_down: '<b>k</b>/<b>j</b> Move seleção &uarr; &darr;'
         open: '<b>o</b> ou <b>Enter</b> Abre tópico selecionado'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Sessão próxima/anterior'
       application:
         title: 'Aplicação'
         create: '<b>c</b> Criar um tópico novo'
@@ -2024,12 +1997,8 @@ pt_BR:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
       actions:
         title: 'Ações'
-        star: '<b>f</b> Tópico favorito'
-        pin_unpin_topic: '<b>shift p</b> Fixar/Desfixar o tópico'
-        share_topic: '<b>shift s</b> Compartilhar tópico'
         share_post: '<b>s</b> Compartilhar mensagem'
         reply_as_new_topic: '<b>t</b> Responder como tópico linkado'
-        reply_topic: '<b>shift r</b> Responder ao tópico'
         reply_post: '<b>r</b> Responder a mensagem'
         quote_post: '<b>q</b> Citar resposta'
         like: '<b>l</b> Curtir a mensagem'

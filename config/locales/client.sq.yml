@@ -84,7 +84,6 @@ sq:
           other: "%{count} ditë më parë"
     share:
       topic: 'shpërnda një lidhje tek kjo temë'
-      post: 'shpërnda një lidhje tek tema #%{postNumber}'
       close: 'mbylle'
       twitter: 'shpërndaje këtë lidhe në Twitter'
       facebook: 'shpërndaje këtë lidhje ne Facebook'
@@ -251,7 +250,6 @@ sq:
       profile: "Profili"
       mute: "Mute"
       edit: "Ndrysho Preferencat"
-      download_archive: "shkarko arkivin e postimeve të mia"
       private_message: "Mesazhet Private"
       private_messages: "Mesazhet"
       activity_stream: "Aktiviteti"
@@ -319,10 +317,8 @@ sq:
         error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga dikush tjetër?"
         success: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
       change_avatar:
-        title: "Ndryshoni maskën tuaj"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
         refresh_gravatar_title: "Rifresko Gravatar tuaj"
-        letter_based: "Foto caktuar nga Sistemi"
         uploaded_avatar: "Foto personalizuar"
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarni foton tuaj"
@@ -413,7 +409,6 @@ sq:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për Ftesat në Grup"
           uploading: "Duke ngarkuar..."
-          success: "File uploaded successfully, you will be notified shortly with progress."
           error: "There was an error uploading '{{filename}}': {{message}}"
       password:
         title: "Fjalëkalimi"
@@ -421,13 +416,10 @@ sq:
         common: "Ky fjalëkalim është shumë i përdorur."
         ok: "Fjalëkalimi është i pranueshëm."
         instructions: "Të paktën %{count} karaktere."
-      associated_accounts: "Associated accounts"
       ip_address:
         title: "Adresa IP e Fundit"
       registration_ip_address:
         title: "Adresa IP e rregjistrimit"
-      avatar:
-        title: "Avatar"
       title:
         title: "Titulli"
       filters:
@@ -662,11 +654,6 @@ sq:
     go_back: 'kthehu mbrapa'
     not_logged_in_user: 'user page with summary of current activity and preferences'
     current_user: 'go to your user page'
-    starred:
-      title: 'Preferuar'
-      help:
-        star: 'shto këtë diskutim tek lista prefererimeve'
-        unstar: 'remove this topic from your starred list'
     topics:
       bulk:
         reset_read: "Reseto Leximet"
@@ -686,7 +673,6 @@ sq:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
       none:
-        starred: "You have no starred topics."
         unread: "Nuk keni tema të palexuara."
         new: "Nuk ka tema të reja."
         read: "Nuk keni lexuar asnjë temë deri tani."
@@ -698,7 +684,6 @@ sq:
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
-          starred: '<p>Your starred topics appear here.</p><p>To star or unstar a topic, use:</p><ul><li>the <i class="fa fa-star"></i> next to any topic title</li><li>the Star button at the bottom of each topic</li></ul>'
       bottom:
         latest: "Nuk ka më tema së fundmi."
         hot: "Nuk ka më tema të populluara."
@@ -706,7 +691,6 @@ sq:
         read: "Nuk ka më tema për të lexuar."
         new: "Nuk ka më tema të reja."
         unread: "Nuk ka më tema të palexuara."
-        starred: "Nuk ka më tema të preferuara."
         category: "Nuk ka me tema nga {{category}}."
         top: "Nuk ka më tema të populluara"
     topic:
@@ -1197,13 +1181,11 @@ sq:
         help: "This topic is closed; it no longer accepts new replies"
       unpinned:
         title: "Unpinned"
-        help: "This topic is unpinned; it will display in default order"
       pinned_globally:
         title: "Pinned Globally"
         help: "This topic is pinned globally; it will display at the top of all lists"
       pinned:
         title: "Pinned"
-        help: "This topic is pinned; it will display at the top of its category"
       archived:
         help: "This topic is archived; it is frozen and cannot be changed"
       invisible:
@@ -1244,9 +1226,6 @@ sq:
       hot:
         title: "Kryesoret"
         help: "a selection of the hottest topics"
-      starred:
-        title: "Preferuar"
-        help: "topics you starred"
       read:
         title: "Lexo"
         help: "topics you've read, in the order that you last read them"
@@ -1417,7 +1396,6 @@ sq:
         edit: "Redakto Grup"
         refresh: "Rifresko"
         new: "I Ri"
-        selector_placeholder: "shto anëtarë"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Anëtarët e grupit"
@@ -1614,7 +1592,6 @@ sq:
           do_nothing: "do nothing"
         staff_actions:
           title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
           clear_filters: "Show Everything"
           staff_user: "Staff User"
           target_user: "Target User"
@@ -1831,7 +1808,6 @@ sq:
           external_username: "Pseudonimi"
           external_name: "Emri"
           external_email: "Email"
-          external_avatar_url: "Avatar URL"
       user_fields:
         title: "User Fields"
         help: "Add fields that your users can fill out."
@@ -1961,7 +1937,6 @@ sq:
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
-        starred: '<b>g</b>, <b>f</b> Starred'
         categories: '<b>g</b>, <b>c</b> Kategoritë'
         top: '<b>g</b>, <b>t</b> Top'
       navigation:
@@ -1970,7 +1945,6 @@ sq:
         back: '<b>u</b> Mbrapa'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
       application:
         title: 'Aplikacion'
         create: '<b>c</b> Filloni një diskutim të ri'
@@ -1984,12 +1958,8 @@ sq:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
-        star: '<b>f</b> Star topic'
-        pin_unpin_topic: '<b>shift p</b> Pin/Unpin temën'
-        share_topic: '<b>shift s</b> Share topic'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Reply as linked topic'
-        reply_topic: '<b>shift r</b> Reply to topic'
         reply_post: '<b>r</b> Reply to post'
         quote_post: '<b>q</b> Quote post'
         like: '<b>l</b> Like post'

@@ -1,13 +1,13 @@
 <table class="table">
   <tr>
     <th>{{i18n 'admin.email.delivery_method'}}</th>
-    <td>{{model.delivery_method}}</td>
+    <td>{{delivery_method}}</td>
   </tr>
 
-  {{#each model.settings}}
+  {{#each s in model.settings}}
     <tr>
-      <th style='width: 25%'>{{name}}</th>
-      <td>{{value}}</td>
+      <th style='width: 25%'>{{s.name}}</th>
+      <td>{{s.value}}</td>
     </tr>
   {{/each}}
 </table>

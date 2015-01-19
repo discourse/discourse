@@ -121,6 +121,17 @@ test("cancelFilter", function() {
   blank(postStream.get('userFilters'), "cancelling the filters clears the userFilters");
 });
 
+test("findPostIdForPostNumber", function() {
+  var postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
+  postStream.set('gaps', { before: { 60: [55, 58] } });
+
+  equal(postStream.findPostIdForPostNumber(500), null, 'it returns null when the post cannot be found');
+  equal(postStream.findPostIdForPostNumber(1), 10, 'it finds the postId at the beginning');
+  equal(postStream.findPostIdForPostNumber(5), 50, 'it finds the postId in the middle');
+  equal(postStream.findPostIdForPostNumber(8), 60, 'it respects gaps');
+
+});
+
 test("toggleParticipant", function() {
   var postStream = buildStream(1236);
   sandbox.stub(postStream, "refresh");

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe PostTiming do
 
-  it { should validate_presence_of :post_number }
-  it { should validate_presence_of :msecs }
+  it { is_expected.to validate_presence_of :post_number }
+  it { is_expected.to validate_presence_of :msecs }
 
   describe 'pretend_read' do
     let!(:p1) { Fabricate(:post) }
@@ -41,21 +41,21 @@ describe PostTiming do
 
       PostTiming.pretend_read(topic_id, 2, 3)
 
-      PostTiming.where(topic_id: topic_id, user_id: 1, post_number: 3).count.should == 0
-      PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count.should == 1
-      PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count.should == 1
+      expect(PostTiming.where(topic_id: topic_id, user_id: 1, post_number: 3).count).to eq(0)
+      expect(PostTiming.where(topic_id: topic_id, user_id: 2, post_number: 3).count).to eq(1)
+      expect(PostTiming.where(topic_id: topic_id, user_id: 3, post_number: 3).count).to eq(1)
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 1)
-      tu.last_read_post_number.should == 1
-      tu.highest_seen_post_number.should == 1
+      expect(tu.last_read_post_number).to eq(1)
+      expect(tu.highest_seen_post_number).to eq(1)
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 2)
-      tu.last_read_post_number.should == 3
-      tu.highest_seen_post_number.should == 3
+      expect(tu.last_read_post_number).to eq(3)
+      expect(tu.highest_seen_post_number).to eq(3)
 
       tu = TopicUser.find_by(topic_id: topic_id, user_id: 3)
-      tu.last_read_post_number.should == 3
-      tu.highest_seen_post_number.should == 3
+      expect(tu.last_read_post_number).to eq(3)
+      expect(tu.highest_seen_post_number).to eq(3)
 
     end
   end
@@ -73,14 +73,14 @@ describe PostTiming do
 
       PostAction.act(user2, post, PostActionType.types[:like])
 
-      post.user.unread_notifications.should == 1
-      post.user.unread_notifications_by_type.should == {Notification.types[:liked] => 1 }
+      expect(post.user.unread_notifications).to eq(1)
+      expect(post.user.unread_notifications_by_type).to eq({Notification.types[:liked] => 1 })
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
       post.user.reload
-      post.user.unread_notifications_by_type.should == {}
-      post.user.unread_notifications.should == 0
+      expect(post.user.unread_notifications_by_type).to eq({})
+      expect(post.user.unread_notifications).to eq(0)
 
     end
   end
@@ -94,10 +94,10 @@ describe PostTiming do
     end
 
     it 'adds a view to the post' do
-      lambda {
+      expect {
         PostTiming.record_timing(@timing_attrs)
         @post.reload
-      }.should change(@post, :reads).by(1)
+      }.to change(@post, :reads).by(1)
     end
 
     describe 'multiple calls' do
@@ -106,10 +106,10 @@ describe PostTiming do
         PostTiming.record_timing(@timing_attrs)
         timing = PostTiming.find_by(topic_id: @post.topic_id, user_id: @coding_horror.id, post_number: @post.post_number)
 
-        timing.should be_present
-        timing.msecs.should == 2468
+        expect(timing).to be_present
+        expect(timing.msecs).to eq(2468)
 
-        @coding_horror.user_stat.posts_read_count.should == 1
+        expect(@coding_horror.user_stat.posts_read_count).to eq(1)
       end
 
     end
@@ -118,25 +118,25 @@ describe PostTiming do
 
       describe 'posts' do
         it 'has no avg_time by default' do
-          @post.avg_time.should be_blank
+          expect(@post.avg_time).to be_blank
         end
 
         it "doesn't change when we calculate the avg time for the post because there's no timings" do
           Post.calculate_avg_time
           @post.reload
-          @post.avg_time.should be_blank
+          expect(@post.avg_time).to be_blank
         end
       end
 
       describe 'topics' do
         it 'has no avg_time by default' do
-          @topic.avg_time.should be_blank
+          expect(@topic.avg_time).to be_blank
         end
 
         it "doesn't change when we calculate the avg time for the post because there's no timings" do
           Topic.calculate_avg_time
           @topic.reload
-          @topic.avg_time.should be_blank
+          expect(@topic.avg_time).to be_blank
         end
       end
 
@@ -145,7 +145,7 @@ describe PostTiming do
           PostTiming.record_timing(@timing_attrs.merge(user_id: @post.user_id))
           Post.calculate_avg_time
           @post.reload
-          @post.avg_time.should be_blank
+          expect(@post.avg_time).to be_blank
         end
 
       end
@@ -158,7 +158,7 @@ describe PostTiming do
         end
 
         it 'has a post avg_time from the timing' do
-          @post.avg_time.should be_present
+          expect(@post.avg_time).to be_present
         end
 
         describe 'forum topics' do
@@ -168,7 +168,7 @@ describe PostTiming do
           end
 
           it 'has an avg_time from the timing' do
-            @topic.avg_time.should be_present
+            expect(@topic.avg_time).to be_present
           end
 
         end

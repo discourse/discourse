@@ -9,8 +9,8 @@ describe DiscourseSassCompiler do
     it "compiles scss" do
       DiscoursePluginRegistry.stubs(:stylesheets).returns(["#{Rails.root}/spec/fixtures/scss/my_plugin.scss"])
       css = described_class.compile(test_scss, "test")
-      css.should include("color")
-      css.should include('my-plugin-thing')
+      expect(css).to include("color")
+      expect(css).to include('my-plugin-thing')
     end
 
     it "raises error for invalid scss" do
@@ -23,7 +23,7 @@ describe DiscourseSassCompiler do
       ColorScheme.expects(:enabled).never
       DiscoursePluginRegistry.stubs(:stylesheets).returns(["#{Rails.root}/spec/fixtures/scss/my_plugin.scss"])
       css = described_class.compile(test_scss, "test", safe: true)
-      css.should_not include('my-plugin-thing')
+      expect(css).not_to include('my-plugin-thing')
     end
   end
 

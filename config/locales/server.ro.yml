@@ -725,8 +725,6 @@ ro:
     post_menu_hidden_items: "Meniul de elemente de ascuns din oficiu în meniul de postări numai dacă elipsa este activată prin click."
     share_links: "Determină ce elemente apar în dialogul distribuit şi în ce ordine."
     track_external_right_clicks: "Urmăreşte adresele externe ce sunt activate prin click-dreapta (ex: deschide în tab nou) dezactivate din oficiu fiindcă rescrie URL-uri"
-    topics_per_page: "Câte discuţii sunt încărcate din oficiu în lista de discuţii, şi când se face scroll pentru a încărca mai multe discuţii"
-    posts_per_page: "Câte postări sunt încărcate din oficiu într-o discuţie, şi când se face scroll pentru a încărca mai multe postări"
     site_contact_username: "Toate mesajele priovate automate trimise de forum vor fi de la acest utilizator; dacă este lăsat necompletat va fi folosit contul de sistem oficial."
     send_welcome_message: "Trimite tuturor utilizatorilor noi un mesaj privat de bun-venit şi un scurt ghid."
     suppress_reply_directly_below: "Nu arăta numărul expadabil de răspunsuri într-o postare când există doar un sigur răspuns sub acesta."

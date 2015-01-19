@@ -73,11 +73,6 @@ id:
       messages:
         is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
         has_already_been_used: "telah digunakan"
-      models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "Maaf, Anda tidak dapat mengirimkan pesan kepada pengguna ini."
   user_profile:
     no_info_me: "<div class='missing-profile'>kolom Tentang Saya dari profil Anda masih kosong, <a href='/users/%{username_lower}/preferences/about-me'>apakah Anda mau mengisinya?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} belum mengisi kolom Tentang Saya untuk profilnya</div>"

@@ -4,7 +4,7 @@ require 'jobs/regular/process_post'
 describe Jobs::ProcessPost do
 
   it "returns when the post cannot be found" do
-    lambda { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.should_not raise_error
+    expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
 
   context 'with a post' do
@@ -19,7 +19,7 @@ describe Jobs::ProcessPost do
       cooked = post.cooked
 
       post.reload
-      post.cooked.should == cooked
+      expect(post.cooked).to eq(cooked)
 
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
     end
@@ -31,19 +31,19 @@ describe Jobs::ProcessPost do
       Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
 
       post.reload
-      post.cooked.should == cooked
+      expect(post.cooked).to eq(cooked)
     end
 
     it 'processes posts' do
 
       post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
-      post.cooked.should =~ /http/
+      expect(post.cooked).to match(/http/)
 
       Jobs::ProcessPost.new.execute(post_id: post.id)
       post.reload
 
       # subtle but cooked post processor strip this stuff, this ensures all the code gets a workout
-      post.cooked.should_not =~ /http/
+      expect(post.cooked).not_to match(/http/)
     end
 
   end

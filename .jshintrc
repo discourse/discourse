@@ -49,6 +49,7 @@
     "notEqual",
     "require",
     "requirejs",
+    "hasModule",
     "Blob",
     "File"],
   "node" : false,

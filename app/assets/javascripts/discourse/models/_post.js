@@ -60,24 +60,13 @@ Discourse.Post = Discourse.Model.extend({
     );
   }.property('reply_to_user', 'reply_to_post_number', 'post_number'),
 
-  byTopicCreator: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
+  topicOwner: Discourse.computed.propertyEqual('topic.details.created_by.id', 'user_id'),
   hasHistory: Em.computed.gt('version', 1),
   postElementId: Discourse.computed.fmt('post_number', 'post_%@'),
 
   canViewRawEmail: function() {
     return this.get("user_id") === Discourse.User.currentProp("id") || Discourse.User.currentProp('staff');
   }.property("user_id"),
-
-  bookmarkedChanged: function() {
-    Discourse.Post.bookmark(this.get('id'), this.get('bookmarked'))
-             .then(null, function (error) {
-               if (error && error.responseText) {
-                 bootbox.alert($.parseJSON(error.responseText).errors[0]);
-               } else {
-                 bootbox.alert(I18n.t('generic_error'));
-               }
-             });
-  }.observes('bookmarked'),
 
   wikiChanged: function() {
     var data = { wiki: this.get("wiki") };
@@ -134,6 +123,7 @@ Discourse.Post = Discourse.Model.extend({
   save: function(complete, error) {
     var self = this;
     if (!this.get('newPost')) {
+
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
@@ -155,17 +145,9 @@ Discourse.Post = Discourse.Model.extend({
     } else {
 
       // We're saving a post
-      var data = {
-        raw: this.get('raw'),
-        topic_id: this.get('topic_id'),
-        is_warning: this.get('is_warning'),
-        reply_to_post_number: this.get('reply_to_post_number'),
-        category: this.get('category'),
-        archetype: this.get('archetype'),
-        title: this.get('title'),
-        image_sizes: this.get('imageSizes'),
-        target_usernames: this.get('target_usernames'),
-      };
+      var data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
+      data.reply_to_post_number = this.get('reply_to_post_number');
+      data.image_sizes = this.get('imageSizes');
 
       var metaData = this.get('metaData');
       // Put the metaData into the request
@@ -428,6 +410,18 @@ Discourse.Post = Discourse.Model.extend({
 
   unhide: function () {
     return Discourse.ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
+  },
+
+  toggleBookmark: function() {
+    var self = this;
+
+    this.toggleProperty("bookmarked");
+    if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
+
+    return Discourse.Post.updateBookmark(this.get('id'), this.get('bookmarked')).catch(function() {
+      self.toggleProperty("bookmarked");
+      if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
+    });
   }
 });
 
@@ -455,6 +449,13 @@ Discourse.Post.reopenClass({
       result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));
     }
     return result;
+  },
+
+  updateBookmark: function(postId, bookmarked) {
+    return Discourse.ajax("/posts/" + postId + "/bookmark", {
+      type: 'PUT',
+      data: { bookmarked: bookmarked }
+    });
   },
 
   deleteMany: function(selectedPosts, selectedReplies) {
@@ -498,10 +499,6 @@ Discourse.Post.reopenClass({
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       return Discourse.Post.create(result);
     });
-  },
-
-  bookmark: function(postId, bookmarked) {
-    return Discourse.ajax("/posts/" + postId + "/bookmark", { type: 'PUT', data: { bookmarked: bookmarked } });
   }
 
 });

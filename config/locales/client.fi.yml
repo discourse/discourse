@@ -84,7 +84,6 @@ fi:
           other: "%{count} päivää sitten"
     share:
       topic: 'jaa linkki tähän ketjuun'
-      post: 'jaa linkki viestiin #%{postNumber}'
       close: 'sulje'
       twitter: 'jaa tämä linkki Twitterissä'
       facebook: 'jaa tämä linkki Facebookissa'
@@ -259,7 +258,6 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
-      download_archive: "lataa arkisto viesteistäsi"
       new_private_message: "Uusi yksityisviesti"
       private_message: "Yksityisviesti"
       private_messages: "Viestit"
@@ -328,10 +326,8 @@ fi:
         error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä sama sähköpostiosoite on jo käytössä?"
         success: "Annettuun osoitteeseen on lähetetty viesti. Seuraa sen ohjeita sähköpostiosoitteen varmentamiseksi."
       change_avatar:
-        title: "Vaihda avatarisi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
         refresh_gravatar_title: "Päivitä Gravatar"
-        letter_based: "Järjestelmän luoma avatar"
         uploaded_avatar: "Oma kuva"
         uploaded_avatar_empty: "Lisää oma kuva"
         upload_title: "Lataa oma kuva"
@@ -441,7 +437,6 @@ fi:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
           uploading: "Lähettää..."
-          success: "Tiedoston lähettäminen onnistui, saat pikaisesti ilmoituksen edistymisestä."
           error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
       password:
         title: "Salasana"
@@ -449,13 +444,10 @@ fi:
         common: "Annettu salasana on liian yleinen."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
-      associated_accounts: "Liittyvät käyttäjätilit"
       ip_address:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
         title: "IP osoite rekisteröityessä"
-      avatar:
-        title: "Avatar"
       title:
         title: "Otsikko"
       filters:
@@ -694,11 +686,6 @@ fi:
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
     current_user: 'siirry omalle käyttäjäsivullesi'
-    starred:
-      title: 'Merkitse tähdellä'
-      help:
-        star: 'lisää tämä ketju tähdellisten listaan'
-        unstar: 'poista tämä ketju tähdellisten listalta'
     topics:
       bulk:
         reset_read: "Palauta lukutila"
@@ -718,7 +705,6 @@ fi:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
       none:
-        starred: "Et ole merkinnyt ketjuja tähdellä."
         unread: "Sinulla ei ole lukemattomia ketjuja."
         new: "Sinulla ei ole uusia ketjuja."
         read: "Et ole lukenut vielä yhtään yhtään ketjua."
@@ -730,7 +716,6 @@ fi:
         educate:
           new: '<p>Uudet ketjut ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkki, kun ne on luotu edellisen kahden päivän aikana.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
           unread: '<p>Lukemattomat viestit ilmestyvät tähän.</p><p>Oletuksena, ketjut tulkitaan lukemattomiksi ja niiden yhteydessä näytetään <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua enemmän, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurantaan tai tarkkailuun ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
-          starred: '<p>Tähdelliset ketjut ilmestyvät tähän.</p><p>Merkitäksesi ketjun tähdellä, klikkaa:</p><ul><li><i class="fa fa-star"></i> ketjun otsikon vierestä</li><li>Merkitse tähdellä-painiketta ketjun lopussa</li></ul>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
         hot: "Kuumia ketjuja ei ole enempää."
@@ -738,7 +723,6 @@ fi:
         read: "Luettuja ketjuja ei ole enempää."
         new: "Uusia ketjuja ei ole enempää."
         unread: "Lukemattomia ketjuja ei ole enempää."
-        starred: "Tähdellisiä ketjuja ei ole enempää."
         category: "Alueen {{category}} ketjuja ei ole enempää."
         top: "Huippuketjuja ei ole enempää."
     topic:
@@ -1229,13 +1213,11 @@ fi:
         help: "Tämä ketju on suljettu; siihen ei voi enää vastata."
       unpinned:
         title: "Kiinnitys poistettu"
-        help: "Ketjun kiinnitys on poistettu; se näytetään oletusjärjestyksessä."
       pinned_globally:
         title: "Kiinnitetty koko palstalle"
         help: "Tämä ketju on nyt kiinnitetty koko palstalle; se näytetään kaikkien listausten ylimpänä"
       pinned:
         title: "Kiinnitetty"
-        help: "Tämä ketju on nostettu; se näytetään alueensa ensimmäisenä"
       archived:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       invisible:
@@ -1276,9 +1258,6 @@ fi:
       hot:
         title: "Kuuma"
         help: "valikoima kuumimpia ketjuja"
-      starred:
-        title: "Tähdelliset"
-        help: "tähdellä merkitsemäsi ketjut"
       read:
         title: "Luetut"
         help: "lukemasi ketjut, lukemisjärjestyksessä"
@@ -1449,7 +1428,6 @@ fi:
         edit: "Muokkaa ryhmiä"
         refresh: "Lataa uudelleen"
         new: "Uusi"
-        selector_placeholder: "lisää käyttäjiä"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samt säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
@@ -1523,7 +1501,6 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
-        success: "Vienti on käynnissä, saat pian ilmoituksen sen edistymisestä."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
         button_text: "Vie"
       customize:
@@ -1649,7 +1626,6 @@ fi:
           do_nothing: "älä tee mitään"
         staff_actions:
           title: "Henkilökunnan toimet"
-          instructions: "Klikkaa käyttäjänimiä tai toimintoja suodattaaksesi listaa. Klikkaa avataria siirtyäksesi käyttäjäsivulle."
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
           target_user: "Kohteena ollut käyttäjä"
@@ -1876,7 +1852,6 @@ fi:
           external_username: "Käyttäjätunnus"
           external_name: "Nimi"
           external_email: "Sähköposti"
-          external_avatar_url: "Avatarin URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."
@@ -2006,7 +1981,6 @@ fi:
         latest: '<b>g</b>,<b>l</b> Tuoreimmat'
         new: '<b>g</b>, <b>n</b> Uudet'
         unread: '<b>g</b>, <b>u</b> Lukemattomat'
-        starred: '<b>g</b>, <b>f</b> Tähdelliset'
         categories: '<b>g</b>, <b>c</b> Alueet'
         top: '<b>g</b>, <b>t</b> Ylös'
       navigation:
@@ -2015,7 +1989,6 @@ fi:
         back: '<b>u</b> Takaisin'
         up_down: '<b>k</b>/<b>j</b> Siirrä valintaa &uarr; &darr;'
         open: '<b>o</b> tai <b>Enter</b> Avaa valittu ketju'
-        next_prev: '<b>shift j</b>/<b>shift k</b> Seuraava/edellinen osio'
       application:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
@@ -2029,12 +2002,8 @@ fi:
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
       actions:
         title: 'Toiminnot'
-        star: '<b>f</b> Merkitse ketju tähdellä'
-        pin_unpin_topic: '<b>shift p</b> Kiinnitä ketju/poista kiinnitys'
-        share_topic: '<b>shift s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'
         reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'
-        reply_topic: '<b>shift r</b> Vastaa ketjuun'
         reply_post: '<b>r</b> Vastaa viestiin'
         quote_post: '<b>q</b> Lainaa viesti'
         like: '<b>l</b> Tykkää viestistä'

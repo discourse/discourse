@@ -1,9 +1,12 @@
+import Session from 'discourse/models/session';
+import AppEvents from 'discourse/lib/app-events';
+
 export default {
   name: "inject-objects",
   initialize: function(container, application) {
 
     // Inject appEvents everywhere
-    var appEvents = Ember.Object.createWithMixins(Ember.Evented);
+    var appEvents = AppEvents.create();
     application.register('app-events:main', appEvents, { instantiate: false });
 
     application.inject('controller', 'appEvents', 'app-events:main');
@@ -29,5 +32,17 @@ export default {
     application.inject('route', 'siteSettings', 'site-settings:main');
     application.inject('view', 'siteSettings', 'site-settings:main');
     application.inject('model', 'siteSettings', 'site-settings:main');
+
+    // Inject Session for transient data
+    application.register('session:main', Session.current(), { instantiate: false });
+    application.inject('controller', 'session', 'session:main');
+    application.inject('component', 'session', 'session:main');
+    application.inject('route', 'session', 'session:main');
+    application.inject('view', 'session', 'session:main');
+    application.inject('model', 'session', 'session:main');
+
+    // Inject currentUser. Components only for now to prevent any breakage
+    application.register('current-user:main', Discourse.User.current(), { instantiate: false });
+    application.inject('component', 'currentUser', 'current-user:main');
   }
 };

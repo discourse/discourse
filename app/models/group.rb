@@ -7,10 +7,13 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_many :group_managers, dependent: :destroy
+  has_many :managers, through: :group_managers
+
   after_save :destroy_deletions
 
   validate :name_format_validator
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: false
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -275,6 +278,10 @@ class Group < ActiveRecord::Base
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
+  end
+
+  def appoint_manager(user)
+    managers << user
   end
 
   protected

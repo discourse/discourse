@@ -3,7 +3,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
   before_filter :enable_customization
 
   def index
-    @site_customizations = SiteCustomization.all
+    @site_customizations = SiteCustomization.order(:name)
 
     respond_to do |format|
       format.json { render json: @site_customizations }
@@ -52,9 +52,10 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
     def site_customization_params
       params.require(:site_customization)
-            .permit(:name, :stylesheet, :header, :footer,
-                    :mobile_stylesheet, :mobile_header, :mobile_footer,
-                    :position, :enabled, :key, :override_default_style,
+            .permit(:name, :stylesheet, :header, :top, :footer,
+                    :mobile_stylesheet, :mobile_header, :mobile_top, :mobile_footer,
+                    :head_tag, :body_tag,
+                    :position, :enabled, :key,
                     :stylesheet_baked)
     end
 

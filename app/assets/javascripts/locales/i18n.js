@@ -522,7 +522,7 @@ I18n.enable_verbose_localization = function(){
       if (!_.isEmpty(value)) {
         message += ", parameters: " + JSON.stringify(value);
       }
-      window.console.log(message);
+      //window.console.log(message);
     }
     return t.apply(I18n, [scope, value]) + " (t" + current + ")";
   };

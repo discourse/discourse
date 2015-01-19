@@ -78,30 +78,16 @@ Discourse.User = Discourse.Model.extend({
     return 'background-image: url(' + background + ')';
   }.property('profile_background'),
 
-  statusIcon: function() {
-    var name = Handlebars.Utils.escapeExpression(this.get('name')),
-        desc;
-
-    if(Discourse.User.currentProp("admin") || Discourse.User.currentProp("moderator")) {
-      if(this.get('admin')) {
-        desc = I18n.t('user.admin', {user: name});
-        return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
-      }
-    }
-    if(this.get('moderator')){
-      desc = I18n.t('user.moderator', {user: name});
-      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
-    }
-    return null;
-  }.property('admin','moderator'),
-
   /**
     Path to this user.
 
     @property path
     @type {String}
   **/
-  path: Discourse.computed.url('username_lower', "/users/%@"),
+  path: function(){
+    return Discourse.getURL('/users/' + this.get('username_lower'));
+    // no need to observe, requires a hard refresh to update
+  }.property(),
 
   /**
     Path to this user's administration
@@ -347,6 +333,14 @@ Discourse.User = Discourse.Model.extend({
 
       user.setProperties(json.user);
       return user;
+    });
+  },
+
+  findStaffInfo: function() {
+    if (!Discourse.User.currentProp("staff")) { return Ember.RSVP.resolve(null); }
+    var self = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/staff-info.json").then(function(info) {
+      self.setProperties(info);
     });
   },
 

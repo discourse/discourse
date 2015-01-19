@@ -11,35 +11,35 @@ describe DiscoursePluginRegistry do
   context '#stylesheets' do
     it 'defaults to an empty Set' do
       registry.stylesheets = nil
-      registry.stylesheets.should == Set.new
+      expect(registry.stylesheets).to eq(Set.new)
     end
   end
 
   context '#mobile_stylesheets' do
     it 'defaults to an empty Set' do
       registry.mobile_stylesheets = nil
-      registry.mobile_stylesheets.should == Set.new
+      expect(registry.mobile_stylesheets).to eq(Set.new)
     end
   end
 
   context '#javascripts' do
     it 'defaults to an empty Set' do
       registry.javascripts = nil
-      registry.javascripts.should == Set.new
+      expect(registry.javascripts).to eq(Set.new)
     end
   end
 
   context '#server_side_javascripts' do
     it 'defaults to an empty Set' do
       registry.server_side_javascripts = nil
-      registry.server_side_javascripts.should == Set.new
+      expect(registry.server_side_javascripts).to eq(Set.new)
     end
   end
 
   context '#admin_javascripts' do
     it 'defaults to an empty Set' do
       registry.admin_javascripts = nil
-      registry.admin_javascripts.should == Set.new
+      expect(registry.admin_javascripts).to eq(Set.new)
     end
   end
 
@@ -49,15 +49,15 @@ describe DiscoursePluginRegistry do
     end
 
     it 'is not leaking' do
-      DiscoursePluginRegistry.new.stylesheets.should be_blank
+      expect(DiscoursePluginRegistry.new.stylesheets).to be_blank
     end
 
     it 'is returned by DiscoursePluginRegistry.stylesheets' do
-      registry_instance.stylesheets.include?('hello.css').should == true
+      expect(registry_instance.stylesheets.include?('hello.css')).to eq(true)
     end
 
     it "won't add the same file twice" do
-      lambda { registry_instance.register_css('hello.css') }.should_not change(registry.stylesheets, :size)
+      expect { registry_instance.register_css('hello.css') }.not_to change(registry.stylesheets, :size)
     end
   end
 
@@ -67,11 +67,11 @@ describe DiscoursePluginRegistry do
     end
 
     it 'is returned by DiscoursePluginRegistry.javascripts' do
-      registry_instance.javascripts.include?('hello.js').should == true
+      expect(registry_instance.javascripts.include?('hello.js')).to eq(true)
     end
 
     it "won't add the same file twice" do
-      lambda { registry_instance.register_js('hello.js') }.should_not change(registry.javascripts, :size)
+      expect { registry_instance.register_js('hello.js') }.not_to change(registry.javascripts, :size)
     end
   end
 
@@ -93,53 +93,53 @@ describe DiscoursePluginRegistry do
       registry.register_asset("test.css")
       registry.register_asset("test2.css")
 
-      registry.mobile_stylesheets.count.should == 0
-      registry.stylesheets.count.should == 2
+      expect(registry.mobile_stylesheets.count).to eq(0)
+      expect(registry.stylesheets.count).to eq(2)
     end
 
     it "registers desktop css properly" do
       registry.register_asset("test.css", :desktop)
 
-      registry.mobile_stylesheets.count.should == 0
-      registry.desktop_stylesheets.count.should == 1
-      registry.stylesheets.count.should == 0
+      expect(registry.mobile_stylesheets.count).to eq(0)
+      expect(registry.desktop_stylesheets.count).to eq(1)
+      expect(registry.stylesheets.count).to eq(0)
     end
 
     it "registers mobile css properly" do
       registry.register_asset("test.css", :mobile)
 
-      registry.mobile_stylesheets.count.should == 1
-      registry.stylesheets.count.should == 0
+      expect(registry.mobile_stylesheets.count).to eq(1)
+      expect(registry.stylesheets.count).to eq(0)
     end
 
     it "registers desktop css properly" do
       registry.register_asset("test.css", :desktop)
 
-      registry.desktop_stylesheets.count.should == 1
-      registry.stylesheets.count.should == 0
+      expect(registry.desktop_stylesheets.count).to eq(1)
+      expect(registry.stylesheets.count).to eq(0)
     end
 
     it "registers sass variable properly" do
       registry.register_asset("test.css", :variables)
 
-      registry.sass_variables.count.should == 1
-      registry.stylesheets.count.should == 0
+      expect(registry.sass_variables.count).to eq(1)
+      expect(registry.stylesheets.count).to eq(0)
     end
 
     it "registers admin javascript properly" do
       registry.register_asset("my_admin.js", :admin)
 
-      registry.admin_javascripts.count.should == 1
-      registry.javascripts.count.should == 0
-      registry.server_side_javascripts.count.should == 0
+      expect(registry.admin_javascripts.count).to eq(1)
+      expect(registry.javascripts.count).to eq(0)
+      expect(registry.server_side_javascripts.count).to eq(0)
     end
 
     it "registers server side javascript properly" do
       registry.register_asset("my_admin.js", :server_side)
 
-      registry.server_side_javascripts.count.should == 1
-      registry.javascripts.count.should == 1
-      registry.admin_javascripts.count.should == 0
+      expect(registry.server_side_javascripts.count).to eq(1)
+      expect(registry.javascripts.count).to eq(1)
+      expect(registry.admin_javascripts.count).to eq(0)
     end
   end
 

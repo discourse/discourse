@@ -4,6 +4,7 @@ require_dependency 'guardian/post_guardian'
 require_dependency 'guardian/topic_guardian'
 require_dependency 'guardian/user_guardian'
 require_dependency 'guardian/post_revision_guardian'
+require_dependency 'guardian/group_guardian'
 
 # The guardian is responsible for confirming access to various site resources and operations
 class Guardian
@@ -13,6 +14,7 @@ class Guardian
   include TopicGuardian
   include UserGuardian
   include PostRevisionGuardian
+  include GroupGuardian
 
   class AnonymousUser
     def blank?; true; end
@@ -247,6 +249,12 @@ class Guardian
 
   def can_see_emails?
     @can_see_emails
+  end
+
+  def can_export_entity?(entity_type)
+    return true if is_staff?
+    return false if entity_type == "admin"
+    UserExport.where(user_id: @user.id, created_at: (Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)).count == 0
   end
 
   private

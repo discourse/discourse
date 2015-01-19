@@ -3,8 +3,8 @@ require_dependency 'oneboxer'
 
 describe Oneboxer do
   it "returns blank string for an invalid onebox" do
-    Oneboxer.preview("http://boom.com").should == ""
-    Oneboxer.onebox("http://boom.com").should == ""
+    expect(Oneboxer.preview("http://boom.com")).to eq("")
+    expect(Oneboxer.onebox("http://boom.com")).to eq("")
   end
 end
 

@@ -23,7 +23,7 @@ describe Jobs::Base do
   it 'handles correct jobs' do
     job = GoodJob.new
     job.perform({})
-    job.count.should == 1
+    expect(job.count).to eq(1)
   end
 
   it 'handles errors in multisite' do
@@ -33,7 +33,7 @@ describe Jobs::Base do
 
     bad = BadJob.new 
     expect{bad.perform({})}.to raise_error
-    bad.fail_count.should == 3
+    expect(bad.fail_count).to eq(3)
   end
 
   it 'delegates the process call to execute' do
