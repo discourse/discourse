@@ -4,6 +4,8 @@ require_dependency 'system_message'
 module Jobs
 
   class ExportCsvFile < Jobs::Base
+    include ActionView::Helpers::NumberHelper
+
     HEADER_ATTRS_FOR = {}
     HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
     HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
@@ -288,7 +290,7 @@ module Jobs
       def notify_user
         if @current_user
           if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz")
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz", file_size: number_to_human_size(File.size("#{UserExport.base_directory}/#{@file_name}.gz")))
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end
