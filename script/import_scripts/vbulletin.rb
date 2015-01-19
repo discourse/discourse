@@ -1,13 +1,20 @@
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'mysql2'
+require 'htmlentities'
 
 class ImportScripts::VBulletin < ImportScripts::Base
-
-  DATABASE = "iref"
   BATCH_SIZE = 1000
+
+  # CHANGE THESE BEFORE RUNNING THE IMPORTER
+  DATABASE = "iref"
+  TIMEZONE = "Asia/Kolkata"
 
   def initialize
     super
+
+    @tz = TZInfo::Timezone.get(TIMEZONE)
+
+    @htmlentities = HTMLEntities.new
 
     @client = Mysql2::Client.new(
       host: "localhost",
@@ -24,6 +31,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     import_posts
 
     close_topics
+    post_process_posts
   end
 
   def import_groups
@@ -37,8 +45,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     create_groups(groups) do |group|
       {
-        id: group["usergroupid"].to_i,
-        name: group["title"]
+        id: group["usergroupid"],
+        name: @htmlentities.decode(group["title"]).strip
       }
     end
   end
@@ -49,6 +57,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
     @old_username_to_new_usernames = {}
 
     user_count = mysql_query("SELECT COUNT(userid) count FROM user").first["count"]
+
+    # TODO: add email back in when using real data
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
@@ -62,59 +72,118 @@ class ImportScripts::VBulletin < ImportScripts::Base
       break if users.size < 1
 
       create_users(users, total: user_count, offset: offset) do |user|
+        username = @htmlentities.decode(user["username"]).strip
+
         {
-          id: user["userid"].to_i,
-          username: user["username"],
+          id: user["userid"],
+          name: username,
+          username: username,
           email: user["email"].presence || fake_email,
-          website: user["homepage"],
-          title: user["usertitle"],
+          website: user["homepage"].strip,
+          title: @htmlentities.decode(user["usertitle"]).strip,
           primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
-          created_at: Time.at(user["joindate"].to_i),
+          created_at: parse_timestamp(user["joindate"]),
           post_create_action: proc do |u|
             @old_username_to_new_usernames[user["username"]] = u.username
+            import_profile_picture(user, u)
+            import_profile_background(user, u)
           end
         }
       end
     end
   end
 
+  def import_profile_picture(old_user, imported_user)
+    query = mysql_query <<-SQL
+        SELECT filedata, filename
+          FROM customavatar
+         WHERE userid = #{old_user["userid"]}
+      ORDER BY dateline DESC
+         LIMIT 1
+    SQL
+
+    picture = query.first
+
+    return if picture.nil?
+
+    file = Tempfile.new("profile-picture")
+    file.write(picture["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
+    file.rewind
+
+    upload = Upload.create_for(imported_user.id, file, picture["filename"], file.size)
+
+    return if !upload.persisted?
+
+    imported_user.create_user_avatar
+    imported_user.user_avatar.update(custom_upload_id: upload.id)
+    imported_user.update(uploaded_avatar_id: upload.id)
+  ensure
+    file.close rescue nil
+    file.unlind rescue nil
+  end
+
+  def import_profile_background(old_user, imported_user)
+    query = mysql_query <<-SQL
+        SELECT filedata, filename
+          FROM customprofilepic
+         WHERE userid = #{old_user["userid"]}
+      ORDER BY dateline DESC
+         LIMIT 1
+    SQL
+
+    background = query.first
+
+    return if background.nil?
+
+    file = Tempfile.new("profile-background")
+    file.write(background["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
+    file.rewind
+
+    upload = Upload.create_for(imported_user.id, file, background["filename"], file.size)
+
+    return if !upload.persisted?
+
+    imported_user.user_profile.update(profile_background: upload.url)
+  ensure
+    file.close rescue nil
+    file.unlink rescue nil
+  end
+
   def import_categories
     puts "", "importing top level categories..."
 
-    # TODO: deal with permissions
+    categories = mysql_query("SELECT forumid, title, description, displayorder, parentid FROM forum ORDER BY forumid").to_a
 
-    top_level_categories = mysql_query <<-SQL
-        SELECT forumid, title, description, displayorder
-          FROM forum
-         WHERE parentid = -1
-      ORDER BY forumid
-    SQL
+    top_level_categories = categories.select { |c| c["parentid"] == -1 }
 
     create_categories(top_level_categories) do |category|
       {
-        id: category["forumid"].to_i,
-        name: category["title"],
-        position: category["displayorder"].to_i,
-        description: category["description"]
+        id: category["forumid"],
+        name: @htmlentities.decode(category["title"]).strip,
+        position: category["displayorder"],
+        description: @htmlentities.decode(category["description"]).strip
       }
     end
 
     puts "", "importing children categories..."
 
-    childen_categories = mysql_query <<-SQL
-        SELECT forumid, title, description, displayorder, parentid
-          FROM forum
-         WHERE parentid <> -1
-      ORDER BY forumid
-    SQL
+    children_categories = categories.select { |c| c["parentid"] != -1 }
+    top_level_category_ids = Set.new(top_level_categories.map { |c| c["forumid"] })
 
-    create_categories(childen_categories) do |category|
+    # cut down the tree to only 2 levels of categories
+    children_categories.each do |cc|
+      while !top_level_category_ids.include?(cc["parentid"])
+        cc["parentid"] = categories.detect { |c| c["forumid"] == cc["parentid"] }["parentid"]
+      end
+    end
+
+    create_categories(children_categories) do |category|
       {
-        id: category["forumid"].to_i,
-        name: category["title"],
-        position: category["displayorder"].to_i,
-        description: category["description"].strip!,
-        parent_category_id: category_from_imported_category_id(category["parentid"].to_i).try(:[], "id")
+        id: category["forumid"],
+        name: @htmlentities.decode(category["title"]).strip,
+        position: category["displayorder"],
+        description: @htmlentities.decode(category["description"]).strip,
+        parent_category_id: category_from_imported_category_id(category["parentid"]).try(:[], "id")
       }
     end
   end
@@ -145,13 +214,13 @@ class ImportScripts::VBulletin < ImportScripts::Base
         @closed_topic_ids << topic_id if topic["open"] == "0"
         t = {
           id: topic_id,
-          user_id: user_id_from_imported_user_id(topic["postuserid"].to_i) || Discourse::SYSTEM_USER_ID,
-          title: CGI.unescapeHTML(topic["title"]).strip[0...255],
-          category: category_from_imported_category_id(topic["forumid"].to_i).try(:name),
+          user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
+          title: @htmlentities.decode(topic["title"]).strip[0...255],
+          category: category_from_imported_category_id(topic["forumid"]).try(:name),
           raw: preprocess_post_raw(topic["raw"]),
-          created_at: Time.at(topic["dateline"].to_i),
+          created_at: parse_timestamp(topic["dateline"]),
           visible: topic["visible"].to_i == 1,
-          views: topic["views"].to_i,
+          views: topic["views"],
         }
         t[:pinned_at] = t[:created_at] if topic["sticky"].to_i == 1
         t
@@ -179,11 +248,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
       create_posts(posts, total: post_count, offset: offset) do |post|
         next unless topic = topic_lookup_from_imported_post_id("thread-#{post["threadid"]}")
         p = {
-          id: post["postid"].to_i,
+          id: post["postid"],
           user_id: user_id_from_imported_user_id(post["userid"]) || Discourse::SYSTEM_USER_ID,
           topic_id: topic[:topic_id],
           raw: preprocess_post_raw(post["raw"]),
-          created_at: Time.at(post["dateline"].to_i),
+          created_at: parse_timestamp(post["dateline"]),
           hidden: post["visible"].to_i == 0,
         }
         if parent = topic_lookup_from_imported_post_id(post["parentid"])
@@ -214,9 +283,32 @@ class ImportScripts::VBulletin < ImportScripts::Base
     Topic.exec_sql(sql, @closed_topic_ids)
   end
 
+  def post_process_posts
+    puts "", "Postprocessing posts..."
+
+    current = 0
+    max = Post.count
+
+    Post.find_each do |post|
+      begin
+        new_raw = postprocess_post_raw(post.raw)
+        if new_raw != post.raw
+          post.raw = new_raw
+          post.save
+        end
+      ensure
+        print_status(current += 1, max)
+      end
+    end
+  end
+
   def preprocess_post_raw(raw)
     return "" if raw.blank?
 
+    # decode HTML entities
+    raw = @htmlentities.decode(raw)
+
+    # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
              .gsub("\\t", "\t")
 
@@ -299,6 +391,77 @@ class ImportScripts::VBulletin < ImportScripts::Base
     raw = raw.gsub(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
 
     raw
+  end
+
+  def postprocess_post_raw(raw)
+    # [QUOTE=<username>;<post_id>]...[/QUOTE]
+    raw = raw.gsub(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
+      old_username, post_id, quote = $1, $2, $3
+
+      if @old_username_to_new_usernames.has_key?(old_username)
+        old_username = @old_username_to_new_usernames[old_username]
+      end
+
+      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
+        post_number = topic_lookup[:post_number]
+        topic_id    = topic_lookup[:topic_id]
+        "\n[quote=\"#{old_username},post:#{post_number},topic:#{topic_id}\"]\n#{quote}\n[/quote]\n"
+      else
+        "\n[quote=\"#{old_username}\"]\n#{quote}\n[/quote]\n"
+      end
+    end
+
+    # [THREAD]<thread_id>[/THREAD]
+    # ==> http://my.discourse.org/t/slug/<topic_id>
+    raw = raw.gsub(/\[thread\](\d+)\[\/thread\]/i) do
+      thread_id = $1
+      if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
+        topic_lookup[:url]
+      else
+        $&
+      end
+    end
+
+    # [THREAD=<thread_id>]...[/THREAD]
+    # ==> [...](http://my.discourse.org/t/slug/<topic_id>)
+    raw = raw.gsub(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
+      thread_id, link = $1, $2
+      if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
+        url = topic_lookup[:url]
+        "[#{link}](#{url})"
+      else
+        $&
+      end
+    end
+
+    # [POST]<post_id>[/POST]
+    # ==> http://my.discourse.org/t/slug/<topic_id>/<post_number>
+    raw = raw.gsub(/\[post\](\d+)\[\/post\]/i) do
+      post_id = $1
+      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
+        topic_lookup[:url]
+      else
+        $&
+      end
+    end
+
+    # [POST=<post_id>]...[/POST]
+    # ==> [...](http://my.discourse.org/t/<topic_slug>/<topic_id>/<post_number>)
+    raw = raw.gsub(/\[post=(\d+)\](.+?)\[\/post\]/i) do
+      post_id, link = $1, $2
+      if topic_lookup = topic_lookup_from_imported_post_id(post_id)
+        url = topic_lookup[:url]
+        "[#{link}](#{url})"
+      else
+        $&
+      end
+    end
+
+    raw
+  end
+
+  def parse_timestamp(timestamp)
+    Time.zone.at(@tz.utc_to_local(timestamp))
   end
 
   def fake_email

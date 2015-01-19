@@ -41,6 +41,8 @@ class PostCreator
   #     target_usernames      - comma delimited list of usernames for membership (private message)
   #     target_group_names    - comma delimited list of groups for membership (private message)
   #     meta_data             - Topic meta data hash
+  #     created_at            - Topic creation time (optional)
+  #     pinned_at             - Topic pinned time (optional)
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user

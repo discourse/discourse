@@ -86,6 +86,8 @@ class TopicCreator
 
     topic_params[:created_at] = Time.zone.parse(@opts[:created_at].to_s) if @opts[:created_at].present?
 
+    topic_params[:pinned_at] = Time.zone.parse(@opts[:pinned_at].to_s) if @opts[:pinned_at].present?
+
     topic_params
   end
 
