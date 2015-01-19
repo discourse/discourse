@@ -27,7 +27,7 @@ if Rails.env.production?
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /\/trackback\/$/ }),
     # suppress trackback spam bots submitting to random URLs
     # test for the presence of these params: url, title, excerpt, blog_name
-    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { params: { url: /./, title: /./, excerpt: /./, blog_name: /./} },
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { params: { url: /./, title: /./, excerpt: /./, blog_name: /./} }),
 
     # API calls, TODO fix this in rails
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ })
