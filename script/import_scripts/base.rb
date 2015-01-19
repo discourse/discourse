@@ -229,7 +229,7 @@ class ImportScripts::Base
     results.each do |result|
       u = yield(result)
 
-      # block returns nil to skip a post
+      # block returns nil to skip a user
       if u.nil?
         users_skipped += 1
       else
