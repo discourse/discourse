@@ -17,9 +17,10 @@
             <button class="btn btn-default remove-bookmark" {{action "removeBookmark" grandChild}}>
               {{fa-icon 'times'}} {{i18n "bookmarks.remove"}}
             </button>
+          {{else}}
+              <a href="{{unbound grandChild.userUrl}}" data-user-card="{{unbound grandChild.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
+              {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{unbound grandChild.edit_reason}}</span>{{/if}}
           {{/if}}
-          <a href="{{unbound grandChild.userUrl}}" data-user-card="{{unbound grandChild.username}}" class='avatar-link'><div class='avatar-wrapper'>{{avatar grandChild imageSize="tiny" extraClasses="actor" ignoreTitle="true"}}</div></a>
-          {{#if grandChild.edit_reason}} &mdash; <span class="edit-reason">{{unbound grandChild.edit_reason}}</span>{{/if}}
         {{/each}}
       </div>
     {{/each}}
