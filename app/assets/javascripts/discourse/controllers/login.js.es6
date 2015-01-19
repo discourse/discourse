@@ -160,6 +160,12 @@ export default DiscourseController.extend(ModalFunctionality, {
       this.set('authenticate', null);
       return;
     }
+    if (options.suspended) {
+      this.send('showLogin');
+      this.flash(options.suspended_message, 'error');
+      this.set('authenticate', null);
+      return;
+    }
     // Reload the page if we're authenticated
     if (options.authenticated) {
       if (window.location.pathname === Discourse.getURL('/login')) {

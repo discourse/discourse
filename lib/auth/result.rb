@@ -19,12 +19,20 @@ class Auth::Result
     if requires_invite
       { requires_invite: true }
     elsif user
-      {
-        authenticated: !!authenticated,
-        awaiting_activation: !!awaiting_activation,
-        awaiting_approval: !!awaiting_approval,
-        not_allowed_from_ip_address: !!not_allowed_from_ip_address
-      }
+      if user.suspended?
+        {
+          suspended: true,
+          suspended_message: I18n.t( user.suspend_reason ? "login.suspended_with_reason" : "login.suspended",
+                                     {date: I18n.l(user.suspended_till, format: :date_only), reason: user.suspend_reason} )
+        }
+      else
+        {
+          authenticated: !!authenticated,
+          awaiting_activation: !!awaiting_activation,
+          awaiting_approval: !!awaiting_approval,
+          not_allowed_from_ip_address: !!not_allowed_from_ip_address
+        }
+      end
     else
       {
         email: email,
