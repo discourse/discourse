@@ -4,6 +4,8 @@ describe Invite do
 
   it { is_expected.to validate_presence_of :invited_by_id }
 
+  it { is_expected.to rate_limit }
+
   let(:iceking) { 'iceking@adventuretime.ooo' }
 
   context 'user validators' do
