@@ -1018,7 +1018,7 @@ en:
 
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+        error: "Sorry, we couldn't invite that person. Perhaps they are already a user? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 
