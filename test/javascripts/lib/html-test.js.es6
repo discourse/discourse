@@ -1,14 +1,13 @@
 module("Discourse.HTML");
 
-var html = Discourse.HTML;
+import { getCustomHTML, setCustomHTML } from 'discourse/lib/html';
 
 test("customHTML", function() {
-  blank(html.getCustomHTML('evil'), "there is no custom HTML for a key by default");
+  blank(getCustomHTML('evil'), "there is no custom HTML for a key by default");
 
-  html.setCustomHTML('evil', 'trout');
-  equal(html.getCustomHTML('evil'), 'trout', 'it retrieves the custom html');
+  setCustomHTML('evil', 'trout');
+  equal(getCustomHTML('evil'), 'trout', 'it retrieves the custom html');
 
   PreloadStore.store('customHTML', {cookie: 'monster'});
-  equal(html.getCustomHTML('cookie'), 'monster', 'it returns HTML fragments from the PreloadStore');
-
+  equal(getCustomHTML('cookie'), 'monster', 'it returns HTML fragments from the PreloadStore');
 });
