@@ -1,7 +1,5 @@
-import { getCustomHTML } from 'discourse/lib/html';
-
 Handlebars.registerHelper('custom-html', function(name, contextString, options) {
-  var html = getCustomHTML(name);
+  var html = Discourse.HTML.getCustomHTML(name);
   if (html) { return html; }
 
   var container = (options || contextString).data.view.container;
