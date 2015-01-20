@@ -1,5 +1,6 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import { listenForViewEvent } from 'discourse/lib/app-events';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   templateName: 'topic',
@@ -130,7 +131,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
+      opts.catLink = categoryBadgeHTML(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }

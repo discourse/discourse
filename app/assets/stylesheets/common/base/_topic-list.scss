@@ -154,15 +154,19 @@
 }
 
 .list-controls {
-  .home {
-    background-color: scale-color-diff();
+  .category-dropdown-menu .home {
     color: $primary;
+    margin-left: 8px;
   }
   .badge-category {
     padding: 4px 10px;
     display: inline-block;
     line-height: 24px;
     float: left;
+  }
+
+  .category-dropdown-menu .badge-category {
+    width: 100%;
   }
   .category-dropdown-button {
     border-left: 1px solid rgba(0,0,0,0.15);
@@ -223,18 +227,21 @@ ol.category-breadcrumb {
   background-color: $secondary;
   z-index: 100;
 
+  .cat {
+    margin-right: 20px;
+  }
+
+  a.badge-category, a.badge-category-parent {
+    line-height: 19px;
+    overflow:hidden;
+    margin-bottom: 0;
+  }
   a.badge-category {
     font-size: 0.929em;
     font-weight: bold;
     float: none;
-    line-height: 19px;
     text-transform: none;
-    width: 100%;
-    min-width: 102px;
-    margin-right: 20px;
-    margin-bottom: 0;
     max-width:200px;
-    overflow:hidden;
     text-overflow:ellipsis;
   }
 }

@@ -1,3 +1,5 @@
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
+
 export default Ember.Component.extend({
 
   _initializeAutocomplete: function(){
@@ -25,7 +27,7 @@ export default Ember.Component.extend({
       },
       template: template,
       transformComplete: function(category) {
-        return Discourse.HTML.categoryBadge(category, {allowUncategorized: true});
+        return categoryBadgeHTML(category, {allowUncategorized: true});
       }
     });
   }.on('didInsertElement')

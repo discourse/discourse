@@ -113,9 +113,9 @@
               {{/if}}
             </h1>
             {{#if topic.category.parentCategory}}
-              {{bound-category-link topic.category.parentCategory onlyStripe="true"}}
+              {{bound-category-link topic.category.parentCategory}}
             {{/if}}
-            {{bound-category-link topic.category onlyStripe="true"}}
+            {{bound-category-link topic.category hideParent=true}}
           </div>
         </div>
       </div>

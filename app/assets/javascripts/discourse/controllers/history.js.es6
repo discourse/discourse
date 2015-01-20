@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 // This controller handles displaying of history
 export default ObjectController.extend(ModalFunctionality, {
@@ -22,14 +23,14 @@ export default ObjectController.extend(ModalFunctionality, {
 
   hide: function(postId, postVersion) {
     var self = this;
-    Discourse.Post.hideRevision(postId, postVersion).then(function (result) {
+    Discourse.Post.hideRevision(postId, postVersion).then(function () {
       self.refresh(postId, postVersion);
     });
   },
 
   show: function(postId, postVersion) {
     var self = this;
-    Discourse.Post.showRevision(postId, postVersion).then(function (result) {
+    Discourse.Post.showRevision(postId, postVersion).then(function () {
       self.refresh(postId, postVersion);
     });
   },
@@ -68,7 +69,7 @@ export default ObjectController.extend(ModalFunctionality, {
     var changes = this.get("category_changes");
     if (changes) {
       var category = Discourse.Category.findById(changes["previous"]);
-      return Discourse.HTML.categoryBadge(category, { allowUncategorized: true });
+      return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   }.property("category_changes"),
 
@@ -76,12 +77,12 @@ export default ObjectController.extend(ModalFunctionality, {
     var changes = this.get("category_changes");
     if (changes) {
       var category = Discourse.Category.findById(changes["current"]);
-      return Discourse.HTML.categoryBadge(category, { allowUncategorized: true });
+      return categoryBadgeHTML(category, { allowUncategorized: true });
     }
   }.property("category_changes"),
 
   wiki_diff: function() {
-    var changes = this.get("wiki_changes")
+    var changes = this.get("wiki_changes");
     if (changes) {
       return changes["current"] ?
              '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i></span>' :
@@ -93,7 +94,7 @@ export default ObjectController.extend(ModalFunctionality, {
     var moderator = Discourse.Site.currentProp('post_types.moderator_action');
     var changes = this.get("post_type_changes");
     if (changes) {
-      return changes["current"] == moderator ?
+      return changes["current"] === moderator ?
              '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i></span>' :
              '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
     }

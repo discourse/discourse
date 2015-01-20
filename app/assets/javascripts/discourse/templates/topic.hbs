@@ -46,7 +46,7 @@
               {{#if category.parentCategory}}
                 {{bound-category-link category.parentCategory}}
               {{/if}}
-              {{bound-category-link category}}
+              {{bound-category-link category hideParent=true}}
               {{plugin-outlet "topic-category"}}
             {{/unless}}
           {{/if}}

@@ -1,11 +1,5 @@
-/**
-  Renders a drop down for selecting a category
+var get = Ember.get;
 
-  @class CategoryDropComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.Component.extend({
   classNameBindings: ['category::no-category', 'categories:has-drop'],
   tagName: 'li',
@@ -44,11 +38,20 @@ export default Ember.Component.extend({
 
   badgeStyle: function() {
     var category = this.get('category');
+
     if (category) {
-      return Discourse.HTML.categoryStyle(category);
-    } else {
-      return "background-color: #eee; color: #333";
+      var color = get(category, 'color'),
+          textColor = get(category, 'text_color');
+
+      if (color || textColor) {
+        var style = "";
+        if (color) { style += "background-color: #" + color + "; "; }
+        if (textColor) { style += "color: #" + textColor + "; "; }
+        return style;
+      }
     }
+
+    return "background-color: #eee; color: #333";
   }.property('category'),
 
   clickEventName: function() {

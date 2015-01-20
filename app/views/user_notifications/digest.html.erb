@@ -45,7 +45,7 @@
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
             <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
-            <%= email_category(t.category, only_stripe: true) %>
+            <%= email_category(t.category) %>
           </li>
         </ul>
       <%- end -%>
