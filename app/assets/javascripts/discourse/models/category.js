@@ -232,6 +232,7 @@ Discourse.Category.reopenClass({
   },
 
   findById: function(id) {
+    if (!id) { return; }
     return Discourse.Category.idMap()[id];
   },
 

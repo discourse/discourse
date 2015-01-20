@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 // Modal for editing / creating a category
 export default ObjectController.extend(ModalFunctionality, {
@@ -69,7 +70,7 @@ export default ObjectController.extend(ModalFunctionality, {
       parent_category_id: parseInt(this.get('parent_category_id'),10),
       read_restricted: this.get('model.read_restricted')
     });
-    return Discourse.HTML.categoryBadge(c, {showParent: true, link: false});
+    return categoryBadgeHTML(c, {link: false});
   }.property('parent_category_id', 'categoryName', 'color', 'text_color'),
 
   // background colors are available as a pipe-separated string
