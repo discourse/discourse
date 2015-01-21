@@ -160,6 +160,12 @@ cs:
       topic_count: "Témata"
       post_count: "Příspěvky"
       user_count: "Uživatelé"
+      contact: "Kontaktujte nás"
+    bookmarked:
+      title: "Záložka"
+      help:
+        bookmark: "Kliknutím přidáte záložku"
+        unbookmark: "Kliknutím odstraníte záložku"
     bookmarks:
       not_logged_in: "Pro přidání záložky se musíte přihlásit."
       created: "Záložka byla přidána."
@@ -351,8 +357,10 @@ cs:
         error: "Nastala chyba při změně emailové adresy. Není tato adresa již používaná?"
         success: "Na zadanou adresu jsme zaslali email. Následujte, prosím, instrukce v tomto emailu."
       change_avatar:
+        title: "Změňte si svůj profilový obrázek"
         gravatar: "Založeno na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>u"
         refresh_gravatar_title: "Obnovit Gravatar"
+        letter_based: "Systémem přidělený profilový obrázek"
         uploaded_avatar: "Vlastní obrázek"
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
@@ -476,6 +484,8 @@ cs:
         title: "Poslední IP adresa"
       registration_ip_address:
         title: "Registrační IP adresa"
+      avatar:
+        title: "Profilový obrázek"
       title:
         title: "Titul"
       filters:
@@ -1229,10 +1239,13 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
+          description: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Na všechny nové příspěvky budete upozorněni. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
         tracking:
           title: "Sledování"
+          description: "Všechna nová témata v této kategorii budou automaticky hlídaná. Počet nepřečtených a nových příspěvků se zobrazí vedle tématu."
         regular:
           title: "Normální"
+          description: "Budete informováni, pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         muted:
           title: "Ztišený"
           description: "Nebudete upozorněni na žádná nová témata v těchto kategoriích a ani se nebudou zobrazovat jako nepřečtené."
@@ -1254,6 +1267,7 @@ cs:
         inappropriate: "Je to nevhodné"
         spam: "Je to spam"
       custom_placeholder_notify_user: "Buďte věcný, konstruktivní a vždy zdvořilý."
+      custom_placeholder_notify_moderators: "Sdělte nám, co vás přesně trápí a kde to bude možné, tak nám poskytněte související odkazy a příklady."
       custom_message:
         at_least: "zadejte alespoň {{n}} znaků"
         more: "ještě {{n}}..."
@@ -1272,17 +1286,23 @@ cs:
     topic_statuses:
       warning:
         help: "Toto je oficiální varování."
+      bookmarked:
+        help: "V tématu je vložena záložka"
       locked:
         help: "toto téma je uzavřené; další odpovědi nejsou přijímány"
       unpinned:
         title: "Nepřipnuté"
+        help: "Pro vás toto téma není připnuté; bude se zobrazovat v běžném pořadí"
       pinned_globally:
         title: "Připnuté globálně"
         help: "Toto téma je připnuto globálně, zobrazí se na vršku všech seznamů"
       pinned:
         title: "Připnuto"
+        help: "Pro vás je toto téma připnuté; bude se zobrazovat na vrcholu seznamu ve své kategorii"
       archived:
         help: "toto téma je archivováno; je zmraženo a nelze ho již měnit"
+      invisible:
+        help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
     posts_lowercase: "příspěvky"
     posts_long: "v tomto tématu je {{number}} příspěvků"
@@ -1500,6 +1520,7 @@ cs:
         delete: "Smazat"
         delete_confirm: "Smazat toto skupiny?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         name: "Jméno"
         add: "Přidat"
         add_members: "Přidat členy"
@@ -1568,16 +1589,25 @@ cs:
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
+        success: "Exportování bylo zahájeno. O dokončení budete informováni pomocí soukromé zprávy."
         failed: "Exportování selhalo. Prosím zkontrolujte logy."
+        rate_limit_error: "Příspěvky mohou být staženy jednou za den. Prosíme, zkuste to znovu zítra."
         button_text: "Export"
         button_title:
           user: "Exportovat kompletní seznam uživatelů v CSV formátu."
+          screened_email: "Exportovat kompletní seznam emailů v CSV formátu."
+          screened_ip: "Exportovat kompletní seznam IP adres v CSV formátu."
+          screened_url: "Exportovat kompletní seznam URL v CSV formátu."
       customize:
         title: "Přizpůsobení"
         long_title: "Přizpůsobení webu"
         css: "CSS"
         header: "header"
         footer: "Patička"
+        head_tag:
+          text: "</head>"
+        body_tag:
+          text: "</body>"
         override_default: "Přetížit výchozí?"
         enabled: "Zapnuto?"
         preview: "náhled"
@@ -1869,6 +1899,7 @@ cs:
           external_username: "Uživatelské jméno"
           external_name: "Jméno"
           external_email: "Email"
+          external_avatar_url: "URL na profilový obrázek"
       user_fields:
         save: "Uložit"
         edit: "Upravit"
@@ -1944,7 +1975,16 @@ cs:
         preview:
           bad_count_warning:
             header: "VAROVÁNÍ!"
+          grant_count:
+            zero: "Žádné odznaky k udělení."
+            one: "<b>1</b> odznak k udělení."
+            other: "<b>%{count}</b> odznaků k udělení."
           sample: "Příklad:"
+          grant:
+            with: <span class="username">%{username}</span>
+      emoji:
+        name: "Jméno"
+        image: "Obrázek"
     lightbox:
       download: "download"
     search_help:
@@ -1965,6 +2005,7 @@ cs:
         back: '<b>u</b> Back'
         up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Následující/předchozí výběr'
       application:
         title: 'Application'
         create: '<b>c</b> Create a new topic'
@@ -1978,8 +2019,12 @@ cs:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
+        bookmark_topic: '<b>f</b> Bookmark topic'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Připnout/Odepnout téma'
+        share_topic: '<b>shift</b>+<b>s</b> Sdílet téma'
         share_post: '<b>s</b> Share post'
         reply_as_new_topic: '<b>t</b> Odpovědět v propojeném tématu'
+        reply_topic: '<b>shift</b>+<b>r</b> Odpovědět na téma'
         reply_post: '<b>r</b> Odpovědět na příspěvek'
         quote_post: '<b>q</b> Citovat příspěvek'
         like: '<b>l</b> Like post'

@@ -84,6 +84,7 @@ it:
           other: "%{count} giorni fa"
     share:
       topic: 'Condividi un link a questa conversazione'
+      post: 'messaggio n°%{postNumber}'
       close: 'chiudi'
       twitter: 'Condividi questo link su Twitter'
       facebook: 'Condividi questo link su Facebook'
@@ -142,6 +143,12 @@ it:
       topic_count: "Argomenti"
       post_count: "Messaggi"
       user_count: "Utenti"
+      contact: "Contattaci"
+    bookmarked:
+      title: "Segnalibro"
+      help:
+        bookmark: "Clicca per aggiungere un segnalibro a questo argomento"
+        unbookmark: "Clicca per rimuove il segnalibro a questo argomento"
     bookmarks:
       not_logged_in: "spiacenti, devi essere connesso per aggiungere segnalibri ai messaggi"
       created: "hai inserito questo messaggio nei segnalibri."
@@ -258,6 +265,7 @@ it:
       profile: "Profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
+      download_archive: "Scarica i miei messaggi"
       new_private_message: "Nuovo Messaggio Privato"
       private_message: "Messaggio privato"
       private_messages: "Messaggi"
@@ -326,8 +334,10 @@ it:
         error: "C'è stato un errore nel cambio dell'email; potrebbe essere già usata da un altro utente."
         success: "Abbiamo inviato una email a questo indirizzo. Segui le indicazioni di conferma."
       change_avatar:
+        title: "Cambia l'immagine del tuo profilo"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basato su"
         refresh_gravatar_title: "Ricarica il tuo Gravatar"
+        letter_based: "Immagine del profilo assegnata dal sistema"
         uploaded_avatar: "Immagine personalizzata"
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"

@@ -358,7 +358,7 @@ de:
       description: 'Dieser Beitrag hat nichts mit dem Thema zu tun wie es im Titel und ersten Beitrag steht. Deshalb sollte er woanders hin verschoben werden.'
       long_form: 'dies als am Thema vorbei gemeldet'
     spam:
-      title: 'Werbung'
+      title: 'Reklame'
       description: 'Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei.'
       long_form: 'dies als Spam gemeldet'
     inappropriate:
@@ -908,6 +908,7 @@ de:
     incorrect_username_email_or_password: "Benutzername, Mailadresse oder Passwort falsch"
     wait_approval: "Danke fürs Registrieren. Wir werden dich benachrichtigen, sobald dein Benutzerkonto freigeschaltet wurde."
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
+    activate_email: "<p>Fast fertig!  Eine E-Mail mit einem Aktivierungscode wurde an Deine Mailadresse <b>%{email}</b> gesendet. <br>Dort findest Du die Anleitung, um Deinen Zugang zu aktivieren. </p><p>Solltest Du die Mail nicht vorfinden, kontrolliere bitte auch den Spamverdachts-Ordner. Gegebenenfalls kannst Du Dir von hier eine weitere Aktivierungs-Mail zusenden lassen. </p>"
     not_activated: "Du kannst Dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
     not_allowed_from_ip_address: "Von dieser IP-Adresse können Sie sich nicht als %{username} anmelden."
     suspended: "Du kannst Dich bis zum %{date} nicht anmelden."
@@ -936,7 +937,7 @@ de:
   invite_mailer:
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
-      %{invitee_name} hat Dich dazu eingeladen an einer Diskussion teilzunehmen:
+      %{invitee_name} hat Dich dazu eingeladen, an einer Diskussion teilzunehmen:
 
       > **%{topic_title}**
       >
@@ -948,7 +949,7 @@ de:
 
       %{invite_link}
 
-      Dies ist eine EInladung von einem vertrautem Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
+      Dies ist eine Einladung von einem vertrautem Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   invite_forum_mailer:
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
@@ -1007,17 +1008,24 @@ de:
 
       %{notes}
   flags_reminder:
+    flags_were_submitted:
+      one: "Folgende Markierungen wurden währen der letzten Stunden vorgenommen."
+      other: "Folgende Markierungen wurden währen der letzten %{count} Stunden vorgenommen."
     please_review: "Bitte überprüfe sie."
     post_number: "Beitrag"
+    how_to_disable: 'Die Benachrichtungen für markierte Beiträge kann deaktiviert oder in ihrer Häufigkeit geändert werden mittels des Wertes unter "notify about flags after".'
     subject_template:
       one: "Eine Markierung wartet auf Bearbeitung"
       other: "%{count} Markierungen warten auf Bearbeitung"
+  flag_reasons:
+    spam: "Dein Beitrag wurde als **Spam** geflaggt: Die Community denkt, dass es sich um Werbung handelt und nicht nützlich oder für das Diskussionsthema relevant ist."
   flags_dispositions:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."
     disagreed: "Danke für deine Meldung. Wir sehen uns das an."
     deferred: "Danke für deine Meldung. Wir sehen uns das an."
     deferred_and_deleted: "Danke für deine Meldung. Wir haben den Beitrag entfernt."
+  temporarily_closed_due_to_flags: "Der Diskussionsstrang wurde wegen zahlreicher Meldungen aus der Community vorübergehend geschlossen."
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
@@ -1075,6 +1083,10 @@ de:
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_no_account:
       subject_template: "E-Mail-Problem -- Unbekannter Account"
+      text_body_template: |
+        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) konnte nicht verarbeitet werden!
+
+        Es ist kein Account mit dieser E-Mail-Adresse bekannt. Versuche die Nachricht von einer anderen, m Forum registrierten E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
       subject_template: "E-Mail-Problem -- Kein Inhalt"
     email_reject_parsing:
