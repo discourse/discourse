@@ -43,11 +43,7 @@
             </h1>
 
             {{#unless isPrivateMessage}}
-              {{#if category.parentCategory}}
-                {{bound-category-link category.parentCategory}}
-              {{/if}}
-              {{bound-category-link category hideParent=true}}
-              {{plugin-outlet "topic-category"}}
+              {{topic-category topic=model}}
             {{/unless}}
           {{/if}}
         </div>
