@@ -42,10 +42,10 @@
 
 .topic-list {
   margin: 0 0 10px;
-  .fa-thumb-tack {color: $primary;}
-  .fa-thumb-tack.unpinned {color: $primary;}
+  .fa-thumb-tack { color: scale-color($primary, $lightness: 50%); }
+  .fa-thumb-tack.unpinned { color: scale-color($primary, $lightness: 50%); }
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification), .fa-bookmark {color: scale-color($primary, $lightness: 50%);}
+  a.title:visited:not(.badge-notification), .fa-bookmark { color: scale-color($primary, $lightness: 50%); }
   th,
   td {
     padding: 12px 5px;
