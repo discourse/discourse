@@ -84,6 +84,7 @@ nb_NO:
           other: "%{count} dager siden"
     share:
       topic: 'del en lenke til dette emnet'
+      post: 'innlegg #%{postNumber}'
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
@@ -142,6 +143,13 @@ nb_NO:
       topic_count: "Emner"
       post_count: "Innlegg"
       user_count: "Brukere"
+      contact: "Kontakt Oss"
+      contact_info: "Hvis noe kritisk skulle oppstå eller det er en hastesak som påvirker siden kontakt oss på %{contact_email}."
+    bookmarked:
+      title: "Bokmerke"
+      help:
+        bookmark: "Klikk for å lagre dette emnet"
+        unbookmark: "Klikk for å fjerne dette lagrede emnet"
     bookmarks:
       not_logged_in: "beklager, du må være innlogget for å kunne bokmerke innlegg"
       created: "du har bokmerket dette innlegget"
@@ -258,6 +266,7 @@ nb_NO:
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
+      download_archive: "Last ned mine innlegg"
       new_private_message: "Ny Privat Melding"
       private_message: "Privat melding"
       private_messages: "Meldinger"
@@ -326,8 +335,10 @@ nb_NO:
         error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
         success: "Vi har sendt en e-post til den adressen. Vennligst følg meldingens instruksjoner for bekreftelse."
       change_avatar:
+        title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         refresh_gravatar_title: "Oppdater din Gravatar"
+        letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
@@ -437,6 +448,7 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
           uploading: "Laster opp..."
+          success: "Fil lastet opp. Du vil bli varslet med en privat melding når prosessen er fullført."
           error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
@@ -444,10 +456,13 @@ nb_NO:
         common: "Det passordet er for vanlig."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
+      associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
         title: "Registreringens IP-adresse."
+      avatar:
+        title: "Profilbilde"
       title:
         title: "Tittel"
       filters:
@@ -569,6 +584,9 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
     composer:
       add_warning: "Dette er en offisiell advarsel."
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
@@ -694,7 +712,7 @@ nb_NO:
         dismiss_posts_tooltip: "Tøm antallet uleste innlegg i disse emnene men fortsett å vis dem i min liste over uleste innlegg når nye innlegg blir lagt inn"
         dismiss_topics: "Avvis innlegg"
         dismiss_topics_tooltip: "Ikke vis disse emnene i min ulest-liste når nye innlegg i disse forekommer"
-        dismiss_new: "Avvis nye"
+        dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
         change_category: "Endre Kategori"
@@ -1209,10 +1227,13 @@ nb_NO:
     topic_statuses:
       warning:
         help: "Dette er en offisiell advarsel."
+      bookmarked:
+        help: "Du lagret dette emnet"
       locked:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       unpinned:
         title: "Løsgjort"
+        help: "Dette emnet er ikke lenger fastsatt, det vil vises i vanlig rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
         help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
@@ -1428,12 +1449,16 @@ nb_NO:
         edit: "Rediger Grupper"
         refresh: "Last inn på nytt"
         new: "Ny"
+        selector_placeholder: "oppgi brukernavn"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
         delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
+        name: "Navn"
+        add: "Legg til"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -1975,6 +2000,8 @@ nb_NO:
             with_post: <span class="username">%{username}</span> for innlegg i %{link}
             with_post_time: <span class="username">%{username}</span> for innlegg i %{link} - <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
+      emoji:
+        name: "Navn"
     lightbox:
       download: "last ned"
     search_help:

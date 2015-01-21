@@ -84,6 +84,7 @@ nl:
           other: "%{count} dagen geleden"
     share:
       topic: 'deel een link naar deze topic'
+      post: 'bericht #%{postNumber}'
       close: 'sluit'
       twitter: 'deel deze link op Twitter'
       facebook: 'deel deze link op Facebook'
@@ -142,6 +143,12 @@ nl:
       topic_count: "Topics"
       post_count: "Berichten"
       user_count: "Gebruikers"
+      contact: "Neem contact op"
+    bookmarked:
+      title: "Bewaar"
+      help:
+        bookmark: "Klik om deze topic te bewaren"
+        unbookmark: "Klik om deze topic niet meer te bewaren"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt dit bericht aan je favorieten toegevoegd"
@@ -246,14 +253,18 @@ nl:
       organisation: Organisatie
       phone: Telefoon
       other_accounts: "Andere accounts met dit IP-adres"
+      delete_other_accounts: "Verwijder %{count}"
       username: "gebruikersnaam"
+      read_time: "leestijd"
       topics_entered: "topics ingevoerd"
+      post_count: "# berichten"
       confirm_delete_other_accounts: "Weet je zeker dat je deze accounts wil verwijderen?"
     user:
       said: "{{username}}:"
       profile: "Profiel"
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
+      download_archive: "Download mijn berichten"
       new_private_message: "Nieuw persoonlijk bericht"
       private_message: "Privébericht"
       private_messages: "Berichten"
@@ -321,8 +332,10 @@ nl:
         error: "Het veranderen van je e-mailadres is mislukt. Misschien is deze al in gebruik?"
         success: "We hebben een mail gestuurd naar dat adres. Volg de bevestigingsinstructies in die mail."
       change_avatar:
+        title: "Wijzig je profiel afbeelding"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, gebaseerd op"
         refresh_gravatar_title: "Laad je Gravatar opnieuw"
+        letter_based: "Door systeem toegekende profiel afbeelding"
         uploaded_avatar: "Eigen afbeelding"
         uploaded_avatar_empty: "Voeg een eigen afbeelding toe"
         upload_title: "Upload je afbeelding"
@@ -330,15 +343,33 @@ nl:
         image_is_not_a_square: "Let op: we hebben je afbeelding bijgesneden; het is geen vierkant."
       change_profile_background:
         title: "Profielachtergrond"
+        instructions: "Profiel achtergronden worden gecentreerd en hebben een standaard breedte van 850px."
+      change_card_background:
+        instructions: "Achtergrond afbeeldingen worden gecentreerd en hebben een standaard breedte van 590px."
       email:
         title: "E-mail"
+        instructions: "Nooit publiekelijk vertonen"
+        ok: "We sturen een email ter bevestiging"
+        invalid: "Vul een geldig email adres in "
+        authenticated: "Je email is geauthenticeerd door  {{provider}}"
       name:
         title: "Naam"
+        instructions: "Je volledige naam (optioneel)"
+        too_short: "Je naam is te kort"
+        ok: "Je naam ziet er goed uit"
       username:
         title: "Gebruikersnaam"
+        instructions: "Uniek, geen spaties, kort"
+        short_instructions: "Mensen kunnen naar je verwijzen als @{{username}}."
+        available: "Je gebruikersnaam is beschikbaar."
+        global_match: "E-mail hoort bij deze gebruikersnaam"
         global_mismatch: "Is al geregistreerd. Gebruikersnaam {{suggestion}} proberen?"
         not_available: "Niet beschikbaar. Gebruikersnaam {{suggestion}} proberen?"
+        too_short: "Je gebruikersnaam is te kort."
+        too_long: "Je gebruikersnaam is te lang."
         checking: "Kijken of gebruikersnaam beschikbaar is..."
+        enter_email: 'Gebruikersnaam gevonden. Vul het bijbehorende emailadres in.'
+        prefilled: "Je e-mailadres komt overeen met je geregistreerde gebruikersnaam."
       locale:
         title: "Interfacetaal"
         instructions: "De taal waarin het forum wordt getoond. Deze verandert als je de pagina herlaadt."

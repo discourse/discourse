@@ -511,10 +511,12 @@ zh_CN:
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是 ImageMagick 没有被安装。用你最喜爱的包管理器安装 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '%{num_failed_jobs} 个 email 任务失败。请检查 config/discourse.conf 文件是否正确配置了邮件服务器。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中查看失败的任务</a>。'
     default_logo_warning: "设置你站点的图形logo。请在<a href='/admin/site_settings'>站点设置</a>中配置logo_url、logo_small_url和favicon_url。"
+    contact_email_missing: "输入一个站点联系人的邮件地址，这样在用户在网站出现紧急状况时能够找到你。在<a href='/admin/site_settings'>站点设置</a>中更新它。"
     contact_email_invalid: "站点联系邮箱不正确。在<a href='/admin/site_settings'>站点设置</a>中修改。"
     title_nag: "为站点指定一个名字。在<a href='/admin/site_settings'>站点设置</a>中更新标题。"
     site_description_missing: "输入一句话作为你站点的简介，将出现在搜索结果中。在<a href='/admin/site_settings'>站点设置</a>中更新 site_description。"
     consumer_email_warning: "你的站点被设置为使用 Gmail 或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail 限制每日邮件发送数量</a>。请考虑使用其他邮件服务商来保证邮件的成功发送，例如 mandrill.com。"
+    site_contact_username_warning: "输入一个友善的职员账户名，并以他的名义发送重要的自动私信。在<a href='/admin/site_settings'>站点设置</a>中更新 site_contact_username。"
     notification_email_warning: "通知邮件不是从你域名的一个有效地址发出的；邮件分发将会变得危险和不可靠。请在<a href='/admin/site_settings'>站点设置</a>中将 notification_email 设置为一个有效的本地邮件地址。"
   content_types:
     education_new_reply:
@@ -586,8 +588,11 @@ zh_CN:
     post_excerpt_maxlength: "帖子摘要的最大字符长度"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
     onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
+    logo_url: "出现在您站点左上角的标志图片；如果留空，将显示站点标题文字。"
     digest_logo_url: "站点邮件摘要使用的标志。如果留空，则使用 `logo_url`。例如：http://example.com/logo.png"
+    logo_small_url: "出现在您站点左上角的小号标志图片，当滚动后可见。如果留空，将显示主页图标。"
     favicon_url: "你的站点图标（favicon），参考 http://zh.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "移动浏览器左上角的固定标志图片。如果留空，将显示站点标题文字。"
     apple_touch_icon_url: "Apple 触摸设备使用的图标。推荐 144x144 大小。"
     notification_email: "这个表格：被用于发送所有重要系统邮件的邮箱地址。指定的域名必须正确设置 SPF、DKIM 和反向 PTR 记录以发送邮件。"
     email_custom_headers: "一个逗号分离的自定义邮件头部"
@@ -661,6 +666,7 @@ zh_CN:
     max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
+    enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆；同时禁用邀请功能）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于加密/解密 SSO 信息，请保证有 10 个字符或者更长"
@@ -945,6 +951,7 @@ zh_CN:
     errors: "%{errors}"
     not_available: "不可用，试试 %{suggestion}？"
     something_already_taken: "出了一些问题，可能此用户名或电子邮箱已经被注册。试试 忘记密码链接吧。"
+    omniauth_error: "抱歉，在验证你的帐号时发生了错误。可能你没有批准授权申请？"
     omniauth_error_unknown: "在处理你的登录过程中发生了错误，请重试。"
     new_registrations_disabled: "现在不允许注册新账户。"
     password_too_long: "密码不能超过 200 个字符。"
@@ -1090,6 +1097,11 @@ zh_CN:
     how_to_disable: '你可以通过修改“notify about flags after”设置项以禁用或改变邮件提醒设置。'
     subject_template:
       other: "%{count} 个标记需要被处理"
+  flag_reasons:
+    off_topic: "您的帖子被标记为 **偏离主题**：鉴于当前的主题标题和第一个帖子，社群成员们感觉它不适合处于这个主题中。"
+    inappropriate: "您的帖子被标记为 **不恰当**：社群成员感觉它有冒犯或者侮辱的意味，亦或是它违反了[社群准则](/guidelines)。"
+    spam: "您的帖子被标记为 **广告**：社群成员觉得它是广告，像是在过度地推广着什么，而不是预期中与主题有关的内容。"
+    notify_moderators: "您的帖子被标记为 **需要版主关注**：社群成员感觉帖子需要职员的人工干预。"
   flags_dispositions:
     agreed: "感谢通知我们。我们认为这是一个问题，并且我们正在了解情况。"
     agreed_and_deleted: "感谢通知我们。我们认为这是一个问题，并且我们已经删除了帖子。"
@@ -1573,6 +1585,8 @@ zh_CN:
     编辑本主题的第一帖以改变 %{page_name} 页面的内容。
   guidelines_topic:
     title: "FAQ/指引"
+    body: "<a name=\"civilized\"></a>\n\n## [文明讨论的地方](#civilized)\n\n请您在论坛表现得像在公共公园。我们也同样分享着一个公共社群资源 &mdash; 一个通过不断进行的讨论分享我们技能、知识和兴趣的地方。\n\n这些都不是硬性规定，只是一些帮助社群的人们来判断的规定。试用这些指引来保持干净和充满灵感的公开论坛。\n\n<a name=\"improve\"></a>\n\n## [改善讨论](#improve)\n\n帮助我们做一些帮助改善讨论的事，这样能帮助我们让这个地方变成一个参与讨论的好地方。\n\n这里被讨论的主题对我们很重要，并且如果他们对您也很重要，请和我们一样严肃对待他们。即使您不同意别人的话，但是也要尊重正在讨论这些主题的人们。\n\n改进讨论的一个方式是探索已经发生过的事。请在回复或者开始您自己的主题前花一些时间浏览，这样您更有机会遇见和您有共同爱好的人。\n\n<a name=\"agreeable\"></a>\n\n## [尊重，当您不同意时](#agreeable)\n\n您可能想表达您的不同意。这没问题。但是，记住_批评观点，而不是人_。请避免：\n\n*   指名道姓。\n*   人生攻击。\n*   回应帖子的语气而不是它的真正内容。\n*   下意识的反驳。\n\n相反，提供合理的观点改善讨论。\n\n<a name=\"participate\"></a>\n\n## [您的参与有价值](#participate)\n\n我们在这儿的讨论为大家树立了榜样。通过选择参与那些让论坛变成一个有意思的地方，来帮助我们改善社群的未来 &mdash; 并且避免那些没有帮助的行为。\n\nDiscourse 提供了让社群共同鉴别最棒（或最差）的贡献的工具：收藏、书签、赞、标记、回复、编辑或者其他。使用这些工具改善您自己的体验，和其他人的体验。\n\n让我们留下一个比发现它之前更好的社群。\n\n<a name=\"flag-problems\"></a>\n\n## [如果您看见了一个问题，标记它](#flag-problems)\n\n版主有特别的权力；他们对论坛负责。但是您也是。通过您的帮助，版主能促进社群的发展，而不是守卫或者警察。\n\n当您见到不合适的行为，不要回应它。这种承认变相鼓励了这种不合适的行为，浪费了您的经历，并且浪费了每一个人的时间。_是要标记它。_如果收到了足够的标记，会有相应的处理，无论是自动地或版主的介入。\n\n为了维护我们的社群，版主保留了任何情况下删除任何内容和其他用户的权力。版主不能预览任何新帖子；版主和站点维护人员对社群里发表的任何言论均不负责任。\n\n<a name=\"be-civil\"></a>\n\n## [永远文明](#be-civil)\n\n粗鲁这样的行为会破坏健康的讨论：\n\n*   文明。不要发表任何理智的人会认为会冒犯、滥用或招致怨恨的言论。\n*   保持干净。不要发表任何淫秽或性暗示的东西。\n*   尊重其他人。不要骚扰或者让别人难过，检视别人，或暴露他们的个人信息。\n*   尊重我们的论坛。不要发表广告或者其他垃圾信息。\n\n这些条款没有准确的定义 &mdash; 避免任何_可能_的这些事。如果您不确定，问问自己这些是否能出现在纽约时报的头版头条上。\n\n这是一个公共论坛，并且搜索引擎会索引这些讨论。注意语言、链接和家庭和朋友的图片的安全。\n\n<a name=\"keep-tidy\"></a>\n\n## [保持整洁](#keep-tidy)\n\n花一点时间让东西出现在正确的位置，这样我们能花更多的时间在讨论上而非清理格式。所以：\n\n*   不要在错误的分类开始一个新主题。\n*   不要在多个主题中回复同样的内容。\n*   不要发布没有内容的回复。\n*   不要在中途改变主题。\n*   不要在您的帖子中签名 &mdash; 每一贴都附有您的个人信息。\n\n比起发表“+1”或者“同意”，使用赞按钮。比起将帖子带向一个决然不同的方向，使用“回复为关联主题”。\n\n<a name=\"stealing\"></a>\n\n## [发表您自己的东西](#stealing)\n\n您不能在没有他人授权的情况下发表任何属于他人的数字信息。您可能不能发表关于窃据他人知识产权（软件、视频、音频和图像）的任何简介、链接或方法，或其他任何不符合其他法律的事。\n\n<a name=\"power\"></a>\n\n## [有你参与](#power) \n\n这个站点由[一群友善的职员](/about)、你和社群一起运营。如果你对这里的事情仍有疑问，在[站务](/c/meta)分类新建一个主题并且开始讨论！如果遇到了重要或紧急的事情，并且不能用站务分类的主题或标记解决，通过[职员页面](/about)联系我们。\n\n<a name=\"tos\"\
+      ></a>\n\n## [使用条款](#tos)\n\n是的，法律很无聊，但是我们必须保护我们自己 &ndash; 引申开来，您和您的数据 &ndash; 用于针对不友好的家伙们。我们有一个[使用条款](/tos)描述您的（或者我们）关于内容、隐私和法律的行为和权力。要使用我们的服务，您必须同意遵守[使用条款](/tos)。\n"
   tos_topic:
     title: "服务条款"
     body: "下面的条款及条件适用于 %{company_domain} 网站的所有内容、服务和产品，其方式通过网站，其中包括，但不限于 %{company_domain} 论坛软件、%{company_domain} 支持论坛和在 %{company_domain} 托管服务（“托管”）（一起称为，网站）。该网站属于 %{company_full_name}（“%{COMPANY_NAME}”）并由其运营。该网站要求你必须接受所有本文中所包含的条款和条件以及其他所有的规则、政策（包括修改，但不限于 %{company_domain} 的[隐私政策](/privacy)、[社群准则](/FAQ)和程序（统称“协议”），并可能不时由 %{COMPANY_NAME} 发布。\n\n访问或使用本网站之前，请仔细阅读本协议。访问或使用网站的任何部分，即代表你同意成为受本协议的条款和条件。如果你不同意所有的条款和本协议的条件，那么你可能无法访问网站或使用任何服务。若这些条款和条件被认为是与 %{COMPANY_NAME} 的合同，则你必须接受这些条款。本网站只提供给 13 岁以上个人。\n\n<a name=\"1\"></A> \n\n## [1. 你的 %{company_domain} 帐号]（#1） \n\n如果你在网站上创建一个帐户，你有责任维护你的帐号安全，你对帐户下发生的所有活动完全负责。你必须立即通知 %{COMPANY_NAME} 关于你的帐户的任何未经授权或任何其他违反安全的使用。%{COMPANY_NAME} 不会对你的任何行或不作为，包括因该等作为或不作为而导致的任何种类的任何损失承担任何责任。 \n\n<a name=\"2\"></A> \n\n## [2. 提供者的责任]（#2） \n\n如果你张贴的材料有关于别的网站的链接，或以其他方式（或允许任何第三方进行）张贴别的网站的材料（不论何等材料，“内容”），你需对此完全负责，包括使用因该内容所造成的任何损害。不管所讨论的内容是文字、图形、音频文件或计算机软件。你声明和保证： \n\n* 下载、复制和使用内容不会侵犯专有权利，包括但不限于著作权，专利，商标或商业秘密权利的任何第三方；\n* 如果你的雇主对你的创造拥有知识产权，你必须以(i)获准从你的雇主发布或提供的内容，包括但不限于任何软件，或(ii)由你的雇主放弃拥有内容的所有权利；\n* 你已完全遵守有关该内容的第三方条约，并同意了所有面向最终用户所需的任何条款；\n* 内容不包含或安装任何病毒、蠕虫、恶意软件、特洛伊木马或其他有害或破坏性的内容；\n* 内容不是垃圾，不是机器的或随机生成的，并且不包含设计来吸引流量到第三方网站或助推第三方网站的搜索引擎排名，或者进一步非法行为不道德或不想要的广告内容（诸如网络钓鱼）或误导接受者为对材料的来源（如欺骗）；\n* 内容不色情，不包含威胁或煽动暴力，并没有侵犯任何第三方的隐私或公开权；\n* 你的内容不是不受欢迎的电子讯息，如新闻组垃圾链接、邮件列表、博客和网站，以及类似的不请自来的宣传方式宣传；\n* 你的内容不是在误导读者，以你是另外一个人或公司的方式；和 \n* 你应在内容中包含计算机代码，准确地分类和/或所描述的类型、性质、用途和材料的影响，是否请求 %{COMPANY_NAME} 或以其他方式这样做的情况下。 \n\n<a name=\"3\"></A> \n\n## [3.用户内容授权]（#3） \n\n用户贡献使用 [知识共享 署名-非商业性使用-相同方式共享3.0 Unported之许可](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.zh_CN)授权。在不限制任何该等陈述或保证的情况下，%{COMPANY_NAME} 有权利（但没有义务）在 %{COMPANY_NAME} 的全权酌情决定下(i)根据 %{COMPANY_NAME} 的合理意见，任何违反 %{COMPANY_NAME} 政策或以任何方式伤害或使他人反感的情况能拒绝或删除任何内容；或(ii)以任何理由终止或拒绝任何个人和组织访问和使用本网站。%{COMPANY_NAME} 有唯一裁量权。%{COMPANY_NAME} 没有义务退还先前支付的任何款项。 \n\n\n<a name=\"4\"></a> \n\n## [4. Payment and Renewal](#4)\n\n### General Terms\n\nOptional paid services or upgrades may be available on the Website. When utilizing an optional paid service or upgrade, you agree to pay %{company_name} the monthly or annual subscription fees indicated.\

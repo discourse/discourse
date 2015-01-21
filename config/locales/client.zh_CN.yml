@@ -86,7 +86,7 @@ zh_CN:
     age: "年龄"
     joined: "加入时间："
     admin_title: "管理"
-    flags_title: "旗帜"
+    flags_title: "标记"
     show_more: "显示更多"
     show_help: "帮助"
     links: "链接"
@@ -126,6 +126,13 @@ zh_CN:
       topic_count: "主题"
       post_count: "帖子"
       user_count: "用户"
+      contact: "联系我们"
+      contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_email} 联系我们。"
+    bookmarked:
+      title: "书签"
+      help:
+        bookmark: "点击收藏此主题"
+        unbookmark: "点击这里将主题移除书签"
     bookmarks:
       not_logged_in: "抱歉，你需要先登录才能给帖子加书签"
       created: "你已经为此贴添加书签"
@@ -305,8 +312,10 @@ zh_CN:
         error: "抱歉在修改你的电子邮箱时发生了错误，可能此邮箱已经被使用了？"
         success: "我们已经发送了一封确认信到此邮箱地址，请按照邮箱内指示完成确认。"
       change_avatar:
+        title: "更改你的头像"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>头像，基于："
         refresh_gravatar_title: "刷新你的头像"
+        letter_based: "系统分配的头像"
         uploaded_avatar: "自定义图片"
         uploaded_avatar_empty: "添加自定义图片"
         upload_title: "上传图片"
@@ -425,6 +434,8 @@ zh_CN:
         title: "最后使用的 IP 地址"
       registration_ip_address:
         title: "注册 IP 地址"
+      avatar:
+        title: "头像"
       title:
         title: "头衔"
       filters:
@@ -1158,15 +1169,19 @@ zh_CN:
     topic_statuses:
       warning:
         help: "这是一个正式的警告。"
+      bookmarked:
+        help: "你已经收藏了此主题"
       locked:
         help: "本主题已关闭；不再接受新的回复"
       unpinned:
         title: "解除置顶"
+        help: "主题已经解除置顶；它将以默认顺序显示"
       pinned_globally:
         title: "全局置顶"
         help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       pinned:
         title: "置顶"
+        help: "本主题已置顶；它将始终显示在它所属分类的顶部"
       archived:
         help: "本主题已归档；即已经冻结，无法修改"
       invisible:
@@ -1465,7 +1480,14 @@ zh_CN:
         long_title: "站点定制"
         css: "CSS"
         header: "头部"
+        top: "顶部"
         footer: "底部"
+        head_tag:
+          text: "</head>"
+          title: "将在 </head> 标签前插入的 HTML"
+        body_tag:
+          text: "</body>"
+          title: "将在 </body> 标签前插入的 HTML"
         override_default: "覆盖缺省值？"
         enabled: "启用？"
         preview: "预览"
@@ -1583,6 +1605,7 @@ zh_CN:
           do_nothing: "无操作"
         staff_actions:
           title: "管理人员操作"
+          instructions: "点击用户名和操作可以过滤列表。点击头像可以访问用户个人页面。"
           clear_filters: "显示全部"
           staff_user: "管理人员"
           target_user: "目标用户"
@@ -1803,6 +1826,7 @@ zh_CN:
           external_username: "用户名"
           external_name: "名字"
           external_email: "电子邮件"
+          external_avatar_url: "头像URL"
       user_fields:
         title: "用户属性"
         help: "增加用户能填写的字段。"
@@ -1961,6 +1985,7 @@ zh_CN:
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
       actions:
         title: '动作'
+        bookmark_topic: '<b>f</b> 收藏主题'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
         share_topic: '<b>shift</b>+<b>s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'

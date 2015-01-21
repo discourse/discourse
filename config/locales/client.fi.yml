@@ -84,6 +84,7 @@ fi:
           other: "%{count} päivää sitten"
     share:
       topic: 'jaa linkki tähän ketjuun'
+      post: '%{postNumber}. viesti'
       close: 'sulje'
       twitter: 'jaa tämä linkki Twitterissä'
       facebook: 'jaa tämä linkki Facebookissa'
@@ -142,6 +143,13 @@ fi:
       topic_count: "Ketjuja"
       post_count: "Viestejä"
       user_count: "Käyttäjiä"
+      contact: "Yhteystiedot"
+      contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
+    bookmarked:
+      title: "Kirjanmerkki"
+      help:
+        bookmark: "Klikkaa lisätäksesi ketjun kirjanmerkkeihin"
+        unbookmark: "Klikkaa poistaaksesi ketjun kirjanmerkeistä"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
       created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
@@ -258,6 +266,7 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
+      download_archive: "Lataa viestini"
       new_private_message: "Uusi yksityisviesti"
       private_message: "Yksityisviesti"
       private_messages: "Viestit"
@@ -326,8 +335,10 @@ fi:
         error: "Sähköpostiosoitteen vaihdossa tapahtui virhe. Ehkäpä sama sähköpostiosoite on jo käytössä?"
         success: "Annettuun osoitteeseen on lähetetty viesti. Seuraa sen ohjeita sähköpostiosoitteen varmentamiseksi."
       change_avatar:
+        title: "Vaihda profiilikuvasi"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, osoitteesta"
         refresh_gravatar_title: "Päivitä Gravatar"
+        letter_based: "Sivuston luoma profiilikuva"
         uploaded_avatar: "Oma kuva"
         uploaded_avatar_empty: "Lisää oma kuva"
         upload_title: "Lataa oma kuva"
@@ -437,6 +448,7 @@ fi:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
           uploading: "Lähettää..."
+          success: "Tiedoston lähettäminen onnistui. Saat yksityisviestillä tiedon, kun prosessi on valmis."
           error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
       password:
         title: "Salasana"
@@ -444,10 +456,13 @@ fi:
         common: "Annettu salasana on liian yleinen."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
+      associated_accounts: "Kirjautumiset"
       ip_address:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
         title: "IP osoite rekisteröityessä"
+      avatar:
+        title: "Profiilikuva"
       title:
         title: "Otsikko"
       filters:
@@ -569,7 +584,12 @@ fi:
       github:
         title: "GitHubilla"
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
+    apple_international: "Apple/kansainvälinen"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Tämä on virallinen varoitus."
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saving_draft_tip: "tallennetaan"
@@ -1124,6 +1144,8 @@ fi:
       delete: 'Poista alue'
       create: 'Uusi alue'
       save: 'Tallenna alue'
+      slug: 'Alueen lyhenne'
+      slug_placeholder: '(Valinnainen) url-lyhenne'
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
       name: "Alueen nimi"
@@ -1209,15 +1231,19 @@ fi:
     topic_statuses:
       warning:
         help: "Tämä on virallinen varoitus."
+      bookmarked:
+        help: "Olet lisännyt ketjun kirjanmerkkeihisi"
       locked:
         help: "Tämä ketju on suljettu; siihen ei voi enää vastata."
       unpinned:
         title: "Kiinnitys poistettu"
+        help: "Ketjun kiinnitys on poistettu sinulta; se näytetään tavallisessa järjestyksessä."
       pinned_globally:
         title: "Kiinnitetty koko palstalle"
         help: "Tämä ketju on nyt kiinnitetty koko palstalle; se näytetään kaikkien listausten ylimpänä"
       pinned:
         title: "Kiinnitetty"
+        help: "Tämä ketju on kiinnitetty sinulle; se näytetään alueensa ensimmäisenä"
       archived:
         help: "Tämä ketju on arkistoitu; se on jäädytetty eikä sitä voi muuttaa"
       invisible:
@@ -1428,12 +1454,17 @@ fi:
         edit: "Muokkaa ryhmiä"
         refresh: "Lataa uudelleen"
         new: "Uusi"
+        selector_placeholder: "syötä käyttäjätunnus"
         name_placeholder: "Ryhmän nimi, ei välilyöntejä, samt säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
         delete_confirm: "Poista tämä ryhmä?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
+        delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
+        name: "Nimi"
+        add: "Lisää"
+        add_members: "Lisää jäseniä"
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
@@ -1501,14 +1532,29 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
+        success: "Vienti on käynnissä. Saat ilmoituksen yksityisviestillä, kun prosessi on valmis."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
+        rate_limit_error: "Viestit voidaan ladata kerran päivässä, yritä uudestaan huomenna."
         button_text: "Vie"
+        button_title:
+          user: "Vie lista käyttäjistä CSV-formaatissa."
+          staff_action: "Vie lista henkilökunnan toimista CSV-formaatissa."
+          screened_email: "Vie koko lista seulotuista sähköpostiosoitteista CSV-formaatissa."
+          screened_ip: "Vie koko lista seulotuista IP-osoitteista CSV-formaatissa."
+          screened_url: "Vie koko lista seulotuista URL-osoitteista CSV-formaatissa."
       customize:
         title: "Mukauta"
         long_title: "Sivuston mukautukset"
         css: "CSS"
         header: "Header"
+        top: "Alku"
         footer: "Footer"
+        head_tag:
+          text: "</head>"
+          title: "HTML, joka lisätään ennen </head> elementtiä"
+        body_tag:
+          text: "</body>"
+          title: "HTML, joka lisätään ennen </body> elementtiä"
         override_default: "Älä sisällytä oletus-tyylitiedostoa"
         enabled: "Otettu käyttöön?"
         preview: "esikatselu"
@@ -1626,6 +1672,7 @@ fi:
           do_nothing: "älä tee mitään"
         staff_actions:
           title: "Henkilökunnan toimet"
+          instructions: "Klikkaa käyttäjänimiä tai toimintoja suodattaaksesi listaa. Klikkaa profiilikuvaa siirtyäksesi käyttäjäsivulle."
           clear_filters: "Näytä kaikki"
           staff_user: "Palstan edustaja"
           target_user: "Kohteena ollut käyttäjä"
@@ -1669,6 +1716,7 @@ fi:
           title: "Seulottavat IP:t"
           description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen ohitettavien listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön osoitteelle %{ip_address}?"
+          roll_up_confirm: "Oletko varma, että haluat yhdistää seulottavat IP-osoitteet aliverkoiksi?"
           rolled_up_some_subnets: "Porttikieltojen IP osoitteet käärittiin onnistuneesti näiksi aliverkoiksi: %{subnets}."
           rolled_up_no_subnet: "Mitään käärittävää ei ollut."
           actions:
@@ -1852,6 +1900,7 @@ fi:
           external_username: "Käyttäjätunnus"
           external_name: "Nimi"
           external_email: "Sähköposti"
+          external_avatar_url: "Profiilikuvan URL"
       user_fields:
         title: "Käyttäjäkentät"
         help: "Lisää kenttiä jotka käyttäjät voivat täyttää."
@@ -1969,6 +2018,13 @@ fi:
             with_post: <span class="username">%{username}</span> viestille ketjussa %{link}
             with_post_time: <span class="username">%{username}</span> viestille ketjussa %{link} <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> <span class="time">%{time}</span>
+      emoji:
+        title: "Emoji"
+        help: "Lisää uusi emoji joka on kaikkien käytettävissä. (Voit raahata useita tiedostoja kerralla)"
+        add: "Lisää uusi emoji"
+        name: "Nimi"
+        image: "Kuva"
+        delete_confirm: "Oletko varma, että haluat poistaa emojin :%{name}:?"
     lightbox:
       download: "lataa"
     search_help:
@@ -1989,6 +2045,7 @@ fi:
         back: '<b>u</b> Takaisin'
         up_down: '<b>k</b>/<b>j</b> Siirrä valintaa &uarr; &darr;'
         open: '<b>o</b> tai <b>Enter</b> Avaa valittu ketju'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b>  Seuraava/edellinen osio'
       application:
         title: 'Ohjelmisto'
         create: '<b>c</b> Luo uusi ketju'
@@ -2002,8 +2059,12 @@ fi:
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
       actions:
         title: 'Toiminnot'
+        bookmark_topic: '<b>f</b> Lisää ketju kirjanmerkkeihin'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Kiinnitä ketju/poista kiinnitys'
+        share_topic: '<b>shift</b>+<b>s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'
         reply_as_new_topic: '<b>t</b> Aloita uusi yhdistetty ketju'
+        reply_topic: '<b>shift</b>+<b>r</b> Vastaa ketjuun'
         reply_post: '<b>r</b> Vastaa viestiin'
         quote_post: '<b>q</b> Lainaa viesti'
         like: '<b>l</b> Tykkää viestistä'
