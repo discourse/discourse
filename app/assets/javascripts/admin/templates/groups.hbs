@@ -1,20 +1,11 @@
-<div class='row groups'>
-  <div class='content-list span6'>
-    <h3>{{i18n 'admin.groups.edit'}}</h3>
-    <ul>
-      {{#each group in arrangedContent}}
-        <li>
-        <a href='#' {{action "showGroup" group}}>{{group.name}} <span class="count">{{group.userCountDisplay}}</span></a>
-        </li>
-      {{/each}}
+<div class="admin-controls">
+  <div class="span15">
+    <ul class="nav nav-pills">
+      <li>{{#link-to "adminGroupsType" "custom"}}{{i18n 'admin.groups.custom'}}{{/link-to}}</li>
+      <li>{{#link-to "adminGroupsType" "automatic"}}{{i18n 'admin.groups.automatic'}}{{/link-to}}</li>
     </ul>
-    <div class='controls'>
-      <button class='btn' {{bind-attr disabled="refreshingAutoGroups"}} {{action "refreshAutoGroups"}}><i class="fa fa-refresh"></i>{{i18n 'admin.groups.refresh'}}</button>
-      <button class='btn' {{action "newGroup"}}><i class="fa fa-plus"></i>{{i18n 'admin.groups.new'}}</button>
-    </div>
   </div>
-
-  <div class='content-editor'>
-    {{outlet}}
-  </div>
+</div>
+<div class="admin-container">
+  {{outlet}}
 </div>

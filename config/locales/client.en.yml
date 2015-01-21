@@ -1631,6 +1631,8 @@ en:
         name: "Name"
         add: "Add"
         add_members: "Add members"
+        custom: "Custom"
+        automatic: "Automatic"
 
       api:
         generate_master: "Generate Master API Key"

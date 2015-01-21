@@ -32,7 +32,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def update
-    group = Group.find(params[:id].to_i)
+    group = Group.find(params[:id])
 
     group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
     group.visible = params[:visible] == "true"
@@ -47,7 +47,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def destroy
-    group = Group.find(params[:id].to_i)
+    group = Group.find(params[:id])
 
     if group.automatic
       can_not_modify_automatic
@@ -63,7 +63,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def add_members
-    group = Group.find(params.require(:group_id).to_i)
+    group = Group.find(params.require(:id))
     usernames = params.require(:usernames)
 
     return can_not_modify_automatic if group.automatic
@@ -82,7 +82,7 @@ class Admin::GroupsController < Admin::AdminController
   end
 
   def remove_member
-    group = Group.find(params.require(:group_id).to_i)
+    group = Group.find(params.require(:id))
     user_id = params.require(:user_id).to_i
 
     return can_not_modify_automatic if group.automatic

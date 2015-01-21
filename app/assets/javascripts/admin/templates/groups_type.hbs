@@ -1,0 +1,20 @@
+<div class='row groups'>
+  <div class='content-list span6'>
+    <h3>{{i18n 'admin.groups.edit'}}</h3>
+    <ul>
+      {{#each group in controller}}
+        <li>
+          {{#link-to "adminGroup" group.type group.name}}{{group.name}} <span class="count">{{group.userCountDisplay}}</span>{{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+    <div class='controls'>
+      {{d-button action="newGroup" icon="plus" label="admin.groups.new"}}
+      {{d-button action="refreshAutoGroups" icon="refresh" label="admin.groups.refresh" disabled=refreshingAutoGroups}}
+    </div>
+  </div>
+
+  <div class='content-editor'>
+    {{outlet}}
+  </div>
+</div>
