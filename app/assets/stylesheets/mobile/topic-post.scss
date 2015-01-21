@@ -476,3 +476,16 @@ span.highlighted {
 .read-state {
   display: none;
 }
+
+// hide the full set of selection buttons on mobile
+.select-posts button { display: none; }
+
+// unhide the simple "select just this post" button
+button.select-post {
+  display: inline-block;
+  position: absolute;
+  z-index: 401; // 400 is the reply-to tab
+  left: 200px;
+  background-color: scale-color($tertiary, $lightness: 50%);
+  color: $secondary;
+}
