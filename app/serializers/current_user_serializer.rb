@@ -9,6 +9,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :site_flagged_posts_count,
              :moderator?,
              :staff?,
+             :title,
              :reply_count,
              :topic_count,
              :enable_quoting,
