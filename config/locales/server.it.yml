@@ -39,6 +39,7 @@ it:
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
+      taken: "è già stato usato (i nomi dei gruppi non distinguono le maiuscole)."
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
   bulk_invite:
@@ -181,6 +182,8 @@ it:
             base:
               warning_requires_pm: "Puoi allegare solo avvertimenti ai messaggi privati."
               too_many_users: "Puoi inviare avvertimenti ad un solo utente per volta."
+              cant_send_pm: "Spiacenti, non puoi inviare un messaggio privato a quell'utente."
+              no_user_selected: "Seleziona un utente valido."
         user:
           attributes:
             password:
@@ -503,6 +506,7 @@ it:
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno uno dei seguenti campi non è impostato: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Vai sulle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i relativi campi. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Guarda "Come impostare il caricamento di immagini su S3?" per informazioni</a>.'
     image_magick_warning: 'Il server è configurato per creare thumbnail di immagini di ampie dimensioni, ma ImageMagick non è installato. Installa ImageMagick usando il tuo Package Manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il tuo file config/environments/production.rb e accertati che le impostazioni config.action_mailer siano corrette. <a href="/sidekiq/retries" target="_blank">Guarda i job falliti in Sidekiq</a>.'
+    contact_email_invalid: "La email di contatto non è valida. Aggiornala nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un provider come mandrill.com per l'invio delle tue email."
   content_types:
     education_new_reply:

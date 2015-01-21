@@ -29,7 +29,7 @@ cs:
   topics: "Témata"
   posts: "příspěvky"
   loading: "Nahrávám"
-  powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlepší zážitek je se zapnutým JavaScriptem'
+  powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
   via: "%{username} přes %{site_name}"
   is_reserved: "je rezervováno"
