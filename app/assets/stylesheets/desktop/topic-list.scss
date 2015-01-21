@@ -45,7 +45,7 @@
   .fa-thumb-tack {color: $primary;}
   .fa-thumb-tack.unpinned {color: $primary;}
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification), .fa-bookmark {color: scale-color($primary, $lightness: 35%);}
+  a.title:visited:not(.badge-notification), .fa-bookmark {color: scale-color($primary, $lightness: 50%);}
   th,
   td {
     padding: 12px 5px;
