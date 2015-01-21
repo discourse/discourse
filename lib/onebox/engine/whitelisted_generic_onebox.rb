@@ -33,7 +33,6 @@ module Onebox
           cnn.com
           collegehumor.com
           coursera.org
-          codepen.io
           cracked.com
           dailymail.co.uk
           dailymotion.com
