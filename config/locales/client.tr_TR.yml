@@ -128,6 +128,11 @@ tr_TR:
       user_count: "Kullanıcılar"
       contact: "İletişim"
       contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_email} adresi üzerinden bizimle iletişime geçin."
+    bookmarked:
+      title: "İşaretle"
+      help:
+        bookmark: "Bu konuyu işaretlemek için tıklayın"
+        unbookmark: "Bu konunun işaretini kaldırmak için tıklayın"
     bookmarks:
       not_logged_in: "üzgünüz, gönderileri işaretleyebilmek için giriş yapmanız gerekiyor"
       created: "bu gönderiyi işaretlediniz"
@@ -307,8 +312,10 @@ tr_TR:
         error: "E-posta adresinizi değiştirirken bir hata oluştu. Belki bu adres zaten kullanımdadır?"
         success: "Adresinize bir e-posta gönderdik. Lütfen onaylama talimatlarını uygulayınız."
       change_avatar:
+        title: "Profil resminizi değiştirin"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baz alındı"
         refresh_gravatar_title: "Avatarınızı Yenileyin"
+        letter_based: "Sistem tarafından verilen profil resmi"
         uploaded_avatar: "Özel resim"
         uploaded_avatar_empty: "Özel resim ekleyin"
         upload_title: "Resminizi yükleyin"
@@ -427,6 +434,8 @@ tr_TR:
         title: "Son IP Adresi"
       registration_ip_address:
         title: "Kayıt Anındaki IP Adresi"
+      avatar:
+        title: "Profil Resmi"
       title:
         title: "Başlık"
       filters:
@@ -1166,11 +1175,13 @@ tr_TR:
         help: "Bu konu kapatıldı; artık yeni cevaplar kabul edilmiyor"
       unpinned:
         title: "Başa tutturma kaldırıldı"
+        help: "Bu konu sizin için başa tutturulmuyor; normal sıralama içerisinde görünecek"
       pinned_globally:
         title: "Her Yerde Başa Tutturuldu"
         help: "Bu konu her yerde başa tutturuldu; tüm listelerin başında görünecek"
       pinned:
         title: "Başa Tutturuldu"
+        help: "Bu konu sizin için başa tutturuldu; kendi kategorisinin en üstünde görünecek"
       archived:
         help: "Bu başlık arşive kaldırıldı; donduruldu ve değiştirilemez"
       invisible:
@@ -1469,7 +1480,14 @@ tr_TR:
         long_title: "Site Özelleştirmeleri"
         css: "CSS"
         header: "Başlık"
+        top: "En Popüler"
         footer: "Altbilgi"
+        head_tag:
+          text: "</head>"
+          title: "</head> etiketinden önce eklenecek HTML"
+        body_tag:
+          text: "</body>"
+          title: "</body> etiketinden önce eklenecek HTML"
         override_default: "Standart stil sayfasını eklemeyin"
         enabled: "Etkinleştirildi mi?"
         preview: "önizleme"
@@ -1587,6 +1605,7 @@ tr_TR:
           do_nothing: "hiçbir şey yapma"
         staff_actions:
           title: "Görevli Aksiyonları"
+          instructions: "Kullanıcı adları ve aksiyonlara tıklayarak listeyi filtrele. Profil resimlerine tıklayarak kullanıcı sayfalarına git."
           clear_filters: "Hepsini Göster"
           staff_user: "Görevli Kullanıcı"
           target_user: "Hedef Kullanıcı"
@@ -1807,6 +1826,7 @@ tr_TR:
           external_username: "Kullanıcı adı"
           external_name: "İsim"
           external_email: "E-posta"
+          external_avatar_url: "Profil Resmi URLsi"
       user_fields:
         title: "Kullanıcı Alanları"
         help: "Kullanıcıların doldurabileceği alanlar ekleyin."

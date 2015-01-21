@@ -24,11 +24,11 @@ ar:
             mb: ميجا
             tb: تيرا
     dates:
-      time: "سا:دد  ف"
-      long_no_year: "ش ش ش  ي  سا:دد ف"
-      long_no_year_no_time: "ش ش ش  ي"
-      long_with_year: "ش ش ش  ي,  س س س س  سا:دد  ف"
-      long_with_year_no_time: "ش ش ش  ي,  س س س س"
+      time: "h:mm a"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
       long_date_with_year: "ش ش ش  ي,  س س س س"
       long_date_without_year: "ش ش ش  ي"
       long_date_with_year_without_time: "ش ش ش  ي,  س س س س"
@@ -43,6 +43,13 @@ ar:
           few: "> %{count}ث"
           many: "> %{count}ث"
           other: "> %{count}ث"
+        x_seconds:
+          zero: "%{count} ثانية"
+          one: "%{count} ثانية"
+          two: "%{count} ثانية"
+          few: "%{count} ثانية"
+          many: "%{count} ثانية"
+          other: "%{count} ثانية"
         date_month: "ش ش ش  ي"
         date_year: "ش ش ش  ي,  س س س س"
       medium:
@@ -112,6 +119,13 @@ ar:
       topic_count: "مواضيع"
       post_count: "مشاركات"
       user_count: "مستخدمين"
+      contact: "اتصل بنا"
+      contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
+    bookmarked:
+      title: "المفضلة"
+      help:
+        bookmark: "انقر هنا لإضافة العنوان إلى المفضلة"
+        unbookmark: "أنقر هنا لحذف العنوان من المفضلة"
     bookmarks:
       not_logged_in: "نعتذر يجب ان تكون متصلا لكي تقوم بإضافة هدا الموضوع للمفضلة"
       created: "لقد نجحت في إضافة الموضوع للمفضلة"
@@ -280,8 +294,16 @@ ar:
         uploaded_avatar_empty: "اضافة صورة "
         upload_title: "رفع صورتك "
         upload_picture: "رفع الصورة"
+        image_is_not_a_square: "تنبيه: تم اقتصاص جزء من الصورة ، لأنها ليست مربعة الشكل."
+      change_profile_background:
+        title: "لون خلفية الحساب"
+        instructions: "سيتم وضع خلفية الحساب في المنتصف بعرض 850px"
+      change_card_background:
+        instructions: "سيتم وضع الخلفية في المنتصف بعرض 590px"
       email:
         title: "بريد الكتروني"
+        invalid: "يرجى إدخال بريد الكتروني فعّال."
+        authenticated: "تم توثيق بريدك الإلكتروني بواسطة {{provider}}"
       name:
         title: "الاسم"
       username:

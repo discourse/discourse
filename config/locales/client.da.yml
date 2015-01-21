@@ -84,6 +84,7 @@ da:
           other: "%{count} dage siden"
     share:
       topic: 'del et link til dette emne'
+      post: 'indlæg #%{postNumber}'
       close: 'luk'
       twitter: 'del dette link på Twitter'
       facebook: 'del dette link på Facebook'
@@ -138,9 +139,17 @@ da:
       stat:
         all_time: "Alt"
         last_7_days: "De sidste 7 Dage"
+      like_count: "Syntes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
       user_count: "Brugere"
+      contact: "Kontakt os"
+      contact_info: "I tilfælde af kritiske situationer eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_emal}."
+    bookmarked:
+      title: "Bogmærke"
+      help:
+        bookmark: "Klik for at tilføje dette emne til bogmærker"
+        unbookmark: "Klik for at fjerne dette emne fra bognmærker"
     bookmarks:
       not_logged_in: "Beklager, du skal været logget ind for at bogmærke indlæg"
       created: "Du har bogmærket dette indlæg."
@@ -245,11 +254,19 @@ da:
       organisation: Organisation
       phone: Telefon
       other_accounts: "Andre konti med denne IP adresse"
+      delete_other_accounts: "Slet %{count}"
+      username: "brugernavn"
+      read_time: "læse tid"
+      topics_entered: "emner indstastet"
+      post_count: "# indlæg"
+      confirm_delete_other_accounts: "Er du sikker på, at du vil slette disse kontoer?"
     user:
       said: "{{username}}:"
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
+      download_archive: "Download Mine Posts"
+      new_private_message: "Ny Private Besked"
       private_message: "Private beskeder"
       private_messages: "Beskeder"
       activity_stream: "Aktivitet"
@@ -317,8 +334,10 @@ da:
         error: "Der opstod en fejl i forbindelse med skift af din e-mail-adresse. Måske er adressen allerede i brug?"
         success: "Vi har sendt en e-mail til din nye adresse. Klik på linket i mail’en for at aktivere din nye e-mail-adresse."
       change_avatar:
+        title: "Skift dit profilbillede"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseret på"
         refresh_gravatar_title: "Gendindlæs dit profil billede"
+        letter_based: "System tildelt profilbillede"
         uploaded_avatar: "Brugerdefineret profil billede"
         uploaded_avatar_empty: "Tilføj et brugerdefineret profil billede"
         upload_title: "Upload dit profil billede"
@@ -327,15 +346,37 @@ da:
       change_profile_background:
         title: "Profil baggrundsbillede"
         instructions: "Profil baggrunde vil blive centrerede og have en standard bredde på 850 pixels"
+      change_card_background:
+        title: "Buger Kort Baggrund"
+        instructions: "Baggrunds billeder vil blive centreret og have en standard bredde på 590px."
       email:
         title: "E-mail"
+        instructions: "Aldrig vist offentligt"
+        ok: "Vi vil sende dig en bekræftelses email"
+        invalid: "Indtast venligst en gyldig email adresse"
+        authenticated: "Din email er blevet bekræftet af {{provider}}"
+        frequency:
+          zero: "Vi vil straks sende dig en e-mail, hvis du ikke har læst det vi sender dig en e-mail omkring."
+          one: "Vi vil kun sende dig en e-mail hvis vi ikke har set dig det sidste minut og su ikke har læst det vi sender dig en e-mail omkring."
+          other: "Vi vil kun sende dig en e-mail hvis vi ikke har set dig de sidste {{count}} minutter og su ikke har læst det vi sender dig en e-mail omkring."
       name:
         title: "Navn"
+        instructions: "Dit fulde navn (optimalt)"
+        too_short: "Dit navn er for kort"
+        ok: "Dit navn ser fint ud"
       username:
         title: "Brugernavn"
+        instructions: "Unikt, ingen mellemrum, kort"
+        short_instructions: "Folk kan benævne dig som @{{username}}"
+        available: "Dit brugernavn er utilgængeligt"
+        global_match: "E-mail tilsvarende det registrerede brugernavn"
         global_mismatch: "Allerede registreret. Prøv {{suggestion}}?"
         not_available: "Ikke ledigt. Prøv {{suggestion}}?"
+        too_short: "Dit brugernavn er for kort"
+        too_long: "Dit brugernavn er for langt"
         checking: "Kontrollerer om brugernavnet er ledigt…"
+        enter_email: 'Brugernavn fundet; indtast tilsvarende e-mail'
+        prefilled: "E-mail tilsvarende dette registrerede brugernavn"
       locale:
         title: "sprog"
         instructions: "Brugerinterface sprog. Det skifter når de reloader siden."
@@ -348,6 +389,8 @@ da:
       created: "Oprettet"
       log_out: "Log ud"
       location: "Sted"
+      card_badge:
+        title: "Bruger Kort Badge"
       website: "Site"
       email_settings: "E-mail"
       email_digests:
@@ -403,16 +446,22 @@ da:
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
+          uploading: "Uploader..."
+          success: "Fil uploaded successfuldt, du vil blive meddelt via private beskeder når processen er fuldendt."
           error: "Der var en fejl ved upload af filen '{{filename}}': {{message}}"
       password:
         title: "Adgangskode"
         too_short: "Din adgangskode er for kort."
         common: "Den adgangskode er for udbredt."
         ok: "Din adgangskode ser fin ud."
+        instructions: "Mindst %{count} tegn"
+      associated_accounts: "Logins"
       ip_address:
         title: "Sidste IP-adresse"
       registration_ip_address:
         title: "Registrerings IP adresse"
+      avatar:
+        title: "Profil Billede"
       title:
         title: "Titel"
       filters:
@@ -442,6 +491,8 @@ da:
         fixed: "Indlæs side"
     close: "Luk"
     assets_changed_confirm: "Dette site er lige blevet opdateret. Vil du opdatere nu til den seneste version?"
+    logout: "Du var logget ud."
+    refresh: "Opdater"
     read_only_mode:
       enabled: "En administrator har aktiver \"kun læsnings\" tilstranden. Du kan fortsætte med at læse forummet, men nogle handlinger vil ikke fungere."
       login_disabled: "Log in er deaktiveret midlertidigt, da forummet er i \"kun læsnings\" tilstand."
@@ -491,6 +542,10 @@ da:
       reset: "Nulstil adgangskode"
       complete_username: "Hvis en konto matcher brugernavnet <b>%{username}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
       complete_email: "Hvis en konto matcher <b>%{email}</b>, vil du om lidt modtage en email med instruktioner om hvordan man nulstiller passwordet."
+      complete_username_found: "Vi fandt ingen kontoer tilsvarende brugernavnet <b>%{username}</b>, du burde modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode, i løbet af kort tid."
+      complete_email_found: "Vi har fundet en konto tilsvarende <b>%{email}</b>, du burde modtage en e-mail med instruktioner om hvordan du nulstiller din adgangskode, i løbet af kort tid."
+      complete_username_not_found: "Ingen kontoer passer til brugernavnet <b>%{username}</b>"
+      complete_email_not_found: "Ingen kontoer tilsvarende <b>%{email}</b>"
     login:
       title: "Log ind"
       username: "Bruger"
@@ -507,6 +562,7 @@ da:
       awaiting_approval: "Din konto er ikke blevet godkendt af en moderator endnu. Du får en e-mail når den bliver godkendt."
       requires_invite: "Beklager, det kræve en invitation at blive medlem af dette forum."
       not_activated: "Du kan ikke logge ind endnu. Vi har tidligere sendt en aktiverings-e-mail til dig på <b>{{sentTo}}</b>. Følg venligst instruktionerne i den e-mail for at aktivere din konto."
+      not_allowed_from_ip_address: "Du kan ikke logge ind fra den IP adresse."
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; kontrollér også din spam-mappe."
       google:
@@ -621,7 +677,10 @@ da:
       title_with_attachments: "Tilføj et billede eller en fil"
       from_my_computer: "Fra min computer"
       from_the_web: "Fra nettet"
+      remote_tip: "link til billede"
+      remote_tip_with_attachments: "link til billede eller fil ({{authorized_extensions}})"
       local_tip: "klik for at vælge et billede fra din computer."
+      local_tip_with_attachments: "klik for at vælge et billede eller fil fra din enhed ({{authorized_extensions}})"
       hint: "(du kan også trække og slippe ind i editoren for at uploade dem)"
       hint_for_supported_browsers: "(du kan også trække og slippe eller indsætte billeder ind i editoren for at uploade dem)"
       uploading: "Uploader billede"
@@ -635,6 +694,7 @@ da:
         user: "Søg i indlæg fra @{{username}}"
         category: "Søg i kategorien \"{{category}}\""
         topic: "Søg i dette emne"
+        private_messages: "Søg i private beskeder"
     site_map: "gå til en anden emneoversigt eller kategori"
     go_back: 'gå tilbage'
     not_logged_in_user: 'bruger side, med oversigt over aktivitet og indstillinger'
@@ -666,6 +726,9 @@ da:
         hot: "Der er ingen populære emner."
         category: "Der er ingen emner i kategorien {{category}}."
         top: "Der er ingen top emner"
+        educate:
+          new: '<p>Dine nye emner vises her.</p><p>Som standard, betragtes emner som nye og vil vise en <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> indikator hvis de er lavet inden for de sidste 2 dage.</p><p>Du kan skifte dette i dine <a href="%{userPrefsUrl}">instillinger</a>.</p>'
+          unread: '<p>Dine ulæste emner vises her.</p><p>Som standard, betragtes emner som ulæste og vil vise en ulæst-tæller <span class="badge new-posts badge-notification">1</span> hvis du:</p><ul><li>Lavede emnet</li><li>Svarede på emnet</li><li>læste emnet i mere end 4 min.</li></ul><p>Eller hvis du udtrykkeligt har sat emnet til Sporet eller Overvåget via notifikations kontrollen i budnen af hvert emne.</p><p>Du kan ændre dette i dine <a href="%{userPrefsUrl}">instillinger</a>.</p>'
       bottom:
         latest: "Der er ikke flere populære emner."
         hot: "There are no more hot topics."
@@ -727,6 +790,7 @@ da:
       jump_reply_down: hop til senere svar
       deleted: "Emnet er blevet slettet"
       auto_close_notice: "Dette emne lukker automatisk %{timeLeft}."
+      auto_close_notice_based_on_last_post: "Dette emne vil lukke %{duration} efter det sidste svar."
       auto_close_title: 'Indstillinger for automatisk lukning'
       auto_close_save: "Gem"
       auto_close_remove: "Luk ikke dette emne automatisk"
