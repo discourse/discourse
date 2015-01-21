@@ -16,18 +16,15 @@ export default TextField.extend({
       return selected;
     }
 
-    var template = this.container.lookup('template:user-selector-autocomplete.raw');
-    $(this.get('element')).val(this.get('usernames')).autocomplete({
-      template: template,
-
+    this.$().val(this.get('usernames')).autocomplete({
+      template: this.container.lookup('template:user-selector-autocomplete.raw'),
       disabled: this.get('disabled'),
       single: this.get('single'),
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
-        term = term.replace(/[^a-zA-Z0-9_]/, '');
         return userSearch({
-          term: term,
+          term: term.replace(/[^a-zA-Z0-9_]/, ''),
           topicId: self.get('topicId'),
           exclude: excludedUsernames(),
           includeGroups: includeGroups
@@ -58,6 +55,15 @@ export default TextField.extend({
       }
 
     });
-  }.on('didInsertElement')
+  }.on('didInsertElement'),
+
+  // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
+  _clearInput: function() {
+    if (arguments.length > 1) {
+      if (Em.isEmpty(this.get("usernames"))) {
+        this.$().parent().find("a").click();
+      }
+    }
+  }.observes("usernames")
 
 });

@@ -91,7 +91,7 @@ describe Admin::GroupsController do
   context ".add_members" do
 
     it "cannot add members to automatic groups" do
-      xhr :put, :add_members, group_id: 1, usernames: "l77t"
+      xhr :put, :add_members, id: 1, usernames: "l77t"
       expect(response.status).to eq(422)
     end
 
@@ -100,7 +100,7 @@ describe Admin::GroupsController do
       user2 = Fabricate(:user)
       group = Fabricate(:group)
 
-      xhr :put, :add_members, group_id: group.id, usernames: [user1.username, user2.username].join(",")
+      xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
 
       expect(response).to be_success
       group.reload
@@ -112,7 +112,7 @@ describe Admin::GroupsController do
   context ".remove_member" do
 
     it "cannot remove members from automatic groups" do
-      xhr :put, :remove_member, group_id: 1, user_id: 42
+      xhr :put, :remove_member, id: 1, user_id: 42
       expect(response.status).to eq(422)
     end
 
@@ -122,7 +122,7 @@ describe Admin::GroupsController do
       group.add(user)
       group.save
 
-      xhr :delete, :remove_member, group_id: group.id, user_id: user.id
+      xhr :delete, :remove_member, id: group.id, user_id: user.id
 
       expect(response).to be_success
       group.reload

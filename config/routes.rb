@@ -46,9 +46,14 @@ Discourse::Application.routes.draw do
       collection do
         post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
       end
-      delete "members" => "groups#remove_member"
-      put "members" => "groups#add_members"
+      member do
+        put "members" => "groups#add_members"
+        delete "members" => "groups#remove_member"
+      end
     end
+
+    get "groups/:type" => "groups#show", constraints: AdminConstraint.new
+    get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
