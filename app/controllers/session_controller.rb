@@ -72,6 +72,17 @@ class SessionController < ApplicationController
         else
           log_on_user user
         end
+
+        # If it's not a relative URL check the host
+        if return_path !~ /^\/[^\/]/
+          begin
+            uri = URI(return_path)
+            return_path = "/" unless uri.host == Discourse.current_hostname
+          rescue
+            return_path = "/"
+          end
+        end
+
         redirect_to return_path
       else
         render text: I18n.t("sso.not_found"), status: 500
