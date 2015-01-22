@@ -14,10 +14,10 @@
         <% topic_url = Discourse.base_url + topic.relative_url -%>
         <item>
           <title><%= topic.title %></title>
-          <author><%= "no-reply@example.com (@#{topic.user.username}#{" #{topic.user.name}" if topic.user.name.present?})" -%></author>
+          <author><%= "no-reply@example.com (@#{topic.user.username}#{" #{topic.user.name}" if (topic.user.name.present? && SiteSetting.enable_names?)})" -%></author>
           <category><%= topic.category.name %></category>
           <description><![CDATA[
-            <p><%= t('author_wrote', author: link_to(topic.user.name, user_url(topic.user.username_lower))).html_safe %></p>
+            <p><%= t('author_wrote', author: link_to("@#{topic.user.username}", user_url(topic.user.username_lower))).html_safe %></p>
             <blockquote>
               <%= topic.posts.first.cooked.html_safe %>
             </blockquote>

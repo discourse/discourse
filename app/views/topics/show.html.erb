@@ -10,7 +10,7 @@
   <% if post.user %>
     <div class='creator'>
       <b><%= post.user.username %></b>
-       <%= "(#{post.user.name})" if SiteSetting.display_name_on_posts %> —
+       <%= "(#{post.user.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names?) %> —
        <%= post.created_at.to_formatted_s(:iso8601) %> —
        #<%= post.post_number %>
     </div>
