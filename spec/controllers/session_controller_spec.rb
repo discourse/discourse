@@ -26,9 +26,11 @@ describe SessionController do
       @sso_url = "http://somesite.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
 
-      SiteSetting.stubs("enable_sso").returns(true)
-      SiteSetting.stubs("sso_url").returns(@sso_url)
-      SiteSetting.stubs("sso_secret").returns(@sso_secret)
+      request.host = Discourse.current_hostname
+
+      SiteSetting.enable_sso = true
+      SiteSetting.sso_url = @sso_url
+      SiteSetting.sso_secret = @sso_secret
 
       # We have 2 options, either fabricate an admin or don't
       # send welcome messages
@@ -60,9 +62,42 @@ describe SessionController do
 
       response.should redirect_to('/')
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-      logged_on_user.email.should == user.email
-      logged_on_user.single_sign_on_record.external_id.should == "abc"
-      logged_on_user.single_sign_on_record.external_username.should == 'sam'
+      expect(logged_on_user.email).to eq(user.email)
+      expect(logged_on_user.single_sign_on_record.external_id).to eq("abc")
+      expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
+    end
+
+    it 'redirects to a non-relative url' do
+      sso = get_sso("#{Discourse.base_url}/b/")
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/b/')
+    end
+
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('//eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/')
+    end
+
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('http://eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/')
     end
 
     it 'allows you to create an account' do
