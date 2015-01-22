@@ -28,6 +28,24 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
   end
 
+  describe 'html_providers' do
+    class HTMLOnebox < Onebox::Engine::WhitelistedGenericOnebox
+      def data
+        {html: 'cool html',
+         provider_name: 'CoolSite'}
+      end
+    end
+
+    it "doesn't return the HTML when not in the `html_providers`" do
+      Onebox::Engine::WhitelistedGenericOnebox.html_providers = []
+      HTMLOnebox.new("http://coolsite.com").to_html.should be_nil
+    end
+
+    it "returns the HMTL when in the `html_providers`" do
+      Onebox::Engine::WhitelistedGenericOnebox.html_providers = ['CoolSite']
+      HTMLOnebox.new("http://coolsite.com").to_html.should == "cool html"
+    end
+  end
 
   describe 'rewrites' do
     class DummyOnebox < Onebox::Engine::WhitelistedGenericOnebox

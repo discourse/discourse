@@ -124,6 +124,21 @@ module Onebox
           zillow.com)
       end
 
+      # Often using the `html` attribute is not what we want, like for some blogs that
+      # include the entire page HTML. However for some providers like Imgur it allows us
+      # to return gifv and galleries.
+      def self.default_html_providers
+        ['Imgur']
+      end
+
+      def self.html_providers
+        @html_providers ||= default_html_providers.dup
+      end
+
+      def self.html_providers=(new_provs)
+        @html_providers = new_provs
+      end
+
       # A re-written URL coverts https:// -> // - it is useful on HTTPS sites that embed
       # youtube for example
       def self.rewrites
@@ -178,11 +193,22 @@ module Onebox
         html
       end
 
+      def html_type?
+        return data &&
+               data[:html] &&
+               (
+                 (data[:html] =~ /iframe/) ||
+                 WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
+               )
+      end
+
       def generic_html
-        return data[:html] if data[:html] && data[:html] =~ /iframe/
+        return data[:html] if html_type?
         return layout.to_html if article_type?
         return html_for_video(data[:video]) if data[:video]
+
         return image_html if photo_type?
+
         return nil unless data[:title]
         layout.to_html
       end
