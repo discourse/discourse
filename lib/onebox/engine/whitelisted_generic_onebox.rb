@@ -150,7 +150,7 @@ module Onebox
       end
 
       def self.default_rewrites
-        %w(slideshare.net)
+        %w(slideshare.net imgur.com)
       end
 
       def self.host_matches(uri, list)
