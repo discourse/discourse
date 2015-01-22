@@ -31,11 +31,18 @@ en:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
+
+  datetime: &datetime
+    month_names:
+      [~, January, February, March, April, May, June, July, August, September, October, November, December]
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
+  date:
+    <<: *datetime
+  time:
+    <<: *datetime
 
   title: "Discourse"
   topics: "Topics"
