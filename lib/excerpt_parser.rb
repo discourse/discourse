@@ -56,7 +56,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         elsif attributes["title"]
           characters("[#{attributes["title"]}]")
         else
-          characters("[image]")
+          characters("[#{I18n.t 'excerpt_image'}]")
         end
 
         characters("(#{attributes['src']})") if @markdown_images
