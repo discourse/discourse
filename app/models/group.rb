@@ -11,6 +11,7 @@ class Group < ActiveRecord::Base
   has_many :managers, through: :group_managers
 
   after_save :destroy_deletions
+  after_save :automatic_group_membership
 
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
@@ -299,6 +300,12 @@ class Group < ActiveRecord::Base
         end
       end
       @deletions = nil
+    end
+
+    def automatic_group_membership
+      if self.automatic_membership_retroactive
+        Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+      end
     end
 
 end

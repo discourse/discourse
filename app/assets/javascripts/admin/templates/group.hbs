@@ -43,6 +43,17 @@
     {{combo-box name="alias" valueAttribute="value" value=alias_level content=aliasLevelOptions}}
   </div>
 
+  {{#unless automatic}}
+    <div>
+      <label for="automatic_membership">{{i18n 'admin.groups.automatic_membership_email_domains'}}</label>
+      {{list-setting name="automatic_membership" settingValue=automatic_membership_email_domains}}
+      <label>
+        {{input type="checkbox" checked=automatic_membership_retroactive}}
+        {{i18n 'admin.groups.automatic_membership_retroactive'}}
+      </label>
+    </div>
+  {{/unless}}
+
   <div class='buttons'>
     <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless automatic}}

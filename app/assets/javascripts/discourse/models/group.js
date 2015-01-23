@@ -68,7 +68,9 @@ Discourse.Group = Discourse.Model.extend({
     return {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
-      visible: !!this.get('visible')
+      visible: !!this.get('visible'),
+      automatic_membership_email_domains: this.get('automatic_membership_email_domains'),
+      automatic_membership_retroactive: !!this.get('automatic_membership_retroactive')
     };
   },
 

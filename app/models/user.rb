@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
   after_create :create_user_stat
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
+  after_create :automatic_group_membership
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -713,6 +714,17 @@ class User < ActiveRecord::Base
 
   def ensure_in_trust_level_group
     Group.user_trust_level_change!(id, trust_level)
+  end
+
+  def automatic_group_membership
+    Group.where(automatic: false)
+         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
+         .each do |group|
+      domains = group.automatic_membership_email_domains.gsub('.', '\.')
+      if self.email =~ Regexp.new("@(#{domains})", true)
+        group.add(self) rescue ActiveRecord::RecordNotUnique
+      end
+    end
   end
 
   def create_user_stat

@@ -25,7 +25,9 @@ describe Admin::GroupsController do
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
-        "visible"=>true
+        "visible"=>true,
+        "automatic_membership_email_domains"=>"",
+        "automatic_membership_retroactive"=>false
       }])
     end
 
@@ -55,6 +57,18 @@ describe Admin::GroupsController do
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
       expect(group.visible).to eq(true)
+    end
+
+    it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
+      Jobs.expects(:enqueue).never
+      xhr :put, :update, id: 1, automatic_membership_retroactive: "false"
+      expect(response).to be_success
+    end
+
+    it "launches the 'automatic group membership' job when it's retroactive" do
+      Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: 1)
+      xhr :put, :update, id: 1, automatic_membership_retroactive: "true"
+      expect(response).to be_success
     end
 
   end

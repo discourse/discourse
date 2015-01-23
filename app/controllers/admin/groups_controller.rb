@@ -21,8 +21,11 @@ class Admin::GroupsController < Admin::AdminController
 
   def create
     group = Group.new
+
     group.name = (params[:name] || '').strip
     group.visible = params[:visible] == "true"
+    group.automatic_membership_email_domains = params[:automatic_membership_email_domains]
+    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true"
 
     if group.save
       render_serialized(group, BasicGroupSerializer)
@@ -36,11 +39,13 @@ class Admin::GroupsController < Admin::AdminController
 
     group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
     group.visible = params[:visible] == "true"
+    group.automatic_membership_email_domains = params[:automatic_membership_email_domains]
+    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true"
     # group rename is ignored for automatic groups
     group.name = params[:name] if params[:name] && !group.automatic
 
     if group.save
-      render json: success_json
+      render_serialized(group, BasicGroupSerializer)
     else
       render_json_error group
     end

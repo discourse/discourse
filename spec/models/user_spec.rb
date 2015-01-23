@@ -1213,4 +1213,15 @@ describe User do
 
   end
 
+  describe "automatic group membership" do
+
+    it "is automatically added to a group when the email matches" do
+      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
+      user = Fabricate(:user, email: "foo@bar.com")
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
+    end
+
+  end
+
 end
