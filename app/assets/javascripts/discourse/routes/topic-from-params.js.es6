@@ -34,7 +34,11 @@ export default Discourse.Route.extend({
         progressPosition: progress,
         expanded: false
       });
-      self.appEvents.trigger('post:highlight', closest);
+
+      // Highlight our post after the next render
+      Ember.run.scheduleOnce('afterRender', function() {
+        self.appEvents.trigger('post:highlight', closest);
+      });
       Discourse.URL.jumpToPost(closest);
 
       if (topic.present('draft')) {
