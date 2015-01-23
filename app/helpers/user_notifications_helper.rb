@@ -1,3 +1,5 @@
+require_dependency 'category_badge'
+
 module UserNotificationsHelper
 
   def indent(text, by=2)
@@ -59,21 +61,6 @@ module UserNotificationsHelper
   end
 
   def email_category(category, opts=nil)
-    opts = opts || {}
-
-    # If there is no category, bail
-    return "" if category.blank?
-
-    # By default hide uncategorized
-    return "" if category.uncategorized? && !opts[:show_uncategorized]
-
-    result = ""
-
-    category_url = "#{Discourse.base_url}#{category.url}"
-
-    result << "<a href='#{category_url}' style='background-color: ##{category.color}; font-size: 12px; padding: 2px 1px; font-weight: bold; margin: 0; width: 2px; white-space:nowrap;'>&nbsp;</a>"
-    result << "<a href='#{category_url}' style='font-size: 12px; font-weight: bold; margin-left: 3px; color: #222;'>#{category.name}</a>"
-
-    result.html_safe
+    CategoryBadge.html_for(category, opts).html_safe
   end
 end
