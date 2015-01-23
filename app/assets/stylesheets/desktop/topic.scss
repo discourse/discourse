@@ -204,7 +204,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color:  dark-light-diff($success, $secondary, 60%, -35%);
+    background-color:  dark-light-diff($success, $secondary, 50%, -35%);
     transition: width .75s;
 
   }
