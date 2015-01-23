@@ -60,14 +60,16 @@ test("prevents files that are too big from being uploaded", function() {
   ok(bootbox.alert.calledWith(I18n.t('post.errors.file_too_large', { max_size_kb: 5 })));
 });
 
+var imageSize = 10 * 1024;
+
 var dummyBlob = function() {
   var BlobBuilder = window.BlobBuilder || window.WebKitBlobBuilder || window.MozBlobBuilder || window.MSBlobBuilder;
   if (BlobBuilder) {
     var bb = new BlobBuilder();
-    bb.append([1]);
+    bb.append([new Int8Array(imageSize)]);
     return bb.getBlob("image/png");
   } else {
-    return new Blob([1], { "type" : "image\/png" });
+    return new Blob([new Int8Array(imageSize)], { "type" : "image\/png" });
   }
 };
 
@@ -75,10 +77,11 @@ test("allows valid uploads to go through", function() {
   Discourse.User.resetCurrent(Discourse.User.create());
   Discourse.User.currentProp("trust_level", 1);
   Discourse.SiteSettings.max_image_size_kb = 15;
+  Discourse.SiteSettings.max_attachment_size_kb = 1;
   sandbox.stub(bootbox, "alert");
 
   // image
-  var image = { name: "image.png", size: 10 * 1024 };
+  var image = { name: "image.png", size: imageSize };
   ok(validUpload([image]));
   // pasted image
   var pastedImage = dummyBlob();
