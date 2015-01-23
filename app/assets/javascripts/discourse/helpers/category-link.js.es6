@@ -32,7 +32,7 @@ export function categoryBadgeHTML(category, opts) {
 
   var html = "";
 
-  var parentCat = Discourse.Category.findById(category.get('parent_category_id'));
+  var parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
   if (opts.hideParent) { parentCat = null; }
   html += categoryStripe(tagName, parentCat, extraClasses, href);
 

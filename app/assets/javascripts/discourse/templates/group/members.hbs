@@ -4,7 +4,7 @@
       <th colspan="3" class="seen">{{i18n 'last_seen'}}</th>
     </tr>
   {{#each m in members}}
-  <tr>
+    <tr>
       <td class='avatar'>
         {{avatar m imageSize="large"}}
       </td>
@@ -16,7 +16,6 @@
         <span class='last-seen-at'>{{bound-date m.last_seen_at}}</span>
       </td>
     </tr>
-    </div>
   {{/each}}
 </table>
 {{/if}}
