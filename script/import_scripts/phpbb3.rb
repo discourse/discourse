@@ -8,8 +8,6 @@ require "mysql2"
 
 class ImportScripts::PhpBB3 < ImportScripts::Base
 
-  include ActionView::Helpers::NumberHelper
-
   PHPBB_DB   = "phpbb"
   BATCH_SIZE = 1000
 
@@ -86,8 +84,10 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
           admin: user['group_name'] == 'ADMINISTRATORS',
           post_create_action: proc do |newmember|
             if not PHPBB_BASE_DIR.nil? and IMPORT_AVATARS.include?(user['user_avatar_type']) and newmember.uploaded_avatar_id.blank?
-              path = phpbb_avatar_fullpath(user['user_avatar_type'], user['user_avatar']) and begin
-                upload = create_upload(newmember.id, path, user['user_avatar'])
+              path = phpbb_avatar_fullpath(user['user_avatar_type'], user['user_avatar'])
+              if path
+                begin
+                  upload = create_upload(newmember.id, path, user['user_avatar'])
                   if upload.persisted?
                     newmember.import_mode = false
                     newmember.create_user_avatar
@@ -99,6 +99,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
                   end
                 rescue SystemCallError => err
                   puts "Could not import avatar: #{err.message}"
+                end
               end
             end
           end
@@ -411,11 +412,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         success_count += 1
 
-        if FileHelper.is_image?(upload.url)
-          %Q[<img src="#{upload.url}" width="#{[upload.width, 640].compact.min}" height="#{[upload.height,480].compact.min}"><br/>]
-        else
-          "<a class='attachment' href='#{upload.url}'>#{real_filename}</a> (#{number_to_human_size(upload.filesize)})"
-        end
+        html_for_upload(upload)
       end
 
       if new_raw != post.raw
