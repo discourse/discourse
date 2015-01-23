@@ -46,7 +46,7 @@
   {{#unless automatic}}
     <div>
       <label for="automatic_membership">{{i18n 'admin.groups.automatic_membership_email_domains'}}</label>
-      {{list-setting name="automatic_membership" settingValue=automatic_membership_email_domains}}
+      {{list-setting name="automatic_membership" settingValue=emailDomains}}
       <label>
         {{input type="checkbox" checked=automatic_membership_retroactive}}
         {{i18n 'admin.groups.automatic_membership_retroactive'}}
