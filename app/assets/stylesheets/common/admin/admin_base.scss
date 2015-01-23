@@ -463,6 +463,7 @@ section.details {
 .groups {
   .ac-wrap {
     width: 100% !important;
+    border-color: scale-color($primary, $lightness: 75%);
     .item {
       width: 190px;
       margin-right: 0 !important;
@@ -479,6 +480,13 @@ section.details {
   }
   .controls {
     margin-top: 10px;
+  }
+  .select2-container {
+    width: 100%;
+  }
+  .select2-choices {
+    width: 100%;
+    border-color: scale-color($primary, $lightness: 75%);
   }
 }
 
