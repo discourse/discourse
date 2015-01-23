@@ -11,6 +11,11 @@ Discourse.Group = Discourse.Model.extend({
   offset: 0,
   user_count: 0,
 
+  emailDomains: function() {
+    var value = this.get("automatic_membership_email_domains");
+    return Em.isEmpty(value) ? "" : value;
+  }.property("automatic_membership_email_domains"),
+
   type: function() {
     return this.get("automatic") ? "automatic" : "custom";
   }.property("automatic"),
@@ -69,7 +74,7 @@ Discourse.Group = Discourse.Model.extend({
       name: this.get('name'),
       alias_level: this.get('alias_level'),
       visible: !!this.get('visible'),
-      automatic_membership_email_domains: this.get('automatic_membership_email_domains'),
+      automatic_membership_email_domains: this.get('emailDomains'),
       automatic_membership_retroactive: !!this.get('automatic_membership_retroactive')
     };
   },

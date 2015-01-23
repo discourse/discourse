@@ -21,12 +21,13 @@ describe Admin::GroupsController do
       expect(response.status).to eq(200)
       expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
+        "automatic"=>false,
         "name"=>group.name,
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
         "visible"=>true,
-        "automatic_membership_email_domains"=>"",
+        "automatic_membership_email_domains"=>nil,
         "automatic_membership_retroactive"=>false
       }])
     end
