@@ -3,6 +3,10 @@ section {
   border-bottom: 1px solid #999;
 }
 
+section h2 {
+  margin: 10px 0;
+}
+
 #onebox-url {
   width: 80%;
   height: 25px;
@@ -11,5 +15,5 @@ section {
 .message-group label {
   display: block;
   color: #666;
-  margin-top: 20px;
+  margin-top: 15px;
 }

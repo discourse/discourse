@@ -19,6 +19,8 @@ $(function() {
         }
       }).done(function(data) {
         $('.onebox-container').empty().append(data.onebox);
+        $('#oneboxed-url').empty().text(data.url);
+        $('#onebox-engine').empty().text(data.engine);
         $('#preview-html').empty().text(data.onebox);
         $('#placeholder-html').empty().text(data.placeholder);
       });

@@ -20,8 +20,13 @@ module Onebox
 
     get '/onebox' do
       content_type :json
+      result = {
+          url: params[:url],
+          engine: Onebox::Matcher.new(params[:url]).oneboxed.to_s
+      }
       onebox = Onebox.preview(params[:url])
-      MultiJson.dump({onebox: onebox.to_s, placeholder: onebox.placeholder_html})
+      result.merge!(onebox: onebox.to_s, placeholder: onebox.placeholder_html)
+      MultiJson.dump(result)
     end
   end
 end
