@@ -26,8 +26,14 @@ class PostsController < ApplicationController
   end
 
   def latest
+    params.permit(:before)
+    last_post_id = params[:before].to_i
+    last_post_id = Post.last.id if last_post_id <= 0
+
+    # last 50 post IDs only, to avoid counting deleted posts in security check
     posts = Post.order(created_at: :desc)
-                .where('posts.id > ?', Post.last.id - 50) # last 50 post IDs only, to avoid counting deleted posts in security check
+                .where('posts.id <= ?', last_post_id)
+                .where('posts.id > ?', last_post_id - 50)
                 .includes(topic: :category)
                 .includes(:user)
                 .limit(50)
