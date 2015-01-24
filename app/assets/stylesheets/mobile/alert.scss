@@ -3,10 +3,8 @@
 }
 
 // there are (n) new or updated topics, click to show
-.topic-list {
-  .alert {
+.alert.alert-info {
     margin: 0;
     padding: 15px;
-    font-size: 120%;
-  }
+    font-size: 1.1em;
 }
