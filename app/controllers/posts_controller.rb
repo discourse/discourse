@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown, :raw, :cooked]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
@@ -23,6 +23,27 @@ class PostsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def latest
+    posts = Post.order(created_at: :desc)
+                .where('posts.id > ?', Post.last.id - 50) # last 50 post IDs only, to avoid counting deleted posts in security check
+                .includes(topic: :category)
+                .includes(:user)
+                .limit(50)
+    # Remove posts the user doesn't have permission to see
+    # This isn't leaking any information we weren't already through the post ID numbers
+    posts = posts.reject { |post| !guardian.can_see?(post) }
+
+    counts = PostAction.counts_for(posts, current_user)
+
+    render_json_dump(serialize_data(posts,
+                                    PostSerializer,
+                                    scope: guardian,
+                                    root: 'latest_posts',
+                                    add_raw: true,
+                                    all_post_actions: counts)
+    )
   end
 
   def cooked
