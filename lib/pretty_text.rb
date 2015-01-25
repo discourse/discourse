@@ -75,14 +75,14 @@ module PrettyText
       "app/assets/javascripts/discourse/lib/markdown.js"
     )
 
-    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
+    Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
       unless dialect =~ /\/dialect\.js$/
         ctx.load(dialect)
       end
     end
 
     # custom emojis
-    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
     ctx.eval(emoji.result)
 
     Emoji.custom.each do |emoji|
