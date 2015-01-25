@@ -819,6 +819,7 @@ en:
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
+        bookmarks: "You have no bookmarked topics yet."
         category: "There are no {{category}} topics."
         top: "There are no top topics."
         educate:
@@ -1465,6 +1466,9 @@ en:
       posted:
         title: "My Posts"
         help: "topics you have posted in"
+      bookmarks:
+        title: "Bookmarks"
+        help: "topics you have bookmarked"
       category:
         title:
           zero: "{{categoryName}}"
