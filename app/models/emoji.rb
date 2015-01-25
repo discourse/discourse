@@ -65,7 +65,7 @@ class Emoji
   end
 
   def self.db_file
-    "lib/emoji/db.json"
+    "#{Rails.root}/lib/emoji/db.json"
   end
 
   def self.load_standard
