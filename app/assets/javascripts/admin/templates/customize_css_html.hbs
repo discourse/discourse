@@ -5,9 +5,7 @@
       <li><a {{action "selectStyle" style}} {{bind-attr class="style.selected:active"}}>{{style.description}}</a></li>
     {{/each}}
   </ul>
-  <button {{action "newCustomization"}} class='btn'>
-    {{fa-icon "plus"}}{{i18n 'admin.customize.new'}}
-  </button>
+  {{d-button action='newCustomization' icon='plus' label='admin.customize.new'}}
 </div>
 
 {{#if selectedItem}}
@@ -68,7 +66,7 @@
         </div>
 
         <div class='buttons'>
-          <button {{action "save"}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n 'admin.customize.save'}}</button>
+          {{d-button action='save' label='admin.customize.save' disabled=selectedItem.disableSave}}
           <span class='saving'>{{selectedItem.savingStatus}}</span>
           <a {{action "destroy"}} class='delete-link'>{{i18n 'admin.customize.delete'}}</a>
         </div>

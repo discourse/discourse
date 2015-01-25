@@ -7,7 +7,7 @@
       {{/unless}}
     {{/each}}
   </ul>
-  <button {{action "newColorScheme"}} class='btn'><i class="fa fa-plus"></i>{{i18n 'admin.customize.new'}}</button>
+  {{d-button action='newColorScheme' icon='plus' label='admin.customize.new'}}
 </div>
 
 {{#if selectedItem}}
@@ -16,7 +16,7 @@
       <h1>{{text-field class="style-name" value=selectedItem.name}}</h1>
 
       <div class="controls">
-        <button {{action "save"}} {{bind-attr disabled="selectedItem.disableSave"}} class='btn'>{{i18n 'admin.customize.save'}}</button>
+        {{d-button action='save' label='admin.customize.save' disabled=selectedItem.disableSave}}
         <button {{action "toggleEnabled"}} {{bind-attr disabled="selectedItem.disableEnable"}} class="btn">
           {{#if selectedItem.enabled}}
             {{i18n 'disable'}}
@@ -24,8 +24,8 @@
             {{i18n 'enable'}}
           {{/if}}
         </button>
-        <button {{action "copy" selectedItem}} class='btn'><i class="fa fa-copy"></i> {{i18n 'admin.customize.copy'}}</button>
-        <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n 'admin.customize.delete'}}</button>
+        {{d-button action='copy' actionParam=selectedItem icon='copy' label='admin.customize.copy'}}
+        {{d-button class='btn-danger' action='destroy' icon='danger' title='trash-o' label='admin.customize.delete'}}
         <span {{bind-attr class=":saving selectedItem.savingStatus::hidden" }}>{{selectedItem.savingStatus}}</span>
       </div>
 

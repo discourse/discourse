@@ -26,7 +26,7 @@
       <div>
         <label for="user-selector">{{i18n 'admin.groups.add_members'}}</label>
         {{user-selector usernames=usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
-        <button {{action "addMembers"}} class='btn add'>{{fa-icon "plus"}} {{i18n 'admin.groups.add'}}</button>
+        {{d-button class='add' action='addMembers' icon='plus' label='admin.groups.add'}}
       </div>
     {{/unless}}
   {{/if}}
@@ -44,9 +44,9 @@
   </div>
 
   <div class='buttons'>
-    <button {{action "save"}} {{bind-attr disabled="disableSave"}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
+    {{d-button class='btn-primary' action='save' label='admin.customize.save' disabled=disableSave}}
     {{#unless automatic}}
-      <button {{action "destroy"}} class='btn btn-danger'>{{fa-icon "trash-o"}}{{i18n 'admin.customize.delete'}}</button>
+      {{d-button class='btn-danger' action='destroy' icon='trash-o' label='admin.customize.delete'}}
     {{/unless}}
   </div>
 

@@ -20,7 +20,7 @@
             <tr>
               <th><img class="emoji" src="{{unbound e.url}}" title="{{unbound e.name}}"></th>
               <th>:{{e.name}}:</th>
-              <th><button {{action "destroy" e}} class='btn btn-danger no-text pull-right'>{{fa-icon 'trash-o'}} </button></th>
+              <th>{{d-button class='btn-danger no-text pull-right' action='destroy' actionParam=e icon='trash-o'}}</th>
             </tr>
           {{/each}}
         </tbody>
