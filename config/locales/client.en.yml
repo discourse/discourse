@@ -746,7 +746,7 @@ en:
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "You have no notifications right now."
+      none: "Unable to load notifications at this time."
       more: "view older notifications"
       total_flagged: "total flagged posts"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
