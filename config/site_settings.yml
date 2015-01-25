@@ -92,6 +92,7 @@ basic:
      - categories
      - read
      - posted
+     - bookmarks
   post_menu:
     client: true
     type: list
