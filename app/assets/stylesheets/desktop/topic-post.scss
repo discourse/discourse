@@ -472,9 +472,23 @@ a.star {
     }
   }
   table {
-    box-shadow: none;
-    border-radius: 0;
+    table-layout: fixed;
     margin-top: 10px;
+  }
+  .topics {
+    padding-bottom: 15px;
+  }
+  // this forces category to take less space in suggested topics
+  // as the poster list is not present at all there.
+  th.category {
+    width: 150px;
+  }
+}
+
+#suggested-topics .topic-statuses .topic-status {
+  padding: 0;
+  i {
+    font-size:15px;
   }
 }
 
