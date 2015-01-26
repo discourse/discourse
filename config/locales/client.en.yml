@@ -1637,8 +1637,8 @@ en:
         add_members: "Add members"
         custom: "Custom"
         automatic: "Automatic"
-        automatic_membership_email_domains: "Users registering with an email from that list will automatically be a member of this group"
-        automatic_membership_retroactive: "Registered users matching this list are also member of the group"
+        automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically made a member of this group:"
+        automatic_membership_retroactive: "Apply the same email matching rules to existing registered users"
 
       api:
         generate_master: "Generate Master API Key"
