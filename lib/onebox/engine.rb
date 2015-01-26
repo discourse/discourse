@@ -14,7 +14,7 @@ module Onebox
     attr_reader :cache
     attr_reader :timeout
 
-    DEFUALT = {}
+    DEFAULT = {}
     def options
       @options
     end
@@ -32,7 +32,7 @@ module Onebox
 
     def initialize(link, cache = nil, timeout = nil)
 
-      @options = DEFUALT
+      @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
       self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.
 
