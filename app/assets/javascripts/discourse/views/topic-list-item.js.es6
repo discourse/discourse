@@ -10,8 +10,16 @@ export default Discourse.View.extend(StringBuffer, {
        ],
 
   unboundClassNames: function(){
-    var classes = [];
     var topic = this.get('topic');
+    var classes = [];
+
+    if(topic.get('category')){
+      var category,categoryClass;
+      category = topic.get('category');            
+      categoryClass = 'category-' + category.get('slug');
+
+      classes.push(categoryClass);
+    }
 
     if (topic.get('category')) {
       classes.push("category-" + topic.get('category.slug'));
