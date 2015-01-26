@@ -323,6 +323,15 @@ button.dismiss-read {
 @media all
 and (max-width : 850px) {
 
+  // add some left padding to topics otherwise everything is 100% flush
+  // with left edge in portrait tablet, which looks awful
+  #topic-title {
+    padding-left: 10px;
+  }
+  .container.posts {
+    padding-left: 10px;
+  }
+
   .nav-pills {
     > li > a {
       font-size: 1em;
@@ -351,9 +360,6 @@ and (max-width : 850px) {
     .categories td.category {
       padding-left: 10px;
       }
-   td:first-of-type {
-     padding: 0;
-     }
    th:first-of-type {
      padding: 12px 5px;
      }
