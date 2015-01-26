@@ -13,6 +13,10 @@ export default Discourse.View.extend(StringBuffer, {
     var classes = [];
     var topic = this.get('topic');
 
+    if (topic.get('category')) {
+      classes.push("category-" + topic.get('category.slug'));
+    }
+
     if(topic.get('hasExcerpt')){
       classes.push('has-excerpt');
     }
