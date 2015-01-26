@@ -33,6 +33,12 @@
   a { word-wrap: break-word; }
 }
 
+
+.cooked, #wmd-preview {
+  video {
+    max-width: 100%;
+  }
+}
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
