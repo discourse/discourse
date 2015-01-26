@@ -15,7 +15,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   menuVisible: true,
   SHORT_POST: 1200,
 
-  categoryId: Em.computed.alias('topic.category.id'),
+  categorySlug: Em.computed.alias('topic.category.slug'),
 
   postStream: Em.computed.alias('controller.postStream'),
 
