@@ -721,7 +721,7 @@ class User < ActiveRecord::Base
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})", true)
+      if self.email =~ Regexp.new("@(#{domains})$", true)
         group.add(self) rescue ActiveRecord::RecordNotUnique
       end
     end
