@@ -12,6 +12,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def initialize
     super
 
+    @old_username_to_new_usernames = {}
+
     @tz = TZInfo::Timezone.get(TIMEZONE)
 
     @htmlentities = HTMLEntities.new
@@ -53,8 +55,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   def import_users
     puts "", "importing users"
-
-    @old_username_to_new_usernames = {}
 
     user_count = mysql_query("SELECT COUNT(userid) count FROM user").first["count"]
 
@@ -303,6 +303,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
           post.raw = new_raw
           post.save
         end
+      rescue PrettyText::JavaScriptError
+        nil
       ensure
         print_status(current += 1, max)
       end
