@@ -14,10 +14,9 @@ export default Discourse.View.extend(StringBuffer, {
     var classes = [];
 
     if(topic.get('category')){
-      var category,categorySlug,categoryClass;
-      category = topic.get('category');      
-      categorySlug = category.get('slug');
-      categoryClass = 'category-' + categorySlug;
+      var category,categoryClass;
+      category = topic.get('category');            
+      categoryClass = 'category-' + category.get('slug');
 
       classes.push(categoryClass);
     }
