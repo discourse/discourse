@@ -8,8 +8,14 @@ section h2 {
 }
 
 #onebox-url {
-  width: 80%;
+  width: 60%;
+  min-width: 400px;
   height: 25px;
+}
+
+#go {
+  width: 80px;
+  height: 30px;
 }
 
 .message-group label {
