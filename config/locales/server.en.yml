@@ -990,6 +990,7 @@ en:
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    suppress_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
