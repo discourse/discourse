@@ -65,15 +65,18 @@ describe Jobs::EnqueueDigestEmails do
         user = user_visited_this_week
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
       end
+    end
 
-      it "does return users who have been emailed recently but have email_always set" do
-        user = user_visited_this_week_email_always
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(true)
+    context 'visited the site a year ago' do
+      let!(:user_visited_a_year_ago) { Fabricate(:active_user, last_seen_at: 370.days.ago) }
+
+      it "doesn't return the user who have not visited the site for more than 365 days" do
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_visited_a_year_ago.id)).to eq(false)
       end
     end
 
     context 'regular users' do
-      let!(:user) { Fabricate(:active_user) }
+      let!(:user) { Fabricate(:active_user, last_seen_at: 360.days.ago) }
 
       it "returns the user" do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids).to eq([user.id])
@@ -99,4 +102,3 @@ describe Jobs::EnqueueDigestEmails do
 
 
 end
-

@@ -408,6 +408,7 @@ email:
   default_digest_email_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'
+  suppress_digest_email_after_days: 365
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
