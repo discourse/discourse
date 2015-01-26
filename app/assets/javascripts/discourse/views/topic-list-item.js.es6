@@ -10,8 +10,17 @@ export default Discourse.View.extend(StringBuffer, {
        ],
 
   unboundClassNames: function(){
-    var classes = [];
     var topic = this.get('topic');
+    var classes = [];
+    
+    if(topic.get('category')){
+      var category, category_name, category_class;
+      category = topic.get('category');
+      category_name = category.get('name').toLowerCase();
+      category_class = category_name + '-category';
+
+      classes.push(category_class);
+    }
 
     if(topic.get('hasExcerpt')){
       classes.push('has-excerpt');
