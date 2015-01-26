@@ -11,12 +11,12 @@ test("Visit Discovery Pages", function() {
   andThen(function() {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
-    ok($('body.category-1').length, "has a custom css class for the category id on the body");
+    ok($('body.category-bug').length, "has a custom css class for the category id on the body");
   });
 
   visit("/categories");
   andThen(function() {
-    ok($('body.category-1').length === 0, "removes the custom category class");
+    ok($('body.category-bug').length === 0, "removes the custom category class");
 
     ok(exists('.category'), "has a list of categories");
     ok($('body.categories-list').length, "has a custom class to indicate categories");
