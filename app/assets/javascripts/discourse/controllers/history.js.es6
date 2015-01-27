@@ -66,22 +66,22 @@ export default ObjectController.extend(ModalFunctionality, {
   displayingSideBySideMarkdown: Em.computed.equal("viewMode", "side_by_side_markdown"),
 
   previousCategory: function() {
-    var changes = this.get("category_changes");
+    var changes = this.get("category_id_changes");
     if (changes) {
       var category = Discourse.Category.findById(changes["previous"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
-  }.property("category_changes"),
+  }.property("category_id_changes"),
 
   currentCategory: function() {
-    var changes = this.get("category_changes");
+    var changes = this.get("category_id_changes");
     if (changes) {
       var category = Discourse.Category.findById(changes["current"]);
       return categoryBadgeHTML(category, { allowUncategorized: true });
     }
-  }.property("category_changes"),
+  }.property("category_id_changes"),
 
-  wiki_diff: function() {
+  wikiDiff: function() {
     var changes = this.get("wiki_changes");
     if (changes) {
       return changes["current"] ?
@@ -90,7 +90,7 @@ export default ObjectController.extend(ModalFunctionality, {
     }
   }.property("wiki_changes"),
 
-  post_type_diff: function () {
+  postTypeDiff: function () {
     var moderator = Discourse.Site.currentProp('post_types.moderator_action');
     var changes = this.get("post_type_changes");
     if (changes) {
@@ -100,13 +100,13 @@ export default ObjectController.extend(ModalFunctionality, {
     }
   }.property("post_type_changes"),
 
-  title_diff: function() {
+  titleDiff: function() {
     var viewMode = this.get("viewMode");
     if (viewMode === "side_by_side_markdown") { viewMode = "side_by_side"; }
     return this.get("title_changes." + viewMode);
   }.property("viewMode", "title_changes"),
 
-  body_diff: function() {
+  bodyDiff: function() {
     return this.get("body_changes." + this.get("viewMode"));
   }.property("viewMode", "body_changes"),
 
