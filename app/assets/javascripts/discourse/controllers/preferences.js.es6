@@ -42,6 +42,10 @@ export default ObjectController.extend(CanCheckEmails, {
     return !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins;
   }.property(),
 
+  canReceiveDigest: function() {
+    return !this.siteSettings.disable_digest_emails
+  }.property(),
+
   availableLocales: function() {
     return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
       return {name: s, value: s};
@@ -166,5 +170,3 @@ export default ObjectController.extend(CanCheckEmails, {
   }
 
 });
-
-
