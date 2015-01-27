@@ -93,7 +93,7 @@ We only support Docker based installs now. Please see [our **official install gu
 >     EOF
 
 >     # Add nginx key
->     curl http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+>     wget http://nginx.org/keys/nginx_signing.key | sudo apt-key add nginx_signing.key
 
 >     # install nginx
 >     sudo apt-get update && sudo apt-get -y install nginx
