@@ -69,12 +69,19 @@ class ImportScripts::Ning < ImportScripts::Base
           if staff_levels.include?(u["level"].downcase)
             if u["level"].downcase == "admin" || u["level"].downcase == "owner"
               newuser.admin = true
-              newuser.save
             else
               newuser.moderator = true
-              newuser.save
             end
           end
+
+          # states: ["active", "suspended", "left", "pending"]
+          if u["state"] == "active"
+            newuser.approved = true
+            newuser.approved_by_id = @system_user.id
+            newuser.approved_at = newuser.created_at
+          end
+
+          newuser.save
 
           if u["profilePhoto"]
             photo_path = file_full_path(u["profilePhoto"])
