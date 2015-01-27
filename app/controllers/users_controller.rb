@@ -213,20 +213,19 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      if params[:user_fields].blank? && UserField.where(required: true).exists?
-        return fail_with("login.missing_user_field")
-      else
-        fields = user.custom_fields
-        user_fields.each do |f|
-          field_val = params[:user_fields][f.id.to_s]
-          if field_val.blank?
-            return fail_with("login.missing_user_field") if f.required?
-          else
-            fields["user_field_#{f.id}"] = field_val
-          end
+      field_params = params[:user_fields] || {}
+      fields = user.custom_fields
+
+      user_fields.each do |f|
+        field_val = field_params[f.id.to_s]
+        if field_val.blank?
+          return fail_with("login.missing_user_field") if f.required?
+        else
+          fields["user_field_#{f.id}"] = field_val
         end
-        user.custom_fields = fields
       end
+
+      user.custom_fields = fields
     end
 
     authentication = UserAuthenticator.new(user, session)

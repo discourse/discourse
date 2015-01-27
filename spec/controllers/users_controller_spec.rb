@@ -604,6 +604,28 @@ describe UsersController do
       end
     end
 
+    context "with only optional custom fields" do
+      let!(:user_field) { Fabricate(:user_field, required: false) }
+
+      context "without values for the fields" do
+        let(:create_params) { {
+          name: @user.name,
+          password: 'watwatwat',
+          username: @user.username,
+          email: @user.email,
+        } }
+
+        it "should succeed" do
+          xhr :post, :create, create_params
+          expect(response).to be_success
+          inserted = User.where(email: @user.email).first
+          expect(inserted).to be_present
+          expect(inserted.custom_fields).not_to be_present
+          expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
+        end
+      end
+    end
+
   end
 
   context '.username' do
