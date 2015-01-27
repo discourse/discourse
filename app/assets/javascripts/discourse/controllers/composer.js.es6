@@ -212,7 +212,9 @@ export default DiscourseController.extend({
       }
 
       if ((!composer.get('replyingToTopic')) || (!Discourse.User.currentProp('disable_jump_reply'))) {
-        Discourse.URL.routeTo(opts.post.get('url'));
+        if (opts.post) {
+          Discourse.URL.routeTo(opts.post.get('url'));
+        }
       }
     }, function(error) {
       composer.set('disableDrafts', false);

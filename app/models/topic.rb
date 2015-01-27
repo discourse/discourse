@@ -821,6 +821,7 @@ class Topic < ActiveRecord::Base
 
 end
 
+
 # == Schema Information
 #
 # Table name: topics
