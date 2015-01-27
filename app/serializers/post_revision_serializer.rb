@@ -22,10 +22,27 @@ class PostRevisionSerializer < ApplicationSerializer
              :edit_reason,
              :body_changes,
              :title_changes,
-             :category_changes,
-             :user_changes,
-             :wiki_changes,
-             :post_type_changes
+             :user_changes
+
+
+  # Creates a field called field_name_changes with previous and
+  # current members if a field has changed in this revision
+  def self.add_compared_field(field)
+    changes_name = "#{field}_changes".to_sym
+
+    self.attributes changes_name
+    define_method(changes_name) do
+      { previous: previous[field], current: current[field] }
+    end
+
+    define_method("include_#{changes_name}?") do
+      previous[field] != current[field]
+    end
+  end
+
+  add_compared_field :category_id
+  add_compared_field :wiki
+  add_compared_field :post_type
 
   def previous_hidden
     previous["hidden"]
@@ -109,17 +126,6 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
-  def category_changes
-    prev = previous["category_id"]
-    cur = current["category_id"]
-    return if prev == cur
-
-    {
-      previous: prev,
-      current: cur,
-    }
-  end
-
   def user_changes
     prev = previous["user_id"]
     cur = current["user_id"]
@@ -140,28 +146,6 @@ class PostRevisionSerializer < ApplicationSerializer
           display_username: current.username,
           avatar_template: current.avatar_template
         }
-    }
-  end
-
-  def wiki_changes
-    prev = previous["wiki"]
-    cur = current["wiki"]
-    return if prev == cur
-
-    {
-        previous: prev,
-        current: cur,
-    }
-  end
-
-  def post_type_changes
-    prev = previous["post_type"]
-    cur = current["post_type"]
-    return if prev == cur
-
-    {
-        previous: prev,
-        current: cur,
     }
   end
 
