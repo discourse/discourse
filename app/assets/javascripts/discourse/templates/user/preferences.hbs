@@ -171,11 +171,13 @@
 
     <div class="control-group pref-email-settings">
       <label class="control-label">{{i18n 'user.email_settings'}}</label>
-      {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
-      {{#if email_digests}}
-        <div class='controls controls-dropdown'>
-          {{combo-box valueAttribute="value" content=digestFrequencies value=digest_after_days}}
-        </div>
+      {{#if canReceiveDigest}}
+        {{preference-checkbox labelKey="user.email_digests.title" checked=email_digests}}
+        {{#if email_digests}}
+          <div class='controls controls-dropdown'>
+            {{combo-box valueAttribute="value" content=digestFrequencies value=digest_after_days}}
+          </div>
+        {{/if}}
       {{/if}}
       {{preference-checkbox labelKey="user.email_private_messages" checked=email_private_messages}}
       {{preference-checkbox labelKey="user.email_direct" checked=email_direct}}
