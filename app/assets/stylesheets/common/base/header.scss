@@ -8,6 +8,7 @@
 
     .docked & {
       position: fixed;
+      backface-visibility: hidden;  /** do magic for scrolling performance **/
     }
 
     .contents {
