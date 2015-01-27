@@ -126,17 +126,18 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
 
     changes = {}
-    changes[:title]       = params[:title]       if params[:title] && topic.title != params[:title]
-    changes[:category_id] = params[:category_id] if params[:category_id] && topic.category_id != params[:category_id].to_i
+    PostRevisor.tracked_fields.keys.each do |f|
+      changes[f] = params[f] if params.has_key?(f)
+    end
+
+    changes.delete(:title) if topic.title == changes[:title]
+    changes.delete(:category_id) if topic.category_id == changes[:category_id].to_i
 
     success = true
-
     if changes.length > 0
       first_post = topic.ordered_posts.first
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
     end
-
-    DiscourseEvent.trigger(:topic_saved, topic, params, current_user)
 
     # this is used to return the title to the client as it may have been changed by "TextCleaner"
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
