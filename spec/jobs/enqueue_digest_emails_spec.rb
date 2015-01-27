@@ -89,13 +89,28 @@ describe Jobs::EnqueueDigestEmails do
 
     let(:user) { Fabricate(:user) }
 
-    before do
-      Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
+    context "digest emails are enabled" do
+      before do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
+      end
+
+      it "enqueues the digest email job" do
+        SiteSetting.stubs(:disable_digest_emails?).returns(false)
+        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
+        Jobs::EnqueueDigestEmails.new.execute({})
+      end
     end
 
-    it "enqueues the digest email job" do
-      Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
-      Jobs::EnqueueDigestEmails.new.execute({})
+    context "digest emails are disabled" do
+      before do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+      end
+
+      it "does not enqueue the digest email job" do
+        SiteSetting.stubs(:disable_digest_emails?).returns(true)
+        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
+        Jobs::EnqueueDigestEmails.new.execute({})
+      end
     end
 
   end
