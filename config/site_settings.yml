@@ -234,6 +234,7 @@ login:
     default: ''
     type: list
   forgot_password_strict: false
+  log_out_strict: true
 
 users:
   min_username_length:
