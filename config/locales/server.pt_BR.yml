@@ -657,7 +657,6 @@ pt_BR:
     active_user_rate_limit_secs: "Qual a frequencia de atualização do campo 'última vez visto em', em segundos."
     previous_visit_timeout_hours: "Quanto tempo uma visita dura antes de considerarmos como 'última visita', em horas."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
-    max_stars_per_day: "O número máximo de tópicos que podem ser favoritados por usuário por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
     max_private_messages_per_day: "Número máximo de mensagens privadas que os usuários podem criar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
