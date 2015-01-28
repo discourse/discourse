@@ -18,6 +18,10 @@ export default Ember.Component.extend({
     return !!this.get('changeSort');
   }.property(),
 
+  skipHeader: function() {
+    return Discourse.Mobile.mobileView;
+  }.property(),
+
   showLikes: function(){
     return this.get('order') === "likes";
   }.property('order'),
