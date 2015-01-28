@@ -711,7 +711,6 @@ he:
     max_flags_per_day: "מספר מקסימלי של סימונים.מותרים למשתמש/ת ביום."
     max_bookmarks_per_day: "מספר מקסימלי של סימניות למשתמש/ת ביום."
     max_edits_per_day: "מספר עריכות מקסימלי מותר למשתמש ליום."
-    max_stars_per_day: "מספר נושאים מקסימלי שיותר למשתמש/ת לסמן (בכוכב) ביום."
     max_topics_per_day: "מספר מקסימלי של נושאים שמשתמש/ת יכולים ליצור ביום."
     max_private_messages_per_day: "מספר מקסימלי של מסרים פרטיים שמשתמש/ת יכולים ליצור ביום."
     suggested_topics: "מספר הנושאים המוצעים שיופיעו בתחתית הנושא המוצג."
@@ -1149,12 +1148,6 @@ he:
         ```
     csv_export_succeeded:
       subject_template: "יצוא הנתונים הושלם"
-      text_body_template: |
-        יצוא הנתונים שלכם הסתיים בהצלחה! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        קישור זה יהיה זמין במשך 48 שעות.
     csv_export_failed:
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."

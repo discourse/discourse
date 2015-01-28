@@ -107,6 +107,7 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     topic_admin_menu: "akcje administratora"
+    emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     edit: 'edytuj tytuł i kategorię tego tematu'
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
@@ -160,6 +161,13 @@ pl_PL:
       topic_count: "Tematy"
       post_count: "Wpisy"
       user_count: "Użytkownicy"
+      contact: "Kontakt"
+      contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z funkcjonowaniem serwisu, prosimy o kontakt pod adresem %{contact_email}."
+    bookmarked:
+      title: "Zakładka"
+      help:
+        bookmark: "Kliknij, aby dodać temat do zakładek."
+        unbookmark: "Kliknij, aby usunąć temat z zakładek."
     bookmarks:
       not_logged_in: "przykro nam, ale należy się zalogować, aby dodawać zakładki"
       created: "zakładka dodana"
@@ -351,8 +359,10 @@ pl_PL:
         error: "Wystąpił błąd podczas próby zmiany twojego adresu email. Być może ten email jest już zarejestrowany?"
         success: "Wysłaliśmy wiadomość do potwierdzenia na podany adres email."
       change_avatar:
+        title: "Zmień swój awatar"
         gravatar: "bazujący na <a href='//gravatar.com/emails' target='_blank'>Gravatar</a>"
         refresh_gravatar_title: "Zaktualizuj swój Gravatar"
+        letter_based: "Awatar przyznany przez system"
         uploaded_avatar: "Zwyczajny obrazek"
         uploaded_avatar_empty: "Dodaj zwyczajny obrazek"
         upload_title: "Wyślij swoją grafikę"
@@ -479,6 +489,8 @@ pl_PL:
         title: "Ostatni adres IP"
       registration_ip_address:
         title: "Adres IP rejestracji"
+      avatar:
+        title: "Awatar"
       title:
         title: "Tytuł"
       filters:
@@ -924,7 +936,7 @@ pl_PL:
         to_forum: "Wyślemy krótki email pozwalający twojemu znajomemu błyskawicznie dołączyć przez kliknięcie w link (bez logowania)."
         email_placeholder: 'nazwa@example.com'
         success: "Wysłaliśmy zaproszenie do <b>{{email}}</b>. Powiadomimy cię gdy zaproszenie zostanie przyjęte. Status swoich zaproszeń możesz śledzić na dedykowanej zakładce w swoim profilu."
-        error: "Przepraszamy, nie mogliśmy zaprosić tej osoby. Być może jest już na forum?"
+        error: "Przepraszamy, nie mogliśmy zaprosić tej osoby. Być może jest już użytkownikiem? (Możliwe też, że zapraszasz zbyt szybko, zbyt wiele osób)"
       login_reply: 'Zaloguj się, aby odpowiedzieć'
       filters:
         n_posts:
@@ -1284,15 +1296,19 @@ pl_PL:
     topic_statuses:
       warning:
         help: "To jest oficjalne ostrzeżenie."
+      bookmarked:
+        help: "Temat został dodany do zakładek."
       locked:
         help: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
       unpinned:
         title: "Nieprzypięty"
+        help: "Temat nie jest przypięty w ramach twojego konta. Będzie wyświetlany w normalnej kolejności."
       pinned_globally:
         title: "Przypięty globalnie"
         help: "Temat przypięty globalnie. Będzie wyświetlany na początku wszystkich list."
       pinned:
         title: "Przypięty"
+        help: "Temat przypięty dla twojego konta. Będzie wyświetlany na początku swojej kategorii."
       archived:
         help: "Ten temat został zarchiwizowany i nie można go zmieniać"
       invisible:
@@ -1595,7 +1611,14 @@ pl_PL:
         long_title: "Personalizacja strony"
         css: "CSS"
         header: "Nagłówki"
+        top: "Nagłówek"
         footer: "Stopka"
+        head_tag:
+          text: "</head>"
+          title: "Kod HTML, który zostanie umieszczony przed tagiem </head>"
+        body_tag:
+          text: "</body>"
+          title: "Kod HTML, który zostanie umieszczony przed tagiem </body>."
         override_default: "Nie dołączaj standardowego arkusza stylów"
         enabled: "Włączone?"
         preview: "podgląd"
@@ -1713,6 +1736,7 @@ pl_PL:
           do_nothing: "nic nie rób"
         staff_actions:
           title: "Działania obsługi"
+          instructions: "Klikając nazwę użytkownika i akcję możesz filtrować listę. Kliknij awatary aby przejść na stronę użytkownika."
           clear_filters: "Pokaż wszystko"
           staff_user: "Użytkownik obsługi"
           target_user: "Użytkownik będący Obiektem"
@@ -1730,6 +1754,7 @@ pl_PL:
           actions:
             delete_user: "usunięcie użytkownika"
             change_trust_level: "zmiana poziomu zaufania"
+            change_username: "zmień nazwę użytkownika"
             change_site_setting: "zmiana ustawień serwisu"
             change_site_customization: "modyfikacja personalizacji serwisu"
             delete_site_customization: "usunięcie personalizacji strony"
@@ -1947,6 +1972,7 @@ pl_PL:
           external_username: "Nazwa użytkownika"
           external_name: "Nazwa"
           external_email: "Email"
+          external_avatar_url: "URL awatara"
       user_fields:
         title: "Pola użytkownika"
         help: "Dodaj pola które użytkownicy mogą wypełnić."
@@ -2105,6 +2131,7 @@ pl_PL:
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
       actions:
         title: 'Operacje'
+        bookmark_topic: '<b>f</b> Dodaj temat do zakładek'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
         share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'

@@ -33,11 +33,13 @@ ko:
   log_in: "로그인"
   via: "%{site_name}의 %{username}"
   is_reserved: "예약됨"
+  purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "서버에 저장공간이 부족해서  원격 이미지 저장이 비활성화됨. "
   errors:
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
       invalid_boolean: "잘못된 값"
+      taken: "이미 사용중입니다. (그룹 이름은 대소문자를 구분하지 않습니다.)"
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
   bulk_invite:
@@ -193,6 +195,8 @@ ko:
             base:
               warning_requires_pm: "개인 메시지를 통해 경고를 보낼 수 있습니다."
               too_many_users: "한 번에 한 명의 사용자에게 경고를 보낼 수 있습니다."
+              cant_send_pm: "죄송합니다. 그 사용자에게 개인 메세지를 보낼 수 없습니다."
+              no_user_selected: "유효한 사용자를 선택해주십시오"
         user:
           attributes:
             password:
@@ -542,6 +546,7 @@ ko:
     allow_duplicate_topic_titles: "같은 제목의 동일한 토픽을 허용한다."
     unique_posts_mins: "같은 컨텐츠를 다시 포스트 할 수 있는 기간(분)"
     educate_until_posts: "새로운 사용자가 포스트를 작성할 시 포스트 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 포스트 개수"
+    title: "타이틀 태그에 쓰일 이 사이트의 이름"
     queue_jobs: "오직 개발자만!! 주의!! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "제대로된 넓이와 높이를 추가하기 위해, 원격 URL로 부터 이미지를 회수해온다."
     download_remote_images_to_local: "이미지를 다운로드하면 원격 이미지를 로컬이미지로 변경한다. 이미지가 깨지는 것을 막을 수 있다."
@@ -561,7 +566,9 @@ ko:
     post_excerpt_maxlength: "게시글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 포스트에 허용되는 최대 글자수"
     onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야한다. http://iframely.com/debug를 통해 테스트해볼 수 있다."
+    logo_url: "로고 이미지는 사이트의 왼쪽 상단에 나타납니다. 만약 왼쪽이 비어있다면 사이트의 이름이 나타납니다."
     digest_logo_url: "요약 이메일 발송시 사용될 로고. 공백으로 남겨두면 `logo_url`이 사용됩니다. 예: http://example.com/logo.png"
+    logo_small_url: "작은 로고 이미지는 사이트 왼쪽 상단에 스크롤링할 때 나타납니다. 만일 왼쪽이 빈다면 홈으로 가는 글자가 표시됩니다."
     favicon_url: "이 사이트의 favicon, 참고 http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
@@ -660,14 +667,15 @@ ko:
     max_flags_per_day: "사용자가 하루동안 할 수 있는 최대 신고 개수"
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
-    max_stars_per_day: "사용자당 하루동안 즐겨찾기 할 수 있는 최대 토픽 개수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 토픽 개수"
     max_private_messages_per_day: "사용자가 하루동안 생성할 수 있는 개인 메시지 개수"
+    max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     suggested_topics: "토픽 아랫부분에 몇개의 토픽을 제안하여 보여준다."
     limit_suggested_to_category: "제안된 토픽은 현재의 카테고리에 있는 토픽 중에서만 보여준다."
     clean_up_uploads: "불법 호스팅을 막기 위해서 참조되지 않은 업로드 파일은 제거한다. 주의 : 이 설정을 활성화 하기 전에 `/uploads` 디렉토리를 백업하는 것이 좋다."
     clean_orphan_uploads_grace_period_hours: "참조되지 않은 업로드 파일을 제거하기 전 기간(시간)"
     purge_deleted_uploads_grace_period_days: "참조되지 않은 업로드 파일을 완전 삭제하지 전 기간(일)"
+    purge_unactivated_users_grace_period_days: "유예기간(하루) 동안 활성화하지 않으면 계정이 삭제됩니다."
     s3_access_key_id: "이미지를 업로드 할 때 사용할 Amazon S3의 access key id"
     s3_secret_access_key: "이미지를 업로드 할 때 사용할 Amazon S3의 secret access key"
     s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"
@@ -766,10 +774,12 @@ ko:
     suppress_uncategorized_badge: "토픽 리스트에서 카테고리가 없는 토픽에 대한 훈장을 보여주지 않는다."
     enable_names: "사용자의 전체 이름을 보여준다."
     display_name_on_posts: "포스트에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
+    invites_per_page: "사용자 페이지에 방문자를 표시합니다."
     short_progress_text_threshold: "토픽의 포스트 개수가 이 값을 넘어서면, 포스트 프로그래스바는 오직 현재 포스트 넘버만 보여준다. 만약 포스트 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야한다."
     default_code_lang: "기본 programming language syntax highlighting은 GitHub code blocks이 적용된다. (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "이 값보다 오래된 토픽에 답글을 달면, 오래된 토론이라는 것을 상기시키기 위해 주의 알림이 보여진다. 비활성화 값음 0 이다. "
     autohighlight_all_code: "형식이 지정되기 전의(되지 않은) 모든 코드 블럭들에 대해, 사용자가 언어를 지정하지 않아도 강제로 code highlighting이 적용된다."
+    embed_post_limit: "포스트 개수가 최대치입니다."
     errors:
       invalid_email: "유효하지 않은 이메일 주소입니다."
       invalid_username: "해당 이름의 사용자가 없습니다."
@@ -801,6 +811,9 @@ ko:
       category: '카테고리'
       topic: '검색 결과'
       user: '사용자'
+  sso:
+    unknown_error: "업데이트 정보에 오류가 있습니다. 사이트 관리자에게 문의해주세요."
+    timeout_expired: "로그인 연결 시간이 초과되었습니다. 다시한번 시도해주세요"
   original_poster: "원본 게시자"
   most_posts: "최대 게시자"
   most_recent_poster: "최근 게시자"
@@ -815,6 +828,9 @@ ko:
       other: "%{count}개의 글을 기존 토픽으로 옮겼습니다: %{topic_link}"
   change_owner:
     post_revision_text: "소유권이 %{old_user}에서 %{new_user}으로 이전되었습니다."
+  emoji:
+    errors:
+      name_already_exists: "죄송합니다. '%{name}'은/는 이미 다른 이모티콘이 사용하고 있습니다."
   topic_statuses:
     archived_enabled: "이 토픽은 보관되었고 더이상 변경하실 수 없습니다."
     archived_disabled: "이 토픽의 보관이 풀렸고 이제 변경하실 수 있습니다."
@@ -828,6 +844,8 @@ ko:
       other: "이 토픽은 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_days:
       other: "이 토픽은 마지막 답글이 달리고 %{count}일 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
+    autoclosed_enabled_lastpost_hours:
+      other: "마지막 댓글로부터 %{count} 시간이 지나 토픽이 자동으로 닫혔습니다. 새로운 댓글을 다실 수 없습니다."
     autoclosed_enabled_lastpost_minutes:
       other: "이 토픽은 마지막 답글이 달리고 %{count}분 뒤 자동적으로 닫혔습니다. 새로운 답글을 다실 수 없습니다."
     autoclosed_disabled: "이 토픽은 이제 열렸습니다. 새로운 답글을 허용합니다."
@@ -892,6 +910,7 @@ ko:
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 업데이트 가능."
   flags_reminder:
+    please_review: "후기를 써주세요."
     post_number: "게시글"
   flags_dispositions:
     agreed: "알려줘서 감사합니다. 문제가 있음에 동의하며 내용을 살펴보겠습니다."
@@ -911,10 +930,15 @@ ko:
     backup_failed:
       subject_template: "백업에 실패했습니다."
     restore_succeeded:
-      subject_template: "복구 성공"
-      text_body_template: "복구 성공하였습니다."
+      subject_template: "복원 성공"
+      text_body_template: "복원에 성공했습니다."
     restore_failed:
-      subject_template: "복구 실패"
+      subject_template: "복원 실패"
+    csv_export_succeeded:
+      subject_template: "데이터 추출이 완료되었습니다."
+    csv_export_failed:
+      subject_template: "데이터 추출 실패"
+      text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."
     email_reject_no_account:
       subject_template: "이메일 문제 -- 모르는 계정"
     email_reject_empty:
@@ -923,6 +947,12 @@ ko:
       subject_template: "이메일 문제 -- 글쓰기 에러"
     email_reject_post_error_specified:
       subject_template: "이메일 문제 -- 글쓰기 에러"
+    email_reject_destination:
+      subject_template: "이메일 오류 -- 잘못된 주소"
+    email_reject_topic_not_found:
+      subject_template: "이메일 오류 -- 주제를 찾을 수 없습니다"
+    email_reject_topic_closed:
+      subject_template: "이메일 오류 -- 토픽이 닫힘"
     too_many_spam_flags:
       subject_template: "새로운 계정은 블락되었습니다."
     blocked_by_staff:
@@ -991,6 +1021,15 @@ ko:
 
         ---
         %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
       subject_template: "[%{site_name}] 요약 %{date}"
       new_activity: "당신의 토픽과 게시물에 등록된 새로운 활동:"
@@ -1037,11 +1076,16 @@ ko:
     see_more: "더"
     search_title: "이 사이트 검색"
     search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[%{title}에 오신 것을 환영합니다.](#welcome)
+      계정이 필요합니다. 회원가입 또는 로그인 해주세요
   terms_of_service:
     title: "서비스 이용약관"
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: '삭제되었습니다'
   upload:
+    edit_reason: "이미지를 다운로드 합니다."
     unauthorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: %{authorized_extensions})."
     pasted_image_filename: "게시된 이미지"
     attachments:
@@ -1072,6 +1116,9 @@ ko:
   guidelines: "가이드라인"
   privacy: "개인정보 취급방침"
   edit_this_page: "이 페이지 수정"
+  csv_export:
+    boolean_yes: "네"
+    boolean_no: "아니오"
   static_topic_first_reply: |+
     이 토픽인 %{page_name} 페이지의 첫글 수정.
 
