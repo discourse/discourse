@@ -441,6 +441,9 @@ class UsersController < ApplicationController
 
     file = params[:file] || params[:files].first
 
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
+
     begin
       image = build_user_image_from(file)
     rescue Discourse::InvalidParameters

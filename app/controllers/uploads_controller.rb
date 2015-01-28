@@ -4,16 +4,16 @@ class UploadsController < ApplicationController
 
   def create
     file = params[:file] || params[:files].first
-
     filesize = File.size(file.tempfile)
     upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, { content_type: file.content_type })
 
-    if current_user.admin?
+    if upload.errors.empty? && current_user.admin?
       retain_hours = params[:retain_hours].to_i
-      if retain_hours > 0
-        upload.update_columns(retain_hours: retain_hours)
-      end
+      upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
     end
+
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
     if upload.errors.empty?
       render_serialized(upload, UploadSerializer, root: false)

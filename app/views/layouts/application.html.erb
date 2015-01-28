@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
+<!--[if IE 9]><html lang="<%= SiteSetting.default_locale %>" class="ie9 <%= html_classes %>"><![endif]-->
+<!--[if (!IE 9) | (!IE)]><!--><html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
