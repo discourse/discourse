@@ -775,7 +775,6 @@ ja:
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         email_placeholder: 'メールアドレス'
         success: "<b>{{email}}</b>に招待を送りました。"
-        error: "申し訳ありませんが招待に失敗しました。既にユーザ登録済かもしれません。"
       login_reply: 'ログインして返信'
       filters:
         n_posts:

@@ -716,7 +716,6 @@ sq:
     max_flags_per_day: "Maximum number of flags per user per day."
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
-    max_stars_per_day: "Maximum number of topics that can be starred per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
     max_private_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."

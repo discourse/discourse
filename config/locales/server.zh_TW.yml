@@ -544,7 +544,6 @@ zh_TW:
     max_flags_per_day: "每個用戶每天最多能\"標記\"的數量"
     max_bookmarks_per_day: "每個用戶每天最多能建立\"書籤\"的數量"
     max_edits_per_day: "每個用戶每天最大的\"編輯次數\"的數量"
-    max_stars_per_day: "每個用戶一天內最多能標星的數量"
     max_topics_per_day: "每個用戶每天最多建立\"討論話題\"的數量"
     max_private_messages_per_day: "每個用戶每天最多能發\"私訊\"的數量"
     suggested_topics: "討論話題下的推薦話題數量"
