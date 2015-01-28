@@ -175,7 +175,7 @@ class PostRevisionSerializer < ApplicationSerializer
         "user_id" => [post.user_id]
       }
 
-      # For the topic fields, let's get the values from a serializer
+      # Retrieve any `tracked_topic_fields`
       PostRevisor.tracked_topic_fields.keys.each do |field|
         if topic.respond_to?(field)
           latest_modifications[field.to_s] = [topic.send(field)]
