@@ -136,6 +136,10 @@ body {
     margin-bottom: 10px;
   }
 
+  .not-found-topic {
+    a[href] { margin-right: 10px; line-height: 2;}
+  }
+
   .page-not-found-topics .span8 {
     line-height: 1.5em;
     margin-right: 20px;

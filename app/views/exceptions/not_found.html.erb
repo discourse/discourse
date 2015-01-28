@@ -6,7 +6,9 @@
   <div class="span8 popular-topics">
     <h2 class="popular-topics-title"><%= t 'page_not_found.popular_topics' %></h2>
     <% @top_viewed.each do |t| %>
-      <span style="line-height:2;"><%= link_to t.title, t.relative_url %><% if !t.category.uncategorized? %>&nbsp;&nbsp;<a href="<%= t.category.url %>" class="badge badge-category" style="background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>"><%= t.category.name %></a><% end %></span><br/>
+      <div class='not-found-topic'>
+        <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
+      </div>
     <% end %>
     <br/>
     <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>
@@ -14,7 +16,9 @@
   <div class="span8 recent-topics">
     <h2 class="recent-topics-title"><%= t 'page_not_found.recent_topics' %></h2>
     <% @recent.each do |t| %>
-      <span style="line-height:2;"><%= link_to t.title, t.relative_url %><% if !t.category.uncategorized? %>&nbsp;&nbsp;<a href="<%= t.category.url %>" class="badge badge-category" style="background-color: #<%= t.category.color %>; color: #<%= t.category.text_color %>"><%= t.category.name %></a><% end %></span><br/>
+      <div class='not-found-topic'>
+        <%= link_to t.title, t.relative_url %><%= category_badge(t.category) %>
+      </div>
     <% end %>
     <br/>
     <a href="/latest" class="btn"><%= t 'page_not_found.see_more' %>&hellip;</a>

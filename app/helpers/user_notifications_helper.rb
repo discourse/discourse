@@ -1,5 +1,3 @@
-require_dependency 'category_badge'
-
 module UserNotificationsHelper
 
   def indent(text, by=2)
@@ -60,7 +58,4 @@ module UserNotificationsHelper
     PrettyText.format_for_email(html).html_safe
   end
 
-  def email_category(category, opts=nil)
-    CategoryBadge.html_for(category, opts).html_safe
-  end
 end

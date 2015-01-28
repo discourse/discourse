@@ -3,6 +3,7 @@ require_dependency 'email/message_builder'
 require_dependency 'age_words'
 
 class UserNotifications < ActionMailer::Base
+  helper :application
   default charset: 'UTF-8'
 
   include Email::BuildEmailHelper
