@@ -879,7 +879,6 @@ sv:
         to_forum: "Vi skickar ett kort e-postmeddelande som tillåter din vän att omedelbart delta genom att klicka på en länk, ingen inloggning krävs."
         email_placeholder: 'namn@exampel.se'
         success: "Vi har mailat ut ett inbjudan till <b>{{email}}</b>. Vi låter dig veta när de löst in sin inbjudan. Kolla in fliken med Inbjudningar på din användarsida för att hålla koll på vem du har bjudit in."
-        error: "Tyvärr vi kunde inte bjudan in den personen. Kanske är den redan en användare?"
       login_reply: 'Logga in för att svara'
       filters:
         n_posts:

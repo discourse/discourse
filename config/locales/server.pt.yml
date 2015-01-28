@@ -708,7 +708,6 @@ pt:
     max_flags_per_day: "Número máximo de sinalizações por utilizador por dia."
     max_bookmarks_per_day: "Número máximo de marcadores por utilizador por dia."
     max_edits_per_day: "Número máximo de edições por utilizador por dia."
-    max_stars_per_day: "Número máximo de tópicos que podem ser colocados como favoritos por utilizador por dia."
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
     max_private_messages_per_day: "Número máximo de mensagens privadas que os utilizadores podem criar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
@@ -1109,26 +1108,6 @@ pt:
         Desfrute da sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
-      text_body_template: |
-        Obrigado por ter aceite o convite para %{site_name} -- bem-vindo!
-
-        Nós gerámos, automaticamente um nome de utilizador para si: **%{username}**, mas pode alterá-lo a qualquer momento no [seu perfil de utilizador][prefs].
-
-        Para iniciar a sessão novamente, pode:
-
-        1. Iniciar a sessão utilizando um qualquer método preferido -- desde que faça referência ao **mesmo endereço eletrónico** através do qual recebeu o convite inicial. De outro modo, nós não poderemos saber se é a mesma pessoa!!
-
-        2. Criar uma palavra-passe única para [o seu perfil de utilizador][prefs], e utilizá-la para iniciar a sessão.
-
-        %{new_user_tips}
-
-        Nós acreditamos num constante [comportamento civilizado da comunidade](%{base_url/guidelines).
-
-        (Se precisar de entrar em contacto privado com os [membros da equipa](/sobre) como um novo utilizador, basta responder a esta mensagem privada.)
-
-        Desfrute da sua estadia!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Cópia de segurança completa corretamente"
       text_body_template: "A cópia de segurança foi feita corretamente.\nVisite a [admin > secção de cópias de segurança](/admin/backups) para descarregar a sua nova cópia de segurança."
@@ -1170,12 +1149,6 @@ pt:
         ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completa"
-      text_body_template: |
-        A exportação dos dados foi bem sucedida! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        A hiperligação acima será válida durante 48 horas.
     csv_export_failed:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."

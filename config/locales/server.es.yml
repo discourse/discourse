@@ -437,7 +437,7 @@ es:
   unsubscribed:
     title: 'Dado de bajada'
     description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
-    oops: "En caso de que no quieras hacer esto, haz click abajo."
+    oops: "En caso de que no quieras hacer esto, haz clic abajo."
     error: "Error al darse de baja"
     preferences_link: "También puedes darte de baja de los emails de resumen en tu <a href='/my/preferences'>página de preferencias</a>"
     different_user_description: "Actualmente estás logueado/a con un usuario diferente al que se le ha enviado el email de resumen. Por favor, cierra sesión e inténtalo de nuevo."
@@ -510,18 +510,18 @@ es:
     top_referrers:
       title: "Los que más recomiendan"
       xaxis: "Usuario"
-      num_clicks: "Clicks"
+      num_clicks: "Clics"
       num_topics: "Temas"
     top_traffic_sources:
       title: "Las mayores fuentes de tráfico"
       xaxis: "Dominio"
-      num_clicks: "Clicks"
+      num_clicks: "Clics"
       num_topics: "Temas"
       num_users: "Usuarios"
     top_referred_topics:
       title: "Los temas más referidos"
       xaxis: "Tema"
-      num_clicks: "Clicks"
+      num_clicks: "Clics"
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     ruby_version_warning: "Tú estás utilizando una versión de Ruby 2.0.0 que es conocida por tener problemas. Actualiza al nivel de parche 247 o más nuevo."
@@ -541,7 +541,6 @@ es:
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
     default_logo_warning: "Establece los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
-    contact_email_missing: "Introduce una dirección de correo electrónico de contacto para que te puedan llegar mensajes urgentes sobre tu sitio. Actualízalo en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     contact_email_invalid: "La dirección email de contacto es inválida. Actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
     title_nag: "Introduce un nombre de tu sitio. Actualiza el nombre en <a href='/admin/site_settings'>Configuración del Sitio</a>."
     site_description_missing: "Introduce una breve descripción sobre tu sitio que aparecerá en los resultados de búsqueda. Actualiza site_description en <a href='/admin/site_settings'>Ajustes del sitio</a>."
@@ -598,6 +597,7 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
+    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas y en la página /about de contacto para asuntos urgentes."
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -617,8 +617,11 @@ es:
     post_excerpt_maxlength: "Extensión máxima del resumen / extracto de un post."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
     onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
+    logo_url: "El logo situado en la esquina superior izquierda de tu sitio; si se deja en blanco, se mostrará un texto con el título del sitio."
     digest_logo_url: "El logo alternativo que irá arriba en los emails de resumen de tu sitio. Si se deja en blanco, se utilizará `logo_url`. Ejemplo: http://example.com/logo.png"
+    logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, mostrado cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."
     favicon_url: "Un favicon para tu sitio, mira http://es.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "El logo con posición fijada utilizado en la esquina superior izquierda de la versión móvil de tu sitio. Si se deja en blanco, se mostrará el texto del título del sitio."
     apple_touch_icon_url: "Icono para los dispositivos táctiles de Apple. Se recomienda un tamaño de 144px por 144px."
     notification_email: "La dirección de correo electrónico \"remitente\", utilizada al enviar todos los emails esenciales de sistema. El dominio especificado debe tener correctamente configurados los registros SPF, DKIM y PTR inversos para que los emails se reciban correctamente."
     email_custom_headers: "Lista de emails separados por una barra"
@@ -662,6 +665,7 @@ es:
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
     track_external_right_clicks: "Hacer seguimiento de los enlaces externos en los que se ha hecho clic con el botón derecho (ej: abrir en nueva pestaña) desactivado por defecto porque reescribe URLs"
+    site_contact_username: "Nombre de usuario de moderador o administrador desde donde se enviarán mensajes privados automáticos. Si se deja en blanco, se utilizará la cuenta de sistema por defecto."
     send_welcome_message: "Enviar a todos los nuevos usuarios un mensaje privado de bienvenida con una guía rápida para comenzar."
     suppress_reply_directly_below: "No mostrar el contador de respuestas desplegable en un post si solo hay una única respuesta y está justamente debajo del post en cuestión."
     suppress_reply_directly_above: "No mostrar el en-respuesta-a desplegable en un post cuando solo hay una sola respuesta justo encima del post."
@@ -691,6 +695,7 @@ es:
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS LARGOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
+    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar si no está configurado de forma apropiada; además, desactiva las invitaciones)"
     enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
     sso_secret: "Cadena secreta utilizada para cifrar/descifrar la información del SSO, asegúrate de que es de 10 caracteres o más"
@@ -730,7 +735,6 @@ es:
     max_flags_per_day: "Máximo número de reportes por usuario y día."
     max_bookmarks_per_day: "Máximo número de marcadores por usuario y día."
     max_edits_per_day: "Máximo número de ediciones por usuario y día."
-    max_stars_per_day: "Máximo número temas que pueden ser añadidos a favoritos por usuario y día."
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
     max_private_messages_per_day: "Máximo número de mensajes privados por usuario y día."
     suggested_topics: "Número de temas sugeridos mostrados al pie del tema."
@@ -983,6 +987,7 @@ es:
     errors: "%{errors}"
     not_available: "No disponible. Prueba %{suggestion}?"
     something_already_taken: "Algo ha salido mal, quizá el nombre de usuario o el email ya han sido registrados. Prueba con el enlace de olvidé mi contraseña."
+    omniauth_error: "Lo sentimos, hubo un error al autorizar tu cuenta. ¿Quizás no has aprobado la autorización?"
     omniauth_error_unknown: "Algo ha salido mal procesando tu inicio de sesión, por favor, vuelve a intentarlo."
     new_registrations_disabled: "El registro de nuevas cuentas no está permitido en este momento."
     password_too_long: "Las contraseñas están limitadas a 200 caracteres"
@@ -1022,7 +1027,7 @@ es:
       Esta invitación proviene de un usuario de confianza, por lo que puedes comentar en el tema inmediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
-    text_body_template: "%{invitee_name} lo ha invitado a unirse a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si esta interesado, haga click en el link de abajo: \n\n %{invite_link}\n\nEsta invitación proviene de un usuario de confianza, por lo cual no necesitara autenticarse.\n"
+    text_body_template: "%{invitee_name} te ha invitado a unirte a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si te interesa, haz clic en el siguiente enlace: \n\n %{invite_link}\n\nEsta invitación procede de un usuario de confianza, por lo que no necesitarás autenticarte.\n"
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
     text_body_template: |
@@ -1118,6 +1123,11 @@ es:
     subject_template:
       one: "1 reporte esperando ser atendidos."
       other: "%{count} reportes esperando ser atendidos."
+  flag_reasons:
+    off_topic: "Tu post fue reportado como **off-topic**: la comunidad piensa que no se ajusta debidamente al tema, definido por el título o el primer post."
+    inappropriate: "Tu post fue reportado como **inapropiado**: la comunidad piensa que es ofensivo, abusivo o que vulnera alguna de [nuestros consejos de uso](/guidelines)."
+    spam: "Tu post fue reportado como **spam**: la comunidad piensa que se trata de un anuncio, algo de naturaleza promocional en vez de resultar útil o relevante para lo que se espera del tema."
+    notify_moderators: "Tu post fue reportado para la **atención de un moderador**: la comunidad piensa que algo de este post requiere la intervención manual de un miembro del staff."
   flags_dispositions:
     agreed: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y lo estamos revisando."
     agreed_and_deleted: "Gracias por avisarnos. Coincidimos con tu reporte en que hay un problema y hemos quitado el post."
@@ -1162,26 +1172,6 @@ es:
         ¡Disfruta de tu estancia!
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        Gracias por aceptar tu invitación a %{site_name} -- ¡bienvenido!
-
-        Hemos generado automáticamente un nombre de usuario por ti: **%{username}**, pero puedes cambiarlo en cualquier momento visitando [tu perfil de usuario][prefs].
-
-        Para iniciar sesión otra vez, puedes:
-
-        1. Iniciar sesión usando cualquier método que desees -- pero debe de resolver a la **misma dirección e-mail** que tu recibiste en tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tu!
-
-        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
-
-        ¡Disfruta de tu estancia!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: "La copia de seguridad fue exitosa.\nVisita la [sección admin > copia de seguridad](/admin/backups) para descargar tu nueva copia de seguridad."
@@ -1223,12 +1213,6 @@ es:
         ```
     csv_export_succeeded:
       subject_template: "Exportación de datos completada"
-      text_body_template: |
-        ¡La exportación de datos se ha completado con éxito! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        El enlace de descarga de arriba será válido durante 48 horas.
     csv_export_failed:
       subject_template: "La exportación de datos falló"
       text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
@@ -1443,7 +1427,7 @@ es:
 
         Si no formulaste esta petición, por favor, ignora este correo.
 
-        Haz click en el siguiente enlace para escoger una contraseña:
+        Haz clic en el siguiente enlace para escoger una contraseña:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Tu nueva cuenta"

@@ -847,7 +847,6 @@ sq:
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
       login_reply: 'Përgjigju tek Diskutimi'
       filters:
         n_posts:

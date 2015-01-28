@@ -879,7 +879,6 @@ pt_BR:
         to_forum: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
         email_placeholder: 'nome@exemplo.com'
         success: "Enviamos um convite para <b>{{email}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
-        error: "Desculpe não podemos convidar essa pessoa. Talvez já seja um usuário?"
       login_reply: 'Logar para Responder'
       filters:
         n_posts:
