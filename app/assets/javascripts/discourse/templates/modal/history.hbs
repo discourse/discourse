@@ -40,10 +40,10 @@
         &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
       {{/if}}
       {{#if wiki_changes}}
-        &mdash; {{{wikiDiff}}}
+        &mdash; {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
       {{/if}}
       {{#if post_type_changes}}
-        &mdash; {{{postTypeDiff}}}
+        &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
       {{/if}}
       {{#if category_id_changes}}
         &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
@@ -65,12 +65,12 @@
       {{/if}}
       {{#if wiki_changes}}
         <div class="row">
-          {{{wikiDiff}}}
+          {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
         </div>
       {{/if}}
       {{#if post_type_changes}}
         <div class="row">
-          {{{postTypeDiff}}}
+          {{disabled-icon icon="shield" disabled=postTypeDisabled}}
         </div>
       {{/if}}
       {{#if category_id_changes}}
@@ -79,6 +79,9 @@
         </div>
       {{/if}}
     {{/if}}
+
+    {{plugin-outlet "post-revisions"}}
+
     <div class="row">
       {{{bodyDiff}}}
     </div>

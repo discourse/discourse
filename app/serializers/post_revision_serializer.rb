@@ -40,9 +40,7 @@ class PostRevisionSerializer < ApplicationSerializer
     end
   end
 
-  add_compared_field :category_id
   add_compared_field :wiki
-  add_compared_field :post_type
 
   def previous_hidden
     previous["hidden"]
@@ -167,19 +165,27 @@ class PostRevisionSerializer < ApplicationSerializer
       return @all_revisions if @all_revisions
 
       post_revisions = PostRevision.where(post_id: object.post_id).order(:number).to_a
+
+      latest_modifications = {
+        "raw" => [post.raw],
+        "cooked" => [post.cooked],
+        "edit_reason" => [post.edit_reason],
+        "wiki" => [post.wiki],
+        "post_type" => [post.post_type],
+        "user_id" => [post.user_id]
+      }
+
+      # For the topic fields, let's get the values from a serializer
+      PostRevisor.tracked_topic_fields.keys.each do |field|
+        if topic.respond_to?(field)
+          latest_modifications[field.to_s] = [topic.send(field)]
+        end
+      end
+
       post_revisions << PostRevision.new(
         number: post_revisions.last.number + 1,
         hidden: post.hidden,
-        modifications: {
-          "raw" => [post.raw],
-          "cooked" => [post.cooked],
-          "edit_reason" => [post.edit_reason],
-          "wiki" => [post.wiki],
-          "post_type" => [post.post_type],
-          "user_id" => [post.user_id],
-          "title" => [topic.title],
-          "category_id" => [topic.category_id],
-        }
+        modifications: latest_modifications
       )
 
       @all_revisions = []

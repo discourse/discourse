@@ -1,5 +1,13 @@
-export function iconHTML(icon, label) {
-  var html = "<i class='fa fa-" + icon + "'";
+import registerUnbound from 'discourse/helpers/register-unbound';
+
+export function iconClasses(icon, modifier) {
+  var classes = "fa fa-" + icon;
+  if (modifier) { classes += " fa-" + modifier; }
+  return classes;
+}
+
+export function iconHTML(icon, label, modifier) {
+  var html = "<i class='" + iconClasses(icon, modifier) + "'";
   if (label) { html += " aria-hidden='true'"; }
   html += "></i>";
   if (label) {
@@ -8,9 +16,7 @@ export function iconHTML(icon, label) {
   return html;
 }
 
-Handlebars.registerHelper('fa-icon', function(icon, options) {
-  var label;
-  if (options.hash) { label = options.hash.label; }
 
-  return new Handlebars.SafeString(iconHTML(icon, label));
+registerUnbound('fa-icon', function(icon, params) {
+  return new Handlebars.SafeString(iconHTML(icon, params.label, params.modifier));
 });

@@ -81,23 +81,14 @@ export default ObjectController.extend(ModalFunctionality, {
     }
   }.property("category_id_changes"),
 
-  wikiDiff: function() {
+  wikiDisabled: function() {
     var changes = this.get("wiki_changes");
-    if (changes) {
-      return changes["current"] ?
-             '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i></span>' :
-             '<span class="fa-stack"><i class="fa fa-pencil-square-o fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-    }
-  }.property("wiki_changes"),
+    return changes && !changes['current'];
+  }.property('wiki_changes'),
 
-  postTypeDiff: function () {
-    var moderator = Discourse.Site.currentProp('post_types.moderator_action');
+  postTypeDisabled: function () {
     var changes = this.get("post_type_changes");
-    if (changes) {
-      return changes["current"] === moderator ?
-             '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i></span>' :
-             '<span class="fa-stack"><i class="fa fa-shield fa-stack-2x"></i><i class="fa fa-ban fa-stack-2x"></i></span>';
-    }
+    return (changes && changes['current'] !== this.site.get('post_types.moderator_action'));
   }.property("post_type_changes"),
 
   titleDiff: function() {
