@@ -105,20 +105,33 @@ describe DiscourseSingleSignOn do
   end
 
   context 'when sso_overrides_avatar is enabled' do
+    let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
+    let!(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = sso_record.user.email
+      sso.external_id = sso_record.external_id
+      sso
+    }
+    let(:logo) { file_from_fixtures("logo.png") }
 
     before do
       SiteSetting.sso_overrides_avatar = true
     end
 
     it "deal with no avatar url passed for an existing user with an avatar" do
-      sso_record = Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png")
-
-      sso = DiscourseSingleSignOn.new
-      sso.username = "test"
-      sso.name = "test"
-      sso.email = sso_record.user.email
-      sso.external_id = sso_record.external_id
       # Deliberately not setting avatar_url.
+
+      user = sso.lookup_or_create_user
+      expect(user).to_not be_nil
+    end
+
+    it "deal with no avatar_force_update passed as a boolean" do
+      FileHelper.stubs(:download).returns(logo)
+
+      sso.avatar_url = "http://example.com/a_different_image.png"
+      sso.avatar_force_update = true
 
       user = sso.lookup_or_create_user
       expect(user).to_not be_nil
