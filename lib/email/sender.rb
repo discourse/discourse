@@ -70,6 +70,10 @@ module Email
       post_id = header_value('X-Discourse-Post-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
 
+      # always set a default Message ID from the host
+      uuid = SecureRandom.uuid
+      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
+
       if topic_id.present?
         email_log.topic_id = topic_id
 
