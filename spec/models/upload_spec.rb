@@ -84,6 +84,18 @@ describe Upload do
       expect(upload.errors.size).to be > 0
     end
 
+    it "generates an error when the image is too large" do
+      SiteSetting.stubs(:max_image_size_kb).returns(1)
+      upload = Upload.create_for(user_id, image, image_filename, image_filesize)
+      expect(upload.errors.size).to be > 0
+    end
+
+    it "generates an error when the attachment is too large" do
+      SiteSetting.stubs(:max_attachment_size_kb).returns(1)
+      upload = Upload.create_for(user_id, attachment, attachment_filename, attachment_filesize)
+      expect(upload.errors.size).to be > 0
+    end
+
     it "saves proper information" do
       store = {}
       Discourse.expects(:store).returns(store)

@@ -1,7 +1,7 @@
-<input type="file" accept="image/*" style="display:none" />
-<button class="btn" {{action "selectFile"}} {{bind-attr disabled="uploading"}} title="{{i18n 'user.change_avatar.upload_title'}}">
-  <i class="fa fa-picture-o"></i>&nbsp;{{uploadButtonText}}
-</button>
+<label class="btn" {{bind-attr disabled="uploading"}} title="{{i18n 'user.change_avatar.upload_title'}}">
+  {{fa-icon "picture-o"}}&nbsp;{{uploadButtonText}}
+  <input {{bind-attr disabled="uploading"}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
+</label>
 {{#if uploading}}
   <span>{{i18n 'upload_selector.uploading'}} {{view.uploadProgress}}%</span>
 {{/if}}

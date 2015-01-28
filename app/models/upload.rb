@@ -72,38 +72,22 @@ class Upload < ActiveRecord::Base
       # trim the origin if any
       upload.origin = options[:origin][0...1000] if options[:origin]
 
-      # deal with width & height for images
+      # check the size of the upload
       if FileHelper.is_image?(filename)
-        begin
-          if filename =~ /\.svg$/i
-            svg = Nokogiri::XML(file).at_css("svg")
-            width, height = svg["width"].to_i, svg["height"].to_i
-            if width == 0 || height == 0
-              upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-            else
-              upload.width, upload.height = ImageSizer.resize(width, height)
-            end
-          else
-            # fix orientation first
-            Upload.fix_image_orientation(file.path)
-            # retrieve image info
-            image_info = FastImage.new(file, raise_on_failure: true)
-              # compute image aspect ratio
-            upload.width, upload.height = ImageSizer.resize(*image_info.size)
-          end
-          # make sure we're at the beginning of the file
-          # (FastImage and Nokogiri move the pointer)
-          file.rewind
-        rescue FastImage::ImageFetchFailure
-          upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
-        rescue FastImage::UnknownImageType
-          upload.errors.add(:base, I18n.t("upload.images.unknown_image_type"))
-        rescue FastImage::SizeNotFound
-          upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+        if SiteSetting.max_image_size_kb > 0 && filesize >= SiteSetting.max_image_size_kb.kilobytes
+          upload.errors.add(:base, I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb))
+        else
+          # deal with width & height for images
+          upload = Upload.resize_image(filename, file, upload)
         end
-
-        return upload unless upload.errors.empty?
+      else
+        if SiteSetting.max_attachment_size_kb > 0 && filesize >= SiteSetting.max_attachment_size_kb.kilobytes
+          upload.errors.add(:base, I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb))
+        end
       end
+
+      # make sure there is no error
+      return upload unless upload.errors.empty?
 
       # create a db record (so we can use the id)
       return upload unless upload.save
@@ -119,6 +103,38 @@ class Upload < ActiveRecord::Base
     end
 
     # return the uploaded file
+    upload
+  end
+
+  def self.resize_image(filename, file, upload)
+    begin
+      if filename =~ /\.svg$/i
+        svg = Nokogiri::XML(file).at_css("svg")
+        width, height = svg["width"].to_i, svg["height"].to_i
+        if width == 0 || height == 0
+          upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+        else
+          upload.width, upload.height = ImageSizer.resize(width, height)
+        end
+      else
+        # fix orientation first
+        Upload.fix_image_orientation(file.path)
+        # retrieve image info
+        image_info = FastImage.new(file, raise_on_failure: true)
+          # compute image aspect ratio
+        upload.width, upload.height = ImageSizer.resize(*image_info.size)
+      end
+      # make sure we're at the beginning of the file
+      # (FastImage and Nokogiri move the pointer)
+      file.rewind
+    rescue FastImage::ImageFetchFailure
+      upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
+    rescue FastImage::UnknownImageType
+      upload.errors.add(:base, I18n.t("upload.images.unknown_image_type"))
+    rescue FastImage::SizeNotFound
+      upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+    end
+
     upload
   end
 

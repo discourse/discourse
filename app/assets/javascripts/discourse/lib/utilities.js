@@ -164,7 +164,9 @@ Discourse.Utilities = {
     var upload = files[0];
 
     // CHROME ONLY: if the image was pasted, sets its name to a default one
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    if (typeof Blob !== "undefined" && typeof File !== "undefined") {
+      if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    }
 
     var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
 
@@ -287,7 +289,7 @@ Discourse.Utilities = {
     // deal with meaningful errors first
     if (data.jqXHR) {
       switch (data.jqXHR.status) {
-        // cancel from the user
+        // cancelled by the user
         case 0: return;
 
         // entity too large, usually returned from the web server
