@@ -470,7 +470,7 @@ Discourse.Post.reopenClass({
 
   loadRevision: function(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
-      return Em.Object.create(result);
+      return Ember.Object.create(result);
     });
   },
 

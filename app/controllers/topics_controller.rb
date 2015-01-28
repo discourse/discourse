@@ -126,7 +126,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_edit!(topic)
 
     changes = {}
-    PostRevisor.tracked_fields.keys.each do |f|
+    PostRevisor.tracked_topic_fields.keys.each do |f|
       changes[f] = params[f] if params.has_key?(f)
     end
 

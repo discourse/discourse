@@ -4,7 +4,7 @@ class PostRevisor
 
   # Helps us track changes to a topic.
   #
-  # It's passed to `Topic.track_field` callbacks so they can record if they
+  # It's passed to `track_topic_fields` callbacks so they can record if they
   # changed a value or not. This is needed for things like custom fields.
   class TopicChanges
     attr_reader :topic, :user
@@ -47,13 +47,29 @@ class PostRevisor
     @topic = topic || post.topic
   end
 
-  def self.tracked_fields
-    @@tracked_fields ||= {}
-    @@tracked_fields
+  def self.tracked_topic_fields
+    @@tracked_topic_fields ||= {}
+    @@tracked_topic_fields
   end
 
-  def self.track_field(field, &block)
-    tracked_fields[field] = block
+  def self.track_topic_field(field, &block)
+    tracked_topic_fields[field] = block
+
+    # Define it in the serializer unless it already has been defined
+    unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
+      PostRevisionSerializer.add_compared_field(field)
+    end
+  end
+
+  # Fields we want to record revisions for by default
+  track_topic_field(:title) do |tc, title|
+    tc.record_change('title', tc.topic.title, title)
+    tc.topic.title = title
+  end
+
+  track_topic_field(:category_id) do |tc, category_id|
+    tc.record_change('category_id', tc.topic.category_id, category_id)
+    tc.check_result(tc.topic.change_category_to_id(category_id))
   end
 
   # AVAILABLE OPTIONS:
@@ -139,7 +155,7 @@ class PostRevisor
   end
 
   def topic_changed?
-    PostRevisor.tracked_fields.keys.any? {|f| @fields.has_key?(f)}
+    PostRevisor.tracked_topic_fields.keys.any? {|f| @fields.has_key?(f)}
   end
 
   def revise_post
@@ -217,7 +233,7 @@ class PostRevisor
 
   def update_topic
     Topic.transaction do
-      PostRevisor.tracked_fields.each do |f, cb|
+      PostRevisor.tracked_topic_fields.each do |f, cb|
         if !@topic_changes.errored? && @fields.has_key?(f)
           cb.call(@topic_changes, @fields[f])
         end
@@ -360,13 +376,3 @@ class PostRevisor
 
 end
 
-# Fields we want to record revisions for by default
-PostRevisor.track_field(:title) do |tc, title|
-  tc.record_change('title', tc.topic.title, title)
-  tc.topic.title = title
-end
-
-PostRevisor.track_field(:category_id) do |tc, category_id|
-  tc.record_change('category_id', tc.topic.category_id, category_id)
-  tc.check_result(tc.topic.change_category_to_id(category_id))
-end
