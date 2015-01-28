@@ -22,7 +22,7 @@
         <div class='featured-topic'>
           <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
           <br/>
-          <%= email_category(t.category) %>
+          <%= category_badge(t.category) %>
         </div>
 
         <%- if t.best_post.present? %>
@@ -45,7 +45,7 @@
           <li>
             <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
             <span class='post-count'><%= t('user_notifications.digest.posts', count: t.posts_count) %></span>
-            <%= email_category(t.category) %>
+            <%= category_badge(t.category) %>
           </li>
         </ul>
       <%- end -%>
