@@ -73,6 +73,11 @@ describe Email::Sender do
       Then { expect(message.header['List-ID']).to be_present }
     end
 
+    context "adds a Message-ID header even when topic id is not present" do
+      When { email_sender.send }
+      Then { expect(message.header['Message-ID']).to be_present }
+    end
+
     context "adds Precedence header" do
       before do
         message.header['X-Discourse-Topic-Id'] = 5577
