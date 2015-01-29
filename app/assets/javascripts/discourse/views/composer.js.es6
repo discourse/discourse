@@ -314,7 +314,8 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     // NOTE: we need both the .json extension and the CSRF token as a query parameter for IE9
     $uploadTarget.fileupload({
       url: Discourse.getURL('/uploads.json?authenticity_token=' + encodeURIComponent(csrf)),
-      dataType: 'json'
+      dataType: 'json',
+      pasteZone: $uploadTarget
     });
 
     // submit - this event is triggered for each upload
