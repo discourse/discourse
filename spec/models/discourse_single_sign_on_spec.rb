@@ -103,4 +103,25 @@ describe DiscourseSingleSignOn do
     sso = DiscourseSingleSignOn.parse(payload)
     expect(sso.nonce).to_not be_nil
   end
+
+  context 'when sso_overrides_avatar is enabled' do
+
+    before do
+      SiteSetting.sso_overrides_avatar = true
+    end
+
+    it "deal with no avatar url passed for an existing user with an avatar" do
+      sso_record = Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png")
+
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = sso_record.user.email
+      sso.external_id = sso_record.external_id
+      # Deliberately not setting avatar_url.
+
+      user = sso.lookup_or_create_user
+      expect(user).to_not be_nil
+    end
+  end
 end
