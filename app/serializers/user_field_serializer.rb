@@ -4,5 +4,6 @@ class UserFieldSerializer < ApplicationSerializer
              :description,
              :field_type,
              :editable,
-             :required
+             :required,
+             :show_on_profile
 end
