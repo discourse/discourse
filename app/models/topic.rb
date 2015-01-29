@@ -124,7 +124,7 @@ class Topic < ActiveRecord::Base
 
   scope :visible, -> { where(visible: true) }
 
-  scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
+  scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
 
   scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
@@ -276,8 +276,10 @@ class Topic < ActiveRecord::Base
               .visible
               .secured(Guardian.new(user))
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
+              .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
+              .where("COALESCE(users.trust_level, 0) > 0")
               .created_since(since)
               .listable_topics
               .includes(:category)
