@@ -1,7 +1,7 @@
 class Admin::UserFieldsController < Admin::AdminController
 
   def self.columns
-    [:name, :field_type, :editable, :description, :required]
+    [:name, :field_type, :editable, :description, :required, :show_on_profile]
   end
 
   def create

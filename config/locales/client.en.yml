@@ -2108,6 +2108,10 @@ en:
           title: "Editable after signup?"
           enabled: "editable"
           disabled: "not editable"
+        show_on_profile:
+          title: "Show on public profile?"
+          enabled: "shown on profile"
+          disabled: "not shown on profile"
 
         field_types:
           text: 'Text Field'
