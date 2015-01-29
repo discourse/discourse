@@ -15,26 +15,31 @@
 // Category badge
 // --------------------------------------------------
 
-.badge-category, .badge-category-parent {
+.badge-wrapper span {
   font-size: 0.857em;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
   line-height: 1;
+  position: relative;
 }
+
 .badge-wrapper {
   white-space: nowrap;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
 }
 
 .badge-category {
-  padding: 6px;
-  color: $primary;
-  &[href] {
-  color: $primary;
-  }
+  padding: 0;
+  left: 3px;
+  top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.badge-category-parent {
+.badge-category-parent-bg, .badge-category-bg {
   padding: 6px 2px;
   width: 2px;
   .category-name {
@@ -47,13 +52,33 @@
 
 .d-dropdown .badge-category {
 &.restricted {
-    div {
+    span {
       display: inline-block;
       margin: 0;
     }
 }}
 
 h1 a.badge-category div {vertical-align: top;}
+
+// specific styles for badge categories
+
+.badge-wrapper.bar {
+  .badge-category {
+    color: $primary !important;
+  }
+}
+
+
+.badge-wrapper.box {
+  .badge-category-bg {
+    position: absolute;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+}
+
 
 
 // Notification badge

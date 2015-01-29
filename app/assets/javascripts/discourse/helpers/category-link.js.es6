@@ -4,13 +4,9 @@ import { iconHTML } from 'discourse/helpers/fa-icon';
 var get = Em.get,
     escapeExpression = Handlebars.Utils.escapeExpression;
 
-function categoryStripe(tagName, category, extraClasses, href) {
-  if (!category) { return ""; }
-
-  var color = Em.get(category, 'color'),
-      style = color ? "style='background-color: #" + color + ";'" : "";
-
-  return "<" + tagName + " class='badge-category-parent" + extraClasses + "' " + style + " href=\"" + href + "\"></" + tagName + ">";
+function categoryStripe(color, classes) {
+  var style = color ? "style='background-color: #" + color + ";'" : "";
+  return "<span class='" + classes + "' " + style + "></span>";
 }
 
 export function categoryBadgeHTML(category, opts) {
@@ -28,35 +24,44 @@ export function categoryBadgeHTML(category, opts) {
       url = Discourse.getURL("/c/") + Discourse.Category.slugFor(category),
       href = (opts.link === false ? '' : url),
       tagName = (opts.link === false || opts.link === "false" ? 'span' : 'a'),
-      extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : '');
+      extraClasses = (opts.extraClasses ? (' ' + opts.extraClasses) : ''),
+      color = get(category, 'color'),
+      html = "",
+      parentCat = null;
 
-  var html = "";
-
-  var parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
-  if (opts.hideParent) { parentCat = null; }
-  html += categoryStripe(tagName, parentCat, extraClasses, href);
-
-  if (parentCat !== category) {
-    html += categoryStripe(tagName, category, extraClasses, href);
+  if (!opts.hideParent) {
+    parentCat = Discourse.Category.findById(get(category, 'parent_category_id'));
   }
 
-  var classNames = "badge-category clear-badge" + extraClasses;
+  if (parentCat && parentCat !== category) {
+    html += categoryStripe(get(parentCat,'color'), "badge-category-parent-bg");
+  }
+
+  html += categoryStripe(color, "badge-category-bg");
+
+  var classNames = "badge-category clear-badge";
   if (restricted) { classNames += " restricted"; }
 
-  html += "<" + tagName + ' href="' + href + '" ' +
+  var textColor = "#" + get(category, 'text_color');
+
+  html += "<span" + ' style="color: ' + textColor + ';" '+
              'data-drop-close="true" class="' + classNames + '"' +
              (description ? 'title="' + escapeExpression(description) + '" ' : '') +
           ">";
 
   var name = escapeExpression(get(category, 'name'));
   if (restricted) {
-    html += "<div>" + iconHTML('lock') + " " + name + "</div>";
+    html += "<span>" + iconHTML('lock') + " " + name + "</span>";
   } else {
     html += name;
   }
-  html += "</" + tagName + ">";
+  html += "</span>";
 
-  return "<span class='badge-wrapper'>" + html + "</span>";
+  if(href){
+    href = " href='" + href + "' ";
+  }
+
+  return "<" + tagName + " class='badge-wrapper " + Discourse.SiteSettings.category_style + extraClasses + "' " + href + ">" + html + "</" + tagName + ">";
 }
 
 export function categoryLinkHTML(category, options) {

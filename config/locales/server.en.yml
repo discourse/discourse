@@ -912,6 +912,7 @@ en:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
 
     category_colors: "A list of hexadecimal color values allowed for categories."
+    category_style: "Visual style for category badges."
 
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
