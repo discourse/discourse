@@ -61,7 +61,9 @@ export function categoryBadgeHTML(category, opts) {
     href = " href='" + href + "' ";
   }
 
-  return "<" + tagName + " class='badge-wrapper " + Discourse.SiteSettings.category_style + extraClasses + "' " + href + ">" + html + "</" + tagName + ">";
+  extraClasses = Discourse.SiteSettings.category_style ? Discourse.SiteSettings.category_style + extraClasses : extraClasses;
+
+  return "<" + tagName + " class='badge-wrapper " + extraClasses + "' " + href + ">" + html + "</" + tagName + ">";
 }
 
 export function categoryLinkHTML(category, options) {
