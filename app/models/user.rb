@@ -62,7 +62,7 @@ class User < ActiveRecord::Base
 
   delegate :last_sent_email_address, :to => :email_logs
 
-  before_validation :downcase_email
+  before_validation :strip_downcase_email
 
   validates_presence_of :username
   validate :username_validator
@@ -764,8 +764,11 @@ class User < ActiveRecord::Base
     self.username_lower = username.downcase
   end
 
-  def downcase_email
-    self.email = self.email.downcase if self.email
+  def strip_downcase_email
+    if self.email
+      self.email = self.email.strip
+      self.email = self.email.downcase
+    end
   end
 
   def username_validator
