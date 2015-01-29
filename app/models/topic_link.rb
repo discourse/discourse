@@ -159,7 +159,8 @@ class TopicLink < ActiveRecord::Base
                            internal: internal,
                            link_topic_id: topic_id,
                            link_post_id: reflected_post.try(:id),
-                           quote: link.is_quote
+                           quote: link.quote_link,
+                           from_quote: link.from_quote
                           )
 
           # Create the reflection if we can

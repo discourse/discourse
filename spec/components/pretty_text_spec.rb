@@ -177,7 +177,7 @@ describe PrettyText do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
     end
 
-    it "should not extract links inside quotes" do
+    it "should extract & flag links inside quotes" do
       links = PrettyText.extract_links("
         <a href='http://body_only.com'>http://useless1.com</a>
         <aside class=\"quote\" data-topic=\"1234\">
@@ -187,10 +187,11 @@ describe PrettyText do
         <a href='http://body_and_quote.com'>http://useless2.com</a>
         ")
 
-      expect(links.map{|l| [l.url, l.is_quote]}.to_a.sort).to eq(
-        [["http://body_only.com",false],
-         ["http://body_and_quote.com", false],
-         ["/t/topic/1234",true]
+      expect(links.map{|l| [l.url, l.quote_link, l.from_quote]}.to_a.sort).to eq(
+        [["http://body_only.com", false, false],
+         ["http://body_and_quote.com", false, false],
+         ["/t/topic/1234", true, false],
+         ["http://quote_only.com", false, true]
         ].sort
       )
     end
