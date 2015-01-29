@@ -1,7 +1,12 @@
 var get = Ember.get;
 
 export default Ember.Component.extend({
-  classNameBindings: ['category::no-category', 'categories:has-drop'],
+  classNameBindings: ['category::no-category', 'categories:has-drop','categoryStyle'],
+
+  categoryStyle: function(){
+    return Discourse.SiteSettings.category_style;
+  }.property(),
+
   tagName: 'li',
 
   iconClass: function() {
@@ -45,7 +50,7 @@ export default Ember.Component.extend({
 
       if (color || textColor) {
         var style = "";
-        if (color) { style += "background-color: #" + color + "; "; }
+        if (color) { style += "background-color: #" + color + "; border-color: #" + color + ";"; }
         if (textColor) { style += "color: #" + textColor + "; "; }
         return style;
       }
@@ -84,24 +89,33 @@ export default Ember.Component.extend({
         self.close();
       });
 
-      $('html').on(this.get('clickEventName'), function(e) {
-        var $target = $(e.target),
-            closest = $target.closest($dropdown);
+      Em.run.next(function(){
+        self.$('.cat a').add('html').on(self.get('clickEventName'), function(e) {
+          var $target = $(e.target),
+              closest = $target.closest($dropdown);
 
-        return ($(e.currentTarget).hasClass('badge-category') || (closest.length && closest[0] === $dropdown)) ? true : self.close();
+          if ($(e.currentTarget).hasClass('badge-wrapper')){
+            self.close();
+          }
+
+          return ($(e.currentTarget).hasClass('badge-category') || (closest.length && closest[0] === $dropdown)) ? true : self.close();
+        });
       });
     }
   },
 
-  close: function() {
+  removeEvents: function(){
     $('html').off(this.get('clickEventName'));
     this.$('a[data-drop-close]').off('click.category-drop');
+  },
+
+  close: function() {
+    this.removeEvents();
     this.set('expanded', false);
   },
 
   willDestroyElement: function() {
-    $('html').off(this.get('clickEventName'));
-    this.$('a[data-drop-close]').off('click.category-drop');
+    this.removeEvents();
   }
 
 });

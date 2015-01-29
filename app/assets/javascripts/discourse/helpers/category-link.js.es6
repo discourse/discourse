@@ -51,7 +51,7 @@ export function categoryBadgeHTML(category, opts) {
 
   var name = escapeExpression(get(category, 'name'));
   if (restricted) {
-    html += "<span>" + iconHTML('lock') + " " + name + "</span>";
+    html += iconHTML('lock') + " " + name;
   } else {
     html += name;
   }
