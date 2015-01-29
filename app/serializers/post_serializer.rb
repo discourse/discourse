@@ -11,6 +11,7 @@ class PostSerializer < BasicPostSerializer
   attributes :post_number,
              :post_type,
              :updated_at,
+             :like_count,
              :reply_count,
              :reply_to_post_number,
              :quote_count,
