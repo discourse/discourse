@@ -117,9 +117,9 @@ module Email
       email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id'] = nil
-      @message.header['X-Discourse-Post-Id'] = nil
-      @message.header['X-Discourse-Reply-Key'] = nil
+      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id'] = nil if post_id.present?
+      @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails && @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length && @message.html_part.body =~ /<img[^>]+>/

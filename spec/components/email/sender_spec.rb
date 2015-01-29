@@ -87,6 +87,24 @@ describe Email::Sender do
       Then { expect(message.header['Precedence']).to be_present }
     end
 
+    context "removes custom Discourse headers from topic notification mails" do
+      before do
+        message.header['X-Discourse-Topic-Id'] = 5577
+      end
+
+      When { email_sender.send }
+      Then { expect(message.header['X-Discourse-Topic-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Post-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Reply-Key']).not_to be_present }
+    end
+
+    context "removes custom Discourse headers from digest/registration/other mails" do
+      When { email_sender.send }
+      Then { expect(message.header['X-Discourse-Topic-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Post-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Reply-Key']).not_to be_present }
+    end
+
     context 'email logs' do
       let(:email_log) { EmailLog.last }
 
