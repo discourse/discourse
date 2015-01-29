@@ -977,17 +977,25 @@ describe UsersController do
           context "an editable field" do
             let!(:user_field) { Fabricate(:user_field) }
             let!(:optional_field) { Fabricate(:user_field, required: false ) }
+            let(:updated_user_field) { user.user_fields[user_field.id.to_s] }
 
             it "should update the user field" do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
               expect(response).to be_success
-              expect(user.user_fields[user_field.id.to_s]).to eq 'happy'
+              expect(updated_user_field).to eq 'happy'
             end
 
             it "cannot be updated to blank" do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => '' }
               expect(response).not_to be_success
-              expect(user.user_fields[user_field.id.to_s]).not_to eq('happy')
+              expect(updated_user_field).not_to eq('happy')
+            end
+
+            context 'when :custom_fields is an empty string' do
+              it 'updates the user field as intended' do
+                put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }, custom_fields: ''
+                expect(updated_user_field).to eq 'happy'
+              end
             end
           end
 
