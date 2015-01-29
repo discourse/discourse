@@ -1,12 +1,17 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_view,
+  INSTANCE_VARS = [:topic_view,
                 :parent_post,
                 :add_raw,
                 :single_post_link_counts,
                 :draft_sequence,
-                :post_actions
+                :post_actions,
+                :all_post_actions]
+
+  INSTANCE_VARS.each do |v|
+    self.send(:attr_accessor, v)
+  end
 
   attributes :post_number,
              :post_type,
@@ -53,6 +58,15 @@ class PostSerializer < BasicPostSerializer
              :user_custom_fields,
              :static_doc,
              :via_email
+
+  def initialize(object, opts)
+    super(object, opts)
+    PostSerializer::INSTANCE_VARS.each do |name|
+      if opts.include? name
+        self.send("#{name}=", opts[name])
+      end
+    end
+  end
 
   def topic_slug
     object.try(:topic).try(:slug)
@@ -155,6 +169,13 @@ class PostSerializer < BasicPostSerializer
     scope.is_staff? && object.deleted_by.present?
   end
 
+  # Helper function to decide between #post_actions and @all_post_actions
+  def actions
+    return post_actions if post_actions.present?
+    return all_post_actions[object.id] if all_post_actions.present?
+    nil
+  end
+
   # Summary of the actions taken on this post
   def actions_summary
     result = []
@@ -168,7 +189,7 @@ class PostSerializer < BasicPostSerializer
         id: id,
         count: count,
         hidden: (sym == :vote),
-        can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)
+        can_act: scope.post_can_act?(object, sym, taken_actions: actions)
       }
 
       if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
@@ -183,9 +204,9 @@ class PostSerializer < BasicPostSerializer
                                            active_flags[id].count > 0
       end
 
-      if post_actions.present? && post_actions.has_key?(id)
+      if actions.present? && actions.has_key?(id)
         action_summary[:acted] = true
-        action_summary[:can_undo] = scope.can_delete?(post_actions[id])
+        action_summary[:can_undo] = scope.can_delete?(actions[id])
       end
 
       # only show public data
@@ -226,7 +247,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_bookmarked?
-    post_actions.present? && post_actions.keys.include?(PostActionType.types[:bookmark])
+    actions.present? && actions.keys.include?(PostActionType.types[:bookmark])
   end
 
   def include_display_username?
