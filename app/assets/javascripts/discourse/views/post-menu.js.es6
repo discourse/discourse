@@ -48,6 +48,7 @@ export default Discourse.View.extend(StringBuffer, {
 
   rerenderTriggers: [
     'post.deleted_at',
+    'post.like_count',
     'post.reply_count',
     'post.showRepliesBelow',
     'post.can_delete',
