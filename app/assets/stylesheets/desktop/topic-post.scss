@@ -527,10 +527,10 @@ video {
 .extra-info-wrapper {
   overflow: hidden;
 
-.star, .badge-wrapper, i,  .topic-link:not(.loading) {
-  -webkit-animation: fadein .7s;
-  animation: fadein .7s;
-}
+  .star, .badge-wrapper, i,  .topic-link:not(.loading) {
+    -webkit-animation: fadein .7s;
+    animation: fadein .7s;
+  }
 
   .topic-statuses {
     i  { color: $header_primary; }
