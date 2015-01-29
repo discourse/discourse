@@ -54,6 +54,10 @@ module SiteSettingExtension
     @refresh_settings ||= []
   end
 
+  def previews
+    @previews ||= {}
+  end
+
   def validators
     @validators ||= {}
   end
@@ -79,8 +83,13 @@ module SiteSettingExtension
       if opts[:hidden]
         hidden_settings << name
       end
+
       if opts[:refresh]
         refresh_settings << name
+      end
+
+      if opts[:preview]
+        previews[name] = opts[:preview]
       end
 
       if validator_type = validator_for(opts[:type] || get_data_type(name, defaults[name]))
@@ -134,7 +143,8 @@ module SiteSettingExtension
           default: v.to_s,
           type: type.to_s,
           value: value.to_s,
-          category: categories[s]
+          category: categories[s],
+          preview: previews[s]
         }
         opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
         opts[:choices] = choices[s] if choices.has_key? s
