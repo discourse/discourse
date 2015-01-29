@@ -131,7 +131,7 @@ class TopicsController < ApplicationController
     end
 
     changes.delete(:title) if topic.title == changes[:title]
-    changes.delete(:category_id) if (changes[:category_id].empty? or topic.category_id == changes[:category_id].to_i)
+    changes.delete(:category_id) if (changes[:category_id].blank? or topic.category_id == changes[:category_id].to_i)
 
     success = true
     if changes.length > 0
