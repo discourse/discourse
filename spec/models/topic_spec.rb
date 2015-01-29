@@ -1151,6 +1151,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "doesn't return topics from TL0 users" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
   end
 
   describe 'secured' do
