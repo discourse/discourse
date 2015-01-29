@@ -1245,6 +1245,7 @@ describe Topic do
     SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
     RateLimiter.stubs(:rate_limit_create_topic).returns(100)
     RateLimiter.stubs(:disabled?).returns(false)
+    RateLimiter.clear_all!
 
     start = Time.now.tomorrow.beginning_of_day
 

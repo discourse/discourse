@@ -4,6 +4,8 @@ require_dependency 'rate_limiter/on_create_record'
 # A redis backed rate limiter.
 class RateLimiter
 
+  KEY_PREFIX = "l-rate-limit:"
+
   def self.disable
     @disabled = true
   end
@@ -17,9 +19,13 @@ class RateLimiter
     @disabled || Rails.env.test?
   end
 
+  def self.clear_all!
+    $redis.keys("#{KEY_PREFIX}:*").each { |k| $redis.del(k) }
+  end
+
   def initialize(user, key, max, secs)
     @user = user
-    @key = "l-rate-limit:#{@user && @user.id}:#{key}"
+    @key = "#{KEY_PREFIX}:#{@user && @user.id}:#{key}"
     @max = max
     @secs = secs
   end
@@ -64,10 +70,10 @@ class RateLimiter
   end
 
   def is_under_limit?
-      # number of events in buffer less than max allowed? OR
-      ($redis.llen(@key) < @max) ||
-      # age bigger than silding window size?
-      (age_of_oldest > @secs)
+    # number of events in buffer less than max allowed? OR
+    ($redis.llen(@key) < @max) ||
+    # age bigger than silding window size?
+    (age_of_oldest > @secs)
   end
 
   def rate_unlimited?
