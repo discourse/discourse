@@ -155,7 +155,7 @@ class ApplicationController < ActionController::Base
   # If we are rendering HTML, preload the session data
   def preload_json
     # We don't preload JSON on xhr or JSON request
-    return if request.xhr?
+    return if request.xhr? || request.format.json?
 
     preload_anonymous_data
 
