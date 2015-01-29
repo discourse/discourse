@@ -76,18 +76,12 @@ module PrettyText
     )
 
     Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
-      unless dialect =~ /\/dialect\.js$/
-        ctx.load(dialect)
-      end
+      ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
     end
 
-    # custom emojis
+    # emojis
     emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
     ctx.eval(emoji.result)
-
-    Emoji.custom.each do |emoji|
-      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
-    end
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -102,8 +96,8 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.hbs') {|f| f.read}
-    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.hbs') {|f| f.read}
+    ctx['quoteTemplate'] = File.read("#{app_root}/app/assets/javascripts/discourse/templates/quote.hbs")
+    ctx['quoteEmailTemplate'] = File.read("#{app_root}/lib/assets/quote_email.hbs")
     ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
@@ -158,6 +152,11 @@ module PrettyText
         Post.white_listed_image_classes.each do |klass|
           context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
         end
+      end
+
+      # custom emojis
+      Emoji.custom.each do |emoji|
+        context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
