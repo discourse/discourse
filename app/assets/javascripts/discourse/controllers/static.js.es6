@@ -3,7 +3,9 @@ export default Em.ObjectController.extend({
 
   actions: {
     markFaqRead: function() {
-      Discourse.ajax("/users/read-faq", { method: "POST" });
+      if (Discourse.User.current()) {
+        Discourse.ajax("/users/read-faq", { method: "POST" });
+      }
     }
   }
 });
