@@ -104,7 +104,9 @@ h1 a.badge-category div {vertical-align: top;}
   }
 }
 
-
+.category-dropdown-menu .cat .badge-wrapper.box {
+  width: 110%;
+}
 .badge-wrapper.box {
   .badge-category-bg {
     position: absolute;
@@ -113,8 +115,15 @@ h1 a.badge-category div {vertical-align: top;}
     height: 100%;
   }
 
+  > .badge-category {
+    width: 100%;
+    width: calc(100% - 2px);
+  }
 }
 
+.title-wrapper .badge-wrapper.box .badge-category {
+  vertical-align: middle;
+}
 
 
 // Notification badge
