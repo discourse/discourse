@@ -72,9 +72,10 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   profileBackground: function() {
-    var url = this.get('profile_background');
-    if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-    return 'background-image: url(' + Discourse.getURLWithCDN(url) + ')';
+    var background = this.get('profile_background');
+    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+
+    return 'background-image: url(' + background + ')';
   }.property('profile_background'),
 
   /**
@@ -441,7 +442,6 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId) {
     var url;
-
     if (uploadedAvatarId) {
       url = "/user_avatar/" +
             Discourse.BaseUrl +
@@ -456,7 +456,11 @@ Discourse.User.reopenClass(Discourse.Singleton, {
             Discourse.LetterAvatarVersion + ".png";
     }
 
-    return Discourse.getURLWithCDN(url);
+    url = Discourse.getURL(url);
+    if (Discourse.CDN) {
+      url = Discourse.CDN + url;
+    }
+    return url;
   },
 
   /**
