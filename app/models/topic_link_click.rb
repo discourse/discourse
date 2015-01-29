@@ -8,12 +8,33 @@ class TopicLinkClick < ActiveRecord::Base
   validates_presence_of :topic_link_id
   validates_presence_of :ip_address
 
+  def self.recheck_before_date
+    DateTime.iso8601('2015-02-01T00:00:00+00:00')
+  end
+
   # Create a click from a URL and post_id
   def self.create_from(args={})
 
     link = link_query(args).first
 
-    # If no link is found, return the url for relative links
+    # Prefer to count the link in the post being quoted, if possible
+    if link.present? && link.from_quote
+      args.delete[:post_id]
+      link = link_query(args).first
+    end
+
+    # If a post is specified but the link isn't found...
+    if !link.present? && args[:post_id].present?
+      # Recheck the post with the new extractor
+      post = Post.find(args[:post_id])
+      # But only if it hasn't been rechecked
+      if post && post.baked_at < recheck_before_date
+        TopicLink.extract_from(post)
+        post.touch(:baked_at) # don't check again
+      end
+    end
+
+    # If no link is found, allow without tracking for in-forum links
     unless link.present?
       return args[:url] if args[:url] =~ /^\//
 
