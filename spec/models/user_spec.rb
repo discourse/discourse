@@ -261,8 +261,14 @@ describe User do
 
     it "downcases email addresses" do
       user = Fabricate.build(:user, email: 'Fancy.Caps.4.U@gmail.com')
-      user.save
-      expect(user.reload.email).to eq('fancy.caps.4.u@gmail.com')
+      user.valid?
+      expect(user.email).to eq('fancy.caps.4.u@gmail.com')
+    end
+
+    it "strips whitespace from email addresses" do
+      user = Fabricate.build(:user, email: ' example@gmail.com ')
+      user.valid?
+      expect(user.email).to eq('example@gmail.com')
     end
   end
 
