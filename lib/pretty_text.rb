@@ -1,11 +1,13 @@
 require 'v8'
 require 'nokogiri'
+require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 
 module PrettyText
 
   class Helpers
+    include UrlHelper
 
     def t(key, opts)
       key = "js." + key
@@ -21,15 +23,15 @@ module PrettyText
     # function here are available to v8
     def avatar_template(username)
       return "" unless username
-
       user = User.find_by(username_lower: username.downcase)
-      user.avatar_template if user.present?
+      return "" unless user.present?
+      schemaless absolute user.avatar_template
     end
 
     def is_username_valid(username)
       return false unless username
       username = username.downcase
-      return User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
+      User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
   end
 
@@ -128,7 +130,9 @@ module PrettyText
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+
+    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
+    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
   end
 
   def self.markdown(text, opts=nil)
