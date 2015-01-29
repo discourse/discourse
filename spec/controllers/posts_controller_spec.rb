@@ -477,15 +477,16 @@ describe PostsController do
 	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
       end
 
-      it 'calls the post creator' do
+      it 'creates the post' do
         PostCreator.any_instance.expects(:create).returns(new_post)
-        xhr :post, :create, {raw: 'test'}
-        expect(response).to be_success
-      end
 
-      it 'returns JSON of the post' do
-        PostCreator.any_instance.expects(:create).returns(new_post)
+        # Make sure our extensibility points are triggered
+        DiscourseEvent.expects(:trigger).with(:topic_created, new_post.topic, anything, user).once
+        DiscourseEvent.expects(:trigger).with(:post_created, new_post, anything, user).once
+
         xhr :post, :create, {raw: 'test'}
+
+        expect(response).to be_success
         expect(::JSON.parse(response.body)).to be_present
       end
 

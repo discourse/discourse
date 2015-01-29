@@ -85,7 +85,8 @@ class PostsController < ApplicationController
       [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
 
     else
-      DiscourseEvent.trigger(:topic_created, post.topic, params, current_user)
+      DiscourseEvent.trigger(:topic_created, post.topic, params, current_user) unless params[:topic_id]
+      DiscourseEvent.trigger(:post_created, post, params, current_user)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
       [true, MultiJson.dump(post_serializer)]
