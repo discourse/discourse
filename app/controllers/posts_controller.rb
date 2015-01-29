@@ -420,6 +420,11 @@ class PostsController < ApplicationController
       result[f] = params[f] if params.has_key?(f)
     end
 
+    # Stuff we can use in spam prevention plugins
+    result[:ip_address] = request.remote_ip
+    result[:user_agent] = request.user_agent
+    result[:referrer] = request.env["HTTP_REFERER"]
+
     result
   end
 
