@@ -16,8 +16,8 @@ test("Regular categoryBadge", function() {
       }),
       tag = parseHTML(categoryBadgeHTML(category))[0];
 
-  equal(tag.name, 'span', 'it creates a `span` wrapper tag');
-  equal(tag.attributes['class'], 'badge-wrapper', 'it has the correct class');
+  equal(tag.name, 'a', 'it creates a `a` wrapper tag');
+  equal(tag.attributes['class'].trim(), 'badge-wrapper', 'it has the correct class');
 
   var label = tag.children[1];
   equal(label.attributes.title, 'cool description', 'it has the correct title');
