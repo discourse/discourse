@@ -11,7 +11,6 @@ export default Discourse.View.extend(CleansUp, {
 
   addBackground: function() {
     var url = this.get('controller.user.card_background');
-
     if (!this.get('allowBackgrounds')) { return; }
 
     var $this = this.$();
@@ -20,7 +19,7 @@ export default Discourse.View.extend(CleansUp, {
     if (Ember.isEmpty(url)) {
       $this.css('background-image', '').addClass('no-bg');
     } else {
-      $this.css('background-image', "url(" + Discourse.getURLWithCDN(url) + ")").removeClass('no-bg');
+      $this.css('background-image', "url(" + url + ")").removeClass('no-bg');
     }
   }.observes('controller.user.card_background'),
 

@@ -128,9 +128,7 @@ module PrettyText
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-
-    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
-    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
+    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
   end
 
   def self.markdown(text, opts=nil)
