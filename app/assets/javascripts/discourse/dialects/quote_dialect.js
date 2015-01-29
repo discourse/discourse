@@ -1,4 +1,5 @@
 var esc = Handlebars.Utils.escapeExpression;
+
 Discourse.BBCode.register('quote', {noWrap: true, singlePara: true}, function(contents, bbParams, options) {
   var params = {'class': 'quote'},
       username = null;
