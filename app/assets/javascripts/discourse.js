@@ -24,6 +24,12 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return u + url;
   },
 
+  getURLWithCDN: function(url) {
+    url = this.getURL(url);
+    if (Discourse.CDN) { url = Discourse.CDN + url; }
+    return url;
+  },
+
   Resolver: DiscourseResolver,
 
   _titleChanged: function() {
