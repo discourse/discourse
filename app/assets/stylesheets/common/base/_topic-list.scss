@@ -100,10 +100,7 @@
   }
 
   td.category a {
-    // suppress extra long category names in tables
     max-width:150px;
-    overflow:hidden;
-    text-overflow:ellipsis;
   }
 
 }
