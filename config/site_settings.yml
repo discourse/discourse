@@ -724,6 +724,8 @@ uncategorized:
     client: true
     default: true
 
+  suppress_slug: false
+
   # Search
   min_search_term_length:
     client: true
