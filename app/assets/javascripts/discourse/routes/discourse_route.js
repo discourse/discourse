@@ -89,23 +89,53 @@ Discourse.Route.reopenClass({
   },
 
   mapRoutes: function() {
+    var resources = {};
+
+    // If a module is defined as `route-map` in discourse or a plugin, its routes
+    // will be built automatically. You can supply a `resource` property to
+    // automatically put it in that resource, such as `admin`. That way plugins
+    // can define admin routes.
+    Ember.keys(requirejs._eak_seen).forEach(function(key) {
+      if (/route-map$/.test(key)) {
+        var module = require(key, null, null, true);
+        if (!module || !module.default) { throw new Error(key + ' must export a route map.'); }
+
+        var mapObj = module.default;
+        if (typeof mapObj === 'function') {
+          mapObj = { resource: 'root', map: mapObj };
+        }
+
+        if (!resources[mapObj.resource]) { resources[mapObj.resource] = []; }
+        resources[mapObj.resource].push(mapObj.map);
+      }
+    });
+
     Discourse.Router.map(function() {
       var router = this;
+
+      // Do the root resources first
+      if (resources.root) {
+        resources.root.forEach(function(m) {
+          m.call(router);
+        });
+        delete resources.root;
+      }
+
+      // Apply other resources next
+      Object.keys(resources).forEach(function(r) {
+        router.resource(r, function() {
+          var res = this;
+          resources[r].forEach(function(m) {
+            m.call(res);
+          });
+        });
+      });
 
       if (routeBuilder) {
         Ember.warn("The Discourse `routeBuilder` is deprecated. Export a `route-map` instead");
         routeBuilder.call(router);
       }
 
-      // If a module is defined as `route-map` in discourse or a plugin, its routes
-      // will be built automatically.
-      Ember.keys(requirejs._eak_seen).forEach(function(key) {
-        if (/route-map$/.test(key)) {
-          var module = require(key, null, null, true);
-          if (!module) { throw new Error(key + ' must export a map function.'); }
-          module.default.call(router);
-        }
-      });
 
       this.route('unknown', {path: '*path'});
     });
