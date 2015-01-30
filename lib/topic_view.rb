@@ -342,7 +342,7 @@ class TopicView
 
     # Filters
     if @filter == 'summary'
-      @filtered_posts = @filtered_posts.summary
+      @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
     end
 
