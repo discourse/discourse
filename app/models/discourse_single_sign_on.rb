@@ -126,8 +126,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
-      avatar_force_update == "true" ||
-      avatar_force_update.to_i != 0 ||
+      avatar_force_update ||
       sso_record.external_avatar_url != avatar_url)
 
       begin
