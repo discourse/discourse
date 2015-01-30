@@ -472,7 +472,10 @@ Discourse.Composer = Discourse.Model.extend({
 
     // Update the title if we've changed it, otherwise consider it a
     // successful resolved promise
-    if (this.get('title') && post.get('post_number') === 1) {
+    if (this.get('title') &&
+        post.get('post_number') === 1 &&
+        this.get('topic.details.can_edit')) {
+
       var topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
       promise = Discourse.Topic.update(this.get('topic'), topicProps);
     } else {
