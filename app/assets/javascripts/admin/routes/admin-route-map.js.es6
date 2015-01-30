@@ -1,5 +1,7 @@
-export default function() {
-  this.resource('admin', function() {
+export default {
+  resource: 'admin',
+
+  map: function() {
     this.route('dashboard', { path: '/' });
     this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
       this.resource('adminSiteSettingsCategory', { path: 'category/:category_id'} );
@@ -60,6 +62,5 @@ export default function() {
     this.resource('adminBadges', { path: '/badges' }, function() {
       this.route('show', { path: '/:badge_id' });
     });
-
-  });
-}
+  }
+};
