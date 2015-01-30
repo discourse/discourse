@@ -40,7 +40,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     this.bindScrolling({name: 'topic-view'});
 
     var self = this;
-    $(window).resize('resize.discourse-on-scroll', function() {
+    $(window).on('resize.discourse-on-scroll', function() {
       self.scrolled();
     });
 
