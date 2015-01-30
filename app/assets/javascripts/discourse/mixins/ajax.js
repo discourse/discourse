@@ -63,6 +63,8 @@ Discourse.Ajax = Em.Mixin.create({
         xhr.jqTextStatus = textStatus;
         xhr.requestedUrl = url;
 
+        // TODO is this sequence correct? we are calling catch defined externally before
+        // the error that was defined inline, it should probably be in reverse
         Ember.run(null, reject, xhr);
         if (oldError) oldError(xhr);
       };
