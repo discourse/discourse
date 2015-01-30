@@ -56,10 +56,16 @@ h3 .badge-wrapper {
 }
 
 
-header .title-wrapper .badge-category-bg {
-  vertical-align: top;
-  padding-top:0;
-  padding-bottom:0;
+header .title-wrapper {
+
+  .badge-category-bg, .badge-category {
+    vertical-align: middle;
+  }
+
+  .badge-category-bg {
+    padding-top:0;
+    padding-bottom:0;
+  }
 }
 
 .badge-category-parent-bg, .badge-category-bg {
