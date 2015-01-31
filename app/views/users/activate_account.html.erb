@@ -10,8 +10,19 @@
 </div>
 
 <%- content_for(:no_ember_head) do %>
+  <%= script "preload_store" %>
+  <%= script "locales/#{I18n.locale}" %>
   <%= script "vendor" %>
+  <%= script "application" %>
+  <%- if staff? %>
+    <%= script "admin"%>
+  <%- end %>
+
+  <%= render_google_universal_analytics_code %>
+
 <%- end %>
+
+<%= render :partial => "common/discourse_javascript" %>
 
 <script language="javascript">
   (function() {
