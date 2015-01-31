@@ -1,4 +1,3 @@
-require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 # Edit the constants and initialize method for your import data.

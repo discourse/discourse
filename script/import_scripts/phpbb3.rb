@@ -1,8 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/../../config/environment")
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-require_dependency 'url_helper'
-require_dependency 'file_helper'
-
 require "mysql2"
 
 
@@ -313,7 +309,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     s.gsub!(/\[list=1\](.*?)\[\/list:o\]/m, '[ol]\1[/ol]')
     # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
     s.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
-    
+
     s
   end
 
