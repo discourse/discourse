@@ -11,7 +11,7 @@ export default Discourse.View.extend(StringBuffer, {
        ],
   actions: {
     select: function(){
-      this.set('controller.selected', this);
+      this.set('controller.selectedRow', this);
     },
 
     toggleBookmark: function(){
@@ -24,8 +24,8 @@ export default Discourse.View.extend(StringBuffer, {
   },
 
   selected: function(){
-    return this.get('controller.selected')===this;
-  }.property('controller.selected'),
+    return this.get('controller.selectedRow')===this;
+  }.property('controller.selectedRow'),
 
   unboundClassNames: function(){
     var classes = [];
