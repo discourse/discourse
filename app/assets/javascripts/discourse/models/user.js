@@ -444,7 +444,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     var base = Discourse.BaseUri === '/' ? '' : Discourse.BaseUri;
     if (uploadedAvatarId) {
       url = base +
-           "/user_avatar" +
+           "/user_avatar/" +
             Discourse.BaseUrl +
             "/" +
             username.toLowerCase() +
