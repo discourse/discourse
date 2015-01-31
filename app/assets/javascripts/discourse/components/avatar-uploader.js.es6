@@ -14,9 +14,6 @@ export default Em.Component.extend(UploadMixin, {
   uploadDone: function(data) {
     var self = this;
 
-    // indicates the users is using an uploaded avatar
-    this.set("custom_avatar_upload_id", data.result.upload_id);
-
     // display a warning whenever the image is not a square
     this.set("imageIsNotASquare", data.result.width !== data.result.height);
 
@@ -26,6 +23,11 @@ export default Em.Component.extend(UploadMixin, {
     // this will also capture the first frame of animated avatars when they're not allowed
     Discourse.Utilities.cropAvatar(data.result.url, data.files[0].type).then(function(avatarTemplate) {
       self.set("uploadedAvatarTemplate", avatarTemplate);
+
+      // indicates the users is using an uploaded avatar (must happen after cropping, otherwise
+      //  we will attempt to load an invalid avatar and cache a redirect to old one, uploadedAvatarTemplate
+      //  trumps over custom avatar upload id)
+      self.set("custom_avatar_upload_id", data.result.upload_id);
     });
 
     // the upload is now done
