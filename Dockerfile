@@ -31,12 +31,6 @@ RUN curl http://apt.postgresql.org/pub/repos/apt/ACCC4CF8.asc | apt-key add - &&
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* &&\
     rm -fr /usr/share/man && rm -fr /usr/share/doc
 
-# ruby dependencies
-# ADD Gemfile /opt/discourse/
-# ADD Gemfile.lock /opt/discourse/
-# ADD Gemfile_master.lock /opt/discourse/
-# ADD vendor/gems/ /opt/discourse/vendor/
-
 ADD . /opt/discourse
 
 WORKDIR /opt/discourse
@@ -47,6 +41,3 @@ RUN bundle install
 RUN mkdir -p /var/log && rm -rf log && ln -sf /var/log log
 
 VOLUME ["/opt/discourse"]
-
-
-# RUN RAILS_ENV=production bundle exec rake assets:precompile
