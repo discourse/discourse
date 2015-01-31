@@ -6,7 +6,7 @@ Simple 30 minute basic install:
 Powerful, flexible, large or multiple server install:
 [**Advanced Docker install guide**][docker]
 
-The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation. (Alternately, you can try the [unofficial Heroku install guide][heroku], the [unofficial Ubuntu install guide][ubuntu], the [BitNami Discourse Virtual Machine package][bitnami] or [Cloud66][cloud66].)
+The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation.
 
 ### Why do you only officially support Docker?
 
