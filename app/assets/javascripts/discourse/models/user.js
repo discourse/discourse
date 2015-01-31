@@ -442,10 +442,11 @@ Discourse.User.reopenClass(Discourse.Singleton, {
   avatarTemplate: function(username, uploadedAvatarId) {
     var url;
     var base = Discourse.BaseUri === '/' ? '' : Discourse.BaseUri;
+
     if (uploadedAvatarId) {
       url = base +
            "/user_avatar/" +
-            Discourse.BaseUrl +
+            Discourse.BaseHost +
             "/" +
             username.toLowerCase() +
             "/{size}/" +
