@@ -351,10 +351,13 @@ Discourse.User = Discourse.Model.extend({
     Change avatar selection
   */
   pickAvatar: function(uploadId) {
-    this.set("uploaded_avatar_id", uploadId);
+    var self = this;
+
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/pick", {
       type: 'PUT',
       data: { upload_id: uploadId }
+    }).then(function(){
+      self.set('uploaded_avatar_id', uploadId);
     });
   },
 
