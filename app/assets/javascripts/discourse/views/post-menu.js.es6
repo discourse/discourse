@@ -57,6 +57,7 @@ export default Discourse.View.extend(StringBuffer, {
     'post.topic.deleted_at',
     'post.replies.length',
     'post.wiki',
+    'post.post_type',
     'collapsed'],
 
   _collapsedByDefault: function() {
