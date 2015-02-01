@@ -30,8 +30,6 @@ discourse:
     DISCOURSE_REDIS_HOST: redis
     # Important: make sure RAILS_RELATIVE_URL_ROOT is NOT set when running rake autospec.
     #    RAILS_RELATIVE_URL_ROOT: /discourse
-    # DB settings apply only if RAILS_ENV is production
-    # else edit database.yml
     # DISCOURSE_CDN_URL:
     DISCOURSE_DB_HOST: db
     DISCOURSE_DB_USERNAME: postgres
