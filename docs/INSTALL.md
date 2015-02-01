@@ -24,16 +24,10 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 - [Redis 2.6+](http://redis.io/download)
 - [Ruby 2.0+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
 
-
-
 ## Security
 
 We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
 
 [basic]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
 [advanced]: https://github.com/discourse/discourse_docker
-[bitnami]: http://bitnami.com/stack/discourse
-[cloud66]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud66.md
-[heroku]: https://github.com/discourse/discourse/blob/master/docs/install-HEROKU.md
-[ubuntu]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
 [swap]: https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880
