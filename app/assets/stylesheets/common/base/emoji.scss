@@ -15,11 +15,12 @@ body img.emoji {
   margin-top: -100px;
   left: 50%;
   top: 50%;
-  background-color: white;
+  background-color: #dadada;
 }
 
 .emoji-page td {
-  border: 1px solid #eee;
+  border: 1px solid transparent;
+  background-color: white;
 }
 
 .emoji-page a {
@@ -32,13 +33,9 @@ body img.emoji {
 }
 
 .emoji-table-wrapper {
-  min-width: 444px;
+  min-width: 442px;
   min-height: 185px;
-}
-
-.emoji-page {
-  border-collapse: collapse;
-  margin: 3px;
+  background-color: white;
 }
 
 .emoji-modal-wrapper {
@@ -52,12 +49,9 @@ body img.emoji {
   background-color: black;
 }
 
-
 .emoji-modal .toolbar {
   margin: 0;
-  padding: 0;
-  margin-top: 10px;
-  margin-left: 5px;
+  margin-top: 8px;
   margin-bottom: 5px
 }
 
