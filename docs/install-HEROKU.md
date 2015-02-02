@@ -1,3 +1,8 @@
+# Warning: This Guide is Deprecated
+We only support Docker based installs now. Please see [our **official install guide**](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) for supported install instructions.
+
+-----
+
 # Basic Heroku deployment
 
 This guide takes you through the steps for deploying Discourse to the [Heroku](http://www.heroku.com/) cloud application platform. If you're unfamiliar with Heroku, [read this first](https://devcenter.heroku.com/articles/quickstart). The basic deployment of Discourse requires several services that will cost you money. In addition to the [750 free Dyno hours](https://devcenter.heroku.com/articles/usage-and-billing) provided by Heroku, the application requires one additional process to be running for the Sidekiq queue ($34 monthly), and a Redis database plan that supports a minimum of 2 databases (average $10 monthly).
