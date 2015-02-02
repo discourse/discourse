@@ -211,6 +211,7 @@ class PostRevisor
     clear_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
+
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
   end

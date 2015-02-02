@@ -4,7 +4,9 @@ require_dependency 'rate_limiter/on_create_record'
 # A redis backed rate limiter.
 class RateLimiter
 
-  KEY_PREFIX = "l-rate-limit:"
+  def self.key_prefix
+    "l-rate-limit:"
+  end
 
   def self.disable
     @disabled = true
@@ -20,12 +22,12 @@ class RateLimiter
   end
 
   def self.clear_all!
-    $redis.keys("#{KEY_PREFIX}:*").each { |k| $redis.del(k) }
+    $redis.delete_prefixed(RateLimiter.key_prefix)
   end
 
   def initialize(user, key, max, secs)
     @user = user
-    @key = "#{KEY_PREFIX}:#{@user && @user.id}:#{key}"
+    @key = "#{RateLimiter.key_prefix}:#{@user && @user.id}:#{key}"
     @max = max
     @secs = secs
   end

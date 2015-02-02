@@ -70,6 +70,10 @@ class DiscourseRedis
     }
   end
 
+  def delete_prefixed(prefix)
+    keys("#{prefix}*").each { |k| $redis.del(k) }
+  end
+
   def flushdb
     keys.each{|k| del(k)}
   end

@@ -39,6 +39,24 @@ describe PostRevisor do
     end
   end
 
+  context 'revise wiki' do
+
+    before do
+      # There used to be a bug where wiki changes were considered posting "too similar"
+      # so this is enabled and checked
+      $redis.delete_prefixed('unique-post')
+      SiteSetting.unique_posts_mins = 10
+    end
+
+    it 'allows the user to change it to a wiki' do
+      pc = PostCreator.new(newuser, topic_id: topic.id, raw: 'this is a post that will become a wiki')
+      post = pc.create
+      post.revise(post.user, wiki: true).should == true
+      post.reload
+      post.wiki.should be_true
+    end
+  end
+
   context 'revise' do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }
