@@ -4,7 +4,7 @@ require_dependency 'rate_limiter/on_create_record'
 # A redis backed rate limiter.
 class RateLimiter
 
-  KEY_PREFIX = "l-rate-limit:"
+  KEY_PREFIX = "l-rate-limit:" unless defined? KEY_PREFIX
 
   def self.disable
     @disabled = true
