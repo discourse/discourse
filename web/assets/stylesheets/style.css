@@ -1,0 +1,25 @@
+section {
+  padding: 20px;
+  border-bottom: 1px solid #999;
+}
+
+section h2 {
+  margin: 10px 0;
+}
+
+#onebox-url {
+  width: 60%;
+  min-width: 400px;
+  height: 25px;
+}
+
+#go {
+  width: 80px;
+  height: 30px;
+}
+
+.message-group label {
+  display: block;
+  color: #666;
+  margin-top: 15px;
+}

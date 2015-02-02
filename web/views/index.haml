@@ -1,0 +1,29 @@
+%section.input-content
+  %h2
+    Url to onebox
+  %input#onebox-url(placeholder="url")
+  %button#go{type: 'button'}
+    Go
+%section.preview
+  %h2
+    Onebox preview
+  .onebox-container
+%section.debug-message
+  %h2
+    Debug message
+  .message-group
+    %label(for='oneboxed-url')
+      url
+    %span#oneboxed-url
+  .message-group
+    %label(for='onebox-engine')
+      engine
+    %span#onebox-engine
+  .message-group
+    %label(for='placeholder-html')
+      placeholder_html
+    %span#placeholder-html
+  .message-group
+    %label(for='preview-html')
+      to_s
+    %span#preview-html

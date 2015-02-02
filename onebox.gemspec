@@ -33,6 +33,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rubocop", "~> 0.11"
   spec.add_development_dependency "twitter", "~> 4.8"
   spec.add_development_dependency "guard-rspec", "~> 4.2.8"
+  spec.add_development_dependency "sinatra", "~> 1.4"
+  spec.add_development_dependency "sinatra-contrib", "~> 1.4"
+  spec.add_development_dependency "haml", "~> 4.0"
   # listen current is a bit broken
   # http://stackoverflow.com/questions/21319753/readline-seems-to-be-broken
   spec.add_development_dependency "listen", "= 2.6.0"
