@@ -409,7 +409,7 @@ class PostAction < ActiveRecord::Base
 
   def enforce_rules
     post = Post.with_deleted.where(id: post_id).first
-    PostAction.auto_close_if_treshold_reached(post.topic)
+    PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
@@ -422,7 +422,7 @@ class PostAction < ActiveRecord::Base
 
   MAXIMUM_FLAGS_PER_POST = 3
 
-  def self.auto_close_if_treshold_reached(topic)
+  def self.auto_close_if_threshold_reached(topic)
     return if topic.closed?
 
     flags = PostAction.active
