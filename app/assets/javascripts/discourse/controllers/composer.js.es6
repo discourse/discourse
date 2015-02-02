@@ -39,7 +39,34 @@ export default DiscourseController.extend({
 
     // Import a quote from the post
     importQuote: function() {
-      this.get('model').importQuote();
+      var postStream = this.get('topic.postStream'),
+          postId = this.get('model.post.id');
+
+      // If there is no current post, use the first post id from the stream
+      if (!postId && postStream) {
+        postId = postStream.get('firstPostId');
+      }
+
+      // If we're editing a post, fetch the reply when importing a quote
+      if (this.get('model.editingPost')) {
+        var replyToPostNumber = this.get('model.post.reply_to_post_number');
+        if (replyToPostNumber) {
+          var replyPost = postStream.get('posts').findBy('post_number', replyToPostNumber);
+          if (replyPost) {
+            postId = replyPost.get('id');
+          }
+        }
+      }
+
+      if (postId) {
+        this.set('model.loading', true);
+        var composer = this;
+        return Discourse.Post.load(postId).then(function(post) {
+          var quote = Discourse.Quote.build(post, post.get("raw"))
+          composer.appendBlockAtCursor(quote);
+          composer.set('model.loading', false);
+        });
+      }
     },
 
     cancel: function() {

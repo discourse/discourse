@@ -328,36 +328,6 @@ Discourse.Composer = Discourse.Model.extend({
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
-  importQuote: function() {
-    var postStream = this.get('topic.postStream'),
-        postId = this.get('post.id');
-
-    if (!postId && postStream) {
-      postId = postStream.get('firstPostId');
-    }
-
-    // If we're editing a post, fetch the reply when importing a quote
-    if (this.get('editingPost')) {
-      var replyToPostNumber = this.get('post.reply_to_post_number');
-      if (replyToPostNumber) {
-        var replyPost = postStream.get('posts').findBy('post_number', replyToPostNumber);
-        if (replyPost) {
-          postId = replyPost.get('id');
-        }
-      }
-    }
-
-    // If there is no current post, use the post id from the stream
-    if (postId) {
-      this.set('loading', true);
-      var composer = this;
-      return Discourse.Post.load(postId).then(function(post) {
-        composer.appendText(Discourse.Quote.build(post, post.get('raw')));
-        composer.set('loading', false);
-      });
-    }
-  },
-
   /*
      Open a composer
 
