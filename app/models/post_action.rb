@@ -127,13 +127,17 @@ class PostAction < ActiveRecord::Base
                         .where(post_id: post.id)
                         .where(post_action_type_id: PostActionType.flag_types.values)
 
+    trigger_spam = false
     actions.each do |action|
       action.agreed_at = Time.zone.now
       action.agreed_by_id = moderator.id
       # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :agreed, delete_post)
+      @trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
+
+    DiscourseEvent.trigger(:confirmed_spam_post, post) if @trigger_spam
 
     update_flagged_posts_count
   end
