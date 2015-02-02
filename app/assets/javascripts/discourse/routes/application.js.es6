@@ -132,18 +132,13 @@ var ApplicationRoute = Discourse.Route.extend({
     },
 
     editCategory: function(category) {
-      var router = this;
+      var self = this;
 
-      if (category.get('isUncategorizedCategory')) {
-        Discourse.Route.showModal(router, 'editCategory', category);
-        router.controllerFor('editCategory').set('selectedTab', 'general');
-      } else {
-        Discourse.Category.reloadById(category.get('id')).then(function (c) {
-          Discourse.Site.current().updateCategory(c);
-          Discourse.Route.showModal(router, 'editCategory', c);
-          router.controllerFor('editCategory').set('selectedTab', 'general');
-        });
-      }
+      Discourse.Category.reloadById(category.get('id')).then(function (c) {
+        self.site.updateCategory(c);
+        Discourse.Route.showModal(self, 'editCategory', c);
+        self.controllerFor('editCategory').set('selectedTab', 'general');
+      });
     },
 
     /**
