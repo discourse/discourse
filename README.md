@@ -72,6 +72,16 @@ preview = Onebox.preview(url)
 "#{preview}" == preview.to_s #=> true
 ```
 
+Development Preview Interface
+=============================
+
+The onebox gem comes with a development server for previewing the results
+of your changes. You can run it by running `rake server` after checking
+out the project. You can then try out URLs.
+
+The server doesn't reload code changes automatically (PRs accepted!) so
+make sure to hit CTRL-C and restart the server to try a code change out.
+
 
 Adding Support for a new URL
 ============================
@@ -172,7 +182,7 @@ Installing
 Add this line to your application's Gemfile:
 
     gem "onebox", "~> 1.2"
-    
+
 And then execute:
 
     $ bundle
