@@ -8,6 +8,7 @@
     <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
     <%- end %>
+    <%= render_google_universal_analytics_code %>
     <%= yield :head %>
     <style>
         img { max-width: 100%; width: auto; height: auto; }
@@ -26,5 +27,9 @@
     <footer class="container">
       <p><%= t 'powered_by_html' %></p>
     </footer>
+    <%= render_google_analytics_code %>
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
+    <%- end %>
   </body>
 </html>
