@@ -156,6 +156,7 @@ en:
       stat:
         all_time: "All Time"
         last_7_days: "Last 7 Days"
+        last_30_days: "Last 30 Days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"

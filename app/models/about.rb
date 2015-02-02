@@ -40,13 +40,16 @@ class About
        post_count: Post.count,
        user_count: User.count,
        topics_7_days: Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
+       topics_30_days: Topic.listable_topics.where('created_at > ?', 30.days.ago).count,
        posts_7_days: Post.where('created_at > ?', 7.days.ago).count,
+       posts_30_days: Post.where('created_at > ?', 30.days.ago).count,
        users_7_days: User.where('created_at > ?', 7.days.ago).count,
+       users_30_days: User.where('created_at > ?', 30.days.ago).count,
        active_users_7_days: User.where('last_seen_at > ?', 7.days.ago).count,
+       active_users_30_days: User.where('last_seen_at > ?', 30.days.ago).count,
        like_count: UserAction.where(action_type: UserAction::LIKE).count,
-       likes_7_days: UserAction.where(action_type: UserAction::LIKE)
-                               .where("created_at > ?", 7.days.ago)
-                               .count
+       likes_7_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 7.days.ago).count,
+       likes_30_days: UserAction.where(action_type: UserAction::LIKE).where("created_at > ?", 30.days.ago).count
     }
   end
 
