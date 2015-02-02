@@ -78,14 +78,13 @@ var trackEmojiUsage = function(title){
   recentlyUsedIcons = null;
 };
 
-var initializeRecentlyUsedIcons = function() {
+var initializeRecentlyUsedIcons = function(){
   recentlyUsedIcons = [];
 
   var usage = JSON.parse(localStorage.emojiUsage);
   var recent = _.take(_.sortByAll(usage, ["usage", "title"]).reverse(), PER_ROW);
 
-
-  if(recentlyUsedIcons.length > 0){
+  if(recent.length > 0){
     _.each(recent, function(emoji){
       recentlyUsedIcons.push(emoji.title);
     });
@@ -105,7 +104,8 @@ var toolbar = function(selected){
   if (!recentlyUsedIcons) { initializeRecentlyUsedIcons(); }
 
   return _.map(groups, function(g, i){
-    var row = {src: Discourse.Emoji.urlFor(g.icons[0]), groupId: i};
+    var icon = g.name === "recent" ? "star2" : g.icons[0];
+    var row = {src: Discourse.Emoji.urlFor(icon), groupId: i};
     if(i === selected){
       row.selected = true;
     }
