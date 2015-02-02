@@ -121,7 +121,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "post-#{user_id}:#{raw_hash}"
+    "unique-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
@@ -132,7 +132,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = $redis.get(unique_post_key)
-    post_id != nil and post_id != id
+    post_id != nil and post_id.to_i != id
   end
 
   def raw_hash
