@@ -21,6 +21,12 @@ class ImportScripts::Ning < ImportScripts::Base
     #SiteSetting.max_image_size_kb = 3072
     #SiteSetting.max_attachment_size_kb = 1024
     SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + EXTRA_AUTHORIZED_EXTENSIONS).uniq.join("|")
+
+    # Example of importing a custom profile field:
+    # @interests_field = UserField.find_by_name("My interests")
+    # unless @interests_field
+    #   @interests_field = UserField.create(name: "My interests", description: "Do you like stuff?", field_type: "text", editable: true, required: false, show_on_profile: true)
+    # end
   end
 
   def execute
@@ -65,6 +71,10 @@ class ImportScripts::Ning < ImportScripts::Base
         avatar_url: u["profilePhoto"],
         bio_raw: u["profileQuestions"].is_a?(Hash) ? u["profileQuestions"]["About Me"] : nil,
         post_create_action: proc do |newuser|
+          # if u["profileQuestions"].is_a?(Hash)
+          #   newuser.custom_fields = {"user_field_#{@interests_field.id}" => u["profileQuestions"]["My interests"]}
+          # end
+
           if staff_levels.include?(u["level"].downcase)
             if u["level"].downcase == "admin" || u["level"].downcase == "owner"
               newuser.admin = true
@@ -74,7 +84,7 @@ class ImportScripts::Ning < ImportScripts::Base
           end
 
           # states: ["active", "suspended", "left", "pending"]
-          if u["state"] == "active"
+          if u["state"] == "active" && newuser.approved_at.nil?
             newuser.approved = true
             newuser.approved_by_id = @system_user.id
             newuser.approved_at = newuser.created_at
@@ -82,7 +92,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
           newuser.save
 
-          if u["profilePhoto"]
+          if u["profilePhoto"] && newuser.user_avatar.try(:custom_upload_id).nil?
             photo_path = file_full_path(u["profilePhoto"])
             if File.exists?(photo_path)
               begin
@@ -106,6 +116,7 @@ class ImportScripts::Ning < ImportScripts::Base
         end
       }
     end
+    EmailToken.delete_all
   end
 
   def suspend_users
@@ -176,31 +187,42 @@ class ImportScripts::Ning < ImportScripts::Base
     topics_json.each do |topic|
       if topic["title"].present? && topic["description"].present?
         @current_topic_title = topic["title"] # for debugging
-        mapped = {}
-        mapped[:id] = topic["id"]
-        mapped[:user_id] = user_id_from_imported_user_id(topic["contributorName"]) || -1
-        mapped[:created_at] = Time.zone.parse(topic["createdDate"])
-        unless topic["category"].nil? || topic["category"].downcase == "uncategorized"
-          mapped[:category] = category_from_imported_category_id(topic["category"]).try(:name)
-        end
-        if topic["category"].nil? && default_category
-          mapped[:category] = default_category
-        end
-        mapped[:title] = CGI.unescapeHTML(topic["title"])
-        mapped[:raw] = process_ning_post_body(topic["description"])
+        parent_post = nil
 
-        if topic["fileAttachments"]
-          mapped[:raw] = add_file_attachments(mapped[:raw], topic["fileAttachments"])
-        end
+        if parent_post_id = post_id_from_imported_post_id(topic["id"])
+          parent_post = Post.find(parent_post_id) # already imported this post
+        else
+          mapped = {}
+          mapped[:id] = topic["id"]
+          mapped[:user_id] = user_id_from_imported_user_id(topic["contributorName"]) || -1
+          mapped[:created_at] = Time.zone.parse(topic["createdDate"])
+          unless topic["category"].nil? || topic["category"].downcase == "uncategorized"
+            mapped[:category] = category_from_imported_category_id(topic["category"]).try(:name)
+          end
+          if topic["category"].nil? && default_category
+            mapped[:category] = default_category
+          end
+          mapped[:title] = CGI.unescapeHTML(topic["title"])
+          mapped[:raw] = process_ning_post_body(topic["description"])
 
-        parent_post = create_post(mapped, mapped[:id])
-        unless parent_post.is_a?(Post)
-          puts "Error creating topic #{mapped[:id]}. Skipping."
-          puts parent_post.inspect
+          if topic["fileAttachments"]
+            mapped[:raw] = add_file_attachments(mapped[:raw], topic["fileAttachments"])
+          end
+
+          parent_post = create_post(mapped, mapped[:id])
+          unless parent_post.is_a?(Post)
+            puts "Error creating topic #{mapped[:id]}. Skipping."
+            puts parent_post.inspect
+          end
         end
 
         if topic["comments"].present?
           topic["comments"].reverse.each do |post|
+
+            if post_id_from_imported_post_id(post["id"])
+              next # already imported this post
+            end
+
             raw = process_ning_post_body(post["description"])
             if post["fileAttachments"]
               raw = add_file_attachments(raw, post["fileAttachments"])
