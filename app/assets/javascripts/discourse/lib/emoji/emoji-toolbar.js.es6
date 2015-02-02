@@ -40,34 +40,73 @@ var closeSelector = function(){
   $('body, textarea').off('keydown.emoji');
 };
 
-var ungroupedIcons;
+var ungroupedIcons, recentlyUsedIcons;
+
+var initializeUngroupedIcons = function(){
+  ungroupedIcons = [];
+
+  var groupedIcons = {};
+  _.each(groups, function(group){
+    _.each(group.icons, function(icon){
+      groupedIcons[icon] = true;
+    });
+  });
+
+  var emojis = Discourse.Emoji.list();
+  _.each(emojis, function(emoji){
+    if(groupedIcons[emoji] !== true){
+      ungroupedIcons.push(emoji);
+    }
+  });
+
+  if(ungroupedIcons.length > 0){
+    groups.push({name: 'ungrouped', icons: ungroupedIcons});
+  }
+};
+
+if (!localStorage.emojiUsage) { localStorage.emojiUsage = "{}"; }
+
+var trackEmojiUsage = function(title){
+  var recent = JSON.parse(localStorage.emojiUsage);
+
+  if (!recent[title]) { recent[title] = { title: title, usage: 0 }; }
+  recent[title]["usage"]++;
+
+  localStorage.emojiUsage = JSON.stringify(recent);
+
+  // clear the cache
+  recentlyUsedIcons = null;
+};
+
+var initializeRecentlyUsedIcons = function() {
+  recentlyUsedIcons = [];
+
+  var usage = JSON.parse(localStorage.emojiUsage);
+  var recent = _.take(_.sortByAll(usage, ["usage", "title"]).reverse(), PER_ROW);
+
+
+  if(recentlyUsedIcons.length > 0){
+    _.each(recent, function(emoji){
+      recentlyUsedIcons.push(emoji.title);
+    });
+
+    var recentGroup = _.find(groups, {name: 'recent'});
+    if(!recentGroup){
+      recentGroup = {name: 'recent', icons: []};
+      groups.push(recentGroup);
+    }
+
+    recentGroup.icons = recentlyUsedIcons;
+  }
+};
 
 var toolbar = function(selected){
-  if(!ungroupedIcons){
-    ungroupedIcons = [];
-    var groupedIcons = {};
-
-    _.each(groups, function(group){
-      _.each(group.icons, function(icon){
-        groupedIcons[icon] = true;
-      });
-    });
-
-    var emojis = Discourse.Emoji.list();
-    _.each(emojis,function(emoji){
-      if(groupedIcons[emoji] !== true){
-        ungroupedIcons.push(emoji);
-      }
-    });
-
-    if(ungroupedIcons.length > 0){
-      groups.push({name: 'ungrouped', icons: ungroupedIcons});
-    }
-  }
+  if (!ungroupedIcons) { initializeUngroupedIcons(); }
+  if (!recentlyUsedIcons) { initializeRecentlyUsedIcons(); }
 
   return _.map(groups, function(g, i){
     var row = {src: Discourse.Emoji.urlFor(g.icons[0]), groupId: i};
-    if(i===selected){
+    if(i === selected){
       row.selected = true;
     }
     return row;
@@ -80,9 +119,11 @@ var bindEvents = function(page,offset){
   var composerController = Discourse.__container__.lookup('controller:composer');
 
   $('.emoji-page a').click(function(){
-     composerController.appendTextAtCursor(":" + $(this).attr('title') + ":", {space: true});
-     closeSelector();
-     return false;
+    var title = $(this).attr('title');
+    trackEmojiUsage(title)
+    composerController.appendTextAtCursor(":" + title + ":", {space: true});
+    closeSelector();
+    return false;
   }).hover(function(){
     var title = $(this).attr('title');
     var html = "<img src='" + Discourse.Emoji.urlFor(title) + "' class='emoji'> <span>:" + title + ":<span>";
