@@ -146,7 +146,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.fix_image_orientation(path)
-    `convert #{path} -set colorspace RGB -auto-orient #{path}`
+    `convert #{path} -auto-orient #{path}`
   end
 
 end
