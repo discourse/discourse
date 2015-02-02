@@ -329,7 +329,7 @@ export default Discourse.View.extend(StringBuffer, {
                  '<h3>' + I18n.t('admin_title') + '</h3>' +
                  '<ul>' +
                    '<li class="btn btn-admin" data-action="toggleWiki">' + wikiIcon + wikiText + '</li>' +
-                   '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' +
+                   (Discourse.User.currentProp('staff') ? '<li class="btn btn-admin" data-action="togglePostType">' + postTypeIcon + postTypeText + '</li>' : '') +
                    '<li class="btn btn-admin" data-action="rebakePost">' + rebakePostIcon + rebakePostText + '</li>' +
                    (post.hidden ? '<li class="btn btn-admin" data-action="unhidePost">' + unhidePostIcon + unhidePostText + '</li>' : '') +
                  '</ul>' +
