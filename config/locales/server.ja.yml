@@ -20,11 +20,6 @@ ja:
     short_date_no_year: "MMM D"
     short_date: "MMM D, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -444,7 +439,6 @@ ja:
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
-    top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
     port: "開発者用! 警告! デフォルトの80番ポートではなく、ここで指定した HTTP ポートを利用する。空欄でデフォルトの80番ポートを利用。"
@@ -645,10 +639,7 @@ ja:
   upload:
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
     pasted_image_filename: "貼り付けた画像"
-    attachments:
-      too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)"
     images:
-      too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)。リサイズして再アップロードしてください。"
       fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
       unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"

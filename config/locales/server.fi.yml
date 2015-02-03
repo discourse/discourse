@@ -20,11 +20,6 @@ fi:
     short_date_no_year: "D. MMM"
     short_date: "D. MMMM[ta] YYYY"
     long_date: "D. MMMM[ta] YYYY, H:mm"
-  time:
-    formats:
-      short: "%-d.%-m.%Y"
-      short_no_year: "%d. %b"
-      date_only: "%e. %Bta %Y"
   title: "Discourse"
   topics: "Ketjut"
   posts: "viestit"
@@ -59,7 +54,7 @@ fi:
     more_replies:
       one: "1 vastaus lisää"
       other: "%{count} vastausta lisää"
-    loading: "Lataa keskustelua..."
+    loading: "Haetaan viestejä..."
     permalink: "Suora linkki"
     imported_from: "Tässä viestiketju keskustellaan kirjoituksesta osoitteessa %{link}"
     in_reply_to: "▶ %{username}"
@@ -541,7 +536,6 @@ fi:
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataamalla uusin versio</a>.'
     failing_emails_warning: 'Sähköpostitehtävä on epäonnistunut %{num_failed_jobs} kertaa. Tarkista config/discourse.conf tiedostosta, että sähköpostiasetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Tarkastele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     default_logo_warning: "Aseta sivustolle logot. Päivitä logo_url, logo_small_url, ja favicon_url <a href='/admin/site_settings'>sivuston asetuksissa</a>."
-    contact_email_missing: "Aseta yhteystietoihin sähköpostiosoite, josta sinut saa tavoitettua sivustoon liittyvissä kiireellisissä asioissa. Voit syöttää sen <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     contact_email_invalid: "Sivuston sähköpostiosoite ei kelpaa. Muokkaa sitä <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     title_nag: "Aseta keskustelupalstalle nimi. Voita muokata sitä <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     site_description_missing: "Aseta yhden lauseen mittainen kuvaus palstasta, joka näkyy hakutuloksissa. Muokkaa asetusta site_description <a href='/admin/site_settings'>sivuston asetuksissa</a>."
@@ -598,7 +592,6 @@ fi:
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan nimi, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
-    contact_email: "Sähköpostiosoite, josta sivuston henkilökunnan saa tavoitettua. Lähetetään sivuston kriittiset ilmoitukset ja näytetään /about sivun yhteystietona."
     queue_jobs: "VAIN KEHITTÄJILLE! VAROITUS! Oletusarvona tehtävät asetetaan sidekiq jonoon. Jos poistetaan käytöstä, sivusto ei enää toimi."
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
@@ -661,7 +654,6 @@ fi:
     enable_noscript_support: "Ota käyttöön noscript-tagi hakukoneiden webcrawlereille"
     allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
-    top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
     share_links: "Mitkä painikkeet näytetään Jaa-valikossa ja missä järjestyksessä."
@@ -699,7 +691,6 @@ fi:
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (HUOM: voi estää kaikkia kirjautumasta sisään, jos asetukset eivät ole kunnossa ja poistaa kutsut käytöstä)"
     enable_sso_provider: "Ota käyttöön Discourse SSO protokolla /session/sso_provider päätepisteessä, vaatii asetuksen sso_secret asettamista."
     sso_url: "single sign on endpointin URL"
-    sso_secret: "Salausavain, jolla salataan/puretaan SSO tiedot, varmista että siinä on vähintään 10 merkkiä"
     sso_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen SSO:n kautta saatavalla ulkopuolisella sähköpostillosoitteella (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten sähköpostien normalisoinnista)"
     sso_overrides_username: "Ohittaa paikallisen käyttäjänimen SSO:n kautta saatavalla ulkopuolisella käyttäjänimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen eroavuuksista nimien pituuksissa/vaatimuksissa)"
     sso_overrides_name: "Ohittaa paikallisen nimen SSO:n kautta saatavalla ulkopuolisella nimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten nimien normalisoinnista)"
@@ -736,7 +727,6 @@ fi:
     max_flags_per_day: "Liputusten päivittäinen maksimäärä per käyttäjä."
     max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimäärä per käyttäjä."
     max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä."
-    max_stars_per_day: "Ketjujen maksimimäärä, jotka yksittäinen käyttäjä voi merkitä tähdellä päivässä."
     max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä."
     max_private_messages_per_day: "Yksityisviestien päivittäinen maksimäärä per käyttäjä."
     suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa."
@@ -875,8 +865,8 @@ fi:
     embeddable_host: "Host, joka voi upottaa kommentteja tältä Discourse-palstalta."
     feed_polling_enabled: "VAIN UPOTUS: Upotetaanko RSS/ATOM syöte viesteinä."
     feed_polling_url: "VAIN UPOTUS: RSS/ATOM syötteen URL."
-    embed_by_username: "Sen käyttjän Discourse käyttäjänimi, joka luo upotetut ketjut."
-    embed_username_key_from_feed: "Avain, jolla erotetaan discoure käyttäjänimi syötteestä."
+    embed_by_username: "Sen käyttäjän Discourse käyttäjänimi, joka luo upotetut ketjut."
+    embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä."
     embed_truncate: "Typistä upotetut viestit."
     embed_category: "Alue upotettujen ketjuille."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
@@ -1050,50 +1040,6 @@ fi:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testisähköposti sivustolta
-
-      [**%{base_url}**][0]
-
-      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
-
-      - *Varmista,* että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin varmennus tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
-
-      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan,* jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
-
-      - **TÄRKEÄÄ:** Onko palveluntarjoajasi syöttänyt reverse DNS kentän verkkotunnuksille ja IP osoitteille, joists lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköposti menee perille.
-
-      - Onko verkkotunnuksesi [SPF record][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT oikea tietuetyyppi SPF tietueelle.
-
-      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä vaikuttaa merkittävästi sähköpostin toimitettavuuteen. [Kokeile DKIM tietuetta][7] täällä.
-
-      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4].
-
-      - Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
-
-      (Helpoin tapa on luoda ilmainen tili [Mandrilliin][md], [Mailguniin][mg] tai [Mailjetiin][mj], joide ilmaiset palvelut riittävät hyvin piemen palstan käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
-
-      Toivottavasti tämä testisähköposti meni perille OK!
-
-      Onnea matkaan,
-
-      Ystäväsi [Discourselta](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>Jokaisen lähettämäsi sähköpostin lopussa pitäisi olla listaltapoistumislinkki, joten luodaan sellainen tähänkin. Tämän sähköpostin lähetti Yritys, Tie 1, 12345 Kaupunki, Suomi. Jos et halua vastaanottaa näitä sähköposteja jatkossa, [klikkaa poistuaksesi listalta][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
     text_body_template: |+
@@ -1249,26 +1195,6 @@ fi:
         Toivottavasti viihdyt!
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
-      text_body_template: |
-        Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
-
-        Olemme luoneet sinulle automaattisesti käyttäjänimen: **%{username}**, mutta voit vaihtaa sen koska hyvänsä [käyttäjäprofiilistasi][prefs].
-
-        Kirjautuaksesi sisään uudestaan, joko:
-
-        1. Kirjaudu sisään millä metodilla haluat -- kunhan se on yhdistetty **samaan sähköpostiosoitteeseen,** kuin jonne vastaanotit alkuperäisen kutsun. Muuten emme voi tietää, että se todella olet sinä!
-
-        2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
-
-        %{new_user_tips}
-
-        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
-
-        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](/about) kanssa, vastaa vain tähän viestiin)
-
-        Toivottavasti viihdyt!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
       text_body_template: "Varmuuskopiointi onnistui.\nVoit ladata varmuuskopioin avaamalla valikon [ylläpito > varmuuskopiot](/admin/backups)."
@@ -1310,12 +1236,6 @@ fi:
         ```
     csv_export_succeeded:
       subject_template: "Datan vieminen on tehty"
-      text_body_template: |
-        Datan vienti onnistui.
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        Linkki tiedostoon on voimassa 48 tuntia.
     csv_export_failed:
       subject_template: "Datan vienti epäonnistui"
       text_body_template: "Pahoittelemme, mutta datan vientisi epäonnistui. Tarkasta lokit tai ota yhteyttä henkilökuntaan."
@@ -1605,10 +1525,7 @@ fi:
     unauthorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: %{authorized_extensions})."
     pasted_image_filename: "Liitetty kuva"
     store_failure: "Latauksen #%{upload_id} käyttäjälle #%{user_id} tallentaminen epäonnistui."
-    attachments:
-      too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on %{max_size_kb}%kb)."
     images:
-      too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on {%max_size_kb}%kb), pienennä kuvaa ja yritä uudestaan."
       fetch_failure: "Pahoittelut, kuvan hakemisessa tapahtui virhe."
       unknown_image_type: "Pahoittelut, mutta tiedosto jota yrität ladata ei vaikuta olevan kuva."
       size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"

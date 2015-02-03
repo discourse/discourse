@@ -91,6 +91,7 @@ fr:
       google+: 'partager ce lien sur Google+'
       email: 'envoyer ce lien dans un courriel'
     topic_admin_menu: "actions administrateur pour ce sujet"
+    emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     edit: 'éditer le titre et la catégorie de ce sujet'
     not_implemented: "Cette fonctionnalité n'a pas encore été implémentée, désolé."
     no_value: "Non"
@@ -279,7 +280,7 @@ fr:
       notifications: "Notifications"
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
-      disable_jump_reply: "Ne pas allez à votre nouveau message après avoir répondu"
+      disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
       dynamic_favicon: "Afficher les notifications de nouveaux messages sur le favicon (expérimental)"
       edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -292,7 +293,7 @@ fr:
       suspended_notice: "L'utilisateur est suspendu jusqu'au {{date}}."
       suspended_reason: "Raison :"
       github_profile: "Github"
-      mailing_list_mode: "Recevoir un courriel pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
+      mailing_list_mode: "M'envoyer un courriel pour tous les nouveaux messages (sauf si vous avez rendu silencieux le sujet ou la catégorie)"
       watched_categories: "Surveillés"
       watched_categories_instructions: "Vous pourrez suivre attentivement automatiquement toutes les nouveaux sujets dans ces catégories. Vous serez notifié de tous les nouveaux messages et sujets, de plus les nombres de messages non lus et de nouveaux messages apparaîtront également à côté de la liste des sujets."
       tracked_categories: "Suivies"
@@ -358,8 +359,8 @@ fr:
         authenticated: "Votre adresse de courriel a été authentifiée par {{provider}}"
         frequency:
           zero: "Nous vous enverrons un courriel immédiatement si vous n'avez déjà lu le contenu en question."
-          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute et que vous n'avez pas lu le contenu en question."
-          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes et que vous n'avez pas lu le contenu en question."
+          one: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans la dernière minute."
+          other: "Nous vous enverrons des courriels seulement si nous ne vous avons pas vu sur le site dans les dernières {{count}} minutes."
       name:
         title: "Nom d'utilisateur"
         instructions: "Votre nom complet (facultatif)"
@@ -395,26 +396,26 @@ fr:
       website: "Site internet"
       email_settings: "Courriel"
       email_digests:
-        title: "Quand vous ne visitez pas ce site, envoyer un résumé par courriel des nouveautés"
+        title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
         daily: "quotidien"
         weekly: "hebdomadaire"
         bi_weekly: "tous les 15 jours"
-      email_direct: "Recevoir un courriel quand quelqu'un vous cite, répond à votre message ou mentionne votre @pseudo"
-      email_private_messages: "Recevoir un courriel quand quelqu'un vous envoie un message privé"
+      email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo"
+      email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
       other_settings: "Autre"
       categories_settings: "Catégories"
       new_topic_duration:
         label: "Considérer les sujets comme nouveau quand"
-        not_viewed: "vous ne les avez pas encore vus"
-        last_here: "créés depuis votre dernière visite"
+        not_viewed: "Je ne les ai pas encore vus"
+        last_here: "crées depuis ma dernière visite"
         after_n_days:
           one: "créés hier"
           other: "créés lors des {{count}} derniers jours"
         after_n_weeks:
           one: "créés la semaine dernière"
           other: "créés les {{count}} dernières semaines."
-      auto_track_topics: "Suivre automatiquement les sujets que vous consultez"
+      auto_track_topics: "Suivre automatiquement les sujets que je consulte"
       auto_track_options:
         never: "jamais"
         always: "toujours"
@@ -664,7 +665,7 @@ fr:
           examples: 'Saisir le nombre d''heures (24).'
     notifications:
       title: "Notification des mentions de votre @pseudo, réponses à vos sujets et messages, etc."
-      none: "Vous n'avez aucune notification pour le moment."
+      none: "Actuellement il est impossible de montrer les notifications."
       more: "voir les anciennes notifications"
       total_flagged: "Nombre total de messages signalés"
       mentioned: "<i title='mentionné' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -731,6 +732,7 @@ fr:
         posted: "Vous n'avez écrit aucun message pour le moment."
         latest: "Il n'y a aucun sujet pour le moment. C'est triste..."
         hot: "Il n'y a aucun sujet populaire pour le moment."
+        bookmarks: "Vous n'avez pas encore ajouté de sujet à vos signets"
         category: "Il n'y a aucun sujet sur {{category}}."
         top: "Il n'y a pas de meilleurs sujets."
         educate:
@@ -903,7 +905,7 @@ fr:
         to_forum: "Nous allons envoyer un courriel à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
         email_placeholder: 'nom@exemple.com'
         success: "Nous avons envoyé un courriel à <b>{{email}}</b>. Nous vous avertirons lorsque l'invitation sera acceptée. Suivez vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
-        error: "Désolé nous ne pouvons pas inviter cette personne. Peut-être a-t-elle déjà un compte utilisateur ?"
+        error: "Désolé, nous n'avons pas pu invité cette personne. Peut-être est-elle déjà utilisateur? (Le débit des invitations est limité)"
       login_reply: 'Se connecter pour répondre'
       filters:
         n_posts:
@@ -1317,6 +1319,9 @@ fr:
       posted:
         title: "Mes Messages"
         help: "sujets auxquels vous avez participé"
+      bookmarks:
+        title: "Signets"
+        help: "sujets ajoutés à vos signets"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1469,6 +1474,10 @@ fr:
         name: "Nom"
         add: "Ajouter"
         add_members: "Ajouter des membres"
+        custom: "Personnaliser"
+        automatic: "Automatique"
+        automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
+        automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -1694,6 +1703,7 @@ fr:
           actions:
             delete_user: "Supprimer l'utilisateur"
             change_trust_level: "modifier le niveau de confiance"
+            change_username: "modifier pseudo"
             change_site_setting: "modifier les paramètres du site"
             change_site_customization: "modifier la personnalisation du site"
             delete_site_customization: "supprimer la personnalisation du site"
@@ -1862,7 +1872,7 @@ fr:
         deactivate_failed: "Il y a eu un problème lors de la désactivation du compte."
         unblock_failed: 'Problème rencontré lors du déblocage de l''utilisateur.'
         block_failed: 'Problème rencontré lors du blocage de l''utilisateur.'
-        deactivate_explanation: "Un compte désactivé doit revalidé son adresse de courriel."
+        deactivate_explanation: "Un utilisateur désactivé doit revalider son adresse de courriel."
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         block_explanation: "Un utilisateur bloqué ne peut pas écrire de message, ni créer de sujet."
         trust_level_change_failed: "Il y a eu un problème lors de la modification du niveau de confiance de l'utilisateur."
@@ -2082,8 +2092,8 @@ fr:
         mark_watching: '<b>m</b>, <b>w</b> Marquer le sujet comme surveillé'
     badges:
       title: Badges
-      allow_title: "autoriser le badge comme titre ?"
-      multiple_grant: "peut être décerné plusieurs fois ?"
+      allow_title: "peut être utilisé comme votre titre"
+      multiple_grant: "peut être décerné plusieurs fois"
       badge_count:
         one: "1 badge"
         other: "%{count} badges"

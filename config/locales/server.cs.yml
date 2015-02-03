@@ -20,11 +20,6 @@ cs:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"
     long_date: "D. MMMM YYYY h:mma"
-  time:
-    formats:
-      short: "%d.%m.%Y"
-      short_no_year: "%-d %B"
-      date_only: "%-d %b %Y"
   title: "Discourse"
   topics: "Témata"
   posts: "příspěvky"
@@ -197,6 +192,8 @@ cs:
             base:
               warning_requires_pm: "Varování můžete přidat pouze k soukromým zprávám."
               too_many_users: "Varování můžete najednou poslat pouze jednomu uživateli."
+              cant_send_pm: "Bohužel, tomuto uživateli nemůžete poslat soukromou zprávu."
+              no_user_selected: "Musíte vybrat platného uživatele."
         user:
           attributes:
             password:
@@ -531,6 +528,7 @@ cs:
     s3_config_warning: 'Server je nakonfigurován, aby nahrával soubory na S3, ale chybí nastavení: s3_access_key_id, s3_secret_access_key nebo s3_upload_bucket. Navštivte <a href="/admin/site_settings">nastavení webu</a> a opravte nastavení. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Přečtěte si "How to set up image uploads to S3?" pro více informací</a>.'
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
     failing_emails_warning: '%{num_failed_jobs} emailů se nepodařilo odeslat. Zkontrolujte soubor config/production.rb a ujistěte se, že máte správné nastavení config.action_mailer.'
+    contact_email_invalid: "Kontaktní email je neplatný. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
     consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
   content_types:
     education_new_reply:
@@ -564,6 +562,7 @@ cs:
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
+    min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     allow_uncategorized_topics: "Povolit vytváření tématů bez určení kategorie"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
@@ -586,19 +585,22 @@ cs:
     ga_universal_tracking_code: "Kód Google Universal Analytics (analytics.js); například UA–12345678-9; více na http://google.com/analytics"
     ga_universal_domain_name: "Doménové jméno Google Universal Analytics (analytics.js); například mojeforum.cz; více na http://google.com/analytics"
     enable_noscript_support: "Povolit podporu &lt;noscript&gt; tagu"
-    top_menu: "Určuje, které položky se zobrazí v navigaci na hlavní stránce a v jakém pořadí. Příklad: latest|new|unread|starred|categories|top|read|posted"
+    allow_moderators_to_create_categories: "Povolit moderátorům vytváření nových kategorií."
     post_menu: "Určuje, které položky se zobrazí v menu u příspěvku a v jakém pořadí. Příklad: like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Počítat kliknutí na externí odkazy pravým tlačítkem (např. otevření do nové záložky); defaultně zakázáno kvůli přepisu URL"
+    enable_badges: "Povolit odznaky"
     port: "Používat tento HTTP port místo standardního portu 80. Nechte prázdné pro výchozí port, užitečné hlavně pro vývoj"
     force_hostname: "Na pevno nastaví hostitele v URL. Nechte prázdné pro výchozí server, užitečné hlavně pro vývoj"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
+    block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     sso_url: "URL pro single sign on"
-    sso_secret: "Tajný kód pro šifrování a dešifrování informací pro SSO. Chcete zadat minimálně 10 znaků a víc"
     sso_overrides_email: "Přepisuje místní email tím z dat SSO (VAROVÁNÍ: v důsledku normalizování lokálních emailů může dojít k nesrovnalostem)"
     sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
     sso_overrides_name: "Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
+    google_oauth2_client_id: "Client ID vaší Google aplikace."
+    google_oauth2_client_secret: "Client secret vaší Google aplikace."
     enable_twitter_logins: "Povolit přihlašování přes Twitter, vyžaduje správně nastavené 'twitter_consumer_key' a 'twitter_consumer_secret'"
     twitter_consumer_key: "'Consumer key' pro přihlašování přes Twitter, registrace na http://dev.twitter.com"
     twitter_consumer_secret: "'Consumer secret' pro přihlašování přes Twitter, registrace na http://dev.twitter.com"
@@ -608,8 +610,14 @@ cs:
     enable_github_logins: "Povolit přihlašování přes Github, vyžaduje správně nastavené 'github_client_id' a 'github_client_secret'"
     github_client_id: "'Client id' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
     github_client_secret: "'Client secret' pro přihlašování přes Github, registrace na https://github.com/settings/applications"
+    backup_daily: "Automaticky zálohovat stránky jednou denně."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
     previous_visit_timeout_hours: "Kolik času musí uplynout v hodinách, než je návštěva uživatele považována za uplynulou"
+    max_likes_per_day: "Maximální počet 'to se mi líbí', která smí uživatel za den udělit."
+    max_flags_per_day: "Maximální počet nahlášení, která smí uživatel za den poslat."
+    max_edits_per_day: "Maximální počet úprav, které smí uživatel za den udělat."
+    max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit."
+    max_private_messages_per_day: "Maximální počet soukromých zpráv, které smí uživatel za den poslat."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -628,6 +636,10 @@ cs:
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zruště pokud chcete používat vlastní plně responzivní kaskádový styl."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
+    errors:
+      invalid_email: "Neplatná emailová adresa."
+      invalid_integer: "Hodnota musí být celé číslo."
+      invalid_string: "Neplatná hodnota."
   notification_types:
     mentioned: "%{display_username} vás zmínil v %{link}"
     liked: "%{display_username} se líbí váš příspěvek v %{link}"
@@ -697,6 +709,8 @@ cs:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Zkušební email"
+  new_version_mailer:
+    subject_template: "[%{site_name}] Je k dispozici nová verze Discourse."
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Updates Are Available"
   system_messages:
@@ -777,6 +791,10 @@ cs:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:
       subject_template: "Vítejte na %{site_name}!"
+    backup_succeeded:
+      subject_template: "Zálohování bylo úspěšně dokončeno."
+    backup_failed:
+      subject_template: "Zálohování selhalo."
     too_many_spam_flags:
       subject_template: "Účet zablokován"
     blocked_by_staff:
@@ -909,20 +927,19 @@ cs:
         Pokud tento odkaz nefunguje, zkuste ho zkopírovat a vložit přes schránku do adresního řádku vaše webového prohlížeče.
   page_not_found:
     title: "Stránka, kterou žádáte, na tomto diskuzním fóru neexistuje. Možná vám můžeme pomoci ji najít, nebo poradit jiné téma, které se vám může líbit:"
+    search_google: "Google"
   login_required:
     welcome_message: |
       #[Vítejte na %{title}](#welcome)
       Je vyžadován uživatelský účet. Prosím vytvořte si nový účet nebo se přihlaste.
   terms_of_service:
+    title: "Podmínky používání."
     signup_form_message: 'I have read and accept the <a href="/tos" target="_blank">Terms of Service</a>.'
   deleted: 'smazáno'
   upload:
     unauthorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: %{authorized_extensions})."
     pasted_image_filename: "Vložený obrázek"
-    attachments:
-      too_large: "Bohužel, soubor, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}%kb)."
     images:
-      too_large: "Bohužel, obrázek, který se snažíte nahrát, je příliš velký (maximální velikost je %{max_size_kb}%kb), prosím zmenšete ho a zkuste to znovu."
       fetch_failure: "Bohužel, nastala chybí při získávání obrázku."
       unknown_image_type: "Bohužel, soubor, který se snažíte nahrát, zřejmě není obrázek."
       size_not_found: "Bohužel se nepodařilo zjistit velikost obrázku. Není soubor s obrázkem poškozený?"
@@ -941,6 +958,11 @@ cs:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+  csv_export:
+    boolean_yes: "Ano"
+    boolean_no: "Ne"
+  tos_topic:
+    title: "Podmínky používání"
   privacy_topic:
     body: |
       <a name="collect"></a>

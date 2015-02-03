@@ -20,11 +20,6 @@ tr_TR:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%-d. %b. %Y"
   title: "Discourse"
   topics: "Konular"
   posts: "gönderiler"
@@ -495,7 +490,6 @@ tr_TR:
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısız sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. config/discourse.conf dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere gözatın</a>.'
     default_logo_warning: "Siteniz için logo grafikleri yükleyin.  <a href='/admin/site_settings'>Site Ayarları</a>'nda logo_url, logo_small_url, ve favicon_url güncellemelerini yapın."
-    contact_email_missing: "Sitenizle alakalı acil durumlar için size ulaşabileceğimiz bir iletişim emaili girin. Lütfen <a href='/admin/site_settings'>Site Ayarları'nda</a> iletişim emailinizi güncelleyin."
     contact_email_invalid: "Site iletişim emaili geçersiz. İletişim emailini <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
     title_nag: "Sitenizin ismini girin. Site ismini <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
     site_description_missing: "Arama sonuçlarında gözükecek, sitenizi açıklayan tek bir cümle girin. <a href='/admin/site_settings'>Site Ayarları</a> sayfasından site açıklamasını güncelleyin."
@@ -552,7 +546,6 @@ tr_TR:
     educate_until_posts: "Kullanıcılar, ilk (n) gönderilerini yazmaya başladıklarında, pop-up yeni kullanıcı eğitim paneli metin düzenleyecisinin üstünde çıksın."
     title: "Sayfa başlığı etiketinde kullanılacak, bu sitenin ismi."
     site_description: "Meta açıklama etiketinde kullanılacak, bu sitenin bir cümlelik açıklaması."
-    contact_email: "Bu site için sorumlu kişinin email adresi. Sadece acil durumlar için iletişim formunda ve kritik bildiriler için kullanılacak."
     queue_jobs: "SADECE YAZILIMCILAR İÇİN! UYARI! Aksi gerekmediği takdirde sidekiq işlerini hep otomatik sıraya koydurtun. Bu özellik devre dışı bırakılırsa, siteniz düzgün çalışmayacaktır."
     crawl_images: "Doğru genişlik ve yükseklik boyutlarını girmek için uzak URL'lerdeki resimlerin birer kopyasını alınsın."
     download_remote_images_to_local: "Uzaktaki resimler yerel resimlere çevirmek için indirilsin; bu ayar resim bağlantılarının kırılmasını önleyecektir"
@@ -615,7 +608,6 @@ tr_TR:
     enable_noscript_support: "Noscript etiketi üzerinden standart webcrawler arama motoru desteğini etkinleştir"
     allow_moderators_to_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"
     cors_origins: "Cross-origin taleplerine (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
-    top_menu: "Anasayfa navigasyonundaki öğelerin hangi sırada yer alacağını belirleyin. Örneğin;\nen sonIyeniIokunmamışIyıldızlıIkategorilerIpopülerIokunmuşlarIgönderilenler"
     post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bayrakla|sil|paylaş|işaretle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
@@ -653,7 +645,6 @@ tr_TR:
     enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin giriş yapmasını engelleyebilir; ayrıca davetiye sistemini de devre dışı bırakır)"
     enable_sso_provider: " /session/sso_provider son noktasında Discourse SSO uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_url: "Bitiş noktasındaki tek oturum açma URL'i"
-    sso_secret: "SSO bilgisinin şifrelemesi/deşifre edilmesi için kullanılan gizli string, 10 karakter veya daha uzun olması gerekli"
     sso_overrides_email: "SSO yararlı yükündeki dış site e-postasını yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
     sso_overrides_username: "SSO yararlı yükündeki dış site kullanıcı adını yerel kullanıcı adının üzerine yazar (DİKKAT: kullanıcı adı uzunlukları/gereksinimleri arasındaki farklılıklardan ötürü uyuşmazlıklar yaşanabilir)"
     sso_overrides_name: "SSO yararlı yükündeki dış site ismini yerel ismin üzerine yazar (DİKKAT: yerel isimlerin normalizasyon sürecinde uyuşmazlıklar doğabilir)"
@@ -690,7 +681,6 @@ tr_TR:
     max_flags_per_day: "Bir günde, bir kullanıcının verebileceği en fazla bayrak sayısı. "
     max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla işaretleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
-    max_stars_per_day: "Bir günde, bir kullanıcının yıldızlayabileceği en fazla konu sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
     max_private_messages_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla özel mesaj sayısı."
     suggested_topics: "Konunun en altında yer alan, önerilen konu sayısı. "
@@ -981,8 +971,6 @@ tr_TR:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
-    text_body_template: "Bu aşağıdaki adresten gönderilen bir test e-postasıdır\n\n[**%{base_url}**][0]\n\nEmailların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri emailları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız emaillarda \"gönderen\" adresi olarak belirlediğiniz alan adı, emaillarınızın doğrulanacağı alan adıdır.**\n\n- Email başlıklarındaki önemli ipuçlarını yakalayabilmek için email istemcinizde emailların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her emailin sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde email yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. \n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1].  SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın.\n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu emailların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi email sunucunuzu kullanıyorsanız, email sunucunuzun IPlerinin [hiç bir email karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELLO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, emailinizin bir çok email servisi tarafından reddedilmesine sebep olacaktır.\n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te ücretsiz hesap açmak. Tabi, gene DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek.)\n\nUmarız bu email ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar,\n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n\
-      [5]: %{base_url}/unsubscribe\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: http://www.mailjet.com/pricing\n\n----\n\n<small>Her yolladığınız emailin altbilgisinde bir aboneliği iptal etme bağlantısı bulunması gerektiğinden dolayı hemen bir tane örnek yapalım. Bu email Şirketin Adı, 55 Main Street, Anytown, USA 12345 tarafından gönderilmiştir. İleride email almak istemiyorsanız, [buradan aboneliğinizi iptal edin][5].</small>\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
     text_body_template: |2
@@ -1125,26 +1113,6 @@ tr_TR:
         Ziyaretinizin keyfini çıkarın!
     welcome_invite:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
-      text_body_template: |
-        %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz!
-
-        Sizin için otomatik olarak bir kullanıcı adı oluşturduk: **%{username}**, ancak [kullanıcı profiliniz][prefs] kısmını ziyaret ederek istediğiniz zaman bu kullanıcı adını değiştirebilirsiniz.
-
-        Tekrar giriş yapmak için, ya:
-
-        1. İstediğiniz yöntemle giriş yapın -- ancak davetiyeyi aldığınız **aynı email adresine** bağlı olmalı. Yoksa sizi eşleştirmemiz mümkün değil.
-
-        2. Ya da [kullanıcı profiliniz][prefs] kısmından yeni bir şifre oluşturun ve o şifre ile giriş yapın.
-
-        %{new_user_tips}
-
-        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplamanız yeterli.)
-
-        Ziyaretinizin keyfini çıkarın!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
@@ -1185,12 +1153,6 @@ tr_TR:
         ```
     csv_export_succeeded:
       subject_template: "Dışarı veri aktarımı tamamlandı"
-      text_body_template: |
-        Dışarı veri aktarımı başarılı! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        Bu bağlantı 48 saat boyunca geçerli olacak.
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
       text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
@@ -1459,10 +1421,7 @@ tr_TR:
     unauthorized: "Üzgünüz, yüklemeye çalıştığınız dosya izinli değil (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Yapıştırılan resim"
     store_failure: "#%{user_id} kullanıcısı için yükleme #%{upload_id} kaydedilemedi."
-    attachments:
-      too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük (en fazla %{max_size_kb}%kb olabilir)."
     images:
-      too_large: "Üzgünüz, yüklemeye çalıştığınız resim çok büyük (en fazla %{max_size_kb}%kb olabilir), lütfen küçültüp tekrar deneyin."
       fetch_failure: "Üzgünüz, resim çekilirken hata oluştu."
       unknown_image_type: "Üzgünüz ama yüklemeye çalıştığınız dosya resim dosyası değil. "
       size_not_found: "Üzgünüz, resminizin büyüklüğünü tespit edemedik. Dosya bozuk olabilir mi?"
@@ -1495,104 +1454,6 @@ tr_TR:
      %{page_name} sayfasının içeriğini değiştirmek için bu konuya ait ilk gönderiyi düzenleyin.
   guidelines_topic:
     title: "SSS/Yönergeler"
-    body: |
-      <a name="civilized"></a>
-
-      ## [This is a Civilized Place for Public Discussion](#civilized)
-
-      Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
-
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
-
-      <a name="improve"></a>
-
-      ## [Improve the Discussion](#improve)
-
-      Help us make this a great place for discussion by always working to improve the discussion in some way, however small. If you are not sure your post adds to the conversation, think over what you want to say and try again later.
-
-      The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
-
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
-
-      <a name="agreeable"></a>
-
-      ## [Be Agreeable, Even When You Disagree](#agreeable)
-
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
-
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
-
-      Instead, provide reasoned counter-arguments that improve the conversation.
-
-      <a name="participate"></a>
-
-      ## [Your Participation Counts](#participate)
-
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
-
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
-
-      Let’s try to leave our park better than we found it.
-
-      <a name="flag-problems"></a>
-
-      ## [If You See a Problem, Flag It](#flag-problems)
-
-      Moderators have special authority; they are responsible for this forum. But so are you. With your help, moderators can be community facilitators, not just janitors or police.
-
-      When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
-
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
-
-      <a name="be-civil"></a>
-
-      ## [Always Be Civil](#be-civil)
-
-      Nothing sabotages a healthy conversation like rudeness:
-
-      *   Be civil. Don’t post anything that a reasonable person would consider offensive, abusive, or hate speech.
-      *   Keep it clean. Don’t post anything obscene or sexually explicit.
-      *   Respect each other. Don’t harass or grief anyone, impersonate people, or expose their private information.
-      *   Respect our forum. Don’t post spam or otherwise vandalize the forum.
-
-      These are not concrete terms with precise definitions &mdash; avoid even the _appearance_ of any of these things. If you’re unsure, ask yourself how you would feel if your post was featured on the front page of the New York Times.
-
-      This is a public forum, and search engines index these discussions. Keep the language, links, and images safe for family and friends.
-
-      <a name="keep-tidy"></a>
-
-      ## [Keep It Tidy](#keep-tidy)
-
-      Make the effort to put things in the right place, so that we can spend more time discussing and less cleaning up. So:
-
-      *   Don’t start a topic in the wrong category.
-      *   Don’t cross-post the same thing in multiple topics.
-      *   Don’t post no-content replies.
-      *   Don’t divert a topic by changing it midstream.
-      *   Don’t sign your posts &mdash; every post has your profile information attached to it.
-
-      Rather than posting “+1” or “Agreed”, use the Like button. Rather than taking an existing topic in a radically different direction, use Reply as a Linked Topic.
-
-      <a name="stealing"></a>
-
-      ## [Post Only Your Own Stuff](#stealing)
-
-      You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
-
-      <a name="operated"></a>
-
-      ## [Powered by You](#power)
-
-      This site is operated by your [friendly local staff](/about) and *you*, the community. If you have any further questions about how things should work here, open a new topic in the [meta category](/c/meta) and let's discuss! If there's a critical or urgent issue that can't be handled by a meta topic or flag, contact us via the [staff page](/about).
-
-      <a name="tos"></a>
-
-      ## [Terms of Service](#tos)
-
-      Yes, legalese is boring, but we must protect ourselves &ndash; and by extension, you and your data &ndash; against unfriendly folks. We have a [Terms of Service](/tos) describing your (and our) behavior and rights related to content, privacy, and laws. To use this service, you must agree to abide by our [TOS](/tos).
   tos_topic:
     title: "Üyelik Sözleşmesi"
     body: |

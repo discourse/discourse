@@ -20,11 +20,6 @@ es:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM, YYYY h:mma"
-  time:
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Temas"
   posts: "posts"
@@ -107,6 +102,7 @@ es:
     latest: "Temas recientes"
     hot: "Temas calientes"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
+  excerpt_image: "imagen"
   groups:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
@@ -597,7 +593,6 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
-    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas y en la página /about de contacto para asuntos urgentes."
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -660,7 +655,6 @@ es:
     enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
-    top_menu: "Determinar qué elementos aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
@@ -698,7 +692,6 @@ es:
     enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar si no está configurado de forma apropiada; además, desactiva las invitaciones)"
     enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
-    sso_secret: "Cadena secreta utilizada para cifrar/descifrar la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_email: "Reemplaza el email local con el email del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los correos electrónicos locales)"
     sso_overrides_username: "Reemplaza el nombre de usuario local con el nombre de usuario del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a las diferencias de requirimientos/longitud en los nombres de usuario)"
     sso_overrides_name: "Reemplaza el nombre local con el nombre del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los nombres locales)"
@@ -852,6 +845,7 @@ es:
     digest_topics: "El número máximo de temas a mostrar en el resumen por email."
     digest_min_excerpt_length: "La extensión mínima, en caracteres, del extracto de un post en el resumen por email."
     default_digest_email_frequency: "Cada cuánto tiempo los usuarios recibirán emails con el resumen del sitio por defecto. Cada usuario puede cambiar esta opción para sí en sus preferencias."
+    disable_digest_emails: "Inhabilitar e-mails de resumen para todos los usuarios."
     default_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña. Los usuarios pueden cambiar esto en sus preferencias."
     detect_custom_avatars: "Verificar o no que los usuarios han subido su propio avatar personalizado."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
@@ -1037,48 +1031,6 @@ es:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
-    text_body_template: |
-      Este es un e-mail de prueba de
-
-      [**%{base_url}**][0]
-
-      La entrega de e-mail es complicada. Aquí hay unas cuantas cosas importantes que deberías de checar primero:
-
-      - *Asegúrate* de ajustar la dirección `notificación e-mail` desde: correctamente en la configuración del sitio. **El dominio especificado en la dirección "desde" de los e-mails que envíes es el dominio que será validado**.
-
-      - Conoce como puedes ver la fuente original de los e-mails en tu cliente de e-mail, para que puedas examinar las cabeceras y encontrar pistas importantes. En Gmail, es la opción "mostrar original" en el menu desplegable en la parte superior izquierda de cada e-mail.
-
-      - **IMPORTANTE:** ¿Tiene tu ISP un registro DNS inverso proporcionado para asociar los nombres de dominio y la dirección IP de la cual envías e-mails? [Prueba tu registro PTR inverso][2] aquí. Si tu ISP no tiene proporcionado el registro DNS inverso apropiado, es muy improbable que cualquier e-mail que envíes sea entregado.
-
-      - ¿Es correcto el [registro SPF][8] de tu dominio? [Prueba tu registro SPF][1] aquí. Nota que TXT es el tipo correcto oficial para SPF.
-
-      - ¿Es correcto el [registro DKIM][3] de tu dominio? Esto mejorara significativamente la entrega de e-mails. [Prueba tu registro DKIM][7] aquí.
-
-      - Si estas administrando tu propio servidor de correo, asegúrate que las IPs de tu servidor de correo no estén en [ninguna lista negra][4]. También verifica que este definitivamente enviando un `fully-qualified hostname` que resuelva en DNS el mensaje HELO. Si no, esto provocara que tus e-mails sean rechazados por varios servicios de correo.
-
-      (La manera *fácil* es crear una cuenta gratis en [Mandrill][md] o [Mailgun][mg] o [Mailjet][mj], los cuales tienen generosos planes gratuitos para enviar e-mails esto será suficiente para comunidades pequeñas. Aunque vas a necesitar de todos modos ajustar los registros SPF y DKIM en tus DNS.)
-
-      Esperamos que hayas recibido esta prueba de entrega de e-mail OK!
-
-      Buena suerte,
-
-      Tus amigos en [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>Debe de haber un pie de página en cada correo que tu envíes, vamos a maquetar uno. Este e-mail fue enviado por Nombre de la Compañia, 55 Main Street, Anytown, USA 12345. Si deseas dejar de recibir futuros e-mails, [De clic aquí para cancelar su suscripción][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
     text_body_template: |
@@ -1490,10 +1442,7 @@ es:
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está autorizado (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
-    attachments:
-      too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%kb)."
     images:
-      too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%kb). Por favor, modifica sus dimensiones y prueba otra vez."
       fetch_failure: "Lo sentimos, hubo un error al recuperar la imagen."
       unknown_image_type: "Lo sentimos, pero el archivo que estás intentado subir no parece ser una imagen."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"

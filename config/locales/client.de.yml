@@ -280,7 +280,7 @@ de:
       notifications: "Benachrichtigungen"
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
-      disable_jump_reply: "Nach Verfassen einer Antwort nicht zum neuen Beitrag springen"
+      disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige Benachrichtigungen über eingehende Nachrichten im Favicon (experimentell)"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
@@ -293,7 +293,7 @@ de:
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
       github_profile: "Github"
-      mailing_list_mode: "Erhalte bei jedem neuen Beitrag eine E-Mail (sofern du das Thema oder die Kategorie nicht stummgeschaltet hast)"
+      mailing_list_mode: "Sende mir bei jedem neuen Beitrag eine E-Mail (außer wenn ich das Thema oder die Kategorie stummgeschaltet habe)"
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
       tracked_categories: "Verfolgt"
@@ -359,8 +359,8 @@ de:
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt"
         frequency:
           zero: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
-          one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten Minute nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
-          other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten {{count}} Minuten nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
+          one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
+          other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten {{count}} Minuten gesehen haben."
       name:
         title: "Name"
         instructions: "Dein vollständiger Name (optional)"
@@ -396,7 +396,7 @@ de:
       website: "Website"
       email_settings: "E-Mail"
       email_digests:
-        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Website länger nicht besuche:"
+        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich länger nicht hier bin:"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "alle zwei Wochen"
@@ -665,7 +665,7 @@ de:
           examples: 'Gib die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über Erwähnungen mit @Name, Antworten auf deine Beiträge und Themen, private Nachrichten etc."
-      none: "Du hast momentan keine Benachrichtigungen."
+      none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
       mentioned: "<i title='erwähnt' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -732,6 +732,7 @@ de:
         posted: "Du hast noch keine Beiträge verfasst."
         latest: "Es gibt keine aktuellen Themen. Das ist schade."
         hot: "Es gibt keine beliebten Themen."
+        bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
         educate:
@@ -1316,6 +1317,9 @@ de:
       posted:
         title: "Meine Beiträge"
         help: "Themen zu denen du beigetragen hast"
+      bookmarks:
+        title: "Lesezeichen"
+        help: "Themen, in denen du ein Lesezeichen gesetzt hast"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1468,6 +1472,8 @@ de:
         name: "Name"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
+        custom: "Benutzerdefiniert"
+        automatic: "Automatisch"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -2082,8 +2088,8 @@ de:
         mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
     badges:
       title: Abzeichen
-      allow_title: "Abzeichen als Titel erlauben?"
-      multiple_grant: "wird mehrfach verliehen?"
+      allow_title: "kann als Titel verwendet werden"
+      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"

@@ -20,11 +20,6 @@ pt:
     short_date_no_year: "DD MMM"
     short_date: "DD MMM, YYYY"
     long_date: "DD de MMMM de YYYY hh:mm"
-  time:
-    formats:
-      short: "%d/%m/%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Tópicos"
   posts: "mensagens"
@@ -635,7 +630,6 @@ pt:
     enable_noscript_support: "Ativar o suporte básico para pesquisas em motores de pesquisa através da etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir que os moderadores criem novas categorias"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
-    top_menu: "Determinar que elementos aparecem na navegação da página principal, e em que ordem. Exemplo mais recentes|novos|não lidos|favoritos|categorias|os melhores|lidos|publicados"
     post_menu: "Determine que itens irão aparecer no menu de mensagens, e em que ordem. Exemplo\ngostar|editar|sinalizar|eliminar|partilhar|marcar|responder"
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
@@ -671,7 +665,6 @@ pt:
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
     enable_sso_provider: "Implementa o protocolo SSO para o Discourse em /session/sso_provider endpoint, requer que sso_secret esteja configurado"
     sso_url: "URL da inscrição única"
-    sso_secret: "String secreta usada para encriptar/desencriptar informação, certifique-se que são 10 ou mais caracteres"
     sso_overrides_email: "Substitui o email local por um email externo de um SSO (AVISO: discrepâncias podem ocorrer devido a normalização de emails locais)"
     sso_overrides_username: "Substitui nomes de utilizador locais por nomes de utilizadores externos de um SSO (AVISO: discrepâncias podem ocorrer diferenças no nome de utilizador length/requirements)"
     sso_overrides_name: "Substitui o nome local por um nome externo de um SSO (AVISO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
@@ -1020,8 +1013,6 @@ pt:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro.\n\n- *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “De” nos emails que envia é o domínio que será validado**.\n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email. \n\n- **IMPORTANTE:**  O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email?  [Teste o seu registo de PTR Inverso][2] aqui.  Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF.\n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma listanegraemail] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve\
-      \ o DNS na mensagem HELO. Se não for, isto irá fazer com que o seu email seja rejeitado por muitos serviços de email. \n\n(A maneira *fácil* é criar uma conta gratuita em [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], que tem vários planos de email gratuitos e será bom para pequenas comunidades. Irá precisar na mesma de configurar os registos SPF e o DKIM no seu DNS!)\n\nEsperamos que tenha recebido este teste de entrega de email sem problema!\n\nBoa sorte,\n\nOs seus amigos em [Discourse](http://www.discourse.org)\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[5]: %{base_url}/unsubscribe\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: http://www.mailjet.com/pricing\n\n----\n\n<small>Deverá haver um rodapé para cancelar a subscrição em todos os emails que envia por isso vamos simular um. Este email foi enviado por Nome da Empresa, 55 Rua Principal, Cidade, PT 12345. Se desejar não receber mais emails, [clique aqui para cancelar a subscrição][ 5].</small>\n"
   new_version_mailer:
     subject_template: "[%{site_name}]  Nova versão Discourse, atualização disponível"
     text_body_template: |
@@ -1437,10 +1428,7 @@ pt:
     unauthorized: "Pedimos desculpa, o ficheiro que está a tentar carregar não está autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     store_failure: "Falha ao armazenar o carregamento #%{upload_id} para o utilizador #%{user_id}."
-    attachments:
-      too_large: "Pedimos desculpa, o ficheiro que está a tentar enviar é muito grande (o tamanho máximo é %{max_size_kb}%kb)."
     images:
-      too_large: "Pedimos desculpa, a imagem que está a tentar carregar é muito grande (o tamanho máximo é %{max_size_kb}%kb), por favor redimensione-a e tente novamente."
       fetch_failure: "Pedimos desculpa, ocorreu um erro ao transferir a imagem."
       unknown_image_type: "Pedimos desculpa, mas o ficheiro que tentou carregar não parece ser uma imagem."
       size_not_found: "Pedimos desculpa, mas não conseguimos determinar o tamanho da imagem. É possível que seu ficheiro de imagem esteja corrompido?"

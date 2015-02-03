@@ -75,6 +75,7 @@ zh_TW:
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     topic_admin_menu: "討論話題管理員操作"
+    emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
     edit: '編輯此討論話題的標題與分類'
     not_implemented: "抱歉，此功能尚未開放。"
     no_value: "否"
@@ -256,7 +257,7 @@ zh_TW:
       notifications: "通知"
       dismiss_notifications: "全部標記為已讀"
       dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
-      disable_jump_reply: "不要在回覆之後直接跳到你的新文章"
+      disable_jump_reply: "不要在回覆之後直接跳到我的文章"
       dynamic_favicon: "在 favicon 顯示訊息通知"
       edit_history_public: "讓其他用戶檢視我的文章修訂紀錄"
       external_links_in_new_tab: "以新分頁開啟所有外部連結"
@@ -269,7 +270,7 @@ zh_TW:
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       github_profile: "Github"
-      mailing_list_mode: "每當有新討論話題時，你將會收到郵件。(除非你將該討論話題或分類設為靜音)"
+      mailing_list_mode: "每當有新文章時，寄給我郵件通知。(除非我將該討論話題或分類設為靜音)"
       watched_categories: "關注"
       watched_categories_instructions: "你將會自動關注在此分類的新討論話題。你將收到所有新文章和討論話題的通知，未讀和新討論話題的數量也將出現在討論話題的列表旁。"
       tracked_categories: "追蹤"
@@ -335,8 +336,8 @@ zh_TW:
         authenticated: "你的 Email 已由 {{provider}} 驗證完成。"
         frequency:
           zero: "如果您沒有閱讀過重要通知，我們會立即發送電子郵件給您。"
-          one: "如果您沒有閱讀過重要通知，我們只會在您沒有登入網站時才會發送電子郵件給您。"
-          other: "如果您沒有閱讀過重要通知，我們只會在您最近 {{count}} 分鐘內沒有登入網站時才會發送電子郵件給您。"
+          one: "我們只會在您 1 分鐘內沒有活動時，才會寄送電郵通知給您。"
+          other: "我們只會在您 {{count}} 分鐘內沒有活動時，才會寄送電郵通知給您。"
       name:
         title: "名稱"
         instructions: "您的全名 (選填)。"
@@ -372,24 +373,24 @@ zh_TW:
       website: "網站"
       email_settings: "電子郵件"
       email_digests:
-        title: "當你很久沒來此網站時以電子郵件通知你最近有什麼新文章。"
+        title: "當我很久沒來此網站時，以電子郵件通知我最近有什麼新文章："
         daily: "每天"
         weekly: "每週"
         bi_weekly: "每兩週"
-      email_direct: "當有人引用、回覆你的文章，或以 @用戶名稱 提到你時以電子郵件通知你。"
-      email_private_messages: "當有人寄給你私人訊息時以電子郵件通知你。"
+      email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
+      email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
       email_always: "不要因為我在網站上活動而不寄信通知。"
       other_settings: "其它"
       categories_settings: "分類"
       new_topic_duration:
         label: "視為新討論話題的條件"
-        not_viewed: "你尚未看過它們"
-        last_here: "建立於你上次到訪後"
+        not_viewed: "我未看過的討論"
+        last_here: "我上次到訪後的討論"
         after_n_days:
           other: "建立於最近 {{count}} 天"
         after_n_weeks:
           other: "建立於最近 {{count}} 週"
-      auto_track_topics: "自動追蹤你點進的討論話題"
+      auto_track_topics: "自動追蹤我參與的討論"
       auto_track_options:
         never: "永不"
         always: "總是"
@@ -637,7 +638,7 @@ zh_TW:
           examples: '輸入小時數（24）'
     notifications:
       title: "以 @用戶名稱 提到、回覆您的文章與討論話題、私人訊息... 的通知。"
-      none: "目前沒有任何通知。"
+      none: "目前無法載入通知訊息。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -703,6 +704,7 @@ zh_TW:
         posted: "你尚未在任何討論話題裡發表文章。"
         latest: "沒有最近的討論話題。真令人難過。"
         hot: "沒有熱門的討論話題。"
+        bookmarks: "您目前沒有加入書籤的討論話題。"
         category: "沒有 {{category}} 的討論話題。"
         top: "沒有精選討論話題。"
         educate:
@@ -865,7 +867,7 @@ zh_TW:
         to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
         email_placeholder: '電子郵件地址'
         success: "我們已將邀請寄至 <b>{{email}}</b>，當受邀者接受邀請時我們會再通知你，你也可以在你的用戶頁面的邀請清單查看邀請狀態。"
-        error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶?"
+        error: "抱歉，我們無法邀請此人，他可能已經是此論壇的用戶? (送出兩次邀請之間需要等待一段時間。)"
       login_reply: '登入以發表回應'
       filters:
         n_posts:
@@ -1251,6 +1253,9 @@ zh_TW:
       posted:
         title: "我的文章"
         help: "你回覆過的討論話題"
+      bookmarks:
+        title: "書籤"
+        help: "你加進書籤的討論話題"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1398,6 +1403,10 @@ zh_TW:
         name: "名稱"
         add: "加入"
         add_members: "新增成員"
+        custom: "自訂"
+        automatic: "自動"
+        automatic_membership_email_domains: "註冊的用戶的電子郵件地址網域，完全符合列表裡某項時，會自動加進這個群組裡："
+        automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"
@@ -1623,6 +1632,7 @@ zh_TW:
           actions:
             delete_user: "刪除用戶"
             change_trust_level: "修改信任等級"
+            change_username: "修改用戶名稱"
             change_site_setting: "修改網站設定"
             change_site_customization: "修改網站客製化"
             delete_site_customization: "刪除網站客製化"
@@ -2004,8 +2014,8 @@ zh_TW:
         mark_watching: '<b>m</b>, <b>w</b> 關注討論話題'
     badges:
       title: 徽章
-      allow_title: "允許徽章做為標題？"
-      multiple_grant: "可多次授予"
+      allow_title: "允許使用它作為稱號"
+      multiple_grant: "可以多次授予"
       badge_count:
         other: "%{count} 徽章"
       more_badges:
