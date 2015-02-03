@@ -91,6 +91,7 @@ da:
       google+: 'del dette link på Google+'
       email: 'send dette link i en e-mail'
     topic_admin_menu: "administrationshandlinger på emne"
+    emails_are_disabled: "Alle udgående emails er blevet globalt deaktiveret af en administrator. Ingen email notifikationer af nogen slags vil blive sendt."
     edit: 'redigér titel og kategori for dette emne'
     not_implemented: "Beklager, denne feature er ikke blevet implementeret endnu."
     no_value: "Nej"
@@ -256,6 +257,7 @@ da:
       other_accounts: "Andre konti med denne IP adresse"
       delete_other_accounts: "Slet %{count}"
       username: "brugernavn"
+      trust_level: "TL"
       read_time: "læse tid"
       topics_entered: "emner indstastet"
       post_count: "# indlæg"
@@ -278,7 +280,7 @@ da:
       notifications: "Underretninger"
       dismiss_notifications: "Marker alle som læst"
       dismiss_notifications_tooltip: "Marker alle ulæste meddelelser som læst"
-      disable_jump_reply: "Spring ikke til dit nye indlæg efter du har svaret"
+      disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
       dynamic_favicon: "Vis indkommende underretninger i favicon"
       edit_history_public: "Lad andre brugere se mine tidligere revisioner"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
@@ -291,7 +293,7 @@ da:
       suspended_notice: "Denne bruger er suspenderet indtil {{date}}."
       suspended_reason: "Begrundelse: "
       github_profile: "Github"
-      mailing_list_mode: "Få en email, hver nyt emne (med mindre du har sat et emne eller en kategori på lydløs)"
+      mailing_list_mode: "Send mig en email for hvert nye indlæg (med mindre, at jeg muter emnet eller kategorien)"
       watched_categories: "Overvåget"
       watched_categories_instructions: "Du overvåger automatisk alle emner i disse kategorier"
       tracked_categories: "Fulgt"
@@ -357,8 +359,8 @@ da:
         authenticated: "Din email er blevet bekræftet af {{provider}}"
         frequency:
           zero: "Vi vil straks sende dig en e-mail, hvis du ikke har læst det vi sender dig en e-mail omkring."
-          one: "Vi vil kun sende dig en e-mail hvis vi ikke har set dig det sidste minut og su ikke har læst det vi sender dig en e-mail omkring."
-          other: "Vi vil kun sende dig en e-mail hvis vi ikke har set dig de sidste {{count}} minutter og su ikke har læst det vi sender dig en e-mail omkring."
+          one: "Vi vil kun sende dig en email, hvis vi ikke har set dig det sidste minut."
+          other: "Vi vil kun sende dig en email, hvis vi ikke har set dig de sidste {{count}} minutter."
       name:
         title: "Navn"
         instructions: "Dit fulde navn (optimalt)"
@@ -394,19 +396,18 @@ da:
       website: "Site"
       email_settings: "E-mail"
       email_digests:
-        title: "Send mig et e-mail-sammendrag af ny aktivitet når jeg ikke besøger sitet"
         daily: "dagligt"
         weekly: "ugenligt"
         bi_weekly: "hver anden uge"
-      email_direct: "Modtag e-mail, når nogen citerer dig, svarer på dine indlæg eller nævner dit @brugernavn"
-      email_private_messages: "Modtag e-mail, når nogen sender dig en privat besked"
+      email_direct: "Send mig en email når nogen citere mig, svar på mit indlæg, eller nævner mit @brugernavn"
+      email_private_messages: "Send mig en email når nogen sender mig private beskeder"
       email_always: "Send email notifikationer, selvom jeg er aktiv på forummet"
       other_settings: "Andre"
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Betragt emner som nye når"
-        not_viewed: "jeg ikke har set dem endnu"
-        last_here: "oprettet siden du sidst var her"
+        not_viewed: "Jeg har ikke set dem endnu"
+        last_here: "oprettet siden jeg var her sidst"
         after_n_days:
           one: "Oprettet i dag"
           other: "oprettet indenfor de seneste {{count}} dage"
@@ -583,7 +584,12 @@ da:
       github:
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
+    emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Dette er en officiel advarsel."
       posting_not_on_topic: "Hvilket emne vil du svare på?"
       saving_draft_tip: "gemmer"
@@ -657,7 +663,6 @@ da:
           examples: 'Indtast antal timer (24).'
     notifications:
       title: "notifikation ved @navns nævnelse, svar til dine indlæg og emner, private beskeder, mv."
-      none: "Du har ikke nogen notifikationer lige nu."
       more: "se ældre notifikationer"
       total_flagged: "total markerede indlæg"
       mentioned: "<i title='nævnt' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -882,7 +887,6 @@ da:
         to_forum: "Vi sender din ven en kort e-mail, som gør det muligt at tilmelde sig øjeblikkeligt ved at klikke på et link, uden det er nødvendigt at logge ind."
         email_placeholder: 'e-mail-adresse'
         success: "Vi har sendt en invitation til <b>{{email}}</b>. Vi påminder dig når invitationen er blevet accepteret. Check invitations-fanen på din brugerside, for at følge med i hvem du har inviteret."
-        error: "Beklager, vi kunne ikke invitere den person. Måske er de allerede brugere?"
       login_reply: 'Log ind for at svare'
       filters:
         n_posts:
@@ -1941,8 +1945,6 @@ da:
         mark_watching: '<b>m</b>, <b>w</b> Iagtag emne'
     badges:
       title: Badges
-      allow_title: "tillad denne badge benyttes som en titel?"
-      multiple_grant: "givet flere gange?"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"

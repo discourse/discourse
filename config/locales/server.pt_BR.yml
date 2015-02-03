@@ -20,11 +20,6 @@ pt_BR:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D de MMMM de YYYY h:mma"
-  time:
-    formats:
-      short: "%d/%m/%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Tópicos"
   posts: "postagens"
@@ -622,7 +617,6 @@ pt_BR:
     ga_universal_domain_name: "Nome de domínio do Google Universal Analytics (analytics.js), ex: meusite.com; veja http://google.com/analytics"
     enable_noscript_support: "Ativar suporte a tag &lt;noscript&gt;"
     allow_moderators_to_create_categories: "Permitir a criação de categorias por moderadores"
-    top_menu: "Determine quais itens aparecem na navegação da homepage e em que ordem. Exemplo latest|new|unread|starred|categories|top|read|posted"
     post_menu: "A ordem dos items no menu da postagem."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
@@ -633,7 +627,6 @@ pt_BR:
     invite_expiry_days: "Quantos dias as chaves de convite são válidas."
     min_password_length: "Comprimento mínimo da senha."
     sso_url: "URL destino do logon único"
-    sso_secret: "Cadeia secreta usada para criptografar/descriptografar informações SSO, certifique-se que tenha 10 caracteres ou mais"
     sso_overrides_email: "Substitui e-mail local com site externo de e-mail do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de e-mails locais)"
     sso_overrides_username: "Substitui nome de usuário local com nome de usuário do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido a diferenças nos requerimentos de comprimento de nome de usuário)"
     sso_overrides_name: "Substitui nome local com o nome do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
@@ -811,49 +804,6 @@ pt_BR:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
-    text_body_template: |
-      Este é um e-mail de teste do
-
-      [**%{base_url}**][0]
-
-      A entregabilidade de email é complicado. Aqui estão algumas coisas importantes que você deve verificar em primeiro lugar:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-      - Tenha *certeza* que definiu o `notification email` para: endereço corretamente em suas configurações do site. **O domínio especificado no endereço "De" dos e-mails enviadas é o domínio seu e-mail será validado contra**.
-
-      - Saiba como ver a fonte raw do e-mail no seu cliente de e-mail, para que você possa examinar os cabeçalhos de e-mail em busca de pistas importantes. No Gmail, é a opção "Mostrar original" no menu drop-down no canto superior direito de cada e-mail.
-
-      - **IMPORTANTE:** Será que o seu ISP tem um registro DNS reverso inserido para associar os nomes de domínio e endereços IP que você enviou os e-mails a partir dele? [Teste o seu registro PTR Reverso][2] aqui. ISe o seu ISP não entrou com o registro adequado ponteiro do DNS reverso, é muito improvável que algum de seu e-mail será entregue.
-
-      - O [registro SPF][8] do seu domínio esta correto? [Teste o seu registro SPF][1] aqui. Note-se que TXT é o tipo de registro oficial correto para SPF.
-
-      - O [registro DKIM][3] do seu domínio esta correto? Isto irá melhorar significativamente a capacidade de entrega de e-mail. [Teste o seu registro DKIM][7] aqui.
-
-      - Se você executar o seu próprio servidor de email, certifique-se de que os IPs de seu servidor de email [não esta em qualquer lista negra de e-mail][4]. Também verifique se ele está definitivamente esta enviando um nome de host totalmente qualificado que resolve em DNS em sua mensagem HELO. Se não, isso fará com que seu e-mail para ser rejeitada por muitos serviços de correio.
-
-      (A maneira *fácil* é criar uma conta gratuita no [Mandrill][MD] ou [Mailgun][mg] ou [MailJet][mj], que tem planos generosos de discussão gráris que será bom para pequenas comunidades. Você ainda precisará configurar os registos SPF e DKIM no seu DNS, embora!)
-
-      Esperamos que você tenha recebido este e-mail de teste de entregabilidade OK!
-
-      Boa sorte,
-
-      Seus amigos em [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>Deve haver um rodapé cancelamento de inscrição em cada e-mail que você envia, então vamos zombar um. Este e-mail foi enviado por Nome da empresa, 55 Main Street, Anytown, EUA 12345 Se você gostaria de optar por sair de futuros e-mails,[clique aqui para cancelar a inscrição][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
     text_body_template: |
@@ -1221,10 +1171,7 @@ pt_BR:
     unauthorized: "Desculpe-nos, o arquivo que você está tentando enviar não é autorizado (extensões autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagem colada"
     store_failure: "Falha ao arquivar o upload #%{upload_id} do usuário #%{user_id}."
-    attachments:
-      too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (tamanho máximo é %{max_size_kb}%kb)."
     images:
-      too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (tamanho máximo é %{max_size_kb}%kb), por favor redimensione-a e tente novamente."
       fetch_failure: "Desculpe, houve um erro ao transferir a imagem."
       unknown_image_type: "Desculpe, mas o arquivo que você tentou enviar não parece ser uma imagem."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"

@@ -303,7 +303,7 @@ pl_PL:
       notifications: "Powiadomienia"
       dismiss_notifications: "Oznacz jako przeczytane"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
-      disable_jump_reply: "Po odpowiedzi nie skacz do twojego nowego wpisu "
+      disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj powiadomienia o nowych wiadomościach na ikonie w karcie przeglądarki (eksperymentalne)"
       edit_history_public: "Pozwól innym oglądać historię edycji moich wpisów"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
@@ -316,7 +316,7 @@ pl_PL:
       suspended_notice: "ten użytkownik jest zawieszony do {{date}}."
       suspended_reason: "Powód: "
       github_profile: "Github"
-      mailing_list_mode: "Otrzymuj email z każdym nowym wpisem (o ile nie wyciszysz kategorii lub tematu)."
+      mailing_list_mode: "Wysyłaj e-mail z każdym nowym wpisem (o ile nie wyciszysz kategorii lub tematu)."
       watched_categories: "Obserwowane"
       watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach: liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. Dodatkowo będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie."
       tracked_categories: "Śledzone"
@@ -382,8 +382,8 @@ pl_PL:
         authenticated: "Twój email został potwierdzony przez {{provider}}"
         frequency:
           zero: "Otrzymasz email natychmiast jeśli nie widziałeś rzeczy na temat której wysyłamy email."
-          one: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatniej minuty i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
-          other: "Otrzymasz e-mail jeśli nie widzieliśmy Cie w ciągu ostatnich  {{count}} minut i jeszcze nie widziałeś rzeczy której dotyczy powiadomienie."
+          one: "Otrzymasz e-mail jeśli nie widzieliśmy Cię w ciągu ostatniej minuty."
+          other: "Otrzymasz e-mail jeśli nie widzieliśmy Cię w ciągu ostatnich {{count}} minut."
       name:
         title: "Pełna nazwa"
         instructions: "Twoja pełna nazwa (opcjonalna)"
@@ -419,19 +419,19 @@ pl_PL:
       website: "Strona internetowa"
       email_settings: "Email"
       email_digests:
-        title: "Gdy nie odwiedzam strony, wysyłaj email z nowościami:"
+        title: "Gdy nie odwiedzam strony, wysyłaj e-mail z podsumowaniem aktywności:"
         daily: "codziennie"
         weekly: "co tydzień"
         bi_weekly: "co 2 tygodnie"
-      email_direct: "Wyślij powiadomienie, kiedy ktoś mnie cytuje, odpowiada na mój wpis lub wspomina moją @nazwę"
-      email_private_messages: "Wyślij powiadomienie, kiedy ktoś wyśle mi prywatną wiadomość"
+      email_direct: "Wysyłaj powiadomienia gdy ktoś mnie cytuje, odpowiada na mój wpis lub wywołuje moją @nazwę"
+      email_private_messages: "Wysyłaj powiadomienia, gdy ktoś wyśle mi prywatną wiadomość"
       email_always: "Wysyłaj powiadomienia email nawet gdy przejawiam aktywność na forum"
       other_settings: "Inne"
       categories_settings: "Kategorie"
       new_topic_duration:
         label: "Uznaj, że temat jest nowy, jeśli"
-        not_viewed: "jeszcze ich nie widziałeś"
-        last_here: "dodane od twojej ostatniej wizyty"
+        not_viewed: "niewidziane "
+        last_here: "dodane od ostatniej wizyty"
         after_n_days:
           one: "dodane w ciągu ostatniego dnia"
           few: "dodane w ciągu ostatnich {{count}} dni"
@@ -440,7 +440,7 @@ pl_PL:
           one: "dodane w ciągu ostatniego tygodnia"
           few: "dodane w ciągu ostatnich {{count}} tygodni"
           other: "dodane w ciągu ostatnich {{count}} tygodni"
-      auto_track_topics: "Automatycznie śledź tematy które odwiedzam"
+      auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
       auto_track_options:
         never: "nigdy"
         always: "zawsze"
@@ -692,7 +692,7 @@ pl_PL:
           examples: 'Podaj liczbę godzin (24).'
     notifications:
       title: "powiadomienia dla wspomnień przy użyciu @nazwy, odpowiedzi do twoich wpisów i tematów, prywatne wiadomości, itp"
-      none: "Aktualnie nie masz żadnych powiadomień."
+      none: "Nie udało się załadować listy powiadomień."
       more: "pokaż starsze powiadomienia"
       total_flagged: "wszystkie oflagowane wpisy"
       mentioned: "<i title='wspomnienie' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -760,6 +760,7 @@ pl_PL:
         posted: "Jeszcze nie zamieściłeś wpisu w żadnym z tematów."
         latest: "Nie ma najnowszych tematów. Smutne."
         hot: "Nie ma gorących tematów."
+        bookmarks: "Nie posiadasz tematów dodanych do zakładek."
         category: "Nie ma tematów w kategorii {{category}}."
         top: "Brak najlepszych tematów."
         educate:
@@ -1372,6 +1373,9 @@ pl_PL:
       posted:
         title: "Moje wpisy"
         help: "tematy w których pisałeś"
+      bookmarks:
+        title: "Zakładki"
+        help: "tematy dodane do zakładek"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1529,6 +1533,10 @@ pl_PL:
         name: "Nazwa"
         add: "Dodaj"
         add_members: "Dodaj członków"
+        custom: "Personalizacje"
+        automatic: "Automatyczne"
+        automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
+        automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -2150,8 +2158,8 @@ pl_PL:
         mark_watching: '<b>m</b>, <b>w</b> śledź wszystko w temacie'
     badges:
       title: Odznaki
-      allow_title: "użycie odznaki jako tytułu?"
-      multiple_grant: "przyznana wielokrotnie?"
+      allow_title: "może być użyta jako tytuł"
+      multiple_grant: "może być przyznana wielokrotnie"
       badge_count:
         one: "1 odznaka"
         few: "%{count} odznaki"

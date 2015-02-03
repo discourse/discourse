@@ -107,6 +107,7 @@ cs:
       google+: 'sdílet odkaz na Google+'
       email: 'odeslat odkaz emailem'
     topic_admin_menu: "akce administrátora tématu"
+    emails_are_disabled: "Všechny odchozí emaily byly administrátorem vypnuty. Žádné odchozí emaily nebudou odeslány."
     edit: 'upravit název a kategorii příspěvku'
     not_implemented: "Tato fičura ještě není implementovaná"
     no_value: "Ne"
@@ -161,6 +162,7 @@ cs:
       post_count: "Příspěvky"
       user_count: "Uživatelé"
       contact: "Kontaktujte nás"
+      contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku, nás prosím kontaktujte na %{contact_email}."
     bookmarked:
       title: "Záložka"
       help:
@@ -301,7 +303,6 @@ cs:
       notifications: "Oznámení"
       dismiss_notifications: "Označ vše jako přečtené"
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
-      disable_jump_reply: "Po odpovědi nepřeskakovat na nový příspěvek"
       dynamic_favicon: "Zobrazovat notifikace na favikoně"
       edit_history_public: "Povolit ostatním zobrazení všechn verzí mého příspěvku"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
@@ -314,7 +315,6 @@ cs:
       suspended_notice: "Uživatel je suspendován do {{date}}."
       suspended_reason: "Důvod: "
       github_profile: "Github"
-      mailing_list_mode: "Obdržet email za každý nový příspěvek (pokud si neztišíte téma nebo kateogii)"
       watched_categories: "Hlídané"
       watched_categories_instructions: "Nová témata v těchto kategoriích budou hlídaná. Na všechny nové příspěvky budete upozorněni."
       tracked_categories: "Sledované"
@@ -415,19 +415,14 @@ cs:
       website: "Webová stránka"
       email_settings: "Emailová upozornění"
       email_digests:
-        title: "When you don't visit the site, send an email digest of what's new:"
         daily: "denně"
         weekly: "týdně"
         bi_weekly: "jednou za 14 dní"
-      email_direct: "Upozornění emailem na citace, odpovědi na vaše příspěvky a zmínky @vy"
-      email_private_messages: "Upozornění emailem na novou soukromou zprávu"
       email_always: "Posílat upozorňovací emaily i když jsem zrovna na webu aktivní"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
       new_topic_duration:
         label: "Považovat témata za nová, pokud"
-        not_viewed: "you haven't viewed them yet"
-        last_here: "vytvořeno od poslední návštěvy"
         after_n_days:
           one: "vytvořeno v poslední {{count}} dnu"
           few: "vytvořeno v posledních {{count}} dnech"
@@ -436,7 +431,6 @@ cs:
           one: "vytvořeno v posledním {{count}} týdnu"
           few: "vytvořeno v posledních {{count}} týdnech"
           other: "vytvořeno v posledních {{count}} týdnech"
-      auto_track_topics: "Automaticky sledovat navštívená témata"
       auto_track_options:
         never: "nikdy"
         always: "vždy"
@@ -686,7 +680,6 @@ cs:
           examples: 'Zadejte počet hodin (24).'
     notifications:
       title: "oznámení o zmínkách pomocí @jméno, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
-      none: "V tuto chvíli nemáte žádná oznámení."
       more: "zobrazit starší oznámení"
       total_flagged: "celkem nahlášeno příspěvků"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -929,7 +922,6 @@ cs:
         to_forum: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit s pomocí kliknutí na odkaz. Nebude potřeba registrace."
         email_placeholder: 'jmeno@priklad.cz'
         success: "Zaslali jsme pozvánku na <b>{{email}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
-        error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem?"
       login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
@@ -1655,6 +1647,7 @@ cs:
             name: 'úspěch'
           love:
             name: 'láska'
+            description: "Barva tlačítka Like."
           wiki:
             name: 'wiki'
       email:
@@ -1724,6 +1717,7 @@ cs:
           actions:
             delete_user: "odstranit uživatele"
             change_trust_level: "z. důvěryhodnosti"
+            change_username: "Změnit uživatelské jméno"
             change_site_setting: "změna nastavení"
             change_site_customization: "změna přizpůsobení"
             delete_site_customization: "odstranit přizpůsobení"
@@ -1859,6 +1853,7 @@ cs:
           one: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než den nemůžou být smazány.)"
           few: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dny nemůžou být smazány.)"
           other: "Uživatelé nemůžou být smazáni pokud mají příspěvky. Před smazáním uživatele smažte všechny jeho příspěvky. (Příspěvky starší než %{count} dnů nemůžou být smazány.)"
+        delete_confirm: "Jste si jistí, že chcete smazat tohoto uživatele? Tato akce je nevratná!"
         deleted: "Uživatel byl smazán."
         delete_failed: "Nastala chyba při odstraňování uživatele. Ujistěte se, že jsou všechny příspěvky tohoto uživatele smazané, než budete uživatele mazat."
         send_activation_email: "Odeslat aktivační email"
@@ -2038,8 +2033,6 @@ cs:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Odznaky
-      allow_title: "Povolit užití odzanku jako titulu?"
-      multiple_grant: "Může být přiděleno několikrát"
       badge_count:
         one: "1 odznak"
         few: "%{count} odznaky"

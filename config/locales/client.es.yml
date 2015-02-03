@@ -280,7 +280,7 @@ es:
       notifications: "Notificaciones"
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
-      disable_jump_reply: "No ir directamente a tu nuevo post al responder"
+      disable_jump_reply: "No dirigirme a mi post cuando responda"
       dynamic_favicon: "Mostrar notificaciones de mensajes de entrada en favicon (experimental)"
       edit_history_public: "Dejar que otros usuarios puedan ver las revisiones de mis posts"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
@@ -293,7 +293,7 @@ es:
       suspended_notice: "Este usuario ha sido suspendido hasta {{date}}."
       suspended_reason: "Causa: "
       github_profile: "Github"
-      mailing_list_mode: "Recibir un e-mail por cada nuevo post (a menos que hayas silenciado el tema o la categoría)"
+      mailing_list_mode: "Enviarme un e-mail para cada nuevo post (excepto las categorías o temas que tenga silenciadas)"
       watched_categories: "Vigiladas"
       watched_categories_instructions: "Automáticamente vigilarás todos los temas en estas categorías. Se te notificará de todos los posts y temas, y además aparecerá un contador de posts nuevos y no leídos en la lista de temas."
       tracked_categories: "Siguiendo"
@@ -359,8 +359,8 @@ es:
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
         frequency:
           zero: "Te enviaremos un email inmediatamente si no has leído aquello que vamos a enviarte."
-          one: "Solo te enviaremos emails si, pasado un minuto, no te hemos visto y no has leído aquello que vamos a enviarte."
-          other: "Solo te enviaremos emails si, pasados {{count}} minutos, no te hemos visto y no has leído aquello que vamos a enviarte."
+          one: "Sólo te enviaremos emails si no te hemos visto en el último minuto."
+          other: "Sólo te enviaremos si no te hemos visto en los últimos {{count}} minutos."
       name:
         title: "Nombre"
         instructions: "Tu nombre completo (opcional)"
@@ -396,26 +396,26 @@ es:
       website: "Sitio Web"
       email_settings: "E-mail"
       email_digests:
-        title: "Cuando no visite el sitio, envíenme un resumen vía e-mail de las novedades"
+        title: "Cuando no visite la página, enviarme un correo con las últimas novedades."
         daily: "diariamente"
         weekly: "semanalmente"
         bi_weekly: "cada dos semanas"
-      email_direct: "Recibe un e-mail cuando alguien te cite, responda a tu post, o mencione tu @nombredeusuario"
-      email_private_messages: "Recibe un e-mail cuando alguien te envíe un mensaje privado"
+      email_direct: "Enviarme un email cuando alguien me cita, responde a mi post o menciona mi @usuario"
+      email_private_messages: "Enviarme un email cuando alguien me mande un mensaje privado"
       email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"
       other_settings: "Otros"
       categories_settings: "Categorías"
       new_topic_duration:
         label: "Considerar que los temas son nuevos cuando"
-        not_viewed: "no los has visto todavía"
-        last_here: "creados desde la última vez que estuviste aquí"
+        not_viewed: "No los he visto todavía"
+        last_here: "creados desde mi última visita"
         after_n_days:
           one: "creados en el último día"
           other: "creados en los últimos {{count}} días"
         after_n_weeks:
           one: "creados en la última semana"
           other: "creados en las últimas {{count}} semanas"
-      auto_track_topics: "Seguir automáticamente los temas que leo"
+      auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
         always: "siempre"
@@ -665,7 +665,7 @@ es:
           examples: 'Introduzca el número de horas (24).'
     notifications:
       title: "notificaciones por menciones a tu @nombre, respuestas a tus publicaciones y temas, mensajes privados, etc."
-      none: "No tienes notificaciones por el momento."
+      none: "No se han podido cargar las notificaciones."
       more: "ver notificaciones antiguas"
       total_flagged: "total de posts reportados"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -732,6 +732,7 @@ es:
         posted: "Todavía no has publicado en ningún tema."
         latest: "No hay temas recientes. Qué pena..."
         hot: "No hay temas calientes nuevos."
+        bookmarks: "No tienes temas guardados en marcadores todavía."
         category: "No hay temas en la categoría {{category}}."
         top: "No hay temas en el top más vistos."
         educate:
@@ -1314,6 +1315,9 @@ es:
       posted:
         title: "Mis posts"
         help: "temas en los que has publicado"
+      bookmarks:
+        title: "Marcadores"
+        help: "temas que has guardado en marcadores"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1466,6 +1470,10 @@ es:
         name: "Nombre"
         add: "Añadir"
         add_members: "Añadir miembros"
+        custom: "Personalizado"
+        automatic: "Automático"
+        automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
+        automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."
@@ -2080,8 +2088,8 @@ es:
         mark_watching: '<b>m</b>, <b>w</b> Vigilar Tema'
     badges:
       title: Distintivos
-      allow_title: "¿se permite usar el distintivo como título?"
-      multiple_grant: "¿se concede múltiples veces?"
+      allow_title: "puede ser utilizado como título"
+      multiple_grant: "puede ser otorgado varias veces"
       badge_count:
         one: "1 distintivo"
         other: "%{count} distintivos"

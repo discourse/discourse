@@ -20,11 +20,6 @@ ko:
     short_date_no_year: "MMM D"
     short_date: "YYYY-MMM-D"
     long_date: "YYYY-MMM-D a h:mm"
-  time:
-    formats:
-      short: "%Y-%m-%d"
-      short_no_year: "%B %-d"
-      date_only: "%Y %b %-d"
   title: "Discourse"
   topics: "토픽들"
   posts: "게시물들"
@@ -603,7 +598,6 @@ ko:
     enable_escaped_fragments: "구형의 검색엔진 및 크롤러도 잘 동작하게 하기 위한 동작을 활성화. https://support.google.com/webmasters/answer/174992?hl=en 참고하세요."
     enable_noscript_support: "당신의 사이트를 검색하기 위한 noscript 태그를 이용한 일반적인 웹 크롤러를 활성화"
     allow_moderators_to_create_categories: "운영자가 새로운 카테고리를 만드는 것을 허용"
-    top_menu: "홈페이지 네비게이션에 어떤 아이템이 나올지, 어떤 순서로 나올지 결정한다.예 latest(최신)|new(새로운)|unread(읽지않은)|starred(즐겨찾는)|categories(카테고리)|top(인기)|read(읽은)|posted(작성된)"
     post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
     share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
     track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
@@ -631,7 +625,6 @@ ko:
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
     sso_url: "SSO endpoint의 URL"
-    sso_secret: "SSO 정보를 encrypt/decrypt할 때 사용할 문자열.  (10글자 이상이어야 함)"
     sso_overrides_email: "내부에서 사용되는 이메일을 SSO로부터 부여받은 외부 이메일로 사용. (주의 : 내부에서 사용되는 이메일 표준화로 인해 불일치가 발생할 수 있)"
     sso_overrides_username: "내부에서 사용되는 사용자 이름을 SSO로부터 부여받은 외부 사용자 이름으로 사용. (주의 : 내부에서 사용되는 사용자 이름의 길이/요구조건의 차이점 때문에 불일치가 발생할 수 있)"
     sso_overrides_name: "내부에서 사용되는 이름을 SSO로부터 부여받은 외부 이름으로 사용. (주의 : 내부에서 사용되는 이름의 표준화로 인해 불일치가 발생할 수 있)"
@@ -1088,10 +1081,7 @@ ko:
     edit_reason: "이미지를 다운로드 합니다."
     unauthorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: %{authorized_extensions})."
     pasted_image_filename: "게시된 이미지"
-    attachments:
-      too_large: "업로드하려는 파일의 크기가 너무 큽니다 (최대 크기는 %{max_size_kb}%kb 입니다)."
     images:
-      too_large: "업로드하려는 이미지의 크기가 너무 큽니다. (최대 크기는 %{max_size_kb}%kb 입니다), 사이즈를 조정하고 다시 시도해보세요."
       fetch_failure: "죄송합니다. 이미지 업로드에 오류가 있습니다."
       unknown_image_type: "죄송합니다. 당신은 이미지로 보이지 않는 파일을 업로드 하려고 하였습니다."
       size_not_found: "죄송합니다. 이미지 사이즈가 잘못 되었습니다. 혹시 깨진 이미지가 아닌가요?"
