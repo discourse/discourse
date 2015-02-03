@@ -10,11 +10,6 @@ da:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%Y-%m-%d"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
@@ -548,7 +543,6 @@ da:
     ga_tracking_code: "Google analytics sporingskode, f.eks.: UA-12345678-9; se http://google.com/analytics."
     ga_domain_name: "Google analytics domænenavn, f.eks.: example.com; se http://google.com/analytics."
     enable_noscript_support: "Aktivér standard webcrawler søgemaskineunderstøttelse vha. noscript-tagget"
-    top_menu: "Angiv hvilke elementer der skal vises i hjemmesidenavigationen, og i hvilken rækkefølge. Eksempel: latest|new|unread|starred|categories|top|read|posted."
     post_menu: "Angiv hvilke elementer der skal vises i indlægsmenuen, og i hvilken rækkefølge. Eksempel: like|edit|flag|delete|share|bookmark|reply."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     track_external_right_clicks: "Spor højreklik på eksterne links (f.eks.: åbn i ny tab); deaktiveret som standard fordi den omskriver URLer"
@@ -797,10 +791,7 @@ da:
   upload:
     unauthorized: "Beklager, filen, som du forsøger at uploade er ikke autoriseret (autoriserede filendelser: %{authorized_extensions})."
     pasted_image_filename: "Indsat billede"
-    attachments:
-      too_large: "Beklager, filen, som du forsøger at uploade, er for stor (maksimal størrelse %{max_size_kb}%kb)."
     images:
-      too_large: "Beklager, billedet, som du forsøger at uploade, er for stort (maksimal størrelse %{max_size_kb}%kb), please resize it and try again."
       fetch_failure: "Beklager, der opstod en fejl ved hentning af det eksterne billede."
       unknown_image_type: "Beklager, men filen, som du forsøgte at uploade, ser ikke ud til at være et billede."
       size_not_found: "Beklager, men vi kunne ikke fastslå billedets størrelse. Måske er dit billede ødelagt?"

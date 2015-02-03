@@ -75,6 +75,7 @@ zh_CN:
       google+: '分享这个链接到 Google+'
       email: '用电子邮件发送这个链接'
     topic_admin_menu: "主题管理操作"
+    emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
@@ -256,7 +257,7 @@ zh_CN:
       notifications: "通知"
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
-      disable_jump_reply: "不要在回复后跳转到你的新帖子"
+      disable_jump_reply: "不要在回复后跳转到我的新帖子"
       dynamic_favicon: "在标签页图标上动态显示未读消息提醒（测试）"
       edit_history_public: "让其他用户查看我的帖子的以前版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
@@ -269,7 +270,7 @@ zh_CN:
       suspended_notice: "该用户将被禁止登录，直至 {{date}}。"
       suspended_reason: "原因："
       github_profile: "Github"
-      mailing_list_mode: "对每个新帖发送一封邮件（除非你屏蔽了主题或者分类）"
+      mailing_list_mode: "每有一个新帖就发送一封邮件给我（除非我屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "你将自动关注这些分类的所有新主题。你将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
       tracked_categories: "已跟踪"
@@ -335,8 +336,8 @@ zh_CN:
         authenticated: "你的电子邮箱已经被 {{provider}} 验证了。"
         frequency:
           zero: "如果你没有阅读过我们想寄给你的内容，我们会立即发送电子邮件给你。"
-          one: "如果你没有阅读过我们想寄给你的内容，我们只会在你没有访问时才会发送电子邮件给你。"
-          other: "如果你没有阅读过我们想寄给你的内容，我们只会在你最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
+          one: "如果你很久都没有出现了，我们才会发送电子邮件给你。"
+          other: "我们只会在您最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
       name:
         title: "名字"
         instructions: "你的全名（可选）"
@@ -372,18 +373,18 @@ zh_CN:
       website: "网站"
       email_settings: "电子邮箱"
       email_digests:
-        title: "当你长期未访问此站时，发送新的摘要信息邮件"
+        title: "当我不访问时，向我的邮箱发送最新信息："
         daily: "每天"
         weekly: "每周"
         bi_weekly: "每两周"
-      email_direct: "当有人引用、回复或提及你时发送一封邮件给你"
-      email_private_messages: "当有人给你发私信时发送一封邮件给你"
+      email_direct: "当有人引用我、回复我的帖子或提及@你时发送一封邮件给我"
+      email_private_messages: "当有人给发私信给我时发送一封邮件给我"
       email_always: "即使在论坛中活跃时也接收电子邮件提醒"
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
         label: "认为主题是新主题的条件："
-        not_viewed: "我还没有浏览过它们"
+        not_viewed: "我还没有浏览它们"
         last_here: "在你最近一次访问之后创建的"
         after_n_days:
           other: "最近 {{count}} 天内创建"
@@ -637,7 +638,7 @@ zh_CN:
           examples: '输入小时数（24）。'
     notifications:
       title: "使用 @用户名称 提及到你，回复你的帖子和主题，私信等等的通知消息"
-      none: "你当前没有任何通知。"
+      none: "现在无法载入通知"
       more: "浏览以前的通知"
       total_flagged: "被报告帖子的总数"
       mentioned: "<i title='提及' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -703,6 +704,7 @@ zh_CN:
         posted: "你尚未在任何主题中发帖。"
         latest: "没有最新的讨论主题。"
         hot: "没有热门主题。"
+        bookmarks: "你没有书签任何主题。"
         category: "没有 {{category}} 分类的主题。"
         top: "没有最佳主题。"
         educate:
@@ -737,7 +739,7 @@ zh_CN:
         login_required: "你需要登录才能阅读此主题。"
       server_error:
         title: "载入主题失败"
-        description: "抱歉，无法载入此主题。有可能是网络连接问题导致的，请重试。如果问题始终存在，请告诉我们。"
+        description: "抱歉，无法载入主题。这可能是网络连接问题导致的。请重试一次。如果始终无法加载，请告诉我们。"
       not_found:
         title: "未找到主题"
         description: "抱歉，无法找到此主题。可能已被版主删除。"
@@ -755,7 +757,7 @@ zh_CN:
       toggle_information: "切换主题详细"
       read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{latestLink}} 里的其它主题。"
       read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 条未读</a> } other { <a href='/unread'># 条未读</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 新的</a>话题} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># 新的</a>话题} } 或者{CATEGORY, select, true {浏览{catLink}中的话题} false {{latestLink}} other {}}。"
+      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个新</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}。"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 浏览最新主题
       suggest_create_topic: 马上创建一个主题吧！
@@ -865,7 +867,7 @@ zh_CN:
         to_forum: "我们将发送一封简洁的邮件让你的朋友通过点击一个链接参与讨论，不需要登录。"
         email_placeholder: '电子邮箱地址'
         success: "我们发了一封邀请邮件给 <b>{{email}}</b>。我们将在邀请被接受后通知你。检查你的用户中的邀请标签页来追踪你的邀请。"
-        error: "抱歉，我们不能邀请此人，可能他/她已经是本站用户了？"
+        error: "抱歉，我们不能邀请这个人。可能他已经是个用户了？（邀请还有频率限制）"
       login_reply: '登录后回复'
       filters:
         n_posts:
@@ -1251,6 +1253,9 @@ zh_CN:
       posted:
         title: "我的帖子"
         help: "你发表过帖子的主题"
+      bookmarks:
+        title: "书签"
+        help: "你标上书签的主题"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1398,6 +1403,10 @@ zh_CN:
         name: "名字"
         add: "添加"
         add_members: "添加成员"
+        custom: "定制"
+        automatic: "自动"
+        automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
+        automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有活动的 API 密钥。"
@@ -1623,6 +1632,7 @@ zh_CN:
           actions:
             delete_user: "删除用户"
             change_trust_level: "更改信任等级"
+            change_username: "修改用户名"
             change_site_setting: "更改站点设置"
             change_site_customization: "更改站点自定义"
             delete_site_customization: "删除站点自定义"
@@ -1807,7 +1817,7 @@ zh_CN:
           topics_viewed_all_time: "已阅的主题 (全部)"
           posts_read: "已读帖子"
           posts_read_all_time: "已读的帖子 (全部)"
-          flagged_posts: "旗标帖子"
+          flagged_posts: "被报告的帖子"
           flagged_by_users: "标记的用户"
           likes_given: "给出的赞"
           likes_received: "收到的赞"
@@ -2004,8 +2014,8 @@ zh_CN:
         mark_watching: '<b>m</b> 然后 <b>w</b> 关注主题'
     badges:
       title: 徽章
-      allow_title: "允许使用徽章作为头衔？"
-      multiple_grant: "可以被奖励多次？"
+      allow_title: "能用作头衔"
+      multiple_grant: "能被授予多次"
       badge_count:
         other: "%{count} 个徽章"
       more_badges:

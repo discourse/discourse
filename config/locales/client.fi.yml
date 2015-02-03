@@ -279,7 +279,6 @@ fi:
       notifications: "Ilmoitukset"
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
-      disable_jump_reply: "Älä siirry uuteen viestiin sen lähettämisen jälkeen"
       dynamic_favicon: "Näytä ilmoitukset viesteistä faviconissa (kokeellinen)"
       edit_history_public: "Anna muiden nähdä viestieni revisiot"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
@@ -292,7 +291,6 @@ fi:
       suspended_notice: "Tämä käyttäjätili on hyllytetty {{date}} asti."
       suspended_reason: "Syy:"
       github_profile: "GitHub"
-      mailing_list_mode: "Lähetä sähköposti jokaisesta uudesta viestistä (paitsi vaimennetuista ketjuista ja alueilta)."
       watched_categories: "Tarkkaillut"
       watched_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen listauksissa. "
       tracked_categories: "Seuratut"
@@ -358,8 +356,6 @@ fi:
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency:
           zero: "Lähetämme sähköpostia heti, jos et ole lukenut sähköpostin aihetta."
-          one: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen minuutin aikana, etkä ole lukenut sähköpostin aihetta."
-          other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana, etkä ole lukenut sähköpostin aihetta."
       name:
         title: "Nimi"
         instructions: "Koko nimesi (valinnainen)"
@@ -395,26 +391,20 @@ fi:
       website: "Nettisivu"
       email_settings: "Sähköposti"
       email_digests:
-        title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         daily: "päivittäin"
         weekly: "viikottain"
         bi_weekly: "joka toinen viikko"
-      email_direct: "Lähetä sähköposti jos joku lainaa viestiäni, vastaa viestiini tai viittaa @nimeeni."
-      email_private_messages: "Lähetä sähköposti jos joku lähettää minulle yksityisviestin"
       email_always: "Älä jätä lähettämättä sähköposti-ilmoituksia, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
       categories_settings: "Keskustelualueet"
       new_topic_duration:
         label: "Tulkitse ketju uudeksi, kun"
-        not_viewed: "en ole avannut sitä vielä"
-        last_here: "se on luotu edellisen käyntisi jälkeen"
         after_n_days:
           one: "se on luotu edellisen päivän aikana"
           other: "se on luotu edellisen {{count}} päivän aikana"
         after_n_weeks:
           one: "se on luotu edellisen viikon aikana"
           other: "se on luotu edellisen {{count}} viikon aikana"
-      auto_track_topics: "Seuraa automaattisesti ketjuja"
       auto_track_options:
         never: "ei koskaan"
         always: "aina"
@@ -664,7 +654,6 @@ fi:
           examples: 'Syötä aika tunteina (24).'
     notifications:
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, yksityisviesteistä ym."
-      none: "Sinulla ei ole ilmoituksia."
       more: "vanhat ilmoitukset"
       total_flagged: "yhteensä liputettuja viestejä"
       mentioned: "<i title='viittasi' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -709,7 +698,7 @@ fi:
     topics:
       bulk:
         reset_read: "Palauta lukutila"
-        delete: "Poista ketjuja"
+        delete: "Poista ketjut"
         dismiss_posts: "Unohda viestit"
         dismiss_posts_tooltip: "Tyhjennä nyt ilmoitukset lukemattomista viesteistä näiden ketjujen osalta, mutta näytä ilmoitukset uudestaan, kun ketjuihin kirjoitetaan uusia viestejä."
         dismiss_topics: "Unohda ketjut"
@@ -899,7 +888,6 @@ fi:
         to_forum: "Lähetämme lyhyen sähköpostin jonka avulla ystäväsi voi liittyä klikkaamalla linkkiä, sisäänkirjautumista ei tarvita."
         email_placeholder: 'nimi@esimerkki.fi'
         success: "Olemme lähettäneet kutsun osoitteeseen <b>{{email}}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
-        error: "Pahoittelut, emme pystyneet kutsumaan tätä henkilöä. Ehkäpä hän on käyttäjä jo valmiiksi?"
       login_reply: 'Kirjaudu sisään vastataksesi'
       filters:
         n_posts:
@@ -2078,8 +2066,6 @@ fi:
         mark_watching: '<b>m</b>, <b>w</b> Tarkkaile ketjua'
     badges:
       title: Arvomerkit
-      allow_title: "salli arvomerkin käyttäminen tittelinä?"
-      multiple_grant: "myönnettävissä useita kertoja?"
       badge_count:
         one: "1 Arvomerkki"
         other: "%{count} Arvomerkkiä"

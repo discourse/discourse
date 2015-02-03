@@ -91,6 +91,7 @@ nb_NO:
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     topic_admin_menu: "admin-handlinger for emne"
+    emails_are_disabled: "All outgunned email har blitt deaktivert globalt av en administrator. Ingen email varslinger vil bli sent. "
     edit: 'rediger tittelen og kategorien til dette emnet'
     not_implemented: "Den funksjonen har ikke blitt implementert ennå, beklager!"
     no_value: "Nei"
@@ -292,7 +293,6 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
-      mailing_list_mode: "Motta en e-post for hvert nye innlegg (ved mindre du demper emnet eller kategorien)"
       watched_categories: "Følger"
       watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
       tracked_categories: "Sporet"
@@ -358,8 +358,6 @@ nb_NO:
         authenticated: "Din email har blitt autentisert av {{provider}}"
         frequency:
           zero: "Vi sender deg straks en email hvis du ikke har lest tingen vi sendte deg en email om."
-          one: "Vi sender deg bare en email hvis vi ikke har sett deg i det siste minuttet og du har ikke lest tingen vi sender deg en email om."
-          other: "Vi sender deg bare en email om vi ikke har sett deg i de siste {{count}} minuttene og du har ikke lest tingen vi sender deg en email om."
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)"
@@ -395,26 +393,21 @@ nb_NO:
       website: "Nettsted"
       email_settings: "E-post"
       email_digests:
-        title: "Når du ikke besøker nettstedet, send et sammendrag på e-post om siste nytt:"
         daily: "daglig"
         weekly: "ukentlig"
         bi_weekly: "hver andre uke"
-      email_direct: "Motta en e-post når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
-      email_private_messages: "Motta en e-post når noen sender deg en privat melding"
+      email_private_messages: "Notta en email når noen sender deg en privat melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Anse emner som nye når"
-        not_viewed: "Jeg har ikke sett dem ennå"
-        last_here: "opprettet siden du sist var her"
         after_n_days:
           one: "opprettet den siste  {{count}} dagen"
           other: "opprettet de siste {{count}} dagene"
         after_n_weeks:
           one: "opprettet den siste {{count}} uken"
           other: "opprettet de siste {{count}} ukene"
-      auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
         always: "alltid"
@@ -662,7 +655,6 @@ nb_NO:
           examples: 'Før inn antall timer (24).'
     notifications:
       title: "varsler når @brukernavn nevnes, svar til dine innlegg og emner, private meldinger, osv"
-      none: "Du har ingen varsler akkurat nå."
       more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -897,7 +889,6 @@ nb_NO:
         to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         email_placeholder: 'email'
         success: "Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil gi deg en varsling når invitasjonen benyttes. Se fanen for invitasjoner på din brukerside for å holde oversikt over dine invitasjoner."
-        error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
       login_reply: 'Logg Inn for å svare'
       filters:
         n_posts:
@@ -1142,6 +1133,8 @@ nb_NO:
       delete: 'Slett kategori'
       create: 'Ny Kategori'
       save: 'Lagre Kategori'
+      slug: 'Kategorinavn i URL'
+      slug_placeholder: '(valgfritt) sammensatte ord for bruk i URL'
       creation_error: Det oppstod en feil ved å lage denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       name: "Kategorinavn"
@@ -1239,6 +1232,7 @@ nb_NO:
         help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
         title: "Fastsatt"
+        help: "Dette emnet er fastsatt for deg; det vil vises i toppen av sin kategori"
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
@@ -2050,8 +2044,6 @@ nb_NO:
         mark_watching: '<b>m</b>, <b>w</b> Følg emne'
     badges:
       title: Merker
-      allow_title: "tillat merke som tittel?"
-      multiple_grant: "kan gis flere ganger?"
       badge_count:
         one: "1 Merke"
         other: "%{count} Merker"

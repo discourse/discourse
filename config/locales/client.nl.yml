@@ -277,7 +277,6 @@ nl:
       notifications: "Notificaties"
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
-      disable_jump_reply: "Niet na reageren naar je nieuwe bericht gaan"
       dynamic_favicon: "Laat notificatie voor nieuw bericht zien in favicon (experiment)"
       edit_history_public: "Laat andere gebruikers mijn aanpassingen aan dit bericht zien."
       external_links_in_new_tab: "Open alle externe links in een nieuw tabblad"
@@ -289,7 +288,6 @@ nl:
       admin_tooltip: "Deze gebruiker is een admin"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
-      mailing_list_mode: "Ontvang een e-mail bij elk nieuwe bericht (tenzij je het topic of de categorie op stil zet)"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je zal automatisch alle nieuwe topics in deze categorieën bekijken. Je ontvangt een notificatie van alle nieuwe berichten en topics. Daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
@@ -385,26 +383,20 @@ nl:
       website: "Website"
       email_settings: "E-mail"
       email_digests:
-        title: "Ontvang een mail met de laatste updates wanneer je de site niet bezoekt."
         daily: "dagelijks"
         weekly: "wekelijks"
         bi_weekly: "elke twee weken"
-      email_direct: "Ontvang een mail wanneer iemand je citeert, reageert op je bericht of je @gebruikersnaam noemt."
-      email_private_messages: "Ontvang een mail wanneer iemand je een privébericht heeft gestuurd."
       email_always: "E-mailnotificaties niet onderdrukken als ik actief ben op de site"
       other_settings: "Overige"
       categories_settings: "Categorieën"
       new_topic_duration:
         label: "Beschouw topics als nieuw wanneer"
-        not_viewed: "je hebt ze nog niet bekeken"
-        last_here: "gemaakt sinds de vorige keer dat je hier was"
         after_n_days:
           one: "gemaakt gisteren"
           other: "gemaakt in de afgelopen {{count}} dagen"
         after_n_weeks:
           one: "gemaakt in de afgelopen week"
           other: "gemaakt in de afgelopen {{count}} weken"
-      auto_track_topics: "Houd automatisch topics bij die je bezoekt"
       auto_track_options:
         never: "nooit"
         always: "altijd"
@@ -478,6 +470,8 @@ nl:
         fixed: "Pagina laden"
     close: "Sluit"
     assets_changed_confirm: "De site is bijgewerkt. Wil je een de pagina vernieuwen om de laatste versie te laden?"
+    logout: "Je bent uitgelogd."
+    refresh: "Ververs"
     read_only_mode:
       enabled: "Een administrator heeft dit forum op alleen-lezen gezet. Je kan rondkijken, maar sommige elementen zullen mogelijk niet werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
@@ -516,6 +510,7 @@ nl:
     created: 'Gemaakt'
     created_lowercase: 'gemaakt'
     trust_level: 'Trustlevel'
+    search_hint: 'gebruikersnaam, email of IP adres'
     create_account:
       title: "Maak een nieuw account"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
@@ -567,6 +562,9 @@ nl:
       github:
         title: "met Github"
         message: "Inloggen met een Githubaccount (zorg ervoor dat je popup blocker uit staat)"
+    apple_international: "Apple/Internationaal"
+    google: "Google"
+    twitter: "Twitter"
     composer:
       add_warning: "Dit is een officiële waarschuwing."
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
@@ -589,6 +587,8 @@ nl:
       reply_here: "Reageer hier"
       reply: "Reageer"
       cancel: "Annuleer"
+      create_topic: "Nieuw topic"
+      create_pm: "Privé-bericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
@@ -627,9 +627,10 @@ nl:
       help: "Uitleg over Markdown"
       toggler: "verberg of toon de editor"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
+      auto_close:
+        error: "Vul een geldige waarde in."
     notifications:
       title: "notificaties van meldingen van @naam, reacties op je berichten en topics, privé-berichten, etc."
-      none: "Er zijn nu geen notificaties."
       more: "bekijk oudere notificaties"
       total_flagged: "aantal gemarkeerde berichten"
       mentioned: "<i title='genoemd' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -649,7 +650,9 @@ nl:
       title_with_attachments: "Voeg een afbeelding of bestand toe"
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
+      remote_tip_with_attachments: "vul een url in van een afbeelding of bestand (toegestane extensies: {{authorized_extensions}})."
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
+      local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
       hint: "(je kan afbeeldingen ook slepen in de editor om deze te uploaden)"
       hint_for_supported_browsers: "(je kan ook afbeeldingen hierheen slepen of copy/pasten om ze te uploaden)"
       uploading: "Uploaden"
@@ -846,7 +849,6 @@ nl:
         to_forum: "We sturen een kort mailtje waarmee je vriend direct zich kan aanmelden door op een link te klikken, zonder te hoeven inloggen."
         email_placeholder: 'naam@voorbeeld.nl'
         success: "We hebben een uitnodiging verstuurd naar <b>{{email}}</b>. We laten het je weten als de uitnodiging wordt gebruikt. Bekijk de uitnodigingen tab op je profielpagina om je uitnodigingen te volgen."
-        error: "Sorry, we kunnen deze persoon niet uitnodigen. Wellicht is deze al een lid op onze site?"
       login_reply: 'Log in om te beantwoorden'
       filters:
         n_posts:
@@ -1185,6 +1187,7 @@ nl:
     views_long: "deze topic is {{number}} keer bekeken"
     activity: "Activiteit"
     likes: "Leuk"
+    likes_lowercase: "likes"
     likes_long: "er zijn {{count}} likes in deze topic"
     users: "Gebruikers"
     users_lowercase: "leden"
@@ -1368,12 +1371,16 @@ nl:
         edit: "Wijzig groepen"
         refresh: "Herlaad"
         new: "Nieuw"
+        selector_placeholder: "vul gebruikersnaam in"
         name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         group_members: "Groepsleden"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze groepen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
+        name: "Naam"
+        add: "Voeg toe"
+        add_members: "Voeg leden toe"
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -1442,9 +1449,12 @@ nl:
       export_csv:
         failed: "Exporteren is mislukt. Controleer de logbestanden."
         button_text: "Exporteren"
+        button_title:
+          user: "Exporteer volledige gebruikerslijst in *.CSV-formaat"
       customize:
         title: "Aanpassingen"
         long_title: "Aanpassingen aan de site"
+        css: "CSS"
         header: "Header"
         footer: "Voettekst"
         override_default: "Sluit de standaard stylesheet uit"
@@ -1852,6 +1862,9 @@ nl:
           grant_count:
             zero: "Geen badges om toe te wijzen."
           sample: "Voorbeeld:"
+      emoji:
+        name: "Naam"
+        image: "Afbeelding"
     lightbox:
       download: "download"
     keyboard_shortcuts_help:
@@ -1887,8 +1900,6 @@ nl:
         delete: '<b>d</b> Verwijder bericht'
     badges:
       title: Badges
-      allow_title: "badge als titel toestaan"
-      multiple_grant: "Meerdere malen toegekend?"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"

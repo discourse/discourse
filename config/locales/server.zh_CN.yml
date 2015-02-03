@@ -20,11 +20,6 @@ zh_CN:
     short_date_no_year: "MMMDo"
     short_date: "ll"
     long_date: "lll"
-  time:
-    formats:
-      short: "%Y年%m月%d日"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d，%Y"
   title: "Discourse"
   topics: "主题列表"
   posts: "帖子"
@@ -104,6 +99,7 @@ zh_CN:
     latest: "最新主题"
     hot: "最热主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
+  excerpt_image: "图片"
   groups:
     errors:
       can_not_modify_automatic: "你不能修改一个自动组"
@@ -274,29 +270,29 @@ zh_CN:
       other: "%{count} 秒"
   datetime:
     distance_in_words:
-      half_a_minute: "< 1m"
+      half_a_minute: "< 1 分"
       less_than_x_seconds:
-        other: "< %{count}s"
+        other: "< %{count} 秒"
       x_seconds:
-        other: "%{count}s"
+        other: "%{count} 秒"
       less_than_x_minutes:
-        other: "< %{count}m"
+        other: "< %{count} 分"
       x_minutes:
-        other: "%{count}m"
+        other: "%{count} 分"
       about_x_hours:
-        other: "%{count}h"
+        other: "%{count} 小时"
       x_days:
-        other: "%{count}d"
+        other: "%{count} 天"
       about_x_months:
         other: "%{count} 分钟"
       x_months:
         other: "%{count} 分钟"
       about_x_years:
-        other: "%{count}y"
+        other: "%{count} 年"
       over_x_years:
-        other: "> %{count}y"
+        other: "> %{count} 年"
       almost_x_years:
-        other: "%{count}y"
+        other: "%{count} 年"
     distance_in_words_verbose:
       half_a_minute: "刚刚"
       less_than_x_seconds:
@@ -568,7 +564,7 @@ zh_CN:
     educate_until_posts: "当用户开始键入他们的前几个（n）新帖子时，在编辑器上显示教育面板弹窗。"
     title: "站点名字，用于 title 标签。"
     site_description: "用一句话描述这个论坛，用于 meta description 标签。"
-    contact_email: "本站负责人的电子邮件地址。仅用于紧急事项的通知，以及作为 /about 页面中的紧急联系人。"
+    contact_email: "本站负责人的电子邮件地址。用于紧急事项的通知，如未处理的标记，以及作为 /about 页面中的紧急联系人。"
     queue_jobs: "仅限开发者设定！警告！默认使用 sidekiq 完成队列工作。如果禁用，你的站点将无法使用。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
@@ -631,7 +627,7 @@ zh_CN:
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
     cors_origins: "允许跨源请求（CORS）。每个源必须包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 环境变量必须设置为 true 才能启用 CORS 政策。"
-    top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|starred|categories|top|read|posted"
+    top_menu: "确定在主页导航条包含哪些条目，以及排列顺序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "确定在帖子菜单条包含哪些条目，以及排列顺序。例如：like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "帖子菜单中默认隐藏的按钮，点击省略号后显示。"
     share_links: "决定分享对话框中出现的按钮及显示顺序。"
@@ -654,6 +650,7 @@ zh_CN:
     email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     forgot_password_strict: "在找回密码对话框中不告知用户账户的存在。"
+    log_out_strict: "登出时，登出用户所有设备的会话"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
     new_version_emails: "当新版本发布时，发送一封邮件至 contact_email 设置的地址。"
     port: "仅限开发者设定！警告！使用此 HTTP 端口而不是80端口。留空为使用默认 80 端口"
@@ -669,7 +666,7 @@ zh_CN:
     enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆；同时禁用邀请功能）"
     enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
-    sso_secret: "秘密字符串，用于加密/解密 SSO 信息，请保证有 10 个字符或者更长"
+    sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
     sso_overrides_email: "用 SSO 信息中的外部邮件地址覆盖本地邮件地址（警告：因为对本地邮件的统一处理，这个邮件地址可能不同）"
     sso_overrides_username: "用 SSO 信息中的外部用户名覆盖用户名（警告：因为对本地用户名的统一处理，用户名的长度或者要求可能不同）"
     sso_overrides_name: "用 SSO 信息中的外部名字覆盖本地名字（警告：因为对本地名字的统一处理，这个名字可能不同）"
@@ -706,9 +703,9 @@ zh_CN:
     max_flags_per_day: "每个用户每天能标记的数量的最大值。"
     max_bookmarks_per_day: "每个用户每天能做书签数量的最大值。"
     max_edits_per_day: "每个用户每天能编辑的次数的最大值。"
-    max_stars_per_day: "每个用户每天能星标的主题数量的最大值。"
     max_topics_per_day: "每个用户每天能创建的主题数量的最大值。"
     max_private_messages_per_day: "每个用户每天能发私信数量的最大值。"
+    max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     suggested_topics: "在一个主题底部显示的推荐主题的数量。"
     limit_suggested_to_category: "只在当前分类的推荐帖子列表中显示帖子。"
     clean_up_uploads: "移除孤立的已上传资料。警告：你可能想要在启用这个设定前备份一下 /uploads 目录。"
@@ -824,6 +821,8 @@ zh_CN:
     digest_topics: "邮件摘要中显示的最大主题数目。"
     digest_min_excerpt_length: "在邮件摘要中每个帖子最少显示的字符数量。"
     default_digest_email_frequency: "用户收到摘要邮件的默认间隔。用户可以在参数设置中更改这个设置。"
+    suppress_digest_email_after_days: "不发送摘要邮件给超过 (n) 天未出现的用户。"
+    disable_digest_emails: "为所有用户禁用摘要邮件。"
     default_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
     detect_custom_avatars: "是否检测用户上传了自定义头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
@@ -1017,44 +1016,39 @@ zh_CN:
 
       [**%{base_url}**][0]
 
-      电子邮件分发很复杂。以下是一些重要的你应该检查的内容：
+      电子邮件分发很复杂。以下是一些重要的您应该检查的内容：
 
-      - 确定你设置了站点设置为 `notification email` 设置了正确的地址。**“来自”中指定的域名应和将要验证的域名一致。**
+      - 确定您设置了站点设置为 `notification email` 设置了正确的地址。**“来自”中指定的域名应和将要验证的域名一致。**
 
-      - 确定你会使用你的邮件客户端查看*电子邮件源代码*，这样你可以通过查看邮件头来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
+      - 确定您会使用您的邮件客户端查看*电子邮件源代码*，这样您可以通过查看邮件头来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
 
-      - **重要：** 你的 ISP 是否对你发送邮件的域名和IP作了反向DNS解析？你可以在此[测试你的反向枚举指针（PTR）记录][2]。如果你的 ISP 没有正确的反向 DNS 记录，那么很可能你的任何电子邮件都不会被成功发送。
+      - **重要：** 您的 ISP 是否对您发送邮件的域名和IP作了反向DNS解析？您可以在此[测试您的反向枚举指针（PTR）记录][2]。如果您的 ISP 没有正确的反向 DNS 记录，那么很可能您的任何电子邮件都不会被成功发送。
 
-      - 你的域名的[发件人策略框架（SPF）记录][8]是否正确？你可以在此[测试你的SPF记录][1]。注意 TXT 是一种正确的官方 SPF 记录。
+      - 您的域名的[发件人策略框架（SPF）记录][8]是否正确？您可以在此[测试您的SPF记录][1]。注意 TXT 是一种正确的官方 SPF 记录。
 
-      - 你域名的[域名密钥身份识别邮件（DKIM）记录][3]正确？这将显著提高邮件分发的成功率。在此[测试你的 DKIM 记录]。
+      - 您域名的[域名密钥身份识别邮件（DKIM）记录][3]正确？这将显著提高邮件分发的成功率。在此[测试您的 DKIM 记录]。
 
-      - 如果你自己运行邮件服务器，检查确认你发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。验证你的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝你的邮件。
+      - 如果您自己运行邮件服务器，检查确认您发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。验证您的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝您的邮件。
 
-      （最简单的方法是在[Mandrill][md]或[Mailgun][mg]或[Mailjet][mj]注册免费账户，他们的免费账户足够小社群使用。如果你希望在中国大陆提供稳定的服务，你可以考虑[SendCloud][sc]不过你仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
+      （最简单的方法是在[Mandrill][md]或[Mailgun][mg]或[Mailjet][mj]注册免费账户，他们的免费账户对一个小社群是足够的。如果您希望在中国大陆提供稳定的服务，您可以考虑[SendCloud][sc]不过您仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
 
-      我们衷心希望你收到这封邮件，成功完成邮件发送测试！
+      我们衷心希望您收到这封邮件，成功完成邮件发送测试！
 
       祝好运！
 
-      你的朋友，[Discourse](http://www.discourse.org)
+      您的朋友，[Discourse](http://www.discourse.org)
 
       [0]: %{base_url}
       [1]: http://www.kitterman.com/spf/validate.html
       [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: http://www.mailjet.com/pricing
       [sc]: http://sendcloud.sohu.com/
-
-      ----
-
-      <small>在每封你发送的邮件底部应该都有取消订阅的链接，让我们模拟一下。这封邮件发送自 中华人民共和国北京市海淀区中关村南大街公司名称，邮编 100081。如果你不希望将来继续收到我们的邮件，[点击此处取消订阅][5]。</small>
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |
@@ -1214,7 +1208,7 @@ zh_CN:
         好好享受你在论坛的时光吧！
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: "感谢您接受邀请加入 %{site_name} —— 欢迎！\n\n我们为您自动生成了一个用户名：**%{username}**，但是您在任何时候都可以访问[您的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 使用您喜欢的方式登入——但是必须以**同样的邮件地址**，即您收到邀请的邮箱地址登入。否则我们就无法分辨是不是您本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n（如果您在新用户级别需要和[职员](/about)私下沟通的话，请回复这一私信。）\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: "感谢你接受邀请加入 %{site_name} —— 欢迎！\n\n我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。\n\n要再次登入，或者：\n\n1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！\n\n2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。 \n\n%{new_user_tips}\n\n我们始终相信[讨论应该文明](%{base_url}/guidelines)。\n\n（如果您在新用户级别需要和[职员](/about)私下沟通的话，请回复这一私信。）\n\n好好享受您在论坛的时光吧！\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "备份成功完成"
       text_body_template: "备份成功。\n访问[管理 > 备份](/admin/backups)下载你的新备份文件。"
@@ -1259,7 +1253,7 @@ zh_CN:
       text_body_template: |
         数据成功导出！:dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
+        <a class="attachment" href="%{download_link}">%{file_name}</a>（%{file_size}）
 
         以上的下载链接将在 48 小时后失效。
     csv_export_failed:
@@ -1550,9 +1544,9 @@ zh_CN:
     pasted_image_filename: "粘贴的图像"
     store_failure: "用户#%{user_id} 上传的 #%{upload_id} 保存失败。"
     attachments:
-      too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%kb）。"
+      too_large: "抱歉，您试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
-      too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%kb），请裁剪它并充实"
+      too_large: "抱歉，您试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
       fetch_failure: "抱歉，获取图片时发生错误。"
       unknown_image_type: "抱歉，你上传的文件似乎不是一张图片。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"

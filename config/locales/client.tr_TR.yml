@@ -256,7 +256,6 @@ tr_TR:
       notifications: "Bildirimler"
       dismiss_notifications: "Hepsini okunmuş olarak işaretle"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
-      disable_jump_reply: "Cevapladıktan sonra yeni gönderine geçme"
       dynamic_favicon: "Favicon üzerinde gelen mesaj bildirimlerini göster (deneysel)"
       edit_history_public: "Gönderimde yaptığım revizyonları diğer kullanıcıların görmesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
@@ -269,7 +268,6 @@ tr_TR:
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_reason: "Neden:"
       github_profile: "Github"
-      mailing_list_mode: "Her yeni gönderi için e-posta alın (susturduğunuz konu ve kategorilerdekiler hariç)"
       watched_categories: "Gözlendi"
       watched_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konu yanında belirecek. "
       tracked_categories: "Takip edildi"
@@ -335,8 +333,6 @@ tr_TR:
         authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
         frequency:
           zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk e-posta yollayacağız."
-          one: "Sadece, son bir dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size e-posta yollayacağız."
-          other: "Sadece, son {{count}} dakika içinde forumu ziyaret etmediyseniz ve yollamak üzere olduğumuz şeyi okumadıysanız size e-posta yollayacağız."
       name:
         title: "İsim"
         instructions: "Adınız ve soyadınız (zorunlu değil)"
@@ -372,24 +368,18 @@ tr_TR:
       website: "Web Sayfası"
       email_settings: "E-posta"
       email_digests:
-        title: "Siteyi ziyaret etmediğiniz zamanlar, yeni olayların özetini içeren bir e-posta yolla:"
         daily: "günlük"
         weekly: "haftalık"
         bi_weekly: "her iki haftada bir"
-      email_direct: "Birisi gönderinize cevap verdiği, sizden alıntı yaptığı ya da sizden @username bahsettiği zaman e-posta alın"
-      email_private_messages: "Biri size özel mesaj yolladığında e-posta alın"
       email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"
       other_settings: "Diğer"
       categories_settings: "Kategoriler"
       new_topic_duration:
         label: "Seçili durumdaki konular yeni sayılsın"
-        not_viewed: "henüz görüntülemedikleriniz"
-        last_here: "son girişinizden beri oluşturulanlar"
         after_n_days:
           other: "son {{count}} günde oluşturulanlar"
         after_n_weeks:
           other: "son {{count}} haftada oluşturulanlar"
-      auto_track_topics: "Girdiğiniz konuları otomatik olarak takip edin"
       auto_track_options:
         never: "asla"
         always: "her zaman"
@@ -637,7 +627,6 @@ tr_TR:
           examples: 'Saat sayısını giriniz (24).'
     notifications:
       title: "@isim bahsedilişleri, gönderileriniz ve konularınıza atılan cevaplar, özel mesajlarla vb. ilgili bildiriler"
-      none: "Şu an yeni bir bildiriminiz yok."
       more: "daha eski bildirimleri görüntüle"
       total_flagged: "tüm bayraklı gönderiler"
       mentioned: "<i title='bahsetti' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -865,7 +854,6 @@ tr_TR:
         to_forum: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak katılabilmesi için kısa bir e-posta göndereceğiz. "
         email_placeholder: 'isim@örnek.com'
         success: " <b>{{email}}</b> adresine bir davet emaili attık. Davetiniz kabul edildiğinde size bir bildirim göndereceğiz. Kullanıcı sayfanızdaki davetiyeler sekmesinden davetlerinizi takip edebilirsiniz."
-        error: "Üzgünüz, o kişiyi davet edemedik. Zaten kullanıcı olabilir mi?"
       login_reply: 'Cevaplamak için Giriş Yap'
       filters:
         n_posts:
@@ -2004,8 +1992,6 @@ tr_TR:
         mark_watching: '<b>m</b>, <b>w</b> Konuyu gözle'
     badges:
       title: Rozetler
-      allow_title: "rozet ünvan olarak kullanılabilsin?"
-      multiple_grant: "birden fazla kez verildi?"
       badge_count:
         other: "%{count} Rozet"
       more_badges:

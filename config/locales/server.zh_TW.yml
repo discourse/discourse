@@ -20,11 +20,6 @@ zh_TW:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%Y-%m-%d"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
@@ -36,6 +31,7 @@ zh_TW:
   errors:
     messages:
       too_long_validation: "限制 %{max} 個字元，你已經輸入了 %{length} 個字元"
+      invalid_boolean: "無效的真假值。"
     embed:
       load_from_remote: "載入文章時發生了錯誤"
   bulk_invite:
@@ -99,6 +95,7 @@ zh_TW:
     latest: "最新討論話題"
     hot: "熱門討論話題"
   too_late_to_edit: "這文章建立很久了，它已經無法被編輯或刪除"
+  excerpt_image: "圖片"
   groups:
     errors:
       can_not_modify_automatic: "你無法修改自動群組"
@@ -278,9 +275,12 @@ zh_TW:
       title: '不當內容'
       long_form: '投訴為不當內容'
     notify_user:
+      title: '私人訊息 @{{username}}'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "其他"
+      long_form: '向板主回報問題發文'
       email_title: '一篇在 "%{title}" 裡的文章需要板主注意'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -490,7 +490,6 @@ zh_TW:
     ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
     enable_noscript_support: "開啟noscript來對網路爬蟲來做標準的支援"
     allow_moderators_to_create_categories: "允許板主建立新分類"
-    top_menu: "確定在主頁導航條包含哪些條目，以及排列順序。例如：latest|hot|read|starred|unread|new|posted|categories"
     post_menu: "確定在文章功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
@@ -513,7 +512,6 @@ zh_TW:
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
     sso_url: "單點登入 URL 入口點"
-    sso_secret: "用於加解密 SSO 訊息的密鑰字串，請確認在 10 個字元以上"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
     enable_google_logins: "( 已作廢 ) 啟用 Google 認證。這是已經被 Google 作廢的 Open ID 認證方式，新的安裝將無法使用。請改用 Google Oauth2。現有的安裝必須在 2015 年 4 月 20 日以前移轉至 Google Oauth2。"
@@ -693,12 +691,22 @@ zh_TW:
       subject_template: "歡迎來到 %{site_name}！"
     welcome_invite:
       subject_template: "歡迎來到 %{site_name}！"
+    backup_failed:
+      subject_template: "備份失敗"
+    restore_failed:
+      subject_template: "復原失敗"
     bulk_invite_succeeded:
       subject_template: "批次用戶邀請已完成處理"
     bulk_invite_failed:
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
+    csv_export_succeeded:
+      subject_template: "資料匯出完成"
+    csv_export_failed:
+      subject_template: "資料匯出失敗"
     email_reject_trust_level:
       subject_template: "EMail 錯誤 -- 尚未達到信任等級"
+    email_reject_no_account:
+      subject_template: "EMail 錯誤 -- 未知的帳戶"
     email_reject_empty:
       subject_template: "EMail 錯誤 -- 沒有內文"
     email_reject_parsing:
@@ -739,11 +747,15 @@ zh_TW:
     download_remote_images_disabled:
       subject_template: "停用下載遠端圖片"
   unsubscribe_link: "如果你希望取消這些郵件的訂閱，請瀏覽 [用戶偏好設定](%{user_preferences_url})。"
+  subject_re: "回覆："
+  subject_pm: "[私訊]"
   user_notifications:
     previous_discussion: "之前的回覆"
     unsubscribe:
       title: "取消訂閱"
       description: "不再對這些郵件感興趣？沒問題！點擊下面按鈕來立即取消訂閱："
+    reply_by_email: "要回應時，請回覆這封郵件，或在瀏覽器裡開啟 %{base_url}%{url} 網址。"
+    visit_link_to_respond: "要回應時，請在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀請你進行私人對話 '%{topic_title}'"
@@ -835,14 +847,13 @@ zh_TW:
     search_title: "搜尋該網頁"
     search_google: "Google"
   terms_of_service:
+    title: "服務條款"
     signup_form_message: '我已閱讀並接受 <a href="/tos" target="_blank">服務條款</a>'
   deleted: '已刪除'
   upload:
     edit_reason: "下載外部圖片留做存檔"
     pasted_image_filename: "貼上的圖片"
     store_failure: "用戶 #%{user_id} 上傳 #%{upload_id} 儲存失敗"
-    attachments:
-      too_large: "抱歉，你試著上傳的檔案過大(檔案上傳上限: %{max_size_kb}%kb)"
     images:
       fetch_failure: "抱歉，獲取圖片時發生錯誤。"
       unknown_image_type: "抱歉，你上傳的檔似乎不是一張圖片。"
@@ -865,5 +876,11 @@ zh_TW:
   color_schemes:
     base_theme_name: "基礎"
   guidelines: "指導"
+  privacy: "隱私政策"
+  csv_export:
+    boolean_yes: "是"
+    boolean_no: "否"
   guidelines_topic:
     title: "FAQ / 使用守則"
+  privacy_topic:
+    title: "隱私政策"
