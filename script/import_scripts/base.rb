@@ -462,7 +462,7 @@ class ImportScripts::Base
     src.close
     tmp.rewind
 
-    Upload.create_for(user_id, tmp, source_filename, File.size(tmp))
+    Upload.create_for(user_id, tmp, source_filename, tmp.size)
   ensure
     tmp.close rescue nil
     tmp.unlink rescue nil
