@@ -280,7 +280,7 @@ SQL
   end
 
   def self.ensure_consistency!(topic_id=nil)
-    update_post_action_cache
+    update_post_action_cache(topic_id: topic_id)
 
     # TODO this needs some reworking, when we mark stuff skipped
     # we up these numbers so they are not in-sync
