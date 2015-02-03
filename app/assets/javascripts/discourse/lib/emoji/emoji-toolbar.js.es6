@@ -81,8 +81,18 @@ var trackEmojiUsage = function(title){
 var initializeRecentlyUsedIcons = function(){
   recentlyUsedIcons = [];
 
-  var usage = JSON.parse(localStorage.emojiUsage);
-  var recent = _.take(_.sortByAll(usage, ["usage", "title"]).reverse(), PER_ROW);
+  var usage = _.map(JSON.parse(localStorage.emojiUsage));
+  usage.sort(function(a,b){
+    if(a.usage > b.usage){
+      return -1;
+    }
+    if(b.usage > a.usage){
+      return 1;
+    }
+    return a.title.localeCompare(b.title);
+  });
+
+  var recent = _.take(usage, PER_ROW);
 
   if(recent.length > 0){
     _.each(recent, function(emoji){
