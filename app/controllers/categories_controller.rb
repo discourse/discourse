@@ -36,7 +36,7 @@ class CategoriesController < ApplicationController
     guardian.ensure_can_create!(Category)
 
     file = params[:file] || params[:files].first
-    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, File.size(file.tempfile))
+    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, file.tempfile.size)
     if upload.errors.blank?
       render json: { url: upload.url, width: upload.width, height: upload.height }
     else

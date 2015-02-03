@@ -130,12 +130,12 @@ class DiscourseSingleSignOn < SingleSignOn
       sso_record.external_avatar_url != avatar_url)
 
       begin
-        tempfile = FileHelper.download(avatar_url, 1.megabyte, "sso-avatar", true)
+        tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
 
         ext = FastImage.type(tempfile).to_s
         tempfile.rewind
 
-        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), { origin: avatar_url })
+        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, tempfile.size, { origin: avatar_url })
         user.uploaded_avatar_id = upload.id
 
         unless user.user_avatar
