@@ -35,7 +35,7 @@
       </div>
     </div>
   </header>
-  <div id="main-outlet" class="container">
+  <div id="main-outlet" class="<%= @container_class ? @container_class : 'container' %>">
     <%= yield %>
   </div>
 </section>
