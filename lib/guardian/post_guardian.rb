@@ -20,7 +20,7 @@ module PostGuardian
       not(is_flag || already_taken_this_action) &&
 
       # nothing except flagging on archived topics
-      not(post.topic.archived?) &&
+      not(post.topic.try(:archived?)) &&
 
       # nothing except flagging on deleted posts
       not(post.trashed?) &&
