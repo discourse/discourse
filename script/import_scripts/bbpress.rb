@@ -5,6 +5,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 BB_PRESS_DB = "bbpress"
+DB_TABLE_PREFIX = "wp_"
 
 require 'mysql2'
 
@@ -21,23 +22,25 @@ class ImportScripts::Bbpress < ImportScripts::Base
     )
   end
 
+  def table_name(name)
+    DB_TABLE_PREFIX + name
+  end
+
   def execute
     users_results = @client.query("
-       select id,
+       SELECT id,
               user_login username,
               display_name name,
               user_url website,
               user_email email,
               user_registered created_at
-         from wp_users
-        where spam = 0
-          and deleted = 0 limit 50", cache_rows: false)
+         FROM #{table_name 'users'}", cache_rows: false)
 
     create_users(users_results) do |u|
       ActiveSupport::HashWithIndifferentAccess.new(u)
     end
 
-    create_categories(@client.query("select id, post_name from wp_posts where post_type = 'forum' and post_name != ''")) do |c|
+    create_categories(@client.query("SELECT id, post_name from #{table_name 'posts'} WHERE post_type = 'forum' AND post_name != ''")) do |c|
       {id: c['id'], name: c['post_name']}
     end
 
@@ -48,28 +51,28 @@ class ImportScripts::Bbpress < ImportScripts::Base
     puts '', "creating topics and posts"
 
     total_count = @client.query("
-      select count(*) count
-        from wp_posts
-       where post_status <> 'spam'
-         and post_type in ('topic', 'reply')").first['count']
+      SELECT count(*) count
+        FROM #{table_name 'posts'}
+       WHERE post_status <> 'spam'
+         AND post_type IN ('topic', 'reply')").first['count']
 
     batch_size = 1000
 
     batches(batch_size) do |offset|
       results = @client.query("
-                   select id,
+                   SELECT id,
                           post_author,
                           post_date,
                           post_content,
                           post_title,
                           post_type,
                           post_parent
-                     from wp_posts
-                    where post_status <> 'spam'
-                      and post_type in ('topic', 'reply')
-                 order by id
-                    limit #{batch_size}
-                   offset #{offset}", cache_rows: false)
+                     FROM #{table_name 'posts'}
+                    WHERE post_status <> 'spam'
+                      AND post_type IN ('topic', 'reply')
+                 ORDER BY id
+                    LIMIT #{batch_size}
+                   OFFSET #{offset}", cache_rows: false)
 
       break if results.size < 1
 
