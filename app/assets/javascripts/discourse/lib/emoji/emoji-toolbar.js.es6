@@ -64,7 +64,13 @@ var initializeUngroupedIcons = function(){
   }
 };
 
-if (!localStorage.emojiUsage) { localStorage.emojiUsage = "{}"; }
+try {
+  if (localStorage && !localStorage.emojiUsage) { localStorage.emojiUsage = "{}"; }
+} catch(e){
+/* localStorage can be disabled, or cookies disabled, do not crash script here 
+ * TODO introduce a global wrapper for dealing with local storage
+ * */
+}
 
 var trackEmojiUsage = function(title){
   var recent = JSON.parse(localStorage.emojiUsage);
