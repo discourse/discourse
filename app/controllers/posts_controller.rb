@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown, :raw, :cooked]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
@@ -23,6 +23,33 @@ class PostsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def latest
+    params.permit(:before)
+    last_post_id = params[:before].to_i
+    last_post_id = Post.last.id if last_post_id <= 0
+
+    # last 50 post IDs only, to avoid counting deleted posts in security check
+    posts = Post.order(created_at: :desc)
+                .where('posts.id <= ?', last_post_id)
+                .where('posts.id > ?', last_post_id - 50)
+                .includes(topic: :category)
+                .includes(:user)
+                .limit(50)
+    # Remove posts the user doesn't have permission to see
+    # This isn't leaking any information we weren't already through the post ID numbers
+    posts = posts.reject { |post| !guardian.can_see?(post) }
+
+    counts = PostAction.counts_for(posts, current_user)
+
+    render_json_dump(serialize_data(posts,
+                                    PostSerializer,
+                                    scope: guardian,
+                                    root: 'latest_posts',
+                                    add_raw: true,
+                                    all_post_actions: counts)
+    )
   end
 
   def cooked
@@ -85,7 +112,8 @@ class PostsController < ApplicationController
       [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
 
     else
-      DiscourseEvent.trigger(:topic_saved, post.topic, params, current_user)
+      DiscourseEvent.trigger(:topic_created, post.topic, params, current_user) unless params[:topic_id]
+      DiscourseEvent.trigger(:post_created, post, params, current_user)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
       [true, MultiJson.dump(post_serializer)]
@@ -382,7 +410,6 @@ class PostsController < ApplicationController
     permitted = [
       :raw,
       :topic_id,
-      :title,
       :archetype,
       :category,
       :target_usernames,
@@ -415,8 +442,15 @@ class PostsController < ApplicationController
       result[:is_warning] = (params[:is_warning] == "true")
     end
 
-    # Enable plugins to whitelist additional parameters they might need
-    DiscourseEvent.trigger(:permit_post_params, result, params)
+    PostRevisor.tracked_topic_fields.keys.each do |f|
+      params.permit(f => [])
+      result[f] = params[f] if params.has_key?(f)
+    end
+
+    # Stuff we can use in spam prevention plugins
+    result[:ip_address] = request.remote_ip
+    result[:user_agent] = request.user_agent
+    result[:referrer] = request.env["HTTP_REFERER"]
 
     result
   end

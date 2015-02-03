@@ -1,7 +1,9 @@
-<input type="file" accept="image/*" style="display:none" />
 <div class="uploaded-image-preview" class="input-xxlarge" {{bind-attr style="backgroundStyle"}}>
   <div class="image-upload-controls">
-    <button {{action "selectFile"}} class="btn pad-left no-text">{{fa-icon "picture-o"}}</button>
+    <label class="btn pad-left no-text" {{bind-attr disabled="uploading"}}>
+      {{fa-icon "picture-o"}}
+      <input {{bind-attr disabled="uploading"}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
+    </label>
     {{#if backgroundStyle}}
       <button {{action "trash"}} class="btn btn-danger pad-left no-text">{{fa-icon "trash-o"}}</button>
     {{/if}}

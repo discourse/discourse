@@ -15,7 +15,7 @@
       {{#if subCategories}}
         <label>{{i18n 'categories.subcategories'}}</label>
         {{#each s in subCategories}}
-          {{category-badge s}}
+          {{category-badge s hideParent="true"}}
         {{/each}}
       {{else}}
         <label>{{i18n 'category.parent'}}</label>

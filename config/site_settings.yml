@@ -88,11 +88,11 @@ basic:
      - latest
      - new
      - unread
-     - starred
      - top
      - categories
      - read
      - posted
+     - bookmarks
   post_menu:
     client: true
     type: list
@@ -132,6 +132,11 @@ basic:
     client: true
     type: list
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
+  category_style:
+    client: true
+    default: 'bar'
+    enum: 'CategoryStyleSetting'
+    preview: '<span class="badge-wrapper {{value}}"><span class="badge-category-parent-bg" style="background-color: #aaa;"></span><span class="badge-category-bg" style="background-color: #777;"></span><span style="color: #fff;" data-drop-close="true" class="badge-category clear-badge">Category</span></span>'
   enable_mobile_theme:
     client: true
     default: true
@@ -234,6 +239,7 @@ login:
     default: ''
     type: list
   forgot_password_strict: false
+  log_out_strict: true
 
 users:
   min_username_length:
@@ -408,6 +414,10 @@ email:
   default_digest_email_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'
+  suppress_digest_email_after_days: 365
+  disable_digest_emails:
+    default: false
+    client: true
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
@@ -429,7 +439,9 @@ email:
     enum: 'TrustLevelSetting'
   email_prefix: ''
   email_site_title: ''
-  disable_emails: false
+  disable_emails:
+    default: false
+    client: true
   strip_images_from_short_emails: true
   short_email_length: 2800
 
@@ -610,7 +622,7 @@ rate_limits:
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
   max_edits_per_day: 30
-  max_stars_per_day: 20
+  max_invites_per_day: 10
   max_topics_in_first_day: 5
   max_replies_in_first_day: 10
 

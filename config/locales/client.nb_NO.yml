@@ -84,12 +84,14 @@ nb_NO:
           other: "%{count} dager siden"
     share:
       topic: 'del en lenke til dette emnet'
+      post: 'innlegg #%{postNumber}'
       close: 'lukk'
       twitter: 'del denne lenken på Twitter'
       facebook: 'del denne lenken på Facebook'
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     topic_admin_menu: "admin-handlinger for emne"
+    emails_are_disabled: "All outgunned email har blitt deaktivert globalt av en administrator. Ingen email varslinger vil bli sent. "
     edit: 'rediger tittelen og kategorien til dette emnet'
     not_implemented: "Den funksjonen har ikke blitt implementert ennå, beklager!"
     no_value: "Nei"
@@ -142,6 +144,13 @@ nb_NO:
       topic_count: "Emner"
       post_count: "Innlegg"
       user_count: "Brukere"
+      contact: "Kontakt Oss"
+      contact_info: "Hvis noe kritisk skulle oppstå eller det er en hastesak som påvirker siden kontakt oss på %{contact_email}."
+    bookmarked:
+      title: "Bokmerke"
+      help:
+        bookmark: "Klikk for å lagre dette emnet"
+        unbookmark: "Klikk for å fjerne dette lagrede emnet"
     bookmarks:
       not_logged_in: "beklager, du må være innlogget for å kunne bokmerke innlegg"
       created: "du har bokmerket dette innlegget"
@@ -258,6 +267,7 @@ nb_NO:
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
+      download_archive: "Last ned mine innlegg"
       new_private_message: "Ny Privat Melding"
       private_message: "Privat melding"
       private_messages: "Meldinger"
@@ -283,7 +293,6 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
-      mailing_list_mode: "Motta en e-post for hvert nye innlegg (ved mindre du demper emnet eller kategorien)"
       watched_categories: "Følger"
       watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
       tracked_categories: "Sporet"
@@ -326,8 +335,10 @@ nb_NO:
         error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje den adressen allerede er i bruk?"
         success: "Vi har sendt en e-post til den adressen. Vennligst følg meldingens instruksjoner for bekreftelse."
       change_avatar:
+        title: "Bytt profilbilde"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basert på"
         refresh_gravatar_title: "Oppdater din Gravatar"
+        letter_based: "Systemtildelt profilbilde"
         uploaded_avatar: "Egendefinert bilde"
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
@@ -347,8 +358,6 @@ nb_NO:
         authenticated: "Din email har blitt autentisert av {{provider}}"
         frequency:
           zero: "Vi sender deg straks en email hvis du ikke har lest tingen vi sendte deg en email om."
-          one: "Vi sender deg bare en email hvis vi ikke har sett deg i det siste minuttet og du har ikke lest tingen vi sender deg en email om."
-          other: "Vi sender deg bare en email om vi ikke har sett deg i de siste {{count}} minuttene og du har ikke lest tingen vi sender deg en email om."
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)"
@@ -384,26 +393,21 @@ nb_NO:
       website: "Nettsted"
       email_settings: "E-post"
       email_digests:
-        title: "Når du ikke besøker nettstedet, send et sammendrag på e-post om siste nytt:"
         daily: "daglig"
         weekly: "ukentlig"
         bi_weekly: "hver andre uke"
-      email_direct: "Motta en e-post når noen siterer deg, svarer på ditt innlegg, eller nevner ditt @brukernavn"
-      email_private_messages: "Motta en e-post når noen sender deg en privat melding"
+      email_private_messages: "Notta en email når noen sender deg en privat melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Anse emner som nye når"
-        not_viewed: "Jeg har ikke sett dem ennå"
-        last_here: "opprettet siden du sist var her"
         after_n_days:
           one: "opprettet den siste  {{count}} dagen"
           other: "opprettet de siste {{count}} dagene"
         after_n_weeks:
           one: "opprettet den siste {{count}} uken"
           other: "opprettet de siste {{count}} ukene"
-      auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
         always: "alltid"
@@ -437,6 +441,7 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
           uploading: "Laster opp..."
+          success: "Fil lastet opp. Du vil bli varslet med en privat melding når prosessen er fullført."
           error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
@@ -444,10 +449,13 @@ nb_NO:
         common: "Det passordet er for vanlig."
         ok: "Passordet ditt ser bra ut"
         instructions: "Minst %{count} tegn."
+      associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
       registration_ip_address:
         title: "Registreringens IP-adresse."
+      avatar:
+        title: "Profilbilde"
       title:
         title: "Tittel"
       filters:
@@ -569,6 +577,9 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
     composer:
       add_warning: "Dette er en offisiell advarsel."
       posting_not_on_topic: "Du svarer på emnet \"{{title}}\", men for øyeblikket ser du på et annet emne."
@@ -644,7 +655,6 @@ nb_NO:
           examples: 'Før inn antall timer (24).'
     notifications:
       title: "varsler når @brukernavn nevnes, svar til dine innlegg og emner, private meldinger, osv"
-      none: "Du har ingen varsler akkurat nå."
       more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -694,7 +704,7 @@ nb_NO:
         dismiss_posts_tooltip: "Tøm antallet uleste innlegg i disse emnene men fortsett å vis dem i min liste over uleste innlegg når nye innlegg blir lagt inn"
         dismiss_topics: "Avvis innlegg"
         dismiss_topics_tooltip: "Ikke vis disse emnene i min ulest-liste når nye innlegg i disse forekommer"
-        dismiss_new: "Avvis nye"
+        dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
         change_category: "Endre Kategori"
@@ -879,7 +889,6 @@ nb_NO:
         to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         email_placeholder: 'email'
         success: "Vi har sendt ut en invitasjon til <b>{{email}}</b>. Vi vil gi deg en varsling når invitasjonen benyttes. Se fanen for invitasjoner på din brukerside for å holde oversikt over dine invitasjoner."
-        error: "Beklager, vi kunne ikke invitere den personen. Kanskje de allerede er en bruker?"
       login_reply: 'Logg Inn for å svare'
       filters:
         n_posts:
@@ -1124,6 +1133,8 @@ nb_NO:
       delete: 'Slett kategori'
       create: 'Ny Kategori'
       save: 'Lagre Kategori'
+      slug: 'Kategorinavn i URL'
+      slug_placeholder: '(valgfritt) sammensatte ord for bruk i URL'
       creation_error: Det oppstod en feil ved å lage denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       name: "Kategorinavn"
@@ -1209,15 +1220,19 @@ nb_NO:
     topic_statuses:
       warning:
         help: "Dette er en offisiell advarsel."
+      bookmarked:
+        help: "Du lagret dette emnet"
       locked:
         help: "dette emnet er låst; det aksepterer ikke lenger nye svar"
       unpinned:
         title: "Løsgjort"
+        help: "Dette emnet er ikke lenger fastsatt, det vil vises i vanlig rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
         help: "Dette emnet er globalt fastsatt; det vil vises på toppen av alle lister"
       pinned:
         title: "Fastsatt"
+        help: "Dette emnet er fastsatt for deg; det vil vises i toppen av sin kategori"
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       invisible:
@@ -1428,12 +1443,16 @@ nb_NO:
         edit: "Rediger Grupper"
         refresh: "Last inn på nytt"
         new: "Ny"
+        selector_placeholder: "oppgi brukernavn"
         name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
         delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
+        name: "Navn"
+        add: "Legg til"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -1975,6 +1994,8 @@ nb_NO:
             with_post: <span class="username">%{username}</span> for innlegg i %{link}
             with_post_time: <span class="username">%{username}</span> for innlegg i %{link} - <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> - <span class="time">%{time}</span>
+      emoji:
+        name: "Navn"
     lightbox:
       download: "last ned"
     search_help:
@@ -2023,8 +2044,6 @@ nb_NO:
         mark_watching: '<b>m</b>, <b>w</b> Følg emne'
     badges:
       title: Merker
-      allow_title: "tillat merke som tittel?"
-      multiple_grant: "kan gis flere ganger?"
       badge_count:
         one: "1 Merke"
         other: "%{count} Merker"

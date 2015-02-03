@@ -5,6 +5,7 @@ require_dependency 'unread'
 require_dependency 'age_words'
 require_dependency 'configurable_urls'
 require_dependency 'mobile_detection'
+require_dependency 'category_badge'
 
 module ApplicationHelper
   include CurrentUser
@@ -153,5 +154,8 @@ module ApplicationHelper
     controller.class.name.split("::").first == "Admin" || session[:disable_customization]
   end
 
+  def category_badge(category, opts=nil)
+    CategoryBadge.html_for(category, opts).html_safe
+  end
 
 end

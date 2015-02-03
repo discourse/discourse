@@ -146,7 +146,7 @@ module Email
       return nil if object.nil?
 
       if object.charset
-        object.body.decoded.force_encoding(object.charset).encode("UTF-8").to_s
+        object.body.decoded.force_encoding(object.charset.gsub(/utf8/i, "UTF-8")).encode("UTF-8").to_s
       else
         object.body.to_s
       end
@@ -224,7 +224,7 @@ module Email
           # read attachment
           File.open(tmp.path, "w+b") { |f| f.write attachment.body.decoded }
           # create the upload for the user
-          upload = Upload.create_for(user.id, tmp, attachment.filename, File.size(tmp))
+          upload = Upload.create_for(user.id, tmp, attachment.filename, tmp.size)
           if upload && upload.errors.empty?
             # TODO: should use the same code as the client to insert attachments
             raw << "\n#{attachment_markdown(upload)}\n"

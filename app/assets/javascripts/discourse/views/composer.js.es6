@@ -73,6 +73,13 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
       if (pos) {
         self.$('.wmd-controls').css('top', $fields.height() + pos.top + 5);
       }
+
+      // get the submit panel height
+      pos = self.$('.submit-panel').position();
+      if (pos) {
+        self.$('.wmd-controls').css('bottom', h - pos.top + 7);
+      }
+
     });
   }.observes('model.composeState', 'model.action'),
 
@@ -300,11 +307,15 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     // in case it's still bound somehow
     this._unbindUploadTarget();
 
-    var $uploadTarget = $('#reply-control');
+    var $uploadTarget = $('#reply-control'),
+        csrf = Discourse.Session.currentProp('csrfToken'),
+        cancelledByTheUser;
 
+    // NOTE: we need both the .json extension and the CSRF token as a query parameter for IE9
     $uploadTarget.fileupload({
-      url: Discourse.getURL('/uploads'),
+      url: Discourse.getURL('/uploads.json?authenticity_token=' + encodeURIComponent(csrf)),
       dataType: 'json',
+      pasteZone: $uploadTarget
     });
 
     // submit - this event is triggered for each upload
@@ -317,22 +328,27 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // send - this event is triggered when the upload request is about to start
     $uploadTarget.on('fileuploadsend', function (e, data) {
+      cancelledByTheUser = false;
       // hide the "file selector" modal
       self.get('controller').send('closeModal');
-      // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/API#how-to-cancel-an-upload
-      var jqXHR = data.xhr();
-      // need to wait for the link to show up in the DOM
-      Em.run.schedule('afterRender', function() {
-        // bind on the click event on the cancel link
-        $('#cancel-file-upload').on('click', function() {
-          // cancel the upload
-          self.set('isUploading', false);
-          // NOTE: this might trigger a 'fileuploadfail' event with status = 0
-          if (jqXHR) jqXHR.abort();
-          // unbind
-          $(this).off('click');
-        });
-      });
+      // NOTE: IE9 doesn't support XHR
+      if (data["xhr"]) {
+        var jqHXR = data.xhr();
+        if (jqHXR) {
+          // need to wait for the link to show up in the DOM
+          Em.run.schedule('afterRender', function() {
+            // bind on the click event on the cancel link
+            $('#cancel-file-upload').on('click', function() {
+              // cancel the upload
+              self.set('isUploading', false);
+              // NOTE: this might trigger a 'fileuploadfail' event with status = 0
+              if (jqHXR) { cancelledByTheUser = true; jqHXR.abort(); }
+              // unbind
+              $(this).off('click');
+            });
+          });
+        }
+      }
     });
 
     // progress all
@@ -343,14 +359,17 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // done
     $uploadTarget.on('fileuploaddone', function (e, data) {
-      // make sure we have a url
-      if (data.result.url) {
-        var markdown = Discourse.Utilities.getUploadMarkdown(data.result);
-        // appends a space at the end of the inserted markdown
-        self.addMarkdown(markdown + " ");
-        self.set('isUploading', false);
-      } else {
-        bootbox.alert(I18n.t('post.errors.upload'));
+      if (!cancelledByTheUser) {
+        // make sure we have a url
+        if (data.result.url) {
+          var markdown = Discourse.Utilities.getUploadMarkdown(data.result);
+          // appends a space at the end of the inserted markdown
+          self.addMarkdown(markdown + " ");
+          self.set('isUploading', false);
+        } else {
+          // display the error message sent by the server
+          bootbox.alert(data.result.join("\n"));
+        }
       }
     });
 
@@ -358,8 +377,10 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     $uploadTarget.on('fileuploadfail', function (e, data) {
       // hide upload status
       self.set('isUploading', false);
-      // display an error message
-      Discourse.Utilities.displayErrorForUpload(data);
+      if (!cancelledByTheUser) {
+        // display an error message
+        Discourse.Utilities.displayErrorForUpload(data);
+      }
     });
 
     // contenteditable div hack for getting image paste to upload working in

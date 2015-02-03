@@ -261,8 +261,14 @@ describe User do
 
     it "downcases email addresses" do
       user = Fabricate.build(:user, email: 'Fancy.Caps.4.U@gmail.com')
-      user.save
-      expect(user.reload.email).to eq('fancy.caps.4.u@gmail.com')
+      user.valid?
+      expect(user.email).to eq('fancy.caps.4.u@gmail.com')
+    end
+
+    it "strips whitespace from email addresses" do
+      user = Fabricate.build(:user, email: ' example@gmail.com ')
+      user.valid?
+      expect(user.email).to eq('example@gmail.com')
     end
   end
 
@@ -534,6 +540,12 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
+    it 'blacklist should not reject developer emails' do
+      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
+      SiteSetting.stubs(:email_domains_blacklist).returns('discourse.org')
+      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
+    end
+
     it 'should not interpret a period as a wildcard' do
       SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
       expect(Fabricate.build(:user, email: 'good@trashmailinet.com')).to be_valid
@@ -569,6 +581,12 @@ describe User do
     it 'should accept some emails based on the email_domains_whitelist site setting ignoring case' do
       SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
       expect(Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM')).to be_valid
+    end
+
+    it 'whitelist should accept developer emails' do
+      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
+      SiteSetting.stubs(:email_domains_whitelist).returns('awesome.org')
+      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
     it 'email whitelist should not be used to validate existing records' do
@@ -1029,6 +1047,22 @@ describe User do
     end
   end
 
+  context "group management" do
+    let!(:user) { Fabricate(:user) }
+
+    it "by default has no managed groups" do
+      expect(user.managed_groups).to be_empty
+    end
+
+    it "can manage multiple groups" do
+      3.times do |i|
+        g = Fabricate(:group, name: "group_#{i}")
+        g.appoint_manager(user)
+      end
+      expect(user.managed_groups.count).to eq(3)
+    end
+  end
+
   describe "should_be_redirected_to_top" do
     let!(:user) { Fabricate(:user) }
 
@@ -1193,6 +1227,17 @@ describe User do
 
     it "raises an error when passwords are too long" do
       expect { hash(too_long, 'gravy') }.to raise_error
+    end
+
+  end
+
+  describe "automatic group membership" do
+
+    it "is automatically added to a group when the email matches" do
+      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
+      user = Fabricate(:user, email: "foo@bar.com")
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
     end
 
   end

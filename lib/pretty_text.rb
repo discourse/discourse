@@ -1,11 +1,13 @@
 require 'v8'
 require 'nokogiri'
+require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 
 module PrettyText
 
   class Helpers
+    include UrlHelper
 
     def t(key, opts)
       key = "js." + key
@@ -21,15 +23,15 @@ module PrettyText
     # function here are available to v8
     def avatar_template(username)
       return "" unless username
-
       user = User.find_by(username_lower: username.downcase)
-      user.avatar_template if user.present?
+      return "" unless user.present?
+      schemaless absolute user.avatar_template
     end
 
     def is_username_valid(username)
       return false unless username
       username = username.downcase
-      return User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
+      User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
   end
 
@@ -75,19 +77,13 @@ module PrettyText
       "app/assets/javascripts/discourse/lib/markdown.js"
     )
 
-    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
-      unless dialect =~ /\/dialect\.js$/
-        ctx.load(dialect)
-      end
+    Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
+      ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
     end
 
-    # custom emojis
-    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    # emojis
+    emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
     ctx.eval(emoji.result)
-
-    Emoji.custom.each do |emoji|
-      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
-    end
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -102,8 +98,8 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.hbs') {|f| f.read}
-    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.hbs') {|f| f.read}
+    ctx['quoteTemplate'] = File.read("#{app_root}/app/assets/javascripts/discourse/templates/quote.hbs")
+    ctx['quoteEmailTemplate'] = File.read("#{app_root}/lib/assets/quote_email.hbs")
     ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
@@ -134,7 +130,9 @@ module PrettyText
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+
+    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
+    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
   end
 
   def self.markdown(text, opts=nil)
@@ -158,6 +156,11 @@ module PrettyText
         Post.white_listed_image_classes.each do |klass|
           context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
         end
+      end
+
+      # custom emojis
+      Emoji.custom.each do |emoji|
+        context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')

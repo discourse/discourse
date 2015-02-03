@@ -8,7 +8,6 @@ var PATH_BINDINGS = {
     },
 
     SELECTED_POST_BINDINGS = {
-      'b': 'toggleBookmark',
       'd': 'deletePost',
       'e': 'editPost',
       'l': 'toggleLike',
@@ -50,7 +49,8 @@ var PATH_BINDINGS = {
       'ctrl+f': 'showBuiltinSearch',
       'command+f': 'showBuiltinSearch',
       '?': 'showHelpModal',                                                     // open keyboard shortcut help
-      'q': 'quoteReply'
+      'q': 'quoteReply',
+      'b': 'toggleBookmark'
     };
 
 
@@ -63,6 +63,11 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     _.each(CLICK_BINDINGS, this._bindToClick, this);
     _.each(SELECTED_POST_BINDINGS, this._bindToSelectedPost, this);
     _.each(FUNCTION_BINDINGS, this._bindToFunction, this);
+  },
+
+  toggleBookmark: function(){
+    this.sendToSelectedPost('toggleBookmark');
+    this.sendToTopicListItemView('toggleBookmark');
   },
 
   quoteReply: function(){
@@ -157,19 +162,32 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     Discourse.__container__.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
-  _bindToSelectedPost: function(action, binding) {
+  sendToTopicListItemView: function(action){
+    var elem = $('tr.selected.topic-list-item.ember-view')[0];
+    if(elem){
+      var view = Ember.View.views[elem.id];
+      view.send(action);
+    }
+  },
+
+  sendToSelectedPost: function(action){
     var container = this.container;
+    // TODO: We should keep track of the post without a CSS class
+    var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
+    if (selectedPostId) {
+      var topicController = container.lookup('controller:topic'),
+          post = topicController.get('postStream.posts').findBy('id', selectedPostId);
+      if (post) {
+        topicController.send(action, post);
+      }
+    }
+  },
+
+  _bindToSelectedPost: function(action, binding) {
+    var self = this;
 
     this.keyTrapper.bind(binding, function() {
-      // TODO: We should keep track of the post without a CSS class
-      var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
-      if (selectedPostId) {
-        var topicController = container.lookup('controller:topic'),
-            post = topicController.get('postStream.posts').findBy('id', selectedPostId);
-        if (post) {
-          topicController.send(action, post);
-        }
-      }
+      self.sendToSelectedPost(action);
     });
   },
 
@@ -244,8 +262,13 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     var $article = $articles.eq(index + direction);
 
     if ($article.size() > 0) {
+
       $articles.removeClass('selected');
       $article.addClass('selected');
+
+      if($article.is('.topic-list-item')){
+        this.sendToTopicListItemView('select');
+      }
 
       if ($article.is('.topic-post')) {
         var tabLoc = $article.find('a.tabLoc');

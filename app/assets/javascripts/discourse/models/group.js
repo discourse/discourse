@@ -11,6 +11,15 @@ Discourse.Group = Discourse.Model.extend({
   offset: 0,
   user_count: 0,
 
+  emailDomains: function() {
+    var value = this.get("automatic_membership_email_domains");
+    return Em.isEmpty(value) ? "" : value;
+  }.property("automatic_membership_email_domains"),
+
+  type: function() {
+    return this.get("automatic") ? "automatic" : "custom";
+  }.property("automatic"),
+
   userCountDisplay: function(){
     var c = this.get('user_count');
     // don't display zero its ugly
@@ -20,7 +29,8 @@ Discourse.Group = Discourse.Model.extend({
   findMembers: function() {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
-    var self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
+    var self = this,
+        offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
     return Discourse.ajax('/groups/' + this.get('name') + '/members.json', {
       data: {
@@ -63,7 +73,9 @@ Discourse.Group = Discourse.Model.extend({
     return {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
-      visible: !!this.get('visible')
+      visible: !!this.get('visible'),
+      automatic_membership_email_domains: this.get('emailDomains'),
+      automatic_membership_retroactive: !!this.get('automatic_membership_retroactive')
     };
   },
 
@@ -100,7 +112,7 @@ Discourse.Group = Discourse.Model.extend({
 
 Discourse.Group.reopenClass({
   findAll: function(opts){
-    return Discourse.ajax("/admin/groups.json", { data: opts }).then(function(groups){
+    return Discourse.ajax("/admin/groups.json", { data: opts }).then(function (groups){
       return groups.map(function(g) { return Discourse.Group.create(g); });
     });
   },
@@ -112,8 +124,8 @@ Discourse.Group.reopenClass({
   },
 
   find: function(name) {
-    return Discourse.ajax("/groups/" + name + ".json").then(function(g) {
-      return Discourse.Group.create(g.basic_group);
+    return Discourse.ajax("/groups/" + name + ".json").then(function (result) {
+      return Discourse.Group.create(result.basic_group);
     });
   }
 });

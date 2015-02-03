@@ -212,6 +212,7 @@ class TopicView
 
   def post_counts_by_user
     @post_counts_by_user ||= Post.where(topic_id: @topic.id)
+                                 .where("user_id IS NOT NULL")
                                  .group(:user_id)
                                  .order("count_all DESC")
                                  .limit(24)
@@ -341,7 +342,7 @@ class TopicView
 
     # Filters
     if @filter == 'summary'
-      @filtered_posts = @filtered_posts.summary
+      @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
     end
 

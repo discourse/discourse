@@ -56,6 +56,8 @@ class Emoji
     File.open(path, "wb") { |f| f << file.tempfile.read }
     # clear the cache
     Emoji.clear_cache
+    # launch resize job
+    Jobs.enqueue(:resize_emoji, path: path)
     # return created emoji
     Emoji.custom.detect { |e| e.name == name }
   end
@@ -65,7 +67,7 @@ class Emoji
   end
 
   def self.db_file
-    "lib/emoji/db.json"
+    "#{Rails.root}/lib/emoji/db.json"
   end
 
   def self.load_standard

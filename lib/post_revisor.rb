@@ -2,14 +2,74 @@ require "edit_rate_limiter"
 
 class PostRevisor
 
+  # Helps us track changes to a topic.
+  #
+  # It's passed to `track_topic_fields` callbacks so they can record if they
+  # changed a value or not. This is needed for things like custom fields.
+  class TopicChanges
+    attr_reader :topic, :user
+
+    def initialize(topic, user)
+      @topic = topic
+      @user = user
+      @changed = {}
+      @errored = false
+    end
+
+    def errored?
+      @errored
+    end
+
+    def guardian
+      @guardian ||= Guardian.new(@user)
+    end
+
+    def record_change(field_name, previous_val, new_val)
+      return if previous_val == new_val
+      diff[field_name] = [previous_val, new_val]
+    end
+
+    def check_result(res)
+      @errored = true if !res
+    end
+
+    def diff
+      @diff ||= {}
+    end
+  end
+
   POST_TRACKED_FIELDS = %w{raw cooked edit_reason user_id wiki post_type}
-  TOPIC_TRACKED_FIELDS = %w{title category_id}
 
   attr_reader :category_changed
 
   def initialize(post, topic=nil)
     @post = post
     @topic = topic || post.topic
+  end
+
+  def self.tracked_topic_fields
+    @@tracked_topic_fields ||= {}
+    @@tracked_topic_fields
+  end
+
+  def self.track_topic_field(field, &block)
+    tracked_topic_fields[field] = block
+
+    # Define it in the serializer unless it already has been defined
+    unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
+      PostRevisionSerializer.add_compared_field(field)
+    end
+  end
+
+  # Fields we want to record revisions for by default
+  track_topic_field(:title) do |tc, title|
+    tc.record_change('title', tc.topic.title, title)
+    tc.topic.title = title
+  end
+
+  track_topic_field(:category_id) do |tc, category_id|
+    tc.record_change('category_id', tc.topic.category_id, category_id)
+    tc.check_result(tc.topic.change_category_to_id(category_id))
   end
 
   # AVAILABLE OPTIONS:
@@ -22,6 +82,8 @@ class PostRevisor
     @editor = editor
     @fields = fields.with_indifferent_access
     @opts = opts
+
+    @topic_changes = TopicChanges.new(@topic, editor)
 
     # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
@@ -40,7 +102,6 @@ class PostRevisor
 
     @version_changed = false
     @post_successfully_saved = true
-    @topic_successfully_saved = true
 
     @validate_post = true
     @validate_post = @opts[:validate_post] if @opts.has_key?(:validate_post)
@@ -94,10 +155,7 @@ class PostRevisor
   end
 
   def topic_changed?
-    TOPIC_TRACKED_FIELDS.each do |field|
-      return true if @fields.has_key?(field) && @fields[field] != @topic.send(field)
-    end
-    false
+    PostRevisor.tracked_topic_fields.keys.any? {|f| @fields.has_key?(f)}
   end
 
   def revise_post
@@ -153,6 +211,7 @@ class PostRevisor
     clear_flags_and_unhide_post
 
     @post.extract_quoted_post_numbers
+
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
   end
@@ -174,10 +233,16 @@ class PostRevisor
   end
 
   def update_topic
-    @topic.title = @fields[:title] if @fields.has_key?(:title)
     Topic.transaction do
-      @topic_successfully_saved = @topic.change_category_to_id(@fields[:category_id]) if @fields.has_key?(:category_id)
-      @topic_successfully_saved &&= @topic.save(validate: @validate_topic)
+      PostRevisor.tracked_topic_fields.each do |f, cb|
+        if !@topic_changes.errored? && @fields.has_key?(f)
+          cb.call(@topic_changes, @fields[f])
+        end
+      end
+
+      unless @topic_changes.errored?
+        @topic_changes.check_result(@topic.save(validate: @validate_topic))
+      end
     end
   end
 
@@ -188,7 +253,7 @@ class PostRevisor
   end
 
   def create_revision
-    modifications = post_changes.merge(topic_changes)
+    modifications = post_changes.merge(@topic_changes.diff)
     PostRevision.create!(
       user_id: @post.last_editor_id,
       post_id: @post.id,
@@ -200,7 +265,7 @@ class PostRevisor
   def update_revision
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
-    modifications = post_changes.merge(topic_changes)
+    modifications = post_changes.merge(@topic_changes.diff)
     modifications.keys.each do |field|
       if revision.modifications.has_key?(field)
         old_value = revision.modifications[field][0]
@@ -210,15 +275,11 @@ class PostRevisor
         revision.modifications[field] = modifications[field]
       end
     end
-    revision.save
+    revision.save if modifications.length
   end
 
   def post_changes
     @post.previous_changes.slice(*POST_TRACKED_FIELDS)
-  end
-
-  def topic_changes
-    @topic.previous_changes.slice(*TOPIC_TRACKED_FIELDS)
   end
 
   def perform_edit
@@ -311,7 +372,8 @@ class PostRevisor
   end
 
   def successfully_saved_post_and_topic
-    @post_successfully_saved && @topic_successfully_saved
+    @post_successfully_saved && !@topic_changes.errored?
   end
 
 end
+

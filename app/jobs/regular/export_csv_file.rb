@@ -4,6 +4,8 @@ require_dependency 'system_message'
 module Jobs
 
   class ExportCsvFile < Jobs::Base
+    include ActionView::Helpers::NumberHelper
+
     HEADER_ATTRS_FOR = {}
     HEADER_ATTRS_FOR['user_archive'] = ['topic_title','category','sub_category','is_pm','post','like_count','reply_count','url','created_at']
     HEADER_ATTRS_FOR['user_list'] = ['id','name','username','email','title','created_at','trust_level','active','admin','moderator','ip_address']
@@ -260,8 +262,12 @@ module Jobs
 
 
       def set_file_path
-        file_name_prefix = @file_name.split('_').join('-')
-        @file = UserExport.create(export_type: file_name_prefix, user_id: @current_user.id)
+        if @entity == "user_archive"
+          file_name_prefix = "#{@file_name.split('_').join('-')}-#{current_user.username}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+        else
+          file_name_prefix = "#{@file_name.split('_').join('-')}-#{Time.now.strftime("%y%m%d-%H%M%S")}"
+        end
+        @file = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
         @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
         # ensure directory exists
@@ -278,13 +284,13 @@ module Jobs
           end
         end
         # compress CSV file
-        `gzip --best #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
+        `gzip -5 #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 
       def notify_user
         if @current_user
           if @file_name != "" && File.exists?("#{UserExport.base_directory}/#{@file_name}.gz")
-            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz")
+            SystemMessage.create_from_system_user(@current_user, :csv_export_succeeded, download_link: "#{Discourse.base_url}/export_csv/#{@file_name}.gz", file_name: "#{@file_name}.gz", file_size: number_to_human_size(File.size("#{UserExport.base_directory}/#{@file_name}.gz")))
           else
             SystemMessage.create_from_system_user(@current_user, :csv_export_failed)
           end

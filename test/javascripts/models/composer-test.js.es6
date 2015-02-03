@@ -129,19 +129,6 @@ test("Title length for private messages", function() {
   ok(composer.get('titleLengthValid'), "in the range is okay");
 });
 
-test('importQuote with no data', function() {
-  sandbox.stub(Discourse.Post, 'load');
-  var composer = Discourse.Composer.create();
-  composer.importQuote();
-  blank(composer.get('reply'), 'importing with no topic adds nothing');
-  ok(!Discourse.Post.load.calledOnce, "load is not called");
-
-  composer = Discourse.Composer.create({topic: Discourse.Topic.create()});
-  composer.importQuote();
-  blank(composer.get('reply'), 'importing with no posts in a topic adds nothing');
-  ok(!Discourse.Post.load.calledOnce, "load is not called");
-});
-
 test('editingFirstPost', function() {
   var composer = Discourse.Composer.create();
   ok(!composer.get('editingFirstPost'), "it's false by default");
@@ -152,36 +139,6 @@ test('editingFirstPost', function() {
 
   post.set('post_number', 1);
   ok(composer.get('editingFirstPost'), "it's true when editing the first post");
-
-});
-
-asyncTestDiscourse('importQuote with a post', function() {
-  expect(1);
-
-  sandbox.stub(Discourse.Post, 'load').withArgs(123).returns(new Ember.RSVP.Promise(function (resolve) {
-    resolve(Discourse.Post.create({raw: "let's quote"}));
-  }));
-
-  var composer = Discourse.Composer.create({post: Discourse.Post.create({id: 123})});
-  composer.importQuote().then(function () {
-    start();
-    ok(composer.get('reply').indexOf("let's quote") > -1, "it quoted the post");
-  });
-});
-
-asyncTestDiscourse('importQuote with no post', function() {
-  expect(1);
-
-  sandbox.stub(Discourse.Post, 'load').withArgs(4).returns(new Ember.RSVP.Promise(function (resolve) {
-    resolve(Discourse.Post.create({raw: 'quote me'}));
-  }));
-
-  var composer = Discourse.Composer.create({topic: Discourse.Topic.create()});
-  composer.set('topic.postStream.stream', [4, 5]);
-  composer.importQuote().then(function () {
-    start();
-    ok(composer.get('reply').indexOf('quote me') > -1, "it contains the word quote me");
-  });
 
 });
 

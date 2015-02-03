@@ -91,6 +91,7 @@ de:
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     topic_admin_menu: "Thema administrieren"
+    emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei E-Mail Benachrichtigungen verschickt."
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -143,6 +144,13 @@ de:
       topic_count: "Themen"
       post_count: "Beiträge"
       user_count: "Benutzer"
+      contact: "Kontaktiere uns"
+      contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die dieses Seite betrifft, kontaktiere uns bitte unter %{contact_email}. "
+    bookmarked:
+      title: "Lesezeichen setzen"
+      help:
+        bookmark: "setze ein Lesezeichen für dieses Thema"
+        unbookmark: "entferne des Lesezeichen von diesem Thema"
     bookmarks:
       not_logged_in: "Entschuldige, du musst angemeldet sein, um ein Lesezeichen setzen zu können."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
@@ -272,7 +280,7 @@ de:
       notifications: "Benachrichtigungen"
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
-      disable_jump_reply: "Nach Verfassen einer Antwort nicht zum neuen Beitrag springen"
+      disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige Benachrichtigungen über eingehende Nachrichten im Favicon (experimentell)"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
@@ -285,7 +293,7 @@ de:
       suspended_notice: "Dieser Benutzer ist bis zum {{date}} gesperrt."
       suspended_reason: "Grund: "
       github_profile: "Github"
-      mailing_list_mode: "Erhalte bei jedem neuen Beitrag eine E-Mail (sofern du das Thema oder die Kategorie nicht stummgeschaltet hast)"
+      mailing_list_mode: "Sende mir bei jedem neuen Beitrag eine E-Mail (außer wenn ich das Thema oder die Kategorie stummgeschaltet habe)"
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst in diesen Kategorien automatisch alle neuen Themen beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Eintrag in der Themenliste angezeigt."
       tracked_categories: "Verfolgt"
@@ -328,8 +336,10 @@ de:
         error: "Beim Ändern der E-Mail-Adresse ist ein Fehler aufgetreten. Möglicherweise wird diese Adresse schon benutzt."
         success: "Wir haben eine E-Mail an die angegebene E-Mail-Adresse gesendet. Folge zur Bestätigung der Adresse bitte den darin enthaltenen Anweisungen."
       change_avatar:
+        title: "Ändere dein Profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, basierend auf"
         refresh_gravatar_title: "Deinen Gravatar aktualisieren"
+        letter_based: "ein vom System zugewiesenes Profilbild"
         uploaded_avatar: "Eigenes Bild"
         uploaded_avatar_empty: "Eigenes Bild hinzufügen"
         upload_title: "Lade dein Bild hoch"
@@ -349,8 +359,8 @@ de:
         authenticated: "Deine E-Mail-Adresse wurde von {{provider}} bestätigt"
         frequency:
           zero: "Wir werden dir sofort eine E-Mail senden, wenn du die betroffenen Inhalte noch nicht gelesen hast."
-          one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten Minute nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
-          other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich innerhalb der letzten {{count}} Minuten nicht gesehen haben und wenn du die betroffenen Inhalte noch nicht gelesen hast. "
+          one: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten Minute gesehen haben."
+          other: "Wir werden dir nur dann eine E-Mail senden, wenn wir dich nicht innerhalb der letzten {{count}} Minuten gesehen haben."
       name:
         title: "Name"
         instructions: "Dein vollständiger Name (optional)"
@@ -386,7 +396,7 @@ de:
       website: "Website"
       email_settings: "E-Mail"
       email_digests:
-        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich die Website länger nicht besuche:"
+        title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich länger nicht hier bin:"
         daily: "täglich"
         weekly: "wöchentlich"
         bi_weekly: "alle zwei Wochen"
@@ -452,6 +462,8 @@ de:
         title: "Letzte IP-Adresse"
       registration_ip_address:
         title: "IP-Adresse bei Registrierung"
+      avatar:
+        title: "Profilbild"
       title:
         title: "Titel"
       filters:
@@ -653,7 +665,7 @@ de:
           examples: 'Gib die Anzahl der Stunden ein (24).'
     notifications:
       title: "Benachrichtigung über Erwähnungen mit @Name, Antworten auf deine Beiträge und Themen, private Nachrichten etc."
-      none: "Du hast momentan keine Benachrichtigungen."
+      none: "Die Benachrichtigungen können derzeit nicht geladen werden."
       more: "ältere Benachrichtigungen anzeigen"
       total_flagged: "Anzahl der gemeldeten Beiträge"
       mentioned: "<i title='erwähnt' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -720,6 +732,7 @@ de:
         posted: "Du hast noch keine Beiträge verfasst."
         latest: "Es gibt keine aktuellen Themen. Das ist schade."
         hot: "Es gibt keine beliebten Themen."
+        bookmarks: "Du hast noch keine Themen, in denen du ein Lesezeichen gesetzt hast."
         category: "Es gibt keine Themen in {{category}}."
         top: "Es gibt keine Top-Themen."
         educate:
@@ -890,7 +903,7 @@ de:
         to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
         email_placeholder: 'name@example.com'
         success: "Wir haben an <b>{{email}}</b> eine Einladung verschickt. Wir werden dich benachrichtigen, sobald die Einladung angenommen wurde. Auf deiner Benutzerseite kannst du den Status deiner Einladungen verfolgen."
-        error: "Entschuldige, wir konnten diese Person nicht einladen. Vielleicht ist sie schon ein Nutzer?"
+        error: "Es tut uns leid, wir konnten diese Person nicht einladen. Hat diese Person schon einen Benutzeraccount? (Einladungen sind in ihrer Zahl beschränkt.)"
       login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
@@ -1228,11 +1241,13 @@ de:
         help: "Dieses Thema ist geschlossen; Antworten sind nicht mehr möglich"
       unpinned:
         title: "Losgelöst"
+        help: "Dieses Thema ist für dich losgelöst; es wird in der normalen Reihenfolge angezeigt"
       pinned_globally:
         title: "Global angeheftet"
         help: "Dieses Thema ist global angeheftet; es wird immer am Anfang aller Listen auftauchen"
       pinned:
         title: "Angeheftet"
+        help: "Dieses Thema ist für dich angeheftet; es wird immer am Anfang seiner Kategorie auftauchen"
       archived:
         help: "Dieses Thema ist archiviert; es ist eingefroren und kann nicht mehr geändert werden"
       invisible:
@@ -1302,6 +1317,9 @@ de:
       posted:
         title: "Meine Beiträge"
         help: "Themen zu denen du beigetragen hast"
+      bookmarks:
+        title: "Lesezeichen"
+        help: "Themen, in denen du ein Lesezeichen gesetzt hast"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1454,6 +1472,8 @@ de:
         name: "Name"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
+        custom: "Benutzerdefiniert"
+        automatic: "Automatisch"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -1536,7 +1556,14 @@ de:
         long_title: "Website-Anpassungen"
         css: "CSS"
         header: "Kopfbereich"
+        top: "Anfang"
         footer: "Fußzeile"
+        head_tag:
+          text: "</head>"
+          title: "HTML das vor dem </head> Tag eingefügt wird."
+        body_tag:
+          text: "</body>"
+          title: "HTML das vor dem </body> Tag eingefügt wird."
         override_default: "Das Standard-Stylesheet nicht verwenden"
         enabled: "Aktiviert?"
         preview: "Vorschau"
@@ -1654,6 +1681,7 @@ de:
           do_nothing: "nichts tun"
         staff_actions:
           title: "Mitarbeiter-Aktionen"
+          instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf das Profilbild, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
           staff_user: "Mitarbeiter"
           target_user: "Betroffener Benutzer"
@@ -1671,6 +1699,7 @@ de:
           actions:
             delete_user: "Benutzer löschen"
             change_trust_level: "Vertrauensstufe ändern"
+            change_username: "Benutzernamen ändern"
             change_site_setting: "Website-Einstellungen ändern"
             change_site_customization: "Website-Anpassungen ändern"
             delete_site_customization: "Website-Anpassungen löschen"
@@ -1881,6 +1910,7 @@ de:
           external_username: "Benutzername"
           external_name: "Name"
           external_email: "E-Mail"
+          external_avatar_url: "URL des Profilbilds"
       user_fields:
         title: "Benutzerfelder"
         help: "Füge Felder hinzu, welche deine Benutzer ausfüllen können."
@@ -2058,8 +2088,8 @@ de:
         mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
     badges:
       title: Abzeichen
-      allow_title: "Abzeichen als Titel erlauben?"
-      multiple_grant: "wird mehrfach verliehen?"
+      allow_title: "kann als Titel verwendet werden"
+      multiple_grant: "kann mehrfach verliehen werden"
       badge_count:
         one: "1 Abzeichen"
         other: "%{count} Abzeichen"

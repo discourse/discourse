@@ -41,8 +41,7 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-
-
+    margin-bottom: 5px;
   }
 
 
@@ -204,21 +203,10 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color:  dark-light-diff($success, $secondary, 60%, -35%);
+    background-color:  desaturate(dark-light-diff($success, $secondary, 60%, -35%), 30%);
     transition: width .75s;
 
   }
-}
-
-#suggested-topics .topic-statuses .topic-status {
-  padding: 0;
-  i {
-    font-size:15px;
-  }
-}
-
-#suggested-topics .topics {
-  padding-bottom: 15px;
 }
 
 .heatmap-high {color: #fe7a15 !important;}

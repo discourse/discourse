@@ -31,11 +31,18 @@ en:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
+
+  datetime: &datetime
+    month_names:
+      [~, January, February, March, April, May, June, July, August, September, October, November, December]
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%b %-d, %Y"
+  date:
+    <<: *datetime
+  time:
+    <<: *datetime
 
   title: "Discourse"
   topics: "Topics"
@@ -130,6 +137,8 @@ en:
     latest: "Latest topics"
     hot: "Hot topics"
   too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+
+  excerpt_image: "image"
 
   groups:
     errors:
@@ -599,7 +608,7 @@ en:
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "Enter a site contact email address so you can be reached you urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
+    contact_email_missing: "Enter a site contact email address so you can be reached for urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
     contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
     title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
@@ -658,7 +667,7 @@ en:
     educate_until_posts: "When the user starts typing their first (n) new posts, show the pop-up new user education panel in the composer."
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
-    contact_email: "Email address of key contact responsible for this site. Used for critical notifications only, as well as on the /about contact form for urgent matters."
+    contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -731,7 +740,7 @@ en:
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
+    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
@@ -759,6 +768,7 @@ en:
     email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
     email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
+    log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
 
@@ -783,7 +793,7 @@ en:
     enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in if not properly configured when enabled; also disables invites)"
     enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
-    sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
+    sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
@@ -829,9 +839,9 @@ en:
     max_flags_per_day: "Maximum number of flags per user per day."
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
-    max_stars_per_day: "Maximum number of topics that can be starred per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
     max_private_messages_per_day: "Maximum number of private messages users can create per day."
+    max_invites_per_day: "Maximum number of invites a user can send per day."
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
@@ -902,6 +912,7 @@ en:
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
 
     category_colors: "A list of hexadecimal color values allowed for categories."
+    category_style: "Visual style for category badges."
 
     max_image_size_kb: "The maximum image upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
     max_attachment_size_kb: "The maximum attachment files upload size in kB. This must be configured in nginx (client_max_body_size) / apache or proxy as well."
@@ -981,6 +992,8 @@ en:
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    suppress_digest_email_after_days: "Suppress digest emails for users not seen on the site for more than (n) days."
+    disable_digest_emails: "Disable digest emails for all users."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
@@ -1000,7 +1013,7 @@ en:
 
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
-    enable_names: "Allow showing user full names. Disable to hide full names."
+    enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     invites_per_page: "Default invites shown on the user page."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
@@ -1237,16 +1250,11 @@ en:
       [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
 
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
@@ -1416,11 +1424,11 @@ en:
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
 
-        We've automatically generated a username for you: **%{username}**, but you can change it any time by visiting [your user profile][prefs].
+        We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
 
-        To log in again, either:
+        To log in again later:
 
-        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
+        1. Always **use the same email address from your original invitation** when logging in. Otherwise we won't be able to tell it's you!
 
         2. Create a unique password for [your user profile][prefs], and use it to log in.
 
@@ -1486,7 +1494,7 @@ en:
       text_body_template: |
         Your data export was successful! :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
         The above download link will be valid for 48 hours.
 
@@ -1821,9 +1829,9 @@ en:
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     attachments:
-      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
+      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
-      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
+      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
@@ -1951,7 +1959,7 @@ en:
 
       You may not post anything digital that belongs to someone else without permission. You may not post descriptions of, links to, or methods for stealing someone’s intellectual property (software, video, audio, images), or for breaking any other law.
 
-      <a name="operated"></a>
+      <a name="power"></a>
 
       ## [Powered by You](#power)
 

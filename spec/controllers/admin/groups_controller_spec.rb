@@ -21,11 +21,14 @@ describe Admin::GroupsController do
       expect(response.status).to eq(200)
       expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
+        "automatic"=>false,
         "name"=>group.name,
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
-        "visible"=>true
+        "visible"=>true,
+        "automatic_membership_email_domains"=>nil,
+        "automatic_membership_retroactive"=>false
       }])
     end
 
@@ -55,6 +58,18 @@ describe Admin::GroupsController do
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
       expect(group.visible).to eq(true)
+    end
+
+    it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
+      Jobs.expects(:enqueue).never
+      xhr :put, :update, id: 1, automatic_membership_retroactive: "false"
+      expect(response).to be_success
+    end
+
+    it "launches the 'automatic group membership' job when it's retroactive" do
+      Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: 1)
+      xhr :put, :update, id: 1, automatic_membership_retroactive: "true"
+      expect(response).to be_success
     end
 
   end
@@ -91,7 +106,7 @@ describe Admin::GroupsController do
   context ".add_members" do
 
     it "cannot add members to automatic groups" do
-      xhr :put, :add_members, group_id: 1, usernames: "l77t"
+      xhr :put, :add_members, id: 1, usernames: "l77t"
       expect(response.status).to eq(422)
     end
 
@@ -100,7 +115,7 @@ describe Admin::GroupsController do
       user2 = Fabricate(:user)
       group = Fabricate(:group)
 
-      xhr :put, :add_members, group_id: group.id, usernames: [user1.username, user2.username].join(",")
+      xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
 
       expect(response).to be_success
       group.reload
@@ -112,7 +127,7 @@ describe Admin::GroupsController do
   context ".remove_member" do
 
     it "cannot remove members from automatic groups" do
-      xhr :put, :remove_member, group_id: 1, user_id: 42
+      xhr :put, :remove_member, id: 1, user_id: 42
       expect(response.status).to eq(422)
     end
 
@@ -122,7 +137,7 @@ describe Admin::GroupsController do
       group.add(user)
       group.save
 
-      xhr :delete, :remove_member, group_id: group.id, user_id: user.id
+      xhr :delete, :remove_member, id: group.id, user_id: user.id
 
       expect(response).to be_success
       group.reload

@@ -65,15 +65,18 @@ describe Jobs::EnqueueDigestEmails do
         user = user_visited_this_week
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(false)
       end
+    end
 
-      it "does return users who have been emailed recently but have email_always set" do
-        user = user_visited_this_week_email_always
-        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user.id)).to eq(true)
+    context 'visited the site a year ago' do
+      let!(:user_visited_a_year_ago) { Fabricate(:active_user, last_seen_at: 370.days.ago) }
+
+      it "doesn't return the user who have not visited the site for more than 365 days" do
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(user_visited_a_year_ago.id)).to eq(false)
       end
     end
 
     context 'regular users' do
-      let!(:user) { Fabricate(:active_user) }
+      let!(:user) { Fabricate(:active_user, last_seen_at: 360.days.ago) }
 
       it "returns the user" do
         expect(Jobs::EnqueueDigestEmails.new.target_user_ids).to eq([user.id])
@@ -86,17 +89,31 @@ describe Jobs::EnqueueDigestEmails do
 
     let(:user) { Fabricate(:user) }
 
-    before do
-      Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
+    context "digest emails are enabled" do
+      before do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).returns([user.id])
+      end
+
+      it "enqueues the digest email job" do
+        SiteSetting.stubs(:disable_digest_emails?).returns(false)
+        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
+        Jobs::EnqueueDigestEmails.new.execute({})
+      end
     end
 
-    it "enqueues the digest email job" do
-      Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id)
-      Jobs::EnqueueDigestEmails.new.execute({})
+    context "digest emails are disabled" do
+      before do
+        Jobs::EnqueueDigestEmails.any_instance.expects(:target_user_ids).never
+      end
+
+      it "does not enqueue the digest email job" do
+        SiteSetting.stubs(:disable_digest_emails?).returns(true)
+        Jobs.expects(:enqueue).with(:user_email, type: :digest, user_id: user.id).never
+        Jobs::EnqueueDigestEmails.new.execute({})
+      end
     end
 
   end
 
 
 end
-

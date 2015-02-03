@@ -26,6 +26,8 @@ describe SessionController do
       @sso_url = "http://somesite.com/discourse_sso"
       @sso_secret = "shjkfdhsfkjh"
 
+      request.host = Discourse.current_hostname
+
       SiteSetting.enable_sso = true
       SiteSetting.sso_url = @sso_url
       SiteSetting.sso_secret = @sso_secret
@@ -79,7 +81,39 @@ describe SessionController do
 
       logged_on_user = Discourse.current_user_provider.new(request.env).current_user
       expect(logged_on_user.admin).to eq(true)
+    end
 
+    it 'redirects to a non-relative url' do
+      sso = get_sso("#{Discourse.base_url}/b/")
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/b/')
+    end
+
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('//eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/')
+    end
+
+    it 'redirects to root if the host of the return_path is different' do
+      sso = get_sso('http://eviltrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('/')
     end
 
     it 'allows you to create an account' do

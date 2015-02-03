@@ -825,7 +825,6 @@
         // TODO: Cache this regexp for certain depths.
         // Create a regexp suitable for matching an li for a given stack depth
         function regex_for_depth( depth ) {
-
           return new RegExp(
             // m[1] = indent, m[2] = list_type
             "(?:^(" + indent_re + "{0," + depth + "} {0,3})(" + any_list + ")\\s+)|" +
@@ -871,8 +870,11 @@
               replace = new RegExp("^" + indent_re + "{" + depth + "}", "gm"),
               ret = [];
 
+
           while ( blocks.length > 0 ) {
-            if ( re.exec( blocks[0] ) ) {
+            // HACK: Fixes a v8 issue
+            test = blocks[0].replace(/^ {8,}/, '        ');
+            if ( re.exec( test ) ) {
               var b = blocks.shift(),
                   // Now remove that indent
                   x = b.replace( replace, "");

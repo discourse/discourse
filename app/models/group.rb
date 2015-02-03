@@ -7,7 +7,11 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_many :group_managers, dependent: :destroy
+  has_many :managers, through: :group_managers
+
   after_save :destroy_deletions
+  after_save :automatic_group_membership
 
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
@@ -277,6 +281,10 @@ class Group < ActiveRecord::Base
     self.group_users.where(user: user).each(&:destroy)
   end
 
+  def appoint_manager(user)
+    managers << user
+  end
+
   protected
 
     def name_format_validator
@@ -292,6 +300,12 @@ class Group < ActiveRecord::Base
         end
       end
       @deletions = nil
+    end
+
+    def automatic_group_membership
+      if self.automatic_membership_retroactive
+        Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+      end
     end
 
 end

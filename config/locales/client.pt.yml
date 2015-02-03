@@ -890,7 +890,6 @@ pt:
         to_forum: "Enviaremos um breve email que permitirá ao seu amigo juntar-se imediatamente clicando numa hiperligação, não sendo necessário ter sessão iniciada."
         email_placeholder: 'nome@exemplo.com'
         success: "Enviámos um convite para <b>{{email}}</b>. Será notificado quando o convite for resgatado. Verifique o separador de convites na sua página de utilizador para poder acompanhar os seus convites."
-        error: "Pedimos desculpa, não conseguimos convidar essa pessoa. Talvez já seja um utilizador?"
       login_reply: 'Iniciar sessão para Responder'
       filters:
         n_posts:

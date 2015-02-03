@@ -176,7 +176,7 @@ module PostGuardian
   end
 
   def can_rebake?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_see_flagged_posts?

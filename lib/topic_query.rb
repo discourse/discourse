@@ -88,6 +88,10 @@ class TopicQuery
     create_list(:posted) {|l| l.where('tu.posted') }
   end
 
+  def list_bookmarks
+    create_list(:bookmarks) {|l| l.where('tu.bookmarked') }
+  end
+
   def list_top_for(period)
     score = "#{period}_score"
     create_list(:top, unordered: true) do |topics|

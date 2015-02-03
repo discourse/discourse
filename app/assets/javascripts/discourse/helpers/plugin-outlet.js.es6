@@ -88,20 +88,21 @@ export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
   if (_connectorCache[connectionName]) {
-    var view;
+    var viewClass;
     var childViews = _connectorCache[connectionName];
 
     // If there is more than one view, create a container. Otherwise
     // just shove it in.
     if (childViews.length > 1) {
-      view = Ember.ContainerView.extend({
+      viewClass = Ember.ContainerView.extend({
         childViews: childViews
       });
     } else {
-      view = childViews[0];
+      viewClass = childViews[0];
     }
+
     delete options.fn;  // we don't need the default template since we have a connector
-    return Ember.Handlebars.helpers.view.call(this, view, options);
+    return Ember.Handlebars.helpers.view.call(this, viewClass, options);
   } else if (options.fn) {
     // If a block is passed, render its content.
     return Ember.Handlebars.helpers.view.call(this,

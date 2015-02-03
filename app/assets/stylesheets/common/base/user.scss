@@ -24,6 +24,16 @@
   }
 }
 
+.public-user-fields {
+  .user-field-name {
+    font-weight: bold;
+  }
+}
+
+.collapsed-info .public-user-fields {
+  display: none;
+}
+
 .notification-buttons {
   margin: 10px 0;
   text-align: right;

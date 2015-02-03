@@ -604,6 +604,28 @@ describe UsersController do
       end
     end
 
+    context "with only optional custom fields" do
+      let!(:user_field) { Fabricate(:user_field, required: false) }
+
+      context "without values for the fields" do
+        let(:create_params) { {
+          name: @user.name,
+          password: 'watwatwat',
+          username: @user.username,
+          email: @user.email,
+        } }
+
+        it "should succeed" do
+          xhr :post, :create, create_params
+          expect(response).to be_success
+          inserted = User.where(email: @user.email).first
+          expect(inserted).to be_present
+          expect(inserted.custom_fields).not_to be_present
+          expect(inserted.custom_fields["user_field_#{user_field.id}"]).to be_blank
+        end
+      end
+    end
+
   end
 
   context '.username' do
@@ -612,28 +634,59 @@ describe UsersController do
     end
 
     context 'while logged in' do
-      let!(:user) { log_in }
-      let(:new_username) { "#{user.username}1234" }
+      let(:old_username) { "OrigUsrname" }
+      let(:new_username) { "#{old_username}1234" }
+      let(:user) { Fabricate(:user, username: old_username) }
+
+      before do
+        user.username = old_username
+        log_in_user(user)
+      end
 
       it 'raises an error without a new_username param' do
         expect { xhr :put, :username, username: user.username }.to raise_error(ActionController::ParameterMissing)
+        user.reload.username.should == old_username
       end
 
       it 'raises an error when you don\'t have permission to change the username' do
         Guardian.any_instance.expects(:can_edit_username?).with(user).returns(false)
         xhr :put, :username, username: user.username, new_username: new_username
         expect(response).to be_forbidden
+        user.reload.username.should == old_username
       end
 
+      # Bad behavior, this should give a real JSON error, not an InvalidParameters
       it 'raises an error when change_username fails' do
-        User.any_instance.expects(:change_username).with(new_username).returns(false)
+        User.any_instance.expects(:save).returns(false)
         expect { xhr :put, :username, username: user.username, new_username: new_username }.to raise_error(Discourse::InvalidParameters)
+        user.reload.username.should == old_username
       end
 
-      it 'should succeed when the change_username returns true' do
-        User.any_instance.expects(:change_username).with(new_username).returns(true)
+      it 'should succeed in normal circumstances' do
         xhr :put, :username, username: user.username, new_username: new_username
-        expect(response).to be_success
+        response.should be_success
+        user.reload.username.should == new_username
+      end
+
+      pending 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+        # Older than the change period and >1 post
+        user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
+        user.stubs(:post_count).returns(200)
+        Guardian.new(user).can_edit_username?(user).should == false
+
+        xhr :put, :username, username: user.username, new_username: new_username
+
+        response.should be_forbidden
+        user.reload.username.should == old_username
+      end
+
+      it 'should create a staff action log when a staff member changes the username' do
+        acting_user = Fabricate(:admin)
+        log_in_user(acting_user)
+        xhr :put, :username, username: user.username, new_username: new_username
+        response.should be_success
+        UserHistory.where(action: UserHistory.actions[:change_username], target_user_id: user.id, acting_user_id: acting_user.id).should be_present
+        user.reload.username.should == new_username
       end
 
       it 'should return a JSON response with the updated username' do

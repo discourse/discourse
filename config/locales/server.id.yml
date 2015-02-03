@@ -10,9 +10,6 @@ id:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%d-%m-%Y"
   title: "Discourse"
   topics: "Topik"
   posts: "post"
@@ -143,10 +140,7 @@ id:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
   upload:
-    attachments:
-      too_large: "Maaf, berkas yang Anda unggah terlalu besar (ukuran maksimum adalah %{max_size_kb}%kb)."
     images:
-      too_large: "Maaf, gambar yang Anda unggah terlalu besar (ukuran maksimum adalah %{max_size_kb}%kb), sesuaikan ukuran gambar Anda dan cobalah lagi."
       fetch_failure: "Maaf, terjadi kesalahan saat memuat gambar."
       unknown_image_type: "Maaf, berkas yang Anda unggah bukan gambar"
       size_not_found: "Maaf, kami tidak dapat mendeteksi ukuran dari gambar. Apa berkas gambar yang Anda unggah rusak?"

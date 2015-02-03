@@ -72,10 +72,9 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   profileBackground: function() {
-    var background = this.get('profile_background');
-    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-
-    return 'background-image: url(' + background + ')';
+    var url = this.get('profile_background');
+    if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    return 'background-image: url(' + Discourse.getURLWithCDN(url) + ')';
   }.property('profile_background'),
 
   /**
@@ -352,10 +351,13 @@ Discourse.User = Discourse.Model.extend({
     Change avatar selection
   */
   pickAvatar: function(uploadId) {
-    this.set("uploaded_avatar_id", uploadId);
+    var self = this;
+
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/pick", {
       type: 'PUT',
       data: { upload_id: uploadId }
+    }).then(function(){
+      self.set('uploaded_avatar_id', uploadId);
     });
   },
 
@@ -442,6 +444,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId) {
     var url;
+
     if (uploadedAvatarId) {
       url = "/user_avatar/" +
             Discourse.BaseUrl +
@@ -456,11 +459,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
             Discourse.LetterAvatarVersion + ".png";
     }
 
-    url = Discourse.getURL(url);
-    if (Discourse.CDN) {
-      url = Discourse.CDN + url;
-    }
-    return url;
+    return Discourse.getURLWithCDN(url);
   },
 
   /**

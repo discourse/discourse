@@ -8,6 +8,7 @@
 
     .docked & {
       position: fixed;
+      backface-visibility: hidden;  /** do magic for scrolling performance **/
     }
 
     .contents {
@@ -17,7 +18,6 @@
     .title {
       display: table;
       float: left;
-      height: 45px;
       > a {
         display: table-cell;
         vertical-align: middle;
@@ -296,6 +296,7 @@
     float: left;
     background-color: transparent;
     line-height: 20px;
+    width: 45%;
     margin: 5px 5px 0 5px;
     .badge-notification {
       color: scale-color($primary, $lightness: 50%);
@@ -316,19 +317,23 @@
   }
 }
 
-.search-link .topic-statuses {
-  float: none;
-  display: inline-block;
-  color: scale-color($primary, $lightness: 50%);
-  margin: 0;
-  .fa {
-    margin: 0;
+.search-link {
+  .badge-category-parent {
+    line-height: 0.8em;
   }
-}
+  .topic-title {
+    margin-right: 6px;
+  }
 
-.search-link .badge-category {
-  padding: 4px 6px;
-  margin-left: 6px;
+  .topic-statuses {
+    float: none;
+    display: inline-block;
+    color: scale-color($primary, $lightness: 50%);
+    margin: 0;
+    .fa {
+      margin: 0;
+    }
+  }
 }
 
 .highlight-strong {

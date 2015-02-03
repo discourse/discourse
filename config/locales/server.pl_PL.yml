@@ -20,11 +20,6 @@ pl_PL:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
     long_date: "D MMMM YYYY H:mm"
-  time:
-    formats:
-      short: "%d.%m.%Y"
-      short_no_year: "%-d %B"
-      date_only: "%-d %b %Y"
   title: "Discourse"
   topics: "Tematy"
   posts: "wpisy"
@@ -628,7 +623,6 @@ pl_PL:
     ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Zezwól moderatorom na tworzenie nowych kategorii"
-    top_menu: "Określ które elementy nawigacyjne serwisu powinny być widoczne i w jakiej kolejności. Przykład latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Określ które elementy menu wpisu powinny być widoczne i w jakiej kolejności. Przykład like|edit|flag|delete|share|bookmark|reply"
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
     track_external_right_clicks: "Śledź zewnętrzne linki kliknięte prawym klawiszem (np. otwierane w nowej zakładce). Domyślnie wyłączone, gdyż wymaga nadpisywania URLi."
@@ -965,10 +959,7 @@ pl_PL:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
-    attachments:
-      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:
-      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"

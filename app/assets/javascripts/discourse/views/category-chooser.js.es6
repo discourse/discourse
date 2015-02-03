@@ -1,6 +1,5 @@
 import ComboboxView from 'discourse/views/combo-box';
-
-var badgeHtml = Discourse.HTML.categoryBadge;
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
@@ -57,10 +56,10 @@ export default ComboboxView.extend({
     }
 
     if (!category) return item.text;
-    var result = badgeHtml(category, {showParent: false, link: false, allowUncategorized: true}),
+    var result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true}),
         parentCategoryId = category.get('parent_category_id');
     if (parentCategoryId) {
-      result = badgeHtml(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+      result = categoryBadgeHTML(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
     }
 
     result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";

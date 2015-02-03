@@ -63,8 +63,6 @@
     }
     .category a {
       max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -144,8 +142,7 @@ tr.category-topic-link:nth-of-type(odd) {
   margin-bottom: 10px;
 
   th .badge-category {
-    float: left;
-    margin: 1px 4px 0 0;
+    margin: 0;
     font-size: 110%;
   }
 

@@ -1,10 +1,16 @@
 #topic-title {
 
-  .title-wrapper {float: left; width: 90%;}
+  .title-wrapper {
+    float: left;
+    width: 90%;
+    .btn-small {
+      margin: 0 6px 0 0;
+    }
+  }
 
   a.badge-category {
     margin-top: 5px;
-    }
+  }
 
   a.edit-topic i { font-size: 0.8em; }
 }

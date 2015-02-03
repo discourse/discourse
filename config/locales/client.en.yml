@@ -103,6 +103,8 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
+    emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -154,10 +156,12 @@ en:
       stat:
         all_time: "All Time"
         last_7_days: "Last 7 Days"
+        last_30_days: "Last 30 Days"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "Users"
+      user_count: "New Users"
+      active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_email}."
 
@@ -313,7 +317,7 @@ en:
       notifications: "Notifications"
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
-      disable_jump_reply: "Don't jump to your new post after replying"
+      disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
       edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -326,7 +330,7 @@ en:
       suspended_notice: "This user is suspended until {{date}}."
       suspended_reason: "Reason: "
       github_profile: "Github"
-      mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
+      mailing_list_mode: "Send me an email for every new post (unless I mute the topic or category)"
       watched_categories: "Watched"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Tracked"
@@ -402,8 +406,8 @@ en:
         authenticated: "Your email has been authenticated by {{provider}}"
         frequency:
           zero: "We'll email you immediately if you haven't read the thing we're emailing you about."
-          one: "We'll only email you if we haven't seen you in the last minute and you haven't read the thing we're emailing you about."
-          other: "We'll only email you if we haven't seen you in the last {{count}} minutes and you haven't read the thing we're emailing you about."
+          one: "We'll only email you if we haven't seen you in the last minute."
+          other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
 
       name:
         title: "Name"
@@ -444,13 +448,13 @@ en:
       website: "Web Site"
       email_settings: "Email"
       email_digests:
-        title: "When you don't visit the site, send an email digest of what's new:"
+        title: "When I don't visit here, send an email digest of what's new:"
         daily: "daily"
         weekly: "weekly"
         bi_weekly: "every two weeks"
 
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Receive an email when someone sends you a private message"
+      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
+      email_private_messages: "Send me an email when someone private messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
       other_settings: "Other"
@@ -458,8 +462,8 @@ en:
 
       new_topic_duration:
         label: "Consider topics new when"
-        not_viewed: "you haven't viewed them yet"
-        last_here: "created since you were here last"
+        not_viewed: "I haven't viewed them yet"
+        last_here: "created since I was here last"
         after_n_days:
           one: "created in the last day"
           other: "created in the last {{count}} days"
@@ -467,7 +471,7 @@ en:
           one: "created in the last week"
           other: "created in the last {{count}} weeks"
 
-      auto_track_topics: "Automatically track topics you enter"
+      auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
         always: "always"
@@ -744,7 +748,7 @@ en:
 
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "You have no notifications right now."
+      none: "Unable to load notifications at this time."
       more: "view older notifications"
       total_flagged: "total flagged posts"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -817,6 +821,7 @@ en:
         posted: "You haven't posted in any topics yet."
         latest: "There are no latest topics. That's sad."
         hot: "There are no hot topics."
+        bookmarks: "You have no bookmarked topics yet."
         category: "There are no {{category}} topics."
         top: "There are no top topics."
         educate:
@@ -847,7 +852,6 @@ en:
         one: '1 unread topic'
         other: '{{count}} unread topics'
       title: 'Topic'
-      loading: 'Loading topic...'
       invalid_access:
         title: "Topic is private"
         description: "Sorry, you don't have access to that topic!"
@@ -1016,7 +1020,7 @@ en:
 
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+        error: "Sorry, we couldn't invite that person. Perhaps they are already a user? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 
@@ -1463,6 +1467,9 @@ en:
       posted:
         title: "My Posts"
         help: "topics you have posted in"
+      bookmarks:
+        title: "Bookmarks"
+        help: "topics you have bookmarked"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1629,6 +1636,10 @@ en:
         name: "Name"
         add: "Add"
         add_members: "Add members"
+        custom: "Custom"
+        automatic: "Automatic"
+        automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+        automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
 
       api:
         generate_master: "Generate Master API Key"
@@ -1861,6 +1872,7 @@ en:
           actions:
             delete_user: "delete user"
             change_trust_level: "change trust level"
+            change_username: "change username"
             change_site_setting: "change site setting"
             change_site_customization: "change site customization"
             delete_site_customization: "delete site customization"
@@ -2097,6 +2109,10 @@ en:
           title: "Editable after signup?"
           enabled: "editable"
           disabled: "not editable"
+        show_on_profile:
+          title: "Show on public profile?"
+          enabled: "shown on profile"
+          disabled: "not shown on profile"
 
         field_types:
           text: 'Text Field'
@@ -2262,8 +2278,8 @@ en:
 
     badges:
       title: Badges
-      allow_title: "allow badge as title?"
-      multiple_grant: "awarded multiple times?"
+      allow_title: "can be used as a title"
+      multiple_grant: "can be awarded multiple times"
       badge_count:
         one:   "1 Badge"
         other: "%{count} Badges"

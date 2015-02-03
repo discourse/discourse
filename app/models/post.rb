@@ -121,7 +121,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "post-#{user_id}:#{raw_hash}"
+    "unique-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
@@ -132,7 +132,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = $redis.get(unique_post_key)
-    post_id != nil and post_id != id
+    post_id != nil and post_id.to_i != id
   end
 
   def raw_hash
@@ -251,8 +251,23 @@ class Post < ActiveRecord::Base
     order('sort_order desc, post_number desc')
   end
 
-  def self.summary
-    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.summary_percent_filter.to_f / 100.0]).limit(SiteSetting.summary_max_results)
+  def self.summary(topic_id=nil)
+    # PERF: if you pass in nil it is WAY slower
+    #  pg chokes getting a reasonable plan
+    topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
+
+    # percent rank has tons of ties
+    where(["post_number = 1 or id in (
+            SELECT p1.id
+            FROM posts p1
+            WHERE p1.percent_rank <= ? AND
+               p1.topic_id = #{topic_id}
+            ORDER BY p1.percent_rank
+            LIMIT ?
+          )",
+           SiteSetting.summary_percent_filter.to_f / 100.0,
+           SiteSetting.summary_max_results
+    ])
   end
 
   def update_flagged_posts_count

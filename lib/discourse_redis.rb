@@ -63,11 +63,15 @@ class DiscourseRedis
     @redis.del k
   end
 
-  def keys
+  def keys(pattern=nil)
     len = DiscourseRedis.namespace.length + 1
-    @redis.keys("#{DiscourseRedis.namespace}:*").map{
+    @redis.keys("#{DiscourseRedis.namespace}:#{pattern || '*'}").map{
       |k| k[len..-1]
     }
+  end
+
+  def delete_prefixed(prefix)
+    keys("#{prefix}*").each { |k| $redis.del(k) }
   end
 
   def flushdb

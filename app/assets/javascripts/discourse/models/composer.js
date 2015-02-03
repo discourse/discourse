@@ -328,36 +328,6 @@ Discourse.Composer = Discourse.Model.extend({
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
 
-  importQuote: function() {
-    var postStream = this.get('topic.postStream'),
-        postId = this.get('post.id');
-
-    if (!postId && postStream) {
-      postId = postStream.get('firstPostId');
-    }
-
-    // If we're editing a post, fetch the reply when importing a quote
-    if (this.get('editingPost')) {
-      var replyToPostNumber = this.get('post.reply_to_post_number');
-      if (replyToPostNumber) {
-        var replyPost = postStream.get('posts').findBy('post_number', replyToPostNumber);
-        if (replyPost) {
-          postId = replyPost.get('id');
-        }
-      }
-    }
-
-    // If there is no current post, use the post id from the stream
-    if (postId) {
-      this.set('loading', true);
-      var composer = this;
-      return Discourse.Post.load(postId).then(function(post) {
-        composer.appendText(Discourse.Quote.build(post, post.get('raw')));
-        composer.set('loading', false);
-      });
-    }
-  },
-
   /*
      Open a composer
 
@@ -467,14 +437,19 @@ Discourse.Composer = Discourse.Model.extend({
   editPost: function(opts) {
     var post = this.get('post'),
         oldCooked = post.get('cooked'),
-        composer = this;
+        self = this,
+        promise;
 
-    // Update the title if we've changed it
-    if (this.get('title') && post.get('post_number') === 1) {
+    // Update the title if we've changed it, otherwise consider it a
+    // successful resolved promise
+    if (this.get('title') &&
+        post.get('post_number') === 1 &&
+        this.get('topic.details.can_edit')) {
 
       var topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
-
-      Discourse.Topic.update(this.get('topic'), topicProps);
+      promise = Discourse.Topic.update(this.get('topic'), topicProps);
+    } else {
+      promise = Ember.RSVP.resolve();
     }
 
     post.setProperties({
@@ -485,19 +460,19 @@ Discourse.Composer = Discourse.Model.extend({
     });
     this.set('composeState', CLOSED);
 
-    return new Ember.RSVP.Promise(function(resolve, reject) {
-      post.save(function(result) {
+    return promise.then(function() {
+      return post.save(function(result) {
         post.updateFromPost(result);
-        composer.clearState();
-      }, function(error) {
+        self.clearState();
+      }).catch(function(error) {
         var response = $.parseJSON(error.responseText);
         if (response && response.errors) {
-          reject(response.errors[0]);
+          return(response.errors[0]);
         } else {
-          reject(I18n.t('generic_error'));
+          return(I18n.t('generic_error'));
         }
         post.set('cooked', oldCooked);
-        composer.set('composeState', OPEN);
+        self.set('composeState', OPEN);
       });
     });
   },
@@ -530,9 +505,11 @@ Discourse.Composer = Discourse.Model.extend({
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
+      name: currentUser.get('name'),
       display_username: currentUser.get('name'),
       username: currentUser.get('username'),
       user_id: currentUser.get('id'),
+      user_title: currentUser.get('title'),
       uploaded_avatar_id: currentUser.get('uploaded_avatar_id'),
       user_custom_fields: currentUser.get('custom_fields'),
       post_type: Discourse.Site.currentProp('post_types.regular'),

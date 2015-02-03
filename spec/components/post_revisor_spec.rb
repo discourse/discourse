@@ -7,6 +7,56 @@ describe PostRevisor do
   let(:newuser) { Fabricate(:newuser) }
   let(:post_args) { {user: newuser, topic: topic} }
 
+  context 'TopicChanges' do
+    let(:topic) { Fabricate(:topic) }
+    let(:tc) {
+      topic.reload
+      PostRevisor::TopicChanges.new(topic, topic.user)
+    }
+
+    it 'provides a guardian' do
+      tc.guardian.should be_an_instance_of Guardian
+    end
+
+    it 'tracks changes properly' do
+      tc.diff.should == {}
+
+      # it remembers changes we tell it to
+      tc.record_change('height', '180cm', '170cm')
+      tc.diff['height'].should == ['180cm', '170cm']
+
+      # it works with arrays of values
+      tc.record_change('colors', nil, ['red', 'blue'])
+      tc.diff['colors'].should == [nil, ['red', 'blue']]
+
+      # it does not record changes to the same val
+      tc.record_change('wat', 'js', 'js')
+      tc.diff['wat'].should be_nil
+
+      tc.record_change('tags', ['a', 'b'], ['a', 'b'])
+      tc.diff['tags'].should be_nil
+
+    end
+  end
+
+  context 'revise wiki' do
+
+    before do
+      # There used to be a bug where wiki changes were considered posting "too similar"
+      # so this is enabled and checked
+      $redis.delete_prefixed('unique-post')
+      SiteSetting.unique_posts_mins = 10
+    end
+
+    it 'allows the user to change it to a wiki' do
+      pc = PostCreator.new(newuser, topic_id: topic.id, raw: 'this is a post that will become a wiki')
+      post = pc.create
+      post.revise(post.user, wiki: true).should == true
+      post.reload
+      post.wiki.should be_true
+    end
+  end
+
   context 'revise' do
     let(:post) { Fabricate(:post, post_args) }
     let(:first_version_at) { post.last_version_at }

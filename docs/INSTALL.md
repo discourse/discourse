@@ -1,12 +1,12 @@
 # How Do I Install Discourse?
 
 Simple 30 minute basic install:
-[**Beginner Docker install guide for Digital Ocean**][do]
+[**Beginner Docker install guide**][basic]
 
 Powerful, flexible, large or multiple server install:
-[**Advanced Docker install guide**][docker]
+[**Advanced Docker install guide**][advanced]
 
-The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation. (Alternately, you can try the [unofficial Heroku install guide][heroku], the [unofficial Ubuntu install guide][ubuntu], the [BitNami Discourse Virtual Machine package][bitnami] or [Cloud66][cloud66].)
+The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation.
 
 ### Why do you only officially support Docker?
 
@@ -24,16 +24,10 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 - [Redis 2.6+](http://redis.io/download)
 - [Ruby 2.0+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
 
-
-
 ## Security
 
 We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
 
-[do]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
-[docker]: https://github.com/discourse/discourse_docker
-[bitnami]: http://bitnami.com/stack/discourse
-[cloud66]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud66.md
-[heroku]: https://github.com/discourse/discourse/blob/master/docs/install-HEROKU.md
-[ubuntu]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md
+[basic]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
+[advanced]: https://github.com/discourse/discourse_docker
 [swap]: https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880

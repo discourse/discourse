@@ -1,0 +1,6 @@
+{{#if topic.category.parentCategory}}
+  {{bound-category-link topic.category.parentCategory}}
+{{/if}}
+{{bound-category-link topic.category hideParent=true}}
+
+{{plugin-outlet "topic-category"}}

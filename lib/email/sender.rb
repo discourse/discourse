@@ -49,6 +49,13 @@ module Email
 
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/\[\/?email-indent\]/, '')
 
+      # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
+      # These are the links we add when a user uploads a file or image.
+      # Ideally we would parse general markdown into plain text, but that is almost an intractable problem.
+      url_prefix = Discourse.base_url
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<a class="attachment" href="(\/uploads\/default\/[^"]+)">([^<]*)<\/a>/, '[\2]('+url_prefix+'\1)')
+      @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![]('+url_prefix+'\1)')
+
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
       # Set up the email log
@@ -62,6 +69,10 @@ module Email
       topic_id = header_value('X-Discourse-Topic-Id')
       post_id = header_value('X-Discourse-Post-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
+
+      # always set a default Message ID from the host
+      uuid = SecureRandom.uuid
+      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
 
       if topic_id.present?
         email_log.topic_id = topic_id
@@ -106,9 +117,9 @@ module Email
       email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id'] = nil
-      @message.header['X-Discourse-Post-Id'] = nil
-      @message.header['X-Discourse-Reply-Key'] = nil
+      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id'] = nil if post_id.present?
+      @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails && @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length && @message.html_part.body =~ /<img[^>]+>/

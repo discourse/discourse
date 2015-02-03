@@ -127,13 +127,17 @@ class PostAction < ActiveRecord::Base
                         .where(post_id: post.id)
                         .where(post_action_type_id: PostActionType.flag_types.values)
 
+    trigger_spam = false
     actions.each do |action|
       action.agreed_at = Time.zone.now
       action.agreed_by_id = moderator.id
       # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :agreed, delete_post)
+      @trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
     end
+
+    DiscourseEvent.trigger(:confirmed_spam_post, post) if @trigger_spam
 
     update_flagged_posts_count
   end
@@ -405,7 +409,7 @@ class PostAction < ActiveRecord::Base
 
   def enforce_rules
     post = Post.with_deleted.where(id: post_id).first
-    PostAction.auto_close_if_treshold_reached(post.topic)
+    PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user) if post_action_type_key == :spam
   end
@@ -418,7 +422,7 @@ class PostAction < ActiveRecord::Base
 
   MAXIMUM_FLAGS_PER_POST = 3
 
-  def self.auto_close_if_treshold_reached(topic)
+  def self.auto_close_if_threshold_reached(topic)
     return if topic.closed?
 
     flags = PostAction.active

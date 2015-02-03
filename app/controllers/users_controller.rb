@@ -88,7 +88,8 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    result = user.change_username(params[:new_username])
+    # TODO proper error surfacing (result is a Model#save call)
+    result = user.change_username(params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
     render json: {
@@ -212,20 +213,19 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      if params[:user_fields].blank? && UserField.where(required: true).exists?
-        return fail_with("login.missing_user_field")
-      else
-        fields = user.custom_fields
-        user_fields.each do |f|
-          field_val = params[:user_fields][f.id.to_s]
-          if field_val.blank?
-            return fail_with("login.missing_user_field") if f.required?
-          else
-            fields["user_field_#{f.id}"] = field_val
-          end
+      field_params = params[:user_fields] || {}
+      fields = user.custom_fields
+
+      user_fields.each do |f|
+        field_val = field_params[f.id.to_s]
+        if field_val.blank?
+          return fail_with("login.missing_user_field") if f.required?
+        else
+          fields["user_field_#{f.id}"] = field_val
         end
-        user.custom_fields = fields
       end
+
+      user.custom_fields = fields
     end
 
     authentication = UserAuthenticator.new(user, session)
@@ -312,7 +312,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def logon_after_password_reset
@@ -363,18 +363,18 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('change_email.error')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def account_created
     @message = session['user_created_message']
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def activate_account
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def perform_account_activation
@@ -392,7 +392,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('activation.already_done')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def send_activation_email
@@ -439,6 +439,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     file = params[:file] || params[:files].first
+
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
     begin
       image = build_user_image_from(file)

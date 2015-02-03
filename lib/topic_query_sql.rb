@@ -6,7 +6,7 @@ module TopicQuerySQL
   class << self
 
     def lowest_date
-      "2010-01-01"
+      "1900-01-01"
     end
 
     def order_by_category_sql(dir)

@@ -254,7 +254,6 @@ nav.post-controls {
       opacity: 0;
     }
   }
-  &.bottom .arrow { float: right; }
   &.bottom {
     margin-top: -11px;
     .row {
@@ -273,7 +272,7 @@ nav.post-controls {
   }
 
   .post-date { color: scale-color($primary, $lightness: 50%); }
-  .fa-arrow-up { margin-left: 5px; }
+  .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
   .row {
     border-top: 1px solid darken(scale-color-diff(), 10%);
   }
@@ -473,9 +472,23 @@ a.star {
     }
   }
   table {
-    box-shadow: none;
-    border-radius: 0;
+    table-layout: fixed;
     margin-top: 10px;
+  }
+  .topics {
+    padding-bottom: 15px;
+  }
+  // this forces category to take less space in suggested topics
+  // as the poster list is not present at all there.
+  th.category {
+    width: 150px;
+  }
+}
+
+#suggested-topics .topic-statuses .topic-status {
+  padding: 0;
+  i {
+    font-size:15px;
   }
 }
 
@@ -514,10 +527,10 @@ video {
 .extra-info-wrapper {
   overflow: hidden;
 
-.star, .badge-wrapper, i,  .topic-link:not(.loading) {
-  -webkit-animation: fadein .7s;
-  animation: fadein .7s;
-}
+  .star, .badge-wrapper, i,  .topic-link:not(.loading) {
+    -webkit-animation: fadein .7s;
+    animation: fadein .7s;
+  }
 
   .topic-statuses {
     i  { color: $header_primary; }

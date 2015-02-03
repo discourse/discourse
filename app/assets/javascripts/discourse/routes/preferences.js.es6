@@ -45,15 +45,17 @@ export default RestrictedUserRoute.extend(ShowFooter, {
 
       // sends the information to the server if it has changed
       if (avatarSelector.get('selectedUploadId') !== user.get('uploaded_avatar_id')) {
-        user.pickAvatar(avatarSelector.get('selectedUploadId'));
+        user.pickAvatar(avatarSelector.get('selectedUploadId'))
+          .then(function(){
+            user.setProperties(avatarSelector.getProperties(
+              'system_avatar_upload_id',
+              'gravatar_avatar_upload_id',
+              'custom_avatar_upload_id'
+            ));
+          });
       }
 
       // saves the data back
-      user.setProperties(avatarSelector.getProperties(
-        'system_avatar_upload_id',
-        'gravatar_avatar_upload_id',
-        'custom_avatar_upload_id'
-      ));
       avatarSelector.send('closeModal');
     },
 

@@ -1,5 +1,10 @@
+require_dependency 'rate_limiter'
+
 class Invite < ActiveRecord::Base
+  include RateLimiter::OnCreateRecord
   include Trashable
+
+  rate_limit :limit_invites_per_day
 
   belongs_to :user
   belongs_to :topic
@@ -182,6 +187,10 @@ class Invite < ActiveRecord::Base
   def resend_invite
     self.update_columns(created_at: Time.zone.now, updated_at: Time.zone.now)
     Jobs.enqueue(:invite_email, invite_id: self.id)
+  end
+
+  def limit_invites_per_day
+    RateLimiter.new(invited_by, "invites-per-day:#{Date.today}", SiteSetting.max_invites_per_day, 1.day.to_i)
   end
 
   def self.base_directory

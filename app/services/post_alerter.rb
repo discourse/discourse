@@ -118,7 +118,13 @@ class PostAlerter
     if collapsed
       post = first_unread_post(user,post.topic) || post
       count = unread_count(user, post.topic)
-      opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      I18n.with_locale(if SiteSetting.allow_user_locale && user.locale.present?
+                         user.locale
+                       else
+                         SiteSetting.default_locale
+                       end) do
+        opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      end
     end
 
     UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])

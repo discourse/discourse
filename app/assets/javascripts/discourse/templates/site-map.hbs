@@ -46,7 +46,7 @@
 
       {{#each c in categories itemController='site-map-category'}}
         <li class="category">
-          {{category-link c allowUncategorized="true" showParent="true"}}
+          {{category-link c allowUncategorized="true"}}
 
           {{#if c.unreadTotal}}
             <a href={{unbound c.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
