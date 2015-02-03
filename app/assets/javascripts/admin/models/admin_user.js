@@ -98,7 +98,21 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('admin', true);
     this.set('can_grant_admin', false);
     this.set('can_revoke_admin', true);
-    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_admin", {type: 'PUT'});
+    var self = this;
+
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_admin", {type: 'PUT'})
+      .then(null, function(e) {
+        self.set('admin', false);
+        self.set('can_grant_admin', true);
+        self.set('can_revoke_admin', false);
+
+        var error;
+        if (e.responseJSON && e.responseJSON.error) {
+          error = e.responseJSON.error;
+        }
+        error = error || I18n.t('admin.user.grant_admin_failed', { error: "http: " + e.status + " - " + e.body });
+        bootbox.alert(error);
+      });
   },
 
   // Revoke the user's moderation access
@@ -113,7 +127,20 @@ Discourse.AdminUser = Discourse.User.extend({
     this.set('moderator', true);
     this.set('can_grant_moderation', false);
     this.set('can_revoke_moderation', true);
-    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_moderation", {type: 'PUT'});
+    var self = this;
+    Discourse.ajax("/admin/users/" + (this.get('id')) + "/grant_moderation", {type: 'PUT'})
+      .then(null, function(e) {
+        self.set('moderator', false);
+        self.set('can_grant_moderation', true);
+        self.set('can_revoke_moderation', false);
+
+        var error;
+        if (e.responseJSON && e.responseJSON.error) {
+          error = e.responseJSON.error;
+        }
+        error = error || I18n.t('admin.user.grant_moderation_failed', { error: "http: " + e.status + " - " + e.body });
+        bootbox.alert(error);
+       });
   },
 
   refreshBrowsers: function() {
