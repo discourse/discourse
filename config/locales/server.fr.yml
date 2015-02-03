@@ -20,11 +20,6 @@ fr:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "D MMMM YYYY H:mm"
-  time:
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Sujets"
   posts: "messages"
@@ -107,6 +102,7 @@ fr:
     latest: "Sujets récents"
     hot: "Sujets populaires"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
+  excerpt_image: "image"
   groups:
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
@@ -593,7 +589,7 @@ fr:
     educate_until_posts: "Lors de la rédaction des (n) premiers nouveaux sujets de l'utilisateur, afficher le panneau d'aide à la saisie."
     title: "Le nom du site, utilisé dans la balise title."
     site_description: "Décrivez ce site en une seule phrase, utilisée dans le tag meta description."
-    contact_email: "Adresse de courriel du contact clef pour ce site. Ne sera utilisée que pour des notifications critiques, et aussi sur la formulaire de contact sur la page 'a propos'."
+    contact_email: "Adresse de courriel du contact clef pour ce site. Utilisée que pour des notifications critiques tel que des signalements en suspens, et aussi sur la formulaire de contact sur la page 'a propos'."
     queue_jobs: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Par défaut, empiler les travaux dans sidekiq. Si désactivé, votre site sera cassé."
     crawl_images: "Récupère les images provenant de sources tierces pour y insérer les dimensions corrects (hauteur et largeur)"
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant; cela permet d'éviter les liens morts."
@@ -656,7 +652,7 @@ fr:
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
-    top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|starred|categories|top|read|posted"
+    top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
     share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
@@ -679,6 +675,7 @@ fr:
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourrons pas s'enregistrer."
     forgot_password_strict: "Ne pas tenir informé de l'existance d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
+    log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
     new_version_emails: "Envoyer un courriel à contact_email quand une nouvelle version de Discourse est disponible."
     port: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Utiliser ce port HTTP plutôt que celui par défaut 80. Laissez vide par défaut 80."
@@ -694,7 +691,7 @@ fr:
     enable_sso: "Activer l'authentication unique via un site externe (AVERTISSEMENT : si activé, peut empêcher toute connexion en cas de mauvaise configuration ; désactive aussi les invitations)"
     enable_sso_provider: "Implémenter le procotole Discourse SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique"
-    sso_secret: "Chaîne de caractères secrète utilisée pour crypter/décrypter les informations SSO, assurez-vous qu'elle est de 10 caractères ou plus"
+    sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_email: "Surcharger les adresses de courriel locales avec les adresses de courriel  externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les adresses de courriel)"
     sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
     sso_overrides_name: "Surcharger les noms locaux avec les noms externes du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les noms)"
@@ -731,9 +728,9 @@ fr:
     max_flags_per_day: "Nombre maximum de signalement par utilisateur chaque jour."
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
-    max_stars_per_day: "Nombre maximum de favoris par utilisateur chaque jour."
     max_topics_per_day: "Nombre maximum de sujet qu'utilisateur peut créer par jour."
     max_private_messages_per_day: "Nombre maximum de message privé qu'utilisateur peut créer par jour."
+    max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
     clean_up_uploads: "Retirer les fichiers téléchargés orphelins pour prévenir les hébergements illégaux. ATTENTION: vous devriez faire une sauvegarde de votre répertoire /uploads avant d'activer ce paramètre."
@@ -849,6 +846,8 @@ fr:
     digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
     digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
     default_digest_email_frequency: "A quelle fréquence les utilisateurs reçoivent-ils les courriels par défaut. Ils peuvent modifier ce paramétrage dans leur préférences."
+    suppress_digest_email_after_days: "Ne pas envoyer de résumés courriel aux utilisateurs qui n'ont pas visité le site depuis (n) jours."
+    disable_digest_emails: "Désactiver les résumés par courriels pour tous les utilisateurs."
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
     detect_custom_avatars: "Vérifier ou pas que les utilisateurs ont envoyés des avatars personnalisés."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
@@ -1056,15 +1055,15 @@ fr:
 
       - Sachez comment consulter le format brut d'un courriel dans votre client de courriel, pour vous permettre de consulter les entêtes pour obtenirs des indices importants. Dans Gmail, c'est l'option "show original" dans le menu contextuel situé en haut à droite  de chaque courriel.
 
-      - **IMPORTANT:** Votre fournisseur internet a-t-il renseigné un enregistrement de DNS inversé pour associer le nom de domaine et l'addresse IP utilisée pour envoyer vos courriels ? [Testez l'enregistrement inversé de DNS de type PTR][2] ici. Si votre fournisseur d'accès internet n'a pas renseigné de manière correcte l'enregistrement de DNS inversé, il est très peu probable que vos courriels soient réceptionnés.
+      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
 
       - l'enregistrement [SPF record][8] de votre nom de domaine est-il correcte ? [Testez votre enregistrement SPF][1] ici Veuillez noter que le type officiel d'enregistrment est TXT pour l'enregistrement SPF.
 
       - l'enregistrement [DKIM record][3] de votre nom de domaine est-il correcte ? Ce point particulier augmentera de manière significative la bonne distribution de vos courriels. [Testez votre enregistrement DKIM][7] ici.
 
-      - Si vous utisez votre propre serveur de courriels, vérifiez pour être certain que les adresses IP de votre serveur de courriel ne sont dans  [aucune listes noires][4]. Vérifiez également que le courriel est envoyé en utilisant des noms de machines complets qui se traduisent en DNS dans les messages de type HELO. Si ce n'est pas le cas, votre courriel sera rejeté par les services de messageries.
+      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
 
-      (La manière la plus *facile* est de créer un compte gratuit sur [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], qui ont des options gratuites généreuses et qui seront parfaite pour de petites communautés. Vous devrez quand même configurer les entrées SPF et DKIM dans votre DNS!)
+      (La mannière la plus *facile* est de créer un compte gratuit sur [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], qui ont des options gratuites généreuses et qui seront parfaite pour de petites communautés. Vous devrez quand même configurer les entrées SPF et DKIM dans votre DNS!)
 
       Nous espérons que vous avez bien reçu ce courriel de test de distribution !
 
@@ -1077,16 +1076,11 @@ fr:
       [2]: http://mxtoolbox.com/ReverseLookup.aspx
       [3]: http://www.dkim.org/
       [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
       [7]: http://dkimcore.org/tools/dkimrecordcheck.html
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>Il doit y avoir un pied de page pour le désabonnement sur chaque courriel que vous envoyez, en voici un exemple. Ce courriel a été envoyé par Name of Company, 55 Main Street, Anytown, USA 12345. Si vous ne souhaitez plus recevoir de nouveaux courriels, [cliquez ici pour le désabonnement][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
     text_body_template: |
@@ -1179,7 +1173,7 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons automatiquement généré un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter, vous pouvez :\n\n1. Utiliser n'importe quel des méthodes proposés sur l'écran d'accueil. **Utilisez toujours la même adresse de courriel que celle de l'invitation que vous avez reçue**. Sinon, nous ne pourrons pas vous reconnaître !\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nSi en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé.\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
+      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé).\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
@@ -1224,7 +1218,7 @@ fr:
       text_body_template: |
         L'exportation de vos données a réussi!  :dvd:
 
-        <a class="attachment" href="%{download_link}">%{file_name}</a>
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
         Le lien de téléchargement ci-dessus expire après 48h.
     csv_export_failed:
@@ -1510,9 +1504,9 @@ fr:
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
     attachments:
-      too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}% ko)."
+      too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}Ko)."
     images:
-      too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}% ko), merci de la redimensionner et de réessayer."
+      too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
       fetch_failure: "Désolé, il y a eu une erreur lors de la récupération de l'image."
       unknown_image_type: "Désolé, mais le fichier que vous avez essayé d'envoyer ne semble pas être une image."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
@@ -1631,6 +1625,8 @@ fr:
       ## [Postez seulement vos propres trucs](#stealing)
 
       Vous ne pouvez pas poster n'importe quel contenu numérique s'il appartient à quelqu'un d'autre sans son autorisation. Vous ne pouvez pas poster des descriptions, des liens ou des méthodes pour voler la propriété intellectuelle de quelqu'un (logiciels, vidéo, audio, images), ou pour transgresser toute autre loi.
+
+      <a name="power"></a>
 
       ## [Powered by You](#power)
 

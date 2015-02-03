@@ -20,11 +20,6 @@ sq:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
@@ -644,7 +639,6 @@ sq:
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "Allowed origins for cross-origin requests (CORS). Each origin must include http:// or https://. The DISCOURSE_ENABLE_CORS env variable must be set to true to enable CORS."
-    top_menu: "Determine which items appear in the homepage navigation, and in what order. Example latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
@@ -679,7 +673,6 @@ sq:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
     sso_url: "URL of single sign on endpoint"
-    sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
     sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
@@ -1007,48 +1000,6 @@ sq:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
-    text_body_template: |
-      This is a test email from
-
-      [**%{base_url}**][0]
-
-      Email deliverability is complicated. Here are a few important things you should check first:
-
-      - Be *sure* to set the `notification email` from: address correctly in your site settings. **The domain specified in the "from" address of the emails you send is the domain your email will be validated against**.
-
-      - Know how to view the raw source of the email in your mail client, so you can examine email headers for important clues. in Gmail, it is the "show original" option in the drop-down menu at the top right of each mail.
-
-      - **IMPORTANT:** Does your ISP have a reverse DNS record entered to associate the domain names and IP addresses you send mail from? [Test your Reverse PTR record][2] here. If your ISP does not enter the proper reverse DNS pointer record, it's very unlikely any of your email will be delivered.
-
-      - Is your domain's [SPF record][8] correct? [Test your SPF record][1] here. Note that TXT is the correct official record type for SPF.
-
-      - Is your domain's [DKIM record][3] correct? This will significantly improve email deliverability. [Test your DKIM record][7] here.
-
-      - If you run your own mail server, check to make sure the IPs of your mail server are [not on any email blacklists][4]. Also verify that it is definitely sending a fully-qualified hostname that resolves in DNS in its HELO message. If not, this will cause your email to be rejected by many mail services.
-
-      (The *easy* way is to create a free account on [Mandrill][md] or [Mailgun][mg] or [Mailjet][mj], which have free generous free mailing plans and will be fine for small communities. You'll still need to set up the SPF and DKIM records in your DNS, though!)
-
-      We hope you received this email deliverability test OK!
-
-      Good luck,
-
-      Your friends at [Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [5]: %{base_url}/unsubscribe
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
-
-      ----
-
-      <small>There should be an unsubscribe footer on every email you send, so let's mock one up. This email was sent by Name of Company, 55 Main Street, Anytown, USA 12345. If you would like to opt out of future emails, [click here to unsubscribe][5].</small>
   new_version_mailer:
     subject_template: "[%{site_name}] verion i ri i Discourse, përditësoje!"
     text_body_template: |
@@ -1495,10 +1446,7 @@ sq:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
-    attachments:
-      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:
-      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"

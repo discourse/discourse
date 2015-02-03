@@ -20,11 +20,6 @@ de:
     short_date_no_year: "DD. MMM"
     short_date: "DD. MMM YYYY"
     long_date: "DD. MMMM YYYY, H:mm"
-  time:
-    formats:
-      short: "%d. %m. %Y"
-      short_no_year: "%-d. %B"
-      date_only: "%-d. %b %Y"
   title: "Discourse"
   topics: "Themen"
   posts: "Beiträge"
@@ -520,6 +515,7 @@ de:
     s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens einer der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key or s3_backup_bucket ist nicht festgelegt. Gehe Sie zu <a href="/admin/site_settings">den Seiteneinstellungen</a> und aktualisieren Sie die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe "Wie konfiguriere ich das Hochladen von Bildern zu S3?" um mehr darüber zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: 'Es konnten insgesamt %{num_failed_jobs} Mails nicht versendet werden. Bitte überprüfe die Mailserver-Einstellungen in config/discourse.conf. Siehe auch: <a href="/sidekiq/retries" target="_blank">Fehlgeschlagene Jobs in Sidekiq</a>.'
+    default_logo_warning: "Richte das Logo für deine Seite ein. Konfiguriere dafür logo_url, logo_small_url, und favicon_url unter <a href='/admin/site_settings'>Website-Einstellungen</a>."
     title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
@@ -630,7 +626,6 @@ de:
     enable_noscript_support: "Aktiviere standard Suchmaschinen-Webcrawler Unterstützung durch den noscript Tag"
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
-    top_menu: "Bestimme, welche Navigationselemente in welcher Reihenfolge auftauchen. Beispiel: latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Bestimme, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
@@ -666,7 +661,6 @@ de:
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso_provider: "Aktiviere das Discourse SSO Protokoll unter /session/sso_provider - dazu muss sso_secret gesetzt sein."
     sso_url: "URL des Single Sign On Endpunkts"
-    sso_secret: "Geheime Zeichenkette, die für die Ver-/Entschlüsselung von SSO-Informationen verwendet wird. Stell sicher, dass er 10 Zeichen oder länger ist."
     sso_overrides_email: "Überschreibt lokale mit externer E-Mail-Adresse aus den SSO Daten (WARNUNG: es können dennoch Unterschiede auf Grund von Normalisierung lokaler E-Mail-Adressen auftreten)"
     sso_overrides_username: "Überschreibt lokale Benutzernamen mit externen Seiten-Usernamen von SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Unterschieden in Benutzernamenlängen/-anforderungen, auftreten)"
     sso_overrides_name: "Überschreibt lokalen Namen mit Namen der externen Seite aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Namen auftreten)"
@@ -703,7 +697,6 @@ de:
     max_flags_per_day: "Maximale Anzahl der Meldungen pro Nutzer pro Tag."
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Nutzer pro Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Nutzer pro Tag."
-    max_stars_per_day: "Maximale Anzahl der Themen, die ein User pro Tag favorisieren kann."
     max_topics_per_day: "Maximale Anzahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
@@ -825,6 +818,8 @@ de:
     enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     vacuum_db_days: "Führe VACUUM FULL ANALYZE aus, um nach Migrationen Speicher in der Datenbank zurückzugewinnen (zum Deaktivieren auf 0 setzen)"
+    enable_emoji: "Aktiviere emoji"
+    emoji_set: "Wie magst du dein emoji?"
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Nutzernamen."
@@ -856,6 +851,11 @@ de:
       category: 'Kategorien'
       topic: 'Ergebnisse'
       user: 'Benutzer'
+  sso:
+    not_found: "Account kann nicht gefunden oder erstellt werden, kontaktiere den Administrator."
+    account_not_approved: "Der Account wartet auf seine Überprüfung. Du bekommst eine E-Mail Benachrichtigung wenn er überprüft wurde."
+    unknown_error: "Die Informationen konnten nicht aktualisiert werden, kontaktiere den Administrator."
+    timeout_expired: "Zeitüberschreitung beim Login. Bitte versuche dich erneut einzuloggen."
   original_poster: "Autor des ersten Beitrags"
   most_posts: "Autor der meisten Beiträge"
   most_recent_poster: "Autor des jüngsten Beitrags"
@@ -872,6 +872,10 @@ de:
       other: "Ich hab %{count} Beiträge in ein vorhandenes Thema verschoben: %{topic_link}"
   change_owner:
     post_revision_text: "Eigentümer geändert von %{old_user} zu %{new_user}"
+  emoji:
+    errors:
+      name_already_exists: "Es tut uns leid, der Name '%{name}' wird schon von einem anderen emoji verwendet."
+      error_while_storing_emoji: "Es tut uns leid, es gab einen Fehler beim Speichern des emoji."
   topic_statuses:
     archived_enabled: "Dieses Thema ist nun archiviert. Es ist eingefroren und kann in keiner Weise mehr verändert werden."
     archived_disabled: "Dieses Thema wurde aus dem Archiv geholt. Es ist nicht länger eingefroren und kann verändert werden."
@@ -920,6 +924,7 @@ de:
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
     missing_user_field: "Sie haben nicht alle Benutzerfelder ausgefüllt"
+    close_window: "Authentifizierung abgeschlossen. Schließe das Fenster um fortzufahren."
   user:
     no_accounts_associated: "Es sind keine Konten zugeordnet"
     username:
@@ -1320,10 +1325,7 @@ de:
     unauthorized: "Entschuldigung, die Datei die Du hochladen möchtest ist nicht erlaubt (erlaubte Dateiendungen sind: %{authorized_extensions})."
     pasted_image_filename: "Hinzugefügtes Bild"
     store_failure: "Hochladen von #%{upload_id} für Benutzer #%{user_id} ist fehlgeschlagen."
-    attachments:
-      too_large: "Entschuldigung, die Datei die Du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}%KB)."
     images:
-      too_large: "Entschuldigung, das Bild das Du hochladen möchtest ist zu groß (maximale Dateigröße ist %{max_size_kb}%KB). Bitte verkleinere es und versuche es erneut."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Entschuldigung, aber die Datei die Du hochladen möchtest scheint kein Bild zu sein."
       size_not_found: "Entschuldige, aber wir konnten die Grösse des Bildes nicht feststellen. Vielleicht ist das Bild defekt?"

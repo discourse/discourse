@@ -17,11 +17,6 @@ nl:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
     long_date: "D MMMM YYYY H:mm"
-  time:
-    formats:
-      short: "%d-%m-%Y"
-      short_no_year: "%-d %B"
-      date_only: "%-d %b %Y"
   title: "Discourse"
   topics: "Topics"
   posts: "berichten"
@@ -562,7 +557,6 @@ nl:
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domeinnaam, bijv. mijnsite.nl; zie http://google.com/analytics"
     enable_noscript_support: "Ondersteun &lt;noscript&gt; tag"
     allow_moderators_to_create_categories: "Moderators mogen nieuwe categorieën maken"
-    top_menu: "De volgorde en selectie van items in het hoofdmenu. Bijvoorbeeld latest|new|unread|starred|categories|top|read|posted"
     post_menu: "De volgorde en selectie van items in het berichtmenu. Bijvoorbeeld like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Houd bij welke externe links met de rechtermuisknop worden aangeklikt (bijv: open in nieuwe tab). Dit staat standaard uit, gezien het de URLs moet herschrijven, waardoor het gebruiksgemak afneemt"
     topics_per_period_in_top_summary: "Aantal topics in het top-topics overzicht"
@@ -574,7 +568,6 @@ nl:
     invite_expiry_days: "Hoe lang uitnodigingscodes geldig blijven (in dagen)."
     min_password_length: "Minimum lengte wachtwoord."
     sso_url: "URL van single sign on eindpunt"
-    sso_secret: "Geheime tekenreeks voor het encrypten/decrypten van SSO informatie, zorg er voor dat het 10 tekens of langer is"
     sso_overrides_email: "Gebruikt het mailadres van de SSO service i.p.v. het lokaal opgegegeven adres. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
     sso_overrides_username: "Gebruikt de gebruikersnaam van de SSO service i.p.v. de lokaal gekozen gebruikersnaam. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in eisen aan bijv. de lengte van de gebruikersnaam)"
     sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
@@ -947,10 +940,7 @@ nl:
     unauthorized: "Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions})."
     pasted_image_filename: "Geplakte afbeelding"
     store_failure: "Het opslaan van upload #%{upload_id} voor gebruiker #%{user_id} is mislukt."
-    attachments:
-      too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is %{max_size_kb}%kb)."
     images:
-      too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%kb). Verklein de afbeelding en probeer het opnieuw."
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
