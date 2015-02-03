@@ -63,8 +63,6 @@
     }
     .category a {
       max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
