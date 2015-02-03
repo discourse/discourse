@@ -339,4 +339,71 @@ describe SiteSettingExtension do
     end
   end
 
+  describe "hidden" do
+    before do
+      settings.setting(:superman_identity, 'Clark Kent', hidden: true)
+      settings.refresh!
+    end
+
+    it "is in the `hidden_settings` collection" do
+      settings.hidden_settings.include?(:superman_identity).should == true
+    end
+
+    it "can be retrieved" do
+      settings.superman_identity.should == "Clark Kent"
+    end
+
+    it "is not present in all_settings by default" do
+      settings.all_settings.find {|s| s[:setting] == :superman_identity }.should be_blank
+    end
+
+    it "is present in all_settings when we ask for hidden" do
+      settings.all_settings(true).find {|s| s[:setting] == :superman_identity }.should be_present
+    end
+  end
+
+  describe "shadowed_by_global" do
+    context "without global setting" do
+      before do
+        settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should not add the key to the shadowed_settings collection" do
+        settings.shadowed_settings.include?(:trout_api_key).should == false
+      end
+
+      it "can return the default value" do
+        settings.trout_api_key.should == 'evil'
+      end
+
+      it "can overwrite the default" do
+        settings.trout_api_key = 'tophat'
+        settings.refresh!
+        settings.trout_api_key.should == 'tophat'
+      end
+    end
+
+    context "with global setting" do
+      before do
+        GlobalSetting.stubs(:trout_api_key).returns('purringcat')
+        settings.setting(:trout_api_key, 'evil', shadowed_by_global: true)
+        settings.refresh!
+      end
+
+      it "should return the global setting instead of default" do
+        settings.trout_api_key.should == 'purringcat'
+      end
+
+      it "should return the global setting after a refresh" do
+        settings.refresh!
+        settings.trout_api_key.should == 'purringcat'
+      end
+
+      it "should add the key to the shadowed_settings collection" do
+        settings.shadowed_settings.include?(:trout_api_key).should == true
+      end
+    end
+  end
+
 end
