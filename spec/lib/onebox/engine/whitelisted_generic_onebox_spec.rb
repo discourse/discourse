@@ -65,6 +65,19 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
     end
   end
 
+  describe 'oembed_providers' do
+    before do
+      fake("http://api.meetup.com/oembed?url=http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537",
+           response('meetup'))
+    end
+
+    it 'uses the endpoint for the url' do
+      onebox = described_class.new("http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537")
+      onebox.raw.should_not be_nil
+      onebox.raw[:title].should == "February EmberTO Meet-up"
+    end
+  end
+
   describe 'to_html' do
 
     before do

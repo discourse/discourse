@@ -128,7 +128,7 @@ module Onebox
       # include the entire page HTML. However for some providers like Imgur it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        ['Imgur']
+        ['Imgur', 'Meetup']
       end
 
       def self.html_providers
@@ -284,10 +284,7 @@ module Onebox
               attr = append_attribute(:width, attr, video)
               attr = append_attribute(:height, attr, video)
 
-              # html_v1 = %Q(<video #{attr} title="#{data[:title]}" controls="" ><source src="#{video_url}"></video>)
-
               site_name_and_title  =  ( ("<span style='color:#fff;background:#9B9B9B;border-radius:3px;padding:3px;margin-right: 5px;'>" + CGI::escapeHTML(@raw.metadata[:site_name][0].to_s) + '</span> ') + CGI::escapeHTML((@raw.title || @raw.description).to_s) )
-
               orig_url = @raw.url
               html_v2 = %Q(
                 <div style='position:relative;padding-top:29px;'>
