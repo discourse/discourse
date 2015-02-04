@@ -3,13 +3,13 @@ class DiskSpace
   extend ActionView::Helpers::NumberHelper
 
   def self.uploads_used_bytes
-    used(uploads_path)
+    # used(uploads_path)
+    # temporary (on our internal setup its just too slow to iterate)
+    Upload.sum(:filesize).to_i
   end
 
   def self.uploads_free_bytes
-    # temporary (on our internal setup its just too slow)
-    Upload.sum(:filesize).to_i
-    # free(uploads_path)
+    free(uploads_path)
   end
 
   def self.backups_used_bytes
