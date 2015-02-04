@@ -2155,6 +2155,7 @@ en:
           uncategorized: 'Other'
           backups: "Backups"
           login: "Login"
+          plugins: "Plugins"
 
       badges:
         title: Badges
