@@ -39,15 +39,35 @@ class Plugin::Instance
     end
   end
 
-  def name
-    metadata.name
+  def enabled?
+    return @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
   end
+
+  delegate :name, to: :metadata
 
   def add_to_serializer(serializer, attr, &block)
     klass = "#{serializer.to_s.classify}Serializer".constantize
-
     klass.attributes(attr)
     klass.send(:define_method, attr, &block)
+
+    # Don't include serialized methods if the plugin is disabled
+    plugin = self
+    klass.send(:define_method, "include_#{attr}?") do
+      plugin.enabled?
+    end
+  end
+
+  # Extend a class but check that the plugin is enabled
+  def add_to_class(klass, attr, &block)
+    klass = klass.to_s.classify.constantize
+
+    hidden_method_name = "#{attr}_without_enable_check".to_sym
+    klass.send(:define_method, hidden_method_name, &block)
+
+    plugin = self
+    klass.send(:define_method, attr) do |*args|
+      send(hidden_method_name, *args) if plugin.enabled?
+    end
   end
 
   # will make sure all the assets this plugin needs are registered
@@ -95,13 +115,20 @@ class Plugin::Instance
     initializers << block
   end
 
+  # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
+  def on(event_name, &block)
+    DiscourseEvent.on(event_name) do |*args|
+      block.call(*args) if enabled?
+    end
+  end
+
   def notify_after_initialize
     color_schemes.each do |c|
       ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
     end
 
     initializers.each do |callback|
-      callback.call
+      callback.call(self)
     end
   end
 
@@ -233,6 +260,10 @@ class Plugin::Instance
       puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
       exit(-1)
     end
+  end
+
+  def enabled_site_setting(setting)
+    @enabled_site_setting = setting
   end
 
   protected

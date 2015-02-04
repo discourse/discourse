@@ -39,18 +39,35 @@
        Nobody says hello :'(
      {{/plugin-outlet}}
    ```
+
+   ## Disabling
+
+   If a plugin returns a disabled status, the outlets will not be wired up for it.
+   The list of disabled plugins is returned via the `Site` singleton.
+
 **/
 
 var _connectorCache;
 
 function findOutlets(collection, callback) {
-  Ember.keys(collection).forEach(function(i) {
-    if (i.indexOf("/connectors/") !== -1) {
-      var segments = i.split("/"),
+
+  var disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
+
+  Ember.keys(collection).forEach(function(res) {
+    if (res.indexOf("/connectors/") !== -1) {
+      // Skip any disabled plugins
+      for (var i=0; i<disabledPlugins.length; i++) {
+        if (res.indexOf("/" + disabledPlugins[i] + "/") !== -1) {
+          return;
+        }
+      }
+
+      var segments = res.split("/"),
           outletName = segments[segments.length-2],
           uniqueName = segments[segments.length-1];
 
-      callback(outletName, i, uniqueName);
+
+      callback(outletName, res, uniqueName);
     }
   });
 }
@@ -59,18 +76,18 @@ function buildConnectorCache() {
   _connectorCache = {};
 
   var uniqueViews = {};
-  findOutlets(requirejs._eak_seen, function(outletName, idx, uniqueName) {
+  findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var viewClass = require(idx, null, null, true).default;
+    var viewClass = require(resource, null, null, true).default;
     uniqueViews[uniqueName] = viewClass;
     _connectorCache[outletName].pushObject(viewClass);
   });
 
-  findOutlets(Ember.TEMPLATES, function(outletName, idx, uniqueName) {
+  findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var mixin = {templateName: idx.replace('javascripts/', '')},
+    var mixin = {templateName: resource.replace('javascripts/', '')},
         viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
@@ -81,7 +98,6 @@ function buildConnectorCache() {
     }
     _connectorCache[outletName].pushObject(viewClass.extend(mixin));
   });
-
 }
 
 export default function(connectionName, options) {

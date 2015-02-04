@@ -84,6 +84,11 @@ module Discourse
     @plugins.each { |plugin| plugin.activate! }
   end
 
+  def self.disabled_plugin_names
+    return [] if @plugins.blank?
+    @plugins.select {|p| !p.enabled?}.map(&:name)
+  end
+
   def self.plugins
     @plugins
   end
