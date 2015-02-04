@@ -14,6 +14,10 @@ describe DiscoursePlugin do
   let(:registry) { mock }
   let(:plugin) { TestPlugin.new(registry) }
 
+  after do
+    DiscourseEvent.clear
+  end
+
   describe ".mixins" do
     it "finds its mixins" do
       expect(TestPlugin.mixins).to eq([TestPlugin::TestMixin])
