@@ -340,6 +340,8 @@ end
 #  cleared_pinned_at        :datetime
 #  id                       :integer          not null, primary key
 #  last_emailed_post_number :integer
+#  liked                    :boolean          default(FALSE)
+#  bookmarked               :boolean          default(FALSE)
 #
 # Indexes
 #
