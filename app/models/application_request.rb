@@ -84,3 +84,16 @@ class ApplicationRequest < ActiveRecord::Base
 
 end
 
+# == Schema Information
+#
+# Table name: application_requests
+#
+#  id       :integer          not null, primary key
+#  date     :date             not null
+#  req_type :integer          not null
+#  count    :integer          default(0), not null
+#
+# Indexes
+#
+#  index_application_requests_on_date_and_req_type  (date,req_type) UNIQUE
+#
