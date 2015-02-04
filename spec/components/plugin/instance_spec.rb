@@ -23,6 +23,60 @@ describe Plugin::Instance do
     end
   end
 
+  context "enabling/disabling" do
+
+    it "is enabled by default" do
+      expect(Plugin::Instance.new.enabled?).to eq(true)
+    end
+
+    context "with a plugin that extends things" do
+
+      class Trout; end
+      class TroutSerializer < ApplicationSerializer; end
+
+      class TroutPlugin < Plugin::Instance
+        attr_accessor :enabled
+        def enabled?; @enabled; end
+      end
+
+      before do
+        @plugin = TroutPlugin.new
+        @trout = Trout.new
+
+        # New method
+        @plugin.add_to_class(:trout, :status?) { "evil" }
+
+        # DiscourseEvent
+        @hello_count = 0
+        @plugin.on(:hello) { @hello_count += 1 }
+
+        # Serializer
+        @plugin.add_to_serializer(:trout, :scales) { 1024 }
+        @serializer = TroutSerializer.new(@trout)
+      end
+
+      it "checks enabled/disabled functionality for extensions" do
+
+        # with an enabled plugin
+        @plugin.enabled = true
+        expect(@trout.status?).to eq("evil")
+        DiscourseEvent.trigger(:hello)
+        expect(@hello_count).to eq(1)
+        expect(@serializer.scales).to eq(1024)
+        expect(@serializer.include_scales?).to eq(true)
+
+        # When a plugin is disabled
+        @plugin.enabled = false
+        expect(@trout.status?).to eq(nil)
+        DiscourseEvent.trigger(:hello)
+        expect(@hello_count).to eq(1)
+        expect(@serializer.scales).to eq(1024)
+        expect(@serializer.include_scales?).to eq(false)
+
+      end
+    end
+  end
+
   context "register asset" do
     it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
