@@ -55,6 +55,10 @@ describe Plugin::Instance do
         @serializer = TroutSerializer.new(@trout)
       end
 
+      after do
+        DiscourseEvent.clear
+      end
+
       it "checks enabled/disabled functionality for extensions" do
 
         # with an enabled plugin
