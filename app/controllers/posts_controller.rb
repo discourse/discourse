@@ -70,6 +70,8 @@ class PostsController < ApplicationController
       user = User.find(params[:user_id].to_i)
       request['u'] = user.username_lower if user
     end
+
+    guardian.ensure_can_see!(post)
     redirect_to post.url
   end
 
