@@ -5,8 +5,16 @@ require_dependency 'plugin/auth_provider'
 
 class Plugin::Instance
 
-  attr_reader :auth_providers, :assets, :styles, :color_schemes
   attr_accessor :path, :metadata
+
+  # Memoized array readers
+  [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+    class_eval %Q{
+      def #{att}
+        @#{att} ||= []
+      end
+    }
+  end
 
   def self.find_all(parent_path)
     [].tap { |plugins|
@@ -22,8 +30,6 @@ class Plugin::Instance
   def initialize(metadata=nil, path=nil)
     @metadata = metadata
     @path = path
-    @assets = []
-    @color_schemes = []
 
     if @path
       # Automatically include all ES6 JS and hbs files
@@ -86,8 +92,7 @@ class Plugin::Instance
   end
 
   def after_initialize(&block)
-    @after_initialize ||= []
-    @after_initialize << block
+    initializers << block
   end
 
   def notify_after_initialize
@@ -95,10 +100,8 @@ class Plugin::Instance
       ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
     end
 
-    if @after_initialize
-      @after_initialize.each do |callback|
-        callback.call
-      end
+    initializers.each do |callback|
+      callback.call
     end
   end
 
@@ -108,13 +111,11 @@ class Plugin::Instance
   end
 
   def register_css(style)
-    @styles ||= []
-    @styles << style
+    styles << style
   end
 
   def register_javascript(js)
-    @javascripts ||= []
-    @javascripts << js
+    javascripts << js
   end
 
   def register_custom_html(hash)
@@ -132,29 +133,24 @@ class Plugin::Instance
    end
 
   def automatic_assets
-    css = ""
-    js = ""
+    css = styles.join("\n")
+    js = javascripts.join("\n")
 
-    css = @styles.join("\n") if @styles
-    js = @javascripts.join("\n") if @javascripts
+    auth_providers.each do |auth|
+      overrides = ""
+      overrides = ", titleOverride: '#{auth.title}'" if auth.title
+      overrides << ", messageOverride: '#{auth.message}'" if auth.message
+      overrides << ", frameWidth: '#{auth.frame_width}'" if auth.frame_width
+      overrides << ", frameHeight: '#{auth.frame_height}'" if auth.frame_height
 
-    unless auth_providers.blank?
-      auth_providers.each do |auth|
-        overrides = ""
-        overrides = ", titleOverride: '#{auth.title}'" if auth.title
-        overrides << ", messageOverride: '#{auth.message}'" if auth.message
-        overrides << ", frameWidth: '#{auth.frame_width}'" if auth.frame_width
-        overrides << ", frameHeight: '#{auth.frame_height}'" if auth.frame_height
+      js << "Discourse.LoginMethod.register(Discourse.LoginMethod.create({name: '#{auth.name}'#{overrides}}));\n"
 
-        js << "Discourse.LoginMethod.register(Discourse.LoginMethod.create({name: '#{auth.name}'#{overrides}}));\n"
+      if auth.glyph
+        css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
+      end
 
-        if auth.glyph
-          css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
-        end
-
-        if auth.background_color
-          css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
-        end
+      if auth.background_color
+        css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
       end
     end
 
@@ -201,12 +197,11 @@ class Plugin::Instance
 
 
   def auth_provider(opts)
-    @auth_providers ||= []
     provider = Plugin::AuthProvider.new
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
-    @auth_providers << provider
+    auth_providers << provider
   end
 
 
