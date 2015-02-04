@@ -314,14 +314,16 @@ end
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  automatic   :boolean          default(FALSE), not null
-#  user_count  :integer          default(0), not null
-#  alias_level :integer          default(0)
-#  visible     :boolean          default(TRUE), not null
+#  id                                 :integer          not null, primary key
+#  name                               :string(255)      not null
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  automatic                          :boolean          default(FALSE), not null
+#  user_count                         :integer          default(0), not null
+#  alias_level                        :integer          default(0)
+#  visible                            :boolean          default(TRUE), not null
+#  automatic_membership_email_domains :text
+#  automatic_membership_retroactive   :boolean          default(FALSE)
 #
 # Indexes
 #
