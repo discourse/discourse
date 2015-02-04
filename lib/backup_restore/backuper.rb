@@ -283,11 +283,17 @@ module BackupRestore
 
     def clean_up
       log "Cleaning stuff up..."
+      remove_tar_leftovers
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       log "Finished!"
+    end
+
+    def remove_tar_leftovers
+      log "Removing '.tar' leftovers..."
+      `rm -f #{@archive_directory}/*.tar`
     end
 
     def remove_tmp_directory
