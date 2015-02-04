@@ -4,22 +4,27 @@ require_dependency 'site_settings/local_process_provider'
 
 describe SiteSettingExtension do
 
-  class FakeSettings
-    extend SiteSettingExtension
-    self.provider = SiteSettings::LocalProcessProvider.new
+
+  let :provider do
+    SiteSettings::LocalProcessProvider.new
   end
 
-  class FakeSettings2
-    extend SiteSettingExtension
-    self.provider = FakeSettings.provider
+  def new_settings(provider)
+    c = Class.new
+    c.class_eval do
+      extend SiteSettingExtension
+      self.provider = provider
+    end
+
+    c
   end
 
   let :settings do
-    FakeSettings
+    new_settings(provider)
   end
 
   let :settings2 do
-    FakeSettings2
+    new_settings(provider)
   end
 
   describe "refresh!" do
