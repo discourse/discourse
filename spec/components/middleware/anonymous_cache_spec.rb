@@ -3,12 +3,33 @@ require_dependency "middleware/anonymous_cache"
 
 describe Middleware::AnonymousCache::Helper do
 
-  def new_helper(env={})
-    Middleware::AnonymousCache::Helper.new({
+  def env(opts={})
+    {
       "HTTP_HOST" => "http://test.com",
       "REQUEST_URI" => "/path?bla=1",
-      "REQUEST_METHOD" => "GET"
-    }.merge(env))
+      "REQUEST_METHOD" => "GET",
+      "rack.input" => ""
+    }.merge(opts)
+  end
+
+  def new_helper(opts={})
+    Middleware::AnonymousCache::Helper.new(env(opts))
+  end
+
+  context "log_request" do
+    it "can log requests correctly" do
+      freeze_time Time.now
+
+      ApplicationRequest.clear_cache!
+
+      Middleware::AnonymousCache.log_request(env "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
+      Middleware::AnonymousCache.log_request(env)
+
+      ApplicationRequest.write_cache!
+
+      ApplicationRequest.crawler.first.count.should == 1
+      ApplicationRequest.anon.first.count.should == 1
+    end
   end
 
   context "cachable?" do

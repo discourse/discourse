@@ -60,8 +60,12 @@ module Middleware
         @env["REQUEST_METHOD"] == "GET"
       end
 
+      def has_auth_cookie?
+        CurrentUser.has_auth_cookie?(@env)
+      end
+
       def cacheable?
-        !!(!CurrentUser.has_auth_cookie?(@env) && get?)
+        !!(!has_auth_cookie? && get?)
       end
 
       def cached
@@ -110,8 +114,35 @@ module Middleware
       @app = app
     end
 
+    def self.log_request_on_site(env, helper=nil)
+      host = RailsMultisite::ConnectionManagement.host(env)
+      RailsMultisite::ConnectionManagement.with_hostname(host) do
+        log_request(env,helper)
+      end
+    end
+
+    def self.log_request(env,helper=nil)
+
+      helper ||= Helper.new(env)
+
+      type =
+        if helper.is_crawler?
+          :crawler
+        elsif helper.has_auth_cookie?
+          :logged_in
+        else
+          :anon
+        end
+
+      ApplicationRequest.increment!(type)
+    end
+
     def call(env)
       helper = Helper.new(env)
+
+      Scheduler::Defer.later "Track view" do
+        self.class.log_request_on_site(env,helper)
+      end
 
       if helper.cacheable?
         helper.cached or helper.cache(@app.call(env))
