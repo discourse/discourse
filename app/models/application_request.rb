@@ -82,6 +82,28 @@ class ApplicationRequest < ActiveRecord::Base
     "app_req_#{req_type}#{time.strftime('%Y%m%d')}"
   end
 
+  def self.stats
+    @stats ||= begin
+      s = HashWithIndifferentAccess.new({
+        all_total: 0,
+        all_30_days: 0,
+        all_7_days: 0
+      })
+
+      self.req_types.each do |key, i|
+        query = self.where(req_type: i)
+        s["#{key}_total"]   = query.sum(:count)
+        s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
+        s["#{key}_7_days"]  = query.where("date > ?", 7.days.ago).sum(:count)
+
+        s[:all_total]   += s["#{key}_total"]
+        s[:all_30_days] += s["#{key}_30_days"]
+        s[:all_7_days]  += s["#{key}_7_days"]
+      end
+
+      s
+    end
+  end
 end
 
 # == Schema Information
