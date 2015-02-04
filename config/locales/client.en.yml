@@ -1531,6 +1531,9 @@ en:
         suspended: 'Suspended:'
         private_messages_short: "PMs"
         private_messages_title: "Private Messages"
+        space_free: "{{size}} free"
+        uploads: "uploads"
+        backups: "backups"
 
         reports:
           today: "Today"

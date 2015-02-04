@@ -100,6 +100,28 @@
       {{/unless}}
     </table>
   </div>
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+          {{#unless loading}}
+          <tr>
+            <td>{{i18n 'admin.dashboard.uploads'}}</td>
+            <td>{{disk_space.uploads_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.uploads_free}})</td>
+            <td>{{i18n 'admin.dashboard.backups'}}</td>
+            <td>{{disk_space.backups_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.backups_free}} free)</td>
+          </tr>
+          {{/unless}}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="dashboard-right">
