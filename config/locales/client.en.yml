@@ -836,6 +836,7 @@ en:
         unread: "There are no more unread topics."
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
+        bookmarks: "There are no more bookmarked topics."
 
     topic:
       filter_to: "{{post_count}} posts in topic"
