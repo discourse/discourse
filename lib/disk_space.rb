@@ -7,7 +7,9 @@ class DiskSpace
   end
 
   def self.uploads_free_bytes
-    free(uploads_path)
+    # temporary (on our internal setup its just too slow)
+    Upload.sum(:filesize).to_i
+    # free(uploads_path)
   end
 
   def self.backups_used_bytes
