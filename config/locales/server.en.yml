@@ -441,6 +441,8 @@ en:
       title: 'Spam'
       description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
       long_form: 'flagged this as spam'
+      email_title: '"%{title}" was flagged as spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriate'
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
