@@ -16,21 +16,6 @@ describe Middleware::AnonymousCache::Helper do
     Middleware::AnonymousCache::Helper.new(env(opts))
   end
 
-  context "log_request" do
-    it "can log requests correctly" do
-      freeze_time Time.now
-
-      ApplicationRequest.clear_cache!
-
-      Middleware::AnonymousCache.log_request(env "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)")
-      Middleware::AnonymousCache.log_request(env)
-
-      ApplicationRequest.write_cache!
-
-      ApplicationRequest.crawler.first.count.should == 1
-      ApplicationRequest.anon.first.count.should == 1
-    end
-  end
 
   context "cachable?" do
     it "true by default" do

@@ -588,18 +588,38 @@ en:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
-    anon_reqs:
-      title: "Anonymous"
+    topic_anon_reqs:
+      title: "Anonymous Topics Views"
       xaxis: "Day"
-      yaxis: "Anonymous application requests"
-    logged_in_reqs:
-      title: "Logged In"
+      yaxis: "Anonymous Topic Views"
+    topic_logged_in_reqs:
+      title: "Logged In Topic Views"
       xaxis: "Day"
-      yaxis: "Logged In application requests"
-    crawler_reqs:
-      title: "Crawler"
+      yaxis: "Logged In Topic Views"
+    topic_crawler_reqs:
+      title: "Crawler Topic Views"
       xaxis: "Day"
-      yaxis: "Crawler application requests"
+      yaxis: "Crawler Topic Views"
+    background_reqs:
+      title: "Background requests"
+      xaxis: "Day"
+      yaxis: "Requests used for live update and tracking"
+    success_reqs:
+      title: "Successful requests"
+      xaxis: "Day"
+      yaxis: "Successful requests (Status 2xx)"
+    redirect_reqs:
+      title: "Redirect requests"
+      xaxis: "Day"
+      yaxis: "Redirect requests (Status 3xx)"
+    server_error_reqs:
+      title: "Server Errors"
+      xaxis: "Day"
+      yaxis: "Server Errors (Status 5xx)"
+    client_error_reqs:
+      title: "Bad requests"
+      xaxis: "Day"
+      yaxis: "Client Errors (Status 4xx)"
     total_reqs:
       title: "Total"
       xaxis: "Day"
