@@ -25,6 +25,6 @@ test('filterParam', function() {
   equal(stream.get('filterParam'), Discourse.UserAction.TYPES.likes_given);
 
   stream.set('filter', Discourse.UserAction.TYPES.replies);
-  equal(stream.get('filterParam'), '6,7,9');
+  equal(stream.get('filterParam'), '6,9');
 
 });
