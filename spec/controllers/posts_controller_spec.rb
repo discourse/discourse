@@ -821,4 +821,19 @@ describe PostsController do
     end
   end
 
+  describe "short link" do
+    let(:topic) { Fabricate(:topic) }
+    let(:post) { Fabricate(:post, topic: topic) }
+
+    it "redirects to the topic" do
+      xhr :get, :short_link, post_id: post.id
+      response.should be_redirect
+    end
+
+    it "returns a 403 when access is denied" do
+      Guardian.any_instance.stubs(:can_see?).returns(false)
+      xhr :get, :short_link, post_id: post.id
+      response.should be_forbidden
+    end
+  end
 end
