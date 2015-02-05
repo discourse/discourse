@@ -140,16 +140,16 @@ module Middleware
     def call(env)
       helper = Helper.new(env)
 
-      Scheduler::Defer.later "Track view" do
-        self.class.log_request_on_site(env,helper)
-      end
-
       if helper.cacheable?
         helper.cached or helper.cache(@app.call(env))
       else
         @app.call(env)
       end
 
+    ensure
+      Scheduler::Defer.later "Track view" do
+        self.class.log_request_on_site(env,helper)
+      end
     end
 
   end
