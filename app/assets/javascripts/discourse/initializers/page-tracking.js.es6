@@ -5,7 +5,14 @@ export default {
   name: "page-tracking",
   after: 'register-discourse-location',
 
-  initialize: function() {
+  initialize: function(container) {
+
+    // Tell our AJAX system to track a page transition
+    var router = container.lookup('router:main');
+    router.on('willTransition', function() {
+      Discourse.viewTrackingRequired();
+    });
+
     var pageTracker = Discourse.PageTracker.current();
     pageTracker.start();
 
@@ -18,7 +25,6 @@ export default {
       });
       return;
     }
-
 
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== 'undefined') {
