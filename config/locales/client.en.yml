@@ -1535,7 +1535,7 @@ en:
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"
-        traffic_short: "Application Traffic"
+        traffic_short: "Traffic"
         traffic: "Application web requests"
 
         reports:
