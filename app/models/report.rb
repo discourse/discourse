@@ -33,27 +33,26 @@ class Report
 
   def self.find(type, opts=nil)
     opts ||= {}
-    report_method = :"report_#{type}"
-    return nil unless respond_to?(report_method)
-
     # Load the report
     report = Report.new(type)
-
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
-    send(report_method, report)
+    report_method = :"report_#{type}"
+
+    if respond_to?(report_method)
+      send(report_method, report)
+    elsif type =~ /_reqs$/
+      req_report(report, type.split(/_reqs$/)[0].to_sym)
+    else
+      return nil
+    end
     report
   end
 
   def self.req_report(report, filter=nil)
-    data = ApplicationRequest.all
-
-    if mapped = ApplicationRequest.req_types[filter]
-      data = data.where(req_type: mapped)
-    end
+    data = ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
 
     filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
-
 
     report.data = []
     filtered_results.group(:date)
@@ -67,21 +66,6 @@ class Report
     report.prev30Days = filtered_results.sum(:count)
   end
 
-  def self.report_anon_reqs(report)
-    req_report(report, :anon)
-  end
-
-  def self.report_crawler_reqs(report)
-    req_report(report, :crawler)
-  end
-
-  def self.report_logged_in_reqs(report)
-    req_report(report, :logged_in)
-  end
-
-  def self.report_total_reqs(report)
-    req_report(report)
-  end
 
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date

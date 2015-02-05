@@ -18,9 +18,9 @@ describe ApplicationRequest do
   it 'can automatically flush' do
     t1 = Time.now.utc.at_midnight
     freeze_time(t1)
-    inc(:anon)
-    inc(:anon)
-    inc(:anon, autoflush: 3)
+    inc(:total)
+    inc(:total)
+    inc(:total, autoflush: 3)
 
     ApplicationRequest.first.count.should == 3
   end
@@ -28,9 +28,9 @@ describe ApplicationRequest do
   it 'flushes yesterdays results' do
     t1 = Time.now.utc.at_midnight
     freeze_time(t1)
-    inc(:anon)
+    inc(:total)
     freeze_time(t1.tomorrow)
-    inc(:anon)
+    inc(:total)
 
     ApplicationRequest.write_cache!
     ApplicationRequest.count.should == 2
@@ -49,15 +49,15 @@ describe ApplicationRequest do
     time = Time.now.at_midnight
     freeze_time(time)
 
-    3.times { inc(:anon) }
-    2.times { inc(:logged_in) }
-    4.times { inc(:crawler) }
+    3.times { inc(:total) }
+    2.times { inc(:success) }
+    4.times { inc(:redirect) }
 
     ApplicationRequest.write_cache!
 
-    ApplicationRequest.anon.first.count.should == 3
-    ApplicationRequest.logged_in.first.count.should == 2
-    ApplicationRequest.crawler.first.count.should == 4
+    ApplicationRequest.total.first.count.should == 3
+    ApplicationRequest.success.first.count.should == 2
+    ApplicationRequest.redirect.first.count.should == 4
 
   end
 end

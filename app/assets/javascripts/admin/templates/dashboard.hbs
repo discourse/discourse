@@ -75,10 +75,15 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_counts' anon_reqs }}
-        {{ render 'admin_report_counts' logged_in_reqs }}
-        {{ render 'admin_report_counts' crawler_reqs}}
-        {{ render 'admin_report_counts' total_reqs}}
+        {{ render 'admin_report_counts' topic_anon_reqs }}
+        {{ render 'admin_report_counts' topic_logged_in_reqs }}
+        {{ render 'admin_report_counts' topic_crawler_reqs }}
+        {{ render 'admin_report_counts' background_reqs }}
+        {{ render 'admin_report_counts' success_reqs }}
+        {{ render 'admin_report_counts' redirect_reqs }}
+        {{ render 'admin_report_counts' server_error_reqs }}
+        {{ render 'admin_report_counts' client_error_reqs }}
+        {{ render 'admin_report_counts' total_reqs }}
       {{/unless}}
     </table>
   </div>

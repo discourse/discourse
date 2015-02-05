@@ -1,9 +1,9 @@
 class ApplicationRequest < ActiveRecord::Base
-  enum req_type: %i(anon logged_in crawler)
+  enum req_type: %i(total success background topic_anon topic_logged_in topic_crawler server_error client_error redirect)
 
   cattr_accessor :autoflush
   # auto flush if backlog is larger than this
-  self.autoflush = 100
+  self.autoflush = 200
 
   def self.increment!(type, opts=nil)
     key = redis_key(type)
