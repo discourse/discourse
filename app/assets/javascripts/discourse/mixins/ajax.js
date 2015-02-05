@@ -34,22 +34,19 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     if (args.success) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      throw "Discourse.ajax should use promises, received 'success' callback";
     }
     if (args.error) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      throw "DEPRECATION: Discourse.ajax should use promises, received 'error' callback";
     }
 
     var performAjax = function(resolve, reject) {
-      var oldSuccess = args.success;
+
       args.success = function(xhr) {
         Ember.run(null, resolve, xhr);
-        if (oldSuccess) oldSuccess(xhr);
       };
 
-      var oldError = args.error;
       args.error = function(xhr, textStatus) {
-
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
         if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
@@ -63,10 +60,7 @@ Discourse.Ajax = Em.Mixin.create({
         xhr.jqTextStatus = textStatus;
         xhr.requestedUrl = url;
 
-        // TODO is this sequence correct? we are calling catch defined externally before
-        // the error that was defined inline, it should probably be in reverse
         Ember.run(null, reject, xhr);
-        if (oldError) oldError(xhr);
       };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
