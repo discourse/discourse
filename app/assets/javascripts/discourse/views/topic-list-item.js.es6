@@ -7,19 +7,18 @@ export default Discourse.View.extend(StringBuffer, {
   classNameBindings: ['controller.checked',
                       ':topic-list-item',
                       'unboundClassNames',
-                      'selected'
-       ],
+                      'selected'],
+
   actions: {
     select: function(){
       this.set('controller.selectedRow', this);
     },
 
-    toggleBookmark: function(){
+    toggleBookmark: function() {
       var self = this;
-      this.get('topic').toggleBookmark().catch(function(){
+      this.get('topic').toggleBookmark().finally(function() {
         self.rerender();
       });
-      self.rerender();
     }
   },
 

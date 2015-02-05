@@ -186,25 +186,25 @@ Discourse.Topic = Discourse.Model.extend({
     this.toggleProperty('bookmarked');
     if (this.get("postStream.firstPostPresent")) { firstPost.toggleProperty("bookmarked"); }
 
+
     return Discourse.ajax('/t/' + this.get('id') + '/bookmark', {
       type: 'PUT',
       data: { bookmarked: self.get('bookmarked') },
-      error: function(error){
-        self.toggleProperty('bookmarked');
-        if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
+    }).catch(function(error) {
+      self.toggleProperty('bookmarked');
+      if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
 
-        var showGenericError = true;
+      var showGenericError = true;
 
-        if (error && error.responseText) {
-          try {
-            bootbox.alert($.parseJSON(error.responseText).errors);
-            showGenericError = false;
-          } catch(e){}
-        }
+      if (error && error.responseText) {
+        try {
+          bootbox.alert($.parseJSON(error.responseText).errors);
+          showGenericError = false;
+        } catch(e){}
+      }
 
-        if(showGenericError){
-          bootbox.alert(I18n.t('generic_error'));
-        }
+      if(showGenericError){
+        bootbox.alert(I18n.t('generic_error'));
       }
     });
   },
