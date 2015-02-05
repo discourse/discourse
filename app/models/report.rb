@@ -45,6 +45,44 @@ class Report
     report
   end
 
+  def self.req_report(report, filter=nil)
+    data = ApplicationRequest.all
+
+    if mapped = ApplicationRequest.req_types[filter]
+      data = data.where(req_type: mapped)
+    end
+
+    filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+
+
+    report.data = []
+    filtered_results.group(:date)
+                    .sum(:count)
+                    .each do |date, count|
+
+      report.data << {x: date, y: count}
+    end
+
+    report.total      = data.sum(:count)
+    report.prev30Days = filtered_results.sum(:count)
+  end
+
+  def self.report_anon_reqs(report)
+    req_report(report, :anon)
+  end
+
+  def self.report_crawler_reqs(report)
+    req_report(report, :crawler)
+  end
+
+  def self.report_logged_in_reqs(report)
+    req_report(report, :logged_in)
+  end
+
+  def self.report_total_reqs(report)
+    req_report(report)
+  end
+
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date
   end
