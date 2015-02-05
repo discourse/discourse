@@ -54,6 +54,7 @@ export default Ember.Component.extend(StringBuffer, {
       case Discourse.UserAction.TYPES.bookmarks: return "bookmark";
       case Discourse.UserAction.TYPES.edits: return "pencil";
       case Discourse.UserAction.TYPES.replies: return "reply";
+      case Discourse.UserAction.TYPES.mentions: return "at";
     }
   }.property("content.action_type")
 });
