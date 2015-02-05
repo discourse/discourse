@@ -197,7 +197,7 @@ class PostAction < ActiveRecord::Base
   def self.create_message_for_post_action(user, post, post_action_type_id, opts)
     post_action_type = PostActionType.types[post_action_type_id]
 
-    return unless opts[:message] && [:notify_moderators, :notify_user].include?(post_action_type)
+    return unless opts[:message] && [:notify_moderators, :notify_user, :spam].include?(post_action_type)
 
     title = I18n.t("post_action_types.#{post_action_type}.email_title", title: post.topic.title)
     body = I18n.t("post_action_types.#{post_action_type}.email_body", message: opts[:message], link: "#{Discourse.base_url}#{post.url}")
@@ -210,7 +210,7 @@ class PostAction < ActiveRecord::Base
       raw: body
     }
 
-    if post_action_type == :notify_moderators
+    if [:notify_moderators, :spam].include?(post_action_type)
       opts[:subtype] = TopicSubtype.notify_moderators
       opts[:target_group_names] = "moderators"
     else

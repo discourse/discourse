@@ -443,4 +443,19 @@ describe PostAction do
     end
   end
 
+  describe "#create_message_for_post_action" do
+    it "does not create a message when there is no message" do
+      message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:spam], {})
+      expect(message_id).to be_nil
+    end
+
+    [:notify_moderators, :notify_user, :spam].each do |post_action_type|
+      it "creates a message for #{post_action_type}" do
+        message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[post_action_type], message: "WAT")
+        expect(message_id).to be_present
+      end
+    end
+
+  end
+
 end
