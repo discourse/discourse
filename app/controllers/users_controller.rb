@@ -66,7 +66,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:user_fields].present?
-      params[:custom_fields] ||= {}
+      params[:custom_fields] = {} unless params[:custom_fields].present?
       UserField.where(editable: true).each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
