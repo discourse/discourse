@@ -1,70 +1,97 @@
-/**
-  This controller supports the interface for listing staff action logs in the admin section.
-
-  @class AdminLogsStaffActionLogsController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
-**/
 import { outputExportResult } from 'discourse/lib/export-result';
 
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
-  filters: {},
+  filters: null,
 
-  show: function() {
-    var self = this;
-    this.set('loading', true);
-    Discourse.URL.set('queryParams', this.get('filters')); // TODO: doesn't work
-    Discourse.StaffActionLog.findAll(this.get('filters')).then(function(result) {
-      self.set('model', result);
-      self.set('loading', false);
-    });
-  }.observes('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),
-
-  filtersExists: function() {
-    return (_.size(this.get('filters')) > 0);
-  }.property('filters.action_name', 'filters.acting_user', 'filters.target_user', 'filters.subject'),
+  filtersExists: Ember.computed.gt('filterCount', 0),
 
   actionFilter: function() {
-    if (this.get('filters.action_name')) {
-      return I18n.t("admin.logs.staff_actions.actions." + this.get('filters.action_name'));
+    var name = this.get('filters.action_name');
+    if (name) {
+      return I18n.t("admin.logs.staff_actions.actions." + name);
     } else {
       return null;
     }
   }.property('filters.action_name'),
 
-  showInstructions: function() {
-    return this.get('model.length') > 0;
-  }.property('loading', 'model.length'),
+  showInstructions: Ember.computed.gt('model.length', 0),
+
+  refresh: function() {
+    var self = this;
+    this.set('loading', true);
+
+    var filters = this.get('filters'),
+        params = {},
+        count = 0;
+
+    // Don't send null values
+    Object.keys(filters).forEach(function(k) {
+      var val = filters.get(k);
+      if (val) {
+        params[k] = val;
+        count += 1;
+      }
+    });
+    this.set('filterCount', count);
+
+    Discourse.StaffActionLog.findAll(params).then(function(result) {
+      self.set('model', result);
+    }).finally(function() {
+      self.set('loading', false);
+    });
+  },
+
+  resetFilters: function() {
+    this.set('filters', Ember.Object.create());
+    this.refresh();
+  }.on('init'),
+
+  _changeFilters: function(props) {
+    this.get('filters').setProperties(props);
+    this.refresh();
+  },
 
   actions: {
     clearFilter: function(key) {
-      delete this.get('filters')[key];
-      this.notifyPropertyChange('filters');
+      var changed = {};
+
+      // Special case, clear all action related stuff
+      if (key === 'actionFilter') {
+        changed.action_name = null;
+        changed.action_id = null;
+        changed.custom_type = null;
+      } else {
+        changed[key] = null;
+      }
+      this._changeFilters(changed);
     },
 
     clearAllFilters: function() {
-      this.set('filters', {});
+      this.resetFilters();
     },
 
-    filterByAction: function(action) {
-      this.set('filters.action_name', action);
+    filterByAction: function(logItem) {
+      this._changeFilters({
+        action_name: logItem.get('action_name'),
+        action_id: logItem.get('action'),
+        custom_type: logItem.get('custom_type')
+      });
     },
 
     filterByStaffUser: function(acting_user) {
-      this.set('filters.acting_user', acting_user.username);
+      this._changeFilters({ acting_user: acting_user.username });
     },
 
     filterByTargetUser: function(target_user) {
-      this.set('filters.target_user', target_user.username);
+      this._changeFilters({ target_user: target_user.username });
     },
 
     filterBySubject: function(subject) {
-      this.set('filters.subject', subject);
+      this._changeFilters({ subject: subject });
     },
 
-    exportStaffActionLogs: function(subject) {
+    exportStaffActionLogs: function() {
       Discourse.ExportCsv.exportStaffActionLogs().then(outputExportResult);
     }
   }
