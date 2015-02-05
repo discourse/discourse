@@ -14,19 +14,15 @@ describe Report do
     context "with visits" do
       let(:user) { Fabricate(:user) }
 
-      before(:each) do
-        user.user_visits.create(visited_at: 1.hour.ago)
+      it "returns a report with data" do
+        freeze_time DateTime.parse('2000-01-01')
+        user.user_visits.create(visited_at: 1.hour.from_now)
         user.user_visits.create(visited_at: 1.day.ago)
         user.user_visits.create(visited_at: 2.days.ago)
-      end
-
-      it "returns a report with data" do
         expect(report.data).to be_present
-      end
-
-      it "returns today's visit" do
         expect(report.data.select { |v| v[:x].today? }).to be_present
       end
+
     end
   end
 
