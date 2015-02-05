@@ -588,6 +588,22 @@ en:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    anon_reqs:
+      title: "Anonymous"
+      xaxis: "Day"
+      yaxis: "Anonymous application requests"
+    logged_in_reqs:
+      title: "Logged In"
+      xaxis: "Day"
+      yaxis: "Logged In application requests"
+    crawler_reqs:
+      title: "Crawler"
+      xaxis: "Day"
+      yaxis: "Crawler application requests"
+    total_reqs:
+      title: "Total"
+      xaxis: "Day"
+      yaxis: "Total application requests"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."

@@ -16,7 +16,11 @@ class AdminDashboardData
     'system_private_messages',
     'moderator_warning_private_messages',
     'notify_moderators_private_messages',
-    'notify_user_private_messages'
+    'notify_user_private_messages',
+    'anon_reqs',
+    'crawler_reqs',
+    'logged_in_reqs',
+    'total_reqs'
   ]
 
   def problems
