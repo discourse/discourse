@@ -348,13 +348,6 @@ class Search
           posts = posts.where("posts.user_id = #{@guardian.user.id}")
         end
 
-        if @search_bookmarks
-          post_action_type = @search_likes ? PostActionType.types(:like) : PostActionType.types[:bookmark]
-          posts = posts.where(["posts.id IN (SELECT post_id FROM post_actions
-                                  WHERE user_id = ? AND post_action_type_id = ?)",
-                               @guardian.user.id, post_action_type])
-        end
-
         if @notification_level
           posts = posts.where("posts.topic_id IN (
                               SELECT tu.topic_id FROM topic_users tu
