@@ -7,7 +7,14 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var _trackView = false;
+
 Discourse.Ajax = Em.Mixin.create({
+
+  viewTrackingRequired: function() {
+    _trackView = true;
+  },
 
   /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
@@ -41,6 +48,11 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     var performAjax = function(resolve, reject) {
+
+      if (_trackView) {
+        _trackView = false;
+        args.headers = { 'Discourse-Track-View': true };
+      }
 
       args.success = function(xhr) {
         Ember.run(null, resolve, xhr);
