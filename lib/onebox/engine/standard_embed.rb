@@ -43,9 +43,10 @@ module Onebox
 
       def fetch_oembed_raw(oembed_url)
         return unless oembed_url
+        oembed_url = oembed_url['href'] unless oembed_url['href'].nil?
         @raw = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
-      # rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
-      #   @raw = nil
+      rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
+        @raw = nil
       end
 
       def parse_open_graph(html, og_url)
