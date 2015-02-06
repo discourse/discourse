@@ -15,7 +15,7 @@ class ApplicationRequest < ActiveRecord::Base
 
   # auto flush if older than this
   self.autoflush_seconds = 5.minutes
-  self.last_flush = Time.now
+  self.last_flush = Time.now.utc
 
   def self.increment!(type, opts=nil)
     key = redis_key(type)
@@ -28,7 +28,7 @@ class ApplicationRequest < ActiveRecord::Base
       return
     end
 
-    if (Time.now - last_flush).to_i > autoflush_seconds
+    if (Time.now.utc - last_flush).to_i > autoflush_seconds
       write_cache!
     end
   end
@@ -40,7 +40,7 @@ class ApplicationRequest < ActiveRecord::Base
       return
     end
 
-    self.last_flush = Time.now
+    self.last_flush = Time.now.utc
 
     date = date.to_date
 
