@@ -72,18 +72,22 @@ module SiteSettingExtension
       self.defaults[name] = default
       categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
+
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
       end
+
       if opts[:choices]
         choices.has_key?(name) ?
           choices[name].concat(opts[:choices]) :
           choices[name] = opts[:choices]
       end
+
       if opts[:type] == 'list'
         lists << name
       end
+
       if opts[:hidden]
         hidden_settings << name
       end
@@ -105,8 +109,11 @@ module SiteSettingExtension
         previews[name] = opts[:preview]
       end
 
-      if validator_type = validator_for(opts[:type] || get_data_type(name, defaults[name]))
-        validators[name] = {class: validator_type, opts: opts}
+      opts[:validator] = opts[:validator].try(:constantize)
+      type = opts[:type] || get_data_type(name, defaults[name])
+
+      if validator_type = opts[:validator] || validator_for(type)
+        validators[name] = { class: validator_type, opts: opts }
       end
 
       current[name] = current_value

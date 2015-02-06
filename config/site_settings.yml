@@ -1,13 +1,14 @@
 # Available options:
 #
-# default - The default value of the setting.
-# client  - Set to true if the javascript should have access to this setting's value.
-# refresh - Set to true if clients should refresh when the setting is changed.
-# min     - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max     - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex   - A regex that the value must match.
-# enum    - The setting has a fixed set of allowed values, and only one can be chosen.
-#           Set to the class name that defines the set.
+# default   - The default value of the setting.
+# client    - Set to true if the javascript should have access to this setting's value.
+# refresh   - Set to true if clients should refresh when the setting is changed.
+# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex     - A regex that the value must match.
+# validator - The name of the class that will be use to validate the value of the setting.
+# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
+#             Set to the class name that defines the set.
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -423,7 +424,7 @@ email:
   reply_by_email_enabled: false
   reply_by_email_address:
     default: ''
-    regex: "%{reply_key}"
+    validator: "ReplyByEmailAddressValidator"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
@@ -491,7 +492,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[^A-Z._]+$"
   allow_profile_backgrounds:
     client: true
     default: true
