@@ -1,5 +1,6 @@
 {{#if category}}
   <a href {{action "expand"}} class="badge-category" {{bind-attr style="badgeStyle"}}>
+    <span class="badge-category-bg" style="background-color: #{{unbound category.color}};"></span>
     {{#if category.read_restricted}}
       {{fa-icon "lock"}}
     {{/if}}
