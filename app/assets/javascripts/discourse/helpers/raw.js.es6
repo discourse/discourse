@@ -1,6 +1,6 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-export function renderRaw(template, templateName, params) {
+function renderRaw(template, templateName, params) {
   params.parent = params.parent || this;
 
   if (!params.view) {
@@ -22,3 +22,5 @@ registerUnbound('raw', function(templateName, params) {
 
   return renderRaw.call(this, template, templateName, params);
 });
+
+export { renderRaw };

@@ -2,7 +2,7 @@
 
 import siteFixtures from 'fixtures/site_fixtures';
 
-export function integration(name, options) {
+function integration(name, options) {
   module("Integration: " + name, {
     setup: function() {
       Ember.run(Discourse, Discourse.advanceReadiness);
@@ -39,13 +39,13 @@ export function integration(name, options) {
   });
 }
 
-export function controllerFor(controller, model) {
+function controllerFor(controller, model) {
   controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
 }
 
-export function asyncTestDiscourse(text, func) {
+function asyncTestDiscourse(text, func) {
   asyncTest(text, function () {
     var self = this;
     Ember.run(function () {
@@ -54,9 +54,11 @@ export function asyncTestDiscourse(text, func) {
   });
 }
 
-export function fixture(selector) {
+function fixture(selector) {
   if (selector) {
     return $("#qunit-fixture").find(selector);
   }
   return $("#qunit-fixture");
 }
+
+export { integration, controllerFor, asyncTestDiscourse, fixture };

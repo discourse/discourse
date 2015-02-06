@@ -1,6 +1,6 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-export function daysSinceEpoch(dt) {
+function daysSinceEpoch(dt) {
   // 1000 * 60 * 60 * 24 = days since epoch
   return dt.getTime() / 86400000;
 }
@@ -22,3 +22,5 @@ registerUnbound('cold-age-class', function(dt, params) {
 
   return className;
 });
+
+export { daysSinceEpoch };

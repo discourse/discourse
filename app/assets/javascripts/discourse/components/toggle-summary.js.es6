@@ -1,11 +1,3 @@
-/**
-  The controls for toggling the summarized view on/off
-
-  @class ToggleSummaryComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.Component.extend({
   layoutName: 'components/toggle-summary',
   tagName: 'section',
@@ -13,7 +5,7 @@ export default Ember.Component.extend({
   postStream: Em.computed.alias('topic.postStream'),
 
   actions: {
-    toggleSummary: function() {
+    toggleSummary() {
       this.get('postStream').toggleSummary();
     }
   }
