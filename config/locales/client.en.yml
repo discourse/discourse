@@ -1537,6 +1537,9 @@ en:
         backups: "backups"
         traffic_short: "Traffic"
         traffic: "Application web requests"
+        page_views: "Page Views"
+        page_views_short: "Page Views"
+        show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
           today: "Today"

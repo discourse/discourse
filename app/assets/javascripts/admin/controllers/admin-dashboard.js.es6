@@ -53,6 +53,9 @@ export default Ember.Controller.extend({
   actions: {
     refreshProblems: function() {
       this.loadProblems();
+    },
+    showTrafficReport: function() {
+      this.set("showTrafficReport", true);
     }
   }
 

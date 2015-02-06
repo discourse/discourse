@@ -66,7 +66,7 @@
     <table class="table table-condensed table-hover">
       <thead>
         <tr>
-          <th class="title" title="{{i18n 'admin.dashboard.traffic'}}">{{i18n 'admin.dashboard.traffic_short'}}</th>
+          <th class="title" title="{{i18n 'admin.dashboard.page_views'}}">{{i18n 'admin.dashboard.page_views_short'}}</th>
           <th>{{i18n 'admin.dashboard.reports.today'}}</th>
           <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
           <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
@@ -75,18 +75,14 @@
         </tr>
       </thead>
       {{#unless loading}}
-        {{ render 'admin_report_counts' topic_anon_reqs }}
-        {{ render 'admin_report_counts' topic_logged_in_reqs }}
-        {{ render 'admin_report_counts' topic_crawler_reqs }}
-        {{ render 'admin_report_counts' background_reqs }}
-        {{ render 'admin_report_counts' success_reqs }}
-        {{ render 'admin_report_counts' redirect_reqs }}
-        {{ render 'admin_report_counts' server_error_reqs }}
-        {{ render 'admin_report_counts' client_error_reqs }}
-        {{ render 'admin_report_counts' total_reqs }}
+        {{ render 'admin_report_counts' page_view_anon_reqs }}
+        {{ render 'admin_report_counts' page_view_logged_in_reqs }}
+        {{ render 'admin_report_counts' page_view_crawler_reqs }}
+        {{ render 'admin_report_counts' page_view_total_reqs }}
       {{/unless}}
     </table>
   </div>
+
 
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">
@@ -148,6 +144,37 @@
       </tbody>
     </table>
   </div>
+
+  {{#unless loading}}
+    {{#if showTrafficReport}}
+    <div class="dashboard-stats">
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th class="title" title="{{i18n 'admin.dashboard.traffic'}}">{{i18n 'admin.dashboard.traffic_short'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+          </tr>
+        </thead>
+        {{#unless loading}}
+          {{ render 'admin_report_counts' http_2xx_reqs }}
+          {{ render 'admin_report_counts' http_3xx_reqs}}
+          {{ render 'admin_report_counts' http_4xx_reqs}}
+          {{ render 'admin_report_counts' http_5xx_reqs}}
+          {{ render 'admin_report_counts' http_background_reqs }}
+          {{ render 'admin_report_counts' http_total_reqs }}
+        {{/unless}}
+      </table>
+    </div>
+    {{else}}
+    <div class="dashboard-stats">
+      <a href {{action showTrafficReport}}>{{i18n 'admin.dashboard.show_traffic_report'}}</a>
+    </div>
+    {{/if}}
+  {{/unless}}
 </div>
 
 <div class="dashboard-right">

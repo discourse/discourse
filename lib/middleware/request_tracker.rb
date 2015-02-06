@@ -14,44 +14,45 @@ class Middleware::RequestTracker
   end
 
   PATH_PARAMS = "action_dispatch.request.path_parameters".freeze
+  TRACK_VIEW = "HTTP_DISCOURSE_TRACK_VIEW".freeze
+
 
   def self.log_request(result,env,helper=nil)
 
     helper ||= Middleware::AnonymousCache::Helper.new(env)
-    params = env[PATH_PARAMS]
     request = Rack::Request.new(env)
 
-    ApplicationRequest.increment!(:total)
-
-    status,_ = result
+    status,headers = result
     status = status.to_i
 
-    if status >= 500
-      ApplicationRequest.increment!(:server_error)
-    elsif status >= 400
-      ApplicationRequest.increment!(:client_error)
-    elsif status >= 300
-      ApplicationRequest.increment!(:redirect)
-    end
-
-    if request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/
-      ApplicationRequest.increment!(:background)
-    elsif status >= 200 && status < 300
-      ApplicationRequest.increment!(:success)
-    end
-
-    if params && params[:controller] == "topics" && params[:action] == "show"
+    if (env[TRACK_VIEW] || (request.get? && !request.xhr? && headers["Content-Type"] =~ /text\/html/)) && status == 200
       if helper.is_crawler?
-        ApplicationRequest.increment!(:topic_crawler)
+        ApplicationRequest.increment!(:page_view_crawler)
       elsif helper.has_auth_cookie?
-        ApplicationRequest.increment!(:topic_logged_in)
+        ApplicationRequest.increment!(:page_view_logged_in)
       else
-        ApplicationRequest.increment!(:topic_anon)
+        ApplicationRequest.increment!(:page_view_anon)
       end
     end
 
-  rescue => ex
-    Discourse.handle_exception(ex, {message: "Failed to log request"})
+    ApplicationRequest.increment!(:http_total)
+
+    if status >= 500
+      ApplicationRequest.increment!(:http_5xx)
+    elsif status >= 400
+      ApplicationRequest.increment!(:http_4xx)
+    elsif status >= 300
+      ApplicationRequest.increment!(:http_3xx)
+    else
+      if request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/
+        ApplicationRequest.increment!(:http_background)
+      elsif status >= 200 && status < 300
+        ApplicationRequest.increment!(:http_2xx)
+      end
+    end
+
+  # rescue => ex
+  #   Discourse.handle_exception(ex, {message: "Failed to log request"})
   end
 
 

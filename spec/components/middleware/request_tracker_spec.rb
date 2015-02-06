@@ -18,21 +18,20 @@ describe Middleware::RequestTracker do
 
       ApplicationRequest.clear_cache!
 
-      Middleware::RequestTracker.log_request(["200"], env(
-        "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)",
-        "action_dispatch.request.path_parameters" => {controller: "topics", action: "show"}
+      Middleware::RequestTracker.log_request(["200",{"Content-Type" => 'text/html'}], env(
+        "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"
       ))
-      Middleware::RequestTracker.log_request(["200"], env(
-        "action_dispatch.request.path_parameters" => {controller: "topics", action: "show"}
+      Middleware::RequestTracker.log_request(["200",{}], env(
+        "HTTP_DISCOURSE_TRACK_VIEW" => "1"
       ))
 
       ApplicationRequest.write_cache!
 
-      ApplicationRequest.total.first.count.should == 2
-      ApplicationRequest.success.first.count.should == 2
+      ApplicationRequest.http_total.first.count.should == 2
+      ApplicationRequest.http_2xx.first.count.should == 2
 
-      ApplicationRequest.topic_anon.first.count.should == 1
-      ApplicationRequest.topic_crawler.first.count.should == 1
+      ApplicationRequest.page_view_anon.first.count.should == 1
+      ApplicationRequest.page_view_crawler.first.count.should == 1
     end
   end
 end
