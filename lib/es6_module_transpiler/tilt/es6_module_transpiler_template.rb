@@ -1,4 +1,5 @@
 require 'execjs'
+require '6to5'
 
 module Tilt
   class ES6ModuleTranspilerTemplate < Tilt::Template
@@ -14,6 +15,7 @@ module Tilt
 
     def self.create_new_context
       ctx = V8::Context.new(timeout: 5000)
+      ctx.eval("var self = this; #{File.read(ES6to5::Source.path)}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx
@@ -107,7 +109,9 @@ module Tilt
     private
 
     def generate_source(scope)
-      "new module.exports.Compiler(#{::JSON.generate(data, quirks_mode: true)}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
+      js_source = ::JSON.generate(data, quirks_mode: true)
+      js_source = "to5.transform(#{js_source}, {ast: false, blacklist: ['es6.modules', 'useStrict']})['code']"
+      "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
 
     def module_name(root_path, logical_path)

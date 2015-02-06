@@ -1,6 +1,6 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-export function renderAvatar(user, options) {
+function renderAvatar(user, options) {
   options = options || {};
 
   if (user) {
@@ -44,3 +44,5 @@ export function renderAvatar(user, options) {
 registerUnbound('avatar', function(user, params) {
   return new Handlebars.SafeString(renderAvatar.call(this, user, params));
 });
+
+export { renderAvatar };
