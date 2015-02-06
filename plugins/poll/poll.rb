@@ -21,19 +21,13 @@ module ::PollPlugin
         return false
       end
 
-      topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
+      I18n.with_locale(topic.user.effective_locale) do
+        topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
+      end
     end
 
     def has_poll_details?
-      if SiteSetting.allow_user_locale?
-        # If we allow users to select their locale of choice we cannot detect polls
-        # by the prefix, so we fall back to checking if the poll details is set in
-        # places to make sure polls are still accessible by users using a different
-        # locale than the one used by the topic creator.
-        not self.details.nil?
-      else
-        self.is_poll?
-      end
+      self.is_poll?
     end
 
     # Called during validation of poll posts. Discourse already restricts edits to
@@ -60,7 +54,8 @@ module ::PollPlugin
     end
 
     def is_closed?
-      @post.topic.closed? || @post.topic.archived? || (!SiteSetting.allow_user_locale? && (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0)
+      topic = @post.topic
+      topic.closed? || topic.archived? || (topic.title =~ /^#{I18n.t('poll.closed_prefix', locale: topic.user.effective_locale)}/i) === 0
     end
 
     def options
