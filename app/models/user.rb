@@ -138,6 +138,14 @@ class User < ActiveRecord::Base
     User.where(username_lower: lower).blank?
   end
 
+  def effective_locale
+    if SiteSetting.allow_user_locale && self.locale.present?
+      self.locale
+    else
+      SiteSetting.default_locale
+    end
+  end
+
   EMAIL = %r{([^@]+)@([^\.]+)}
 
   def self.new_from_params(params)
