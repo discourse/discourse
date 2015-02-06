@@ -203,7 +203,7 @@ a:hover.reply-new {
     bottom: 0;
     width: 0;
     border-right: 1px solid  scale-color-diff();
-    background-color: desaturate(dark-light-diff($tertiary, $secondary, 90%, -65%), 20%);
+    background-color:  desaturate(dark-light-diff($success, $secondary, 60%, -35%), 30%);
     transition: width .75s;
 
   }

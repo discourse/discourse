@@ -140,7 +140,7 @@
     bottom: 0;
     width: 0;
     border-right: 1px solid scale-color($success, $lightness: 50%);
-    background-color: desaturate(dark-light-diff($tertiary, $secondary, 90%, -65%), 20%);
+    background-color: scale-color($success, $lightness: 50%);
   }
 }
 
