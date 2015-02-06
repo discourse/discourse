@@ -51,7 +51,12 @@ class ImportScripts::Ning < ImportScripts::Base
   def repair_json(arg)
     arg.gsub!(/^\(/, "")     # content of file is surround by ( )
     arg.gsub!(/\)$/, "")
+
     arg.gsub!(/\}\{/, "},{") # missing commas sometimes!
+
+    arg.gsub!("}]{", "},{")  # surprise square brackets
+    arg.gsub!("}[{", "},{")  # :troll:
+
     arg
   end
 
