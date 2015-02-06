@@ -13,8 +13,8 @@ class Report
     @data = nil
     @total = nil
     @prev30Days = nil
-    @start_date ||= 1.month.ago.utc.beginning_of_day
-    @end_date ||= Time.now.utc.end_of_day
+    @start_date ||= 1.month.ago.beginning_of_day
+    @end_date ||= Time.zone.now.end_of_day
   end
 
   def as_json(options = nil)
