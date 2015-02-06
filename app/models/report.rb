@@ -50,7 +50,14 @@ class Report
   end
 
   def self.req_report(report, filter=nil)
-    data = ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
+    data =
+      if filter == :page_view_total
+        ApplicationRequest.where(req_type: [
+          ApplicationRequest.req_types.map{|k,v| v if k =~ /page_view/}.compact
+        ])
+      else
+        ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
+      end
 
     filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
 

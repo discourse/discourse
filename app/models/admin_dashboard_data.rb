@@ -16,7 +16,8 @@ class AdminDashboardData
     'system_private_messages',
     'moderator_warning_private_messages',
     'notify_moderators_private_messages',
-    'notify_user_private_messages'
+    'notify_user_private_messages',
+    'page_view_total_reqs'
   ] + ApplicationRequest.req_types.keys.map{|r| r + "_reqs"}
 
   def problems
