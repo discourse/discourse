@@ -49,7 +49,7 @@ Discourse.Ajax = Em.Mixin.create({
 
     var performAjax = function(resolve, reject) {
 
-      if (_trackView) {
+      if (_trackView && (!args.type || args.type === "GET")) {
         _trackView = false;
         args.headers = { 'Discourse-Track-View': true };
       }
