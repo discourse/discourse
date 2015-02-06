@@ -4,25 +4,26 @@
     <div class="full-width">
 
       <ul class="nav nav-pills">
-        <li>{{#link-to 'admin.dashboard'}}{{i18n 'admin.dashboard.title'}}{{/link-to}}</li>
+        {{admin-nav-item route='admin.dashboard' label='admin.dashboard.title'}}
         {{#if currentUser.admin}}
-          <li>{{#link-to 'adminSiteSettings'}}{{i18n 'admin.site_settings.title'}}{{/link-to}}</li>
+          {{admin-nav-item route='adminSiteSettings' label='admin.site_settings.title'}}
         {{/if}}
-        <li>{{#link-to 'adminUsersList'}}{{i18n 'admin.users.title'}}{{/link-to}}</li>
+        {{admin-nav-item route='adminUsersList' label='admin.users.title'}}
         {{#if showBadges}}
-          <li>{{#link-to 'adminBadges.index'}}{{i18n 'admin.badges.title'}}{{/link-to}}</li>
+          {{admin-nav-item route='adminBadges.index' label='admin.badges.title'}}
         {{/if}}
         {{#if currentUser.admin}}
-          <li>{{#link-to 'adminGroups'}}{{i18n 'admin.groups.title'}}{{/link-to}}</li>
+          {{admin-nav-item route='adminGroups' label='admin.groups.title'}}
         {{/if}}
-        <li>{{#link-to 'adminEmail'}}{{i18n 'admin.email.title'}}{{/link-to}}</li>
-        <li>{{#link-to 'adminFlags'}}{{i18n 'admin.flags.title'}}{{/link-to}}</li>
-        <li>{{#link-to 'adminLogs'}}{{i18n 'admin.logs.title'}}{{/link-to}}</li>
+        {{admin-nav-item route='adminEmail' label='admin.email.title'}}
+        {{admin-nav-item route='adminFlags' label='admin.flags.title'}}
+        {{admin-nav-item route='adminLogs' label='admin.logs.title'}}
         {{#if currentUser.admin}}
-          <li>{{#link-to 'adminCustomize.colors'}}{{i18n 'admin.customize.title'}}{{/link-to}}</li>
-          <li>{{#link-to 'admin.api'}}{{i18n 'admin.api.title'}}{{/link-to}}</li>
-          <li>{{#link-to 'admin.backups'}}{{i18n 'admin.backups.title'}}{{/link-to}}</li>
+          {{admin-nav-item route='adminCustomize.colors' label='admin.customize.title'}}
+          {{admin-nav-item route='admin.api' label='admin.api.title'}}
+          {{admin-nav-item route='admin.backups' label='admin.backups.title'}}
         {{/if}}
+        {{admin-nav-item route='adminPlugins.index' label='admin.plugins.title'}}
         {{plugin-outlet "admin-menu" tagName="li"}}
       </ul>
 

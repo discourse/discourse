@@ -97,7 +97,8 @@ Discourse.Route.reopenClass({
   },
 
   mapRoutes: function() {
-    var resources = {};
+    var resources = {},
+        paths = {};
 
     // If a module is defined as `route-map` in discourse or a plugin, its routes
     // will be built automatically. You can supply a `resource` property to
@@ -115,6 +116,7 @@ Discourse.Route.reopenClass({
 
         if (!resources[mapObj.resource]) { resources[mapObj.resource] = []; }
         resources[mapObj.resource].push(mapObj.map);
+        if (mapObj.path) { paths[mapObj.resource] = mapObj.path; }
       }
     });
 
@@ -129,13 +131,32 @@ Discourse.Route.reopenClass({
         delete resources.root;
       }
 
-      // Apply other resources next
+      var segments = {},
+          standalone = [];
+
       Object.keys(resources).forEach(function(r) {
-        router.resource(r, function() {
+        var m = /^([^\.]+)\.(.*)$/.exec(r);
+        if (m) {
+          segments[m[1]] = m[2];
+        } else {
+          standalone.push(r);
+        }
+      });
+
+      // Apply other resources next. A little hacky but works!
+      standalone.forEach(function(r) {
+        router.resource(r, {path: paths[r]}, function() {
           var res = this;
-          resources[r].forEach(function(m) {
-            m.call(res);
-          });
+          resources[r].forEach(function(m) { m.call(res); });
+
+          var s = segments[r];
+          if (s) {
+            var full = r + '.' + s;
+            res.resource(s, {path: paths[full]}, function() {
+              var nestedRes = this;
+              resources[full].forEach(function(m) { m.call(nestedRes); });
+            });
+          }
         });
       });
 
