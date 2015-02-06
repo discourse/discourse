@@ -1672,6 +1672,7 @@ en:
         none_installed: "You don't have any plugins installed."
         version: "Version"
         change_settings: "Change Settings"
+        howto: "How do I install plugins?"
 
       backups:
         title: "Backups"

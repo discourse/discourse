@@ -2,6 +2,7 @@
 # about: adds poll support to Discourse
 # version: 0.1
 # authors: Vikhyat Korrapati
+# url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
 load File.expand_path("../poll.rb", __FILE__)
 

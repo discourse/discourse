@@ -20,8 +20,8 @@
       {{#each plugin in controller}}
         <tr>
           <td>
-            {{#if plugin.admin_route}}
-              {{#link-to plugin.admin_route.full_location}}{{plugin.name}}{{/link-to}}
+            {{#if plugin.url}}
+              <a {{bind-attr href=plugin.url}} target="_blank">{{plugin.name}}</a>
             {{else}}
               {{plugin.name}}
             {{/if}}
@@ -34,3 +34,6 @@
 {{else}}
   <p>{{i18n "admin.plugins.none_installed"}}</p>
 {{/if}}
+
+<p><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
+
