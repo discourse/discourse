@@ -9,7 +9,7 @@ Allows you to add a poll to the first post of a topic.
 
 ## Closing the poll
 
-Change the start of the topic title from "Poll: " to "Closed Poll: ". This feature is disabled if the `allow_user_locale` site setting is enabled.
+Change the start of the topic title from "Poll: " to "Closed Poll: ". This feature uses the locale of the user who started the topic.
 
 _Note: closing a topic will also close the poll._
 

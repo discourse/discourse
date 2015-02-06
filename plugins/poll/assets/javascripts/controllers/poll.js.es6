@@ -5,7 +5,7 @@ export default DiscourseController.extend({
   showResults: Em.computed.oneWay('poll.closed'),
   disableRadio: Em.computed.any('poll.closed', 'loading'),
   showToggleClosePoll: function() {
-    return this.get('poll.post.topic.details.can_edit') && !Discourse.SiteSettings.allow_user_locale;
+    return this.get('poll.post.topic.details.can_edit');
   }.property('poll.post.topic.details.can_edit'),
 
   actions: {
