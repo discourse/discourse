@@ -1,0 +1,36 @@
+{{#if length}}
+
+  {{d-button label="admin.plugins.change_settings"
+             icon="gear"
+             class='settings-button pull-right'
+             action="showSettings"}}
+
+  <h3>{{i18n "admin.plugins.installed"}}</h3>
+
+  <br/>
+
+  <table>
+    <tbody>
+      <thead>
+        <tr>
+          <th>{{i18n "admin.plugins.name"}}</th>
+          <th>{{i18n "admin.plugins.version"}}</th>
+        </tr>
+      </thead>
+      {{#each plugin in controller}}
+        <tr>
+          <td>
+            {{#if plugin.admin_route}}
+              {{#link-to plugin.admin_route.full_location}}{{plugin.name}}{{/link-to}}
+            {{else}}
+              {{plugin.name}}
+            {{/if}}
+          </td>
+          <td>{{plugin.version}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>{{i18n "admin.plugins.none_installed"}}</p>
+{{/if}}

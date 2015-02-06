@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<div class="site-settings-nav pull-left">
+<div class="admin-nav pull-left">
   <ul class="nav nav-stacked">
     {{#each category in controller}}
       {{#link-to 'adminSiteSettingsCategory' category.nameKey tagName='li' class=category.nameKey}}
@@ -26,7 +26,7 @@
   </ul>
 </div>
 
-<div class="site-settings-detail pull-left">
+<div class="admin-detail pull-left">
   {{outlet}}
 </div>
 

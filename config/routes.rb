@@ -34,6 +34,8 @@ Discourse::Application.routes.draw do
   namespace :admin, constraints: StaffConstraint.new do
     get "" => "admin#index"
 
+    get 'plugins' => 'plugins#index'
+
     resources :site_settings, constraints: AdminConstraint.new do
       collection do
         get "category/:id" => "site_settings#index"

@@ -6,6 +6,7 @@ require_dependency 'plugin/auth_provider'
 class Plugin::Instance
 
   attr_accessor :path, :metadata
+  attr_reader :admin_route
 
   # Memoized array readers
   [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
@@ -37,6 +38,10 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
+  end
+
+  def add_admin_route(label, location)
+    @admin_route = {label: label, location: location}
   end
 
   def enabled?

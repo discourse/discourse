@@ -1665,6 +1665,14 @@ en:
         all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
 
+      plugins:
+        title: "Plugins"
+        installed: "Installed Plugins"
+        name: "Name"
+        none_installed: "You don't have any plugins installed."
+        version: "Version"
+        change_settings: "Change Settings"
+
       backups:
         title: "Backups"
         menu:
