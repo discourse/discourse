@@ -21,7 +21,7 @@ module Onebox
       html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
     end
 
-    def self.fetch_response(location, limit = 5, domain = nil,headers=nil)
+    def self.fetch_response(location, limit = 5, domain = nil, headers = nil)
       raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
       uri = URI(location)
@@ -53,4 +53,3 @@ module Onebox
     end
   end
 end
-
