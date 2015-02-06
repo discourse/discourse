@@ -15,8 +15,9 @@ class ImportScripts::Ning < ImportScripts::Base
 
     @users_json       = load_ning_json("ning-members-local.json")
     @discussions_json = load_ning_json("ning-discussions-local.json")
+
+    # An example of a custom category from Ning:
     @blogs_json       = load_ning_json("ning-blogs-local.json")
-    @pages_json       = load_ning_json("ning-pages-local.json")
 
     #SiteSetting.max_image_size_kb = 3072
     #SiteSetting.max_attachment_size_kb = 1024
@@ -35,9 +36,11 @@ class ImportScripts::Ning < ImportScripts::Base
     import_users
     import_categories
     import_discussions
-    import_blogs
-    import_pages
+
+    import_blogs # Remove this and/or add more as necessary
+
     suspend_users
+    update_tl0
 
     puts "", "Done"
   end
@@ -177,11 +180,6 @@ class ImportScripts::Ning < ImportScripts::Base
   def import_blogs
     puts "", "Importing blogs"
     import_topics(@blogs_json, "Blog")
-  end
-
-  def import_pages
-    puts "", "Importing pages"
-    import_topics(@pages_json, "Pages")
   end
 
   def import_topics(topics_json, default_category=nil)

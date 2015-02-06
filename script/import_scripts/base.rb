@@ -561,6 +561,12 @@ class ImportScripts::Base
     end
   end
 
+  def update_tl0
+    User.all.each do |user|
+      user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+    end
+  end
+
   def html_for_upload(upload, display_filename)
     if FileHelper.is_image?(upload.url)
       embedded_image_html(upload)
