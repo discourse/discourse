@@ -200,6 +200,7 @@
   td.latest {
     vertical-align: top;
     padding: 8px;
+    padding-top: 0;
   }
   .last-user-info {
     font-size: 0.857em;
@@ -242,6 +243,7 @@
     }
     a.last-posted-at, a.last-posted-at:visited {
       color: scale-color($primary, $lightness: 50%);
+      font-size: 0.88em;
     }
     .badge {
       font-size: 0.714em;
