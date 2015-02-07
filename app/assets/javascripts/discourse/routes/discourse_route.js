@@ -131,6 +131,11 @@ Discourse.Route.reopenClass({
         delete resources.root;
       }
 
+      // Even if no plugins set it up, we need an `adminPlugins` route
+      var adminPlugins = 'admin.adminPlugins';
+      resources[adminPlugins] = resources[adminPlugins] || [Ember.K];
+      paths[adminPlugins] = paths[adminPlugins] || "/plugins";
+
       var segments = {},
           standalone = [];
 
