@@ -99,7 +99,7 @@ class ApplicationController < ActionController::Base
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
 
-    if (request.format && request.format.json?) || (request.xhr?)
+    if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions('not_logged_in', 403, true)
     else
       redirect_to "/"
@@ -120,7 +120,13 @@ class ApplicationController < ActionController::Base
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
+
     if (request.format && request.format.json?) || (request.xhr?)
+      # HACK: do not use render_json_error for topics#show
+      if request.params[:controller] == 'topics' && request.params[:action] == 'show'
+        return render status: status_code, layout: false, text: (status_code == 404) ? build_not_found_page(status_code) : I18n.t(type)
+      end
+
       render_json_error I18n.t(type), type, status_code
     else
       render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
