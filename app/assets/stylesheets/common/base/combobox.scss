@@ -29,7 +29,16 @@
 
 .select2-container {
   border-radius: 3px;
+  border: 1px solid scale-color-diff();
+  &.select2-dropdown-open {
+    border: 0;
+  }
+  &.select2-container-active {
+    border-color: $tertiary;
+  }
 }
+
+
 
 .select2-container a.select2-choice {
   background: $secondary;
