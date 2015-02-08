@@ -141,17 +141,11 @@ class ApplicationController < ActionController::Base
   end
 
   def set_current_user_for_logs
-    if current_user
-      Logster.add_to_env(request.env,"username",current_user.username)
-    end
+    Logster.add_to_env(request.env,"username",current_user.username) if current_user
   end
 
   def set_locale
-    I18n.locale = if current_user
-                    current_user.effective_locale
-                  else
-                    SiteSetting.default_locale
-                  end
+    I18n.locale = current_user ? current_user.effective_locale : SiteSetting.default_locale
   end
 
   def store_preloaded(key, json)
@@ -415,9 +409,7 @@ class ApplicationController < ActionController::Base
     # returns an array of integers given a param key
     # returns nil if key is not found
     def param_to_integer_list(key, delimiter = ',')
-      if params[key]
-        params[key].split(delimiter).map(&:to_i)
-      end
+      params[key].split(delimiter).map(&:to_i) if params[key]
     end
 
 end
