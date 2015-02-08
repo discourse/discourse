@@ -163,7 +163,7 @@ header .title-wrapper .bar .badge-category {
 
 .badge-notification {
   @extend %badge;
-  padding: 3px 5px;
+  padding: 4px 5px 2px 5px;
   vertical-align: middle;
   color: $secondary;
   font-size: 11px;
@@ -224,7 +224,7 @@ header .title-wrapper .bar .badge-category {
 
 .badge-group {
   @extend %badge;
-  padding: 3px 5px;
+  padding: 4px 5px 2px 5px;
   color: $primary;
   text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: dark-light-diff($primary, $secondary, 90%, -65%);
