@@ -10,7 +10,7 @@ export default {
 
     var site = container.lookup('site:main');
     Discourse.MessageBus.subscribe("/site/read-only", function (enabled) {
-      site.currentProp('isReadOnly', enabled);
+      site.set('isReadOnly', enabled);
     });
   }
 };
