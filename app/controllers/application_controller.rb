@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
   # Some exceptions
   class RenderEmpty < Exception; end
 
-  # Render nothing unless we are an xhr request
+  # Render nothing
   rescue_from RenderEmpty do
     render 'default/empty'
   end
@@ -93,40 +93,37 @@ class ApplicationController < ActionController::Base
       time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i))
     end
 
-    render json: {errors: [I18n.t("rate_limiter.too_many_requests", time_left: time_left)]}, status: 429
+    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), 'rate_limit', 429
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
 
-    if request.get?
-      redirect_to "/"
+    if (request.format && request.format.json?) || (request.xhr?)
+      rescue_discourse_actions('not_logged_in', 403, true)
     else
-      render status: 403, json: failed_json.merge(message: I18n.t(:not_logged_in))
+      redirect_to "/"
     end
 
   end
 
   rescue_from Discourse::NotFound do
-    rescue_discourse_actions("[error: 'not found']", 404) # TODO: this breaks json responses
+    rescue_discourse_actions('not_found', 404)
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions("[error: 'invalid access']", 403, true) # TODO: this breaks json responses
+    rescue_discourse_actions('invalid_access', 403, true)
   end
 
   rescue_from Discourse::ReadOnly do
-    render status: 405, json: failed_json.merge(message: I18n.t("read_only_mode_enabled"))
+    render_json_error I18n.t('read_only_mode_enabled'), 'read_only', 405
   end
 
-  def rescue_discourse_actions(message, error, include_ember=false)
-    if request.format && request.format.json?
-      # TODO: this doesn't make sense. Stuffing an html page into a json response will cause
-      #       $.parseJSON to fail in the browser. Also returning text like "[error: 'invalid access']"
-      #       from the above rescue_from blocks will fail because that isn't valid json.
-      render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
+  def rescue_discourse_actions(type, status_code, include_ember=false)
+    if (request.format && request.format.json?) || (request.xhr?)
+      render_json_error I18n.t(type), type, status_code
     else
-      render text: build_not_found_page(error, include_ember ? 'application' : 'no_ember')
+      render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
     end
   end
 
@@ -317,8 +314,13 @@ class ApplicationController < ActionController::Base
       MultiJson.dump(serializer)
     end
 
-    def render_json_error(obj)
-      render json: MultiJson.dump(create_errors_json(obj)), status: 422
+    # Render action for a JSON error.
+    #
+    # obj    - a translated string, an ActiveRecord model, or an array of translated strings
+    # type   - a machine-readable description of the error
+    # status - HTTP status code to return
+    def render_json_error(obj, type=nil, status=422)
+      render json: MultiJson.dump(create_errors_json(obj, type)), status: status
     end
 
     def success_json
