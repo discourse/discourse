@@ -177,7 +177,10 @@ module SiteSettingExtension
   end
 
   def self.client_settings_cache_key
-    "client_settings_json"
+    # NOTE: we use the git version in the key to ensure
+    # that we don't end up caching the incorrect version
+    # in cases where we are cycling unicorns
+    "client_settings_json_#{Discourse.git_version}"
   end
 
   # refresh all the site settings
