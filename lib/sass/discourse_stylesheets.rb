@@ -3,9 +3,9 @@ require_dependency 'distributed_cache'
 
 class DiscourseStylesheets
 
-  CACHE_PATH = 'uploads/stylesheet-cache'
-  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  MANIFEST_FULL_PATH = "#{MANIFEST_DIR}/stylesheet-manifest"
+  CACHE_PATH ||= 'uploads/stylesheet-cache'
+  MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
 
   @lock = Mutex.new
 
