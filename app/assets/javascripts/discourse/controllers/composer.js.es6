@@ -181,11 +181,11 @@ export default DiscourseController.extend({
 
     // for now handle a very narrow use case
     // if we are replying to a topic AND not on the topic pop the window up
-    if(!force && composer.get('replyingToTopic')) {
+    if (!force && composer.get('replyingToTopic')) {
       var topic = this.get('topic');
       if (!topic || topic.get('id') !== composer.get('topic.id'))
       {
-        var message = I18n.t("composer.posting_not_on_topic", {title: this.get('model.topic.title')});
+        var message = I18n.t("composer.posting_not_on_topic");
 
         var buttons = [{
           "label": I18n.t("composer.cancel"),
@@ -193,11 +193,11 @@ export default DiscourseController.extend({
           "link": true
         }];
 
-        if(topic) {
+        if (topic) {
           buttons.push({
-            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + topic.get('title') + "</div>",
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + Handlebars.Utils.escapeExpression(topic.get('title')) + "</div>",
             "class": "btn btn-reply-here",
-            "callback": function(){
+            "callback": function() {
               composer.set('topic', topic);
               composer.set('post', null);
               self.save(true);
@@ -206,14 +206,14 @@ export default DiscourseController.extend({
         }
 
         buttons.push({
-          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.title') + "</div>",
+          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + Handlebars.Utils.escapeExpression(this.get('model.topic.title')) + "</div>",
           "class": "btn-primary btn-reply-on-original",
-          "callback": function(){
+          "callback": function() {
             self.save(true);
           }
         });
 
-        bootbox.dialog(message, buttons, {"classes": "reply-where-modal"});
+        bootbox.dialog(message, buttons, { "classes": "reply-where-modal" });
         return;
       }
     }
