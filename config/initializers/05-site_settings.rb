@@ -1,3 +1,8 @@
+# load up git version into memory
+# this way if it changes underneath we still have
+# the original version
+Discourse.git_version
+
 reload_settings = lambda {
   RailsMultisite::ConnectionManagement.each_connection do
     begin
