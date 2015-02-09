@@ -93,14 +93,14 @@ class ApplicationController < ActionController::Base
       time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i))
     end
 
-    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), 'rate_limit', 429
+    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), :rate_limit, 429
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
 
     if (request.format && request.format.json?) || request.xhr? || !request.get?
-      rescue_discourse_actions('not_logged_in', 403, true)
+      rescue_discourse_actions(:not_logged_in, 403, true)
     else
       redirect_to "/"
     end
@@ -108,15 +108,15 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::NotFound do
-    rescue_discourse_actions('not_found', 404)
+    rescue_discourse_actions(:not_found, 404)
   end
 
   rescue_from Discourse::InvalidAccess do
-    rescue_discourse_actions('invalid_access', 403, true)
+    rescue_discourse_actions(:invalid_access, 403, true)
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), 'read_only', 405
+    render_json_error I18n.t('read_only_mode_enabled'), :read_only, 405
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
