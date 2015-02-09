@@ -9,6 +9,9 @@ reload_settings = lambda {
       SiteSetting.refresh!
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
+    rescue => e
+      STDERR.puts "URGENT: #{e} Failed to initialize site #{RailsMultisite::ConnectionManagement.current_db}"
+      # the show must go on, don't stop startup if multisite fails
     end
   end
 }
