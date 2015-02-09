@@ -92,7 +92,7 @@ class SessionController < ApplicationController
       SingleSignOn::ACCESSORS.each do |a|
         details[a] = sso.send(a)
       end
-      Discourse.handle_exception(e, details)
+      Discourse.handle_job_exception(e, details)
 
       render text: I18n.t("sso.unknown_error"), status: 500
     end
