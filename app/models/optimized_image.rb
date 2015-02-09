@@ -67,7 +67,9 @@ class OptimizedImage < ActiveRecord::Base
     end
 
     # make sure we remove the cached copy from external stores
-    external_copy.close! if Discourse.store.external?
+    if Discourse.store.external?
+      external_copy.try(:close!) rescue nil
+    end
 
     thumbnail
   end
