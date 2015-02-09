@@ -7,7 +7,8 @@
 **/
 Discourse.Lightbox = {
   apply: function($elem) {
-    $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
+    var base = Discourse.BaseUri === '/' ? '' : Discourse.BaseUri;
+    $LAB.script(base + "/javascripts/jquery.magnific-popup-min.js").wait(function() {
       $("a.lightbox", $elem).each(function(i, e) {
         var $e = $(e);
         // do not lightbox spoiled images

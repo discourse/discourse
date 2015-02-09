@@ -30,6 +30,7 @@ test("avatarTemplate", function(){
   var oldCDN = Discourse.CDN;
   var oldBase = Discourse.BaseUrl;
   Discourse.BaseUrl = "frogs.com";
+  Discourse.BaseHost = Discourse.BaseUrl;
 
   equal(Discourse.User.avatarTemplate("sam", 1), "/user_avatar/frogs.com/sam/{size}/1.png");
   Discourse.CDN = "http://awesome.cdn.com";

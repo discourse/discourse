@@ -99,7 +99,9 @@ module ApplicationHelper
 
     opts ||= {}
     opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_small_url}"
-    opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
+    # strip base_uri becasue base_url includes it
+    path = request.fullpath.sub(/^#{Discourse.base_uri}/, '')
+    opts[:url] ||= "#{Discourse.base_url}#{path}"
 
     # Use the correct scheme for open graph
     if opts[:image].present? && opts[:image].start_with?("//")

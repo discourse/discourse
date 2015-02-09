@@ -138,7 +138,7 @@ class UsersController < ApplicationController
 
   def my_redirect
     if current_user.present? && params[:path] =~ /^[a-z\-\/]+$/
-      redirect_to "/users/#{current_user.username}/#{params[:path]}"
+      redirect_to "#{Discourse.base_uri}/users/#{current_user.username}/#{params[:path]}"
       return
     end
     raise Discourse::NotFound.new
