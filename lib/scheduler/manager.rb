@@ -42,13 +42,13 @@ module Scheduler
       def keep_alive
         @manager.keep_alive
       rescue => ex
-        Discourse.handle_exception(ex, {message: "Scheduling manager keep-alive"})
+        Discourse.handle_job_exception(ex, {message: "Scheduling manager keep-alive"})
       end
 
       def reschedule_orphans
         @manager.reschedule_orphans!
       rescue => ex
-        Discourse.handle_exception(ex, {message: "Scheduling manager orphan rescheduler"})
+        Discourse.handle_job_exception(ex, {message: "Scheduling manager orphan rescheduler"})
       end
 
       def process_queue
@@ -66,7 +66,7 @@ module Scheduler
           # Discourse.handle_exception was already called, and we don't have any extra info to give
           failed = true
         rescue => e
-          Discourse.handle_exception(e, {message: "Running a scheduled job", job: klass})
+          Discourse.handle_job_exception(e, {message: "Running a scheduled job", job: klass})
           failed = true
         end
         duration = ((Time.now.to_f - start) * 1000).to_i
@@ -77,7 +77,7 @@ module Scheduler
           @mutex.synchronize { info.write! }
         end
       rescue => ex
-        Discourse.handle_exception(ex, {message: "Processing scheduled job queue"})
+        Discourse.handle_job_exception(ex, {message: "Processing scheduled job queue"})
       ensure
         @running = false
       end

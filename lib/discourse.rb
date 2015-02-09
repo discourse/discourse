@@ -15,7 +15,7 @@ module Discourse
   # error_context() method in Jobs::Base to pass the job arguments and any
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
-  def self.handle_exception(ex, context = {}, parent_logger = nil)
+  def self.handle_job_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
