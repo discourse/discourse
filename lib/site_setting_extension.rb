@@ -196,18 +196,20 @@ module SiteSettingExtension
       # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
 
-      changes,deletions = diff_hash(new_hash, old)
-
-      if deletions.length > 0 || changes.length > 0
-        changes.each do |name, val|
-          next if shadowed_settings.include?(name)
-          current[name] = val
-        end
-        deletions.each do |name,val|
-          next if shadowed_settings.include?(name)
-          current[name] = defaults[name]
-        end
+      # add shadowed
+      shadowed_settings.each do |ss|
+        new_hash[ss] = GlobalSetting.send(ss)
       end
+
+      changes, deletions = diff_hash(new_hash, old)
+
+      changes.each do |name, val|
+        current[name] = val
+      end
+      deletions.each do |name, val|
+        current[name] = defaults[name]
+      end
+
       clear_cache!
     end
   end
