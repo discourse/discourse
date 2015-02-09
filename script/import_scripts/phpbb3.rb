@@ -408,7 +408,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         success_count += 1
 
-        html_for_upload(upload)
+        html_for_upload(upload, real_filename)
       end
 
       if new_raw != post.raw
