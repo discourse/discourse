@@ -137,11 +137,17 @@ describe Admin::GroupsController do
       group.add(user)
       group.save
 
+      user.primary_group_id = group.id
+      user.save
+
       xhr :delete, :remove_member, id: group.id, user_id: user.id
 
       expect(response).to be_success
       group.reload
       expect(group.users.count).to eq(0)
+
+      user.reload
+      expect(user.primary_group_id).to eq(nil)
     end
 
   end
