@@ -20,7 +20,8 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
       var result = model.get('title'),
           cat = model.get('category');
 
-      if (cat && !cat.get('isUncategorized')) {
+      // Only display uncategorized in the title tag if it was renamed
+      if (cat && !(cat.get('isUncategorizedCategory') && cat.get('name').toLowerCase() == "uncategorized")) {
         var catName = cat.get('name'),
             parentCategory = cat.get('parentCategory');
 
