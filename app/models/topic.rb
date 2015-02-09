@@ -249,13 +249,7 @@ class Topic < ActiveRecord::Base
   end
 
   def fancy_title
-    sanitized_title = title.gsub(/['&\"<>]/, {
-        "'" => '&#39;',
-        '&' => '&amp;',
-        '"' => '&quot;',
-        '<' => '&lt;',
-        '>' => '&gt;',
-      })
+    sanitized_title = ERB::Util.html_escape(title)
 
     return unless sanitized_title
     return sanitized_title unless SiteSetting.title_fancy_entities?
