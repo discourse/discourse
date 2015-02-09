@@ -112,18 +112,17 @@ Discourse.ClickTrack = {
       return false;
     }
 
+    // restore href
+    setTimeout(function() {
+      $link.removeClass('no-href');
+      $link.attr('href', $link.data('href'));
+      $link.data('href', null);
+    }, 50);
+
     // Otherwise, use a custom URL with a redirect
     if (Discourse.User.currentProp('external_links_in_new_tab')) {
       var win = window.open(trackingUrl, '_blank');
       win.focus();
-
-      // restore href
-      setTimeout(function(){
-        $link.removeClass('no-href');
-        $link.attr('href', $link.data('href'));
-        $link.data('href', null);
-      },50);
-
     } else {
       Discourse.URL.redirectTo(trackingUrl);
     }
