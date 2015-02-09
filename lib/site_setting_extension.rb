@@ -200,11 +200,9 @@ module SiteSettingExtension
 
       if deletions.length > 0 || changes.length > 0
         changes.each do |name, val|
-          next if shadowed_settings.include?(name)
           current[name] = val
         end
         deletions.each do |name,val|
-          next if shadowed_settings.include?(name)
           current[name] = defaults[name]
         end
       end
