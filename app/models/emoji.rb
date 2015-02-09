@@ -1,6 +1,8 @@
 class Emoji
   include ActiveModel::SerializerSupport
 
+  EMOJIS_CUSTOM_LOCK ||= "_emojis_custom_lock_".freeze
+
   attr_reader :path
   attr_accessor :name, :url
 
@@ -13,9 +15,12 @@ class Emoji
 
   def remove
     return if path.blank?
-    if File.exists?(path)
-      File.delete(path) rescue nil
-      Emoji.clear_cache
+
+    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
+      if File.exists?(path)
+        File.delete(path) rescue nil
+        Emoji.clear_cache
+      end
     end
   end
 
@@ -29,6 +34,14 @@ class Emoji
 
   def self.custom
     Discourse.cache.fetch("custom", family: "emoji") { load_custom }
+  end
+
+  def self.exists?(name)
+    Emoji[name].present?
+  end
+
+  def self.[](name)
+    Emoji.custom.detect { |e| e.name == name }
   end
 
   def self.create_from_path(path)
@@ -51,15 +64,19 @@ class Emoji
   def self.create_for(file, name)
     extension = File.extname(file.original_filename)
     path = "#{Emoji.base_directory}/#{name}#{extension}"
-    # store the emoji
-    FileUtils.mkdir_p(Pathname.new(path).dirname)
-    File.open(path, "wb") { |f| f << file.tempfile.read }
-    # clear the cache
-    Emoji.clear_cache
+
+    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
+      # store the emoji
+      FileUtils.mkdir_p(Pathname.new(path).dirname)
+      File.open(path, "wb") { |f| f << file.tempfile.read }
+      # clear the cache
+      Emoji.clear_cache
+    end
+
     # launch resize job
     Jobs.enqueue(:resize_emoji, path: path)
     # return created emoji
-    Emoji.custom.detect { |e| e.name == name }
+    Emoji[name]
   end
 
   def self.clear_cache
@@ -76,9 +93,11 @@ class Emoji
   end
 
   def self.load_custom
-    Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
-       .sort
-       .map { |emoji| Emoji.create_from_path(emoji) }
+    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
+      Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
+         .sort
+         .map { |emoji| Emoji.create_from_path(emoji) }
+    end
   end
 
   def self.base_directory
