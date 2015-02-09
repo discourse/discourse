@@ -26,6 +26,29 @@ module Discourse
     }.merge(context))
   end
 
+  def self.handle_request_exception(ex, controller, request, current_user)
+    cm = RailsMultisite::ConnectionManagement
+    context = {
+      current_db: cm.current_db,
+      current_hostname: cm.current_hostname,
+      rails_action: controller.action_name,
+      rails_controller: controller.controller_name,
+    }
+
+    env = request.env.dup
+
+    context.each do |key, value|
+      Logster.add_to_env(env, key, value)
+    end
+
+    begin
+      Thread.current[Logster::Logger::LOGSTER_ENV] = env
+      Logster.logger.fatal("#{ex.class.to_s}: #{ex.message} in #{controller.controller_name}##{controller.action_name}")
+    ensure
+      Thread.current[Logster::Logger::LOGSTER_ENV] = nil
+    end
+  end
+
   # Expected less matches than what we got in a find
   class TooManyMatches < Exception; end
 
