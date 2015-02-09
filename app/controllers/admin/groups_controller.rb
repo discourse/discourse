@@ -93,9 +93,12 @@ class Admin::GroupsController < Admin::AdminController
 
     return can_not_modify_automatic if group.automatic
 
+    user = User.find(user_id)
+    user.primary_group_id = nil if user.primary_group_id == group.id
+
     group.users.delete(user_id)
 
-    if group.save
+    if group.save && user.save
       render json: success_json
     else
       render_json_error(group)

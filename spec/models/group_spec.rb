@@ -47,6 +47,24 @@ describe Group do
     Group[:staff].user_ids - [-1]
   end
 
+  it "Correctly handles primary group" do
+    group = Fabricate(:group)
+    user = Fabricate(:user)
+    group.add(user)
+    group.save
+
+    user.primary_group = group
+    user.save
+
+    group.reload
+
+    group.remove(user)
+    group.save
+
+    user.reload
+    expect(user.primary_group).to eq nil
+  end
+
   it "Can update moderator/staff/admin groups correctly" do
 
     admin = Fabricate(:admin)

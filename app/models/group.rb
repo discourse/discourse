@@ -279,6 +279,7 @@ class Group < ActiveRecord::Base
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
+    user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
   end
 
   def appoint_manager(user)
