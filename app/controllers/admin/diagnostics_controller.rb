@@ -48,13 +48,12 @@ class Admin::DiagnosticsController < Admin::AdminController
 
     diff = from - to
 
-    report = "#{diff.length} objects have leaked\n"
-
-
     require 'objspace'
     diff = diff.map do |id|
       ObjectSpace._id2ref(id) rescue nil
     end.compact!
+
+    report = "#{diff.length} objects have leaked\n"
 
     report << "Summary:\n"
 
@@ -72,7 +71,7 @@ class Admin::DiagnosticsController < Admin::AdminController
       "#{k}: #{v}"
     }.join("\n")
 
-    report << "\nSample Items:\n"
+    report << "\n\nSample Items:\n"
 
     diff[0..5000].each do |v|
       report << "#{v.class}: #{String === v ? v[0..300] : (40 + ObjectSpace.memsize_of(v)).to_s + " bytes"}\n" rescue nil
