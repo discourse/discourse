@@ -1487,7 +1487,7 @@ en:
 
         <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
-        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
+        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](%{base_url}/my/preferences).
 
         ## Why can't I do certain things?
 
@@ -1502,7 +1502,7 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
         Enjoy your stay!
 
@@ -1523,7 +1523,7 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
         Enjoy your stay!
 
@@ -1877,7 +1877,7 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
         Enjoy your stay!
 
