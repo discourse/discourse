@@ -230,7 +230,7 @@ GEM
       metaclass (~> 0.0.1)
     mock_redis (0.13.2)
     moneta (0.8.0)
-    msgpack (0.5.10)
+    msgpack (0.5.11)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
