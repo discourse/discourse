@@ -6,8 +6,7 @@ class Middleware::RequestTracker
     @app = app
   end
 
-  def self.log_request_on_site(data)
-    host = RailsMultisite::ConnectionManagement.host(env)
+  def self.log_request_on_site(data,host)
     RailsMultisite::ConnectionManagement.with_hostname(host) do
       log_request(data)
     end
@@ -73,10 +72,11 @@ class Middleware::RequestTracker
 
     # we got to skip this on error ... its just logging
     data = self.class.get_data(env,result) rescue nil
+    host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
       Scheduler::Defer.later("Track view", _db=nil) do
-        self.class.log_request_on_site(data)
+        self.class.log_request_on_site(data,host)
       end
     end
 
