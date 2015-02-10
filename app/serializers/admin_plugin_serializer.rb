@@ -1,8 +1,13 @@
 class AdminPluginSerializer < ApplicationSerializer
-  attributes :name,
+  attributes :id,
+             :name,
              :version,
              :url,
              :admin_route
+
+  def id
+    object.metadata.name
+  end
 
   def name
     object.metadata.name

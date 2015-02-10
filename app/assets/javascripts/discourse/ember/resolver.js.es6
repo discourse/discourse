@@ -24,7 +24,7 @@ function loadingResolver(cb) {
 function parseName(fullName) {
   /*jshint validthis:true */
 
-  var nameParts = fullName.split(":"),
+  const nameParts = fullName.split(":"),
       type = nameParts[0], fullNameWithoutType = nameParts[1],
       name = fullNameWithoutType,
       namespace = get(this, 'namespace'),
@@ -83,6 +83,10 @@ export default Ember.DefaultResolver.extend({
       if (module && module['default']) { module = module['default']; }
     }
     return module;
+  },
+
+  resolveAdapter(parsedName) {
+    return this.customResolve(parsedName) || this._super(parsedName);
   },
 
   resolveView(parsedName) {
