@@ -85,12 +85,11 @@ module Discourse
   end
 
   def self.disabled_plugin_names
-    return [] if @plugins.blank?
-    @plugins.select {|p| !p.enabled?}.map(&:name)
+    plugins.select {|p| !p.enabled?}.map(&:name)
   end
 
   def self.plugins
-    @plugins
+    @plugins ||= []
   end
 
   def self.assets_digest
@@ -119,12 +118,10 @@ module Discourse
 
   def self.auth_providers
     providers = []
-    if plugins
-      plugins.each do |p|
-        next unless p.auth_providers
-        p.auth_providers.each do |prov|
-          providers << prov
-        end
+    plugins.each do |p|
+      next unless p.auth_providers
+      p.auth_providers.each do |prov|
+        providers << prov
       end
     end
     providers

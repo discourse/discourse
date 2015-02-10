@@ -1,6 +1,6 @@
 export default Ember.Route.extend({
   model() {
-    return Discourse.ajax("/admin/plugins.json");
+    return Discourse.ajax("/admin/plugins.json").then(res => res.plugins);
   },
 
   actions: {
