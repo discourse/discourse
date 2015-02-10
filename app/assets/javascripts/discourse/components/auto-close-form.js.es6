@@ -28,7 +28,7 @@ export default Ember.Component.extend({
       // only # of hours in limited mode
       return t.match(/^(\d+\.)?\d+$/);
     } else {
-      if (t.match(/^\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}(\s?[AP]M)?$/i)) {
+      if (t.match(/^\d{4}-\d{1,2}-\d{1,2}(?: \d{1,2}:\d{2}(\s?[AP]M)?){0,1}$/i)) {
         // timestamp must be in the future
         return moment(t).isAfter();
       } else {
