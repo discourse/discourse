@@ -3,15 +3,16 @@ import { outputExportResult } from 'discourse/lib/export-result';
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
   itemController: 'admin-log-screened-ip-address',
+  filter: null,
 
-  show: function() {
+  show: Discourse.debounce(function() {
     var self = this;
     self.set('loading', true);
-    Discourse.ScreenedIpAddress.findAll().then(function(result) {
+    Discourse.ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {
       self.set('model', result);
       self.set('loading', false);
     });
-  },
+  }, 250).observes("filter"),
 
   actions: {
     recordAdded: function(arg) {
