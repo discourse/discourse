@@ -1,7 +1,14 @@
+import LoadingSpinner from 'discourse/views/loading'
+
 export default Em.View.extend({
   classNameBindings: [':container'],
 
   render: function(buffer) {
-    buffer.push(this.get('controller.model'));
+    var model = this.get('controller.model');
+    if (!model) {
+      LoadingSpinner.create({}).render(buffer);
+    } else {
+      buffer.push(model);
+    }
   }
 });

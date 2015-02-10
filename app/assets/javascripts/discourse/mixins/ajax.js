@@ -54,8 +54,8 @@ Discourse.Ajax = Em.Mixin.create({
         args.headers = { 'Discourse-Track-View': true };
       }
 
-      args.success = function(xhr) {
-        Ember.run(null, resolve, xhr);
+      args.success = function(response) {
+        Ember.run(null, resolve, response);
       };
 
       args.error = function(xhr, textStatus) {
