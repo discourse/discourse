@@ -18,12 +18,17 @@ describe Middleware::RequestTracker do
 
       ApplicationRequest.clear_cache!
 
-      Middleware::RequestTracker.log_request(["200",{"Content-Type" => 'text/html'}], env(
+      data = Middleware::RequestTracker.get_data(env(
         "HTTP_USER_AGENT" => "AdsBot-Google (+http://www.google.com/adsbot.html)"
-      ))
-      Middleware::RequestTracker.log_request(["200",{}], env(
+      ), ["200",{"Content-Type" => 'text/html'}])
+
+      Middleware::RequestTracker.log_request(data)
+
+      data = Middleware::RequestTracker.get_data(env(
         "HTTP_DISCOURSE_TRACK_VIEW" => "1"
-      ))
+      ), ["200",{}])
+
+      Middleware::RequestTracker.log_request(data)
 
       ApplicationRequest.write_cache!
 
