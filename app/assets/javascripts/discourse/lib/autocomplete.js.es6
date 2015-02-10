@@ -270,7 +270,7 @@ export default function(options) {
         updateAutoComplete(options.dataSource(""));
       }
     } else if ((completeStart !== null) && (e.charCode !== 0)) {
-      caretPosition = Discourse.Utilities.caretPosition(me[0]),
+      caretPosition = Discourse.Utilities.caretPosition(me[0]);
       term = me.val().substring(completeStart + (options.key ? 1 : 0), caretPosition);
       term += String.fromCharCode(e.charCode);
       updateAutoComplete(options.dataSource(term));

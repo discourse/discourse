@@ -136,7 +136,7 @@ var bindEvents = function(page,offset){
 
   $('.emoji-page a').click(function(){
     var title = $(this).attr('title');
-    trackEmojiUsage(title)
+    trackEmojiUsage(title);
     composerController.appendTextAtCursor(":" + title + ":", {space: true});
     closeSelector();
     return false;

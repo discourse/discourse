@@ -15,15 +15,15 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   }, 250).observes("filter"),
 
   actions: {
-    recordAdded: function(arg) {
+    recordAdded(arg) {
       this.get("model").unshiftObject(arg);
     },
 
-    rollUp: function() {
-      var self = this;
+    rollUp() {
+      const self = this;
       return bootbox.confirm(I18n.t("admin.logs.screened_ips.roll_up_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
         if (confirmed) {
-          self.set("loading", true)
+          self.set("loading", true);
           return Discourse.ScreenedIpAddress.rollUp().then(function(results) {
             if (results && results.subnets) {
               if (results.subnets.length > 0) {
@@ -39,7 +39,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
       });
     },
 
-    exportScreenedIpList: function(subject) {
+    exportScreenedIpList() {
       Discourse.ExportCsv.exportScreenedIpList().then(outputExportResult);
     }
   }

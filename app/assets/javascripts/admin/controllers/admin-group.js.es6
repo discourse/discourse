@@ -3,12 +3,12 @@ export default Em.ObjectController.extend({
   disableSave: false,
 
   currentPage: function() {
-    if (this.get("user_count") == 0) { return 0; }
+    if (this.get("user_count") === 0) { return 0; }
     return Math.floor(this.get("offset") / this.get("limit")) + 1;
   }.property("limit", "offset", "user_count"),
 
   totalPages: function() {
-    if (this.get("user_count") == 0) { return 0; }
+    if (this.get("user_count") === 0) { return 0; }
     return Math.floor(this.get("user_count") / this.get("limit")) + 1;
   }.property("limit", "user_count"),
 

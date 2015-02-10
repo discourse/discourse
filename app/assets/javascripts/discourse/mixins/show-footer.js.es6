@@ -13,4 +13,4 @@ export default Em.Mixin.create({
       return true;
     }
   }
-})
+});

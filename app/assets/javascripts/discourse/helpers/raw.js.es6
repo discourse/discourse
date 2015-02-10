@@ -1,7 +1,7 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-function renderRaw(template, templateName, params) {
-  params.parent = params.parent || this;
+function renderRaw(ctx, template, templateName, params) {
+  params.parent = params.parent || ctx;
 
   if (!params.view) {
     var viewClass = Discourse.__container__.lookupFactory('view:' + templateName);
@@ -20,7 +20,5 @@ registerUnbound('raw', function(templateName, params) {
     return;
   }
 
-  return renderRaw.call(this, template, templateName, params);
+  return renderRaw(this, template, templateName, params);
 });
-
-export { renderRaw };
