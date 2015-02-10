@@ -12,11 +12,7 @@ class Middleware::RequestTracker
     end
   end
 
-
-
   def self.log_request(data)
-
-
     status = data[:status]
     track_view = data[:track_view]
 
