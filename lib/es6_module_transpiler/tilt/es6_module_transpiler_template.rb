@@ -99,8 +99,16 @@ module Tilt
 
       # Include JS code for JSHint
       unless Rails.env.production?
-        req_path = "/assets/#{scope.logical_path}.js"
-        @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{source.to_json};\n"
+        if scope.pathname.to_s =~ /js\.es6/
+          extension = "js.es6"
+        elsif scope.pathname.to_s =~ /\.es6/
+          extension = "es6"
+        else
+          extension = "js"
+        end
+        req_path = "/assets/#{scope.logical_path}.#{extension}"
+
+        @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{data.to_json};\n"
       end
 
       @output

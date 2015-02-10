@@ -30,7 +30,7 @@ export default Discourse.View.extend({
           position: "absolute",
           top: location.top - $this.innerHeight() + 5,
           left: location.left,
-        })
+        });
         break;
       }
       case "fixed": {
@@ -38,7 +38,7 @@ export default Discourse.View.extend({
           position: "fixed",
           top: location.top,
           left: location.left - $this.innerWidth(),
-        })
+        });
         break;
       }
     }

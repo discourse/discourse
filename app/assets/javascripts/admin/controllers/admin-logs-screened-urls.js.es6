@@ -3,8 +3,8 @@ import { outputExportResult } from 'discourse/lib/export-result';
 export default Ember.ArrayController.extend(Discourse.Presence, {
   loading: false,
 
-  show: function() {
-    var self = this;
+  show() {
+    const self = this;
     self.set('loading', true);
     Discourse.ScreenedUrl.findAll().then(function(result) {
       self.set('model', result);
@@ -13,7 +13,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
   },
 
   actions: {
-    exportScreenedUrlList: function(subject) {
+    exportScreenedUrlList() {
       Discourse.ExportCsv.exportScreenedUrlList().then(outputExportResult);
     }
   }

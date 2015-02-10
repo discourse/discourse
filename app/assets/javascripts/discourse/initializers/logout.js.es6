@@ -8,7 +8,7 @@ export default {
   initialize: function () {
     if (!Discourse.MessageBus) { return; }
 
-    Discourse.MessageBus.subscribe("/logout", function (user_id) {
+    Discourse.MessageBus.subscribe("/logout", function () {
       var refresher = function() {
         var redirect = Discourse.SiteSettings.logout_redirect;
         if(redirect.length === 0){
@@ -17,7 +17,7 @@ export default {
           window.location.href = redirect;
         }
       };
-      bootbox.dialog(I18n.t("logout"), {label: I18n.t("refresh"), callback: refresher}, {onEscape: refresher, backdrop: 'static'})
+      bootbox.dialog(I18n.t("logout"), {label: I18n.t("refresh"), callback: refresher}, {onEscape: refresher, backdrop: 'static'});
     });
   }
 };
