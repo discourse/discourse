@@ -1502,9 +1502,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
@@ -1523,9 +1523,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -1877,9 +1877,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
     signup:
       subject_template: "[%{site_name}] Activate your new account"
