@@ -24,22 +24,19 @@ class ScreenedIpAddress < ActiveRecord::Base
       return
     end
 
-    return write_attribute(:ip_address, val) if val.is_a?(IPAddr)
-
-    num_wildcards = val.count('*')
-    if num_wildcards == 0
+    if val.is_a?(IPAddr)
       write_attribute(:ip_address, val)
-    else
-      v = val.gsub(/\/.*/, '') # strip ranges like "/16" from the end if present
-      if v[v.index('*')..-1] =~ /[^\.\*]/
-        self.errors.add(:ip_address, :invalid)
-        return
-      end
-      parts = v.split('.')
-      (4 - parts.size).times { parts << '*' } # support strings like 192.*
-      v = parts.join('.')
-      write_attribute(:ip_address, "#{v.gsub('*', '0')}/#{32 - (v.count('*') * 8)}")
+      return
     end
+
+    v = IPAddr.handle_wildcards(val)
+
+    if v.nil?
+      self.errors.add(:ip_address, :invalid)
+      return
+    end
+
+    write_attribute(:ip_address, v)
 
   # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
   # handle both exceptions
