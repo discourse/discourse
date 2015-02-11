@@ -170,13 +170,24 @@ module Discourse
   end
 
   def self.enable_readonly_mode
-    $redis.set readonly_mode_key, 1
+    $redis.set(readonly_mode_key, 1)
     MessageBus.publish(readonly_channel, true)
+    keep_readonly_mode
     true
   end
 
+  def self.keep_readonly_mode
+    # extend the expiry by 1 minute every 30 seconds
+    Thread.new do
+      while readonly_mode?
+        $redis.expire(readonly_mode_key, 1.minute)
+        sleep 30.seconds
+      end
+    end
+  end
+
   def self.disable_readonly_mode
-    $redis.del readonly_mode_key
+    $redis.del(readonly_mode_key)
     MessageBus.publish(readonly_channel, false)
     true
   end
