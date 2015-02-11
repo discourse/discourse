@@ -1,43 +1,49 @@
-var ApplicationRoute = Discourse.Route.extend({
+const ApplicationRoute = Discourse.Route.extend({
 
   siteTitle: Discourse.computed.setting('title'),
 
   actions: {
-    _collectTitleTokens: function(tokens) {
+    _collectTitleTokens(tokens) {
       tokens.push(this.get('siteTitle'));
       Discourse.set('_docTitle', tokens.join(' - '));
     },
 
-    showTopicEntrance: function(data) {
+    // This is here as a bugfix for when an Ember Cloaked view triggers
+    // a scroll after a controller has been torn down. The real fix
+    // should be to fix ember cloaking to not do that, but this catches
+    // it safely just in case.
+    postChangedRoute: Ember.K,
+
+    showTopicEntrance(data) {
       this.controllerFor('topic-entrance').send('show', data);
     },
 
-    composePrivateMessage: function(user) {
-      var self = this;
+    composePrivateMessage(user) {
+      const self = this;
       this.transitionTo('userActivity', user).then(function () {
         self.controllerFor('user-activity').send('composePrivateMessage', user);
       });
     },
 
-    error: function(err, transition) {
+    error(err, transition) {
       if (err.status === 404) {
         // 404
         this.intermediateTransitionTo('unknown');
         return;
       }
 
-      var exceptionController = this.controllerFor('exception'),
-          errorString = err.toString(),
-          stack = err.stack;
+      const exceptionController = this.controllerFor('exception'),
+            stack = err.stack;
 
       // If we have a stack call `toString` on it. It gives us a better
       // stack trace since `console.error` uses the stack track of this
       // error callback rather than the original error.
+      let errorString = err.toString();
       if (stack) { errorString = stack.toString(); }
 
       if (err.statusText) { errorString = err.statusText; }
 
-      var c = window.console;
+      const c = window.console;
       if (c && c.error) {
         c.error(errorString);
       }
@@ -46,7 +52,7 @@ var ApplicationRoute = Discourse.Route.extend({
       this.intermediateTransitionTo('exception');
     },
 
-    showLogin: function() {
+    showLogin() {
       if (this.site.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
@@ -54,7 +60,7 @@ var ApplicationRoute = Discourse.Route.extend({
       }
     },
 
-    showCreateAccount: function() {
+    showCreateAccount() {
       if (this.site.get("isReadOnly")) {
         bootbox.alert(I18n.t("read_only_mode.login_disabled"));
       } else {
@@ -62,8 +68,8 @@ var ApplicationRoute = Discourse.Route.extend({
       }
     },
 
-    autoLogin: function(modal, onFail){
-      var methods = Em.get('Discourse.LoginMethod.all');
+    autoLogin(modal, onFail){
+      const methods = Em.get('Discourse.LoginMethod.all');
       if (!Discourse.SiteSettings.enable_local_logins &&
           methods.length === 1) {
             Discourse.Route.showModal(this, modal);
@@ -73,26 +79,26 @@ var ApplicationRoute = Discourse.Route.extend({
       }
     },
 
-    showForgotPassword: function() {
+    showForgotPassword() {
       Discourse.Route.showModal(this, 'forgotPassword');
     },
 
-    showNotActivated: function(props) {
+    showNotActivated(props) {
       Discourse.Route.showModal(this, 'notActivated');
       this.controllerFor('notActivated').setProperties(props);
     },
 
-    showUploadSelector: function(composerView) {
+    showUploadSelector(composerView) {
       Discourse.Route.showModal(this, 'uploadSelector');
       this.controllerFor('upload-selector').setProperties({ composerView: composerView });
     },
 
-    showKeyboardShortcutsHelp: function() {
+    showKeyboardShortcutsHelp() {
       Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
     },
 
-    showSearchHelp: function() {
-      var self = this;
+    showSearchHelp() {
+      const self = this;
 
       // TODO: @EvitTrout how do we get a loading indicator here?
       Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(html){
@@ -107,7 +113,7 @@ var ApplicationRoute = Discourse.Route.extend({
 
       @method closeModal
     **/
-    closeModal: function() {
+    closeModal() {
       this.render('hide-modal', {into: 'modal', outlet: 'modalBody'});
     },
 
@@ -118,7 +124,7 @@ var ApplicationRoute = Discourse.Route.extend({
 
       @method hideModal
     **/
-    hideModal: function() {
+    hideModal() {
       $('#discourse-modal').modal('hide');
     },
 
@@ -127,13 +133,12 @@ var ApplicationRoute = Discourse.Route.extend({
 
       @method showModal
     **/
-    showModal: function() {
+    showModal() {
       $('#discourse-modal').modal('show');
     },
 
-    editCategory: function(category) {
-      var self = this;
-
+    editCategory(category) {
+      const self = this;
       Discourse.Category.reloadById(category.get('id')).then(function (c) {
         self.site.updateCategory(c);
         Discourse.Route.showModal(self, 'editCategory', c);
@@ -156,7 +161,7 @@ var ApplicationRoute = Discourse.Route.extend({
     }
   },
 
-  activate: function() {
+  activate() {
     this._super();
     Em.run.next(function() {
       // Support for callbacks once the application has activated
@@ -164,11 +169,11 @@ var ApplicationRoute = Discourse.Route.extend({
     });
   },
 
-  handleShowLogin: function() {
-    var self = this;
+  handleShowLogin() {
+    const self = this;
 
     if(Discourse.SiteSettings.enable_sso) {
-      var returnPath = encodeURIComponent(window.location.pathname);
+      const returnPath = encodeURIComponent(window.location.pathname);
       window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
     } else {
       this.send('autoLogin', 'login', function(){
@@ -178,8 +183,8 @@ var ApplicationRoute = Discourse.Route.extend({
     }
   },
 
-  handleShowCreateAccount: function() {
-    var self = this;
+  handleShowCreateAccount() {
+    const self = this;
 
     self.send('autoLogin', 'createAccount', function(){
       Discourse.Route.showModal(self, 'createAccount');

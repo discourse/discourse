@@ -653,12 +653,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     }
   },
 
-  /**
-    Called the the topmost visible post on the page changes.
-
-    @method topVisibleChanged
-    @params {Discourse.Post} post that is at the top
-  **/
+  // Called the the topmost visible post on the page changes.
   topVisibleChanged: function(post) {
     if (!post) { return; }
 
