@@ -6,26 +6,31 @@ export default Ember.Component.extend({
   attributeBindings: ['disabled', 'translatedTitle:title'],
 
   translatedTitle: function() {
-    var label = this.get('label');
+    const title = this.get('title');
+    return title ? I18n.t(title) : this.get('translatedLabel');
+  }.property('title', 'translatedLabel'),
+
+  translatedLabel: function() {
+    const label = this.get('label');
     if (label) {
       return I18n.t(this.get('label'));
     }
   }.property('label'),
 
-  render: function(buffer) {
-    var title = this.get('translatedTitle'),
-        icon = this.get('icon');
+  render(buffer) {
+    const label = this.get('translatedLabel'),
+          icon = this.get('icon');
 
-    if (title || icon) {
+    if (label || icon) {
       if (icon) { buffer.push(iconHTML(icon) + ' '); }
-      if (title) { buffer.push(title); }
+      if (label) { buffer.push(label); }
     } else {
       // If no label or icon is present, yield
       return this._super();
     }
   },
 
-  click: function() {
+  click() {
     this.sendAction("action", this.get("actionParam"));
   }
 });
