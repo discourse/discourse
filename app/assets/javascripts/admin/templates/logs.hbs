@@ -1,14 +1,12 @@
-<div class='admin-controls'>
-  <div class='span15'>
-    <ul class="nav nav-pills">
-      <li>{{#link-to 'adminLogs.staffActionLogs'}}{{i18n 'admin.logs.staff_actions.title'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedEmails'}}{{i18n 'admin.logs.screened_emails.title'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedIpAddresses'}}{{i18n 'admin.logs.screened_ips.title'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminLogs.screenedUrls'}}{{i18n 'admin.logs.screened_urls.title'}}{{/link-to}}</li>
-      <li><a href="/logs" data-auto-route="true">{{i18n 'admin.logs.logster.title'}}</a></li>
-    </ul>
-  </div>
-</div>
+{{#admin-nav}}
+  {{admin-nav-item route='adminLogs.staffActionLogs' label='admin.logs.staff_actions.title'}}
+  {{admin-nav-item route='adminLogs.screenedEmails' label='admin.logs.screened_emails.title'}}
+  {{admin-nav-item route='adminLogs.screenedIpAddresses' label='admin.logs.screened_ips.title'}}
+  {{admin-nav-item route='adminLogs.screenedUrls' label='admin.logs.screened_urls.title'}}
+  {{#if currentUser.admin}}
+    {{admin-nav-item href='/logs' label='admin.logs.logster.title'}}
+  {{/if}}
+{{/admin-nav}}
 
 <div class="admin-container">
   {{outlet}}
