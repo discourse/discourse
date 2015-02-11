@@ -147,7 +147,7 @@ class Admin::DiagnosticsController < Admin::AdminController
 
       classes += large_objects.sort{|a,b| b[0] <=> a[0]}[0..800].map do |size,object|
         rval = "#{object.class}: size #{size}"
-        rval << " " << object[0..500].gsub("\n", "") if String === object
+        rval << " " << object.to_s[0..500].gsub("\n", "") if (String === object) || (Regexp === object)
         rval << "\n"
         rval
       end
