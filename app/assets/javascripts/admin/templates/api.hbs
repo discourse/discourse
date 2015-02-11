@@ -18,8 +18,8 @@
         {{/if}}
       </td>
       <td>
-        <button class='btn' {{action "regenerateKey" k}}><i class="fa fa-undo"></i>{{i18n 'admin.api.regenerate'}}</button>
-        <button class='btn' {{action "revokeKey" k}}><i class="fa fa-times"></i>{{i18n 'admin.api.revoke'}}</button>
+        {{d-button action='regenerateKey' actionParam=k icon='undo' label='admin.api.regenerate'}}
+        {{d-button action='revokeKey' actionParam=k icon='times' label='admin.api.revoke'}}
       </td>
     </tr>
   {{/each}}
@@ -29,5 +29,5 @@
 {{/if}}
 
 {{#unless hasMasterKey}}
-  <button class='btn' {{action "generateMasterKey"}}><i class="fa fa-key"></i>{{i18n 'admin.api.generate_master'}}</button>
+  {{d-button action='generateMasterKey' icon='key' label='admin.api.generate_master'}}
 {{/unless }}

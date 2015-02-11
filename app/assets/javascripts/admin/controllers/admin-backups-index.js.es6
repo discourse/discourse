@@ -8,32 +8,32 @@ export default Ember.ArrayController.extend({
 
   restoreDisabled: Em.computed.alias("status.restoreDisabled"),
 
-  restoreTitle: function() {
+  restoreTitleKey: function() {
     if (!this.get('status.allowRestore')) {
-      return I18n.t("admin.backups.operations.restore.is_disabled");
+      return "admin.backups.operations.restore.is_disabled";
     } else if (this.get("status.isOperationRunning")) {
-      return I18n.t("admin.backups.operation_already_running");
+      return "admin.backups.operation_already_running";
     } else {
-      return I18n.t("admin.backups.operations.restore.title");
+      return "admin.backups.operations.restore.title";
     }
   }.property("status.isOperationRunning"),
 
   destroyDisabled: Em.computed.alias("status.isOperationRunning"),
 
-  destroyTitle: function() {
+  destroyTitleKey: function() {
     if (this.get("status.isOperationRunning")) {
-      return I18n.t("admin.backups.operation_already_running");
+      return "admin.backups.operation_already_running";
     } else {
-      return I18n.t("admin.backups.operations.destroy.title");
+      return "admin.backups.operations.destroy.title";
     }
   }.property("status.isOperationRunning"),
 
-  readOnlyModeTitle: function() { return this._readOnlyModeI18n("title"); }.property("site.isReadOnly"),
-  readOnlyModeText: function() { return this._readOnlyModeI18n("text"); }.property("site.isReadOnly"),
+  readOnlyModeTitleKey: function() { return this._readOnlyModeI18nKey("title"); }.property("site.isReadOnly"),
+  readOnlyModeTextKey: function() { return this._readOnlyModeI18nKey("text"); }.property("site.isReadOnly"),
 
-  _readOnlyModeI18n: function(value) {
+  _readOnlyModeI18nKey: function(value) {
     var action = this.site.get("isReadOnly") ? "disable" : "enable";
-    return I18n.t("admin.backups.read_only." + action + "." + value);
+    return "admin.backups.read_only." + action + "." + value;
   },
 
   actions: {

@@ -7,12 +7,12 @@
   </div>
   <div class="pull-right">
     {{#if canRollback}}
-      <button {{action "rollback"}} class="btn btn-rollback" title="{{i18n 'admin.backups.operations.rollback.title'}}" {{bind-attr disabled="rollbackDisabled"}}><i class="fa fa-ambulance fa-flip-horizontal"></i>{{i18n 'admin.backups.operations.rollback.text'}}</button>
+      {{d-button class='btn-rollback' action='rollback' icon='ambulance fa-flip-horizontal' title='admin.backups.operations.rollback.title' label='admin.backups.operations.rollback.text' disabled=rollbackDisabled}}
     {{/if}}
     {{#if isOperationRunning}}
-      <button {{action "cancelOperation"}} class="btn btn-danger" title="{{i18n 'admin.backups.operations.cancel.title'}}"><i class="fa fa-times"></i>{{i18n 'admin.backups.operations.cancel.text'}}</button>
+      {{d-button class='btn-danger' action='cancelOperation' icon='times' title='admin.backups.operations.cancel.title' label='admin.backups.operations.cancel.text'}}
     {{else}}
-      <button {{action "startBackup"}} class="btn btn-primary" title="{{i18n 'admin.backups.operations.backup.title'}}"><i class="fa fa-rocket"></i>{{i18n 'admin.backups.operations.backup.text'}}</button>
+      {{d-button class='btn-primary' action='startBackup' icon='rocket' title='admin.backups.operations.backup.title' label='admin.backups.operations.backup.text'}}
     {{/if}}
   </div>
 </div>

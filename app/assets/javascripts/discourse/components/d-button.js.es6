@@ -6,6 +6,15 @@ export default Ember.Component.extend({
   attributeBindings: ['disabled', 'translatedTitle:title'],
 
   translatedTitle: function() {
+    var title = this.get('title');
+    if (title) {
+      return I18n.t(this.get('title'));
+    } else {
+      return this.get('translatedLabel');
+    }
+  }.property('title'),
+
+  translatedLabel: function() {
     var label = this.get('label');
     if (label) {
       return I18n.t(this.get('label'));
@@ -13,12 +22,12 @@ export default Ember.Component.extend({
   }.property('label'),
 
   render: function(buffer) {
-    var title = this.get('translatedTitle'),
+    var label = this.get('translatedLabel'),
         icon = this.get('icon');
 
-    if (title || icon) {
+    if (label || icon) {
       if (icon) { buffer.push(iconHTML(icon) + ' '); }
-      if (title) { buffer.push(title); }
+      if (label) { buffer.push(label); }
     } else {
       // If no label or icon is present, yield
       return this._super();
@@ -26,6 +35,6 @@ export default Ember.Component.extend({
   },
 
   click: function() {
-    this.sendAction("action", this.get("actionParam"));
+    this.sendAction('action', this.get('actionParam'));
   }
 });
