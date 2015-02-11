@@ -22,6 +22,15 @@ export default Em.Mixin.create({
       pasteZone: $upload
     });
 
+    $upload.on("fileuploaddrop", function (e, data) {
+      if (data.files.length > 10) {
+        bootbox.alert(I18n.t("post.errors.too_many_dragged_and_dropped_files"));
+        return false;
+      } else {
+        return true;
+      }
+    });
+
     $upload.on('fileuploadsubmit', function (e, data) {
       var isValid = Discourse.Utilities.validateUploadedFiles(data.files, true);
       var form = { image_type: self.get('type') };
