@@ -117,7 +117,9 @@ gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
-gem 'fastimage'
+
+# while we sort out https://github.com/sdsykes/fastimage/pull/46
+gem 'fastimage_discourse', require: 'fastimage'
 gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 
