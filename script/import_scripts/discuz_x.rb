@@ -361,6 +361,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # [quote] quotation includes the topic which is the same as reply to in Discourse
     # We get the pid to find the post number the post reply to. So it can be stripped
     s = s.gsub(/\[quote\][\s\S]*?\[\/quote\]/i, '').strip
+    s = s.gsub(/\[b\]回复 \[url=forum.php\?mod=redirect&goto=findpost&pid=\d+&ptid=\d+\].* 的帖子\[\/url\]\[\/b\]/i, '').strip
+
+    # Convert image bbcode
+    s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
 
     # Remove the font tag
     # Discourse doesn't support the font tag
@@ -376,14 +380,16 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     s.gsub!(/\[color=[^ \t\r\n\f\]]*?\]/i, '')
     s.gsub!(/\[\/color\]/i, '')
 
+    # Remove the hide tag
+    s.gsub!(/\[\/?hide\]/i, '')
+
     # Remove the align tag
     # still don't know what it is
     s.gsub!(/\[align=[^ \t\r\n\f\]]*?\]/i, '')
     s.gsub!(/\[\/align\]/i, "\n")
 
     # Convert code
-    s.gsub!(/\[code\]/i, "\n```\n")
-    s.gsub!(/\[\/code\]/i, "\n```\n")
+    s.gsub!(/\[\/?code\]/i, "\n```\n")
 
     # The edit notice should be removed
     # example: 本帖最后由 Helloworld 于 2015-1-28 22:05 编辑
@@ -514,9 +520,10 @@ class ImportScripts::DiscuzX < ImportScripts::Base
   # post id is in the quote block
   def find_post_id_by_quote_number(raw)
     s = raw.dup
-    quote_post_id = s.match(/\[quote\][\S\s]*pid=(\d+)[\S\s]*\[\/quote\]/)
+    quote_reply = s.match(/\[quote\][\S\s]*pid=(\d+)[\S\s]*\[\/quote\]/)
+    reply = s.match(/url=forum.php\?mod=redirect&goto=findpost&pid=(\d+)&ptid=\d+/)
 
-    quote_post_id ? quote_post_id[1] : nil
+    quote_reply ? quote_reply[1] : (reply ? reply[1] : nil)
   end
 
   # for some reason, discuz inlined some png file
