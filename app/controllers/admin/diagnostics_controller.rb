@@ -125,14 +125,16 @@ class Admin::DiagnosticsController < Admin::AdminController
 
 
     classes = {}
+    large_objects = []
 
     if opts[:class_report]
       ObjectSpace.each_object do |o|
         begin
-          next if o == classes
-
           classes[o.class] ||= 0
           classes[o.class] += 1
+          if (size = ObjectSpace.memsize_of(o)) > 200
+            large_objects << [size, o]
+          end
         rescue
           # all sorts of stuff can happen here BasicObject etc.
           classes[:unknown] ||= 0
@@ -140,6 +142,15 @@ class Admin::DiagnosticsController < Admin::AdminController
         end
       end
       classes = classes.sort{|a,b| b[1] <=> a[1]}[0..40].map{|klass, count| "#{klass}: #{count}"}
+
+      classes << "\nLarge Objects (#{large_objects.length} larger than 200 bytes total size #{large_objects.map{|x,_| x}.sum}):\n"
+
+      classes += large_objects.sort{|a,b| b[0] <=> a[0]}[0..800].map do |size,object|
+        rval = "#{object.class}: size #{size}"
+        rval << " " << object[0..500].gsub("\n", "") if String === object
+        rval << "\n"
+        rval
+      end
     end
 
     stats = GC.stat.map{|k,v| "#{k}: #{v}"}
