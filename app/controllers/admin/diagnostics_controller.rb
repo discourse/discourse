@@ -128,6 +128,7 @@ class Admin::DiagnosticsController < Admin::AdminController
     large_objects = []
 
     if opts[:class_report]
+      require 'objspace'
       ObjectSpace.each_object do |o|
         begin
           classes[o.class] ||= 0
