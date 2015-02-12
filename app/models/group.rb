@@ -46,15 +46,7 @@ class Group < ActiveRecord::Base
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 
-    unless guardian.is_admin?
-      allowed_ids = guardian.allowed_category_ids
-      if allowed_ids.length > 0
-        result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-      else
-        result = result.where('topics.category_id IS NULL')
-      end
-    end
-
+    result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
     result.order('posts.created_at desc')
   end
