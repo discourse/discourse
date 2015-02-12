@@ -1,5 +1,4 @@
-Discourse.PostStream = Em.Object.extend({
-
+const PostStream = Ember.Object.extend({
   loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
   notLoading: Em.computed.not('loading'),
   filteredPostsCount: Em.computed.alias("stream.length"),
@@ -45,15 +44,13 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
-
-    @property streamFilters
   **/
   streamFilters: function() {
-    var result = {};
+    const result = {};
     if (this.get('summary')) { result.filter = "summary"; }
     if (this.get('show_deleted')) { result.show_deleted = true; }
 
-    var userFilters = this.get('userFilters');
+    const userFilters = this.get('userFilters');
     if (!Em.isEmpty(userFilters)) {
       result.username_filters = userFilters.join(",");
     }
@@ -62,27 +59,25 @@ Discourse.PostStream = Em.Object.extend({
   }.property('userFilters.[]', 'summary', 'show_deleted'),
 
   hasNoFilters: function() {
-    var streamFilters = this.get('streamFilters');
+    const streamFilters = this.get('streamFilters');
     return !(streamFilters && ((streamFilters.filter === 'summary') || streamFilters.username_filters));
   }.property('streamFilters.[]', 'topic.posts_count', 'posts.length'),
 
   /**
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
-
-    @property previousWindow
   **/
   previousWindow: function() {
     // If we can't find the last post loaded, bail
-    var firstPost = _.first(this.get('posts'));
+    const firstPost = _.first(this.get('posts'));
     if (!firstPost) { return []; }
 
     // Find the index of the last post loaded, if not found, bail
-    var stream = this.get('stream');
-    var firstIndex = this.indexOf(firstPost);
+    const stream = this.get('stream');
+    const firstIndex = this.indexOf(firstPost);
     if (firstIndex === -1) { return []; }
 
-    var startIndex = firstIndex - this.get('topic.chunk_size');
+    let startIndex = firstIndex - this.get('topic.chunk_size');
     if (startIndex < 0) { startIndex = 0; }
     return stream.slice(startIndex, firstIndex);
 
@@ -91,17 +86,15 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
-
-    @property nextWindow
   **/
   nextWindow: function() {
     // If we can't find the last post loaded, bail
-    var lastLoadedPost = this.get('lastLoadedPost');
+    const lastLoadedPost = this.get('lastLoadedPost');
     if (!lastLoadedPost) { return []; }
 
     // Find the index of the last post loaded, if not found, bail
-    var stream = this.get('stream');
-    var lastIndex = this.indexOf(lastLoadedPost);
+    const stream = this.get('stream');
+    const lastIndex = this.indexOf(lastLoadedPost);
     if (lastIndex === -1) { return []; }
     if ((lastIndex + 1) >= this.get('highest_post_number')) { return []; }
 
@@ -109,41 +102,26 @@ Discourse.PostStream = Em.Object.extend({
     return stream.slice(lastIndex+1, lastIndex + this.get('topic.chunk_size') + 1);
   }.property('lastLoadedPost', 'stream.@each'),
 
-
-  /**
-    Cancel any active filters on the stream.
-
-    @method cancelFilter
-  **/
-  cancelFilter: function() {
+  cancelFilter() {
     this.set('summary', false);
     this.set('show_deleted', false);
     this.get('userFilters').clear();
   },
 
-  /**
-    Toggle summary mode for the stream.
-
-    @method toggleSummary
-  **/
-  toggleSummary: function() {
+  toggleSummary() {
     this.get('userFilters').clear();
     this.toggleProperty('summary');
     return this.refresh();
   },
 
-  toggleDeleted: function() {
+  toggleDeleted() {
     this.toggleProperty('show_deleted');
     return this.refresh();
   },
 
-  /**
-    Filter the stream to a particular user.
-
-    @method toggleParticipant
-  **/
-  toggleParticipant: function(username) {
-    var userFilters = this.get('userFilters');
+  // Filter the stream to a particular user.
+  toggleParticipant(username) {
+    const userFilters = this.get('userFilters');
     this.set('summary', false);
     this.set('show_deleted', true);
     if (userFilters.contains(username)) {
@@ -157,22 +135,16 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Loads a new set of posts into the stream. If you provide a `nearPost` option and the post
     is already loaded, it will simply scroll there and load nothing.
-
-    @method refresh
-    @param {Object} opts Options for loading the stream
-      @param {Integer} opts.nearPost The post we want to find other posts near to.
-      @param {Boolean} opts.track_visit Whether or not to track this as a visit to a topic.
-    @returns {Promise} a promise that is resolved when the posts have been inserted into the stream.
   **/
-  refresh: function(opts) {
+  refresh(opts) {
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
-    var topic = this.get('topic'),
+    const topic = this.get('topic'),
         self = this;
 
     // Do we already have the post in our list of posts? Jump there.
-    var postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
+    const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
     if (postWeWant) { return Ember.RSVP.resolve(); }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
@@ -192,10 +164,10 @@ Discourse.PostStream = Em.Object.extend({
   },
   hasLoadedData: Em.computed.and('hasPosts', 'hasStream'),
 
-  collapsePosts: function(from, to){
-    var posts = this.get('posts');
-    var remove = posts.filter(function(post){
-      var postNumber = post.get('post_number');
+  collapsePosts(from, to){
+    const posts = this.get('posts');
+    const remove = posts.filter(function(post){
+      const postNumber = post.get('post_number');
       return postNumber >= from && postNumber <= to;
     });
 
@@ -203,9 +175,9 @@ Discourse.PostStream = Em.Object.extend({
 
     // make gap
     this.set('gaps', this.get('gaps') || {before: {}, after: {}});
-    var before = this.get('gaps.before');
+    const before = this.get('gaps.before');
 
-    var post = posts.find(function(post){
+    const post = posts.find(function(post){
       return post.get('post_number') > to;
     });
 
@@ -218,16 +190,9 @@ Discourse.PostStream = Em.Object.extend({
   },
 
 
-  /**
-    Fill in a gap of posts before a particular post
-
-    @method fillGapBefore
-    @paaram {Discourse.Post} post beside gap
-    @paaram {Array} gap array of post ids to load
-    @returns {Promise} a promise that's resolved when the posts have been added.
-  **/
-  fillGapBefore: function(post, gap) {
-    var postId = post.get('id'),
+  // Fill in a gap of posts before a particular post
+  fillGapBefore(post, gap) {
+    const postId = post.get('id'),
         stream = this.get('stream'),
         idx = stream.indexOf(postId),
         currentPosts = this.get('posts'),
@@ -237,11 +202,11 @@ Discourse.PostStream = Em.Object.extend({
       // Insert the gap at the appropriate place
       stream.splice.apply(stream, [idx, 0].concat(gap));
 
-      var postIdx = currentPosts.indexOf(post);
+      let postIdx = currentPosts.indexOf(post);
       if (postIdx !== -1) {
         return this.findPostsByIds(gap).then(function(posts) {
           posts.forEach(function(p) {
-            var stored = self.storePost(p);
+            const stored = self.storePost(p);
             if (!currentPosts.contains(stored)) {
               currentPosts.insertAt(postIdx++, stored);
             }
@@ -256,16 +221,9 @@ Discourse.PostStream = Em.Object.extend({
     return Ember.RSVP.resolve();
   },
 
-  /**
-    Fill in a gap of posts after a particular post
-
-    @method fillGapAfter
-    @paaram {Discourse.Post} post beside gap
-    @paaram {Array} gap array of post ids to load
-    @returns {Promise} a promise that's resolved when the posts have been added.
-  **/
-  fillGapAfter: function(post, gap) {
-    var postId = post.get('id'),
+  // Fill in a gap of posts after a particular post
+  fillGapAfter(post, gap) {
+    const postId = post.get('id'),
         stream = this.get('stream'),
         idx = stream.indexOf(postId),
         self = this;
@@ -279,24 +237,19 @@ Discourse.PostStream = Em.Object.extend({
     return Ember.RSVP.resolve();
   },
 
-  /**
-    Appends the next window of posts to the stream. Call it when scrolling downwards.
-
-    @method appendMore
-    @returns {Promise} a promise that's resolved when the posts have been added.
-  **/
-  appendMore: function() {
-    var self = this;
+  // Appends the next window of posts to the stream. Call it when scrolling downwards.
+  appendMore() {
+    const self = this;
 
     // Make sure we can append more posts
     if (!self.get('canAppendMore')) { return Ember.RSVP.resolve(); }
 
-    var postIds = self.get('nextWindow');
+    const postIds = self.get('nextWindow');
     if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
     self.set('loadingBelow', true);
 
-    var stopLoading = function() {
+    const stopLoading = function() {
       self.set('loadingBelow', false);
     };
 
@@ -308,19 +261,14 @@ Discourse.PostStream = Em.Object.extend({
     }, stopLoading);
   },
 
-  /**
-    Prepend the previous window of posts to the stream. Call it when scrolling upwards.
-
-    @method prependMore
-    @returns {Promise} a promise that's resolved when the posts have been added.
-  **/
-  prependMore: function() {
-    var postStream = this;
+  // Prepend the previous window of posts to the stream. Call it when scrolling upwards.
+  prependMore() {
+    const postStream = this;
 
     // Make sure we can append more posts
     if (!postStream.get('canPrependMore')) { return Ember.RSVP.resolve(); }
 
-    var postIds = postStream.get('previousWindow');
+    const postIds = postStream.get('previousWindow');
     if (Ember.isEmpty(postIds)) { return Ember.RSVP.resolve(); }
 
     postStream.set('loadingAbove', true);
@@ -336,18 +284,13 @@ Discourse.PostStream = Em.Object.extend({
     Stage a post for insertion in the stream. It should be rendered right away under the
     assumption that the post will succeed. We can then `commitPost` when it succeeds or
     `undoPost` when it fails.
-
-    @method stagePost
-    @param {Discourse.Post} post the post to stage in the stream
-    @param {Discourse.User} user the user creating the post
   **/
-  stagePost: function(post, user) {
-
+  stagePost(post, user) {
     // We can't stage two posts simultaneously
     if (this.get('stagingPost')) { return false; }
     this.set('stagingPost', true);
 
-    var topic = this.get('topic');
+    const topic = this.get('topic');
     topic.setProperties({
       posts_count: (topic.get('posts_count') || 0) + 1,
       last_posted_at: new Date(),
@@ -371,13 +314,8 @@ Discourse.PostStream = Em.Object.extend({
     return true;
   },
 
-  /**
-    Commit the post we staged. Call this after a save succeeds.
-
-    @method commitPost
-    @param {Discourse.Post} the post we saved in the stream.
-  **/
-  commitPost: function(post) {
+  // Commit the post we staged. Call this after a save succeeds.
+  commitPost(post) {
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
     }
@@ -398,16 +336,13 @@ Discourse.PostStream = Em.Object.extend({
   /**
     Undo a post we've staged in the stream. Remove it from being rendered and revert the
     state we changed.
-
-    @method undoPost
-    @param {Discourse.Post} the post to undo from the stream
   **/
-  undoPost: function(post) {
+  undoPost(post) {
     this.get('stream').removeObject(-1);
     this.posts.removeObject(post);
     this.get('postIdentityMap').set(-1, null);
 
-    var topic = this.get('topic');
+    const topic = this.get('topic');
     this.set('stagingPost', false);
 
     topic.setProperties({
@@ -418,44 +353,24 @@ Discourse.PostStream = Em.Object.extend({
     // TODO unfudge reply count on parent post
   },
 
-  /**
-    Prepends a single post to the stream.
-
-    @method prependPost
-    @param {Discourse.Post} post The post we're prepending
-    @returns {Discourse.Post} the post that was inserted.
-  **/
-  prependPost: function(post) {
+  prependPost(post) {
     this.get('posts').unshiftObject(this.storePost(post));
     return post;
   },
 
-  /**
-    Appends a single post into the stream.
-
-    @method appendPost
-    @param {Discourse.Post} post The post we're appending
-    @returns {Discourse.Post} the post that was inserted.
-  **/
-  appendPost: function(post) {
-    var stored = this.storePost(post);
+  appendPost(post) {
+    const stored = this.storePost(post);
     if (stored) {
       this.get('posts').addObject(stored);
     }
     return post;
   },
 
-  /**
-    Removes posts from the stream.
-
-    @method removePosts
-    @param {Array} posts the collection of posts to remove
-  **/
-  removePosts: function(posts) {
+  removePosts(posts) {
     if (Em.isEmpty(posts)) { return; }
 
-    var postIds = posts.map(function (p) { return p.get('id'); });
-    var identityMap = this.get('postIdentityMap');
+    const postIds = posts.map(function (p) { return p.get('id'); });
+    const identityMap = this.get('postIdentityMap');
 
     this.get('stream').removeObjects(postIds);
     this.get('posts').removeObjects(posts);
@@ -464,14 +379,8 @@ Discourse.PostStream = Em.Object.extend({
     });
   },
 
-  /**
-    Returns a post from the identity map if it's been inserted.
-
-    @method findLoadedPost
-    @param {Integer} id The post we want from the identity map.
-    @returns {Discourse.Post} the post that was inserted.
-  **/
-  findLoadedPost: function(id) {
+  // Returns a post from the identity map if it's been inserted.
+  findLoadedPost(id) {
     return this.get('postIdentityMap').get(id);
   },
 
@@ -479,17 +388,14 @@ Discourse.PostStream = Em.Object.extend({
     Finds and adds a post to the stream by id. Typically this would happen if we receive a message
     from the message bus indicating there's a new post. We'll only insert it if we currently
     have no filters.
-
-    @method triggerNewPostInStream
-    @param {Integer} postId The id of the new post to be inserted into the stream
   **/
-  triggerNewPostInStream: function(postId) {
+  triggerNewPostInStream(postId) {
     if (!postId) { return; }
 
     // We only trigger if there are no filters active
     if (!this.get('hasNoFilters')) { return; }
 
-    var loadedAllPosts = this.get('loadedAllPosts');
+    const loadedAllPosts = this.get('loadedAllPosts');
 
     if (this.get('stream').indexOf(postId) === -1) {
       this.get('stream').addObject(postId);
@@ -497,8 +403,8 @@ Discourse.PostStream = Em.Object.extend({
     }
   },
 
-  triggerRecoveredPost: function(postId){
-    var self = this,
+  triggerRecoveredPost(postId){
+    const self = this,
         postIdentityMap = this.get('postIdentityMap'),
         existing = postIdentityMap.get(postId);
 
@@ -506,15 +412,15 @@ Discourse.PostStream = Em.Object.extend({
       this.triggerChangedPost(postId, new Date());
     } else {
       // need to insert into stream
-      var url = "/posts/" + postId;
+      const url = "/posts/" + postId;
       Discourse.ajax(url).then(function(p){
-        var post = Discourse.Post.create(p);
-        var stream = self.get("stream");
-        var posts = self.get("posts");
+        const post = Discourse.Post.create(p);
+        const stream = self.get("stream");
+        const posts = self.get("posts");
         self.storePost(post);
 
         // we need to zip this into the stream
-        var index = 0;
+        let index = 0;
         stream.forEach(function(postId){
           if(postId < p.id){
             index+= 1;
@@ -541,13 +447,13 @@ Discourse.PostStream = Em.Object.extend({
     }
   },
 
-  triggerDeletedPost: function(postId){
-    var self = this,
+  triggerDeletedPost(postId){
+    const self = this,
         postIdentityMap = this.get('postIdentityMap'),
         existing = postIdentityMap.get(postId);
 
     if(existing){
-      var url = "/posts/" + postId;
+      const url = "/posts/" + postId;
       Discourse.ajax(url).then(
         function(p){
           self.storePost(Discourse.Post.create(p));
@@ -558,30 +464,24 @@ Discourse.PostStream = Em.Object.extend({
     }
   },
 
-  triggerChangedPost: function(postId, updatedAt) {
+  triggerChangedPost(postId, updatedAt) {
     if (!postId) { return; }
 
-    var postIdentityMap = this.get('postIdentityMap'),
+    const postIdentityMap = this.get('postIdentityMap'),
         existing = postIdentityMap.get(postId),
         self = this;
 
     if (existing && existing.updated_at !== updatedAt) {
-      var url = "/posts/" + postId;
+      const url = "/posts/" + postId;
       Discourse.ajax(url).then(function(p){
         self.storePost(Discourse.Post.create(p));
       });
     }
   },
 
-  /**
-    Returns the "thread" of posts in the history of a post.
-
-    @method findReplyHistory
-    @param {Discourse.Post} post the post whose history we want
-    @returns {Array} the posts in the history.
-  **/
-  findReplyHistory: function(post) {
-    var postStream = this,
+  // Returns the "thread" of posts in the history of a post.
+  findReplyHistory(post) {
+    const postStream = this,
         url = "/posts/" + post.get('id') + "/reply-history.json?max_replies=" + Discourse.SiteSettings.max_reply_history;
 
     return Discourse.ajax(url).then(function(result) {
@@ -597,16 +497,11 @@ Discourse.PostStream = Em.Object.extend({
     Returns the closest post given a postNumber that may not exist in the stream.
     For example, if the user asks for a post that's deleted or otherwise outside the range.
     This allows us to set the progress bar with the correct number.
-
-    @method closestPostForPostNumber
-    @param {Number} postNumber the post number we're looking for
-    @return {Post} the closest post
-    @see PostStream.closestPostNumberFor
   **/
-  closestPostForPostNumber: function(postNumber) {
+  closestPostForPostNumber(postNumber) {
     if (!this.get('hasPosts')) { return; }
 
-    var closest = null;
+    let closest = null;
     this.get('posts').forEach(function (p) {
       if (!closest) {
         closest = p;
@@ -628,17 +523,12 @@ Discourse.PostStream = Em.Object.extend({
     @returns {Number} 1-starting index of the post, or 0 if not found
     @see PostStream.progressIndexOfPostId
   **/
-  progressIndexOfPost: function(post) {
+  progressIndexOfPost(post) {
     return this.progressIndexOfPostId(post.get('id'));
   },
 
-  /**
-    Get the index in the stream of a post id. (Use this for the topic progress bar.)
-
-    @param post_id - post id to search for
-    @returns {Number} 1-starting index of the post, or 0 if not found
-  **/
-  progressIndexOfPostId: function(post_id) {
+  // Get the index in the stream of a post id. (Use this for the topic progress bar.)
+  progressIndexOfPostId(post_id) {
     return this.get('stream').indexOf(post_id) + 1;
   },
 
@@ -646,15 +536,11 @@ Discourse.PostStream = Em.Object.extend({
     Returns the closest post number given a postNumber that may not exist in the stream.
     For example, if the user asks for a post that's deleted or otherwise outside the range.
     This allows us to set the progress bar with the correct number.
-
-    @method closestPostNumberFor
-    @param {Number} postNumber the post number we're looking for
-    @return {Number} a close post number
   **/
-  closestPostNumberFor: function(postNumber) {
+  closestPostNumberFor(postNumber) {
     if (!this.get('hasPosts')) { return; }
 
-    var closest = null;
+    let closest = null;
     this.get('posts').forEach(function (p) {
       if (closest === postNumber) { return; }
       if (!closest) { closest = p.get('post_number'); }
@@ -668,41 +554,33 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   // Find a postId for a postNumber, respecting gaps
-  findPostIdForPostNumber: function(postNumber) {
-    var count = 1,
-        stream = this.get('stream'),
-        beforeLookup = this.get('gaps.before'),
-        streamLength = stream.length;
+  findPostIdForPostNumber(postNumber) {
+    const stream = this.get('stream'),
+          beforeLookup = this.get('gaps.before'),
+          streamLength = stream.length;
 
-    for (var i=0; i<streamLength; i++) {
-      var pid = stream[i];
+    let sum = 1;
+    for (let i=0; i<streamLength; i++) {
+      const pid = stream[i];
 
       // See if there are posts before this post
       if (beforeLookup) {
-        var before = beforeLookup[pid];
+        const before = beforeLookup[pid];
         if (before) {
-          for (var j=0; j<before.length; j++) {
-            if (count === postNumber) { return pid; }
-            count++;
+          for (let j=0; j<before.length; j++) {
+            if (sum === postNumber) { return pid; }
+            sum++;
           }
         }
       }
 
-      if (count === postNumber) { return pid; }
-      count++;
+      if (sum === postNumber) { return pid; }
+      sum++;
     }
   },
 
-  /**
-    @private
-
-    Given a JSON packet, update this stream and the posts that exist in it.
-
-    @param {Object} postStreamData The JSON data we want to update from.
-    @method updateFromJson
-  **/
-  updateFromJson: function(postStreamData) {
-    var postStream = this,
+  updateFromJson(postStreamData) {
+    const postStream = this,
         posts = this.get('posts');
 
     posts.clear();
@@ -720,23 +598,17 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   /**
-    @private
-
     Stores a post in our identity map, and sets up the references it needs to
     find associated objects like the topic. It might return a different reference
     than you supplied if the post has already been loaded.
-
-    @method storePost
-    @param {Discourse.Post} post The post we're storing in the identity map
-    @returns {Discourse.Post} the post from the identity map
   **/
-  storePost: function(post) {
+  storePost(post) {
     // Calling `Em.get(undefined` raises an error
     if (!post) { return; }
 
-    var postId = Em.get(post, 'id');
+    const postId = Em.get(post, 'id');
     if (postId) {
-      var postIdentityMap = this.get('postIdentityMap'),
+      const postIdentityMap = this.get('postIdentityMap'),
           existing = postIdentityMap.get(post.get('id'));
 
       if (existing) {
@@ -752,7 +624,7 @@ Discourse.PostStream = Em.Object.extend({
       postIdentityMap.set(post.get('id'), post);
 
       // Update the `highest_post_number` if this post is higher.
-      var postNumber = post.get('post_number');
+      const postNumber = post.get('post_number');
       if (postNumber && postNumber > (this.get('topic.highest_post_number') || 0)) {
         this.set('topic.highest_post_number', postNumber);
       }
@@ -761,17 +633,11 @@ Discourse.PostStream = Em.Object.extend({
   },
 
   /**
-    @private
-
     Given a list of postIds, returns a list of the posts we don't have in our
     identity map and need to load.
-
-    @method listUnloadedIds
-    @param {Array} postIds The post Ids we want to load from the server
-    @returns {Array} the array of postIds we don't have loaded.
   **/
-  listUnloadedIds: function(postIds) {
-    var unloaded = Em.A(),
+  listUnloadedIds(postIds) {
+    const unloaded = Em.A(),
         postIdentityMap = this.get('postIdentityMap');
     postIds.forEach(function(p) {
       if (!postIdentityMap.has(p)) { unloaded.pushObject(p); }
@@ -779,17 +645,8 @@ Discourse.PostStream = Em.Object.extend({
     return unloaded;
   },
 
-  /**
-    @private
-
-    Returns a list of posts in order requested, by id.
-
-    @method findPostsByIds
-    @param {Array} postIds The post Ids we want to retrieve, in order.
-    @returns {Promise} a promise that will resolve to the posts in the order requested.
-  **/
-  findPostsByIds: function(postIds) {
-    var unloaded = this.listUnloadedIds(postIds),
+  findPostsByIds(postIds) {
+    const unloaded = this.listUnloadedIds(postIds),
         postIdentityMap = this.get('postIdentityMap');
 
     // Load our unloaded posts by id
@@ -800,27 +657,18 @@ Discourse.PostStream = Em.Object.extend({
     });
   },
 
-  /**
-    @private
-
-    Loads a list of posts from the server and inserts them into our identity map.
-
-    @method loadIntoIdentityMap
-    @param {Array} postIds The post Ids we want to insert into the identity map.
-    @returns {Promise} a promise that will resolve to the posts in the order requested.
-  **/
-  loadIntoIdentityMap: function(postIds) {
+  loadIntoIdentityMap(postIds) {
     // If we don't want any posts, return a promise that resolves right away
     if (Em.isEmpty(postIds)) {
       return Ember.RSVP.resolve();
     }
 
-    var url = "/t/" + this.get('topic.id') + "/posts.json",
+    const url = "/t/" + this.get('topic.id') + "/posts.json",
         data = { post_ids: postIds },
         postStream = this;
 
     return Discourse.ajax(url, {data: data}).then(function(result) {
-      var posts = Em.get(result, "post_stream.posts");
+      const posts = Em.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(function (p) {
           postStream.storePost(Discourse.Post.create(p));
@@ -830,33 +678,19 @@ Discourse.PostStream = Em.Object.extend({
   },
 
 
-  /**
-    @private
-
-    Returns the index of a particular post in the stream
-
-    @method indexOf
-    @param {Discourse.Post} post The post we're looking for
-  **/
-  indexOf: function(post) {
+  indexOf(post) {
     return this.get('stream').indexOf(post.get('id'));
   },
 
 
   /**
-    @private
-
     Handles an error loading a topic based on a HTTP status code. Updates
     the text to the correct values.
-
-    @method errorLoading
-    @param {Integer} status the HTTP status code
-    @param {Discourse.Topic} topic The topic instance we were trying to load
   **/
-  errorLoading: function(result) {
-    var status = result.status;
+  errorLoading(result) {
+    const status = result.status;
 
-    var topic = this.get('topic');
+    const topic = this.get('topic');
     topic.set('loadingFilter', false);
     topic.set('errorLoading', true);
 
@@ -887,10 +721,10 @@ Discourse.PostStream = Em.Object.extend({
 });
 
 
-Discourse.PostStream.reopenClass({
+PostStream.reopenClass({
 
-  create: function() {
-    var postStream = this._super.apply(this, arguments);
+  create() {
+    const postStream = this._super.apply(this, arguments);
     postStream.setProperties({
       posts: [],
       stream: [],
@@ -906,9 +740,9 @@ Discourse.PostStream.reopenClass({
     return postStream;
   },
 
-  loadTopicView: function(topicId, args) {
-    var opts = _.merge({}, args),
-        url = Discourse.getURL("/t/") + topicId;
+  loadTopicView(topicId, args) {
+    const opts = _.merge({}, args);
+    let url = Discourse.getURL("/t/") + topicId;
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }
@@ -921,3 +755,5 @@ Discourse.PostStream.reopenClass({
   }
 
 });
+
+export default PostStream;

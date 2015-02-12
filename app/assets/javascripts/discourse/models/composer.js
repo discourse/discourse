@@ -532,6 +532,7 @@ Discourse.Composer = Discourse.Model.extend({
       });
     }
 
+
     // If we're in a topic, we can append the post instantly.
     if (postStream) {
       // If it's in reply to another post, increase the reply count

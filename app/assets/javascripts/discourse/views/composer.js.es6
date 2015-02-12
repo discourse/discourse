@@ -154,8 +154,6 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
     var $wmdPreview = $('#wmd-preview');
     if ($wmdPreview.length === 0) return;
 
-    Discourse.SyntaxHighlighting.apply($wmdPreview);
-
     var post = this.get('model.post'),
         refresh = false;
 

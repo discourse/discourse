@@ -4,6 +4,7 @@ var isTransitioning = false,
     SCROLL_DELAY = 500;
 
 import ShowFooter from "discourse/mixins/show-footer";
+import Topic from 'discourse/models/topic';
 
 var TopicRoute = Discourse.Route.extend(ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
@@ -163,7 +164,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
         return topic;
       });
     } else {
-      return this.setupParams(Discourse.Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
+      return this.setupParams(Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
     }
   },
 
