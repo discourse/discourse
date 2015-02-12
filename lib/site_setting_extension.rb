@@ -405,7 +405,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method clean_name + "?" do
-      clean_name
+      self.send clean_name
     end
 
     define_singleton_method clean_name + "=" do |val|
