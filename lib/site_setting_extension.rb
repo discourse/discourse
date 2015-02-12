@@ -394,7 +394,7 @@ module SiteSettingExtension
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "")
 
-    eval "define_singleton_method :#{clean_name} do
+    define_singleton_method clean_name do
       c = @containers[provider.current_site]
       if c
         c[name]
@@ -404,14 +404,13 @@ module SiteSettingExtension
       end
     end
 
-    define_singleton_method :#{clean_name}? do
-      #{clean_name}
+    define_singleton_method clean_name + "?" do
+      clean_name
     end
 
-    define_singleton_method :#{clean_name}= do |val|
-      add_override!(:#{name}, val)
+    define_singleton_method clean_name + "=" do |val|
+      add_override!(name, val)
     end
-    "
   end
 
   def enum_class(name)
