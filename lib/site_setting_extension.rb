@@ -392,7 +392,7 @@ module SiteSettingExtension
 
 
   def setup_methods(name)
-    clean_name = name.to_s.sub("?", "")
+    clean_name = name.to_s.sub("?", "").to_sym
 
     define_singleton_method clean_name do
       c = @containers[provider.current_site]
@@ -404,11 +404,11 @@ module SiteSettingExtension
       end
     end
 
-    define_singleton_method clean_name + "?" do
+    define_singleton_method "#{clean_name}?" do
       self.send clean_name
     end
 
-    define_singleton_method clean_name + "=" do |val|
+    define_singleton_method "#{clean_name}=" do |val|
       add_override!(name, val)
     end
   end
