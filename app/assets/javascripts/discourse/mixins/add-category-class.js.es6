@@ -1,8 +1,8 @@
-// Mix this in to a view that has a `categorySlug` property to automatically
+// Mix this in to a view that has a `categoryFullSlug` property to automatically
 // add it to the body as the view is entered / left / model is changed.
 // This is used for keeping the `body` style in sync for the background image.
 export default {
-  _enterView: function() { this.get('categorySlug'); }.on('init'),
+  _enterView: function() { this.get('categoryFullSlug'); }.on('init'),
 
   _removeClasses: function() {
     $('body').removeClass(function(idx, css) {
@@ -11,13 +11,13 @@ export default {
   },
 
   _categoryChanged: function() {
-    var categorySlug = this.get('categorySlug');
+    var categoryFullSlug = this.get('categoryFullSlug');
     this._removeClasses();
 
-    if (categorySlug) {
-      $('body').addClass('category-' + categorySlug);
+    if (categoryFullSlug) {
+      $('body').addClass('category-' + categoryFullSlug);
     }
-  }.observes('categorySlug'),
+  }.observes('categoryFullSlug'),
 
   _leaveView: function() { this._removeClasses(); }.on('willDestroyElement')
 };

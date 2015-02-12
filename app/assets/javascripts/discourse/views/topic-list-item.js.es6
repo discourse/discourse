@@ -27,12 +27,11 @@ export default Discourse.View.extend(StringBuffer, {
   }.property('controller.selectedRow'),
 
   unboundClassNames: function(){
-    var classes = [];
-    var topic = this.get('topic');
-
+    let classes = [];
+    const topic = this.get('topic');
 
     if (topic.get('category')) {
-      classes.push("category-" + topic.get('category.slug'));
+      classes.push("category-" + topic.get('category.fullSlug'));
     }
 
     if(topic.get('hasExcerpt')){

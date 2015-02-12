@@ -48,8 +48,8 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('category_id', 'categoryName'),
 
   categoryClass: function() {
-    return 'category-' + Discourse.Category.slugFor(this.get('category'));
-  }.property('category'),
+    return 'category-' + this.get('category.fullSlug');
+  }.property('category.fullSlug'),
 
   shareUrl: function(){
     var user = Discourse.User.current();
