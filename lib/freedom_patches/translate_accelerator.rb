@@ -45,7 +45,7 @@ module I18n
     LOAD_MUTEX = Mutex.new
     def load_locale(locale)
       LOAD_MUTEX.synchronize do
-        return if @loaded_locales.include?(config.locale)
+        return if @loaded_locales.include?(locale)
 
         if @loaded_locales.empty?
           # load all rb files
