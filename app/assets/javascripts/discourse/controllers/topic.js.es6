@@ -1,6 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 import BufferedContent from 'discourse/mixins/buffered-content';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
+import Topic from 'discourse/models/topic';
 
 export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedContent, {
   multiSelect: false,
@@ -272,7 +273,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       var self = this,
           props = this.get('buffered.buffer');
 
-      Discourse.Topic.update(this.get('model'), props).then(function() {
+      Topic.update(this.get('model'), props).then(function() {
         // Note we roll back on success here because `update` saves
         // the properties to the topic.
         self.rollbackBuffer();
@@ -555,13 +556,13 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
   },
 
   // Receive notifications for this topic
-  subscribe: function() {
+  subscribe() {
     // Unsubscribe before subscribing again
     this.unsubscribe();
 
-    var topicController = this;
+    const self = this;
     Discourse.MessageBus.subscribe("/topic/" + this.get('id'), function(data) {
-      var topic = topicController.get('model');
+      const topic = self.get('model');
 
       if (data.notification_level_change) {
         topic.set('details.notification_level', data.notification_level_change);
@@ -569,7 +570,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
         return;
       }
 
-      var postStream = topicController.get('postStream');
+      const postStream = self.get('postStream');
       switch (data.type) {
         case "revised":
         case "acted":

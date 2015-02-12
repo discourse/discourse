@@ -1,8 +1,11 @@
-Discourse.Topic = Discourse.Model.extend({
+import TopicDetails from 'discourse/models/topic-details';
+import PostStream from 'discourse/models/post-stream';
+
+const Topic = Discourse.Model.extend({
 
   // returns createdAt if there's no bumped date
   bumpedAt: function() {
-    var bumpedAt = this.get('bumped_at');
+    const bumpedAt = this.get('bumped_at');
     if (bumpedAt) {
       return new Date(bumpedAt);
     } else {
@@ -20,11 +23,11 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('created_at'),
 
   postStream: function() {
-    return Discourse.PostStream.create({topic: this});
+    return PostStream.create({topic: this});
   }.property(),
 
   details: function() {
-    return Discourse.TopicDetails.create({topic: this});
+    return TopicDetails.create({topic: this});
   }.property(),
 
   invisible: Em.computed.not('visible'),
@@ -35,12 +38,12 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('id'),
 
   category: function() {
-    var categoryId = this.get('category_id');
+    const categoryId = this.get('category_id');
     if (categoryId) {
       return Discourse.Category.list().findProperty('id', categoryId);
     }
 
-    var categoryName = this.get('categoryName');
+    const categoryName = this.get('categoryName');
     if (categoryName) {
       return Discourse.Category.list().findProperty('name', categoryName);
     }
@@ -52,12 +55,12 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('category.fullSlug'),
 
   shareUrl: function(){
-    var user = Discourse.User.current();
+    const user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
   url: function() {
-    var slug = this.get('slug');
+    let slug = this.get('slug');
     if (slug.trim().length === 0) {
       slug = "topic";
     }
@@ -65,8 +68,8 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('id', 'slug'),
 
   // Helper to build a Url with a post number
-  urlForPostNumber: function(postNumber) {
-    var url = this.get('url');
+  urlForPostNumber(postNumber) {
+    let url = this.get('url');
     if (postNumber && (postNumber > 0)) {
       url += "/" + postNumber;
     }
@@ -74,7 +77,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   totalUnread: function() {
-    var count = (this.get('unread') || 0) + (this.get('new_posts') || 0);
+    const count = (this.get('unread') || 0) + (this.get('new_posts') || 0);
     return count > 0 ? count : null;
   }.property('new_posts', 'unread'),
 
@@ -83,7 +86,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('url', 'last_read_post_number'),
 
   lastUnreadUrl: function() {
-    var postNumber = Math.min(this.get('last_read_post_number') + 1, this.get('highest_post_number'));
+    const postNumber = Math.min(this.get('last_read_post_number') + 1, this.get('highest_post_number'));
     return this.urlForPostNumber(postNumber);
   }.property('url', 'last_read_post_number', 'highest_post_number'),
 
@@ -107,12 +110,11 @@ Discourse.Topic = Discourse.Model.extend({
   // tells us if we are still asynchronously flushing our "recently read" data.
   // So take what the browser has seen into consideration.
   displayNewPosts: function() {
-    var delta, result;
-    var highestSeen = Discourse.Session.currentProp('highestSeenByTopic')[this.get('id')];
+    const highestSeen = Discourse.Session.currentProp('highestSeenByTopic')[this.get('id')];
     if (highestSeen) {
-      delta = highestSeen - this.get('last_read_post_number');
+      let delta = highestSeen - this.get('last_read_post_number');
       if (delta > 0) {
-        result = this.get('new_posts') - delta;
+        let result = this.get('new_posts') - delta;
         if (result < 0) {
           result = 0;
         }
@@ -123,7 +125,7 @@ Discourse.Topic = Discourse.Model.extend({
   }.property('new_posts', 'id'),
 
   viewsHeat: function() {
-    var v = this.get('views');
+    const v = this.get('views');
     if( v >= Discourse.SiteSettings.topic_views_heat_high )   return 'heatmap-high';
     if( v >= Discourse.SiteSettings.topic_views_heat_medium ) return 'heatmap-med';
     if( v >= Discourse.SiteSettings.topic_views_heat_low )    return 'heatmap-low';
@@ -137,17 +139,17 @@ Discourse.Topic = Discourse.Model.extend({
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
   isBanner: Em.computed.equal('archetype', 'banner'),
 
-  toggleStatus: function(property) {
+  toggleStatus(property) {
     this.toggleProperty(property);
     this.saveStatus(property, this.get(property) ? true : false);
   },
 
-  setStatus: function(property, value) {
+  setStatus(property, value) {
     this.set(property, value);
     this.saveStatus(property, value);
   },
 
-  saveStatus: function(property, value) {
+  saveStatus(property, value) {
     if (property === 'closed' && value === true) {
       this.set('details.auto_close_at', null);
     }
@@ -160,28 +162,28 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  makeBanner: function() {
-    var self = this;
+  makeBanner() {
+    const self = this;
     return Discourse.ajax('/t/' + this.get('id') + '/make-banner', { type: 'PUT' })
            .then(function () { self.set('archetype', 'banner'); });
   },
 
-  removeBanner: function() {
-    var self = this;
+  removeBanner() {
+    const self = this;
     return Discourse.ajax('/t/' + this.get('id') + '/remove-banner', { type: 'PUT' })
            .then(function () { self.set('archetype', 'regular'); });
   },
 
   estimatedReadingTime: function() {
-    var wordCount = this.get('word_count');
+    const wordCount = this.get('word_count');
     if (!wordCount) return;
 
     // Avg for 500 words per minute when you account for skimming
     return Math.floor(wordCount / 500.0);
   }.property('word_count'),
 
-  toggleBookmark: function() {
-    var self = this, firstPost = this.get("postStream.posts")[0];
+  toggleBookmark() {
+    const self = this, firstPost = this.get("postStream.posts")[0];
 
     this.toggleProperty('bookmarked');
     if (this.get("postStream.firstPostPresent")) { firstPost.toggleProperty("bookmarked"); }
@@ -194,8 +196,7 @@ Discourse.Topic = Discourse.Model.extend({
       self.toggleProperty('bookmarked');
       if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
 
-      var showGenericError = true;
-
+      let showGenericError = true;
       if (error && error.responseText) {
         try {
           bootbox.alert($.parseJSON(error.responseText).errors);
@@ -209,13 +210,7 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  /**
-    Invite a user to this topic
-
-    @method createInvite
-    @param {String} emailOrUsername The email or username of the user to be invited
-  **/
-  createInvite: function(emailOrUsername, groupNames) {
+  createInvite(emailOrUsername, groupNames) {
     return Discourse.ajax("/t/" + this.get('id') + "/invite", {
       type: 'POST',
       data: { user: emailOrUsername, group_names: groupNames }
@@ -223,7 +218,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Delete this topic
-  destroy: function(deleted_by) {
+  destroy(deleted_by) {
     this.setProperties({
       deleted_at: new Date(),
       deleted_by: deleted_by,
@@ -237,7 +232,7 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Recover this topic if deleted
-  recover: function() {
+  recover() {
     this.setProperties({
       deleted_at: null,
       deleted_by: null,
@@ -248,14 +243,14 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Update our attributes from a JSON result
-  updateFromJson: function(json) {
+  updateFromJson(json) {
     this.get('details').updateFromJson(json.details);
 
-    var keys = Object.keys(json);
+    const keys = Object.keys(json);
     keys.removeObject('details');
     keys.removeObject('post_stream');
 
-    var topic = this;
+    const topic = this;
     keys.forEach(function (key) {
       topic.set(key, json[key]);
     });
@@ -266,13 +261,8 @@ Discourse.Topic = Discourse.Model.extend({
     return this.get('pinned') && this.get('category.isUncategorizedCategory');
   }.property('pinned', 'category.isUncategorizedCategory'),
 
-  /**
-    Clears the pin from a topic for the currently logged in user
-
-    @method clearPin
-  **/
-  clearPin: function() {
-    var topic = this;
+  clearPin() {
+    const topic = this;
 
     // Clear the pin optimistically from the object
     topic.set('pinned', false);
@@ -287,7 +277,7 @@ Discourse.Topic = Discourse.Model.extend({
     });
   },
 
-  togglePinnedForUser: function() {
+  togglePinnedForUser() {
     if (this.get('pinned')) {
       this.clearPin();
     } else {
@@ -295,13 +285,8 @@ Discourse.Topic = Discourse.Model.extend({
     }
   },
 
-  /**
-    Re-pins a topic with a cleared pin
-
-    @method rePin
-  **/
-  rePin: function() {
-    var topic = this;
+  rePin() {
+    const topic = this;
 
     // Clear the pin optimistically from the object
     topic.set('pinned', true);
@@ -317,12 +302,12 @@ Discourse.Topic = Discourse.Model.extend({
   },
 
   // Is the reply to a post directly below it?
-  isReplyDirectlyBelow: function(post) {
-    var posts = this.get('postStream.posts');
-    var postNumber = post.get('post_number');
+  isReplyDirectlyBelow(post) {
+    const posts = this.get('postStream.posts');
+    const postNumber = post.get('post_number');
     if (!posts) return;
 
-    var postBelow = posts[posts.indexOf(post) + 1];
+    const postBelow = posts[posts.indexOf(post) + 1];
 
     // If the post directly below's reply_to_post_number is our post number or we are quoted,
     // it's considered directly below.
@@ -340,7 +325,7 @@ Discourse.Topic = Discourse.Model.extend({
   hasExcerpt: Em.computed.and('pinned', 'excerptNotEmpty'),
 
   excerptTruncated: function() {
-    var e = this.get('excerpt');
+    const e = this.get('excerpt');
     return( e && e.substr(e.length - 8,8) === '&hellip;' );
   }.property('excerpt'),
 
@@ -349,7 +334,7 @@ Discourse.Topic = Discourse.Model.extend({
 
 });
 
-Discourse.Topic.reopenClass({
+Topic.reopenClass({
   NotificationLevel: {
     WATCHING: 3,
     TRACKING: 2,
@@ -357,13 +342,13 @@ Discourse.Topic.reopenClass({
     MUTED: 0
   },
 
-  createActionSummary: function(result) {
+  createActionSummary(result) {
     if (result.actions_summary) {
-      var lookup = Em.Object.create();
+      const lookup = Em.Object.create();
       result.actions_summary = result.actions_summary.map(function(a) {
         a.post = result;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        var actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
         return actionSummary;
       });
@@ -371,7 +356,7 @@ Discourse.Topic.reopenClass({
     }
   },
 
-  update: function(topic, props) {
+  update(topic, props) {
     props = JSON.parse(JSON.stringify(props)) || {};
 
     // We support `category_id` and `categoryId` for compatibility
@@ -384,7 +369,7 @@ Discourse.Topic.reopenClass({
     // allows us to make a distinction between arrays that were not
     // sent and arrays that we specifically want to be empty.
     Object.keys(props).forEach(function(k) {
-      var v = props[k];
+      const v = props[k];
       if (v instanceof Array && v.length === 0) {
         props[k + '_empty_array'] = true;
       }
@@ -400,24 +385,16 @@ Discourse.Topic.reopenClass({
     });
   },
 
-  create: function() {
-    var result = this._super.apply(this, arguments);
+  create() {
+    const result = this._super.apply(this, arguments);
     this.createActionSummary(result);
     return result;
   },
 
-  /**
-    Find similar topics to a given title and body
-
-    @method findSimilar
-    @param {String} title The current title
-    @param {String} body The current body
-    @returns A promise that will resolve to the topics
-  **/
-  findSimilarTo: function(title, body) {
+  findSimilarTo(title, body) {
     return Discourse.ajax("/topics/similar_to", { data: {title: title, raw: body} }).then(function (results) {
       if (Array.isArray(results)) {
-        return results.map(function(topic) { return Discourse.Topic.create(topic); });
+        return results.map(function(topic) { return Topic.create(topic); });
       } else {
         return Ember.A();
       }
@@ -425,14 +402,13 @@ Discourse.Topic.reopenClass({
   },
 
   // Load a topic, but accepts a set of filters
-  find: function(topicId, opts) {
-    var url = Discourse.getURL("/t/") + topicId;
-
+  find(topicId, opts) {
+    let url = Discourse.getURL("/t/") + topicId;
     if (opts.nearPost) {
       url += "/" + opts.nearPost;
     }
 
-    var data = {};
+    const data = {};
     if (opts.postsAfter) {
       data.posts_after = opts.postsAfter;
     }
@@ -461,8 +437,8 @@ Discourse.Topic.reopenClass({
     return Discourse.ajax(url + ".json", {data: data});
   },
 
-  mergeTopic: function(topicId, destinationTopicId) {
-    var promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
+  mergeTopic(topicId, destinationTopicId) {
+    const promise = Discourse.ajax("/t/" + topicId + "/merge-topic", {
       type: 'POST',
       data: {destination_topic_id: destinationTopicId}
     }).then(function (result) {
@@ -472,8 +448,8 @@ Discourse.Topic.reopenClass({
     return promise;
   },
 
-  movePosts: function(topicId, opts) {
-    var promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
+  movePosts(topicId, opts) {
+    const promise = Discourse.ajax("/t/" + topicId + "/move-posts", {
       type: 'POST',
       data: opts
     }).then(function (result) {
@@ -483,8 +459,8 @@ Discourse.Topic.reopenClass({
     return promise;
   },
 
-  changeOwners: function(topicId, opts) {
-    var promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
+  changeOwners(topicId, opts) {
+    const promise = Discourse.ajax("/t/" + topicId + "/change-owner", {
       type: 'POST',
       data: opts
     }).then(function (result) {
@@ -494,7 +470,7 @@ Discourse.Topic.reopenClass({
     return promise;
   },
 
-  bulkOperation: function(topics, operation) {
+  bulkOperation(topics, operation) {
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',
       data: {
@@ -504,8 +480,8 @@ Discourse.Topic.reopenClass({
     });
   },
 
-  bulkOperationByFilter: function(filter, operation, categoryId) {
-    var data = { filter: filter, operation: operation };
+  bulkOperationByFilter(filter, operation, categoryId) {
+    const data = { filter: filter, operation: operation };
     if (categoryId) data['category_id'] = categoryId;
     return Discourse.ajax("/topics/bulk", {
       type: 'PUT',
@@ -513,12 +489,13 @@ Discourse.Topic.reopenClass({
     });
   },
 
-  resetNew: function() {
+  resetNew() {
     return Discourse.ajax("/topics/reset-new", {type: 'PUT'});
   },
 
-  idForSlug: function(slug) {
+  idForSlug(slug) {
     return Discourse.ajax("/t/id_for/" + slug);
   }
-
 });
+
+export default Topic;

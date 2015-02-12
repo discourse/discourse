@@ -28,6 +28,8 @@
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action
 //= require ./discourse/models/composer
+//= require ./discourse/models/post-stream
+//= require ./discourse/models/topic-details
 //= require ./discourse/models/topic
 //= require ./discourse/models/top-period
 //= require ./discourse/controllers/controller

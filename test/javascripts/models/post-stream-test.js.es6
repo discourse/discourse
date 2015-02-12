@@ -1,7 +1,10 @@
-module("Discourse.PostStream");
+module("model:post-stream");
+
+import PostStream from 'discourse/models/post-stream';
+import Topic from 'discourse/models/topic';
 
 var buildStream = function(id, stream) {
-  var topic = Discourse.Topic.create({id: id, chunk_size: 5});
+  var topic = Topic.create({id: id, chunk_size: 5});
   var ps = topic.get('postStream');
   if (stream) {
     ps.set('stream', stream);
@@ -12,7 +15,7 @@ var buildStream = function(id, stream) {
 var participant = {username: 'eviltrout'};
 
 test('create', function() {
-  ok(Discourse.PostStream.create(), 'it can be created with no parameters');
+  ok(PostStream.create(), 'it can be created with no parameters');
 });
 
 test('defaults', function() {

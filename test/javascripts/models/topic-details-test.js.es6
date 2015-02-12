@@ -1,7 +1,9 @@
-module("Discourse.TopicDetails");
+module("model:topic-details");
+
+import Topic from 'discourse/models/topic';
 
 var buildDetails = function(id) {
-  var topic = Discourse.Topic.create({id: id});
+  var topic = Topic.create({id: id});
   return topic.get('details');
 };
 
@@ -20,13 +22,9 @@ test('updateFromJson', function() {
   });
 
   equal(details.get('suggested_topics.length'), 2, 'it loaded the suggested_topics');
-  containsInstance(details.get('suggested_topics'), Discourse.Topic);
+  containsInstance(details.get('suggested_topics'), Topic);
 
   equal(details.get('allowed_users.length'), 1, 'it loaded the allowed users');
   containsInstance(details.get('allowed_users'), Discourse.User);
 
 });
-
-
-
-

@@ -264,8 +264,6 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
     this._showLinkCounts();
 
     Discourse.ScreenTrack.current().track(this.$().prop('id'), postNumber);
-    Discourse.SyntaxHighlighting.apply($post);
-    Discourse.Lightbox.apply($post);
 
     this.trigger('postViewInserted', $post);
 
