@@ -26,6 +26,6 @@ export default Ember.Controller.extend({
   },
 
   sources: function() {
-    return Sharing.activeSources();
+    return Sharing.activeSources(this.siteSettings.share_links);
   }.property()
 });

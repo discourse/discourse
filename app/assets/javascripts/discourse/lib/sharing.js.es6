@@ -31,8 +31,7 @@ export default {
     _sources[source.id] = source;
   },
 
-  activeSources() {
-    const enabled = Discourse.SiteSettings.share_links.split('|');
-    return enabled.map(s => _sources[s]).compact();
+  activeSources(linksSetting) {
+    return linksSetting.split('|').map(s => _sources[s]).compact();
   }
 };
