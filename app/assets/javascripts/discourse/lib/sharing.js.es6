@@ -24,17 +24,14 @@
   ```
 **/
 
-var _sources = [];
+var _sources = {};
 
 export default {
-  addSource: function (source) {
-    _sources.push(source);
+  addSource(source) {
+    _sources[source.id] = source;
   },
 
-  activeSources: function() {
-    var enabled = Discourse.SiteSettings.share_links.split('|');
-    return _sources.filter(function(s) {
-      return enabled.indexOf(s.id) !== -1;
-    });
+  activeSources(linksSetting) {
+    return linksSetting.split('|').map(s => _sources[s]).compact();
   }
 };

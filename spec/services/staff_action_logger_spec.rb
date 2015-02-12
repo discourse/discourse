@@ -245,4 +245,23 @@ describe StaffActionLogger do
       log_record.details.should == subnets.join(", ")
     end
   end
+
+  describe 'log_custom' do
+    it "raises an error when `custom_type` is missing" do
+      expect { logger.log_custom(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates the UserHistory record" do
+      logged = logger.log_custom('clicked_something', {
+        evil: 'trout',
+        clicked_on: 'thing',
+        topic_id: 1234
+      })
+      logged.should be_valid
+      logged.details.should == "evil: trout\nclicked_on: thing"
+      logged.action.should == UserHistory.actions[:custom_staff]
+      logged.custom_type.should == 'clicked_something'
+      logged.topic_id.should === 1234
+    end
+  end
 end

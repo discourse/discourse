@@ -192,6 +192,9 @@ class Search
         elsif word == 'in:private'
           @search_pms = true
           nil
+        elsif word == 'in:bookmarks'
+          @bookmarked_only = true
+          nil
         else
           word
         end
@@ -329,11 +332,15 @@ class Search
       end
 
       if @guardian.user
-        if @liked_only
+        if @liked_only || @bookmarked_only
+
+          post_action_type = PostActionType.types[:like] if @liked_only
+          post_action_type = PostActionType.types[:bookmark] if @bookmarked_only
+
           posts = posts.where("posts.id IN (
                                 SELECT pa.post_id FROM post_actions pa
                                 WHERE pa.user_id = #{@guardian.user.id} AND
-                                      pa.post_action_type_id = #{PostActionType.types[:like]}
+                                      pa.post_action_type_id = #{post_action_type}
                              )")
         end
 

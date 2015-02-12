@@ -107,6 +107,7 @@ gem 'ember-rails'
 gem 'ember-source', '1.9.0.beta.4'
 gem 'handlebars-source', '2.0.0'
 gem 'barber'
+gem '6to5'
 
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
@@ -116,7 +117,9 @@ gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
-gem 'fastimage'
+
+# while we sort out https://github.com/sdsykes/fastimage/pull/46
+gem 'fastimage_discourse', require: 'fastimage'
 gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 

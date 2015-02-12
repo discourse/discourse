@@ -26,6 +26,14 @@ Discourse.Route = Ember.Route.extend({
   },
 
   actions: {
+
+    // Ember doesn't provider a router `willTransition` event so let's make one
+    willTransition: function() {
+      var router = this.container.lookup('router:main');
+      Ember.run.once(router, router.trigger, 'willTransition');
+      return this._super();
+    },
+
     _collectTitleTokens: function(tokens) {
       // If there's a title token method, call it and get the token
       if (this.titleToken) {
@@ -89,7 +97,8 @@ Discourse.Route.reopenClass({
   },
 
   mapRoutes: function() {
-    var resources = {};
+    var resources = {},
+        paths = {};
 
     // If a module is defined as `route-map` in discourse or a plugin, its routes
     // will be built automatically. You can supply a `resource` property to
@@ -107,6 +116,7 @@ Discourse.Route.reopenClass({
 
         if (!resources[mapObj.resource]) { resources[mapObj.resource] = []; }
         resources[mapObj.resource].push(mapObj.map);
+        if (mapObj.path) { paths[mapObj.resource] = mapObj.path; }
       }
     });
 
@@ -121,13 +131,37 @@ Discourse.Route.reopenClass({
         delete resources.root;
       }
 
-      // Apply other resources next
+      // Even if no plugins set it up, we need an `adminPlugins` route
+      var adminPlugins = 'admin.adminPlugins';
+      resources[adminPlugins] = resources[adminPlugins] || [Ember.K];
+      paths[adminPlugins] = paths[adminPlugins] || "/plugins";
+
+      var segments = {},
+          standalone = [];
+
       Object.keys(resources).forEach(function(r) {
-        router.resource(r, function() {
+        var m = /^([^\.]+)\.(.*)$/.exec(r);
+        if (m) {
+          segments[m[1]] = m[2];
+        } else {
+          standalone.push(r);
+        }
+      });
+
+      // Apply other resources next. A little hacky but works!
+      standalone.forEach(function(r) {
+        router.resource(r, {path: paths[r]}, function() {
           var res = this;
-          resources[r].forEach(function(m) {
-            m.call(res);
-          });
+          resources[r].forEach(function(m) { m.call(res); });
+
+          var s = segments[r];
+          if (s) {
+            var full = r + '.' + s;
+            res.resource(s, {path: paths[full]}, function() {
+              var nestedRes = this;
+              resources[full].forEach(function(m) { m.call(nestedRes); });
+            });
+          }
         });
       });
 

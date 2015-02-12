@@ -163,6 +163,10 @@ end
 #  mobile_stylesheet_baked :text
 #  footer                  :text
 #  mobile_footer           :text
+#  head_tag                :text
+#  body_tag                :text
+#  top                     :text
+#  mobile_top              :text
 #
 # Indexes
 #

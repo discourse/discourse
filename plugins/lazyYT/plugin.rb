@@ -2,6 +2,7 @@
 # about: Uses the lazyYT plugin to lazy load Youtube videos
 # version: 1.0.1
 # authors: Arpit Jalan
+# url: https://github.com/discourse/discourse/tree/master/plugins/lazyYT
 
 # javascript
 register_asset "javascripts/lazyYT.js"

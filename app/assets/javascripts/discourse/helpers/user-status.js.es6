@@ -1,6 +1,6 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-var safe = Handlebars.SafeString;
+const Safe = Handlebars.SafeString;
 
 registerUnbound('user-status', function(user) {
   if (!user) { return; }
@@ -10,11 +10,11 @@ registerUnbound('user-status', function(user) {
   if(Discourse.User.currentProp("admin") || Discourse.User.currentProp("moderator")) {
     if(user.get('admin')) {
       var adminDesc = I18n.t('user.admin', {user: name});
-      return new safe('<i class="fa fa-shield" title="' + adminDesc +  '" alt="' + adminDesc + '"></i>');
+      return new Safe('<i class="fa fa-shield" title="' + adminDesc +  '" alt="' + adminDesc + '"></i>');
     }
   }
   if(user.get('moderator')){
     var modDesc = I18n.t('user.moderator', {user: name});
-    return new safe('<i class="fa fa-shield" title="' + modDesc +  '" alt="' + modDesc + '"></i>');
+    return new Safe('<i class="fa fa-shield" title="' + modDesc +  '" alt="' + modDesc + '"></i>');
   }
 });

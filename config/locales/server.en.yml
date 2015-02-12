@@ -57,13 +57,57 @@ en:
   purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
 
-  errors:
+  errors: &errors
+    format: ! '%{attribute} %{message}'
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
-      taken: "has already been taken. (group names are case insensitive)"
+      taken: "has already been taken"
+      accepted: must be accepted
+      blank: can't be blank
+      present: must be blank
+      confirmation: ! "doesn't match %{attribute}"
+      empty: can't be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      odd: must be odd
+      record_invalid: ! 'Validation failed: %{errors}'
+      restrict_dependent_destroy:
+        one: "Cannot delete record because a dependent %{record} exists"
+        many: "Cannot delete record because dependent %{record} exist"
+      too_long:
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
+      other_than: "must be other than %{count}"
+    template:
+      body: ! 'There were problems with the following fields:'
+      header:
+        one: 1 error prohibited this %{model} from being saved
+        other: ! '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "There was an error loading that post."
+
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv or txt format."
@@ -441,6 +485,8 @@ en:
       title: 'Spam'
       description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
       long_form: 'flagged this as spam'
+      email_title: '"%{title}" was flagged as spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriate'
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
@@ -588,6 +634,46 @@ en:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    page_view_anon_reqs:
+      title: "Anonymous"
+      xaxis: "Day"
+      yaxis: "Anonymous Page Views"
+    page_view_logged_in_reqs:
+      title: "Logged In"
+      xaxis: "Day"
+      yaxis: "Logged In Page Views"
+    page_view_crawler_reqs:
+      title: "Web Crawlers"
+      xaxis: "Day"
+      yaxis: "Web Crawler Page Views"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Day"
+      yaxis: "Total Page Views"
+    http_background_reqs:
+      title: "Background"
+      xaxis: "Day"
+      yaxis: "Requests used for live update and tracking"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Day"
+      yaxis: "Successful requests (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
+      xaxis: "Day"
+      yaxis: "Redirect requests (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client Error)"
+      xaxis: "Day"
+      yaxis: "Client Errors (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Server Error)"
+      xaxis: "Day"
+      yaxis: "Server Errors (Status 5xx)"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Day"
+      yaxis: "Total requests"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -1054,6 +1140,7 @@ en:
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
+      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -1400,7 +1487,7 @@ en:
 
         <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
-        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
+        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](%{base_url}/my/preferences).
 
         ## Why can't I do certain things?
 
@@ -1415,9 +1502,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
@@ -1436,9 +1523,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -1790,9 +1877,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
 
     signup:
       subject_template: "[%{site_name}] Activate your new account"
@@ -2212,6 +2299,7 @@ en:
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
         </table>
       </p>
       <p>

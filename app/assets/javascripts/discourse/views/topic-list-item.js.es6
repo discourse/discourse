@@ -7,19 +7,18 @@ export default Discourse.View.extend(StringBuffer, {
   classNameBindings: ['controller.checked',
                       ':topic-list-item',
                       'unboundClassNames',
-                      'selected'
-       ],
+                      'selected'],
+
   actions: {
     select: function(){
       this.set('controller.selectedRow', this);
     },
 
-    toggleBookmark: function(){
+    toggleBookmark: function() {
       var self = this;
-      this.get('topic').toggleBookmark().catch(function(){
+      this.get('topic').toggleBookmark().finally(function() {
         self.rerender();
       });
-      self.rerender();
     }
   },
 
@@ -28,12 +27,11 @@ export default Discourse.View.extend(StringBuffer, {
   }.property('controller.selectedRow'),
 
   unboundClassNames: function(){
-    var classes = [];
-    var topic = this.get('topic');
-
+    let classes = [];
+    const topic = this.get('topic');
 
     if (topic.get('category')) {
-      classes.push("category-" + topic.get('category.slug'));
+      classes.push("category-" + topic.get('category.fullSlug'));
     }
 
     if(topic.get('hasExcerpt')){

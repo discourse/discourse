@@ -19,7 +19,7 @@ describe Guardian do
     expect { Guardian.new }.not_to raise_error
   end
 
-  it 'can be instantiaed with a user instance' do
+  it 'can be instantiated with a user instance' do
     expect { Guardian.new(user) }.not_to raise_error
   end
 

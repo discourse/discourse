@@ -83,7 +83,7 @@ describe SiteSetting do
   describe "scheme" do
 
     it "returns http when ssl is disabled" do
-      SiteSetting.expects(:use_https).returns(false)
+      SiteSetting.use_https = false
       expect(SiteSetting.scheme).to eq("http")
     end
 

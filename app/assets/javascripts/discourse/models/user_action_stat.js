@@ -19,7 +19,6 @@ Discourse.UserActionStat = Discourse.Model.extend({
   isResponse: function() {
     var actionType = this.get('action_type');
     return actionType === Discourse.UserAction.TYPES.replies ||
-           actionType === Discourse.UserAction.TYPES.mentions ||
            actionType === Discourse.UserAction.TYPES.quotes;
   }.property('action_type')
 

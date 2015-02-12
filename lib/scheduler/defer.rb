@@ -14,10 +14,10 @@ module Scheduler
       @async = val
     end
 
-    def later(desc = nil, &blk)
+    def later(desc = nil, db=RailsMultisite::ConnectionManagement.current_db, &blk)
       if @async
         start_thread unless @thread.alive?
-        @queue << [RailsMultisite::ConnectionManagement.current_db, blk, desc]
+        @queue << [db, blk, desc]
       else
         blk.call
       end
@@ -48,7 +48,7 @@ module Scheduler
     def do_work
       db, job, desc = @queue.deq
       begin
-        RailsMultisite::ConnectionManagement.establish_connection(db: db)
+        RailsMultisite::ConnectionManagement.establish_connection(db: db) if db
         job.call
       rescue => ex
         Discourse.handle_exception(ex, {message: "Running deferred code '#{desc}'"})

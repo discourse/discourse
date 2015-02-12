@@ -41,6 +41,22 @@ export default Ember.Component.extend({
     return result;
   }.property('category'),
 
+  categoryColor: function() {
+    var category = this.get('category');
+
+    if (category) {
+      var color = get(category, 'color');
+
+      if (color) {
+        var style = "";
+        if (color) { style += "background-color: #" + color + ";" }
+        return style;
+      }
+    }
+
+    return "background-color: #eee;";
+  }.property('category'),
+
   badgeStyle: function() {
     var category = this.get('category');
 

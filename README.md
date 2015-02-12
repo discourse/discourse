@@ -17,6 +17,7 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 [![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
 [![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
 
+Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
 ## Development
 

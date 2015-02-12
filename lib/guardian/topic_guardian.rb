@@ -67,6 +67,19 @@ module TopicGuardian
 
     # not secure, or I can see it
     !topic.read_restricted_category? || can_see_category?(topic.category)
-
   end
+
+  def filter_allowed_categories(records)
+    unless is_admin?
+      allowed_ids = allowed_category_ids
+      if allowed_ids.length > 0
+        records = records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
+      else
+        records = records.where('topics.category_id IS NULL')
+      end
+      records = records.references(:categories)
+    end
+    records
+  end
+
 end

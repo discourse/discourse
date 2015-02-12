@@ -1,16 +1,13 @@
 /**
   A model representing a Topic's details that aren't always present, such as a list of participants.
   When showing topics in lists and such this information should not be required.
-
-  @class TopicDetails
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
 **/
-Discourse.TopicDetails = Discourse.Model.extend({
+const TopicDetails = Discourse.Model.extend({
   loaded: false,
 
-  updateFromJson: function(details) {
+  updateFromJson(details) {
+    const topic = this.get('topic');
+
     if (details.allowed_users) {
       details.allowed_users = details.allowed_users.map(function (u) {
         return Discourse.User.create(u);
@@ -24,10 +21,9 @@ Discourse.TopicDetails = Discourse.Model.extend({
     }
 
     if (details.participants) {
-      var topic = this.get('topic');
       details.participants = details.participants.map(function (p) {
         p.topic = topic;
-        return Em.Object.create(p);
+        return Ember.Object.create(p);
       });
     }
 
@@ -59,7 +55,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
   }.property('notification_level', 'notifications_reason_id'),
 
 
-  updateNotifications: function(v) {
+  updateNotifications(v) {
     this.set('notification_level', v);
     this.set('notifications_reason_id', null);
     return Discourse.ajax("/t/" + (this.get('topic.id')) + "/notifications", {
@@ -68,7 +64,7 @@ Discourse.TopicDetails = Discourse.Model.extend({
     });
   },
 
-  removeAllowedUser: function(user) {
+  removeAllowedUser(user) {
     var users = this.get('allowed_users'),
         username = user.get('username');
 
@@ -80,3 +76,5 @@ Discourse.TopicDetails = Discourse.Model.extend({
     });
   }
 });
+
+export default TopicDetails;

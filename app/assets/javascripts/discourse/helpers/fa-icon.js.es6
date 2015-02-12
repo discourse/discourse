@@ -1,12 +1,12 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
 
-export function iconClasses(icon, modifier) {
+function iconClasses(icon, modifier) {
   var classes = "fa fa-" + icon;
   if (modifier) { classes += " fa-" + modifier; }
   return classes;
 }
 
-export function iconHTML(icon, label, modifier) {
+function iconHTML(icon, label, modifier) {
   var html = "<i class='" + iconClasses(icon, modifier) + "'";
   if (label) { html += " aria-hidden='true'"; }
   html += "></i>";
@@ -20,3 +20,5 @@ export function iconHTML(icon, label, modifier) {
 registerUnbound('fa-icon', function(icon, params) {
   return new Handlebars.SafeString(iconHTML(icon, params.label, params.modifier));
 });
+
+export { iconClasses, iconHTML };

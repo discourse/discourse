@@ -2,6 +2,7 @@
 # about: adds poll support to Discourse
 # version: 0.1
 # authors: Vikhyat Korrapati
+# url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
 load File.expand_path("../poll.rb", __FILE__)
 
@@ -80,10 +81,12 @@ after_initialize do
         end
 
         # Modify topic title.
-        if topic.title =~ /^(#{I18n.t('poll.prefix').strip})\s?:/i
-          topic.title = topic.title.gsub(/^(#{I18n.t('poll.prefix').strip})\s?:/i, I18n.t('poll.closed_prefix') + ':')
-        elsif topic.title =~ /^(#{I18n.t('poll.closed_prefix').strip})\s?:/i
-          topic.title = topic.title.gsub(/^(#{I18n.t('poll.closed_prefix').strip})\s?:/i, I18n.t('poll.prefix') + ':')
+        I18n.with_locale(topic.user.effective_locale) do
+          if topic.title =~ /^(#{I18n.t('poll.prefix').strip})\s?:/i
+            topic.title = topic.title.gsub(/^(#{I18n.t('poll.prefix').strip})\s?:/i, I18n.t('poll.closed_prefix') + ':')
+          elsif topic.title =~ /^(#{I18n.t('poll.closed_prefix').strip})\s?:/i
+            topic.title = topic.title.gsub(/^(#{I18n.t('poll.closed_prefix').strip})\s?:/i, I18n.t('poll.prefix') + ':')
+          end
         end
 
         topic.acting_user = current_user

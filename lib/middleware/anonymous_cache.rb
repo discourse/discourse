@@ -60,8 +60,12 @@ module Middleware
         @env["REQUEST_METHOD"] == "GET"
       end
 
+      def has_auth_cookie?
+        CurrentUser.has_auth_cookie?(@env)
+      end
+
       def cacheable?
-        !!(!CurrentUser.has_auth_cookie?(@env) && get?)
+        !!(!has_auth_cookie? && get?)
       end
 
       def cached

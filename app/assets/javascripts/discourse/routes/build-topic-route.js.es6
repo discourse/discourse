@@ -1,7 +1,7 @@
 import { queryParams } from 'discourse/controllers/discovery-sortable';
 
 // A helper to build a topic route for a filter
-export function filterQueryParams(params, defaultParams) {
+function filterQueryParams(params, defaultParams) {
   var findOpts = defaultParams || {};
   if (params) {
     Ember.keys(queryParams).forEach(function(opt) {
@@ -74,3 +74,4 @@ export default function(filter, extras) {
   }, extras);
 }
 
+export { filterQueryParams };

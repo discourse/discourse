@@ -6,7 +6,7 @@ export default {
   name: 'dynamic-route-builders',
   after: 'register-discourse-location',
 
-  initialize: function(container, app) {
+  initialize(container, app) {
     app.DiscoveryCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');
     app.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});

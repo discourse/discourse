@@ -359,18 +359,7 @@ class TopicQuery
       result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
       result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
-      guardian = Guardian.new(@user)
-      if !guardian.is_admin?
-        allowed_ids = guardian.allowed_category_ids
-        if allowed_ids.length > 0
-          result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-        else
-          result = result.where('topics.category_id IS NULL')
-        end
-        result = result.references(:categories)
-      end
-
-      result
+      Guardian.new(@user).filter_allowed_categories(result)
     end
 
     def remove_muted_categories(list, user, opts=nil)

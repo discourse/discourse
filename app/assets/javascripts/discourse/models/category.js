@@ -29,6 +29,10 @@ Discourse.Category = Discourse.Model.extend({
     return Discourse.getURL("/c/") + Discourse.Category.slugFor(this);
   }.property('name'),
 
+  fullSlug: function() {
+    return this.get("url").slice(3).replace("/", "-");
+  }.property("url"),
+
   nameLower: function() {
     return this.get('name').toLowerCase();
   }.property('name'),

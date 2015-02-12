@@ -1,13 +1,17 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
 
+  def self.base_attrs
+    [:topic_id, :post_id, :context, :subject, :ip_address, :previous_value, :new_value]
+  end
+
   def initialize(admin)
     @admin = admin
-    raise Discourse::InvalidParameters.new('admin is nil') unless @admin && @admin.is_a?(User)
+    raise Discourse::InvalidParameters.new(:admin) unless @admin && @admin.is_a?(User)
   end
 
   def log_user_deletion(deleted_user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless deleted_user && deleted_user.is_a?(User)
+    raise Discourse::InvalidParameters.new(:deleted_user) unless deleted_user && deleted_user.is_a?(User)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:delete_user],
       email: deleted_user.email,
@@ -16,8 +20,25 @@ class StaffActionLogger
     }))
   end
 
+  def log_custom(custom_type, details=nil)
+    raise Discourse::InvalidParameters.new(:custom_type) unless custom_type
+
+    details ||= {}
+
+    attrs = {}
+    StaffActionLogger.base_attrs.each do |attr|
+      attrs[attr] = details.delete(attr) if details.has_key?(attr)
+    end
+    attrs[:details] = details.map {|r| "#{r[0]}: #{r[1]}"}.join("\n")
+    attrs[:acting_user_id] = @admin.id
+    attrs[:action] = UserHistory.actions[:custom_staff]
+    attrs[:custom_type] = custom_type
+
+    UserHistory.create(attrs)
+  end
+
   def log_post_deletion(deleted_post, opts={})
-    raise Discourse::InvalidParameters.new("post is nil") unless deleted_post && deleted_post.is_a?(Post)
+    raise Discourse::InvalidParameters.new(:deleted_post) unless deleted_post && deleted_post.is_a?(Post)
 
     topic = deleted_post.topic || Topic.with_deleted.find(deleted_post.topic_id)
 
@@ -38,7 +59,7 @@ class StaffActionLogger
   end
 
   def log_topic_deletion(deleted_topic, opts={})
-    raise Discourse::InvalidParameters.new("topic is nil") unless deleted_topic && deleted_topic.is_a?(Topic)
+    raise Discourse::InvalidParameters.new(:deleted_topic) unless deleted_topic && deleted_topic.is_a?(Topic)
 
     details = [
       "id: #{deleted_topic.id}",
@@ -59,9 +80,9 @@ class StaffActionLogger
   end
 
   def log_trust_level_change(user, old_trust_level, new_trust_level, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user && user.is_a?(User)
-    raise Discourse::InvalidParameters.new('old trust level is invalid') unless TrustLevel.valid? old_trust_level
-    raise Discourse::InvalidParameters.new('new trust level is invalid') unless TrustLevel.valid? new_trust_level
+    raise Discourse::InvalidParameters.new(:user) unless user && user.is_a?(User)
+    raise Discourse::InvalidParameters.new(:old_trust_level) unless TrustLevel.valid? old_trust_level
+    raise Discourse::InvalidParameters.new(:new_trust_level) unless TrustLevel.valid? new_trust_level
     UserHistory.create!( params(opts).merge({
       action: UserHistory.actions[:change_trust_level],
       target_user_id: user.id,
@@ -70,7 +91,7 @@ class StaffActionLogger
   end
 
   def log_site_setting_change(setting_name, previous_value, new_value, opts={})
-    raise Discourse::InvalidParameters.new('setting_name is invalid') unless setting_name.present? && SiteSetting.respond_to?(setting_name)
+    raise Discourse::InvalidParameters.new(:setting_name) unless setting_name.present? && SiteSetting.respond_to?(setting_name)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:change_site_setting],
       subject: setting_name,
@@ -82,7 +103,7 @@ class StaffActionLogger
   SITE_CUSTOMIZATION_LOGGED_ATTRS = ['stylesheet', 'header', 'position', 'enabled', 'key']
 
   def log_site_customization_change(old_record, site_customization_params, opts={})
-    raise Discourse::InvalidParameters.new('site_customization_params is nil') unless site_customization_params
+    raise Discourse::InvalidParameters.new(:site_customization_params) unless site_customization_params
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:change_site_customization],
       subject: site_customization_params[:name],
@@ -92,7 +113,7 @@ class StaffActionLogger
   end
 
   def log_site_customization_destroy(site_customization, opts={})
-    raise Discourse::InvalidParameters.new('site_customization is nil') unless site_customization
+    raise Discourse::InvalidParameters.new(:site_customization) unless site_customization
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:delete_site_customization],
       subject: site_customization.name,
@@ -101,7 +122,7 @@ class StaffActionLogger
   end
 
   def log_username_change(user, old_username, new_username, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user
+    raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:change_username],
       target_user_id: user.id,
@@ -111,7 +132,7 @@ class StaffActionLogger
   end
 
   def log_user_suspend(user, reason, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user
+    raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:suspend_user],
       target_user_id: user.id,
@@ -120,7 +141,7 @@ class StaffActionLogger
   end
 
   def log_user_unsuspend(user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user
+    raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:unsuspend_user],
       target_user_id: user.id
@@ -128,7 +149,7 @@ class StaffActionLogger
   end
 
   def log_badge_grant(user_badge, opts={})
-    raise Discourse::InvalidParameters.new('user_badge is nil') unless user_badge
+    raise Discourse::InvalidParameters.new(:user_badge) unless user_badge
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:grant_badge],
       target_user_id: user_badge.user_id,
@@ -137,7 +158,7 @@ class StaffActionLogger
   end
 
   def log_badge_revoke(user_badge, opts={})
-    raise Discourse::InvalidParameters.new('user_badge is nil') unless user_badge
+    raise Discourse::InvalidParameters.new(:user_badge) unless user_badge
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:revoke_badge],
       target_user_id: user_badge.user_id,
@@ -146,7 +167,7 @@ class StaffActionLogger
   end
 
   def log_check_email(user, opts={})
-    raise Discourse::InvalidParameters.new('user is nil') unless user
+    raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:check_email],
       target_user_id: user.id
@@ -162,7 +183,7 @@ class StaffActionLogger
   end
 
   def log_impersonate(user, opts={})
-    raise Discourse::InvalidParameters.new("user is nil") unless user
+    raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:impersonate],
       target_user_id: user.id
@@ -178,7 +199,8 @@ class StaffActionLogger
 
   private
 
-    def params(opts)
+    def params(opts=nil)
+      opts ||= {}
       { acting_user_id: @admin.id, context: opts[:context] }
     end
 

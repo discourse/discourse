@@ -836,6 +836,7 @@ en:
         unread: "There are no more unread topics."
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
+        bookmarks: "There are no more bookmarked topics."
 
     topic:
       filter_to: "{{post_count}} posts in topic"
@@ -1105,6 +1106,7 @@ en:
         attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
         file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
         too_many_uploads: "Sorry, you can only upload one file at a time."
+        too_many_dragged_and_dropped_files: "Sorry, you can only drag & drop up to 10 files at a time."
         upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
@@ -1531,6 +1533,14 @@ en:
         suspended: 'Suspended:'
         private_messages_short: "PMs"
         private_messages_title: "Private Messages"
+        space_free: "{{size}} free"
+        uploads: "uploads"
+        backups: "backups"
+        traffic_short: "Traffic"
+        traffic: "Application web requests"
+        page_views: "Page Views"
+        page_views_short: "Page Views"
+        show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
           today: "Today"
@@ -1655,6 +1665,15 @@ en:
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+
+      plugins:
+        title: "Plugins"
+        installed: "Installed Plugins"
+        name: "Name"
+        none_installed: "You don't have any plugins installed."
+        version: "Version"
+        change_settings: "Change Settings"
+        howto: "How do I install plugins?"
 
       backups:
         title: "Backups"
@@ -1910,6 +1929,7 @@ en:
             label: "New:"
             ip_address: "IP address"
             add: "Add"
+            filter: "Search"
           roll_up:
             text: "Roll up"
             title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
@@ -2048,6 +2068,8 @@ en:
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
+        grant_admin_failed: "There was a problem granting admin privileges."
+        grant_moderation_failed: "There was a problem granting moderation privileges."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
         trust_level_3_requirements: "Trust Level 3 Requirements"
@@ -2149,6 +2171,7 @@ en:
           uncategorized: 'Other'
           backups: "Backups"
           login: "Login"
+          plugins: "Plugins"
 
       badges:
         title: Badges

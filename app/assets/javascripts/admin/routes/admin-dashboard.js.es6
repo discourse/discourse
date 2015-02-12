@@ -24,7 +24,8 @@ export default Discourse.Route.extend({
           c.set('top_referrers', topReferrers);
         }
 
-        ['admins', 'moderators', 'blocked', 'suspended', 'top_traffic_sources', 'top_referred_topics', 'updated_at'].forEach(function(x) {
+        [ 'disk_space','admins', 'moderators', 'blocked', 'suspended',
+          'top_traffic_sources', 'top_referred_topics', 'updated_at'].forEach(function(x) {
           c.set(x, d[x]);
         });
 
