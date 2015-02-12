@@ -341,9 +341,9 @@ SQL
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
-  def self.query_category(slug, parent_category_id)
-    self.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+  def self.query_category(slug_or_id, parent_category_id)
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
   def self.find_by_email(email)
@@ -364,6 +364,10 @@ SQL
     # parent takes part in url calculation
     # any change could invalidate multiples
     @@url_cache.clear
+  end
+
+  def full_slug
+    url[3..-1].gsub("/", "-")
   end
 
   def url
