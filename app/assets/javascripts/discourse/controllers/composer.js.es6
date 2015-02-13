@@ -155,8 +155,8 @@ export default DiscourseController.extend({
   },
 
   disableSubmit: function() {
-    return this.get('model.loading');
-  }.property('model.loading'),
+    return this.get('model.loading') || this.get('model.topic.deleted');
+  }.property('model.loading', 'model.topic.deleted'),
 
   save: function(force) {
     var composer = this.get('model'),

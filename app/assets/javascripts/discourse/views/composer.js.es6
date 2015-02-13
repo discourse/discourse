@@ -557,17 +557,20 @@ var ComposerView = Discourse.View.extend(Ember.Evented, {
   replyValidation: function() {
     var replyLength = this.get('model.replyLength'),
         missingChars = this.get('model.missingReplyCharacters'),
+        topicDeleted = this.get('model.topic.deleted'),
         reason;
     if( replyLength < 1 ){
       reason = I18n.t('composer.error.post_missing');
     } else if( missingChars > 0 ) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
+    } else if ( topicDeleted ) {
+      reason = I18n.t('composer.error.topic_deleted');
     }
 
     if( reason ) {
       return Discourse.InputValidation.create({ failed: true, reason: reason });
     }
-  }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength'),
+  }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength', 'model.topic.deleted'),
 
   _unbindUploadTarget: function() {
     var $uploadTarget = $('#reply-control');
