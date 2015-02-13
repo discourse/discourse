@@ -384,29 +384,6 @@ describe User do
     end
   end
 
-  describe 'temporary_key' do
-
-    let(:user) { Fabricate(:user) }
-    let!(:temporary_key) { user.temporary_key}
-
-    it 'has a temporary key' do
-      expect(temporary_key).to be_present
-    end
-
-    describe 'User#find_by_temporary_key' do
-
-      it 'can be used to find the user' do
-        expect(User.find_by_temporary_key(temporary_key)).to eq(user)
-      end
-
-      it 'returns nil with an invalid key' do
-        expect(User.find_by_temporary_key('asdfasdf')).to be_blank
-      end
-
-    end
-
-  end
-
   describe 'email_hash' do
     before do
       @user = Fabricate(:user)
