@@ -579,7 +579,6 @@ zh_TW:
     public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
-    enable_names: "允許用戶顯示全名，並禁止隱藏全名"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"
     embed_truncate: "截斷 embed 過的文章"
     embed_category: "embedded 話題的分類"

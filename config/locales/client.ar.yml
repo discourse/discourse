@@ -116,10 +116,12 @@ ar:
       stat:
         all_time: "دائما "
         last_7_days: "آخر 7 أيام "
+        last_30_days: "آخر 30 يوم"
       like_count: "اعجابات"
       topic_count: "مواضيع"
       post_count: "مشاركات"
-      user_count: "مستخدمين"
+      user_count: "مستخدمون جدد"
+      active_user_count: "مستخدمون نشطون"
       contact: "اتصل بنا"
       contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
     bookmarked:
@@ -245,6 +247,7 @@ ar:
       notifications: "اشعارات"
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
+      disable_jump_reply: "لاتذهب الى مشاركة جديدة بعد الرد"
       dynamic_favicon: " (أظهر تنبيهات الرسائل الواردة على فافيكون  (تجريبية "
       edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
@@ -257,6 +260,7 @@ ar:
       suspended_notice: "هذا المستخدم موقوف حتى تاريخ  {{date}}"
       suspended_reason: "سبب"
       github_profile: "Github"
+      mailing_list_mode: "استقبال بريد الكتروني لكل مشاركة  جديدة (بإسثناء لو قمت بكتم الموضوع او التصنيف)"
       watched_categories: "متابع"
       watched_categories_instructions: "تلقائيا ستقوم بمتابعة جميع المواضيع في هذا التصنيف , وسيتم اشعارك لجميع المشاركات والمواضيع وكذلك عداد الغيرمقروء والمشاركات الجديدة"
       tracked_categories: "Tracked"
@@ -322,6 +326,8 @@ ar:
         authenticated: "تم توثيق بريدك الإلكتروني بواسطة {{provider}}"
         frequency:
           zero: "سيتم ارسال رسالة الكترونية فورا في حال أنك لم الرسائل السابقة"
+          one: "سيتم ارسال رسالة الكترونية فقط في حال أننا لم نشاهدك في آخر دقيقة وانك لك تقم بقراءة الرسائل الالكترونية السابقة"
+          other: "سيتم ارسال رسالة الكترونية في أننا لم نشاهدك خلال  {{count}} دقيقة وانك لم تقم بقراءة الرسائل الالكترونية السابقة "
       name:
         title: "الاسم"
         instructions: "اسمك الكامل (اختياري )"
@@ -357,14 +363,20 @@ ar:
       website: "موقع الكتروني"
       email_settings: "بريد الكتروني"
       email_digests:
+        title: "إرسال رسالة إلكترونية تحتوي على جديد الموقع عندما لا أزور الموقع"
         daily: "يومي"
         weekly: "اسبوعي"
         bi_weekly: "كل اسبوعين"
+      email_direct: "تلقي رسالة إلكترونية عند اقتباس مشاركة لك  أو الرد على عليها أو في حالة ذكر اسمك @username"
+      email_private_messages: "إرسال إشعار بالبريد الإلكتروني عندما يرسل لك شخصاً رسالة خاصة"
       email_always: "لاتفعل ارسال رسائل بريدية اذا كنت متفاعل مع الموقع"
       other_settings: "اخرى"
       categories_settings: "اقسام"
       new_topic_duration:
         label: " \nإعتبر الوضوع جديد حين"
+        not_viewed: "لم تقم بالاطلاع عليها حتى الآن"
+        last_here: "تم انشائها منذ آخر زيارة لك"
+      auto_track_topics: "متابعة المواضيع التي أدخلها بشكل تلقائي"
       auto_track_options:
         never: "ابداً"
         always: "دائما"
@@ -543,11 +555,16 @@ ar:
       drafts_offline: "مسودات محفوظة "
       min_length:
         need_more_for_title: "{{n}} لذهاب الى العنوان"
+        need_more_for_reply: "{{n}} الذهاب الى"
       error:
         title_missing: "العنوان مطلوب"
+        title_too_short: "العنوان يجب أن يكون اكثر  {{min}} حرف"
+        title_too_long: "العنوان يجب أن لا يكون أكثر من  {{max}} حرف"
         post_missing: "لا يمكن للمشاركة أن تكون خالية"
+        post_length: "التعليق يجب أن يكون أكثر  {{min}} حرف"
         category_missing: "يجب عليك اختيارفئة"
       save_edit: "حفظ التحرير"
+      reply_original: "التعليق على الموضوع الاصلي"
       reply_here: "الرد هنا"
       reply: "الرد"
       cancel: "إلغاء"
@@ -601,6 +618,23 @@ ar:
         limited:
           units: "(# of hours)"
           examples: 'أدخل الساعة (24)'
+    notifications:
+      title: "الإشعار عندما يتم ذكر @name , أو الردود على مواضيعك أو مشاركاتك أو الرسالة الخاصة ...إلخ"
+      none: "لا يمكن عرض الإشعارات في الوقت الحالي."
+      more: "إظهار إشعارات قديمة"
+      total_flagged: "مجموع المشاركات المعلّم عليها"
+      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span>"
+      replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
+      moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> نقل{{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>استحق'{{description}}'</p>"
     upload_selector:
       title: "اضف صورة"
       title_with_attachments: "اضف صورة او ملف"
@@ -624,14 +658,341 @@ ar:
         category: "البحث في التصنيف \"{{category}}\""
         topic: "بحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
+    site_map: "الذهاب إلى قائمة مواضيع أو تصنيف آخر"
     go_back: 'الرجوع'
+    not_logged_in_user: 'صفحة المستخدم مع ملخص عن نشاطه و إعداداته'
+    current_user: 'الذهاب إلى صفحتك الشخصية'
+    topics:
+      bulk:
+        reset_read: "تصفير القراءات"
+        delete: "المواضيع المحذوفة"
+        dismiss_posts: "إخفاء المشاركات"
+        dismiss_posts_tooltip: "تصفير عدادا المواضيع الغير مقروءة مع الاستمرار في إظهارها في قائمة المواضيع الغير مقروءة عند إضافة مشاركات جديدة"
+        dismiss_topics: "إخفاء المواضيع"
+        dismiss_topics_tooltip: "توقف عن إظهار هذه المواضيع ضمن قائمة الغير مقروءة عند إضافة مشاركات جديدة لها"
+        dismiss_new: "إخفاء الجديد"
+        toggle: "إيقاف/تشغيل الاختيار المتعدد للمواضيع"
+        actions: "عمليات تنفذ دفعة واحدة"
+        change_category: "تغيير التصنيف"
+        close_topics: "إغلاق المواضيع"
+        archive_topics: "أرشفة المواضيع"
+        notification_level: "تغيير مستوى الإشعارات"
+      none:
+        unread: "لا يوجد لديك مواضيع غير مقروءة"
+        new: "لا يوجد لديك مواضيع جديدة"
+        read: "لم تقرأ أي موضوع حتى الآن"
+        posted: "لم تقم بإضافة أي موضوع حتى الآن"
+        latest: "لا يوجد مشاركات حديثة .. مع الأسف :("
+        hot: "الهدوء يعم المكان."
+        bookmarks: "ليس لديك مواضيع في المفضلة."
+        category: "لا يوجد مواضيع في التصنيف {{category}}"
+        top: "لا يوجد مواضيع تستحق أن تكون ضمن الأفضل مع الأسف."
+        educate:
+          new: '<p>مواضيعك الجديدة ستظهر هنا.</p><p> بشكل افتراضي ، كل المواضيع ستعتبر جديدة و تحمل الوسم <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> جديد </span> إذا تمت كتابتها قبل يومين على الأكثر.</p><p> طبعا تقدر تغير هذا من <a href="%{userPrefsUrl}"> إعداداتك</a>.</p>'
+          unread: '<p>المواضيع الغير مقروءة ستظهر هنا</p><p> افتراضياً, سيتم اعتبارالمواضيع غير مقروءة وتحمل الوسم <span class="badge new-posts badge-notification">1</span> إذا:</p><ul><li> كتبت موضوع جديد</li><li> رددت على موضوع</li><li>قرأت موضوع لأكثر من 4 دقائق.</li></ul><p> أو إذا قمت باختيار خيار تتبع موضوع أو إضافته للمواضيع المراقبة من خلال لوحة التحكم بالإشعارات.</p><p> تستطيع تغيير الإعدادات من خلال <a href="%{userPrefsUrl}"> إعداداتك</a>.</p>'
+      bottom:
+        latest: "لا يوجد المزيد من المواضيع الحديثة"
+        hot: "هذه كل المواضيع التي عليها إقبال عالي حتى هذه اللحظة"
+        posted: "لا يوجد مواضيع أخرى."
+        read: "لا يوجد المزيد من المواضيع المقروءة"
+        new: "لا يوجد المزيد من المواضيع الجديدة"
+        unread: "لا يوجد المزيد من المواضيع الغير مقروءة"
+        category: "لا يوجد مواضيع أخرى في التصنيف {{category}}"
+        top: "لقد اطلعت على كل المواضيع المميزة حتى هذه اللحظة."
+        bookmarks: "لايوجد المزيد من المواضيع في المفضلة"
+    topic:
+      filter_to: "{{post_count}} مشاركات/مشاركة في الموضوع"
+      create: 'موضوع جديد'
+      create_long: 'كتابة موضوع جديد'
+      private_message: 'رسالة خاصة'
+      list: 'المواضيع'
+      new: 'موضوع جديد'
+      unread: 'غير مقروء'
+      title: 'موضوع'
+      invalid_access:
+        title: "الموضوع خاص"
+        description: "لا تملك صلاحيات للوصول لهذا الموضوع"
+        login_required: "عليك تسجيل الدخول لمشاهدة الموضوع"
+      server_error:
+        title: "حدث خطأ أثناء عرض الموضوع"
+        description: "للأسف، لا يمكن عرض الموضوع ، قد يكون بسبب مشكلة في الاتصال. الرجاء المحاولة مرة أخرى، إذا استمرت المشكلة عطنا خبر"
+      not_found:
+        title: "لم يتم العثور على الموضوع"
+        description: "للأسف، لم نتمكن من إيجاد الموضوع. يمكن تم حذفه من قبل المشرف."
+      back_to_list: "العودة لقائمة المواضيع"
+      options: "خيارات الموضوع"
+      show_links: "إظهار الروابط في هذا الموضوع"
+      toggle_information: "إظهار/إخفاء تفاصيل الموضوع"
+      read_more_in_category: "ترغب في قراءة المزيد؟ استعرض مواضيع أخرى في {{catLink}} أو {{latestLink}}."
+      read_more: "ترغب في قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
+      browse_all_categories: استعرض جميع التصنيفات
+      view_latest_topics: شاهد آخر المواضيع
+      suggest_create_topic: ما رأيك لو تكتب موضوع جديد؟
+      jump_reply_up: الذهاب إلى أول رد
+      jump_reply_down: الذهاب إلى آخر رد
+      deleted: "الموضوع محذوف"
+      auto_close_notice: "سيتم إغلاق الموضوع آليا بعد %{timeLeft}"
+      auto_close_notice_based_on_last_post: "سيتم إغلاق هذا الموضوع بعد %{duration} من آخر رد."
+      auto_close_title: 'إعدادات الإغلاق التلقائي'
+      auto_close_save: "حفظ"
+      auto_close_remove: "لا تغلق هذا الموضوع تلقائياً"
+      progress:
+        title: حالة الموضوع
+        go_top: "أعلى"
+        go_bottom: "أسفل"
+        go: "اذهب"
+        jump_bottom_with_number: "الذهاب إلى الرد %{post_number}"
+        total: مجموع المشاركات
+        current: المشاركة الحالية
+        position: "المشاركة %{current} من أصل %{total}"
+      notifications:
+        reasons:
+          '3_6': 'سيصلك إشعارات لأنك اخترت أن تتابع هذا التصنيف'
+          '3_5': 'سيصلك إشعارات لأنك اخترت أن تتابع هذا الموضوع بشكل تلقائي.'
+          '3_2': 'سيصلك إشعارات لأنك اخترت أن تتابع هذا الموضوع.'
+          '3_1': 'سيصلك إشعارات لأنك أنت من أنشأ هذا الموضوع.'
+          '3': 'سيصلك إشعارات لأنك اخترت أن تتابع هذا الموضوع.'
+          '2_8': 'سيصلك إشعارات لأنك اخترت تتبع هذا التصنيف'
+          '2_4': 'سيصلك إشعارات لأنك أضفت مشاركة لهذا الموضوع.'
+          '2_2': 'سيصلك إشعارات لأنك اخترت متابعة الموضوع'
+          '2': 'سيصلك اشعار بسبب انك  <a href="/users/{{username}}/preferences">قراءة هذا الموضوع</a>.'
+          '1_2': '.سيتم إشعارك إذا ذكر أحد ما اسمك أو رد على مشاركاتك'
+          '1': '.سيتم إشعارك إذا ذكر أحد ما اسمك أو رد على مشاركاتك'
+          '0_7': 'لن يصلك أي إشعار يخص هذا التصنيف بناء على طلبك.'
+          '0_2': 'لن يصلك أي إشعار يخص هذا الموضوع بناء على طلبك.'
+          '0': 'لن يصلك أي إشعار يخص هذا الموضوع بناء على طلبك.'
+        watching_pm:
+          title: "تحت المتابعة"
+          description: "سيتم إشعارك بأية رد على هذه الرسالة الخاصة. عدد الرسائل الغير مقروءة و الجديدة ستظهر بجانب موضوع الرسالة."
+        watching:
+          title: "تحت المتابعة"
+          description: "سيتم إشعارك بأية رد على هذه الرسالة الخاصة. عدد الرسائل الغير مقروءة و الجديدة ستظهر بجانب الرسالة."
+        tracking_pm:
+          title: "متتبعة"
+          description: "عدد المشاركات الغير مقروءة و الجديدة سيظهر بجانب هذه الرسالة الخاصة. سيصلك إشعار إذا ذكرك أحد ما أو رد على مشاركتك."
+        tracking:
+          title: "تحت المتابعة"
+          description: "عدد المشاركات الغير مقروءة و الجديدة سيظهر بجانب هذا الموضوع. سيصلك إشعار إذا ذكرك أحد ما أو رد على مشاركتك."
+        regular:
+          title: "منتظم"
+          description: ".سيتم إشعارك إذا ذكر أحد ما اسمك أو رد على مشاركاتك"
+        regular_pm:
+          title: "منتظم"
+          description: "سيتم إشعارك إذا ذكر اسمك أحد ما أو رد على مشاركتك في الرسالة الخاصة."
+        muted_pm:
+          title: "كتم"
+          description: "لن يتم إشعارك بأي جديد يخص هذه الرسالة الخاصة."
+        muted:
+          title: "مكتوم"
+          description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في تبويب المواضيع الغير مقروءة."
+      actions:
+        recover: "استرجاع الموضوع"
+        delete: "حذف الموضوع"
+        open: "كتابة موضوع"
+        close: "إغلاق الموضوع"
+        auto_close: "إغلاق تلقائي"
+        make_banner: "موضوع إعلاني"
+        remove_banner: "حذف الموضوع الإعلاني"
+        unpin: "إلغاء تثبيت الموضوع"
+        pin: "تثبيت الموضوع"
+        pin_globally: "تثبيت الموضوع على مستوى الموقع"
+        unarchive: "التراجع عن أرشفة الموضوع"
+        archive: "أرشفة الموضوع"
+        invisible: "إزالة من القائمة"
+        visible: "إضافة ضمن القائمة"
+        reset_read: "تصفير القراءات"
+        multi_select: "اختيار مشاركات"
+      reply:
+        title: 'الرد'
+        help: 'البدء بالرد على هذا الموضوع'
+      clear_pin:
+        title: "إلغاء التثبيت"
+        help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى القائمة"
+      share:
+        title: 'مشاركة'
+        help: 'شارك برابط يشير لهذا الموضوع'
+      flag_topic:
+        title: 'إبلاغ'
+        help: 'قم بمتابعة هذا الموضوع بشكل خاص حيث سيصلك تنبيهات عليها '
+        success_message: 'تم الإبلاغ عن الموضوع'
+      inviting: "دعوة..."
+      automatically_add_to_groups_optional: "هذه الدعوة تتضمن صلاحيات الدخول على المجموعات : (اختياري , مدير فقط )"
+      automatically_add_to_groups_required: "هذه الدعوة تتضمن صلاحيات الدخول على هذه المجموعات: (<b>يتطلب </b>, مدير"
+      invite_private:
+        title: 'دعوة لرسالة خاصة'
+        email_or_username: "دعوات عن طريق اسم المستخدم او البريد الالكتروني"
+        email_or_username_placeholder: "البريد الإلكتروني أو إسم المستخدم"
+        action: "دعوة"
+        success: "تم دعوة المستخدم للمشاركة في رسالة خاصة"
+        error: "للأسف, حدثت مشكلة في دعوة المستخدم"
+        group_name: "اسم المجموعة"
+      invite_reply:
+        title: 'دعوة'
+        action: 'دعوة بالبريد'
+        help: 'ارسال دعوة للأصدقاء جيث بإمكانهم الرد على الموضوع بضغطة واحدة'
+        to_topic: "سيتم ارسال رسالة بريد الكتروني ﻷصدقائك للمشاركة في هذا الموضوع"
+        to_forum: "سيتم ارسال رسالة بريد الكتروني ﻷصدقائك للمشاركة في هذا الموضوع , لابتطلب تسجيل الدخول"
+        email_placeholder: 'name@example.com'
+        success: "قمنا بإرسال دعوة لـ to <b>{{email}}</b>. سيتم تنبيهك عند قبول الدعوة , تستطيع متابعة الدعوة عن طريق مركز التنبيهات في الاعلى"
+        error: "للأسف, لايمكننا دعوة هذا المستخدم , ريما ﻷنه بالفعل مسجل لدينا؟ (الدعوات محدودة)"
+      login_reply: 'سجل دخولك لرد'
+      filters:
+        cancel: "حذف التخصيص"
+      split_topic:
+        title: "موضوع جديد"
+        action: "موضوع جديد"
+        topic_name: "اسم الموضوع"
+        error: "هناك مشكلة في نقل المشاركات الى الموضوع الجديد"
+      merge_topic:
+        title: "الانتقال الى موضوع موجود"
+        action: "الانتقال الى موضوع موجود"
+        error: "هناك خطأ في نقل هذه المشاركات الى هذا الموضوع"
+      change_owner:
+        title: "تغيير صاحب المشاركة"
+        action: "تغيير العضوية "
+        error: "هناك خطأ في نغيير العضوية"
+        label: "عضوية جديدة للمشاركات"
+        placeholder: "اسم مستخدم للعضوية الجديدة"
+        instructions_warn: "ملاحطة لن يتم نقل الاشعارت القديمة  للمشاركة  للمسخدم الجديد <br>تحذير: اي بيانات تتعلق بالمشاركة هذه لن يتم نقلها للمستخدم الجديد. استعملها بحذر."
+      multi_select:
+        select: 'تحديد'
+        selected: 'محدد ({{count}})'
+        select_replies: 'تحديد + ردود'
+        delete: حذف المحدد
+        cancel: الغاء التحديد
+        select_all: تحديد الكل
+        deselect_all: حذف الكل
     post:
+      reply: "الرد على  {{link}} عن طريق  {{replyAvatar}} {{username}}"
+      reply_topic: "الرد على {{link}}"
+      quote_reply: "الاقتباس"
+      edit: "التعديل {{link}} عن طريق {{replyAvatar}} {{username}}"
+      edit_reason: "سبب:"
+      post_number: "مشاركات {{number}}"
+      in_reply_to: "الرد"
+      reply_as_new_topic: "التعليق على الموضوع الاصلي"
+      continue_discussion: "إكمال النقاش على {{postLink}}"
+      follow_quote: "الذهاب إلى المشاركة المقتبسة"
+      show_full: "عرض كامل المشاركة"
+      show_hidden: 'عرض المحتوى المخفي.'
+      expand_collapse: "عرض/إخفاء"
+      unread: "المشاركة غير مقروءة"
       errors:
+        create: "المعذرة، حدثت مشكلة أثناء إنشاء المشاركة. الرجاء المحاولة مرة أخرى."
+        edit: "المعذرة، حدث  خطأ أثناء تحرير مشاركتك. الرجاء المحاولة في وقت لاحق."
+        upload: "المعذرة، حدث خطأ أثناء رفع الملف. الرجاء المحاولة في وقت لاحق."
         attachment_too_large: "نعتذر، الملف الذي تريد رفعه كبير جداَ ( الحد الاقصى {{max_size_kb}} كيلوبايت )"
+        file_too_large: "المعذرة، الملف الذي تحاول رفعه أكبر من المسموح به {{max_size_kb}} كيلوبايت"
         too_many_uploads: "نأسف, يمكنك رفع ملف واحد فقط في نفس الوقت."
+        upload_not_authorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به، الامتدادات المسموح بها هي {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع صور."
         attachment_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع مرفقات."
+        attachment_download_requires_login: "يجب أن تكون مسجل الدخول لتنزيل المرفق."
+      abandon:
+        confirm: "هل أنت متأكد من فكرة تخليك عن مشاركتك؟"
+        no_value: "لا ، حافظ عليها"
+        yes_value: "نعم متأكد."
+      via_email: "وصلت هذه المشاركة من خلال الإيميل"
+      wiki:
+        about: "هذه المشاركة عبارة عن ويكي بمعنى أنها متاحة للمستخدمين العاديين لتحريرها ، "
+      archetypes:
+        save: 'حفظ الخيارات'
+      controls:
+        reply: "كتابة رد على هذه المشاركة"
+        like: "تمام"
+        has_liked: "لقد تم تسجيل إعجابك بالمشاركة"
+        undo_like: "التراجع عن الإعجاب بهذه المشاركة"
+        edit: "تحرير المشاركة"
+        edit_anonymous: "للأسف, يجب تسجيل الدخول للتعديل على المشاركة"
+        flag: "قم بمتابعة هذا الموضوع بشكل خاص حيث سيصلك تنبيهات عليها "
+        delete: "حذف المشاركة"
+        undelete: "التراجع عن حذف المشاركة"
+        share: "مشاركة رابط في هذه المشاركة"
+        more: "المزيد"
+        delete_replies:
+          yes_value: "نعم، احذف هذه الردود أيضاً"
+          no_value: "لا ، المشاركة فقط"
+        admin: "عمليات المدير"
+        wiki: "تحويلها إلى ويكي"
+        unwiki: "إيقاف وضعية الويكي"
+        convert_to_moderator: "إضافة لون للموظف"
+        revert_to_regular: "حذف اللون الوظيفي"
+        rebake: "إعادة بناء HTML"
+        unhide: "إظهار"
+      actions:
+        flag: 'التبليغات'
+        it_too:
+          off_topic: "أبلغ عنها أيضا"
+          spam: "أبلغ عنها أيضا"
+          inappropriate: "أبلغ عنها أيضا"
+          custom_flag: "أبلغ عنها أيضا"
+          bookmark: "أضفها للمفضلة"
+          like: "أبدِ إعجابك بها :)"
+          vote: "صوت لها أيضاً"
+        undo:
+          off_topic: "تراجع عن التبليغ"
+          spam: "تراجع عن التبليغ"
+          inappropriate: "تراجع عن التبليغ"
+          bookmark: "التراجع عن التفضيل"
+          like: "التراجع عن الإعجاب"
+          vote: "التراجع عن التصويت"
+        people:
+          off_topic: "{{icons}} بلغ أن هذا لاعلاقة له بالموضوع"
+          spam: "{{icons}} بلغ انه هذا هو سبام"
+          inappropriate: "{{icons}} بلغ أنه غير لائق"
+          notify_moderators: "{{icons}} تنبيه المشرف"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>نبه المشرف</a>"
+          notify_user: "{{icons}} ارسال رسالة خاصة"
+          notify_user_with_url: "{icons}} sent a <a href='{{postUrl}}'>رسالة خاصة</a>"
+          bookmark: "{{icons}} اضف في المفضلة"
+          like: "{{icons}} استحسان"
+          vote: "{{icons}} صوت لهذا"
+        by_you:
+          off_topic: "لقد تم الإبلاغ عن الموضوع على أنه ليس في المكان الصحيح"
+          spam: "تم الإبلاغ عن الموضوع على أنه سبام"
+          inappropriate: "تم الإبلاغ عن الموضوع على أنه غير لائق"
+          notify_moderators: "تم الإبلاغ عن الموضوع ليشاهده المشرف"
+          notify_user: "قمت بإرسال رسالة خاصة الى هذا المستخدم"
+          bookmark: "قمت بتفضيل هذه المشاركة"
+          like: "قمت بإستحسان هذا"
+          vote: "قمت بالتصويت لهذه المشاركة"
+      edits:
+        one: 1 تعديل
+        zero: لايوجد تعديل
+      revisions:
+        controls:
+          first: "التعديل الاول"
+          previous: "التعديل السابق"
+          next: "التعديل التالي"
+          last: "آخر تعديل"
+          hide: "اخفاء التعديل"
+          show: "اظهار التعديل"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+        displays:
+          inline:
+            title: "Show the rendered output with additions and removals inline"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "اظهار نتيجة المخرجات جنب الى جنب"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "اظهار الفروقات في الصف المصدري جنبا الى جنب"
+            button: '<i class="fa fa-columns"></i> صف'
+        details:
+          edited_by: "عدل عن طريق"
     category:
+      can: 'can&hellip;'
+      none: '(غير مصنف)'
+      choose: 'اختيار category&hellip;'
+      edit: 'تعديل'
+      edit_long: "تعديل"
+      view: 'اظهار المواضيع في الصنف'
+      general: 'عام'
+      settings: 'اعدادات'
+      delete: 'حذف الصنف'
+      create: 'قسم جديد'
+      save: 'حفظ القسم'
+      creation_error: حدثت مشكلة اثناء انشاء القسم
       edit_permissions: "تعديل الصلاحيات"
       add_permission: "اضف صلاحية"
   admin_js:

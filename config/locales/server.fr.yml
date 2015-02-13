@@ -31,10 +31,32 @@ fr:
   purge_reason: "Supprimé automatiquement comme compte abandonné, non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "est limité à %{max} caractères maximum; il y en a %{length}."
       invalid_boolean: "Vrai/Faux invalide."
       taken: "est déjà pris. (Les noms des groupes sont sensibles à la casse.)"
+      accepted: must be accepted
+      blank: ne peut être vide
+      present: doit être vide
+      confirmation: "ne correspond pas %{attribute}"
+      empty: ne peut être vide
+      equal_to: doit être égal à %{count}
+      even: doit être encore
+      exclusion: est réservé
+      greater_than: doit être supérieure à %{count}
+      greater_than_or_equal_to: doit être supérieur ou égal à %{count}
+      inclusion: n'est pas inclus dans la liste
+      invalid: est invalide
+      less_than: doit être inférieure à %{count}
+      less_than_or_equal_to: doit être inférieur ou égal à %{count}
+      not_a_number: n'est pas un nombre
+      not_an_integer: doit être un entier
+      odd: doit être impair
+      record_invalid: 'Validation échouée: %{errors}'
+      other_than: "doit être différent de %{count}"
+    template:
+      body: 'Des problèmes ont été rencontrés sur les champs suivants : '
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
   bulk_invite:
@@ -372,6 +394,7 @@ fr:
       title: 'Spam'
       description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
+      email_title: '"%{title}" a été signalé comme spam'
     inappropriate:
       title: 'Inapproprié'
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
@@ -513,6 +536,33 @@ fr:
       title: "Sujets les plus référencés"
       xaxis: "Sujet"
       num_clicks: "Clics"
+    page_view_anon_reqs:
+      title: "Anonyme"
+      xaxis: "Jour"
+    page_view_logged_in_reqs:
+      title: "Connecté"
+      xaxis: "Jour"
+    page_view_crawler_reqs:
+      xaxis: "Jour"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Jour"
+      yaxis: "Nombre de pages vues"
+    http_background_reqs:
+      title: "Arrière plan"
+      xaxis: "Jour"
+    http_2xx_reqs:
+      xaxis: "Jour"
+    http_3xx_reqs:
+      xaxis: "Jour"
+    http_4xx_reqs:
+      xaxis: "Jour"
+    http_5xx_reqs:
+      xaxis: "Jour"
+      yaxis: "Erreurs du serveur (Status 5xx)"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Jour"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     ruby_version_warning: "Vous exécutez une version de Ruby 2.0.0 qui est connu pour avoir des problèmes. Migrez vers le patch 247 ou supérieur."
@@ -786,6 +836,7 @@ fr:
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."
     min_body_similar_length: "La taille minimale d'un message avant que l'on vérifie l'existence de sujets identiques."
     category_colors: "Une liste de couleurs en hexadécimale autorisées pour les catégories."
+    category_style: "Style visuel pour les badges de catégorie."
     max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. Doit être configurer dans nginx (client_max_body_size) / apache ou proxy aussi."
     authorized_extensions: "Une liste d'extensions de fichier autorisés pour les envois sur le serveur (mettre '*' pour autoriser tout les types)"
@@ -859,7 +910,7 @@ fr:
     suppress_uncategorized_badge: "Ne pas afficher le badge pour les sujets non catégorisés dans les listes des sujets."
     global_notice: "Affiche un bandeau global URGENT pour tout les utilisateurs du site, laissez vide pour le cacher (HTML autorisé)."
     disable_edit_notifications: "Désactiver les notifications de modifications par l'utilisateur système lorsque l'option 'download_remote_images_to_local' est activée."
-    enable_names: "Autoriser l'affichage des noms complets des utilisateurs. Désactiver pour cacher les noms complets."
+    enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
     invites_per_page: "Afficher les invitations sur la page de l'utilisateur."
     short_progress_text_threshold: "Si le nombre de messages dans un sujet dépasse ce nombre, la barre de progression affichera uniquement le numéro de message actuel. Si vous modifiez la largeur de la barre de progression, vous devrez peut-être modifier cette valeur."
@@ -1173,7 +1224,7 @@ fr:
         Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé).\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
+      text_body_template: "Merci d'avoir accepté notre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé).\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
@@ -1821,25 +1872,3 @@ fr:
       \ ?](#cookies)\n\nOui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.\n\nNous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.\n\n<a name=\"disclose\"></a>\n\n## [Divulguons-nous des informations à des tiers?](#disclose)\n\nNous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations\
       \ confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.\n\n<a name=\"third-party\"></a>\n\n## [Liens vers des tiers](#third-party)\n\nParfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites. \n\n<a name=\"coppa\"></a>\n\n## [Protection des mineurs](#coppa)\n\nNotre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](http://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site. <a name=\"\
       online\"></a> ## [Politique de confidentialité en ligne](#online) Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion. <a name=\"consent\"></a> ## [Votre consentement](#consent) En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.\n\n<a name=\"changes\"></a>\n\n## [Changements à notre politique de confidentialité](#changes)\n\nSi nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page.\n\nCe document est soumis à la licence creative commons CC-BY-SA.\n"
-  static:
-    search_help: |
-      <h2>Astuces</h2>
-      <p>
-      <ul>
-        <li>Les résultats dont le titre correspond à la recherche sont retournés en priorité. Donc, en cas de doutes, recherchez dans les titres</li>
-        <li>Pour obtenir de meilleurs résultats, utilisez toujours des mots rares ou peu fréquents</li>
-        <li>Dès que possible, limitez vos recherches à une catégorie en particulier, à un utilisateur ou à un sujet</li>
-      </ul>
-      </p>
-      <h2>Paramètres</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>rainbows category:parks status:open order:latest</code> recherchera les sujets qui contiennent le mot "rainbows", qui sont dans la catégorie "parks" et qui ne sont ni fermés ni archivé. Les résultats seront triés par la date du dernier message publié.
-      </p>

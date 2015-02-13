@@ -142,7 +142,6 @@ fi:
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
-      user_count: "Käyttäjiä"
       contact: "Yhteystiedot"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
     bookmarked:
@@ -749,7 +748,6 @@ fi:
         one: '1 lukematon ketju'
         other: '{{count}} lukematonta ketjua'
       title: 'Aihe'
-      loading: 'Ladataan ketjua...'
       invalid_access:
         title: "Tämä ketju on yksityinen"
         description: "Pahoittelut, sinulla ei ole pääsyä tähän ketjuun!"

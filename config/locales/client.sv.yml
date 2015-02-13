@@ -90,6 +90,7 @@ sv:
       google+: 'dela denna länk på Google+'
       email: 'skicka denna länk i ett email'
     topic_admin_menu: "ämne admin åtgärder"
+    emails_are_disabled: "Alla utgående email har blivit deaktiverad av en administratör. Inga kungörelser av någon sort kommer att bli skickad."
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
@@ -138,13 +139,21 @@ sv:
       stat:
         all_time: "Alla dagar"
         last_7_days: "Senaste 7 dagarna"
+        last_30_days: "Senaste 30 Dagarna"
       like_count: "Likes"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Användare"
+      user_count: "Nya Användare"
+      active_user_count: "Aktiva Användare"
+      contact: "Kontakta Oss"
+    bookmarked:
+      title: "Bokmärke"
+      help:
+        bookmark: "Klicka för att bokmärka detta ämne"
+        unbookmark: "Klicka för att ta bort bokmärket till detta ämne"
     bookmarks:
-      not_logged_in: "förlåt, men du måste vara inloggad för att kunna bokmärka inlägg"
-      created: "du har bokmärkt det här inlägget"
+      not_logged_in: "tyvärr, du måste vara inloggad för att kunna bokmärka inlägg"
+      created: "du har bokmärkt detta inlägg"
       not_bookmarked: "du har läst detta inlägg, klicka för att bokmärka det"
       last_read: "detta är det senaste inlägg som du läst, klicka för att bokmärka"
       remove: "Ta bort bokmärke"
@@ -258,6 +267,7 @@ sv:
       profile: "Profil"
       mute: "Dämpa"
       edit: "Redigera inställningar"
+      download_archive: "Ladda ner Mina Bilder"
       new_private_message: "Nytt Privat Meddelande"
       private_message: "Privat meddelande"
       private_messages: "Meddelanden"
@@ -270,7 +280,7 @@ sv:
       notifications: "Notifieringar"
       dismiss_notifications: "Markera alla som lästa"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
-      disable_jump_reply: "Hoppa inte till ditt nya inlägg efter du svarat"
+      disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
       dynamic_favicon: "Visa notifieringar om inkomna meddelanden på favicon (Experiment)"
       edit_history_public: "Låt andra användare se mina ändringar"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
@@ -283,15 +293,14 @@ sv:
       suspended_notice: "Den här användaren är avstängd till {{date}}."
       suspended_reason: "Anledning:"
       github_profile: "Github"
-      mailing_list_mode: "Skicka ett e-postmeddelande för varje nytt inlägg (gäller ej tystade ämnen eller kategorier)"
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Du kommer att få notifieringar om alla nya inlägg och trådar; antalet olästa och nya inlägg kommer även att visas vid sidan av trådens namn."
       tracked_categories: "Följd"
       tracked_categories_instructions: "Du kommer automatiskt att följa alla nya trådar inom dessa kategorier. Antalet olästa och nya inlägg kommer att visas vid sidan av trådens namn."
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att få notifieringar om nya trådar inom dessa kategorier, och de kommer inte att visas under din \"oläst\"-tab."
-      delete_account: "Ta bort mitt konto"
-      delete_account_confirm: "Är du säkert på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
+      delete_account: "Radera mitt konto"
+      delete_account_confirm: "Är du säker på att du vill ta bort ditt konto permanent? Denna åtgärd kan inte ångras!"
       deleted_yourself: "Ditt konto har framgångsrikt tagits bort."
       delete_yourself_not_allowed: "Du kan inte ta bort ditt konto just nu. Kontakta en admin och be om att få ditt konto borttaget."
       unread_message_count: "Meddelanden"
@@ -299,7 +308,7 @@ sv:
       staff_counters:
         flags_given: "Hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"
-        deleted_posts: "borttagna inlägg"
+        deleted_posts: "raderade inlägg"
         suspensions: "avstängningar"
         warnings_received: "varningar"
       messages:
@@ -326,6 +335,7 @@ sv:
         error: "Det uppstod ett problem under bytet av din e-post. Är kanske adressen redan upptagen?"
         success: "Vi har skickat ett mail till den adressen. Var god följ bekräftelseinstruktionerna."
       change_avatar:
+        title: "Ändra din profilbild"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baserat på"
         refresh_gravatar_title: "Uppdatera din Gravatar"
         uploaded_avatar: "Anpassad bild"
@@ -347,8 +357,6 @@ sv:
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
         frequency:
           zero: "Vi kommer att skicka e-post till dig omedelbart om du inte har läst det som vi skickar e-post till dig om."
-          one: "Vi kommer bara att skicka e-post till dig om vi inte sett dig den senaste minuten och du inte har läst det som vi skickar e-post till dig om."
-          other: "Vi kommer bara att skicka e-post till dig om vi inte sett dig de senaste  {{count}} minuterna och du inte har läst det som vi skickar e-post till dig om."
       name:
         title: "Namn"
         instructions: "Ditt fullständiga namn (valfritt)"
@@ -384,26 +392,24 @@ sv:
       website: "Webbplats"
       email_settings: "E-post"
       email_digests:
-        title: "När jag inte besöker sidan, skicka mig ett sammandrag via mail om vad som är nytt:"
         daily: "dagligen"
         weekly: "veckovis"
         bi_weekly: "varannan vecka"
-      email_direct: "Ta emot ett mail när någon citerar dig, svarar på dina inlägg, eller nämner ditt @användarnamn"
-      email_private_messages: "Ta emot ett mail när någon skickar dig ett privat meddelande"
+      email_direct: "Skicka ett e-postmeddelande när någon citerar mig, svarar på mitt inlägg, eller nämner mitt @användarnamn"
+      email_private_messages: "Skicka ett e-postmeddelande till mig när någon skickar mig ett privatmeddelande."
       email_always: "Ta emot notifieringar via mail även om jag är aktiv på forumet"
       other_settings: "Övrigt"
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Betrakta trådar som nya när"
-        not_viewed: "Du inte har tittat på dem än"
-        last_here: "skapad sedan ditt senaste besök"
+        not_viewed: "Jag har inte tittat dom än"
         after_n_days:
           one: "skapad det senaste dygnet"
           other: "skapad de senaste {{count}} dagarna"
         after_n_weeks:
           one: "skapad den senaste veckan"
           other: "skapad de senaste {{count}} veckorna"
-      auto_track_topics: "Följ automatiskt trådar du öppnar"
+      auto_track_topics: "Följ automatiskt nya trådar jag går in i"
       auto_track_options:
         never: "aldrig"
         always: "alltid"
@@ -444,10 +450,13 @@ sv:
         common: "Det lösenordet är för vanligt."
         ok: "Ditt lösenord ser bra ut."
         instructions: "Måste vara minst %{count} tecken lång."
+      associated_accounts: "Inloggningar"
       ip_address:
         title: "Senaste IP-adress"
       registration_ip_address:
         title: "IP-adress vid registrering"
+      avatar:
+        title: "Profil Bild"
       title:
         title: "Titel"
       filters:
@@ -569,6 +578,9 @@ sv:
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
+    apple_international: "Apple/International"
+    google: "Google"
+    twitter: "Twitter"
     composer:
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Du svarar på tråden \"{{title}}\", men du besöker just nu en annan tråd."
@@ -644,7 +656,6 @@ sv:
           examples: 'Ange antal timmar (24).'
     notifications:
       title: "notifikationer med omnämnanden av @namn, svar på dina inlägg och trådar, privata meddelanden, etc"
-      none: "Du har inte notifikationer just nu."
       more: "visa äldre notifikationer"
       total_flagged: "totalt antal flaggade inlägg"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -711,6 +722,7 @@ sv:
         posted: "Du har inte postat i några trådar än."
         latest: "Det finns inga senaste trådar. Det är lite sorgligt."
         hot: "Det finns inga heta trådar."
+        bookmarks: "Du har inga bokmärkta ämnen ännu."
         category: "Det finns inga {{category}}-trådar."
         top: "Det finns inga topptrådar."
         educate:
@@ -740,7 +752,6 @@ sv:
         one: '1 oläst tråd'
         other: '{{count}} olästa trådar'
       title: 'Tråd'
-      loading: 'Laddar tråd...'
       invalid_access:
         title: "Tråden är privat"
         description: "Tyvärr, du har inte behörighet till den tråden."
@@ -1208,6 +1219,8 @@ sv:
     topic_statuses:
       warning:
         help: "Det här är en officiell varning."
+      bookmarked:
+        help: "Du bokmärkte nu detta ämnet."
       locked:
         help: "Det här ämnet är stängt; det går inte längre att svara på inlägg"
       unpinned:
@@ -1286,6 +1299,9 @@ sv:
       posted:
         title: "Mina Inlägg"
         help: "trådar som du har postat i"
+      bookmarks:
+        title: "Bokmärken"
+        help: "Ämnen du har bokmärkt"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1341,6 +1357,13 @@ sv:
         suspended: 'Avstängd:'
         private_messages_short: "PMs"
         private_messages_title: "Privata meddelanden"
+        space_free: "{{size}} ledigt"
+        uploads: "uppladningar"
+        backups: "säkerhetskopior"
+        traffic_short: "Trafik"
+        page_views: "Sidvisningar"
+        page_views_short: "Sidvisningar"
+        show_traffic_report: "Visa Detaljerad Trafik Rapport"
         reports:
           today: "Idag"
           yesterday: "Igår"
@@ -1427,12 +1450,21 @@ sv:
         edit: "Edit Groups"
         refresh: "uppdatera"
         new: "Ny"
+        selector_placeholder: "ange användarnamn"
         name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Gruppmedlemmar"
         delete: "Radera"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+        delete_member_confirm: "Ta bort '%{username}' från '%{group}' gruppen?"
+        name: "Namn"
+        add: "Lägg till"
+        add_members: "Lägg till medlemmar"
+        custom: "Anpassad"
+        automatic: "Automatisk"
+        automatic_membership_email_domains: "Användare som registrerar sig med en email där domänen liknar exact en av dom ovanstående domänerna kommer automatiskt att bli tillagd i den här gruppen:"
+        automatic_membership_retroactive: "Avänd samma email domän regel för att lägga till nya avändare"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."
@@ -1500,7 +1532,9 @@ sv:
             title: "Gör rollback på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra rollback på databasen till det tidigare fungerande tillståndet?"
       export_csv:
+        success: "Exportering startad, du kommer att få ett medelande när processen är färdig."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
+        rate_limit_error: "Inlägg kan bara laddas ner en gång per dag, var vänlig och försök imorgon istället."
         button_text: "Exportera"
         button_title:
           user: "Exportera alla användare i CSV-format"
@@ -1514,6 +1548,12 @@ sv:
         css: "CSS"
         header: "Sidhuvud"
         footer: "Footer"
+        head_tag:
+          text: "</head>"
+          title: "HTML som kommer att sättas in före </head> taggen"
+        body_tag:
+          text: "</body>"
+          title: "HTML som kommer att sättas in före </body> taggen"
         override_default: "Skriv över standard?"
         enabled: "Aktiverad?"
         preview: "förhandsgranska"
@@ -1631,6 +1671,7 @@ sv:
           do_nothing: "gör ingenting"
         staff_actions:
           title: "Personalåtgärder"
+          instructions: "Klicka på användarnamn och handling för att filtrera listan. Klicka på profilbilder för att gå till användarnas profiler."
           clear_filters: "Visa allt"
           staff_user: "Personalmedlem"
           target_user: "Målanvändare"
@@ -1648,6 +1689,7 @@ sv:
           actions:
             delete_user: "radera användare"
             change_trust_level: "Ändra förtroendenivå"
+            change_username: "ändra användarnamn"
             change_site_setting: "ändra sidinställning"
             change_site_customization: "ändra webbplatsanpassning"
             delete_site_customization: "radera webbplatsanpassning"
@@ -1674,6 +1716,7 @@ sv:
           title: "Granskade IP-adresser"
           description: 'IP-adresser som är under bevakning. Använd "tillåt" för att vitlista IP-adresser.'
           delete_confirm: "Är du säker på att du vill ta bort regeln för %{ip_address}?"
+          rolled_up_no_subnet: "Det fanns inget att rulla upp."
           actions:
             block: "Blockera"
             do_nothing: "Tillåt"
@@ -1682,6 +1725,8 @@ sv:
             label: "Nytt:"
             ip_address: "IP-adress"
             add: "Lägg till"
+          roll_up:
+            text: "Rulla upp"
         logster:
           title: "Felprotokoll"
       impersonate:
@@ -1814,6 +1859,8 @@ sv:
         suspended_explanation: "En avstängd användare kan inte logga in."
         block_explanation: "En blockerad användare kan inte posta inlägg eller starta trådar."
         trust_level_change_failed: "Ett problem uppstod då användarens förtroendenivå skulle ändras."
+        grant_admin_failed: "Det skedde ett problem i försöket att ge admin rättigheter."
+        grant_moderation_failed: "Det skedde ett problem i försöket att ge moderator rättigheter."
         suspend_modal_title: "Stäng av användare"
         trust_level_2_users: "Användare med Förtroendenivå 2"
         trust_level_3_requirements: "Krav för Förtroendenivå 3"
