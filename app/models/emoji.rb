@@ -85,11 +85,9 @@ class Emoji
   end
 
   def self.load_custom
-    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
-      Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
-         .sort
-         .map { |emoji| Emoji.create_from_path(emoji) }
-    end
+    Dir.glob(File.join(Emoji.base_directory, "*.{png,gif}"))
+       .sort
+       .map { |emoji| Emoji.create_from_path(emoji) }
   end
 
   def self.base_directory
