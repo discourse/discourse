@@ -6,6 +6,16 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 da:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -18,11 +28,35 @@ da:
   log_in: "Log ind"
   via: "%{username} via %{site_name}"
   is_reserved: "er reservet"
+  purge_reason: "Automatisk slettet som forladt, ikke aktiveret, konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
+      taken: "er allerede benyttet. (gruppe navne skelner ikke mellem store og små bogstaver)"
+      accepted: skal accepteres
+      blank: kan ikke være tom
+      present: skal være tomt
+      confirmation: "matcher ikke %{attribute}"
+      empty: kan ikke være tom
+      equal_to: skal være %{count}
+      even: skal være et lige tal
+      exclusion: er reserveret
+      greater_than: skal være større end %{count}
+      greater_than_or_equal_to: skal være større eller lig med %{count}
+      inclusion: er ikke inkluderet i listen
+      invalid: er ikke gyldig
+      less_than: skal være mindre end %{count}
+      less_than_or_equal_to: skal være mindre end eller lig med %{count}
+      not_a_number: er ikke et nummer
+      not_an_integer: skal være et heltal
+      odd: skal være et ulige tal
+      record_invalid: 'Kunne ikke valideres: %{errors}'
+      restrict_dependent_destroy:
+        one: "Kan ikke slette fordi en afhængighed %{record} findes"
+        many: "Kan ikke slette fordi en afhængighed %{record} findes"
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
   bulk_invite:

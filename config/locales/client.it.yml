@@ -140,10 +140,12 @@ it:
       stat:
         all_time: "Sempre"
         last_7_days: "Ultimi 7 giorni"
+        last_30_days: "Ultimi 30 Giorni"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
-      user_count: "Utenti"
+      user_count: "Nuovi Utenti"
+      active_user_count: "Utenti Attivi"
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_email}."
     bookmarked:
@@ -747,6 +749,7 @@ it:
         unread: "Non ci sono altri argomenti non letti"
         category: "Non ci sono altri argomenti nella categoria {{category}}."
         top: "Non ci sono altri argomenti di punta."
+        bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
     topic:
       filter_to: "{{post_count}} suoi messaggi"
       create: 'Nuovo Argomento'
@@ -762,7 +765,6 @@ it:
         one: '1 argomento non letto'
         other: '{{count}} argomenti non letti'
       title: 'Argomento'
-      loading: 'Caricamento dell''argomento...'
       invalid_access:
         title: "L'argomento è privato"
         description: "Spiacenti, non puoi accedere a questo argomento!"
@@ -1373,6 +1375,13 @@ it:
         suspended: 'Sospesi: '
         private_messages_short: "MP"
         private_messages_title: "Messaggi Privati"
+        space_free: "{{size}} liberi"
+        uploads: "caricamenti"
+        backups: "backup"
+        traffic_short: "Traffico"
+        page_views: "Pagine Viste"
+        page_views_short: "Pagine Viste"
+        show_traffic_report: "Mostra Rapporto di Traffico Dettagliato"
         reports:
           today: "Oggi"
           yesterday: "Ieri"
@@ -1872,6 +1881,8 @@ it:
         suspended_explanation: "Un utente sospeso non può fare il login."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
         trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente.  "
+        grant_admin_failed: "Si è verificato un problema nell'assegnazione dei privilegi di amministrazione."
+        grant_moderation_failed: "Si è verificato un problema nell'assegnazione dei privilegi di moderazione."
         suspend_modal_title: "Sospendi Utente"
         trust_level_2_users: "Utenti con Livello Esperienza 2"
         trust_level_3_requirements: "Requisiti per Livello Esperienza 3"
@@ -1932,6 +1943,10 @@ it:
           title: "Modificabile dopo la registrazione?"
           enabled: "modificabile"
           disabled: "non modificabile"
+        show_on_profile:
+          title: "Mostrare nel profilo pubblico?"
+          enabled: "mostrato nel profilo"
+          disabled: "non mostrato nel profilo"
         field_types:
           text: 'Campo Testo'
           confirm: 'Conferma'
@@ -1965,6 +1980,7 @@ it:
           uncategorized: 'Altro'
           backups: "Backup"
           login: "Accesso"
+          plugins: "Plugin"
       badges:
         title: Targhette
         new_badge: Nuova Targhetta

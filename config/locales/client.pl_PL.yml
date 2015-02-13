@@ -157,10 +157,12 @@ pl_PL:
       stat:
         all_time: "Ogółem"
         last_7_days: "Ostatnich 7 dni"
+        last_30_days: "Ostatnie 30 dni"
       like_count: "Polubienia"
       topic_count: "Tematy"
       post_count: "Wpisy"
-      user_count: "Użytkownicy"
+      user_count: "Nowi użytkownicy"
+      active_user_count: "Aktywni użytkownicy"
       contact: "Kontakt"
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z funkcjonowaniem serwisu, prosimy o kontakt pod adresem %{contact_email}."
     bookmarked:
@@ -777,6 +779,7 @@ pl_PL:
         unread: "Nie ma więcej nieprzeczytanych tematów."
         category: "Nie ma więcej tematów w kategorii {{category}}."
         top: "Nie ma już więcej najlepszych tematów."
+        bookmarks: "Nie ma więcej zakładek."
     topic:
       filter_to: "{{post_count}} wpisów w temacie"
       create: 'Nowy temat'
@@ -794,7 +797,6 @@ pl_PL:
         few: '{{count}} nieprzeczytane tematy'
         other: '{{count}} nieprzeczytanych tematów'
       title: 'Temat'
-      loading: 'Wczytuję temat…'
       invalid_access:
         title: "Temat jest prywatny"
         description: "Przepraszamy, nie masz dostępu do tego tematu!"
@@ -1431,6 +1433,14 @@ pl_PL:
         suspended: 'Zawieszeni:'
         private_messages_short: "PM"
         private_messages_title: "Prywatne Wiadomości"
+        space_free: "{{size}} wolne"
+        uploads: "załączniki"
+        backups: "kopie zapasowe"
+        traffic_short: "Ruch"
+        traffic: "Zapytania do aplikacji"
+        page_views: "Wyświetlenia stron"
+        page_views_short: "Wyświetlenia"
+        show_traffic_report: "Pokaż szczegółowy raport ruchu"
         reports:
           today: "Dzisiaj"
           yesterday: "Wczoraj"
@@ -1942,6 +1952,8 @@ pl_PL:
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
         block_explanation: "Zablokowany użytkownik nie może tworzyć wpisów ani zaczynać tematów."
         trust_level_change_failed: "Wystąpił problem przy zmianie poziomu zaufania użytkowanika."
+        grant_admin_failed: "Wystąpił problem z przyznaniem przywileju administratora,"
+        grant_moderation_failed: "Wystąpił problem z przyznaniem przywileju moderatora,"
         suspend_modal_title: "Zawieś użytkownika"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
         trust_level_3_requirements: "Wymagania 3. poziomu zaufania"
@@ -2002,6 +2014,10 @@ pl_PL:
           title: "Edytowalne po rejestracji?"
           enabled: "edytowalne"
           disabled: "nieedytowalne"
+        show_on_profile:
+          title: "Widoczne w publicznym profilu?"
+          enabled: "widoczne w profilu"
+          disabled: "niewidoczne w profilu"
         field_types:
           text: 'Pole tekstowe'
           confirm: 'Potwierdzenie'
@@ -2035,6 +2051,7 @@ pl_PL:
           uncategorized: 'Inne'
           backups: "Kopie zapasowe"
           login: "Logowanie"
+          plugins: "Wtyczki"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka
