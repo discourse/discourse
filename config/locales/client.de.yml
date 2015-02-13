@@ -91,7 +91,7 @@ de:
       google+: 'diesen Link auf Google+ teilen'
       email: 'diesen Link per E-Mail senden'
     topic_admin_menu: "Thema administrieren"
-    emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei E-Mail Benachrichtigungen verschickt."
+    emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     edit: 'Titel und Kategorie dieses Themas ändern'
     not_implemented: "Entschuldige, diese Funktion wurde noch nicht implementiert!"
     no_value: "Nein"
@@ -139,11 +139,13 @@ de:
       our_moderators: "Unsere Moderatoren"
       stat:
         all_time: "Gesamt"
-        last_7_days: "Letzte 7 Tage"
+        last_7_days: "Letzten 7 Tage"
+        last_30_days: "Letzten 30 Tage"
       like_count: "Likes"
       topic_count: "Themen"
       post_count: "Beiträge"
-      user_count: "Benutzer"
+      user_count: "Neue Benutzer"
+      active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die dieses Seite betrifft, kontaktiere uns bitte unter %{contact_email}. "
     bookmarked:
@@ -715,7 +717,7 @@ de:
         dismiss_posts_tooltip: "Neue Beiträge in diesen Themen ignorieren. Die Themen aber später wieder als ungelesen anzeigen, sobald neue Beiträge verfasst werden."
         dismiss_topics: "Themen ignorieren"
         dismiss_topics_tooltip: "Diese Themen ignorieren und nicht mehr als ungelesen anzeigen, selbst wenn neue Beiträge verfasst werden."
-        dismiss_new: "Verwerfe neue Themen"
+        dismiss_new: "Neue Themen ignorieren"
         toggle: "zu Massenoperationen auf Themen umschalten"
         actions: "Massenoperationen"
         change_category: "Kategorie ändern"
@@ -749,6 +751,7 @@ de:
         unread: "Das waren alle ungelesen Themen."
         category: "Das waren alle Themen in der Kategorie „{{category}}“."
         top: "Das waren alle angesagten Themen."
+        bookmarks: "Das waren alle Themen mit Lesezeichen."
     topic:
       filter_to: "{{post_count}} Beiträge im Thema"
       create: 'Neues Thema'
@@ -764,7 +767,6 @@ de:
         one: '1 ungelesenes Thema'
         other: '{{count}} ungelesene Themen'
       title: 'Thema'
-      loading: 'Thema wird geladen...'
       invalid_access:
         title: "Thema ist privat"
         description: "Entschuldige, du hast keinen Zugriff auf dieses Thema!"
@@ -793,7 +795,7 @@ de:
       toggle_information: "Details zum Thema ein- oder ausblenden"
       read_more_in_category: "Möchtest du mehr lesen? Entdecke andere Themen in {{catLink}} oder {{latestLink}}."
       read_more: "Möchtest du mehr lesen? {{catLink}} oder {{latestLink}}."
-      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='/unread'>eine ungelesene</a> } other {hast <a href='/unread'># ungelesene</a> } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {ist } other{}} <a href='/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {sind } other{}} <a href='/new'># neue</a> Themen} } übrig, oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='/unread'>ein ungelesenes</a> Thema } other {hast <a href='/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='/new'># neue</a> Themen} } übrig. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle Kategorien durchsehen
       view_latest_topics: aktuelle Themen anzeigen
       suggest_create_topic: Möchtest du ein neues Thema erstellen?
@@ -903,7 +905,7 @@ de:
         to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
         email_placeholder: 'name@example.com'
         success: "Wir haben an <b>{{email}}</b> eine Einladung verschickt. Wir werden dich benachrichtigen, sobald die Einladung angenommen wurde. Auf deiner Benutzerseite kannst du den Status deiner Einladungen verfolgen."
-        error: "Es tut uns leid, wir konnten diese Person nicht einladen. Hat diese Person schon einen Benutzeraccount? (Einladungen sind in ihrer Zahl beschränkt.)"
+        error: "Entschuldige, wir konnten diese Person nicht einladen. Hat diese Person vielleicht schon ein Benutzerkonto? (Einladungen sind in ihrer Zahl beschränkt)"
       login_reply: 'Anmelden, um zu antworten'
       filters:
         n_posts:
@@ -1375,15 +1377,23 @@ de:
         suspended: 'Gesperrt:'
         private_messages_short: "PNs"
         private_messages_title: "Private Nachrichten"
+        space_free: "{{size}} frei"
+        uploads: "Uploads"
+        backups: "Backups"
+        traffic_short: "Traffic"
+        traffic: "Web Requests der Applikation"
+        page_views: "Page Views"
+        page_views_short: "Page Views"
+        show_traffic_report: "Zeige detaillierten Traffic-Bericht"
         reports:
-          today: "heute"
-          yesterday: "gestern"
-          last_7_days: "letzten 7 Tage"
-          last_30_days: "letzten 30 Tage"
-          all_time: "gesamt"
+          today: "Heute"
+          yesterday: "Gestern"
+          last_7_days: "Letzten 7 Tage"
+          last_30_days: "Letzten 30 Tage"
+          all_time: "Gesamt"
           7_days_ago: "vor 7 Tagen"
           30_days_ago: "vor 30 Tagen"
-          all: "alle"
+          all: "Gesamt"
           view_table: "Tabelle"
           view_chart: "Balkendiagramm"
           refresh_report: "Bericht aktualisieren"
@@ -1474,6 +1484,8 @@ de:
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
         automatic: "Automatisch"
+        automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
+        automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -1872,6 +1884,8 @@ de:
         suspended_explanation: "Ein gesperrter Benutzer kann sich nicht anmelden."
         block_explanation: "Ein geblockter Benutzer kann keine Themen erstellen oder Beiträge veröffentlichen."
         trust_level_change_failed: "Beim Wechsel der Vertrauensstufe ist ein Fehler aufgetreten."
+        grant_admin_failed: "Beim Vergeben der Administrator-Berechtigungen ist ein Fehler aufgetreten."
+        grant_moderation_failed: "Beim Vergeben der Moderator-Berechtigungen ist ein Fehler aufgetreten."
         suspend_modal_title: "Benutzer sperren"
         trust_level_2_users: "Benutzer mit Vertrauensstufe 2"
         trust_level_3_requirements: "Anforderungen für Vertrauensstufe 3"
@@ -1932,6 +1946,10 @@ de:
           title: "Nach der Registrierung editierbar?"
           enabled: "editierbar"
           disabled: "nicht editierbar"
+        show_on_profile:
+          title: "Im öffentlichen Profil anzeigen?"
+          enabled: "wird im Profil angezeigt"
+          disabled: "wird im Profil nicht angezeigt"
         field_types:
           text: 'Textfeld'
           confirm: 'Bestätigung'
@@ -1965,6 +1983,7 @@ de:
           uncategorized: 'Sonstiges'
           backups: "Backups"
           login: "Anmeldung"
+          plugins: "Plugins"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen

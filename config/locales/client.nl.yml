@@ -142,7 +142,6 @@ nl:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
-      user_count: "Gebruikers"
       contact: "Neem contact op"
     bookmarked:
       title: "Bewaar"
@@ -721,7 +720,6 @@ nl:
         one: '1 ongelezen topic'
         other: '{{count}} ongelezen topics'
       title: 'Topic'
-      loading: 'Bezig met laden van topic...'
       invalid_access:
         title: "Topic is privé"
         description: "Sorry, je hebt geen toegang tot deze topic."
