@@ -1,8 +1,6 @@
 class Emoji
   include ActiveModel::SerializerSupport
 
-  EMOJIS_CUSTOM_LOCK ||= "_emojis_custom_lock_".freeze
-
   attr_reader :path
   attr_accessor :name, :url
 
@@ -15,12 +13,9 @@ class Emoji
 
   def remove
     return if path.blank?
-
-    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
-      if File.exists?(path)
-        File.delete(path) rescue nil
-        Emoji.clear_cache
-      end
+    if File.exists?(path)
+      File.delete(path) rescue nil
+      Emoji.clear_cache
     end
   end
 
@@ -65,14 +60,11 @@ class Emoji
     extension = File.extname(file.original_filename)
     path = "#{Emoji.base_directory}/#{name}#{extension}"
 
-    DistributedMutex.new(EMOJIS_CUSTOM_LOCK).synchronize do
-      # store the emoji
-      FileUtils.mkdir_p(Pathname.new(path).dirname)
-      File.open(path, "wb") { |f| f << file.tempfile.read }
-      # clear the cache
-      Emoji.clear_cache
-    end
-
+    # store the emoji
+    FileUtils.mkdir_p(Pathname.new(path).dirname)
+    File.open(path, "wb") { |f| f << file.tempfile.read }
+    # clear the cache
+    Emoji.clear_cache
     # launch resize job
     Jobs.enqueue(:resize_emoji, path: path)
     # return created emoji
