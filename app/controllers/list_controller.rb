@@ -62,8 +62,8 @@ class ListController < ApplicationController
 
 
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
-      list.more_topics_url = construct_next_url_with(list_opts)
-      list.prev_topics_url = construct_prev_url_with(list_opts)
+      list.more_topics_url = construct_url_with(:next, list_opts)
+      list.prev_topics_url = construct_url_with(:prev, list_opts)
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
@@ -121,8 +121,8 @@ class ListController < ApplicationController
       guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
       list = generate_list_for(action.to_s, target_user, list_opts)
       url_prefix = "topics" unless action == :topics_by
-      list.more_topics_url = url_for(construct_next_url_with(list_opts, url_prefix))
-      list.prev_topics_url = url_for(construct_prev_url_with(list_opts, url_prefix))
+      list.more_topics_url = url_for(construct_url_with(:next, list_opts, url_prefix))
+      list.prev_topics_url = url_for(construct_url_with(:prev, list_opts, url_prefix))
       respond_with_list(list)
     end
   end
@@ -166,8 +166,8 @@ class ListController < ApplicationController
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
-      list.more_topics_url = construct_next_url_with(top_options)
-      list.prev_topics_url = construct_prev_url_with(top_options)
+      list.more_topics_url = construct_url_with(:next, top_options)
+      list.prev_topics_url = construct_url_with(:prev, top_options)
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title")
@@ -279,14 +279,14 @@ class ListController < ApplicationController
     TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
   end
 
-  def construct_next_url_with(opts, url_prefix = nil)
+  def construct_url_with(action, opts, url_prefix = nil)
     method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
-    public_send(method, opts.merge(next_page_params(opts)))
-  end
-
-  def construct_prev_url_with(opts, url_prefix = nil)
-    method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
-    public_send(method, opts.merge(prev_page_params(opts)))
+    url = if action == :prev
+      public_send(method, opts.merge(prev_page_params(opts)))
+    else # :next
+      public_send(method, opts.merge(next_page_params(opts)))
+    end
+    url.sub('.json?','?')
   end
 
   def generate_top_lists(options)
