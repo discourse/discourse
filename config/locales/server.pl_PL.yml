@@ -31,10 +31,47 @@ pl_PL:
   purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
       taken: "jest już w użyciu. (nazwy grup nie są wrażliwe na małe i wielkie litery)"
+      accepted: musi zostać zaakceptowane
+      blank: nie może być puste
+      present: musi być puste
+      confirmation: "nie zgadza się z %{attribute}"
+      empty: nie może być puste
+      equal_to: musi być równe do %{count}
+      even: musi być parzyste
+      exclusion: jest zarezerwowane
+      greater_than: musi być większe niż %{count}
+      greater_than_or_equal_to: musi być większe lub równe %{count}
+      inclusion: nie jest zawarty w liście
+      invalid: jest nieprawidłowy
+      less_than: musi być mniejszy niż %{count}
+      less_than_or_equal_to: musi być mniejszy lub równy %{count}
+      not_a_number: nie jest liczbą
+      not_an_integer: musi być liczbą całkowitą
+      odd: musi być nieparzysty
+      record_invalid: 'Weryfikacja zakończyła się niepowiedzeniem: %{errors}'
+      restrict_dependent_destroy:
+        one: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
+        many: "Nie można usunąć wpisu, ponieważ zależny %{record} istnieje"
+      too_long:
+        one: jest za długa (maksymalnie 1 znak)
+        few: jest za długa (maksymalnie %{count} znaków)
+        other: jest za długa (maksymalnie %{count} znaków)
+      too_short:
+        one: jest za krótka (minimalnie 1 znak)
+        few: jest za krótka (minimalnie %{count} znaków)
+        other: jest za długa (minimum to %{count} znaków)
+      wrong_length:
+        one: ma nieprawidłową długość (powinna być 1 znakiem)
+        few: jest nieprawidłowej długości (powinna mieć %{count} znaków)
+        other: jest nieprawidłowej długości (powinna mieć %{count} znaków)
+      other_than: "musi być różna od %{count}"
+    template:
+      body: 'Wystąpiły problemy z następującymi polami:'
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
   bulk_invite:
@@ -105,6 +142,7 @@ pl_PL:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
+  excerpt_image: "zdjęcie"
   groups:
     errors:
       can_not_modify_automatic: "Nie możesz modyfikować automatycznej grupy"
@@ -382,11 +420,14 @@ pl_PL:
   post_action_types:
     off_topic:
       title: 'Nie-na-temat'
+      description: 'Ten post jest niezwiązany z obecną dyskusją zdefiniowaną przez tytuł i pierwszy post, i powinien zostać przeniesiony gdzieś indziej.'
       long_form: 'oflagowano jako nie-na-temat'
     spam:
       title: 'Spam'
       description: 'Ten wpis jest reklamą. Jest nieprzydatny i bez związku z obecnym tematem, ma naturę promocyjną.'
       long_form: 'oflagowano jako spam'
+      email_title: '%{title}" został oznaczony jako spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Niewłaściwe'
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
@@ -394,10 +435,13 @@ pl_PL:
     notify_user:
       title: 'Prywatna wiadomość @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
+      long_form: 'wysłał prywatną wiadomość do użytkownika'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Coś innego"
+      description: 'Ten post wymaga uwagi moderatora z powodu nie uwzględnionego na liście powyżej.'
+      long_form: 'oznaczył to dla uwagi moderatora'
       email_title: 'Wpis w "%{title}" wymaga uwagi moderatorów'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -422,7 +466,9 @@ pl_PL:
       description: 'Ten temat zawiera treści jakie rozsądna osoba może uznać za agresywne, obraźliwe,  lub sprzeczne z <a href="/guidelines">wytycznymi społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_moderators:
+      title: "Coś innego"
       description: 'Ten temat wymaga interwencji moderatora z uwagi na niezgodność z <a href="/guidelines">wytycznymi społeczności</a>, <a href="%{tos_url}">warunkami użytkowania</a> lub z innego, niewymienionego tu powodu.'
+      long_form: 'oznaczył to dla uwagi moderatora'
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
@@ -523,6 +569,37 @@ pl_PL:
       title: "Najczęściej linkowane tematy"
       xaxis: "Temat"
       num_clicks: "Kliki"
+    page_view_anon_reqs:
+      title: "Anonimowy"
+      xaxis: "Dzień"
+      yaxis: "Anonimowych wyświetleń strony"
+    page_view_logged_in_reqs:
+      title: "Zalogowany"
+      xaxis: "Dzień"
+      yaxis: "Wyświetleń zalogowanych użytkowników"
+    page_view_crawler_reqs:
+      title: "Bot indeksujący"
+      xaxis: "Dzień"
+      yaxis: "Wyświetlenia botów indeksujących"
+    page_view_total_reqs:
+      title: "Łącznie"
+      xaxis: "Dzień"
+      yaxis: "Łączna ilość wyświetleń"
+    http_background_reqs:
+      title: "Tło"
+      xaxis: "Dzień"
+    http_2xx_reqs:
+      xaxis: "Dzień"
+    http_3xx_reqs:
+      xaxis: "Dzień"
+    http_4xx_reqs:
+      xaxis: "Dzień"
+    http_5xx_reqs:
+      xaxis: "Dzień"
+    http_total_reqs:
+      title: "Łącznie"
+      xaxis: "Dzień"
+      yaxis: "Razem zapytań"
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
     ruby_version_warning: "Używasz Ruby w wersji 2.0.0, która może powodować problemy. Zaktualizuj się do patch level 247 lub późniejszej. "
@@ -540,6 +617,7 @@ pl_PL:
     s3_config_warning: 'Serwer jest skonfigurowany by przesyłać pliki na s3, ale przynajmniej jedno z następujących ustawień nie jest ustawione: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik config/discourse.conf i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
+    default_logo_warning: "Ustaw logo dla swojej strony. Zaktualizuj logo_url, logo_small_url i favicon_url tutaj: <a href='/admin/site_settings'>ustawienia strony</a>."
     title_nag: "Wprowadź nazwę swojej strony. Zaktualizuj tytuł w <a href='/admin/site_settings'>Ustawieniach strony</a>."
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
   content_types:
@@ -677,7 +755,6 @@ pl_PL:
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
     suppress_uncategorized_badge: "Nie pokazuj etykiety z nazwą kategorii Inne na listach tematów."
-    enable_names: "Zezwól na wyświetlanie imienia i nazwiska użytkowników. Wyłącz, aby ukryć te dane."
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -734,10 +811,13 @@ pl_PL:
     something_already_taken: "Coś poszło źle. Możliwe, że ta nazwa użytkownika lub email są już zarejestrowane. Spróbuj użyć procedury przypominania hasła."
     omniauth_error_unknown: "Wystąpił błąd podczas logowania, spróbuj ponownie."
     password_too_long: "Hasła są ograniczone do 200 znaków."
+    missing_user_field: "Nie wypełniłeś wszystkich pól użytkownika"
     close_window: "Uwierzytelnianie zakończone. Aby kontynuować, zamknij to okno."
   user:
+    no_accounts_associated: "Brak powiązanych kont"
     username:
       short: "music zawierać co najmniej %{min} znaków"
+      long: "nie może zawierać więcej niż %{max} znaków"
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
       blank: "musi zostać podana"
@@ -745,6 +825,8 @@ pl_PL:
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
       blocked: "is not allowed."
+    ip_address:
+      blocked: "jest zablokowany"
   invite_forum_mailer:
     text_body_template: |
       %{invitee_name} wysłał Tobie zaproszenie
@@ -971,5 +1053,12 @@ pl_PL:
     user_suspended: "użytkownik został zawieszony"
   color_schemes:
     base_theme_name: "Podstawa"
+  csv_export:
+    boolean_yes: "Tak"
+    boolean_no: "Nie"
+  static_topic_first_reply: |
+    Edytuj pierwszy post w tym temacie by zmienić zawartość strony %{page_name}.
+  guidelines_topic:
+    title: "FAQ"
   tos_topic:
     title: "Warunki użytkowania"

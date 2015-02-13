@@ -832,7 +832,6 @@ he:
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
-    enable_names: "אפשרו הצגת שמות מלאים של משתמשים. בטלו אפשרות זו כדי להסתיר את השמות המלאים."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
     invites_per_page: "ברירת המחדל, הזמנות המוצגות בעמוד המשתמש."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."

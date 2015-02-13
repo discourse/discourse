@@ -31,6 +31,7 @@ ko:
   purge_reason: "비활성화된 계정은 자동적으로 삭제됩니다."
   disable_remote_images_download_reason: "서버에 저장공간이 부족해서  원격 이미지 저장이 비활성화됨. "
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
       invalid_boolean: "잘못된 값"
@@ -765,7 +766,6 @@ ko:
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
     dominating_topic_minimum_percent: "한 토픽에서 한 사용자의 영향력을 결정하는 게시글 수의 퍼센트"
     suppress_uncategorized_badge: "토픽 리스트에서 카테고리가 없는 토픽에 대한 훈장을 보여주지 않는다."
-    enable_names: "사용자의 전체 이름을 보여준다."
     display_name_on_posts: "포스트에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     invites_per_page: "사용자 페이지에 방문자를 표시합니다."
     short_progress_text_threshold: "토픽의 포스트 개수가 이 값을 넘어서면, 포스트 프로그래스바는 오직 현재 포스트 넘버만 보여준다. 만약 포스트 프로그래스바의 넓이는 변경하면, 이 숫자도 변경해야한다."

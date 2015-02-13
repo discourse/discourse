@@ -140,10 +140,12 @@ fr:
       stat:
         all_time: "depuis toujours"
         last_7_days: "Les 7 derniers jours"
+        last_30_days: "Les 30 derniers jours"
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Nombre d'utilisateurs"
+      user_count: "Nouveaux utilisateurs"
+      active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter: %{contact_email}."
     bookmarked:
@@ -751,6 +753,7 @@ fr:
         unread: "Il n'y a plus de sujet à lire."
         category: "Il n'y a plus de sujet sur {{category}} à lire."
         top: "Il n'y a plus de meilleurs sujets."
+        bookmarks: "Il n'y a plus de sujets dans vos signets."
     topic:
       filter_to: "{{post_count}} messages sur ce sujet"
       create: 'Créer votre sujet'
@@ -766,7 +769,6 @@ fr:
         one: '1 sujet non lu'
         other: '{{count}} sujets non lus'
       title: 'Sujet'
-      loading: 'Chargement du sujet…'
       invalid_access:
         title: "Ce sujet est privé"
         description: "Désolé, vous n'avez pas accès à ce sujet !"
@@ -1377,6 +1379,14 @@ fr:
         suspended: 'Suspendu :'
         private_messages_short: "MPs"
         private_messages_title: "Messages Privés"
+        space_free: "{{size}} libre"
+        uploads: "téléchargements"
+        backups: "sauvegardes"
+        traffic_short: "Trafic"
+        traffic: "Requêtes Web Application"
+        page_views: "Page Vue"
+        page_views_short: "Page Vue"
+        show_traffic_report: "Voir rapport de trafic détaillé"
         reports:
           today: "Aujourd'hui"
           yesterday: "Hier"
@@ -1876,6 +1886,8 @@ fr:
         suspended_explanation: "Un utilisateur suspendu ne peut pas se connecter."
         block_explanation: "Un utilisateur bloqué ne peut pas écrire de message, ni créer de sujet."
         trust_level_change_failed: "Il y a eu un problème lors de la modification du niveau de confiance de l'utilisateur."
+        grant_admin_failed: "Il y a eu un problème pour accorder les privilèges d'admin."
+        grant_moderation_failed: "Il y a eu un problème pour accorder les privilèges de modération."
         suspend_modal_title: "Suspendre l'utilisateur"
         trust_level_2_users: "Utilisateurs de niveau de confiance 2"
         trust_level_3_requirements: "Niveaux de confiance 3 Pré-requis"
@@ -1936,6 +1948,10 @@ fr:
           title: "Modifiable après l'inscription ?"
           enabled: "modifiable"
           disabled: "non modifiable"
+        show_on_profile:
+          title: "Afficher dans le profil public"
+          enabled: "affiché dans le profil"
+          disabled: "pas affiché dans le profil"
         field_types:
           text: 'Zone de texte'
           confirm: 'Confirmation'
@@ -1969,6 +1985,7 @@ fr:
           uncategorized: 'Autre'
           backups: "Sauvegardes"
           login: "Connexion"
+          plugins: "Plugins"
       badges:
         title: Badges
         new_badge: Nouveau Badge

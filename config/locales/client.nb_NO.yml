@@ -143,7 +143,6 @@ nb_NO:
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
-      user_count: "Brukere"
       contact: "Kontakt Oss"
       contact_info: "Hvis noe kritisk skulle oppstå eller det er en hastesak som påvirker siden kontakt oss på %{contact_email}."
     bookmarked:
@@ -750,7 +749,6 @@ nb_NO:
         one: 'Ett ulest emne'
         other: '{{count}} uleste emner'
       title: 'Emne'
-      loading: 'Behandler emnet...'
       invalid_access:
         title: "Emnet er privat"
         description: "Beklager, du har ikke tilgang til det emnet!"

@@ -140,10 +140,12 @@ es:
       stat:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
+        last_30_days: "Últimos 30 días"
       like_count: "Likes"
       topic_count: "Temas"
       post_count: "Posts"
-      user_count: "Usuarios"
+      user_count: "Nuevos usuarios"
+      active_user_count: "Usuarios activos"
       contact: "Contáctanos"
       contact_info: "En caso de error crítico o asunto urgente con respecto a este sitio, por favor, contáctanos a %{contact_email}."
     bookmarked:
@@ -747,6 +749,7 @@ es:
         unread: "No hay más temas que no hayas leído."
         category: "No hay más temas en la categoría {{category}}."
         top: "No hay más temas en el top más vistos."
+        bookmarks: "No hay más temas guardados en marcadores."
     topic:
       filter_to: "{{post_count}} posts en este tema"
       create: 'Crear tema'
@@ -762,7 +765,6 @@ es:
         one: '1 tema sin leer'
         other: '{{count}} temas sin leer'
       title: 'Tema'
-      loading: 'Cargando tema...'
       invalid_access:
         title: "Este tema es privado"
         description: "Lo sentimos, ¡no tienes acceso a este tema!"
@@ -1373,6 +1375,14 @@ es:
         suspended: 'Suspendidos:'
         private_messages_short: "PMs"
         private_messages_title: "Mensajes Privados"
+        space_free: "{{size}} libre"
+        uploads: "subidas"
+        backups: "backups"
+        traffic_short: "Tráfico"
+        traffic: "Peticiones web de la app"
+        page_views: "Páginas vistas"
+        page_views_short: "Páginas vistas"
+        show_traffic_report: "Mostrar informe detallado del tráfico"
         reports:
           today: "Hoy"
           yesterday: "Ayer"
@@ -1872,6 +1882,8 @@ es:
         suspended_explanation: "Un usuario suspendido no puede ingresar al sitio."
         block_explanation: "Un usuario bloqueado no puede publicar posts ni crear temas."
         trust_level_change_failed: "Ha habido un problema cambiando el nivel de confianza del usuario."
+        grant_admin_failed: "Hubo un problema al conceder privilegios de administración."
+        grant_moderation_failed: "Hubo un problema al conceder privilegios de moderación."
         suspend_modal_title: "Suspender Usuario"
         trust_level_2_users: "Usuarios del nivel de Confianza 2"
         trust_level_3_requirements: "Requerimientos para nivel de confianza 3"
@@ -1932,6 +1944,10 @@ es:
           title: "¿Editable después del registro?"
           enabled: "editable"
           disabled: "no editable"
+        show_on_profile:
+          title: "¿Se muestra públicamente en el perfil?"
+          enabled: "Mostrado en el perfil"
+          disabled: "No mostrado en el perfil"
         field_types:
           text: 'Campo de Texto'
           confirm: 'Confirmación'
@@ -1965,6 +1981,7 @@ es:
           uncategorized: 'Otros'
           backups: "Copias de seguridad"
           login: "Login"
+          plugins: "Plugins"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo

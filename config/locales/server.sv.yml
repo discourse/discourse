@@ -23,11 +23,29 @@ sv:
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
       invalid_boolean: "Ogiltigt boolean."
+      present: måste vara tomt
+      confirmation: "matchar inte %{attribute}"
+      empty: kan inte vara tomt
+      equal_to: måste vara lika med %{count}
+      even: måste vara jämnt
+      exclusion: är reserverad
+      greater_than: måste vara större än %{count}
+      greater_than_or_equal_to: måste vara större eller lika med %{count}
+      inclusion: är inte inkluderad i listan
+      invalid: är ogiltig
+      less_than: måste vara mindre än %{count}
+      less_than_or_equal_to: måste vara mindre eller lika med %{count}
+      not_a_number: är inte ett nummer
+      not_an_integer: måste vara ett tal
+      odd: måste vara udda
+    template:
+      body: 'Det var ett problem med dom följande fälten:'
     embed:
       load_from_remote: "Det uppstod ett fel vid laddning av artikeln."
   bulk_invite:
     file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
   backup:
+    operation_already_running: "En operation är redan igång. Kan inte starta ett nytt job just nu."
     backup_file_should_be_tar_gz: "Backup filen ska vara ett .tar.gz arkiv."
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna backup."
   not_logged_in: "Du måste vara inloggad för att göra detta."
@@ -89,6 +107,7 @@ sv:
     latest: "Senaste trådar"
     hot: "Heta trådar"
   too_late_to_edit: "Inlägget skapades för långt tillbaka i tiden. Det kan inte lägre redigeras eller tas bort."
+  excerpt_image: "bild"
   groups:
     errors:
       can_not_modify_automatic: "Du kan inte modifiera en automatisk grupp"
@@ -129,24 +148,47 @@ sv:
         is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
         has_already_been_used: "har redan använts"
       models:
+        topic:
+          attributes:
+            base:
+              cant_send_pm: "Tyvärr, du kan inte skicka ett privat medelande till den användaren. "
+              no_user_selected: "Du måste välja en giltig användare."
         user:
           attributes:
             password:
               common: "är ett av de 10000 vanligaste lösenorden. Vänligen använd ett säkrare lösenord."
             ip_address:
               signup_not_allowed: "Registration är inte tillåtet från detta konto."
+        color_scheme_color:
+          attributes:
+            hex:
+              invalid: "är inte en giltig färg"
   user_profile:
     no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} har inte skrivit någonting i dess profils Om Mig-fält ännu</div>"
   vip_category_name: "Lounge"
+  staff_category_name: "Personal"
+  staff_category_description: "Privat kategori för personal diskussioner. Ämnen här är bara synliga till administratörer och moderatorer."
   category:
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    errors:
+      uncategorized_parent: "Kategorin \"Okategoriserat\" kan inte ha en föräldrar kategori."
+    cannot_delete:
+      uncategorized: "Du kan inte ta bort kategorin \"Okategoriserat\""
+      has_subcategories: "Du kan inte ta bort den här kategorin för att den har under-kategorier."
   trust_levels:
     newuser:
       title: "besökare"
     basic:
       title: "vanlig användare"
+    regular:
+      title: "medlem"
+    leader:
+      title: "vanlig"
+    elder:
+      title: "ledare"
   rate_limiter:
+    slow_down: "Du har utfört den här handlingen för många gånger, var vänligen och försök igen senare."
     too_many_requests: "Du gör det där för ofta. Var god vänta %{time_left} innan du försöker igen."
     hours:
       one: "1 timme"
@@ -325,6 +367,10 @@ sv:
       title: "Bokmärken"
       xaxis: "Dag"
       yaxis: "Antal nya bokmärken"
+    starred:
+      title: "Favoriserad"
+      xaxis: "Dag"
+      yaxis: "Antal favoriserade trådar"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
@@ -368,6 +414,34 @@ sv:
       title: "Mest refererade trådar"
       xaxis: "Tråd"
       num_clicks: "Klick"
+    page_view_anon_reqs:
+      title: "Anonym"
+      xaxis: "Dag"
+      yaxis: "Anonyma sidvisningar"
+    page_view_logged_in_reqs:
+      title: "Inloggad"
+      xaxis: "Dag"
+      yaxis: "Inloggade sidvisningar"
+    page_view_crawler_reqs:
+      xaxis: "Dag"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Dag"
+      yaxis: "Totala Sidvisningar"
+    http_background_reqs:
+      title: "Bakgrund"
+      xaxis: "Dag"
+    http_2xx_reqs:
+      xaxis: "Dag"
+    http_3xx_reqs:
+      xaxis: "Dag"
+    http_4xx_reqs:
+      xaxis: "Dag"
+    http_5xx_reqs:
+      xaxis: "Dag"
+    http_total_reqs:
+      title: "Totala"
+      xaxis: "Dag"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     ruby_version_warning: "Du använder en version av Ruby 2.0.0 som är känd för att ha problem. Uppgradera till patch-nivå 247 eller senare."

@@ -123,10 +123,12 @@ ko:
       stat:
         all_time: "전체"
         last_7_days: "지난 7일"
+        last_30_days: "최근 30일"
       like_count: "좋아요"
       topic_count: "토픽"
       post_count: "게시글"
-      user_count: "사용자"
+      user_count: "새로운 사용자"
+      active_user_count: "활성화된 사용자"
       contact: "Contact Us"
       contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_email}로 연락주시기 바랍니다."
     bookmarked:
@@ -257,6 +259,7 @@ ko:
       notifications: "알림"
       dismiss_notifications: "모두 읽음으로 표시"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
+      disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새로운 메시지 알림을 Favicon으로 보여줍니다. (실험적 기능)"
       edit_history_public: "내 글의 리비전을 다른 사용자들이 볼 수 있게 허용"
       external_links_in_new_tab: "모든 외부 링크를 새 탭에 열기"
@@ -269,6 +272,7 @@ ko:
       suspended_notice: "이 사용자는 {{date}}까지 접근 금지 되었습니다."
       suspended_reason: "이유: "
       github_profile: "Github"
+      mailing_list_mode: "(토픽이나 카테고리의 알림을 끄지 않는 한) 모든 새로운 글에 대해 메일을 보내주세요."
       watched_categories: "지켜보기"
       watched_categories_instructions: "이 카테고리들에 있는 모든 새로운 토픽을 지켜봅니다. 새로운 글과 토픽이 작성될 때마다 알림이 오고, 읽지 않은 글과 새로운 글 수가 토픽의 리스트에 나타납니다."
       tracked_categories: "추적하기"
@@ -334,6 +338,8 @@ ko:
         authenticated: "당신의 이메일은 {{provider}}에 의해 인증되었습니다."
         frequency:
           zero: "읽지 않은 내용이 있을 때 즉시 이메일로 알립니다."
+          one: "1분 후에도 내용을 확인하지 않았을 때에 이메일로 알립니다."
+          other: "{{count}}분 후에도 확인하지 않았을 때에 이메일로 알립니다."
       name:
         title: "이름"
         instructions: "이름을 적어주세요. (선택사항)"
@@ -369,18 +375,24 @@ ko:
       website: "웹사이트"
       email_settings: "이메일"
       email_digests:
+        title: "사이트 방문이 없을 경우, 새로운 글을 요약하여 메일로 보냄"
         daily: "매일"
         weekly: "매주"
         bi_weekly: "격주"
+      email_direct: "누군가 나를 인용했을 때, 내 글에 답글을 달았을때, 혹은 내 이름을 언급했을때 이메일 보내기"
+      email_private_messages: "누군가 나에게 개인 메시지를 보냈을때 이메일 보내기"
       email_always: "싸이트에 방문 중 일 때 이메일 알림을 보내지 마세요."
       other_settings: "추가 사항"
       categories_settings: "카테고리"
       new_topic_duration:
         label: "새글을 정의해주세요."
+        not_viewed: "아직 보지 않았습니다."
+        last_here: "마지막 방문이후 작성된 토픽"
         after_n_days:
           other: "지난 {{count}}일간 생성된 토픽"
         after_n_weeks:
           other: "지난 {{count}}주간 생성된 토픽"
+      auto_track_topics: "마지막 방문이후 작성된 토픽"
       auto_track_options:
         never: "하지않음"
         always: "항상"
@@ -628,6 +640,7 @@ ko:
           examples: '시간에 해당하는 숫자를 입력하세요. (24)'
     notifications:
       title: "@사용자이름 언급, 게시글과 토픽에 대한 언급, 개인 메시지 등에 대한 알림"
+      none: "현재 알림을 불러올 수 없습니다."
       more: "이전 알림을 볼 수 있습니다."
       total_flagged: "관심 표시된 총 게시글"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -693,6 +706,7 @@ ko:
         posted: "아직 어떠한 토픽도 작성되지 않았습니다."
         latest: "최신 토픽이 없습니다."
         hot: "인기있는 토픽이 없습니다."
+        bookmarks: "아직 북마크한 토픽이 없습니다."
         category: "{{category}}에 토픽이 없습니다."
         top: "Top 토픽이 없습니다."
         educate:
@@ -707,6 +721,7 @@ ko:
         unread: "더 이상 읽지 않은 토픽이 없습니다"
         category: "더 이상 {{category}}에 토픽이 없습니다"
         top: "더 이상 인기 토픽이 없습니다."
+        bookmarks: "더이상 북마크한 토픽이 없습니다."
     topic:
       filter_to: "이 토픽에서 {{username}}님의 {{post_count}}건의 게시물만 보기"
       create: '새 토픽 만들기'
@@ -720,7 +735,6 @@ ko:
       unread_topics:
         other: '{{count}}개의 읽지 않은 토픽'
       title: '토픽'
-      loading: '토픽을 로딩 중...'
       invalid_access:
         title: "이 토픽은 비공개입니다"
         description: "죄송합니다. 그 토픽에 접근 할 수 없습니다!"
@@ -1241,6 +1255,9 @@ ko:
       posted:
         title: "내 게시물"
         help: "당신이 게시한 글"
+      bookmarks:
+        title: "북마크"
+        help: "북마크된 토픽들"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1296,6 +1313,14 @@ ko:
         suspended: '접근금지:'
         private_messages_short: "PMs"
         private_messages_title: "개인 메시지"
+        space_free: "{{size}} free"
+        uploads: "업로드"
+        backups: "백업"
+        traffic_short: "트래픽"
+        traffic: "어플리케이션 웹 요청"
+        page_views: "페이지 조회"
+        page_views_short: "페이지 조회"
+        show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
           yesterday: "어제"
@@ -1388,6 +1413,10 @@ ko:
         name: "이름"
         add: "추가"
         add_members: "사용자 추가하기"
+        custom: "커스텀"
+        automatic: "오토메틱"
+        automatic_membership_email_domains: "이 목록의 있는 항목과 사용자들이  등록한 이메일 도메인이 일치할때 이 그룹에 포함"
+        automatic_membership_retroactive: "이미 등록된 사용자에게 같은 이메일 도메인 규칙 적용하기"
       api:
         generate_master: "마스터 API 키 생성"
         none: "지금 활성화된 API 키가 없습니다."

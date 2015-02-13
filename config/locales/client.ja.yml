@@ -232,7 +232,6 @@ ja:
       invited_by: "招待者"
       trust_level: "トラストレベル"
       notifications: "通知"
-      disable_jump_reply: "回答後新しいポストに移動しない。"
       dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
@@ -244,7 +243,6 @@ ja:
       admin_tooltip: "このユーザは管理者であり"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
-      mailing_list_mode: "フォーラムに投稿がされる度にメールで通知を受け取る(ミュートしているトピックやカテゴリ以外)"
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
@@ -319,24 +317,18 @@ ja:
       website: "ウェブサイト"
       email_settings: "メール"
       email_digests:
-        title: "新規トピックのダイジェストをメールで受信する"
         daily: "毎日"
         weekly: "毎週"
         bi_weekly: "隔週"
-      email_direct: "ポストが引用されたり、回答を受けたり、 @ユーザ名 でタグ付けを受けた際にメール通知を受け取る"
-      email_private_messages: "プライベートメッセージを受けた際にメール通知を受け取る"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"
       new_topic_duration:
         label: "以下の条件でトピックを新規と見なす"
-        not_viewed: "未読のもの"
-        last_here: "前回ログアウト後に投稿されたもの"
         after_n_days:
           other: "過去{{count}}日間に投稿されたもの"
         after_n_weeks:
           other: "過去{{count}}週間に投稿されたもの"
-      auto_track_topics: "以下のタイミングで、自分が投稿したトピックを自動的にトラックする"
       auto_track_options:
         never: "トラックしない"
         always: "常にトラックする"
@@ -559,7 +551,6 @@ ja:
       admin_options_title: "このトピックの詳細設定"
     notifications:
       title: "@ユーザ名 のタグ付けやあなたのポストやトピックへの回答、プライベートメッセージなどの通知"
-      none: "現在通知はありません。"
       more: "古い通知を確認する"
       total_flagged: "フラグがたったポストの総数"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -647,7 +638,6 @@ ja:
       unread_topics:
         other: '{{count}}個の未読トピック'
       title: 'トピック'
-      loading: 'トピックを読み込み中...'
       invalid_access:
         title: "トピックはプライベートです"
         description: "申し訳ありませんが、このトピックへのアクセスは許可されていません。"
@@ -1685,8 +1675,6 @@ ja:
         mark_watching: '<b>m</b>, <b>w</b> トピックを参加中にする'
     badges:
       title: バッジ
-      allow_title: "バッジをタイトルとして使用しますか？"
-      multiple_grant: "何度も受け取ることができますか？"
       badge_count:
         other: "%{count} バッジ"
       more_badges:

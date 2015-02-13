@@ -31,10 +31,47 @@ es:
   purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
       taken: "ya ha sido escogido. (los nombres de grupos no distinguen mayúsculas o minúsculas)"
+      accepted: debe ser aceptado
+      blank: no puede dejarse en blanco
+      present: debe dejarse en blanco
+      confirmation: "no coincide %{attribute}"
+      empty: no puede estar vacío
+      equal_to: debe ser igual a %{count}
+      even: debe ser además
+      exclusion: está reservado
+      greater_than: debe ser más grande que %{count}
+      greater_than_or_equal_to: debe ser igual o más grande que %{count}
+      inclusion: no está incluido en la lista
+      invalid: no es válido
+      less_than: debe ser menor que %{count}
+      less_than_or_equal_to: debe ser menor o igual que %{count}
+      not_a_number: no es un número
+      not_an_integer: debe ser un valor entero
+      odd: debe ser impar
+      record_invalid: 'Error en la validación: %{errors}'
+      restrict_dependent_destroy:
+        one: "No se pudo eliminar el registro porque existe otro %{record} dependiente"
+        many: "No se puede eliminar el registro porque existen otros %{record} dependientes"
+      too_long:
+        one: es demasiado largo (el máximo es de 1 carácter)
+        other: es demasiado largo (el máximo es de %{count} caracteres)
+      too_short:
+        one: es demasiado corto (el mínimo es de 1 carácter)
+        other: es demasiado corto (el mínimo es de %{count} caracteres)
+      wrong_length:
+        one: tiene una longitud incorrecta (debería ser de 1 carácter)
+        other: tiene una longitud incorrecta (debería ser de %{count} caracteres)
+      other_than: "debe ser distinto de %{count}"
+    template:
+      body: 'Ha habido problemas con los siguientes campos:'
+      header:
+        one: '1 error impidió guardar este %{model}'
+        other: '%{count} errores impidieron guardar este %{model}'
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
   bulk_invite:
@@ -377,6 +414,8 @@ es:
       title: 'Spam'
       description: 'Este post es un anuncio publicitario. No es útil ni relevante para este tema, sino de naturaleza promocional.'
       long_form: 'reportado como spam'
+      email_title: '"%{title}" fue reportado como spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapropiado'
       description: 'Este post contiene contenido que una persona sensata podría considerar ofensivo, abusivo o que viola <a href="/guidelines">nuestras directrices de comunidad</a>.'
@@ -518,6 +557,46 @@ es:
       title: "Los temas más referidos"
       xaxis: "Tema"
       num_clicks: "Clics"
+    page_view_anon_reqs:
+      title: "Anónimas"
+      xaxis: "Día"
+      yaxis: "Páginas vistas de anónimos"
+    page_view_logged_in_reqs:
+      title: "Registrados"
+      xaxis: "Día"
+      yaxis: "Páginas vistas de usuarios registrados"
+    page_view_crawler_reqs:
+      title: "Rastreadores web"
+      xaxis: "Día"
+      yaxis: "Páginas vistas de rastreadores web"
+    page_view_total_reqs:
+      title: "Tota"
+      xaxis: "Día"
+      yaxis: "Páginas vistas totales"
+    http_background_reqs:
+      title: "Background"
+      xaxis: "Día"
+      yaxis: "Peticiones utilizadas para seguir y actualizar contenido"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Día"
+      yaxis: "Peticiones con éxito (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirecciones)"
+      xaxis: "Día"
+      yaxis: "Peticiones de redirección (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Error de cliente)"
+      xaxis: "Día"
+      yaxis: "Errores de cliente (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Error de servidor)"
+      xaxis: "Día"
+      yaxis: "Errores de servidor (Status 5xx)"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Día"
+      yaxis: "Peticiones totales"
   dashboard:
     rails_env_warning: "Tu servidor está funcionando en modo de %{env}."
     ruby_version_warning: "Tú estás utilizando una versión de Ruby 2.0.0 que es conocida por tener problemas. Actualiza al nivel de parche 247 o más nuevo."
@@ -537,6 +616,7 @@ es:
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} de tareas de email que fallaron. Revisa tu archivo config/discourse.conf y asegúrate que la configuración del servidor de email esté correcta. <a href="/sidekiq/retries" target="_blank">Revisa las tareas fallidas en Sidekiq</a>.'
     default_logo_warning: "Establece los imágenes del logo para tu sitio. Actualiza logo_url, logo_small_url, y favicon_url en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
+    contact_email_missing: "Introduce una dirección de correo electrónico de contacto para que puedan llegar mensajes urgentes sobre tu sitio. Actualízalo en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     contact_email_invalid: "La dirección email de contacto es inválida. Actualízala en la <a href='/admin/site_settings'>Configuración del Sitio</a>."
     title_nag: "Introduce un nombre de tu sitio. Actualiza el nombre en <a href='/admin/site_settings'>Configuración del Sitio</a>."
     site_description_missing: "Introduce una breve descripción sobre tu sitio que aparecerá en los resultados de búsqueda. Actualiza site_description en <a href='/admin/site_settings'>Ajustes del sitio</a>."
@@ -593,6 +673,7 @@ es:
     educate_until_posts: "Cuando el usuario comienza a escribir su primer o primeros (n) posts, mostrar un pop-up con el panel de consejos para nuevos usuarios en el editor."
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
+    contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas como reportes sin resolver, así como en la página /about de contacto para asuntos urgentes."
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -655,6 +736,7 @@ es:
     enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
     cors_origins: "Orígenes permitidos para las cross-origin requests (CORS). Cada origen debe incluir http:// or https://. La variable env DISCOURSE_ENABLE_CORS debe establecerse a verdadero para activar CORS."
+    top_menu: "Determinar que items aparecen en la navegación de la home y en qué orden. Ejemplo latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Determina qué elementos aparecen en el menú de un post y en qué orden. Ejemplo: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Los elementos del menú a ocultar por defecto en el menú de cada post a menos que se haga clic en el botón para expandir las opciones."
     share_links: "Determina qué elementos aparecen en el cuadro de compartir y en qué orden"
@@ -677,6 +759,7 @@ es:
     email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
     email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
     forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
+    log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
     new_version_emails: "Enviar un email a la dirección contact_email cuando esté disponible una nueva versión de Discourse."
     port: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Usa este puerto HTTP en vez del puerto 80 por defecto. Dejar en blanco deja por defecto el puerto 80."
@@ -692,6 +775,7 @@ es:
     enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar si no está configurado de forma apropiada; además, desactiva las invitaciones)"
     enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
+    sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_email: "Reemplaza el email local con el email del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los correos electrónicos locales)"
     sso_overrides_username: "Reemplaza el nombre de usuario local con el nombre de usuario del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a las diferencias de requirimientos/longitud en los nombres de usuario)"
     sso_overrides_name: "Reemplaza el nombre local con el nombre del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los nombres locales)"
@@ -730,6 +814,7 @@ es:
     max_edits_per_day: "Máximo número de ediciones por usuario y día."
     max_topics_per_day: "Máximo número de temas que un usuario puede crear al día."
     max_private_messages_per_day: "Máximo número de mensajes privados por usuario y día."
+    max_invites_per_day: "Máximo número de invitaciones que un usuario puede enviar al día."
     suggested_topics: "Número de temas sugeridos mostrados al pie del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
@@ -785,6 +870,7 @@ es:
     min_title_similar_length: "La extensión mínima que un título debe tener antes de revisar temas similares."
     min_body_similar_length: "La extensión mínima que el cuerpo de un post debe tener antes de revisar temas similares."
     category_colors: "Una lista de valores en hexadecimal de los colores para las categorías."
+    category_style: "Estilo visual de las etiquetas de categoría."
     max_image_size_kb: "El tamaño máximo, en kB, para subir imágenes. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     max_attachment_size_kb: "El tamaño máximo, en kB, para adjuntar archivos. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos de archivo)"
@@ -845,6 +931,7 @@ es:
     digest_topics: "El número máximo de temas a mostrar en el resumen por email."
     digest_min_excerpt_length: "La extensión mínima, en caracteres, del extracto de un post en el resumen por email."
     default_digest_email_frequency: "Cada cuánto tiempo los usuarios recibirán emails con el resumen del sitio por defecto. Cada usuario puede cambiar esta opción para sí en sus preferencias."
+    suppress_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
     disable_digest_emails: "Inhabilitar e-mails de resumen para todos los usuarios."
     default_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña. Los usuarios pueden cambiar esto en sus preferencias."
     detect_custom_avatars: "Verificar o no que los usuarios han subido su propio avatar personalizado."
@@ -857,7 +944,7 @@ es:
     suppress_uncategorized_badge: "No mostrar la etiqueta de los temas sin categoría en la lista de temas."
     global_notice: "Mostrar una noticia de URGENCIA o EMERGENCIA para todos los visitantes, deja este campo en blanco para ocultarla (se puede utilizar código HTML)"
     disable_edit_notifications: "Inhabilitar editar notificaciones por el usuario system cuando 'download_remote_images_to_local' este activo."
-    enable_names: "Habilitar que se muestren los nombres completos de los usuarios. Si se deshabilita, se ocultarán los nombres completos."
+    enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
     invites_per_page: "Número de invitaciones por defecto mostradas en la página de perfil del usuario."
     short_progress_text_threshold: "Después de que un número de posts en un tema alcance esta cifra, la barra de progreso sólo mostrará el número del post actual. Si cambias el ancho de la barra de progreso, deberías revisar este valor."
@@ -893,6 +980,7 @@ es:
       invalid_string_min_max: "Debe contener entre %{min}  y  %{max} caracteres."
       invalid_string_min: "Debe contener como mínimo %{min} caracteres. "
       invalid_string_max: "No debe exceder los %{max} caracteres. "
+      invalid_reply_by_email_address: "El valor debe contener '%{reply_key}' y debe ser diferente del email de notificación."
   notification_types:
     mentioned: "%{display_username} te ha mencionado en %{link}"
     liked: "%{display_username} le ha gustado tu post en %{link}"
@@ -1479,25 +1567,3 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
-  static:
-    search_help: |
-      <h2>Consejos</h2>
-      <p>
-      <ul>
-        <li>Se priorizan las coincidencias con el título, por lo que si tienes dudas, busca por títulos</li>
-        <li>Buscar palabras diferentes, no muy comunes, siempre dará mejores resultados</li>
-        <li>Cuando sea posible, centra tu búsqueda en una categoría, un tema o un usuario en concreto</li>
-      </ul>
-      </p>
-      <h2>Opciones</h2>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        </table>
-      </p>
-      <p>
-        <code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha de la última publicación.
-      </p>

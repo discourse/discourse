@@ -75,6 +75,7 @@ tr_TR:
       google+: 'bu bağlantıyı Google+''da paylaşın'
       email: 'bu bağlantıyı e-posta ile gönderin'
     topic_admin_menu: "konuyla alakalı admin aksiyonları"
+    emails_are_disabled: "Tüm giden emaillar admin tarafından evrensel olarak devre dışı bırakıldı. Herhangi bir email bildirimi yollanmayacak."
     edit: 'bu konunun başlığını ve kategorisini düzenleyin'
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
@@ -122,10 +123,12 @@ tr_TR:
       stat:
         all_time: "Tüm Zamanlar"
         last_7_days: "Son 7 Gün"
+        last_30_days: "Son 30 Gün"
       like_count: "Beğeniler"
       topic_count: "Konular"
       post_count: "Gönderiler"
-      user_count: "Kullanıcılar"
+      user_count: "Yeni Kullanıcılar"
+      active_user_count: "Aktif Kullanıcılar"
       contact: "İletişim"
       contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_email} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
@@ -256,6 +259,7 @@ tr_TR:
       notifications: "Bildirimler"
       dismiss_notifications: "Hepsini okunmuş olarak işaretle"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Favicon üzerinde gelen mesaj bildirimlerini göster (deneysel)"
       edit_history_public: "Gönderimde yaptığım revizyonları diğer kullanıcıların görmesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
@@ -268,6 +272,7 @@ tr_TR:
       suspended_notice: "Bu kullanıcı {{tarih}} tarihine kadar uzaklaştırıldı."
       suspended_reason: "Neden:"
       github_profile: "Github"
+      mailing_list_mode: "(Konuyu veya kategoriyi susturmadığım takdirde) her yeni gönderi için bana bir email yolla"
       watched_categories: "Gözlendi"
       watched_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konu yanında belirecek. "
       tracked_categories: "Takip edildi"
@@ -333,6 +338,8 @@ tr_TR:
         authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
         frequency:
           zero: "Eğer yollamak üzere olduğumuz şeyi okumadıysanız size direk e-posta yollayacağız."
+          one: "Sadece sizi son bir dakika içinde görmediysek size email yollayacağız."
+          other: "Sadece sizi son {{count}} dakika içerisinde görmediysek size email yollayacağız."
       name:
         title: "İsim"
         instructions: "Adınız ve soyadınız (zorunlu değil)"
@@ -368,18 +375,24 @@ tr_TR:
       website: "Web Sayfası"
       email_settings: "E-posta"
       email_digests:
+        title: "Burayı ziyaret etmediğim zamanlarda bana yeni şeylerin özetini içeren bir email yolla:"
         daily: "günlük"
         weekly: "haftalık"
         bi_weekly: "her iki haftada bir"
+      email_direct: "Birisi gönderime cevap verdiğinde, benden alıntı yaptığında ya da benden @username bahsettiğinde bana bir email at"
+      email_private_messages: "Biri bana özel mesaj yazdığında bana bir email at"
       email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"
       other_settings: "Diğer"
       categories_settings: "Kategoriler"
       new_topic_duration:
         label: "Seçili durumdaki konular yeni sayılsın"
+        not_viewed: "Onları henüz görüntülemedim"
+        last_here: "son ziyaretimden beri oluşturulanlar"
         after_n_days:
           other: "son {{count}} günde oluşturulanlar"
         after_n_weeks:
           other: "son {{count}} haftada oluşturulanlar"
+      auto_track_topics: "Girdiğim konuları otomatik olarak takip et"
       auto_track_options:
         never: "asla"
         always: "her zaman"
@@ -459,7 +472,7 @@ tr_TR:
     refresh: "Yenile"
     read_only_mode:
       enabled: "Bir admin salt-okunur modunu etkinleştirdi. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
-      login_disabled: "Sitesi salt okunur modda iken Giriş devre dışı bırakılır ."
+      login_disabled: "Site salt-okunur modda iken giriş yapma devre dışı bırakılır ."
     too_few_topics_notice: "Tartışmayı başlatmak için herkese açık en az 5 konu ve %{posts} gönderi oluşturun. Yeni kullanıcıların güven seviyelerini artırabilmeleri için okuyabilecekleri içerik olması gerekli. Bu mesaj sadece görevlilere görünür."
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
@@ -582,7 +595,7 @@ tr_TR:
       title_placeholder: "Kısa bir cümlede açılamak gerekirse bu tartışmanın konusu nedir?"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
-      reply_placeholder: "Buraya yazın. Markdown veya BBCode kullanarak biçimlendirin. Resmi yüklemek için sürükleyip bırakın ya da yapıştırın."
+      reply_placeholder: "Buraya yazın. Markdown veya BBCode kullanarak biçimlendirin. Resim yüklemek için sürükleyip bırakın ya da yapıştırın."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor..."
       saved: "Kaydedildi!"
@@ -627,6 +640,7 @@ tr_TR:
           examples: 'Saat sayısını giriniz (24).'
     notifications:
       title: "@isim bahsedilişleri, gönderileriniz ve konularınıza atılan cevaplar, özel mesajlarla vb. ilgili bildiriler"
+      none: "Şu an için bildirimler yüklenemiyor."
       more: "daha eski bildirimleri görüntüle"
       total_flagged: "tüm bayraklı gönderiler"
       mentioned: "<i title='bahsetti' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -692,6 +706,7 @@ tr_TR:
         posted: "Henüz herhangi bir konuda gönderi oluşturmadınız."
         latest: "Son bir konu yok. Bu üzücü."
         hot: "Sıcak bir konu yok."
+        bookmarks: "Henüz bir konu işaretlememişsiniz."
         category: "{{category}} konusu yok."
         top: "Popüler bir konu yok."
         educate:
@@ -706,6 +721,7 @@ tr_TR:
         unread: "Daha fazla okunmamış konu yok."
         category: "Daha fazla {{category}} konusu yok."
         top: "Daha fazla popüler konu yok"
+        bookmarks: "Daha fazla işaretlenmiş konu yok."
     topic:
       filter_to: "Bu konuda {{post_count}} gönderi"
       create: 'Yeni Konu'
@@ -719,7 +735,6 @@ tr_TR:
       unread_topics:
         other: '{{count}} okunmamış konu'
       title: 'Konu'
-      loading: 'Konu yükleniyor...'
       invalid_access:
         title: "Bu konu özel"
         description: "Üzgünüz, bu konuya erişiminiz yok!"
@@ -854,6 +869,7 @@ tr_TR:
         to_forum: "Arkadaşınıza, giriş yapması gerekmeden, bir linke tıklayarak katılabilmesi için kısa bir e-posta göndereceğiz. "
         email_placeholder: 'isim@örnek.com'
         success: " <b>{{email}}</b> adresine bir davet emaili attık. Davetiniz kabul edildiğinde size bir bildirim göndereceğiz. Kullanıcı sayfanızdaki davetiyeler sekmesinden davetlerinizi takip edebilirsiniz."
+        error: "Üzgünüz, o kişiyi davet edemedik. Zaten kullanıcı olabilir mi? (Davetler oran sınırlarına tabiidir.)"
       login_reply: 'Cevaplamak için Giriş Yap'
       filters:
         n_posts:
@@ -1239,6 +1255,9 @@ tr_TR:
       posted:
         title: "Gönderilerim"
         help: "gönderi oluşturduğunuz konular"
+      bookmarks:
+        title: "İşaretlenenler"
+        help: "işaretlediğiniz konular"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1294,6 +1313,14 @@ tr_TR:
         suspended: 'Uzaklaştırılmışlar:'
         private_messages_short: "Özel Mesajlar"
         private_messages_title: "Özel Mesajlar"
+        space_free: "{{size}} serbest"
+        uploads: "yüklemeler"
+        backups: "yedeklemeler"
+        traffic_short: "Trafik"
+        traffic: "Uygulama web istekleri"
+        page_views: "Sayfa Görüntülemeleri"
+        page_views_short: "Sayfa Görüntülemeleri"
+        show_traffic_report: "Detaylı Trafik Raporunu Görüntüle"
         reports:
           today: "Bugün"
           yesterday: "Dün"
@@ -1386,6 +1413,10 @@ tr_TR:
         name: "Ad"
         add: "Ekle"
         add_members: "Üye ekle"
+        custom: "Özel"
+        automatic: "Otomatik"
+        automatic_membership_email_domains: "Bu listedeki bir email alan adıyla kaydolan kullanıcılar otomatik olarak bu gruba eklenecekler:"
+        automatic_membership_retroactive: "Varolan kayıtlı kullanıcıları eklemek için aynı email alan adı kuralını uygula"
       api:
         generate_master: "Master API Anahtarı üret"
         none: "Şu etkin API anahtarı bulunmuyor."
@@ -1412,8 +1443,8 @@ tr_TR:
             text: "Salt-okunur modunu etkinleştir"
             confirm: "Salt-okunur modunu etkinleştirmek istediğinize emin misiniz?"
           disable:
-            title: "Salt-okunur modunu etkisizleştir"
-            text: "Salt-okunur modunu etkisizleştir"
+            title: "Salt-okunur modunu devre dışı bırak"
+            text: "Salt-okunur modunu devre dışı bırak"
         logs:
           none: "Henüz kayıt bulunmuyor..."
         columns:
@@ -1611,6 +1642,7 @@ tr_TR:
           actions:
             delete_user: "kullanıcıyı sil"
             change_trust_level: "güven seviyesini değiştir"
+            change_username: "kullanıcı adını değiştir"
             change_site_setting: "websitesi ayarlarını değiştir"
             change_site_customization: "websitesinin özelleştirmesini değiştir"
             delete_site_customization: "websitesinin özelleştirmesini sil"
@@ -1776,6 +1808,8 @@ tr_TR:
         suspended_explanation: "Uzaklaştırılmış kullanıcılar sisteme giriş yapamaz."
         block_explanation: "Engellenmiş bir kullanıcı gönderi oluşturamaz veya konu başlatamaz."
         trust_level_change_failed: "Kullanıcının güven seviyesi değiştirilirken bir sorun yaşandı."
+        grant_admin_failed: "Admin ayrıcalıkları tanınırken problem oluştu."
+        grant_moderation_failed: "Moderasyon ayrıcalıkları tanınırken problem oluştu."
         suspend_modal_title: "Kullanıcıyı Uzaklaştır"
         trust_level_2_users: "Güven Seviyesi 2 Olan Kullanıcılar"
         trust_level_3_requirements: "Güven Seviyesi 3 Gereksinimleri"
@@ -1836,6 +1870,10 @@ tr_TR:
           title: "Üyelik sonrası düzenlenebilir?"
           enabled: "düzenlenebilir"
           disabled: "düzenlenemez"
+        show_on_profile:
+          title: "Herkese açık profilde göster?"
+          enabled: "profilde gösteriliyor"
+          disabled: "profilde gösterilmiyor"
         field_types:
           text: 'Yazı Alanı'
           confirm: 'Onay'
@@ -1869,6 +1907,7 @@ tr_TR:
           uncategorized: 'Diğer'
           backups: "Yedekler"
           login: "Giriş Yap"
+          plugins: "Eklentiler"
       badges:
         title: Rozetler
         new_badge: Yeni Rozet
@@ -1992,6 +2031,8 @@ tr_TR:
         mark_watching: '<b>m</b>, <b>w</b> Konuyu gözle'
     badges:
       title: Rozetler
+      allow_title: "ünvan olarak kullanılabilir"
+      multiple_grant: "birden fazla kez verilebilir"
       badge_count:
         other: "%{count} Rozet"
       more_badges:

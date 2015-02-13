@@ -141,7 +141,6 @@ sq:
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      user_count: "Anëtarët"
     bookmarks:
       not_logged_in: "ju duhet të jeni të identifikuar për të ruajtur temën."
       created: "ju ruajtët këtë temë"
@@ -261,7 +260,6 @@ sq:
       notifications: "Njoftimet"
       dismiss_notifications: "Shënoj të gjitha si të lexuara"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
-      disable_jump_reply: "Mos kalo tek postimi i ri pas përgjigjes"
       dynamic_favicon: "Shfaq njoftimet e mesazheve përbri ikonës faqes (eksperimentale)"
       edit_history_public: "Lejo anëtarët e tjerë të shikojnë redaktimet e mia "
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
@@ -274,7 +272,6 @@ sq:
       suspended_notice: "Ky anëtarë është përjashtuar deri më {{date}}."
       suspended_reason: "Arsyeja:"
       github_profile: "Github"
-      mailing_list_mode: "Merrni email për çdo postim të ri (veç nëse klikoni hesht mbi temën apo kategorin)"
       watched_categories: "Shikuar"
       watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
       tracked_categories: "Gjurmuar"
@@ -356,26 +353,20 @@ sq:
       website: "Web Site"
       email_settings: "Email"
       email_digests:
-        title: "When you don't visit the site, send an email digest of what's new:"
         daily: "ditore"
         weekly: "javore"
         bi_weekly: "çdo dy javë"
-      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
-      email_private_messages: "Merrni një email, kur dikush ju dërgon një mesazh privat"
       email_always: "Do not suppress email notifications when I am active on the site"
       other_settings: "Tjetër"
       categories_settings: "Kategoritë"
       new_topic_duration:
         label: "Konsidero diskutim te ri kur"
-        not_viewed: "ju nuk i keni parë ato ende"
-        last_here: "krijuar që nga vizita juaj e fundit"
         after_n_days:
           one: "krijuar në ditën e fundit"
           other: "krijuar në {{count}} ditët e fundit"
         after_n_weeks:
           one: "created in the last week"
           other: "created in the last {{count}} weeks"
-      auto_track_topics: "Gjurmo automatikisht temat kur futeni"
       auto_track_options:
         never: "asnjëherë"
         always: "gjithmon"
@@ -613,7 +604,6 @@ sq:
           examples: 'Enter number of hours (24).'
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
-      none: "Nuk ka asnjë njoftim në këto momente."
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali postimeve të sinjalizuar"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -708,7 +698,6 @@ sq:
         one: '1 unread topic'
         other: '{{count}} unread topics'
       title: 'Temë'
-      loading: 'Duke ngarkuar temat...'
       invalid_access:
         title: "Tema është private"
         description: "Sorry, you don't have access to that topic!"
@@ -1972,8 +1961,6 @@ sq:
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
     badges:
       title: Badges
-      allow_title: "allow badge as title?"
-      multiple_grant: "awarded multiple times?"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
