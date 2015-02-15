@@ -69,7 +69,16 @@ export default ObjectController.extend(CanCheckEmails, {
     },
 
     exportUserArchive: function() {
-      Discourse.ExportCsv.exportUserArchive();
+      bootbox.confirm(
+        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            Discourse.ExportCsv.exportUserArchive();
+          }
+        }
+      );
     }
   }
 });
