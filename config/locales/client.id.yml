@@ -122,9 +122,11 @@ id:
       stat:
         all_time: "Setiap Waktu"
         last_7_days: "Selama 7 Hari"
+        last_30_days: "30 hari terakhir"
       topic_count: "Topik"
       post_count: "Post"
-      user_count: "Pengguna"
+      user_count: "Pengguna Baru"
+      active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Dalam kondisi kritis atau masalah mendesak yang menyangkut laman ini, mohon hubungi kami di %{contact_email}. "
     bookmarked:

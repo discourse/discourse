@@ -164,14 +164,6 @@ class User < ActiveRecord::Base
     name.titleize
   end
 
-  # Find a user by temporary key, nil if not found or key is invalid
-  def self.find_by_temporary_key(key)
-    user_id = $redis.get("temporary_key:#{key}")
-    if user_id.present?
-      find_by(id: user_id.to_i)
-    end
-  end
-
   def self.find_by_username_or_email(username_or_email)
     if username_or_email.include?('@')
       find_by_email(username_or_email)
@@ -201,13 +193,6 @@ class User < ActiveRecord::Base
 
     self.username = new_username
     save
-  end
-
-  # Use a temporary key to find this user, store it in redis with an expiry
-  def temporary_key
-    key = SecureRandom.hex(32)
-    $redis.setex "temporary_key:#{key}", 2.months, id.to_s
-    key
   end
 
   def created_topic_count

@@ -381,6 +381,19 @@ describe Guardian do
         expect(Guardian.new(moderator).can_edit?(tos_topic)).to be_falsey
         expect(Guardian.new(admin).can_edit?(tos_topic)).to be_truthy
       end
+
+      it "allows moderators to see a flagged private message" do
+        moderator.save!
+        user.save!
+
+        private_topic = Fabricate(:private_message_topic, user: user)
+        first_post = Fabricate(:post, topic: private_topic, user: user)
+
+        expect(Guardian.new(moderator).can_see?(private_topic)).to be_falsey
+
+        PostAction.act(user, first_post, PostActionType.types[:off_topic])
+        expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
+      end
     end
 
     describe 'a Post' do

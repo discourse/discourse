@@ -24,17 +24,50 @@ zh_CN:
   topics: "主题列表"
   posts: "帖子"
   loading: "载入中"
-  powered_by_html: '源自<a href="http://www.discourse.org">论坛 - Discourse</a>，请启用 JavaScript 以获得最佳效果'
+  powered_by_html: '采用 <a href="http://www.discourse.org">Discourse</a>，启用 JavaScript 以获得最佳效果'
   log_in: "登录"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留权利"
   purge_reason: "自动删除被遗弃、未激活账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被禁用。"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "最多只能有 %{max} 个字符；你已经输入了 %{length} 个字符。"
       invalid_boolean: "无效布尔值。"
       taken: "已经被使用。（群组名大小写敏感）"
+      accepted: 必须被接受
+      blank: 不能为空
+      present: 必须为空
+      confirmation: "不匹配 %{attribute}"
+      empty: 不能为空
+      equal_to: 必须等于 %{count}
+      even: 必须为奇数
+      exclusion: 被保留
+      greater_than: 必须大于 %{count}
+      greater_than_or_equal_to: 必须大于或等于 %{count}
+      inclusion: 不包括在列表中
+      invalid: 无效
+      less_than: 必须小于 %{count}
+      less_than_or_equal_to: 必须小于等于 %{count}
+      not_a_number: 不是数字
+      not_an_integer: 必须是数字
+      odd: 必须是偶数
+      record_invalid: '验证失败：%{errors}'
+      restrict_dependent_destroy:
+        one: "因为独立的%{record}存在不能删除记录"
+        many: "因为独立的%{record}存在不能删除记录"
+      too_long:
+        other: 太长（最长 %{count} 字符）
+      too_short:
+        other: 太短（最长 %{count} 字符）
+      wrong_length:
+        other: 长度错误（应为 %{count} 字符）
+      other_than: "必须不是 %{count}"
+    template:
+      body: '下列栏目有问题：'
+      header:
+        other: '有 %{count} 错误使得 %{model} 无法被保存'
     embed:
       load_from_remote: "载入帖子时遇到错误。"
   bulk_invite:
@@ -87,7 +120,7 @@ zh_CN:
   next_page: "下一页 →"
   prev_page: "← 上一页"
   page_num: "#{num} 页"
-  topics_in_category: "分类 '%{category}' 中的主题"
+  topics_in_category: "'%{category}'分类中的主题"
   rss_posts_in_topic: "'%{topic}' 的 RSS 内容聚合"
   rss_topics_in_category: "分类 '%{category}' 中主题的 RSS 内容聚合"
   author_wrote: "%{author} 写道："
@@ -117,7 +150,7 @@ zh_CN:
     until_posts:
       other: "%{count} 个帖子"
     new-topic: |
-      欢迎来到 %{site_name} &mdash; **衷心感谢你开启一段新的讨论！**
+      欢迎来到%{site_name} &mdash; **衷心感谢你开启一段新的讨论！**
 
       - 标题是否清晰明了地描述了主题？看起来有意思么？
 
@@ -347,6 +380,8 @@ zh_CN:
       title: '垃圾'
       description: '此帖为广告。它不包含任何对当前讨论有帮助的内容，只有促销信息。'
       long_form: '标记为垃圾'
+      email_title: '“%{title}”被标记为垃圾'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不当内容'
       description: '此帖内容包含对他人的攻击、侮辱、仇视语言或违反了<a href="/guidelines">我们的社群准则</a>。'
@@ -488,6 +523,46 @@ zh_CN:
       title: "最高引用主题"
       xaxis: "主题"
       num_clicks: "点击数"
+    page_view_anon_reqs:
+      title: "匿名"
+      xaxis: "天"
+      yaxis: "匿名页面访问量"
+    page_view_logged_in_reqs:
+      title: "已登录"
+      xaxis: "天"
+      yaxis: "已登录用户页面访问量"
+    page_view_crawler_reqs:
+      title: "Web 爬虫"
+      xaxis: "天"
+      yaxis: "Web 爬虫页面访问量"
+    page_view_total_reqs:
+      title: "总量"
+      xaxis: "天"
+      yaxis: "总页面访问量"
+    http_background_reqs:
+      title: "后台"
+      xaxis: "天"
+      yaxis: "实时更新和追踪的请求"
+    http_2xx_reqs:
+      title: "状态码 2xx（正常）"
+      xaxis: "天"
+      yaxis: "正常的请求（状态码 2xx）"
+    http_3xx_reqs:
+      title: "HTTP 3xx（重定向）"
+      xaxis: "天"
+      yaxis: "重定向请求（状态码 3xx）"
+    http_4xx_reqs:
+      title: "HTTP 4xx（客户端错误）"
+      xaxis: "天"
+      yaxis: "客户端错误（状态码 4xx）"
+    http_5xx_reqs:
+      title: "HTTP 5xx（服务器错误）"
+      xaxis: "天"
+      yaxis: "服务器错误（状态码 5xx）"
+    http_total_reqs:
+      title: "总量"
+      xaxis: "天"
+      yaxis: "总请求数"
   dashboard:
     rails_env_warning: "你的服务器运行在 %{env} 模式。"
     ruby_version_warning: "你正在使用 Ruby 2.0.0，这个版本有较多的问题。请升级至 p247 或更新版。"
@@ -761,6 +836,7 @@ zh_CN:
     min_title_similar_length: "开始检查相似主题的帖子标题的最小长度。"
     min_body_similar_length: "开始检查相似主题的帖子内容的最小长度。"
     category_colors: "设置分类颜色的十六进制色彩值列表。"
+    category_style: "分类图标的视觉样式。"
     max_image_size_kb: "允许用户上传的最大文件大小（以kB为单位）。确保也在nginx（client_max_body_size），apache 或代理中进行限制文件大小的配置。"
     max_attachment_size_kb: "允许用户上传的最大文件大小（单位：KB）——同时在 nginx（client_max_body_size），apache 或代理中配置他们。"
     authorized_extensions: "允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
@@ -834,7 +910,7 @@ zh_CN:
     suppress_uncategorized_badge: "不要为主题列表中的未分类主题显示徽章。"
     global_notice: "为所有访客显示“紧急的”全局横幅，留空隐藏它（可以使用 HTML）"
     disable_edit_notifications: "当 'download_remote_images_to_local' 启用时禁用系统编辑提醒。"
-    enable_names: "允许用户显示全名。禁止隐藏全名。"
+    enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
     display_name_on_posts: "在用户的帖子中显示他们的全名以及他们的 @username。"
     invites_per_page: "默认在用户页显示邀请。"
     short_progress_text_threshold: "在主题中的帖子数超过这个设定后，进度条将只显示当前的帖子数。如果你更改了进度条的宽度，你需要修改这个值。"
@@ -870,6 +946,7 @@ zh_CN:
       invalid_string_min_max: "必须在 %{min} 和 %{max} 字符内。"
       invalid_string_min: "必须超过 %{min} 个字符。"
       invalid_string_max: "必须不超过 %{max} 个字符。"
+      invalid_reply_by_email_address: "值必须包含 '%{reply_key' 并且要与通知邮件不同。"
   notification_types:
     mentioned: "%{display_username} 在 %{link} @ 了你"
     liked: "%{display_username} 在 %{link} 赞了你的帖子 "
@@ -1680,20 +1757,21 @@ zh_CN:
       <h2>小技巧</h2>
       <p>
       <ul>
-        <li>匹配有优先级。所以有疑问时，搜索标题</li>
-        <li>独一无二的、不常见的单词将总是产生最好的结果</li>
-        <li>只要有可能，限制你的搜索范围至一个特定的分类、用户或主题</li>
+      <li>匹配有优先级。所以有疑问时，搜索标题</li>
+      <li>独一无二的、不常见的单词将总是产生最好的结果</li>
+      <li>只要有可能，限制您的搜索范围至一个特定的分类、用户或主题</li>
       </ul>
       </p>
       <h2>选项</h2>
       <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
-        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        </table>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+      </table>
       </p>
       <p>
-        <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的包含“彩虹”的主题，并按最后一个帖子的日期来排序。
+      <code>彩虹 category:公园 status:open order:latest</code> 将搜索在“公园”分类中没有关闭或存档中的包含“彩虹”的主题，并按最后一个帖子的日期来排序。
       </p>

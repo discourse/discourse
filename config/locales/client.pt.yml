@@ -142,7 +142,6 @@ pt:
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Mensagens"
-      user_count: "Utilizadores"
       contact: "Contacte-nos"
       contact_info: "No caso de ter um problema critico ou assunto urgente que afete este site, por favor, contacte-nos em %{contact_email}."
     bookmarks:
@@ -274,7 +273,6 @@ pt:
       notifications: "Notificações"
       dismiss_notifications: "Marcar tudo como lido"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
-      disable_jump_reply: "Não ir para a sua nova mensagem após ter respondido"
       dynamic_favicon: "Exibir notificações de novas mensagens no favicon (experimental)"
       edit_history_public: "Permitir que outros utilizadores vejam as minhas revisões de publicação"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -287,7 +285,6 @@ pt:
       suspended_notice: "Este utilizador está suspenso até {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
-      mailing_list_mode: "Receber um email por cada mensagem nova (salvo quando silenciar o tópico ou categoria)"
       watched_categories: "Vigiado"
       watched_categories_instructions: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todos as novas mensagens e tópicos. Além disso, a contagem de mensagens novas e não lidas surgirá junto do tópico. "
       tracked_categories: "Acompanhado"
@@ -351,8 +348,6 @@ pt:
         authenticated: "O seu email foi autenticado por {{provider}}"
         frequency:
           zero: "Enviar-lhe-emos um email imediatamente caso não leia o que lhe estamos a enviar."
-          one: "Apenas lhe enviaremos um email se não o virmos no último minuto e caso não leia o que lhe estamos a enviar."
-          other: "Apenas lhe enviaremos um email se não o virmos nos últimos {{count}} minutos e caso não leia o que lhe estamos a enviar."
       name:
         title: "Nome"
         instructions: "O seu nome completo (opcional)"
@@ -388,26 +383,20 @@ pt:
       website: "Sítio da Internet"
       email_settings: "Email"
       email_digests:
-        title: "Quando não visitar o sítio, enviar-me um email com um resumo das novidades:"
         daily: "diariamente"
         weekly: "semanalmente"
         bi_weekly: "a cada duas semanas"
-      email_direct: "Receber um email quando alguém o cita, responde às suas mensagens, ou menciona o seu @nomedeutilizador"
-      email_private_messages: "Recebe um email quando alguém lhe envia uma mensagem privada"
       email_always: "Não suprimir notificações de email quando estou ativo no sítio"
       other_settings: "Outros"
       categories_settings: "Categorias"
       new_topic_duration:
         label: "Considerar tópicos como novos quando"
-        not_viewed: "ainda não as viu"
-        last_here: "criadas desde a sua última sessão"
         after_n_days:
           one: "criadas no último dia"
           other: "criadas nos últimos {{count}} dias"
         after_n_weeks:
           one: "criada na última semana"
           other: "criadas nas últimas {{count}} semanas"
-      auto_track_topics: "Acompanhar automaticamente os tópicos onde entra"
       auto_track_options:
         never: "nunca"
         always: "sempre"
@@ -655,7 +644,6 @@ pt:
           examples: 'Introduza o número de horas (24).'
     notifications:
       title: "notificações de menção de @nome, respostas às suas mensagens e tópicos, mensagens privadas, etc"
-      none: "Não tem notificações neste momento."
       more: "ver notificações antigas"
       total_flagged: "total de mensagens sinalizadas"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -751,7 +739,6 @@ pt:
         one: '1 tópico não lido'
         other: '{{count}} tópicos não lidos'
       title: 'Tópico'
-      loading: 'A carregar tópico...'
       invalid_access:
         title: "O tópico é privado"
         description: "Pedimos desculpa, mas não tem acesso a esse tópico!"
@@ -2057,8 +2044,6 @@ pt:
         mark_watching: '<b>m</b>, <b>w</b> Vigiar este tópico'
     badges:
       title: Distintivos
-      allow_title: "permitir uso de distintivo como título?"
-      multiple_grant: " premiado múltiplas vezes?"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivos"

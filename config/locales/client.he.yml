@@ -141,7 +141,6 @@ he:
       like_count: "לייקים"
       topic_count: "נושאים"
       post_count: "פרסומים"
-      user_count: "משתמשים"
     bookmarks:
       not_logged_in: "סליחה, עליך להיות מחובר כדי להוסיף פוסט למועדפים"
       created: "סימנת הודעה זו כמועדפת"
@@ -270,7 +269,6 @@ he:
       notifications: "התראות"
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
-      disable_jump_reply: "לא לקפוץ לפוסט החדש שלך לאחר משלוח התשובה"
       dynamic_favicon: "הראה התראה על הודעות חדשות באייקון העמוד (נסיוני)"
       edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
@@ -283,7 +281,6 @@ he:
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
-      mailing_list_mode: "קבלו דוא\"ל על כל פרסום חדש (אלא אם כן השתקתם את הנושא או את הקטגוריה)"
       watched_categories: "נצפה"
       watched_categories_instructions: "את/ה תצפו אוטומטית בכל הנושאים החדשים בקטגוריות האלה ותקבלו התראות על כל ההודעות והנושאים החדשים. כמו כן כמות ההודעות החדשות ואלו שלא נקראו תופיע לצד כל נושא."
       tracked_categories: "במעקב"
@@ -347,8 +344,6 @@ he:
         authenticated: "כתובת הדואר האלקטרוני שלך אושרה על ידי {{provider}}"
         frequency:
           zero: "נעדכן אותך מיד בדוא\"ל אם לא קראת את הדבר שעליו אנחנו שולחים אליך דוא\"ל."
-          one: "נשלח לך דוא\"ל רק אם לא ראינו אותך בדקה האחרונה ולא קראת את הדבר שעליו אנחנו שולחים לך את הדוא\"ל."
-          other: "נשלח לך דוא\"ל רק אם לא ראינו אותך ב-{{count}} דקןץ האחרונות ואם לא קראת את הדבר שאנחנו שולחים לך עליו דוא\"ל."
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
@@ -384,26 +379,20 @@ he:
       website: "אתר"
       email_settings: "דואר אלקטרוני"
       email_digests:
-        title: "כשאת/ה לא מבקר באתר, שלח סיכום בדואר אלקטרוני של מה חדש"
         daily: "יומית"
         weekly: "שבועית"
         bi_weekly: "דו-שבועית"
-      email_direct: "קבל דואר אלקטרוני כשמישהו מצטט אותך, מגיב להודעה שלך, או מזכיר את ה @שם שלך"
-      email_private_messages: "קבל דואר אלקטרוני כשמישהו שולח לך הודעה פרטית"
       email_always: "אל תמנעו התראות דוא\"ל כאשר אני פעיל/ה באתר"
       other_settings: "אחר"
       categories_settings: "קטגוריות"
       new_topic_duration:
         label: "נושא יחשב כנושא חדש כאשר"
-        not_viewed: "עדיין לא צפית בהם"
-        last_here: "נוצר(ו) מאז שהייתם כאן לאחרונה"
         after_n_days:
           one: "נוצר ביום האחרון"
           other: "נוצרו ב-{{count}} ימים האחרונים"
         after_n_weeks:
           one: "נוצר/ו בשבוע האחרון"
           other: "נוצר/ו ב-{{count}} שבועות האחרונים"
-      auto_track_topics: " מעקב אוטומטי אחרי נושאים אליהם אני נכנס/ת"
       auto_track_options:
         never: "אף פעם"
         always: "תמיד"
@@ -644,7 +633,6 @@ he:
           examples: 'הזינו מספר שעות (24).'
     notifications:
       title: "התראות של אזכורי @שם, תגובות להודעות ונושאים שלך, הודעות פרטיות וכיו\"ב"
-      none: "אין לך התראות כרגע."
       more: "הצגת התראות ישנות יותר"
       total_flagged: "סך הכל נושאים מדוגללים"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -740,7 +728,6 @@ he:
         one: '1 שלא נקרא'
         other: '{{count}} נושאים שלא נקראו'
       title: 'נושא'
-      loading: 'טוען נושא...'
       invalid_access:
         title: "הנושא פרטי"
         description: "סליחה, איך אין לך גישה לנושא הזה!"
@@ -2016,8 +2003,6 @@ he:
         mark_watching: '<b>m</b>, <b>w</b>צפייה בנושא'
     badges:
       title: תגים
-      allow_title: "אישור תגים ככותרת?"
-      multiple_grant: "הוענק מספר פעמים?"
       badge_count:
         one: "תג אחד"
         other: "%{count} תגים"

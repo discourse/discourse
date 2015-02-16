@@ -10,7 +10,7 @@ class EmailController < ApplicationController
   end
 
   def unsubscribe
-    @user = User.find_by_temporary_key(params[:key])
+    @user = DigestUnsubscribeKey.user_for_key(params[:key])
 
     # Don't allow the use of a key while logged in as a different user
     if current_user.present? && (@user != current_user)
@@ -28,7 +28,7 @@ class EmailController < ApplicationController
   end
 
   def resubscribe
-    @user = User.find_by_temporary_key(params[:key])
+    @user = DigestUnsubscribeKey.user_for_key(params[:key])
     raise Discourse::NotFound unless @user.present?
     @user.update_column(:email_digests, true)
   end

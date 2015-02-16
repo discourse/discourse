@@ -157,10 +157,12 @@ ru:
       stat:
         all_time: "За все время"
         last_7_days: "Последние 7 дней"
+        last_30_days: "30 дней"
       like_count: "Симпатии"
       topic_count: "Темы"
       post_count: "Сообщения"
-      user_count: "Пользователи"
+      user_count: "Новые пользователи"
+      active_user_count: "Активные пользователи"
       contact: "Контакты"
       contact_info: "В случае возникновения критической ошибки или срочного дела, касающегося этого сайта, свяжитесь с нами по адресу %{contact_email}."
     bookmarked:
@@ -303,6 +305,7 @@ ru:
       notifications: "Уведомления"
       dismiss_notifications: "Пометить все прочитанными"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
+      disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
       dynamic_favicon: "Показывать количество приходящих уведомлений в favicon (экспериментальный)"
       edit_history_public: "Разрешить другим пользователям просматривать мои редакции сообщения"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
@@ -315,6 +318,7 @@ ru:
       suspended_notice: "Пользователь заморожен до {{date}}."
       suspended_reason: "Причина:"
       github_profile: "Github"
+      mailing_list_mode: "Получать письмо каждый раз, когда появляется новое сообщение (кроме тех случаев, когда тема или раздел отключены)"
       watched_categories: "Наблюдение"
       watched_categories_instructions: "Вы будете автоматически отслеживать новые темы в этих разделах. Вам будут приходить уведомления о новых сообщениях и темах, плюс рядом со списком тем будет отображено количество непрочитанных и новых сообщений."
       tracked_categories: "Отслеживаемые разделы"
@@ -423,6 +427,8 @@ ru:
       categories_settings: "Разделы"
       new_topic_duration:
         label: "Считать темы новыми, если"
+        not_viewed: "Еще не просмотрены"
+        last_here: "создано после вашего последнего визита"
         after_n_days:
           one: "созданы за последний день"
           few: "созданы за последние {{count}} дня"
@@ -431,6 +437,7 @@ ru:
           one: "созданы за последнюю неделю"
           few: "созданы за последние {{count}} недели"
           other: "созданы за последние {{count}} недель"
+      auto_track_topics: "Автоматически отслеживать темы, которые я просматриваю"
       auto_track_options:
         never: "никогда"
         always: "всегда"
@@ -682,6 +689,7 @@ ru:
           examples: 'Введите количество часов (24).'
     notifications:
       title: "уведомления: новые личные сообщения, ответы в темах, упоминания по @псевдониму и т.д."
+      none: "Уведомления не могут быть загружены."
       more: "посмотреть более ранние уведомления"
       total_flagged: "всего сообщений с жалобами"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -749,6 +757,7 @@ ru:
         posted: "Вы не принимали участие в обсуждении."
         latest: "Новых тем нет."
         hot: "Популярных тем нет."
+        bookmarks: "У вас нет избранных тем."
         category: "В разделе {{category}} отсутствуют темы."
         top: "Нет обсуждаемых тем."
         educate:
@@ -763,6 +772,7 @@ ru:
         unread: "Больше нет непрочитанных тем."
         category: "В разделе {{category}} больше нет тем."
         top: "Больше нет обсуждаемых тем."
+        bookmarks: "Больше нет избранных тем."
     topic:
       filter_to: "{{post_count}} сообщений в теме"
       create: 'Создать Тему'
@@ -780,7 +790,6 @@ ru:
         few: '{{count}} непрочитанные темы'
         other: '{{count}} непрочитанных тем'
       title: 'Тема'
-      loading: 'Загружаю тему...'
       invalid_access:
         title: "Частная тема"
         description: "К сожалению, у вас нет прав доступа к теме!"
@@ -1365,6 +1374,9 @@ ru:
       posted:
         title: "Мои"
         help: "темы, в которых вы принимали участие"
+      bookmarks:
+        title: "Закладки"
+        help: "темы, которые вы добавили в закладки"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1420,6 +1432,14 @@ ru:
         suspended: 'Заморожены:'
         private_messages_short: "ЛС"
         private_messages_title: "Личные сообщения"
+        space_free: "{{size}} свободно"
+        uploads: "загрузки"
+        backups: "резервные копии"
+        traffic_short: "Трафик"
+        traffic: "Трафик"
+        page_views: "Просмотры"
+        page_views_short: "Просмотры"
+        show_traffic_report: "Раширенный отчет"
         reports:
           today: "Сегодня"
           yesterday: "Вчера"
@@ -1522,6 +1542,8 @@ ru:
         name: "Имя"
         add: "Добавить"
         add_members: "Добавить участников"
+        custom: "Настраиваемые"
+        automatic: "Автоматические"
       api:
         generate_master: "Сгенерировать ключ API"
         none: "Отсутствует ключ API."
@@ -1987,6 +2009,10 @@ ru:
           title: "Редактируемое после регистрации?"
           enabled: "редактируемое"
           disabled: "нередактируемое"
+        show_on_profile:
+          title: "Показать в публичном профиле?"
+          enabled: "показывается в профиле"
+          disabled: "не показывается в профиле"
         field_types:
           text: 'Текстовое поле'
           confirm: 'Подтверждение'
@@ -2020,6 +2046,7 @@ ru:
           uncategorized: 'Вне разделов'
           backups: "Резервные копии"
           login: "Имя пользователя"
+          plugins: "Плагины"
       badges:
         title: Награды
         new_badge: Новая награда
@@ -2143,6 +2170,7 @@ ru:
         mark_watching: '<b>m</b>, <b>w</b> Наблюдать за темой'
     badges:
       title: Награды
+      multiple_grant: "может быть получено несколько раз"
       badge_count:
         one: "1 награда"
         few: "%{count} награды"

@@ -145,10 +145,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
-# pg is downgraded while we investigate a severe memory issu
-#  during multi threading that shows up on 0.18.1
-# This also means we DO NOT work on Ruby 2.2 at the moment
-gem 'pg', '0.15.1'
+gem 'pg'
 gem 'pry-rails', require: false
 gem 'rake'
 

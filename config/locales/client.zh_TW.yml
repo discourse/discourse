@@ -123,10 +123,12 @@ zh_TW:
       stat:
         all_time: "所有時間"
         last_7_days: "最近 7 天"
+        last_30_days: "最近 30 天"
       like_count: "讚"
       topic_count: "討論話題"
       post_count: "文章"
-      user_count: "用戶"
+      user_count: "新用戶"
+      active_user_count: "啟用的用戶"
       contact: "聯絡我們"
       contact_info: "當網站發生嚴重錯誤或緊急事件，請聯絡我們 %{contact_email}"
     bookmarked:
@@ -719,6 +721,7 @@ zh_TW:
         unread: "已經沒有其它未讀的討論話題了。"
         category: "{{category}} 分類已經沒有其它討論話題了。"
         top: "沒有更多精選討論話題。"
+        bookmarks: "書籤裡沒有更多的討論話題了。"
     topic:
       filter_to: "在討論話題裡顯示 {{post_count}} 文章"
       create: '新討論話題'
@@ -732,7 +735,6 @@ zh_TW:
       unread_topics:
         other: '{{count}} 個未讀討論話題'
       title: '討論話題'
-      loading: '正在載入討論話題...'
       invalid_access:
         title: "私人討論話題"
         description: "抱歉，你沒有進入此討論話題的權限！"
@@ -1311,6 +1313,14 @@ zh_TW:
         suspended: '已停權:'
         private_messages_short: "私訊"
         private_messages_title: "私人訊息"
+        space_free: "{{size}} 可用空間"
+        uploads: "上傳"
+        backups: "備份檔"
+        traffic_short: "流量"
+        traffic: "網頁應用程式請求數"
+        page_views: "頁面瀏覽數"
+        page_views_short: "頁面瀏覽數"
+        show_traffic_report: "顯示詳細的流量報表"
         reports:
           today: "今天"
           yesterday: "昨天"
@@ -1798,6 +1808,8 @@ zh_TW:
         suspended_explanation: "被停權的用戶無法登入。"
         block_explanation: "被封鎖的用戶無法發表文章或建立討論話題。"
         trust_level_change_failed: "修改用戶的信任等級時發生錯誤。"
+        grant_admin_failed: "賦予管理員權限時發生問題。"
+        grant_moderation_failed: "賦予板主權限時發生問題。"
         suspend_modal_title: "將用戶停權"
         trust_level_2_users: "信任等級 2 用戶"
         trust_level_3_requirements: "信任等級 3 之條件"
@@ -1858,6 +1870,10 @@ zh_TW:
           title: "在註冊後可以修改？"
           enabled: "可編輯"
           disabled: "不可編輯"
+        show_on_profile:
+          title: "顯示在公開的基本資料裡?"
+          enabled: "在基本資料裡顯示"
+          disabled: "不在基本資料裡顯示"
         field_types:
           text: '文字區域'
           confirm: '確認'
@@ -1891,6 +1907,7 @@ zh_TW:
           uncategorized: '其他'
           backups: "備份"
           login: "登入"
+          plugins: "延伸套件"
       badges:
         title: 徽章
         new_badge: 新徽章

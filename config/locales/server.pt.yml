@@ -829,7 +829,6 @@ pt:
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     global_notice: "Exibir um banner global URGENTE, EMERGÊNCIA a todos os visitantes, mudar para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desativa notificações de edição do sistema quando 'download_remote_images_to_local' está ativo."
-    enable_names: "Permitir a exibição de nomes completos de utilizadores. Desativar para ocultar nomes completos."
     display_name_on_posts: "Mostrar o nome completo de um utilizador nas suas mensagens em adição ao seu @nome-de-utilizador."
     invites_per_page: "Convites por defeito exibidos na página do utilizador."
     short_progress_text_threshold: "Após o número de mensagens num tópico passar acima deste número, a barra de progresso irá apenas mostrar o número da mensagem atual. Se alterar a largura da barra de progresso, poderá ter que mudar este valor."
@@ -1560,27 +1559,3 @@ pt:
       Se decidirmos alterar a nossa política de privacidade, iremos publicar as mudanças nesta página.
 
       Este documento é CC-BY-SA. Foi atualizado pela última vez em 31 de Maio de 2013.
-  static:
-    search_help: |
-      <h2>Dicas</h2>
-      <p>
-      <ul>
-      <li>A correspondência de títulos está priorizada, por isso em caso de dúvida, pesquise por títulos</li>
-      <li>Palavras únicas e incomuns irão sempre produzir melhores resultados</li>
-      <li>Sempre que possível, direcione a sua pesquisa para um tópico, utilizador ou categoria em particular</li>
-      </ul>
-      </p>
-      <h2>Opções</h2>
-      <p>
-      <table>
-      <tr><td><code>encomenda:visualizações</code></td><td><code>encomenda:última</code></td><td colspan=3></td></tr>
-      <tr><td><code>estado:aberto</code></td><td><code>estado:fechado</code></td><td>
-      <code>estado:arquivado</code></td><td><code>estado:semrespostas</code></td><td>
-      <code>estado:utilizadorúnico</code></td></tr>
-      <tr><td><code>categoria:foo</code></td><td><code>utilizador:foo</code></td><td colspan=3></td></tr>
-      <tr><td><code>em:gostos</code></td><td><code>em:publicado</code></td><td><code>em:vigilância</code>
-      </td><td><code>em:acompanhamento</code></td><td><code>em:privado</code></td></tr>
-      </table>
-      </p>
-      <p>
-      <code>categoria arco-íris:parques estado:aberto encomenda:última</code> irá retornar uma pesquisa por tópicos que contém a palavra "arco-íris" na categoria "parques" que não estão fechados ou arquivados e que estão ordenados pela data da última mensagem.

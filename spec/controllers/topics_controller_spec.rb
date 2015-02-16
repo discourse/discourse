@@ -724,6 +724,11 @@ describe TopicsController do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: 123
         end
 
+        it 'allows to change category to "uncategorized"' do
+          Topic.any_instance.expects(:change_category_to_id).with(0).returns(true)
+          xhr :put, :update, topic_id: @topic.id, slug: @topic.title, category_id: ""
+        end
+
         it "returns errors with invalid titles" do
           xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: 'asdf'
           expect(response).not_to be_success

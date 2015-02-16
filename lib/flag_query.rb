@@ -6,7 +6,9 @@ module FlagQuery
     guardian = Guardian.new(current_user)
 
     if !guardian.is_admin?
-      actions = actions.where('category_id in (?)', guardian.allowed_category_ids)
+      actions = actions.where('category_id IN (:allowed_category_ids) OR archetype = :private_message',
+        allowed_category_ids: guardian.allowed_category_ids,
+        private_message: Archetype.private_message)
     end
 
     post_ids = actions.limit(per_page)
@@ -107,25 +109,23 @@ module FlagQuery
     ]
   end
 
-  protected
+  def self.flagged_post_actions(filter)
+    post_actions = PostAction.flags
+                             .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
+                             .joins("INNER JOIN topics ON topics.id = posts.topic_id")
+                             .joins("LEFT JOIN users ON users.id = posts.user_id")
 
-    def self.flagged_post_actions(filter)
-      post_actions = PostAction.flags
-                               .joins("INNER JOIN posts ON posts.id = post_actions.post_id")
-                               .joins("INNER JOIN topics ON topics.id = posts.topic_id")
-                               .joins("LEFT JOIN users ON users.id = posts.user_id")
-
-      if filter == "old"
-        post_actions.where("post_actions.disagreed_at IS NOT NULL OR
-                            post_actions.deferred_at IS NOT NULL OR
-                            post_actions.agreed_at IS NOT NULL")
-      else
-        post_actions.active
-                    .where("posts.deleted_at" => nil)
-                    .where("topics.deleted_at" => nil)
-      end
-
+    if filter == "old"
+      post_actions.where("post_actions.disagreed_at IS NOT NULL OR
+                          post_actions.deferred_at IS NOT NULL OR
+                          post_actions.agreed_at IS NOT NULL")
+    else
+      post_actions.active
+                  .where("posts.deleted_at" => nil)
+                  .where("topics.deleted_at" => nil)
     end
+
+  end
 
   private
 

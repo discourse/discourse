@@ -123,10 +123,12 @@ zh_CN:
       stat:
         all_time: "所有时间内"
         last_7_days: "7 天以内"
+        last_30_days: "30 天以内"
       like_count: "赞"
       topic_count: "主题"
       post_count: "帖子"
-      user_count: "用户"
+      user_count: "新用户"
+      active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_email} 联系我们。"
     bookmarked:
@@ -705,7 +707,7 @@ zh_CN:
         latest: "没有最新的讨论主题。"
         hot: "没有热门主题。"
         bookmarks: "你没有书签任何主题。"
-        category: "没有 {{category}} 分类的主题。"
+        category: "没有{{category}}分类的主题。"
         top: "没有最佳主题。"
         educate:
           new: '<p>这里是你的新主题。</p><p>默认情况下，最近两天创建的主题是新主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
@@ -717,8 +719,9 @@ zh_CN:
         read: "没有更多已阅主题可看了。"
         new: "没有更多新主题可看了。"
         unread: "没有更多未阅主题可看了。"
-        category: "没有更多 {{category}} 分类的主题了。"
+        category: "没有更多{{category}}分类的主题了。"
         top: "没有更多最佳主题了。"
+        bookmarks: "没有更多书签主题了。"
     topic:
       filter_to: "只显示本主题中的 {{post_count}} 个帖子"
       create: '新主题'
@@ -732,7 +735,6 @@ zh_CN:
       unread_topics:
         other: '{{count}} 未读主题'
       title: '主题'
-      loading: '载入主题中...'
       invalid_access:
         title: "这是私密主题"
         description: "抱歉，你没有访问此主题的权限！"
@@ -1216,8 +1218,8 @@ zh_CN:
       not_available: "不可用！"
     categories_list: "分类列表"
     filters:
-      with_topics: "%{filter} 主题"
-      with_category: "%{filter} %{category} 的主题"
+      with_topics: "%{filter}主题"
+      with_category: "%{category}的%{filter}主题"
       latest:
         title: "最新"
         help: "最新发布的帖子"
@@ -1246,7 +1248,7 @@ zh_CN:
           other: "{{count}} 新"
         lower_title: "新"
         title:
-          zero: "新主题"
+          zero: "新"
           one: "新主题（1）"
           other: "新主题（{{count}}）"
         help: "最近几天创建的主题"
@@ -1311,6 +1313,14 @@ zh_CN:
         suspended: '禁止登录'
         private_messages_short: "私信"
         private_messages_title: "私密信息"
+        space_free: "{{size}} 空闲"
+        uploads: "上传"
+        backups: "备份"
+        traffic_short: "流量"
+        traffic: "应用 web 请求"
+        page_views: "页面浏览次数"
+        page_views_short: "页面浏览次数"
+        show_traffic_report: "显示详细的流量报告"
         reports:
           today: "今天"
           yesterday: "昨天"
@@ -1798,6 +1808,8 @@ zh_CN:
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
+        grant_admin_failed: "授予管理员权限时发生问题。"
+        grant_moderation_failed: "授予版主权限时发生问题"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
         trust_level_3_requirements: "三级信任等级需求"
@@ -1858,6 +1870,10 @@ zh_CN:
           title: "在注册后可以修改？"
           enabled: "可修改"
           disabled: "不可修改"
+        show_on_profile:
+          title: "在个人信息页显示？"
+          enabled: "在个人信息页显示"
+          disabled: "未在个人信息页显示"
         field_types:
           text: '文本字段'
           confirm: '确认'
@@ -1891,6 +1907,7 @@ zh_CN:
           uncategorized: '未分类'
           backups: "备份"
           login: "登录"
+          plugins: "插件"
       badges:
         title: 徽章
         new_badge: 新徽章
