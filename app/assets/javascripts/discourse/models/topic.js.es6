@@ -365,6 +365,9 @@ Topic.reopenClass({
       delete props.categoryId;
     }
 
+    // Make sure we never change the category for private messages
+    if (topic.get("isPrivateMessage")) { delete props.category_id; }
+
     // Annoyingly, empty arrays are not sent across the wire. This
     // allows us to make a distinction between arrays that were not
     // sent and arrays that we specifically want to be empty.
