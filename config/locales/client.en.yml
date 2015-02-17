@@ -1741,6 +1741,10 @@ en:
           screened_ip: "Export full screened IP list in CSV format."
           screened_url: "Export full screened URL list in CSV format."
 
+      invite:
+        button_text: "Send Invites"
+        button_title: "Send Invites"
+
       customize:
         title: "Customize"
         long_title: "Site Customizations"
