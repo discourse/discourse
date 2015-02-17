@@ -40,7 +40,11 @@ Staff members are official representatives of this community. There are two kind
 1. **Admins**, who can do anything and configure anything on this site.
 2. **Moderators**, who can edit all posts and users, but cannot add categories or change any site settings.
 
-You may want to grant other users staff abilities &ndash; to do so click the admin button :wrench: on their user page, then look for the grant buttons.
+To add additional staff members:
+
+- have them sign up on the site (or send out an invitation to join via your user page)
+- click the admin button :wrench: on their user page
+- look for the <kbd>Grant Admin</kbd> and <kbd>Grant Moderator</kbd> buttons there
 
 ### Private or Public?
 
