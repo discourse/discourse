@@ -90,7 +90,8 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
       # from should include full user name
@@ -138,7 +139,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(false)
+      SiteSetting.enable_names = false
       mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
 
       # from should not include full user name if "show user full names" is disabled
@@ -170,7 +171,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
       mail = UserNotifications.user_private_message(response.user, post: response, notification: notification)
 
       # from should include username if full user name is not provided
@@ -267,9 +268,16 @@ describe UserNotifications do
         expects_build_with(has_key(:topic_id))
       end
 
-      it "has a from alias" do
-        SiteSetting.stubs(:enable_names).returns(true)
+      it "should have user name as from_alias" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_posts = true
         expects_build_with(has_entry(:from_alias, "#{user.name}"))
+      end
+
+      it "should not have user name as from_alias if display_name_on_posts is disabled" do
+        SiteSetting.enable_names = false
+        SiteSetting.display_name_on_posts = false
+        expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
       it "should explain how to respond" do
