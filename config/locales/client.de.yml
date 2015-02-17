@@ -1382,8 +1382,8 @@ de:
         backups: "Backups"
         traffic_short: "Traffic"
         traffic: "Web Requests der Applikation"
-        page_views: "Page Views"
-        page_views_short: "Page Views"
+        page_views: "API Requests"
+        page_views_short: "API Requests"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
         reports:
           today: "Heute"
