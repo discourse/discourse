@@ -1174,6 +1174,7 @@ en:
         people:
           off_topic: "{{icons}} flagged this as off-topic"
           spam: "{{icons}} flagged this as spam"
+          spam_with_url: "{{icons}} flagged <a href='{{postUrl}}'>this as spam</a>"
           inappropriate: "{{icons}} flagged this as inappropriate"
           notify_moderators: "{{icons}} notified moderators"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
