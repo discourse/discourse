@@ -7,6 +7,10 @@ export default Discourse.Route.extend({
       Discourse.ExportCsv.exportUserList().then(outputExportResult);
     },
 
+    sendInvites: function() {
+      this.transitionTo('user.invited', Discourse.User.current());
+    },
+
     deleteUser: function(user) {
       Discourse.AdminUser.create(user).destroy({ deletePosts: true });
     }
