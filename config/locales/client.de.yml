@@ -981,6 +981,7 @@ de:
         attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         file_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
+        too_many_dragged_and_dropped_files: "Entschuldige, du kannst Drag & Drop gleichzeitig nur für bis zu 10 Dateien benutzen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
@@ -1382,8 +1383,8 @@ de:
         backups: "Backups"
         traffic_short: "Traffic"
         traffic: "Web Requests der Applikation"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Page Views"
+        page_views_short: "Page Views"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
         reports:
           today: "Heute"
@@ -1500,6 +1501,14 @@ de:
         info_html: "Dein API-Key erlaubt dir das Erstellen und Bearbeiten von Themen via JSON-Aufrufen."
         all_users: "Alle Benutzer"
         note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
+      plugins:
+        title: "Plug-ins"
+        installed: "Installierte Plug-ins"
+        name: "Name"
+        none_installed: "Du hast keine Plug-ins installiert."
+        version: "Version"
+        change_settings: "Einstellungen ändern"
+        howto: "Wie installiere ich Plug-ins?"
       backups:
         title: "Backups"
         menu:
@@ -1749,6 +1758,7 @@ de:
             label: "Neu:"
             ip_address: "IP-Adresse"
             add: "Hinzufügen"
+            filter: "Suche"
           roll_up:
             text: "Zusammenfassen"
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
@@ -1983,7 +1993,7 @@ de:
           uncategorized: 'Sonstiges'
           backups: "Backups"
           login: "Anmeldung"
-          plugins: "Plugins"
+          plugins: "Plug-ins"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
