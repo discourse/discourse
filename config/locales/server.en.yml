@@ -637,19 +637,19 @@ en:
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
-      yaxis: "Anonymous Page Views"
+      yaxis: "Anonymous API Requests"
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
-      yaxis: "Logged In Page Views"
+      yaxis: "Logged In API Requests"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Day"
-      yaxis: "Web Crawler Page Views"
+      yaxis: "Web Crawler API Requests"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Day"
-      yaxis: "Total Page Views"
+      yaxis: "Total API Requests"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
