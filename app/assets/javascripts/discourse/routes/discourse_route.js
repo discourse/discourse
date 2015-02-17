@@ -27,13 +27,6 @@ Discourse.Route = Ember.Route.extend({
 
   actions: {
 
-    // Ember doesn't provider a router `willTransition` event so let's make one
-    willTransition: function() {
-      var router = this.container.lookup('router:main');
-      Ember.run.once(router, router.trigger, 'willTransition');
-      return this._super();
-    },
-
     _collectTitleTokens: function(tokens) {
       // If there's a title token method, call it and get the token
       if (this.titleToken) {
