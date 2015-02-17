@@ -8,6 +8,13 @@ const ApplicationRoute = Discourse.Route.extend({
       Discourse.set('_docTitle', tokens.join(' - '));
     },
 
+    // Ember doesn't provider a router `willTransition` event so let's make one
+    willTransition() {
+      var router = this.container.lookup('router:main');
+      Ember.run.once(router, router.trigger, 'willTransition');
+      return this._super();
+    },
+
     // This is here as a bugfix for when an Ember Cloaked view triggers
     // a scroll after a controller has been torn down. The real fix
     // should be to fix ember cloaking to not do that, but this catches

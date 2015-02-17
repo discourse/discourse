@@ -7,7 +7,7 @@ import ShowFooter from "discourse/mixins/show-footer";
 import Topic from 'discourse/models/topic';
 
 var TopicRoute = Discourse.Route.extend(ShowFooter, {
-  redirect: function() { return this.redirectIfLoginRequired(); },
+  redirect() { return this.redirectIfLoginRequired(); },
 
   queryParams: {
     filter: { replace: true },
@@ -15,7 +15,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     show_deleted: { replace: true }
   },
 
-  titleToken: function() {
+  titleToken() {
     var model = this.modelFor('topic');
     if (model) {
       var result = model.get('title'),
@@ -38,31 +38,31 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
 
   actions: {
 
-    showTopicAdminMenu: function() {
+    showTopicAdminMenu() {
       this.controllerFor("topic-admin-menu").send("show");
     },
 
-    showFlags: function(post) {
+    showFlags(post) {
       Discourse.Route.showModal(this, 'flag', post);
       this.controllerFor('flag').setProperties({ selected: null });
     },
 
-    showFlagTopic: function(topic) {
+    showFlagTopic(topic) {
       Discourse.Route.showModal(this, 'flag', topic);
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
 
-    showAutoClose: function() {
+    showAutoClose() {
       Discourse.Route.showModal(this, 'editTopicAutoClose', this.modelFor('topic'));
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
-    showInvite: function() {
+    showInvite() {
       Discourse.Route.showModal(this, 'invite', this.modelFor('topic'));
       this.controllerFor('invite').reset();
     },
 
-    showPrivateInvite: function() {
+    showPrivateInvite() {
       Discourse.Route.showModal(this, 'invitePrivate', this.modelFor('topic'));
       this.controllerFor('invitePrivate').setProperties({
         email: null,
@@ -72,31 +72,31 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
       });
     },
 
-    showHistory: function(post) {
+    showHistory(post) {
       Discourse.Route.showModal(this, 'history', post);
       this.controllerFor('history').refresh(post.get("id"), "latest");
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
-    showRawEmail: function(post) {
+    showRawEmail(post) {
       Discourse.Route.showModal(this, 'raw-email', post);
       this.controllerFor('raw_email').loadRawEmail(post.get("id"));
     },
 
-    mergeTopic: function() {
+    mergeTopic() {
       Discourse.Route.showModal(this, 'mergeTopic', this.modelFor('topic'));
     },
 
-    splitTopic: function() {
+    splitTopic() {
       Discourse.Route.showModal(this, 'split-topic', this.modelFor('topic'));
     },
 
-    changeOwner: function() {
+    changeOwner() {
       Discourse.Route.showModal(this, 'changeOwner', this.modelFor('topic'));
     },
 
     // Use replaceState to update the URL once it changes
-    postChangedRoute: function(currentPost) {
+    postChangedRoute(currentPost) {
       // do nothing if we are transitioning to another route
       if (isTransitioning || Discourse.TopicRoute.disableReplaceState) { return; }
 
@@ -111,12 +111,12 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
       }
     },
 
-    didTransition: function() {
+    didTransition() {
       this.controllerFor("topic")._showFooter();
       return true;
     },
 
-    willTransition: function() {
+    willTransition() {
       this._super();
       this.controllerFor("quote-button").deselectText();
       Em.run.cancel(scheduledReplace);
@@ -127,7 +127,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
 
   // replaceState can be very slow on Android Chrome. This function debounces replaceState
   // within a topic until scrolling stops
-  _replaceUnlessScrolling: function(url) {
+  _replaceUnlessScrolling(url) {
     var currentPos = parseInt($(document).scrollTop(), 10);
     if (currentPos === lastScrollPos) {
       Discourse.URL.replaceState(url);
@@ -137,7 +137,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     scheduledReplace = Em.run.later(this, '_replaceUnlessScrolling', url, SCROLL_DELAY);
   },
 
-  setupParams: function(topic, params) {
+  setupParams(topic, params) {
     var postStream = topic.get('postStream');
     postStream.set('summary', Em.get(params, 'filter') === 'summary');
     postStream.set('show_deleted', !!Em.get(params, 'show_deleted'));
@@ -153,7 +153,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     return topic;
   },
 
-  model: function(params, transition) {
+  model(params, transition) {
     var queryParams = transition.queryParams;
 
     var topic = this.modelFor('topic');
@@ -168,7 +168,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     }
   },
 
-  activate: function() {
+  activate() {
     this._super();
     isTransitioning = false;
 
@@ -177,7 +177,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     this.controllerFor('search').set('searchContext', topic.get('searchContext'));
   },
 
-  deactivate: function() {
+  deactivate() {
     this._super();
 
     // Clear the search context
@@ -200,7 +200,7 @@ var TopicRoute = Discourse.Route.extend(ShowFooter, {
     }
   },
 
-  setupController: function(controller, model) {
+  setupController(controller, model) {
     // In case we navigate from one topic directly to another
     isTransitioning = false;
 
