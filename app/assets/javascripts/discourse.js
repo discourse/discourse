@@ -6,6 +6,8 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   _docTitle: document.title,
 
   getURL: function(url) {
+    if (!url) { return url; }
+
     // If it's a non relative URL, return it.
     if (url.indexOf('http') === 0) return url;
 
