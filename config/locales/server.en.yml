@@ -1665,6 +1665,13 @@ en:
 
         The topic is closed. If you believe this is in error, contact a staff member.
 
+    email_reject_auto_generated:
+      subject_template: "Email issue -- Auto Generated Reply"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your email reply was auto generated, which we don't accept. If you believe this is in error, contact a staff member.
+
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"
       text_body_template: |
