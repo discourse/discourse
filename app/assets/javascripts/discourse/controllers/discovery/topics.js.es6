@@ -174,7 +174,7 @@ var controllerOpts = {
     });
   }.property('allLoaded', 'topics.length'),
 
-  loadMoreTopics: function() {
+  loadMoreTopics() {
     return this.get('model').loadMore();
   }
 };
