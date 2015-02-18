@@ -564,7 +564,7 @@ en:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
+      title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
     topics:
