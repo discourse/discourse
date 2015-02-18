@@ -752,6 +752,22 @@ describe TopicsController do
           expect(response).to be_success
         end
 
+        context 'when topic is private' do
+          before do
+            @topic.archetype = Archetype.private_message
+            @topic.category = nil
+            @topic.save!
+          end
+
+          context 'when there are no changes' do
+            it 'does not call the PostRevisor' do
+              PostRevisor.any_instance.expects(:revise!).never
+              xhr :put, :update, topic_id: @topic.id, slug: @topic.title, title: @topic.title, category_id: nil
+              expect(response).to be_success
+            end
+          end
+        end
+
         context "allow_uncategorized_topics is false" do
           before do
             SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
