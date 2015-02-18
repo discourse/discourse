@@ -19,6 +19,7 @@ class Badge < ActiveRecord::Base
   NiceShare = 21
   GoodShare = 22
   GreatShare = 23
+  OneYearAnniversary = 24
 
   # other consts
   AutobiographerMinBioLength = 10
@@ -169,6 +170,23 @@ SQL
     WHERE bio_raw IS NOT NULL AND LENGTH(TRIM(bio_raw)) > #{Badge::AutobiographerMinBioLength} AND
           uploaded_avatar_id IS NOT NULL AND
           (:backfill OR u.id IN (:user_ids) )
+SQL
+
+    # member for a year + has posted at least once during that year
+    OneYearAnniversary = <<-SQL
+    SELECT u.id AS user_id, MIN(u.created_at + interval '1 year') AS granted_at
+      FROM users u
+      JOIN posts p ON p.user_id = u.id
+     WHERE u.id > 0
+       AND u.active
+       AND NOT u.blocked
+       AND u.created_at + interval '1 year' < now()
+       AND p.deleted_at IS NULL
+       AND NOT p.hidden
+       AND p.created_at + interval '1 year' > now()
+       AND (:backfill OR u.id IN (:user_ids))
+     GROUP BY u.id
+     HAVING COUNT(p.id) > 0
 SQL
 
     def self.like_badge(count, is_topic)
