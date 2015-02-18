@@ -51,6 +51,7 @@
         </tr>
       </thead>
       {{#unless loading}}
+        {{ render 'admin/templates/reports/per_day_counts_report' visits tagName="tbody"}}
         {{ render 'admin_report_counts' signups }}
         {{ render 'admin_report_counts' topics }}
         {{ render 'admin_report_counts' posts }}
@@ -106,22 +107,6 @@
     </table>
   </div>
 
-  <div class="dashboard-stats">
-    <table class="table table-condensed table-hover">
-      <thead>
-        <tr>
-          <th>&nbsp;</th>
-          <th>{{i18n 'admin.dashboard.reports.today'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.7_days_ago'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.30_days_ago'}}</th>
-        </tr>
-      </thead>
-      {{#unless loading}}
-        {{ render 'admin/templates/reports/per_day_counts_report' visits tagName="tbody"}}
-      {{/unless}}
-    </table>
-  </div>
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">
       <thead>
