@@ -26,6 +26,8 @@ class GlobalSetting
     hash["host_names"] = [ hostname ]
     hash["database"] = db_name
 
+    hash["prepared_statements"] = !!self.db_prepared_statements
+
     {"production" => hash}
   end
 
