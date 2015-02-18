@@ -17,8 +17,8 @@ export default Discourse.Route.extend({
 
     composePrivateMessage: function(user, post) {
       var recipient = user ? user.get('username') : '',
-          reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null
-          
+          reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
+
       return this.controllerFor('composer').open({
         action: Discourse.Composer.PRIVATE_MESSAGE,
         usernames: recipient,
