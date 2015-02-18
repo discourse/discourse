@@ -24,7 +24,7 @@
 
   <ul class="usercard-controls">
     {{#if user.can_send_private_message_to_user}}
-      <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
+      <li><a class='btn btn-primary' {{action "composePrivateMessage" user post}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
     {{/if}}
 
     {{#if showFilter}}

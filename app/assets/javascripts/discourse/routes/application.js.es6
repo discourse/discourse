@@ -25,10 +25,10 @@ const ApplicationRoute = Discourse.Route.extend({
       this.controllerFor('topic-entrance').send('show', data);
     },
 
-    composePrivateMessage(user) {
+    composePrivateMessage(user, post) {
       const self = this;
       this.transitionTo('userActivity', user).then(function () {
-        self.controllerFor('user-activity').send('composePrivateMessage', user);
+        self.controllerFor('user-activity').send('composePrivateMessage', user, post);
       });
     },
 

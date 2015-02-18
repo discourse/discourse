@@ -371,7 +371,6 @@ export default DiscourseController.extend({
         // If it's the same draft, just open it up again.
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
             composerModel.get('draftKey') === opts.draftKey) {
-
           composerModel.set('composeState', Discourse.Composer.OPEN);
           return resolve();
         }
