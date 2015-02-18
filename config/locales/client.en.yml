@@ -167,9 +167,10 @@ en:
 
     bookmarked:
       title: "Bookmark"
+      clear_bookmarks: "Clear Bookmarks"
       help:
-        bookmark: "Click to bookmark this topic"
-        unbookmark: "Click to remove bookmark to this topic"
+        bookmark: "Click to bookmark the first post on this topic"
+        unbookmark: "Click to remove all bookmarks in this topic"
 
     bookmarks:
       not_logged_in: "sorry, you must be logged in to bookmark posts"
@@ -2287,7 +2288,7 @@ en:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
-        bookmark_topic: '<b>f</b> Bookmark topic'
+        bookmark_topic: '<b>f</b> Toggle bookmark topic'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
         share_topic: '<b>shift</b>+<b>s</b> Share topic'
         share_post: '<b>s</b> Share post'

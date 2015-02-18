@@ -426,6 +426,7 @@ Discourse::Application.routes.draw do
   post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: {topic_id: /\d+/}
   delete "t/:topic_id/timings" => "topics#destroy_timings", constraints: {topic_id: /\d+/}
   put "t/:topic_id/bookmark" => "topics#bookmark", constraints: {topic_id: /\d+/}
+  put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: {topic_id: /\d+/}
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 

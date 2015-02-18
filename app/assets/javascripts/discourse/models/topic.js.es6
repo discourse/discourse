@@ -183,18 +183,48 @@ const Topic = Discourse.Model.extend({
   }.property('word_count'),
 
   toggleBookmark() {
-    const self = this, firstPost = this.get("postStream.posts")[0];
+    const self = this,
+          stream = this.get('postStream'),
+          posts = Em.get(stream, 'posts'),
+          firstPost = posts &&
+                      posts[0] &&
+                      posts[0].get('post_number') === 1 &&
+                      posts[0],
+          bookmark = !self.get('bookmarked');
+
+    var path = bookmark ? '/bookmark' : '/remove_bookmarks';
+    var unbookmarkedPosts = [],
+        bookmarkedPost;
 
     this.toggleProperty('bookmarked');
-    if (this.get("postStream.firstPostPresent")) { firstPost.toggleProperty("bookmarked"); }
 
+    if (bookmark && firstPost) {
+      firstPost.set('bookmarked', true);
+      bookmarkedPost = firstPost;
+    }
 
-    return Discourse.ajax('/t/' + this.get('id') + '/bookmark', {
+    if (!bookmark && posts) {
+      posts.forEach(function(post){
+          if(post.get('bookmarked')){
+            post.set('bookmarked', false);
+            unbookmarkedPosts.push(post);
+          }
+      });
+    }
+
+    return Discourse.ajax('/t/' + this.get('id') + path, {
       type: 'PUT',
-      data: { bookmarked: self.get('bookmarked') },
     }).catch(function(error) {
+
       self.toggleProperty('bookmarked');
-      if (self.get("postStream.firstPostPresent")) { firstPost.toggleProperty('bookmarked'); }
+
+      if(bookmarkedPost) {
+        bookmarkedPost.set('bookmarked', false);
+      }
+
+      unbookmarkedPosts.forEach(function(p){
+        p.set('bookmarked', true);
+      });
 
       let showGenericError = true;
       if (error && error.responseText) {
@@ -207,6 +237,8 @@ const Topic = Discourse.Model.extend({
       if(showGenericError){
         bootbox.alert(I18n.t('generic_error'));
       }
+
+      throw error;
     });
   },
 
