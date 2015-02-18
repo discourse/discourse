@@ -413,15 +413,27 @@ Discourse.Post = Discourse.Model.extend({
   },
 
   toggleBookmark: function() {
-    var self = this;
+    var self = this,
+        bookmarkedTopic;
 
     this.toggleProperty("bookmarked");
-    if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
 
-    return Discourse.Post.updateBookmark(this.get('id'), this.get('bookmarked')).catch(function() {
-      self.toggleProperty("bookmarked");
-      if (this.get("post_number") === 1) { this.toggleProperty("topic.bookmarked"); }
-    });
+    if(this.get("bookmarked") && !this.get("topic.bookmarked")) {
+      this.set("topic.bookmarked", true);
+      bookmarkedTopic = true;
+    }
+
+    // need to wait to hear back from server (stuff may not be loaded)
+
+    return Discourse.Post.updateBookmark(this.get('id'), this.get('bookmarked'))
+      .then(function(result){
+        self.set("topic.bookmarked", result.topic_bookmarked);
+      })
+      .catch(function(e) {
+        self.toggleProperty("bookmarked");
+        if (bookmarkedTopic) {self.set("topic.bookmarked", false); }
+        throw e;
+      });
   }
 });
 

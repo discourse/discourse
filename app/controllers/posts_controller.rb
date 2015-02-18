@@ -285,7 +285,9 @@ class PostsController < ApplicationController
       PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end
 
-    render nothing: true
+    tu = TopicUser.get(post.topic, current_user)
+
+    render_json_dump(topic_bookmarked: tu.bookmarked)
   end
 
   def wiki

@@ -790,7 +790,7 @@ describe TopicsController do
       it "works correctly" do
         group = Fabricate(:group)
         topic = Fabricate(:topic)
-        admin = log_in(:admin)
+        _admin = log_in(:admin)
 
         xhr :post, :invite, topic_id: topic.id, email: 'hiro@from.heros', group_ids: "#{group.id}"
 
@@ -857,7 +857,7 @@ describe TopicsController do
     end
 
     it 'needs you to be an admin or mod' do
-      user = log_in
+      log_in
       xhr :put, :autoclose, topic_id: 99, auto_close_time: '24', auto_close_based_on_last_post: false
       expect(response).to be_forbidden
     end
@@ -956,6 +956,25 @@ describe TopicsController do
         topics_bulk_action.expects(:perform!)
         xhr :put, :bulk, topic_ids: topic_ids, operation: operation
       end
+    end
+  end
+
+  describe 'remove_bookmarks' do
+    it "should remove bookmarks properly from non first post" do
+      bookmark = PostActionType.types[:bookmark]
+      user = log_in
+
+      post = create_post
+      post2 = create_post(topic_id: post.topic_id)
+
+      PostAction.act(user, post2, bookmark)
+
+      xhr :put, :bookmark, topic_id: post.topic_id
+      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 2
+
+      xhr :put, :remove_bookmarks, topic_id: post.topic_id
+      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 0
+
     end
   end
 

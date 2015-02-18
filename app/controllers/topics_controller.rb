@@ -217,15 +217,24 @@ class TopicsController < ApplicationController
     render nothing: true
   end
 
+  def remove_bookmarks
+    topic = Topic.find(params[:topic_id].to_i)
+
+    PostAction.joins(:post)
+              .where(user_id: current_user.id)
+              .where('topic_id = ?', topic.id).each do |pa|
+
+      PostAction.remove_act(current_user, pa.post, PostActionType.types[:bookmark])
+    end
+
+    render nothing: true
+  end
+
   def bookmark
-    topic = Topic.find_by(id: params[:topic_id])
+    topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
-    if params[:bookmarked] == "true"
-      PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
-    else
-      PostAction.remove_act(current_user, first_post, PostActionType.types[:bookmark])
-    end
+    PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
 
     render nothing: true
   end
