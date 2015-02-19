@@ -31,10 +31,47 @@ fi:
   purge_reason: "Poistettu automaattisesti hylättynä, aktivoimattomana tilinä"
   disable_remote_images_download_reason: "Linkattujen kuvien lataaminen poistettiin käytöstä vähäisen tallennustilan vuoksi."
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "on rajoitettu %{max} merkkiin; sinä syötit %{length} merkkiä."
       invalid_boolean: "Totuusarvomuuttuja ei kelpaa"
-      taken: "on jo varattu. (ryhmien nimet eivät ole merkkikokoriippuvaisia)"
+      taken: "on jo varattu"
+      accepted: täytyy hyväksyä
+      blank: ei voi olla tyhjä
+      present: täytyy olla tyhjä
+      confirmation: "ei vastaa %{attribute}"
+      empty: ei voi olla tyhjä
+      equal_to: täytyy olla sama kuin %{count}
+      even: täytyy olla parillinen
+      exclusion: on varattu
+      greater_than: täytyy olla suurempi kuin %{count}
+      greater_than_or_equal_to: täytyy olla yhtä suuri, tai suurempi kuin %{count}
+      inclusion: ei ole listalla
+      invalid: ei kelpaa
+      less_than: täytyy olla vähemmän kuin %{count}
+      less_than_or_equal_to: täytyy olla yhtä suuri, tai vähemmän kuin %{count}
+      not_a_number: ei ole numero
+      not_an_integer: täytyy olla kokonaisluku
+      odd: täytyy olla pariton
+      record_invalid: 'Validointi epäonnistui: %{errors}'
+      restrict_dependent_destroy:
+        one: "Tietuetta ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa"
+        many: "Tietueita ei voi poistaa, koska siitä riippuva tietue %{record} on olemassa."
+      too_long:
+        one: on liian pitkä (enintään 1 merkki)
+        other: on liian pitkä (enintään %{count}  merkkiä)
+      too_short:
+        one: on liian lyhyt (vähintään 1 merkki)
+        other: on liian lyhyt (vähintään %{count} merkkiä)
+      wrong_length:
+        one: on väärän mittainen (pitäisi olla 1 merkki)
+        other: on väärän mittainen (pitäisi olla %{count} merkkiä)
+      other_than: "pitää olla muu kuin %{count}"
+    template:
+      body: 'Seuraavien kenttien kanssa oli ongelmia:'
+      header:
+        one: 1 virhe esti tallentamasta tätä %{model}
+        other: '%{count} virhettä esti tallentamasta tätä %{model}'
     embed:
       load_from_remote: "Viestin lataamisessa tapahtui virhe."
   bulk_invite:
@@ -102,6 +139,7 @@ fi:
     latest: "Tuoreimmat viestiketjut"
     hot: "Kuumat ketjut"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
+  excerpt_image: "kuva"
   groups:
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
@@ -376,6 +414,8 @@ fi:
       title: 'Roskaposti'
       description: 'Tämä viesti on mainos. Se ei ole hyödyllinen tai relevantti tässä ketjussa, vaan luonteeltaan mainostamista.'
       long_form: 'liputti tämän roskapostiksi'
+      email_title: '"%{title}" liputettiin roskapostiksi'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Asiaton'
       description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
@@ -517,6 +557,46 @@ fi:
       title: "Parhaat viitatut ketjut"
       xaxis: "Ketju"
       num_clicks: "Klikkausta"
+    page_view_anon_reqs:
+      title: "Anonyymejä"
+      xaxis: "Päivä"
+      yaxis: "Anonyymeien sivun katseluita"
+    page_view_logged_in_reqs:
+      title: "Kirjautuneita"
+      xaxis: "Päivä"
+      yaxis: "Kirjautuneiden sivunkatseluita"
+    page_view_crawler_reqs:
+      title: "Hakurobotteja"
+      xaxis: "Päivä"
+      yaxis: "Hakurobottien sivunkatseluita"
+    page_view_total_reqs:
+      title: "Yhteensä"
+      xaxis: "Päivä"
+      yaxis: "Katseluita yhteensä"
+    http_background_reqs:
+      title: "Taustajärjestelmä"
+      xaxis: "Päivä"
+      yaxis: "Pyyntöjä sivun päivittämiseen ja seuraamiseen"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Päivä"
+      yaxis: "Onnistuneita pyyntöjä (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Uudelleenohjaus)"
+      xaxis: "Päivä"
+      yaxis: "Uudelleenohjauksia (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Asiakasvirhe)"
+      xaxis: "Päivä"
+      yaxis: "Asiakasvirheitä (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Palvelinvirhe)"
+      xaxis: "Päivä"
+      yaxis: "Palvelinvirheitä (Status 5xx)"
+    http_total_reqs:
+      title: "Yhteensä"
+      xaxis: "Päivä"
+      yaxis: "Pyyntöjä yhteensä"
   dashboard:
     rails_env_warning: "Palvelintasi ajetaan %{env} moodissa."
     ruby_version_warning: "Käytät Rubyn versiota 2.0.0 jonka kanssa on tunnettuja ongelmia. Päivitä patch level 247 tai uudempaan."
@@ -536,6 +616,7 @@ fi:
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataamalla uusin versio</a>.'
     failing_emails_warning: 'Sähköpostitehtävä on epäonnistunut %{num_failed_jobs} kertaa. Tarkista config/discourse.conf tiedostosta, että sähköpostiasetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Tarkastele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     default_logo_warning: "Aseta sivustolle logot. Päivitä logo_url, logo_small_url, ja favicon_url <a href='/admin/site_settings'>sivuston asetuksissa</a>."
+    contact_email_missing: "Aseta yhteystietoihin sähköpostiosoite, josta sinut saa tavoitettua sivustoon liittyvissä kiireellisissä asioissa. Voit syöttää sen <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     contact_email_invalid: "Sivuston sähköpostiosoite ei kelpaa. Muokkaa sitä <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     title_nag: "Aseta keskustelupalstalle nimi. Voita muokata sitä <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     site_description_missing: "Aseta yhden lauseen mittainen kuvaus palstasta, joka näkyy hakutuloksissa. Muokkaa asetusta site_description <a href='/admin/site_settings'>sivuston asetuksissa</a>."
@@ -592,6 +673,7 @@ fi:
     educate_until_posts: "Näytä uuden käyttäjän ohje, kun käyttäjä alkaa kirjoittamaan ensimmäistä (n) viestiään viestikenttään."
     title: "Palstan nimi, käytetään title tagissa."
     site_description: "Kuvaile sivustoa yhdellä lauseella, jota käytetään meta description tagissa."
+    contact_email: "Sähköpostiosoite, josta sivuston henkilökunnan saa tavoitettua. Tänne lähetetään sivuston kriittiset ilmoitukset, kuten käsittelemättömät liput ja näytetään /about sivun yhteystietona."
     queue_jobs: "VAIN KEHITTÄJILLE! VAROITUS! Oletusarvona tehtävät asetetaan sidekiq jonoon. Jos poistetaan käytöstä, sivusto ei enää toimi."
     crawl_images: "Lataa linkatut kuvat kuvan dimensioiden määrittamiseksi."
     download_remote_images_to_local: "Muunna linkatut kuvat liitetiedostoiksi lataamalla ne; tämä estää kuvien rikkoontumisen vanhentuneiden linkkien vuoksi."
@@ -654,6 +736,7 @@ fi:
     enable_noscript_support: "Ota käyttöön noscript-tagi hakukoneiden webcrawlereille"
     allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
+    top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
     share_links: "Mitkä painikkeet näytetään Jaa-valikossa ja missä järjestyksessä."
@@ -676,6 +759,7 @@ fi:
     email_domains_blacklist: "Lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com trashmail.net"
     email_domains_whitelist: "Lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
     forgot_password_strict: "Älä paljasta tilin olemassaoloa unohtuneen salasanan kyselyssä."
+    log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos kaikilta laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä viesti /admin hallintapaneelissa kun uusi versio on saatavilla"
     new_version_emails: "Lähetä sähköposti contact_email osoitteeseen kun uusi versio Discoursesta on saatavilla."
     port: "VAIN KEHITTÄJILLE! VAROITUS! Käytä tätä HTTP porttia portin 80 sijaan. Jätä tyhjäksi jos haluat käyttää oletusporttia 80."
@@ -691,6 +775,7 @@ fi:
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (HUOM: voi estää kaikkia kirjautumasta sisään, jos asetukset eivät ole kunnossa ja poistaa kutsut käytöstä)"
     enable_sso_provider: "Ota käyttöön Discourse SSO protokolla /session/sso_provider päätepisteessä, vaatii asetuksen sso_secret asettamista."
     sso_url: "single sign on endpointin URL"
+    sso_secret: "Salausavain, jolla todennetaan SSO tiedot, varmista että se on vähintään 10 merkkiä pitkä"
     sso_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen SSO:n kautta saatavalla ulkopuolisella sähköpostillosoitteella (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten sähköpostien normalisoinnista)"
     sso_overrides_username: "Ohittaa paikallisen käyttäjänimen SSO:n kautta saatavalla ulkopuolisella käyttäjänimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen eroavuuksista nimien pituuksissa/vaatimuksissa)"
     sso_overrides_name: "Ohittaa paikallisen nimen SSO:n kautta saatavalla ulkopuolisella nimellä (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten nimien normalisoinnista)"
@@ -729,6 +814,7 @@ fi:
     max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä."
     max_topics_per_day: "Luotujen ketjujen päivittäinen maksimäärä per käyttäjä."
     max_private_messages_per_day: "Yksityisviestien päivittäinen maksimäärä per käyttäjä."
+    max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     suggested_topics: "Suositeltujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Näytä suositeltuja ketjuja vain nykyiseltä alueelta."
     clean_up_uploads: "Poista orpoutuneet liitetiedostot, joita ei käytetä viesteissä, laittoman hostauksen estämiseksi. VAROITUS: kannattaa varmuuskopioida /uploads kansio ennen tämän asetuksen ottamista käyttöön."
@@ -784,6 +870,7 @@ fi:
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
     min_body_similar_length: "Viestin minimipituus, kunnes sitä verratataan muihin samankaltaisiin ketjuihin."
     category_colors: "Lista alueiden sallituista väriarvoista, heksadesimaaleina."
+    category_style: "Aluemerkin tyyli."
     max_image_size_kb: "Liitetyn kuvan suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     max_attachment_size_kb: "Liitetyn tiedoston suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
     authorized_extensions: "Liitetiedostojen sallitut tiedostopäätteet (käytä '*' salliaksesi kaikki tiedostotyypit)"
@@ -844,6 +931,8 @@ fi:
     digest_topics: "Sähköpostitiivistelmässä näytettävien ketjujen maksimimäärä."
     digest_min_excerpt_length: "Viestin katkelman vähimmäispituus sähköpostitiivistelmässä, merkeissä"
     default_digest_email_frequency: "Kuinka usein käyttäjän saavat sähköpostitiivistelmän oletuksena. He voivat muuttaa asetusta omista asetuksistaan."
+    suppress_digest_email_after_days: "Supista tiivistelmäsähköpostit käyttäjltä, joita ei ole nähty (n) päivän aikana."
+    disable_digest_emails: "Ota tiivistelmäsähköpostit pois käytöstä kaikilta käyttäjiltä."
     default_external_links_in_new_tab: "Avaa ulkoiset linkit uudessa välilehdessä. Käyttäjät voivat muuttaa tämän asetuksistaan."
     detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman avatarin."
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
@@ -855,6 +944,7 @@ fi:
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
+    enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
     invites_per_page: "Oletuksena montako kutsua näytetään käyttäjäsivulla."
     short_progress_text_threshold: "Kuinka monen viestin jälkeen ketjun edistyspalkissa näytetään vain nykyisen viestin numero. Jos muutat palkin leveyttä, voit joutua muuttamaan tätä arvoa."
@@ -890,6 +980,7 @@ fi:
       invalid_string_min_max: "Merkkien lukumäärän täytyy olla välillä %{min} - %{max}."
       invalid_string_min: "Täytyy olla vähintään %{min} merkkiä."
       invalid_string_max: "Ei saa olla yli %{max} merkkiä."
+      invalid_reply_by_email_address: "Arvon täytyy sisältää '%{reply_key}' ja olla eri, kuin ilmoitusten sähköpostiosoite."
   notification_types:
     mentioned: "%{display_username} viittasi sinuun viestissä %{link}"
     liked: "%{display_username} tykkäsi viestistäsi %{link}"
@@ -1039,6 +1130,45 @@ fi:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
+    text_body_template: |
+      Tämä on testisähköposti sivustolta
+
+      [**%{base_url}**][0]
+
+      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
+
+      - *Varmista,* että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin varmennus tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
+
+      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan,* jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
+
+      - **TÄRKEÄÄ:** Onko palveluntarjoajasi syöttänyt reverse DNS kentän verkkotunnuksille ja IP osoitteille, joists lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköposti menee perille.
+
+      - Onko verkkotunnuksesi [SPF record][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT oikea tietuetyyppi SPF tietueelle.
+
+      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä vaikuttaa merkittävästi sähköpostin toimitettavuuteen. [Kokeile DKIM tietuetta][7] täällä.
+
+      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4].
+
+      - Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
+
+      (Helpoin tapa on luoda ilmainen tili [Mandrilliin][md], [Mailguniin][mg] tai [Mailjetiin][mj], joide ilmaiset palvelut riittävät hyvin piemen palstan käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
+
+      Toivottavasti tämä testisähköposti meni perille OK!
+
+      Onnea matkaan,
+
+      Ystäväsi [Discourselta](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: http://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
     text_body_template: |+
@@ -1175,7 +1305,7 @@ fi:
 
         <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
-        Voit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](/my/preferences).
+        Voit vaihtaa yksittäisen viestiketjun ilmoitusasetuksia ketjun alalaidassa olevalla painikkeella (asetuksen voi muuttaa myös aluekohtaisesti). Vaihtaaksesi asetuksia siitä, kuinka seuraat ketjuja tai mitkä ketjut tulkitaan uusiksi, katso [käyttäjäasetukset](%{base_url}/my/preferences).
 
         ## Miksi en voi tehdä jotain?
 
@@ -1189,11 +1319,31 @@ fi:
 
         Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
 
-        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](/about) kanssa, vastaa vain tähän viestiin)
-
         Toivottavasti viihdyt!
+
+        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     welcome_invite:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
+      text_body_template: |
+        Kiitos kutsun hyväksymisestä sivustolle %{site_name} -- tervetuloa!
+
+        Olemme luoneet sinulle uuden käyttäjätunnuksen: **%{username}** ja olet nyt kirjautuneena sisään. Voit vaihtaa nimeäsi [käyttäjäprofiilistasi][prefs].
+
+        Kirjautuaksesi uudestaan sisään myöhemmin:
+
+        1. Käytä aina **samaa sähköpostiosoitetta, jonne vastaanotit alkuperäisen kutsun**. Muuten emme voi tietää, että olet sinä!
+
+        2. Luo salasana [käyttäjäprofiilissasi][prefs], ja käytä sitä kirjautumiseen.
+
+        %{new_user_tips}
+
+        Me uskomme [sivistyneeseen kanssakäymiseen](%{base_url}/guidelines).
+
+        Toivottavasti viihdyt!
+
+        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
       text_body_template: "Varmuuskopiointi onnistui.\nVoit ladata varmuuskopioin avaamalla valikon [ylläpito > varmuuskopiot](/admin/backups)."
@@ -1235,6 +1385,12 @@ fi:
         ```
     csv_export_succeeded:
       subject_template: "Datan vieminen on tehty"
+      text_body_template: |
+        Datan vienti onnistui.
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Linkki tiedostoon on voimassa 48 tuntia.
     csv_export_failed:
       subject_template: "Datan vienti epäonnistui"
       text_body_template: "Pahoittelemme, mutta datan vientisi epäonnistui. Tarkasta lokit tai ota yhteyttä henkilökuntaan."
@@ -1492,9 +1648,9 @@ fi:
 
         Me uskomme [sivistyneeseen kanssakäyntiin](%{base_url}/guidelines).
 
-        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](/about) kanssa, vastaa vain tähän viestiin)
-
         Toivottavasti viihdyt!
+
+        (Jos haluat keskustella yksityisesti [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
       subject_template: "[%{site_name}] Vahvista uusi tilisi"
       text_body_template: |
@@ -1524,7 +1680,10 @@ fi:
     unauthorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: %{authorized_extensions})."
     pasted_image_filename: "Liitetty kuva"
     store_failure: "Latauksen #%{upload_id} käyttäjälle #%{user_id} tallentaminen epäonnistui."
+    attachments:
+      too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri ( suurin tiedostokoko on %{max_size_kb}KB)."
     images:
+      too_large: "Pahoittelut, kuva jonka yritit ladata on liian suuri (suurin sallittu kuvakoko on %{max_size_kb}KB), pienennä kuvaa ja yritä uudestaan."
       fetch_failure: "Pahoittelut, kuvan hakemisessa tapahtui virhe."
       unknown_image_type: "Pahoittelut, mutta tiedosto jota yrität ladata ei vaikuta olevan kuva."
       size_not_found: "Pahoittelut, mutta emme pystyneet selvittämään kuvan kokoa. Ehkä kuvatiedosto on vahingoittunut?"
@@ -1561,3 +1720,26 @@ fi:
     title: "Käyttöehdot"
   privacy_topic:
     title: "Rekisteriseloste"
+  static:
+    search_help: |
+      <h2>Vinkkejä</h2>
+      <p>
+      <ul>
+      <li>Otsikon vastaavuutta korostetaan, joten jos olet epävarma, etsi otsikkoa</li>
+      <li>Uniikit, harvinaiset sanat tuovat aina parhaan lopputuloksen</li>
+      <li>Rajoita hakusi tietylle alueelle, tiettyyn käyttäjään tai ketjuun aina kun mahdollista.</li>
+      </ul>
+      </p>
+      <h2>Komennot:</h2>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+      <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+      </table>
+      </p>
+      <p>
+      <code>sateenkaari category:puistot status:open order:latest</code> etsii ketjuja, joissa mainitaan sana "sateenkaari" alueella "puistot" joita ei ole suljettu tai arkistoitu, järjestettynä viimeisen viestin mukaan.
+      </p>

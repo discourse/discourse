@@ -12,7 +12,7 @@ te:
         one: "ఒక ఓటు"
         other: "%{count} ఓట్లు"
       results:
-        show: ఫలితాలు చూపు
+        show: ఫలితాలు చూపించు
         hide: ఫలితాలు దాయు
       close_poll: "ఓటు ముగించు"
       open_poll: "ఓటు తెరువు"
