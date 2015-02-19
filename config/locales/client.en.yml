@@ -2354,6 +2354,9 @@ en:
         autobiographer:
           name: Autobiographer
           description: Filled user <a href="/my/preferences">profile</a> information
+        anniversary:
+          name: Anniversary
+          description: Active member for a year, posted at least once
         nice_post:
           name: Nice Post
           description: Received 10 likes on a post. This badge can be granted multiple times
