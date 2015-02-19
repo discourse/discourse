@@ -84,16 +84,11 @@ describe UsersController do
     end
 
     context 'invalid token' do
-      before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
-        put :perform_account_activation, token: 'asdfasdf'
-      end
 
       it 'return success' do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
+        put :perform_account_activation, token: 'asdfasdf'
         expect(response).to be_success
-      end
-
-      it 'sets a flash error' do
         expect(flash[:error]).to be_present
       end
     end
@@ -249,7 +244,7 @@ describe UsersController do
       end
 
       it 'disallows login' do
-        expect(flash[:error]).to be_present
+        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(assigns[:invalid_token]).to eq(nil)
         expect(response).to be_success
@@ -262,7 +257,7 @@ describe UsersController do
       end
 
       it 'disallows login' do
-        expect(flash[:error]).to be_present
+        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(assigns[:invalid_token]).to eq(true)
         expect(response).to be_success
@@ -277,7 +272,7 @@ describe UsersController do
         get :password_reset, token: token
         put :password_reset, token: token, password: 'newpassword'
         expect(response).to be_success
-        expect(flash[:error]).to be_blank
+        expect(assigns[:error]).to be_blank
       end
     end
 
