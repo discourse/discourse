@@ -51,6 +51,10 @@ class ApplicationController < ActionController::Base
     @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent))
   end
 
+  def slow_platform?
+    request.user_agent =~ /Android/
+  end
+
   def set_layout
     use_crawler_layout? ? 'crawler' : 'application'
   end
@@ -122,7 +126,17 @@ class ApplicationController < ActionController::Base
       #       from the above rescue_from blocks will fail because that isn't valid json.
       render status: error, layout: false, text: (error == 404) ? build_not_found_page(error) : message
     else
-      render text: build_not_found_page(error, include_ember ? 'application' : 'no_js')
+      render text: build_not_found_page(error, include_ember ? 'application' : 'no_ember')
+    end
+  end
+
+  class PluginDisabled < Exception; end
+
+  # If a controller requires a plugin, it will raise an exception if that plugin is
+  # disabled. This allows plugins to be disabled programatically.
+  def self.requires_plugin(plugin_name)
+    before_filter do
+      raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
     end
   end
 
@@ -133,8 +147,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    I18n.locale = if SiteSetting.allow_user_locale && current_user && current_user.locale.present?
-                    current_user.locale
+    I18n.locale = if current_user
+                    current_user.effective_locale
                   else
                     SiteSetting.default_locale
                   end
@@ -151,7 +165,7 @@ class ApplicationController < ActionController::Base
   # If we are rendering HTML, preload the session data
   def preload_json
     # We don't preload JSON on xhr or JSON request
-    return if request.xhr?
+    return if request.xhr? || request.format.json?
 
     preload_anonymous_data
 
@@ -167,13 +181,22 @@ class ApplicationController < ActionController::Base
 
   def inject_preview_style
     style = request['preview-style']
-    if style.blank?
-      session[:preview_style] = nil
-    elsif style == "default"
-      session[:preview_style] = ""
+
+    if style.nil?
+      session[:preview_style] = cookies[:preview_style]
     else
-      session[:preview_style] = style
+      cookies.delete(:preview_style)
+
+      if style.blank? || style == 'default'
+        session[:preview_style] = nil
+      else
+        session[:preview_style] = style
+        if request['sticky']
+          cookies[:preview_style] = style
+        end
+      end
     end
+
   end
 
   def disable_customization
@@ -251,6 +274,7 @@ class ApplicationController < ActionController::Base
       store_preloaded("siteSettings", SiteSetting.client_settings_json)
       store_preloaded("customHTML", custom_html_json)
       store_preloaded("banner", banner_json)
+      store_preloaded("customEmoji", custom_emoji)
     end
 
     def preload_current_user_data
@@ -260,9 +284,10 @@ class ApplicationController < ActionController::Base
     end
 
     def custom_html_json
+      target = view_context.mobile_view? ? :mobile : :desktop
       data = {
-        top: SiteText.text_for(:top),
-        footer: SiteCustomization.custom_footer(session[:preview_style])
+        top: SiteCustomization.custom_top(session[:preview_style], target),
+        footer: SiteCustomization.custom_footer(session[:preview_style], target)
       }
 
       if DiscoursePluginRegistry.custom_html
@@ -277,7 +302,6 @@ class ApplicationController < ActionController::Base
     end
 
     def banner_json
-
       json = ApplicationController.banner_json_cache["json"]
 
       unless json
@@ -287,6 +311,11 @@ class ApplicationController < ActionController::Base
       end
 
       json
+    end
+
+    def custom_emoji
+      serializer = ActiveModel::ArraySerializer.new(Emoji.custom, each_serializer: EmojiSerializer)
+      MultiJson.dump(serializer)
     end
 
     def render_json_error(obj)
@@ -346,6 +375,8 @@ class ApplicationController < ActionController::Base
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && api_key_valid?)
 
+      # save original URL in a cookie
+      cookies[:destination_url] = request.original_url unless request.original_url =~ /uploads/
       redirect_to :login if SiteSetting.login_required?
     end
 
@@ -356,6 +387,7 @@ class ApplicationController < ActionController::Base
 
     def build_not_found_page(status=404, layout=false)
       category_topic_ids = Category.pluck(:topic_id).compact
+      @container_class = "container not-found-container"
       @top_viewed = Topic.where.not(id: category_topic_ids).top_viewed(10)
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''

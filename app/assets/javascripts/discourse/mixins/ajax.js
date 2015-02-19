@@ -7,7 +7,14 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var _trackView = false;
+
 Discourse.Ajax = Em.Mixin.create({
+
+  viewTrackingRequired: function() {
+    _trackView = true;
+  },
 
   /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
@@ -34,22 +41,24 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     if (args.success) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      throw "Discourse.ajax should use promises, received 'success' callback";
     }
     if (args.error) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      throw "DEPRECATION: Discourse.ajax should use promises, received 'error' callback";
     }
 
     var performAjax = function(resolve, reject) {
-      var oldSuccess = args.success;
+
+      if (_trackView && (!args.type || args.type === "GET")) {
+        _trackView = false;
+        args.headers = { 'Discourse-Track-View': true };
+      }
+
       args.success = function(xhr) {
         Ember.run(null, resolve, xhr);
-        if (oldSuccess) oldSuccess(xhr);
       };
 
-      var oldError = args.error;
       args.error = function(xhr, textStatus) {
-
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
         if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
@@ -64,7 +73,6 @@ Discourse.Ajax = Em.Mixin.create({
         xhr.requestedUrl = url;
 
         Ember.run(null, reject, xhr);
-        if (oldError) oldError(xhr);
       };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header

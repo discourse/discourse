@@ -3,9 +3,9 @@ require_dependency 'distributed_cache'
 
 class DiscourseStylesheets
 
-  CACHE_PATH = 'uploads/stylesheet-cache'
-  MANIFEST_DIR = "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
-  MANIFEST_FULL_PATH = "#{MANIFEST_DIR}/stylesheet-manifest"
+  CACHE_PATH ||= 'uploads/stylesheet-cache'
+  MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
+  MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
 
   @lock = Mutex.new
 
@@ -23,7 +23,7 @@ class DiscourseStylesheets
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_relpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
 
       cache[target] = tag
 
@@ -56,10 +56,17 @@ class DiscourseStylesheets
   end
 
   def self.max_file_mtime
-    [ "#{Rails.root}/app/assets/stylesheets/**/*.*css",
-      "#{Rails.root}/plugins/**/*.*css",
-      "#{Rails.root}/plugins/**/plugin.rb" ].map do |pattern|
-        Dir.glob(pattern).map { |x| File.mtime(x) }.max
+    globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css"]
+
+    for path in (Discourse.plugins || []).map { |plugin| File.dirname(plugin.path) }
+      globs += [
+        "#{path}/plugin.rb",
+        "#{path}/**/*.*css",
+      ]
+    end
+
+    globs.map do |pattern|
+      Dir.glob(pattern).map { |x| File.mtime(x) }.max
     end.compact.max.to_i
   end
 
@@ -103,9 +110,14 @@ class DiscourseStylesheets
     "#{cache_fullpath}/#{stylesheet_filename_no_digest}"
   end
 
+  def stylesheet_cdnpath
+    "#{GlobalSetting.cdn_url}#{stylesheet_relpath}?__ws=#{Discourse.current_hostname}"
+  end
+
   def stylesheet_relpath
     "/#{CACHE_PATH}/#{stylesheet_filename}"
   end
+
   def stylesheet_relpath_no_digest
     "/#{CACHE_PATH}/#{stylesheet_filename_no_digest}"
   end

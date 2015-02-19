@@ -1,6 +1,6 @@
-// A helper function to create a category route with parameters
 import { queryParams, filterQueryParams } from 'discourse/routes/build-topic-route';
 
+// A helper function to create a category route with parameters
 export default function(filter, params) {
   return Discourse.Route.extend({
     queryParams: queryParams,
@@ -54,9 +54,7 @@ export default function(filter, params) {
           extras = { cached: this.isPoppedState(transition) };
 
       return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
-        // If all the categories are the same, we can hide them
-        var hideCategory = !list.get('topics').find(function (t) { return t.get('category') !== model; });
-        list.set('hideCategory', hideCategory);
+        Discourse.TopicList.hideUniformCategory(list, model);
         self.set('topics', list);
       });
     },
@@ -80,8 +78,9 @@ export default function(filter, params) {
         period: periods.findBy('id', periodId),
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
-        order: model.get('params.order'),
-        ascending: model.get('params.ascending'),
+        order: topics.get('params.order'),
+        ascending: topics.get('params.ascending'),
+        expandAllPinned: true
       });
 
       this.controllerFor('search').set('searchContext', model.get('searchContext'));

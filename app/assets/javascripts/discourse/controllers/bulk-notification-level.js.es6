@@ -1,14 +1,6 @@
-/**
-  Support for changing the notification level of various topics
-
-  @class BulkNotificationLevelControler
-  @extends Ember.Controller
-  @namespace Discourse
-  @module Discourse
-**/
+// Support for changing the notification level of various topics
 export default Em.Controller.extend({
   needs: ['topic-bulk-actions'],
-
   notificationLevelId: null,
 
   notificationLevels: function() {

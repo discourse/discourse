@@ -84,14 +84,14 @@ describe Jobs do
       job_to_keep2 = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 44}]])])
       job_to_keep2.expects(:delete).never
       Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep1, job_to_delete, job_to_keep2] )
-      Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42}).should == true
+      expect(Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42})).to eq(true)
     end
 
     it 'returns false when no matching job is scheduled' do
       job_to_keep = stub_everything(klass: 'Sidekiq::Extensions::DelayedClass', args: [YAML.dump(['Jobs::DrinkBeer', :delayed_perform, [{beer_id: 43}]])])
       job_to_keep.expects(:delete).never
       Sidekiq::ScheduledSet.stubs(:new).returns( [job_to_keep] )
-      Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42}).should == false
+      expect(Jobs.cancel_scheduled_job(:drink_beer, {beer_id: 42})).to eq(false)
     end
   end
 

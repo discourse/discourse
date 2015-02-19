@@ -13,6 +13,7 @@ module JsLocaleHelper
     Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
       plugin_translations.deep_merge! YAML::load(File.open(file))
     end
+
     # merge translations (plugin translations overwrite default translations)
     translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
 
@@ -22,7 +23,7 @@ module JsLocaleHelper
     # For now, let's leave it split out in the translation file in case we want to split
     # it again later, so we'll merge the JSON ourselves.
     admin_contents = translations[locale_str].delete('admin_js')
-    translations[locale_str]['js'].merge!(admin_contents) if admin_contents.present?
+    translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
     translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 

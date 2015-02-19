@@ -1,32 +1,32 @@
 <div class="modal-body">
   <div>
     <div id="revision-controls">
-      <button title="{{i18n post.revisions.controls.first}}" {{bind-attr class=":btn :standard :no-text displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
-      <button title="{{i18n post.revisions.controls.previous}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
+      <button title="{{i18n 'post.revisions.controls.first'}}" {{bind-attr class=":btn :standard :no-text displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
+      <button title="{{i18n 'post.revisions.controls.previous'}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
         {{#loading-spinner condition=loading size="small"}}
           {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="current_version" totalBinding="version_count"}}
         {{/loading-spinner}}
       </div>
-      <button title="{{i18n post.revisions.controls.next}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
-      <button title="{{i18n post.revisions.controls.last}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
+      <button title="{{i18n 'post.revisions.controls.next'}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
+      <button title="{{i18n 'post.revisions.controls.last'}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
       {{#if displayHide}}
-        <button title="{{i18n post.revisions.controls.hide}}" {{bind-attr class=":btn :standard :no-text :btn-danger" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
+        <button title="{{i18n 'post.revisions.controls.hide'}}" {{bind-attr class=":btn :standard :no-text :btn-danger" disabled=loading}} {{action "hideVersion"}}><i class="fa fa-trash-o"></i></button>
       {{/if}}
       {{#if displayShow}}
-        <button title="{{i18n post.revisions.controls.show}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
+        <button title="{{i18n 'post.revisions.controls.show'}}" {{bind-attr class=":btn :standard :no-text" disabled=loading}} {{action "showVersion"}}><i class="fa fa-undo"></i></button>
       {{/if}}
     </div>
     <div id="display-modes">
-      <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n post.revisions.displays.inline.title}}" {{action "displayInline"}}>{{{i18n post.revisions.displays.inline.button}}}</button>
+      <button {{bind-attr class=":btn displayingInline:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.inline.title'}}" {{action "displayInline"}}>{{{i18n 'post.revisions.displays.inline.button'}}}</button>
       {{#unless site.mobileView}}
-        <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side.title}}" {{action "displaySideBySide"}}>{{{i18n post.revisions.displays.side_by_side.button}}}</button>
-        <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n post.revisions.displays.side_by_side_markdown.title}}" {{action "displaySideBySideMarkdown"}}>{{{i18n post.revisions.displays.side_by_side_markdown.button}}}</button>
+        <button {{bind-attr class=":btn displayingSideBySide:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.side_by_side.title'}}" {{action "displaySideBySide"}}>{{{i18n 'post.revisions.displays.side_by_side.button'}}}</button>
+        <button {{bind-attr class=":btn displayingSideBySideMarkdown:btn-primary:standard"}} title="{{i18n 'post.revisions.displays.side_by_side_markdown.title'}}" {{action "displaySideBySideMarkdown"}}>{{{i18n 'post.revisions.displays.side_by_side_markdown.button'}}}</button>
       {{/unless}}
     </div>
   </div>
   <div id="revision-details">
-    {{i18n post.revisions.details.edited_by}}
+    {{i18n 'post.revisions.details.edited_by'}}
     {{#link-to 'user' username}}
       {{bound-avatar-template content.avatar_template "small"}} {{username}}
     {{/link-to}}
@@ -40,12 +40,12 @@
         &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
       {{/if}}
       {{#if wiki_changes}}
-        &mdash; {{{wiki_diff}}}
+        &mdash; {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
       {{/if}}
       {{#if post_type_changes}}
-        &mdash; {{{post_type_diff}}}
+        &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
       {{/if}}
-      {{#if category_changes}}
+      {{#if category_id_changes}}
         &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
       {{/if}}
     {{/unless}}
@@ -53,7 +53,7 @@
   <div id="revisions" {{bind-attr class="hiddenClasses"}}>
     {{#if title_changes}}
       <div class="row">
-        <h2>{{{title_diff}}}</h2>
+        <h2>{{{titleDiff}}}</h2>
       </div>
     {{/if}}
     {{#if site.mobileView}}
@@ -65,22 +65,25 @@
       {{/if}}
       {{#if wiki_changes}}
         <div class="row">
-          {{{wiki_diff}}}
+          {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
         </div>
       {{/if}}
       {{#if post_type_changes}}
         <div class="row">
-          {{{post_type_diff}}}
+          {{disabled-icon icon="shield" disabled=postTypeDisabled}}
         </div>
       {{/if}}
-      {{#if category_changes}}
+      {{#if category_id_changes}}
         <div class="row">
           {{{previousCategory}}} &rarr; {{{currentCategory}}}
         </div>
       {{/if}}
     {{/if}}
+
+    {{plugin-outlet "post-revisions"}}
+
     <div class="row">
-      {{{body_diff}}}
+      {{{bodyDiff}}}
     </div>
   </div>
 </div>

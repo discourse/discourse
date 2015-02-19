@@ -67,17 +67,19 @@ unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
    end
 end
 
-gem 'seed-fu', '~> 2.3.3'
 
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
+  gem 'rails-observers', git: 'https://github.com/SamSaffron/rails-observers.git'
+  gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
+  gem 'seed-fu', '~> 2.3.3'
   gem 'rails'
+  gem 'rails-observers'
 end
 
 gem 'actionpack-action_caching'
-gem 'rails-observers'
 
 # Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
 # However, mail gem 2.6.x currently does not work with discourse because of the
@@ -102,9 +104,10 @@ end
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '1.6.0.beta.2'
-gem 'handlebars-source', '1.3.0'
+gem 'ember-source', '1.9.0.beta.4'
+gem 'handlebars-source', '2.0.0'
 gem 'barber'
+gem '6to5'
 
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
@@ -114,15 +117,13 @@ gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
-gem 'fastimage'
-gem 'fog', '1.22.1', require: false
+
+# while we sort out https://github.com/sdsykes/fastimage/pull/46
+gem 'fastimage_discourse', require: 'fastimage'
+gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 
-# see: https://twitter.com/samsaffron/status/412360162297393152
-# Massive amount of changes made in branch we use, no PR upstreamed
-# We need to get this sorted
-# https://github.com/samsaffron/email_reply_parser
-gem 'email_reply_parser-discourse', require: 'email_reply_parser'
+gem 'email_reply_parser'
 
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
@@ -144,8 +145,7 @@ gem 'omniauth-github-discourse', require: 'omniauth-github'
 gem 'omniauth-oauth2', require: false
 gem 'omniauth-google-oauth2'
 gem 'oj'
-# while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
-gem 'pg', '0.15.1'
+gem 'pg'
 gem 'pry-rails', require: false
 gem 'rake'
 
@@ -225,7 +225,7 @@ gem 'lru_redux'
 gem 'htmlentities', require: false
 
 # IMPORTANT: mini profiler monkey patches, so it better be required last
-#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
@@ -240,6 +240,9 @@ gem 'rbtrace', require: false, platform: :mri
 gem 'ruby-readability', require: false
 
 gem 'simple-rss', require: false
+
+# TODO mri_22 should be here, but bundler was real slow to pick it up
+# not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
 gem 'memory_profiler', require: false, platform: :mri_21

@@ -4,107 +4,95 @@ require_dependency 'plugin/instance'
 describe Plugin::Instance do
 
   after do
-    DiscoursePluginRegistry.javascripts.clear
-    DiscoursePluginRegistry.admin_javascripts.clear
-    DiscoursePluginRegistry.server_side_javascripts.clear
-    DiscoursePluginRegistry.stylesheets.clear
-    DiscoursePluginRegistry.mobile_stylesheets.clear
-    DiscoursePluginRegistry.desktop_stylesheets.clear
-    DiscoursePluginRegistry.sass_variables.clear
-    DiscoursePluginRegistry.serialized_current_user_fields
+    DiscoursePluginRegistry.reset!
   end
 
   context "find_all" do
     it "can find plugins correctly" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins")
-      plugins.count.should == 1
+      expect(plugins.count).to eq(1)
       plugin = plugins[0]
 
-      plugin.name.should == "plugin-name"
-      plugin.path.should == "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      expect(plugin.name).to eq("plugin-name")
+      expect(plugin.path).to eq("#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb")
     end
 
     it "does not blow up on missing directory" do
       plugins = Plugin::Instance.find_all("#{Rails.root}/frank_zappa")
-      plugins.count.should == 0
+      expect(plugins.count).to eq(0)
+    end
+  end
+
+  context "enabling/disabling" do
+
+    it "is enabled by default" do
+      expect(Plugin::Instance.new.enabled?).to eq(true)
+    end
+
+    context "with a plugin that extends things" do
+
+      class Trout; end
+      class TroutSerializer < ApplicationSerializer; end
+
+      class TroutPlugin < Plugin::Instance
+        attr_accessor :enabled
+        def enabled?; @enabled; end
+      end
+
+      before do
+        @plugin = TroutPlugin.new
+        @trout = Trout.new
+
+        # New method
+        @plugin.add_to_class(:trout, :status?) { "evil" }
+
+        # DiscourseEvent
+        @hello_count = 0
+        @plugin.on(:hello) { @hello_count += 1 }
+
+        # Serializer
+        @plugin.add_to_serializer(:trout, :scales) { 1024 }
+        @serializer = TroutSerializer.new(@trout)
+      end
+
+      after do
+        DiscourseEvent.clear
+      end
+
+      it "checks enabled/disabled functionality for extensions" do
+
+        # with an enabled plugin
+        @plugin.enabled = true
+        expect(@trout.status?).to eq("evil")
+        DiscourseEvent.trigger(:hello)
+        expect(@hello_count).to eq(1)
+        expect(@serializer.scales).to eq(1024)
+        expect(@serializer.include_scales?).to eq(true)
+
+        # When a plugin is disabled
+        @plugin.enabled = false
+        expect(@trout.status?).to eq(nil)
+        DiscourseEvent.trigger(:hello)
+        expect(@hello_count).to eq(1)
+        expect(@serializer.scales).to eq(1024)
+        expect(@serializer.include_scales?).to eq(false)
+
+      end
     end
   end
 
   context "register asset" do
-    it "does register general css properly" do
+    it "populates the DiscoursePluginRegistry" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
       plugin.register_asset("test.css")
       plugin.register_asset("test2.css")
 
       plugin.send :register_assets!
 
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
-      DiscoursePluginRegistry.stylesheets.count.should == 2
+      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(0)
+      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
     end
-
-    it "registers desktop css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :desktop)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 0
-      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-    it "registers mobile css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :mobile)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-    it "registers desktop css properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :desktop)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.desktop_stylesheets.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-
-    it "registers sass variable properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("test.css", :variables)
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.sass_variables.count.should == 1
-      DiscoursePluginRegistry.stylesheets.count.should == 0
-    end
-
-
-    it "registers admin javascript properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("my_admin.js", :admin)
-
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.admin_javascripts.count.should == 1
-      DiscoursePluginRegistry.javascripts.count.should == 0
-      DiscoursePluginRegistry.server_side_javascripts.count.should == 0
-    end
-
-    it "registers server side javascript properly" do
-      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
-      plugin.register_asset("my_admin.js", :server_side)
-
-      plugin.send :register_assets!
-
-      DiscoursePluginRegistry.server_side_javascripts.count.should == 1
-      DiscoursePluginRegistry.javascripts.count.should == 1
-      DiscoursePluginRegistry.admin_javascripts.count.should == 0
-    end
-
   end
-
 
   context "activate!" do
     it "can activate plugins correctly" do
@@ -116,18 +104,18 @@ describe Plugin::Instance do
       File.open("#{plugin.auto_generated_path}/junk", "w") {|f| f.write("junk")}
       plugin.activate!
 
-      plugin.auth_providers.count.should == 1
+      expect(plugin.auth_providers.count).to eq(1)
       auth_provider = plugin.auth_providers[0]
-      auth_provider.authenticator.name.should == 'ubuntu'
+      expect(auth_provider.authenticator.name).to eq('ubuntu')
 
       # calls ensure_assets! make sure they are there
-      plugin.assets.count.should == 1
+      expect(plugin.assets.count).to eq(1)
       plugin.assets.each do |a, opts|
-        File.exists?(a).should == true
+        expect(File.exists?(a)).to eq(true)
       end
 
       # ensure it cleans up all crap in autogenerated directory
-      File.exists?(junk_file).should == false
+      expect(File.exists?(junk_file)).to eq(false)
     end
 
     it "finds all the custom assets" do
@@ -152,13 +140,13 @@ describe Plugin::Instance do
 
       plugin.activate!
 
-      DiscoursePluginRegistry.javascripts.count.should == 3
-      DiscoursePluginRegistry.admin_javascripts.count.should == 2
-      DiscoursePluginRegistry.server_side_javascripts.count.should == 1
-      DiscoursePluginRegistry.desktop_stylesheets.count.should == 2
-      DiscoursePluginRegistry.sass_variables.count.should == 2
-      DiscoursePluginRegistry.stylesheets.count.should == 2
-      DiscoursePluginRegistry.mobile_stylesheets.count.should == 1
+      expect(DiscoursePluginRegistry.javascripts.count).to eq(3)
+      expect(DiscoursePluginRegistry.admin_javascripts.count).to eq(2)
+      expect(DiscoursePluginRegistry.server_side_javascripts.count).to eq(1)
+      expect(DiscoursePluginRegistry.desktop_stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.sass_variables.count).to eq(2)
+      expect(DiscoursePluginRegistry.stylesheets.count).to eq(2)
+      expect(DiscoursePluginRegistry.mobile_stylesheets.count).to eq(1)
     end
   end
 
@@ -170,7 +158,7 @@ describe Plugin::Instance do
       user.save!
 
       payload = JSON.parse(CurrentUserSerializer.new(user, scope: Guardian.new(user)).to_json)
-      payload["current_user"]["custom_fields"]["has_car"].should == "true"
+      expect(payload["current_user"]["custom_fields"]["has_car"]).to eq("true")
     end
   end
 
@@ -181,7 +169,7 @@ describe Plugin::Instance do
         plugin.register_color_scheme("Purple", {primary: 'EEE0E5'})
         plugin.notify_after_initialize
       }.to change { ColorScheme.count }.by(1)
-      ColorScheme.where(name: "Purple").should be_present
+      expect(ColorScheme.where(name: "Purple")).to be_present
     end
 
     it "doesn't add the same color scheme twice" do

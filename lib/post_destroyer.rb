@@ -54,8 +54,9 @@ class PostDestroyer
     elsif @user.staff? || @user.id == @post.user_id
       user_recovered
     end
-    @post.topic.recover! if @post.post_number == 1
-    @post.topic.update_statistics
+    topic = Topic.with_deleted.find @post.topic_id
+    topic.recover! if @post.post_number == 1
+    topic.update_statistics
   end
 
   def staff_recovered
@@ -88,6 +89,7 @@ class PostDestroyer
       end
       update_associated_category_latest_topic
       update_user_counts
+      TopicUser.update_post_action_cache(topic_id: @post.topic_id)
     end
 
     @post.publish_change_to_clients! :deleted if @post.topic
@@ -95,11 +97,13 @@ class PostDestroyer
 
   # When a user 'deletes' their own post. We just change the text.
   def mark_for_deletion
-    Post.transaction do
-      @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
-      @post.update_column(:user_deleted, true)
-      @post.update_flagged_posts_count
-      @post.topic_links.each(&:destroy)
+    I18n.with_locale(SiteSetting.default_locale) do
+      Post.transaction do
+        @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
+        @post.update_column(:user_deleted, true)
+        @post.update_flagged_posts_count
+        @post.topic_links.each(&:destroy)
+      end
     end
   end
 
@@ -112,16 +116,15 @@ class PostDestroyer
     end
   end
 
-
   private
 
   def make_previous_post_the_last_one
     last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
     if last_post.present?
       @post.topic.update_attributes(
-          last_posted_at: last_post.created_at,
-          last_post_user_id: last_post.user_id,
-          highest_post_number: last_post.post_number
+        last_posted_at: last_post.created_at,
+        last_post_user_id: last_post.user_id,
+        highest_post_number: last_post.post_number
       )
     end
   end

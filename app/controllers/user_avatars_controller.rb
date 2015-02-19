@@ -13,7 +13,7 @@ class UserAvatarsController < ApplicationController
       user.create_user_avatar(user_id: user.id) unless user.user_avatar
       user.user_avatar.update_gravatar!
 
-      render json: {upload_id: user.user_avatar.gravatar_upload_id}
+      render json: { upload_id: user.user_avatar.gravatar_upload_id }
     else
       raise Discourse::NotFound
     end

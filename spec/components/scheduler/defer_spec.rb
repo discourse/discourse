@@ -1,6 +1,6 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'scheduler/scheduler'
+require_dependency 'scheduler/defer'
 
 describe Scheduler::Defer do
   class DeferInstance
@@ -23,6 +23,32 @@ describe Scheduler::Defer do
     @defer.stop!
   end
 
+  it "can pause and resume" do
+    x = 1
+    @defer.pause
+
+    @defer.later do
+      x = 2
+    end
+
+    @defer.do_all_work
+
+    expect(x).to eq(2)
+
+    @defer.resume
+
+
+    @defer.later do
+      x = 3
+    end
+
+    wait_for(10) do
+      x == 3
+    end
+
+    expect(x).to eq(3)
+  end
+
   it "recovers from a crash / fork" do
     s = nil
     @defer.stop!
@@ -40,7 +66,7 @@ describe Scheduler::Defer do
       s == "good"
     end
 
-    s.should == "good"
+    expect(s).to eq("good")
   end
 
   it "can queue jobs properly" do
@@ -54,7 +80,7 @@ describe Scheduler::Defer do
       s == "good"
     end
 
-    s.should == "good"
+    expect(s).to eq("good")
   end
 
 end

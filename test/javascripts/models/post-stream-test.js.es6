@@ -1,7 +1,10 @@
-module("Discourse.PostStream");
+module("model:post-stream");
+
+import PostStream from 'discourse/models/post-stream';
+import Topic from 'discourse/models/topic';
 
 var buildStream = function(id, stream) {
-  var topic = Discourse.Topic.create({id: id});
+  var topic = Topic.create({id: id, chunk_size: 5});
   var ps = topic.get('postStream');
   if (stream) {
     ps.set('stream', stream);
@@ -12,7 +15,7 @@ var buildStream = function(id, stream) {
 var participant = {username: 'eviltrout'};
 
 test('create', function() {
-  ok(Discourse.PostStream.create(), 'it can be created with no parameters');
+  ok(PostStream.create(), 'it can be created with no parameters');
 });
 
 test('defaults', function() {
@@ -20,7 +23,6 @@ test('defaults', function() {
   blank(postStream.get('posts'), "there are no posts in a stream by default");
   ok(!postStream.get('loaded'), "it has never loaded");
   present(postStream.get('topic'));
-
 });
 
 test('appending posts', function() {
@@ -122,6 +124,17 @@ test("cancelFilter", function() {
   blank(postStream.get('userFilters'), "cancelling the filters clears the userFilters");
 });
 
+test("findPostIdForPostNumber", function() {
+  var postStream = buildStream(1234, [10, 20, 30, 40, 50, 60, 70]);
+  postStream.set('gaps', { before: { 60: [55, 58] } });
+
+  equal(postStream.findPostIdForPostNumber(500), null, 'it returns null when the post cannot be found');
+  equal(postStream.findPostIdForPostNumber(1), 10, 'it finds the postId at the beginning');
+  equal(postStream.findPostIdForPostNumber(5), 50, 'it finds the postId in the middle');
+  equal(postStream.findPostIdForPostNumber(8), 60, 'it respects gaps');
+
+});
+
 test("toggleParticipant", function() {
   var postStream = buildStream(1236);
   sandbox.stub(postStream, "refresh");
@@ -182,7 +195,6 @@ test("loading", function() {
 });
 
 test("nextWindow", function() {
-  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('nextWindow'), 'With no posts loaded, the window is blank');
@@ -199,7 +211,6 @@ test("nextWindow", function() {
 });
 
 test("previousWindow", function() {
-  Discourse.SiteSettings.posts_chunksize = 5;
   var postStream = buildStream(1234, [1,2,3,5,8,9,10,11,13,14,15,16]);
 
   blank(postStream.get('previousWindow'), 'With no posts loaded, the window is blank');
@@ -233,7 +244,7 @@ test("storePost", function() {
   var postWithoutId = Discourse.Post.create({raw: 'hello world'});
   stored = postStream.storePost(postWithoutId);
   equal(stored, postWithoutId, "it returns the same post back");
-  equal(postStream.get('postIdentityMap.length'), 1, "it does not add a new entry into the identity map");
+  equal(postStream.get('postIdentityMap.size'), 1, "it does not add a new entry into the identity map");
 
 });
 

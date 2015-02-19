@@ -3,33 +3,38 @@ require_dependency 'pinned_check'
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
 
-  # These attributes will be delegated to the topic
-  def self.topic_attributes
-    [:id,
-     :title,
-     :fancy_title,
-     :posts_count,
-     :created_at,
-     :views,
-     :reply_count,
-     :participant_count,
-     :like_count,
-     :last_posted_at,
-     :visible,
-     :closed,
-     :archived,
-     :has_summary,
-     :archetype,
-     :slug,
-     :category_id,
-     :word_count,
-     :deleted_at]
+  def self.attributes_from_topic(*list)
+    [list].flatten.each do |attribute|
+      attributes(attribute)
+      class_eval %{def #{attribute}
+        object.topic.#{attribute}
+      end}
+    end
   end
+
+  attributes_from_topic :id,
+                        :title,
+                        :fancy_title,
+                        :posts_count,
+                        :created_at,
+                        :views,
+                        :reply_count,
+                        :participant_count,
+                        :like_count,
+                        :last_posted_at,
+                        :visible,
+                        :closed,
+                        :archived,
+                        :has_summary,
+                        :archetype,
+                        :slug,
+                        :category_id,
+                        :word_count,
+                        :deleted_at
 
   attributes :draft,
              :draft_key,
              :draft_sequence,
-             :starred,
              :posted,
              :unpinned,
              :pinned_globally,
@@ -42,16 +47,9 @@ class TopicViewSerializer < ApplicationSerializer
              :has_deleted,
              :actions_summary,
              :expandable_first_post,
-             :is_warning
-
-
-  # Define a delegator for each attribute of the topic we want
-  attributes(*topic_attributes)
-  topic_attributes.each do |ta|
-    class_eval %{def #{ta}
-      object.topic.#{ta}
-    end}
-  end
+             :is_warning,
+             :chunk_size,
+             :bookmarked
 
   # TODO: Split off into proper object / serializer
   def details
@@ -113,6 +111,9 @@ class TopicViewSerializer < ApplicationSerializer
     result
   end
 
+  def chunk_size
+    object.chunk_size
+  end
 
   def is_warning
     object.topic.private_message? && object.topic.subtype == TopicSubtype.moderator_warning
@@ -141,11 +142,6 @@ class TopicViewSerializer < ApplicationSerializer
   def has_topic_user?
     object.topic_user.present?
   end
-
-  def starred
-    object.topic_user.starred?
-  end
-  alias_method :include_starred?, :has_topic_user?
 
   def highest_post_number
     object.highest_post_number
@@ -204,6 +200,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_expandable_first_post?
     object.topic.expandable_first_post?
+  end
+
+  def bookmarked
+    object.topic_user.try(:bookmarked)
   end
 
 end

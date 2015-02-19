@@ -10,13 +10,14 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png?breakcache=1)](http://discuss.howtogeek.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
-[![](https://raw2.github.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
-[![](https://raw.github.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
-[![](https://raw.github.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
+[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
 
+Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
 ## Development
 
@@ -56,8 +57,8 @@ Plus *lots* of Ruby Gems, a complete list of which is at [/master/Gemfile](https
 
 ## Contributing
 
-[![Build Status](https://travis-ci.org/discourse/discourse.png)](https://travis-ci.org/discourse/discourse)
-[![Code Climate](https://codeclimate.com/github/discourse/discourse.png)](https://codeclimate.com/github/discourse/discourse)
+[![Build Status](https://travis-ci.org/discourse/discourse.svg)](https://travis-ci.org/discourse/discourse)
+[![Code Climate](https://codeclimate.com/github/discourse/discourse.svg)](https://codeclimate.com/github/discourse/discourse)
 
 Discourse is **100% free** and **open-source**. We encourage and support an active, healthy community that
 accepts contributions from the public &ndash; including you!

@@ -1,0 +1,5 @@
+//= depend_on 'client.tr_TR.yml'
+//= require locales/i18n
+<%= JsLocaleHelper.output_locale(:tr_TR) %>
+
+I18n.pluralizationRules['tr_TR'] = function(n) { return "other"; }

@@ -5,11 +5,11 @@ shared_examples "a generic error" do
   let(:result) { creator.create_errors_json(obj) }
 
   it "should have a result object" do
-    result.should be_present
+    expect(result).to be_present
   end
 
   it "has a generic error message" do
-    result[:errors].should == [I18n.t('js.generic_error')]
+    expect(result[:errors]).to eq([I18n.t('js.generic_error')])
   end
 end
 
@@ -37,17 +37,17 @@ describe JsonError do
 
   describe "with a string" do
     it "returns the string in the error format" do
-      creator.create_errors_json("test error").should == {errors: ["test error"]}
+      expect(creator.create_errors_json("test error")).to eq({errors: ["test error"]})
     end
   end
 
   describe "an activerecord objec with errors" do
     let(:invalid_user) { User.new }
     it "returns the errors correctly" do
-      invalid_user.should_not be_valid
+      expect(invalid_user).not_to be_valid
       result = creator.create_errors_json(invalid_user)
-      result.should be_present
-      result[:errors].should_not be_blank
+      expect(result).to be_present
+      expect(result[:errors]).not_to be_blank
     end
   end
 

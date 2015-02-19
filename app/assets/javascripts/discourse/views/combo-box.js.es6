@@ -63,16 +63,27 @@ export default Discourse.View.extend({
     this.rerender();
   }.observes('content.@each'),
 
-  didInsertElement: function() {
+  _initializeCombo: function() {
     var $elem = this.$(),
         self = this;
 
+    // Workaround for https://github.com/emberjs/ember.js/issues/9813
+    // Can be removed when fixed. Without it, the wrong option is selected
+    this.$('option').each(function(i, o) {
+      o.selected = !!$(o).attr('selected');
+    });
+
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
+    var castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
-      self.set('value', $(e.target).val());
+      var val = $(e.target).val();
+      if (val.length && castInteger) {
+        val = parseInt(val, 10);
+      }
+      self.set('value', val);
     });
-  },
+  }.on('didInsertElement'),
 
   willClearRender: function() {
     var elementId = "s2id_" + this.$().attr('id');

@@ -13,12 +13,12 @@ describe SearchObserver do
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
-    data.split(" ").length.should == 1
+    expect(data.split(" ").length).to eq(1)
 
     SearchObserver.update_posts_index(99, "你好世界", "", nil)
 
     row = get_row(99)
-    row.raw_data.split(' ').length.should == 2
+    expect(row.raw_data.split(' ').length).to eq(2)
   end
 
   it 'correctly indexes a post' do
@@ -28,13 +28,13 @@ describe SearchObserver do
 
     row = get_row(99)
 
-    row.raw_data.should == "This is a test"
-    row.locale.should == "en"
+    expect(row.raw_data).to eq("This is a test")
+    expect(row.locale).to eq("en")
 
     SearchObserver.update_posts_index(99, "tester", "", nil)
 
     row = get_row(99)
 
-    row.raw_data.should == "tester"
+    expect(row.raw_data).to eq("tester")
   end
 end

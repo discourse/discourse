@@ -1,6 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
 
-
 var ButtonBackBright = {
       classes: "btn-primary",
       action: "back",
@@ -22,14 +21,7 @@ var ButtonBackBright = {
       key: "errors.buttons.fixed"
     };
 
-/**
-  The controller for the nice error page
-
-  @class ExceptionController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
+// The controller for the nice error page
 export default ObjectController.extend({
   thrown: null,
   lastTransition: null,

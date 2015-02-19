@@ -5,6 +5,7 @@ require_dependency 'unread'
 require_dependency 'age_words'
 require_dependency 'configurable_urls'
 require_dependency 'mobile_detection'
+require_dependency 'category_badge'
 
 module ApplicationHelper
   include CurrentUser
@@ -111,7 +112,9 @@ module ApplicationHelper
 
     result << tag(:meta, name: 'twitter:card', content: "summary")
 
-    [:image, :url, :title, :description, 'image:width', 'image:height'].each do |property|
+    # I removed image related opengraph tags from here for now due to
+    # https://meta.discourse.org/t/x/22744/18
+    [:url, :title, :description].each do |property|
       if opts[property].present?
         escape = (property != :image)
         result << tag(:meta, {property: "og:#{property}", content: opts[property]}, nil, escape) << "\n"
@@ -151,5 +154,8 @@ module ApplicationHelper
     controller.class.name.split("::").first == "Admin" || session[:disable_customization]
   end
 
+  def category_badge(category, opts=nil)
+    CategoryBadge.html_for(category, opts).html_safe
+  end
 
 end

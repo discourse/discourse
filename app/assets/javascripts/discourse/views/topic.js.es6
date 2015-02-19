@@ -1,6 +1,8 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
+import { listenForViewEvent } from 'discourse/lib/app-events';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
-export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
+var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
@@ -13,7 +15,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   menuVisible: true,
   SHORT_POST: 1200,
 
-  categoryId: Em.computed.alias('topic.category.id'),
+  categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
 
   postStream: Em.computed.alias('controller.postStream'),
 
@@ -38,7 +40,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     this.bindScrolling({name: 'topic-view'});
 
     var self = this;
-    $(window).resize('resize.discourse-on-scroll', function() {
+    $(window).on('resize.discourse-on-scroll', function() {
       self.scrolled();
     });
 
@@ -129,7 +131,7 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
+      opts.catLink = categoryBadgeHTML(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }
@@ -157,3 +159,22 @@ export default Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     }
   }.property('topicTrackingState.messageCount')
 });
+
+function highlight(postNumber) {
+  var $contents = $('#post_' + postNumber +' .topic-body'),
+      origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+
+  $contents.data("orig-color", origColor)
+    .addClass('highlighted')
+    .stop()
+    .animate({ backgroundColor: origColor }, 2500, 'swing', function(){
+      $contents.removeClass('highlighted');
+      $contents.css({'background-color': ''});
+    });
+}
+
+listenForViewEvent(TopicView, 'post:highlight', function(postNumber) {
+  Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
+});
+
+export default TopicView;

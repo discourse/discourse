@@ -3,6 +3,7 @@
 </div>
 <div class="setting-value">
   {{combo-box valueAttribute="value" content=validValues value=value none=allowsNone}}
+  {{view.preview}}
   <div class='desc'>{{unbound description}}</div>
 </div>
 {{#if dirty}}
@@ -12,6 +13,6 @@
   </div>
 {{else}}
   {{#if overridden}}
-    <button class='btn' href='#' {{action "resetDefault" this}}><i class="fa fa-undo"></i>{{i18n admin.site_settings.reset}}</button>
+    <button class='btn' href='#' {{action "resetDefault" this}}><i class="fa fa-undo"></i>{{i18n 'admin.site_settings.reset'}}</button>
   {{/if}}
 {{/if}}

@@ -1,11 +1,3 @@
-/**
-  Represents an action taken by a staff member that has been logged.
-
-  @class StaffActionLog
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.StaffActionLog = Discourse.Model.extend({
   showFullDetails: false,
 

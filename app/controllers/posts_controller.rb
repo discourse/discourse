@@ -5,7 +5,7 @@ require_dependency 'distributed_memoizer'
 class PostsController < ApplicationController
 
   # Need to be logged in for all actions here
-  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown, :raw, :cooked]
+  before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
   skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
@@ -23,6 +23,33 @@ class PostsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def latest
+    params.permit(:before)
+    last_post_id = params[:before].to_i
+    last_post_id = Post.last.id if last_post_id <= 0
+
+    # last 50 post IDs only, to avoid counting deleted posts in security check
+    posts = Post.order(created_at: :desc)
+                .where('posts.id <= ?', last_post_id)
+                .where('posts.id > ?', last_post_id - 50)
+                .includes(topic: :category)
+                .includes(:user)
+                .limit(50)
+    # Remove posts the user doesn't have permission to see
+    # This isn't leaking any information we weren't already through the post ID numbers
+    posts = posts.reject { |post| !guardian.can_see?(post) }
+
+    counts = PostAction.counts_for(posts, current_user)
+
+    render_json_dump(serialize_data(posts,
+                                    PostSerializer,
+                                    scope: guardian,
+                                    root: 'latest_posts',
+                                    add_raw: true,
+                                    all_post_actions: counts)
+    )
   end
 
   def cooked
@@ -43,6 +70,8 @@ class PostsController < ApplicationController
       user = User.find(params[:user_id].to_i)
       request['u'] = user.username_lower if user
     end
+
+    guardian.ensure_can_see!(post)
     redirect_to post.url
   end
 
@@ -78,12 +107,15 @@ class PostsController < ApplicationController
   def create_post(params)
     post_creator = PostCreator.new(current_user, params)
     post = post_creator.create
+
     if post_creator.errors.present?
       # If the post was spam, flag all the user's posts as spam
       current_user.flag_linked_posts_as_spam if post_creator.spam?
       [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
 
     else
+      DiscourseEvent.trigger(:topic_created, post.topic, params, current_user) unless params[:topic_id]
+      DiscourseEvent.trigger(:post_created, post, params, current_user)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
       post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
       [true, MultiJson.dump(post_serializer)]
@@ -246,14 +278,16 @@ class PostsController < ApplicationController
 
   def bookmark
     post = find_post_from_params
-    if current_user
-      if params[:bookmarked] == "true"
-        PostAction.act(current_user, post, PostActionType.types[:bookmark])
-      else
-        PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
-      end
+
+    if params[:bookmarked] == "true"
+      PostAction.act(current_user, post, PostActionType.types[:bookmark])
+    else
+      PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end
-    render nothing: true
+
+    tu = TopicUser.get(post.topic, current_user)
+
+    render_json_dump(topic_bookmarked: tu.try(:bookmarked))
   end
 
   def wiki
@@ -380,7 +414,6 @@ class PostsController < ApplicationController
     permitted = [
       :raw,
       :topic_id,
-      :title,
       :archetype,
       :category,
       :target_usernames,
@@ -400,7 +433,6 @@ class PostsController < ApplicationController
       permitted << :embed_url
     end
 
-
     params.require(:raw)
     result = params.permit(*permitted).tap do |whitelisted|
       whitelisted[:image_sizes] = params[:image_sizes]
@@ -413,6 +445,16 @@ class PostsController < ApplicationController
       params.permit(:is_warning)
       result[:is_warning] = (params[:is_warning] == "true")
     end
+
+    PostRevisor.tracked_topic_fields.keys.each do |f|
+      params.permit(f => [])
+      result[f] = params[f] if params.has_key?(f)
+    end
+
+    # Stuff we can use in spam prevention plugins
+    result[:ip_address] = request.remote_ip
+    result[:user_agent] = request.user_agent
+    result[:referrer] = request.env["HTTP_REFERER"]
 
     result
   end

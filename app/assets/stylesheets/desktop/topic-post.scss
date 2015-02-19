@@ -10,7 +10,7 @@
 }
 
 h1 .topic-statuses .topic-status i {
-  font-size: 20px;
+  font-size: 0.8em;
   vertical-align: middle;
 }
 
@@ -30,25 +30,18 @@ h1 .topic-statuses .topic-status i {
   }
 
 .reply-to-tab {
-  position: absolute;
-  right: 420px;
   z-index: 400;
-  padding: 13px 6px 5px;
-  font-size: 12px;
+  font-size: 0.929em;
+  float: right;
+  margin: 1px 25px 0 0;
   color: scale-color($primary, $lightness: 50%);
-
-}
-
-.via-email .reply-to-tab {
-  padding: 13px 15px 5px;
 }
 
 .gutter {
   .reply-new {
     .discourse-no-touch & {
-     opacity:0;
-     @include transition(opacity linear 0.4s);
-
+      opacity:0;
+      transition: opacity 0.7s ease-in-out;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -57,7 +50,7 @@ h1 .topic-statuses .topic-status i {
 div.actions, .post-actions {
     .discourse-no-touch & {
       opacity: 0.2;
-      @include transition(opacity linear 0.4s);
+      transition: opacity 0.7s ease-in-out;
     }
     .discourse-touch & {opacity: 1;}
   }
@@ -88,7 +81,7 @@ nav.post-controls {
 
   span.badge-posts {
     margin-right: 5px;
-    @include transition(all linear 0.15s);
+    transition: all linear 0.15s;
 
   }
 
@@ -105,7 +98,6 @@ nav.post-controls {
   .show-replies {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
     padding: 8px 15px;
-    padding-bottom: 20px;
     margin-left: 0;
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
@@ -141,13 +133,14 @@ nav.post-controls {
   }
 
   button {
-    font-size: 16px;
+    font-size: 1.143em;
     padding: 8px 10px;
     vertical-align: top;
     background: transparent;
     border: none;
     margin-left: 3px;
-    @include transition(all linear 0.15s);
+    transition: all linear 0.15s;
+
          &:hover {
           background: scale-color-diff();
           color: $primary;
@@ -236,25 +229,22 @@ nav.post-controls {
 
 .embedded-posts {
   background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-
   h1, h2, h3 { margin: 10px 0; }
   a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
     background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-    width: 87%;
-    padding-left: 1%;
-    padding-right: 1%;
-    border-top: none;
+    box-sizing: border-box;
+    width: calc(100% - 60px); // [100% - .topic-avatar width]
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
+    padding: 10px 15px 15px 15px;
   }
 
   .topic-avatar {
-     width: 45px;
-     margin: 0 5px 0 15px;
-     border: none;
+    padding-left: 15px;
+    padding-top: 0;
   }
 
   // bottom means "reply expansion" below a post
@@ -264,9 +254,11 @@ nav.post-controls {
       opacity: 0;
     }
   }
-  &.bottom .arrow { float: right; }
   &.bottom {
     margin-top: -11px;
+    .row {
+      padding-top: 7px;
+    }
   }
 
   // top means "in reply to expansion" above a post
@@ -280,10 +272,9 @@ nav.post-controls {
   }
 
   .post-date { color: scale-color($primary, $lightness: 50%); }
-  .fa-arrow-up { margin-left: 5px; }
+  .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
   .row {
     border-top: 1px solid darken(scale-color-diff(), 10%);
-    padding-top: 7px;
   }
   .reply:first-of-type .row { border-top: none; }
 
@@ -298,21 +289,13 @@ nav.post-controls {
   .topic-meta-data h5 {
     position: absolute;
     z-index: 1;
-    font-size: 13px;
+    font-size: 0.929em;
     a {
       font-weight: bold;
       color: scale-color($primary, $lightness: 30%);
     }
   }
   .arrow {color: scale-color($primary, $lightness: 50%);}
-}
-
-.bottom-round nav.post-controls .show-replies {
-  background: scale-color-diff();
-  margin-bottom: 0;
-  padding-bottom: 8px;
-  &:hover {background: scale-color-diff();
-  }
 }
 
 .post-action {
@@ -345,7 +328,7 @@ a.star {
     margin: 1px 0 2px 0;
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -355,7 +338,7 @@ a.star {
   }
 
   span.domain {
-    font-size: 10px;
+    font-size: 0.714em;
     color: scale-color($primary, $lightness: 50%);
   }
 
@@ -454,7 +437,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.286em;
         line-height: 52px;
       }
     }
@@ -471,7 +454,7 @@ a.star {
     outline: 0;
     margin-bottom: 5px;
     margin-right: 10px;
-    .fa-star {margin-right: 5px;}
+    .fa-bookmark.bookmarked { color: $tertiary; }
   }
 }
 
@@ -489,14 +472,24 @@ a.star {
     }
   }
   table {
-    box-shadow: none;
-    border-radius: 0;
+    table-layout: fixed;
     margin-top: 10px;
   }
+  .topics {
+    padding-bottom: 15px;
+  }
+  // this forces category to take less space in suggested topics
+  // as the poster list is not present at all there.
+  th.category {
+    width: 150px;
+  }
+}
 
-   .title {
-    font-size: 14px; line-height: 8px;
-   }
+#suggested-topics .topic-statuses .topic-status {
+  padding: 0;
+  i {
+    font-size:15px;
+  }
 }
 
 span.post-count {
@@ -517,11 +510,16 @@ iframe {
   max-width: 100%;
 }
 
-@keyframes fadein {
-    from {opacity: 0;}
-    to {opacity: 1;}
+video {
+  max-height: 500px;
 }
+
 @-webkit-keyframes fadein {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadein {
     from {opacity: 0;}
     to {opacity: 1;}
 }
@@ -529,11 +527,10 @@ iframe {
 .extra-info-wrapper {
   overflow: hidden;
 
-.star, .badge-wrapper, i,  .topic-link:not(.loading) {
-  -webkit-animation: fadein .7s;
-  animation-duration: .7s;
-  animation-name: fadein;
-}
+  .star, .badge-wrapper, i,  .topic-link:not(.loading) {
+    -webkit-animation: fadein .7s;
+    animation: fadein .7s;
+  }
 
   .topic-statuses {
     i  { color: $header_primary; }
@@ -558,13 +555,6 @@ iframe {
     line-height: 1.3em;
   }
 
-  a.star {
-    margin: 0 7px 20px 2px;
-    font-size: 17px;
-    color: dark-light-diff($secondary, $primary, 80%, -20%) !important;
-  }
-  a.star.starred {color: $danger !important;}
-
   .topic-statuses {
     margin-top: -2px;
   }
@@ -575,7 +565,6 @@ iframe {
 
     .badge-category {
       color: $header_primary;
-      padding: 0 0 0 3px;
       margin-right: 5px;
     }
 
@@ -588,10 +577,10 @@ iframe {
 }
 
 /* override docked header CSS for topics with categories */
-.extra-info.has-category {
+.extra-info.two-rows {
   h1 {
     line-height: 1.1em;
-    margin: 0 0 2px 0;
+    margin: 0;
   }
 }
 
@@ -615,12 +604,6 @@ a.mention {
   background: scale-color-diff();
 }
 
-
-.modal-body {
-  input[type=text] {
-    font-size: 16px;
-  }
-}
 
 .moderator {
   .topic-body {
@@ -657,7 +640,7 @@ a.mention {
 }
 
 .deleted-user-avatar {
-  font-size: 36px;
+  font-size: 2.571em;
 }
 
 .info-line {
@@ -674,16 +657,6 @@ blockquote {
   padding: 12px;
   a.mention {background: darken(scale-color-diff(), 10%);}
 }
-
-// we assume blockquotes have their own margins, so all blockquotes
-// will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
-}
-
 
 /* quotes with attribution */
 .quote {
@@ -717,7 +690,7 @@ blockquote > *:last-child {
 
   ul {margin: 0;}
   li {margin-bottom: 10px;}
-  i {font-size: 12px;}
+  i {font-size: 0.857em;}
 
   .reply-new {
     padding-left: 27px;
@@ -764,12 +737,11 @@ $topic-avatar-width: 45px;
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
-
   }
 }
 .topic-avatar {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
-  padding-top: 16px;
+  padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
   position: relative;
@@ -817,8 +789,8 @@ $topic-avatar-width: 45px;
   border: 1px solid scale-color-diff();
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-clip: padding-box;
-  span {font-size: 12px;}
-  .title {font-weight: bold; display: block; font-size: 14px;}
+  span {font-size: 0.857em;}
+  .title {font-weight: bold; display: block; font-size: 1em;}
 }
 .dropdown-menu a {
   display: block;
@@ -827,7 +799,7 @@ $topic-avatar-width: 45px;
   font-weight: normal;
   line-height: 18px;
   color: $primary;
-  @include transition(all linear .15s);
+  transition: all linear .15s;
 
   & > div {
     margin-left: 26px;
@@ -853,7 +825,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .icon {
   margin-top: 3px;
   float: left;
-  font-size: 18px;
+  font-size: 1.286em;
 }
 
 .open > .dropdown-menu {
@@ -874,8 +846,6 @@ $topic-avatar-width: 45px;
   padding: 5px;
   margin-bottom: 5px;
 
-
-
   button {
     width: 180px;
     margin: 4px auto;
@@ -890,14 +860,14 @@ $topic-avatar-width: 45px;
     margin-top: 10px;
   }
   p {
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 0 0 10px 0;
   }
   p.cancel {
     margin: 10px 0 0 0;
   }
   h3 {
-    font-size: 25px;
+    font-size: 1.786em;
     color: $primary;
     margin-bottom: 5px;
     i {
@@ -985,7 +955,7 @@ a.attachment:before {
     position: absolute;
     left: 767px;
     color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
-    font: 90px/1 FontAwesome;
+    font: 6.429em/1 FontAwesome;
     content: "\f014";
     z-index: -5;
 }
@@ -1004,7 +974,7 @@ a.attachment:before {
  .post-info  {
    display: inline-block;
    float: right;
-   font-size: 12px;
+   font-size: 0.929em;
    margin-top: 1px;
    a {color: scale-color($primary, $lightness: 50%);}
  }
@@ -1024,39 +994,17 @@ span.highlighted {
   position: absolute;
   right: -2px;
   top: 13px;
-  font-size: 8px;
+  font-size: 0.571em;
 }
 
 .read-state.read {
   opacity: 0;
-  @include transition(opacity ease-out 1s);
-
+  transition: opacity ease-out 1s;
 }
 
 
 /* Tablet (portrait) ----------- */
 
-@media all
-and (max-width : 1140px) {
-  .post-cloak .reply-to-tab {
-    right: 320px;
-  }
-}
-
-
-@media all
-and (max-width : 975px) {
-  .post-cloak .reply-to-tab {
-    right: 300px;
-  }
-}
-
-@media all
-and (max-width : 940px) {
-  .post-cloak .reply-to-tab {
-    right: 250px;
-  }
-}
 
 @media all
 and (max-width : 870px) {
@@ -1066,7 +1014,7 @@ and (max-width : 870px) {
     }
 
   .topic-avatar {
-    width: 5%;
+    width: 45px;
   }
 
   .post-cloak .reply-to-tab {
@@ -1074,16 +1022,31 @@ and (max-width : 870px) {
     }
 
   .topic-body {
-      width: 91%;
+      box-sizing: border-box;
+      width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
+
       padding-left: 2%;
     }
 
   .embedded-posts {
     // top means "in reply to expansion" above a post
     &.top {
-      margin-left: 6%;
-      width: 91%;
+      width: calc(100% - 56px); // [100% - margin-left]
     }
+  }
+
+}
+
+/* below standard tablet portrait ----------- */
+
+@media all
+and (max-width : 767px) {
+
+  .reply-to-tab {
+    span {display: none;}
+  }
+  .names {
+    span {display: block;}
   }
 
 }

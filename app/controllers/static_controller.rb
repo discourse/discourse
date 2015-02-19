@@ -90,7 +90,7 @@ class StaticController < ApplicationController
     expires_in 1.year, public: true
 
     response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Access-Control-Allow-Origin"] = params[:origin]
+    response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
 
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate

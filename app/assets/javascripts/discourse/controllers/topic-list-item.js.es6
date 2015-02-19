@@ -1,14 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  Handles displaying of a topic as a list item
-
-  @class TopicListItemController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
-export default Ember.ObjectController.extend({
+// Handles displaying of a topic as a list item
+export default ObjectController.extend({
   needs: ['discovery/topics'],
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),

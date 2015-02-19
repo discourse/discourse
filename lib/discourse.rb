@@ -56,7 +56,7 @@ module Discourse
   class CSRF < Exception; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :starred, :read, :posted]
+    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
   end
 
   def self.feed_filters
@@ -84,8 +84,12 @@ module Discourse
     @plugins.each { |plugin| plugin.activate! }
   end
 
+  def self.disabled_plugin_names
+    plugins.select {|p| !p.enabled?}.map(&:name)
+  end
+
   def self.plugins
-    @plugins
+    @plugins ||= []
   end
 
   def self.assets_digest
@@ -114,12 +118,10 @@ module Discourse
 
   def self.auth_providers
     providers = []
-    if plugins
-      plugins.each do |p|
-        next unless p.auth_providers
-        p.auth_providers.each do |prov|
-          providers << prov
-        end
+    plugins.each do |p|
+      next unless p.auth_providers
+      p.auth_providers.each do |prov|
+        providers << prov
       end
     end
     providers
@@ -168,13 +170,24 @@ module Discourse
   end
 
   def self.enable_readonly_mode
-    $redis.set readonly_mode_key, 1
+    $redis.set(readonly_mode_key, 1)
     MessageBus.publish(readonly_channel, true)
+    keep_readonly_mode
     true
   end
 
+  def self.keep_readonly_mode
+    # extend the expiry by 1 minute every 30 seconds
+    Thread.new do
+      while readonly_mode?
+        $redis.expire(readonly_mode_key, 1.minute)
+        sleep 30.seconds
+      end
+    end
+  end
+
   def self.disable_readonly_mode
-    $redis.del readonly_mode_key
+    $redis.del(readonly_mode_key)
     MessageBus.publish(readonly_channel, false)
     true
   end
@@ -276,18 +289,29 @@ module Discourse
     nil
   end
 
-  def self.start_connection_reaper(interval=30, age=30)
+  def self.start_connection_reaper
+    return if GlobalSetting.connection_reaper_age < 1 ||
+              GlobalSetting.connection_reaper_interval < 1
+
     # this helps keep connection counts in check
     Thread.new do
       while true
-        sleep interval
-        pools = []
-        ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
-
-        pools.each do |pool|
-          pool.drain(age.seconds)
+        begin
+          sleep GlobalSetting.connection_reaper_interval
+          reap_connections(GlobalSetting.connection_reaper_age)
+        rescue => e
+          Discourse.handle_exception(e, {message: "Error reaping connections"})
         end
       end
+    end
+  end
+
+  def self.reap_connections(age)
+    pools = []
+    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
+
+    pools.each do |pool|
+      pool.drain(age.seconds)
     end
   end
 

@@ -3,7 +3,7 @@
   padding: 5px 15px;
   color: $primary;
   text-align: center;
-  margin: 0 10px;
+  margin: 10px 0;
 }
 
 .topic-post {
@@ -28,7 +28,7 @@ nav.post-controls {
 
 button {
   border: none;
-  font-size: 17px;
+  font-size: 1.214em;
   padding: 8px 10px;
   vertical-align: top;
   background: transparent;
@@ -147,7 +147,6 @@ a.star {
 .topic-post .boxed .contents {
   float: none;
   padding-top: 5px;
-  padding-bottom: 0px;
   clear: both;
   position: relative;
 }
@@ -167,7 +166,7 @@ a.star {
     margin: 0 0 3px 0;
     color: $primary;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -282,7 +281,7 @@ a.star {
       }
       .fa {
         margin: 0;
-        font-size: 18px;
+        font-size: 1.286em;
         line-height: 52px;
       }
     }
@@ -292,6 +291,7 @@ a.star {
 #topic-footer-buttons {
   border-top: 1px solid scale-color-diff();
   padding: 20px 10px 0 10px;
+  .fa-bookmark.bookmarked { color: $tertiary; }
 }
 
 /* this is to force the drop-down notification state description para below the button */
@@ -308,14 +308,9 @@ a.star {
     }
 
    a.badge-category, a.badge-category-parent {
-    font-size: 10px;
+    font-size: 0.714em;
     vertical-align: top;
     }
-
-   .title {
-    font-size: 14px; line-height: 8px;
-  }
-
 }
 
 
@@ -382,24 +377,42 @@ iframe {
   position: relative;
 }
 
-.modal-body {
-  input[type=text] {
-    font-size: 16px;
-    display: block;
-    margin-top: 10px;
-  }
-}
-
 #share-link {
   width: 290px;
+  left: auto;
+  right: 4px;
 }
 
 #selected-posts {
-  padding-left: 20px;
+  float: left;
+  width: 97%;
+  padding-left: 3%;
+  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
   .btn {
     margin-bottom: 10px;
+    color: $secondary;
+    background: scale-color($tertiary, $lightness: 50%);
+    clear: both;
+  }
+  p {
+    clear: both;
   }
 }
+
+// hide the full set of selection buttons on mobile
+.select-posts button { display: none; }
+
+// unhide the simple "select just this post" button
+button.select-post {
+  display: inline-block;
+  position: absolute;
+  z-index: 401; // 400 is the reply-to tab
+  left: 200px;
+  background-color: scale-color($tertiary, $lightness: 50%);
+  color: $secondary;
+  padding: 5px;
+}
+
 
 .post-select {
   float: right;
@@ -422,7 +435,7 @@ background-color: scale-color($danger, $lightness: 75%);
 }
 
 .deleted-user-avatar {
-  font-size: 36px;
+  font-size: 2.571em;
 }
 
 span.btn-text {display: none;}
@@ -432,15 +445,6 @@ blockquote {
   /* leave browser defaults for top and bottom here */
   margin-left: 0;
   margin-right: 0;
-}
-
-// we assume blockquotes have their own margins, so all blockquotes
-// will remove margins from first (top) and last (bottom) child elements
-blockquote > *:first-child {
-  margin-top: 0 !important;
-}
-blockquote > *:last-child {
-  margin-bottom: 0 !important;
 }
 
 .gutter { display: none; }
@@ -458,24 +462,25 @@ span.highlighted {
 .topic-avatar {
   float: left;
   position: relative;
+  z-index:999; /* must render on top of topic-body + topic-meta-data, otherwise not tappable */
 }
 
 .topic-meta-data {
-  margin-left: 60px;
   white-space: nowrap;
   position: absolute;
-  width: 80%;
+  width: 100%;
   left: 0px;
   .names {
     margin: 5px 0 0 5px;
     line-height: 17px;
+    padding-left: 60px;
     span {
       display: block;
     }
   }
   .post-info {
     float: right;
-    font-size: 12px;
+    font-size: 0.929em;
     margin: 4px 10px 0 0;
     .edits { margin-right: 5px; }
   }
@@ -495,3 +500,4 @@ span.highlighted {
 .read-state {
   display: none;
 }
+

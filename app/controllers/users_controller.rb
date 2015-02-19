@@ -30,6 +30,7 @@ class UsersController < ApplicationController
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
     respond_to do |format|
       format.html do
+        @restrict_fields = guardian.restrict_user_fields?(@user)
         store_preloaded("user_#{@user.username}", MultiJson.dump(user_serializer))
       end
 
@@ -65,7 +66,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:user_fields].present?
-      params[:custom_fields] ||= {}
+      params[:custom_fields] = {} unless params[:custom_fields].present?
       UserField.where(editable: true).each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
@@ -87,10 +88,14 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    result = user.change_username(params[:new_username])
+    # TODO proper error surfacing (result is a Model#save call)
+    result = user.change_username(params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
-    render nothing: true
+    render json: {
+      id: user.id,
+      username: user.username
+    }
   end
 
   def check_emails
@@ -213,20 +218,19 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      if params[:user_fields].blank? && UserField.where(required: true).exists?
-        return fail_with("login.missing_user_field")
-      else
-        fields = user.custom_fields
-        user_fields.each do |f|
-          field_val = params[:user_fields][f.id.to_s]
-          if field_val.blank?
-            return fail_with("login.missing_user_field") if f.required?
-          else
-            fields["user_field_#{f.id}"] = field_val
-          end
+      field_params = params[:user_fields] || {}
+      fields = user.custom_fields
+
+      user_fields.each do |f|
+        field_val = field_params[f.id.to_s]
+        if field_val.blank?
+          return fail_with("login.missing_user_field") if f.required?
+        else
+          fields["user_field_#{f.id}"] = field_val
         end
-        user.custom_fields = fields
       end
+
+      user.custom_fields = fields
     end
 
     authentication = UserAuthenticator.new(user, session)
@@ -313,7 +317,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def logon_after_password_reset
@@ -364,18 +368,18 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('change_email.error')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def account_created
     @message = session['user_created_message']
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def activate_account
     expires_now
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def perform_account_activation
@@ -393,7 +397,7 @@ class UsersController < ApplicationController
     else
       flash[:error] = I18n.t('activation.already_done')
     end
-    render layout: 'no_js'
+    render layout: 'no_ember'
   end
 
   def send_activation_email
@@ -434,40 +438,15 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  # [LEGACY] avatars in quotes/oneboxes might still be pointing to this route
-  # fixing it requires a rebake of all the posts
-  def avatar
-    user = User.find_by(username_lower: params[:username].downcase)
-    if user.present?
-      size = determine_avatar_size(params[:size])
-      url = user.avatar_template.gsub("{size}", size.to_s)
-      expires_in 1.day
-      redirect_to url
-    else
-      raise ActiveRecord::RecordNotFound
-    end
-  end
-
-  def determine_avatar_size(size)
-    size = size.to_i
-    size = 64 if size == 0
-    size = 10 if size < 10
-    size = 128 if size > 128
-    size
-  end
-
-  # LEGACY: used by the API
-  def upload_avatar
-    params[:image_type] = "avatar"
-    upload_user_image
-  end
-
   def upload_user_image
     params.require(:image_type)
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
     file = params[:file] || params[:files].first
+
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
     begin
       image = build_user_image_from(file)
@@ -504,7 +483,7 @@ class UsersController < ApplicationController
     end
     user.save!
 
-    render nothing: true
+    render json: success_json
   end
 
   def destroy_user_image
@@ -539,6 +518,19 @@ class UsersController < ApplicationController
     end
 
     render json: success_json
+  end
+
+  def staff_info
+    @user = fetch_user_from_params
+    guardian.ensure_can_see_staff_info!(@user)
+
+    result = {}
+
+    %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
+      result[info] = @user.send(info)
+    end
+
+    render json: result
   end
 
   private

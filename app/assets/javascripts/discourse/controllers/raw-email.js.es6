@@ -1,16 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  This controller handles displaying of raw email
-
-  @class RawEmailController
-  @extends ObjectController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
+// This controller handles displaying of raw email
 export default ObjectController.extend(ModalFunctionality, {
   rawEmail: "",
 

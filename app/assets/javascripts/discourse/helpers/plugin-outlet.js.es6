@@ -39,18 +39,35 @@
        Nobody says hello :'(
      {{/plugin-outlet}}
    ```
+
+   ## Disabling
+
+   If a plugin returns a disabled status, the outlets will not be wired up for it.
+   The list of disabled plugins is returned via the `Site` singleton.
+
 **/
 
 var _connectorCache;
 
 function findOutlets(collection, callback) {
-  Ember.keys(collection).forEach(function(i) {
-    if (i.indexOf("/connectors/") !== -1) {
-      var segments = i.split("/"),
+
+  var disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
+
+  Ember.keys(collection).forEach(function(res) {
+    if (res.indexOf("/connectors/") !== -1) {
+      // Skip any disabled plugins
+      for (var i=0; i<disabledPlugins.length; i++) {
+        if (res.indexOf("/" + disabledPlugins[i] + "/") !== -1) {
+          return;
+        }
+      }
+
+      var segments = res.split("/"),
           outletName = segments[segments.length-2],
           uniqueName = segments[segments.length-1];
 
-      callback(outletName, i, uniqueName);
+
+      callback(outletName, res, uniqueName);
     }
   });
 }
@@ -59,54 +76,50 @@ function buildConnectorCache() {
   _connectorCache = {};
 
   var uniqueViews = {};
-  findOutlets(requirejs._eak_seen, function(outletName, idx, uniqueName) {
+  findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var viewClass = require(idx, null, null, true).default;
+    var viewClass = require(resource, null, null, true).default;
     uniqueViews[uniqueName] = viewClass;
     _connectorCache[outletName].pushObject(viewClass);
   });
 
-  findOutlets(Ember.TEMPLATES, function(outletName, idx, uniqueName) {
+  findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var mixin = {templateName: idx.replace('javascripts/', '')},
+    var mixin = {templateName: resource.replace('javascripts/', '')},
         viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
       // We are going to add it back with the proper template
       _connectorCache[outletName].removeObject(viewClass);
     } else {
-      viewClass = Em.View;
+      viewClass = Em.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
     }
     _connectorCache[outletName].pushObject(viewClass.extend(mixin));
   });
-
 }
 
 export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
-  var self = this;
   if (_connectorCache[connectionName]) {
-    var view,
-        childViews = _connectorCache[connectionName].map(function(vc) {
-          return vc.create({ context: self });
-        });
+    var viewClass;
+    var childViews = _connectorCache[connectionName];
 
     // If there is more than one view, create a container. Otherwise
     // just shove it in.
     if (childViews.length > 1) {
-      view = Ember.ContainerView.extend({
+      viewClass = Ember.ContainerView.extend({
         childViews: childViews
       });
     } else {
-      view = childViews[0];
+      viewClass = childViews[0];
     }
-    delete options.fn;  // we don't need the default template since we have a connector
-    return Ember.Handlebars.helpers.view.call(this, view, options);
-  } else if (options.fn) {
 
+    delete options.fn;  // we don't need the default template since we have a connector
+    return Ember.Handlebars.helpers.view.call(this, viewClass, options);
+  } else if (options.fn) {
     // If a block is passed, render its content.
     return Ember.Handlebars.helpers.view.call(this,
               Ember.View.extend({

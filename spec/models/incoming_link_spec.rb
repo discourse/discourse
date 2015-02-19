@@ -15,14 +15,14 @@ describe IncomingLink do
       it "increases the incoming link counts" do
         link = incoming_link
 
-        link.domain.should == "twitter.com"
-        link.post_id.should == post.id
+        expect(link.domain).to eq "twitter.com"
+        expect(link.post_id).to eq post.id
 
         post.reload
-        post.incoming_link_count.should == 1
+        expect(post.incoming_link_count).to eq 1
 
         topic.reload
-        topic.incoming_link_count.should == 1
+        expect(topic.incoming_link_count).to eq 1
       end
     end
 
@@ -63,22 +63,22 @@ describe IncomingLink do
 
     it "does nothing if referer is empty" do
       add(post_id: 1)
-      IncomingLink.count.should == 0
+      expect(IncomingLink.count).to eq 0
     end
 
     it "does nothing if referer is same as host" do
       add(post_id: 1, host: 'somesite.com', referer: 'http://somesite.com')
-      IncomingLink.count.should == 0
+      expect(IncomingLink.count).to eq 0
     end
 
     it "tracks not visits for invalid referers" do
       add(post_id: 1, referer: 'bang bang bang')
-      IncomingLink.count.should == 0
+      expect(IncomingLink.count).to eq 0
     end
 
     it "expects to be called with referer and user id" do
       add(host: "test.com", referer: 'http://some.other.site.com', post_id: 1)
-      IncomingLink.count.should == 1
+      expect(IncomingLink.count).to eq 1
     end
 
     it "is able to look up user_id and log it from the GET params" do
@@ -86,7 +86,7 @@ describe IncomingLink do
       add(host: 'test.com', username: "bob", post_id: 1)
 
       first = IncomingLink.first
-      first.user_id.should == user.id
+      expect(first.user_id).to eq user.id
     end
   end
 

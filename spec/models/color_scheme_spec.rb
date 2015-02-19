@@ -11,10 +11,10 @@ describe ColorScheme do
   describe "new" do
     it "can take colors" do
       c = described_class.new(valid_params)
-      c.colors.size.should == valid_colors.size
-      c.colors.first.should be_a(ColorSchemeColor)
+      expect(c.colors.size).to eq valid_colors.size
+      expect(c.colors.first).to be_a(ColorSchemeColor)
       expect {
-        c.save.should == true
+        expect(c.save).to eq true
       }.to change { ColorSchemeColor.count }.by(valid_colors.size)
     end
   end
@@ -32,22 +32,22 @@ describe ColorScheme do
 
     it "creates a new color scheme" do
       c = described_class.create_from_base(name: 'Yellow', colors: {first_one: 'FFFF00', third_one: 'F00D33'})
-      c.colors.size.should == base_colors.size
+      expect(c.colors.size).to eq base_colors.size
       first  = c.colors.find {|x| x.name == 'first_one'}
       second = c.colors.find {|x| x.name == 'second_one'}
       third  = c.colors.find {|x| x.name == 'third_one'}
-      first.hex.should == 'FFFF00'
-      second.hex.should == base_colors[:second_one]
-      third.hex.should == 'F00D33'
+      expect(first.hex).to eq 'FFFF00'
+      expect(second.hex).to eq base_colors[:second_one]
+      expect(third.hex).to eq 'F00D33'
     end
 
     context "hex_for_name without anything enabled" do
       it "returns nil for a missing attribute" do
-        described_class.hex_for_name('undefined').should == nil
+        expect(described_class.hex_for_name('undefined')).to eq nil
       end
 
       it "returns the base color for an attribute" do
-        described_class.hex_for_name('second_one').should == base_colors[:second_one]
+        expect(described_class.hex_for_name('second_one')).to eq base_colors[:second_one]
       end
     end
   end
@@ -65,14 +65,14 @@ describe ColorScheme do
 
   describe "#enabled" do
     it "returns nil when there is no enabled record" do
-      described_class.enabled.should == nil
+      expect(described_class.enabled).to eq nil
     end
 
     it "returns the enabled color scheme" do
-      described_class.hex_for_name('$primary_background_color').should == nil
+      expect(described_class.hex_for_name('$primary_background_color')).to eq nil
       c = described_class.create(valid_params.merge(enabled: true))
-      described_class.enabled.id.should == c.id
-      described_class.hex_for_name('$primary_background_color').should == "FFBB00"
+      expect(described_class.enabled.id).to eq c.id
+      expect(described_class.hex_for_name('$primary_background_color')).to eq "FFBB00"
     end
   end
 end

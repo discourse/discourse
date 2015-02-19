@@ -1,16 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  Modal related to merging of topics
-
-  @class MergeTopicController
-  @extends ObjectController
-  @namespace Discourse
-  @uses ModalFunctionality
-  @module Discourse
-**/
+// Modal related to merging of topics
 export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 

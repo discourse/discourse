@@ -4,7 +4,7 @@
    font-weight: bold;
  }
  span {
-   font-size: 13px;
+   font-size: 0.929em;
    padding-right: 8px;
    display: inline-block;
    max-width: 280px;
@@ -33,10 +33,18 @@
   a { word-wrap: break-word; }
 }
 
+
+.cooked, #wmd-preview {
+  video {
+    max-width: 100%;
+  }
+}
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
+
+  .badge-wrapper { margin-left: 5px; }
 
   .title {
     border-left: 5px solid darken(scale-color-diff(), 10%);
@@ -47,6 +55,7 @@ aside.quote {
     /* blockquote is underneath this and has top margin */
     .avatar { margin-right: 7px; }
     img { margin-top: -4px; }
+    @include unselectable;
   }
 
   // blockquote is docked within aside for content
@@ -118,14 +127,20 @@ aside.quote {
 }
 
 .wiki .topic-body {
-  background-color: scale-color($wiki, $lightness: 95%);
+  background-color: dark-light-diff($wiki, $secondary, 95%, -50%);
+}
+
+// this ensures consistent top margin on topic posts even if the first line of a post
+// is a top-margin-less element like a list or image.
+.topic-body .contents {
+  margin-top: 15px;
 }
 
 .post-info {
   &.wiki, &.via-email {
     margin-right: 5px;
     i.fa {
-      font-size: 14px;
+      font-size: 1em;
     }
   }
   &.wiki {
@@ -139,7 +154,6 @@ aside.quote {
     cursor: pointer;
   }
 }
-
 
 pre {
   code {
@@ -160,10 +174,19 @@ kbd
   box-shadow: 0 1px 0 rgba(0,0,0, .8);
   color: $primary;
   display: inline-block;
-  font-size: 12px;
+  font-size: 0.857em;
   line-height: 1.4;
   margin: 0 .1em;
   padding: .1em .6em;
 
   * * { display: none; }
+}
+
+// we assume blockquotes have their own margins, so all blockquotes
+// will remove margins from first (top) and last (bottom) child elements
+blockquote > *:first-child {
+  margin-top: 0 !important;
+}
+blockquote > *:last-child {
+  margin-bottom: 0 !important;
 }

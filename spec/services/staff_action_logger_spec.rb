@@ -33,6 +33,20 @@ describe StaffActionLogger do
     end
   end
 
+  describe "log_show_emails" do
+    it "logs the user history" do
+      -> { logger.log_show_emails([admin]) }.should change(UserHistory, :count).by(1)
+    end
+
+    it "doesn't raise an exception with nothing to log" do
+      -> { logger.log_show_emails([]) }.should_not raise_error
+    end
+
+    it "doesn't raise an exception with nil input" do
+      -> { logger.log_show_emails(nil) }.should_not raise_error
+    end
+  end
+
   describe 'log_post_deletion' do
     let(:deleted_post) { Fabricate(:post) }
 
@@ -218,6 +232,36 @@ describe StaffActionLogger do
       log_record.should be_valid
       log_record.target_user.should == user
       log_record.details.should == badge.name
+    end
+  end
+
+  describe 'log_roll_up' do
+    let(:subnets) { ["1.2.3.0/24", "42.42.42.0/24"] }
+    subject(:log_roll_up) { described_class.new(admin).log_roll_up(subnets) }
+
+    it 'creates a new UserHistory record' do
+      log_record = logger.log_roll_up(subnets)
+      log_record.should be_valid
+      log_record.details.should == subnets.join(", ")
+    end
+  end
+
+  describe 'log_custom' do
+    it "raises an error when `custom_type` is missing" do
+      expect { logger.log_custom(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates the UserHistory record" do
+      logged = logger.log_custom('clicked_something', {
+        evil: 'trout',
+        clicked_on: 'thing',
+        topic_id: 1234
+      })
+      logged.should be_valid
+      logged.details.should == "evil: trout\nclicked_on: thing"
+      logged.action.should == UserHistory.actions[:custom_staff]
+      logged.custom_type.should == 'clicked_something'
+      logged.topic_id.should === 1234
     end
   end
 end

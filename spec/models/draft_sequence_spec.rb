@@ -3,12 +3,12 @@ require 'spec_helper'
 describe DraftSequence do
   it 'should produce next sequence for a key' do
     u = Fabricate(:user)
-    DraftSequence.next!(u, 'test').should == 1
-    DraftSequence.next!(u, 'test').should == 2
+    expect(DraftSequence.next!(u, 'test')).to eq 1
+    expect(DraftSequence.next!(u, 'test')).to eq 2
   end
 
   it 'should return 0 by default' do
     u = Fabricate(:user)
-    DraftSequence.current(u, 'test').should == 0
+    expect(DraftSequence.current(u, 'test')).to eq 0
   end
 end

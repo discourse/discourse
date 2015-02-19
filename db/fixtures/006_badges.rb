@@ -238,6 +238,18 @@ like_badges.each do |spec|
   end
 end
 
+Badge.seed do |b|
+  b.id = Badge::OneYearAnniversary
+  b.default_name = "Anniversary"
+  b.default_icon = "fa-clock-o"
+  b.badge_type_id = BadgeType::Silver
+  b.query = Badge::Queries::OneYearAnniversary
+  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::None
+  b.auto_revoke = false
+  b.system = true
+end
+
 Badge.where("NOT system AND id < 100").each do |badge|
   new_id = [Badge.maximum(:id) + 1, 100].max
   old_id = badge.id

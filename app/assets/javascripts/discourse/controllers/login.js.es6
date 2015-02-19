@@ -2,12 +2,13 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
-  needs: ['modal', 'createAccount', 'application'],
+  needs: ['modal', 'createAccount', 'forgotPassword', 'application'],
   authenticate: null,
   loggingIn: false,
   loggedIn: false,
 
   canLoginLocal: Discourse.computed.setting('enable_local_logins'),
+  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
 
   resetForm: function() {
     this.set('authenticate', null);
@@ -72,9 +73,16 @@ export default DiscourseController.extend(ModalFunctionality, {
           self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:
           var $hidden_login_form = $('#hidden-login-form');
+          var destinationUrl = $.cookie('destination_url');
           $hidden_login_form.find('input[name=username]').val(self.get('loginName'));
           $hidden_login_form.find('input[name=password]').val(self.get('loginPassword'));
-          $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+          if (self.get('loginRequired') && destinationUrl) {
+            // redirect client to the original URL
+            $.cookie('destination_url', null);
+            $hidden_login_form.find('input[name=redirect]').val(destinationUrl);
+          } else {
+            $hidden_login_form.find('input[name=redirect]').val(window.location.href);
+          }
           $hidden_login_form.submit();
         }
 
@@ -114,8 +122,22 @@ export default DiscourseController.extend(ModalFunctionality, {
 
     createAccount: function() {
       var createAccountController = this.get('controllers.createAccount');
-      createAccountController.resetForm();
+      if (createAccountController) {
+        createAccountController.resetForm();
+        var loginName = this.get('loginName');
+        if (loginName && loginName.indexOf('@') > 0) {
+          createAccountController.set("accountEmail", loginName);
+        } else {
+          createAccountController.set("accountUsername", loginName);
+        }
+      }
       this.send('showCreateAccount');
+    },
+
+    forgotPassword: function() {
+      var forgotPasswordController = this.get('controllers.forgotPassword');
+      if (forgotPasswordController) { forgotPasswordController.set("accountEmailOrUsername", this.get("loginName")); }
+      this.send("showForgotPassword");
     }
   },
 
@@ -149,6 +171,12 @@ export default DiscourseController.extend(ModalFunctionality, {
     if (options.not_allowed_from_ip_address) {
       this.send('showLogin');
       this.flash(I18n.t('login.not_allowed_from_ip_address'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
+    if (options.suspended) {
+      this.send('showLogin');
+      this.flash(options.suspended_message, 'error');
       this.set('authenticate', null);
       return;
     }

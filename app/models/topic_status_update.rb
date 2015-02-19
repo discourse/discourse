@@ -1,12 +1,12 @@
 TopicStatusUpdate = Struct.new(:topic, :user) do
-  def update!(status, enabled)
+  def update!(status, enabled, message=nil)
     status = Status.new(status, enabled)
 
     Topic.transaction do
       change(status)
       highest_post_number = topic.highest_post_number
 
-      create_moderator_post_for(status)
+      create_moderator_post_for(status, message)
       update_read_state_for(status, highest_post_number)
     end
   end
@@ -31,8 +31,8 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
     CategoryFeaturedTopic.feature_topics_for(topic.category)
   end
 
-  def create_moderator_post_for(status)
-    topic.add_moderator_post(user, message_for(status), options_for(status))
+  def create_moderator_post_for(status, message=nil)
+    topic.add_moderator_post(user, message || message_for(status), options_for(status))
     topic.reload
   end
 

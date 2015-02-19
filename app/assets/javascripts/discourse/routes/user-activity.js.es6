@@ -5,7 +5,6 @@ export default Discourse.Route.extend({
 
   setupController: function(controller, user) {
     this.controllerFor('user-activity').set('model', user);
-    this.controllerFor('user').set('pmView', null);
 
     // Bring up a draft
     var composerController = this.controllerFor('composer');

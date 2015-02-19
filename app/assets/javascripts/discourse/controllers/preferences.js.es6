@@ -20,7 +20,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   userFields: function() {
     var siteUserFields = this.site.get('user_fields');
-    if (!Ember.empty(siteUserFields)) {
+    if (!Ember.isEmpty(siteUserFields)) {
       var userFields = this.get('user_fields');
       return siteUserFields.filterProperty('editable', true).sortBy('field_type').map(function(uf) {
         var val = userFields ? userFields[uf.get('id').toString()] : null;
@@ -35,15 +35,19 @@ export default ObjectController.extend(CanCheckEmails, {
   canEditName: Discourse.computed.setting('enable_names'),
 
   canSelectTitle: function() {
-    return Discourse.SiteSettings.enable_badges && this.get('model.has_title_badges');
+    return this.siteSettings.enable_badges && this.get('model.has_title_badges');
   }.property('model.badge_count'),
 
   canChangePassword: function() {
-    return !Discourse.SiteSettings.enable_sso && Discourse.SiteSettings.enable_local_logins;
+    return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
+  }.property(),
+
+  canReceiveDigest: function() {
+    return !this.siteSettings.disable_digest_emails;
   }.property(),
 
   availableLocales: function() {
-    return Discourse.SiteSettings.available_locales.split('|').map( function(s) {
+    return this.siteSettings.available_locales.split('|').map( function(s) {
       return {name: s, value: s};
     });
   }.property(),
@@ -85,9 +89,9 @@ export default ObjectController.extend(CanCheckEmails, {
           userFields = this.get('userFields');
 
       // Update the user fields
-      if (!Em.empty(userFields)) {
+      if (!Ember.isEmpty(userFields)) {
         var modelFields = model.get('user_fields');
-        if (!Em.empty(modelFields)) {
+        if (!Ember.isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
             modelFields[uf.get('field.id').toString()] = uf.get('value');
           });
@@ -166,5 +170,3 @@ export default ObjectController.extend(CanCheckEmails, {
   }
 
 });
-
-

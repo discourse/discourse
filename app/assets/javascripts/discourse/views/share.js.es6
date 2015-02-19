@@ -1,11 +1,3 @@
-/**
-  This view is used for rendering the "share" interface for a post
-
-  @class ShareView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.View.extend({
   templateName: 'share',
   elementId: 'share-link',
@@ -27,14 +19,23 @@ export default Discourse.View.extend({
   }.property('controller.link'),
 
   linkChanged: function() {
+    var self=this;
     if (this.present('controller.link')) {
-      var $linkInput = $('#share-link input');
-      $linkInput.val(this.get('controller.link'));
+      Em.run.next(function(){
+        if (!self.capabilities.touch) {
+          var $linkInput = $('#share-link input');
+          $linkInput.val(self.get('controller.link'));
 
-      // Wait for the fade-in transition to finish before selecting the link:
-      window.setTimeout(function() {
-        $linkInput.select().focus();
-      }, 160);
+          // Wait for the fade-in transition to finish before selecting the link:
+          window.setTimeout(function() {
+            $linkInput.select().focus();
+          }, 160);
+        } else {
+          var $linkForTouch = $('#share-link .share-for-touch a');
+          $linkForTouch.attr('href',self.get('controller.link'));
+          $linkForTouch.html(self.get('controller.link'));
+        }
+      });
     }
   }.observes('controller.link'),
 
@@ -84,10 +85,11 @@ export default Discourse.View.extend({
         y = $currentTargetOffset.top + 10;
       }
 
-      $shareLink.css({
-        left: "" + x + "px",
-        top: "" + y + "px"
-      });
+      $shareLink.css({top: "" + y + "px"});
+
+      if (!Discourse.Mobile.mobileView) {
+        $shareLink.css({left: "" + x + "px"});
+      }
 
       shareView.set('controller.link', url);
       shareView.set('controller.postNumber', postNumber);
@@ -104,6 +106,8 @@ export default Discourse.View.extend({
   },
 
   willDestroyElement: function() {
+    this.get('controller').send('close');
+
     $('html').off('click.discoure-share-link')
              .off('mousedown.outside-share-link')
              .off('keydown.share-view');

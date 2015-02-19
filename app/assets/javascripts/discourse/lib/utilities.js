@@ -146,39 +146,26 @@ Discourse.Utilities = {
     }
   },
 
-  /**
-    Validate a list of files to be uploaded
-
-    @method validateUploadedFiles
-    @param {Array} files The list of files we want to upload
-  **/
   validateUploadedFiles: function(files, bypassNewUserRestriction) {
     if (!files || files.length === 0) { return false; }
 
-    // can only upload one file at a time
     if (files.length > 1) {
       bootbox.alert(I18n.t('post.errors.too_many_uploads'));
       return false;
     }
 
     var upload = files[0];
-    var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
 
     // CHROME ONLY: if the image was pasted, sets its name to a default one
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    if (typeof Blob !== "undefined" && typeof File !== "undefined") {
+      if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
+    }
+
+    var type = Discourse.Utilities.isAnImage(upload.name) ? 'image' : 'attachment';
 
     return Discourse.Utilities.validateUploadedFile(upload, type, bypassNewUserRestriction);
   },
 
-  /**
-    Validate a file to be uploaded
-
-    @method validateUploadedFile
-    @param {File} file The file to be uploaded
-    @param {string} type The type of the upload (image, attachment)
-    @params {bool} bypassNewUserRestriction
-    @returns true whenever the upload is valid
-  **/
   validateUploadedFile: function(file, type, bypassNewUserRestriction) {
     // check that the uploaded file is authorized
     if (!Discourse.Utilities.authorizesAllExtensions() &&
@@ -286,7 +273,7 @@ Discourse.Utilities = {
     // deal with meaningful errors first
     if (data.jqXHR) {
       switch (data.jqXHR.status) {
-        // cancel from the user
+        // cancelled by the user
         case 0: return;
 
         // entity too large, usually returned from the web server
@@ -297,7 +284,11 @@ Discourse.Utilities = {
 
         // the error message is provided by the server
         case 422:
-          bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          if (data.jqXHR.responseJSON.message) {
+            bootbox.alert(data.jqXHR.responseJSON.message);
+          } else {
+            bootbox.alert(data.jqXHR.responseJSON.join("\n"));
+          }
           return;
       }
     }

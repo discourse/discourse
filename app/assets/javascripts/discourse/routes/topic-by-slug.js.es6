@@ -1,6 +1,8 @@
+import Topic from 'discourse/models/topic';
+
 export default Discourse.Route.extend({
   model: function(params) {
-    return Discourse.Topic.idForSlug(params.slug);
+    return Topic.idForSlug(params.slug);
   },
 
   afterModel: function(result) {

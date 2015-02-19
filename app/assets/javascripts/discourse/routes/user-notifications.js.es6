@@ -1,21 +1,28 @@
-export default Discourse.Route.extend({
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
+  actions: {
+    didTransition: function() {
+      this.controllerFor("user_notifications")._showFooter();
+      return true;
+    }
+  },
+
   model: function() {
     var user = this.modelFor('user');
     return Discourse.NotificationContainer.loadHistory(undefined, user.get('username'));
   },
 
   setupController: function(controller, model) {
-    this.controllerFor('user').setProperties({
-      indexStream: false,
-      datasource: "notifications"
-    });
+    controller.set('model', model);
+    controller.set('user', this.modelFor('user'));
 
     if (this.controllerFor('user_activity').get('content')) {
       this.controllerFor('user_activity').set('userActionType', -1);
     }
 
-    controller.set('model', model);
-    controller.set('user', this.modelFor('user'));
+    // properly initialize "canLoadMore"
+    controller.set("canLoadMore", model.get("length") === 60);
   },
 
   renderTemplate: function() {

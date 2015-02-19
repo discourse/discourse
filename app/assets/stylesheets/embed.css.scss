@@ -40,7 +40,7 @@ article.post {
   .post-date {
     float: right;
     color: #aaa;
-    font-size: 12px;
+    font-size: 0.857em;
     margin: 10px 4px 0 0;
   }
 
@@ -54,7 +54,7 @@ article.post {
   }
 
   h3.username {
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 0 0 10px 0;
 
     a {
@@ -104,7 +104,7 @@ img.emoji {
 }
 
 .in-reply-to {
-  font-size: 13px;
+  font-size: 0.929em;
   text-align: center;
   margin: 10px 20px 6px 0;
   display: inline-block;
@@ -113,18 +113,18 @@ img.emoji {
 }
 
 .replies {
-  font-size: 15px;
+  font-size: 1.071em;
   color: #999;
 }
 
 header.embedded {
   padding: 10px 10px 20px 10px;
-  font-size: 18px;
+  font-size: 1.286em;
   border-bottom: 1px solid #ddd;
 }
 
 footer {
-  font-size: 18px;
+  font-size: 1.286em;
 
   .logo {
     margin-right: 10px;

@@ -23,7 +23,7 @@ module Email
 
   def self.cleanup_alias(name)
     # TODO: I'm sure there are more, but I can't find a list
-    name ? name.gsub(/[:<>]/, '') : name
+    name ? name.gsub(/[:<>,]/, '') : name
   end
 
 end

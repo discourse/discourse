@@ -1,17 +1,21 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
+<!--[if IE 9]><html lang="<%= SiteSetting.default_locale %>" class="ie9 <%= html_classes %>"><![endif]-->
+<!--[if (!IE 9) | (!IE)]><!--><html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
+    <%= render partial: "common/special_font_face" %>
+    <%= render partial: "common/discourse_stylesheet" %>
+    <%= discourse_csrf_tags %>
 
     <%- if SiteSetting.enable_escaped_fragments? %>
-    <meta name="fragment" content="!">
+      <meta name="fragment" content="!">
     <%- end %>
 
     <%- if shared_session_key %>
-    <meta name="shared_session_key" content="<%= shared_session_key %>">
+      <meta name="shared_session_key" content="<%= shared_session_key %>">
     <%- end %>
 
     <%= script "preload_store" %>
@@ -22,7 +26,9 @@
       <%= script "admin"%>
     <%- end %>
 
-    <%= raw SiteText.text_for(:head) %>
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+    <%- end %>
 
     <%= render_google_universal_analytics_code %>
 
@@ -61,6 +67,9 @@
     <section id='main'>
     </section>
 
+    <div id='offscreen-content'>
+    </div>
+
     <% unless current_user %>
       <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
         <input name="username" type="text"     id="signin_username">
@@ -84,6 +93,8 @@
 
     <%= render_google_analytics_code %>
 
-    <%= raw SiteText.text_for(:bottom) %>
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
+    <%- end %>
   </body>
 </html>

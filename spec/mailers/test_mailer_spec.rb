@@ -7,10 +7,10 @@ describe TestMailer do
     it "works" do
       test_mailer = TestMailer.send_test('marcheline@adventuretime.ooo')
 
-      test_mailer.from.should == [SiteSetting.notification_email]
-      test_mailer.to.should == ['marcheline@adventuretime.ooo']
-      test_mailer.subject.should be_present
-      test_mailer.body.should be_present
+      expect(test_mailer.from).to eq([SiteSetting.notification_email])
+      expect(test_mailer.to).to eq(['marcheline@adventuretime.ooo'])
+      expect(test_mailer.subject).to be_present
+      expect(test_mailer.body).to be_present
     end
 
   end

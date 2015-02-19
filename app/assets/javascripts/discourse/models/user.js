@@ -11,6 +11,9 @@ Discourse.User = Discourse.Model.extend({
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
   hasUnreadPMs: Em.computed.gt("private_messages_stats.unread", 0),
+  hasPosted: Em.computed.gt("post_count", 0),
+  hasNotPosted: Em.computed.not("hasPosted"),
+  canBeDeleted: Em.computed.and("can_be_deleted", "hasNotPosted"),
 
   /**
     The user's stream
@@ -69,28 +72,10 @@ Discourse.User = Discourse.Model.extend({
     @type {String}
   **/
   profileBackground: function() {
-    var background = this.get('profile_background');
-    if(Em.isEmpty(background) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-
-    return 'background-image: url(' + background + ')';
+    var url = this.get('profile_background');
+    if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    return 'background-image: url(' + Discourse.getURLWithCDN(url) + ')';
   }.property('profile_background'),
-
-  statusIcon: function() {
-    var name = Handlebars.Utils.escapeExpression(this.get('name')),
-        desc;
-
-    if(Discourse.User.currentProp("admin") || Discourse.User.currentProp("moderator")) {
-      if(this.get('admin')) {
-        desc = I18n.t('user.admin', {user: name});
-        return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
-      }
-    }
-    if(this.get('moderator')){
-      desc = I18n.t('user.moderator', {user: name});
-      return '<i class="fa fa-shield" title="' + desc +  '" alt="' + desc + '"></i>';
-    }
-    return null;
-  }.property('admin','moderator'),
 
   /**
     Path to this user.
@@ -98,7 +83,10 @@ Discourse.User = Discourse.Model.extend({
     @property path
     @type {String}
   **/
-  path: Discourse.computed.url('username_lower', "/users/%@"),
+  path: function(){
+    return Discourse.getURL('/users/' + this.get('username_lower'));
+    // no need to observe, requires a hard refresh to update
+  }.property(),
 
   /**
     Path to this user's administration
@@ -347,6 +335,14 @@ Discourse.User = Discourse.Model.extend({
     });
   },
 
+  findStaffInfo: function() {
+    if (!Discourse.User.currentProp("staff")) { return Ember.RSVP.resolve(null); }
+    var self = this;
+    return Discourse.ajax("/users/" + this.get("username_lower") + "/staff-info.json").then(function(info) {
+      self.setProperties(info);
+    });
+  },
+
   avatarTemplate: function() {
     return Discourse.User.avatarTemplate(this.get('username'), this.get('uploaded_avatar_id'));
   }.property('uploaded_avatar_id', 'username'),
@@ -355,10 +351,13 @@ Discourse.User = Discourse.Model.extend({
     Change avatar selection
   */
   pickAvatar: function(uploadId) {
-    this.set("uploaded_avatar_id", uploadId);
+    var self = this;
+
     return Discourse.ajax("/users/" + this.get("username_lower") + "/preferences/avatar/pick", {
       type: 'PUT',
       data: { upload_id: uploadId }
+    }).then(function(){
+      self.set('uploaded_avatar_id', uploadId);
     });
   },
 
@@ -445,6 +444,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
 
   avatarTemplate: function(username, uploadedAvatarId) {
     var url;
+
     if (uploadedAvatarId) {
       url = "/user_avatar/" +
             Discourse.BaseUrl +
@@ -459,11 +459,7 @@ Discourse.User.reopenClass(Discourse.Singleton, {
             Discourse.LetterAvatarVersion + ".png";
     }
 
-    url = Discourse.getURL(url);
-    if (Discourse.CDN) {
-      url = Discourse.CDN + url;
-    }
-    return url;
+    return Discourse.getURLWithCDN(url);
   },
 
   /**

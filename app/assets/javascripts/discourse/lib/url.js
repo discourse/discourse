@@ -2,7 +2,7 @@
 var jumpScheduled = false,
     rewrites = [];
 
-Discourse.URL = Em.Object.createWithMixins({
+Discourse.URL = Ember.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
@@ -53,11 +53,6 @@ Discourse.URL = Em.Object.createWithMixins({
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
           if (location && location.replaceURL) {
-
-            if (Ember.FEATURES.isEnabled("query-params-new")) {
-              var search = Discourse.__container__.lookup('router:main').get('location.location.search') || '';
-              path += search;
-            }
             location.replaceURL(path);
           }
         });
@@ -203,7 +198,6 @@ Discourse.URL = Em.Object.createWithMixins({
 
         var container = Discourse.__container__,
             topicController = container.lookup('controller:topic'),
-            topicProgressController = container.lookup('controller:topic-progress'),
             opts = {},
             postStream = topicController.get('postStream');
 
@@ -211,16 +205,18 @@ Discourse.URL = Em.Object.createWithMixins({
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
         var closest = opts.nearPost || 1;
 
+        var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
             currentPost: closest,
-            highlightOnInsert: closest,
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),
-              progress = postStream.progressIndexOfPost(closestPost);
-          topicProgressController.set('progressPosition', progress);
-          Discourse.PostView.considerHighlighting(topicController, closest);
+              progress = postStream.progressIndexOfPost(closestPost),
+              progressController = container.lookup('controller:topic-progress');
+
+          progressController.set('progressPosition', progress);
+          self.appEvents.trigger('post:highlight', closest);
         }).then(function() {
           Discourse.URL.jumpToPost(closest);
         });

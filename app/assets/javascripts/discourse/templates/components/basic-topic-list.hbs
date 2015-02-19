@@ -1,58 +1,12 @@
 {{#loading-spinner condition=loading}}
   {{#if topics}}
-    <table class="topic-list">
-      <thead>
-        <tr>
-          <th class="default">{{i18n topic.title}}</th>
-          {{#unless controller.hideCategory}}
-            <th class="category">{{i18n category_title}}</th>
-          {{/unless}}
-          <th class="num posts">{{i18n posts}}</th>
-          {{#if controller.showParticipants}}
-            <th class="posters">{{i18n users}}</th>
-          {{/if}}
-          <th class="num views">{{i18n views}}</th>
-          <th class="num activity">{{i18n activity}}</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {{#each topics}}
-          <tr {{bind-attr class="archived"}}>
-            <td class='main-link'>
-              {{topic-status topic=this}}
-              <a class='title' href="{{unbound lastUnreadUrl}}">{{{unbound fancy_title}}}</a>
-              {{topic-post-badges unread=unread
-                                  newPosts=new_posts
-                                  unseen=unseen
-                                  url=lastUnreadUrl}}
-            </td>
-
-            {{raw "list/category-column" hideCategory=controller.hideCategory category=category}}
-
-            {{posts-count-column topic=this class="num" action="clickedPosts"}}
-
-            {{#if controller.showParticipants}}
-              <td class='participants'>
-                {{#each participants}}
-                <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}" class="{{unbound extras}}">{{avatar this usernamePath="user.username" imageSize="small"}}</a>
-                {{/each}}
-              </td>
-            {{/if}}
-
-            <td {{bind-attr class=":num :views viewsHeat"}}>
-              {{number views numberKey="views_long"}}
-            </td>
-
-            {{raw "list/activity-column" topic=this class="num" tagName="td"}}
-          </tr>
-        {{/each}}
-      </tbody>
-
-    </table>
+    {{topic-list
+        showParticipants=showParticipants
+        hideCategory=hideCategory
+        topics=topics}}
   {{else}}
     <div class='alert alert-info'>
-      {{i18n choose_topic.none_found}}
+      {{i18n 'choose_topic.none_found'}}
     </div>
   {{/if}}
 {{/loading-spinner}}

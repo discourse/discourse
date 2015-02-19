@@ -1,0 +1,9 @@
+<th data-sort-order='{{order}}' class='{{view.className}}'>
+  {{~#if showBulkToggle}}
+      <button class='btn bulk-select' title='{{i18n "topics.bulk.toggle"}}'><i class='fa fa-list'></i></button>
+  {{/if ~}}
+  {{view.localizedName}}
+  {{~#if view.isSorting}}
+    <i class='{{view.sortClass}}'></i>
+  {{/if ~}}
+</th>

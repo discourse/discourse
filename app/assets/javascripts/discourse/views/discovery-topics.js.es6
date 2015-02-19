@@ -1,10 +1,11 @@
 import UrlRefresh from 'discourse/mixins/url-refresh';
+import LoadMore from "discourse/mixins/load-more";
 
-export default Discourse.View.extend(Discourse.LoadMore, UrlRefresh, {
+export default Discourse.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
 
   actions: {
-    loadMore: function() {
+    loadMore() {
       var self = this;
       Discourse.notifyTitle(0);
       this.get('controller').loadMoreTopics().then(function (hasMoreResults) {
@@ -19,7 +20,7 @@ export default Discourse.View.extend(Discourse.LoadMore, UrlRefresh, {
   },
 
   _readjustScrollPosition: function() {
-    var scrollTo = Discourse.Session.currentProp('topicListScrollPosition');
+    var scrollTo = this.session.get('topicListScrollPosition');
 
     if (typeof scrollTo !== "undefined") {
       Em.run.schedule('afterRender', function() {
@@ -33,14 +34,13 @@ export default Discourse.View.extend(Discourse.LoadMore, UrlRefresh, {
   }.observes('controller.topicTrackingState.incomingCount'),
 
   // Remember where we were scrolled to
-  saveScrollPosition: function() {
-    Discourse.Session.current().set('topicListScrollPosition', $(window).scrollTop());
+  saveScrollPosition() {
+    this.session.set('topicListScrollPosition', $(window).scrollTop());
   },
 
   // When the topic list is scrolled
-  scrolled: function() {
+  scrolled() {
     this._super();
     this.saveScrollPosition();
   }
 });
-

@@ -14,7 +14,6 @@ class UserAction < ActiveRecord::Base
   RESPONSE= 6
   MENTION = 7
   QUOTE = 9
-  STAR = 10
   EDIT = 11
   NEW_PRIVATE_MESSAGE = 12
   GOT_PRIVATE_MESSAGE = 13
@@ -30,7 +29,6 @@ class UserAction < ActiveRecord::Base
     MENTION,
     QUOTE,
     BOOKMARK,
-    STAR,
     EDIT
   ].each_with_index.to_a.flatten]
 
@@ -240,35 +238,8 @@ SQL
     builder.exec
   end
 
-  def self.synchronize_starred
-    exec_sql("
-    DELETE FROM user_actions ua
-    WHERE action_type = :star
-      AND NOT EXISTS (
-        SELECT 1 FROM topic_users tu
-        WHERE
-              tu.user_id = ua.user_id AND
-              tu.topic_id = ua.target_topic_id AND
-              starred
-      )", star: UserAction::STAR)
-
-    exec_sql("INSERT INTO user_actions
-             (action_type, user_id, target_topic_id, target_post_id, acting_user_id, created_at, updated_at)
-             SELECT :star, tu.user_id, tu.topic_id, -1, tu.user_id, tu.starred_at, tu.starred_at
-             FROM topic_users tu
-             WHERE starred AND NOT EXISTS(
-              SELECT 1 FROM user_actions ua
-              WHERE tu.user_id = ua.user_id AND
-                    tu.topic_id = ua.target_topic_id AND
-                    ua.action_type = :star
-             )
-             ", star: UserAction::STAR)
-
-  end
-
   def self.ensure_consistency!
     self.synchronize_target_topic_ids
-    self.synchronize_starred
   end
 
   def self.update_like_count(user_id, action_type, delta)
@@ -294,7 +265,7 @@ SQL
     end
 
     unless (guardian.user && guardian.user.id == user_id) || guardian.is_staff?
-      builder.where("a.action_type not in (#{BOOKMARK},#{STAR})")
+      builder.where("a.action_type not in (#{BOOKMARK})")
       builder.where("t.visible")
     end
 

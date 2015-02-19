@@ -32,7 +32,7 @@ export default Ember.ArrayController.extend({
       }
     });
 
-    return badges;
+    return _.sortBy(badges, "name");
   }.property('badges.@each', 'model.@each'),
 
   /**

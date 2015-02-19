@@ -1,13 +1,14 @@
 # Available options:
 #
-# default - The default value of the setting.
-# client  - Set to true if the javascript should have access to this setting's value.
-# refresh - Set to true if clients should refresh when the setting is changed.
-# min     - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max     - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex   - A regex that the value must match.
-# enum    - The setting has a fixed set of allowed values, and only one can be chosen.
-#           Set to the class name that defines the set.
+# default   - The default value of the setting.
+# client    - Set to true if the javascript should have access to this setting's value.
+# refresh   - Set to true if clients should refresh when the setting is changed.
+# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex     - A regex that the value must match.
+# validator - The name of the class that will be use to validate the value of the setting.
+# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
+#             Set to the class name that defines the set.
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -21,10 +22,11 @@ required:
   site_description:
     default: ''
   contact_email:
+    client: true
     default: ''
     type: email
   notification_email:
-    default: 'info@unconfigured.discourse.org'
+    default: 'noreply@unconfigured.discourse.org'
     type: email
   site_contact_username:
     default: ''
@@ -51,6 +53,7 @@ basic:
     default: 'en'
     enum: 'LocaleSiteSetting'
     refresh: true
+    shadowed_by_global: true
   allow_user_locale:
     client: true
     default: false
@@ -82,16 +85,16 @@ basic:
     client: true
     refresh: true
     type: list
-    default: 'latest|new|unread|starred|top|categories'
+    default: 'latest|new|unread|top|categories'
     choices:
      - latest
      - new
      - unread
-     - starred
      - top
      - categories
      - read
      - posted
+     - bookmarks
   post_menu:
     client: true
     type: list
@@ -108,7 +111,7 @@ basic:
   post_menu_hidden_items:
     client: true
     type: list
-    default: 'edit|delete|admin'
+    default: 'bookmark|edit|delete|admin'
     choices:
      - like
      - edit
@@ -131,6 +134,11 @@ basic:
     client: true
     type: list
     default: 'BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890'
+  category_style:
+    client: true
+    default: 'bar'
+    enum: 'CategoryStyleSetting'
+    preview: '<span class="badge-wrapper {{value}}"><span class="badge-category-parent-bg" style="background-color: #aaa;"></span><span class="badge-category-bg" style="background-color: #777;"></span><span style="color: #fff;" data-drop-close="true" class="badge-category clear-badge">Category</span></span>'
   enable_mobile_theme:
     client: true
     default: true
@@ -151,10 +159,6 @@ basic:
   fixed_category_positions:
     client: true
     default: false
-  topics_per_page:
-    default: 30
-    min: 1
-    client: true
   show_subcategory_list:
     default: false
     client: true
@@ -196,10 +200,10 @@ login:
     default: false
   twitter_consumer_key:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   twitter_consumer_secret:
     default: ''
-    regex: "^[a-zA-Z0-9_+-]*$"
+    regex: "^[a-zA-Z0-9_+-]+$"
   enable_facebook_logins:
     client: true
     default: false
@@ -208,19 +212,20 @@ login:
     regex: "^\\d+$"
   facebook_app_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_github_logins:
     client: true
     default: false
   github_client_id:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   github_client_secret:
     default: ''
-    regex: "^[a-f0-9]*$"
+    regex: "^[a-f0-9]+$"
   enable_sso:
     client: true
     default: false
+  enable_sso_provider: false
   sso_url: ''
   sso_secret: ''
   sso_overrides_email: false
@@ -236,6 +241,7 @@ login:
     default: ''
     type: list
   forgot_password_strict: false
+  log_out_strict: true
 
 users:
   min_username_length:
@@ -284,6 +290,10 @@ users:
     default: false
   email_token_valid_hours: 24
   email_token_grace_period_hours: 0
+  purge_unactivated_users_grace_period_days: 7
+  public_user_custom_fields:
+    type: list
+    default: ''
 
 posting:
   min_post_length:
@@ -388,19 +398,34 @@ posting:
     default: ''
     refresh: true
     type: list
+  enable_emoji:
+    default: true
+    client: true
+  emoji_set:
+    default: 'emoji_one'
+    client: true
+    enum: 'EmojiSetSiteSetting'
 
 email:
-  email_time_window_mins: 10
+  email_time_window_mins:
+    default: 10
+    client: true
   email_posts_context: 5
   digest_min_excerpt_length: 100
   digest_topics: 20
   default_digest_email_frequency:
     default: 7
     enum: 'DigestEmailSiteSetting'
+  suppress_digest_email_after_days: 365
+  disable_digest_emails:
+    default: false
+    client: true
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled: false
-  reply_by_email_address: ''
+  reply_by_email_address:
+    default: ''
+    validator: "ReplyByEmailAddressValidator"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
@@ -416,10 +441,11 @@ email:
     enum: 'TrustLevelSetting'
   email_prefix: ''
   email_site_title: ''
-  disable_emails: false
+  disable_emails:
+    default: false
+    client: true
   strip_images_from_short_emails: true
   short_email_length: 2800
-  enable_email_names: true
 
 files:
   max_image_size_kb:
@@ -467,7 +493,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[^A-Z._]+$"
   allow_profile_backgrounds:
     client: true
     default: true
@@ -577,6 +603,11 @@ spam:
       min: 0
       max: 3
   max_new_accounts_per_registration_ip: 3
+  min_ban_entries_for_roll_up: 5
+  max_age_unmatched_emails: 365
+  max_age_unmatched_ips: 365
+  num_flaggers_to_close_topic: 5
+  num_flags_to_close_topic: 12
 
 rate_limits:
   unique_posts_mins:
@@ -593,7 +624,7 @@ rate_limits:
   max_bookmarks_per_day: 20
   max_flags_per_day: 20
   max_edits_per_day: 30
-  max_stars_per_day: 20
+  max_invites_per_day: 10
   max_topics_in_first_day: 5
   max_replies_in_first_day: 10
 
@@ -640,10 +671,6 @@ developer:
   verbose_localization:
     default: false
     client: true
-  posts_chunksize:
-    client: true
-    default: 20
-    min: 1
 
 embedding:
   embeddable_host: ''
@@ -786,10 +813,6 @@ uncategorized:
 
   notify_about_flags_after: 48
 
-  public_user_custom_fields:
-    type: list
-    default: ''
-
   enable_cdn_js_debugging: false
 
   show_create_topics_notice:
@@ -801,11 +824,6 @@ uncategorized:
     default: true
 
   disable_edit_notifications: false
-  purge_inactive_users_grace_period_days: 7
-
-  company_full_name: 'My Unconfigured Forum Ltd.'
-  company_short_name: 'Unconfigured Forum'
-  company_domain: 'www.example.com'
 
   vacuum_db_days: 90
   last_vacuum:

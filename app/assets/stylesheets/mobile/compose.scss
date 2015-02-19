@@ -22,9 +22,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   .toggle-preview { display:none; }
   .preview-wrapper { display:none; }
-  .mobile-file-upload {
-    text-decoration: underline;
-  }
   #mobile-uploader { display: none; }
   #draft-status, #file-uploading, .mobile-file-upload {
     float: right;
@@ -32,7 +29,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   #file-uploading {
     left: 51%;
-    font-size: 12px;
+    font-size: 0.857em;
     color: scale-color($secondary, $lightness: 50%);
   }
   #draft-status {
@@ -41,19 +38,19 @@ display: none !important; // can be removed if inline JS CSS is removed from com
       color: $danger;
     }
   }
-  @include transition(height 0.4s ease);
+  transition: height 0.4s ease;
   width: 100%;
   z-index: 1039;
   height: 0;
   background-color: scale-color-diff();
   bottom: 0;
-  font-size: 14px;
+  font-size: 1em;
   position: fixed;
   .toggler {
     width: 15px;
     right: 1px;
     position: absolute;
-    font-size: 15px;
+    font-size: 1.071em;
     color: scale-color($primary, $lightness: 50%);
     padding: 0 10px 5px 10px;
     &:before {
@@ -62,7 +59,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
     }
   }
   a.cancel {
-    text-decoration: underline;
     padding-left: 7px;
     float: left;
     margin-top: 6px;
@@ -137,7 +133,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
         box-sizing: border-box;
       }
       .wmd-controls {
-        @include transition(top 0.3s ease);
+        transition: top 0.3s ease;
         top: 110px;
       }
     }
@@ -218,7 +214,7 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 
 #reply-control.edit-title.private-message {
   .wmd-controls {
-    @include transition(top 0.3s ease);
+    transition: top 0.3s ease;
     top: 120px;
   }
 }

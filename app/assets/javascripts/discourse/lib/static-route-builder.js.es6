@@ -1,3 +1,5 @@
+import ShowFooter from "discourse/mixins/show-footer";
+
 var configs = {
   'faq': 'faq_url',
   'tos': 'tos_url',
@@ -5,7 +7,7 @@ var configs = {
 };
 
 export default function(page) {
-  return Discourse.Route.extend({
+  return Discourse.Route.extend(ShowFooter, {
     renderTemplate: function() {
       this.render('static');
     },

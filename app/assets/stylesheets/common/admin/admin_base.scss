@@ -10,7 +10,7 @@
   th {border-top: 1px solid scale-color-diff();}
   td {border-bottom: 1px solid scale-color-diff(); border-top: 1px solid scale-color-diff();}
   tr:hover { background-color: darken($secondary, 2.5%); }
-  tr.selected { background-color: lighten($primary, 50%); }
+  tr.selected { background-color: lighten($primary, 80%); }
   .filters input { margin-bottom: 0; }
 }
 
@@ -20,7 +20,7 @@ td.flaggers td {
 }
 
 .content-list li a span.count {
-  font-size: 12px;
+  font-size: 0.857em;
   float: right;
   margin-right: 10px;
   background-color: scale-color-diff();
@@ -33,10 +33,6 @@ td.flaggers td {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
-
-    .ace-wrapper {
-      height: 400px;
-    }
   }
 
   .view-options {
@@ -82,16 +78,15 @@ td.flaggers td {
     margin-top: -2px;
     background-color: $secondary;
     padding: 12px 12px 5px;
-    .close {
-      float: right;
-    }
 
     .other-accounts {
-      margin: 0;
+      margin: 5px 0 0;
       max-height: 200px;
       overflow: auto;
+      width: 455px;
       ul { margin: 0; }
       li { list-style: none; }
+      tr td:first-of-type { width: 130px; }
     }
   }
 }
@@ -120,7 +115,7 @@ td.flaggers td {
     }
   }
   h1 {
-    font-size: 20px;
+    font-size: 1.429em;
     line-height: 25px;
     color: $primary;
   }
@@ -166,7 +161,27 @@ td.flaggers td {
   }
 }
 
-.site-settings-nav {
+.groups, .badges {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+
+    & > div {
+      margin-top: 10px;
+    }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+    }
+  }
+}
+
+.admin-nav {
   width: 18.018%;
   margin-top: 30px;
   .nav-stacked {
@@ -178,7 +193,7 @@ td.flaggers td {
   }
 }
 
-.site-settings-detail {
+.admin-detail {
   width: 76.5765%;
   min-height: 800px;
   margin-left: 0;
@@ -220,7 +235,6 @@ td.flaggers td {
       border: 1px solid scale-color-diff();
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
-      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
 
       li.select2-search-choice {
@@ -262,7 +276,7 @@ td.flaggers td {
     }
 
     h3 {
-      font-size: 13px;
+      font-size: 0.929em;
       font-weight: normal;
     }
   }
@@ -281,7 +295,7 @@ td.flaggers td {
 
 section.details {
   h1 {
-    font-size: 18px;
+    font-size: 1.286em;
     color: $primary;
     padding: 5px 10px;
     margin: 30px 0 5px 0;
@@ -340,7 +354,7 @@ section.details {
     width: 800px;
     float: left;
     margin-left: 12px;
-    font-size: 13px;
+    font-size: 0.929em;
 
     button {
       margin-left: 10px;
@@ -384,25 +398,10 @@ section.details {
   }
 
   .form-horizontal {
-    label {
-      font-weight: bold;
-    }
-    & > div {
-      margin-top: 10px;
-    }
     .delete-link {
       margin-left: 15px;
       margin-top: 5px;
     }
-
-    input, textarea, select {
-      width: 350px;
-    }
-
-    input[type="checkbox"] {
-      width: 20px;
-    }
-
     textarea {
       height: 200px;
     }
@@ -432,14 +431,14 @@ section.details {
   }
 
   .badge-errors {
-    font-size: 14px;
+    font-size: 1em;
     line-height: 16px;
     padding: 4px;
     background-color: scale-color-diff();
   }
 
   .badge-query-plan {
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 13px;
     padding: 4px;
     background-color: scale-color-diff();
@@ -460,8 +459,61 @@ section.details {
   }
 }
 
+// Groups area
+.groups {
+  .ac-wrap {
+    width: 100% !important;
+    border-color: scale-color($primary, $lightness: 75%);
+    .item {
+      width: 190px;
+      margin-right: 0 !important;
+    }
+  }
+  .next, .previous {
+    color: #333 !important;
+    &.disabled {
+      color: #aaa !important;
+    }
+  }
+  .btn.add {
+    margin-top: 7px;
+  }
+  .controls {
+    margin-top: 10px;
+  }
+  .select2-container {
+    width: 100%;
+  }
+  .select2-choices {
+    width: 100%;
+    border-color: scale-color($primary, $lightness: 75%);
+  }
+}
+
 // Customise area
 .customize {
+  .admin-footer {
+    margin-top: 20px;
+  }
+  .current-style.maximized {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100000;
+    background-color: white;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    .wrapper {
+      position: absolute;
+      top: 20px;
+      bottom: 10px;
+      left: 20px;
+      right: 20px;
+    }
+  }
   .nav.nav-pills {
     margin-left: 10px;
   }
@@ -472,6 +524,18 @@ section.details {
     margin-bottom: 10px;
   }
   .current-style {
+    .nav.nav-pills{
+      position: relative;
+    }
+    .toggle-mobile {
+      position: absolute;
+      right: 35px;
+      font-size: 20px;
+    }
+    .toggle-maximize {
+      position: absolute;
+      right: -5px;
+    }
     .delete-link {
       margin-left: 15px;
       margin-top: 5px;
@@ -480,16 +544,30 @@ section.details {
       margin-left: 15px;
     }
     padding-left: 10px;
-    width: 65%;
+    width: 70%;
     .style-name {
-      width: 54.0540%;
+      width: 350px;
       height: 25px;
-      font-size: 20px;
     }
     .ace-wrapper {
       position: relative;
       height: 400px;
       width: 100%;
+    }
+    &.maximized {
+      .admin-container {
+        position: absolute;
+        bottom: 50px;
+        top: 80px;
+        width: 100%;
+      }
+      .admin-footer {
+        position: absolute;
+        bottom: 10px;
+      }
+      .ace-wrapper {
+        height: 100%;
+      }
     }
     .ace_editor {
       position: absolute;
@@ -591,7 +669,7 @@ section.details {
      padding-bottom: 20px;
   }
   td p {
-    font-size: 13px;
+    font-size: 0.929em;
     margin: 0 0 5px 0;
   }
   .flagged-posts { background: $danger; }
@@ -620,7 +698,7 @@ section.details {
   margin-top: 10px;
 
   .version-number {
-    font-size: 18px;
+    font-size: 1.286em;
     font-weight: bold;
     text-align: center;
   }
@@ -641,7 +719,7 @@ section.details {
   }
 
   .fa {
-    font-size: 26px;
+    font-size: 1.857em;
   }
 
   .up-to-date {
@@ -657,7 +735,7 @@ section.details {
 
 .update-nag {
   i.fa {
-    font-size: 20px;
+    font-size: 1.429em;
   }
 }
 
@@ -675,7 +753,7 @@ table.api-keys {
   }
 
   td.key {
-    font-size: 12px;
+    font-size: 0.857em;
   }
 }
 
@@ -749,7 +827,8 @@ table.api-keys {
       margin: 20px 10px 0 10px;
 
       .fa {
-        font-size: 32px;
+        font-size: 2.286em
+;
         vertical-align: middle;
         color: $primary
       }
@@ -838,7 +917,7 @@ table.api-keys {
     cursor: pointer;
 
     h1 {
-      font-size: 18px;
+      font-size: 1.286em;
       margin: 5px 0 0 8px;
       display: inline-block;
       line-height: 1.0em;
@@ -874,13 +953,13 @@ table.api-keys {
 
       .commit-message {
         color: $primary;
-        font-size: 12px;
+        font-size: 0.857em;
         font-weight: bold;
       }
 
       .commit-meta {
         color: $primary;
-        font-size: 12px;
+        font-size: 0.857em;
       }
 
       .committer-name {
@@ -910,7 +989,7 @@ table.api-keys {
 
   h3 {
     color: dark-light-diff($primary, $secondary, 50%, -60%);
-    font-size: 15px;
+    font-size: 1.071em;
     padding-left: 5px;
     margin-bottom: 10px;
   }
@@ -1260,7 +1339,7 @@ and (max-width : 500px) {
         width: 100%;
         }
       label {
-        font-size: 13px;
+        font-size: 0.929em;
         }
     }
   }
@@ -1306,7 +1385,7 @@ and (max-width : 500px) {
     border-bottom: 1px solid #dfdfdf;
   }
   .actions {
-    font-size: 17px;
+    font-size: 1.214em;
     float: right;
     a {
       margin-left: 5px;
@@ -1356,4 +1435,8 @@ tr.not-activated {
       clear: both;
     }
   }
+}
+
+.preview {
+ margin-top: 5px;
 }

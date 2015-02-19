@@ -155,7 +155,6 @@ input[type="submit"].btn::-moz-focus-inner {
 }
 .fade {
   opacity: 0;
-  -webkit-transition: opacity 0.15s linear;
   transition: opacity 0.15s linear;
 }
 .fade.in {
@@ -169,7 +168,7 @@ body {
   }
 
   p, pre, li, ul {
-    font-size: 14px;
+    font-size: 1em;
   }
   p {
     line-height: 20px;
@@ -186,25 +185,25 @@ body {
     color: inherit;
   }
   h1 {
-    font-size: 30px;
+    font-size: 2.143em;
     line-height: 36px;
   }
   h2 {
-    font-size: 24px;
+    font-size: 1.714em;
     line-height: 36px;
   }
   h3 {
-    font-size: 18px;
+    font-size: 1.286em;
     line-height: 27px;
   }
   h4, h5, h6 {
     line-height: 18px;
   }
   h4 {
-    font-size: 14px;
+    font-size: 1em;
   }
   h5 {
-    font-size: 12px;
+    font-size: 0.857em;
   }
   h6 {
     font-size: 11px;
@@ -226,7 +225,7 @@ body {
     margin: 0 0 18px;
   }
   label, input, button, select, textarea {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: normal;
     line-height: 18px;
   }
@@ -241,7 +240,7 @@ body {
     display: inline-block;
     padding: 4px;
     margin-bottom: 9px;
-    font-size: 13px;
+    font-size: 0.929em;
     line-height: 18px;
     color: #555555;
   }
@@ -251,7 +250,7 @@ body {
       height: 18px;
       padding: 4px;
       margin-bottom: 9px;
-      font-size: 13px;
+      font-size: 0.929em;
       line-height: 18px;
       color: #555555;
     }
@@ -266,7 +265,6 @@ body {
     border: 1px solid #cccccc;
     border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
   }
   input {
@@ -275,7 +273,6 @@ body {
       border: 1px solid #cccccc;
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
       transition: border linear 0.2s, box-shadow linear 0.2s;
     }
   }
@@ -580,7 +577,7 @@ body {
   .alert {
     .close {
       float: right;
-      font-size: 20px;
+      font-size: 1.429em;
       font-weight: bold;
       line-height: 18px;
       color: black;

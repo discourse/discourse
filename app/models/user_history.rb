@@ -20,7 +20,7 @@ class UserHistory < ActiveRecord::Base
                           :change_site_setting,
                           :change_site_customization,
                           :delete_site_customization,
-                          :checked_for_custom_avatar,
+                          :checked_for_custom_avatar, # not used anymore
                           :notified_about_avatar,
                           :notified_about_sequential_replies,
                           :notified_about_dominating_topic,
@@ -33,7 +33,11 @@ class UserHistory < ActiveRecord::Base
                           :check_email,
                           :delete_post,
                           :delete_topic,
-                          :impersonate)
+                          :impersonate,
+                          :roll_up,
+                          :change_username,
+                          :custom,
+                          :custom_staff)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -50,7 +54,10 @@ class UserHistory < ActiveRecord::Base
                         :check_email,
                         :delete_post,
                         :delete_topic,
-                        :impersonate]
+                        :impersonate,
+                        :roll_up,
+                        :change_username,
+                        :custom_staff]
   end
 
   def self.staff_action_ids
@@ -63,9 +70,9 @@ class UserHistory < ActiveRecord::Base
 
   def self.with_filters(filters)
     query = self
-    if filters[:action_name] and action_id = UserHistory.actions[filters[:action_name].to_sym]
-      query = query.where('action = ?', action_id)
-    end
+    query = query.where(action: filters[:action_id]) if filters[:action_id].present?
+    query = query.where(custom_type: filters[:custom_type]) if filters[:custom_type].present?
+
     [:acting_user, :target_user].each do |key|
       if filters[key] and obj_id = User.where(username_lower: filters[key].downcase).pluck(:id)
         query = query.where("#{key}_id = ?", obj_id)
@@ -86,8 +93,13 @@ class UserHistory < ActiveRecord::Base
     result.exists?
   end
 
-  def self.staff_action_records(viewer, opts={})
-    query = self.with_filters(opts.slice(:action_name, :acting_user, :target_user, :subject)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
+  def self.staff_filters
+    [:action_id, :custom_type, :acting_user, :target_user, :subject]
+  end
+
+  def self.staff_action_records(viewer, opts=nil)
+    opts ||= {}
+    query = self.with_filters(opts.slice(*staff_filters)).only_staff_actions.limit(200).order('id DESC').includes(:acting_user, :target_user)
     query = query.where(admin_only: false) unless viewer && viewer.admin?
     query
   end
@@ -126,6 +138,7 @@ end
 #  new_value      :text
 #  topic_id       :integer
 #  admin_only     :boolean          default(FALSE)
+#  post_id        :integer
 #
 # Indexes
 #

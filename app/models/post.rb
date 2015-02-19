@@ -121,7 +121,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "post-#{user_id}:#{raw_hash}"
+    "unique-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
@@ -132,7 +132,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = $redis.get(unique_post_key)
-    post_id != nil and post_id != id
+    post_id != nil and post_id.to_i != id
   end
 
   def raw_hash
@@ -170,7 +170,16 @@ class Post < ActiveRecord::Base
                cloned[1][:omit_nofollow] = true
                post_analyzer.cook(*cloned)
              end
-    Plugin::Filter.apply( :after_post_cook, self, cooked )
+
+    new_cooked = Plugin::Filter.apply(:after_post_cook, self, cooked)
+
+    if new_cooked != cooked && new_cooked.blank?
+      Rails.logger.warn("Plugin is blanking out post: #{self.url}\nraw: #{self.raw}")
+    elsif new_cooked.blank?
+      Rails.logger.warn("Blank post detected post: #{self.url}\nraw: #{self.raw}")
+    end
+
+    new_cooked
   end
 
   # Sometimes the post is being edited by someone else, for example, a mod.
@@ -242,8 +251,23 @@ class Post < ActiveRecord::Base
     order('sort_order desc, post_number desc')
   end
 
-  def self.summary
-    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.summary_percent_filter.to_f / 100.0]).limit(SiteSetting.summary_max_results)
+  def self.summary(topic_id=nil)
+    # PERF: if you pass in nil it is WAY slower
+    #  pg chokes getting a reasonable plan
+    topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
+
+    # percent rank has tons of ties
+    where(["post_number = 1 or id in (
+            SELECT p1.id
+            FROM posts p1
+            WHERE p1.percent_rank <= ? AND
+               p1.topic_id = #{topic_id}
+            ORDER BY p1.percent_rank
+            LIMIT ?
+          )",
+           SiteSetting.summary_percent_filter.to_f / 100.0,
+           SiteSetting.summary_max_results
+    ])
   end
 
   def update_flagged_posts_count
@@ -580,13 +604,14 @@ end
 #  version                 :integer          default(1), not null
 #  cook_method             :integer          default(1), not null
 #  wiki                    :boolean          default(FALSE), not null
-#  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text
 #  baked_at                :datetime
 #  baked_version           :integer
 #  hidden_at               :datetime
 #  self_edits              :integer          default(0), not null
 #  reply_quoted            :boolean          default(FALSE), not null
+#  via_email               :boolean          default(FALSE), not null
+#  raw_email               :text
+#  public_version          :integer          default(1), not null
 #
 # Indexes
 #
@@ -594,4 +619,5 @@ end
 #  idx_posts_user_id_deleted_at             (user_id)
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
 #  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
+#  index_posts_on_user_id_and_created_at    (user_id,created_at)
 #

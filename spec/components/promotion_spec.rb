@@ -19,18 +19,18 @@ describe Promotion do
     let(:promotion) { Promotion.new(user) }
 
     it "doesn't raise an error with a nil user" do
-      -> { Promotion.new(nil).review }.should_not raise_error
+      expect { Promotion.new(nil).review }.not_to raise_error
     end
 
     context 'that has done nothing' do
       let!(:result) { promotion.review }
 
       it "returns false" do
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "has not changed the user's trust level" do
-        user.trust_level.should == TrustLevel[0]
+        expect(user.trust_level).to eq(TrustLevel[0])
       end
     end
 
@@ -45,11 +45,11 @@ describe Promotion do
       end
 
       it "returns true" do
-        @result.should == true
+        expect(@result).to eq(true)
       end
 
       it "has upgraded the user to basic" do
-        user.trust_level.should == TrustLevel[1]
+        expect(user.trust_level).to eq(TrustLevel[1])
       end
     end
 
@@ -64,11 +64,11 @@ describe Promotion do
       let!(:result) { promotion.review }
 
       it "returns false" do
-        result.should == false
+        expect(result).to eq(false)
       end
 
       it "has not changed the user's trust level" do
-        user.trust_level.should == TrustLevel[1]
+        expect(user.trust_level).to eq(TrustLevel[1])
       end
     end
 
@@ -88,11 +88,11 @@ describe Promotion do
       end
 
       it "returns true" do
-        @result.should == true
+        expect(@result).to eq(true)
       end
 
       it "has upgraded the user to regular" do
-        user.trust_level.should == TrustLevel[2]
+        expect(user.trust_level).to eq(TrustLevel[2])
       end
     end
 
@@ -109,7 +109,7 @@ describe Promotion do
 
       it "review_tl2 returns false" do
         expect {
-          promotion.review_tl2.should == false
+          expect(promotion.review_tl2).to eq(false)
         }.to_not change { user.reload.trust_level }
       end
 
@@ -132,12 +132,12 @@ describe Promotion do
       end
 
       it "review_tl2 returns true" do
-        promotion.review_tl2.should == true
+        expect(promotion.review_tl2).to eq(true)
       end
 
       it "promotes to tl3" do
-        promotion.review_tl2.should == true
-        user.reload.trust_level.should == TrustLevel[3]
+        expect(promotion.review_tl2).to eq(true)
+        expect(user.reload.trust_level).to eq(TrustLevel[3])
       end
 
       it "logs a trust level change" do

@@ -43,7 +43,7 @@
   h1 {
     display: inline-block;
     min-width: 120px;
-    font-size: 25px;
+    font-size: 1.786em;
     line-height: 1.25;
     display: block;
     max-width: 250px;
@@ -54,13 +54,13 @@
       color: $secondary;
     }
     i {
-      font-size: 18px;
+      font-size: .8em;
       color: $secondary;
     }
   }
 
   h2 {
-    font-size: 15px;
+    font-size: 1.071em;
     line-height: 1.25;
     font-weight: normal;
     display: block;
@@ -74,7 +74,7 @@
   }
 
   h3 {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
     color: dark-light-diff($secondary, $primary, 25%, -25%);
@@ -85,7 +85,7 @@
     }
   }
   .groups {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: normal;
     margin-top: 0;
     color: $primary;
@@ -201,7 +201,7 @@
 
       h3 {
         color: $primary;
-        font-size: 14px;
+        font-size: 1em;
         margin-bottom: -8px;
       }
     }
@@ -226,7 +226,7 @@
     position: absolute;
     right: 12px;
     bottom: 12px;
-    font-size: 30px;
+    font-size: 2.143em;
     i {color: $secondary;}
   }
 }

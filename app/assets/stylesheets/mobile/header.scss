@@ -3,15 +3,18 @@
 // --------------------------------------------------
 
 .d-header {
-  padding-left: 10px !important;
-  padding-right: 10px !important;
 
   #site-logo {
-    max-width: 122px;
+    max-width: 135px;
   }
 
-  .panel {
-    margin-right: 20px;
+  // some protection for text-only site titles
+  .title {
+    max-width: 140px;
+    height: 39px;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: clip;
   }
 
   .icons {
@@ -28,6 +31,7 @@
     display:none;
   }
 }
+
 #main-outlet {
   padding-top: 60px;
 }
@@ -44,7 +48,7 @@
   .heading {
     color: $primary;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 0.857em;
     line-height: 15px;
   }
 
@@ -55,10 +59,10 @@
     top: 0;
     right: 25px;
   }
-  
+
   input[type='text'] {
     width: 265px;
-    font-size: 16px;
+    font-size: 1.143em;
   }
 
   &#user-dropdown {
@@ -78,7 +82,7 @@
 }
 
 .search-link .topic-statuses .topic-status i {
-  font-size: 14px;
+  font-size: 1em;
 }
 
 .d-dropdown#search-dropdown .heading {

@@ -15,57 +15,60 @@ class OptimizedImage < ActiveRecord::Base
       thumbnail = nil
     end
 
+    # return the previous thumbnail if any
+    return thumbnail unless thumbnail.nil?
+
     # create the thumbnail otherwise
-    unless thumbnail
-      external_copy = Discourse.store.download(upload) if Discourse.store.external?
-      original_path = if Discourse.store.external?
-        external_copy.try(:path)
+    external_copy = Discourse.store.download(upload) if Discourse.store.external?
+    original_path = if Discourse.store.external?
+      external_copy.try(:path)
+    else
+      Discourse.store.path_for(upload)
+    end
+
+    if original_path.blank?
+      Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
+    else
+      # create a temp file with the same extension as the original
+      extension = File.extname(original_path)
+      temp_file = Tempfile.new(["discourse-thumbnail", extension])
+      temp_path = temp_file.path
+
+      if extension =~ /\.svg$/i
+        FileUtils.cp(original_path, temp_path)
+        resized = true
       else
-        Discourse.store.path_for(upload)
+        resized = resize(original_path, temp_path, width, height, opts[:allow_animation])
       end
 
-      if original_path.blank?
-        Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
+      if resized
+        thumbnail = OptimizedImage.create!(
+          upload_id: upload.id,
+          sha1: Digest::SHA1.file(temp_path).hexdigest,
+          extension: extension,
+          width: width,
+          height: height,
+          url: "",
+        )
+        # store the optimized image and update its url
+        url = Discourse.store.store_optimized_image(temp_file, thumbnail)
+        if url.present?
+          thumbnail.url = url
+          thumbnail.save
+        else
+          Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+        end
       else
-        # create a temp file with the same extension as the original
-        extension = File.extname(original_path)
-        temp_file = Tempfile.new(["discourse-thumbnail", extension])
-        temp_path = temp_file.path
-
-        if extension =~ /\.svg$/i
-          FileUtils.cp(original_path, temp_path)
-          resized = true
-        else
-          resized = resize(original_path, temp_path, width, height, opts[:allow_animation])
-        end
-
-        if resized
-          thumbnail = OptimizedImage.create!(
-            upload_id: upload.id,
-            sha1: Digest::SHA1.file(temp_path).hexdigest,
-            extension: File.extname(temp_path),
-            width: width,
-            height: height,
-            url: "",
-          )
-          # store the optimized image and update its url
-          url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-          if url.present?
-            thumbnail.url = url
-            thumbnail.save
-          else
-            Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
-          end
-        else
-          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
-        end
-
-        # close && remove temp file
-        temp_file.close!
+        Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
       end
 
-      # make sure we remove the cached copy from external stores
-      external_copy.close! if Discourse.store.external?
+      # close && remove temp file
+      temp_file.close!
+    end
+
+    # make sure we remove the cached copy from external stores
+    if Discourse.store.external?
+      external_copy.try(:close!) rescue nil
     end
 
     thumbnail
@@ -80,7 +83,7 @@ class OptimizedImage < ActiveRecord::Base
 
   def self.resize(from, to, width, height, allow_animation=false)
     # NOTE: ORDER is important!
-    instructions = if allow_animation
+    instructions = if allow_animation && from =~ /\.GIF$/i
       %W{
         #{from}
         -coalesce

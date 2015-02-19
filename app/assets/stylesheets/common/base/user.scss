@@ -24,6 +24,16 @@
   }
 }
 
+.public-user-fields {
+  .user-field-name {
+    font-weight: bold;
+  }
+}
+
+.collapsed-info .public-user-fields {
+  display: none;
+}
+
 .notification-buttons {
   margin: 10px 0;
   text-align: right;
@@ -49,7 +59,7 @@
   }
   h2 {
     a {
-      font-size: 14px;
+      font-size: 1em;
       color: scale-color($tertiary, $lightness: -10%);;
       cursor: pointer;
     }
@@ -73,3 +83,6 @@
   }
 }
 
+.new-private-message {
+  margin-bottom: 15px;
+}

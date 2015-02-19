@@ -1,11 +1,3 @@
-/**
-  A data model representing the site (instance of Discourse)
-
-  @class Site
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
@@ -66,7 +58,12 @@ Discourse.Site = Discourse.Model.extend({
 
   updateCategory: function(newCategory) {
     var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
-    if (existingCategory) existingCategory.setProperties(newCategory);
+    if (existingCategory) {
+      // Don't update null permissions
+      if (newCategory.permission === null) { delete newCategory.permission; }
+
+      existingCategory.setProperties(newCategory);
+    }
   }
 });
 
@@ -88,15 +85,13 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     if (result.categories) {
       result.categoriesById = {};
       result.categories = _.map(result.categories, function(c) {
-        result.categoriesById[c.id] = Discourse.Category.create(c);
-        return result.categoriesById[c.id];
+        return result.categoriesById[c.id] = Discourse.Category.create(c);
       });
 
       // Associate the categories with their parents
       result.categories.forEach(function (c) {
         if (c.get('parent_category_id')) {
-          c.set('parentCategory',
-            result.categoriesById[c.get('parent_category_id')]);
+          c.set('parentCategory', result.categoriesById[c.get('parent_category_id')]);
         }
       });
     }

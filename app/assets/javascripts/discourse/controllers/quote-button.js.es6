@@ -1,6 +1,5 @@
+/* global assetPath:true */
 import DiscourseController from 'discourse/controllers/controller';
-
-/*global assetPath:true */
 
 export default DiscourseController.extend({
   needs: ['topic', 'composer'],
@@ -55,7 +54,7 @@ export default DiscourseController.extend({
     // create a marker element
     var markerElement = document.createElement("span");
     // containing a single invisible character
-    markerElement.appendChild(document.createTextNode("\ufeff"));
+    markerElement.appendChild(document.createTextNode("\u{feff}"));
 
     // collapse the range at the beginning/end of the selection
     range.collapse(!Discourse.Mobile.isMobileDevice);

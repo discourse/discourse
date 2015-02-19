@@ -8,26 +8,26 @@
 
 {{#loading-spinner condition=loading}}
   <div class='admin-container user-badges'>
-    <h2>{{i18n admin.badges.grant_badge}}</h2>
+    <h2>{{i18n 'admin.badges.grant_badge'}}</h2>
     {{#if noBadges}}
-      <p>{{i18n admin.badges.no_badges}}</p>
+      <p>{{i18n 'admin.badges.no_badges'}}</p>
     {{else}}
       <br>
       {{combo-box valueAttribute="id" value=controller.selectedBadgeId content=controller.grantableBadges}}
-      <button class='btn btn-primary' {{action "grantBadge" controller.selectedBadgeId}}>{{i18n admin.badges.grant}}</button>
+      <button class='btn btn-primary' {{action "grantBadge" controller.selectedBadgeId}}>{{i18n 'admin.badges.grant'}}</button>
     {{/if}}
 
     <br>
     <br>
 
-    <h2>{{i18n admin.badges.granted_badges}}</h2>
+    <h2>{{i18n 'admin.badges.granted_badges'}}</h2>
     <br>
 
     <table>
       <tr>
-        <th>{{i18n admin.badges.badge}}</th>
-        <th>{{i18n admin.badges.granted_by}}</th>
-        <th>{{i18n admin.badges.granted_at}}</th>
+        <th>{{i18n 'admin.badges.badge'}}</th>
+        <th>{{i18n 'admin.badges.granted_by'}}</th>
+        <th>{{i18n 'admin.badges.granted_at'}}</th>
         <th></th>
       </tr>
 
@@ -42,13 +42,13 @@
           </td>
           <td>{{age-with-tooltip granted_at}}</td>
           <td>
-            <button class='btn' {{action "revokeBadge" this}}>{{i18n admin.badges.revoke}}</button>
+            <button class='btn' {{action "revokeBadge" this}}>{{i18n 'admin.badges.revoke'}}</button>
           </td>
         </tr>
       {{else}}
         <tr>
           <td colspan="5">
-            <p>{{i18n admin.badges.no_user_badges name=user.username}}</p>
+            <p>{{i18n 'admin.badges.no_user_badges' name=user.username}}</p>
           </td>
         </tr>
       {{/each}}

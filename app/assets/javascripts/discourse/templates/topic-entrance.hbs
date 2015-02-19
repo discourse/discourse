@@ -1,6 +1,7 @@
-<button {{action "enterTop"}} class='btn full no-text jump-top'>
-  <i class='fa fa-caret-up'></i> {{{topDate}}}
-</button>
-<button {{action "enterBottom"}} class='btn full no-text jump-bottom'>
-  {{{bottomDate}}} <i class='fa fa-caret-down'></i>
-</button>
+{{#d-button action="enterTop" class="full no-text jump-top"}}
+  {{fa-icon 'caret-up'}} {{{topDate}}}
+{{/d-button}}
+
+{{#d-button action="enterBottom" class="full no-text jump-button"}}
+  {{{bottomDate}}} {{fa-icon 'caret-down'}}
+{{/d-button}}

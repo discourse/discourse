@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe UserOpenId do
 
-  it { should belong_to :user }
-  it { should validate_presence_of :email }
-  it { should validate_presence_of :url }
+  it { is_expected.to belong_to :user }
+  it { is_expected.to validate_presence_of :email }
+  it { is_expected.to validate_presence_of :url }
 end

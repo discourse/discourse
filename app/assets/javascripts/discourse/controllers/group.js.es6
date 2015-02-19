@@ -1,13 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  The basic controller for a group
-
-  @class GroupController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
+// The basic controller for a group
 export default ObjectController.extend({
   counts: null,
 

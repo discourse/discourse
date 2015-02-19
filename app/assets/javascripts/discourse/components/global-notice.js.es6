@@ -1,12 +1,17 @@
-export default Ember.Component.extend({
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  shouldRerender: Discourse.View.renderIfChanged("site.isReadOnly"),
+export default Ember.Component.extend(StringBuffer, {
+  rerenderTriggers: ['site.isReadOnly'],
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var notices = [];
 
     if (this.site.get("isReadOnly")) {
       notices.push(I18n.t("read_only_mode.enabled"));
+    }
+
+    if (this.siteSettings.disable_emails) {
+      notices.push(I18n.t("emails_are_disabled"));
     }
 
     if (Discourse.User.currentProp('admin') && this.siteSettings.show_create_topics_notice) {

@@ -9,14 +9,18 @@ module PostGuardian
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
     if authenticated? && post
+
+      return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
+
       # we allow flagging for trust level 1 and higher
-      (is_flag && @user.has_trust_level?(TrustLevel[1]) && not(already_did_flagging)) ||
+      # always allowed for private messages
+      (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
 
       # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
 
       # nothing except flagging on archived topics
-      not(post.topic.archived?) &&
+      not(post.topic.try(:archived?)) &&
 
       # nothing except flagging on deleted posts
       not(post.trashed?) &&
@@ -26,6 +30,9 @@ module PostGuardian
 
       # new users can't notify_user because they are not allowed to send private messages
       not(action_key == :notify_user && !@user.has_trust_level?(TrustLevel[1])) &&
+
+      # can't send private messages if they're disabled globally
+      not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
 
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
@@ -169,7 +176,7 @@ module PostGuardian
   end
 
   def can_rebake?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_see_flagged_posts?

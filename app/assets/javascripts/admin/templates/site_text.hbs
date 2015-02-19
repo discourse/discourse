@@ -1,9 +1,9 @@
 <div class='row'>
   <div class='content-list span6'>
     <ul>
-      {{#each model}}
+      {{#each c in model}}
         <li>
-          {{#link-to 'adminSiteText.edit' text_type}}{{title}}{{/link-to}}
+          {{#link-to 'adminSiteText.edit' c.text_type}}{{c.title}}{{/link-to}}
         </li>
       {{/each}}
     </ul>

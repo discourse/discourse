@@ -1,6 +1,6 @@
 <div class='container show-badge'>
   <h1>
-    {{#link-to 'badges.index'}}{{i18n badges.title}}{{/link-to}}
+    {{#link-to 'badges.index'}}{{i18n 'badges.title'}}{{/link-to}}
     <i class='fa fa-angle-right'></i>
     {{displayName}}
   </h1>
@@ -9,9 +9,9 @@
     <tbody>
       <tr>
         <td class='badge'>{{user-badge badge=this}}</td>
-        <td class='description'>{{displayDescription}}</td>
-        <td class='grant-count'>{{i18n badges.granted count=grant_count}}</td>
-        <td class='info'>{{i18n badges.allow_title}} {{{view.allowTitle}}}<br>{{i18n badges.multiple_grant}} {{{view.multipleGrant}}}
+        <td class='description'>{{{displayDescriptionHtml}}}</td>
+        <td class='grant-count'>{{i18n 'badges.granted' count=grant_count}}</td>
+        <td class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
         </td>
       </tr>
     </tbody>
@@ -19,26 +19,23 @@
 
   {{#if userBadges}}
     <div class={{unbound layoutClass}}>
-    {{#each userBadges}}
+    {{#each ub in userBadges}}
         <div class="badge-user">
-          {{#link-to 'user' user classNames="badge-info"}}
-              {{avatar user imageSize="large"}}
+          {{#link-to 'user' ub.user classNames="badge-info"}}
+              {{avatar ub.user imageSize="large"}}
               <div class="details">
-                <span class="username">{{user.username}}</span>
-                {{format-date granted_at}}
+                <span class="username">{{ub.user.username}}</span>
+                {{format-date ub.granted_at}}
               </div>
           {{/link-to}}
 
-          {{#if post_number}}
-            <a class="post-link" href="{{unbound topic.url}}/{{unbound post_number}}">{{topic.title}}</a>
+          {{#if ub.post_number}}
+            <a class="post-link" href="{{unbound ub.topic.url}}/{{unbound ub.post_number}}">{{ub.topic.title}}</a>
           {{/if}}
         </div>
       {{/each}}
     </div>
 
     {{loading-spinner condition=canLoadMore}}
-    {{#unless canLoadMore}}
-      {{custom-html "footer"}}
-    {{/unless}}
   {{/if}}
 </div>

@@ -41,7 +41,7 @@
     float: right;
     color: $primary;
     opacity: 0.5;
-    font-size: 15px;
+    font-size: 1.071em;
   }
 
   a.close:hover {
@@ -73,13 +73,16 @@
 
   .posts-count {
     color: scale-color($tertiary, $lightness: -40%);
-    font-size: 12px;
+    font-size: 0.857em;
   }
 }
 
 .composer-popup:nth-of-type(2) {
   margin-left: 10px;
 }
+
+// hide cancel upload link on IE9 (not supported)
+.ie9 #cancel-file-upload { display: none; }
 
 #reply-control {
   .toggle-preview, #draft-status, #file-uploading {
@@ -89,11 +92,10 @@
   }
   .toggle-preview {
     right: 5px;
-    text-decoration: underline;
   }
   #file-uploading {
     left: 51%;
-    font-size: 12px;
+    font-size: 0.857em;
     color: $primary;
   }
   #draft-status {
@@ -103,19 +105,19 @@
       color: $danger;
     }
   }
-  @include transition(height 0.4s ease);
+  transition: height 0.4s ease;
   width: 100%;
   z-index: 1039;
   height: 0;
   background-color: scale-color-diff();
   bottom: 0;
-  font-size: 14px;
+  font-size: 1em;
   position: fixed;
   .toggler {
     width: 15px;
     right: 1px;
     position: absolute;
-    font-size: 15px;
+    font-size: 1.071em;
     color: $primary;
     padding: 0 10px 5px 10px;
     &:before {
@@ -124,7 +126,6 @@
     }
   }
   a.cancel {
-    text-decoration: underline;
     padding-left: 7px;
   }
   .control-row {
@@ -205,7 +206,7 @@
 
       }
       .wmd-controls {
-        @include transition(top 0.3s ease);
+        transition: top 0.3s ease;
         top: 100px;
       }
     }
@@ -217,7 +218,7 @@
       display: inline-block;
       .select2-container {
         width: 400px;
-        margin-top: 6px;
+        margin-top: 5px;
         a {
           padding-top: 4px;
           height: 28px;
@@ -277,6 +278,7 @@
       cursor: default;
       video {
         max-width: 100%;
+        max-height: 500px;
         height: auto;
       }
       audio {
@@ -329,13 +331,6 @@
   margin-bottom: 10px;
 }
 
-#reply-control.edit-title.private-message {
-  .wmd-controls {
-    @include transition(top 0.3s ease);
-    top: 140px;
-  }
-}
-
 #reply-control {
   &.hide-preview {
     .wmd-controls {
@@ -357,11 +352,6 @@
     bottom: 48px;
     top: 50px;
 
-    // this removes the topmost margin;
-    // if we don't have this, all posts would have extra space at the top
-    #wmd-preview > *:first-child {
-      margin-top: 0 !important;
-    }
 
     #wmd-input, #wmd-preview-scroller, #wmd-preview {
       box-sizing: border-box;
@@ -382,7 +372,7 @@
       @include border-radius-all(0);
     }
     #wmd-preview-scroller {
-      font-size: 13px;
+      font-size: 0.929em;
       line-height: 18px;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: scroll;

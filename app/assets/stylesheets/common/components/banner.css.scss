@@ -7,6 +7,7 @@
   border-radius: 5px;
   background: scale-color($tertiary, $lightness: 90%);
   box-shadow: 0 1px 2px scale-color($tertiary, $lightness: 70%);
+  color: darken($tertiary, 45%);
   z-index: 501;
   overflow: auto;
 
@@ -15,8 +16,9 @@
   }
 
   .close {
-    font-size: 25px !important;
+    font-size: 1.786em !important;
     margin-top: -10px !important;
+    color: darken($tertiary, 45%);
   }
 
   .meta {

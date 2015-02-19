@@ -4,31 +4,46 @@ require 'jobs/regular/process_post'
 describe Jobs::ProcessPost do
 
   it "returns when the post cannot be found" do
-    lambda { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.should_not raise_error
+    expect { Jobs::ProcessPost.new.perform(post_id: 1, sync_exec: true) }.not_to raise_error
   end
 
   context 'with a post' do
 
-    before do
-      @post = Fabricate(:post)
+    let(:post) do
+      Fabricate(:post)
     end
 
-    it 'calls process on a CookedPostProcessor' do
-      CookedPostProcessor.any_instance.expects(:post_process).once
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'does not erase posts when CookedPostProcessor malfunctions' do
+      # Look kids, an actual reason why you want to use mocks
+      CookedPostProcessor.any_instance.expects(:html).returns(' ')
+      cooked = post.cooked
+
+      post.reload
+      expect(post.cooked).to eq(cooked)
+
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
     end
 
-    it 'updates the html if the dirty flag is true' do
-      CookedPostProcessor.any_instance.expects(:dirty?).returns(true)
-      CookedPostProcessor.any_instance.expects(:html).returns('test')
-      Post.any_instance.expects(:update_column).with(:cooked, 'test').once
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'recooks if needed' do
+      cooked = post.cooked
+
+      post.update_columns(cooked: "frogs")
+      Jobs::ProcessPost.new.execute(post_id: post.id, cook: true)
+
+      post.reload
+      expect(post.cooked).to eq(cooked)
     end
 
-    it "doesn't update the cooked content if dirty is false" do
-      CookedPostProcessor.any_instance.expects(:dirty?).returns(false)
-      Post.any_instance.expects(:update_column).never
-      Jobs::ProcessPost.new.execute(post_id: @post.id)
+    it 'processes posts' do
+
+      post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
+      expect(post.cooked).to match(/http/)
+
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      post.reload
+
+      # subtle but cooked post processor strip this stuff, this ensures all the code gets a workout
+      expect(post.cooked).not_to match(/http/)
     end
 
   end

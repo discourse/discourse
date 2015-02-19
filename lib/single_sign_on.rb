@@ -1,7 +1,8 @@
 class SingleSignOn
   ACCESSORS = [:nonce, :name, :username, :email, :avatar_url, :avatar_force_update,
-               :about_me, :external_id]
+               :about_me, :external_id, :return_sso_url, :admin, :moderator]
   FIXNUMS = []
+  BOOLS = [:avatar_force_update, :admin, :moderator]
   NONCE_EXPIRY_TIME = 10.minutes
 
   attr_accessor(*ACCESSORS)
@@ -21,7 +22,12 @@ class SingleSignOn
 
     parsed = Rack::Utils.parse_query(payload)
     if sso.sign(parsed["sso"]) != parsed["sig"]
-      raise RuntimeError, "Bad signature for payload"
+      diags = "\n\nsso: #{parsed["sso"]}\n\nsig: #{parsed["sig"]}\n\nexpected sig: #{sso.sign(parsed["sso"])}"
+      if parsed["sso"] =~ /[^a-zA-Z0-9=\r\n\/+]/m
+        raise RuntimeError, "The SSO field should be Base64 encoded, using only A-Z, a-z, 0-9, +, /, and = characters. Your input contains characters we don't understand as Base64, see http://en.wikipedia.org/wiki/Base64 #{diags}"
+      else
+        raise RuntimeError, "Bad signature for payload #{diags}"
+      end
     end
 
     decoded = Base64.decode64(parsed["sso"])
@@ -30,6 +36,9 @@ class SingleSignOn
     ACCESSORS.each do |k|
       val = decoded_hash[k.to_s]
       val = val.to_i if FIXNUMS.include? k
+      if BOOLS.include? k
+        val = ["true", "false"].include?(val) ? val == "true" : nil
+      end
       sso.send("#{k}=", val)
     end
 
@@ -77,7 +86,7 @@ class SingleSignOn
   def unsigned_payload
     payload = {}
     ACCESSORS.each do |k|
-     next unless (val = send k)
+     next if (val = send k) == nil
 
      payload[k] = val
     end

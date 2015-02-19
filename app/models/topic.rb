@@ -101,6 +101,8 @@ class Topic < ActiveRecord::Base
 
   has_one :warning
 
+  has_one :first_post, -> {where post_number: 1}, class_name: Post
+
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
@@ -122,7 +124,7 @@ class Topic < ActiveRecord::Base
 
   scope :visible, -> { where(visible: true) }
 
-  scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
+  scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
 
   scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
@@ -138,13 +140,6 @@ class Topic < ActiveRecord::Base
            SELECT c.id FROM categories c
            WHERE #{condition[0]})", condition[1])
   }
-
-  # Helps us limit how many topics can be starred in a day
-  class StarLimiter < RateLimiter
-    def initialize(user)
-      super(user, "starred:#{Date.today}", SiteSetting.max_stars_per_day, 1.day.to_i)
-    end
-  end
 
   attr_accessor :ignore_category_auto_close
   attr_accessor :skip_callbacks
@@ -236,10 +231,19 @@ class Topic < ActiveRecord::Base
     posts.order('score desc').limit(1).first
   end
 
+  def has_flags?
+    FlagQuery.flagged_post_actions("active")
+             .where("topics.id" => id)
+             .exists?
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    # TODO we should probably change this from 3 queries to 1
-    User.where('id in (?)', allowed_users.select('users.id').to_a + allowed_group_users.select('users.id').to_a)
+    # TODO we should probably change this to 1 query
+    allowed_user_ids = allowed_users.select('users.id').to_a
+    allowed_group_user_ids = allowed_group_users.select('users.id').to_a
+    allowed_staff_ids = private_message? && has_flags? ? User.where(moderator: true).pluck(:id).to_a : []
+    User.where('id IN (?)', allowed_user_ids + allowed_group_user_ids + allowed_staff_ids)
   end
 
   # Additional rate limits on topics: per day and private messages per day
@@ -275,8 +279,10 @@ class Topic < ActiveRecord::Base
               .visible
               .secured(Guardian.new(user))
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
+              .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
+              .where("COALESCE(users.trust_level, 0) > 0")
               .created_since(since)
               .listable_topics
               .includes(:category)
@@ -346,7 +352,7 @@ class Topic < ActiveRecord::Base
   end
 
   def self.listable_count_per_day(start_date, end_date)
-    listable_topics.where('created_at >= ? and created_at < ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
+    listable_topics.where('created_at >= ? and created_at <= ?', start_date, end_date).group('date(created_at)').order('date(created_at)').count
   end
 
   def private_message?
@@ -391,8 +397,8 @@ class Topic < ActiveRecord::Base
     similar
   end
 
-  def update_status(status, enabled, user)
-    TopicStatusUpdate.new(self, user).update!(status, enabled)
+  def update_status(status, enabled, user, message=nil)
+    TopicStatusUpdate.new(self, user).update!(status, enabled, message)
   end
 
   # Atomically creates the next post number
@@ -604,27 +610,6 @@ class Topic < ActiveRecord::Base
     @participants_summary ||= TopicParticipantsSummary.new(self, options).summary
   end
 
-  # Enable/disable the star on the topic
-  def toggle_star(user, starred)
-    Topic.transaction do
-      TopicUser.change(user, id, {starred: starred}.merge( starred ? {starred_at: DateTime.now, unstarred_at: nil} : {unstarred_at: DateTime.now}))
-
-      # Update the star count
-      exec_sql "UPDATE topics
-                SET star_count = (SELECT COUNT(*)
-                                  FROM topic_users AS ftu
-                                  WHERE ftu.topic_id = topics.id
-                                    AND ftu.starred = true)
-                WHERE id = ?", id
-
-      if starred
-        StarLimiter.new(user).performed!
-      else
-        StarLimiter.new(user).rollback!
-      end
-    end
-  end
-
   def make_banner!(user)
     # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
@@ -652,10 +637,6 @@ class Topic < ActiveRecord::Base
       html: post.cooked,
       key: self.id
     }
-  end
-
-  def self.starred_counts_per_day(sinceDaysAgo=30)
-    TopicUser.starred_since(sinceDaysAgo).by_date_starred.count
   end
 
   # Even if the slug column in the database is null, topic.slug will return something:
@@ -791,10 +772,10 @@ class Topic < ActiveRecord::Base
       else
         self.auto_close_started_at ||= Time.zone.now
       end
-      if by_user.try(:staff?)
+      if by_user.try(:staff?) || by_user.try(:trust_level) == TrustLevel[4]
         self.auto_close_user = by_user
       else
-        self.auto_close_user ||= (self.user.staff? ? self.user : Discourse.system_user)
+        self.auto_close_user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
       end
     end
 
@@ -845,60 +826,62 @@ class Topic < ActiveRecord::Base
 
 end
 
+
 # == Schema Information
 #
 # Table name: topics
 #
-#  id                      :integer          not null, primary key
-#  title                   :string(255)      not null
-#  last_posted_at          :datetime
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  views                   :integer          default(0), not null
-#  posts_count             :integer          default(0), not null
-#  user_id                 :integer
-#  last_post_user_id       :integer          not null
-#  reply_count             :integer          default(0), not null
-#  featured_user1_id       :integer
-#  featured_user2_id       :integer
-#  featured_user3_id       :integer
-#  avg_time                :integer
-#  deleted_at              :datetime
-#  highest_post_number     :integer          default(0), not null
-#  image_url               :string(255)
-#  off_topic_count         :integer          default(0), not null
-#  like_count              :integer          default(0), not null
-#  incoming_link_count     :integer          default(0), not null
-#  bookmark_count          :integer          default(0), not null
-#  star_count              :integer          default(0), not null
-#  category_id             :integer
-#  visible                 :boolean          default(TRUE), not null
-#  moderator_posts_count   :integer          default(0), not null
-#  closed                  :boolean          default(FALSE), not null
-#  archived                :boolean          default(FALSE), not null
-#  bumped_at               :datetime         not null
-#  has_summary             :boolean          default(FALSE), not null
-#  vote_count              :integer          default(0), not null
-#  archetype               :string(255)      default("regular"), not null
-#  featured_user4_id       :integer
-#  notify_moderators_count :integer          default(0), not null
-#  spam_count              :integer          default(0), not null
-#  illegal_count           :integer          default(0), not null
-#  inappropriate_count     :integer          default(0), not null
-#  pinned_at               :datetime
-#  score                   :float
-#  percent_rank            :float            default(1.0), not null
-#  notify_user_count       :integer          default(0), not null
-#  subtype                 :string(255)
-#  slug                    :string(255)
-#  auto_close_at           :datetime
-#  auto_close_user_id      :integer
-#  auto_close_started_at   :datetime
-#  deleted_by_id           :integer
-#  participant_count       :integer          default(1)
-#  word_count              :integer
-#  excerpt                 :string(1000)
-#  pinned_globally         :boolean          default(FALSE), not null
+#  id                            :integer          not null, primary key
+#  title                         :string(255)      not null
+#  last_posted_at                :datetime
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  views                         :integer          default(0), not null
+#  posts_count                   :integer          default(0), not null
+#  user_id                       :integer
+#  last_post_user_id             :integer          not null
+#  reply_count                   :integer          default(0), not null
+#  featured_user1_id             :integer
+#  featured_user2_id             :integer
+#  featured_user3_id             :integer
+#  avg_time                      :integer
+#  deleted_at                    :datetime
+#  highest_post_number           :integer          default(0), not null
+#  image_url                     :string(255)
+#  off_topic_count               :integer          default(0), not null
+#  like_count                    :integer          default(0), not null
+#  incoming_link_count           :integer          default(0), not null
+#  bookmark_count                :integer          default(0), not null
+#  category_id                   :integer
+#  visible                       :boolean          default(TRUE), not null
+#  moderator_posts_count         :integer          default(0), not null
+#  closed                        :boolean          default(FALSE), not null
+#  archived                      :boolean          default(FALSE), not null
+#  bumped_at                     :datetime         not null
+#  has_summary                   :boolean          default(FALSE), not null
+#  vote_count                    :integer          default(0), not null
+#  archetype                     :string(255)      default("regular"), not null
+#  featured_user4_id             :integer
+#  notify_moderators_count       :integer          default(0), not null
+#  spam_count                    :integer          default(0), not null
+#  illegal_count                 :integer          default(0), not null
+#  inappropriate_count           :integer          default(0), not null
+#  pinned_at                     :datetime
+#  score                         :float
+#  percent_rank                  :float            default(1.0), not null
+#  notify_user_count             :integer          default(0), not null
+#  subtype                       :string(255)
+#  slug                          :string(255)
+#  auto_close_at                 :datetime
+#  auto_close_user_id            :integer
+#  auto_close_started_at         :datetime
+#  deleted_by_id                 :integer
+#  participant_count             :integer          default(1)
+#  word_count                    :integer
+#  excerpt                       :string(1000)
+#  pinned_globally               :boolean          default(FALSE), not null
+#  auto_close_based_on_last_post :boolean          default(FALSE)
+#  auto_close_hours              :float
 #
 # Indexes
 #

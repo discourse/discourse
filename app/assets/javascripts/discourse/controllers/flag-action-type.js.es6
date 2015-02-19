@@ -1,13 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  Supports logic for flags in the modal
-
-  @class FlagActionTypeController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
+// Supports logic for flags in the modal
 export default ObjectController.extend({
   needs: ['flag'],
 

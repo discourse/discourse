@@ -1,19 +1,13 @@
-/**
-  This view handles rendering a tip when a field on a form is invalid
+import StringBuffer from 'discourse/mixins/string-buffer';
 
-  @class InputTipView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.View.extend({
+export default Discourse.View.extend(StringBuffer, {
   classNameBindings: [':tip', 'good', 'bad'],
+  rerenderTriggers: ['validation'],
 
-  shouldRerender: Discourse.View.renderIfChanged('validation'),
   bad: Em.computed.alias('validation.failed'),
   good: Em.computed.not('bad'),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var reason = this.get('validation.reason');
     if (reason) {
       var icon = this.get('good') ? 'fa-check' : 'fa-times';

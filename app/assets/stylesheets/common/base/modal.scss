@@ -26,21 +26,24 @@
 
 .modal-backdrop,
 .modal-backdrop.fade.in {
-  -webkit-animation: fade .25s;
-  animation: fade .25s;
-  opacity: 0.8;
-  filter: alpha(opacity=80);
+  -webkit-animation: fade .3s;
+  animation: fade .3s;
+  opacity: .9;
+  filter: alpha(opacity=90);
 }
 
 //fade in
 
-@-webkit-keyframes fade {
-    from {opacity: 0}
-    to {opacity: .8}
-}@keyframes fade {
-    from {opacity: 0}
-    to {opacity: .8}
+@keyframes fade {
+  from {opacity: 0}
+  to {opacity: .9}
 }
+
+@-webkit-keyframes fade {
+  from {opacity: 0}
+  to {opacity: .9}
+}
+
 .modal-outer-container {
   display:table;
   width:100%;
@@ -71,7 +74,6 @@
   margin-bottom: 0;
 }
 .modal-footer {
-  margin-left: 15px;
   padding: 14px 15px 15px;
   border-top: 1px solid scale-color-diff();
 }
@@ -89,7 +91,7 @@
     padding: 10px 30px 10px 15px;
     background-color: dark-light-diff($secondary, $primary, 10%, -15%);
     li > a {
-      font-size: 14px;
+      font-size: 1em;
     }
     border-bottom: 1px solid scale-color-diff();
 
@@ -109,7 +111,7 @@
     }
     p {
       color: darken($primary, 40%);;
-      font-size: 13px;
+      font-size: 0.929em;
     }
     .archetype-option {
       margin-bottom: 20px;
@@ -128,20 +130,24 @@
   section.field {
     margin-bottom: 20px;
   }
+  section.field .field-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
 }
 
 .reply-where-modal {
   .modal-footer {
     .btn {
       text-align: left;
-      font-size: 18px;
+      font-size: 1.286em;
       line-height: 20px;
       width: 310px;
       margin-bottom: 10px;
       display: block;
       margin-left: 0;
       .topic-title {
-        font-size: 13px;
+        font-size: 0.929em;
         font-weight: normal;
       }
       &.btn-reply-here {
@@ -151,7 +157,6 @@
       }
     }
     .cancel {
-      text-decoration: underline;
       float: right;
       margin-right: 5px;
     }
@@ -164,14 +169,13 @@
     .btn {
       font-weight: normal;
       text-align: left;
-      font-size: 14px;
+      font-size: 1em;
       line-height: 20px;
       margin-bottom: 10px;
       display: inline-block;
       margin-left: 0;
     }
     .cancel {
-      text-decoration: underline;
       display: block;
       margin-right: 5px;
     }
@@ -179,7 +183,6 @@
 }
 
 .modal-footer .cancel-inline {
-  text-decoration: underline;
   margin-left: 10px;
 }
 

@@ -21,10 +21,10 @@ describe TopicFeaturedUsers do
 
     t.reload
 
-    t.featured_user1_id.should == p2.user_id
-    t.featured_user2_id.should == p4.user_id
-    t.featured_user3_id.should == nil
-    t.featured_user4_id.should == nil
+    expect(t.featured_user1_id).to eq(p2.user_id)
+    expect(t.featured_user2_id).to eq(p4.user_id)
+    expect(t.featured_user3_id).to eq(nil)
+    expect(t.featured_user4_id).to eq(nil)
 
 
   end

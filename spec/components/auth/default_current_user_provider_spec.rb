@@ -18,7 +18,7 @@ describe Auth::DefaultCurrentUserProvider do
   it "finds a user for a correct per-user api key" do
     user = Fabricate(:user)
     ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
-    provider("/?api_key=hello").current_user.id.should == user.id
+    expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
   end
 
   it "raises for a user pretending" do
@@ -31,20 +31,46 @@ describe Auth::DefaultCurrentUserProvider do
     }.to raise_error(Discourse::InvalidAccess)
   end
 
+  it "raises for a user with a mismatching ip" do
+    user = Fabricate(:user)
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['10.0.0.0/24'])
+
+    expect{
+      provider("/?api_key=hello&api_username=#{user.username.downcase}", "REMOTE_ADDR" => "10.1.0.1").current_user
+    }.to raise_error(Discourse::InvalidAccess)
+
+  end
+
+  it "allows a user with a matching ip" do
+    user = Fabricate(:user)
+    ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1, allowed_ips: ['100.0.0.0/24'])
+
+    found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
+                          "REMOTE_ADDR" => "100.0.0.22").current_user
+
+    expect(found_user.id).to eq(user.id)
+
+
+    found_user = provider("/?api_key=hello&api_username=#{user.username.downcase}",
+                          "HTTP_X_FORWARDED_FOR" => "10.1.1.1, 100.0.0.22").current_user
+    expect(found_user.id).to eq(user.id)
+
+  end
+
   it "finds a user for a correct system api key" do
     user = Fabricate(:user)
     ApiKey.create!(key: "hello", created_by_id: -1)
-    provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id.should == user.id
+    expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
   end
 
   it "should not update last seen for message bus" do
-    provider("/message-bus/anything/goes", method: "POST").should_update_last_seen?.should == false
-    provider("/message-bus/anything/goes", method: "GET").should_update_last_seen?.should == false
+    expect(provider("/message-bus/anything/goes", method: "POST").should_update_last_seen?).to eq(false)
+    expect(provider("/message-bus/anything/goes", method: "GET").should_update_last_seen?).to eq(false)
   end
 
   it "should update last seen for others" do
-    provider("/topic/anything/goes", method: "POST").should_update_last_seen?.should == true
-    provider("/topic/anything/goes", method: "GET").should_update_last_seen?.should == true
+    expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
+    expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 end
 

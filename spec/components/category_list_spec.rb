@@ -15,9 +15,9 @@ describe CategoryList do
       cat.save
 
       # uncategorized + this
-      CategoryList.new(Guardian.new admin).categories.count.should == 2
-      CategoryList.new(Guardian.new user).categories.count.should == 0
-      CategoryList.new(Guardian.new nil).categories.count.should == 0
+      expect(CategoryList.new(Guardian.new admin).categories.count).to eq(2)
+      expect(CategoryList.new(Guardian.new user).categories.count).to eq(0)
+      expect(CategoryList.new(Guardian.new nil).categories.count).to eq(0)
     end
 
     it "doesn't show topics that you can't view" do
@@ -36,14 +36,14 @@ describe CategoryList do
 
       CategoryFeaturedTopic.feature_topics
 
-      CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 2
-      CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == private_cat.name }.displayable_topics.count.should == 1
+      expect(CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
+      expect(CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == private_cat.name }.displayable_topics.count).to eq(1)
 
-      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
-      CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }.should == nil
+      expect(CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }).to eq(nil)
 
-      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count.should == 1
-      CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }.should == nil
+      expect(CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }).to eq(nil)
     end
   end
 
@@ -54,33 +54,33 @@ describe CategoryList do
     context "without a featured topic" do
 
       it "should not return empty categories" do
-        category_list.categories.should be_blank
+        expect(category_list.categories).to be_blank
       end
 
       it "returns empty categories for those who can create them" do
         SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
-        category_list.categories.should_not be_blank
+        expect(category_list.categories).not_to be_blank
       end
 
       it "returns empty categories with descriptions" do
         Fabricate(:category, description: 'The category description.')
         Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
-        category_list.categories.should_not be_blank
+        expect(category_list.categories).not_to be_blank
       end
 
       it 'returns the empty category and a non-empty category for those who can create them' do
         SiteSetting.stubs(:allow_uncategorized_topics).returns(true)
         Fabricate(:topic, category: Fabricate(:category))
         Guardian.any_instance.expects(:can_create?).with(Category).returns(true)
-        category_list.categories.size.should == 3
-        category_list.categories.should include(topic_category)
+        expect(category_list.categories.size).to eq(3)
+        expect(category_list.categories).to include(topic_category)
       end
 
       it "doesn't return empty uncategorized category to admins if allow_uncategorized_topics is false" do
         SiteSetting.stubs(:allow_uncategorized_topics).returns(false)
-        CategoryList.new(Guardian.new(user)).categories.should be_empty
-        CategoryList.new(Guardian.new(admin)).categories.map(&:id).should_not include(SiteSetting.uncategorized_category_id)
+        expect(CategoryList.new(Guardian.new(user)).categories).to be_empty
+        expect(CategoryList.new(Guardian.new(admin)).categories.map(&:id)).not_to include(SiteSetting.uncategorized_category_id)
       end
 
     end
@@ -90,15 +90,15 @@ describe CategoryList do
       let(:category) { category_list.categories.first }
 
       it "should return the category" do
-        category.should be_present
+        expect(category).to be_present
       end
 
       it "returns the correct category" do
-        category.id.should == topic_category.id
+        expect(category.id).to eq(topic_category.id)
       end
 
       it "should contain our topic" do
-        category.featured_topics.include?(topic).should == true
+        expect(category.featured_topics.include?(topic)).to eq(true)
       end
     end
 
@@ -120,16 +120,16 @@ describe CategoryList do
 
       it "returns categories in specified order" do
         cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-        category_ids.should == [cat2.id, cat1.id]
+        expect(category_ids).to eq([cat2.id, cat1.id])
       end
 
       it "handles duplicate position values" do
         cat1, cat2, cat3, cat4 = Fabricate(:category, position: 0), Fabricate(:category, position: 0), Fabricate(:category, position: nil), Fabricate(:category, position: 0)
         first_three = category_ids[0,3] # The order is not deterministic
-        first_three.should include(cat1.id)
-        first_three.should include(cat2.id)
-        first_three.should include(cat4.id)
-        category_ids[-1].should == cat3.id
+        expect(first_three).to include(cat1.id)
+        expect(first_three).to include(cat2.id)
+        expect(first_three).to include(cat4.id)
+        expect(category_ids[-1]).to eq(cat3.id)
       end
     end
 
@@ -141,12 +141,12 @@ describe CategoryList do
       it "returns categories in order of activity" do
         cat1 = Fabricate(:category, position: 0, posts_week: 1, posts_month: 1, posts_year: 1)
         cat2 = Fabricate(:category, position: 1, posts_week: 2, posts_month: 1, posts_year: 1)
-        category_ids.should == [cat2.id, cat1.id]
+        expect(category_ids).to eq([cat2.id, cat1.id])
       end
 
       it "returns categories in order of id when there's no activity" do
         cat1, cat2 = Fabricate(:category, position: 1), Fabricate(:category, position: 0)
-        category_ids.should == [cat1.id, cat2.id]
+        expect(category_ids).to eq([cat1.id, cat2.id])
       end
     end
   end

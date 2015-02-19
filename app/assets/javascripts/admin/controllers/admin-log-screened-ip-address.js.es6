@@ -2,6 +2,10 @@ export default Ember.ObjectController.extend({
   editing: false,
   savedIpAddress: null,
 
+  isRange: function() {
+    return this.get("ip_address").indexOf("/") > 0;
+  }.property("ip_address"),
+
   actions: {
     allow: function(record) {
       record.set('action_name', 'do_nothing');

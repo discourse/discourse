@@ -9,11 +9,11 @@ describe ScreenedUrl do
 
   describe "new record" do
     it "sets a default action_type" do
-      described_class.create(valid_params).action_type.should == described_class.actions[:do_nothing]
+      expect(described_class.create(valid_params).action_type).to eq(described_class.actions[:do_nothing])
     end
 
     it "last_match_at is null" do
-      described_class.create(valid_params).last_match_at.should == nil
+      expect(described_class.create(valid_params).last_match_at).to eq(nil)
     end
 
     it "normalizes the url and domain" do
@@ -30,46 +30,46 @@ describe ScreenedUrl do
     ['http://', 'HTTP://', 'https://', 'HTTPS://'].each do |prefix|
       it "strips #{prefix}" do
         @params = valid_params.merge(url: url.gsub('http://', prefix))
-        subject.url.should == url.gsub('http://', '')
+        expect(subject.url).to eq(url.gsub('http://', ''))
       end
     end
 
     it "strips trailing slash" do
       @params = valid_params.merge(url: 'silverbullet.in/')
-      subject.url.should == 'silverbullet.in'
+      expect(subject.url).to eq('silverbullet.in')
     end
 
     it "strips trailing slashes" do
       @params = valid_params.merge(url: 'silverbullet.in/buy///')
-      subject.url.should == 'silverbullet.in/buy'
+      expect(subject.url).to eq('silverbullet.in/buy')
     end
 
     it "downcases domains" do
       record1 = described_class.new(valid_params.merge(domain: 'DuB30.com', url: 'DuB30.com/Gems/Gems-of-Power'))
       record1.normalize
-      record1.domain.should == 'dub30.com'
-      record1.url.should == 'dub30.com/Gems/Gems-of-Power'
-      record1.should be_valid
+      expect(record1.domain).to eq('dub30.com')
+      expect(record1.url).to eq('dub30.com/Gems/Gems-of-Power')
+      expect(record1).to be_valid
 
       record2 = described_class.new(valid_params.merge(domain: 'DuB30.com', url: 'DuB30.com'))
       record2.normalize
-      record2.domain.should == 'dub30.com'
-      record2.url.should == 'dub30.com'
-      record2.should be_valid
+      expect(record2.domain).to eq('dub30.com')
+      expect(record2.url).to eq('dub30.com')
+      expect(record2).to be_valid
     end
 
     it "strips www. from domains" do
       record1 = described_class.new(valid_params.merge(domain: 'www.DuB30.com', url: 'www.DuB30.com/Gems/Gems-of-Power'))
       record1.normalize
-      record1.domain.should == 'dub30.com'
+      expect(record1.domain).to eq('dub30.com')
 
       record2 = described_class.new(valid_params.merge(domain: 'WWW.DuB30.cOM', url: 'WWW.DuB30.com/Gems/Gems-of-Power'))
       record2.normalize
-      record2.domain.should == 'dub30.com'
+      expect(record2.domain).to eq('dub30.com')
 
       record3 = described_class.new(valid_params.merge(domain: 'www.trolls.spammers.com', url: 'WWW.DuB30.com/Gems/Gems-of-Power'))
       record3.normalize
-      record3.domain.should == 'trolls.spammers.com'
+      expect(record3.domain).to eq('trolls.spammers.com')
     end
 
     it "doesn't modify the url argument" do
@@ -88,17 +88,17 @@ describe ScreenedUrl do
 
   describe 'find_match' do
     it 'returns nil when there is no match' do
-      described_class.find_match('http://spamspot.com/buy/it').should == nil
+      expect(described_class.find_match('http://spamspot.com/buy/it')).to eq(nil)
     end
 
     it 'returns the record when there is an exact match' do
       match = described_class.create(valid_params)
-      described_class.find_match(valid_params[:url]).should == match
+      expect(described_class.find_match(valid_params[:url])).to eq(match)
     end
 
     it 'ignores case of the domain' do
       match = described_class.create(valid_params.merge(url: 'spamexchange.com/Good/Things'))
-      described_class.find_match("http://SPAMExchange.com/Good/Things").should == match
+      expect(described_class.find_match("http://SPAMExchange.com/Good/Things")).to eq(match)
     end
   end
 
@@ -106,14 +106,14 @@ describe ScreenedUrl do
     context 'url is not being blocked' do
       it 'creates a new record with default action of :do_nothing' do
         record = described_class.watch(url, domain)
-        record.should_not be_new_record
-        record.action_type.should == described_class.actions[:do_nothing]
+        expect(record).not_to be_new_record
+        expect(record.action_type).to eq(described_class.actions[:do_nothing])
       end
 
       it 'lets action_type be overriden' do
         record = described_class.watch(url, domain, action_type: described_class.actions[:block])
-        record.should_not be_new_record
-        record.action_type.should == described_class.actions[:block]
+        expect(record).not_to be_new_record
+        expect(record.action_type).to eq(described_class.actions[:block])
       end
     end
 
@@ -125,7 +125,7 @@ describe ScreenedUrl do
       end
 
       it "returns the existing record" do
-        described_class.watch(url, domain).should == existing
+        expect(described_class.watch(url, domain)).to eq(existing)
       end
     end
   end

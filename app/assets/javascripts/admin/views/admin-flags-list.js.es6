@@ -1,4 +1,6 @@
-export default Discourse.View.extend(Discourse.LoadMore, {
+import LoadMore from "discourse/mixins/load-more";
+
+export default Discourse.View.extend(LoadMore, {
   loading: false,
   eyelineSelector: '.admin-flags tbody tr',
 

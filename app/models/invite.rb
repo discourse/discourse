@@ -1,5 +1,10 @@
+require_dependency 'rate_limiter'
+
 class Invite < ActiveRecord::Base
+  include RateLimiter::OnCreateRecord
   include Trashable
+
+  rate_limit :limit_invites_per_day
 
   belongs_to :user
   belongs_to :topic
@@ -184,8 +189,12 @@ class Invite < ActiveRecord::Base
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
+  def limit_invites_per_day
+    RateLimiter.new(invited_by, "invites-per-day:#{Date.today}", SiteSetting.max_invites_per_day, 1.day.to_i)
+  end
+
   def self.base_directory
-    File.join(Rails.root, "public", "csv", RailsMultisite::ConnectionManagement.current_db)
+    File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
 
   def self.chunk_path(identifier, filename, chunk_number)

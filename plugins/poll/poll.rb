@@ -6,34 +6,24 @@ module ::PollPlugin
     end
 
     def is_poll?
-      if !@post.post_number.nil? and @post.post_number > 1
-        # Not a new post, and also not the first post.
-        return false
-      end
+      # Not a new post, and also not the first post.
+      return false if @post.post_number.present? && @post.post_number > 1
 
       topic = @post.topic
 
       # Topic is not set in a couple of cases in the Discourse test suite.
-      return false if topic.nil?
+      return false if topic.nil? || topic.user.nil?
 
-      if @post.post_number.nil? and topic.highest_post_number > 0
-        # New post, but not the first post in the topic.
-        return false
+      # New post, but not the first post in the topic.
+      return false if @post.post_number.nil? && topic.highest_post_number > 0
+
+      I18n.with_locale(topic.user.effective_locale) do
+        topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
       end
-
-      topic.title =~ /^(#{I18n.t('poll.prefix').strip}|#{I18n.t('poll.closed_prefix').strip})\s?:/i
     end
 
     def has_poll_details?
-      if SiteSetting.allow_user_locale?
-        # If we allow users to select their locale of choice we cannot detect polls
-        # by the prefix, so we fall back to checking if the poll details is set in
-        # places to make sure polls are still accessible by users using a different
-        # locale than the one used by the topic creator.
-        not self.details.nil?
-      else
-        self.is_poll?
-      end
+      self.is_poll?
     end
 
     # Called during validation of poll posts. Discourse already restricts edits to
@@ -60,7 +50,8 @@ module ::PollPlugin
     end
 
     def is_closed?
-      @post.topic.closed? || @post.topic.archived? || (!SiteSetting.allow_user_locale? && (@post.topic.title =~ /^#{I18n.t('poll.closed_prefix')}/i) === 0)
+      topic = @post.topic
+      topic.closed? || topic.archived? || (topic.title =~ /^#{I18n.t('poll.closed_prefix', locale: topic.user.effective_locale)}/i) === 0
     end
 
     def options

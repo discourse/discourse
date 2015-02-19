@@ -46,12 +46,20 @@ module SiteSettingExtension
     @choices ||= {}
   end
 
+  def shadowed_settings
+    @shadowed_settings ||= []
+  end
+
   def hidden_settings
     @hidden_settings ||= []
   end
 
   def refresh_settings
     @refresh_settings ||= []
+  end
+
+  def previews
+    @previews ||= {}
   end
 
   def validators
@@ -64,31 +72,52 @@ module SiteSettingExtension
       self.defaults[name] = default
       categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
+
       if opts[:enum]
         enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
       end
+
       if opts[:choices]
         choices.has_key?(name) ?
           choices[name].concat(opts[:choices]) :
           choices[name] = opts[:choices]
       end
+
       if opts[:type] == 'list'
         lists << name
       end
+
       if opts[:hidden]
         hidden_settings << name
       end
+
+      # You can "shadow" a site setting with a GlobalSetting. If the GlobalSetting
+      # exists it will be used instead of the setting and the setting will be hidden.
+      # Useful for things like API keys on multisite.
+      if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
+        hidden_settings << name
+        shadowed_settings << name
+        current_value = GlobalSetting.send(name)
+      end
+
       if opts[:refresh]
         refresh_settings << name
       end
 
-      if validator_type = validator_for(opts[:type] || get_data_type(name, defaults[name]))
-        validators[name] = {class: validator_type, opts: opts}
+      if opts[:preview]
+        previews[name] = opts[:preview]
+      end
+
+      opts[:validator] = opts[:validator].try(:constantize)
+      type = opts[:type] || get_data_type(name, defaults[name])
+
+      if validator_type = opts[:validator] || validator_for(type)
+        validators[name] = { class: validator_type, opts: opts }
       end
 
       current[name] = current_value
-      setup_methods(name, current_value)
+      setup_methods(name)
     end
   end
 
@@ -124,7 +153,7 @@ module SiteSettingExtension
   # Retrieve all settings
   def all_settings(include_hidden=false)
     @defaults
-      .reject{|s, _| hidden_settings.include?(s) || include_hidden}
+      .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
       .map do |s, v|
         value = send(s)
         type = types[get_data_type(s, value)]
@@ -134,7 +163,8 @@ module SiteSettingExtension
           default: v.to_s,
           type: type.to_s,
           value: value.to_s,
-          category: categories[s]
+          category: categories[s],
+          preview: previews[s]
         }
         opts.merge!({valid_values: enum_class(s).values, translate_names: enum_class(s).translate_names?}) if type == :enum
         opts[:choices] = choices[s] if choices.has_key? s
@@ -147,7 +177,10 @@ module SiteSettingExtension
   end
 
   def self.client_settings_cache_key
-    "client_settings_json"
+    # NOTE: we use the git version in the key to ensure
+    # that we don't end up caching the incorrect version
+    # in cases where we are cycling unicorns
+    "client_settings_json_#{Discourse.git_version}"
   end
 
   # refresh all the site settings
@@ -163,20 +196,23 @@ module SiteSettingExtension
       # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
 
-      changes,deletions = diff_hash(new_hash, old)
-
-      if deletions.length > 0 || changes.length > 0
-        changes.each do |name, val|
-          current[name] = val
-        end
-        deletions.each do |name,val|
-          current[name] = defaults[name]
-        end
+      # add shadowed
+      shadowed_settings.each do |ss|
+        new_hash[ss] = GlobalSetting.send(ss)
       end
+
+      changes, deletions = diff_hash(new_hash, old)
+
+      changes.each do |name, val|
+        current[name] = val
+      end
+      deletions.each do |name, val|
+        current[name] = defaults[name]
+      end
+
       clear_cache!
     end
   end
-
 
   def ensure_listen_for_changes
     unless @subscribed
@@ -273,7 +309,7 @@ module SiteSettingExtension
       }
       value = domain_array.join("|")
     end
-    return value
+    value
   end
 
   def set(name, value)
@@ -355,11 +391,10 @@ module SiteSettingExtension
   end
 
 
-  def setup_methods(name, current_value)
+  def setup_methods(name)
+    clean_name = name.to_s.sub("?", "").to_sym
 
-    clean_name = name.to_s.sub("?", "")
-
-    eval "define_singleton_method :#{clean_name} do
+    define_singleton_method clean_name do
       c = @containers[provider.current_site]
       if c
         c[name]
@@ -369,14 +404,13 @@ module SiteSettingExtension
       end
     end
 
-    define_singleton_method :#{clean_name}? do
-      #{clean_name}
+    define_singleton_method "#{clean_name}?" do
+      self.send clean_name
     end
 
-    define_singleton_method :#{clean_name}= do |val|
-      add_override!(:#{name}, val)
+    define_singleton_method "#{clean_name}=" do |val|
+      add_override!(name, val)
     end
-    "
   end
 
   def enum_class(name)
@@ -388,8 +422,7 @@ module SiteSettingExtension
       url = "http://#{url}" if URI.parse(url).scheme.nil?
       url = URI.parse(url).host
     end
-    return url
+    url
   end
 
 end
-

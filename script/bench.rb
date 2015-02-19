@@ -2,6 +2,7 @@ require "socket"
 require "csv"
 require "yaml"
 require "optparse"
+require "fileutils"
 
 @include_env = false
 @result_file = nil
@@ -9,6 +10,7 @@ require "optparse"
 @best_of = 1
 @mem_stats = false
 @unicorn = false
+@dump_heap = false
 
 opts = OptionParser.new do |o|
   o.banner = "Usage: ruby bench.rb [options]"
@@ -25,6 +27,11 @@ opts = OptionParser.new do |o|
   o.on("-b", "--best_of [NUM]", "Number of times to run the bench taking best as result") do |i|
     @best_of = i.to_i
   end
+  o.on("-d", "--heap_dump") do
+    @dump_heap = true
+    # We need an env var for config/boot.rb to enable allocation tracing prior to framework init
+    ENV['DISCOURSE_DUMP_HEAP'] = "1"
+  end
   o.on("-m", "--memory_stats") do
     @mem_stats = true
   end
@@ -35,11 +42,14 @@ end
 opts.parse!
 
 def run(command, opt = nil)
-  if opt == :quiet
-    system(command, out: "/dev/null", err: :out)
-  else
-    system(command, out: $stdout, err: :out)
-  end
+  exit_status =
+    if opt == :quiet
+      system(command, out: "/dev/null", err: :out)
+    else
+      system(command, out: $stdout, err: :out)
+    end
+
+  exit unless exit_status
 end
 
 begin
@@ -75,7 +85,7 @@ sudo apt-get install redis-server
 end
 
 puts "Running bundle"
-if !run("bundle", :quiet)
+if run("bundle", :quiet)
   puts "Quitting, some of the gems did not install"
   prereqs
   exit
@@ -102,16 +112,18 @@ end
 ENV["RAILS_ENV"] = "profile"
 
 
+discourse_env_vars = %w(DISCOURSE_DUMP_HEAP RUBY_GC_HEAP_INIT_SLOTS RUBY_GC_HEAP_FREE_SLOTS RUBY_GC_HEAP_GROWTH_FACTOR RUBY_GC_HEAP_GROWTH_MAX_SLOTS RUBY_GC_MALLOC_LIMIT RUBY_GC_OLDMALLOC_LIMIT RUBY_GC_MALLOC_LIMIT_MAX RUBY_GC_OLDMALLOC_LIMIT_MAX RUBY_GC_MALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_OLDMALLOC_LIMIT_GROWTH_FACTOR RUBY_GC_HEAP_OLDOBJECT_LIMIT_FACTOR)
+
 if @include_env
   puts "Running with tuned environment"
   ENV["RUBY_GC_MALLOC_LIMIT"] = "50_000_000"
-  ENV.delete "RUBY_HEAP_SLOTS_GROWTH_FACTOR"
-  ENV.delete "RUBY_HEAP_MIN_SLOTS"
-  ENV.delete "RUBY_FREE_MIN"
+  discourse_env_vars - %w(RUBY_GC_MALLOC_LIMIT).each do |v|
+    ENV.delete v
+  end
 else
   # clean env
   puts "Running with the following custom environment"
-  %w{RUBY_GC_MALLOC_LIMIT RUBY_HEAP_MIN_SLOTS RUBY_FREE_MIN}.each do |w|
+  discourse_env_vars.each do |w|
     puts "#{w}: #{ENV[w]}"
   end
 end
@@ -168,6 +180,7 @@ begin
 
   pid = if @unicorn
           ENV['UNICORN_PORT'] = @port.to_s
+          FileUtils.mkdir_p(File.join('tmp', 'pids'))
           spawn("bundle exec unicorn -c config/unicorn.conf.rb")
         else
           spawn("bundle exec thin start -p #{@port}")
@@ -250,6 +263,11 @@ begin
   if @mem_stats
     puts
     puts open("http://127.0.0.1:#{@port}/admin/memory_stats#{append}").read
+  end
+
+  if @dump_heap
+    puts
+    puts open("http://127.0.0.1:#{@port}/admin/dump_heap#{append}").read
   end
 
   if @result_file

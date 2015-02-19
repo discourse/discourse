@@ -1,8 +1,11 @@
 
 export default Ember.ArrayController.extend({
-  needs: ['user-notifications'],
-  canLoadMore: true,
+  needs: ['user-notifications', 'application'],
   loading: false,
+
+  _showFooter: function() {
+    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
+  }.observes("canLoadMore"),
 
   showDismissButton: function() {
     return this.get('user').total_unread_notifications > 0;

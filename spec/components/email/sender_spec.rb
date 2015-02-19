@@ -29,19 +29,19 @@ describe Email::Sender do
 
   context "host_for" do
     it "defaults to localhost" do
-      Email::Sender.host_for(nil).should == "localhost"
+      expect(Email::Sender.host_for(nil)).to eq("localhost")
     end
 
     it "returns localhost for a weird host" do
-      Email::Sender.host_for("this is not a real host").should == "localhost"
+      expect(Email::Sender.host_for("this is not a real host")).to eq("localhost")
     end
 
     it "parses hosts from urls" do
-      Email::Sender.host_for("http://meta.discourse.org").should == "meta.discourse.org"
+      expect(Email::Sender.host_for("http://meta.discourse.org")).to eq("meta.discourse.org")
     end
 
     it "downcases hosts" do
-      Email::Sender.host_for("http://ForumSite.com").should == "forumsite.com"
+      expect(Email::Sender.host_for("http://ForumSite.com")).to eq("forumsite.com")
     end
 
   end
@@ -73,6 +73,11 @@ describe Email::Sender do
       Then { expect(message.header['List-ID']).to be_present }
     end
 
+    context "adds a Message-ID header even when topic id is not present" do
+      When { email_sender.send }
+      Then { expect(message.header['Message-ID']).to be_present }
+    end
+
     context "adds Precedence header" do
       before do
         message.header['X-Discourse-Topic-Id'] = 5577
@@ -80,6 +85,24 @@ describe Email::Sender do
 
       When { email_sender.send }
       Then { expect(message.header['Precedence']).to be_present }
+    end
+
+    context "removes custom Discourse headers from topic notification mails" do
+      before do
+        message.header['X-Discourse-Topic-Id'] = 5577
+      end
+
+      When { email_sender.send }
+      Then { expect(message.header['X-Discourse-Topic-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Post-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Reply-Key']).not_to be_present }
+    end
+
+    context "removes custom Discourse headers from digest/registration/other mails" do
+      When { email_sender.send }
+      Then { expect(message.header['X-Discourse-Topic-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Post-Id']).not_to be_present }
+      Then { expect(message.header['X-Discourse-Reply-Key']).not_to be_present }
     end
 
     context 'email logs' do
@@ -144,7 +167,7 @@ describe Email::Sender do
     end
 
     it 'should have the current user_id' do
-      @email_log.user_id.should == user.id
+      expect(@email_log.user_id).to eq(user.id)
     end
 
 

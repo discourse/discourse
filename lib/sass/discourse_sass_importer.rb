@@ -50,7 +50,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
       contents = ""
       Category.where('background_url IS NOT NULL').each do |c|
         if c.background_url.present?
-          contents << "body.category-#{c.id} { background-image: url(#{c.background_url}) }\n"
+          contents << "body.category-#{c.full_slug} { background-image: url(#{c.background_url}) }\n"
         end
       end
       return Sass::Engine.new(contents, options.merge(

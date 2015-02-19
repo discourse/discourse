@@ -2,8 +2,6 @@
 // BEWARE: changing these styles implies they take effect anywhere they are seen
 // throughout the Discourse application
 
-html {font-size: 14px/19px;}
-
 @include medium-width {
   body {
     min-width: $medium-width;
@@ -38,23 +36,11 @@ body {
     }
   }
   #main {
-    .fa-star.starred {
-      color: $danger;
-    }
     a.star {
       color: dark-light-diff($secondary, $primary, 80%, -20%);
       &:before {
         font-family: "FontAwesome";
         content: "\f005";
-      }
-      &.starred {
-        color: $danger;
-        @include hover {
-          opacity: 1;
-          &:before {
-            content: "\f005";
-          }
-        }
       }
       @include hover {
         opacity: 0.6;
@@ -110,7 +96,7 @@ body {
     padding: 0 2px 0 0;
     margin: 0;
     i {
-        font-size: 15px;
+        font-size: 1.071em;
           }
   }
 
@@ -150,6 +136,10 @@ body {
     margin-bottom: 10px;
   }
 
+  .not-found-topic {
+    a[href] { margin-right: 10px; line-height: 2;}
+  }
+
   .page-not-found-topics .span8 {
     line-height: 1.5em;
     margin-right: 20px;
@@ -165,7 +155,7 @@ body {
     margin: 0 0 18px;
   }
   label, input, button, select, textarea {
-    font-size: 13px;
+    font-size: 0.929em;
     font-weight: normal;
     line-height: 18px;
   }
@@ -180,7 +170,7 @@ body {
     display: inline-block;
     padding: 4px;
     margin-bottom: 9px;
-    font-size: 13px;
+    font-size: 0.929em;
     line-height: 18px;
     color: $primary;
   }
@@ -190,7 +180,7 @@ body {
       height: 18px;
       padding: 4px;
       margin-bottom: 9px;
-      font-size: 13px;
+      font-size: 0.929em;
       line-height: 18px;
       color: $primary;
     }
@@ -206,7 +196,6 @@ body {
     border-radius: 3px;
     box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
     transition: border linear 0.2s, box-shadow linear 0.2s;
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   }
   input {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
@@ -215,7 +204,6 @@ body {
       border-radius: 3px;
       box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
       transition: border linear 0.2s, box-shadow linear 0.2s;
-      -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     }
   }
   textarea:focus {

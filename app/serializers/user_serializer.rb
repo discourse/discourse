@@ -18,6 +18,17 @@ class UserSerializer < BasicUserSerializer
     end
   end
 
+  # attributes that are hidden for TL0 users when seen by anonymous
+  def self.untrusted_attributes(*attrs)
+    attrs.each do |attr|
+      method_name = "include_#{attr}?"
+      define_method(method_name) do
+        return false if scope.restrict_user_fields?(object)
+        send(attr).present?
+      end
+    end
+  end
+
   attributes :name,
              :email,
              :last_posted_at,
@@ -34,6 +45,7 @@ class UserSerializer < BasicUserSerializer
              :can_edit_email,
              :can_edit_name,
              :stats,
+             :can_send_private_messages,
              :can_send_private_message_to_user,
              :bio_excerpt,
              :trust_level,
@@ -55,11 +67,7 @@ class UserSerializer < BasicUserSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
 
-  staff_attributes :number_of_deleted_posts,
-                   :number_of_flagged_posts,
-                   :number_of_flags_given,
-                   :number_of_suspensions,
-                   :number_of_warnings,
+  staff_attributes :post_count,
                    :can_be_deleted,
                    :can_delete_all_posts
 
@@ -87,6 +95,14 @@ class UserSerializer < BasicUserSerializer
                      :card_image_badge,
                      :card_image_badge_id
 
+  untrusted_attributes :bio_raw,
+                       :bio_cooked,
+                       :bio_excerpt,
+                       :location,
+                       :website,
+                       :profile_background,
+                       :card_background
+
   ###
   ### ATTRIBUTES
   ###
@@ -99,13 +115,8 @@ class UserSerializer < BasicUserSerializer
     object.user_profile.card_image_badge
   end
 
-
   def bio_raw
     object.user_profile.bio_raw
-  end
-
-  def include_bio_raw?
-    bio_raw.present?
   end
 
   def bio_cooked
@@ -114,10 +125,6 @@ class UserSerializer < BasicUserSerializer
 
   def website
     object.user_profile.website
-  end
-
-  def include_website?
-    website.present?
   end
 
   def card_image_badge_id
@@ -140,24 +147,12 @@ class UserSerializer < BasicUserSerializer
     object.user_profile.profile_background
   end
 
-  def include_profile_background?
-    profile_background.present?
-  end
-
   def card_background
     object.user_profile.card_background
   end
 
-  def include_card_background?
-    card_background.present?
-  end
-
   def location
     object.user_profile.location
-  end
-
-  def include_location?
-    location.present?
   end
 
   def can_edit
@@ -178,6 +173,12 @@ class UserSerializer < BasicUserSerializer
 
   def stats
     UserAction.stats(object.id, scope)
+  end
+
+  # Needed because 'send_private_message_to_user' will always return false
+  # when the current user is being serialized
+  def can_send_private_messages
+    scope.can_send_private_message?(Discourse.system_user)
   end
 
   def can_send_private_message_to_user
@@ -209,36 +210,8 @@ class UserSerializer < BasicUserSerializer
   ### STAFF ATTRIBUTES
   ###
 
-  def number_of_deleted_posts
-    Post.with_deleted
-        .where(user_id: object.id)
-        .where(user_deleted: false)
-        .where.not(deleted_by_id: object.id)
-        .where.not(deleted_at: nil)
-        .count
-  end
-
-  def number_of_flagged_posts
-    Post.with_deleted
-        .where(user_id: object.id)
-        .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
-                             .where(disagreed_at: nil)
-                             .select(:post_id))
-        .count
-  end
-
-  def number_of_flags_given
-    PostAction.where(user_id: object.id)
-              .where(post_action_type_id: PostActionType.notify_flag_type_ids)
-              .count
-  end
-
-  def number_of_warnings
-    object.warnings.count
-  end
-
-  def number_of_suspensions
-    UserHistory.for(object, :suspend_user).count
+  def post_count
+    object.user_stat.try(:post_count)
   end
 
   def can_be_deleted

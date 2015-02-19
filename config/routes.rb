@@ -26,12 +26,15 @@ Discourse::Application.routes.draw do
   resources :about
 
   get "site" => "site#index"
+  get "site_customizations/:key" => "site_customizations#show"
 
   resources :forums
   get "srv/status" => "forums#status"
 
   namespace :admin, constraints: StaffConstraint.new do
     get "" => "admin#index"
+
+    get 'plugins' => 'plugins#index'
 
     resources :site_settings, constraints: AdminConstraint.new do
       collection do
@@ -45,13 +48,21 @@ Discourse::Application.routes.draw do
       collection do
         post "refresh_automatic_groups" => "groups#refresh_automatic_groups"
       end
-      get "users"
+      member do
+        put "members" => "groups#add_members"
+        delete "members" => "groups#remove_member"
+      end
     end
+
+    get "groups/:type" => "groups#show", constraints: AdminConstraint.new
+    get "groups/:type/:id" => "groups#show", constraints: AdminConstraint.new
 
     resources :users, id: USERNAME_ROUTE_FORMAT do
       collection do
         get "list/:query" => "users#index"
         get "ip-info" => "users#ip_info"
+        delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
+        get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
         put "approve-bulk" => "users#approve_bulk"
         delete "reject-bulk" => "users#reject_bulk"
       end
@@ -83,6 +94,7 @@ Discourse::Application.routes.draw do
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
+    post "users/invite_admin" => "users#invite_admin", constraints: AdminConstraint.new
 
     resources :impersonate, constraints: AdminConstraint.new
 
@@ -99,7 +111,11 @@ Discourse::Application.routes.draw do
     scope "/logs" do
       resources :staff_action_logs,     only: [:index]
       resources :screened_emails,       only: [:index, :destroy]
-      resources :screened_ip_addresses, only: [:index, :create, :update, :destroy]
+      resources :screened_ip_addresses, only: [:index, :create, :update, :destroy] do
+        collection do
+          post "roll_up"
+        end
+      end
       resources :screened_urls,         only: [:index]
     end
 
@@ -118,6 +134,7 @@ Discourse::Application.routes.draw do
       resources :site_text, constraints: AdminConstraint.new
       resources :site_text_types, constraints: AdminConstraint.new
       resources :user_fields, constraints: AdminConstraint.new
+      resources :emojis, constraints: AdminConstraint.new
     end
 
     resources :color_schemes, constraints: AdminConstraint.new
@@ -155,15 +172,6 @@ Discourse::Application.routes.draw do
       end
     end
 
-    resources :export_csv, constraints: AdminConstraint.new do
-      member do
-        get "download" => "export_csv#download", constraints: { id: /[^\/]+/ }
-      end
-      collection do
-        get "users" => "export_csv#export_user_list"
-      end
-    end
-
     resources :badges, constraints: AdminConstraint.new do
       collection do
         get "types" => "badges#badge_types"
@@ -173,6 +181,7 @@ Discourse::Application.routes.draw do
     end
 
     get "memory_stats"=> "diagnostics#memory_stats", constraints: AdminConstraint.new
+    get "dump_heap"=> "diagnostics#dump_heap", constraints: AdminConstraint.new
 
   end # admin namespace
 
@@ -189,6 +198,7 @@ Discourse::Application.routes.draw do
 
   get "session/sso" => "session#sso"
   get "session/sso_login" => "session#sso_login"
+  get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
   get "composer-messages" => "composer_messages#index"
@@ -234,14 +244,12 @@ Discourse::Application.routes.draw do
   put "users/:username/preferences/badge_title" => "users#badge_title", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/username" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/username" => "users#username", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/:username/avatar(/:size)" => "users#avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
-  post "users/:username/preferences/avatar" => "users#upload_avatar", constraints: {username: USERNAME_ROUTE_FORMAT} # LEGACY ROUTE
   post "users/:username/preferences/user_image" => "users#upload_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username/preferences/user_image" => "users#destroy_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/card-badge" => "users#card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/card-badge" => "users#update_card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
-
+  get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
@@ -263,6 +271,7 @@ Discourse::Application.routes.draw do
   get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-z0-9]{40}/}
   post "uploads" => "uploads#create"
 
+  get "posts" => "posts#latest"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
   get "posts/:id/reply-history" => "posts#reply_history"
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -272,6 +281,9 @@ Discourse::Application.routes.draw do
     get 'members'
     get 'posts'
     get 'counts'
+
+    put "members" => "groups#add_members"
+    delete "members/:username" => "groups#remove_member"
   end
 
   # In case people try the wrong URL
@@ -326,6 +338,7 @@ Discourse::Application.routes.draw do
   post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
   post "category/:category_id/notifications" => "categories#set_notifications"
+  put "category/:category_id/slug" => "categories#update_slug"
 
   get "c/:id/show" => "categories#show"
   get "c/:category.rss" => "list#category_feed", format: :rss
@@ -412,6 +425,8 @@ Discourse::Application.routes.draw do
   post "t/:topic_id/merge-topic" => "topics#merge_topic", constraints: {topic_id: /\d+/}
   post "t/:topic_id/change-owner" => "topics#change_post_owners", constraints: {topic_id: /\d+/}
   delete "t/:topic_id/timings" => "topics#destroy_timings", constraints: {topic_id: /\d+/}
+  put "t/:topic_id/bookmark" => "topics#bookmark", constraints: {topic_id: /\d+/}
+  put "t/:topic_id/remove_bookmarks" => "topics#remove_bookmarks", constraints: {topic_id: /\d+/}
 
   post "t/:topic_id/notifications" => "topics#set_notifications" , constraints: {topic_id: /\d+/}
 
@@ -432,6 +447,15 @@ Discourse::Application.routes.draw do
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
+
+  resources :export_csv do
+    collection do
+      get "export_entity" => "export_csv#export_entity"
+    end
+    member do
+      get "" => "export_csv#show", constraints: { id: /[^\/]+/ }
+    end
+  end
 
   get "onebox" => "onebox#show"
 

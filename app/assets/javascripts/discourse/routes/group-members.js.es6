@@ -1,19 +1,14 @@
-export default Discourse.Route.extend({
-  model: function() {
+import ShowFooter from "discourse/mixins/show-footer";
+
+export default Discourse.Route.extend(ShowFooter, {
+  model() {
     return this.modelFor('group');
   },
 
-  afterModel: function(model) {
-    var self = this;
-    return model.findMembers().then(function(result) {
-      self.set('_members', result);
-    });
-  },
-
-  setupController: function(controller) {
-    controller.set('model', this.get('_members'));
+  setupController(controller, model) {
     this.controllerFor('group').set('showing', 'members');
+    controller.set("model", model);
+    model.findMembers();
   }
 
 });
-

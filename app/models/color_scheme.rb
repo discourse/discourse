@@ -1,3 +1,5 @@
+require_dependency 'sass/discourse_stylesheets'
+
 class ColorScheme < ActiveRecord::Base
 
   attr_accessor :is_base
@@ -96,6 +98,7 @@ class ColorScheme < ActiveRecord::Base
 
   def publish_discourse_stylesheet
     MessageBus.publish("/discourse_stylesheet", self.name)
+    DiscourseStylesheets.cache.clear
   end
 
 end

@@ -2,7 +2,7 @@ import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 export default ObjectController.extend(CanCheckEmails, {
-  indexStream: true,
+  indexStream: false,
   needs: ['user-notifications', 'user_topics_list'],
 
   viewingSelf: function() {
@@ -42,26 +42,20 @@ export default ObjectController.extend(CanCheckEmails, {
     return this.get('can_be_deleted') && this.get('can_delete_all_posts');
   }.property('can_be_deleted', 'can_delete_all_posts'),
 
-  loadedAllItems: function() {
-    switch (this.get("datasource")) {
-      case "badges": { return true; }
-      case "notifications": { return !this.get("controllers.user-notifications.canLoadMore"); }
-      case "topic_list": { return !this.get("controllers.user_topics_list.canLoadMore"); }
-      case "stream": {
-        if (this.get("userActionType")) {
-          var stat = _.find(this.get("stats"), { action_type: this.get("userActionType") });
-          return stat && stat.count <= this.get("stream.itemsLoaded");
+  publicUserFields: function() {
+    var siteUserFields = this.site.get('user_fields');
+    if (!Ember.isEmpty(siteUserFields)) {
+      var userFields = this.get('user_fields');
+      return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
+        var val = userFields ? userFields[uf.get('id').toString()] : null;
+        if (Ember.isEmpty(val)) {
+          return null;
         } else {
-          return this.get("statsCountNonPM") <= this.get("stream.itemsLoaded");
+          return Ember.Object.create({value: val, field: uf});
         }
-      }
+      }).compact();
     }
-
-    return false;
-  }.property("datasource",
-    "userActionType", "stats", "stream.itemsLoaded",
-    "controllers.user_topics_list.canLoadMore",
-    "controllers.user-notifications.canLoadMore"),
+  }.property('user_fields.@each.value'),
 
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
@@ -72,6 +66,19 @@ export default ObjectController.extend(CanCheckEmails, {
       Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
         user.destroy({deletePosts: true});
       });
+    },
+
+    exportUserArchive: function() {
+      bootbox.confirm(
+        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            Discourse.ExportCsv.exportUserArchive();
+          }
+        }
+      );
     }
   }
 });

@@ -1,5 +1,4 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
@@ -47,7 +46,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       }).then(success, fail).finally(function(){
         setTimeout(function(){
           self.set('disabled',false);
-        }, 10*1000);
+        }, 1000);
       });
 
       return false;

@@ -74,7 +74,7 @@ Discourse.NavItem.reopenClass({
     if (!Discourse.Category.list() && testName === "categories") return null;
     if (!Discourse.Site.currentProp('top_menu_items').contains(testName)) return null;
 
-    var args = { name: name, hasIcon: name === "unread" || name === "starred" };
+    var args = { name: name, hasIcon: name === "unread" };
     if (opts.category) { args.category = opts.category; }
     if (opts.noSubcategories) { args.noSubcategories = true; }
     return Discourse.NavItem.create(args);

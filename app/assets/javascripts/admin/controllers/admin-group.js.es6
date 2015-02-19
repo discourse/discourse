@@ -1,51 +1,86 @@
 export default Em.ObjectController.extend({
-  needs: ['adminGroups'],
-  members: null,
+  needs: ['adminGroupsType'],
   disableSave: false,
+
+  currentPage: function() {
+    if (this.get("user_count") === 0) { return 0; }
+    return Math.floor(this.get("offset") / this.get("limit")) + 1;
+  }.property("limit", "offset", "user_count"),
+
+  totalPages: function() {
+    if (this.get("user_count") === 0) { return 0; }
+    return Math.floor(this.get("user_count") / this.get("limit")) + 1;
+  }.property("limit", "user_count"),
+
+  showingFirst: Em.computed.lte("currentPage", 1),
+  showingLast: Discourse.computed.propertyEqual("currentPage", "totalPages"),
 
   aliasLevelOptions: function() {
     return [
-      { name: I18n.t("groups.alias_levels.nobody"), value: 0},
-      { name: I18n.t("groups.alias_levels.mods_and_admins"), value: 2},
-      { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: 3},
-      { name: I18n.t("groups.alias_levels.everyone"), value: 99}
+      { name: I18n.t("groups.alias_levels.nobody"), value: 0 },
+      { name: I18n.t("groups.alias_levels.mods_and_admins"), value: 2 },
+      { name: I18n.t("groups.alias_levels.members_mods_and_admins"), value: 3 },
+      { name: I18n.t("groups.alias_levels.everyone"), value: 99 }
     ];
   }.property(),
 
-  usernames: function(key, value) {
-    var members = this.get('members');
-    if (arguments.length > 1) {
-      this.set('_usernames', value);
-    } else {
-      var usernames;
-      if(members) {
-        usernames = members.map(function(user) {
-          return user.get('username');
-        }).join(',');
-      }
-      this.set('_usernames', usernames);
-    }
-    return this.get('_usernames');
-  }.property('members.@each.username'),
-
   actions: {
+    next: function() {
+      if (this.get("showingLast")) { return; }
+
+      var group = this.get("model"),
+          offset = Math.min(group.get("offset") + group.get("limit"), group.get("user_count"));
+
+      group.set("offset", offset);
+
+      return group.findMembers();
+    },
+
+    previous: function() {
+      if (this.get("showingFirst")) { return; }
+
+      var group = this.get("model"),
+          offset = Math.max(group.get("offset") - group.get("limit"), 0);
+
+      group.set("offset", offset);
+
+      return group.findMembers();
+    },
+
+    removeMember: function(member) {
+      var self = this,
+          message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("name") });
+      return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
+        if (confirm) {
+          self.get("model").removeMember(member);
+        }
+      });
+    },
+
+    addMembers: function() {
+      if (Em.isEmpty(this.get("usernames"))) { return; }
+      this.get("model").addMembers(this.get("usernames"));
+      // clear the user selector
+      this.set("usernames", null);
+    },
+
     save: function() {
       var self = this,
-          group = this.get('model');
+          group = this.get('model'),
+          groupsController = this.get("controllers.adminGroupsType");
 
-      self.set('disableSave', true);
+      this.set('disableSave', true);
 
       var promise;
-      if (group.get('id')) {
-        promise = group.saveWithUsernames(this.get('usernames'));
+      if (group.get("id")) {
+        promise = group.save();
       } else {
-        promise = group.createWithUsernames(this.get('usernames')).then(function() {
-          var groupsController = self.get('controllers.adminGroups');
+        promise = group.create().then(function() {
           groupsController.addObject(group);
         });
       }
       promise.then(function() {
-        self.send('showGroup', group);
+        self.transitionToRoute("adminGroup", group);
       }, function(e) {
         var message = $.parseJSON(e.responseText).errors;
         bootbox.alert(message);
@@ -56,12 +91,13 @@ export default Em.ObjectController.extend({
 
     destroy: function() {
       var group = this.get('model'),
-          groupsController = this.get('controllers.adminGroups'),
+          groupsController = this.get('controllers.adminGroupsType'),
           self = this;
 
-      bootbox.confirm(I18n.t("admin.groups.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-        if (result) {
-          self.set('disableSave', true);
+      this.set('disableSave', true);
+
+      bootbox.confirm(I18n.t("admin.groups.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(confirmed) {
+        if (confirmed) {
           group.destroy().then(function() {
             groupsController.get('model').removeObject(group);
             self.transitionToRoute('adminGroups.index');

@@ -5,7 +5,7 @@
     {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
     </label>
   {{/if}}
-  <a href="#" class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n show_help}}</a>
+  <a href="#" class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n 'show_help'}}</a>
 </div>
 {{#if loading}}
   <div class='searching'>{{loading-spinner}}</div>
@@ -21,14 +21,14 @@
       </ul>
         <div class='no-results'>
             {{#if resultType.more}}
-                <a href='#' class='filter' {{action "moreOfType" resultType.type bubbles=false}}>{{i18n show_more}} <i class="fa fa-chevron-down"></i></a>
+                <a href='#' class='filter' {{action "moreOfType" resultType.type bubbles=false}}>{{i18n 'show_more'}} <i class="fa fa-chevron-down"></i></a>
             {{else}}
             {{/if}}
         </div>
     {{/each}}
   {{else}}
     <div class='no-results'>
-      {{i18n search.no_results}}
+      {{i18n 'search.no_results'}}
     </div>
   {{/unless}}
   </div>

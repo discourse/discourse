@@ -30,10 +30,10 @@
 .topic-list {
 
   > tbody > tr {
-    &:nth-child(odd) {
+    &:nth-child(even) {
       background-color: darken($secondary, 3%);
       }
-    &:nth-child(even) {
+    &:nth-child(odd) {
       background-color: $secondary;
       }
     &.highlighted {
@@ -58,11 +58,11 @@
 
   .topic-item-stats {
     margin-top: 8px;
-  }
-
-  .topic-item-stats {
     .category, .num, .last-poster {
       float: left;
+    }
+    .category a {
+      max-width: 160px;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -142,8 +142,7 @@ tr.category-topic-link:nth-of-type(odd) {
   margin-bottom: 10px;
 
   th .badge-category {
-    float: left;
-    margin: 1px 4px 0 0;
+    margin: 0;
     font-size: 110%;
   }
 
@@ -159,7 +158,7 @@ tr.category-topic-link:nth-of-type(odd) {
       margin: 3px 7px 0 0;
       color: scale-color($primary, $lightness: 10%);
       font-weight: bold;
-      font-size: 12px;
+      font-size: 0.857em;
     }
     figcaption {
       display: inline;
@@ -253,17 +252,13 @@ tr.category-topic-link:nth-of-type(odd) {
 .fade {
   opacity: 0;
   transition: opacity linear .15s;
-  -webkit-transition: opacity linear .15s;
-
 }
 .fade.in {
   opacity: 1;
 }
 
 ol.category-breadcrumb {
-
   margin: 5px 10px 0 0;
-
 }
 
 .category-dropdown-menu {
@@ -273,10 +268,6 @@ ol.category-breadcrumb {
   a.badge-category {
     line-height: 26px !important;
     margin-bottom: 0 !important;
-  }
-
-  div {
-    margin-bottom: 10px;
   }
 }
 

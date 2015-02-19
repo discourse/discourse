@@ -1,12 +1,12 @@
 import ComboboxView from 'discourse/views/combo-box';
-
-var badgeHtml = Discourse.HTML.categoryBadge;
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   overrideWidths: true,
   dataAttributes: ['id', 'description_text'],
   valueBinding: Ember.Binding.oneWay('source'),
+  castInteger: true,
 
   content: function() {
     var scopedCategoryId = this.get('scopedCategoryId');
@@ -46,7 +46,7 @@ export default ComboboxView.extend({
     var category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
-    if (Em.empty(item.id)) {
+    if (Ember.isEmpty(item.id)) {
       var uncat = Discourse.Category.findUncategorized();
       if (uncat && uncat.get('name') === item.text) {
         category = uncat;
@@ -56,10 +56,10 @@ export default ComboboxView.extend({
     }
 
     if (!category) return item.text;
-    var result = badgeHtml(category, {showParent: false, link: false, allowUncategorized: true}),
+    var result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true}),
         parentCategoryId = category.get('parent_category_id');
     if (parentCategoryId) {
-      result = badgeHtml(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+      result = categoryBadgeHTML(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
     }
 
     result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";

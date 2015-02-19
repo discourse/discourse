@@ -3,14 +3,14 @@
 
     <div class="control-group">
       <div class="controls">
-        <h3>{{i18n user.change_email.title}}</h3>
+        <h3>{{i18n 'user.change_email.title'}}</h3>
       </div>
     </div>
 
     {{#if success}}
         <div class="control-group">
           <div class="instructions">
-            <p>{{i18n user.change_email.success}}</p>
+            <p>{{i18n 'user.change_email.success'}}</p>
           </div>
         </div>
     {{else}}
@@ -23,15 +23,15 @@
       {{/if}}
 
       <div class="control-group">
-        <label class="control-label">{{i18n user.email.title}}</label>
+        <label class="control-label">{{i18n 'user.email.title'}}</label>
         <div class="controls">
           {{text-field value=newEmail id="change_email" classNames="input-xxlarge"}}
         </div>
         <div class='instructions'>
           {{#if taken}}
-            {{i18n user.change_email.taken}}
+            {{i18n 'user.change_email.taken'}}
           {{else}}
-            {{i18n user.email.instructions}}
+            {{i18n 'user.email.instructions'}}
           {{/if}}
 
         </div>

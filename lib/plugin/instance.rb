@@ -5,8 +5,17 @@ require_dependency 'plugin/auth_provider'
 
 class Plugin::Instance
 
-  attr_reader :auth_providers, :assets, :styles, :color_schemes
   attr_accessor :path, :metadata
+  attr_reader :admin_route
+
+  # Memoized array readers
+  [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+    class_eval %Q{
+      def #{att}
+        @#{att} ||= []
+      end
+    }
+  end
 
   def self.find_all(parent_path)
     [].tap { |plugins|
@@ -22,22 +31,48 @@ class Plugin::Instance
   def initialize(metadata=nil, path=nil)
     @metadata = metadata
     @path = path
-    @assets = []
-    @color_schemes = []
 
-    # Automatically include all ES6 JS files
     if @path
-      dir = File.dirname(@path)
-      Dir.glob("#{dir}/assets/javascripts/**/*.js.es6") do |f|
-        relative = f.sub("#{dir}/assets/", "")
-        register_asset(relative)
-      end
+      # Automatically include all ES6 JS and hbs files
+      root_path = "#{File.dirname(@path)}/assets/javascripts"
+      DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
+      DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
-
   end
 
-  def name
-    metadata.name
+  def add_admin_route(label, location)
+    @admin_route = {label: label, location: location}
+  end
+
+  def enabled?
+    return @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
+  end
+
+  delegate :name, to: :metadata
+
+  def add_to_serializer(serializer, attr, &block)
+    klass = "#{serializer.to_s.classify}Serializer".constantize
+    klass.attributes(attr)
+    klass.send(:define_method, attr, &block)
+
+    # Don't include serialized methods if the plugin is disabled
+    plugin = self
+    klass.send(:define_method, "include_#{attr}?") do
+      plugin.enabled?
+    end
+  end
+
+  # Extend a class but check that the plugin is enabled
+  def add_to_class(klass, attr, &block)
+    klass = klass.to_s.classify.constantize
+
+    hidden_method_name = "#{attr}_without_enable_check".to_sym
+    klass.send(:define_method, hidden_method_name, &block)
+
+    plugin = self
+    klass.send(:define_method, attr) do |*args|
+      send(hidden_method_name, *args) if plugin.enabled?
+    end
   end
 
   # will make sure all the assets this plugin needs are registered
@@ -82,8 +117,14 @@ class Plugin::Instance
   end
 
   def after_initialize(&block)
-    @after_initialize ||= []
-    @after_initialize << block
+    initializers << block
+  end
+
+  # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
+  def on(event_name, &block)
+    DiscourseEvent.on(event_name) do |*args|
+      block.call(*args) if enabled?
+    end
   end
 
   def notify_after_initialize
@@ -91,21 +132,22 @@ class Plugin::Instance
       ColorScheme.create_from_base(name: c[:name], colors: c[:colors]) unless ColorScheme.where(name: c[:name]).exists?
     end
 
-    if @after_initialize
-      @after_initialize.each do |callback|
-        callback.call
-      end
+    initializers.each do |callback|
+      callback.call(self)
     end
   end
 
+  def listen_for(event_name)
+    return unless self.respond_to?(event_name)
+    DiscourseEvent.on(event_name, &self.method(event_name))
+  end
+
   def register_css(style)
-    @styles ||= []
-    @styles << style
+    styles << style
   end
 
   def register_javascript(js)
-    @javascripts ||= []
-    @javascripts << js
+    javascripts << js
   end
 
   def register_custom_html(hash)
@@ -123,29 +165,24 @@ class Plugin::Instance
    end
 
   def automatic_assets
-    css = ""
-    js = ""
+    css = styles.join("\n")
+    js = javascripts.join("\n")
 
-    css = @styles.join("\n") if @styles
-    js = @javascripts.join("\n") if @javascripts
+    auth_providers.each do |auth|
+      overrides = ""
+      overrides = ", titleOverride: '#{auth.title}'" if auth.title
+      overrides << ", messageOverride: '#{auth.message}'" if auth.message
+      overrides << ", frameWidth: '#{auth.frame_width}'" if auth.frame_width
+      overrides << ", frameHeight: '#{auth.frame_height}'" if auth.frame_height
 
-    unless auth_providers.blank?
-      auth_providers.each do |auth|
-        overrides = ""
-        overrides = ", titleOverride: '#{auth.title}'" if auth.title
-        overrides << ", messageOverride: '#{auth.message}'" if auth.message
-        overrides << ", frameWidth: '#{auth.frame_width}'" if auth.frame_width
-        overrides << ", frameHeight: '#{auth.frame_height}'" if auth.frame_height
+      js << "Discourse.LoginMethod.register(Discourse.LoginMethod.create({name: '#{auth.name}'#{overrides}}));\n"
 
-        js << "Discourse.LoginMethod.register(Discourse.LoginMethod.create({name: '#{auth.name}'#{overrides}}));\n"
+      if auth.glyph
+        css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
+      end
 
-        if auth.glyph
-          css << ".btn-social.#{auth.name}:before{ content: '#{auth.glyph}'; }\n"
-        end
-
-        if auth.background_color
-          css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
-        end
+      if auth.background_color
+        css << ".btn-social.#{auth.name}{ background: #{auth.background_color}; }\n"
       end
     end
 
@@ -172,13 +209,12 @@ class Plugin::Instance
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
     end
-    unless assets.blank?
-      register_assets!
-      # TODO possibly amend this to a rails engine
-      Rails.configuration.assets.paths << auto_generated_path
-      Rails.configuration.assets.paths << File.dirname(path) + "/assets"
-    end
 
+    register_assets! unless assets.blank?
+
+    # TODO possibly amend this to a rails engine
+    Rails.configuration.assets.paths << auto_generated_path
+    Rails.configuration.assets.paths << File.dirname(path) + "/assets"
 
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)
@@ -193,12 +229,11 @@ class Plugin::Instance
 
 
   def auth_provider(opts)
-    @auth_providers ||= []
     provider = Plugin::AuthProvider.new
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
       provider.send "#{sym}=", opts.delete(sym)
     end
-    @auth_providers << provider
+    auth_providers << provider
   end
 
 
@@ -232,35 +267,15 @@ class Plugin::Instance
     end
   end
 
+  def enabled_site_setting(setting)
+    @enabled_site_setting = setting
+  end
+
   protected
 
   def register_assets!
     assets.each do |asset, opts|
-      if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
-        if opts == :admin
-          DiscoursePluginRegistry.admin_javascripts << asset
-        else
-          if opts == :server_side
-            DiscoursePluginRegistry.server_side_javascripts << asset
-          end
-          DiscoursePluginRegistry.javascripts << asset
-        end
-      elsif asset =~ /\.css$|\.scss$/
-        if opts == :mobile
-          DiscoursePluginRegistry.mobile_stylesheets << asset
-        elsif opts == :desktop
-          DiscoursePluginRegistry.desktop_stylesheets << asset
-        elsif opts == :variables
-          DiscoursePluginRegistry.sass_variables << asset
-        else
-          DiscoursePluginRegistry.stylesheets << asset
-        end
-
-      elsif asset =~ /\.hbs$/
-        DiscoursePluginRegistry.handlebars << asset
-      elsif asset =~ /\.js\.handlebars$/
-        DiscoursePluginRegistry.handlebars << asset
-      end
+      DiscoursePluginRegistry.register_asset(asset, opts)
     end
   end
 

@@ -22,8 +22,6 @@
     background-color: scale-color-diff();
     padding: 5px;
     margin-top: 10px;
-    line-height: 2em;
-    height: 30px;
   }
   #revisions {
     word-wrap: break-word;
@@ -40,7 +38,7 @@
   }
   .markdown {
     font-family: monospace;
-    font-size: 12px;
+    font-size: 0.857em;
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;

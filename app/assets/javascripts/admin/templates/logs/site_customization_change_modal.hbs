@@ -1,10 +1,10 @@
 <div>
   <ul class="nav nav-pills">
     <li {{bind-attr class="newSelected:active"}}>
-      <a href="#" {{action "selectNew"}}>{{i18n admin.logs.staff_actions.new_value}}</a>
+      <a href="#" {{action "selectNew"}}>{{i18n 'admin.logs.staff_actions.new_value'}}</a>
     </li>
     <li {{bind-attr class="previousSelected:active"}}>
-      <a href="#" {{action "selectPrevious"}}>{{i18n admin.logs.staff_actions.previous_value}}</a>
+      <a href="#" {{action "selectPrevious"}}>{{i18n 'admin.logs.staff_actions.previous_value'}}</a>
     </li>
   </ul>
   <div class="modal-body">
@@ -14,7 +14,7 @@
           {{partial "admin/templates/logs/site_customization_change_details"}}
         {{/with}}
       {{else}}
-        {{i18n admin.logs.staff_actions.deleted}}
+        {{i18n 'admin.logs.staff_actions.deleted'}}
       {{/if}}
     </div>
     <div {{bind-attr class=":modal-tab :previous-tab previousSelected::invisible"}}>
@@ -23,11 +23,11 @@
           {{partial "admin/templates/logs/site_customization_change_details"}}
         {{/with}}
       {{else}}
-        {{i18n admin.logs.staff_actions.no_previous}}
+        {{i18n 'admin.logs.staff_actions.no_previous'}}
       {{/if}}
     </div>
   </div>
   <div class="modal-footer">
-    <button class='btn btn-primary' {{action "closeModal"}}>{{i18n close}}</button>
+    <button class='btn btn-primary' {{action "closeModal"}}>{{i18n 'close'}}</button>
   </div>
 </div>

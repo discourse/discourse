@@ -1,4 +1,6 @@
-export default function searchForTerm(term, opts) {
+import Topic from 'discourse/models/topic';
+
+function searchForTerm(term, opts) {
   if (!opts) opts = {};
 
   // Only include the data we have
@@ -22,7 +24,7 @@ export default function searchForTerm(term, opts) {
 
     var topicMap = {};
     results.topics = results.topics.map(function(topic){
-      topic = Discourse.Topic.create(topic);
+      topic = Topic.create(topic);
       topicMap[topic.id] = topic;
       return topic;
     });
@@ -39,9 +41,8 @@ export default function searchForTerm(term, opts) {
     });
 
     results.categories = results.categories.map(function(category){
-      category = Discourse.Category.list().findProperty('id', category.id);
-      return category;
-    });
+      return Discourse.Category.list().findProperty('id', category.id);
+    }).compact();
 
     var r = results.grouped_search_result;
     results.resultTypes = [];
@@ -67,3 +68,5 @@ export default function searchForTerm(term, opts) {
     return noResults ? null : Em.Object.create(results);
   });
 }
+
+export default searchForTerm;

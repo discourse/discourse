@@ -6,7 +6,10 @@ import DiscourseContainerView from 'discourse/views/container';
 
 export default DiscourseContainerView.extend({
   classNameBindings: ['hidden', ':topic-map'],
-  shouldRerender: Discourse.View.renderIfChanged('topic.posts_count'),
+
+  _postsChanged: function() {
+    Ember.run.once(this, 'rerender');
+  }.observes('topic.posts_count'),
 
   hidden: function() {
     if (!this.get('post.firstPost')) return true;

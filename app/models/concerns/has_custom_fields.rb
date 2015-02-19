@@ -78,17 +78,6 @@ module HasCustomFields
     !@custom_fields || @custom_fields_orig == @custom_fields
   end
 
-  protected
-
-  def refresh_custom_fields_from_db
-    target = Hash.new
-    _custom_fields.pluck(:name,:value).each do |key, value|
-      self.class.append_custom_field(target, key, value)
-    end
-    @custom_fields_orig = target
-    @custom_fields = @custom_fields_orig.dup
-  end
-
   def save_custom_fields
     if !custom_fields_clean?
       dup = @custom_fields.dup
@@ -117,7 +106,7 @@ module HasCustomFields
       array_fields.each do |field_name, fields|
         if fields.length == dup[field_name].length &&
             fields.map{|f| f.value} == dup[field_name]
-          dup.delete(f.name)
+          dup.delete(field_name)
         else
           fields.each{|f| f.destroy }
         end
@@ -134,4 +123,16 @@ module HasCustomFields
       refresh_custom_fields_from_db
     end
   end
+
+  protected
+
+  def refresh_custom_fields_from_db
+    target = Hash.new
+    _custom_fields.pluck(:name,:value).each do |key, value|
+      self.class.append_custom_field(target, key, value)
+    end
+    @custom_fields_orig = target
+    @custom_fields = @custom_fields_orig.dup
+  end
+
 end

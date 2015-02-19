@@ -134,12 +134,12 @@ class TrustLevel3Requirements
   end
 
   def num_flagged_by_users
-    PostAction.with_deleted
-              .where(post_id: flagged_post_ids)
-              .where.not(user_id: @user.id)
-              .where.not(agreed_at: nil)
-              .pluck(:user_id)
-              .uniq.count
+    @_num_flagged_by_users ||= PostAction.with_deleted
+                                         .where(post_id: flagged_post_ids)
+                                         .where.not(user_id: @user.id)
+                                         .where.not(agreed_at: nil)
+                                         .pluck(:user_id)
+                                         .uniq.count
   end
 
   def max_flagged_by_users
@@ -212,9 +212,9 @@ class TrustLevel3Requirements
   end
 
   def flagged_post_ids
-    @user.posts
-         .with_deleted
-         .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', TIME_PERIOD.days.ago)
-         .pluck(:id)
+    @_flagged_post_ids ||= @user.posts
+                                .with_deleted
+                                .where('created_at > ? AND (spam_count > 0 OR inappropriate_count > 0)', TIME_PERIOD.days.ago)
+                                .pluck(:id)
   end
 end

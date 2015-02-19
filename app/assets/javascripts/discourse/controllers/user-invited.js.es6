@@ -1,11 +1,4 @@
-/**
-  This controller handles actions related to a user's invitations
-
-  @class UserInvitedController
-  @extends Ember.ArrayController
-  @namespace Discourse
-  @module Discourse
-**/
+// This controller handles actions related to a user's invitations
 export default Ember.ObjectController.extend({
   user: null,
   model: null,
@@ -87,7 +80,7 @@ export default Ember.ObjectController.extend({
       var self = this;
       var model = self.get('model');
 
-      if(self.get('canLoadMore')) {
+      if (self.get('canLoadMore') && !self.get('invitesLoading')) {
         self.set('invitesLoading', true);
         Discourse.Invite.findInvitedBy(self.get('user'), self.get('searchTerm'), model.invites.length).then(function(invite_model) {
           self.set('invitesLoading', false);

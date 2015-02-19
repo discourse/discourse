@@ -5,7 +5,7 @@ describe UploadsController do
   context '.create' do
 
     it 'requires you to be logged in' do
-      -> { xhr :post, :create }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :post, :create }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'logged in' do
@@ -43,12 +43,12 @@ describe UploadsController do
 
           it 'is successful with an image' do
             xhr :post, :create, file: logo
-            response.status.should eq 200
+            expect(response.status).to eq 200
           end
 
           it 'is successful with an attachment' do
             xhr :post, :create, file: text_file
-            response.status.should eq 200
+            expect(response.status).to eq 200
           end
 
           it 'correctly sets retain_hours for admins' do
@@ -56,7 +56,7 @@ describe UploadsController do
             xhr :post, :create, file: logo, retain_hours: 100
             url = JSON.parse(response.body)["url"]
             id = url.split("/")[3].to_i
-            Upload.find(id).retain_hours.should == 100
+            expect(Upload.find(id).retain_hours).to eq(100)
           end
 
           context 'with a big file' do
@@ -65,7 +65,7 @@ describe UploadsController do
 
             it 'rejects the upload' do
               xhr :post, :create, file: text_file
-              response.status.should eq 422
+              expect(response.status).to eq 422
             end
 
           end
@@ -78,7 +78,7 @@ describe UploadsController do
 
           it 'rejects the upload' do
             xhr :post, :create, file: text_file
-            response.status.should eq 422
+            expect(response.status).to eq 422
           end
 
         end
@@ -89,12 +89,12 @@ describe UploadsController do
 
           it 'is successful with an image' do
             xhr :post, :create, file: logo
-            response.status.should eq 200
+            expect(response.status).to eq 200
           end
 
           it 'is successful with an attachment' do
             xhr :post, :create, file: text_file
-            response.status.should eq 200
+            expect(response.status).to eq 200
           end
 
         end
@@ -105,12 +105,12 @@ describe UploadsController do
 
         it 'is successful' do
           xhr :post, :create, files: files
-          response.should be_success
+          expect(response).to be_success
         end
 
         it 'takes the first file' do
           xhr :post, :create, files: files
-          response.body.should match /logo-dev.png/
+          expect(response.body).to match /logo-dev.png/
         end
 
       end
@@ -126,7 +126,7 @@ describe UploadsController do
       Discourse.stubs(:store).returns(store)
       Upload.expects(:find_by).never
       get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
-      response.response_code.should == 404
+      expect(response.response_code).to eq(404)
     end
 
     it "returns 404 when the upload doens't exist" do
@@ -134,7 +134,7 @@ describe UploadsController do
       Upload.expects(:find_by).with(sha1: "1234567890abcdef").returns(nil)
 
       get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
-      response.response_code.should == 404
+      expect(response.response_code).to eq(404)
     end
 
     it 'uses send_file' do
@@ -154,7 +154,7 @@ describe UploadsController do
       it "returns 404 when an anonymous user tries to download a file" do
         Upload.expects(:find_by).never
         get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
-        response.response_code.should == 404
+        expect(response.response_code).to eq(404)
       end
 
     end

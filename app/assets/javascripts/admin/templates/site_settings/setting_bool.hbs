@@ -3,7 +3,7 @@
 </div>
 <div class="setting-value">
   <label>
-    {{view Ember.Checkbox checkedBinding="enabled" value="true"}}
+    {{input type="checkbox" checked=enabled}}
     {{unbound description}}
   </label>
 </div>
@@ -14,6 +14,6 @@
   </div>
 {{else}}
   {{#if overridden}}
-    <button class='btn' href='#' {{action "resetDefault" this}}><i class="fa fa-undo"></i>{{i18n admin.site_settings.reset}}</button>
+    <button class='btn' href='#' {{action "resetDefault" this}}><i class="fa fa-undo"></i>{{i18n 'admin.site_settings.reset'}}</button>
   {{/if}}
 {{/if}}

@@ -6,15 +6,20 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ja:
+  stringex:
+    characters:
+      number: "-"
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
   dates:
     short_date_no_year: "MMM D"
     short_date: "MMM D, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "トピック"
   posts: "投稿"
@@ -23,12 +28,30 @@ ja:
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
+  disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   errors:
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
+      invalid_boolean: "無効なboolean."
+      empty: 本文が未入力です。.
+    embed:
+      load_from_remote: "投稿の読み込みに失敗しました。"
+  bulk_invite:
+    file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
+  backup:
+    operation_already_running: "操作を実行しています。他の操作はできません。"
+    backup_file_should_be_tar_gz: "バックアップファイルは .tar .gz 形式でなければいけません。"
+    not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
+  not_logged_in: "ログインしてください。"
+  read_only_mode_enabled: "このサイトは読み取り専用モードです。会話は無効になっています。"
+  too_many_replies:
+    other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
   embed:
     start_discussion: "議論の開始"
     continue: "議論を続ける"
+    more_replies:
+      other: "%{count} 以上の返信"
+    loading: "会話をロードしています…"
     permalink: "パーマリンク"
     in_reply_to: "▶ %{username}"
     replies:
@@ -78,6 +101,7 @@ ja:
     errors:
       can_not_modify_automatic: "自動作成グループの変更はできません"
     default_names:
+      everyone: "みなさん"
       admins: "管理者"
       moderators: "モデレータ"
       staff: "スタッフ"
@@ -117,10 +141,6 @@ ja:
         is_invalid: "は不正です。もう少し説明を追加してください"
         has_already_been_used: "は既に使用中です"
       models:
-        topic:
-          attributes:
-            archetype:
-              cant_send_pm: "申し訳ありませんが、このユーザにはプライベートメッセージを送信できません。"
         user:
           attributes:
             password:
@@ -317,6 +337,8 @@ ja:
       title: "ブックマーク"
       xaxis: "日"
       yaxis: "新規ブックマーク数"
+    starred:
+      title: "お気に入り"
     users_by_trust_level:
       title: "トラストレベル毎のユーザ"
       xaxis: "トラストレベル"
@@ -374,15 +396,7 @@ ja:
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
     failing_emails_warning: '%{num_failed_jobs}個のメールジョブが失敗しています。config/environments/production.rb ファイルを確認して config.action_mailer の設定が正しいか確認してください。<a href="/sidekiq/retries" target="_blank">Sidekiq で失敗したジョブを確認</a>。'
-    default_logo_warning: "サイトのロゴ画像をカスタマイズしていません。<a href='/admin/site_settings'>サイトの設定</a>において logo_url, logo_small_url, favicon_url を更新してください。"
-    contact_email_missing: "サイトの連絡先メールアドレスが設定されていません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
-    contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>において contact_email を更新してください。"
-    title_nag: "サイトのタイトルがデフォルトのままになっています。<a href='/admin/site_settings'>サイトの設定</a>において正しいサイトのタイトルを設定してください。"
-    site_description_missing: "サイトの site_description 設定が空欄になっています。<a href='/admin/site_settings'>サイトの設定</a>においてこのフォーラムに関する簡単な説明文を追加してください。"
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
-    access_password_removal: "現在サイトは access_password 設定を利用していますが、この設定は廃止されたため代わりに login_required と must_approve_users 設定を利用してください。<a href='/admin/site_settings'>サイトの設定</a>にて変更ができます。この際、<a href='/admin/users/list/pending'>保留中リストのユーザを承認</a>してください。(このメッセージは2日後に削除されます)"
-    site_contact_username_warning: "site_contact_username 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にてシステムメッセージの送信者となる管理者のユーザ名を設定してください。"
-    notification_email_warning: "notification_email 設定が空欄です。<a href='/admin/site_settings'>サイトの設定</a>にて正しい値を設定してください。"
   content_types:
     education_new_reply:
       title: "新規ユーザ支援: 初めての回答"
@@ -428,7 +442,6 @@ ja:
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     enable_noscript_support: "noscript タグ経由でアクセスしてきた標準サーチエンジンクローラのサポートを有効にする"
-    top_menu: "ホームページナビゲーションに表示する項目を指定。例 latest|hot|read|favorited|unread|new|posted|categories"
     post_menu: "ポストメニューに表示する項目を指定。例 like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
     port: "開発者用! 警告! デフォルトの80番ポートではなく、ここで指定した HTTP ポートを利用する。空欄でデフォルトの80番ポートを利用。"
@@ -500,7 +513,6 @@ ja:
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
-    omniauth_error: "あなたの %{strategy} アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください。"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
   user:
     username:
@@ -517,11 +529,6 @@ ja:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
-  flag_reasons:
-    off_topic: "あなたの投稿やトピックは「関係ない話題」としてフラグされています。"
-    inappropriate: "あなたの投稿は「不適切」にフラグされています。誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。"
-    spam: "あなたの投稿は「スパム」にフラグされています。営利目的、宣伝目的の書き込みの可能性がある。"
-    notify_moderators: "あなたの投稿は「管理人に通知」にフラグされています。管理人の確認が必要の内容を含んでいる"
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
@@ -635,10 +642,7 @@ ja:
   upload:
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
     pasted_image_filename: "貼り付けた画像"
-    attachments:
-      too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)"
     images:
-      too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}%kb です)。リサイズして再アップロードしてください。"
       fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
       unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"

@@ -9,32 +9,23 @@ describe Cache do
 
   it "supports fixnum" do
     cache.write("num", 1)
-    cache.read("num").should == 1
+    expect(cache.read("num")).to eq(1)
   end
 
   it "supports hash" do
     hash = {a: 1, b: [1,2,3]}
     cache.write("hash", hash)
-    cache.read("hash").should == hash
+    expect(cache.read("hash")).to eq(hash)
   end
 
   it "can be cleared" do
+    $redis.set("boo", "boo")
     cache.write("hello0", "world")
     cache.write("hello1", "world")
     cache.clear
 
-    cache.read("hello0").should == nil
-  end
-
-  it "can delete by family" do
-    cache.write("key2", "test", family: "my_family")
-    cache.write("key", "test", expires_in: 1.minute, family: "my_family")
-
-    cache.delete_by_family("my_family")
-
-    cache.fetch("key").should == nil
-    cache.fetch("key2").should == nil
-
+    expect($redis.get("boo")).to eq("boo")
+    expect(cache.read("hello0")).to eq(nil)
   end
 
   it "can delete correctly" do
@@ -43,19 +34,26 @@ describe Cache do
     end
 
     cache.delete("key")
-    cache.fetch("key").should == nil
+    expect(cache.fetch("key")).to eq(nil)
   end
 
-  #TODO yuck on this mock
   it "calls setex in redis" do
     cache.delete("key")
+    cache.delete("bla")
 
     key = cache.namespaced_key("key")
-    $redis.expects(:setex).with(key, 60 , Marshal.dump("bob"))
 
     cache.fetch("key", expires_in: 1.minute) do
       "bob"
     end
+
+    expect($redis.ttl(key)).to be_within(2.seconds).of(1.minute)
+
+    # we always expire withing a day
+    cache.fetch("bla"){ "hi" }
+
+    key = cache.namespaced_key("bla")
+    expect($redis.ttl(key)).to be_within(2.seconds).of(1.day)
   end
 
   it "can store and fetch correctly" do
@@ -64,7 +62,7 @@ describe Cache do
     r = cache.fetch "key" do
       "bob"
     end
-    r.should == "bob"
+    expect(r).to eq("bob")
   end
 
   it "can fetch existing correctly" do
@@ -73,6 +71,6 @@ describe Cache do
     r = cache.fetch "key" do
       "bob"
     end
-    r.should == "bill"
+    expect(r).to eq("bill")
   end
 end

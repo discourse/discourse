@@ -1,4 +1,5 @@
 import PollController from "discourse/plugins/poll/controllers/poll";
+import PostView from "discourse/views/post";
 
 var Poll = Discourse.Model.extend({
   post: null,
@@ -49,12 +50,6 @@ var Poll = Discourse.Model.extend({
 var PollView = Ember.View.extend({
   templateName: "poll",
   classNames: ['poll-ui'],
-
-  replaceElement: function(target) {
-    this._insertElementLater(function() {
-      target.replaceWith(this.$());
-    });
-  }
 });
 
 function initializePollView(self) {
@@ -70,18 +65,14 @@ function initializePollView(self) {
     postController: self.get('controller')
   });
 
-  var pollView = self.createChildView(PollView, {
-    controller: pollController
-  });
-  return pollView;
+  return self.createChildView(PollView, { controller: pollController });
 }
-
 
 export default {
   name: 'poll',
 
   initialize: function() {
-    Discourse.PostView.reopen({
+    PostView.reopen({
       createPollUI: function($post) {
         var post = this.get('post');
 
@@ -90,13 +81,14 @@ export default {
         }
 
         var view = initializePollView(this);
-
         var pollContainer = $post.find(".poll-ui:first");
         if (pollContainer.length === 0) {
           pollContainer = $post.find("ul:first");
         }
 
-        view.replaceElement(pollContainer);
+        var $div = $('<div>');
+        pollContainer.replaceWith($div);
+        view.constructor.renderer.appendTo(view, $div[0]);
         this.set('pollView', view);
 
       }.on('postViewInserted'),
@@ -108,4 +100,4 @@ export default {
       }.on('willClearRender')
     });
   }
-}
+};

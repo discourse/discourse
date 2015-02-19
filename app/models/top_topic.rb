@@ -119,7 +119,7 @@ class TopTopic < ActiveRecord::Base
         WITH top AS (
           SELECT CASE
                    WHEN topics.created_at < :from THEN 0
-                   ELSE log(greatest(#{period}_views_count, 1)) + #{period}_likes_count + #{period}_posts_count * 2
+                   ELSE log(greatest(#{period}_views_count, 1)) + #{period}_likes_count * 2 + #{period}_posts_count * 2
                  END AS score,
                  topic_id
           FROM top_topics

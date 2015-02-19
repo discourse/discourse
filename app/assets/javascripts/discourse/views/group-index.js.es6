@@ -1,11 +1,5 @@
-/**
-  Displays all posts within a group
+import LoadMore from "discourse/mixins/load-more";
 
-  @class Discourse.GroupIndexView
-  @extends Ember.Mixin
-  @namespace Discourse
-  @module Discourse
-**/
-export default Discourse.View.extend(Discourse.ScrollTop, Discourse.LoadMore, {
+export default Discourse.View.extend(Discourse.ScrollTop, LoadMore, {
   eyelineSelector: '.user-stream .item',
 });

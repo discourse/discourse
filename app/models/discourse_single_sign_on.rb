@@ -14,6 +14,7 @@ class DiscourseSingleSignOn < SingleSignOn
     sso = new
     sso.nonce = SecureRandom.hex
     sso.register_nonce(return_path)
+    sso.return_sso_url = Discourse.base_url + "/session/sso_login"
     sso.to_url
   end
 
@@ -65,6 +66,9 @@ class DiscourseSingleSignOn < SingleSignOn
     custom_fields.each do |k,v|
       user.custom_fields[k] = v
     end
+
+    user.admin = admin unless admin.nil?
+    user.moderator = moderator unless moderator.nil?
 
     # optionally save the user and sso_record if they have changed
     user.save!
@@ -121,18 +125,22 @@ class DiscourseSingleSignOn < SingleSignOn
       user.name = User.suggest_name(name || username || email)
     end
 
-    if SiteSetting.sso_overrides_avatar && (
-      avatar_force_update == "true" ||
-      avatar_force_update.to_i != 0 ||
+    if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
+      avatar_force_update ||
       sso_record.external_avatar_url != avatar_url)
+
       begin
-        tempfile = FileHelper.download(avatar_url, 1.megabyte, "sso-avatar", true)
+        tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
 
         ext = FastImage.type(tempfile).to_s
         tempfile.rewind
 
-        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), { origin: avatar_url })
+        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, tempfile.size, { origin: avatar_url })
         user.uploaded_avatar_id = upload.id
+
+        unless user.user_avatar
+          user.build_user_avatar
+        end
 
         if !user.user_avatar.contains_upload?(upload.id)
           user.user_avatar.custom_upload_id = upload.id

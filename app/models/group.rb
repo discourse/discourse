@@ -7,10 +7,14 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_many :group_managers, dependent: :destroy
+  has_many :managers, through: :group_managers
+
   after_save :destroy_deletions
+  after_save :automatic_group_membership
 
   validate :name_format_validator
-  validates_uniqueness_of :name
+  validates_uniqueness_of :name, case_sensitive: false
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -42,15 +46,7 @@ class Group < ActiveRecord::Base
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 
-    unless guardian.is_admin?
-      allowed_ids = guardian.allowed_category_ids
-      if allowed_ids.length > 0
-        result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-      else
-        result = result.where('topics.category_id IS NULL')
-      end
-    end
-
+    result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
     result.order('posts.created_at desc')
   end
@@ -273,6 +269,15 @@ class Group < ActiveRecord::Base
     self.users.push(user)
   end
 
+  def remove(user)
+    self.group_users.where(user: user).each(&:destroy)
+    user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
+  end
+
+  def appoint_manager(user)
+    managers << user
+  end
+
   protected
 
     def name_format_validator
@@ -290,20 +295,28 @@ class Group < ActiveRecord::Base
       @deletions = nil
     end
 
+    def automatic_group_membership
+      if self.automatic_membership_retroactive
+        Jobs.enqueue(:automatic_group_membership, group_id: self.id)
+      end
+    end
+
 end
 
 # == Schema Information
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  automatic   :boolean          default(FALSE), not null
-#  user_count  :integer          default(0), not null
-#  alias_level :integer          default(0)
-#  visible     :boolean          default(TRUE), not null
+#  id                                 :integer          not null, primary key
+#  name                               :string(255)      not null
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  automatic                          :boolean          default(FALSE), not null
+#  user_count                         :integer          default(0), not null
+#  alias_level                        :integer          default(0)
+#  visible                            :boolean          default(TRUE), not null
+#  automatic_membership_email_domains :text
+#  automatic_membership_retroactive   :boolean          default(FALSE)
 #
 # Indexes
 #

@@ -11,24 +11,33 @@ export default Em.Mixin.create({
   },
 
   _initializeUploader: function() {
-    // NOTE: we can't cache this as fileupload replaces the input after upload
-    // cf. https://github.com/blueimp/jQuery-File-Upload/wiki/Frequently-Asked-Questions#why-is-the-file-input-field-cloned-and-replaced-after-each-selection
-    var $upload = this.$('input[type=file]'),
-       self = this;
+    var $upload = this.$(),
+        self = this,
+        csrf = Discourse.Session.currentProp("csrfToken");
 
     $upload.fileupload({
-      url: this.get('uploadUrl'),
+      url: this.get('uploadUrl') + ".json?authenticity_token=" + encodeURIComponent(csrf),
       dataType: "json",
-      fileInput: $upload,
-      formData: { image_type: this.get('type') },
-      dropZone: this.$(),
-      pasteZone: this.$()
+      dropZone: $upload,
+      pasteZone: $upload
+    });
+
+    $upload.on("fileuploaddrop", function (e, data) {
+      if (data.files.length > 10) {
+        bootbox.alert(I18n.t("post.errors.too_many_dragged_and_dropped_files"));
+        return false;
+      } else {
+        return true;
+      }
     });
 
     $upload.on('fileuploadsubmit', function (e, data) {
-      var result = Discourse.Utilities.validateUploadedFiles(data.files, true);
-      self.setProperties({ uploadProgress: 0, uploading: result });
-      return result;
+      var isValid = Discourse.Utilities.validateUploadedFiles(data.files, true);
+      var form = { image_type: self.get('type') };
+      if (self.get("data")) { form = $.extend(form, self.get("data")); }
+      data.formData = form;
+      self.setProperties({ uploadProgress: 0, uploading: isValid });
+      return isValid;
     });
 
     $upload.on("fileuploadprogressall", function(e, data) {
@@ -37,8 +46,18 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploaddone", function(e, data) {
-      if(data.result.url) {
-        self.uploadDone(data);
+      if (data.result) {
+        if (data.result.url) {
+          self.uploadDone(data);
+        } else {
+          if (data.result.message) {
+            bootbox.alert(data.result.message);
+          } else if (data.result.length > 0) {
+            bootbox.alert(data.result.join("\n"));
+          } else {
+            bootbox.alert(I18n.t('post.errors.upload'));
+          }
+        }
       } else {
         bootbox.alert(I18n.t('post.errors.upload'));
       }
@@ -54,12 +73,9 @@ export default Em.Mixin.create({
   }.on('didInsertElement'),
 
   _destroyUploader: function() {
-    this.$('input[type=file]').fileupload('destroy');
-  }.on('willDestroyElement'),
-
-  actions: {
-    selectFile: function() {
-      this.$('input[type=file]').click();
-    }
-  }
+    var $upload = this.$();
+    try { $upload.fileupload('destroy'); }
+    catch (e) { /* wasn't initialized yet */ }
+    $upload.off();
+  }.on('willDestroyElement')
 });

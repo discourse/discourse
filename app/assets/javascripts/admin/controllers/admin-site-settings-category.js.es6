@@ -3,28 +3,15 @@ export default Ember.ObjectController.extend({
   needs: ['adminSiteSettings'],
 
   filteredContent: function() {
-    if (!this.get('categoryNameKey')) { return Em.A(); }
+    if (!this.get('categoryNameKey')) { return []; }
 
-    var category = this.get('controllers.adminSiteSettings.content').find(function(siteSettingCategory) {
-      return siteSettingCategory.nameKey === this.get('categoryNameKey');
-    }, this);
-
+    var category = this.get('controllers.adminSiteSettings.content').findProperty('nameKey', this.get('categoryNameKey'));
     if (category) {
       return category.siteSettings;
     } else {
-      return Em.A();
+      return [];
     }
   }.property('controllers.adminSiteSettings.content', 'categoryNameKey'),
-
-  emptyContentHandler: function() {
-    if (this.get('filteredContent').length < 1) {
-      if ( this.get('controllers.adminSiteSettings.filtered') ) {
-        this.transitionToRoute('adminSiteSettingsCategory', 'all_results');
-      } else {
-        this.transitionToRoute('adminSiteSettings');
-      }
-    }
-  }.observes('filteredContent'),
 
   actions: {
 

@@ -21,7 +21,7 @@ export default DiscourseController.extend({
     var usernames = this.get('model.targetUsernames');
 
     // We need exactly one user to issue a warning
-    if (Em.empty(usernames) || usernames.split(',').length !== 1) {
+    if (Ember.isEmpty(usernames) || usernames.split(',').length !== 1) {
       return false;
     }
     return this.get('model.creatingPrivateMessage');
@@ -39,7 +39,34 @@ export default DiscourseController.extend({
 
     // Import a quote from the post
     importQuote: function() {
-      this.get('model').importQuote();
+      var postStream = this.get('topic.postStream'),
+          postId = this.get('model.post.id');
+
+      // If there is no current post, use the first post id from the stream
+      if (!postId && postStream) {
+        postId = postStream.get('firstPostId');
+      }
+
+      // If we're editing a post, fetch the reply when importing a quote
+      if (this.get('model.editingPost')) {
+        var replyToPostNumber = this.get('model.post.reply_to_post_number');
+        if (replyToPostNumber) {
+          var replyPost = postStream.get('posts').findBy('post_number', replyToPostNumber);
+          if (replyPost) {
+            postId = replyPost.get('id');
+          }
+        }
+      }
+
+      if (postId) {
+        this.set('model.loading', true);
+        var composer = this;
+        return Discourse.Post.load(postId).then(function(post) {
+          var quote = Discourse.Quote.build(post, post.get("raw"));
+          composer.appendBlockAtCursor(quote);
+          composer.set('model.loading', false);
+        });
+      }
     },
 
     cancel: function() {
@@ -73,14 +100,34 @@ export default DiscourseController.extend({
     if (c) { c.updateDraftStatus(); }
   },
 
-  appendText: function(text) {
+  appendText: function(text, opts) {
     var c = this.get('model');
-    if (c) { c.appendText(text); }
+    if (c) {
+      opts = opts || {};
+      var wmd = $('#wmd-input');
+      var val = wmd.val() || '';
+      var position = opts.position === "cursor" ? wmd.caret() : val.length;
+
+      var caret = c.appendText(text, position, opts);
+      if(wmd[0]){
+        Em.run.next(function(){
+          Discourse.Utilities.setCaretPosition(wmd[0], caret);
+        });
+      }
+    }
   },
 
-  appendBlockAtCursor: function(text) {
-    var c = this.get('model');
-    if (c) { c.appendText(text, $('#wmd-input').caret(), {block: true}); }
+  appendTextAtCursor: function(text, opts) {
+    opts = opts || {};
+    opts.position = "cursor";
+    this.appendText(text, opts);
+  },
+
+  appendBlockAtCursor: function(text, opts) {
+    opts = opts || {};
+    opts.position = "cursor";
+    opts.block = true;
+    this.appendText(text, opts);
   },
 
   categories: function() {
@@ -114,7 +161,6 @@ export default DiscourseController.extend({
   save: function(force) {
     var composer = this.get('model'),
         self = this;
-
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
@@ -193,7 +239,9 @@ export default DiscourseController.extend({
       }
 
       if ((!composer.get('replyingToTopic')) || (!Discourse.User.currentProp('disable_jump_reply'))) {
-        Discourse.URL.routeTo(opts.post.get('url'));
+        if (opts.post) {
+          Discourse.URL.routeTo(opts.post.get('url'));
+        }
       }
     }, function(error) {
       composer.set('disableDrafts', false);
@@ -316,18 +364,15 @@ export default DiscourseController.extend({
 
         // If we're already open, we don't have to do anything
         if (composerModel.get('composeState') === Discourse.Composer.OPEN &&
-            composerModel.get('draftKey') === opts.draftKey &&
-            composerModel.action === opts.action) {
+            composerModel.get('draftKey') === opts.draftKey) {
           return resolve();
         }
 
         // If it's the same draft, just open it up again.
         if (composerModel.get('composeState') === Discourse.Composer.DRAFT &&
-            composerModel.get('draftKey') === opts.draftKey &&
-            composerModel.action === opts.action) {
-
-            composerModel.set('composeState', Discourse.Composer.OPEN);
-            return resolve();
+            composerModel.get('draftKey') === opts.draftKey) {
+          composerModel.set('composeState', Discourse.Composer.OPEN);
+          return resolve();
         }
 
         // If it's a different draft, cancel it and try opening again.
@@ -445,6 +490,11 @@ export default DiscourseController.extend({
 
   canEdit: function() {
     return this.get("model.action") === "edit" && Discourse.User.current().get("can_edit");
-  }.property("model.action")
+  }.property("model.action"),
+
+  visible: function() {
+    var state = this.get('model.composeState');
+    return state && state !== 'closed';
+  }.property('model.composeState')
 
 });

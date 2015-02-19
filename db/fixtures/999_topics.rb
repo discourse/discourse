@@ -27,9 +27,9 @@ unless Rails.env.test?
   end
 
   create_static_page_topic('tos_topic_id', 'tos_topic.title', "tos_topic.body", nil, staff, "terms of service", {
-    company_domain: SiteSetting.company_domain,
-    company_full_name: SiteSetting.company_full_name,
-    company_name: SiteSetting.company_short_name
+    company_domain: "company_domain",
+    company_full_name: "company_full_name",
+    company_name: "company_short_name"
   })
 
   create_static_page_topic('guidelines_topic_id', 'guidelines_topic.title', "guidelines_topic.body",

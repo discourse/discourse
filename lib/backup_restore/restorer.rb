@@ -268,8 +268,8 @@ module BackupRestore
     end
 
     def extract_uploads
-      log "Extracting uploads..."
       if `tar --list --file #{@tar_filename} | grep 'uploads/'`.present?
+        log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
           `tar --extract --keep-newer-files --file #{@tar_filename} uploads/`
         end
@@ -339,19 +339,20 @@ module BackupRestore
     end
 
     def log(message)
+      timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       puts(message) rescue nil
-      publish_log(message) rescue nil
-      save_log(message)
+      publish_log(message, timestamp) rescue nil
+      save_log(message, timestamp)
     end
 
-    def publish_log(message)
+    def publish_log(message, timestamp)
       return unless @publish_to_message_bus
-      data = { timestamp: Time.now, operation: "restore", message: message }
+      data = { timestamp: timestamp, operation: "restore", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
     end
 
-    def save_log(message)
-      @logs << "[#{Time.now}] #{message}"
+    def save_log(message, timestamp)
+      @logs << "[#{timestamp}] #{message}"
     end
 
   end

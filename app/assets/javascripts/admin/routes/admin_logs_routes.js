@@ -13,47 +13,6 @@ Discourse.AdminLogsIndexRoute = Discourse.Route.extend({
 });
 
 /**
-  The route that lists staff actions that were logged.
-
-  @class AdminLogsStaffActionLogsRoute
-  @extends Discourse.Route
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.AdminLogsStaffActionLogsRoute = Discourse.Route.extend({
-  renderTemplate: function() {
-    this.render('admin/templates/logs/staff_action_logs', {into: 'adminLogs'});
-  },
-
-  setupController: function(controller) {
-    var queryParams = Discourse.URL.get('queryParams');
-    if (queryParams) {
-      controller.set('filters', queryParams);
-    }
-    return controller.show();
-  },
-
-  actions: {
-    showDetailsModal: function(logRecord) {
-      Discourse.Route.showModal(this, 'admin_staff_action_log_details', logRecord);
-      this.controllerFor('modal').set('modalClass', 'log-details-modal');
-    },
-
-    showCustomDetailsModal: function(logRecord) {
-      Discourse.Route.showModal(this, logRecord.action_name + '_details', logRecord);
-      this.controllerFor('modal').set('modalClass', 'tabbed-modal log-details-modal');
-    }
-  },
-
-  deactivate: function() {
-    this._super();
-
-    // Clear any filters when we leave the route
-    Discourse.URL.set('queryParams', null);
-  }
-});
-
-/**
   The route that lists blocked email addresses.
 
   @class AdminLogsScreenedEmailsRoute
