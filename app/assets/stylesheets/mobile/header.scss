@@ -5,17 +5,17 @@
 .d-header {
 
   #site-logo {
-    max-width: 122px;
+    max-width: 135px;
   }
 
   // some protection for text-only site titles
   .title {
     margin-left: 10px;
-    max-width: 135px;
+    max-width: 140px;
+    height: 39px;
     overflow: hidden;
     padding: 0;
     text-overflow: clip;
-    display: block; // table causes clipping fail oddities here
   }
 
   .icons {
