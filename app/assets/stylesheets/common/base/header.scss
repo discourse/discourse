@@ -16,12 +16,13 @@
     }
 
     .title {
-      display: table;
       float: left;
-      > a {
-        display: table-cell;
-        vertical-align: middle;
-      }
+    }
+
+    .valign-helper {
+      display: inline-block;
+      height: 100%;
+      vertical-align: middle;
     }
 
     #site-logo {

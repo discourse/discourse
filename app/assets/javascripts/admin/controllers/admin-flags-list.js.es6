@@ -5,7 +5,7 @@ export default Ember.ArrayController.extend({
   adminActiveFlagsView: Em.computed.equal("query", "active"),
 
   actions: {
-    disagreeFlags: function (flaggedPost) {
+    disagreeFlags(flaggedPost) {
       var self = this;
       flaggedPost.disagreeFlags().then(function () {
         self.removeObject(flaggedPost);
@@ -14,7 +14,7 @@ export default Ember.ArrayController.extend({
       });
     },
 
-    deferFlags: function (flaggedPost) {
+    deferFlags(flaggedPost) {
       var self = this;
       flaggedPost.deferFlags().then(function () {
         self.removeObject(flaggedPost);
@@ -23,12 +23,12 @@ export default Ember.ArrayController.extend({
       });
     },
 
-    doneTopicFlags: function(item) {
+    doneTopicFlags(item) {
       this.send("disagreeFlags", item);
     },
   },
 
-  loadMore: function(){
+  loadMore(){
     var flags = this.get("model");
     return Discourse.FlaggedPost.findAll(this.get("query"),flags.length+1).then(function(data){
       if(data.length===0){

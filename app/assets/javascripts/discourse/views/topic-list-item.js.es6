@@ -1,6 +1,7 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
 export default Discourse.View.extend(StringBuffer, {
+  topic: Em.computed.alias("content"),
   rerenderTriggers: ['controller.bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
   rawTemplate: 'list/topic_list_item.raw',
@@ -8,6 +9,8 @@ export default Discourse.View.extend(StringBuffer, {
                       ':topic-list-item',
                       'unboundClassNames',
                       'selected'],
+  attributeBindings: ['data-topic-id'],
+  'data-topic-id': Em.computed.alias('topic.id'),
 
   actions: {
     select: function(){
@@ -47,14 +50,11 @@ export default Discourse.View.extend(StringBuffer, {
     return classes.join(' ');
   }.property(),
 
-  attributeBindings: ['data-topic-id'],
-  'data-topic-id': Em.computed.alias('content.id'),
   titleColSpan: function(){
     return (!this.get('controller.hideCategory') &&
-             this.get('content.isPinnedUncategorized') ? 2 : 1);
-  }.property(),
+             this.get('topic.isPinnedUncategorized') ? 2 : 1);
+  }.property("topic.isPinnedUncategorized"),
 
-  topic: Em.computed.alias("content"),
 
   hasLikes: function(){
     return this.get('topic.like_count') > 0;
@@ -88,13 +88,13 @@ export default Discourse.View.extend(StringBuffer, {
       if(target.prop('tagName') !== 'A'){
         target = target.find('a');
       }
-      this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('content'), position: target.offset()});
+      this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
       return false;
     }
 
     if(target.hasClass('bulk-select')){
       var selected = this.get('controller.selected');
-      var topic = this.get('content');
+      var topic = this.get('topic');
 
       if(target.is(':checked')){
         selected.addObject(topic);
@@ -122,12 +122,12 @@ export default Discourse.View.extend(StringBuffer, {
 
   _highlightIfNeeded: function() {
     // highlight the last topic viewed
-    if (this.session.get('lastTopicIdViewed') === this.get('content.id')) {
+    if (this.session.get('lastTopicIdViewed') === this.get('topic.id')) {
       this.session.set('lastTopicIdViewed', null);
       this.highlight();
-    } else if (this.get('content.highlight')) {
+    } else if (this.get('topic.highlight')) {
       // highlight new topics that have been loaded from the server or the one we just created
-      this.set('content.highlight', false);
+      this.set('topic.highlight', false);
       this.highlight();
     }
   }.on('didInsertElement')

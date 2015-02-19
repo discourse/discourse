@@ -126,6 +126,13 @@ describe Search do
 
        results.posts.length.should == 1
 
+
+       results = Search.execute('mars',
+                                search_context: topic,
+                                guardian: Guardian.new(reply.user))
+
+       results.posts.length.should == 1
+
        # does not leak out
        results = Search.execute('mars',
                                 type_filter: 'private_messages',

@@ -237,7 +237,7 @@ en:
     sequential_replies: |
       ### Consider replying to several posts at once
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
 
       You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
 
@@ -564,7 +564,7 @@ en:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
+      title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
     topics:
@@ -637,19 +637,19 @@ en:
     page_view_anon_reqs:
       title: "Anonymous"
       xaxis: "Day"
-      yaxis: "Anonymous Page Views"
+      yaxis: "Anonymous API Requests"
     page_view_logged_in_reqs:
       title: "Logged In"
       xaxis: "Day"
-      yaxis: "Logged In Page Views"
+      yaxis: "Logged In API Requests"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Day"
-      yaxis: "Web Crawler Page Views"
+      yaxis: "Web Crawler API Requests"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Day"
-      yaxis: "Total Page Views"
+      yaxis: "Total API Requests"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -1664,6 +1664,13 @@ en:
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The topic is closed. If you believe this is in error, contact a staff member.
+
+    email_reject_auto_generated:
+      subject_template: "Email issue -- Auto Generated Reply"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your email reply was auto generated, which we don't accept. If you believe this is in error, contact a staff member.
 
     email_error_notification:
       subject_template: "Email issue -- POP authentication error"

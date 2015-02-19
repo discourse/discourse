@@ -1,0 +1,21 @@
+<div class="extra-info-wrapper">
+  <div {{bind-attr class=":extra-info needsSecondRow:two-rows"}}>
+    <div class="title-wrapper">
+      <h1>
+        {{#if showPrivateMessageGlyph}}
+          <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+        {{/if}}
+
+        {{#if topic.details.loaded}}
+          {{topic-status topic=topic}}
+          <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
+        {{else}}
+          {{#if topic.errorLoading}}
+            <span class="error">{{topic.errorTitle}}</span>
+          {{/if}}
+        {{/if}}
+      </h1>
+      {{topic-category topic=topic}}
+    </div>
+  </div>
+</div>

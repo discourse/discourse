@@ -1219,4 +1219,27 @@ describe User do
 
   end
 
+  describe "number_of_flags_given" do
+
+    let(:user) { Fabricate(:user) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "doesn't count disagreed flags" do
+      post_agreed = Fabricate(:post)
+      PostAction.act(user, post_agreed, PostActionType.types[:off_topic])
+      PostAction.agree_flags!(post_agreed, moderator)
+
+      post_deferred = Fabricate(:post)
+      PostAction.act(user, post_deferred, PostActionType.types[:inappropriate])
+      PostAction.defer_flags!(post_deferred, moderator)
+
+      post_disagreed = Fabricate(:post)
+      PostAction.act(user, post_disagreed, PostActionType.types[:spam])
+      PostAction.clear_flags!(post_disagreed, moderator)
+
+      expect(user.number_of_flags_given).to eq(2)
+    end
+
+  end
+
 end

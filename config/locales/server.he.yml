@@ -31,10 +31,10 @@ he:
   purge_reason: "נמחק באופן אוטומטי כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "מוגבל לאורך של  %{max} תוים: את/ה הקשת %{length}."
       invalid_boolean: "בוליאני לא חוקי."
-      taken: "כבר תפוס. (שמות קבוצות באנגלית אינן מבדילות בין אותיות גדולות וקטנות)"
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
   bulk_invite:
@@ -1087,16 +1087,6 @@ he:
         להדרכה נוספת אנא פנו למסמך ה[קווים המנחים של הקהילה שלנו](%{base_url}/guidelines).
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
-      text_body_template: |
-        תודה שהצטרפת אל %{site_name} וברוך/ברוכה הבא/ה!
-
-        %{new_user_tips}
-
-        אנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
-
-        (אם אתם זקוקים לתקשר באופן פרטי עם [חברי צוות](/about) כמשתמשים חדשים, פשוט השיבו למסר הפרטי הזה.)
-
-        תכייפו!
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
     backup_succeeded:
@@ -1381,23 +1371,6 @@ he:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        ברוכים הבאים אל %{site_name}!
-
-        חבר/ה בצוות שלנו אישר את חשבונך ב%{site_name}.
-
-        הקישו על הקישור הבא כדי לאשר ולהפעיל את חשבון המשתמש/ת החדש שלכם:
-        %{base_url}/users/activate-account/%{email_token}
-
-        אם לא ניתן להקליק על הקישור, נסו להעתיק ולהדביר אותו אל שורת הכתובת בדפדפן שלכם.
-
-        %{new_user_tips}
-
-        אנחנו מאמינים ב[התנהגות קהילתית מתורבתת](%{base_url}/guidelines) בכל עת.
-
-        (אם אתם צריכים לתקשר באופן פרטי עם [אנשי הצוות](/about) שלנו, כמשתמשים חדשים פשוט שלחו תגובה להודעה זו)
-
-        תהנו!
     signup:
       subject_template: "[%{site_name}] Activate your new account"
       text_body_template: |

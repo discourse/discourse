@@ -38,7 +38,7 @@ class About
     @stats ||= {
        topic_count: Topic.listable_topics.count,
        post_count: Post.count,
-       user_count: User.count,
+       user_count: User.real.count,
        topics_7_days: Topic.listable_topics.where('created_at > ?', 7.days.ago).count,
        topics_30_days: Topic.listable_topics.where('created_at > ?', 30.days.ago).count,
        posts_7_days: Post.where('created_at > ?', 7.days.ago).count,

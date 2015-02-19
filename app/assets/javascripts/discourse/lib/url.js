@@ -53,11 +53,6 @@ Discourse.URL = Ember.Object.createWithMixins({
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
           if (location && location.replaceURL) {
-
-            if (Ember.FEATURES.isEnabled("query-params-new")) {
-              var search = Discourse.__container__.lookup('router:main').get('location.location.search') || '';
-              path += search;
-            }
             location.replaceURL(path);
           }
         });

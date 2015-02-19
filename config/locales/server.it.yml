@@ -35,7 +35,7 @@ it:
     messages:
       too_long_validation: "è limitato a %{max} caratteri; tu ne hai inseriti %{length}."
       invalid_boolean: "Booleano non valido."
-      taken: "è già stato usato (i nomi dei gruppi non distinguono le maiuscole)."
+      taken: "è già stato usato"
       accepted: deve essere accettato
       blank: non può essere vuoto
       present: deve essere vuoto
@@ -70,7 +70,7 @@ it:
     template:
       body: 'Sono stati riscontrati problemi con i seguenti campi:'
       header:
-        one: '1 errore ha impedito il salvataggio di questo %{model}'
+        one: 1 errore ha impedito il salvataggio di questo %{model}
         other: '%{count} errori hanno impedito il salvataggio di questo %{model}'
     embed:
       load_from_remote: "Si è verificato un errore nel caricamento del messaggio."
@@ -540,7 +540,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine Viste Totali"
     http_background_reqs:
-      title: "Sfondo"
+      title: "Background"
       xaxis: "Giorno"
       yaxis: "Richieste usate per l'aggiornamento diretto e per il tracking"
     http_2xx_reqs:
@@ -739,10 +739,13 @@ it:
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
     enable_sso: "Attiva il signle sign.on tramite un sito esterno (ATTENZIONE:  l'opzione mal configurata può impedire a chiunque di accedere; inoltre disabilita gli inviti)"
+    enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret "
     sso_url: "URL per l'endpoint del single sign on "
+    sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_email: "Sostituisce le email locali con quelle del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"
     sso_overrides_username: "Sovrascrive il nome utente locale con quello del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero verificarsi discrepanze a causa delle differenze tra lunghezza effettiva e richiesta del nome utente)"
     sso_overrides_name: "Sovrascrive il nome locale con quello del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero verificarsi discrepanze a causa della normalizzazione dei nomi locali)"
+    sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     enable_local_logins: "Abilita account basati su login con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
     enable_google_logins: "(obsoleto) Attiva l'autenticazione Google. Questo è il metodo di autenticazione OpenID che Google ha definito obsoleto. Le nuove installazioni NON funzioneranno con questa opzione. Utilizzare Google Oauth2. Le installazioni esistenti devono migrare a Google Oauth2 entro il 20 aprile 2015."
@@ -762,6 +765,7 @@ it:
     allow_restore: "Abilita il ripristino, che sostituisce TUTTI i dati del sito! Lascia a falso a meno che non hai intenzione di ripristinare un backup."
     maximum_backups: "Il numero massimo di backup da mantenere sul disco. I backup più vecchi vengono automaticamente cancellati."
     backup_daily: "Crea automaticamente un backup del sito una volta al giorno."
+    enable_s3_backups: "Carica i backup su S3 quando completati. IMPORTANTE: richiede che siano inserite valide credenziali S3 nelle impostazioni File."
     s3_backup_bucket: "Il bucket remoto che contiene i backup. ATTENZIONE: assicurati che sia un bucket privato."
     active_user_rate_limit_secs: "Ogni quanti secondi viene aggiornato il campo 'last_seen_at'"
     verbose_localization: "Mostra suggerimenti per la traduzione nell'interfaccia utente"
@@ -783,7 +787,12 @@ it:
     clean_orphan_uploads_grace_period_hours: "Dopo quante ore un caricamento orfano (senza riferimenti) viene rimosso."
     purge_deleted_uploads_grace_period_days: "Dopo quanti giorni un caricamento cancellato viene rimosso."
     purge_unactivated_users_grace_period_days: "Periodo di grazia (in giorni) prima che un utente che non abbia attivato il proprio account venga cancellato."
-    enable_flash_video_onebox: "Attiva l'inserimento di link swf e flv (Adobe Flash) in onebox. ATTENZIONE: comporta rischi per la sicurezza."
+    enable_s3_uploads: "Mette i caricamenti sullo spazio disco Amazon S3. IMPORTANTE: richiede che siano inserite valide credenziali S3 (sia l'access key id sia l'access key secret)."
+    s3_upload_bucket: "Il nome del bucket Amazon S3 sul quale verranno caricati i file. ATTENZIONE: deve essere tutto minuscolo, senza punti, senza trattini bassi."
+    s3_access_key_id: "La access key id Amazon S3 che verrà usata per caricare le immagini."
+    s3_secret_access_key: "La access key secret Amazon S3 che verrà usata per caricare le immagini."
+    s3_region: "La region name Amazon S3 che verrà usata per caricare le immagini."
+    enable_flash_video_onebox: "Attiva l'inserimento di collegamenti swf e flv (Adobe Flash) in onebox. ATTENZIONE: comporta rischi per la sicurezza."
     default_invitee_trust_level: "Livello di esperienza (0-4) assegnato di default agli utenti invitati."
     default_trust_level: "Livello di esperienza (0-4) assegnato di default ai nuovi utenti."
     tl1_requires_topics_entered: "Quanti argomenti deve inserire un utente per essere promosso a livello di esperienza 1."
@@ -806,7 +815,7 @@ it:
     tl3_promotion_min_duration: "Per quanti giorni al minimo mantenere la promozione al livello di esperienza 3 prima che un utente venga degradato al livello di esperienza 2."
     tl3_requires_likes_given: "Il minimo numero di Mi piace che devono essere dati negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
     tl3_requires_likes_received: "Il minimo numero di Mi piace che devono essere ricevuti negli ultimi 100 giorni per essere promossi al livello di esperienza 3."
-    tl3_links_no_follow: "Non cancellare rel=nofollow dai link pubblicati da utenti di livello 3"
+    tl3_links_no_follow: "Non rimuovere rel=nofollow dai collegamenti pubblicati da utenti con livello di esperienza 3."
     min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
@@ -815,9 +824,10 @@ it:
     newuser_max_mentions_per_post: "Massimo numero di menzioni ad un @nome che un utente può fare in un messaggio."
     newuser_max_replies_per_topic: "Numero massimo di risposte che un nuovo utente può inviare in un singolo argomento, prima che qualcuno risponda."
     max_mentions_per_post: "Numero massimo di menzioni ad un @nome che chiunque può fare in un messaggio."
-    create_thumbnails: "Crea anteprime e immagini lightbox anche se troppo grandi per essere contenute in un messaggio."
+    create_thumbnails: "Crea anteprime e lightbox delle immagini che sono troppo grandi per essere contenute in un messaggio."
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
-    email_posts_context: "Quante risposte precedenti di contesto inserire in una email di notifica."
+    email_posts_context: "Quante risposte precedenti inserire come contesto nelle email di notifica."
+    flush_timings_secs: "Frequenza di svuotamento dei dati temporali verso il server, in secondi."
     max_word_length: "Numero massimo di caratteri che compongono il titolo di un argomento."
     title_min_entropy: "Minima entropia (caratteri unici) richiesti come titolo di un argomento."
     body_min_entropy: "Minima entropia (caratteri unici) richiesti come corpo di un messaggio."
@@ -826,19 +836,28 @@ it:
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico per le etichette di categoria."
-    authorized_extensions: "Una lista delle estensioni dei file che è permesso caricare sul sito (usa '*' per permettere tutti i tipi di file) "
+    authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
     max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."
-    topic_views_heat_low: "Dopo questo numero di visualizzazioni, il campo visualizzazioni è leggermente in evidenza."
-    topic_views_heat_medium: "Dopo questo numero di visualizzazioni, il campo visualizzazioni è abbastanza in evidenza."
-    topic_views_heat_high: "Dopo questo numero di visualizzazioni, il campo visualizzazioni è molto in evidenza."
+    topic_views_heat_low: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato leggermente."
+    topic_views_heat_medium: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato mediamente."
+    topic_views_heat_high: "Dopo tale numero di visualizzazioni, il campo visualizzazioni è evidenziato fortemente."
+    cold_age_days_low: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata leggermente."
+    cold_age_days_medium: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata mediamente."
+    cold_age_days_high: "Dopo tale numero di giorni di conversazione, la data di ultima attività viene evidenziata fortemente."
+    history_hours_low: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato leggermente."
+    history_hours_medium: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato mediamente."
+    history_hours_high: "Un messaggio modificato entro tale numero di ore ha l'indicatore di modifica evidenziato fortemente."
+    topic_post_like_heat_low: "Dopo che il rapporto Mi piace:Messaggi supera tale valore, il campo con il contatore di messaggi è evidenziato leggermente."
+    topic_post_like_heat_medium: "Dopo che il rapporto Mi piace:Messaggi supera tale valore, il campo con il contatore di messaggi è evidenziato mediamente."
+    topic_post_like_heat_high: "Dopo che il rapporto Mi piace:Messaggi supera tale valore, il campo con il contatore di messaggi è evidenziato fortemente."
     faq_url: "Se vuoi usare un documento sulle FAQ ospitato da qualche altra parte, fornisci qui la sua URL completa."
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
-    disable_emails: "Fai che Discourse non invii alcun tipo di email."
+    disable_emails: "Evita che Discourse invii qualunque tipo di email"
     pop3_polling_port: "La porta dell'account POP3."
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
@@ -1038,15 +1057,97 @@ it:
 
          Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     usage_tips:
-      text_body_template: "Questo messaggio privato contiene qualche breve consiglio per permetterti di iniziare.\n\n## Continua a scorrere la pagina\n\nNon ci sono bottoni per cambiare pagina né numeri di pagina - per leggere più messaggi, semplicemente **continua a scorrere la pagina!**\n\nNon appena arrivano nuovi messaggi, questi appaiono automaticamente.\n\n## Dove mi trovo?\n\n- Per fare una ricerca, per la tua pagina utente o per il menu, **usa i pulsanti icona <kbd>☰</kbd> in alto a destra**.\n\n- Cliccando sul titolo di un argomento, verrai sempre portato al prossimo messaggio non ancora letto. Usa la data dell'ultima attività ed il numero del messaggio per saltare in cima o in fondo.\n\n- Mentre leggi un argomento, salta all'inizio &uarr; cliccando sul titolo dell'argomento stesso. Clicca la barra di avanzamento verde che si trova in basso a destra per mostrare tutti i pulsanti di navigazione, oppure usa i tasti <kbd>inizio</kbd> e <kbd>fine</kbd>.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Come faccio a rispondere?\n\n- Per rispondere all'argomento base, usa il pulsante Rispondi <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> in fondo alla pagina.\n\n- Per rispondere a un messaggio specifico, usa il pulsante Rispondi <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> su quel messaggio.\n\n- Per deviare la conversazione - anziché andare fuori tema - e lasciare le due conversazioni collegate tra loro, usa <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Rispondi come Nuovo Argomento alla destra del messaggio.\n\nPer citare qualcuno nella risposta, seleziona il testo che vuoi citare, poi premi qualunque bottone Rispondi.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPer mandare una notifica a qualcuno nella tua risposta, menziona il suo nome. Inizia digitando `@` e si aprirà un completamento automatico.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPer [Emoji standard](http://www.emoji.codes/),\
-        \ inizia a scrivere `:` oppure direttamente i normali smile `:)` :smile: \n\n## Che altro posso fare?\n\nIn fondo a ogni messaggio ci sono dei pulsanti attivi.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPer far sapere a qualcuno che ti è piaciuto il suo messaggio, usa il bottone **Mi piace**. Se rilevi un problema con un messaggio, non esitare ad usare il bottone di segnalazione **bandiera** per inviare una notifica privata all'autore o ad un moderatore. \n\nPuoi anche **condividere** un collegamento ad un messaggio, o impostare un **segnalibro** ad un messaggio per riferimenti futuri. \n\n## Chi sta parlando con me?\n\nQuando qualcuno risponde ad un tuo messaggio o lo cita, oppure menziona il tuo `@utente`, appare un numero sul bottone della conversazione in alto a destra della pagina. Usalo per accedere alle tue **notifiche**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNon preoccuparti di perdere delle risposte – se non sei online quando arrivano, ti verranno inviate per email le risposte dirette (e i messaggi privati).\n\n## Quand'è che le conversazioni sono considerate nuove?\n\nDi norma sono considerate nuove tutte le conversazioni che hanno meno di due giorni, e sarà automaticamente seguita ogni conversazione alla quale hai partecipato (risposto, creato o letto per un periodo abbastanza lungo). \n\nVedrai accanto a tali argomenti un indicatore blu con dei numeri: \n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPuoi modificare le impostazioni di notifica di ciascun argomento con il pannello in fondo all'argomento stesso (questa impostazione si può anche definire per ciascuna categoria). Per modificare il modo in cui segui gli argomenti, o la definizione di ciò che è nuovo, vedi le [tue preferenze](/my/preferences).\n\n## Perché non posso fare alcune cose?\n\nPer ragioni di sicurezza i nuovi utenti hanno alcune limitazioni. Man mano che partecipi, guadagni la fiducia della comunità, ne diverrai un cittadino a pieno titolo e tali limitazioni vengono\
-        \ automaticamente rimosse. Quanto raggiungi un [livello di esperienza] (https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) sufficientemente alto, allora guadagnerai ulteriori capacità per aiutarci a gestire insieme questa comunità.\n"
+      text_body_template: |
+        Questo messaggio privato contiene alcune indicazioni per cominciare.
+
+        ## Continua a scorrere la pagina
+
+        Non ci sono pulsanti o numeri delle pagine successive - per leggere di più, **scorri semplicemente in giù la pagina**
+
+        I nuovi post compariranno automaticamente man mano.
+
+        ## Dove mi trovo?
+
+        - Per fare una ricerca, per la tua pagina utente o per il menu, **usa i pulsanti icona <kbd>☰</kbd> in alto a destra**.
+
+        - Il titolo di una discussione porta sempre al prossimo post non letto. Usa la data dell'ultima attività per saltare rapidamente al primo o ultimo post in una discussione.
+
+        - Quando leggi una discussione, vai in cima &uarr; selezionando il titolo della discussione. Seleziona la barra di avanzamento verde che si trova in basso a destra per mostrare tutti i controlli di navigazione, o usa i tasti <kbd>inizio</kbd> e <kbd>fine</kbd> della tastiera.
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## Come faccio a rispondere?
+
+        - Per rispondere alla discussione generale, usa il pulsante Rispondi <img src="/images/welcome/reply-topic.png" width="29" height="25">  in fondo alla pagina.
+
+        - Per rispondere a un post specifico, usa il pulsante Rispondi <img src="/images/welcome/reply-post.png" width="29" height="25"> su quel messaggio.
+
+        - Per portare la conversazione in una nuova direzione, ma mantenendole collegate, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Rispondi come nuovo argomento alla destra del messaggio.
+
+        Per citare qualcuno nella tua risposta, seleziona il testo che desideri citare e fai clic su uno dei pulsanti Rispondi.
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        Per mandare una notifica a qualcuno nella tua risposta, menziona il suo nome. Scrivere `@` ed apparirà un completatore automatico.
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        For [standard Emoji](http://www.emoji.codes/), just start typing `:` or the traditional smileys `:)` :smile:
+
+        ## Che altro posso fare?
+
+        In fondo a ogni messaggio ci sono dei pulsanti attivi.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Per dire a qualcuno che ti è piaciuto il suo messaggio, usa il bottone **Mi piace** in fondo al messaggio. Se trovi un messaggio con dei problemi, usa subito il bottone **Segnala** in fondo al post e fallo sapere privatamente all'autore o allo staff.
+
+        Puoi anche **condividere** un link a un messaggio, o fare un **segnalibro** di un messaggio per usarlo più tardi sulla tua pagina utente.
+
+        ## Chi sta parlando con me?
+
+        Quando qualcuno risponde a un tuo post, lo cita o menziona il tuo `@nome`, comparirà un numero sul pulsante delle conversazioni in alto a destra nella pagina. Usalo accedere alle tue **notifiche**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Non preoccuparti di perdere delle risposte – se non sei online quando arrivano, ti verranno inviate per email le risposte dirette (e i messaggi privati) che arrivano.
+
+        ## Quand'è che le conversazioni sono nuove?
+
+        Di norma tutte le conversazioni più recenti di due giorni si considerano nuove, e verrà seguita automaticamente ogni conversazione a cui tu abbia partecipato (risposto, creato, o letto per un certo tempo).
+
+        Vedrai gli indicatori blu "nuovo" e "numero" accanto a queste conversazioni:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Puoi modificare le impostazioni di notifica di ciascuna discussione con i controlli in fondo al topic (questa impostazione si può anche definire per ciascuna categoria). Per modificare il modo in cui segui le discussioni, o la definizione di nuovo, vedi le [tue preferenze utente](%{baseurl}/my/preferences).
+
+        ## Perché non posso fare certe cose?
+
+        Per ragioni di sicurezza i nuovo utenti hanno alcune limitazioni. Man mano che parteciperai guadagnerai la fiducia della comunità, ne diverrai partecipante a pieno titolo  e questi limiti verranno rimossi automaticamente. Ad un [livello di fiducia](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) sufficientemente alto guadagnerai ulteriori capacità per aiutarci a gestire insieme questa comunità.
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n %{new_user_tips} \n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines). \n\nBuona permanenza!\n"
+      text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n %{new_user_tips} \n\nNoi crediamo sempre in un [comportamento comunitario civile](%{base_url}/guidelines). \n\nBuona permanenza!\n\n(Se vuoi comunicare in privato con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio privato.)\n"
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: "Grazie per aver accettato l'invito su %{site_name} -- benvenuto/a! \n\nTi abbiamo creato un nuovo account: **%{username}**, e sei autenticato. Puoi cambiare il nome visitando [il tuo profilo][prefs]. \n\nPer autenticarti successivamente puoi: \n\n1. Usa **sempre lo stesso indirizzo email** sul quale hai ricevuto l'invito iniziale. Diversamente non riusciremmo a sapere che sei proprio tu! \n\n2. Creare una password univoca nel [tuo profilo][prefs], ed usarla per poi autenticarti. \n\n%{new_user_tips} \n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines). \n\nBuona permanenza! \n\n[prefs]: %{user_preferences_url}\n"
+      text_body_template: |
+        Grazie per aver accettato l'invito a %{site_name} -- benvenuto/a!!
+
+        Ti abbiamo creato il nuovo account **%{username}** e sei autenticato sul sito. Puoi cambiare il tuo nome visitando [il tuo profilo utente][prefs].
+
+        Per fare login in futuro:
+
+        1. **Usa sempre lo stesso indirizzo email dell'invito originale** quando fai login. Altrimenti non capiremo che sei tu!!
+
+        2. Crea una password unica per [il tuo profilo utente][prefs], e usala per fare login.
+
+        %{new_user_tips}
+
+        Crediamo nei [comportamenti civili e costruttivi nella comunità](%{base_url}/guidelines), sempre.
+
+        (Se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi a questo messaggio privato.)
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completato correttamente"
     backup_failed:
@@ -1077,6 +1178,10 @@ it:
       text_body_template: "Il tuo file con l'invito di massa è stato processato, %{sent} inviti spediti."
     bulk_invite_failed:
       subject_template: "Invito di massa processato con errori"
+    csv_export_succeeded:
+      subject_template: "Esportazione dati completa"
+    csv_export_failed:
+      subject_template: "Esportazione dati fallita"
     email_reject_trust_level:
       subject_template: "Problema email -- Livello Esperienza insufficente"
       text_body_template: |
@@ -1095,6 +1200,12 @@ it:
       subject_template: "Problema email -- Errore di invio"
     email_reject_topic_not_found:
       subject_template: "Problema relativo all'email -- Argomento Non Trovato"
+    email_reject_topic_closed:
+      subject_template: "Problema email: argomento chiuso"
+      text_body_template: |
+        Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è andato a buon fine.
+
+        L'argomento è chiuso. Se pensi che sia un errore, contatta un membro dello staff.
     too_many_spam_flags:
       subject_template: "Nuovo account bloccato"
       text_body_template: "Ciao, \n\nil presente è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati automaticamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. \n\nPer ulteriori informazioni, ti rimandiamo alle [Linee guida della comunità](%{base_url}/guidelines).\n"
@@ -1238,7 +1349,6 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).\n\nSe hai bisogno di comunicare privatamente con i [membri dello staff](/about), rispondi semplicemente a questo messaggio privato.\n\nBuona permanenza!\n"
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |

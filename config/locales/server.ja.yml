@@ -33,6 +33,7 @@ ja:
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
       invalid_boolean: "無効なboolean."
+      empty: 本文が未入力です。.
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
   bulk_invite:
@@ -336,6 +337,8 @@ ja:
       title: "ブックマーク"
       xaxis: "日"
       yaxis: "新規ブックマーク数"
+    starred:
+      title: "お気に入り"
     users_by_trust_level:
       title: "トラストレベル毎のユーザ"
       xaxis: "トラストレベル"

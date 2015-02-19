@@ -35,7 +35,7 @@ pt_BR:
     messages:
       too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
       invalid_boolean: "Boleano inválido."
-      taken: "já foi escolhido. (nomes de grupo não diferenciam maiúsculas e minúsculas)"
+      taken: "já foi escolhido"
       accepted: tem que ser aceito
       blank: não pode estar em branco
       present: deve estar em branco
@@ -70,7 +70,7 @@ pt_BR:
     template:
       body: 'Houve problemas com os seguintes campos:'
       header:
-        one: '1 erro impediu este %{model} de ser salvo'
+        one: 1 erro impediu este %{model} de ser salvo
         other: '%{count} erros impediram este %{model} de ser salvo'
     embed:
       load_from_remote: "Houve um erro ao carregar essa mensagem."
@@ -655,6 +655,7 @@ pt_BR:
     educate_until_posts: "Quando o usuário começa a digitar suas primeiras (n) novos posts, mostrar o novo painel pop-up de educação do usuário no compositor."
     title: "O nome deste site, como usado na tag de título."
     site_description: "Descreva este site com uma frase, como usado na tag de meta description."
+    contact_email: "Endereço de email do responsável de contato chave para este site. Usado para notificações críticas tais como sinalizações não controladas, assim como também pela forma de contato em /about para assuntos urgentes."
     queue_jobs: "APENAS DESENVOLVEDORES! ATENÇÃO! Por padrão, enfileira tarefas no sidekiq. Se desativado, seu site ficará defeituoso."
     crawl_images: "Recupere imagens de URLs remotas para inserir as dimensões de largura e altura corretos."
     download_remote_images_to_local: "Converta imagens remotas para imagens locais, transferindo-as; isto evita imagens quebradas."
@@ -673,6 +674,7 @@ pt_BR:
     exclude_rel_nofollow_domains: "Lista de domínios separados por barras verticais (|) onde o nofollow não é adicionado (tld.com irá automaticamente disponibilizar sub.tld.com também) "
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
+    onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
     logo_url: "A imagem de logo no topo esquerdo do seu site; se deixado em branco, o título do size será mostrado."
     digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
     logo_small_url: "A pequena imagem de logo no topo à esquerda do seu site, vista quando rolando a página abaixo. Se deixado em branco, um símbolo de homepage será mostrado."
@@ -839,6 +841,7 @@ pt_BR:
     max_mentions_per_post: "Número máximo de notificações @nome que quem quer que seja pode usar em um post."
     create_thumbnails: "Criar thumbnails e lightbox para imagens que são muito largas para caber em uma postagem."
     email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários  uma chance de editarem e finalizarem seus posts."
+    email_posts_context: "Quantas respostas prévias incluir como contexto em emails de notificação."
     max_word_length: "O tamanho máximo permitido de uma palavra, em caracteres, num título de tópico."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
@@ -929,6 +932,7 @@ pt_BR:
     feed_polling_enabled: "Se um feed RSS / ATOM são importados como mensagens"
     feed_polling_url: "URL do feed RSS / ATOM para importar"
     embed_by_username: "Nome de usuário Discourse para o usuário que cria os tópicos"
+    embed_truncate: "Cortar os posts embutidos."
     embed_category: "Categoria dos posts embutidos."
     embed_post_limit: "Número máximo de respostas para embutir"
     embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
@@ -1102,6 +1106,8 @@ pt_BR:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
+    text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nEntregabilidade de email é complicada. Aqui estão algumas poucas coisas importantes que você deve verificar primeiro:\n\n- Esteja *certo* de definir o from: do `email de notificação` corretamente nas configurações do seu site. **O domínio especificado no endereço \"from\" dos emails que você envia é o domínio contra o qual o seu email será validado**.\n\n- Aprenda como ver o código cru de email no seu cliente de email, para que assim você possa examinar os cabeçalhos de email por pistas importantes. No Gmail, isso é a opção \"exibir original\" no menu drop-down no topo à direita de cada email.\n\n- **IMPORTANTE:** O seu provedor de acesso à internet possui um record de DNS reverso configurado para associar os nomes de domínio e endereços IP dos quais você envia email? [Teste seu record de PTR Reverso][2] aqui. Se o seu provedor de acesso à internet não configurar o record de DNS reverso apropriadamente, é muito pouco provável que qualquer do seu email será entregue.\n\n- O [record SPF][8] do seu domínio é correto? [Teste seu record SPF][1] aqui. Note que TXT \n é o tipo oficialmente correto de record para SPF.\n\n- O [record DKIM][3] do seu domínio é correto? Isso melhorará significativamente a entregabilidade de email. [Teste seu record DKIM][7] aqui.\n\n- Se você roda o seu próprio servidor de emails, verifique e certifique-se que os IPs do seu servidor de emails [não estão em quaisquer blacklists de emails][4]. Também verifique que ele esteja decisivamente enviando um fully-qualified hostname que se resolve em DNS em sua mensagem HELO. Caso contrário, isso fará com que seu email seja rejeitado por muitos serviços de email. \n\n(O modo *fácil* é criar uma conta grátis no [Mandrill][md] ou [Mailgun][mg] ou [Mailjet][mj], os quais têm generosos planos grátis de email e serão suficientes para pequenas comunidades. Você ainda precisará configurar os records SPF e DKIM no seu DNS, apesar disso!) \n\nNós esperamos que você tenha recebido este teste de entregabilidade de email OK!\n\nBoa sorte,\n\nSeus amigos do [Discourse](http://www.discourse.org)\n\n\
+      [0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]: http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: http://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Nova versão do Discourse, atualização disponível"
     text_body_template: |
@@ -1175,87 +1181,8 @@ pt_BR:
         No entanto, se o post é escondido pela comunidade uma segunda vez, ele permanecerá escondido até ser manipuladas pela staff - e pode haver outras medidas, incluindo a possibilidade de suspensão da sua conta.
 
         Para informações adicionais, por favor consulte a nossas [diretrizes da comunidade] (%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Esta mensagem privada tem algumas dicas para te ajudar a começar.
-
-        ## Continue rodando
-
-        Não existem botões de próxima página ou numerações de página – para ler mais, **simplesmente continue rodando para baixo!**
-
-        Conforme novas mensagens chegam, elas irão aparecer automaticamente.
-
-        ## Onde estou?
-
-        - Para buscar, sua página de usuário, ou o menu, use os **botões do ícone <kbd>☰</kbd> no canto direito superior**.
-
-        - Qualquer título de tópico irá te levar para a próxima mensagem não lida. Utilize o tempo de última atividade e contagem de mensagens para entrar no começo ou no final.
-
-        - Enquanto lê um tópico, vá para o topo &uarr; selecionando o título do tópico. Selecione a barra de progresso verde no canto direito inferior para todos controles de navegação, ou utilize as teclas <kbd>home</kbd> e <kbd>end</kbd>.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Como respondo?
-
-        - Para responder ao tópico geral, utilize o botão de Responder <img src="/images/welcome/reply-topic.png" width="29" height="25"> bem no final da página.
-
-        - Para responder uma mensagem em específico, utilize o botão de Responder <img src="/images/welcome/reply-post.png" width="29" height="25"> na respectiva mensagem.
-
-        - Se quiser levar a conversa para outro sentido, mas manter elas relacionadas, utilize <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responder como um Tópico linkado à direita da mensagem.
-
-        Para citar alguém na sua resposta, selecione o texto que gostaria de citar, daí aperte qualquer botão de Responder.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Para alertar alguém na sua resposta, mencione o nome deles. Tecle `@` e um auto copmpletador surgirá.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        Para [Emojis padrões](http://www.emoji.codes/), simplesmente comece digitando `:` ou os tradicionais smileys `:)` :smile:
-
-        ## O que mais posso fazer?
-
-        Em baixo de cada mensagem existem os botões de ações.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Para deixar que saibam que você gostou a mensagem deles, utilize o botão **curtir**. Se você ver algum problema com uma mensagem, avise a pessoa pessoalmente, ou deixe nossa equipe saber a respeito com o botão **sinalizar**.
-
-        Você também pode **compartilhar** um link para uma mensagem, ou **favoritar** para referência posterior na sua página de usuário.
-
-        ## Quem está falando comigo?
-
-        Quando alguém responde ou cita as suas mensagens, ou menciona o seu `@nomedeusuário`, um número imediatamente aparecerá no topo superior da página. Utilize-o para acessar suas **notificações**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Não se preocupe se não vir uma resposta – você receberá um email sobre respostas direcionadas (e mensagens privadas) caso você não esteja online quando elas chegarem.
-
-        ## Quando as conversas são consideradas novas?
-
-        Por padrão todas conversas com menos de dois dias são consideradas novas, e qualquer conversa da qual você participou (respondeu, criou ou leu por um período extendido) será automaticamente monitorada.
-
-        Você verá um indicador azul, de "novo" ou números, próximos aos tópicos:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Você pode mudar o estado de notificação individual de um tópico via o controle no final dele (isso também pode ser configurado por categorias). Para mudar como você monitora tópicos, ou a definição de "novo", veja [suas preferências de usuário](/my/preferences).
-
-        ## Por que não posso fazer algumas coisas?
-
-        Usuários novos possuem limitações por segurança. Conforme você participa, ganhará a confiança da comunidade, se tornará um cidadão, e todas essas limitações serão automaticamente removidas. Em [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) altos suficientes, você ganhará até mesmo novas abilidades para nos ajudar a cuidar da nossa comunidade juntos.
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por participar de %{site_name}, e bem-vindo!
-
-        %{new_user_tips}
-
-        Nós acredtamos no [comportamento comunitário civilizado](%{base_url}/guidelines) em todos os momentos.
-
-        (Se você precisa se comunicar em particular com os [membros da staff](/about) como um usuário novo, simplesmente responda à esta mensagem particular.)
-
-        Aproveite a sua estadia!
     welcome_invite:
       subject_template: "Bem-vindo ao %{site_name}!"
     backup_succeeded:
@@ -1588,6 +1515,9 @@ pt_BR:
   static_topic_first_reply: "Altere o primeiro post desse tópico para mudar seu conteúdo na página de %{page_name} \n"
   guidelines_topic:
     title: "Perguntas frequentes/Diretrizes"
+    body: "<a name=\"civilized\"></a>\n\n## [Este é um Lugar Civilizado para Discussão Pública](#civilized)\n\nPor gentileza trate este fórum de discussão com o mesmo respeito que você teria em um parque público. Nós, também, somos uma comunidade de recursos compartilhados &mdash; um local para compartilhar habilidades, conhecimento e interesses através da discussão em andamento.\n\nEstas não são regras duras e firmes, meramente suportes ao julgamento humano de nossa comunidade. Use estas diretrizes para manter um lugar claro, bem-iluminado de conversa pública civilizada.\n\n<a name=\"improve\"></a>\n\n## [Melhore a Discussão](#improve)\n\nAjude-nos a fazer deste um grande lugar de discussão ao trabalhar sempre para melhorar a discussão de alguma forma, mesmo que pequena. Se você estiver incerto de que o seu post acrescenta à conversa, pense melhor no que você quer dizer e tente novamente depois.\n\nOs tópicos discutidos aqui importam para nós, e nós queremos que você aja como se eles importassem para você, também. Seja respeitoso com os tópicos e as pessoas que os discutem, ainda que você discorde com algo do que está sendo dito.\n\nUma forma de melhorar a discussão é por descobrir algumas que já estão acontecendo. Por favor passe algum tempo navegando nos tópicos aque antes de responder ou iniciar o seu próprio, e você terá uma chance de conhecer outros que compartilham dos seus interesses.\n\n<a name=\"agreeable\"></a>\n\n## [Seja Agradável, Mesmo Quando Você Discorda](#agreeable)\n\nVocê pode querer responder à algo discordando. Tudo bem. Mas, lembre-se de _criticar idéias, não pessoas_. Por gentileza evite:\n\n*   Xingamentos\n*   Ataques ad hominem\n*   Responder ao tom de um post ao invés do seu conteúdo efetivo.\n*   Contradição impensada.\n\nAo invés disso, ministre contra-argumentos razoáveis que aprimorem a conversa.\n\n<a name=\"participate\"></a>\n\n## [Sua Participação Conta](#participate)\n\nAs conversas que nós temos aqui colocam um ambiente para todos. Ajude-nos a influenciar o futuro desta comunidade escolhendo empenhar-se em discussões que façam deste fórum um lugar interessante para se estar &mdash; e evitando\
+      \ aquelas que não façam.\n\nO Discourse fornece ferramentas que permitem a comunidade de identificar coletivamente as melhores (e piores) contribuições: favoritos, likes, sinalizações, respostas, edits, e assim em diante. Utilize estas ferramentas para aprimorar sua própria experiência, e também a de todos os outros.\n\nVamos tentar deixar nosso parque melhor do que nós o encontramos.\n\n<a name=\"flag-problems\"></a>\n\n## [Se Você Ver um Problema, Sinalize-o](#flag-problems)\n\nModeradores têm autoridade especial; eles são responsáveis por este fórum. Mas você também. Com a sua ajuda, moderadores podem ser facilitadores da comunidade, não zeladores ou polícia.\n\nQuando você vê um comportamento ruim, não responda. Isso encoraja o comportamento ruim por reconhecê-lo, consume a sua energia, e desperdiça o tempo de todos. _Apenas sinalize-o_. Se as sinalizações aumentam o suficiente, ação será tomada, seja automaticamente ou através de intervenção da moderação.\n\nDe modo a manter nossa comunidade, moderadores se reservam o direito de remover qualquer conteúdo e qualquer conta de usuário por qualquer motivo e quando quer que seja. Moderadores não prevêem novos posts de qualquer modo; os moderadores e operadores do site não têm qualquer responsabilidade por qualquer conteúdo postado pela comunidade.\n\n<a name=\"be-civil\"></a>\n\n## [Sempre Seja Civilizado](#be-civil)\n\nNada sabota uma conversa saudável como a grosseria:\n\n*   Seja civilizado. Não poste qualquer coisa que uma pessoa razoável consideraria ofensivo, abusivo, ou discurso de ódio.\n*   Deixe-o limpo. Não poste qualquer coisa obscena ou sexualmente explícita.\n*   Respeite aos demais. Não perturbe ou aflija, se passe por outras pessoas, ou exponha suas informações particulares.\n*   Respeite nosso fórum. Não poste spam ou vandalize o fórum de algum outro modo.\n\nEstes não são termos concretos com definições precisas &mdash; evite mesmo a _aparência_ de qualquer destas coisas. Se você estiver incerto, pergunte-se como você se sentiria se sua postagem fosse veiculada na primeira página do New York Times.\n\nEste é um fórum público, e motores de busca indexam\
+      \ estas discussões. Mantenha a linguagem, links, e imagens seguros para família e amigos.\n\n<a name=\"keep-tidy\"></a>\n\n## [Mantenha-o Arrumado](#keep-tidy)\n\nFaça um esforço para colocar coisas no lugar certo, para que assim nós possamos passar mais tempo discutindo e menos limpando. Assim:\n\n*   Não inicie um tópico na categoria incorreta.\n*   Não faça postagens cruzadas da mesma coisa em múltiplos tópicos.\n*   Não poste respostas sem conteúdo.\n*   Não desvie um tópico mudando-no em meio à correnteza.\n*   Não assine seus posts &mdash; cada postagem tem sua informação de perfil anexada à ela. \n\nAo invés de postar \"+1\" ou \"Concordo\", use o botão Like. Ao invés de levar um tópico existente numa direção radicalmente diferente, utilize Responder como um Tópico Linkado.\n\n<a name=\"stealing\"></a>\n\n## [Poste Apenas Suas Próprias Coisas](#stealing)\n\nVocê deve não postar o que quer que seja digital que pertence a outro sem permissão. Você deve não postar descrições de, links para, ou métodos para roubar a propriedade intelectual de outro (software, vídeo, áudio, imagens), ou para quebrar qualquer outra lei.\n\n<a name=\"power\"></a>\n\n## [Powered by Você](#power)\n\nEste site é operado pela suar [amigável staff local](/about) e *você*, a comunidade. Se você tiver quaisquer outras questões sobre como as coisas devem funcionar aqui, abra um novo tópico na [categoria meta](/c/meta) e vamos discutir! Se houver um assunto crítico ou urgente que não puder ser resolvido por um tópico meta ou sinalização, entre em contato conosco através da [página da staff](/about).\n\n<a name=\"tos\"></a>\n\n## [Terms of Service](#tos)\n\nSim, juridiquês é chata, mas nós devemos nos proteger &ndash; e por extensão, você e seus dados &ndash; contra pessoas não-amigáveis. Nós temos um [Termos of Serviço](/tos) descrevendo a sua (e a nossa) conduta e direitos relacionados a conteúdo, privacidade e leis. Para usar este serviço, você deve concordar em permanecer por nossos [TOS](/tos).\n"
   tos_topic:
     title: "Termos de Serviço"
     body: "Os seguintes termos e condições regem todo o uso do site %{company_domain} e todo o conteúdo, serviços e produtos disponíveis no ou através do site, incluindo, mas não limitado a, o Software do Fórum do %{company_domain}, o Fóruns de Suporte do %{company_domain} e o serviço de hospedagem (\"hosting\") do %{company_domain}, (em conjunto, o site). O site é propriedade e operada por %{company_full_name} (\"%{company_name}\"). O Site é oferecido sujeito à sua aceitação, sem modificação de todos os termos e condições contidos neste documento e todas as outras regras operacionais, políticas (incluindo, sem limitação, a [Política de Privacidade](/privacy) e [Regras da Comunidade ](/faq)) e procedimentos do %{company_domain} que possam ser publicadas de tempos em tempos neste site por %{company_name}  (coletivamente, o \"Contrato\").\n\nPor favor, leia este Contrato cuidadosamente antes de acessar ou utilizar o site. Ao acessar ou utilizar qualquer parte do web site, você concorda em ficar vinculado aos termos e condições deste acordo. Se você não concordar com todos os termos e condições deste contrato, então você não pode acessar o site ou utilizar qualquer serviço. Se estes termos e condições são consideradas uma oferta por %{company_name}, a aceitação é expressamente limitada a estes termos. O site está disponível apenas para indivíduos que são pelo menos 13 anos de idade.\n\n<a name=\"1\"></a>\n\n## [1. Sua conta %{company_domain}](#1)\n\nSe você criar uma conta no site, você é responsável por manter a segurança da sua conta e você é totalmente responsável por todas as atividades que ocorrem sob a conta. Você deve notificar imediatamente %{company_name} de qualquer uso não autorizado de sua conta ou qualquer outra violação de segurança. %{company_name} não será responsável por quaisquer atos ou omissões por você, incluindo quaisquer danos de qualquer tipo incorridos como resultado de tais atos ou omissões.\n\n<a name=\"2\"></a>\n\n## [2. Responsabilidade de Contribuintes](#2)\n\nSe você postar o material no site, postar links no site, ou de outra forma (ou permitir que terceiros o fazem) material disponível por meio do\
@@ -1604,3 +1534,26 @@ pt_BR:
     body: "<a name=\"coleta\"></a>\n\n## [Quais as informações que recolhemos?](#coleta)\n\nColetamos informações de você quando você se cadastra em nosso site e coletamos dados quando você participar do fórum, lendo, escrevendo, e avaliar o conteúdo compartilhado aqui. \n\nAo se cadastrar em nosso site, você pode ser solicitado a digitar seu nome e e-mail. Você pode, entretanto, visite nosso site, sem registrar. O seu endereço de e-mail será verificado por um e-mail contendo um link único. Se o link é visitado, sabemos que você controla o endereço de e-mail. \n\nQuando registrado e fazendo postagens, registramos o endereço IP que originou o post. Também podemos manter os logs do servidor, que incluem o endereço IP de todos os pedidos para o nosso servidor.\n\n<a name=\"uso\"></a>\n\n## [Em que usamos as suas informações?](#uso)\n\nQualquer uma das informações que coletamos de você pode ser usado em uma das seguintes formas: \n\n* Para personalizar a sua experiência &mdash; sua informação nos ajuda a responder melhor às suas necessidades individuais. \n* Para melhorar o nosso site &mdash; nós nos esforçamos continuamente para melhorar as nossas ofertas de site com base nas informações e feedback que recebemos de você. \n* Para melhorar o serviço ao cliente &mdash; sua informação nos ajuda a responder mais eficazmente às suas solicitações de serviço ao cliente e as necessidades de apoio. \n* Para enviar periodicamente e-mails &mdash; O endereço de e-mail que você fornece pode ser usado para enviar-lhe informações, as notificações que você  quando há mudanças tópicos que solicitou ou em resposta a seu nome de usuário, responder a perguntas, e/ou outras solicitações ou perguntas.\n\n<a name=\"protecao\"></a>\n\n## [Como vamos proteger a sua informação?](#protecao)\n\nImplementamos uma série de medidas de segurança para manter a segurança de suas informações pessoais quando você entra, envia ou acessa suas informações pessoais.\n\n<a name=\"retencao-dados\"></a>\n\n## [Qual é a sua política de retenção de dados?](#retencao-dados)\n\nNós vamos fazer um esforço de boa fé para: \n\n* Manter registros do servidor contendo o endereço\
       \ IP de todos os pedidos para este servidor não mais que 90 dias. \n* Manter os endereços de IP associados a usuários registrados e suas mensagens não mais que 5 anos.\n\n<a name=\"cookies\"></a>\n\n## [Nós usamos cookies?](#cookies)\n\nSim. Cookies são pequenos arquivos que um site ou seu fornecedor de serviços transfere para o disco rígido do seu computador através de seu navegador Web (se você permitir). Estes cookies permitem que o site reconhecer o seu browser e, se você tiver uma conta registrada, associá-lo com a sua conta registrada. \n\nNós usamos cookies para compreender e guardar as suas preferências para futuras visitas e compilar dados agregados sobre o tráfego ea interação no site, para que possamos oferecer um site melhor e ferramentas no futuro. Poderemos contratar prestadores de serviços de terceiros para nos ajudar a compreender melhor os nossos visitantes do site. Esses prestadores de serviços não estão autorizados a utilizar as informações coletadas em nosso nome, exceto para nos ajudar a conduzir e melhorar o nosso negócio.\n\n<a name=\"divulgar\"></a>\n\n## [Podemos divulgar qualquer informação a terceiros?](#divulgar)\n\nNós não vendemos, trocamos, ou de outra forma transferrimos a terceiros as suas informações pessoalmente identificáveis. Isso não inclui terceiros de confiança que nos auxiliam no funcionamento do nosso site, conduzindo nosso negócio, ou serviço que a você, desde que as partes concordam em manter esta informação confidencial. Podemos também divulgar as suas informações quando acreditamos que é apropriado para cumprir a lei, fazer cumprir as nossas políticas do site, ou proteger nosso ou de outros direitos, propriedade ou segurança. No entanto, informações turísticas não pessoalmente identificáveis ​​podem ser fornecidas a terceiros para marketing, publicidade, ou outros usos.\n\n<a name=\"terceiros\"></a>\n\n## [Links de terceiros](#terceiros)\n\nOcasionalmente, a nosso critério, podemos incluir ou oferecer produtos ou serviços de terceiros no nosso site. Estes sites de terceiros têm políticas de privacidade separadas e independentes. Portanto, não temos responsabilidade ou obrigações\
       \ pelo conteúdo e atividades desses sites. No entanto, buscamos proteger a integridade do nosso site e agradecemos qualquer feedback sobre esses sites.\n\n<a name=\"coppa\"></a>\n\n## [Privacidade Online Infantil Protection Act Compliance](#coppa)\n\nNosso site, produtos e serviços são todos dirigidos a pessoas que tem pelo menos 13 anos de idade ou mais. Se o servidor for nos EUA, e você está sob a idade de 13, de acordo com as exigências da COPPA ([Lei de Proteção de Privacidade Online de Crianças] (http://en.wikipedia.org/wiki/Children)), não use este site.\n\n<a name=\"online\"></a>\n\n## [Somente Política de Privacidade Online](#online)\n\nEsta política de privacidade online se aplica somente às informações recolhidas pelo nosso site e não a informações coletadas offline.\n\n<a name=\"consentimento\"></a>\n\n## [Seu Consentimento](#consentimento)\n\nAo utilizar nosso site, você concorda com a nossa política de privacidade web site.\n\n<a name=\"mudancas\"></a>\n\n## [Alterações à nossa Política de Privacidade](#mudancas)\n\nSe nós decidirmos mudar nossa política de privacidade, colocaremos essas alterações nesta página. \n\nEste documento é CC-BY-SA. Ele foi atualizado pela última 31 de maio de 2013.\n"
+  static:
+    search_help: |
+      <h2>Dicas</h2>
+      <p>
+      <ul>
+        <li>Resultados de título são priorizados, então quando em dúvida, pesquise pelos títulos</li>
+        <li>Palavras únicas, incomuns sempre produzirão os melhores resultados</li>
+        <li>Sempre que possível, pesquise com escopo em uma categoria, usuário ou tópico em particular.</li>
+      </ul>
+      </p>
+      <h2>Opções</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>arco-íris category:parques status:open order:latest</code> irá pesquisar por tópicos contendo a palavra "arco-íris" na categoria "parques" que não estiverem fechados ou arquivados, ordenados pela data do último post.
+      </p>

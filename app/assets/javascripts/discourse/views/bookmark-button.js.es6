@@ -2,8 +2,11 @@ import ButtonView from 'discourse/views/button';
 
 export default ButtonView.extend({
   classNames: ['bookmark'],
-  textKey: 'bookmarked.title',
   attributeBindings: ['disabled'],
+
+  textKey: function() {
+    return this.get('controller.bookmarked') ? 'bookmarked.clear_bookmarks' : 'bookmarked.title';
+  }.property('controller.bookmarked'),
 
   rerenderTriggers: ['controller.bookmarked'],
 

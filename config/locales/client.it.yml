@@ -979,6 +979,7 @@ it:
         attachment_too_large: "Spiacenti, il file che stai tentando di caricare è troppo grande (il massimo consentito è {{max_size_kb}}kb)."
         file_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la grandezza massima è {{max_size_kb}}kb)"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
+        too_many_dragged_and_dropped_files: "Mi dispiace, puoi trascinare e spostare solo 10 file alla volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
@@ -1381,7 +1382,7 @@ it:
         traffic_short: "Traffico"
         page_views: "Pagine Viste"
         page_views_short: "Pagine Viste"
-        show_traffic_report: "Mostra Rapporto di Traffico Dettagliato"
+        show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
           yesterday: "Ieri"
@@ -1497,6 +1498,14 @@ it:
         info_html: "La tua chiave API ti permetterà di creare e aggiornare gli argomenti usando chiamate JSON."
         all_users: "Tutti gli Utenti"
         note_html: "Mantieni <strong>segreta</strong> questa chiave, tutti gli utenti che la possiedono possono creare messaggi per conto di altri."
+      plugins:
+        title: "Plugin"
+        installed: "Plugin installati"
+        name: "Nome"
+        none_installed: "Non hai installato nessun plugin."
+        version: "Versione"
+        change_settings: "Cambia le impostazioni"
+        howto: "Come installare i plugin?"
       backups:
         title: "Backup"
         menu:
@@ -1746,6 +1755,7 @@ it:
             label: "Nuovo:"
             ip_address: "Indirizzo IP"
             add: "Aggiungi"
+            filter: "Cerca"
           roll_up:
             text: "Sintetizza"
             title: "Crea nuovi elenchi di indirizzi IP interdetti se ci sono almeno 'min_ban_entries_for_roll_up' elementi."

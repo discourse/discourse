@@ -1253,7 +1253,7 @@ es:
       invisible:
         help: "Este tema es invisible; no se mostrará en la lista de temas y solo puede acceder a él a través de su enlace directo."
     posts: "Posts"
-    posts_lowercase: "publicaciones"
+    posts_lowercase: "posts"
     posts_long: "{{number}} posts en este tema"
     posts_likes_MF: |
       Este tema tiene {count, plural, one {1 post} other {# posts}} {ratio, select,
@@ -1284,7 +1284,7 @@ es:
       with_category: "Temas de %{filter} %{category}"
       latest:
         title: "Recientes"
-        help: "temas con publicaciones más recientes"
+        help: "temas con posts recientes"
       hot:
         title: "Popular"
         help: "una selección de los temas más populares"
