@@ -35,7 +35,6 @@ ru:
     messages:
       too_long_validation: "не может быть длиннее %{max} символов, а введено %{length}."
       invalid_boolean: "Неправильное булевое значение."
-      taken: "уже занято. (названия групп нечувствительны к регистру)"
     embed:
       load_from_remote: "Произошла ошибка при загрузке сообщения."
   bulk_invite:

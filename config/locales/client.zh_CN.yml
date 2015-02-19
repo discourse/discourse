@@ -116,7 +116,7 @@ zh_CN:
       title: "推荐主题"
     about:
       simple_title: "关于"
-      title: "关于 %{title}"
+      title: "关于%{title}"
       stats: "站点统计"
       our_admins: "我们的管理员们"
       our_moderators: "我们的版主们"
@@ -676,7 +676,7 @@ zh_CN:
       context:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索“{{category}}”分类"
-        topic: "搜索本主题"
+        topic: "只搜索本主题"
         private_messages: "搜索私信"
     site_map: "去另一个主题列表或分类"
     go_back: '返回'
@@ -937,6 +937,7 @@ zh_CN:
         attachment_too_large: "抱歉，你上传的附件太大了（最大不能超过 {{max_size_kb}}kb）。"
         file_too_large: "抱歉，你上传的附件太大了（最大限制 {{max_size_kb}}kb）。"
         too_many_uploads: "抱歉, 你只能一次上传一张图片。"
+        too_many_dragged_and_dropped_files: "抱歉，你一次只能拖放最多 10 个文件。"
         upload_not_authorized: "抱歉, 你不能上传此类型文件（可上传的文件类型有: {{authorized_extensions}}）。"
         image_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新注册用户无法上传附件。"
@@ -1127,7 +1128,7 @@ zh_CN:
       notifications:
         watching:
           title: "关注"
-          description: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的同志，未读和新帖子数量将出现在每个主题后。"
+          description: "你将会自动监视这些分类中的所有新主题。你会收到新帖子或新主题的通知，未读和新帖数量将出现在每个主题后。"
         tracking:
           title: "追踪"
           description: "你将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
@@ -1244,11 +1245,11 @@ zh_CN:
           other: "{{count}} 条未读"
       new:
         lower_title_with_count:
-          one: "1 新"
-          other: "{{count}} 新"
-        lower_title: "新"
+          one: "1 个新主题"
+          other: "{{count}} 个新主题"
+        lower_title: "新主题"
         title:
-          zero: "新"
+          zero: "新主题"
           one: "新主题（1）"
           other: "新主题（{{count}}）"
         help: "最近几天创建的主题"
@@ -1431,6 +1432,14 @@ zh_CN:
         info_html: "API 密钥可以用来通过 JSON 调用创建和更新主题。"
         all_users: "所有用户"
         note_html: "请<strong>安全地</strong>保管密钥，任何拥有该密钥的用户可以使用它以论坛任何用户的名义发帖。"
+      plugins:
+        title: "插件"
+        installed: "安装的插件"
+        name: "名字"
+        none_installed: "你没有安装任何插件。"
+        version: "版本"
+        change_settings: "更改设置"
+        howto: "如何安装插件？"
       backups:
         title: "备份"
         menu:
@@ -1680,6 +1689,7 @@ zh_CN:
             label: "新："
             ip_address: "IP地址"
             add: "添加"
+            filter: "搜索"
           roll_up:
             text: "折叠"
             title: "如果有至少 'min_ban_entries_for_roll_up' 个记录，创建一个子网封禁记录"

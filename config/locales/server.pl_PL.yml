@@ -35,7 +35,6 @@ pl_PL:
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
-      taken: "jest już w użyciu. (nazwy grup nie są wrażliwe na małe i wielkie litery)"
       accepted: musi zostać zaakceptowane
       blank: nie może być puste
       present: musi być puste

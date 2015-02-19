@@ -35,8 +35,8 @@ fr:
     messages:
       too_long_validation: "est limité à %{max} caractères maximum; il y en a %{length}."
       invalid_boolean: "Vrai/Faux invalide."
-      taken: "est déjà pris. (Les noms des groupes sont sensibles à la casse.)"
-      accepted: must be accepted
+      taken: "a déjà été pris"
+      accepted: doit être accepté
       blank: ne peut être vide
       present: doit être vide
       confirmation: "ne correspond pas %{attribute}"
@@ -54,9 +54,24 @@ fr:
       not_an_integer: doit être un entier
       odd: doit être impair
       record_invalid: 'Validation échouée: %{errors}'
+      restrict_dependent_destroy:
+        one: "Impossible de supprimer l'enregistrement car certains %{record} existent et en dépendent"
+        many: "Impossible de supprimer l'enregistrement car un %{record} existe et en dépend"
+      too_long:
+        one: c'est trop long (le maximum est de 1 caractère)
+        other: c'est trop long (le maximum est de %{count} caractères)
+      too_short:
+        one: c'est trop court (le minimum est de 1 caractère)
+        other: c'est trop court (le minimum est de %{count} caractères)
+      wrong_length:
+        one: c'est la mauvaise longueur (devrait être de 1 caractère)
+        other: c'est la mauvaise longueur (devrait être de %{count} caractères)
       other_than: "doit être différent de %{count}"
     template:
       body: 'Des problèmes ont été rencontrés sur les champs suivants : '
+      header:
+        one: Une erreur empêche ce %{model} d'être sauvegardé
+        other: '%{count} erreurs empêchent ce %{model} d''être sauvegardé'
     embed:
       load_from_remote: "Il y a eu une erreur lors du chargement de ce message."
   bulk_invite:
@@ -395,6 +410,7 @@ fr:
       description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
       email_title: '"%{title}" a été signalé comme spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapproprié'
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
@@ -539,11 +555,15 @@ fr:
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
+      yaxis: "Pages vues par les utilisateurs non connectés"
     page_view_logged_in_reqs:
       title: "Connecté"
       xaxis: "Jour"
+      yaxis: "Pages vues par les utilisateurs connectés"
     page_view_crawler_reqs:
+      title: "Crawlers Web"
       xaxis: "Jour"
+      yaxis: "Pages vues par les Crawler Web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Jour"
@@ -552,17 +572,25 @@ fr:
       title: "Arrière plan"
       xaxis: "Jour"
     http_2xx_reqs:
+      title: "Statut 2xx (OK)"
       xaxis: "Jour"
+      yaxis: "Requêtes traitées avec succès (Statut 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Redirection)"
       xaxis: "Jour"
+      yaxis: "Requêtes de redirection (Statut 3xx)"
     http_4xx_reqs:
+      title: "HTTP 4xx (Erreur du client)"
       xaxis: "Jour"
+      yaxis: "Erreurs du client (Statut 4xx)"
     http_5xx_reqs:
+      title: "HTTP 5xx (Erreur du serveur)"
       xaxis: "Jour"
-      yaxis: "Erreurs du serveur (Status 5xx)"
+      yaxis: "Erreurs du serveur (Statut 5xx)"
     http_total_reqs:
       title: "Total"
       xaxis: "Jour"
+      yaxis: "Total des requêtes"
   dashboard:
     rails_env_warning: "Votre serveur fonctionne dans l'environnement de %{env}."
     ruby_version_warning: "Vous exécutez une version de Ruby 2.0.0 qui est connu pour avoir des problèmes. Migrez vers le patch 247 ou supérieur."
@@ -946,6 +974,7 @@ fr:
       invalid_string_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
+      invalid_reply_by_email_address: "La valeur doit contenir '%{reply_key}' et être différente de la notification email."
   notification_types:
     mentioned: "%{display_username} vous a mentionné dans %{link}"
     liked: "%{display_username} a aimé votre message dans %{link}"
@@ -1205,26 +1234,10 @@ fr:
         Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur – et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
 
         Pour plus d'informations, merci de vous en référer aux [règles de la communauté](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement.\n\n## Descendez toujours\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement. \n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes <kbd>☰</kbd> en haut à droite**.\n\n- Dans la liste des sujets, le titre vous emmènera toujours vers le prochain message non lu. Utiliser les colonnes Activité ou Messages pour allez au premier ou au dernier message. \n\n- Lorsque vous lisez un sujet, retournez en haut de celui &uarr; en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utilisez les touches <kbd>Home</kbd> et <kbd>Fin</kbd>. \n\n    <img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Comment je réponds ?\n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-post.png\" width=\"\
-        29\" height=\"25\"> sur le message.\n\n - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionnez le texte que vous voulez citer et appuyez sur un des boutons Répondre.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nConcernant les [icones Emoji](http://www.emoji.codes/), commencez par écrire `:` ou le traditionnel smiley `:)` :smile: \n\n## Que puis-je faire d'autre ?\n\nÀ la fin de chaque message il y a un ensemble de boutons pour les différentes actions possibles.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton **j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler**\
-        \ pour avertir en privé l'auteur ou les modérateurs du contenu de ce message.\n\nVous pouvez aussi **partager** un lien vers un message ou l'ajouter à vos **signets** pour le retrouver sur votre page d'utilisateur. \n\n## Qui me parle ?\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre apparaitra immédiatement en haut à droite de la page. Utilisez-le pour consulter vos **notifications**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNe soyez pas inquiêt de manquer des notifications –  \nLes réponses directes (et les messages privés) vous seront envoyés par courriel si vous n'êtes pas présent sur le site lorsqu'ils sont envoyés. \n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujet auxquels vous avez participé (répondu, créé ou lu pendant un long moment) sera automatiquements suivi. \n\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages au côté de ces sujets:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nVous pouvez modifier l'état du suivi des notifications d'une discussion en utilisant les boutons en bas de la discussion (vous\
-        \ pouvez également le modiifer au niveau des catégories).\nPour modifier la façon dont vous suivez les sujets, ou pour définir de nouveaux suivis, consultez [vos préférences utilisateurs](/my/preferences). \n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtront. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences pour nous aider à gérer la communauté. \n"
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: |
-        Merci d'avoir rejoint %{site_name}, et bienvenue !
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
-
-        Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé.
-
-        Amusez-vous bien !
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté notre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](/about), répondez simplement à ce message privé).\n\nAmusez-vous bien !\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
@@ -1509,22 +1522,6 @@ fr:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
-      text_body_template: |
-        Bienvenue sur %{site_name} !
-
-        Un responsable a approuvé votre compte sur %{site_name}.
-
-        Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte : %{base_url}/users/activate-account/%{email_token}
-
-        Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
-
-        (Si en tant que nouveau membre vous voulez communiquer en privée avec [un responable](/about), répondez à ce message privé.)
-
-        Amusez-vous bien !
     signup:
       subject_template: "[%{site_name}] Activer votre nouveau compte"
       text_body_template: |

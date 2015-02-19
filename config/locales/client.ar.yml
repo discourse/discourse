@@ -992,9 +992,38 @@ ar:
       delete: 'حذف الصنف'
       create: 'قسم جديد'
       save: 'حفظ القسم'
+      slug: 'عنوان التصنيف/Slug'
       creation_error: حدثت مشكلة اثناء انشاء القسم
+      save_error: حدث خطأ أثناء حفظ التصنيف
+      name: "اسم التصنيف"
+      description: "الوصف"
+      topic: "موضوع التصنيف"
+      logo: "شعار التصنيف"
+      background_image: "خلفية التصنيف"
+      badge_colors: "ألوان الشارة"
+      background_color: "لون الخلفية"
+      foreground_color: "لون الخط"
+      name_placeholder: "كلمة أو كلمتين على الأكثر"
+      color_placeholder: "أي لون "
+      delete_confirm: "هل أنت متأكد من رغبتك في حذف هذا التصنيف؟"
+      delete_error: "حدث خطأ أثناء حذف التصنيف"
+      list: "عرض التصنيفات"
+      no_description: "الرجاء إضافة وصف لهذا التصنيف."
+      change_in_category_topic: "تعديل الوصف"
+      already_used: 'هذا اللون تم استخدامه سابقا في تصنيف آخر'
+      security: "الأمن"
+      images: "الصور"
+      auto_close_label: "الإغلاق التلقائي للمواضيع بعد:"
+      auto_close_units: "ساعات"
+      email_in_allow_strangers: "قبول بريد إلكتروني من مستخدمين لا يملكون حسابات"
+      email_in_disabled: "إضافة مواضيع جديدة من خلال البريد الإلكتروني موقف في الوقت الحالي من خلال إعدادات الموقع. لتفعيل إضافة مواضيع جديدة من خلال البريد الإلكتروني,"
+      email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
+      allow_badges_label: "السماح بالحصول على الشارات في هذا التصنيف"
       edit_permissions: "تعديل الصلاحيات"
       add_permission: "اضف صلاحية"
+      this_year: "هذه السنة"
+      position: "المكان"
+      default_position: "المكان الافتراضي"
   admin_js:
     admin:
       dashboard:

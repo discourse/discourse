@@ -35,7 +35,6 @@ da:
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
-      taken: "er allerede benyttet. (gruppe navne skelner ikke mellem store og små bogstaver)"
       accepted: skal accepteres
       blank: kan ikke være tom
       present: skal være tomt
