@@ -140,9 +140,12 @@ nb_NO:
       stat:
         all_time: "Gjennom tidene"
         last_7_days: "Siste 7 dager"
+        last_30_days: "Siste 30 dager"
       like_count: "Likes"
       topic_count: "Emner"
       post_count: "Innlegg"
+      user_count: "Nye brukere"
+      active_user_count: "Aktive brukere"
       contact: "Kontakt Oss"
       contact_info: "Hvis noe kritisk skulle oppstå eller det er en hastesak som påvirker siden kontakt oss på %{contact_email}."
     bookmarked:
@@ -292,6 +295,7 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
+      mailing_list_mode: "Send meg en e-post for hvert nye innlegg (hvis ikke emnet eller kategorien er dempet)"
       watched_categories: "Følger"
       watched_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner samt at antallet uleste og nye innlegg vil vises sammen med emneoppføringen."
       tracked_categories: "Sporet"
@@ -654,6 +658,7 @@ nb_NO:
           examples: 'Før inn antall timer (24).'
     notifications:
       title: "varsler når @brukernavn nevnes, svar til dine innlegg og emner, private meldinger, osv"
+      none: "Notifikasjoner er ikke tilgjengelig for øyeblikket."
       more: "se gamle varsler"
       total_flagged: "totalt rapporterte innlegg"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"

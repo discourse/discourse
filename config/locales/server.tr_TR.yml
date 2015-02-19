@@ -35,7 +35,6 @@ tr_TR:
     messages:
       too_long_validation: "%{max} karakter ile limitli; siz %{length} karakter girdiniz."
       invalid_boolean: "Geçersiz boolean değeri."
-      taken: "daha önce alındı. (grup isimleri büyük/küçük harfe duyarlıdır)"
       accepted: onaylanmalı
       blank: boş bırakılamaz
       present: boş bırakılmalı
@@ -1118,109 +1117,10 @@ tr_TR:
     post_hidden:
       subject_template: "Topluluk tarafından bayraklandığı için gönderiniz gizlendi"
       text_body_template: "Merhaba,\n\nBu, gönderinizin gizlendiğini haber vermek için %{site_name} sitesinden gönderilmiş otomatik bir mesajdır.\n\n%{base_url}%{url}\n\n%{flag_reason}\n\nGönderiniz gizlenmeden önce birden fazla kullanıcı tarafından bayraklandı. Lütfen, bu geri bildirimler doğrultusunda gönderinizi nasıl düzelteceğinizi düşünün. **Gönderinizi %{edit_delay} dakika sonra düzenleyebilirsiniz, otomatik olarak tekrar yayına alınacaktır.** Bu sistemdeki güven seviyenizi yükseltecektir. \n\nAncak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.\n\nDaha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).\n\n"
-    usage_tips:
-      text_body_template: |
-        Bu özel mesaj, hemen harekete geçebilmeniz için bir kaç pratik tavsiye içerir.
-
-        ## Sayfayı aşağı kaydırmaya devam edin
-
-        Farkettiğiniz gibi sonraki herhangi bir sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!**
-
-        Yeni gönderiler geldikçe, otomatik olarak görünürler.
-
-        ## Neredeyim?
-
-        - Arma, kullanıcı sayfanız, veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.
-
-        - Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.
-
-        - Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; zıpla. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seç, veya <kbd>home</kbd> and <kbd>end</kbd> tuşlarını kullan.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Nasıl cevaplarım?
-
-        - Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src="/images/welcome/reply-topic.png" width="29" height="25">  kullanın.
-
-        - Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src="/images/welcome/reply-post.png" width="29" height="25"> kullanın.
-
-        - Sohbeti bölmeden başka bir yöne çekmek için, bgönderinin sağındaki <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.
-
-        Cevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuma tıklayın.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Cevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        [Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:
-
-        ## Başka neler yapabilirim?
-
-        Her gönderinin altında aksiyon butonları var.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Birine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, görevlilere durumu bildirmek için **bayrakla** butonunu kullanın.
-
-        **Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.
-
-        ## Kim benimle konuşuyor?
-
-        Biri gönderinize cevap verir, gönderinizi alıntılar, ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Bir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve özel mesajlar) geldikçe tarafınıza bilgilendirme emaili atılır.
-
-        ## Hangi durumda sohbetler yeni sayılır?
-
-        Varsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.
-
-        Bu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Herhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz. (Bu ayar kategori bazında da yapılabilir.)  Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](/my/preferences) göz atın.
-
-        ## Bazı şeyleri niye yapamıyorum?
-
-        Güvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. En yüksek [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
-      text_body_template: |
-        %{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!
-
-        %{new_user_tips}
-
-        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplamanız yeterli.)
-
-        Ziyaretinizin keyfini çıkarın!
     welcome_invite:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
-      text_body_template: |
-        %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoşgeldiniz!
-
-        Sizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz.
-
-        Daha sonra tekrar giriş yapmak için:
-
-        1. Giriş yaparken her zaman **ilk davetiyenizdekiyle aynı email adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız.
-
-        2. [Kullanıcı profiliniz][prefs] için yeni bir şifre oluşturun ve o şifre ile giriş yapın.
-
-        %{new_user_tips}
-
-        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplamanız yeterli.)
-
-        Ziyaretinizin keyfini çıkarın!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
@@ -1505,7 +1405,6 @@ tr_TR:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
-      text_body_template: "%{site_name} sitesine hoşgeldiniz! \n\n%{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı. \n\nAşağıdaki linke tıklayın ve yeni hesabınızı aktive edin: \n%{base_url}/users/activate-account/%{email_token} \n\nEğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz. \n\n%{new_user_tips}\n\nBiz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.\n\n(Eğer yeni bir kullanıcı olarak [görevlilerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplamanız yeterli.)\n\nZiyaretinizin keyfini çıkarın!\n"
     signup:
       subject_template: "[%{site_name}] Yeni hesabınızı etkinleştirin"
       text_body_template: |

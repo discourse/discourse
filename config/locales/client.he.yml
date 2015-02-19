@@ -84,12 +84,14 @@ he:
           other: "לפני %{count} ימים"
     share:
       topic: 'שתפו קישור לנושא זה'
+      post: 'פרסום #%{postNumber}'
       close: 'סגור'
       twitter: 'שתפו קישור זה בטוויטר'
       facebook: 'שתפו קישור זה בפייסבוק'
       google+: 'שתף קישור זה בגוגל+'
       email: 'שלח קישור בדוא"ל'
     topic_admin_menu: "פעולות ניהול לנושא"
+    emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -138,9 +140,19 @@ he:
       stat:
         all_time: "כל הזמנים"
         last_7_days: "7 הימים האחרונים"
+        last_30_days: "ב-30 הימים האחרונים"
       like_count: "לייקים"
       topic_count: "נושאים"
       post_count: "פרסומים"
+      user_count: "חדשים"
+      active_user_count: "משתמשים פעילים"
+      contact: "צרו קשר"
+      contact_info: "במקרה של עניין קריטי או דחוף המשפיע על אתר זה, אנא צרו קשר ב-%{contact_email}."
+    bookmarked:
+      title: "סימניה"
+      help:
+        bookmark: "הקליקו כדי לסמן נושא זה"
+        unbookmark: "הקליקו להסיר סימניה מנושא זה"
     bookmarks:
       not_logged_in: "סליחה, עליך להיות מחובר כדי להוסיף פוסט למועדפים"
       created: "סימנת הודעה זו כמועדפת"
@@ -257,6 +269,7 @@ he:
       profile: "פרופיל"
       mute: "השתק"
       edit: "ערוך העדפות"
+      download_archive: "הורדת הפרסומים שלי"
       new_private_message: "מסר פרטי חדש"
       private_message: "הודעה פרטית"
       private_messages: "הודעות"
@@ -269,6 +282,7 @@ he:
       notifications: "התראות"
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
+      disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
       dynamic_favicon: "הראה התראה על הודעות חדשות באייקון העמוד (נסיוני)"
       edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
@@ -281,6 +295,7 @@ he:
       suspended_notice: "המשתמש הזה מושעה עד לתאריך: {{date}}."
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
+      mailing_list_mode: "שלחו לי דוא\"ל על כל פרסום חדש (אלא אם אשתיק את המעקב אחר הנושא או הקטגוריה)"
       watched_categories: "נצפה"
       watched_categories_instructions: "את/ה תצפו אוטומטית בכל הנושאים החדשים בקטגוריות האלה ותקבלו התראות על כל ההודעות והנושאים החדשים. כמו כן כמות ההודעות החדשות ואלו שלא נקראו תופיע לצד כל נושא."
       tracked_categories: "במעקב"
@@ -323,6 +338,7 @@ he:
         error: "הייתה שגיאה בשינוי כתובת הדואר האלקטרוני שלך. אולי היא תפוסה?"
         success: "שלחנו דואר אלקטרוני לכתובת הדואר הזו. בבקשה עקוב אחרי הוראות האישור שם."
       change_avatar:
+        title: "שינוי תמונת הפרופיל"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, מבוסס על"
         refresh_gravatar_title: "רענון האווטר שלכם"
         uploaded_avatar: "תמונה אישית"

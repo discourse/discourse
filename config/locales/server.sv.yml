@@ -23,6 +23,9 @@ sv:
     messages:
       too_long_validation: "är begränsad till %{max} karaktärer; du skrev in %{length}. "
       invalid_boolean: "Ogiltigt boolean."
+      taken: "används redan"
+      accepted: måste accepteras
+      blank: kan inte vara blankt
       present: måste vara tomt
       confirmation: "matchar inte %{attribute}"
       empty: kan inte vara tomt

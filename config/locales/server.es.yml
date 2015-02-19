@@ -35,7 +35,6 @@ es:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
-      taken: "ya ha sido escogido. (los nombres de grupos no distinguen mayúsculas o minúsculas)"
       accepted: debe ser aceptado
       blank: no puede dejarse en blanco
       present: debe dejarse en blanco
@@ -70,7 +69,7 @@ es:
     template:
       body: 'Ha habido problemas con los siguientes campos:'
       header:
-        one: '1 error impidió guardar este %{model}'
+        one: 1 error impidió guardar este %{model}
         other: '%{count} errores impidieron guardar este %{model}'
     embed:
       load_from_remote: "Hubo un error al cargar ese post."
@@ -1192,24 +1191,8 @@ es:
         Sin embargo, si el post es ocultado por la comunidad una segunda vez, este se mantendrá oculto hasta que sea atendido por el staff – y tal vez vez se tomen medidas, incluyendo la posible suspensión de tu cuenta.
 
         Para más información, por favor consulta nuestras [reglas de comunidad](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Este mensaje privado tiene unos cuantos consejos para ayudarte a empezar.\n\n## Sigue desplazándote\n\nNo hay botones de siguiente página o número de páginas - para leer más, **¡solo sigue desplazándote hacia abajo!**\n\nTan pronto como llegue nuevos posts, aparecerán automáticamente.\n\n## ¿Dónde estoy?\n\n- Para buscar, ver tu página de usuario, o el menú, usa el **los botones con el icono <kbd>☰</kbd> en la parte superior derecha**.\n\n- Cualquier título de un tema te llevara al siguiente post sin leer. Usa el tiempo de la última actividad y el contador de posts para ir al inicio o al final.\n\n- Mientras estés leyendo un tema, regresa al inicio &uarr; seleccionando el título del tema. Selecciona la barra de proceso verde en la parte inferior derecha para mostrar todos los controles de navegación, o usa las teclas <kbd>inicio</kbd> y <kbd>fin</kbd>.\n\n<img src=\"/images/welcome/progress-bar.png\"\
-        \ width=\"143\" height=\"39\">\n\n## ¿Cómo respondo?\n\n- Para responder para el tema en general, usa el botón Responder <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> al final de la página.\n\n- Para responder a un post especifico, usa el botón Responder <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> en ese post.\n\n- Para llevar la conversación a una dirección diferente, pero manteniéndola enlazada, usa <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Responder como Tema enlazado a la derecha del post.\n\nPara citar a alguien en tu respuesta, selecciona el texto que desees citar, y presiona cualquier botón de Responder.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPara mencionar a alguien en tu respuesta, menciona su nombre. Escribe `@` y el autocompletado aparecerá.\n\
-        \n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji estándares](http://www.emoji.codes/), solo empieza a teclear `:` o usa las caritas tradicionales `:)` :smile:\n\n## ¿Qué más puedo hacer?\n\nHay botones de acción al final de cada post.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\n\tPara hacerle saber a alguien que has disfrutado de su post, usa el botón **me gusta**. Si ves algún problema con el post, privadamente hazle saber a nuestro staff, por medio del botón **reportar**.\n\nAdemás puedes **compartir** un link a un post, o **marcar** lo para futuras referencias en tu página de usuario.\n\n## ¿Quién me está hablando?\n\nCuando alguien responde a tu post, cita tu post, o menciona tu `@nombre_de_usuario`, un número aparecerá inmediatamente en la parte superior derecha de la página. Usalo para\
-        \ acceder a tus **notificaciones**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNo te preocupes por perderte respuestas - un e-mail te será enviado cuando te respondan directamente (o te envíen mensajes privados) en caso que no te encuentres en línea.\n\n## ¿Cuando son las conversaciones nuevas?\n\nPor defecto todas las conversaciones que tengan menos de 2 días de ser publicadas son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por largo periodo de tiempo) será automáticamente rastreada.\n\nVeras un nuevo indicador en azul y con un número a lado de estos temas:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPuedes cambiar el estado individual de la notificación a través del control en la parte inferior del tema (esto puede ser ajustado por cada categoría).\
-        \ Para cambiar como mantienes un rastro de los temas, o de la definición de nuevo, mira [tus preferencias de usuario](/my/preferences).\n\n## ¿Por qué no puedo ver ciertas cosas?\n\nNuevos usuarios están de alguna manera limitados por razones de seguridad. Conforme participes aquí, ganaras la confianza de la comunidad, conviértete en un ciudadano completo, y esas limitaciones serán automáticamente removidas. A un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficiente, ganaras aún más habilidades para ayudarnos a administrar juntos nuestra comunidad.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        ¡Gracias por unirte a %{site_name}! ¡Bienvenido!
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
-
-        ¡Disfruta de tu estancia!
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
     backup_succeeded:
@@ -1484,23 +1467,6 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Tú solicitud ha sido aprobada en %{site_name}!"
-      text_body_template: |
-        ¡Bienvenido a %{site_name}!
-
-        Un miembro del staff aprobó tu cuenta en %{site_name}.
-
-        Haz clic en el siguiente enlace para confirmar y activar tu nueva cuenta:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Si no puedes hacer clic en el enlace, intenta copiándolo y pegándolo en la barra de direcciones de tu navegador.
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/faq).
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](/about) como nuevo usuario, simplemente puedes responder este mensaje privado.)
-
-        ¡Disfruta de tu estancia!
     signup:
       subject_template: "[%{site_name}] Activa tu nueva cuenta"
       text_body_template: |
@@ -1530,7 +1496,10 @@ es:
     unauthorized: "Lo sentimos, el archivo que estás intentando subir no está autorizado (extensiones autorizadas: %{authorized_extensions})."
     pasted_image_filename: "Imagen pegada"
     store_failure: "Falló el almacenamiento de la subida #%{upload_id} para el usuario #%{user_id}."
+    attachments:
+      too_large: "Lo sentimos, el archivo que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB)."
     images:
+      too_large: "Lo sentimos, la imagen que estás intentando subir es demasiado grande (el tamaño máximo es %{max_size_kb}%KB). Por favor, modifica sus dimensiones y prueba otra vez."
       fetch_failure: "Lo sentimos, hubo un error al recuperar la imagen."
       unknown_image_type: "Lo sentimos, pero el archivo que estás intentado subir no parece ser una imagen."
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
