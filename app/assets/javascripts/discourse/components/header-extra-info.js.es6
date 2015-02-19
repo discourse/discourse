@@ -7,8 +7,8 @@ const TopicCategoryComponent = Ember.Component.extend({
   }.property('topic.is_warning', 'topic.isPrivateMessage'),
 
   actions: {
-    jumpToTopPost: function () {
-      var topic = this.get('topic');
+    jumpToTopPost() {
+      const topic = this.get('topic');
       if (topic) {
         Discourse.URL.routeTo(topic.get('firstPostUrl'));
       }
