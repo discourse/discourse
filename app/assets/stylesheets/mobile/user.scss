@@ -292,6 +292,7 @@
 
       img.avatar {
         float: left;
+        margin-right: 15px;
       }
 
       .suspended {
@@ -310,7 +311,6 @@
           float: left;
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, -10%);
-
           }
         }
 
