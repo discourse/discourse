@@ -294,7 +294,9 @@ class Search
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
 
-      if opts[:private_messages]
+      is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
+
+      if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
          posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
          unless @guardian.is_admin?
@@ -304,7 +306,7 @@ class Search
          posts = posts.where("topics.archetype <> ?", Archetype.private_message)
       end
 
-      if @search_context.present? && @search_context.is_a?(Topic)
+      if is_topic_search
         posts = posts.joins('JOIN users u ON u.id = posts.user_id')
         posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
       else
