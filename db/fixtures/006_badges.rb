@@ -242,7 +242,7 @@ Badge.seed do |b|
   b.id = Badge::OneYearAnniversary
   b.default_name = "Anniversary"
   b.default_icon = "fa-clock-o"
-  b.badge_type_id = BadgeType::Bronze
+  b.badge_type_id = BadgeType::Silver
   b.query = Badge::Queries::OneYearAnniversary
   b.default_badge_grouping_id = BadgeGrouping::Community
   b.trigger = Badge::Trigger::None
