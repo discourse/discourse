@@ -979,6 +979,7 @@ pt_BR:
         attachment_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb)."
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
+        too_many_dragged_and_dropped_files: "Desculpe, você pode arrastar & soltar apenas 10 arquivos por vez."
         upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
@@ -1498,6 +1499,14 @@ pt_BR:
         info_html: "Sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Usuários"
         note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar posts arbritários no forum como qualquer usuário."
+      plugins:
+        title: "Plugins"
+        installed: "Plugins Instalados"
+        name: "Nome"
+        none_installed: "Você não tem quaisquer plugins instalados."
+        version: "Versão"
+        change_settings: "Mudar Configurações"
+        howto: "Como eu instalo plugins?"
       backups:
         title: "Backups"
         menu:
@@ -1747,6 +1756,7 @@ pt_BR:
             label: "Novo:"
             ip_address: "Endereço IP"
             add: "Adicionar"
+            filter: "Pesquisar"
           roll_up:
             text: "Combinar"
             title: "Cria novas entradas de banimento por subnet caso existam no mínimo 'min_ban_entries_for_roll_up' entradas."

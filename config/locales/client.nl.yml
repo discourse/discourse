@@ -139,10 +139,14 @@ nl:
       stat:
         all_time: "Sinds het begin"
         last_7_days: "Afgelopen 7 dagen"
+        last_30_days: "Afgelopen 30 dagen"
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Berichten"
+      user_count: "Nieuwe leden"
+      active_user_count: "Actieve leden"
       contact: "Neem contact op"
+      contact_info: "In het geval van een kritieke probleem of dringende vraagstukken in verband met deze site neem contact op met ons op via% {contact_email}."
     bookmarked:
       title: "Bewaar"
       help:
@@ -276,6 +280,7 @@ nl:
       notifications: "Notificaties"
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
+      disable_jump_reply: "Niet naar je nieuwe bericht gaan na reageren"
       dynamic_favicon: "Laat notificatie voor nieuw bericht zien in favicon (experiment)"
       edit_history_public: "Laat andere gebruikers mijn aanpassingen aan dit bericht zien."
       external_links_in_new_tab: "Open alle externe links in een nieuw tabblad"
@@ -287,6 +292,8 @@ nl:
       admin_tooltip: "Deze gebruiker is een admin"
       suspended_notice: "Deze gebruiker is geschorst tot {{date}}."
       suspended_reason: "Reden: "
+      github_profile: "Github"
+      mailing_list_mode: "Ontvang een mail als er een nieuw bericht op het forum geplaatst is (tenzij je het topic of de betreffende categorie op stil zet)"
       watched_categories: "In de gaten gehouden"
       watched_categories_instructions: "Je zal automatisch alle nieuwe topics in deze categorieën bekijken. Je ontvangt een notificatie van alle nieuwe berichten en topics. Daarnaast zal het aantal ongelezen en nieuwe berichten naast de topiclijst verschijnen."
       tracked_categories: "Gevolgd"
@@ -390,6 +397,7 @@ nl:
       categories_settings: "Categorieën"
       new_topic_duration:
         label: "Beschouw topics als nieuw wanneer"
+        not_viewed: "Ik heb ze nog niet bekeken"
         after_n_days:
           one: "gemaakt gisteren"
           other: "gemaakt in de afgelopen {{count}} dagen"

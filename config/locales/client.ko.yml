@@ -471,7 +471,7 @@ ko:
     logout: "로그아웃 되었습니다."
     refresh: "새로고침"
     read_only_mode:
-      enabled: "관리자가 일기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
+      enabled: "관리자가 읽기 전용모드를 활성화 하였습니다. 컨텐츠를 읽을 수는 있지만 활동할 수는 없습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
     too_few_topics_notice: "토론을 시작하기 위해 최소 5개의 공개 토픽을 %{posts}개의 공개 포스트를 만들어주세요. 읽을거리가 없으면 새로운 사용자가 신뢰도를 올릴 수 없습니다. 이 메시지는 관리자에게만 보입니다."
     learn_more: "더 배우기"
@@ -937,6 +937,7 @@ ko:
         attachment_too_large: "업로드하려는 파일의 크기가 너무 큽니다. 최대 크기는 {{max_size_kb}}kb 입니다."
         file_too_large: "업로드하시려는 파일이 너무 커요. (최대 허용 파일 크기는 {{max_size_kb}}kb입니다)"
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
+        too_many_dragged_and_dropped_files: "Sorry, 한번에 10개까지만 드래그앤 드롭 할 수 있어요."
         upload_not_authorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
@@ -1431,6 +1432,14 @@ ko:
         info_html: "당신의 API 키는 JSON콜을 이용하여 토픽을 생성하거나 수정할 수 있습니다."
         all_users: "전체 유저"
         note_html: "이 키의 <strong>보안에 특별히 주의</strong>하세요. 이 키를 아는 모든 사용자는 다른 사용자의 이름으로 게시물을 작성할 수 있습니다."
+      plugins:
+        title: "플러그인"
+        installed: "설치된 플러그인"
+        name: "이름"
+        none_installed: "설치된 플러그인이 없습니다."
+        version: "버전"
+        change_settings: "설정 변경"
+        howto: "플러그인은 어떻게 설치하나요?"
       backups:
         title: "백업"
         menu:
@@ -1679,6 +1688,7 @@ ko:
             label: "새 IP:"
             ip_address: "IP 주소"
             add: "추가"
+            filter: "검색"
         logster:
           title: "에러 로그"
       impersonate:
@@ -1862,6 +1872,9 @@ ko:
           title: "가입 후 편집 가능?"
           enabled: "편집 가능"
           disabled: "편집 불가"
+        show_on_profile:
+          enabled: "프로필에 표시"
+          disabled: "프로필에 표시하지 않기"
         field_types:
           text: '텍스트 필드'
           confirm: '확인'
@@ -1895,6 +1908,7 @@ ko:
           uncategorized: '카테고리 없음'
           backups: "백업"
           login: "로그인"
+          plugins: "플러그인"
       badges:
         title: 뱃지
         new_badge: 새로운 뱃지

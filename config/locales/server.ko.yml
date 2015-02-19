@@ -35,7 +35,6 @@ ko:
     messages:
       too_long_validation: "%{length}자를 입력하셨습니다. 최대 %{max}자까지 입력 가능합니다. "
       invalid_boolean: "잘못된 값"
-      taken: "이미 사용중입니다. (그룹 이름은 대소문자를 구분하지 않습니다.)"
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
   bulk_invite:
