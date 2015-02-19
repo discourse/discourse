@@ -281,7 +281,7 @@ class UsersController < ApplicationController
   end
 
   def password_reset
-    expires_now()
+    expires_now
 
     if EmailToken.valid_token_format?(params[:token])
       @user = EmailToken.confirm(params[:token])
@@ -297,7 +297,7 @@ class UsersController < ApplicationController
     end
 
     if !@user
-      flash[:error] = I18n.t('password_reset.no_token')
+      @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
@@ -325,7 +325,7 @@ class UsersController < ApplicationController
                 'password_reset.success_unapproved'
               end
 
-    flash[:success] = I18n.t(message)
+    @success = I18n.t(message)
   end
 
   def change_email
