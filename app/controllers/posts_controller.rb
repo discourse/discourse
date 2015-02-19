@@ -287,7 +287,7 @@ class PostsController < ApplicationController
 
     tu = TopicUser.get(post.topic, current_user)
 
-    render_json_dump(topic_bookmarked: tu.bookmarked)
+    render_json_dump(topic_bookmarked: tu.try(:bookmarked))
   end
 
   def wiki
