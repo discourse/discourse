@@ -1,12 +1,4 @@
-/**
-  The data model for a Group
-
-  @class Group
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.Group = Discourse.Model.extend({
+const Group = Discourse.Model.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
@@ -26,28 +18,22 @@ Discourse.Group = Discourse.Model.extend({
     if (c > 0) { return c; }
   }.property('user_count'),
 
-  findMembers: function() {
+  findMembers() {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
-    var self = this,
-        offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
+    const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Discourse.ajax('/groups/' + this.get('name') + '/members.json', {
-      data: {
-        limit: this.get("limit"),
-        offset: offset
-      }
-    }).then(function(result) {
+    return Discourse.Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
       self.setProperties({
         user_count: result.meta.total,
         limit: result.meta.limit,
         offset: result.meta.offset,
-        members: result.members.map(function(member) { return Discourse.User.create(member); })
+        members: result.members.map(member => Discourse.User.create(member))
       });
     });
   },
 
-  removeMember: function(member) {
+  removeMember(member) {
     var self = this;
     return Discourse.ajax('/admin/groups/' + this.get('id') + '/members.json', {
       type: "DELETE",
@@ -58,7 +44,7 @@ Discourse.Group = Discourse.Model.extend({
     });
   },
 
-  addMembers: function(usernames) {
+  addMembers(usernames) {
     var self = this;
     return Discourse.ajax('/admin/groups/' + this.get('id') + '/members.json', {
       type: "PUT",
@@ -69,7 +55,7 @@ Discourse.Group = Discourse.Model.extend({
     });
   },
 
-  asJSON: function() {
+  asJSON() {
     return {
       name: this.get('name'),
       alias_level: this.get('alias_level'),
@@ -79,23 +65,23 @@ Discourse.Group = Discourse.Model.extend({
     };
   },
 
-  create: function(){
+  create() {
     var self = this;
     return Discourse.ajax("/admin/groups", { type: "POST", data: this.asJSON() }).then(function(resp) {
       self.set('id', resp.basic_group.id);
     });
   },
 
-  save: function(){
+  save() {
     return Discourse.ajax("/admin/groups/" + this.get('id'), { type: "PUT", data: this.asJSON() });
   },
 
-  destroy: function(){
+  destroy() {
     if (!this.get('id')) { return; }
     return Discourse.ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
   },
 
-  findPosts: function(opts) {
+  findPosts(opts) {
     opts = opts || {};
 
     var data = {};
@@ -110,22 +96,29 @@ Discourse.Group = Discourse.Model.extend({
   }
 });
 
-Discourse.Group.reopenClass({
-  findAll: function(opts){
+Group.reopenClass({
+  findAll(opts) {
     return Discourse.ajax("/admin/groups.json", { data: opts }).then(function (groups){
-      return groups.map(function(g) { return Discourse.Group.create(g); });
+      return groups.map(g => Discourse.Group.create(g));
     });
   },
 
-  findGroupCounts: function(name) {
-    return Discourse.ajax("/groups/" + name + "/counts.json").then(function (result) {
-      return Em.Object.create(result.counts);
-    });
+  findGroupCounts(name) {
+    return Discourse.ajax("/groups/" + name + "/counts.json").then(result => Em.Object.create(result.counts));
   },
 
-  find: function(name) {
-    return Discourse.ajax("/groups/" + name + ".json").then(function (result) {
-      return Discourse.Group.create(result.basic_group);
+  find(name) {
+    return Discourse.ajax("/groups/" + name + ".json").then(result => Discourse.Group.create(result.basic_group));
+  },
+
+  loadMembers(name, offset, limit) {
+    return Discourse.ajax('/groups/' + name + '/members.json', {
+      data: {
+        limit: limit || 50,
+        offset: offset || 0
+      }
     });
   }
 });
+
+export default Group;
