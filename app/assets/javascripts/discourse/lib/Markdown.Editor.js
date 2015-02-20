@@ -1672,14 +1672,7 @@
     // sure the URL and the optinal title are "nice".
     function properlyEncoded(linkdef) {
         return linkdef.replace(/^\s*(.*?)(?:\s+"(.+)")?\s*$/, function (wholematch, link, title) {
-            link = link.replace(/\?.*$/, function (querypart) {
-                return querypart.replace(/\+/g, " "); // in the query string, a plus and a space are identical
-            });
-            link = decodeURIComponent(link); // unencode first, to prevent double encoding
-            link = encodeURI(link).replace(/#/g, '%23').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29');
-            link = link.replace(/\?.*$/, function (querypart) {
-                return querypart.replace(/\+/g, "%2b"); // since we replaced plus with spaces in the query part, all pluses that now appear where originally encoded
-            });
+            link = link.replace(/ /g, '%20').replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29');
             if (title) {
                 title = title.trim ? title.trim() : title.replace(/^\s*/, "").replace(/\s*$/, "");
                 title = title.replace(/"/g, "quot;").replace(/\(/g, "&#40;").replace(/\)/g, "&#41;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
