@@ -81,9 +81,9 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.resize(from, to, width, height, allow_animation=false)
+  def self.resize_instructions(from, to, width, height, allow_animation=false)
     # NOTE: ORDER is important!
-    instructions = if allow_animation && from =~ /\.GIF$/i
+    if allow_animation && from =~ /\.GIF$/i
       %W{
         #{from}
         -coalesce
@@ -92,29 +92,61 @@ class OptimizedImage < ActiveRecord::Base
         -extent #{width}x#{height}
         -layers optimize
         #{to}
-      }.join(" ")
+      }
     else
       %W{
         #{from}[0]
-        -background transparent
         -gravity center
+        -background transparent
         -thumbnail #{width}x#{height}^
         -extent #{width}x#{height}
         -interpolate bicubic
         -unsharp 2x0.5+0.7+0
         -quality 98
         #{to}
-      }.join(" ")
+      }
     end
+  end
 
-    `convert #{instructions}`
-
-    if $?.exitstatus == 0
-      ImageOptim.new.optimize_image(to) rescue nil
-      true
+  def self.downsize_instructions(from, to, max_width, max_height, allow_animation=false)
+    if allow_animation && from =~ /\.GIF$/i
+      %W{
+        #{from}
+        -coalesce
+        -gravity center
+        -background transparent
+        -thumbnail #{max_width}x#{max_height}\\>
+        -layers optimize
+        #{to}
+      }
     else
-      false
+      %W{
+        #{from}[0]
+        -gravity center
+        -background transparent
+        -thumbnail #{max_width}x#{max_height}\\>
+        #{to}
+      }
     end
+  end
+
+  def self.resize(from, to, width, height, allow_animation=false)
+    instructions = resize_instructions(from, to, width, height, allow_animation)
+    convert_and_optimize_with(instructions)
+  end
+
+  def self.downsize(from, to, max_width, max_height, allow_animation=false)
+    instructions = downsize_instructions(from, to, max_width, max_height, allow_animation)
+    convert_and_optimize_with(instructions)
+  end
+
+  def self.convert_and_optimize_with(instructions)
+    `convert #{instructions.join(" ")}`
+
+    return false if $?.exitstatus != 0
+
+    ImageOptim.new.optimize_image(to) rescue nil
+    true
   end
 
 end
