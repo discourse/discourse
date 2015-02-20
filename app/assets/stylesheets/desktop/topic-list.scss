@@ -20,12 +20,12 @@
   }
 
   a.badge-category {
-    padding: 3px 12px;
+    padding: 6px 12px;
     font-size: 1.143em;
 
     &.category-dropdown-button {
       height: 24px;
-      padding: 3px 9px 3px 0;
+      padding: 7px 9px 0 0;
       i { height: 20px; }
     }
 
@@ -275,7 +275,6 @@
 .category-dropdown-menu {
   max-height: 350px;
   margin-top: 30px;
-  min-width: 152px;
 }
 
 #bulk-select {
