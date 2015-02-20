@@ -151,7 +151,7 @@ module ApplicationHelper
 
 
   def customization_disabled?
-    controller.class.name.split("::").first == "Admin" || session[:disable_customization]
+    session[:disable_customization]
   end
 
   def category_badge(category, opts=nil)

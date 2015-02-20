@@ -1,6 +1,9 @@
-export default Ember.View.extend({
-  _onInsert: function() {
+export default Discourse.View.extend({
+  _disableCustomStylesheets: function() {
+    $("link.custom-css").attr("rel", "");
+  }.on("willInsertElement"),
 
-  }.on('didInsertElement')
+  _enableCustomStylesheets: function() {
+    $("link.custom-css").attr("rel", "stylesheet");
+  }.on("willDestroyElement")
 });
-
