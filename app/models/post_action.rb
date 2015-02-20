@@ -256,6 +256,7 @@ class PostAction < ActiveRecord::Base
 
     if post_action
       post_action.recover!
+      action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
     else
       post_action = create(where_attrs.merge(action_attrs))
