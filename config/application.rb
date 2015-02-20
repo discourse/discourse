@@ -53,6 +53,9 @@ module Discourse
 
     config.assets.paths += %W(#{config.root}/config/locales #{config.root}/public/javascripts)
 
+    # Allows us to skip minifincation on some files
+    config.assets.skip_minification = []
+
     # explicitly precompile any images in plugins ( /assets/images ) path
     config.assets.precompile += [lambda do |filename, path|
       path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
