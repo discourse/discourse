@@ -7,7 +7,7 @@ module Jobs
       return unless File.exists?(path)
 
       # make sure emoji aren't too big
-      OptimizedImage.resize(path, path, 60, 60, true)
+      OptimizedImage.downsize(path, path, 60, 60, true)
     end
   end
 
