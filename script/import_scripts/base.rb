@@ -101,7 +101,6 @@ class ImportScripts::Base
       min_private_message_post_length: 1,
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      default_digest_email_frequency: '',
       disable_emails: true
     }
 
