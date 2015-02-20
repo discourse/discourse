@@ -171,6 +171,11 @@ export default Ember.DefaultResolver.extend({
       const compTemplate = Ember.TEMPLATES['admin/templates/' + decamelized];
       if (compTemplate) { return compTemplate; }
     }
+
+    if (decamelized === "javascripts/admin") {
+      return Ember.TEMPLATES['admin/templates/admin'];
+    }
+
     if (decamelized.indexOf('admin') === 0 || decamelized.indexOf('javascripts/admin') === 0) {
       decamelized = decamelized.replace(/^admin\_/, 'admin/templates/');
       decamelized = decamelized.replace(/^admin\./, 'admin/templates/');
