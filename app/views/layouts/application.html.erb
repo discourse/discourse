@@ -93,6 +93,8 @@
 
     <%= render_google_analytics_code %>
 
+    <%= render_piwik_analytics_code %>
+
     <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
     <%- end %>
