@@ -156,15 +156,19 @@
     margin-left: 8px;
   }
 
+  .bar { margin-bottom: 10px; }
+  .badge-wrapper.box {
+    .badge-category {padding: 8px 7px 6px 6px;}
+  }
+
   .badge-category {
-    padding: 4px 10px;
     display: inline-block;
-    line-height: 24px;
   }
 
   .category-dropdown-menu .badge-category {
     width: 100%;
   }
+
   .category-dropdown-button {
     font-size: 1.143em;
     width: 10px;
