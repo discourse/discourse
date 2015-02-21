@@ -18,8 +18,10 @@ class ClicksController < ApplicationController
 
     # Sometimes we want to record a link without a 302. Since XHR has to load the redirected
     # URL we want it to not return a 302 in those cases.
-    if params[:redirect] == 'false' || @redirect_url.blank?
-      render nothing: true
+    if @redirect_url.blank?
+      render text: 'bad link', status: 422
+    elsif params[:redirect] == 'false'
+      render nothing: true, status: 201 # 201 Created
     else
       redirect_to(@redirect_url)
     end
