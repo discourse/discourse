@@ -405,6 +405,8 @@ posting:
     default: 'emoji_one'
     client: true
     enum: 'EmojiSetSiteSetting'
+  enforce_square_emoji:
+    default: true
 
 email:
   email_time_window_mins:
