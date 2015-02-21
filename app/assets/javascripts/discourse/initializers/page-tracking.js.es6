@@ -26,6 +26,17 @@ export default {
       return;
     }
 
+    // Out of the box, Discourse tries to track Piwik Analytics
+    // if it is present
+    if (typeof window._paq !== 'undefined') {
+      pageTracker.on('change', function(url, title) {
+        window._paq.push(["setCustomUrl", url]);
+        window._paq.push(["trackPageView"]);
+        window._paq.push(["setDocumentTitle", document.title]);
+      });
+      return;
+    }
+
     // Also use Universal Analytics if it is present
     if (typeof window.ga !== 'undefined') {
       pageTracker.on('change', function(url, title) {
