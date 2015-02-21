@@ -38,7 +38,7 @@ class OptimizedImage < ActiveRecord::Base
         FileUtils.cp(original_path, temp_path)
         resized = true
       else
-        resized = resize(original_path, temp_path, width, height, opts[:allow_animation])
+        resized = resize(original_path, temp_path, width, height, opts)
       end
 
       if resized
@@ -81,9 +81,9 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.resize_instructions(from, to, width, height, allow_animation=false)
+  def self.resize_instructions(from, to, width, height, opts={})
     # NOTE: ORDER is important!
-    if allow_animation && from =~ /\.GIF$/i
+    if !!opts[:allow_animation] && from =~ /\.GIF$/i
       %W{
         #{from}
         -coalesce
@@ -108,14 +108,17 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.downsize_instructions(from, to, max_width, max_height, allow_animation=false)
-    if allow_animation && from =~ /\.GIF$/i
+  def self.downsize_instructions(from, to, max_width, max_height, opts={})
+    dimensions = "#{max_width}x#{max_height}"
+    dimensions += !!opts[:force_aspect_ratio] ? "\\!" : "\\>"
+
+    if !!opts[:allow_animation] && from =~ /\.GIF$/i
       %W{
         #{from}
         -coalesce
         -gravity center
         -background transparent
-        -thumbnail #{max_width}x#{max_height}\\>
+        -thumbnail #{dimensions}
         -layers optimize
         #{to}
       }
@@ -124,19 +127,19 @@ class OptimizedImage < ActiveRecord::Base
         #{from}[0]
         -gravity center
         -background transparent
-        -thumbnail #{max_width}x#{max_height}\\>
+        -thumbnail #{dimensions}
         #{to}
       }
     end
   end
 
-  def self.resize(from, to, width, height, allow_animation=false)
-    instructions = resize_instructions(from, to, width, height, allow_animation)
+  def self.resize(from, to, width, height, opts={})
+    instructions = resize_instructions(from, to, width, height, opts)
     convert_and_optimize_with(instructions)
   end
 
-  def self.downsize(from, to, max_width, max_height, allow_animation=false)
-    instructions = downsize_instructions(from, to, max_width, max_height, allow_animation)
+  def self.downsize(from, to, max_width, max_height, opts={})
+    instructions = downsize_instructions(from, to, max_width, max_height, opts)
     convert_and_optimize_with(instructions)
   end
 
