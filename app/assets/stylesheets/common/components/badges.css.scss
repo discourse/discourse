@@ -132,6 +132,7 @@ header .title-wrapper .bar .badge-category {
 
 .category-breadcrumb li.bar > .badge-category {
   background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+  line-height: 24px;
   &:not(.home):first-child {
     border-left-width: 5px;
     border-left-style: solid;
