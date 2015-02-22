@@ -48,12 +48,12 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
     Em.run.scheduleOnce('afterRender', this, '_cookedWasChanged');
   }.observes('post.cooked'),
 
-  _cookedWasChanged: function() {
+  _cookedWasChanged() {
     this.trigger('postViewUpdated', this.$());
     this._insertQuoteControls();
   },
 
-  mouseUp: function(e) {
+  mouseUp(e) {
     if (this.get('controller.multiSelect') && (e.metaKey || e.ctrlKey)) {
       this.get('controller').toggledSelectedPost(this.get('post'));
     }
@@ -74,7 +74,7 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   repliesShown: Em.computed.gt('post.replies.length', 0),
 
-  _updateQuoteElements: function($aside, desc) {
+  _updateQuoteElements($aside, desc) {
     var navLink = "",
         quoteTitle = I18n.t("post.follow_quote"),
         postNumber = $aside.data('post');
@@ -108,7 +108,7 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
     $('.quote-controls', $aside).html(expandContract + navLink);
   },
 
-  _toggleQuote: function($aside) {
+  _toggleQuote($aside) {
     if (this.get('expanding')) { return; }
     this.set('expanding', true);
 
@@ -151,23 +151,29 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   // Show how many times links have been clicked on
-  _showLinkCounts: function() {
-    var self = this,
-        link_counts = this.get('post.link_counts');
+  _showLinkCounts() {
+    const self = this,
+          link_counts = this.get('post.link_counts');
 
-    if (!link_counts) return;
+    if (!link_counts) { return; }
 
     link_counts.forEach(function(lc) {
-      if (!lc.clicks || lc.clicks < 1) return;
+      if (!lc.clicks || lc.clicks < 1) { return; }
 
       self.$(".cooked a[href]").each(function() {
-        var link = $(this);
-        if ((!lc.internal || lc.url[0] === "/") && link.attr('href') === lc.url) {
-          // don't display badge counts on category badge
-          if (link.closest('.badge-category').length === 0 && ((link.closest(".onebox-result").length === 0 && link.closest('.onebox-body').length === 0) || link.hasClass("track-link"))) {
-            link.append("<span class='badge badge-notification clicks' title='" +
-                        I18n.t("topic_map.clicks", {count: lc.clicks}) +
-                        "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
+        const $link = $(this),
+              href = $link.attr('href');
+
+        let valid = !lc.internal && href === lc.url;
+
+        // this might be an attachment
+        if (lc.internal) { valid = href.indexOf(lc.url) >= 0; }
+
+        if (valid) {
+          // don't display badge counts on category badge & oneboxes (unless when explicitely stated)
+          if ($link.hasClass("track-link") ||
+              $link.closest('.badge-category,.onebox-result,.onebox-body').length === 0) {
+            $link.append("<span class='badge badge-notification clicks' title='" + I18n.t("topic_map.clicks", {count: lc.clicks}) + "'>" + Discourse.Formatter.number(lc.clicks) + "</span>");
           }
         }
       });
@@ -176,7 +182,7 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
 
   actions: {
     // Toggle the replies this post is a reply to
-    toggleReplyHistory: function(post) {
+    toggleReplyHistory(post) {
 
       var replyHistory = post.get('replyHistory'),
           topicController = this.get('controller'),
@@ -227,7 +233,7 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
   },
 
   // Add the quote controls to a post
-  _insertQuoteControls: function() {
+  _insertQuoteControls() {
     var self = this,
         $quotes = this.$('aside.quote');
 

@@ -51,8 +51,8 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
 
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
-      return Discourse.ClickTrack.trackClick(e);
 
+      return Discourse.ClickTrack.trackClick(e);
     });
 
   }.on('didInsertElement'),
