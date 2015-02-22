@@ -5,6 +5,7 @@
   @namespace Discourse
   @module Discourse
 **/
+
 Discourse.ClickTrack = {
 
   /**
@@ -43,15 +44,11 @@ Discourse.ClickTrack = {
     if (!ownLink) {
       var $badge = $('span.badge', $link);
       if ($badge.length === 1) {
-        // don't update counts in category badge
-        if ($link.closest('.badge-category').length === 0) {
-          // nor in oneboxes (except when we force it)
-          if (($link.closest(".onebox-result").length === 0 && $link.closest('.onebox-body').length === 0) || $link.hasClass("track-link")) {
-            var html = $badge.html();
-            if (/^\d+$/.test(html)) {
-              $badge.html(parseInt(html, 10) + 1);
-            }
-          }
+        // don't update counts in category badge nor in oneboxes (except when we force it)
+        if ($link.hasClass("track-link") ||
+            $link.closest('.badge-category,.onebox-result,.onebox-body').length === 0) {
+          var html = $badge.html();
+          if (/^\d+$/.test(html)) { $badge.html(parseInt(html, 10) + 1); }
         }
       }
     }

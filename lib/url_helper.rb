@@ -18,7 +18,7 @@ module UrlHelper
   end
 
   def schemaless(url)
-    url.gsub(/^https?:/, "")
+    url.sub(/^https?:/, "")
   end
 
 end
