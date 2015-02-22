@@ -457,6 +457,7 @@ en:
       email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
       email_private_messages: "Send me an email when someone private messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
+      email_force_context: "Always include previous posts in notifications"
 
       other_settings: "Other"
       categories_settings: "Categories"

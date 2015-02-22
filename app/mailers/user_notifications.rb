@@ -153,7 +153,7 @@ class UserNotifications < ActionMailer::Base
     include UserNotificationsHelper
   end
 
-  def self.get_context_posts(post, topic_user)
+  def self.get_context_posts(post, topic_user, force_context)
 
     context_posts = Post.where(topic_id: post.topic_id)
                         .where("post_number < ?", post.post_number)
@@ -162,7 +162,7 @@ class UserNotifications < ActionMailer::Base
                         .order('created_at desc')
                         .limit(SiteSetting.email_posts_context)
 
-    if topic_user && topic_user.last_emailed_post_number
+    if topic_user && topic_user.last_emailed_post_number && !force_context
       context_posts = context_posts.where("post_number > ?", topic_user.last_emailed_post_number)
     end
 
@@ -230,7 +230,7 @@ class UserNotifications < ActionMailer::Base
 
     context = ""
     tu = TopicUser.get(post.topic_id, user)
-    context_posts = self.class.get_context_posts(post, tu)
+    context_posts = self.class.get_context_posts(post, tu, user.email_force_context)
 
     # make .present? cheaper
     context_posts = context_posts.to_a

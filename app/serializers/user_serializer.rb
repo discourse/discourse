@@ -76,6 +76,7 @@ class UserSerializer < BasicUserSerializer
                      :email_private_messages,
                      :email_direct,
                      :email_always,
+                     :email_force_context,
                      :digest_after_days,
                      :mailing_list_mode,
                      :auto_track_topics_after_msecs,
