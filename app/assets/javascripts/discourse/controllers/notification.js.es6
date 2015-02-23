@@ -5,7 +5,7 @@ var INVITED_TYPE= 8;
 export default ObjectController.extend({
 
   scope: function () {
-    return "notifications." + Discourse.Site.currentProp("notificationLookup")[this.get("notification_type")];
+    return "notifications." + this.site.get("notificationLookup")[this.get("notification_type")];
   }.property("notification_type"),
 
   username: Em.computed.alias("data.display_username"),

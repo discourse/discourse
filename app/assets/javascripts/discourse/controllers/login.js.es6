@@ -16,10 +16,6 @@ export default DiscourseController.extend(ModalFunctionality, {
     this.set('loggedIn', false);
   },
 
-  site: function() {
-    return Discourse.Site.current();
-  }.property(),
-
   /**
    Determines whether at least one login button is enabled
   **/
