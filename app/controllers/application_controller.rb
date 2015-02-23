@@ -93,7 +93,7 @@ class ApplicationController < ActionController::Base
       time_left = I18n.t("rate_limiter.hours", count: (e.available_in / 1.hour.to_i))
     end
 
-    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), :rate_limit, 429
+    render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), type: :rate_limit, status: 429
   end
 
   rescue_from Discourse::NotLoggedIn do |e|
@@ -116,7 +116,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), :read_only, 405
+    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 405
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
@@ -127,7 +127,7 @@ class ApplicationController < ActionController::Base
         return render status: status_code, layout: false, text: (status_code == 404) ? build_not_found_page(status_code) : I18n.t(type)
       end
 
-      render_json_error I18n.t(type), type, status_code
+      render_json_error I18n.t(type), type: type, status: status_code
     else
       render text: build_not_found_page(status_code, include_ember ? 'application' : 'no_ember')
     end
@@ -322,11 +322,15 @@ class ApplicationController < ActionController::Base
 
     # Render action for a JSON error.
     #
-    # obj    - a translated string, an ActiveRecord model, or an array of translated strings
-    # type   - a machine-readable description of the error
-    # status - HTTP status code to return
-    def render_json_error(obj, type=nil, status=422)
-      render json: MultiJson.dump(create_errors_json(obj, type)), status: status
+    # obj      - a translated string, an ActiveRecord model, or an array of translated strings
+    # opts:
+    #   type   - a machine-readable description of the error
+    #   status - HTTP status code to return
+    def render_json_error(obj, opts={})
+      if opts.is_a? Fixnum
+        opts = {status: opts}
+      end
+      render json: MultiJson.dump(create_errors_json(obj, opts[:type])), status: opts[:status] || 422
     end
 
     def success_json
