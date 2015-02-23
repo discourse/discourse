@@ -1,4 +1,7 @@
 {{#link-to 'user' user.username}}
   {{avatar user imageSize="tiny"}}
   {{user.username}}
+  {{#if user.name}}
+    ({{user.name}})
+  {{/if}}
 {{/link-to}}
