@@ -596,6 +596,15 @@ describe UsersController do
           expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to eq('value3')
         end
 
+        it "trims excessively long fields" do
+          create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
+          xhr :post, :create, create_params.merge(create_params)
+          expect(response).to be_success
+          inserted = User.where(email: @user.email).first
+
+          val = inserted.custom_fields["user_field_#{optional_field.id}"]
+          expect(val.length).to eq(UserField.max_length)
+        end
       end
     end
 
@@ -983,6 +992,11 @@ describe UsersController do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => '' }
               expect(response).not_to be_success
               expect(user.user_fields[user_field.id.to_s]).not_to eq('happy')
+            end
+
+            it "trims excessively large fields" do
+              put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => ('x' * 3000) }
+              expect(user.user_fields[user_field.id.to_s].size).to eq(UserField.max_length)
             end
           end
 

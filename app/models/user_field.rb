@@ -1,5 +1,9 @@
 class UserField < ActiveRecord::Base
   validates_presence_of :name, :description, :field_type
+
+  def self.max_length
+    2048
+  end
 end
 
 # == Schema Information
