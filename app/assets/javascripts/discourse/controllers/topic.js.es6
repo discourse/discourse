@@ -435,10 +435,10 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       post.toggleProperty('wiki');
     },
 
-    togglePostType: function (post) {
+    togglePostType(post) {
       // the request to the server is made in an observer in the post class
-      var regular = Discourse.Site.currentProp('post_types.regular'),
-          moderator = Discourse.Site.currentProp('post_types.moderator_action');
+      const regular = this.site.get('post_types.regular'),
+            moderator = this.site.get('post_types.moderator_action');
 
       if (post.get("post_type") === moderator) {
         post.set("post_type", regular);

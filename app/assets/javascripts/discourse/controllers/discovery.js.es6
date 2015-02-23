@@ -14,7 +14,7 @@ export default ObjectController.extend({
     this.set("controllers.application.showFooter", this.get("loadedAllItems"));
   }.observes("loadedAllItems"),
 
-  showMoreUrl: function(period) {
+  showMoreUrl(period) {
     var url = '', category = this.get('category');
     if (category) {
       url = '/c/' + Discourse.Category.slugFor(category) + (this.get('noSubcategories') ? '/none' : '') + '/l';
@@ -24,12 +24,12 @@ export default ObjectController.extend({
   },
 
   periods: function() {
-    var self = this,
-        periods = [];
-    Discourse.Site.currentProp('periods').forEach(function(p) {
+    const self = this,
+          periods = [];
+    this.site.get('periods').forEach(function(p) {
       periods.pushObject(TopPeriod.create({ id: p,
                                             showMoreUrl: self.showMoreUrl(p),
-                                            periods: periods }));
+                                            periods }));
     });
     return periods;
   }.property('category', 'noSubcategories'),
