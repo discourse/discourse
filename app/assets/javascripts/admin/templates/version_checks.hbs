@@ -14,7 +14,7 @@
         {{#unless loading}}
           <tbody>
             <td class="title">{{i18n 'admin.dashboard.version'}}</td>
-            <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_version }}</a></td>
+            <td class="version-number"><a {{bind-attr href="versionCheck.gitLink"}} target="_blank">{{ versionCheck.installed_describe }}</a></td>
 
             {{#if versionCheck.noCheckPerformed}}
               <td class="version-number">&nbsp;</td>
