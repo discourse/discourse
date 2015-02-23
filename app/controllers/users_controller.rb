@@ -70,6 +70,7 @@ class UsersController < ApplicationController
       UserField.where(editable: true).each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
+        val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
         params[:custom_fields]["user_field_#{f.id}"] = val
@@ -221,7 +222,7 @@ class UsersController < ApplicationController
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
-          fields["user_field_#{f.id}"] = field_val
+          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
         end
       end
 
