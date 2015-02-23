@@ -108,7 +108,7 @@ module Jobs
           begin
             retval = execute(opts)
           rescue => exc
-            Discourse.handle_exception(exc, error_context(opts))
+            Discourse.handle_job_exception(exc, error_context(opts))
           end
           return retval
         end
@@ -172,7 +172,7 @@ module Jobs
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
-          Discourse.handle_exception(exception_hash[:ex],
+          Discourse.handle_job_exception(exception_hash[:ex],
                 error_context(opts, exception_hash[:code], exception_hash[:other]))
         end
         raise HandledExceptionWrapper.new exceptions[0][:ex]

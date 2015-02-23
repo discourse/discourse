@@ -65,7 +65,7 @@ class ApplicationController < ActionController::Base
             ActionController::UnknownController,
             AbstractController::ActionNotFound].include? exception.class
       begin
-        ErrorLog.report_async!(exception, self, request, current_user)
+        Discourse.handle_request_exception(exception, self, request, current_user)
       rescue
         # dont care give up
       end
