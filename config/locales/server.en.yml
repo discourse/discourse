@@ -878,8 +878,8 @@ en:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
-    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in if not properly configured when enabled; also disables invites)"
-    enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
+    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in, INCLUDING YOU, if not properly configured when enabled! Also disables invites)"
+    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
