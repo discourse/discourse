@@ -190,7 +190,7 @@ class Invite < ActiveRecord::Base
   end
 
   def limit_invites_per_day
-    RateLimiter.new(invited_by, "invites-per-day:#{Date.today}", SiteSetting.max_invites_per_day, 1.day.to_i)
+    RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end
 
   def self.base_directory
