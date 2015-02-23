@@ -1,6 +1,14 @@
 module JsonError
 
-  def create_errors_json(obj)
+  def create_errors_json(obj, type=nil)
+    errors = create_errors_array obj
+    errors[:error_type] = type if type
+    errors
+  end
+
+  private
+
+  def create_errors_array(obj)
 
     # If we're passed a string, assume that is the error message
     return {errors: [obj]} if obj.is_a?(String)
@@ -21,10 +29,8 @@ module JsonError
     JsonError.generic_error
   end
 
-  private
-
-    def self.generic_error
-      {errors: [I18n.t('js.generic_error')]}
-    end
+  def self.generic_error
+    {errors: [I18n.t('js.generic_error')]}
+  end
 
 end
