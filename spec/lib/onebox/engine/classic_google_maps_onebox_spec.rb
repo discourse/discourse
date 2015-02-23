@@ -25,4 +25,14 @@ describe Onebox::Engine::ClassicGoogleMapsOnebox do
       expect(onebox.url).to eq(long_url)
     end
   end
+
+  describe 'www form url' do
+    let(:embed_url) { "https://maps.google.de/maps?t=h&ll=48.398499,9.992333&spn=0.0038338,0.0056322&dg=ntvb&output=embed" }
+
+    it "retrieves the canonical url" do
+      onebox = described_class.new("https://www.google.de/maps/@48.3932366,9.992333,663a,20y,41.43t/data=!3m1!1e3")
+      onebox.expects(:get_canonical_url).once.returns(embed_url)
+      expect(onebox.url).to eq(embed_url)
+    end
+  end
 end
