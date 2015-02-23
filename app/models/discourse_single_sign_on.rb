@@ -42,13 +42,13 @@ class DiscourseSingleSignOn < SingleSignOn
     "SSO_NONCE_#{nonce}"
   end
 
-  def lookup_or_create_user
+  def lookup_or_create_user(ip_address)
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && user = sso_record.user
       sso_record.last_payload = unsigned_payload
     else
-      user = match_email_or_create_user
+      user = match_email_or_create_user(ip_address)
       sso_record = user.single_sign_on_record
     end
 
@@ -67,6 +67,7 @@ class DiscourseSingleSignOn < SingleSignOn
       user.custom_fields[k] = v
     end
 
+    user.ip_address = ip_address
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
@@ -79,16 +80,17 @@ class DiscourseSingleSignOn < SingleSignOn
 
   private
 
-  def match_email_or_create_user
+  def match_email_or_create_user(ip_address)
     user = User.find_by_email(email)
 
     try_name = name.blank? ? nil : name
     try_username = username.blank? ? nil : username
 
     user_params = {
-        email: email,
-        name:  User.suggest_name(try_name || try_username || email),
-        username: UserNameSuggester.suggest(try_username || try_name || email),
+      email: email,
+      name:  User.suggest_name(try_name || try_username || email),
+      username: UserNameSuggester.suggest(try_username || try_name || email),
+      ip_address: ip_address
     }
 
     if user || user = User.create!(user_params)
