@@ -911,6 +911,7 @@ end
 #  title                         :string(255)
 #  uploaded_avatar_id            :integer
 #  email_always                  :boolean          default(FALSE), not null
+#  email_force_context           :boolean          default(FALSE), not null
 #  mailing_list_mode             :boolean          default(FALSE), not null
 #  locale                        :string(10)
 #  primary_group_id              :integer

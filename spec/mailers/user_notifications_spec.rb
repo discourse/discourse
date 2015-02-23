@@ -20,7 +20,17 @@ describe UserNotifications do
       reply3.hidden = true
       reply3.save
 
-      expect(UserNotifications.get_context_posts(reply4, nil).count).to eq(1)
+      expect(UserNotifications.get_context_posts(reply4, nil, false).count).to eq(1)
+    end
+
+    it "respects the user option to always include context" do
+      post = create_post
+      reply1 = create_post(topic: post.topic)
+      reply2 = create_post(topic: post.topic)
+      reply3 = create_post(topic: post.topic)
+      reply4 = create_post(topic: post.topic)
+
+      expect(UserNotifications.get_context_posts(reply4, nil, true).count).to eq(4)
     end
   end
 
@@ -93,6 +103,8 @@ describe UserNotifications do
       SiteSetting.enable_names = true
       SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
+
+      expect(response.user.email_force_context).to eql(false)
 
       # from should include full user name
       expect(mail[:from].display_names).to eql(['John Doe'])

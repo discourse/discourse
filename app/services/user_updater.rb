@@ -11,6 +11,7 @@ class UserUpdater
       :email_always,
       :email_direct,
       :email_private_messages,
+      :email_force_context,
       :external_links_in_new_tab,
       :enable_quoting,
       :dynamic_favicon,
