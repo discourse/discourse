@@ -1,9 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend({
-  faqOverriden: function() {
-    return !(this.siteSettings.faq_url.length === 0);
-  }.property(),
+  faqOverriden: Ember.computed.gt('siteSettings.faq_url.length', 0),
 
   contactInfo: function() {
     if (Discourse.SiteSettings.contact_email) {
