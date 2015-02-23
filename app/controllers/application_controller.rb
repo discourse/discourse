@@ -389,7 +389,13 @@ class ApplicationController < ActionController::Base
 
       # save original URL in a cookie
       cookies[:destination_url] = request.original_url unless request.original_url =~ /uploads/
-      redirect_to :login if SiteSetting.login_required?
+
+      # redirect user to the SSO page if we need to log in AND SSO is enabled
+      if (SiteSetting.enable_sso && SiteSetting.login_required)
+        redirect_to '/session/sso'
+      elsif SiteSetting.login_required?
+        redirect_to :login
+      end
     end
 
     def block_if_readonly_mode
