@@ -82,6 +82,20 @@ describe SessionController do
       expect(logged_on_user).to eq(nil)
     end
 
+    it 'respects email restrictions' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      ScreenedEmail.block('bob@bob.com')
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     it 'allows you to create an admin account' do
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
