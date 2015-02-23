@@ -499,7 +499,7 @@ describe Admin::UsersController do
     sso.external_id = "1"
 
     user = DiscourseSingleSignOn.parse(sso.payload)
-                                .lookup_or_create_user
+                                .lookup_or_create_user('127.0.0.1')
 
 
     sso.name = "Bill"

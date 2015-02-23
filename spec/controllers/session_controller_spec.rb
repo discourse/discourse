@@ -67,6 +67,21 @@ describe SessionController do
       expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
     end
 
+    it 'respects IP restrictions' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      screened_ip = Fabricate(:screened_ip_address)
+      ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     it 'allows you to create an admin account' do
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
@@ -409,7 +424,6 @@ describe SessionController do
 
       context 'when admins are restricted by ip address' do
         let(:permitted_ip_address) { '111.234.23.11' }
-
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
         end

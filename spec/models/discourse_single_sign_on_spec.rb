@@ -48,6 +48,8 @@ describe DiscourseSingleSignOn do
     expect(sso.email).to eq "sam@sam.com"
   end
 
+  let(:ip_address) { "127.0.0.1" }
+
   it "can lookup or create user when name is blank" do
     # so we can create system messages
     Fabricate(:admin)
@@ -56,7 +58,7 @@ describe DiscourseSingleSignOn do
     sso.name = ""
     sso.email = "test@test.com"
     sso.external_id = "A"
-    user = sso.lookup_or_create_user
+    user = sso.lookup_or_create_user(ip_address)
     expect(user).to_not be_nil
   end
 
@@ -123,7 +125,7 @@ describe DiscourseSingleSignOn do
     it "deal with no avatar url passed for an existing user with an avatar" do
       # Deliberately not setting avatar_url.
 
-      user = sso.lookup_or_create_user
+      user = sso.lookup_or_create_user(ip_address)
       expect(user).to_not be_nil
     end
 
@@ -133,7 +135,7 @@ describe DiscourseSingleSignOn do
       sso.avatar_url = "http://example.com/a_different_image.png"
       sso.avatar_force_update = true
 
-      user = sso.lookup_or_create_user
+      user = sso.lookup_or_create_user(ip_address)
       expect(user).to_not be_nil
     end
   end
