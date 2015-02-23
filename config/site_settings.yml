@@ -25,6 +25,9 @@ required:
     client: true
     default: ''
     type: email
+  contact_url:
+    client: true
+    default: ''
   notification_email:
     default: 'noreply@unconfigured.discourse.org'
     type: email

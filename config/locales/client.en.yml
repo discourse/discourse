@@ -163,7 +163,7 @@ en:
       user_count: "New Users"
       active_user_count: "Active Users"
       contact: "Contact Us"
-      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_email}."
+      contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
 
     bookmarked:
       title: "Bookmark"
