@@ -19,7 +19,7 @@ describe Jobs::Base do
       raise StandardError
     end
   end
-  
+
   it 'handles correct jobs' do
     job = GoodJob.new
     job.perform({})
@@ -29,9 +29,9 @@ describe Jobs::Base do
   it 'handles errors in multisite' do
     RailsMultisite::ConnectionManagement.expects(:all_dbs).returns(['default','default','default'])
     # one exception per database
-    Discourse.expects(:handle_exception).times(3)
+    Discourse.expects(:handle_job_exception).times(3)
 
-    bad = BadJob.new 
+    bad = BadJob.new
     expect{bad.perform({})}.to raise_error
     expect(bad.fail_count).to eq(3)
   end
