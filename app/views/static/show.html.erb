@@ -1,4 +1,5 @@
 <ul class="nav-pills">
+  <li class="nav-item-about"><%= link_to t('about'), '/about' %></a></li>
   <% if @faq_overriden %>
     <li class="nav-item-guidelines"><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
     <li class="nav-item-faq"><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
