@@ -69,6 +69,7 @@ module Onebox
           kickstarter.com
           kinomap.com
           liveleak.com
+          livestream.com
           lessonplanet.com
           mashable.com
           meetup.com
@@ -150,7 +151,7 @@ module Onebox
       end
 
       def self.default_rewrites
-        %w(slideshare.net imgur.com dailymotion.com)
+        %w(slideshare.net imgur.com dailymotion.com livestream.com)
       end
 
       def self.host_matches(uri, list)
