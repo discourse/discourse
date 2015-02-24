@@ -118,7 +118,7 @@ end
 
 def gzip(path)
   STDERR.puts "gzip #{path}"
-  STDERR.puts `gzip -f -k -9 #{path}`
+  STDERR.puts `gzip -f -c -9 #{path} > #{path}.gz`
 end
 
 def compress(from,to)
