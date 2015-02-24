@@ -228,7 +228,7 @@ class TopicQuery
       result = Topic.includes(:allowed_users)
                     .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-                    .order("topics.bumped_at")
+                    .order("topics.bumped_at DESC")
                     .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
