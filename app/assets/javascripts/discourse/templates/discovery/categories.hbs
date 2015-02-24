@@ -16,10 +16,10 @@
                 <div class="pull-left">
                   {{category-title-link category=c}}
                   {{#if c.unreadTopics}}
-                    <a href={{unbound c.unreadUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count=c.unreadTopics}}'>{{i18n 'filters.unread.lower_title_with_count' count=c.unreadTopics}}</a>
+                    <a href="{{unbound c.unreadUrl}}" class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count=c.unreadTopics}}'>{{i18n 'filters.unread.lower_title_with_count' count=c.unreadTopics}}</a>
                   {{/if}}
                   {{#if c.newTopics}}
-                    <a href={{unbound c.newUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count=c.newTopics}}'>{{i18n 'filters.new.lower_title_with_count' count=c.newTopics}}</a>
+                    <a href="{{unbound c.newUrl}}" class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count=c.newTopics}}'>{{i18n 'filters.new.lower_title_with_count' count=c.newTopics}}</a>
                   {{/if}}
                 </div>
                 <div class="clearfix"></div>
@@ -45,21 +45,7 @@
             </td>
             <td {{bind-attr class="c.archived :latest"}}>
               {{#each f in c.featuredTopics}}
-                <div class="featured-topic">
-                  {{topic-status topic=f}}
-                  <a class='title' href="{{unbound f.lastUnreadUrl}}">{{{unbound f.fancy_title}}}</a>
-                  {{topic-post-badges newPosts=f.totalUnread unseen=f.unseen url=f.lastUnreadUrl}}
-
-                  {{#if controller.latestTopicOnly}}
-                    <div class='last-user-info'>
-                      {{i18n 'categories.latest_by'}} <a href="{{{unbound f.lastPosterUrl}}}">{{unbound f.last_poster.username}}</a>
-                      <a href="{{unbound f.lastPostUrl}}">{{format-age f.last_posted_at}}</a>
-                    </div>
-                  {{else}}
-                    &nbsp;
-                    <a href="{{unbound f.lastPostUrl}}" class="last-posted-at">{{format-age f.last_posted_at}}</a>
-                  {{/if}}
-                </div>
+                {{featured-topic topic=f latestTopicOnly=latestTopicOnly action="showTopicEntrance"}}
               {{/each}}
             </td>
             <td class='stats' {{bind-attr title="c.topicStatsTitle"}}>
