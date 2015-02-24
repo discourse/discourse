@@ -1,5 +1,7 @@
 class UserSerializer < BasicUserSerializer
 
+  attr_accessor :omit_stats
+
   def self.staff_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
@@ -169,6 +171,10 @@ class UserSerializer < BasicUserSerializer
 
   def can_edit_name
     scope.can_edit_name?(object)
+  end
+
+  def include_stats?
+    !omit_stats == true
   end
 
   def stats

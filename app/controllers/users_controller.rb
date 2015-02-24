@@ -28,6 +28,9 @@ class UsersController < ApplicationController
   def show
     @user = fetch_user_from_params
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    if params[:stats].to_s == "false"
+      user_serializer.omit_stats = true
+    end
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)

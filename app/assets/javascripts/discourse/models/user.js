@@ -292,11 +292,11 @@ Discourse.User = Discourse.Model.extend({
     return this.get('stats').rejectProperty('isPM');
   }.property('stats.@each.isPM'),
 
-  findDetails: function() {
+  findDetails: function(options) {
     var user = this;
 
     return PreloadStore.getAndRemove("user_" + user.get('username'), function() {
-      return Discourse.ajax("/users/" + user.get('username') + '.json');
+      return Discourse.ajax("/users/" + user.get('username') + '.json', {data: options});
     }).then(function (json) {
 
       if (!Em.isEmpty(json.user.stats)) {
@@ -468,9 +468,9 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     @method findByUsername
     @returns {Promise} a promise that resolves to a `Discourse.User`
   **/
-  findByUsername: function(username) {
+  findByUsername: function(username, options) {
     var user = Discourse.User.create({username: username});
-    return user.findDetails();
+    return user.findDetails(options);
   },
 
   /**
