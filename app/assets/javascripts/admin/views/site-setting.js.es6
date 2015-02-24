@@ -1,12 +1,4 @@
-/**
-  A view to display a site setting with edit controls
-
-  @class SiteSettingView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.SiteSettingView = Discourse.View.extend(Discourse.ScrollTop, {
+export default Discourse.View.extend(Discourse.ScrollTop, {
   classNameBindings: [':row', ':setting', 'content.overridden'],
 
   preview: function() {

@@ -1,4 +1,4 @@
-Discourse.AdminBackupsView = Discourse.View.extend({
+export default Discourse.View.extend({
   classNames: ["admin-backups"],
 
   _hijackDownloads: function() {
