@@ -252,6 +252,10 @@ class UserSerializer < BasicUserSerializer
     CategoryUser.lookup(object, :watching).pluck(:category_id)
   end
 
+  def include_private_message_stats?
+    can_edit && !(omit_stats == true)
+  end
+
   def private_messages_stats
     UserAction.private_messages_stats(object.id, scope)
   end
