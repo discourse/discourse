@@ -273,7 +273,7 @@ class Admin::UsersController < Admin::AdminController
     return render nothing: true, status: 404 unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse("sso=#{params[:sso]}&sig=#{params[:sig]}")
-    user = sso.lookup_or_create_user(request.remote_ip)
+    user = sso.lookup_or_create_user
 
     render_serialized(user, AdminDetailedUserSerializer, root: false)
   end

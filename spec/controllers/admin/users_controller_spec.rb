@@ -499,7 +499,7 @@ describe Admin::UsersController do
     sso.external_id = "1"
 
     user = DiscourseSingleSignOn.parse(sso.payload)
-                                .lookup_or_create_user('127.0.0.1')
+                                .lookup_or_create_user
 
 
     sso.name = "Bill"
@@ -513,6 +513,20 @@ describe Admin::UsersController do
     expect(user.email).to eq("bob2@bob.com")
     expect(user.name).to eq("Bill")
     expect(user.username).to eq("Hokli")
+
+    # It can also create new users
+    sso = SingleSignOn.new
+    sso.sso_secret = "sso secret"
+    sso.name = "Dr. Claw"
+    sso.username = "dr_claw"
+    sso.email = "dr@claw.com"
+    sso.external_id = "2"
+    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+    expect(response).to be_success
+
+    user = User.where(email: 'dr@claw.com').first
+    expect(user).to be_present
+    expect(user.ip_address).to be_blank
 
   end
 

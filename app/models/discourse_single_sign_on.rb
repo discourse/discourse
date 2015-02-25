@@ -42,7 +42,7 @@ class DiscourseSingleSignOn < SingleSignOn
     "SSO_NONCE_#{nonce}"
   end
 
-  def lookup_or_create_user(ip_address)
+  def lookup_or_create_user(ip_address=nil)
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && user = sso_record.user
