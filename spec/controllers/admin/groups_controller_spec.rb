@@ -110,16 +110,27 @@ describe Admin::GroupsController do
       expect(response.status).to eq(422)
     end
 
-    it "is able to add several members to a group" do
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
-      group = Fabricate(:group)
+    context "is able to add several members to a group" do
 
-      xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
+      let(:user1) { Fabricate(:user) }
+      let(:user2) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
 
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(2)
+      it "adds by username" do
+        xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
+
+      it "adds by id" do
+        xhr :put, :add_members, id: group.id, user_ids: [user1.id, user2.id].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
     end
 
   end
@@ -131,23 +142,41 @@ describe Admin::GroupsController do
       expect(response.status).to eq(422)
     end
 
-    it "is able to remove a member" do
-      group = Fabricate(:group)
-      user = Fabricate(:user)
-      group.add(user)
-      group.save
+    context "is able to remove a member" do
 
-      user.primary_group_id = group.id
-      user.save
+      let(:user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
 
-      xhr :delete, :remove_member, id: group.id, user_id: user.id
+      before do
+        group.add(user)
+        group.save
+      end
 
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(0)
+      it "removes by id" do
+        xhr :delete, :remove_member, id: group.id, user_id: user.id
 
-      user.reload
-      expect(user.primary_group_id).to eq(nil)
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes by username" do
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes user.primary_group_id when user is removed from group" do
+        user.primary_group_id = group.id
+        user.save
+
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        user.reload
+        expect(user.primary_group_id).to eq(nil)
+      end
     end
 
   end
