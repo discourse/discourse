@@ -32,12 +32,15 @@ class StaticController < ApplicationController
       raise Discourse::NotFound unless @topic
       @body = @topic.posts.first.cooked
       @faq_overriden = !SiteSetting.faq_url.blank?
+      store_preloaded("static/#{@page}", MultiJson.dump(@body))
       render :show, layout: !request.xhr?, formats: [:html]
       return
     end
 
     if I18n.exists?("static.#{@page}")
-      render text: I18n.t("static.#{@page}"), layout: !request.xhr?, formats: [:html]
+      text = I18n.t("static.#{@page}")
+      store_preloaded("static/#{@page}", MultiJson.dump(text))
+      render text: text, layout: !request.xhr?, formats: [:html]
       return
     end
 
