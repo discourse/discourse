@@ -139,6 +139,14 @@ header .title-wrapper .bar .badge-category {
   }
 }
 
+.category-breadcrumb .box > a.badge-category {
+  margin-bottom: 0;
+  height: 24px;
+  // TODO clean this up
+  padding-top: 6px !important;
+  padding-bottom: 0 !important;
+}
+
 .category-dropdown-menu .cat .badge-wrapper.box {
   width: 110%;
 }
