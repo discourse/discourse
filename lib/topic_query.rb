@@ -127,10 +127,6 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
-  def list_category(category)
-    create_list(:category, unordered: true, category: category.id)
-  end
-
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
     pinned_ids = query.where('pinned_at IS NOT NULL').order('pinned_at DESC').pluck(:id)
