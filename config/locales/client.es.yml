@@ -150,9 +150,6 @@ es:
       contact_info: "En caso de error crítico o asunto urgente con respecto a este sitio, por favor, contáctanos a %{contact_email}."
     bookmarked:
       title: "Marcador"
-      help:
-        bookmark: "Clic para guardar este tema en marcadores"
-        unbookmark: "Clic para eliminar este tema de marcadores"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has marcado este post como favorito"
@@ -1380,8 +1377,6 @@ es:
         backups: "backups"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
-        page_views: "Páginas vistas"
-        page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         reports:
           today: "Hoy"
@@ -2086,7 +2081,6 @@ es:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
       actions:
         title: 'Acciones'
-        bookmark_topic: '<b>f</b> Guardar tema en marcadores'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
         share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'

@@ -148,9 +148,6 @@ sv:
       contact: "Kontakta Oss"
     bookmarked:
       title: "Bokmärke"
-      help:
-        bookmark: "Klicka för att bokmärka detta ämne"
-        unbookmark: "Klicka för att ta bort bokmärket till detta ämne"
     bookmarks:
       not_logged_in: "tyvärr, du måste vara inloggad för att kunna bokmärka inlägg"
       created: "du har bokmärkt detta inlägg"
@@ -1361,8 +1358,6 @@ sv:
         uploads: "uppladningar"
         backups: "säkerhetskopior"
         traffic_short: "Trafik"
-        page_views: "Sidvisningar"
-        page_views_short: "Sidvisningar"
         show_traffic_report: "Visa Detaljerad Trafik Rapport"
         reports:
           today: "Idag"

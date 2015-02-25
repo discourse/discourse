@@ -133,9 +133,10 @@ tr_TR:
       contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_email} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
       title: "İşaretle"
+      clear_bookmarks: "Yer İmlerini Temizle"
       help:
-        bookmark: "Bu konuyu işaretlemek için tıklayın"
-        unbookmark: "Bu konunun işaretini kaldırmak için tıklayın"
+        bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıklayın"
+        unbookmark: "Bu konudaki bütün yer işaretlerini kaldırın"
     bookmarks:
       not_logged_in: "üzgünüz, gönderileri işaretleyebilmek için giriş yapmanız gerekiyor"
       created: "bu gönderiyi işaretlediniz"
@@ -210,7 +211,7 @@ tr_TR:
       '12': "Yollanmış ögeler"
       '13': "Gelen Kutusu"
     categories:
-      all: "bütün kategoriler"
+      all: "Bütün Kategoriler"
       all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
@@ -937,6 +938,7 @@ tr_TR:
         attachment_too_large: "Üzgünüz, yükleyeme çalıştığınız dosya çok büyük (en fazla {{max_size_kb}}kb olabilir)"
         file_too_large: "Üzgünüz, yüklemeye çalıştığınız dosya çok büyük. (en fazla boyut {{max_size_kb}}kb)"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
+        too_many_dragged_and_dropped_files: "Üzgünüz. Sürükle bırak ile tek seferde en fazla 10 dosya yükleyebilirsiniz"
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemiyorlar."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya ekleyemiyorlar."
@@ -996,6 +998,7 @@ tr_TR:
         people:
           off_topic: "{{icons}} konu dışı olarak bayraklandı"
           spam: "{{icons}} spam olarak bayraklandı"
+          spam_with_url: "{{icons}} bu linki <a href='{{postUrl}}'>spam olarak işaretledi</a>"
           inappropriate: "{{icons}} uygunsuz olarak bayraklandı"
           notify_moderators: "{{icons}} bildirim gönderilen moderatörler"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>bildirim gönderilen moderatörler</a>"
@@ -1318,8 +1321,8 @@ tr_TR:
         backups: "yedeklemeler"
         traffic_short: "Trafik"
         traffic: "Uygulama web istekleri"
-        page_views: "Sayfa Görüntülemeleri"
-        page_views_short: "Sayfa Görüntülemeleri"
+        page_views: "API İstekleri"
+        page_views_short: "API İstekleri"
         show_traffic_report: "Detaylı Trafik Raporunu Görüntüle"
         reports:
           today: "Bugün"
@@ -1431,6 +1434,14 @@ tr_TR:
         info_html: "API anahtarınız JSON çağrıları kullanarak konu oluşturup güncelleyebilmenize olanak sağlayacaktır."
         all_users: "Tüm kullanıcılar"
         note_html: "Bu anahtarı <strong>gizli</strong> tutun, anahtara sahip kullanıcılar her hangi bir kullanıcı adı altında istedikleri gönderiyi oluşturabilirler."
+      plugins:
+        title: "Eklentiler"
+        installed: "Yüklü Eklentiler"
+        name: "İsim"
+        none_installed: "Yüklenmiş herhangi bir eklentiniz yok."
+        version: "Versiyon"
+        change_settings: "Ayarları değiştir"
+        howto: "Nasıl eklenti yüklerim?"
       backups:
         title: "Yedekler"
         menu:
@@ -1484,6 +1495,7 @@ tr_TR:
             title: "Veritabanını calışan son haline geri al."
             confirm: "Veri tabanını  çalışan bir önceki versyonuna geri almak istediğinizden emin misiniz?"
       export_csv:
+        user_archive_confirm: "Gönderilerinizi indirmek istediğinize emin misiniz ?"
         success: "Dışarı aktarma başlatıldı, işlem tamamlandığında özel mesajla bilgilendirileceksiniz."
         failed: "Dışa aktarırken hata oluştu. Lütfen kayıtları kontrol edin."
         rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
@@ -1494,6 +1506,9 @@ tr_TR:
           screened_email: "Tüm taranmış e-postalar listesini CSV formatında dışa aktar."
           screened_ip: "Tüm taranmış IPler listesini CSV formatında dışa aktar."
           screened_url: "Tüm taranmış URLler listesini CSV formatında dışa aktar."
+      invite:
+        button_text: "Davetleri Gönder"
+        button_title: "Davetleri Gönder"
       customize:
         title: "Özelleştir"
         long_title: "Site Özelleştirmeleri"
@@ -1680,6 +1695,7 @@ tr_TR:
             label: "Yeni:"
             ip_address: "IP adresi"
             add: "Ekle"
+            filter: "Ara"
           roll_up:
             text: "Topla"
             title: "En az 'min_ban_entries_for_roll_up' adet giriş olduğu takdirde yeni subnet engelleme girişleri yaratır."
@@ -2012,7 +2028,7 @@ tr_TR:
         dismiss_topics: '<b>x</b>, <b>t</b> Konuları Yoksay'
       actions:
         title: 'Aksiyonlar'
-        bookmark_topic: '<b>f</b> Konuyu işaretle'
+        bookmark_topic: '<b>f</b> Bu konuyu işaretleyin'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Konuyu başa tuttur / tutturma'
         share_topic: '<b>shift</b>+<b>s</b> Konuyu paylaş'
         share_post: '<b>s</b> Gönderiyi paylaş'
@@ -2074,6 +2090,9 @@ tr_TR:
         autobiographer:
           name: Otobiyografi Yazarı
           description: Kullanıcı <a href="/my/preferences">profil</a> bilgilerini doldurmuş
+        anniversary:
+          name: Yıldönümü
+          description: Aktif kullanıcı, yılda en az 1 gönderi
         nice_post:
           name: İyi Gönderi
           description: Bir gönderiden 10 beğeni alındı. Bu rozet birden fazla defa verilebilir

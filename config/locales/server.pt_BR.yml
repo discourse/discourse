@@ -185,7 +185,6 @@ pt_BR:
       Já considerou **[visitar o seu perfil de usuário](%{profile_path})** e fazer o envio de uma imagem personalizada que representa você?⏎
       ⏎
       É mais fácil para acompanhar as discussões da comunidade e encontrar pessoas interessantes em conversas quando todo mundo tem um avatar exclusivo!⏎
-    sequential_replies: "# # # Considere responder a várias mensagens de uma só vez \n \nAo contrário do que muitas respostas sequenciais para um tópico, por favor, considere uma única resposta que inclui citações ou referências @nome para posts anteriores. \n \nVocê pode editar a sua resposta anterior para adicionar uma citação de realçar o texto e selecionar o botão<b>citar resposta</ b> que aparece. \n \nÉ mais fácil para que todos possam ler os tópicos que têm menos respostas em profundidade contra um monte de pequenas, respostas individuais. \n"
     dominating_topic: |
       ### Deixe que os outros se juntem à conversa⏎
       ⏎
@@ -470,7 +469,7 @@ pt_BR:
       xaxis: "Dia"
       yaxis: "Número de visitas"
     signups:
-      title: "Usuários"
+      title: "Novos Usuários"
       xaxis: "Dia"
       yaxis: "Número de usuários novos"
     topics:
@@ -543,19 +542,19 @@ pt_BR:
     page_view_anon_reqs:
       title: "Anônimo"
       xaxis: "Dia"
-      yaxis: "Visualizações de Página Anônimas"
+      yaxis: "Solicitações Anônimas de API"
     page_view_logged_in_reqs:
       title: "Logado"
       xaxis: "Dia"
-      yaxis: "Visualizações de Página de Logados"
+      yaxis: "Solicitações de Logados de API"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dia"
-      yaxis: "Visualizações de Página de Web Crowlers"
+      yaxis: "Solicitações de API de Web Crawler"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dia"
-      yaxis: "Visualizações de Página Totais"
+      yaxis: "Solicitações Totais de API"
     http_background_reqs:
       title: "Background"
       xaxis: "Dia"

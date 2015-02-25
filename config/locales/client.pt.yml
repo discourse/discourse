@@ -91,6 +91,7 @@ pt:
       google+: 'partilhar esta hiperligação no Google+'
       email: 'enviar esta hiperligação por email'
     topic_admin_menu: "Ações administrativas dos Tópicos"
+    emails_are_disabled: "Todos os envios de email foram desactivados por um administrador. Nenhuma notificação de email será enviada."
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -139,11 +140,20 @@ pt:
       stat:
         all_time: "Sempre"
         last_7_days: "Últimos 7 Dias"
+        last_30_days: "Últimos 30 Dias"
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Mensagens"
+      user_count: "Novos Utilizadores"
+      active_user_count: "Utilizadores Activos"
       contact: "Contacte-nos"
       contact_info: "No caso de ter um problema critico ou assunto urgente que afete este site, por favor, contacte-nos em %{contact_email}."
+    bookmarked:
+      title: "Adicionar Marcador"
+      clear_bookmarks: "Remover Marcadores"
+      help:
+        bookmark: "Clique para adicionar marcador ao primeiro post deste tópico"
+        unbookmark: "Clique para remover todos os marcadores deste tópico"
     bookmarks:
       not_logged_in: "Pedimos desculpa, é necessário ter sessão iniciada para marcar mensagens"
       created: "adicionou esta mensagem aos marcadores"
@@ -327,8 +337,10 @@ pt:
         error: "Ocorreu um erro ao alterar o email. Talvez esse endereço já esteja a ser utilizado neste fórum?"
         success: "Enviámos um email para esse endereço. Por favor siga as instruções de confirmação."
       change_avatar:
+        title: "Alterar a sua imagem de perfil"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baseado em"
         refresh_gravatar_title: "Atualize o seu Gravatar"
+        letter_based: "Imagem de perfil atribuída pelo sistema"
         uploaded_avatar: "Foto personalizada"
         uploaded_avatar_empty: "Adicionar foto personalizada"
         upload_title: "Carregar a sua foto"
@@ -2025,7 +2037,6 @@ pt:
         dismiss_topics: '<b>x</b>, <b>t</b> Destituir Tópicos'
       actions:
         title: 'Ações'
-        bookmark_topic: '<b>f</b> Adicionar tópico aos marcadores'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Tópico Fixado/Desafixado'
         share_topic: '<b>shift</b>+<b>s</b> Partilhar tópico'
         share_post: '<b>s</b> Partilhar mensagem'

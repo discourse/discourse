@@ -35,6 +35,7 @@ da:
     messages:
       too_long_validation: "er begrænset til %{max} tegn; du har brugt %{length}."
       invalid_boolean: "Ugyldig boolsk operator"
+      taken: "er allerede blevet taget"
       accepted: skal accepteres
       blank: kan ikke være tom
       present: skal være tomt
@@ -56,6 +57,9 @@ da:
       restrict_dependent_destroy:
         one: "Kan ikke slette fordi en afhængighed %{record} findes"
         many: "Kan ikke slette fordi en afhængighed %{record} findes"
+      too_long:
+        one: er for lang (maximum er 1 tegn)
+        other: er for lang (maximum er %{count} tegn)
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
   bulk_invite:
@@ -123,6 +127,7 @@ da:
     latest: "Seneste emner"
     hot: "Populære emner"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
+  excerpt_image: "billede"
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
@@ -131,6 +136,7 @@ da:
       admins: "admins"
       moderators: "moderatorer"
       staff: "staff"
+      trust_level_0: "tillidsniveau_0"
       trust_level_1: "tillidsniveau_1"
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
@@ -171,14 +177,6 @@ da:
       Har du overvejet at **[besøge din brugerprofil](%{profile_path})** og uploade et billede, som repræsenterer dig?
 
       Det er nemmere at følge diskussioner og finde interessanter mennesker i samtaler når alle har en unik avatar!
-    sequential_replies: |
-      ### Overvej at svare på flere indlæg på én gang
-
-      I stedet for at lave mange svar i stribe til et emne, bør du overveje at lave et enkelt svar, som indeholder citater eller @navn-referencer til tidligere indlæg.
-
-      Du kan redigere dit forrige svar for at tilføje et citat ved at markere teksten og vælge <b>citér svar</b>-knappen som dukker op.
-
-      Det er nemmere for alle at læse emner som har færre detaljerede svar i stedet for mange mindre, individuelle svar.
     dominating_topic: |
       ### Lad andre deltage i samtalen
 
@@ -434,7 +432,6 @@ da:
       xaxis: "Dag"
       yaxis: "Antal besøg"
     signups:
-      title: "Brugere"
       xaxis: "Dag"
       yaxis: "Antal nye brugere"
     topics:
@@ -504,6 +501,20 @@ da:
       title: "Top henviste emner"
       xaxis: "Emne"
       num_clicks: "Klik"
+    page_view_anon_reqs:
+      title: "Anonym"
+      xaxis: "Dag"
+    page_view_logged_in_reqs:
+      title: "Logget ind"
+      xaxis: "Dag"
+    page_view_crawler_reqs:
+      xaxis: "Dag"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Dag"
+    http_background_reqs:
+      title: "Baggrund"
+      xaxis: "Dag"
   dashboard:
     rails_env_warning: "Din server kører i %{env}-tilstand."
     ruby_version_warning: "Du kører en version af Ruby 2.0.0 som har kendte problemer. Opgradér til patch-level 247 eller senere."
@@ -654,6 +665,7 @@ da:
     incorrect_username_email_or_password: "Ugyldigt navn, e-mail eller adgangskode"
     wait_approval: "Tak for din tilmelding. Du får besked, når din konto er blevet godkendt."
     active: "Din konto er aktiv og klar."
+    activate_email: "<p>Du er næsten færdig! Vi har sendt en aktiverings-mail til  <b>%{email}</b>. Følg venligst instruktionerne i den for at aktivere din konto.</p><p>Hvis du ikke modtager den, skal du kigge i din spam-mappe eller få tilsendt en ny aktiverings.</p>"
     not_activated: "Du kan ikke logge ind endnu. Vi har sendt en aktiverings-e-mail til dig. Følg venligst instruktionerne i e-mail’en for at aktivere din konto."
     suspended: "Du kan ikke logge ind før %{date}."
     suspended_with_reason: "Du kan ikke logge ind før %{date}. Begrundelse for din suspendering: %{reason}"
@@ -685,6 +697,16 @@ da:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
+      text_body_template: |
+        Tak fordi du oprettede dig på %{site_name} - og velkommen!
+
+        %{new_user_tips}
+
+        Vi tror på [civiliseret opførsel](%{base_url}/guidelines) til alle tider.
+
+        Nyd dit ophold!
+
+        (Hvis du har brug for at kommunikere privat med [staben](%{base_url}/about) som en ny bruger, kan du bare svare på denne private besked.)
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
     too_many_spam_flags:
@@ -768,10 +790,12 @@ da:
         ---
         %{respond_instructions}
     digest:
+      why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
       subject_template: "[%{site_name}] Uddrag for %{date}"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
+      unsubscribe: "Dette resume er sent fra %{site_link} hvor vi ikke har set dig i et stykke tid. Hvis du ikke vil modtage disse mails, så %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} opsummering"
       read_more: "Læs mere"
@@ -832,3 +856,10 @@ da:
     sockpuppet: "En ny bruger oprettede et emne, og en anden ny bruger med den samme IP-adresse svarede på det. Se indstillingen af flag_sockpuppets."
   email_log:
     seen_recently: "Bruger har været logget på for nyligt"
+  guidelines: "Retningslinjer"
+  edit_this_page: "Rediger denne side"
+  csv_export:
+    boolean_yes: "Ja"
+    boolean_no: "Nej"
+  guidelines_topic:
+    title: "FAQ/Retningslinjer"

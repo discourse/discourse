@@ -150,9 +150,6 @@ it:
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_email}."
     bookmarked:
       title: "Segnalibro"
-      help:
-        bookmark: "Clicca per aggiungere un segnalibro a questo argomento"
-        unbookmark: "Clicca per rimuove il segnalibro a questo argomento"
     bookmarks:
       not_logged_in: "spiacenti, devi essere connesso per aggiungere segnalibri ai messaggi"
       created: "hai inserito questo messaggio nei segnalibri."
@@ -1380,8 +1377,6 @@ it:
         uploads: "caricamenti"
         backups: "backup"
         traffic_short: "Traffico"
-        page_views: "Pagine Viste"
-        page_views_short: "Pagine Viste"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
@@ -2095,7 +2090,6 @@ it:
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
         title: 'Azioni'
-        bookmark_topic: '<b>f</b> Argomento nei segnalibri'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
         share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'

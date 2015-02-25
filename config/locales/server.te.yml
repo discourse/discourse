@@ -427,7 +427,6 @@ te:
       xaxis: "రోజు"
       yaxis: "దర్శనాల సంఖ్య"
     signups:
-      title: "సభ్యులు"
       xaxis: "రోజు"
       yaxis: "కొత్త సభ్యుల సంఖ్య"
     topics:
@@ -500,19 +499,15 @@ te:
     page_view_anon_reqs:
       title: "అనామక"
       xaxis: "రోజు"
-      yaxis: "అనామక పుట సందర్శనాలు"
     page_view_logged_in_reqs:
       title: "లాగిన్ అయిన"
       xaxis: "రోజు"
-      yaxis: "లాగిన్ పుట సందర్శనాలు"
     page_view_crawler_reqs:
       title: "జాల క్రాలర్లు"
       xaxis: "రోజు"
-      yaxis: "జాల క్రాలరు పుట సందర్శనాలు"
     page_view_total_reqs:
       title: "మొత్తం"
       xaxis: "రోజు"
-      yaxis: "మొత్తం పుట సందర్శనాలు"
     http_background_reqs:
       title: "వెనుతలం"
       xaxis: "రోజు"

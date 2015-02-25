@@ -133,9 +133,6 @@ zh_TW:
       contact_info: "當網站發生嚴重錯誤或緊急事件，請聯絡我們 %{contact_email}"
     bookmarked:
       title: "書籤"
-      help:
-        bookmark: "加入書籤"
-        unbookmark: "移除書籤"
     bookmarks:
       not_logged_in: "抱歉，你必須先登入才能將文章加上書籤"
       created: "你已將此文章加上書籤"
@@ -1318,8 +1315,6 @@ zh_TW:
         backups: "備份檔"
         traffic_short: "流量"
         traffic: "網頁應用程式請求數"
-        page_views: "頁面瀏覽數"
-        page_views_short: "頁面瀏覽數"
         show_traffic_report: "顯示詳細的流量報表"
         reports:
           today: "今天"
@@ -2012,7 +2007,6 @@ zh_TW:
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主題的提示'
       actions:
         title: '行動'
-        bookmark_topic: '<b>f</b> 收藏討論話題'
         pin_unpin_topic: '<b>shift p</b> 置頂/取消置頂'
         share_topic: '<b>shift s</b> 分享討論話題'
         share_post: '<b>s</b> 分享文章'

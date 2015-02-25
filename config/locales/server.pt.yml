@@ -130,14 +130,6 @@ pt:
 
       Para mais, [verifique as diretrizes da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
     avatar: "### Que tal uma nova imagem para a sua conta? \n\nPublicou alguns tópicos e respostas, mas o seu avatar não é tão original como você o é -- é o mesmo avatar padrão que todos os novos utilizadores têm .\n\nJá considerou **[visitar o seu perfil de utilizador](%{profile_path})** e fazer o envio de uma imagem personalizada que o representa?\n\nÉ mais fácil acompanhar as discussões da comunidade e encontrar pessoas interessantes em conversas quando todas as pessoas têm um avatar exclusivo!\n"
-    sequential_replies: |
-      ### Considere responder várias mensagens de uma só vez
-
-      Em vez de várias respostas a um tópico, por favor considere uma única resposta que inclua o texto em debate ou um @nome com referências a mensagens anteriores.
-
-      Poderá editar as suas respostas anteriores, para fazer referências a outras mensagens, fazendo sobressair esse texto, selecionando o botão de resposta apropriado.
-
-      É mais fácil para todos, ler tópicos que têm poucas respostas bem desenvolvidas, do que variadíssimas respostas curtas e elementares.
     dominating_topic: |+
       ### Deixe que os outros se juntem à conversa
 
@@ -433,7 +425,6 @@ pt:
       xaxis: "Dia"
       yaxis: "Número de visitas"
     signups:
-      title: "Utilizadores"
       xaxis: "Dia"
       yaxis: "Número de novos utilizadores"
     topics:

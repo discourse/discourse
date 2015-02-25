@@ -149,9 +149,6 @@ nl:
       contact_info: "In het geval van een kritieke probleem of dringende vraagstukken in verband met deze site neem contact op met ons op via% {contact_email}."
     bookmarked:
       title: "Bewaar"
-      help:
-        bookmark: "Klik om deze topic te bewaren"
-        unbookmark: "Klik om deze topic niet meer te bewaren"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt dit bericht aan je favorieten toegevoegd"
@@ -258,6 +255,7 @@ nl:
       other_accounts: "Andere accounts met dit IP-adres"
       delete_other_accounts: "Verwijder %{count}"
       username: "gebruikersnaam"
+      trust_level: "TL"
       read_time: "leestijd"
       topics_entered: "topics ingevoerd"
       post_count: "# berichten"
@@ -349,6 +347,7 @@ nl:
         title: "Profielachtergrond"
         instructions: "Profiel achtergronden worden gecentreerd en hebben een standaard breedte van 850px."
       change_card_background:
+        title: "Achtergrond gebruikersprofiel"
         instructions: "Achtergrond afbeeldingen worden gecentreerd en hebben een standaard breedte van 590px."
       email:
         title: "E-mail"
@@ -386,6 +385,8 @@ nl:
       created: "Lid sinds"
       log_out: "Uitloggen"
       location: "Locatie"
+      card_badge:
+        title: "Badge van gebruikersprofiel"
       website: "Website"
       email_settings: "E-mail"
       email_digests:
@@ -404,6 +405,7 @@ nl:
         after_n_weeks:
           one: "gemaakt in de afgelopen week"
           other: "gemaakt in de afgelopen {{count}} weken"
+      auto_track_topics: "Automatisch topics volgen die ik bezocht heb"
       auto_track_options:
         never: "nooit"
         always: "altijd"
@@ -444,10 +446,13 @@ nl:
         common: "Dat wachtwoord wordt al te vaak gebruikt."
         ok: "Je wachtwoord ziet er goed uit."
         instructions: "Minimaal %{count} tekens."
+      associated_accounts: "Logins"
       ip_address:
         title: "Laatste IP-adres"
       registration_ip_address:
         title: "Registratie IP-adres"
+      avatar:
+        title: "Profielfoto"
       title:
         title: "Titel"
       filters:
@@ -582,6 +587,7 @@ nl:
       drafts_offline: "concepten offline"
       min_length:
         need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
+        need_more_for_reply: "{{n}} te gaan"
       error:
         title_missing: "Titel is verplicht"
         title_too_short: "Titel moet uit minstens {{min}} tekens bestaan"
@@ -635,7 +641,11 @@ nl:
       toggler: "verberg of toon de editor"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close:
+        label: "Tijd waarna topic automatisch wordt gesloten:"
         error: "Vul een geldige waarde in."
+        limited:
+          units: "(# aantal uren)"
+          examples: 'Geef aantal uren (24).'
     notifications:
       title: "notificaties van meldingen van @naam, reacties op je berichten en topics, privé-berichten, etc."
       more: "bekijk oudere notificaties"
@@ -657,6 +667,7 @@ nl:
       title_with_attachments: "Voeg een afbeelding of bestand toe"
       from_my_computer: "Vanaf mijn apparaat"
       from_the_web: "Vanaf het web"
+      remote_tip: "link naar afbeelding"
       remote_tip_with_attachments: "vul een url in van een afbeelding of bestand (toegestane extensies: {{authorized_extensions}})."
       local_tip: "klik om een afbeelding vanaf je apparaat te selecteren."
       local_tip_with_attachments: "klik om een afbeelding of bestand vanaf je apparaat te selecteren (toegestane extensies: {{authorized_extensions}})."
@@ -673,6 +684,7 @@ nl:
         user: "Zoek berichten van @{{username}}"
         category: "Doorzoek de \"{{category}}\" categorie"
         topic: "Zoek in deze topic"
+        private_messages: "Zoek priveberichten"
     site_map: "ga naar een andere topiclijst of categorie"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
@@ -713,6 +725,7 @@ nl:
         unread: "Er zijn geen ongelezen topics meer."
         category: "Er zijn geen topics meer in {{category}}."
         top: "Er zijn geen top-topics meer."
+        bookmarks: "Er zijn niet meer topics met een bladwijzer."
     topic:
       filter_to: "{{post_count}} berichten in topic"
       create: 'Nieuw topic'
@@ -764,6 +777,7 @@ nl:
       jump_reply_down: ga naar een latere reactie
       deleted: "Deze topic is verwijderd"
       auto_close_notice: "Deze topic wordt automatisch over %{timeLeft} gesloten."
+      auto_close_notice_based_on_last_post: "Deze topic sluit %{duration} na de laatste reactie."
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_save: "Opslaan"
       auto_close_remove: "Sluit deze topic niet automatisch"
@@ -1166,6 +1180,8 @@ nl:
     topic_statuses:
       warning:
         help: "Dit is een officiële waarschuwing."
+      bookmarked:
+        help: "Je hebt een bladwijzer aan deze topic toegevoegd"
       locked:
         help: "Deze topic is gesloten; reageren is niet meer mogelijk"
       unpinned:
@@ -1201,6 +1217,7 @@ nl:
     history: "Geschiedenis"
     changed_by: "door {{author}}"
     raw_email:
+      title: "Broncode van e-mail"
       not_available: "Niet beschikbaar"
     categories_list: "Categorielijst"
     filters:
@@ -1241,6 +1258,9 @@ nl:
       posted:
         title: "Mijn berichten"
         help: "topics waarin je een bericht hebt geplaatst"
+      bookmarks:
+        title: "Bladwijzers"
+        help: "topics waar je een bladwijzer aan toe hebt gevoegd"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1295,6 +1315,10 @@ nl:
         suspended: 'Geschorst:'
         private_messages_short: "PBs"
         private_messages_title: "Privéberichten"
+        space_free: "{{size}} beschikbaar"
+        uploads: "uploads"
+        backups: "backups"
+        traffic_short: "Verkeer"
         reports:
           today: "Vandaag"
           yesterday: "Gisteren"
@@ -1304,6 +1328,8 @@ nl:
           7_days_ago: "7 Dagen geleden"
           30_days_ago: "30 Dagen geleden"
           all: "Alle"
+          view_table: "tabel"
+          view_chart: "staafgrafiek"
           start_date: "Start datum"
           end_date: "Eind datum"
       commits:
@@ -1387,6 +1413,8 @@ nl:
         name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
+        custom: "Aangepast"
+        automatic: "Automatisch"
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -1400,6 +1428,13 @@ nl:
         confirm_revoke: "Weet je zeker dat je die API Key wil intrekken?"
         info_html: "Met deze API key kun je met behulp van JSON calls topics maken en bewerken."
         all_users: "Alle gebruikers"
+      plugins:
+        title: "Plugins"
+        installed: "Geïnstalleerde plugins"
+        name: "Naam"
+        version: "Versie"
+        change_settings: "Wijzig instellingen"
+        howto: "Hoe kan ik plugins installeren"
       backups:
         title: "Backups"
         menu:
@@ -1462,7 +1497,12 @@ nl:
         long_title: "Aanpassingen aan de site"
         css: "CSS"
         header: "Header"
+        top: "Top"
         footer: "Voettekst"
+        head_tag:
+          text: "</head>"
+        body_tag:
+          text: "</body>"
         override_default: "Sluit de standaard stylesheet uit"
         enabled: "Ingeschakeld?"
         preview: "voorbeeld"
@@ -1531,6 +1571,7 @@ nl:
         settings: "Instellingen"
         all: "Alle"
         sending_test: "Testmail wordt verstuurd..."
+        error: "<b>FOUT</b> - %{server_error}"
         test_error: "Er ging iets mis bij het versturen van de testmail. Kijk nog eens naar je mailinstellinen, controleer of je host mailconnecties niet blokkeert. Probeer daarna opnieuw."
         sent: "Verzonden"
         skipped: "Overgeslagen"
@@ -1594,6 +1635,7 @@ nl:
           actions:
             delete_user: "verwijder gebruiker"
             change_trust_level: "verander trustlevel"
+            change_username: "wijzig gebruikersnaam"
             change_site_setting: "verander instellingen"
             change_site_customization: "verander site aanpassingen"
             delete_site_customization: "verwijder site aanpassingen"
@@ -1626,6 +1668,7 @@ nl:
             label: "Nieuw:"
             ip_address: "IP-adres"
             add: "Voeg toe"
+            filter: "Zoek"
         logster:
           title: "Fout Logs"
       impersonate:
@@ -1637,10 +1680,12 @@ nl:
         last_emailed: "Laatste mail verstuurd"
         not_found: "Sorry, deze gebruikersnaam bestaat niet in ons systeem."
         active: "Actief"
+        show_emails: "Bekijk e-mails"
         nav:
           new: "Nieuw"
           active: "Actief"
           pending: "Te beoordelen"
+          staff: 'Stafleden'
           suspended: 'Geschorst'
           blocked: 'Geblokt'
           suspect: 'Verdacht'
@@ -1660,6 +1705,7 @@ nl:
           regular: 'Leden op Trust Level 2 (Lid)'
           leader: 'Leden op Trust Level 3 (Vaste bezoeker)'
           elder: 'Leden op Trust Level 4 (Leider)'
+          staff: "Stafleden"
           admins: 'Administrators'
           moderators: 'Moderators'
           blocked: 'Geblokkeerde leden'
@@ -1773,6 +1819,8 @@ nl:
           flagged_by_users: "Gebruikers die gemarkeerd hebben"
           likes_given: "'Vind ik leuks' gegeven"
           likes_received: "'Vind ik leuks' ontvangen"
+          likes_received_days: "Ontvangen likes: unieke dagen"
+          likes_received_users: "Ontvangen likes: unieke gebruikers"
           qualifies: "Komt in aanmerking voor Trust Level 3"
           does_not_qualify: "Komt niet in aanmerking voor Trust Level 3"
           will_be_promoted: "Zal binnenkort gepromoot worden."
@@ -1782,6 +1830,7 @@ nl:
           external_username: "Gebruikersnaam"
           external_name: "Naam"
           external_email: "E-mail"
+          external_avatar_url: "URL van profielfoto"
       user_fields:
         title: "Gebruikersvelden"
         create: "Maak gebruikersveld"
@@ -1800,6 +1849,9 @@ nl:
         editable:
           enabled: "kan gewijzigd worden"
           disabled: "wijzigen niet mogelijk"
+        show_on_profile:
+          enabled: "wordt getoond op profiel"
+          disabled: "wordt niet getoond op profiel"
         field_types:
           text: 'Tekstveld'
           confirm: 'Bevestiging'
@@ -1830,6 +1882,7 @@ nl:
           uncategorized: 'Overige'
           backups: "Backups"
           login: "Gebruikersnaam"
+          plugins: "Plugins"
       badges:
         title: Badges
         new_badge: Nieuwe badge
@@ -1873,6 +1926,8 @@ nl:
         image: "Afbeelding"
     lightbox:
       download: "download"
+    search_help:
+      title: 'Zoek in Help'
     keyboard_shortcuts_help:
       title: 'Sneltoetsen'
       jump_to:
@@ -1906,6 +1961,8 @@ nl:
         delete: '<b>d</b> Verwijder bericht'
     badges:
       title: Badges
+      allow_title: "kan als titel gebruikt worden"
+      multiple_grant: "kan meerdere keren toegekend worden"
       badge_count:
         one: "1 Badge"
         other: "%{count} Badges"
@@ -1916,6 +1973,7 @@ nl:
         one: "1 toegekend"
         other: "%{count} toegekend"
       select_badge_for_title: Kies een badge om als je titel te gebruiken
+      none: "<geen>"
       badge_grouping:
         getting_started:
           name: Aan De Slag

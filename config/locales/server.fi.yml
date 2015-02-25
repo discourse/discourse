@@ -185,14 +185,6 @@ fi:
       Oletko miettinyt oman kuvan lataamista **[käyttäjäprofiiliisi profile](%{profile_path})**?
 
       On helpompaa seurata keskusteluita ja löytää mielenkiintoisia ihmisiä niistä, kun kaikilla on uniikki avatar!
-    sequential_replies: |
-      ### Harkitse kaikkiin viesteihin vastaamista kerralla
-
-      Usean peräkkäisen viestin sijaan, harkitse yhden vastauksen kirjoittamista, johon voit lisätä lainauksia ja @nimen mainintoja viittauksena useisiin viesteihin.
-
-      Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen korostamalla osan lainattavan viestin tekstiä ja klikkaamalla näkyviin ilmestyvää <b>lainaa</b>-painiketta.
-
-      On kaikille helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia, kuin paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: |
       ### Anna muidenkin osallistua keskusteluun
 
@@ -487,7 +479,6 @@ fi:
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
     signups:
-      title: "Käyttäjät"
       xaxis: "Päivä"
       yaxis: "Uusien käyttäjien määrä"
     topics:
@@ -560,19 +551,15 @@ fi:
     page_view_anon_reqs:
       title: "Anonyymejä"
       xaxis: "Päivä"
-      yaxis: "Anonyymeien sivun katseluita"
     page_view_logged_in_reqs:
       title: "Kirjautuneita"
       xaxis: "Päivä"
-      yaxis: "Kirjautuneiden sivunkatseluita"
     page_view_crawler_reqs:
       title: "Hakurobotteja"
       xaxis: "Päivä"
-      yaxis: "Hakurobottien sivunkatseluita"
     page_view_total_reqs:
       title: "Yhteensä"
       xaxis: "Päivä"
-      yaxis: "Katseluita yhteensä"
     http_background_reqs:
       title: "Taustajärjestelmä"
       xaxis: "Päivä"
