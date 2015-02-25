@@ -292,6 +292,7 @@ en:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
+              same_as_username: "is the same as your username. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:

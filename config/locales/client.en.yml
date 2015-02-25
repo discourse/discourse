@@ -514,6 +514,7 @@ en:
         title: "Password"
         too_short: "Your password is too short."
         common: "That password is too common."
+        same_as_username: "Your password is the same as your username."
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
 

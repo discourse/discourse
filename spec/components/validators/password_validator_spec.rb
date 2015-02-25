@@ -72,6 +72,13 @@ describe PasswordValidator do
         expect(record.errors[:password]).not_to be_present
       end
     end
+
+    it "adds an error when password is the same as the username" do
+      @password = "porkchops1"
+      record.username = @password
+      validate
+      expect(record.errors[:password]).to be_present
+    end
   end
 
   context "password not required" do
