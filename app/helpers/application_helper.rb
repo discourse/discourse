@@ -137,6 +137,10 @@ module ApplicationHelper
     end
   end
 
+  def application_logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
+  end
+
   def login_path
     "#{Discourse::base_uri}/login"
   end
