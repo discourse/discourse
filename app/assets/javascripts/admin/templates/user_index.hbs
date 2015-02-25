@@ -143,7 +143,7 @@
     {{#each uf in userFields}}
       <div class='display-row'>
         <div class='field'>{{uf.name}}</div>
-        <div class='value'>
+        <div class='value'> 
           {{#if uf.value}}
             {{uf.value}}
           {{else}}
@@ -225,7 +225,7 @@
 
     {{#if api_key}}
       <div class='long-value'>
-        <input type="text" value="{{api_key.key}}" onclick="this.select()" style="width:450px">
+        <input type="text" value="{{api_key.key}}" style="width:450px">
         <button class='btn' {{action "regenerateApiKey"}}><i class="fa fa-undo"></i>{{i18n 'admin.api.regenerate'}}</button>
         <button {{action "revokeApiKey"}} class="btn"><i class="fa fa-times"></i>{{i18n 'admin.api.revoke'}}</button>
       </div>
