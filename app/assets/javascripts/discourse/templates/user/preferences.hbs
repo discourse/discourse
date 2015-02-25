@@ -145,6 +145,10 @@
       </div>
     </div>
 
+    {{#each uf in userFields}}
+      {{user-field field=uf.field value=uf.value}}
+    {{/each}}
+
     <div class="control-group pref-location">
       <label class="control-label">{{i18n 'user.location'}}</label>
       <div class="controls">
@@ -211,10 +215,6 @@
 
       {{plugin-outlet "user_custom_preferences"}}
     </div>
-
-    {{#each uf in userFields}}
-      {{user-field field=uf.field value=uf.value}}
-    {{/each}}
 
     <div class="control-group category">
       <label class="control-label">{{i18n 'user.categories_settings'}}</label>
