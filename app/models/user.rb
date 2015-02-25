@@ -80,6 +80,13 @@ class User < ActiveRecord::Base
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :automatic_group_membership
+  after_create do |username, email|
+    DiscourseEvent.trigger(:user_created, username, email)
+  end
+
+  after_update do |username, email|
+    DiscourseEvent.trigger(:user_updated, username, email)
+  end
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -89,7 +96,10 @@ class User < ActiveRecord::Base
   after_save :refresh_avatar
   after_save :badge_grant
 
-  before_destroy do
+  before_destroy do |username, email|
+    # Event hook
+    DiscourseEvent.trigger(:user_deleted, username, email)
+
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
     PostTiming.delete_all(user_id: self.id)
     TopicViewItem.delete_all(user_id: self.id)
