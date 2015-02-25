@@ -11,6 +11,7 @@ class Topic < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include HasCustomFields
   include Trashable
+  include LimitedEdit
   extend Forwardable
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
