@@ -131,9 +131,6 @@ id:
       contact_info: "Dalam kondisi kritis atau masalah mendesak yang menyangkut laman ini, mohon hubungi kami di %{contact_email}. "
     bookmarked:
       title: "Markah"
-      help:
-        bookmark: "Klik untuk memberikan markah topik ini"
-        unbookmark: "Klik untuk menghapus markah topik ini"
     bookmarks:
       not_logged_in: "Maaf, anda harus masuk untuk menandai post"
       created: "Anda telah menandai post ini"

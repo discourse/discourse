@@ -167,9 +167,10 @@ pl_PL:
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z funkcjonowaniem serwisu, prosimy o kontakt pod adresem %{contact_email}."
     bookmarked:
       title: "Zakładka"
+      clear_bookmarks: "Usuń z zakładek"
       help:
-        bookmark: "Kliknij, aby dodać temat do zakładek."
-        unbookmark: "Kliknij, aby usunąć temat z zakładek."
+        bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
+        unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
     bookmarks:
       not_logged_in: "przykro nam, ale należy się zalogować, aby dodawać zakładki"
       created: "zakładka dodana"
@@ -1087,6 +1088,7 @@ pl_PL:
         people:
           off_topic: "{{icons}} oznaczyli jako nie-na-temat"
           spam: "{{icons}} oznaczyli jako spam"
+          spam_with_url: "{{icons}} oznacza <a href='{{postUrl}}'>to jako spam</a>"
           inappropriate: "{{icons}} oznaczyli jako niewłaściwe"
           notify_moderators: "{{icons}} powiadomiło moderatorów"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>powiadomiło moderatorów</a>"
@@ -1439,8 +1441,8 @@ pl_PL:
         backups: "kopie zapasowe"
         traffic_short: "Ruch"
         traffic: "Zapytania do aplikacji"
-        page_views: "Wyświetlenia stron"
-        page_views_short: "Wyświetlenia"
+        page_views: "Zapytania API"
+        page_views_short: "Zapytania API"
         show_traffic_report: "Pokaż szczegółowy raport ruchu"
         reports:
           today: "Dzisiaj"
@@ -1623,6 +1625,7 @@ pl_PL:
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
             confirm: "Czy na pewno chcesz przywrócić bazę danych do poprzedniego poprawnego stanu?"
       export_csv:
+        user_archive_confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
         success: "Rozpoczęto eksport: dostaniesz powiadomienie gdy proces zostanie zakończony."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
         rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
@@ -1633,6 +1636,9 @@ pl_PL:
           screened_email: "Eksportuj listę monitorowanych adresów email do formatu CSV."
           screened_ip: "Eksportuj listę monitorowanych IP do formatu CSV."
           screened_url: "Eksportuj listę monitorowanych URLi do formatu CSV."
+      invite:
+        button_text: "Wyślij zaproszenia"
+        button_title: "Wysyłanie zaproszeń"
       customize:
         title: "Wygląd"
         long_title: "Personalizacja strony"
@@ -2166,7 +2172,7 @@ pl_PL:
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
       actions:
         title: 'Operacje'
-        bookmark_topic: '<b>f</b> Dodaj temat do zakładek'
+        bookmark_topic: '<b>f</b> dodaj/usuń zakładkę na temat'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
         share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> udostępnij wpis'
@@ -2234,6 +2240,9 @@ pl_PL:
         autobiographer:
           name: Autobiograf
           description: Wypełnienie <a href="/my/preferences">profilu</a> użytkownika
+        anniversary:
+          name: Rocznica
+          description: Aktywność przez rok, co najmniej jeden wpis
         nice_post:
           name: Niezły wpis
           description: Otrzymano 10 polubień za wpis. Ta odznaka może być przyznawana wielokrotnie

@@ -170,14 +170,6 @@ pl_PL:
       Rozważałeś **[odwiedzenie swojego profilu](%{profile_path})** i ustawienie własnego obrazka, który będzie Cię reprezentował?
 
       Łatwiej czyta się dyskusje i znajduje ciekawych ludzi w rozmowach, gdy każdy ma unikalny awatar!
-    sequential_replies: |
-      ### Rozważ odpowiadanie na kilka postów jednocześnie
-
-      Zamiast umieszczać odpowiedzi jedna po drugiej w jednym temacie, rozważ zastosowanie jednej odpowiedzi, która zawiera cytaty lub odwołania przez @nazwy do poprzednich wpisów.
-
-      Możesz edytować swoją poprzednią odpowiedź aby dodać cytat przez zaznaczenie tekstu i kliknięcie <b>odpowiedz na ten cytat</b>.
-
-      O wiele łatwiej jest czytać tematy mające kilka wyczerpujących odpowiedzi niż wiele krótkich i zdawkowych.
     dominating_topic: |
       ### Pozwól innym dołączyć do rozmowy
 
@@ -498,7 +490,6 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
     signups:
-      title: "Użytkownicy"
       xaxis: "Dzień"
       yaxis: "Liczba nowych użytkowników"
     topics:
@@ -571,19 +562,15 @@ pl_PL:
     page_view_anon_reqs:
       title: "Anonimowy"
       xaxis: "Dzień"
-      yaxis: "Anonimowych wyświetleń strony"
     page_view_logged_in_reqs:
       title: "Zalogowany"
       xaxis: "Dzień"
-      yaxis: "Wyświetleń zalogowanych użytkowników"
     page_view_crawler_reqs:
       title: "Bot indeksujący"
       xaxis: "Dzień"
-      yaxis: "Wyświetlenia botów indeksujących"
     page_view_total_reqs:
       title: "Łącznie"
       xaxis: "Dzień"
-      yaxis: "Łączna ilość wyświetleń"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -774,6 +761,8 @@ pl_PL:
     types:
       category: 'Kategorie'
       user: 'Użytkownicy'
+  sso:
+    account_not_approved: "Konto czeka na zatwierdzenie. Dostaniesz powiadomienie emailem, kiedy to się stanie."
   original_poster: "Autor pierwszego wpisu"
   most_posts: "Większość postów"
   most_recent_poster: "Autor najnowszego wpisu"
@@ -804,6 +793,7 @@ pl_PL:
     incorrect_username_email_or_password: "Niepoprawna nazwa użytkownika, email lub hasło"
     wait_approval: "Dziękujemy za rejestrację. Powiadomimy Cię gdy Twoje konto zostanie aktywowane."
     active: "Twoje konto zostało aktywowane i jest gotowe do użycia."
+    activate_email: "<p>Prawie gotowe! Wysłaliśmy email aktywacyjny na adres <b>%{email}</b>. Postępuj zgodnie z instrukcją z tego emaila, żeby dokończyć ten proces.</p><p>Jeśli email nie dotrze do Ciebie, sprawdź folder ze spamem, lub zaloguj sie jeszcze raz, żeby wysłać go ponownie.</p>"
     not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy do Ciebie email aktywacyjny. Wykonaj instrukcje w nim zawarte by aktywować Twoje konto."
     errors: "%{errors}"
     not_available: "Niedostępny. Może spróbuj %{suggestion}?"

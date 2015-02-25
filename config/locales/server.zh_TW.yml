@@ -329,7 +329,6 @@ zh_TW:
       xaxis: "天"
       yaxis: "瀏覽量"
     signups:
-      title: "用戶"
       xaxis: "天"
       yaxis: "新用戶數量"
     topics:

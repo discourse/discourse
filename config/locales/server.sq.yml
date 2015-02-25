@@ -145,14 +145,6 @@ sq:
       Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
 
       It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
-    sequential_replies: |
-      ### Consider replying to several posts at once
-
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
-
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
-
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
     dominating_topic: |
       ### Let others join the conversation
 
@@ -443,7 +435,6 @@ sq:
       xaxis: "Ditë"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
       xaxis: "Ditë"
       yaxis: "Number of new users"
     topics:

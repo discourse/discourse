@@ -150,9 +150,10 @@ de:
       contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die dieses Seite betrifft, kontaktiere uns bitte unter %{contact_email}. "
     bookmarked:
       title: "Lesezeichen setzen"
+      clear_bookmarks: "Lesezeichen entfernen"
       help:
-        bookmark: "setze ein Lesezeichen für dieses Thema"
-        unbookmark: "entferne des Lesezeichen von diesem Thema"
+        bookmark: "Klicke hier, um ein Lesezeichen auf den ersten Beitrag in diesem Thema zu setzen."
+        unbookmark: "Klicke hier, um alle Lesezeichen in diesem Thema zu entfernen."
     bookmarks:
       not_logged_in: "Entschuldige, du musst angemeldet sein, um ein Lesezeichen setzen zu können."
       created: "du hast ein Lesezeichen zu diesem Beitrag hinzugefügt"
@@ -981,6 +982,7 @@ de:
         attachment_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         file_too_large: "Entschuldige, die Datei, die du hochladen wolltest, ist zu groß (Maximalgröße {{max_size_kb}} KB)."
         too_many_uploads: "Entschuldige, du darfst immer nur eine Datei hochladen."
+        too_many_dragged_and_dropped_files: "Entschuldige, du kannst Drag & Drop gleichzeitig nur für bis zu 10 Dateien benutzen."
         upload_not_authorized: "Entschuldige, die Datei, die du hochladen wolltest, ist nicht erlaubt (erlaubte Endungen: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Bilder hochladen."
         attachment_upload_not_allowed_for_new_user: "Entschuldige, neue Benutzer dürfen keine Dateien hochladen."
@@ -1042,6 +1044,7 @@ de:
         people:
           off_topic: "{{icons}} haben das als „am Thema vorbei“ gemeldet"
           spam: "{{icons}} haben das als Spam gemeldet"
+          spam_with_url: "{{icons}} haben <a href='{{postUrl}}'>das als Spam</a> gemeldet"
           inappropriate: "{{icons}} haben das als unangemessen gemeldet"
           notify_moderators: "{{icons}} haben das den Moderatoren gemeldet"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>haben das den Moderatoren gemeldet</a>"
@@ -1500,6 +1503,14 @@ de:
         info_html: "Dein API-Key erlaubt dir das Erstellen und Bearbeiten von Themen via JSON-Aufrufen."
         all_users: "Alle Benutzer"
         note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
+      plugins:
+        title: "Plug-ins"
+        installed: "Installierte Plug-ins"
+        name: "Name"
+        none_installed: "Du hast keine Plug-ins installiert."
+        version: "Version"
+        change_settings: "Einstellungen ändern"
+        howto: "Wie installiere ich Plug-ins?"
       backups:
         title: "Backups"
         menu:
@@ -1553,6 +1564,7 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
+        user_archive_confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine private Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
@@ -1563,6 +1575,9 @@ de:
           screened_email: "Vollständige Liste der überprüften E-Mail-Adressen im CSV-Format exportieren."
           screened_ip: "Vollständige Liste der überprüften IP-Adressen im CSV-Format exportieren."
           screened_url: "Vollständige Liste der überprüften URLs im CSV-Format exportieren."
+      invite:
+        button_text: "Einladungen versenden"
+        button_title: "Einladungen versenden"
       customize:
         title: "Anpassen"
         long_title: "Website-Anpassungen"
@@ -1749,6 +1764,7 @@ de:
             label: "Neu:"
             ip_address: "IP-Adresse"
             add: "Hinzufügen"
+            filter: "Suche"
           roll_up:
             text: "Zusammenfassen"
             title: "Erzeugt neue Einträge zum Blockieren von Subnetzen, wenn mindestens 'min_ban_entries_for_roll_up' Einträge vorhanden sind."
@@ -1983,7 +1999,7 @@ de:
           uncategorized: 'Sonstiges'
           backups: "Backups"
           login: "Anmeldung"
-          plugins: "Plugins"
+          plugins: "Plug-ins"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
@@ -2088,7 +2104,7 @@ de:
         dismiss_topics: '<b>x</b>, <b>t</b> Themen ignorieren'
       actions:
         title: 'Aktionen'
-        bookmark_topic: '<b>f</b> Lesezeichen auf Thema setzen'
+        bookmark_topic: '<b>f</b> Lesezeichen auf Thema setzen oder entfernen'
         pin_unpin_topic: '<b>⇧ Umsch</b> + <b>p</b> Thema anheften/loslösen'
         share_topic: '<b>⇧ Umsch</b> + <b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
@@ -2153,6 +2169,9 @@ de:
         autobiographer:
           name: Autobiograf
           description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
+        anniversary:
+          name: Jubiläum
+          description: Aktives Mitglied für ein Jahr und hat mindestens einen Beitrag verfasst
         nice_post:
           name: Schöner Beitrag
           description: Hat 10 Likes für einen Beitrag erhalten. Dieses Abzeichen kann mehrfach verliehen werden.

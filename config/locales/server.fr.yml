@@ -39,10 +39,10 @@ fr:
       accepted: doit être accepté
       blank: ne peut être vide
       present: doit être vide
-      confirmation: "ne correspond pas %{attribute}"
+      confirmation: "ne correspond pas à %{attribute}"
       empty: ne peut être vide
       equal_to: doit être égal à %{count}
-      even: doit être encore
+      even: doit être paire
       exclusion: est réservé
       greater_than: doit être supérieure à %{count}
       greater_than_or_equal_to: doit être supérieur ou égal à %{count}
@@ -65,7 +65,7 @@ fr:
         other: c'est trop court (le minimum est de %{count} caractères)
       wrong_length:
         one: c'est la mauvaise longueur (devrait être de 1 caractère)
-        other: c'est la mauvaise longueur (devrait être de %{count} caractères)
+        other: est de la mauvaise longueur (devrait être de %{count} caractères)
       other_than: "doit être différent de %{count}"
     template:
       body: 'Des problèmes ont été rencontrés sur les champs suivants : '
@@ -188,11 +188,11 @@ fr:
     sequential_replies: |
       ### Envisagez de répondre à plusieurs messages en même temps
 
-      Plutôt que plusieurs réponses en séquence à un sujet, envisagez une seule réponse incluant plusieurs citations ou @pseudo en référence à des précédents messages.
+      Plutôt que plusieurs réponses en séquence à une discussion, envisagez une seule réponse incluant plusieurs citations ou @pseudo en référence à des précédents messages.
 
       Vous pouvez utilisez vos précédentes réponses pour ajouter une citation en surlignant et en cliquant sur le bouton <b>Citer</b>.
 
-      Il est plus facile pour tout le monde de lire des sujets avec peu de réponses mais traités avec profondeur que beaucoup de réponses individuelles et courtes.
+      Il est plus facile pour tout le monde de lire des discussions avec peu de réponses mais traités avec profondeur que beaucoup de réponses individuelles courtes.
     dominating_topic: |
       ### Laisser les autres se joindre à la conversation
 
@@ -231,7 +231,7 @@ fr:
             password:
               common: "fait partie des 10000 mots de passe les plus utilisés. Merci d'en utiliser un plus sûr."
             ip_address:
-              signup_not_allowed: "L'inscription n'est pas autorisé à partir de ce compte."
+              signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
         color_scheme_color:
           attributes:
             hex:
@@ -482,7 +482,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de visites"
     signups:
-      title: "Utilisateurs"
+      title: "Nouveaux utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux utilisateurs"
     topics:
@@ -555,22 +555,23 @@ fr:
     page_view_anon_reqs:
       title: "Anonyme"
       xaxis: "Jour"
-      yaxis: "Pages vues par les utilisateurs non connectés"
+      yaxis: "Requêtes API anonymes"
     page_view_logged_in_reqs:
       title: "Connecté"
       xaxis: "Jour"
-      yaxis: "Pages vues par les utilisateurs connectés"
+      yaxis: "Requêtes API connectées"
     page_view_crawler_reqs:
       title: "Crawlers Web"
       xaxis: "Jour"
-      yaxis: "Pages vues par les Crawler Web"
+      yaxis: "Requêtes API de crawler web"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Jour"
-      yaxis: "Nombre de pages vues"
+      yaxis: "Requêtes API total"
     http_background_reqs:
       title: "Arrière plan"
       xaxis: "Jour"
+      yaxis: "Requêtes de mise à jour en temps réel ou de suivi."
     http_2xx_reqs:
       title: "Statut 2xx (OK)"
       xaxis: "Jour"
@@ -1234,10 +1235,18 @@ fr:
         Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur – et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
 
         Pour plus d'informations, merci de vous en référer aux [règles de la communauté](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement.\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement. \n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes <kbd>☰</kbd> en haut à droite**.\n\n- Dans la liste des sujets, le titre vous emmènera toujours vers le prochain message non lu. Utiliser les colonnes Activité ou Messages pour allez au premier ou au dernier message. \n\n- Lorsque vous lisez un sujet, retournez en haut de celui &uarr; en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utilisez les touches <kbd>Home</kbd> et <kbd>Fin</kbd>. \n\n    <img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Comment je réponds ?\n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-post.png\" width=\"\
+        29\" height=\"25\"> sur le message.\n\n - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionnez le texte que vous voulez citer et appuyez sur un des boutons Répondre.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nConcernant les [icones Emoji](http://www.emoji.codes/), commencez par écrire `:` ou le traditionnel smiley `:)` :smile: \n\n## Que puis-je faire d'autre ?\n\nÀ la fin de chaque message il y a un ensemble de boutons pour les différentes actions possibles.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler**\
+        \ pour avertir en privé l'auteur ou les modérateurs du contenu de ce message.\n\nVous pouvez aussi **partager** un liens vers un message ou l'ajouter à vos **signets** pour le retrouver sur votre page d'utilisateur. \n\n## Qui me parle ?\n\nWhen someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre apparaitra immédiatement en haut à droite de la page. Utilisez-le pour consulter vos **notifications**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNe soyez pas inquiêt de manquer des notifications –  \nLes réponses directes (et les messages privés) vous seront envoyés par courriel si vous n'êtes pas présent sur le site lorsqu'ils sont envoyés. \n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nBy default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujets auxquels vous avez participé\
+        \ (répondus, créés ou lu pendant un long moment) seront automatiquements suivis. \n\nYou will see the blue new and number indicators next to these topics:\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages au côté de ces discussions:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\n\nYou can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).\n\nVous pouvez modifier l'état du suivi des notifications d'une discussion en utilisant les boutons en bas de la discussion (vous pouvez également le modiifer au niveau des catégories).\nPour changer la façon dont vous suivez les discussions, ou pour définir de nouveaux suivis, consultez [vos préférences utilisateurs](%{base_url}/my/preferences). \n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtrons. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences\
+        \ pour nous aider à gérer la communauté. \n"
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
+      text_body_template: "Merci d'avoir rejoint %{site_name}, et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](%{base_url}/about), répondez simplement à ce message privé.)\n"
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
+      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](%{base_url}/about), répondez simplement à ce message privé).\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
@@ -1354,6 +1363,12 @@ fr:
         Nous sommes désolé, mais votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le sujet est fermé. Si vous considérez que c'est une erreur, contacter un responsable.
+    email_reject_auto_generated:
+      subject_template: "Problème de courriel - Réponse automatique"
+      text_body_template: |
+        Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
+
+        Votre réponse était générée automatiquement, ce que nous n'acceptons pas. Si vous considérez qu'il s'agit d'une erreur, prenez contact avec un responsable.
     email_error_notification:
       subject_template: "Problème de courriel  - Erreur d'authentification POP3"
       text_body_template: |
@@ -1522,6 +1537,22 @@ fr:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
+      text_body_template: |
+        Bienvenue sur %{site_name} !
+
+        Un membre de l'équipe a approuvé votre compte sur %{site_name}.
+
+        Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte : %{base_url}/users/activate-account/%{email_token}
+
+        Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
+
+        %{new_user_tips}
+
+        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
+
+        Amusez-vous bien !
+
+        (Si vous voulez communiquer en privée avec [staff members](%{base_url}/about) en tant que nouveau membre, répondez à ce message privé.)
     signup:
       subject_template: "[%{site_name}] Activer votre nouveau compte"
       text_body_template: |
@@ -1869,3 +1900,26 @@ fr:
       \ ?](#cookies)\n\nOui. Les cookies sont de petits fichiers qu'un site ou son prestataire de services transfert sur le disque dur de votre ordinateur via votre navigateur Web (si vous permettez). Ces cookies permettent au site de reconnaître votre navigateur et, si vous avez un compte enregistré, l'associer à votre compte enregistré.\n\nNous utilisons des cookies pour comprendre et sauvegarder vos préférences pour de futures visites et compiler des données globales sur le trafic du site et les interactions avec le site afin que nous puissions offrir de meilleures expériences de navigation et de meilleurs outils à l'avenir. Nous pouvons conclure des contrats avec des fournisseurs de services tiers pour nous aider à mieux comprendre les visiteurs du site. Ces fournisseurs de services ne sont pas autorisés à utiliser les renseignements recueillis en notre nom, sauf pour nous aider à mener et à améliorer notre entreprise.\n\n<a name=\"disclose\"></a>\n\n## [Divulguons-nous des informations à des tiers?](#disclose)\n\nNous ne vendons pas, ni échangeons, ou même transférerons vos renseignements personnelles à des tiers. Ceci n'inclut pas les tiers de confiance qui nous aident à exploiter notre site, la conduite de nos affaires, ou vous servir, tant que ces parties conviennent à garder ces informations\
       \ confidentiels. Nous pouvons également divulguer vos informations lorsque nous croyons nécessaire de se conformer à la loi, appliquer nos politiques de site, ou la nôtre ou d'autres droits, la propriété ou la sécurité. Toutefois, des informations non personnelles des visiteurs peuvent être fournis à d'autres parties pour le marketing, la publicité, ou d'autres utilisations.\n\n<a name=\"third-party\"></a>\n\n## [Liens vers des tiers](#third-party)\n\nParfois, à notre discrétion, nous pouvons inclure ou offrir des produits ou services de tiers sur notre site. Ces sites tiers ont des politiques de confidentialité distinctes et indépendantes. Nous n'avons donc aucune responsabilité pour le contenu et les activités de ces sites. Néanmoins, nous cherchons à protéger l'intégrité de notre site et sommes disposés à accueillir tous les commentaires au sujet de ces sites. \n\n<a name=\"coppa\"></a>\n\n## [Protection des mineurs](#coppa)\n\nNotre site, produits et services sont dirigés vers les personnes qui ont au moins 13 ans ou plus. Si ce serveur est aux Etats-Unis, et que vous êtes sous l'âge de 13 ans, conformément aux exigences de la COPPA ([Children's Online Privacy Protection Act](http://fr.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), n'utiliser pas ce site. <a name=\"\
       online\"></a> ## [Politique de confidentialité en ligne](#online) Cette politique de confidentialité en ligne s'applique uniquement aux informations collectées sur notre site et non aux informations recueillies hors connexion. <a name=\"consent\"></a> ## [Votre consentement](#consent) En utilisant notre site, vous consentez à la Politique de confidentialité de notre site web.\n\n<a name=\"changes\"></a>\n\n## [Changements à notre politique de confidentialité](#changes)\n\nSi nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page.\n\nCe document est soumis à la licence creative commons CC-BY-SA.\n"
+  static:
+    search_help: |
+      <h2>Astuces</h2>
+      <p>
+      <ul>
+        <li>Les résultats dont le titre correspond à la recherche sont retournés en priorité. Donc, en cas de doutes, recherchez dans les titres</li>
+        <li>Pour obtenir de meilleurs résultats, utilisez toujours des mots rares ou peu fréquents</li>
+        <li>Dès que possible, limitez vos recherches à une catégorie en particulier, à un utilisateur ou à un sujet</li>
+      </ul>
+      </p>
+      <h2>Paramètres</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+      </table>
+      </p>
+      <p>
+        <code>rainbows category:parks status:open order:latest</code> recherchera les sujets qui contiennent le mot "rainbows", qui sont dans la catégorie "parks" et qui ne sont ni fermés ni archivé. Les résultats seront triés par la date du dernier message publié.
+      </p>
