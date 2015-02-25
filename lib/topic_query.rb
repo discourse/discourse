@@ -132,7 +132,11 @@ class TopicQuery
   end
 
   def list_category_topic_ids(category)
-    default_results(unordered: true, category: category.id).pluck(:id)
+    query = default_results(category: category.id)
+    pinned_ids = query.where('pinned_at IS NOT NULL').order('pinned_at DESC').pluck(:id)
+    non_pinned_ids = query.where('pinned_at IS NULL').pluck(:id)
+
+    (pinned_ids + non_pinned_ids)[0...@options[:per_page]]
   end
 
   def list_new_in_category(category)
