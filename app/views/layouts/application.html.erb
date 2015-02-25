@@ -37,17 +37,7 @@
 
   <body>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
-      <header class="d-header">
-        <div class="container">
-          <div class="contents">
-            <div class="row">
-              <div class="title span13">
-                <a href="/"><img src="<%= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url %>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <%= render partial: 'header' %>
       <div id="main-outlet" class="container">
         <!-- preload-content: -->
         <%= yield %>
