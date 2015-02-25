@@ -30,7 +30,7 @@ module TopicGuardian
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
     return true if is_staff? || (!topic.private_message? && user.has_trust_level?(TrustLevel[3]))
     return false if topic.archived
-    is_my_own?(topic)
+    is_my_own?(topic) && !topic.edit_time_limit_expired?
   end
 
   # Recovery Method

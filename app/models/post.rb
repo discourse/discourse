@@ -14,6 +14,7 @@ class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
   include HasCustomFields
+  include LimitedEdit
 
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
@@ -521,14 +522,6 @@ class Post < ActiveRecord::Base
     post_revision.modifications.each do |attribute, change|
       attribute = "version" if attribute == "cached_version"
       write_attribute(attribute, change[0])
-    end
-  end
-
-  def edit_time_limit_expired?
-    if created_at && SiteSetting.post_edit_time_limit.to_i > 0
-      created_at < SiteSetting.post_edit_time_limit.to_i.minutes.ago
-    else
-      false
     end
   end
 
