@@ -310,6 +310,13 @@ export default DiscourseController.extend(ModalFunctionality, {
       });
     }
 
+    if (!this.blank('accountUsername') && this.get('accountPassword') === this.get('accountUsername')) {
+      return Discourse.InputValidation.create({
+        failed: true,
+        reason: I18n.t('user.password.same_as_username')
+      });
+    }
+
     // Looks good!
     return Discourse.InputValidation.create({
       ok: true,
