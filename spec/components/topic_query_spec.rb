@@ -243,20 +243,16 @@ describe TopicQuery do
     let(:category) { Fabricate(:category) }
     let(:topic_category) { category.topic }
     let!(:topic_no_cat) { Fabricate(:topic) }
-    let!(:topic_in_cat) { Fabricate(:topic, category: category) }
-
-    it "returns the topic with a category when filtering by category" do
-      expect(topic_query.list_category(category).topics).to eq([topic_category, topic_in_cat])
-    end
-
-    it "returns only the topic category when filtering by another category" do
-      another_category = Fabricate(:category, name: 'new cat')
-      expect(topic_query.list_category(another_category).topics).to eq([another_category.topic])
-    end
+    let!(:topic_in_cat1) { Fabricate(:topic, category: category,
+                                             bumped_at: 10.minutes.ago,
+                                             created_at: 10.minutes.ago) }
+    let!(:topic_in_cat2) { Fabricate(:topic, category: category) }
 
     describe '#list_new_in_category' do
       it 'returns the topic category and the categorized topic' do
-        expect(topic_query.list_new_in_category(category).topics).to eq([topic_in_cat, topic_category])
+        expect(
+          topic_query.list_new_in_category(category).topics.map(&:id)
+        ).to eq([topic_in_cat2.id, topic_category.id, topic_in_cat1.id])
       end
     end
   end
