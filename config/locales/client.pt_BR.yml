@@ -150,9 +150,10 @@ pt_BR:
       contact_info: "No evento de um problema crítico ou um assunto urgente em relação à este site, por favor entre em contato conosco via %{contact_email}."
     bookmarked:
       title: "Favorito"
+      clear_bookmarks: "Limpar Favoritos"
       help:
-        bookmark: "Clique para adicionar este tópico aos favoritos"
-        unbookmark: "Clique para remover este tópico dos favoritos"
+        bookmark: "Clique para adicionar o primeiro post deste tópico aos favoritos"
+        unbookmark: "Clique para remover todos os favoritos neste tópico"
     bookmarks:
       not_logged_in: "desculpe, você precisa estar logado para favoritar mensagens"
       created: "você favoritou essa resposta"
@@ -1381,8 +1382,6 @@ pt_BR:
         backups: "backups"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
-        page_views: "Visualizações de Página"
-        page_views_short: "Visualizações de Página"
         show_traffic_report: "Mostrar Relatório de Tráfego Detalhado"
         reports:
           today: "Hoje"
@@ -2096,7 +2095,6 @@ pt_BR:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Tópicos'
       actions:
         title: 'Ações'
-        bookmark_topic: '<b>f</b> Adicionar tópico aos favoritos'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Fixar/Desfixar tópico'
         share_topic: '<b>shift</b>+<b>s</b> Compartilhar tópico'
         share_post: '<b>s</b> Compartilhar mensagem'

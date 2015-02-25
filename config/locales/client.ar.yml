@@ -126,9 +126,7 @@ ar:
       contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
     bookmarked:
       title: "المفضلة"
-      help:
-        bookmark: "انقر هنا لإضافة العنوان إلى المفضلة"
-        unbookmark: "أنقر هنا لحذف العنوان من المفضلة"
+      clear_bookmarks: "حذف المفضله"
     bookmarks:
       not_logged_in: "نعتذر يجب ان تكون متصلا لكي تقوم بإضافة هدا الموضوع للمفضلة"
       created: "لقد نجحت في إضافة الموضوع للمفضلة"
@@ -870,12 +868,14 @@ ar:
       edit_reason: "سبب:"
       post_number: "مشاركات {{number}}"
       in_reply_to: "الرد"
+      last_edited_on: "آخر تعديل للمشاركة في "
       reply_as_new_topic: "التعليق على الموضوع الاصلي"
       continue_discussion: "إكمال النقاش على {{postLink}}"
       follow_quote: "الذهاب إلى المشاركة المقتبسة"
       show_full: "عرض كامل المشاركة"
       show_hidden: 'عرض المحتوى المخفي.'
       expand_collapse: "عرض/إخفاء"
+      more_links: "{{count}}  أكثر .."
       unread: "المشاركة غير مقروءة"
       errors:
         create: "المعذرة، حدثت مشكلة أثناء إنشاء المشاركة. الرجاء المحاولة مرة أخرى."
@@ -958,6 +958,7 @@ ar:
           vote: "قمت بالتصويت لهذه المشاركة"
       edits:
         one: 1 تعديل
+        other: "{{count}} تعديل"
         zero: لايوجد تعديل
       revisions:
         controls:
@@ -1024,6 +1025,53 @@ ar:
       this_year: "هذه السنة"
       position: "المكان"
       default_position: "المكان الافتراضي"
+      notifications:
+        watching:
+          title: "مشاهده "
+        tracking:
+          title: "تتبع "
+        regular:
+          title: "طبيعي"
+        muted:
+          title: "كتم"
+    flagging:
+      take_action: "أجراء العمليه "
+      notify_action: 'رسائل خاصة'
+      delete_spammer: "حذف مرسلي البريد المزعج"
+      delete_confirm: "أنت على وشك حذف  <b>%{posts}</b> المشاركات و<b>%{topics}</b> المواضيع من هذا المستخدم , حذف حساباتهم منهم من التسجيل وحجب الاي بي  <b>%{ip_address}</b>, واضافة بريدهم الالكتروني  <b>%{email}</b> لقائمة المحجوبين  . هل أنت متأكد أن هذا المستخدم سبام ?"
+      yes_delete_spammer: "نعم , حذف مرسلي البريد المزعج"
+      ip_address_missing: "(N/A)"
+      hidden_email_address: "(مخفي)"
+      formatted_name:
+        off_topic: "خارج عن الموضوع"
+        spam: "هذا سبام"
+      custom_placeholder_notify_user: "كن محدد, استدلالي ودائما حسن الاخلاق"
+      custom_message:
+        at_least: "ادخل على الاقل  {{n}} حرف"
+        more: "{{n}} الذهاب الى"
+        left: "{{n}} باقي"
+    flagging_topic:
+      title: "شكرا لمساعدتنا في ابقاء مجتمعنا نضيفا"
+      notify_action: "رسالة خاصة"
+    topic_map:
+      title: "ملخص الموضوع"
+      links_shown: "اظهار  {{totalLinks}} روابط..."
+    topic_statuses:
+      warning:
+        help: "هذا تحذير رسمي"
+      bookmarked:
+        help: "قمت بتفضيل  هذا الموضوع"
+      locked:
+        help: "هذا الموضوع مغلق, لن يتم قبول اي رد "
+      unpinned:
+        title: "غير مثبت"
+        help: "هذا الموضوع غير مثبت بالنسبة لك, سيتم عرضه بالترتيب العادي"
+      pinned_globally:
+        title: "تثبيت عام"
+        help: "هذا الموضوع مثبت بشكل عام, سوف يظهر في المقدمة في جميع القوائم"
+      pinned:
+        title: "مثبت"
+    posts: "مشاركات"
   admin_js:
     admin:
       dashboard:

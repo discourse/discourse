@@ -178,7 +178,6 @@ it:
 
       Per maggiori informazioni, [guarda le nostre linee guida delle community](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
     avatar: "### Che ne dici di una nuova immagine per il tuo account?\n\nHai pubblicato alcuni argomenti e messaggi, ma il tuo avatar tanto unico quanto te -- è lo stesso avatar di default che hanno tutti i nuovi utenti. \n\nPerché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine personale che ti rappresenta?\n\nÈ più facile seguire le discussioni della comunità e trovare persone interessanti se tutti hanno un avatar unico!\n"
-    sequential_replies: "### Considera la possibilità di rispondere a più messaggi contemporaneamente\n\nPiuttosto che inviare più risposte sequenziali in un argomento, considera l'inserimento di un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti. \n\nPuoi modificare la tua risposta precedente per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare.\n\nE' più facile per tutti leggere argomenti che hanno poche risposte approfondite, rispetto a molte brevi risposte individuali.  \n"
     dominating_topic: |
       ### Permetti agli altri di partecipare alla conversazione
 
@@ -453,7 +452,6 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero visite"
     signups:
-      title: "Utenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi utenti"
     topics:
@@ -526,19 +524,15 @@ it:
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste da utenti anonimi"
     page_view_logged_in_reqs:
       title: "Collegato"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste da utenti collegati"
     page_view_crawler_reqs:
       title: "Web Crawler"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste da Web Crawler"
     page_view_total_reqs:
       title: "Totali"
       xaxis: "Giorno"
-      yaxis: "Pagine Viste Totali"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"

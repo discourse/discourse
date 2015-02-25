@@ -133,9 +133,10 @@ zh_CN:
       contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_email} 联系我们。"
     bookmarked:
       title: "书签"
+      clear_bookmarks: "删除书签"
       help:
-        bookmark: "点击收藏此主题"
-        unbookmark: "点击这里将主题移除书签"
+        bookmark: "点击收藏该主题的第一个帖子"
+        unbookmark: "点击删除本主题的所以书签"
     bookmarks:
       not_logged_in: "抱歉，你需要先登录才能给帖子加书签"
       created: "你已经为此贴添加书签"
@@ -997,6 +998,7 @@ zh_CN:
         people:
           off_topic: "{{icons}} 标记为偏离主题"
           spam: "{{icons}} 标记为垃圾"
+          spam_with_url: "{{icons}} 标记为<a href='{{postUrl}}'>垃圾信息</a>"
           inappropriate: "{{icons}} 标记此为不当内容"
           notify_moderators: "{{icons}} 向版主报告它"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>通知了版主</a>"
@@ -1319,8 +1321,8 @@ zh_CN:
         backups: "备份"
         traffic_short: "流量"
         traffic: "应用 web 请求"
-        page_views: "页面浏览次数"
-        page_views_short: "页面浏览次数"
+        page_views: "API 请求"
+        page_views_short: "API 请求"
         show_traffic_report: "显示详细的流量报告"
         reports:
           today: "今天"
@@ -1493,6 +1495,7 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "你确定要将数据库回滚到之前的工作状态吗？"
       export_csv:
+        user_archive_confirm: "你确定要下载你的帖子吗？"
         success: "导出开始，当操作完成后你将被私信通知。"
         failed: "导出失败。请检查日志。"
         rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
@@ -1503,6 +1506,9 @@ zh_CN:
           screened_email: "以 CSV 格式导出所有已显示的电子邮件列表。"
           screened_ip: "以 CSV 格式导出所有已显示的IP地址列表。"
           screened_url: "以 CSV 格式导出所有已显示的URL列表。"
+      invite:
+        button_text: "发送邀请"
+        button_title: "发送邀请"
       customize:
         title: "定制"
         long_title: "站点定制"
@@ -2022,7 +2028,7 @@ zh_CN:
         dismiss_topics: '<b>x</b>, <b>t</b> 解除主题提示'
       actions:
         title: '动作'
-        bookmark_topic: '<b>f</b> 收藏主题'
+        bookmark_topic: '<b>f</b> 切换主题收藏状态'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> 置顶/截至置顶主题'
         share_topic: '<b>shift</b>+<b>s</b> 分享主题'
         share_post: '<b>s</b> 分享帖子'
@@ -2084,6 +2090,9 @@ zh_CN:
         autobiographer:
           name: 自传作者
           description: 已填写用户<a href="/my/preferences">资料</a>信息
+        anniversary:
+          name: 年度纪念日
+          description: 一年活跃用户，至少发了一个帖子
         nice_post:
           name: 不错的帖子
           description: 一个帖子收到 10 个赞。这个徽章可以被授予多次

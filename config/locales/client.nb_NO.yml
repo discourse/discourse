@@ -150,9 +150,6 @@ nb_NO:
       contact_info: "Hvis noe kritisk skulle oppstå eller det er en hastesak som påvirker siden kontakt oss på %{contact_email}."
     bookmarked:
       title: "Bokmerke"
-      help:
-        bookmark: "Klikk for å lagre dette emnet"
-        unbookmark: "Klikk for å fjerne dette lagrede emnet"
     bookmarks:
       not_logged_in: "beklager, du må være innlogget for å kunne bokmerke innlegg"
       created: "du har bokmerket dette innlegget"

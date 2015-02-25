@@ -180,11 +180,11 @@ zh_CN:
     sequential_replies: |
       ### 考虑一次性回复多个帖子
 
-      与其连续地回复主题，请考虑在一个单独的回复中引用或者 @name 引用前面的帖子。
+      与其接连回复主题几次，不如在一个单独的回复中引用相关内容或者@用户名引用前面的帖子。
 
-      你可以编辑你之前的回复以添加引用。添加引用需要选择文字并且点击出现的<b>引用回复</b>按钮。
+      您可以编辑您之前的回复以添加引用。添加引用需要选择文字并且点击出现的<b>引用回复</b>按钮。
 
-      当主题中的帖子不是许多小的和独立的回复，而是更少的更有深度的帖子时，更容易让我们去阅读这个主题。
+      当主题中的帖子的内容不是多个小且独立的回复，而是更少的更有深度的帖子时，我们会更认真地阅读这个主题。
     dominating_topic: |
       ### 让其他人加入讨论
 
@@ -453,7 +453,7 @@ zh_CN:
       xaxis: "天"
       yaxis: "访问量"
     signups:
-      title: "新注册用户"
+      title: "新用户"
       xaxis: "天"
       yaxis: "新用户数"
     topics:
@@ -526,19 +526,19 @@ zh_CN:
     page_view_anon_reqs:
       title: "匿名"
       xaxis: "天"
-      yaxis: "匿名页面访问量"
+      yaxis: "匿名 API 请求"
     page_view_logged_in_reqs:
       title: "已登录"
       xaxis: "天"
-      yaxis: "已登录用户页面访问量"
+      yaxis: "已登录用户的 API 请求"
     page_view_crawler_reqs:
       title: "Web 爬虫"
       xaxis: "天"
-      yaxis: "Web 爬虫页面访问量"
+      yaxis: "Web 爬虫 API 请求"
     page_view_total_reqs:
       title: "总量"
       xaxis: "天"
-      yaxis: "总页面访问量"
+      yaxis: "总 API 请求"
     http_background_reqs:
       title: "后台"
       xaxis: "天"
@@ -1400,6 +1400,12 @@ zh_CN:
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
         主题已经关闭。如果你相信这其中有错误，联系一个职员成员。
+    email_reject_auto_generated:
+      subject_template: "邮件问题 —— 自动生成的回复"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+
+        你的邮件回复是自动生成的，我们不接受这种内容。如果您相信这其中有错误，联系一个职员成员。
     email_error_notification:
       subject_template: "电子邮件错误 -- POP 验证错误"
       text_body_template: |

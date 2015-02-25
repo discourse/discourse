@@ -148,14 +148,6 @@ cs:
       Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
 
       It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
-    sequential_replies: |
-      ### Consider replying to several posts at once
-
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
-
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
-
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
     dominating_topic: |
       ### Let others join the conversation
 
@@ -444,7 +436,6 @@ cs:
       xaxis: "Den"
       yaxis: "Počet návštěv"
     signups:
-      title: "Uživatelé"
       xaxis: "Den"
       yaxis: "Počet nových uživatelů"
     topics:
@@ -716,77 +707,6 @@ cs:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Oznámení: Příspěvek skryt kvůli hlášením od komunity"
-    usage_tips:
-      text_body_template: |
-        Tahle soukromá zpráva obsahuje pár tipů jak začít.
-
-        ## Roluj dolů
-
-        Nejsou zde žádné šipky na další stránky - když chcete číst víc, **prostě rolujte dolů!**
-
-        Nové odpovědi se zobrazí automaticky jak budou přibývat.
-
-        ## Kde jsem?
-
-        - K vyhledávání, zobrazení vašeho profilu nebo pro další možnosti vyberte **ikonková tračítka <kbd>☰</kbd> v pravém horním rohu**.
-
-        - Název tématu vás vezme na poslední nepřečtený příspěvek. Kliknutím na čas poslední aktivity nebo na počet příspěvků se přesunete na začátek nebo konec vlákna.
-
-        - Při čtení tématu můžete přeskočit nahoru &uarr; kliknutím na název v hlavičce. Kliknutím na zelenou listu otevřete další možnosti navigace. A taky můžete použít klávesy <kbd>home</kbd> a <kbd>end</kbd>.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Jak odpovídat?
-
-        - Pokud chcete přidat další příspěvek do diskuze, klikněte na tlačítko Opovědi <img src="/images/welcome/reply-topic.png" width="29" height="25"> úplně na konci stránky.
-
-        - Nebo můžete odpovědět na konkrétní příspěvěk - to klikněte na tlačítko Odpovědi <img src="/images/welcome/reply-post.png" width="29" height="25"> u konkrétního příspěvku.
-
-        - Pokud chcete konverzaci odvést jinam, použijte tlačítko Opovědět v propojeném tématu <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25">.
-
-        Citovat ve své odpovědi můžete tak, že něčí text vyberete a kliknete na tlačítko Odpověď s citací.
-
-        <img src="/images/welcome/quote-reply-cs.png" height="129">
-
-        To ping someone in your reply, mention their name. Type `@` and an autocompleter will pop up.
-        Upozornit někoho na vaši odpověď můžete zmíněním jejich jména. Napište `@` a zobrazí se doplňovač se všemy jmény.
-
-        <img src="/images/welcome/username-completion-cs.png" height="160">
-
-        Smajlíky ([standartní Emoji](http://www.emoji.codes/)), napište `:` a zobrazí se doplňovač. A nebo používejte tradiční smajlíky `:)` :smile:
-
-        ## Co můžu dělat dát?
-
-        U každého příspěvku je několik tlačítek.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Nechat někoho vědět, že s jeho příspěvkem souhlasíte a nebo vás třeba pobavil, můžete tlačítkem **to se mi líbí**. Naopak pokud je příspěvek problematický, kliknutím na vlaječku ho můžete soukromě **nahlásit** moderátorům.
-
-        You can also **share** a link to a post, or **bookmark** it for later reference on your user page.
-        Také můžete **sdílet** odkaz na příspěvek nebo si ho dát do **záložek** na později.
-
-        ## Kdo to ke mě mluví?
-
-        Když někdo odpoví na váš příspěvek, cituje vás nebo vás zmíní `@jmenem`, na vrchu stránky se okamžitě zobrazí číslo. Můžete tím otevřít svoje **uporoznění**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Nestrachujte se že propásnete nějakou odpověď - pokud nejste zrovna online, na přímé odpovědi (a soukromé zprávy) dostanete upozornění emailem.
-
-        ## Kdy jsou konverzace nové?
-
-        Obyčejně jsou za nové považovány všechny konverzace mladší než 2 dny. Některé konverzace (vámi vytvořené, s odpovědí, nebo ty které jste dlouho četli) se nastaví jako „hlídané“.
-
-        U takovýhle témat uvidíte modré „nové“ a číslo nových příspěvků:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Stavy témat můžete nastavit přepínačem na spodku stránky (a dají se nastavit i pro celé kategorie). Pro nová témata můžete taky pravidla [upravit v nastavení](/my/preferences).
-
-        ## Proč něco dělat nemůžu?
-
-        Noví uživatelé mají z bezpečnostních důvodů trochu omezená práva. Čím víc se do komunity zapojíte, tím větší důvěryhodnost získáte a všechny omezení se automaticky odstraní. Na dostatečně vysoké [důvěryhodnosti](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) můžete získat i moderátorská oprávnění.
     welcome_user:
       subject_template: "Vítejte na %{site_name}!"
     welcome_invite:

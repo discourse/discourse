@@ -133,9 +133,6 @@ ko:
       contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_email}로 연락주시기 바랍니다."
     bookmarked:
       title: "북마크"
-      help:
-        bookmark: "이 토픽을 북마크하려면 클릭하세요"
-        unbookmark: "이 토픽의 북마크를 제거하려면 클릭하세요"
     bookmarks:
       not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
@@ -1319,8 +1316,6 @@ ko:
         backups: "백업"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"
-        page_views: "페이지 조회"
-        page_views_short: "페이지 조회"
         show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
@@ -2012,7 +2007,6 @@ ko:
         dismiss_topics: '<b>x</b>, <b>t</b> 토픽 무시하기'
       actions:
         title: 'Actions'
-        bookmark_topic: '<b>f</b> 토픽 북마크'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> 핀고정/핀해제'
         share_topic: '<b>shift</b>+<b>s</b> 토픽 공유'
         share_post: '<b>s</b> 게시글 공유'
