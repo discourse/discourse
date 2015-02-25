@@ -184,14 +184,6 @@ es:
       ¿Has pensado **[visitar tu perfil de usuario](%{profile_path})** y subir tu propia imagen personalizada?
 
       ¡Es más fácil serguir los debates de la comunidad y encontrar gente interesante en las conversaciones cuando todos tienen su propio y único avatar!
-    sequential_replies: |
-      ### Considera la posibilidad de responder a varios posts a la vez
-
-      En vez de publicar varias respuestas seguidas en un tema, por favor, piensa que en una sola respuesta puedes incluir citas o referencias de @usuario a los posts previos.
-
-      Puedes editar tu respuesta previa para añadir una cita simplemente seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparece.
-
-      Es más fácil para todos leer temas con menos comentarios y respuestas en profundidad que muchas respuestas pequeñas y comentarios individuales.
     dominating_topic: |
       ### Deja a los demás unirse a la conversación
 
@@ -486,7 +478,6 @@ es:
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
-      title: "Nuevos usuarios"
       xaxis: "Día"
       yaxis: "Número de usuarios nuevos"
     topics:
@@ -559,19 +550,15 @@ es:
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
-      yaxis: "Páginas vistas de anónimos"
     page_view_logged_in_reqs:
       title: "Registrados"
       xaxis: "Día"
-      yaxis: "Páginas vistas de usuarios registrados"
     page_view_crawler_reqs:
       title: "Rastreadores web"
       xaxis: "Día"
-      yaxis: "Páginas vistas de rastreadores web"
     page_view_total_reqs:
       title: "Tota"
       xaxis: "Día"
-      yaxis: "Páginas vistas totales"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"

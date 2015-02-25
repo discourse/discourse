@@ -347,7 +347,6 @@ sv:
       xaxis: "Dag"
       yaxis: "Besök"
     signups:
-      title: "Users"
       xaxis: "Day"
       yaxis: "Number of new users"
     topics:
@@ -420,17 +419,14 @@ sv:
     page_view_anon_reqs:
       title: "Anonym"
       xaxis: "Dag"
-      yaxis: "Anonyma sidvisningar"
     page_view_logged_in_reqs:
       title: "Inloggad"
       xaxis: "Dag"
-      yaxis: "Inloggade sidvisningar"
     page_view_crawler_reqs:
       xaxis: "Dag"
     page_view_total_reqs:
       title: "Total"
       xaxis: "Dag"
-      yaxis: "Totala Sidvisningar"
     http_background_reqs:
       title: "Bakgrund"
       xaxis: "Dag"

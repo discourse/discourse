@@ -150,9 +150,10 @@ fr:
       contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter: %{contact_email}."
     bookmarked:
       title: "Signet"
+      clear_bookmarks: "Vider signets"
       help:
-        bookmark: "Cliquer pour ajouter ce sujet à vos signets"
-        unbookmark: "Cliquer pour retirer ce sujet de vos signets"
+        bookmark: "Cliquer pour ajouter le premier message de ce sujet à vos signets"
+        unbookmark: "Cliquer pour retirer tous vos signets pour ce sujet"
     bookmarks:
       not_logged_in: "désolé, vous devez être connecté pour ajouter des message dans vos signets"
       created: "vous avez ajouté ce message dans vos signets"
@@ -1045,6 +1046,7 @@ fr:
         people:
           off_topic: "{{icons}} l'ont signalé comme étant hors-sujet"
           spam: "{{icons}} l'ont signalé comme étant du spam"
+          spam_with_url: "{{icons}} signalé <a href='{{postUrl}}'>ceci comme spam</a>"
           inappropriate: "{{icons}} l'ont signalé comme inapproprié"
           notify_moderators: "{{icons}} l'ont signalé pour modération"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>l'ont signalé pour modération</a>"
@@ -1385,8 +1387,8 @@ fr:
         backups: "sauvegardes"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
-        page_views: "Page Vue"
-        page_views_short: "Page Vue"
+        page_views: "Requêtes API"
+        page_views_short: "Requêtes API"
         show_traffic_report: "Voir rapport de trafic détaillé"
         reports:
           today: "Aujourd'hui"
@@ -1564,6 +1566,7 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer (rollback) la base de données à l'état de fonctionnement précédent?"
       export_csv:
+        user_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages?"
         success: "L'exportation a été initialisé. Vous serez averti par message privé lorsque le traitement sera terminé."
         failed: "L'export a échoué. Veuillez consulter les logs."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
@@ -1574,6 +1577,9 @@ fr:
           screened_email: "Exporter la liste des adresses de courriel sous surveillance dans un fichier CSV."
           screened_ip: "Exporter la liste complète des adresses IP sous surveillance dans un fichier CSV."
           screened_url: "Exporter toutes les URL sous surveillance vers un fichier CSV"
+      invite:
+        button_text: "Envoyer invitations"
+        button_title: "Envoyer invitations"
       customize:
         title: "Personnaliser"
         long_title: "Personnalisation du site"
@@ -2100,7 +2106,7 @@ fr:
         dismiss_topics: '<b>x</b>, <b>r</b> Marquer comme lu les sujets'
       actions:
         title: 'Actions'
-        bookmark_topic: '<b>f</b> Ajouter ce sujet à vos signets'
+        bookmark_topic: '<b>f</b> Modifier signet pour ce sujet'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Épingler/De-épingler le sujet'
         share_topic: '<b>shift</b>+<b>s</b> Partager un sujet'
         share_post: '<b>s</b> Partager un message'
@@ -2165,6 +2171,9 @@ fr:
         autobiographer:
           name: Autobiographe
           description: A rempli les informations de son <a href="/my/preferences">profil</a>
+        anniversary:
+          name: Jubilaire
+          description: Membres actif depuis un an, avec au moins un message
         nice_post:
           name: Joli message
           description: A reçu 10 j'aime sur un message. Ce badge peut être décerné plusieurs fois

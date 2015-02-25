@@ -35,6 +35,7 @@ de:
     messages:
       too_long_validation: "darf höchstens %{max} Zeichen lang sein; Du hast %{length} eingegeben."
       invalid_boolean: "Ungültiger Boolescher Wert"
+      taken: "wird bereits verwendet"
       accepted: muss angenommen werden
       blank: darf nicht leer sein
       present: muss leer sein
@@ -53,6 +54,13 @@ de:
       not_an_integer: muss eine Ganzzahl sein
       odd: muss ungerade sein
       record_invalid: 'Validierung gescheitert: %{errors}'
+      restrict_dependent_destroy:
+        one: "Kann wegen einer bereits existenten Abhängigkeit zu %{record} nicht gelöscht werden"
+      other_than: "muss von %{count} verschieden sein"
+    template:
+      header:
+        one: '%{count} Fehler verhindern, dass %{model} gespeichert wird.'
+        other: '%{count} Fehler verhindern, dass %{model} gespeichert wird.'
     embed:
       load_from_remote: "Beim Laden des Beitrags ist ein Fehler aufgetreten."
   bulk_invite:
@@ -120,6 +128,7 @@ de:
     latest: "Aktuelle Themen"
     hot: "Angesagte Themen"
   too_late_to_edit: "Dieser Beitrag wurde vor zu langer Zeit erstellt. Er kann nicht mehr bearbeitet oder gelöscht werden."
+  excerpt_image: "Bild"
   groups:
     errors:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
@@ -165,14 +174,6 @@ de:
       Hast du darüber nachgedacht **[besuche dein Benutzerprofil](%{profile_path})** und ein eigenes Bild hochzuladen?
 
       Es ist einfacher gemeinschaftlichen Diskussionen zu folgen und interessante Leute zu finden, wenn jeder ein eigenes Avatar hat.
-    sequential_replies: |
-      ### Versuche, mehreren Beitragen gleichzeitig zu antworten
-
-      Statt mehrmals hintereinander in einem Thema zu antworten, versuche eventuell, einen einzigen Beitrag zu verfassen, der Zitate oder @name Verweise auf vorherige Antworten enthält.
-
-      Du kannst deine letzte Antwort bearbeiten und ein Zitat hinzufügen, indem Du den jeweiligen Text markierst und dann auf <b>Antwort zitieren</b> klickst.
-
-      Es ist für jeden einfacher, Themen zu lesen, die anstelle vieler kleiner Antworten etwas weniger tiefgründigere Antworten enthalten.
     dominating_topic: |
       ### Lass auch andere die Konversation mitgestalten
 
@@ -374,6 +375,7 @@ de:
       title: 'Reklame'
       description: 'Dieser Beitrag besteht effektiv nur aus Werbung, die nicht als solche ausgewiesen ist. Er trägt nichts zum aktuellen Gespräch bei.'
       long_form: 'dies als Spam gemeldet'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Unangemessen'
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
@@ -445,7 +447,7 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl der Besuche"
     signups:
-      title: "Benutzer"
+      title: "Neue Benutzer"
       xaxis: "Tag"
       yaxis: "Zahl neuer Nutzer"
     topics:
@@ -515,6 +517,40 @@ de:
       title: "Top verwiesene Themen"
       xaxis: "Themen"
       num_clicks: "Klicks"
+    page_view_anon_reqs:
+      title: "Anonym"
+      xaxis: "Tag"
+      yaxis: "Anonyme API-Anforderungen"
+    page_view_logged_in_reqs:
+      title: "Angemeldet"
+      xaxis: "Tag"
+    page_view_crawler_reqs:
+      xaxis: "Tag"
+    page_view_total_reqs:
+      title: "Gesamt"
+      xaxis: "Tag"
+      yaxis: "Gesamte API-Anforderungen"
+    http_background_reqs:
+      title: "Hintergrund"
+      xaxis: "Tag"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Tag"
+      yaxis: "Erfolgreiche Anforderungen (Status 2xx)"
+    http_3xx_reqs:
+      xaxis: "Tag"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client-Fehler)"
+      xaxis: "Tag"
+      yaxis: "Client-Fehler (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Server-Fehler)"
+      xaxis: "Tag"
+      yaxis: "Server-Fehler (Status 5xx)"
+    http_total_reqs:
+      title: "Gesamt"
+      xaxis: "Tag"
+      yaxis: "Gesamte Anforderungen"
   dashboard:
     rails_env_warning: "Dein Server läuft im %{env}-Modus."
     ruby_version_warning: "Du verwendest eine Version von Ruby 2.0.0, die für Probleme bekannt ist. Aktualisiere auf Patchlevel 247 oder höher."
@@ -585,6 +621,7 @@ de:
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Nutzer denselben Inhalt noch einmal posten kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor sobald ein Nutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
+    contact_email: "Die E-Mail-Adresse des Hauptverantwortlichen dieser Seite. Wird verwendet um kritische Benachrichtigungen wie beispielsweise unbearbeitete Meldungen, als auch solche die via /about Kontaktformular eintreffen. "
     queue_jobs: "NUR FÜR ENTWICKLER! ACHTUNG! Benutze Sidekiq zur Ausführung von Jobs. Wenn dies abgeschaltet wird, dann wird die Seite nicht mehr richtig funktionieren!"
     crawl_images: "Lade Bilder von fremden URLs herunter, um ihre Höhe und Breite zu bestimmen."
     download_remote_images_to_local: "Lade eine Kopie von extern gehosteten Bildern herunter und ersetze Links in Beiträgen entsprechend; dies verhindert defekte Bilder."
@@ -717,6 +754,7 @@ de:
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Nutzer pro Tag."
     max_topics_per_day: "Maximale Anzahl der Themen, die ein Nutzer pro Tag erstellen kann."
     max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
+    max_invites_per_day: "Maximale Zahl an Einladungen, die ein Nutzer pro Tag verschicken kann."
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     clean_up_uploads: "Lösche verwaiste Uploads, um illegales Hosting zu vermeiden. ACHTUNG: Du solltest ein Backup deines /uploads Verzeichnisses erstellen, bevor Du diese Funktion aktivierst."
@@ -1041,6 +1079,7 @@ de:
       other: "%{count} Markierungen warten auf Bearbeitung"
   flag_reasons:
     spam: "Dein Beitrag wurde als **Spam** geflaggt: Die Community denkt, dass es sich um Werbung handelt und nicht nützlich oder für das Diskussionsthema relevant ist."
+    notify_moderators: "Die Community denkt, dass etwas an deinem Beitrag das Eingreifen eines Moderator erfordert."
   flags_dispositions:
     agreed: "Danke, dass du uns Bescheid gegeben hast. Wir sind auch der Meinung, dass es ein Problem gibt und sehen uns das an."
     agreed_and_deleted: "Danke, dass du uns Bescheid gegeben hast. Wir waren auch der Meinung, dass es ein Problem gibt und haben den Beitrag gelöscht."

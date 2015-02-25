@@ -150,9 +150,6 @@ fi:
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
     bookmarked:
       title: "Kirjanmerkki"
-      help:
-        bookmark: "Klikkaa lisätäksesi ketjun kirjanmerkkeihin"
-        unbookmark: "Klikkaa poistaaksesi ketjun kirjanmerkeistä"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
       created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
@@ -1381,8 +1378,6 @@ fi:
         backups: "varmuuskopiot"
         traffic_short: "Liikenne"
         traffic: "Sovelluksen web-pyynnöt"
-        page_views: "Sivunkatselut"
-        page_views_short: "Katselut"
         show_traffic_report: "Näytä yksityiskohtainen liikenneraportti"
         reports:
           today: "Tänään"
@@ -2096,7 +2091,6 @@ fi:
         dismiss_topics: '<b>x</b>, <b>t</b> Unohda ketjut'
       actions:
         title: 'Toiminnot'
-        bookmark_topic: '<b>f</b> Lisää ketju kirjanmerkkeihin'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Kiinnitä ketju/poista kiinnitys'
         share_topic: '<b>shift</b>+<b>s</b> Jaa ketju'
         share_post: '<b>s</b> Jaa viesti'

@@ -164,9 +164,6 @@ cs:
       contact_info: "V případě kritické chyby nebo urgentní záležitosti ovlivňující tuto stránku, nás prosím kontaktujte na %{contact_email}."
     bookmarked:
       title: "Záložka"
-      help:
-        bookmark: "Kliknutím přidáte záložku"
-        unbookmark: "Kliknutím odstraníte záložku"
     bookmarks:
       not_logged_in: "Pro přidání záložky se musíte přihlásit."
       created: "Záložka byla přidána."
@@ -2012,7 +2009,6 @@ cs:
         dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
       actions:
         title: 'Actions'
-        bookmark_topic: '<b>f</b> Bookmark topic'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Připnout/Odepnout téma'
         share_topic: '<b>shift</b>+<b>s</b> Sdílet téma'
         share_post: '<b>s</b> Share post'

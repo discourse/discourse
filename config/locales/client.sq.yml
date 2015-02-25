@@ -244,6 +244,8 @@ sq:
       location_not_found: (i panjohur)
       organisation: Organizata
       phone: Telefoni
+      trust_level: "TL"
+      post_count: "# postimeve"
     user:
       said: "{{username}}:"
       profile: "Profili"
@@ -1647,6 +1649,7 @@ sq:
           new: "New"
           active: "Aktiv"
           pending: "Pezulluar"
+          staff: 'Stafi'
           suspended: 'Suspended'
           blocked: 'Blocked'
         approved: "Aprovuar?"
