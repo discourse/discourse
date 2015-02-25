@@ -1440,3 +1440,9 @@ tr.not-activated {
 .preview {
  margin-top: 5px;
 }
+
+table#user-badges {
+  .reason {
+    max-width: 200px;
+  }
+}

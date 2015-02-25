@@ -25,8 +25,10 @@ class UserBadgesController < ApplicationController
     end
 
     user_badges = user_badges.includes(badge: [:badge_grouping, :badge_type])
+                             .includes(post: :topic)
+                             .includes(:granted_by)
 
-    render_serialized(user_badges, BasicUserBadgeSerializer, root: "user_badges")
+    render_serialized(user_badges, DetailedUserBadgeSerializer, root: "user_badges")
   end
 
   def create
@@ -39,9 +41,22 @@ class UserBadgesController < ApplicationController
     end
 
     badge = fetch_badge_from_params
-    user_badge = BadgeGranter.grant(badge, user, granted_by: current_user)
+    post_id = nil
 
-    render_serialized(user_badge, UserBadgeSerializer, root: "user_badge")
+    if params[:reason].present?
+      path = URI.parse(params[:reason]).path rescue nil
+      route = Rails.application.routes.recognize_path(path) if path
+      if route
+        topic_id = route[:topic_id].to_i
+        post_number = route[:post_number] || 1
+
+        post_id = Post.find_by(topic_id: topic_id, post_number: post_number).try(:id) if topic_id > 0
+      end
+    end
+
+    user_badge = BadgeGranter.grant(badge, user, granted_by: current_user, post_id: post_id)
+
+    render_serialized(user_badge, DetailedUserBadgeSerializer, root: "user_badge")
   end
 
   def destroy

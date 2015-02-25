@@ -63,13 +63,23 @@ describe UserBadgesController do
 
     it 'grants badges from staff' do
       admin = Fabricate(:admin)
+      post = create_post
+
       log_in_user admin
+
       StaffActionLogger.any_instance.expects(:log_badge_grant).once
-      xhr :post, :create, badge_id: badge.id, username: user.username
+
+      xhr :post, :create, badge_id: badge.id,
+                          username: user.username,
+                          reason: Discourse.base_url + post.url
+
       expect(response.status).to eq(200)
+
       user_badge = UserBadge.find_by(user: user, badge: badge)
+
       expect(user_badge).to be_present
       expect(user_badge.granted_by).to eq(admin)
+      expect(user_badge.post_id).to eq(post.id)
     end
 
     it 'does not grant badges from regular api calls' do
