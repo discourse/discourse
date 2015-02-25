@@ -414,7 +414,16 @@ class TopicQuery
         result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END")
       end
 
-      result.order("RANDOM()")
+      # Best effort, it over selects, however if you have a high number
+      # of muted categories there is tiny chance we will not select enough
+      # in particular this can happen if current category is empty and tons
+      # of muted, big edge case
+      #
+      # we over select in case cache is stale
+      max = (count*1.3).to_i
+      ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
+
+      result.where(id: ids)
     end
 
     def suggested_ordering(result, options)
