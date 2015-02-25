@@ -404,6 +404,11 @@ describe TopicQuery do
 
   context 'suggested_for' do
 
+
+    before do
+      $redis.del RandomTopicSelector.cache_key
+    end
+
     context 'when anonymous' do
       let(:topic) { Fabricate(:topic) }
       let!(:new_topic) { Fabricate(:post, user: creator).topic }
