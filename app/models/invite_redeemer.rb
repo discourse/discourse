@@ -88,8 +88,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def add_user_to_groups
-    invite.groups.each do |g|
-      invited_user.group_users.create(group_id: g.id)
+    new_group_ids = invite.groups.pluck(:id) - invited_user.group_users.pluck(:group_id)
+    new_group_ids.each do |id|
+      invited_user.group_users.create(group_id: id)
     end
   end
 
