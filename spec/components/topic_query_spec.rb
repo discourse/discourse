@@ -406,7 +406,7 @@ describe TopicQuery do
 
 
     before do
-      $redis.del RandomTopicSelector.cache_key
+      RandomTopicSelector.clear_cache!
     end
 
     context 'when anonymous' do
@@ -463,12 +463,12 @@ describe TopicQuery do
         end
 
         it "won't return new or fully read if there are enough partially read topics" do
-          SiteSetting.stubs(:suggested_topics).returns(1)
+          SiteSetting.suggested_topics = 1
           expect(suggested_topics).to eq([partially_read.id])
         end
 
         it "won't return fully read if there are enough partially read topics and new topics" do
-          SiteSetting.stubs(:suggested_topics).returns(4)
+          SiteSetting.suggested_topics = 4
           expect(suggested_topics[0]).to eq(partially_read.id)
           expect(suggested_topics[1,3]).to include(new_topic.id)
           expect(suggested_topics[1,3]).to include(closed_topic.id)
@@ -476,7 +476,7 @@ describe TopicQuery do
         end
 
         it "returns unread, then new, then random" do
-          SiteSetting.stubs(:suggested_topics).returns(7)
+          SiteSetting.suggested_topics = 7
           expect(suggested_topics[0]).to eq(partially_read.id)
           expect(suggested_topics[1,3]).to include(new_topic.id)
           expect(suggested_topics[1,3]).to include(closed_topic.id)
