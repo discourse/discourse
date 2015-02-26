@@ -672,7 +672,7 @@ describe UsersController do
         user.reload.username.should == new_username
       end
 
-      pending 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
         user.stubs(:post_count).returns(200)
