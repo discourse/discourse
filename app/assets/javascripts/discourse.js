@@ -126,3 +126,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   }.property()
 
 });
+
+// TODO: Remove this, it is in for backwards compatibiltiy with plugins
+Discourse.HasCurrentUser = {};
