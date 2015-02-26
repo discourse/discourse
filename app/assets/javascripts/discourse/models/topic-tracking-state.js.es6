@@ -1,16 +1,18 @@
-function isNew(topic){
+import NotificationLevels from 'discourse/lib/notification-levels';
+
+function isNew(topic) {
   return topic.last_read_post_number === null &&
         ((topic.notification_level !== 0 && !topic.notification_level) ||
-        topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING);
+        topic.notification_level >= NotificationLevels.TRACKING);
 }
 
-function isUnread(topic){
+function isUnread(topic) {
   return topic.last_read_post_number !== null &&
          topic.last_read_post_number < topic.highest_post_number &&
-         topic.notification_level >= Discourse.Topic.NotificationLevel.TRACKING;
+         topic.notification_level >= NotificationLevels.TRACKING;
 }
 
-Discourse.TopicTrackingState = Discourse.Model.extend({
+const TopicTrackingState = Discourse.Model.extend({
   messageCount: 0,
 
   _setup: function() {
@@ -19,17 +21,17 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.states = {};
   }.on('init'),
 
-  establishChannels: function() {
-    var tracker = this;
+  establishChannels() {
+    const tracker = this;
 
-    var process = function(data){
+    const process = function(data){
       if (data.message_type === "delete") {
         tracker.removeTopic(data.topic_id);
         tracker.incrementMessageCount();
       }
 
       if (data.message_type === "new_topic" || data.message_type === "latest") {
-        var ignored_categories = Discourse.User.currentProp("muted_category_ids");
+        const ignored_categories = Discourse.User.currentProp("muted_category_ids");
         if(_.include(ignored_categories, data.payload.category_id)){
           return;
         }
@@ -41,7 +43,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
       if (data.message_type === "new_topic" || data.message_type === "unread" || data.message_type === "read") {
         tracker.notify(data);
-        var old = tracker.states["t" + data.topic_id];
+        const old = tracker.states["t" + data.topic_id];
 
         if(!_.isEqual(old, data.payload)){
           tracker.states["t" + data.topic_id] = data.payload;
@@ -52,32 +54,32 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 
     Discourse.MessageBus.subscribe("/new", process);
     Discourse.MessageBus.subscribe("/latest", process);
-    var currentUser = Discourse.User.current();
+    const currentUser = Discourse.User.current();
     if(currentUser) {
       Discourse.MessageBus.subscribe("/unread/" + currentUser.id, process);
     }
   },
 
-  updateSeen: function(topicId, highestSeen) {
+  updateSeen(topicId, highestSeen) {
     if(!topicId || !highestSeen) { return; }
-    var state = this.states["t" + topicId];
+    const state = this.states["t" + topicId];
     if(state && (!state.last_read_post_number || state.last_read_post_number < highestSeen)) {
       state.last_read_post_number = highestSeen;
       this.incrementMessageCount();
     }
   },
 
-  notify: function(data){
+  notify(data){
     if (!this.newIncoming) { return; }
 
-    var filter = this.get("filter");
+    const filter = this.get("filter");
 
     if ((filter === "all" || filter === "latest" || filter === "new") && data.message_type === "new_topic" ) {
       this.addIncoming(data.topic_id);
     }
 
     if ((filter === "all" || filter === "unread") && data.message_type === "unread") {
-      var old = this.states["t" + data.topic_id];
+      const old = this.states["t" + data.topic_id];
       if(!old || old.highest_post_number === old.last_read_post_number) {
         this.addIncoming(data.topic_id);
       }
@@ -90,47 +92,47 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.set("incomingCount", this.newIncoming.length);
   },
 
-  addIncoming: function(topicId) {
+  addIncoming(topicId) {
     if(this.newIncoming.indexOf(topicId) === -1){
       this.newIncoming.push(topicId);
     }
   },
 
-  resetTracking: function(){
+  resetTracking(){
     this.newIncoming = [];
     this.set("incomingCount", 0);
   },
 
   // track how many new topics came for this filter
-  trackIncoming: function(filter) {
+  trackIncoming(filter) {
     this.newIncoming = [];
     this.set("filter", filter);
     this.set("incomingCount", 0);
   },
 
   hasIncoming: function(){
-    var count = this.get('incomingCount');
+    const count = this.get('incomingCount');
     return count && count > 0;
   }.property('incomingCount'),
 
-  removeTopic: function(topic_id) {
+  removeTopic(topic_id) {
     delete this.states["t" + topic_id];
   },
 
   // If we have a cached topic list, we can update it from our tracking
   // information.
-  updateTopics: function(topics) {
+  updateTopics(topics) {
     if (Em.isEmpty(topics)) { return; }
 
-    var states = this.states;
+    const states = this.states;
     topics.forEach(function(t) {
-      var state = states['t' + t.get('id')];
+      const state = states['t' + t.get('id')];
 
       if (state) {
-        var lastRead = t.get('last_read_post_number');
+        const lastRead = t.get('last_read_post_number');
         if (lastRead !== state.last_read_post_number) {
-          var postsCount = t.get('posts_count'),
-              newPosts = postsCount - state.highest_post_number,
+          const postsCount = t.get('posts_count');
+          let newPosts = postsCount - state.highest_post_number,
               unread = postsCount - state.last_read_post_number;
 
           if (newPosts < 0) { newPosts = 0; }
@@ -151,16 +153,16 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     });
   },
 
-  sync: function(list, filter) {
-    var tracker = this,
+  sync(list, filter) {
+    const tracker = this,
         states = tracker.states;
 
     if (!list || !list.topics) { return; }
 
     // compensate for delayed "new" topics
     // client side we know they are not new, server side we think they are
-    for (var i=list.topics.length-1; i>=0; i--) {
-      var state = states["t"+ list.topics[i].id];
+    for (let i=list.topics.length-1; i>=0; i--) {
+      const state = states["t"+ list.topics[i].id];
       if (state && state.last_read_post_number > 0) {
         if (filter === "new") {
           list.topics.splice(i, 1);
@@ -172,7 +174,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     }
 
     list.topics.forEach(function(topic){
-      var row = tracker.states["t" + topic.id] || {};
+      const row = tracker.states["t" + topic.id] || {};
       row.topic_id = topic.id;
       row.notification_level = topic.notification_level;
 
@@ -199,7 +201,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     // Correct missing states, safeguard in case message bus is corrupt
     if((filter === "new" || filter === "unread") && !list.more_topics_url){
 
-      var ids = {};
+      const ids = {};
       list.topics.forEach(function(r){
         ids["t" + r.id] = true;
       });
@@ -224,11 +226,11 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     this.incrementMessageCount();
   },
 
-  incrementMessageCount: function() {
+  incrementMessageCount() {
     this.set("messageCount", this.get("messageCount") + 1);
   },
 
-  countNew: function(category_id){
+  countNew(category_id){
     return _.chain(this.states)
       .where(isNew)
       .where(function(topic){ return topic.category_id === category_id || !category_id;})
@@ -236,8 +238,8 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       .length;
   },
 
-  resetNew: function() {
-    var self = this;
+  resetNew() {
+    const self = this;
     Object.keys(this.states).forEach(function (id) {
       if (self.states[id].last_read_post_number === null) {
         delete self.states[id];
@@ -245,7 +247,7 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
     });
   },
 
-  countUnread: function(category_id){
+  countUnread(category_id){
     return _.chain(this.states)
       .where(isUnread)
       .where(function(topic){ return topic.category_id === category_id || !category_id;})
@@ -253,19 +255,19 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       .length;
   },
 
-  countCategory: function(category_id) {
-    var count = 0;
+  countCategory(category_id) {
+    let sum = 0;
     _.each(this.states, function(topic){
       if (topic.category_id === category_id) {
-        count += (topic.last_read_post_number === null ||
+        sum += (topic.last_read_post_number === null ||
                   topic.last_read_post_number < topic.highest_post_number) ? 1 : 0;
       }
     });
-    return count;
+    return sum;
   },
 
-  lookupCount: function(name, category){
-    var categoryName = category ? Em.get(category, "name") : null;
+  lookupCount(name, category){
+    let categoryName = category ? Em.get(category, "name") : null;
     if(name === "new") {
       return this.countNew(categoryName);
     } else if(name === "unread") {
@@ -277,9 +279,9 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
       }
     }
   },
-  loadStates: function (data) {
+  loadStates(data) {
     // not exposed
-    var states = this.states;
+    const states = this.states;
 
     if(data) {
       _.each(data,function(topic){
@@ -290,19 +292,21 @@ Discourse.TopicTrackingState = Discourse.Model.extend({
 });
 
 
-Discourse.TopicTrackingState.reopenClass({
-  createFromStates: function(data){
-    var instance = Discourse.TopicTrackingState.create();
+TopicTrackingState.reopenClass({
+  createFromStates(data){
+    const instance = Discourse.TopicTrackingState.create();
     instance.loadStates(data);
     instance.establishChannels();
     return instance;
   },
-  current: function(){
+  current(){
     if (!this.tracker) {
-      var data = PreloadStore.get('topicTrackingStates');
+      const data = PreloadStore.get('topicTrackingStates');
       this.tracker = this.createFromStates(data);
       PreloadStore.remove('topicTrackingStates');
     }
     return this.tracker;
   }
 });
+
+export default TopicTrackingState;
