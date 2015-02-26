@@ -313,6 +313,7 @@ Discourse.Utilities = {
     } else {
       return new Ember.RSVP.Promise(function(resolve) {
         var image = document.createElement("img");
+        image.crossOrigin = 'Anonymous';
         // this event will be fired as soon as the image is loaded
         image.onload = function(e) {
           var img = e.target;
