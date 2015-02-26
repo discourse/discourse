@@ -44,6 +44,7 @@ export default {
 
     app.register('current-user:main', Discourse.User.current(), { instantiate: false });
     app.inject('component', 'currentUser', 'current-user:main');
+    app.inject('route', 'currentUser', 'current-user:main');
     app.inject('controller', 'currentUser', 'current-user:main');
 
     app.register('store:main', Store);
