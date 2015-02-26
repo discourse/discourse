@@ -5,7 +5,7 @@ describe UserBadgesController do
   let(:badge) { Fabricate(:badge) }
 
   context 'index' do
-    it 'doest not leak private info' do
+    it 'does not leak private info' do
       badge = Fabricate(:badge, target_posts: true, show_posts: false)
       p = create_post
       UserBadge.create(badge: badge, user: user, post_id: p.id, granted_by_id: -1, granted_at: Time.now)
@@ -63,23 +63,13 @@ describe UserBadgesController do
 
     it 'grants badges from staff' do
       admin = Fabricate(:admin)
-      post = create_post
-
       log_in_user admin
-
       StaffActionLogger.any_instance.expects(:log_badge_grant).once
-
-      xhr :post, :create, badge_id: badge.id,
-                          username: user.username,
-                          reason: Discourse.base_url + post.url
-
+      xhr :post, :create, badge_id: badge.id, username: user.username
       expect(response.status).to eq(200)
-
       user_badge = UserBadge.find_by(user: user, badge: badge)
-
       expect(user_badge).to be_present
       expect(user_badge.granted_by).to eq(admin)
-      expect(user_badge.post_id).to eq(post.id)
     end
 
     it 'does not grant badges from regular api calls' do
@@ -97,6 +87,19 @@ describe UserBadgesController do
       expect(user_badge).to be_present
       expect(user_badge.granted_by).to eq(Discourse.system_user)
     end
+
+    it 'will trigger :user_badge_granted' do
+      log_in :admin
+
+      # Make sure our extensibility points are triggered
+      # Stupid DiscourseEvent.clear doesn't work properly .. requires you to list ALL triggers in the chain!
+      # If there are future triggers added in the user creation chain, they need to be added anywhere you create a user and monitor ANY trigger.
+      # Perhaps DiscourseEvent needs a little fix so it doesn't break everything once you add a trigger in the chain.
+      DiscourseEvent.expects(:trigger).with(:user_created, anything).once
+      DiscourseEvent.expects(:trigger).with(:user_verified, anything).once
+      DiscourseEvent.expects(:trigger).with(:user_badge_granted, anything, anything).once
+      xhr :post, :create, badge_id: badge.id, username: user.username
+    end
   end
 
   context 'destroy' do
@@ -113,6 +116,12 @@ describe UserBadgesController do
       xhr :delete, :destroy, id: user_badge.id
       expect(response.status).to eq(200)
       expect(UserBadge.find_by(id: user_badge.id)).to eq(nil)
+    end
+
+    it 'will trigger :user_badge_removed' do
+      log_in :admin
+      DiscourseEvent.expects(:trigger).with(:user_badge_removed, anything, anything).once
+      xhr :delete, :destroy, id: user_badge.id
     end
   end
 end
