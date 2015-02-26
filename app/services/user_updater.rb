@@ -6,17 +6,17 @@ class UserUpdater
     muted_category_ids: :muted
   }
 
-  USER_ATTR =   [
-      :email_digests,
-      :email_always,
-      :email_direct,
-      :email_private_messages,
-      :external_links_in_new_tab,
-      :enable_quoting,
-      :dynamic_favicon,
-      :mailing_list_mode,
-      :disable_jump_reply,
-      :edit_history_public
+  USER_ATTR = [
+    :email_digests,
+    :email_always,
+    :email_direct,
+    :email_private_messages,
+    :external_links_in_new_tab,
+    :enable_quoting,
+    :dynamic_favicon,
+    :mailing_list_mode,
+    :disable_jump_reply,
+    :edit_history_public
   ]
 
   PROFILE_ATTR = [
