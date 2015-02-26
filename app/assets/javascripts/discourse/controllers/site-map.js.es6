@@ -1,4 +1,4 @@
-export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
+export default Ember.ArrayController.extend({
   needs: ['application'],
 
   showBadgesLink: function(){return Discourse.SiteSettings.enable_badges;}.property(),

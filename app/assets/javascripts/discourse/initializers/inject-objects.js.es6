@@ -42,9 +42,9 @@ export default {
     app.inject('view', 'session', 'session:main');
     app.inject('model', 'session', 'session:main');
 
-    // Inject currentUser. Components only for now to prevent any breakage
     app.register('current-user:main', Discourse.User.current(), { instantiate: false });
     app.inject('component', 'currentUser', 'current-user:main');
+    app.inject('controller', 'currentUser', 'current-user:main');
 
     app.register('store:main', Store);
     app.inject('route', 'store', 'store:main');
