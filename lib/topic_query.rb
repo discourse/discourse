@@ -170,7 +170,9 @@ class TopicQuery
     if page == 0
       (pinned_topics + unpinned_topics)[0...limit] if limit
     else
-      unpinned_topics.offset((page * per_page - pinned_topics.count) - 1).to_a
+      offset = (page * per_page - pinned_topics.count) - 1
+      offset = 0 unless offset > 0
+      unpinned_topics.offset(offset).to_a
     end
 
   end
