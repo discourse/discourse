@@ -1,6 +1,6 @@
-import DropdownButtonView from 'discourse/views/dropdown-button';
+import DropdownButton from 'discourse/components/dropdown-button';
 
-export default DropdownButtonView.extend({
+export default DropdownButton.extend({
   classNames: ['notification-options'],
   title: '',
   buttonIncludesText: true,
@@ -21,10 +21,10 @@ export default DropdownButtonView.extend({
   }.property(),
 
   dropDownContent: function() {
-    var contents = [],
-        prefix = this.get('i18nPrefix'),
-        postfix = this.get('i18nPostfix'),
-        levels = this.get('notificationLevels');
+    const contents = [],
+          prefix = this.get('i18nPrefix'),
+          postfix = this.get('i18nPostfix'),
+          levels = this.get('notificationLevels');
 
     _.each(this.get('options'), function(pair) {
       if (postfix === '_pm' && pair[1] === 'regular') { return; }
@@ -40,12 +40,12 @@ export default DropdownButtonView.extend({
   }.property(),
 
   text: function() {
-    var self = this,
-        prefix = this.get('i18nPrefix'),
-        postfix = this.get('i18nPostfix'),
-        levels = this.get('notificationLevels');
+    const self = this,
+          prefix = this.get('i18nPrefix'),
+          postfix = this.get('i18nPostfix'),
+          levels = this.get('notificationLevels');
 
-    var key = (function() {
+    const key = (function() {
       switch (this.get('notificationLevel')) {
         case levels.WATCHING: return 'watching';
         case levels.TRACKING: return 'tracking';
@@ -54,7 +54,7 @@ export default DropdownButtonView.extend({
       }
     }).call(this);
 
-    var icon = (function() {
+    const icon = (function() {
       switch (key) {
         case 'watching': return '<i class="' + self.watchingClasses + '"></i>&nbsp;';
         case 'tracking': return '<i class="' + self.trackingClasses +  '"></i>&nbsp;';
@@ -65,7 +65,7 @@ export default DropdownButtonView.extend({
     return icon + ( this.get('buttonIncludesText') ? I18n.t(prefix + '.' + key + postfix + ".title") : '') + "<span class='caret'></span>";
   }.property('notificationLevel'),
 
-  clicked: function(/* id */) {
+  clicked(/* id */) {
     // sub-class needs to implement this
   }
 

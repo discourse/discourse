@@ -1,8 +1,7 @@
-import NotificationsButton from 'discourse/views/notifications-button';
+import NotificationsButton from 'discourse/components/notifications-button';
 
 export default NotificationsButton.extend({
   longDescriptionBinding: 'topic.details.notificationReasonText',
-  topic: Em.computed.alias('controller.model'),
   target: Em.computed.alias('topic'),
   hidden: Em.computed.alias('topic.deleted'),
   notificationLevels: Discourse.Topic.NotificationLevel,
@@ -14,7 +13,7 @@ export default NotificationsButton.extend({
     return this.get('isPrivateMessage') ? '_pm' : '';
   }.property('isPrivateMessage'),
 
-  clicked: function(id) {
+  clicked(id) {
     this.get('topic.details').updateNotifications(id);
   }
 });
