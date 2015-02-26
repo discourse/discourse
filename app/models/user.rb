@@ -96,7 +96,7 @@ class User < ActiveRecord::Base
   after_save :refresh_avatar
   after_save :badge_grant
   after_save do
-    DiscourseEvent.trigger(:user_verified, user: self) if (self.active_changed? && self.active == true)
+    DiscourseEvent.trigger(:user_verified, user: self) if self.active_changed? && self.active
   end
 
   before_destroy do
