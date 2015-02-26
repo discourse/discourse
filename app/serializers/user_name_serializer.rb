@@ -1,5 +1,5 @@
 class UserNameSerializer < ApplicationSerializer
-  attributes :id, :username, :name, :uploaded_avatar_id, :avatar_template
+  attributes :id, :username, :name, :title, :uploaded_avatar_id, :avatar_template
 
   def include_name?
     SiteSetting.enable_names?
