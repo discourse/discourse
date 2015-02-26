@@ -163,7 +163,7 @@ module Email
           img.remove
         end
 
-        img.replace(img['title']) if img['class'] =~ /emoji/
+        img.replace(img['title']) if (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
       end
 
       @fragment.to_s
