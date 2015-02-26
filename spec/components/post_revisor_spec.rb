@@ -51,9 +51,9 @@ describe PostRevisor do
     it 'allows the user to change it to a wiki' do
       pc = PostCreator.new(newuser, topic_id: topic.id, raw: 'this is a post that will become a wiki')
       post = pc.create
-      post.revise(post.user, wiki: true).should == true
+      post.revise(post.user, wiki: true).should be_truthy
       post.reload
-      post.wiki.should be_true
+      post.wiki.should be_truthy
     end
   end
 
