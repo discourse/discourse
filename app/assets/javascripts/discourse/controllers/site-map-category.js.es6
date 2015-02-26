@@ -1,4 +1,4 @@
-export default Ember.ObjectController.extend(Discourse.HasCurrentUser, {
+export default Ember.ObjectController.extend({
   needs: ['site-map'],
 
   unreadTotal: function() {

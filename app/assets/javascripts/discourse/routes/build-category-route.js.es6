@@ -28,8 +28,7 @@ export default function(filter, params) {
         category: model,
         filterMode: filterMode,
         noSubcategories: params && params.no_subcategories,
-        canEditCategory: model.get('can_edit'),
-        canChangeCategoryNotificationLevel: Discourse.User.current()
+        canEditCategory: model.get('can_edit')
       });
     },
 

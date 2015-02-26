@@ -1,8 +1,8 @@
-export default Ember.ArrayController.extend(Discourse.HasCurrentUser, {
+export default Ember.ArrayController.extend({
   showAdminLinks: Em.computed.alias("currentUser.staff"),
 
   actions: {
-    logout: function() {
+    logout() {
       Discourse.logout();
       return false;
     }

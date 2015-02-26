@@ -13,26 +13,21 @@ moduleFor("controller:site-map", "controller:site-map", {
 });
 
 test("showAdminLinks", function() {
-  var currentUserStub = Ember.Object.create();
-  sandbox.stub(Discourse.User, "current").returns(currentUserStub);
-
-  currentUserStub.set("staff", true);
-  var controller = this.subject();
+  const currentUser = Ember.Object.create({ staff: true });
+  const controller = this.subject({ currentUser });
   equal(controller.get("showAdminLinks"), true, "is true when current user is a staff member");
 
-  currentUserStub.set("staff", false);
+  currentUser.set("staff", false);
   equal(controller.get("showAdminLinks"), false, "is false when current user is not a staff member");
 });
 
 test("flaggedPostsCount", function() {
-  var currentUserStub = Ember.Object.create();
-  sandbox.stub(Discourse.User, "current").returns(currentUserStub);
+  const currentUser = Ember.Object.create({ site_flagged_posts_count: 5 });
+  const controller = this.subject({ currentUser });
 
-  currentUserStub.set("site_flagged_posts_count", 5);
-  var controller = this.subject();
   equal(controller.get("flaggedPostsCount"), 5, "returns current user's flagged posts count");
 
-  currentUserStub.set("site_flagged_posts_count", 0);
+  currentUser.set("site_flagged_posts_count", 0);
   equal(controller.get("flaggedPostsCount"), 0, "is bound (reacts to change of current user's flagged posts count)");
 });
 

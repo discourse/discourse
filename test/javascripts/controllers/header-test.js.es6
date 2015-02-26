@@ -3,26 +3,23 @@ moduleFor("controller:header", "controller:header", {
 });
 
 test("showNotifications action", function() {
-  var resolveRequestWith;
-  var request = new Ember.RSVP.Promise(function(resolve) {
+  let resolveRequestWith;
+  const request = new Ember.RSVP.Promise(function(resolve) {
     resolveRequestWith = resolve;
   });
 
-  var controller = this.subject();
-  var viewSpy = {
-    showDropdownBySelector: sinon.spy()
-  };
+  const currentUser = Discourse.User.create({ unread_notifications: 1});
+  const controller = this.subject({ currentUser: currentUser });
+  const viewSpy = { showDropdownBySelector: sinon.spy() };
+
   sandbox.stub(Discourse, "ajax").withArgs("/notifications").returns(request);
-  sandbox.stub(Discourse.User, "current").returns(Discourse.User.create({
-    unread_notifications: 1
-  }));
 
   Ember.run(function() {
     controller.send("showNotifications", viewSpy);
   });
 
   equal(controller.get("notifications"), null, "notifications are null before data has finished loading");
-  equal(Discourse.User.current().get("unread_notifications"), 1, "current user's unread notifications count is not zeroed before data has finished loading");
+  equal(currentUser.get("unread_notifications"), 1, "current user's unread notifications count is not zeroed before data has finished loading");
   ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with loading glyph is shown before data has finished loading");
 
   Ember.run(function() {
@@ -31,6 +28,6 @@ test("showNotifications action", function() {
 
   // Can't use deepEquals because controller.get("notifications") is an ArrayProxy, not an Array
   ok(controller.get("notifications").indexOf("notification") !== -1, "notification is in the controller");
-  equal(Discourse.User.current().get("unread_notifications"), 0, "current user's unread notifications count is zeroed after data has finished loading");
+  equal(currentUser.get("unread_notifications"), 0, "current user's unread notifications count is zeroed after data has finished loading");
   ok(viewSpy.showDropdownBySelector.calledWith("#user-notifications"), "dropdown with notifications is shown after data has finished loading");
 });
