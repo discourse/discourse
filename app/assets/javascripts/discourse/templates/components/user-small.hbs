@@ -1,7 +1,9 @@
-{{#link-to 'user' user.username}}
-  {{avatar user imageSize="tiny"}}
-  {{user.username}}
-  {{#if user.name}}
-    ({{user.name}})
-  {{/if}}
-{{/link-to}}
+<div class="user-image">
+  {{#link-to 'user' user.username}}{{avatar user imageSize="large"}}{{/link-to}}
+</div>
+
+<div class="user-detail">
+  <span class="username">{{#link-to 'user' user.username}}{{user.username}}{{/link-to}}</span>
+  <span class="name">{{user.name}}</span>
+  <span class="title">{{user.title}}</span>
+</div>
