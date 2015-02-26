@@ -411,7 +411,6 @@ Topic.reopenClass({
     });
 
     return Discourse.ajax(topic.get('url'), { type: 'PUT', data: props }).then(function(result) {
-
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
