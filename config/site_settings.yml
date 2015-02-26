@@ -89,6 +89,7 @@ basic:
     refresh: true
     type: list
     default: 'latest|new|unread|top|categories'
+    regex: "latest"
     choices:
      - latest
      - new
