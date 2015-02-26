@@ -10,6 +10,7 @@
 //
 
 // Stuff we need to load first
+//= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
 //= require ./discourse/helpers/i18n
 //= require ./discourse/helpers/fa-icon
