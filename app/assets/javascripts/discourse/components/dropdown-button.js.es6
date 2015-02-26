@@ -1,13 +1,13 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
 
-export default Discourse.View.extend(StringBuffer, {
+export default Ember.Component.extend(StringBuffer, {
   classNameBindings: [':btn-group', 'hidden'],
   rerenderTriggers: ['text', 'longDescription'],
 
   _bindClick: function() {
     // If there's a click handler, call it
     if (this.clicked) {
-      var self = this;
+      const self = this;
       this.$().on('click.dropdown-button', 'ul li', function(e) {
         e.preventDefault();
         if ($(e.currentTarget).data('id') !== self.get('activeItem')) {
@@ -23,7 +23,7 @@ export default Discourse.View.extend(StringBuffer, {
     this.$().off('click.dropdown-button', 'ul li');
   }.on('willDestroyElement'),
 
-  renderString: function(buffer) {
+  renderString(buffer) {
 
     buffer.push("<h4 class='title'>" + this.get('title') + "</h4>");
     buffer.push("<button class='btn standard dropdown-toggle' data-toggle='dropdown'>");
@@ -31,27 +31,24 @@ export default Discourse.View.extend(StringBuffer, {
     buffer.push("</button>");
     buffer.push("<ul class='dropdown-menu'>");
 
-    var contents = this.get('dropDownContent');
+    const contents = this.get('dropDownContent');
     if (contents) {
-      var self = this;
+      const self = this;
       contents.forEach(function(row) {
-        var id = row.id,
-            title = row.title,
-            iconClass = row.styleClasses,
-            description = row.description,
-            className = (self.get('activeItem') === id ? 'disabled': '');
+        const id = row.id,
+              className = (self.get('activeItem') === id ? 'disabled': '');
 
         buffer.push("<li data-id=\"" + id + "\" class=\"" + className + "\"><a href>");
-        buffer.push("<span class='icon " + iconClass + "'></span>");
-        buffer.push("<div><span class='title'>" + title + "</span>");
-        buffer.push("<span>" + description + "</span></div>");
+        buffer.push("<span class='icon " + row.styleClasses + "'></span>");
+        buffer.push("<div><span class='title'>" + row.title + "</span>");
+        buffer.push("<span>" + row.description + "</span></div>");
         buffer.push("</a></li>");
       });
     }
 
     buffer.push("</ul>");
 
-    var desc = this.get('longDescription');
+    const desc = this.get('longDescription');
     if (desc) {
       buffer.push("<p>");
       buffer.push(desc);

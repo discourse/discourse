@@ -1,4 +1,4 @@
-import NotificationsButton from 'discourse/views/notifications-button';
+import NotificationsButton from 'discourse/components/notifications-button';
 
 export default NotificationsButton.extend({
   classNames: ['notification-options', 'category-notification-menu'],
@@ -10,7 +10,7 @@ export default NotificationsButton.extend({
   i18nPrefix: 'category.notifications',
   i18nPostfix: '',
 
-  clicked: function(id) {
+  clicked(id) {
     this.get('category').setNotification(id);
   }
 });
