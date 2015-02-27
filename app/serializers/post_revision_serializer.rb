@@ -112,8 +112,10 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def title_changes
-    prev = "<div>#{CGI::escapeHTML(previous["title"])}</div>"
-    cur = "<div>#{CGI::escapeHTML(current["title"])}</div>"
+
+    prev = "<div>#{previous["title"] && CGI::escapeHTML(previous["title"])}</div>"
+    cur = "<div>#{current["title"] && CGI::escapeHTML(current["title"])}</div>"
+
     return if prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
