@@ -2319,3 +2319,11 @@ en:
       <p>
         <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
       </p>
+
+  badges:
+    long_descriptions:
+      first_flag: |
+        Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
+        do not hesitate to flag. You may also use the flagging dialog to send <b>private messages</b> to users once you reach
+        trust level 1.
+
