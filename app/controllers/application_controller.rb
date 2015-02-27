@@ -59,20 +59,6 @@ class ApplicationController < ActionController::Base
     use_crawler_layout? ? 'crawler' : 'application'
   end
 
-  rescue_from Exception do |exception|
-    unless [ActiveRecord::RecordNotFound,
-            ActionController::RoutingError,
-            ActionController::UnknownController,
-            AbstractController::ActionNotFound].include? exception.class
-      begin
-        Discourse.handle_request_exception(exception, self, request, current_user)
-      rescue
-        # dont care give up
-      end
-    end
-    raise
-  end
-
   # Some exceptions
   class RenderEmpty < Exception; end
 
