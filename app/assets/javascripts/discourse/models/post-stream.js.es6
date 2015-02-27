@@ -453,13 +453,18 @@ const PostStream = Ember.Object.extend({
         existing = postIdentityMap.get(postId);
 
     if(existing){
-      const url = "/posts/" + postId;
-      Discourse.ajax(url).then(
+      const postUrl = "/posts/" + postId,
+            topicUrl = "/t/" + existing.topic_id;
+      Discourse.ajax(postUrl).then(
         function(p){
           self.storePost(Discourse.Post.create(p));
         },
         function(){
           self.removePosts([existing]);
+        });
+      Discourse.ajax(topicUrl).then(
+        function(t){
+          self.get('topic').updateFromJson(t);
         });
     }
   },

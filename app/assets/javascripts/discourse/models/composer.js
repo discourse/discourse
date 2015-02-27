@@ -120,6 +120,9 @@ Discourse.Composer = Discourse.Model.extend({
     // reply is always required
     if (this.get('missingReplyCharacters') > 0) return true;
 
+    // ensure topic is not deleted
+    if (this.get('topic.deleted')) return true;
+
     if (this.get("privateMessage")) {
       // need at least one user when sending a PM
       return this.get('targetUsernames') && (this.get('targetUsernames').trim() + ',').indexOf(',') === 0;
@@ -130,7 +133,7 @@ Discourse.Composer = Discourse.Model.extend({
             !this.get('categoryId') &&
             !Discourse.User.currentProp('staff');
     }
-  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
+  }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters', 'topic.deleted'),
 
   /**
     Is the title's length valid?

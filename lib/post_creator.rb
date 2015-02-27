@@ -204,7 +204,13 @@ class PostCreator
       end
     else
       topic = Topic.find_by(id: @opts[:topic_id])
-      guardian.ensure_can_create!(Post, topic)
+      if topic.blank?
+        @errors = Post.new.errors
+        @errors.add(:base, I18n.t(:topic_not_found))
+        raise ActiveRecord::Rollback.new
+      else
+        guardian.ensure_can_create!(Post, topic)
+      end
     end
     @topic = topic
   end

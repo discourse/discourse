@@ -347,6 +347,18 @@ describe PostCreator do
 
   end
 
+  context 'missing topic' do
+    let!(:topic) { Fabricate(:topic, user: user, deleted_at: 5.minutes.ago) }
+    let(:creator) { PostCreator.new(user, raw: 'test reply', topic_id: topic.id, reply_to_post_number: 4) }
+
+    it 'responds with an error message' do
+      post = creator.create
+      expect(post).to be_blank
+      expect(creator.errors.count).to eq 1
+      expect(creator.errors.messages[:base][0]).to match I18n.t(:topic_not_found)
+    end
+  end
+
   context "cooking options" do
     let(:raw) { "this is my awesome message body hello world" }
 
