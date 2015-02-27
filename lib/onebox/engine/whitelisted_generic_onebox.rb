@@ -19,6 +19,7 @@ module Onebox
           8tracks.com
           about.com
           answers.com
+          arstechnica.com
           ask.com
           battle.net
           bbc.co.uk
