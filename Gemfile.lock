@@ -207,7 +207,7 @@ GEM
       thor (~> 0.15)
     libv8 (3.16.14.7)
     listen (0.7.3)
-    logster (0.1.6)
+    logster (0.1.7)
     lru_redux (0.8.3)
     mail (2.5.4)
       mime-types (~> 1.16)
