@@ -271,11 +271,8 @@ export default DiscourseController.extend({
     // We don't care about similar topics unless creating a topic
     if (!this.get('model.creatingTopic')) { return; }
 
-    let body = this.get('model.reply'),
-        message;
-
-    const title = this.get('model.title'),
-          self = this;
+    let body = this.get('model.reply');
+    const title = this.get('model.title');
 
     // Ensure the fields are of the minimum length
     if (body.length < Discourse.SiteSettings.min_body_similar_length) { return; }
@@ -291,24 +288,24 @@ export default DiscourseController.extend({
     const messageController = this.get('controllers.composer-messages'),
           similarTopics = this.get('similarTopics');
 
+    let message = this.get('similarTopicsMessage');
+    if (!message) {
+      message = Discourse.ComposerMessage.create({
+        templateName: 'composer/similar_topics',
+        extraClass: 'similar-topics'
+      });
+      this.set('similarTopicsMessage', message);
+    }
+
     Discourse.Topic.findSimilarTo(title, body).then(function (newTopics) {
       similarTopics.clear();
       similarTopics.pushObjects(newTopics);
 
       if (similarTopics.get('length') > 0) {
-        message = Discourse.ComposerMessage.create({
-          templateName: 'composer/similar_topics',
-          similarTopics,
-          extraClass: 'similar-topics'
-        });
-
-        self.set('similarTopicsMessage', message);
+        message.set('similarTopics', similarTopics);
         messageController.send("popup", message);
-      } else {
-        message = self.get('similarTopicsMessage');
-        if (message) {
-          messageController.send("hideMessage", message);
-        }
+      } else if (message) {
+        messageController.send("hideMessage", message);
       }
     });
 
