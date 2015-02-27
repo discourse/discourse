@@ -317,12 +317,19 @@ export default DiscourseController.extend(ModalFunctionality, {
       });
     }
 
+    if (!this.blank('accountEmail') && this.get('accountPassword') === this.get('accountEmail')) {
+      return Discourse.InputValidation.create({
+        failed: true,
+        reason: I18n.t('user.password.same_as_email')
+      });
+    }
+
     // Looks good!
     return Discourse.InputValidation.create({
       ok: true,
       reason: I18n.t('user.password.ok')
     });
-  }.property('accountPassword', 'rejectedPasswords.@each'),
+  }.property('accountPassword', 'rejectedPasswords.@each', 'accountUsername', 'accountEmail'),
 
   fetchConfirmationValue: function() {
     var createAccountController = this;

@@ -28,6 +28,7 @@ test('passwordValidation', function() {
 
   var controller = subject();
   controller.set('passwordRequired', true);
+  controller.set('accountEmail',      'pork@chops.com');
   controller.set('accountUsername',   'porkchops');
   controller.set('prefilledUsername', 'porkchops');
 
@@ -45,4 +46,5 @@ test('passwordValidation', function() {
   testInvalidPassword('', undefined);
   testInvalidPassword('x', I18n.t('user.password.too_short'));
   testInvalidPassword('porkchops', I18n.t('user.password.same_as_username'));
+  testInvalidPassword('pork@chops.com', I18n.t('user.password.same_as_email'));
 });
