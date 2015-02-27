@@ -385,7 +385,8 @@ module SiteSettingExtension
       'email'        => EmailSettingValidator,
       'username'     => UsernameSettingValidator,
       types[:fixnum] => IntegerSettingValidator,
-      types[:string] => StringSettingValidator
+      types[:string] => StringSettingValidator,
+      'list' => StringSettingValidator
     }
     @validator_mapping[type_name]
   end

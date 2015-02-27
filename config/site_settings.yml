@@ -88,8 +88,9 @@ basic:
     client: true
     refresh: true
     type: list
-    default: 'latest|new|unread|top|categories'
+    default: "latest|new|unread|top|categories"
     regex: "latest"
+    regex_error: "site_settings.errors.must_include_latest"
     choices:
      - latest
      - new
