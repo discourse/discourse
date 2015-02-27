@@ -1141,6 +1141,7 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
+      must_include_latest: "Top menu must include the 'latest' tab."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
