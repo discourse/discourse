@@ -79,6 +79,13 @@ describe PasswordValidator do
       validate
       expect(record.errors[:password]).to be_present
     end
+
+    it "adds an error when password is the same as the email" do
+      @password = "pork@chops.com"
+      record.email = @password
+      validate
+      expect(record.errors[:password]).to be_present
+    end
   end
 
   context "password not required" do
