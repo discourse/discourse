@@ -10,7 +10,7 @@ class UserBadgesController < ApplicationController
       user_badges = user_badges.offset(offset.to_i)
     end
 
-    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges")
+    render_serialized(user_badges, UserBadgeSerializer, root: "user_badges", include_long_description: true)
   end
 
   def username
