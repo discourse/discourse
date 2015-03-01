@@ -15,18 +15,6 @@
 # http://yamllint.com/
 
 en:
-  stringex:
-    characters:
-      ellipsis: ""
-      number: "-"
-  # some default transliteration rules may be missing, add them to your locale
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
