@@ -1,0 +1,20 @@
+# encoding: utf-8
+#
+# This file contains default transliteration rules and configures stringex
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+en:
+  stringex:
+    characters:
+      ellipsis: ""
+      number: "-"
+  # some default transliteration rules may be missing, add them to your locale
+  i18n:
+    transliterate:
+      rule:
+        ț: "t"
+        Ț: "t"
+        ș: "s"
+        Ș: "s"
