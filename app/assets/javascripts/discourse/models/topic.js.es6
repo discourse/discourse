@@ -26,6 +26,10 @@ const Topic = Discourse.Model.extend({
     return PostStream.create({topic: this});
   }.property(),
 
+  replyCount: function() {
+    return this.get('posts_count') - 1;
+  }.property('posts_count'),
+
   details: function() {
     return TopicDetails.create({topic: this});
   }.property(),

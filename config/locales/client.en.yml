@@ -1407,7 +1407,7 @@ en:
     posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
     posts_likes_MF: |
-      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
+      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
         med {with a very high like to post ratio}
         high {with an extremely high like to post ratio}
