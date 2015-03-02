@@ -2161,6 +2161,7 @@ en:
         none: 'none'
         no_results: "No results found."
         clear_filter: "Clear"
+        add_url: "add URL"
         categories:
           all_results: 'All'
           required: 'Required'
