@@ -5,13 +5,21 @@
   width: 500px;
   left: 20px;
   z-index: 990;
-  box-shadow: 0 2px 6px rgba(0,0,0, .6);
+  box-shadow: 0 2px 6px rgba(0,0,0,.6);
   margin-top: -2px;
   background-color: $primary;
   color: $secondary;
   background-size: cover;
   background-position: center center;
   min-height: 175px;
+  opacity: 0;
+  transform: scale(.7);
+  transition: opacity .2s, transform .2s;
+
+  &.show {
+    opacity: 1;
+    transform: scale(1);
+  }
 
   .card-content {
     padding: 12px 12px 0 12px;
@@ -25,13 +33,13 @@
     }
   }
 
-&.no-bg {
-  min-height: 50px;
+  &.no-bg {
+    min-height: 50px;
 
-  .card-content {
-    margin-top: 0;
+    .card-content {
+      margin-top: 0;
+    }
   }
-}
 
   .avatar-placeholder {
     width: 120px;
@@ -84,6 +92,7 @@
       color: dark-light-diff($primary, $secondary, 50%, -50%);
     }
   }
+
   .groups {
     font-size: 0.929em;
     font-weight: normal;
