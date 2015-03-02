@@ -515,6 +515,10 @@ files:
     client: true
     default: false
   allow_animated_thumbnails: false
+avatars:
+  default_avatars:
+    default: ''
+    type: url_list
 
 trust:
   default_trust_level:

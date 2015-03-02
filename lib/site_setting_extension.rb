@@ -14,7 +14,7 @@ module SiteSettingExtension
   end
 
   def types
-    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list)
+    @types ||= Enum.new(:string, :time, :fixnum, :float, :bool, :null, :enum, :list, :url_list)
   end
 
   def mutex
@@ -38,8 +38,8 @@ module SiteSettingExtension
     @enums ||= {}
   end
 
-  def lists
-    @lists ||= []
+  def static_types
+    @static_types ||= {}
   end
 
   def choices
@@ -73,9 +73,9 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
       current_value = current.has_key?(name) ? current[name] : default
 
-      if opts[:enum]
-        enum = opts[:enum]
+      if enum = opts[:enum]
         enums[name] = enum.is_a?(String) ? enum.constantize : enum
+        opts[:type] ||= :enum
       end
 
       if opts[:choices]
@@ -84,8 +84,8 @@ module SiteSettingExtension
           choices[name] = opts[:choices]
       end
 
-      if opts[:type] == 'list'
-        lists << name
+      if type = opts[:type]
+        static_types[name.to_sym] = type.to_sym
       end
 
       if opts[:hidden]
@@ -257,7 +257,7 @@ module SiteSettingExtension
     clear_cache!
   end
 
-  def add_override!(name,val)
+  def add_override!(name, val)
     type = get_data_type(name, defaults[name])
 
     if type == types[:bool] && val != true && val != false
@@ -344,10 +344,14 @@ module SiteSettingExtension
     [changes,deletions]
   end
 
-  def get_data_type(name,val)
+  def get_data_type(name, val)
     return types[:null] if val.nil?
-    return types[:enum] if enums[name]
-    return types[:list] if lists.include? name
+
+    # Some types are just for validations like email. Only consider
+    # it valid if includes in `types`
+    if static_type = static_types[name.to_sym]
+      return types[static_type] if types.keys.include?(static_type)
+    end
 
     case val
     when String
@@ -369,13 +373,14 @@ module SiteSettingExtension
       value.to_f
     when types[:fixnum]
       value.to_i
-    when types[:string], types[:list], types[:enum]
-      value
     when types[:bool]
       value == true || value == "t" || value == "true"
     when types[:null]
       nil
     else
+      return value if types[type]
+
+      # Otherwise it's a type error
       raise ArgumentError.new :type
     end
   end
