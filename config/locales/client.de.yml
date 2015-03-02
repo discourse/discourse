@@ -147,7 +147,7 @@ de:
       user_count: "Neue Benutzer"
       active_user_count: "Aktive Benutzer"
       contact: "Kontaktiere uns"
-      contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die dieses Seite betrifft, kontaktiere uns bitte unter %{contact_email}. "
+      contact_info: "Im Falle eines kritischen Problems oder einer dringenden Sache, die diese Website betreffen, kontaktiere uns bitte unter %{contact_info}."
     bookmarked:
       title: "Lesezeichen setzen"
       clear_bookmarks: "Lesezeichen entfernen"
@@ -458,6 +458,7 @@ de:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
         common: "Das Passwort wird zu häufig verwendet."
+        same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "Mindestens %{count} Zeichen."
       associated_accounts: "Anmeldeinformationen"
@@ -2014,10 +2015,13 @@ de:
           modal_title: Abzeichen-Gruppierungen
         granted_by: Verliehen von
         granted_at: Verliehen am
+        reason_help: (ein Link zu einem Beitrag oder Thema)
         save: Speichern
         delete: Löschen
         delete_confirm: Möchtest du wirklich dieses Abzeichen löschen?
         revoke: Entziehen
+        reason: Grund
+        expand: Erweitern &hellip;
         revoke_confirm: Möchtest du wirklich dieses Abzeichen entziehen?
         edit_badges: Abzeichen bearbeiten
         grant_badge: Abzeichen verleihen

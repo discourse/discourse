@@ -147,9 +147,13 @@ es:
       user_count: "Nuevos usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
-      contact_info: "En caso de error crítico o asunto urgente con respecto a este sitio, por favor, contáctanos a %{contact_email}."
+      contact_info: "En el transcurso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
     bookmarked:
       title: "Marcador"
+      clear_bookmarks: "Quitar Marcadores"
+      help:
+        bookmark: "Clic para guardar en marcadores el primer post de este tema"
+        unbookmark: "Clic para quitar todos los marcadores de este tema"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has marcado este post como favorito"
@@ -454,6 +458,7 @@ es:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
         common: "Esa contraseña es demasiado común."
+        same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         ok: "Tu contraseña es válida."
         instructions: "Debe contener al menos %{count} caracteres."
       associated_accounts: "Inicios de sesión"
@@ -976,6 +981,7 @@ es:
         attachment_too_large: "Lo siento, el archivo que estas intentando subir es demasiado grande (el tamaño máximo es {{max_size_kb}}kb)."
         file_too_large: "Lo sentimos, el archivo que estas tratando de subir es demasiado grande (el tamaño máximo es de {{max_size_kb}}kb)"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
+        too_many_dragged_and_dropped_files: "Lo sentimos, solo puedes arrastrar 10 archivos a la vez."
         upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
@@ -1037,6 +1043,7 @@ es:
         people:
           off_topic: "{{icons}} reportó esto como off-topic"
           spam: "{{icons}} reportó esto como spam"
+          spam_with_url: "{{icons}} reportó <a href='{{postUrl}}'>esto como spam</a>"
           inappropriate: "{{icons}} flagged reportó esto como inapropiado"
           notify_moderators: "{{icons}} ha notificado a los moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>moderadores notificados</a>"
@@ -1377,6 +1384,8 @@ es:
         backups: "backups"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
+        page_views: "Peticiones de API"
+        page_views_short: "Peticiones de API"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         reports:
           today: "Hoy"
@@ -1493,6 +1502,14 @@ es:
         info_html: "Tu clave de API te permitirá crear y actualizar temas usando llamadas a JSON."
         all_users: "Todos los usuarios"
         note_html: "Mantén esta clave <strong>secreta</strong> a buen recaudo, cualquier usuario que disponga de ella podría crear posts de cualquier usuario."
+      plugins:
+        title: "Plugins"
+        installed: "Plugins instalados"
+        name: "Nombre"
+        none_installed: "No tienes plugins instalados."
+        version: "Versión"
+        change_settings: "Cambiar preferencias"
+        howto: "¿Cómo instalo plugins?"
       backups:
         title: "Copia de seguridad"
         menu:
@@ -1546,6 +1563,7 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Estás seguro que quieres regresar la base de datos al estado funcional anterior?"
       export_csv:
+        user_archive_confirm: "¿Seguro que quieres descargar todos tus posts?"
         success: "Exportación comenzada, se te notificará a través de un mensaje privado cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
         rate_limit_error: "Los posts se pueden descargar una vez al día, por favor, prueba otra vez mañana."
@@ -1556,6 +1574,9 @@ es:
           screened_email: "Exportar la lista completa de emails vistos en formato CSV."
           screened_ip: "Exportar la lista completa de IP vistas en formato CSV."
           screened_url: "Exportar la lista completa de URL vistas en formato CSV."
+      invite:
+        button_text: "Enviar invitaciones"
+        button_title: "Enviar invitaciones"
       customize:
         title: "Personalizar"
         long_title: "Personalizaciones del sitio"
@@ -1742,6 +1763,7 @@ es:
             label: "Nueva:"
             ip_address: "Dirección IP"
             add: "Añadir"
+            filter: "Búsqueda"
           roll_up:
             text: "Agrupar"
             title: "Crea un nuevo rango de entradas para banear si hay al menos 'min_ban_entries_for_roll_up' entradas."
@@ -1991,10 +2013,13 @@ es:
           modal_title: Grupos de distintivos
         granted_by: Concedido por
         granted_at: Concedido en
+        reason_help: (Enlace a un post o tema)
         save: Guardar
         delete: Borrar
         delete_confirm: ¿Estás seguro de que quieres eliminar este distintivo?
         revoke: Revocar
+        reason: Motivo
+        expand: Expandir &hellip;
         revoke_confirm: ¿Estás seguro de que quieres revocar este distintivo?
         edit_badges: Editar distintivos
         grant_badge: Condecer distintivo
@@ -2081,6 +2106,7 @@ es:
         dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
       actions:
         title: 'Acciones'
+        bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
         share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
         share_post: '<b>s</b> Compartir post'
@@ -2145,6 +2171,9 @@ es:
         autobiographer:
           name: Autobiógrafo
           description: Detalló información en su <a href="/my/preferences">perfil</a> de usuario
+        anniversary:
+          name: Aniversario
+          description: Miembro activo desde hace un año y ha publicado al menos una vez
         nice_post:
           name: Buen post
           description: Recibió 10 "me gusta" en un post. Este distintivo puede ser concedido varias veces

@@ -130,10 +130,10 @@ tr_TR:
       user_count: "Yeni Kullanıcılar"
       active_user_count: "Aktif Kullanıcılar"
       contact: "İletişim"
-      contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_email} adresi üzerinden bizimle iletişime geçin."
+      contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
       title: "İşaretle"
-      clear_bookmarks: "Yer İmlerini Temizle"
+      clear_bookmarks: "İşaretleri Temizle"
       help:
         bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıklayın"
         unbookmark: "Bu konudaki bütün yer işaretlerini kaldırın"
@@ -431,6 +431,7 @@ tr_TR:
         title: "Parola"
         too_short: "Parolanız çok kısa."
         common: "Bu parola çok yaygın."
+        same_as_username: "Şifreniz kullanıcı adınızla aynı."
         ok: "Parolanız uygun gözüküyor."
         instructions: "En az %{count} karakter."
       associated_accounts: "Girişler"
@@ -1440,7 +1441,7 @@ tr_TR:
         name: "İsim"
         none_installed: "Yüklenmiş herhangi bir eklentiniz yok."
         version: "Versiyon"
-        change_settings: "Ayarları değiştir"
+        change_settings: "Ayarları Değiştir"
         howto: "Nasıl eklenti yüklerim?"
       backups:
         title: "Yedekler"
@@ -1938,10 +1939,13 @@ tr_TR:
           modal_title: Rozet Gruplamaları
         granted_by: Tarafından Verildi
         granted_at: Tarihinde Verildi
+        reason_help: (Bir mesaj ya da konu için bağlantı)
         save: Kaydet
         delete: Sil
         delete_confirm: Bu rozeti silmek istediğinize emin misiniz?
         revoke: İptal Et
+        reason: Neden
+        expand: Genişlet &hellip;
         revoke_confirm: Bu rozeti iptal etmek istediğinize emin misiniz?
         edit_badges: Rozetleri Düzenle
         grant_badge: Rozet Ver

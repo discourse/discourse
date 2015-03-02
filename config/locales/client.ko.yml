@@ -130,7 +130,6 @@ ko:
       user_count: "새로운 사용자"
       active_user_count: "활성화된 사용자"
       contact: "Contact Us"
-      contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_email}로 연락주시기 바랍니다."
     bookmarked:
       title: "북마크"
     bookmarks:

@@ -146,7 +146,6 @@ nl:
       user_count: "Nieuwe leden"
       active_user_count: "Actieve leden"
       contact: "Neem contact op"
-      contact_info: "In het geval van een kritieke probleem of dringende vraagstukken in verband met deze site neem contact op met ons op via% {contact_email}."
     bookmarked:
       title: "Bewaar"
     bookmarks:
