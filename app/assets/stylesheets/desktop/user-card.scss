@@ -13,12 +13,17 @@
   background-position: center center;
   min-height: 175px;
   opacity: 0;
-  transform: scale(.7);
-  transition: opacity .2s, transform .2s;
+  -webkit-transform: scale(.7);
+      -ms-transform: scale(.7);
+          transform: scale(.7);
+  -webkit-transition: opacity .2s, -webkit-transform .2s;
+          transition: opacity .2s, transform .2s;
 
   &.show {
     opacity: 1;
-    transform: scale(1);
+    -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+            transform: scale(1);
   }
 
   .card-content {
