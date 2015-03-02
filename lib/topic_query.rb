@@ -425,7 +425,7 @@ class TopicQuery
       max = (count*1.3).to_i
       ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
 
-      result.where(id: ids)
+      result.where(id: ids.uniq)
     end
 
     def suggested_ordering(result, options)
