@@ -130,7 +130,6 @@ zh_CN:
       user_count: "新用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
-      contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_email} 联系我们。"
     bookmarked:
       title: "书签"
       clear_bookmarks: "删除书签"

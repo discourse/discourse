@@ -164,7 +164,7 @@ pl_PL:
       user_count: "Nowi użytkownicy"
       active_user_count: "Aktywni użytkownicy"
       contact: "Kontakt"
-      contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z funkcjonowaniem serwisu, prosimy o kontakt pod adresem %{contact_email}."
+      contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
       clear_bookmarks: "Usuń z zakładek"
@@ -485,6 +485,7 @@ pl_PL:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
         common: "To hasło jest zbyt popularne."
+        same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
       associated_accounts: "Powiązane konta"
@@ -2082,10 +2083,13 @@ pl_PL:
           modal_title: Grupy odznak
         granted_by: Przyznana przez
         granted_at: Przyznana
+        reason_help: (Link do wpisu lub tematu)
         save: Zapisz
         delete: Usuń
         delete_confirm: Czy na pewno chcesz usunąć tę odznakę?
         revoke: Odbierz
+        reason: Powód
+        expand: Rozwiń &hellip;
         revoke_confirm: Czy na pewno chcesz odebrać tę odznakę?
         edit_badges: Edytuj odznaki
         grant_badge: Przyznaj odznakę

@@ -123,7 +123,6 @@ ar:
       user_count: "مستخدمون جدد"
       active_user_count: "مستخدمون نشطون"
       contact: "اتصل بنا"
-      contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
     bookmarked:
       title: "المفضلة"
       clear_bookmarks: "حذف المفضله"
@@ -1071,7 +1070,17 @@ ar:
         help: "هذا الموضوع مثبت بشكل عام, سوف يظهر في المقدمة في جميع القوائم"
       pinned:
         title: "مثبت"
+        help: "هذا الموضوع مثبت لك, سوف يتم عرضه في اول القسم"
+      archived:
+        help: "هذا الموضوع مؤرشف,لن تستطيع أن تعدل عليه"
     posts: "مشاركات"
+    posts_lowercase: "مشاركات"
+    activity: "النشاط"
+    likes: "اعجابات"
+    likes_lowercase: "اعجابات"
+    users: "مستخدمين"
+    users_lowercase: "مستخدمين"
+    category_title: "قسم"
   admin_js:
     admin:
       dashboard:
