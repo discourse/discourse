@@ -13,3 +13,15 @@ Fabricator(:happy_category, from: :category) do
   slug 'happy'
   user
 end
+
+Fabricator(:private_category, from: :category) do
+  transient :group
+
+  name 'Private Category'
+  slug 'private'
+  user
+  after_build do |cat, transients|
+    cat.update!(read_restricted: true)
+    cat.category_groups.build(group_id: transients[:group].id, permission_type: :full)
+  end
+end
