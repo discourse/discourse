@@ -35,6 +35,7 @@ es:
     messages:
       too_long_validation: "está limitado a %{max} caracteres; has introducido %{length}."
       invalid_boolean: "Booleano no válido."
+      taken: "ya ha sido escogido"
       accepted: debe ser aceptado
       blank: no puede dejarse en blanco
       present: debe dejarse en blanco
@@ -80,6 +81,8 @@ es:
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
+  not_found: "No se ha podido encontrar la URL o recurso solicitado."
+  invalid_access: "No tienes permiso para ver el recurso solicitado."
   read_only_mode_enabled: "El sitio está en modo sólo lectura. Las interacciones están deshabilitadas."
   too_many_replies:
     one: "Lo sentimos, pero los usuarios nuevos están limitados a 1 respuesta en el mismo tema."
@@ -184,6 +187,14 @@ es:
       ¿Has pensado **[visitar tu perfil de usuario](%{profile_path})** y subir tu propia imagen personalizada?
 
       ¡Es más fácil serguir los debates de la comunidad y encontrar gente interesante en las conversaciones cuando todos tienen su propio y único avatar!
+    sequential_replies: |
+      ### Considera la posibilidad de responder a varios posts a la vez
+
+      En vez de publicar varias respuestas seguidas en un tema, por favor, piensa que en una sola respuesta puedes incluir citas o referencias de @usuario a los posts previos.
+
+      Puedes editar tu respuesta previa para añadir una cita simplemente seleccionando el texto y pulsando en el botón <b>citar respuesta</b> que aparece.
+
+      Es más fácil para todos leer temas con menos comentarios y respuestas en profundidad que muchas respuestas pequeñas y comentarios individuales.
     dominating_topic: |
       ### Deja a los demás unirse a la conversación
 
@@ -226,6 +237,7 @@ es:
           attributes:
             password:
               common: "es una de las 10000 contraseñas más comunes. Por favor usa una contraseña más segura"
+              same_as_username: "es la misma que tu nombre de usuario. Por favor, escoge una contraseña más segura."
             ip_address:
               signup_not_allowed: "El registro no está permitido para esta cuenta."
         color_scheme_color:
@@ -478,6 +490,7 @@ es:
       xaxis: "Día"
       yaxis: "Número de visitas"
     signups:
+      title: "Nuevos usuarios"
       xaxis: "Día"
       yaxis: "Número de usuarios nuevos"
     topics:
@@ -550,15 +563,19 @@ es:
     page_view_anon_reqs:
       title: "Anónimas"
       xaxis: "Día"
+      yaxis: "Peticiones a la API anónimas"
     page_view_logged_in_reqs:
       title: "Registrados"
       xaxis: "Día"
+      yaxis: "Peticiones a la API de usuarios logueados"
     page_view_crawler_reqs:
       title: "Rastreadores web"
       xaxis: "Día"
+      yaxis: "Peticiones a la API de rastreadores web"
     page_view_total_reqs:
       title: "Tota"
       xaxis: "Día"
+      yaxis: "Total peticiones a la API"
     http_background_reqs:
       title: "Background"
       xaxis: "Día"
@@ -660,6 +677,7 @@ es:
     title: "El nombre de este sitio, utilizado en la etiqueta title."
     site_description: "Describe este sitio en una frase, utilizada en la etiqueta meta description."
     contact_email: "Dirección de correo electrónico del responsable de este sitio. Utilizado para notificaciones críticas como reportes sin resolver, así como en la página /about de contacto para asuntos urgentes."
+    contact_url: "URL de contacto para este sitio. Utilizada en la sección /about para asuntos urgentes."
     queue_jobs: "¡SOLO DESARROLLADORES! ¡ADVERTENCIA! Poner varios trabajos en la cola de Sidekiq. Si se desactiva, el sitio dejará de funcionar."
     crawl_images: "Recuperar imágenes desde URLs remotas para insertarlas con las dimensiones correctas de ancho y de largo."
     download_remote_images_to_local: "Convertir imágenes remotas a imágenes locales descargándolas; esto previene imágenes rotas."
@@ -758,8 +776,8 @@ es:
     max_username_length: "Longitud máxima del nombre de usuario en caracteres. ADVERTENCIA: TODOS LOS USUARIOS EXISTENTES CON NOMBRES MÁS LARGOS QUE ESTE VALOR NO PODRÁN ACCEDER AL SITIO"
     min_password_length: "Longitud mínima de contraseña."
     block_common_passwords: "No permitir contraseñas que están entre las 10.000 más comunes."
-    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar si no está configurado de forma apropiada; además, desactiva las invitaciones)"
-    enable_sso_provider: "Implementar el protocolo de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
+    enable_sso: "Activar single sign on a través de un sitio externo (AVISO: puede hacer que nadie se pueda registrar, INCLUIDO TÚ MISMO, si no está configurado de forma apropiada; además, desactiva las invitaciones)"
+    enable_sso_provider: "Implementar el protocolo del proveedor de SSO de Discourse en el endpoint /session/sso_provider requiere establecer un sso_secret"
     sso_url: "URL del endpoint para el single sign on"
     sso_secret: "Cadena secreta utilizada para autenticar criptográficamente la información del SSO, asegúrate de que es de 10 caracteres o más"
     sso_overrides_email: "Reemplaza el email local con el email del sitio externo desde el payload del SSO (AVISO: pueden ocurrir discrepancias debido a la normalización de los correos electrónicos locales)"
@@ -954,6 +972,7 @@ es:
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
     enable_emoji: "Habilitar emoji"
     emoji_set: "¿De qué tipo os gustan los emoji?"
+    enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1509,6 +1528,7 @@ es:
     body_blank: "el cuerpo está en blanco"
   color_schemes:
     base_theme_name: "Base"
+  about: "Acerca de"
   guidelines: "Directrices"
   privacy: "Privacidad"
   edit_this_page: "Edita esta página"

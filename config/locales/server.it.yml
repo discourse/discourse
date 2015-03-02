@@ -81,6 +81,8 @@ it:
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
   not_logged_in: "Devi essere collegato per farlo."
+  not_found: "L'URL richiesto non è stato trovato."
+  invalid_access: "Non hai il permesso di vedere l'elemento richiesto."
   read_only_mode_enabled: "Il sito è in modalità di sola lettura. Le interazioni sono disabilitate."
   too_many_replies:
     one: "Spiacenti, ma i nuovi utenti possono inserire solo 1 risposta nello stesso argomento."
@@ -220,6 +222,7 @@ it:
           attributes:
             password:
               common: "è una delle 10000 password più comuni. Usa una password più sicura."
+              same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         color_scheme_color:
@@ -452,6 +455,7 @@ it:
       xaxis: "Giorno"
       yaxis: "Numero visite"
     signups:
+      title: "Nuovi Utenti"
       xaxis: "Giorno"
       yaxis: "Numero di nuovi utenti"
     topics:
@@ -524,15 +528,19 @@ it:
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
+      yaxis: "Richieste API anonime"
     page_view_logged_in_reqs:
       title: "Collegato"
       xaxis: "Giorno"
+      yaxis: "Richieste API registrate"
     page_view_crawler_reqs:
       title: "Web Crawler"
       xaxis: "Giorno"
+      yaxis: "Richieste API web crawler"
     page_view_total_reqs:
       title: "Totali"
       xaxis: "Giorno"
+      yaxis: "Richieste API totali"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -634,6 +642,7 @@ it:
     title: "Il nome di questo sito, da usare nell'attributo title."
     site_description: "Descrivi questo sito in una frase, da usare nell'attributo meta description."
     contact_email: "Gli indirizzi email delle persone chiave responsabili di questo sito. Usati per notifiche importanti, come segnalazioni da gestire, come pure nel modulo di contatto /about per questioni urgenti."
+    contact_url: "URL di contatto per questo sito. Usato sul form di contatto in /about per questioni urgenti."
     queue_jobs: "SOLO PER SVILUPPATORI! ATTENZIONE! Per default, accoda i job in sidekiq. Se disabilitato, il tuo sito non funzionerà."
     crawl_images: "Recupera le immagini dagli URL remoti per inserire le dimensioni corrette di ampiezza e altezza nel tag."
     download_remote_images_to_local: "Scarica localmente le immagini remote; ciò permettei di evitare immagini assenti."
@@ -732,8 +741,8 @@ it:
     max_username_length: "Lunghezza massima del nome utente in caratteri. ATTENZIONE: GLI UTENTI GIÀ ESISTENTI CON NOMI PIÙ LUNGHI DI QUESTO NON RIUSCIRANNO AD ACCEDERE AL SITO."
     min_password_length: "Minima lunghezza della password."
     block_common_passwords: "Non permettere password che sono nelle 10.000 password più comuni."
-    enable_sso: "Attiva il signle sign.on tramite un sito esterno (ATTENZIONE:  l'opzione mal configurata può impedire a chiunque di accedere; inoltre disabilita gli inviti)"
-    enable_sso_provider: "Implementa il protocollo SSO Discourse nell'endpoint /session/sso_provider, richiede che sia impostata l'opzione sso_secret "
+    enable_sso: "Attiva Single Sign On tramite un sito esterno (ATTENZIONE: se non configurato correttamente, quando abilitato può impedire a chiunque di effettuare l'accesso, INCLUSO TE, e disabilitare gli inviti)"
+    enable_sso_provider: "Implementa il protocollo Discourse SSO nel punto di accesso /session/sso_provider; richiede il settaggio dell'sso_secret"
     sso_url: "URL per l'endpoint del single sign on "
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_email: "Sostituisce le email locali con quelle del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"

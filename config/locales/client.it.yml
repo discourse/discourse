@@ -147,9 +147,13 @@ it:
       user_count: "Nuovi Utenti"
       active_user_count: "Utenti Attivi"
       contact: "Contattaci"
-      contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_email}."
+      contact_info: "In caso di un problema critico o questione urgente su questo sito, per favore contattaci su %{contact_info}."
     bookmarked:
       title: "Segnalibro"
+      clear_bookmarks: "Cancella Segnalibri"
+      help:
+        bookmark: "Clicca per aggiungere ai segnalibri il primo post su questo topic"
+        unbookmark: "Clicca per rimuovere tutti i segnalibri in questo argomento"
     bookmarks:
       not_logged_in: "spiacenti, devi essere connesso per aggiungere segnalibri ai messaggi"
       created: "hai inserito questo messaggio nei segnalibri."
@@ -454,6 +458,7 @@ it:
         title: "Password"
         too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
+        same_as_username: "La tua password è uguale al tuo nome utente."
         ok: "La password è adeguata"
         instructions: "Minimo %{count} caratteri."
       associated_accounts: "Login"
@@ -1038,6 +1043,7 @@ it:
         people:
           off_topic: "{{icons}} l'hanno segnalato come fuori tema"
           spam: "{{icons}} l'hanno segnalato come spam"
+          spam_with_url: "{{icons}} ha segnalato <a href='{{postUrl}}'>questo come spam</a>"
           inappropriate: "{{icons}} l'hanno segnalato come inappropriato"
           notify_moderators: "{{icons}} hanno informato i moderatori"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>hanno informato i moderatori</a>"
@@ -1377,6 +1383,9 @@ it:
         uploads: "caricamenti"
         backups: "backup"
         traffic_short: "Traffico"
+        traffic: "Richieste web dell'applicazione"
+        page_views: "Richieste API"
+        page_views_short: "Richieste API"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
@@ -1554,6 +1563,7 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
+        user_archive_confirm: "Sei sicuro di voler scaricare i tuoi post?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio privato al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, prova ancora domani."
@@ -1564,6 +1574,9 @@ it:
           screened_email: "Esporta tutta la lista delle email schermate in formato CSV."
           screened_ip: "Esporta tutta la lista degli IP schermati in formato CSV."
           screened_url: "Esporta tutta la lista degli URL schermati in formato CSV."
+      invite:
+        button_text: "Manda Inviti"
+        button_title: "Manda Inviti"
       customize:
         title: "Personalizza"
         long_title: "Personalizzazioni Sito"
@@ -2000,10 +2013,13 @@ it:
           modal_title: Raggruppamento Targhette
         granted_by: Assegnata Da
         granted_at: Assegnata in data
+        reason_help: (Un link a un post o argomento)
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler cancellare questa targhetta?
         revoke: Revoca
+        reason: Motivazione
+        expand: Espandi &hellip;
         revoke_confirm: Sei sicuro di voler revocare questa targhetta?
         edit_badges: Modifica Targhette
         grant_badge: Assegna Targhetta
@@ -2090,6 +2106,7 @@ it:
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
         title: 'Azioni'
+        bookmark_topic: '<b>f</b> Segna argomento preferito'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
         share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
@@ -2154,6 +2171,9 @@ it:
         autobiographer:
           name: Autobiografo
           description: Completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
+        anniversary:
+          name: Anniversario
+          description: Membro attivo per un anno, ha postato almeno una volta
         nice_post:
           name: Buon Messaggio
           description: Ricevuto 10 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.

@@ -81,6 +81,8 @@ fr:
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
   not_logged_in: "Vous devez être connecté pour faire cela."
+  not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
+  invalid_access: "Vous n'avez pas la permission de voir cette ressource."
   read_only_mode_enabled: "Le site est en mode lecture seule. Les interactions sont désactivées."
   too_many_replies:
     one: "Nous sommes désolés, mais les nouveaux utilisateurs sont limités temporairement à 1 réponse par sujet."
@@ -230,6 +232,7 @@ fr:
           attributes:
             password:
               common: "fait partie des 10000 mots de passe les plus utilisés. Merci d'en utiliser un plus sûr."
+              same_as_username: "est aussi votre pseudo. Veuillez utiliser un mot de passe plus sécurisé."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
         color_scheme_color:
@@ -669,6 +672,7 @@ fr:
     title: "Le nom du site, utilisé dans la balise title."
     site_description: "Décrivez ce site en une seule phrase, utilisée dans le tag meta description."
     contact_email: "Adresse de courriel du contact clef pour ce site. Utilisée que pour des notifications critiques tel que des signalements en suspens, et aussi sur la formulaire de contact sur la page 'a propos'."
+    contact_url: "Adresse de contact pour ce site. Utilisée sur la formulaire de contact sur la page 'a propos' pour les notifications critiques."
     queue_jobs: "SEULEMENT POUR LES DÉVELOPPEURS ! ATTENTION ! Par défaut, empiler les travaux dans sidekiq. Si désactivé, votre site sera cassé."
     crawl_images: "Récupère les images provenant de sources tierces pour y insérer les dimensions corrects (hauteur et largeur)"
     download_remote_images_to_local: "Transformer les images distantes en images locales en les téléchargeant; cela permet d'éviter les liens morts."
@@ -767,8 +771,8 @@ fr:
     max_username_length: "Longueur maximum des pseudos en caractères. ATTENTION : TOUS LES UTILISATEURS QUI DÉPASSE CETTE LIMITE NE POURRONS PLUS ACCÉDER AU SITE. "
     min_password_length: "Longueur minimale du mot de passe."
     block_common_passwords: "Ne pas autoriser les mots de passe qui font parti des 10 000 les plus utilisés."
-    enable_sso: "Activer l'authentication unique via un site externe (AVERTISSEMENT : si activé, peut empêcher toute connexion en cas de mauvaise configuration ; désactive aussi les invitations)"
-    enable_sso_provider: "Implémenter le procotole Discourse SSO à /session/sso_provider, requiert sso_secret"
+    enable_sso: "Activer l'authentication unique via un site externe (AVERTISSEMENT : si activé, peut empêcher toute connexion en cas de mauvaise configuration, Y COMPRIS DE VOUS-MÊME ! Désactive aussi les invitations)"
+    enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_email: "Surcharger les adresses de courriel locales avec les adresses de courriel  externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les adresses de courriel)"
@@ -963,6 +967,7 @@ fr:
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux utilisateurs anonymes. ATTENTION: cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     enable_emoji: "Activer les emojis"
     emoji_set: "Comment aimeriez-vous vos emoji ?"
+    enforce_square_emoji: "Forcer tous les emojiis à être carrés."
     errors:
       invalid_email: "Adresse de courriel invalide."
       invalid_username: "Il n'y a pas d'utilisateur ayant ce pseudo."
@@ -1608,6 +1613,7 @@ fr:
     body_blank: "sans contenu"
   color_schemes:
     base_theme_name: "Base"
+  about: "A propos"
   guidelines: "Règlement"
   privacy: "Protection des données"
   edit_this_page: "Modifier cette page"

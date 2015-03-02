@@ -753,8 +753,6 @@ pt_BR:
     max_username_length: "Tamanho máximo de nome de usuário em caracteres. AVISO: QUAISQUER USUÁRIOS EXISTENTES COM NOMES MAIORES DO QUE ISSO SERÃO INCAPACITADOS DE ACESSAR O SITE."
     min_password_length: "Comprimento mínimo da senha."
     block_common_passwords: "Não permitir senhas que estiverem entre as 10,000 senhas mais comuns."
-    enable_sso: "Habilitar single sign on através de um site externo (AVISO: pode impedir que qualquer um se logue se não for adequadamente configurado quando habilitado; além disso desabilita convites)"
-    enable_sso_provider: "Implementar o protocolo Discourse SSO no endpoint /session/sso_provider , exige que sso_secret esteja definido"
     sso_url: "URL destino do logon único"
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
     sso_overrides_email: "Substitui e-mail local com site externo de e-mail do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de e-mails locais)"
