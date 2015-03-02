@@ -74,7 +74,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     found
   end
 
-  def self.block_login?(user, ip_address)
+  def self.block_admin_login?(user, ip_address)
     return false if user.nil?
     return false if !user.admin?
     return false if ScreenedIpAddress.where(action_type: actions[:allow_admin]).count == 0

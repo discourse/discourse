@@ -91,7 +91,7 @@
     }
 
     $thumb = $el.find('.ytp-thumbnail').css({
-      'background-image': ['url(http://img.youtube.com/vi/', id, '/', thumb_img, ')'].join('')
+      'background-image': ['url(//img.youtube.com/vi/', id, '/', thumb_img, ')'].join('')
     })
     .addClass('lazyYT-image-loaded')
     .on('click', function (e) {

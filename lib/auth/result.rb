@@ -2,7 +2,8 @@ class Auth::Result
   attr_accessor :user, :name, :username, :email, :user,
                 :email_valid, :extra_data, :awaiting_activation,
                 :awaiting_approval, :authenticated, :authenticator_name,
-                :requires_invite, :not_allowed_from_ip_address
+                :requires_invite, :not_allowed_from_ip_address,
+                :admin_not_allowed_from_ip_address
 
   def session_data
     {
@@ -30,7 +31,8 @@ class Auth::Result
           authenticated: !!authenticated,
           awaiting_activation: !!awaiting_activation,
           awaiting_approval: !!awaiting_approval,
-          not_allowed_from_ip_address: !!not_allowed_from_ip_address
+          not_allowed_from_ip_address: !!not_allowed_from_ip_address,
+          admin_not_allowed_from_ip_address: !!admin_not_allowed_from_ip_address
         }
       end
     else

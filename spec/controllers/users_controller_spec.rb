@@ -84,16 +84,11 @@ describe UsersController do
     end
 
     context 'invalid token' do
-      before do
-        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
-        put :perform_account_activation, token: 'asdfasdf'
-      end
 
       it 'return success' do
+        EmailToken.expects(:confirm).with('asdfasdf').returns(nil)
+        put :perform_account_activation, token: 'asdfasdf'
         expect(response).to be_success
-      end
-
-      it 'sets a flash error' do
         expect(flash[:error]).to be_present
       end
     end
@@ -249,7 +244,7 @@ describe UsersController do
       end
 
       it 'disallows login' do
-        expect(flash[:error]).to be_present
+        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(assigns[:invalid_token]).to eq(nil)
         expect(response).to be_success
@@ -262,7 +257,7 @@ describe UsersController do
       end
 
       it 'disallows login' do
-        expect(flash[:error]).to be_present
+        expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
         expect(assigns[:invalid_token]).to eq(true)
         expect(response).to be_success
@@ -277,7 +272,7 @@ describe UsersController do
         get :password_reset, token: token
         put :password_reset, token: token, password: 'newpassword'
         expect(response).to be_success
-        expect(flash[:error]).to be_blank
+        expect(assigns[:error]).to be_blank
       end
     end
 
@@ -601,6 +596,15 @@ describe UsersController do
           expect(inserted.custom_fields["user_field_#{optional_field.id}"]).to eq('value3')
         end
 
+        it "trims excessively long fields" do
+          create_params[:user_fields][optional_field.id.to_s] = ('x' * 3000)
+          xhr :post, :create, create_params.merge(create_params)
+          expect(response).to be_success
+          inserted = User.where(email: @user.email).first
+
+          val = inserted.custom_fields["user_field_#{optional_field.id}"]
+          expect(val.length).to eq(UserField.max_length)
+        end
       end
     end
 
@@ -668,7 +672,7 @@ describe UsersController do
         user.reload.username.should == new_username
       end
 
-      pending 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
+      skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
         user.stubs(:post_count).returns(200)
@@ -988,6 +992,11 @@ describe UsersController do
               put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => '' }
               expect(response).not_to be_success
               expect(user.user_fields[user_field.id.to_s]).not_to eq('happy')
+            end
+
+            it "trims excessively large fields" do
+              put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => ('x' * 3000) }
+              expect(user.user_fields[user_field.id.to_s].size).to eq(UserField.max_length)
             end
           end
 

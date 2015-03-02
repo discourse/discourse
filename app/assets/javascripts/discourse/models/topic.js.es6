@@ -26,6 +26,10 @@ const Topic = Discourse.Model.extend({
     return PostStream.create({topic: this});
   }.property(),
 
+  replyCount: function() {
+    return this.get('posts_count') - 1;
+  }.property('posts_count'),
+
   details: function() {
     return TopicDetails.create({topic: this});
   }.property(),
@@ -411,7 +415,6 @@ Topic.reopenClass({
     });
 
     return Discourse.ajax(topic.get('url'), { type: 'PUT', data: props }).then(function(result) {
-
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;

@@ -16,10 +16,6 @@ export default DiscourseController.extend(ModalFunctionality, {
     this.set('loggedIn', false);
   },
 
-  site: function() {
-    return Discourse.Site.current();
-  }.property(),
-
   /**
    Determines whether at least one login button is enabled
   **/
@@ -165,6 +161,12 @@ export default DiscourseController.extend(ModalFunctionality, {
     if (options.awaiting_activation) {
       this.send('showLogin');
       this.flash(I18n.t('login.awaiting_confirmation'), 'success');
+      this.set('authenticate', null);
+      return;
+    }
+    if (options.admin_not_allowed_from_ip_address) {
+      this.send('showLogin');
+      this.flash(I18n.t('login.admin_not_allowed_from_ip_address'), 'success');
       this.set('authenticate', null);
       return;
     }

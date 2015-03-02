@@ -71,7 +71,7 @@ export default ObjectController.extend({
     this.setProperties({ user: null, userLoading: username, cardTarget: target });
 
     var self = this;
-    Discourse.User.findByUsername(username).then(function (user) {
+    Discourse.User.findByUsername(username, {stats: false}).then(function (user) {
       user = Discourse.User.create(user);
       self.setProperties({ user: user, avatar: user, visible: true});
       self.appEvents.trigger('usercard:shown');

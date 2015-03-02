@@ -28,6 +28,9 @@ class UsersController < ApplicationController
   def show
     @user = fetch_user_from_params
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    if params[:stats].to_s == "false"
+      user_serializer.omit_stats = true
+    end
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -70,6 +73,7 @@ class UsersController < ApplicationController
       UserField.where(editable: true).each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
+        val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
         params[:custom_fields]["user_field_#{f.id}"] = val
@@ -221,7 +225,7 @@ class UsersController < ApplicationController
         if field_val.blank?
           return fail_with("login.missing_user_field") if f.required?
         else
-          fields["user_field_#{f.id}"] = field_val
+          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
         end
       end
 
@@ -281,7 +285,7 @@ class UsersController < ApplicationController
   end
 
   def password_reset
-    expires_now()
+    expires_now
 
     if EmailToken.valid_token_format?(params[:token])
       @user = EmailToken.confirm(params[:token])
@@ -297,7 +301,7 @@ class UsersController < ApplicationController
     end
 
     if !@user
-      flash[:error] = I18n.t('password_reset.no_token')
+      @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
@@ -325,7 +329,7 @@ class UsersController < ApplicationController
                 'password_reset.success_unapproved'
               end
 
-    flash[:success] = I18n.t(message)
+    @success = I18n.t(message)
   end
 
   def change_email

@@ -132,10 +132,19 @@ header .title-wrapper .bar .badge-category {
 
 .category-breadcrumb li.bar > .badge-category {
   background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+  line-height: 24px;
   &:not(.home):first-child {
     border-left-width: 5px;
     border-left-style: solid;
   }
+}
+
+.category-breadcrumb .box > a.badge-category {
+  margin-bottom: 0;
+  height: 24px;
+  // TODO clean this up
+  padding-top: 6px !important;
+  padding-bottom: 0 !important;
 }
 
 .category-dropdown-menu .cat .badge-wrapper.box {

@@ -222,40 +222,23 @@ describe TopicsController do
       let(:topic) { Fabricate(:topic) }
       let(:user_a) { Fabricate(:user) }
       let(:p1) { Fabricate(:post, topic_id: topic.id) }
+      let(:p2) { Fabricate(:post, topic_id: topic.id) }
 
       it "raises an error with a parameter missing" do
         expect { xhr :post, :change_post_owners, topic_id: 111, post_ids: [1,2,3] }.to raise_error(ActionController::ParameterMissing)
         expect { xhr :post, :change_post_owners, topic_id: 111, username: 'user_a' }.to raise_error(ActionController::ParameterMissing)
       end
 
-      it "calls PostRevisor" do
-        PostRevisor.any_instance.expects(:revise!)
+      it "calls PostOwnerChanger" do
+        PostOwnerChanger.any_instance.expects(:change_owner!).returns(true)
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
         expect(response).to be_success
       end
 
-      it "changes the user" do
-        old_user = p1.user
-        xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
-        p1.reload
-        expect(old_user).not_to eq(p1.user)
-      end
-
-      # Make sure that p1.reload isn't changing the user for us
-      it "is not an artifact of the framework" do
-        old_user = p1.user
-        # xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id]
-        p1.reload
-        expect(p1.user).not_to eq(nil)
-        expect(old_user).to eq(p1.user)
-      end
-
-      let(:p2) { Fabricate(:post, topic_id: topic.id) }
-
       it "changes multiple posts" do
+        # an integration test
         xhr :post, :change_post_owners, topic_id: topic.id, username: user_a.username_lower, post_ids: [p1.id, p2.id]
-        p1.reload
-        p2.reload
+        p1.reload; p2.reload
         expect(p1.user).not_to eq(nil)
         expect(p1.user).to eq(p2.user)
       end

@@ -70,14 +70,19 @@ class Admin::GroupsController < Admin::AdminController
 
   def add_members
     group = Group.find(params.require(:id))
-    usernames = params.require(:usernames)
 
     return can_not_modify_automatic if group.automatic
 
-    usernames.split(",").each do |username|
-      if user = User.find_by_username(username)
-        group.add(user)
-      end
+    if params[:usernames].present?
+      users = User.where(username: params[:usernames].split(","))
+    elsif params[:user_ids].present?
+      users = User.find(params[:user_ids].split(","))
+    else
+      raise Discourse::InvalidParameters.new('user_ids or usernames must be present')
+    end
+
+    users.each do |user|
+      group.add(user)
     end
 
     if group.save
@@ -89,14 +94,20 @@ class Admin::GroupsController < Admin::AdminController
 
   def remove_member
     group = Group.find(params.require(:id))
-    user_id = params.require(:user_id).to_i
 
     return can_not_modify_automatic if group.automatic
 
-    user = User.find(user_id)
+    if params[:user_id].present?
+      user = User.find(params[:user_id])
+    elsif params[:username].present?
+      user = User.find_by_username(params[:username])
+    else
+      raise Discourse::InvalidParameters.new('user_id or username must be present')
+    end
+
     user.primary_group_id = nil if user.primary_group_id == group.id
 
-    group.users.delete(user_id)
+    group.users.delete(user.id)
 
     if group.save && user.save
       render json: success_json

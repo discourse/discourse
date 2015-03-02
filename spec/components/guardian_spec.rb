@@ -792,6 +792,30 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false when another user has too low trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        coding_horror.trust_level = 1
+
+        expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
+      end
+
+      it 'returns true when another user has adequate trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        coding_horror.trust_level = 2
+
+        expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns true for post author even when he has too low trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        post.user.trust_level = 1
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
       context 'post is older than post_edit_time_limit' do
         let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
         before do
@@ -818,30 +842,6 @@ describe Guardian do
           old_post.wiki = true
           expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
         end
-
-        it 'returns false when another user has too low trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          coding_horror.trust_level = 1
-
-          expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
-        end
-
-        it 'returns true when another user has adequate trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          coding_horror.trust_level = 2
-
-          expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
-        end
-
-        it 'returns true for post author even when he has too low trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          post.user.trust_level = 1
-
-          expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
-        end
       end
 
       context "first post of a static page doc" do
@@ -866,7 +866,6 @@ describe Guardian do
       it 'returns true for editing your own post' do
         expect(Guardian.new(topic.user).can_edit?(topic)).to eq(true)
       end
-
 
       it 'returns false as a regular user' do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
@@ -894,20 +893,44 @@ describe Guardian do
       end
 
       context 'archived' do
+        let(:archived_topic) { build(:topic, user: user, archived: true) }
+
         it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(moderator).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(admin).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns true at trust level 3' do
-          expect(Guardian.new(trust_level_3).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns false as a topic creator' do
-          expect(Guardian.new(user).can_edit?(build(:topic, user: user, archived: true))).to be_falsey
+          expect(Guardian.new(user).can_edit?(archived_topic)).to be_falsey
+        end
+      end
+
+      context 'very old' do
+        let(:old_topic) { build(:topic, user: user, created_at: 6.minutes.ago) }
+
+        before { SiteSetting.stubs(:post_edit_time_limit).returns(5) }
+
+        it 'returns true as a moderator' do
+          expect(Guardian.new(moderator).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns true as an admin' do
+          expect(Guardian.new(admin).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns true at trust level 3' do
+          expect(Guardian.new(trust_level_3).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns false as a topic creator' do
+          expect(Guardian.new(user).can_edit?(old_topic)).to be_falsey
         end
       end
     end

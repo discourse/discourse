@@ -1,5 +1,6 @@
 import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
+import NotificationLevels from 'discourse/lib/notification-levels';
 
 var controllerOpts = {
   needs: ['discovery'],
@@ -86,7 +87,7 @@ var controllerOpts = {
         operation = { type: 'dismiss_posts' };
       } else {
         operation = { type: 'change_notification_level',
-                        notification_level_id: Discourse.Topic.NotificationLevel.REGULAR };
+                        notification_level_id: NotificationLevels.REGULAR };
       }
 
       var promise;

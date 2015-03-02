@@ -1,5 +1,4 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
-
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend(ModalFunctionality, {
@@ -7,14 +6,16 @@ export default ObjectController.extend(ModalFunctionality, {
   newSelected:      Ember.computed.equal('selectedTab', 'new'),
 
   onShow: function() {
-    this.selectNew();
+    this.send("selectNew");
   },
 
-  selectNew: function() {
-    this.set('selectedTab', 'new');
-  },
+  actions: {
+    selectNew: function() {
+      this.set('selectedTab', 'new');
+    },
 
-  selectPrevious: function() {
-    this.set('selectedTab', 'previous');
+    selectPrevious: function() {
+      this.set('selectedTab', 'previous');
+    }
   }
 });

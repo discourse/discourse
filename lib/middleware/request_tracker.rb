@@ -51,12 +51,18 @@ class Middleware::RequestTracker
 
     helper = Middleware::AnonymousCache::Helper.new(env)
     request = Rack::Request.new(env)
+
+    env_track_view = env[TRACK_VIEW]
+    track_view = status == 200
+    track_view &&= env_track_view != "0".freeze && env_track_view != "false".freeze
+    track_view &&= env_track_view || (request.get? && !request.xhr? && headers[CONTENT_TYPE] =~ /text\/html/)
+
     {
       status: status,
       is_crawler: helper.is_crawler?,
       has_auth_cookie: helper.has_auth_cookie?,
       is_background: request.path =~ /^\/message-bus\// || request.path == /\/topics\/timings/,
-      track_view: (env[TRACK_VIEW] || (request.get? && !request.xhr? && headers[CONTENT_TYPE] =~ /text\/html/)) && status == 200
+      track_view: track_view
     }
   end
 

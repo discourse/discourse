@@ -34,7 +34,7 @@ describe Jobs::PollMailbox do
 
       Net::POP3.any_instance.expects(:start).raises(error)
 
-      Discourse.expects(:handle_exception)
+      Discourse.expects(:handle_job_exception)
 
       poller.poll_pop3
     end

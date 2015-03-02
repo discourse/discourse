@@ -1,5 +1,7 @@
 class UserSerializer < BasicUserSerializer
 
+  attr_accessor :omit_stats
+
   def self.staff_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
@@ -171,6 +173,10 @@ class UserSerializer < BasicUserSerializer
     scope.can_edit_name?(object)
   end
 
+  def include_stats?
+    !omit_stats == true
+  end
+
   def stats
     UserAction.stats(object.id, scope)
   end
@@ -244,6 +250,10 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def include_private_message_stats?
+    can_edit && !(omit_stats == true)
   end
 
   def private_messages_stats

@@ -1,9 +1,9 @@
-Discourse.Site = Discourse.Model.extend({
+const Site = Discourse.Model.extend({
 
   isReadOnly: Em.computed.alias('is_readonly'),
 
   notificationLookup: function() {
-    var result = [];
+    const result = [];
     _.each(this.get('notification_types'), function(v,k) {
       result[v] = k;
     });
@@ -11,23 +11,23 @@ Discourse.Site = Discourse.Model.extend({
   }.property('notification_types'),
 
   flagTypes: function() {
-    var postActionTypes = this.get('post_action_types');
+    const postActionTypes = this.get('post_action_types');
     if (!postActionTypes) return [];
     return postActionTypes.filterProperty('is_flag', true);
   }.property('post_action_types.@each'),
 
-  categoriesByCount: Em.computed.sort('categories', function(a, b) {
+  categoriesByCount: Ember.computed.sort('categories', function(a, b) {
     return (b.get('topic_count') || 0) - (a.get('topic_count') || 0);
   }),
 
   // Sort subcategories under parents
   sortedCategories: function() {
-    var cats = this.get('categoriesByCount'),
+    const cats = this.get('categoriesByCount'),
         result = [],
         remaining = {};
 
     cats.forEach(function(c) {
-      var parentCategoryId = parseInt(c.get('parent_category_id'), 10);
+      const parentCategoryId = parseInt(c.get('parent_category_id'), 10);
       if (!parentCategoryId) {
         result.pushObject(c);
       } else {
@@ -37,7 +37,7 @@ Discourse.Site = Discourse.Model.extend({
     });
 
     Ember.keys(remaining).forEach(function(parentCategoryId) {
-      var category = result.findBy('id', parseInt(parentCategoryId, 10)),
+      const category = result.findBy('id', parseInt(parentCategoryId, 10)),
           index = result.indexOf(category);
 
       if (index !== -1) {
@@ -48,16 +48,16 @@ Discourse.Site = Discourse.Model.extend({
     return result;
   }.property(),
 
-  postActionTypeById: function(id) {
+  postActionTypeById(id) {
     return this.get("postActionByIdLookup.action" + id);
   },
 
-  topicFlagTypeById: function(id) {
+  topicFlagTypeById(id) {
     return this.get("topicFlagByIdLookup.action" + id);
   },
 
-  updateCategory: function(newCategory) {
-    var existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
+  updateCategory(newCategory) {
+    const existingCategory = this.get('categories').findProperty('id', Em.get(newCategory, 'id'));
     if (existingCategory) {
       // Don't update null permissions
       if (newCategory.permission === null) { delete newCategory.permission; }
@@ -67,20 +67,15 @@ Discourse.Site = Discourse.Model.extend({
   }
 });
 
-Discourse.Site.reopenClass(Discourse.Singleton, {
+Site.reopenClass(Discourse.Singleton, {
 
-  /**
-    The current singleton will retrieve its attributes from the `PreloadStore`.
-
-    @method createCurrent
-    @returns {Discourse.Site} the site
-  **/
-  createCurrent: function() {
+  // The current singleton will retrieve its attributes from the `PreloadStore`.
+  createCurrent() {
     return Discourse.Site.create(PreloadStore.get('site'));
   },
 
-  create: function() {
-    var result = this._super.apply(this, arguments);
+  create() {
+    const result = this._super.apply(this, arguments);
 
     if (result.categories) {
       result.categoriesById = {};
@@ -107,7 +102,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     if (result.post_action_types) {
       result.postActionByIdLookup = Em.Object.create();
       result.post_action_types = _.map(result.post_action_types,function(p) {
-        var actionType = Discourse.PostActionType.create(p);
+        const actionType = Discourse.PostActionType.create(p);
         result.postActionByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
@@ -116,7 +111,7 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
     if (result.topic_flag_types) {
       result.topicFlagByIdLookup = Em.Object.create();
       result.topic_flag_types = _.map(result.topic_flag_types,function(p) {
-        var actionType = Discourse.PostActionType.create(p);
+        const actionType = Discourse.PostActionType.create(p);
         result.topicFlagByIdLookup.set("action" + p.id, actionType);
         return actionType;
       });
@@ -138,4 +133,4 @@ Discourse.Site.reopenClass(Discourse.Singleton, {
   }
 });
 
-
+export default Site;

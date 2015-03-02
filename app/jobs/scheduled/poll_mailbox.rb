@@ -74,7 +74,7 @@ module Jobs
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
         Email::Sender.new(client_message, message_template).send
       else
-        Discourse.handle_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
+        Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))
       end
     end
 
@@ -91,7 +91,7 @@ module Jobs
         pop.finish
       end
     rescue Net::POPAuthenticationError => e
-      Discourse.handle_exception(e, error_context(@args, "Signing in to poll incoming email"))
+      Discourse.handle_job_exception(e, error_context(@args, "Signing in to poll incoming email"))
     end
 
   end

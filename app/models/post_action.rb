@@ -256,6 +256,7 @@ class PostAction < ActiveRecord::Base
 
     if post_action
       post_action.recover!
+      action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
     else
       post_action = create(where_attrs.merge(action_attrs))
@@ -318,7 +319,7 @@ class PostAction < ActiveRecord::Base
 
     %w(like flag bookmark).each do |type|
       if send("is_#{type}?")
-        @rate_limiter = RateLimiter.new(user, "create_#{type}:#{Date.today}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
+        @rate_limiter = RateLimiter.new(user, "create_#{type}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
         return @rate_limiter
       end
     end

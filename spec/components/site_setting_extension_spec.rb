@@ -29,6 +29,7 @@ describe SiteSettingExtension do
 
   describe "refresh!" do
 
+
     it "will reset to default if provider vanishes" do
       settings.setting(:hello, 1)
       settings.hello = 100
@@ -164,6 +165,22 @@ describe SiteSettingExtension do
         settings.set("test_str", "hi")
         settings.test_str.should == "hi"
       end
+    end
+  end
+
+
+  describe "string setting with regex" do
+    it "Supports custom validation errors" do
+      settings.setting(:test_str, "bob", regex: "hi", regex_error: "oops")
+      settings.refresh!
+
+      begin
+        settings.test_str = "a"
+      rescue Discourse::InvalidParameters => e
+        message = e.message
+      end
+
+      message.should =~ /oops/
     end
   end
 

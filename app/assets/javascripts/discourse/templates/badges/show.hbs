@@ -17,6 +17,12 @@
     </tbody>
   </table>
 
+  {{#if showLongDescription}}
+  <div class='long-description banner'>
+    {{{long_description}}}
+  </div>
+  {{/if}}
+
   {{#if userBadges}}
     <div class={{unbound layoutClass}}>
     {{#each ub in userBadges}}

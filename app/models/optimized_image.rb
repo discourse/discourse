@@ -38,7 +38,7 @@ class OptimizedImage < ActiveRecord::Base
         FileUtils.cp(original_path, temp_path)
         resized = true
       else
-        resized = resize(original_path, temp_path, width, height, opts[:allow_animation])
+        resized = resize(original_path, temp_path, width, height, opts)
       end
 
       if resized
@@ -81,40 +81,80 @@ class OptimizedImage < ActiveRecord::Base
     end
   end
 
-  def self.resize(from, to, width, height, allow_animation=false)
+  def self.resize_instructions(from, to, dimensions, opts={})
     # NOTE: ORDER is important!
-    instructions = if allow_animation && from =~ /\.GIF$/i
-      %W{
-        #{from}
-        -coalesce
-        -gravity center
-        -thumbnail #{width}x#{height}^
-        -extent #{width}x#{height}
-        -layers optimize
-        #{to}
-      }.join(" ")
-    else
-      %W{
-        #{from}[0]
-        -background transparent
-        -gravity center
-        -thumbnail #{width}x#{height}^
-        -extent #{width}x#{height}
-        -interpolate bicubic
-        -unsharp 2x0.5+0.7+0
-        -quality 98
-        #{to}
-      }.join(" ")
-    end
+    %W{
+      #{from}[0]
+      -gravity center
+      -background transparent
+      -thumbnail #{dimensions}^
+      -extent #{dimensions}
+      -interpolate bicubic
+      -unsharp 2x0.5+0.7+0
+      -quality 98
+      #{to}
+    }
+  end
 
-    `convert #{instructions}`
+  def self.resize_instructions_animated(from, to, dimensions, opts={})
+    %W{
+      #{from}
+      -coalesce
+      -gravity center
+      -thumbnail #{dimensions}^
+      -extent #{dimensions}
+      #{to}
+    }
+  end
 
-    if $?.exitstatus == 0
-      ImageOptim.new.optimize_image(to) rescue nil
-      true
-    else
-      false
-    end
+  def self.downsize_instructions(from, to, dimensions, opts={})
+    %W{
+      #{from}[0]
+      -gravity center
+      -background transparent
+      -thumbnail #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      #{to}
+    }
+  end
+
+  def self.downsize_instructions_animated(from, to, dimensions, opts={})
+    %W{
+      #{from}
+      -coalesce
+      -gravity center
+      -background transparent
+      -thumbnail #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      #{to}
+    }
+  end
+
+  def self.resize(from, to, width, height, opts={})
+    optimize("resize", from, to, width, height, opts)
+  end
+
+  def self.downsize(from, to, max_width, max_height, opts={})
+    optimize("downsize", from, to, max_width, max_height, opts)
+  end
+
+  def self.optimize(operation, from, to, width, height, opts={})
+    dim = dimensions(width, height)
+    method_name = "#{operation}_instructions"
+    method_name += "_animated" if !!opts[:allow_animation] && from =~ /\.GIF$/i
+    instructions = self.send(method_name.to_sym, from, to, dim, opts)
+    convert_with(instructions)
+  end
+
+  def self.dimensions(width, height)
+    "#{width}x#{height}"
+  end
+
+  def self.convert_with(instructions)
+    `convert #{instructions.join(" ")}`
+
+    return false if $?.exitstatus != 0
+
+    ImageOptim.new.optimize_image(to) rescue nil
+    true
   end
 
 end

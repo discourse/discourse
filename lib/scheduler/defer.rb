@@ -67,10 +67,10 @@ module Scheduler
         RailsMultisite::ConnectionManagement.establish_connection(db: db) if db
         job.call
       rescue => ex
-        Discourse.handle_exception(ex, {message: "Running deferred code '#{desc}'"})
+        Discourse.handle_job_exception(ex, {message: "Running deferred code '#{desc}'"})
       end
     rescue => ex
-      Discourse.handle_exception(ex, {message: "Processing deferred code queue"})
+      Discourse.handle_job_exception(ex, {message: "Processing deferred code queue"})
     ensure
       ActiveRecord::Base.connection_handler.clear_active_connections!
     end

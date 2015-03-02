@@ -2,6 +2,7 @@ class StringSettingValidator
   def initialize(opts={})
     @opts = opts
     @regex = Regexp.new(opts[:regex]) if opts[:regex]
+    @regex_error = opts[:regex_error] || 'site_settings.errors.regex_mismatch'
   end
 
   def valid_value?(val)
@@ -22,7 +23,7 @@ class StringSettingValidator
 
   def error_message
     if @regex_fail
-      I18n.t('site_settings.errors.regex_mismatch')
+      I18n.t(@regex_error)
     elsif @length_fail
       if @opts[:min] && @opts[:max]
         I18n.t('site_settings.errors.invalid_string_min_max', {min: @opts[:min], max: @opts[:max]})

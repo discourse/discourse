@@ -48,6 +48,10 @@ export default ObjectController.extend({
 
   _showFooter: function() {
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  }.observes("canLoadMore")
+  }.observes("canLoadMore"),
+
+  showLongDescription: function(){
+    return window.location.search.match("long-description");
+  }.property('userBadges')
 
 });

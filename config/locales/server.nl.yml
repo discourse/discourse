@@ -6,6 +6,9 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 nl:
+  stringex:
+    characters:
+      number: "-"
   i18n:
     transliterate:
       rule:
@@ -26,9 +29,37 @@ nl:
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "is beperkt tot %{max} tekens; je gebruikt %{length}."
       invalid_boolean: "Ongeldige boolean."
+      taken: "is al in gebruik"
+      accepted: moet geaccepteerd worden
+      blank: mag niet leeg zijn
+      present: moet leeg zijn
+      confirmation: "komt niet overeen met %{attribute}"
+      empty: mag niet leeg zijn
+      equal_to: moet gelijk zijn aan %{count}
+      even: moet even zijn
+      exclusion: is gereserveerd
+      greater_than: moet groter zijn dan %{count}
+      greater_than_or_equal_to: moet groter zijn dan of gelijk zijn aan %{count}
+      invalid: is ongeldig
+      less_than: moet minder zijn dan %{count}
+      less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
+      not_a_number: is niet een getal
+      not_an_integer: moet een integer zijn
+      odd: moet oneven zijn
+      record_invalid: 'Validatie mislukt: %{errors}'
+      too_long:
+        one: is te lang (maximum is één teken)
+        other: is te lang (maximum is %{count} tekens)
+      too_short:
+        one: is te kort (minimum is één teken)
+        other: is te kort (minimum is %{count} tekens)
+      wrong_length:
+        one: is de verkeerde lengte (moet één teken zijn)
+        other: is de verkeerde lengte (moet %{count} tekens zijn)
     embed:
       load_from_remote: "Er ging iets mis bij het laden van dat bericht."
   bulk_invite:
@@ -96,6 +127,7 @@ nl:
     latest: "Nieuwste topics"
     hot: "Hot topics"
   too_late_to_edit: "Dat bericht is lang geleden geschreven. Het kan niet meer gewijzigd of verwijderd worden."
+  excerpt_image: "afbeelding"
   groups:
     errors:
       can_not_modify_automatic: "Je kunt automatische groepen niet wijzigen"
@@ -141,14 +173,6 @@ nl:
       Heb je al overwogen **[om naar je profielpagina te gaan](%{profile_path})** om een nieuwe afbeelding van jou te uploaden?
 
       Het is makkelijker om conversaties te volgen en interessante mensen te vinden als iedereen een unieke avatar heeft!
-    sequential_replies: |
-      ### Overweeg om op meerdere berichten ineens te reageren
-
-      In plaatst van een reactie per bericht te plaatsten, kan je ook meerdere berichten ineens citeren en @namen noemen in je reactie.
-
-      Je kan je vorige reactie wijzigen en er een citaat aan toevoegen door de betreffende tekst te selecteren en op de <b>citeer</b> knop te drukken die dan verschijnt.
-
-      Het is voor iedereen makkelijker om topics te lezen met minder losstaande reacties.
     dominating_topic: |
       ### Laat anderen meedoen in de conversatie
 
@@ -185,6 +209,7 @@ nl:
             base:
               warning_requires_pm: "Je kunt alleen waarschuwingen aan privéberichten toevoegen."
               too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
+              no_user_selected: "Je moet een geldige gebruiker selecteren."
         user:
           attributes:
             password:
@@ -333,26 +358,32 @@ nl:
   activation:
     action: "Activeer je account"
     already_done: "Sorry, de link om je account te activeren is niet langer geldig. Wellicht is je account al geactiveerd?"
+    please_continue: "Je account is bevestigd en je wordt nu doorgestuurd naar de homepage."
     continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
   post_action_types:
     off_topic:
       title: 'Off-topic'
+      description: 'Dit bericht wijkt erg af van het onderwerp van deze discussie, en moet wellicht naar een ander topic worden verplaatst.'
       long_form: 'heeft dit als off-topic gemeld'
     spam:
       title: 'Spam'
       description: 'Dit bericht bevat reclame. Het draagt niets bij aan deze topic en is er alleen om iets te promoten.'
       long_form: 'heeft dit als spam gemeld'
+      email_title: '"%{title}" is als spam gemarkeerd'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ongepast'
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
+      title: 'Privebericht @{{username}}'
       description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
+      title: "Iets anders"
       email_title: 'Graag aandacht van een moderator voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -377,6 +408,7 @@ nl:
       description: 'Dit topic bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'markeerde dit als ongepast'
     notify_moderators:
+      title: "Iets anders"
       description: 'Dit topic moet door een moderator bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
@@ -403,7 +435,6 @@ nl:
       xaxis: "Dag"
       yaxis: "Aantal bezoeken"
     signups:
-      title: "Leden"
       xaxis: "Dag"
       yaxis: "Aantal leden"
     topics:
@@ -473,6 +504,39 @@ nl:
       title: "Top doorverwezen topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    page_view_anon_reqs:
+      title: "Anoniem"
+      xaxis: "Dag"
+    page_view_logged_in_reqs:
+      title: "Ingelogd"
+      xaxis: "Dag"
+    page_view_crawler_reqs:
+      xaxis: "Dag"
+    page_view_total_reqs:
+      title: "Totaal"
+      xaxis: "Dag"
+    http_background_reqs:
+      title: "Achtergrond"
+      xaxis: "Dag"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Dag"
+      yaxis: "Successful requests (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
+      xaxis: "Dag"
+      yaxis: "Redirect requests (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client Error)"
+      xaxis: "Dag"
+      yaxis: "Client Errors (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Server Error)"
+      xaxis: "Dag"
+      yaxis: "Server Errors (Status 5xx)"
+    http_total_reqs:
+      title: "Totaal"
+      xaxis: "Dag"
   dashboard:
     rails_env_warning: "Je server draait in %{env} modus."
     ruby_version_warning: "Je gebruikt een versie van Ruby 2.0.0 met problemen. Upgrade naar patch level 247 of later."
@@ -531,12 +595,17 @@ nl:
     allow_uncategorized_topics: "Sta topics zonder categorie toe"
     allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
     unique_posts_mins: "Hoeveel minuten iemand moet wachten voordat deze een bericht met dezelfde inhoud mag plaatsen"
+    title: "De naam van deze site, wordt gebruikt in de titeltag"
+    site_description: "Omschrijf de site in één zin. Deze wordt getoond in de meta-omschrijvingstag."
+    contact_email: "E-mailadressen van een contactpersonen van deze site. Belangrijke updates, zoals onbehandelde meldingen, maar ook berichten van het /about contactformulier worden naar dit adres gestuurd."
     queue_jobs: "DEVELOPERS ONLY! WARNING! Zet verschillende taken in een queue binnen sidekiq, bij 'false' worden taken ineens uitgevoerd"
     crawl_images: "Haal afbeeldingen van externe URLs om de correcte breedte- en hoogtedimensies in te voegen"
     download_remote_images_to_local: "Download externe afbeeldingen en sla ze lokaal op. Dit voorkomt dat afbeeldingen niet meer beschikbaar zouden kunnen worden."
     download_remote_images_threshold: "Minimum schijfruimte vereist om externe afbeeldingen lokaal te downloaden (percentage)"
     ninja_edit_window: "Hoe snel je een aanpassing kan maken zonder dat er een nieuwe versie wordt opgeslagen, in (n) seconden."
     post_edit_time_limit: "Berichten mogen na (n) minuten nog gewijzigd of verwijderd worden door de schrijver. Gebruik 0 voor onbeperkt."
+    max_image_width: "Maximale breedte van een thumbnail van afbeeldingen in een bericht"
+    max_image_height: "Maximale hoogte van een thumbnail van afbeeldingen in een bericht"
     category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
     exclude_rel_nofollow_domains: "Een pipe-gescheiden lijst van domeinen waar 'nofollow' niet is toegevoegd (voorbeelddomein.com zal automatisch sub.voorbeelddomein.com toestaan)."
     favicon_url: "Een favicon voor je site. Zie http://nl.wikipedia.org/wiki/Favicon"
@@ -748,6 +817,59 @@ nl:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
+      text_body_template: |
+        Bedankt voor het accepteren van je uitnodiging voor %{site_name} en welkom op ons forum!
+
+        We hebben een automatisch een gebruikersnaam voor je aangemaakt: **%{username}** en je bent nu ingelogd. Je kan je gebruikersnaam nog veranderen door naar  [je gebruikersprofiel][prefs] te gaan. Dit is zeker aan te raden als je gebruikersnaam wat onduidelijk is.
+
+        Om nogmaals in te loggen kan je het volgende doen:
+
+        1. Gebruik altijd **hetzelfde e-mailadres** als waarop je je originele uitnodiging hebt ontvangen. Anders weten we niet zeker dat jij het bent!
+
+        2. Maak een uniek wachtwoord aan in [je gebruikersprofiel][prefs] en log daarmee in.
+
+        %{new_user_tips}
+
+        We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/faq).
+
+        Nogmaals, welkom!
+
+        (Mocht je, als nieuwe gebruiker, een privebericht aan een van de [stafleden](%{base_url}/about) willen sturen, reageer dan op dit bericht.)
+
+        [prefs]: %{user_preferences_url}
+    backup_succeeded:
+      subject_template: "Backup succesvol uitgevoerd"
+    backup_failed:
+      subject_template: "Backup mislukt"
+      text_body_template: |
+        De backup is mislukt.
+
+        Hier is het log:
+
+        ```
+        %{logs}
+        ```
+    restore_succeeded:
+      subject_template: "Het terugzetten van de backup is geslaagd."
+      text_body_template: "Het terugzetten van de backup is geslaagd."
+    restore_failed:
+      subject_template: "Terugzetten van backup is mislukt"
+    csv_export_succeeded:
+      subject_template: "Export succesvol afgerond."
+    csv_export_failed:
+      subject_template: "Export mislukt"
+    email_reject_topic_not_found:
+      subject_template: "E-mailprobleem -- Topic niet gevonden"
+      text_body_template: |
+        Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
+
+        De betreffende topic is niet gevonden. Als je denkt dat dit niet klopt, neem dan contact op met een staflid.
+    email_reject_topic_closed:
+      subject_template: "E-mailprobleem --- Topic gesloten"
+      text_body_template: |
+        Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
+
+        De betreffende topic is gesloten. Als je denkt dat dit niet klopt, neem dan contact op met een staflid.
     too_many_spam_flags:
       subject_template: "Account geblokkeerd"
       text_body_template: |
@@ -867,13 +989,17 @@ nl:
         ---
         %{respond_instructions}
     digest:
+      why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
       subject_template: "[%{site_name}] Samenvatting voor %{date}"
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Populaire berichten"
       other_new_topics: "Populaire topics"
+      unsubscribe: "Deze samenvatting wordt door %{site_link} verstuurd als we je een tijdje niet gezien gebben op onze site. Mocht je dit uit willen zetten of je e-mailvoorkeur willen veranderen, %{unsubscribe_link}."
       click_here: "klik hier"
       from: "%{site_name} Digest"
       read_more: "Lees verder"
+      more_topics: "Er waren %{new_topics_since_seen} andere nieuwe topics gepost."
+      more_topics_category: "Meer nieuwe topics:"
       posts:
         one: "één bericht"
         other: "%{count} berichten"
@@ -939,7 +1065,10 @@ nl:
     unauthorized: "Sorry, je mag dat bestand niet uploaden (toegestane extensies: %{authorized_extensions})."
     pasted_image_filename: "Geplakte afbeelding"
     store_failure: "Het opslaan van upload #%{upload_id} voor gebruiker #%{user_id} is mislukt."
+    attachments:
+      too_large: "Sorry, het bestand dat je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB)."
     images:
+      too_large: "De afbeelding die je wil uploaden is te groot (maximum grootte is %{max_size_kb}%KB). Verklein de afbeelding en probeer het opnieuw."
       fetch_failure: "Er ging iets mis bij het opvragen van de afbeelding."
       unknown_image_type: "Het bestand dat je wil uploaden is geen afbeelding."
       size_not_found: "Het is niet gelukt de afmetingen van de afbeelding te bepalen. Misschien is het bestand corrupt?"
@@ -965,6 +1094,9 @@ nl:
   guidelines: "Regels"
   privacy: "Privacy"
   edit_this_page: "Wijzig deze pagina"
+  csv_export:
+    boolean_yes: "Ja"
+    boolean_no: "Nee"
   static_topic_first_reply: |
     Verander het eerste bericht in dit Topic om de inhoud van de %{page_name} pagina te wijzigen.
   guidelines_topic:

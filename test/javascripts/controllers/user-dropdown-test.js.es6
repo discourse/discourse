@@ -1,23 +1,19 @@
 moduleFor("controller:user-dropdown");
 
 test("logout action logs out the current user", function () {
-  var logout_mock = sinon.mock(Discourse, "logout");
-  logout_mock.expects("logout").once();
+  const logoutMock = sinon.mock(Discourse, "logout");
+  logoutMock.expects("logout").once();
 
-  var controller = this.subject();
-  controller.send("logout");
+  this.subject().send('logout');
 
-  logout_mock.verify();
+  logoutMock.verify();
 });
 
 test("showAdminLinks", function() {
-  var currentUserStub = Ember.Object.create();
-  sandbox.stub(Discourse.User, "current").returns(currentUserStub);
-
-  currentUserStub.set("staff", true);
-  var controller = this.subject();
+  const currentUser = Ember.Object.create({ staff: true });
+  const controller = this.subject({ currentUser });
   equal(controller.get("showAdminLinks"), true, "is true when current user is a staff member");
 
-  currentUserStub.set("staff", false);
+  currentUser.set("staff", false);
   equal(controller.get("showAdminLinks"), false, "is false when current user is not a staff member");
 });

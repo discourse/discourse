@@ -14,11 +14,13 @@ matrix:
       env: "RAILS_MASTER=1"
     - rvm: 2.1
       env: "RAILS_MASTER=1"
+    - rvm: rbx-2
   fast_finish: true
 
 rvm:
   - 2.0.0
   - 2.1
+  - rbx-2
 
 services:
   - redis-server
