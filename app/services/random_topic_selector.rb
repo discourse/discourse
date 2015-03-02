@@ -72,6 +72,7 @@ class RandomTopicSelector
     Category.select(:id).each do |c|
       $redis.del cache_key(c)
     end
+    $redis.del cache_key
   end
 
   def self.cache_key(category=nil)
