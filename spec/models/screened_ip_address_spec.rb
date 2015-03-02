@@ -238,22 +238,22 @@ describe ScreenedIpAddress do
     end
   end
 
-  describe '#block_login?' do
+  describe '#block_admin_login?' do
     context 'no allow_admin records exist' do
       it "returns false when user is nil" do
-        expect(described_class.block_login?(nil, '123.12.12.12')).to eq(false)
+        expect(described_class.block_admin_login?(nil, '123.12.12.12')).to eq(false)
       end
 
       it "returns false for non-admin user" do
-        expect(described_class.block_login?(Fabricate.build(:user), '123.12.12.12')).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:user), '123.12.12.12')).to eq(false)
       end
 
       it "returns false for admin user" do
-        expect(described_class.block_login?(Fabricate.build(:admin), '123.12.12.12')).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:admin), '123.12.12.12')).to eq(false)
       end
 
       it "returns false for admin user and ip_address arg is nil" do
-        expect(described_class.block_login?(Fabricate.build(:admin), nil)).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:admin), nil)).to eq(false)
       end
     end
 
@@ -264,23 +264,23 @@ describe ScreenedIpAddress do
       end
 
       it "returns false when user is nil" do
-        expect(described_class.block_login?(nil, @permitted_ip_address)).to eq(false)
+        expect(described_class.block_admin_login?(nil, @permitted_ip_address)).to eq(false)
       end
 
       it "returns false for an admin user at the allowed ip address" do
-        expect(described_class.block_login?(Fabricate.build(:admin), @permitted_ip_address)).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:admin), @permitted_ip_address)).to eq(false)
       end
 
       it "returns true for an admin user at another ip address" do
-        expect(described_class.block_login?(Fabricate.build(:admin), '123.12.12.12')).to eq(true)
+        expect(described_class.block_admin_login?(Fabricate.build(:admin), '123.12.12.12')).to eq(true)
       end
 
       it "returns false for regular user at allowed ip address" do
-        expect(described_class.block_login?(Fabricate.build(:user), @permitted_ip_address)).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:user), @permitted_ip_address)).to eq(false)
       end
 
       it "returns false for regular user at another ip address" do
-        expect(described_class.block_login?(Fabricate.build(:user), '123.12.12.12')).to eq(false)
+        expect(described_class.block_admin_login?(Fabricate.build(:user), '123.12.12.12')).to eq(false)
       end
     end
   end
