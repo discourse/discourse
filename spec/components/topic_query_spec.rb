@@ -432,6 +432,10 @@ describe TopicQuery do
 
     context 'when logged in' do
 
+      before do
+        RandomTopicSelector.clear_cache!
+      end
+
       let(:topic) { Fabricate(:topic) }
       let(:suggested_topics) { topic_query.list_suggested_for(topic).topics.map{|t| t.id} }
 
