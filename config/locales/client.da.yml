@@ -147,7 +147,6 @@ da:
       user_count: "Nye brugere"
       active_user_count: "Aktive brugere"
       contact: "Kontakt os"
-      contact_info: "I tilfælde af kritiske situationer eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_email}."
     bookmarked:
       title: "Bogmærke"
       clear_bookmarks: "Ryd Bogmærker"

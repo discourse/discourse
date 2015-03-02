@@ -147,7 +147,6 @@ pt:
       user_count: "Novos Utilizadores"
       active_user_count: "Utilizadores Activos"
       contact: "Contacte-nos"
-      contact_info: "No caso de ter um problema critico ou assunto urgente que afete este site, por favor, contacte-nos em %{contact_email}."
     bookmarked:
       title: "Adicionar Marcador"
       clear_bookmarks: "Remover Marcadores"

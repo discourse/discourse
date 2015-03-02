@@ -147,7 +147,6 @@ fi:
       user_count: "Uusia käyttäjiä"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Yhteystiedot"
-      contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
     bookmarked:
       title: "Kirjanmerkki"
     bookmarks:

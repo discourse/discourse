@@ -147,7 +147,6 @@ he:
       user_count: "חדשים"
       active_user_count: "משתמשים פעילים"
       contact: "צרו קשר"
-      contact_info: "במקרה של עניין קריטי או דחוף המשפיע על אתר זה, אנא צרו קשר ב-%{contact_email}."
     bookmarked:
       title: "סימניה"
       clear_bookmarks: "ניקוי סימניות"

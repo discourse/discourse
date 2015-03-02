@@ -147,7 +147,7 @@ fr:
       user_count: "Nouveaux utilisateurs"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
-      contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter: %{contact_email}."
+      contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter : %{contact_info}"
     bookmarked:
       title: "Signet"
       clear_bookmarks: "Vider signets"
@@ -458,6 +458,7 @@ fr:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
+        same_as_username: "Votre mot de passe est le même que votre pseudo."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
       associated_accounts: "Connexions"
@@ -2016,10 +2017,13 @@ fr:
           modal_title: Regroupement de badge
         granted_by: Décerné par
         granted_at: Décerné le
+        reason_help: (Lien vers un message ou sujet)
         save: Sauvegarder
         delete: Supprimer
         delete_confirm: Ëtes-vous sûr de vouloir supprimer ce badge ?
         revoke: Retirer
+        reason: Raison
+        expand: Développer &hellip;
         revoke_confirm: Êtes-vous sur de vouloir retirer ce badge à cet utilisateur ?
         edit_badges: Modifier les badges
         grant_badge: Décerner le badge

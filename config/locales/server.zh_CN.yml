@@ -77,6 +77,8 @@ zh_CN:
     backup_file_should_be_tar_gz: "备份文件应为 .tar.gz 存档文件。"
     not_enough_space_on_disk: "没有足够的磁盘空间可供备份文件上传。"
   not_logged_in: "你需要登录后才能这么做。"
+  not_found: "请求的 URL 或资源未找到。"
+  invalid_access: "你没有权限查看请求的资源。"
   read_only_mode_enabled: "这个站点正处于只读模式。交互功能已禁用。"
   too_many_replies:
     other: "我们非常抱歉，但是新用户被临时限制为在同一个主题只能回复 %{count} 次"
@@ -227,6 +229,7 @@ zh_CN:
           attributes:
             password:
               common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
+              same_as_username: "与你的用户名相同。请使用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登录。"
         color_scheme_color:
@@ -640,6 +643,7 @@ zh_CN:
     title: "站点名字，用于 title 标签。"
     site_description: "用一句话描述这个论坛，用于 meta description 标签。"
     contact_email: "本站负责人的电子邮件地址。用于紧急事项的通知，如未处理的标记，以及作为 /about 页面中的紧急联系人。"
+    contact_url: "联系 URL。作为 /about 页面中的紧急联系方式。"
     queue_jobs: "仅限开发者设定！警告！默认使用 sidekiq 完成队列工作。如果禁用，你的站点将无法使用。"
     crawl_images: "允许从第三方 URL 获取图片来插入宽、高数值"
     download_remote_images_to_local: "下载一份主题中链接的外部图片到本地；以防图片损坏。"
@@ -738,8 +742,8 @@ zh_CN:
     max_username_length: "最大用户名长度。警告：所有现用户名大于此限制长度的用户都将无法访问站点。"
     min_password_length: "最小密码长度。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
-    enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆；同时禁用邀请功能）"
-    enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 协议，要求设置 sso_secret"
+    enable_sso: "启用通过外部站点单点登录（注意：如果没有正确配置就启用可能会使得所有人都无法登陆，包括你；同时禁用邀请功能）"
+    enable_sso_provider: "在 /session/sso_provider endpoint 实现 Discourse SSO 提供方协议，要求设置 sso_secret"
     sso_url: "单点登录 URL 入口点"
     sso_secret: "秘密字符串，用于验证秘密的 SSO 信息，请保证是 10 个字符或者更长"
     sso_overrides_email: "用 SSO 信息中的外部邮件地址覆盖本地邮件地址（警告：因为对本地邮件的统一处理，这个邮件地址可能不同）"
@@ -934,6 +938,7 @@ zh_CN:
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     enable_emoji: "启用绘文字（emoji）"
     emoji_set: "您喜欢哪一种 emoji？"
+    enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1649,6 +1654,7 @@ zh_CN:
     body_blank: "body 为空"
   color_schemes:
     base_theme_name: "基础"
+  about: "关于"
   guidelines: "指导"
   privacy: "隐私"
   edit_this_page: "编辑页面"
