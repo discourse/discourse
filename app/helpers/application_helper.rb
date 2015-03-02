@@ -153,9 +153,12 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
-
   def customization_disabled?
     session[:disable_customization]
+  end
+
+  def loading_admin?
+    controller.class.name.split("::").first == "Admin"
   end
 
   def category_badge(category, opts=nil)
