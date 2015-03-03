@@ -1,4 +1,5 @@
 import registerUnbound from 'discourse/helpers/register-unbound';
+import avatarTemplate from 'discourse/lib/avatar-template';
 
 function renderAvatar(user, options) {
   options = options || {};
@@ -28,13 +29,12 @@ function renderAvatar(user, options) {
 
     // this is simply done to ensure we cache images correctly
     var uploadedAvatarId = Em.get(user, 'uploaded_avatar_id') || Em.get(user, 'user.uploaded_avatar_id');
-    var avatarTemplate = Discourse.User.avatarTemplate(username,uploadedAvatarId);
 
     return Discourse.Utilities.avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
       title: title || username,
-      avatarTemplate: avatarTemplate
+      avatarTemplate: avatarTemplate(username, uploadedAvatarId)
     });
   } else {
     return '';
