@@ -183,7 +183,7 @@ class PostAction < ActiveRecord::Base
   end
 
   def add_moderator_post_if_needed(moderator, disposition, delete_post=false)
-    return if related_post.nil?
+    return if related_post.nil? || related_post.topic.nil?
     return if moderator_already_replied?(related_post.topic, moderator)
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
@@ -422,7 +422,7 @@ class PostAction < ActiveRecord::Base
   MAXIMUM_FLAGS_PER_POST = 3
 
   def self.auto_close_if_threshold_reached(topic)
-    return if topic.closed?
+    return if topic.nil? || topic.closed?
 
     flags = PostAction.active
                       .flags
