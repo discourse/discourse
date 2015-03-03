@@ -4,42 +4,44 @@ export default DiscourseController.extend({
   poll: null,
   showResults: Em.computed.oneWay('poll.closed'),
   disableRadio: Em.computed.any('poll.closed', 'loading'),
-  showToggleClosePoll: function() {
-    return this.get('poll.post.topic.details.can_edit');
-  }.property('poll.post.topic.details.can_edit'),
+  showToggleClosePoll: Em.computed.alias('poll.post.topic.details.can_edit'),
 
   actions: {
-    selectOption: function(option) {
+    selectOption(option) {
       if (this.get('disableRadio')) {
         return;
       }
 
-      if (!this.get('currentUser.id')) {
+      if (!this.get('postController.currentUser.id')) {
         this.get('postController').send('showLogin');
         return;
       }
 
       this.set('loading', true);
+
+      const self = this;
       this.get('poll').saveVote(option).then(function() {
-        this.set('loading', false);
-        this.set('showResults', true);
-      }.bind(this));
+        self.setProperties({ loading: false, showResults: true});
+      });
     },
 
-    toggleShowResults: function() {
-      this.set('showResults', !this.get('showResults'));
+    toggleShowResults() {
+      this.toggleProperty('showResults');
     },
 
-    toggleClosePoll: function() {
+    toggleClosePoll() {
+      const self = this;
+
       this.set('loading', true);
-      return Discourse.ajax("/poll/toggle_close", {
-        type: "PUT",
-        data: {post_id: this.get('poll.post.id')}
-      }).then(function(topicJson) {
-        this.set('poll.post.topic.title', topicJson.basic_topic.title);
-        this.set('poll.post.topic.fancy_title', topicJson.basic_topic.title);
-        this.set('loading', false);
-      }.bind(this));
+
+      return Discourse.ajax('/poll/toggle_close', {
+        type: 'PUT',
+        data: { post_id: this.get('poll.post.id') }
+      }).then(function(result) {
+        self.set('poll.post.topic.title', result.basic_topic.title);
+        self.set('poll.post.topic.fancy_title', result.basic_topic.title);
+        self.set('loading', false);
+      });
     }
   }
 });

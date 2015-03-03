@@ -4,6 +4,6 @@ Discourse.Dialect.inlineBetween({
   rawContents: true,
   emitter: function(contents) {
     var list = Discourse.Dialect.cook(contents, {});
-    return ['div', {class: 'poll-ui'}, list];
+    return ['div', { class: 'poll-ui' }, list];
   }
 });

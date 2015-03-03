@@ -1,12 +1,12 @@
 <table>
   {{#each po in poll.options}}
-    <tr {{bind-attr class=po.checked:active}} {{action "selectOption" po.option}}>
+    <tr {{bind-attr class="po.checked:active"}} {{action "selectOption" po.option}}>
       <td class="radio">
-        <input type="radio" name="poll" {{bind-attr checked=po.checked disabled=controller.disableRadio}}>
+        <input type="radio" name="poll" {{bind-attr checked="po.checked" disabled="disableRadio"}}>
       </td>
       <td class="option">
         <div class="option">{{{po.option}}}</div>
-        {{#if controller.showResults}}
+        {{#if showResults}}
           <div class="result">{{i18n 'poll.voteCount' count=po.votes}}</div>
         {{/if}}
       </td>
@@ -15,27 +15,23 @@
 </table>
 
 <div class='row'>
-<button {{action "toggleShowResults"}} class="btn btn-small show-results">
-  {{#if showResults}}
-    <i class="fa fa-eye-slash"></i>
-    {{i18n 'poll.results.hide'}}
-  {{else}}
-    <i class="fa fa-eye"></i>
-    {{i18n 'poll.results.show'}}
-  {{/if}}
-</button>
-
-{{#if showToggleClosePoll}}
-  <button {{action "toggleClosePoll"}} class="btn btn-small toggle-poll">
-    {{#if poll.closed}}
-      <i class="fa fa-unlock-alt"></i>
-      {{i18n 'poll.open_poll'}}
+  <button {{action "toggleShowResults"}} class="btn btn-small show-results">
+    {{#if showResults}}
+      {{fa-icon "eye-slash"}} {{i18n 'poll.results.hide'}}
     {{else}}
-      <i class="fa fa-lock"></i>
-      {{i18n 'poll.close_poll'}}
+      {{fa-icon "eye"}} {{i18n 'poll.results.show'}}
     {{/if}}
   </button>
-{{/if}}
+
+  {{#if showToggleClosePoll}}
+    <button {{action "toggleClosePoll"}} class="btn btn-small toggle-poll">
+      {{#if poll.closed}}
+        {{fa-icon "unlock-alt"}} {{i18n 'poll.open_poll'}}
+      {{else}}
+        {{fa-icon "lock"}} {{i18n 'poll.close_poll'}}
+      {{/if}}
+    </button>
+  {{/if}}
 </div>
 
 {{loading-spinner condition=loading}}

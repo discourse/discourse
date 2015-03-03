@@ -145,7 +145,9 @@ after_initialize do
 end
 
 # Poll UI.
+register_asset "javascripts/models/poll.js.es6"
 register_asset "javascripts/controllers/poll.js.es6"
+register_asset "javascripts/views/poll.js.es6"
 register_asset "javascripts/discourse/templates/poll.hbs"
 register_asset "javascripts/initializers/poll.js.es6"
 register_asset "javascripts/poll_bbcode.js", :server_side
