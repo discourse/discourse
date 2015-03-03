@@ -211,6 +211,11 @@ class PostRevisor
           @post.is_first_post? ? {topic_count: new_owner.topic_count + 1} : {}
         ))
       end
+      UserAction.where( target_post_id: @post.id,
+                        user_id: @post.user_id,
+                        action_type: [UserAction::NEW_TOPIC, UserAction::REPLY, UserAction::RESPONSE] )
+                .find_each { |ua| ua.destroy }
+      # UserActionObserver will create new UserAction records for the new owner
     end
 
     POST_TRACKED_FIELDS.each do |field|
