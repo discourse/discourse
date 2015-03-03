@@ -1,12 +1,6 @@
-/**
-  A data model representing a user on Discourse
+import avatarTemplate from 'discourse/lib/avatar-template';
 
-  @class User
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.User = Discourse.Model.extend({
+const User = Discourse.Model.extend({
 
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
@@ -344,7 +338,7 @@ Discourse.User = Discourse.Model.extend({
   },
 
   avatarTemplate: function() {
-    return Discourse.User.avatarTemplate(this.get('username'), this.get('uploaded_avatar_id'));
+    return avatarTemplate(this.get('username'), this.get('uploaded_avatar_id'));
   }.property('uploaded_avatar_id', 'username'),
 
   /*
@@ -440,27 +434,7 @@ Discourse.User = Discourse.Model.extend({
 
 });
 
-Discourse.User.reopenClass(Discourse.Singleton, {
-
-  avatarTemplate: function(username, uploadedAvatarId) {
-    var url;
-
-    if (uploadedAvatarId) {
-      url = "/user_avatar/" +
-            Discourse.BaseUrl +
-            "/" +
-            username.toLowerCase() +
-            "/{size}/" +
-            uploadedAvatarId + ".png";
-    } else {
-      url = "/letter_avatar/" +
-            username.toLowerCase() +
-            "/{size}/" +
-            Discourse.LetterAvatarVersion + ".png";
-    }
-
-    return Discourse.getURLWithCDN(url);
-  },
+User.reopenClass(Discourse.Singleton, {
 
   /**
     Find a `Discourse.User` for a given username.
@@ -565,3 +539,5 @@ Discourse.User.reopenClass(Discourse.Singleton, {
     });
   }
 });
+
+export default User;

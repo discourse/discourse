@@ -25,6 +25,7 @@
 //= require ./discourse/lib/autocomplete
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
+//= require ./discourse/lib/avatar-template
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action

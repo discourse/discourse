@@ -519,6 +519,7 @@ avatars:
   default_avatars:
     default: ''
     type: url_list
+    client: true
 
 trust:
   default_trust_level:
