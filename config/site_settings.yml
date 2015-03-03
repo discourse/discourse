@@ -299,6 +299,9 @@ users:
   public_user_custom_fields:
     type: list
     default: ''
+  staff_user_custom_fields:
+    type: list
+    default: ''
 
 posting:
   min_post_length:

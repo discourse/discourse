@@ -1078,6 +1078,7 @@ en:
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
+    staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 

@@ -42,6 +42,11 @@ class TopicView
       @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.public_user_custom_fields.split('|'))
     end
 
+    if @guardian.is_staff? && SiteSetting.staff_user_custom_fields.present? && @posts
+      @user_custom_fields ||= {}
+      @user_custom_fields.deep_merge!(User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.staff_user_custom_fields.split('|')))
+    end
+
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
   end
