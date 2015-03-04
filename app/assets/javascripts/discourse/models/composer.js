@@ -545,7 +545,7 @@ Discourse.Composer = Discourse.Model.extend({
       // Furthermore calculating cooked is very complicated, especially since
       // we would need to handle oneboxes and other bits that are not even in the
       // engine, staging will just cause a blank post to render
-      if (!Discourse.Mobile.mobileView && !postStream.stagePost(createdPost, currentUser)) {
+      if (!_.isEmpty(createdPost.get('cooked')) && !postStream.stagePost(createdPost, currentUser)) {
 
         // If we can't stage the post, return and don't save. We're likely currently
         // staging a post.
