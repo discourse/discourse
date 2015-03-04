@@ -1,3 +1,13 @@
+function unlessReadOnly(method) {
+  return function() {
+    if (this.site.get("isReadOnly")) {
+      bootbox.alert(I18n.t("read_only_mode.login_disabled"));
+    } else {
+      this[method]();
+    }
+  };
+}
+
 const ApplicationRoute = Discourse.Route.extend({
 
   siteTitle: Discourse.computed.setting('title'),
@@ -59,32 +69,9 @@ const ApplicationRoute = Discourse.Route.extend({
       this.intermediateTransitionTo('exception');
     },
 
-    showLogin() {
-      if (this.site.get("isReadOnly")) {
-        bootbox.alert(I18n.t("read_only_mode.login_disabled"));
-      } else {
-        this.handleShowLogin();
-      }
-    },
+    showLogin: unlessReadOnly('handleShowLogin'),
 
-    showCreateAccount() {
-      if (this.site.get("isReadOnly")) {
-        bootbox.alert(I18n.t("read_only_mode.login_disabled"));
-      } else {
-        this.handleShowCreateAccount();
-      }
-    },
-
-    autoLogin(modal, onFail){
-      const methods = Em.get('Discourse.LoginMethod.all');
-      if (!Discourse.SiteSettings.enable_local_logins &&
-          methods.length === 1) {
-            Discourse.Route.showModal(this, modal);
-            this.controllerFor('login').send('externalLogin', methods[0]);
-      } else {
-        onFail();
-      }
-    },
+    showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
 
     showForgotPassword() {
       Discourse.Route.showModal(this, 'forgotPassword');
@@ -114,12 +101,7 @@ const ApplicationRoute = Discourse.Route.extend({
 
     },
 
-
-    /**
-      Close the current modal, and destroy its state.
-
-      @method closeModal
-    **/
+    // Close the current modal, and destroy its state.
     closeModal() {
       this.render('hide-modal', {into: 'modal', outlet: 'modalBody'});
     },
@@ -128,18 +110,11 @@ const ApplicationRoute = Discourse.Route.extend({
       Hide the modal, but keep it with all its state so that it can be shown again later.
       This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
       user clicks "No", showModal. If user clicks "Yes", be sure to call closeModal.
-
-      @method hideModal
     **/
     hideModal() {
       $('#discourse-modal').modal('hide');
     },
 
-    /**
-      Show the modal. Useful after calling hideModal.
-
-      @method showModal
-    **/
     showModal() {
       $('#discourse-modal').modal('show');
     },
@@ -153,11 +128,6 @@ const ApplicationRoute = Discourse.Route.extend({
       });
     },
 
-    /**
-      Deletes a user and all posts and topics created by that user.
-
-      @method deleteSpammer
-    **/
     deleteSpammer: function (user) {
       this.send('closeModal');
       user.deleteAsSpammer(function() { window.location.reload(); });
@@ -177,26 +147,28 @@ const ApplicationRoute = Discourse.Route.extend({
   },
 
   handleShowLogin() {
-    const self = this;
-
-    if(Discourse.SiteSettings.enable_sso) {
+    if (this.siteSettings.enable_sso) {
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
     } else {
-      this.send('autoLogin', 'login', function(){
-        Discourse.Route.showModal(self, 'login');
-        self.controllerFor('login').resetForm();
-      });
+      this._autoLogin('login', () => this.controllerFor('login').resetForm());
     }
   },
 
   handleShowCreateAccount() {
-    const self = this;
+    this._autoLogin('createAccount');
+  },
 
-    self.send('autoLogin', 'createAccount', function(){
-      Discourse.Route.showModal(self, 'createAccount');
-    });
-  }
+  _autoLogin(modal, notAuto) {
+    const methods = Em.get('Discourse.LoginMethod.all');
+    if (!this.siteSettings.enable_local_logins && methods.length === 1) {
+      this.controllerFor('login').send('externalLogin', methods[0]);
+    } else {
+      Discourse.Route.showModal(this, modal);
+      if (notAuto) { notAuto(); }
+    }
+  },
+
 });
 
 RSVP.EventTarget.mixin(ApplicationRoute);

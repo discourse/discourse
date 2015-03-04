@@ -1,6 +1,15 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 
+// This is happening outside of the app via popup
+function showModal(modal) {
+  const route = Discourse.__container__.lookup('route:application');
+  Discourse.Route.showModal(route, modal);
+}
+const AuthErrors =
+  ['requires_invite', 'awaiting_approval', 'awaiting_confirmation', 'admin_not_allowed_from_ip_address',
+   'not_allowed_from_ip_address'];
+
 export default DiscourseController.extend(ModalFunctionality, {
   needs: ['modal', 'createAccount', 'forgotPassword', 'application'],
   authenticate: null,
@@ -146,42 +155,27 @@ export default DiscourseController.extend(ModalFunctionality, {
   }).property('authenticate'),
 
   authenticationComplete: function(options) {
-    if (options.requires_invite) {
-      this.send('showLogin');
-      this.flash(I18n.t('login.requires_invite'), 'success');
-      this.set('authenticate', null);
-      return;
+
+    const self = this;
+    function loginError(errorMsg, className) {
+      showModal('login');
+      Ember.run.next(function() {
+        self.flash(errorMsg, className || 'success');
+        self.set('authenticate', null);
+      });
     }
-    if (options.awaiting_approval) {
-      this.send('showLogin');
-      this.flash(I18n.t('login.awaiting_approval'), 'success');
-      this.set('authenticate', null);
-      return;
+
+    for (let i=0; i<AuthErrors.length; i++) {
+      const cond = AuthErrors[i];
+      if (options[cond]) {
+        return loginError(I18n.t("login." + cond));
+      }
     }
-    if (options.awaiting_activation) {
-      this.send('showLogin');
-      this.flash(I18n.t('login.awaiting_confirmation'), 'success');
-      this.set('authenticate', null);
-      return;
-    }
-    if (options.admin_not_allowed_from_ip_address) {
-      this.send('showLogin');
-      this.flash(I18n.t('login.admin_not_allowed_from_ip_address'), 'success');
-      this.set('authenticate', null);
-      return;
-    }
-    if (options.not_allowed_from_ip_address) {
-      this.send('showLogin');
-      this.flash(I18n.t('login.not_allowed_from_ip_address'), 'success');
-      this.set('authenticate', null);
-      return;
-    }
+
     if (options.suspended) {
-      this.send('showLogin');
-      this.flash(options.suspended_message, 'error');
-      this.set('authenticate', null);
-      return;
+      return loginError(options.suspended_message, 'error');
     }
+
     // Reload the page if we're authenticated
     if (options.authenticated) {
       if (window.location.pathname === Discourse.getURL('/login')) {
@@ -199,7 +193,7 @@ export default DiscourseController.extend(ModalFunctionality, {
       accountName: options.name,
       authOptions: Em.Object.create(options)
     });
-    this.send('showCreateAccount');
+    showModal('createAccount');
   }
 
 });

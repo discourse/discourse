@@ -197,15 +197,10 @@ Discourse.Route.reopenClass({
     appEvents.trigger('dom:clean');
   },
 
-  /**
-    Shows a modal
-
-    @method showModal
-  **/
-  showModal: function(router, name, model) {
-    router.controllerFor('modal').set('modalClass', null);
-    router.render(name, {into: 'modal', outlet: 'modalBody'});
-    var controller = router.controllerFor(name);
+  showModal: function(route, name, model) {
+    route.controllerFor('modal').set('modalClass', null);
+    route.render(name, {into: 'modal', outlet: 'modalBody'});
+    var controller = route.controllerFor(name);
     if (controller) {
       if (model) {
         controller.set('model', model);
