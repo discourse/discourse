@@ -3,12 +3,11 @@ integration("User Card");
 test("card", function() {
   visit('/');
 
-  // will fix
-  // ok(find('#user-card:visible').length === 0, 'user card is invisible by default');
+  ok(invisible('#user-card'), 'user card is invisible by default');
   click('a[data-user-card=eviltrout]:first');
 
   andThen(function() {
-    ok(find('#user-card:visible').length === 1, 'card should appear');
+    ok(visible('#user-card'), 'card should appear');
   });
 
 });
