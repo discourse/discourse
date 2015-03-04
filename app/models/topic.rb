@@ -474,6 +474,8 @@ class Topic < ActiveRecord::Base
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
+      CategoryUser.auto_watch_new_topic(self)
+      CategoryUser.auto_track_new_topic(self)
     end
 
     true
