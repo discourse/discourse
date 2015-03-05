@@ -35,7 +35,15 @@ const PostStream = Ember.Object.extend({
   }.property('stream.@each'),
 
   loadedAllPosts: function() {
-    if (!this.get('hasLoadedData')) { return false; }
+    if (!this.get('hasLoadedData')) {
+      return false;
+    }
+
+    // if we are staging a post assume all is loaded
+    if (this.get('lastPostId') === -1) {
+      return true;
+    }
+
     return !!this.get('posts').findProperty('id', this.get('lastPostId'));
   }.property('hasLoadedData', 'posts.@each.id', 'lastPostId'),
 

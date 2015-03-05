@@ -14,8 +14,19 @@ Discourse.URL = Ember.Object.createWithMixins({
   /**
     Jumps to a particular post in the stream
   **/
-  jumpToPost: function(postNumber) {
+  jumpToPost: function(postNumber, opts) {
     var holderId = '#post-cloak-' + postNumber;
+
+    var offset = function(){
+
+      var $header = $('header'),
+          $title = $('#topic-title'),
+          windowHeight = $(window).height() - $title.height(),
+          expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+
+      return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
+    };
+
 
     Em.run.schedule('afterRender', function() {
       if (postNumber === 1) {
@@ -23,14 +34,24 @@ Discourse.URL = Ember.Object.createWithMixins({
         return;
       }
 
-      new LockOn(holderId, {offsetCalculator: function() {
-        var $header = $('header'),
-            $title = $('#topic-title'),
-            windowHeight = $(window).height() - $title.height(),
-            expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+      var lockon = new LockOn(holderId, {offsetCalculator: offset});
+      var holder = $(holderId);
 
-        return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
-      }}).lock();
+      if(holder.length > 0 && opts && opts.skipIfOnScreen){
+        // if we are on screen just scroll to post
+        var elementTop = lockon.elementTop(),
+            scrollTop = $(window).scrollTop(),
+            windowHeight = $(window).height()-offset(),
+            height = holder.height();
+
+        if (elementTop > scrollTop &&
+            (elementTop + height) < (scrollTop + windowHeight)) {
+          return;
+        }
+      }
+
+      lockon.lock();
+
     });
   },
 
@@ -218,7 +239,7 @@ Discourse.URL = Ember.Object.createWithMixins({
           progressController.set('progressPosition', progress);
           self.appEvents.trigger('post:highlight', closest);
         }).then(function() {
-          Discourse.URL.jumpToPost(closest);
+          Discourse.URL.jumpToPost(closest, {skipIfOnScreen: true});
         });
 
         // Abort routing, we have replaced our state.

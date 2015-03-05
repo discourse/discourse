@@ -44,16 +44,12 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
   }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
   postStreamLoadedAllPostsChanged: function(){
-    // hold back rendering 1 run loop for every transition.
-    var self = this;
+    // in the past we would hold back rendering of suggested topics
+    // 1 run loop, however post optimisations rendering them is fast
+    // holding back rendering just makes for a more jerky UI on initial
+    // transition
     var loaded = this.get('postStream.loadedAllPosts');
-    this.set('loadedAllPosts', false);
-
-    if(loaded){
-      Em.run.next(function(){
-        self.set('loadedAllPosts',true);
-      });
-    }
+    this.set('loadedAllPosts', loaded);
 
   }.observes('postStream', 'postStream.loadedAllPosts'),
 
