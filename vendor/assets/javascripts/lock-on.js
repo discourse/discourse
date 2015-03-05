@@ -1,7 +1,7 @@
 // Dear traveller, you are entering a zone where we are at war with the browser
 // the browser is insisting on positioning scrollTop per the location it was in
 // the past, we are insisting on it being where we want it to be
-// The hack is just to keep trying over and over to positiong the scrollbar (up to 1 minute)
+// The hack is just to keep trying over and over to position the scrollbar (up to 1 minute)
 //
 // The root cause is that a "refresh" on a topic page will almost never be at the
 // same position it was in the past, the URL points to the post at the top of the
