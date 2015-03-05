@@ -53,7 +53,12 @@ export default Ember.ArrayController.extend({
     @method typedReply
   **/
   typedReply() {
-    this.get('queuedForTyping').forEach(msg => this.popup(msg));
+    var self = this;
+    this.get('queuedForTyping').forEach(function(msg){
+      if(self.popup){
+        this.popup(msg);
+      }
+    });
   },
 
   /**
