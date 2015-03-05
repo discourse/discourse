@@ -4,8 +4,14 @@ const _identityMap = {};
 
 const RestModel = Ember.Object.extend({
   update(attrs) {
-    const self = this;
-    return this.store.update(this.get('__type'), this.get('id'), attrs).then(function(result) {
+    const self = this,
+          type = this.get('__type');
+    return this.store.update(type, this.get('id'), attrs).then(function(result) {
+      if (result && result[type]) {
+        Object.keys(result).forEach(function(k) {
+          attrs[k] = result[k];
+        });
+      }
       self.setProperties(attrs);
       return result;
     });
@@ -42,9 +48,20 @@ export default Ember.Object.extend({
 
   update(type, id, attrs) {
     const data = {};
-    data[this.serverName(type)] = attrs;
+    data[Ember.String.underscore(type)] = attrs;
 
-    return Discourse.ajax(this.pathFor(type, id), { method: 'PUT', data });
+    return Discourse.ajax(this.pathFor(type, id), { method: 'PUT', data }).then(function (result) {
+      if (result && result[type] && result[type].id) {
+        const oldRecord = _identityMap[type][id];
+        delete _identityMap[type][id];
+        _identityMap[type][result[type].id] = oldRecord;
+      }
+      return result;
+    });
+  },
+
+  createRecord(type, attrs) {
+    return this._hydrate(type, attrs);
   },
 
   _hydrate(type, obj) {
