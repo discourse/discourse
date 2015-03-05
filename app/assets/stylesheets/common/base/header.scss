@@ -233,11 +233,6 @@
     @include unselectable;
   }
 
-  .category-links li:not(.heading) a {
-    display: inline-block;
-  }
-
-
   // Site map
 
   &#site-map-dropdown {
@@ -296,12 +291,14 @@
   .category {
     float: left;
     background-color: transparent;
-    line-height: 20px;
+    line-height: 1.25;
     width: 45%;
     margin: 5px 5px 0 5px;
     .badge-notification {
       color: scale-color($primary, $lightness: 50%);
       background-color: transparent;
+      vertical-align: top;
+      padding: 5px 5px 2px 5px;
     }
   }
 
