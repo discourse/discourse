@@ -12,162 +12,136 @@
   @include border-radius-all(10px);
 }
 
-// Category badge
+// Category badges
 // --------------------------------------------------
 
-.badge-wrapper span {
+.badge-wrapper {
   font-size: 0.857em;
   font-weight: bold;
   white-space: nowrap;
   display: inline-block;
-  line-height: 1;
   position: relative;
-}
 
-.badge-wrapper {
-  white-space: nowrap;
-  position: relative;
-  display: inline-block;
-}
-
-.badge-category {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  vertical-align: top;
-  .fa {
-    line-height: 0;
-  }
-}
-
-.badge-wrapper > .badge-category {
-  // ie9?
-  width: 100%;
-  padding: 5px 4px;
-}
-
-.d-header li.category .badge-wrapper {
-  max-width: calc(100% - 30px)
-}
-
-h3 .badge-category {
-  padding-left: 3px;
-}
-
-h3 .badge-wrapper {
-  padding-left: 4px;
-}
-
-
-header .title-wrapper {
-
-  .badge-category-bg, .badge-category {
-    vertical-align: middle;
-  }
-
-  .badge-category-bg {
-    padding-top:0;
-    padding-bottom:0;
-  }
-}
-
-.badge-category-parent-bg, .badge-category-bg {
-  padding: 5px 2px 4px 2px;
-  width: 2px;
-  .category-name {
-    display: none;
-  }
-  &:before {
-    content: "\a0";
-  }
-}
-
-.d-dropdown .badge-category {
-&.restricted {
-    span {
-      display: inline-block;
-      margin: 0;
-    }
-}}
-
-h1 a.badge-category div {vertical-align: top;}
-
-.category-breadcrumb li > .badge-category {
-  float: left;
-  &:not(.home):first-child {
-    .badge-category-bg {
-      display: none;
-    }
-  }
-}
-
-
-.user-preferences .autocomplete .badge-wrapper .badge-category {
-  margin: 2px;
-  font-weight: normal;
-}
-
-.user-preferences .autocomplete .selected .badge-wrapper .badge-category {
-  font-weight: bold;
-}
-
-.ac-wrap {
-  .badge-wrapper span {
-    padding-top: 3px;
-    padding-bottom: 0;
-    height: 20px;
-    max-width: 200px;
-  }
-}
-
-// specific styles for badge categories
-
-.bar .badge-category {
+  &.bar { //general bar category style
+    line-height: 1.25;
+    span.badge-category {
     color: $primary !important;
-}
+    padding: 3px;
+    vertical-align: text-top;
+    margin-top: -3px; //vertical alignment fix
 
-header .title-wrapper .bar .badge-category {
-    color: $header-primary !important;
-}
+   }
 
+   .badge-category-parent-bg, .badge-category-bg {
+     display: inline-block;
+     padding: 1px;
 
-.category-breadcrumb li.bar > .badge-category {
-  background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
-  line-height: 24px;
-  &:not(.home):first-child {
-    border-left-width: 5px;
-    border-left-style: solid;
-  }
-}
+     &:before {
+       content: "\a0";
+     }
+   }
 
-.category-breadcrumb .box > a.badge-category {
-  margin-bottom: 0;
-  height: 24px;
-  // TODO clean this up
-  padding-top: 6px !important;
-  padding-bottom: 0 !important;
-}
-
-.category-dropdown-menu .cat .badge-wrapper.box {
-  width: 110%;
-}
-.badge-wrapper.box {
-  .badge-category-bg {
-    position: absolute;
-    padding: 0;
-    width: 100%;
-    height: 100%;
   }
 
-  > .badge-category {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 5px 6px 4px 6px;
+  &.box {  //general box category style
+    margin: 5px 2px 0 0;
+    line-height: 1.25;
+    i {line-height: 0;}
+    .badge-category-bg, .badge-category-parent-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: -3px;
+    }
+    .badge-category-parent-bg + .badge-category-bg { //nesting box categories
+      margin-left: 5px;
+      }
+    .badge-category-parent-bg + .badge-category-bg + .badge-category {
+      margin-left: 5px;
+      padding-right: 0;
+      }
+    span.badge-category {
+      position: relative;
+      padding: 0 5px;
+    }
   }
+  span.badge-category {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+
+  .d-dropdown & {
+    max-width: 100px;
+
+  }
+
+  }
+
 }
 
-.title-wrapper .badge-wrapper.box .badge-category {
-  vertical-align: middle;
+// Category badge dropdown
+// --------------------------------------------------
+
+
+.list-controls {
+.category-breadcrumb {
+  a.badge-category {
+      display: inline-block;
+      padding: 5px 12px;
+      line-height: 20px;
+    &.category-dropdown-button {
+      margin-left: -4px;
+      padding: 5px 0 5px 0;
+      width: 13px;
+      .fa-caret-down {
+        margin-left: -5px;
+        }
+      .fa-caret-right {
+        margin-left: -2px;
+        }
+      }
+    }
+    li.bar>.badge-category:not(.home):first-child {
+      border-left: 5px solid;
+    }
+    li.bar>.badge-category {
+      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      color: $primary !important;}
+  }
+
+  .category-dropdown-menu {
+    .badge-category {
+      &.home {
+        margin-left: 4px;
+        padding-left: 0;
+      }
+    }
+    .cat {
+        line-height: 0;
+      }
+    .badge-wrapper {
+      &.bar {
+        margin: 5px 0;
+
+      }
+      &.box {
+        width: 100%;
+        line-height: 0;
+        margin: 0;
+        span.badge-category {
+          padding: 15px 5px;
+          margin-top: -5px;
+        }
+      }
+
+    }
+
+  }
+
 }
+
+
 
 
 // Notification badge

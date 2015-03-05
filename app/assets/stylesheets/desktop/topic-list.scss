@@ -22,13 +22,6 @@
   a.badge-category {
     padding: 3px 12px;
     font-size: 1.143em;
-
-    &.category-dropdown-button {
-      height: 24px;
-      padding: 3px 9px 3px 0;
-      i { height: 20px; }
-    }
-
   }
 
 }
@@ -95,10 +88,6 @@
     }
   }
 
-  .category {
-    padding: 0 20px 0 20px;
-    min-width: 80px;
-  }
   .posters {
     // we know there are up to 5 avatars of fixed size
     // will be overridden by media width queries on narrow displays to 1 avatar's width
@@ -250,11 +239,6 @@
       top: -1px;
     }
   }
-
-  .category .badge-category {
-    display: inline-block;
-    margin-top: 1px;
-  }
 }
 
 .topic-list-bottom {
@@ -274,8 +258,7 @@
 
 .category-dropdown-menu {
   max-height: 350px;
-  margin-top: 30px;
-  min-width: 152px;
+  min-width: 129px;
 }
 
 #bulk-select {
