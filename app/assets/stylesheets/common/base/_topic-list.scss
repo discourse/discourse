@@ -99,10 +99,6 @@
     }
   }
 
-  td.category a {
-    max-width:150px;
-  }
-
 }
 
 
@@ -156,24 +152,6 @@
     margin-left: 8px;
   }
 
-  .badge-category {
-    padding: 4px 10px;
-    display: inline-block;
-    margin-bottom: 10px;
-  }
-
-  .category-dropdown-menu .badge-category {
-    width: 100%;
-  }
-  .category-dropdown-button {
-    font-size: 1.143em;
-    width: 10px;
-    text-align: center;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
   clear: both;
 }
 
@@ -222,10 +200,6 @@ ol.category-breadcrumb {
   border: 1px solid scale-color-diff();
   background-color: $secondary;
   z-index: 100;
-
-  .cat {
-    margin-right: 20px;
-  }
 
   a.badge-category, a.badge-category-parent {
     line-height: 19px;
