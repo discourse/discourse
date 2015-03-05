@@ -8,7 +8,7 @@
         {{#if currentUser.admin}}
           {{admin-nav-item route='adminSiteSettings' label='admin.site_settings.title'}}
         {{/if}}
-        {{admin-nav-item route='adminUsersList' label='admin.users.title'}}
+        {{admin-nav-item route='adminUsersList.show' routeParam='active' label='admin.users.title'}}
         {{#if showBadges}}
           {{admin-nav-item route='adminBadges.index' label='admin.badges.title'}}
         {{/if}}
