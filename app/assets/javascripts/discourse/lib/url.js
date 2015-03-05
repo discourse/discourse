@@ -38,7 +38,8 @@ Discourse.URL = Ember.Object.createWithMixins({
       var holder = $(holderId);
 
       if(holder.length > 0 && opts && opts.skipIfOnScreen){
-        // if we are on screen just scroll to post
+
+        // if we are on screen skip
         var elementTop = lockon.elementTop(),
             scrollTop = $(window).scrollTop(),
             windowHeight = $(window).height()-offset(),
