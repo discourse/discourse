@@ -130,7 +130,7 @@ Then in a browser, go to [http://localhost:4080](http://localhost:4080). Sent em
 If for some reason mailcatcher is not installed, install and launch it with these commands:
 
 ```
-gem install mailcatcher
+sudo gem install mailcatcher
 mailcatcher --http-ip 0.0.0.0
 ```
 
