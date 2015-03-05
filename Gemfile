@@ -107,7 +107,7 @@ gem 'ember-rails'
 gem 'ember-source', '1.9.0.beta.4'
 gem 'handlebars-source', '2.0.0'
 gem 'barber'
-gem '6to5'
+gem 'babel-transpiler'
 
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
