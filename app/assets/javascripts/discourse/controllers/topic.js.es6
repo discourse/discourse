@@ -44,11 +44,17 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
   }.observes('controllers.search.term', 'controllers.header.visibleDropdown'),
 
   postStreamLoadedAllPostsChanged: function(){
-    // in the past we would hold back rendering of suggested topics
-    // 1 run loop, however post optimisations rendering them is fast
-    // holding back rendering just makes for a more jerky UI on initial
-    // transition
+    // semantics of loaded all posts are slightly diff at topic level,
+    // it just means that we "once" loaded all posts, this means we don't
+    // keep re-rendering the suggested topics when new posts zoom in
     var loaded = this.get('postStream.loadedAllPosts');
+
+    if(loaded) {
+      this.set('loadedTopicId', this.get('model.id'));
+    } else {
+      loaded = this.get('loadedTopicId') === this.get('model.id');
+    }
+
     this.set('loadedAllPosts', loaded);
 
   }.observes('postStream', 'postStream.loadedAllPosts'),
