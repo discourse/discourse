@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= I18n.t('click_fail.title', site_name: SiteSetting.title) %></title>
+</head>
+<body>
+<h3>
+  <%= I18n.t('click_fail.header') %>
+</h3>
+<p>
+  <%= I18n.t('click_fail.body') %>
+</p>
+<p>
+  <a href="<%= h @given_url %>"><%= h @given_url %></a>
+</p>
+</body>
+</html>
