@@ -15,6 +15,11 @@ const RestModel = Ember.Object.extend({
       self.setProperties(attrs);
       return result;
     });
+  },
+
+  destroyRecord() {
+    const type = this.get('__type');
+    return this.store.destroyRecord(type, this.get('id'));
   }
 });
 
@@ -56,6 +61,13 @@ export default Ember.Object.extend({
         delete _identityMap[type][id];
         _identityMap[type][result[type].id] = oldRecord;
       }
+      return result;
+    });
+  },
+
+  destroyRecord(type, id) {
+    return Discourse.ajax(this.pathFor(type, id), { method: 'DELETE' }).then(function(result) {
+      delete _identityMap[type][id];
       return result;
     });
   },
