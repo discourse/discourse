@@ -750,6 +750,7 @@ uncategorized:
   new_topic_duration_minutes: 2880
   previous_visit_timeout_hours: 1
   staff_like_weight: 3
+  topic_view_duration_hours: 8
 
   # Summary mode
   summary_score_threshold: 15
