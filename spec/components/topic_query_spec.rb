@@ -432,12 +432,13 @@ describe TopicQuery do
 
     context 'when logged in' do
 
-      before do
-        RandomTopicSelector.clear_cache!
-      end
-
       let(:topic) { Fabricate(:topic) }
-      let(:suggested_topics) { topic_query.list_suggested_for(topic).topics.map{|t| t.id} }
+      let(:suggested_topics) {
+        tt = topic
+        # lets clear cache once category is created - working around caching is hard
+        RandomTopicSelector.clear_cache!
+        topic_query.list_suggested_for(tt).topics.map{|t| t.id}
+      }
 
       it "should return empty results when there is nothing to find" do
         expect(suggested_topics).to be_blank
