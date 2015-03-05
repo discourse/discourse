@@ -12,5 +12,10 @@ export default Ember.Object.extend({
   createRecord(type, attrs) {
     const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     return adapter.createRecord(type, attrs);
+  },
+
+  destroyRecord(type, id) {
+    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
+    return adapter.destroyRecord(type, id);
   }
 });
