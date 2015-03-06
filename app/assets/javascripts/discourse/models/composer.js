@@ -429,7 +429,8 @@ Discourse.Composer = Discourse.Model.extend({
       reply: null,
       post: null,
       title: null,
-      editReason: null
+      editReason: null,
+      stagedPost: false
     });
   },
 
@@ -518,6 +519,7 @@ Discourse.Composer = Discourse.Model.extend({
       admin: currentUser.get('admin'),
       yours: true,
       newPost: true,
+      read: true
     });
 
     this.serialize(_create_serializer, createdPost);
@@ -532,6 +534,7 @@ Discourse.Composer = Discourse.Model.extend({
       });
     }
 
+    var state = null;
 
     // If we're in a topic, we can append the post instantly.
     if (postStream) {
@@ -545,16 +548,18 @@ Discourse.Composer = Discourse.Model.extend({
       // Furthermore calculating cooked is very complicated, especially since
       // we would need to handle oneboxes and other bits that are not even in the
       // engine, staging will just cause a blank post to render
-      if (!_.isEmpty(createdPost.get('cooked')) && !postStream.stagePost(createdPost, currentUser)) {
+      if (!_.isEmpty(createdPost.get('cooked'))) {
+        state = postStream.stagePost(createdPost, currentUser);
 
-        // If we can't stage the post, return and don't save. We're likely currently
-        // staging a post.
-        return;
+        if(state === "alreadyStaging"){
+          return;
+        }
+
       }
     }
 
     var composer = this;
-    return new Ember.RSVP.Promise(function(resolve, reject) {
+    var promise =  new Ember.RSVP.Promise(function(resolve, reject) {
 
       composer.set('composeState', SAVING);
       createdPost.save(function(result) {
@@ -613,6 +618,10 @@ Discourse.Composer = Discourse.Model.extend({
         reject(parsedError);
       });
     });
+
+    composer.set("stagedPost", state === "staged" && createdPost);
+
+    return promise;
   },
 
   getCookedHtml: function() {

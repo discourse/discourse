@@ -295,7 +295,8 @@ const PostStream = Ember.Object.extend({
   **/
   stagePost(post, user) {
     // We can't stage two posts simultaneously
-    if (this.get('stagingPost')) { return false; }
+    if (this.get('stagingPost')) { return "alreadyStaging"; }
+
     this.set('stagingPost', true);
 
     const topic = this.get('topic');
@@ -317,9 +318,10 @@ const PostStream = Ember.Object.extend({
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
       this.get('stream').addObject(post.get('id'));
+      return "staged";
     }
 
-    return true;
+    return "offScreen";
   },
 
   // Commit the post we staged. Call this after a save succeeds.
