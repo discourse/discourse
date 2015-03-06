@@ -23,6 +23,13 @@ test('find', function() {
   });
 });
 
+test('update', function() {
+  const store = createStore();
+  store.update('widget', 123, {name: 'hello'}).then(function(result) {
+    ok(result);
+  });
+});
+
 test('findAll', function() {
   const store = createStore();
   store.findAll('widget').then(function(result) {
@@ -34,7 +41,9 @@ test('findAll', function() {
 
 test('destroyRecord', function() {
   const store = createStore();
-  store.destroyRecord('widget', 124).then(function(result) {
-    ok(result);
+  store.find('widget', 123).then(function(w) {
+    store.destroyRecord('widget', w).then(function(result) {
+      ok(result);
+    });
   });
 });

@@ -99,6 +99,12 @@ export default function() {
       }
     });
 
+    this.put('/widgets/:widget_id', function(request) {
+      const w = _widgets.findBy('id', parseInt(request.params.widget_id));
+      const cloned = JSON.parse(JSON.stringify(w));
+      return response({ widget: cloned });
+    });
+
     this.get('/widgets', function() {
       return response({ widgets: _widgets });
     });
