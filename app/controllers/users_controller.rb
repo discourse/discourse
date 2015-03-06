@@ -93,7 +93,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit_username!(user)
 
     # TODO proper error surfacing (result is a Model#save call)
-    result = user.change_username(params[:new_username], current_user)
+    result = UsernameChanger.change(user, params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
     render json: {

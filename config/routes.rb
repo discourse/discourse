@@ -96,6 +96,7 @@ Discourse::Application.routes.draw do
       get "badges"
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
+      put "anonymize"
     end
 
 

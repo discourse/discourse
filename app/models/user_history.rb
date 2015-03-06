@@ -37,7 +37,8 @@ class UserHistory < ActiveRecord::Base
                           :roll_up,
                           :change_username,
                           :custom,
-                          :custom_staff)
+                          :custom_staff,
+                          :anonymize_user)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -57,7 +58,8 @@ class UserHistory < ActiveRecord::Base
                         :impersonate,
                         :roll_up,
                         :change_username,
-                        :custom_staff]
+                        :custom_staff,
+                        :anonymize_user]
   end
 
   def self.staff_action_ids
