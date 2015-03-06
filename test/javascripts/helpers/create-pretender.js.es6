@@ -19,6 +19,11 @@ function success() {
   return response({ success: true });
 }
 
+const _widgets = [
+  {id: 123, name: 'Trout Lure'},
+  {id: 124, name: 'Evil Repellant'}
+];
+
 export default function() {
   var server = new Pretender(function() {
 
@@ -84,6 +89,21 @@ export default function() {
 
     this.delete('/posts/:post_id', success);
     this.put('/posts/:post_id/recover', success);
+
+    this.get('/widgets/:widget_id', function(request) {
+      const w = _widgets.findBy('id', parseInt(request.params.widget_id));
+      if (w) {
+        return response({widget: w});
+      } else {
+        return response(404);
+      }
+    });
+
+    this.get('/widgets', function() {
+      return response({ widgets: _widgets });
+    });
+
+    this.delete('/widgets/:widget_id', success);
   });
 
 

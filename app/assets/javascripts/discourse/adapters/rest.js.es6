@@ -47,7 +47,7 @@ export default Ember.Object.extend({
   find(type, id) {
     var self = this;
     return Discourse.ajax(this.pathFor(type, id)).then(function(result) {
-      return self._hydrate(type, result[self.serverName(type)]);
+      return self._hydrate(type, result[Ember.String.underscore(type)]);
     });
   },
 
@@ -67,7 +67,8 @@ export default Ember.Object.extend({
 
   destroyRecord(type, id) {
     return Discourse.ajax(this.pathFor(type, id), { method: 'DELETE' }).then(function(result) {
-      delete _identityMap[type][id];
+      const forType = _identityMap[type];
+      if (forType) { delete forType[id]; }
       return result;
     });
   },
