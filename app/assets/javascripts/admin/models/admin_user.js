@@ -57,6 +57,9 @@ Discourse.AdminUser = Discourse.User.extend({
 
   deleteAllPostsExplanation: function() {
     if (!this.get('can_delete_all_posts')) {
+      if (this.get('deleteForbidden') && this.get('staff')) {
+        return I18n.t('admin.user.delete_posts_forbidden_because_staff');
+      }
       if (this.get('post_count') > Discourse.SiteSettings.delete_all_posts_max) {
         return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: Discourse.SiteSettings.delete_all_posts_max});
       } else {
@@ -65,7 +68,7 @@ Discourse.AdminUser = Discourse.User.extend({
     } else {
       return null;
     }
-  }.property('can_delete_all_posts'),
+  }.property('can_delete_all_posts', 'deleteForbidden'),
 
   deleteAllPosts: function() {
     var user = this;
