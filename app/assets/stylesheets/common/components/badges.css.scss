@@ -30,6 +30,9 @@
     vertical-align: text-top;
     margin-top: -3px; //vertical alignment fix
 
+    .extra-info-wrapper & {
+      color: $header-primary !important;
+    }
    }
 
    .badge-category-parent-bg, .badge-category-bg {
