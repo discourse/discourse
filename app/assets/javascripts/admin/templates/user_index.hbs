@@ -450,6 +450,11 @@
 
 <section>
   <hr/>
+  <button {{bind-attr class=":btn :btn-danger :pull-right anonymizeForbidden:hidden"}} {{action "anonymize" target="content"}} {{bind-attr disabled="anonymizeForbidden"}}>
+    <i class="fa fa-exclamation-triangle"></i>
+    {{i18n 'admin.user.anonymize'}}
+  </button>
+
   <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action "destroy" target="content"}} {{bind-attr disabled="deleteForbidden"}}>
     <i class="fa fa-exclamation-triangle"></i>
     {{i18n 'admin.user.delete'}}

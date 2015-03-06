@@ -1585,6 +1585,48 @@ describe Guardian do
     end
   end
 
+  describe "can_anonymize_user?" do
+    it "is false without a logged in user" do
+      expect(Guardian.new(nil).can_anonymize_user?(user)).to be_falsey
+    end
+
+    it "is false without a user to look at" do
+      expect(Guardian.new(admin).can_anonymize_user?(nil)).to be_falsey
+    end
+
+    it "is false for a regular user" do
+      expect(Guardian.new(user).can_anonymize_user?(coding_horror)).to be_falsey
+    end
+
+    it "is false for myself" do
+      expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
+    end
+
+    it "is true for admin anonymizing a regular user" do
+      Guardian.new(admin).can_anonymize_user?(user).should == true
+    end
+
+    it "is true for moderator anonymizing a regular user" do
+      Guardian.new(moderator).can_anonymize_user?(user).should == true
+    end
+
+    it "is false for admin anonymizing an admin" do
+      expect(Guardian.new(admin).can_anonymize_user?(Fabricate(:admin))).to be_falsey
+    end
+
+    it "is false for admin anonymizing a moderator" do
+      expect(Guardian.new(admin).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
+    end
+
+    it "is false for moderator anonymizing an admin" do
+      expect(Guardian.new(moderator).can_anonymize_user?(admin)).to be_falsey
+    end
+
+    it "is false for moderator anonymizing a moderator" do
+      expect(Guardian.new(moderator).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
+    end
+  end
+
   describe 'can_grant_title?' do
     it 'is false without a logged in user' do
       expect(Guardian.new(nil).can_grant_title?(user)).to be_falsey
