@@ -814,6 +814,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         notification_level: "Change Notification Level"
+        choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."

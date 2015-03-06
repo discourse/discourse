@@ -1,11 +1,39 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
+const _buttons = [];
+
+function addBulkButton(action, key) {
+  _buttons.push({ action: action, label: "topics.bulk." + key });
+}
+
+// Default buttons
+addBulkButton('showChangeCategory', 'change_category');
+addBulkButton('deleteTopics', 'delete');
+addBulkButton('closeTopics', 'close_topics');
+addBulkButton('archiveTopics', 'archive_topics');
+addBulkButton('showNotificationLevel', 'notification_level');
+addBulkButton('resetRead', 'reset_read');
+
 // Modal for performing bulk actions on topics
 export default Ember.ArrayController.extend(ModalFunctionality, {
   needs: ['discovery/topics'],
+  buttonRows: null,
 
   onShow: function() {
     this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
+
+    const buttonRows = [];
+    let row = [];
+    _buttons.forEach(function(b) {
+      row.push(b);
+      if (row.length === 4) {
+        buttonRows.push(row);
+        row = [];
+      }
+    });
+    if (row.length) { buttonRows.push(row); }
+
+    this.set('buttonRows', buttonRows);
   },
 
   perform: function(operation) {
@@ -89,3 +117,5 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     }
   }
 });
+
+export { addBulkButton };
