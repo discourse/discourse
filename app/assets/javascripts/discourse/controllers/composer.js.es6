@@ -216,7 +216,9 @@ export default DiscourseController.extend({
       }
     }
 
-    return composer.save({
+    var staged = false,
+        disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
+    var promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
     }).then(function(opts) {
@@ -236,8 +238,8 @@ export default DiscourseController.extend({
         currentUser.set('reply_count', currentUser.get('reply_count') + 1);
       }
 
-      if ((!composer.get('replyingToTopic')) || (!Discourse.User.currentProp('disable_jump_reply'))) {
-        if (opts.post) {
+      if (!composer.get('replyingToTopic') || !disableJumpReply) {
+        if (opts.post && !staged) {
           Discourse.URL.routeTo(opts.post.get('url'));
         }
       }
@@ -245,6 +247,18 @@ export default DiscourseController.extend({
       composer.set('disableDrafts', false);
       bootbox.alert(error);
     });
+
+    staged = composer.get('stagedPost');
+
+    Em.run.schedule('afterRender', function() {
+      if (staged && !disableJumpReply) {
+        var postNumber = staged.get('post_number');
+        Discourse.URL.jumpToPost(postNumber, {skipIfOnScreen: true});
+        self.appEvents.trigger('post:highlight', postNumber);
+      }
+    });
+
+    return promise;
   },
 
   /**
