@@ -1494,6 +1494,7 @@ en:
           title: "Top Weekly"
         daily:
           title: "Top Daily"
+        all: "All Time"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
