@@ -8,7 +8,12 @@ class TopicsBulkAction
   end
 
   def self.operations
-    %w(change_category close archive change_notification_level reset_read dismiss_posts delete)
+    @operations ||= %w(change_category close archive change_notification_level reset_read dismiss_posts delete)
+  end
+
+  def self.register_operation(name, &block)
+    operations << name
+    define_method(name, &block)
   end
 
   def perform!
