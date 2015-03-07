@@ -299,7 +299,7 @@ class ImportScripts::Base
     begin
       User.transaction do
         u.save!
-        if bio_raw.present? || website.present?
+        if bio_raw.present? || website.present? || location.present?
           u.user_profile.bio_raw = bio_raw if bio_raw.present?
           u.user_profile.website = website if website.present?
           u.user_profile.location = location if location.present?
