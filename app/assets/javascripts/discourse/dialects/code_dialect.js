@@ -10,7 +10,7 @@ var acceptableCodeClasses =
    "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql",
    "tex", "text", "vala", "vbscript", "vhdl"];
 
-var textCodeClasses = ["text", "pre", "plain"];
+var textCodeClasses = ["text", "pre"];
 
 function flattenBlocks(blocks) {
   var result = "";
@@ -39,17 +39,6 @@ Discourse.Dialect.replaceBlock({
   }
 });
 
-Discourse.Dialect.replaceBlock({
-  start: /(<pre[^\>]*\>)([\s\S]*)/igm,
-  stop: /<\/pre>/igm,
-  rawContents: true,
-  skipIfTradtionalLinebreaks: true,
-
-  emitter: function(blockContents) {
-    return ['p', ['pre', flattenBlocks(blockContents)]];
-  }
-});
-
 // Ensure that content in a code block is fully escaped. This way it's not white listed
 // and we can use HTML and Javascript examples.
 Discourse.Dialect.on('parseNode', function (event) {
@@ -62,10 +51,22 @@ Discourse.Dialect.on('parseNode', function (event) {
 
     if (path && path[path.length-1] && path[path.length-1][0] && path[path.length-1][0] === "pre") {
       regexp = / +$/g;
+
     } else {
       regexp = /^ +| +$/g;
     }
     node[node.length-1] = Handlebars.Utils.escapeExpression(contents.replace(regexp,''));
+  }
+});
+
+Discourse.Dialect.replaceBlock({
+  start: /(<pre[^\>]*\>)([\s\S]*)/igm,
+  stop: /<\/pre>/igm,
+  rawContents: true,
+  skipIfTradtionalLinebreaks: true,
+
+  emitter: function(blockContents) {
+    return ['p', ['pre', flattenBlocks(blockContents)]];
   }
 });
 
