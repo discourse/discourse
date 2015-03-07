@@ -23,7 +23,6 @@ describe DistributedMemoizer do
   end
 
   it "return the old value once memoized" do
-
     memoize do
       "abc"
     end
@@ -49,7 +48,14 @@ describe DistributedMemoizer do
     threads.each(&:join)
     expect(results.uniq.length).to eq(1)
     expect(results.count).to eq(5)
-
   end
 
+  let(:private_api) { %i(get_lock) }
+
+  it 'hides private api' do
+    expect(
+      described_class.singleton_class.private_instance_methods(false)
+    ).to eq private_api
+    expect private_api.none? { |m| described_class.respond_to?(m) }
+  end
 end

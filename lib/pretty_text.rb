@@ -314,8 +314,6 @@ module PrettyText
     doc.to_html
   end
 
-  protected
-
   class JavaScriptError < StandardError
     attr_accessor :message, :backtrace
 

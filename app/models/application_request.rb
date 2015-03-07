@@ -79,10 +79,7 @@ class ApplicationRequest < ActiveRecord::Base
     end
   end
 
-  protected
-
   def self.req_id(date,req_type,retries=0)
-
     req_type_id = req_types[req_type]
 
     # a poor man's upsert
@@ -96,10 +93,12 @@ class ApplicationRequest < ActiveRecord::Base
       raise
     end
   end
+  private_class_method :req_id
 
   def self.redis_key(req_type, time=Time.now.utc)
     "app_req_#{req_type}#{time.strftime('%Y%m%d')}"
   end
+  private_class_method :redis_key
 
   def self.stats
     s = HashWithIndifferentAccess.new({})
@@ -113,6 +112,7 @@ class ApplicationRequest < ActiveRecord::Base
 
     s
   end
+  private_class_method :stats
 end
 
 # == Schema Information
