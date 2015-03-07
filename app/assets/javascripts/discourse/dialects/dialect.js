@@ -12,7 +12,8 @@ var parser = window.BetterMarkdown,
     initialized = false,
     emitters = [],
     hoisted,
-    preProcessors = [];
+    preProcessors = [],
+    escape = Handlebars.Utils.escapeExpression;
 
 /**
   Initialize our dialects for processing.
@@ -162,6 +163,10 @@ function hoister(t, target, replacement) {
   return t;
 }
 
+function outdent(t) {
+  return t.replace(/^[ ]{4}/gm, "");
+}
+
 
 /**
   An object used for rendering our dialects.
@@ -183,14 +188,46 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
 
+    dialect.options = opts;
+
     // Helps us hoist out HTML
     hoisted = {};
 
+    // pre-hoist all code-blocks
+
+    // <pre>...</pre> blocks
+    text = text.replace(/(\n*)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, m) {
+      var hash = md5(m);
+      hoisted[hash] = escape(m.trim());
+      return before + "<pre>" + hash + "</pre>";
+    });
+
+    // fenced blocks
+    text = text.replace(/(\n*)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, m) {
+      var hash = md5(m);
+      hoisted[hash] = escape(m.trim());
+      return before + "```" + language + "\n" + hash + "\n```";
+    });
+
+    // inline
+    text = text.replace(/(^|[^`])`([^`]*?)`([^`]|$)/g, function(_, before, m, after) {
+      var hash = md5(m);
+      hoisted[hash] = escape(m);
+      return before + "`" + hash + "`" + after;
+    });
+
+    // markdown blocks
+    text = text.replace(/(\n*)((?:(?:[ ]{4}).*\n+)+)/g, function(_, before, m) {
+      var hash = md5(m);
+      hoisted[hash] = escape(outdent(m).trim());
+      return before + "    " + hash + "\n";
+    });
+
+    // pre-processors
     preProcessors.forEach(function(p) {
       text = p(text, hoister);
     });
 
-    dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
         result = parser.renderJsonML(parseTree(tree));
 
@@ -203,12 +240,11 @@ Discourse.Dialect = {
     // If we hoisted out anything, put it back
     var keys = Object.keys(hoisted);
     if (keys.length) {
-      keys.forEach(function(k) {
-        result = result.replace(new RegExp(k,"g"), hoisted[k]);
+      keys.forEach(function(key) {
+        result = result.replace(new RegExp(key, "g"), hoisted[key]);
       });
     }
 
-    hoisted = {};
     return result.trim();
   },
 
