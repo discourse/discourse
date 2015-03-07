@@ -345,12 +345,12 @@ test("Code Blocks", function() {
          "<p><pre><code class=\"lang-json\">{hello: &#x27;world&#x27;}</code></pre></p>\n\n<p>trailing</p>",
          "It does not truncate text after a code block.");
 
-  cooked("```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+  cooked("```json\nline 1\n\nline 2\n\n\nline 3\n```",
+         "<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline 3</code></pre></p>",
          "it maintains new lines inside a code block.");
 
-  cooked("hello\nworld\n```json\nline 1\n\nline 2\n\n\nline3\n```",
-         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline3</code></pre></p>",
+  cooked("hello\nworld\n```json\nline 1\n\nline 2\n\n\nline 3\n```",
+         "<p>hello<br/>world<br/></p>\n\n<p><pre><code class=\"lang-json\">line 1\n\nline 2\n\n\nline 3</code></pre></p>",
          "it maintains new lines inside a code block with leading content.");
 
   cooked("```ruby\n<header>hello</header>\n```",
