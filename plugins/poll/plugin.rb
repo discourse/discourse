@@ -1,6 +1,6 @@
 # name: poll
 # about: adds poll support to Discourse
-# version: 0.1
+# version: 0.2
 # authors: Vikhyat Korrapati
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
