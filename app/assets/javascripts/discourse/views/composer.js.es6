@@ -1,7 +1,6 @@
-/*global assetPath:true */
-
 import userSearch from 'discourse/lib/user-search';
 import afterTransition from 'discourse/lib/after-transition';
+import loadScript from 'discourse/lib/load-script';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -214,7 +213,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.wmdInput = $wmdInput = $('#wmd-input');
     if ($wmdInput.length === 0 || $wmdInput.data('init') === true) return;
 
-    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
+    loadScript('defer/html-sanitizer-bundle');
     ComposerView.trigger("initWmdEditor");
     this._applyEmojiAutocomplete();
 
