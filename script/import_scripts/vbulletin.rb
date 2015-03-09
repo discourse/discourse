@@ -58,11 +58,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     user_count = mysql_query("SELECT COUNT(userid) count FROM user").first["count"]
 
-    # TODO: add email back in when using real data
-
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate
+          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
             FROM user
         ORDER BY userid
            LIMIT #{BATCH_SIZE}
