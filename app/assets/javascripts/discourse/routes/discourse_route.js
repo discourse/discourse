@@ -113,7 +113,7 @@ Discourse.Route.reopenClass({
       }
     });
 
-    if (Discourse.BaseUri) {
+    if (Discourse.BaseUri && Discourse.BaseUri !== "/") {
       Discourse.Router.reopen({
         rootURL: Discourse.BaseUri + "/"
       });
