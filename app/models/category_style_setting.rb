@@ -4,7 +4,7 @@ require_dependency 'enum_site_setting'
 
 class CategoryStyleSetting < EnumSiteSetting
 
-  VALUES = ["bar", "box"]
+  VALUES = ["bar", "box", "bullet"]
 
   def self.valid_value?(val)
     VALUES.include?(val)

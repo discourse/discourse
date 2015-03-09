@@ -22,18 +22,18 @@
   display: inline-block;
   position: relative;
 
-  &.bar { //general bar category style
+  &.bar { //bar category style
     line-height: 1.25;
     span.badge-category {
-    color: $primary !important;
-    padding: 3px;
-    vertical-align: text-top;
-    margin-top: -3px; //vertical alignment fix
-    display: inline-block;
+      color: $primary !important;
+      padding: 3px;
+      vertical-align: text-top;
+      margin-top: -3px; //vertical alignment fix
+      display: inline-block;
 
-    .extra-info-wrapper & {
-      color: $header-primary !important;
-    }
+      .extra-info-wrapper & {
+        color: $header-primary !important;
+      }
    }
 
    .badge-category-parent-bg, .badge-category-bg {
@@ -43,11 +43,53 @@
      &:before {
        content: "\a0";
      }
+
    }
 
   }
 
-  &.box {  //general box category style (apply custom widths to the wrapper, not the children)
+
+  &.bullet { //bullet category style
+    line-height: 1.25;
+
+    span.badge-category {
+      color: $primary !important;
+      vertical-align: text-top;
+      margin-top: -1px; //vertical alignment fix
+      margin-left: 4px;
+      display: inline-block;
+
+      #search-dropdown & {
+        margin-top: 0;
+      }
+
+      .extra-info-wrapper & {
+        color: $header-primary !important;
+      }
+   }
+
+   .badge-category-parent-bg, .badge-category-bg {
+     display: inline-block;
+     width: 10px;
+     height: 10px;
+     &:before {
+       content: "\a0";
+     }
+   }
+
+   span {
+     &.badge-category-parent-bg { //subcategory style
+       width: 5px;
+       & + .badge-category-bg {
+         width: 5px;
+       }
+     }
+   }
+
+ }
+
+
+  &.box {  //box category style (apply custom widths to the wrapper, not the children)
     line-height: 1.5;
     margin-top: 5px;
 
@@ -60,7 +102,7 @@
         height: 100%;
       }
 
-      &.badge-category-parent-bg { //3 sibling spans
+      &.badge-category-parent-bg { //subcategory style
         width: calc(100% - 5px);
         & + .badge-category-bg {
           left: 5px;
@@ -75,21 +117,18 @@
         position: relative;
         padding: 0 5px;
         margin-top: 2px;
-
       }
-
     }
   }
+
   span.badge-category {
     max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
 
-  .d-dropdown & {
-    max-width: 100px;
-
-  }
-
+    .d-dropdown & {
+      max-width: 100px;
+    }
   }
 
 }
@@ -114,12 +153,16 @@
         }
       }
     }
+
     li.bar>.badge-category:not(.home):first-child {
       border-left: 5px solid;
     }
+
     li.bar>.badge-category {
       background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
-      color: $primary !important;}
+      color: $primary !important;
+    }
+
   }
 
   .category-dropdown-menu {
@@ -135,6 +178,12 @@
     .badge-wrapper {
       &.bar {
         margin: 5px 0;
+        .badge-category {
+          max-width: 100px;
+        }
+      }
+      &.bullet {
+        margin: 5px;
         .badge-category {
           max-width: 100px;
         }
