@@ -8,11 +8,13 @@ require_dependency 'crawler_detection'
 require_dependency 'json_error'
 require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
+require_dependency 'global_path'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
+  include GlobalPath
 
   serialization_scope :guardian
 
@@ -403,10 +405,6 @@ class ApplicationController < ActionController::Base
     end
 
   protected
-
-    def path(p)
-      "#{GlobalSetting.relative_url_root}#{p}"
-    end
 
     def render_post_json(post, add_raw=true)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
