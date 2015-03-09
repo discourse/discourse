@@ -113,6 +113,12 @@ Discourse.Route.reopenClass({
       }
     });
 
+    if (Discourse.BaseUri) {
+      Discourse.Router.reopen({
+        rootURL: Discourse.BaseUri + "/"
+      });
+    }
+
     Discourse.Router.map(function() {
       var router = this;
 

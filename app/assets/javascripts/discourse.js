@@ -5,6 +5,10 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
 
+  script: function(url) {
+    return $LAB.script(this.getURL(url));
+  },
+
   getURL: function(url) {
     if (!url) { return url; }
 
@@ -16,6 +20,12 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       u = u.substring(0, u.length-1);
     }
     if (url.indexOf(u) !== -1) return url;
+
+    if(u.length > 0  && url[0] !== "/") {
+      // we got to root this
+      url = "/" + url;
+    }
+
     return u + url;
   },
 

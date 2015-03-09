@@ -1,6 +1,6 @@
 <% @list.categories.each do |c| %>
   <div class="category">
-    <h2><a href="/c/<%= c.slug.blank? ? c.id : c.slug %>"><%= c.name %></a></h2>
+    <h2><a href="<%= path ("/c/" << (c.slug.blank? ? c.id : c.slug)) %>"><%= c.name %></a></h2>
     <div class="topic-list">
       <%- if c.displayable_topics.present? %>
         <% c.displayable_topics.each do |t| %>

@@ -1,6 +1,6 @@
 export default function($elem) {
   $("a.lightbox", $elem).each(function(i, e) {
-    $LAB.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
+    Discourse.script("/javascripts/jquery.magnific-popup-min.js").wait(function() {
       var $e = $(e);
       // do not lightbox spoiled images
       if ($e.parents(".spoiler").length > 0 || $e.parents(".spoiled").length > 0) { return; }

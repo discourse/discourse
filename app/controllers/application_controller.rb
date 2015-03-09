@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, true)
     else
-      redirect_to "/"
+      redirect_to path("/")
     end
 
   end
@@ -379,7 +379,7 @@ class ApplicationController < ActionController::Base
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
         if SiteSetting.enable_sso?
-          redirect_to '/session/sso'
+          redirect_to path('/session/sso')
         else
           redirect_to :login
         end
@@ -387,7 +387,7 @@ class ApplicationController < ActionController::Base
     end
 
     def block_if_readonly_mode
-      return if request.fullpath.start_with?("/admin/backups")
+      return if request.fullpath.start_with?(path "/admin/backups")
       raise Discourse::ReadOnly.new if !request.get? && Discourse.readonly_mode?
     end
 
@@ -403,6 +403,10 @@ class ApplicationController < ActionController::Base
     end
 
   protected
+
+    def path(p)
+      "#{GlobalSetting.relative_url_root}#{p}"
+    end
 
     def render_post_json(post, add_raw=true)
       post_serializer = PostSerializer.new(post, scope: guardian, root: false)
