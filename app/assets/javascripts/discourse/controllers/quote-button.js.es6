@@ -1,13 +1,12 @@
-/* global assetPath:true */
 import DiscourseController from 'discourse/controllers/controller';
+import loadScript from 'discourse/lib/load-script';
 
 export default DiscourseController.extend({
   needs: ['topic', 'composer'],
 
-  init: function() {
-    this._super();
-    $LAB.script(assetPath('defer/html-sanitizer-bundle'));
-  },
+  _loadSanitizer: function() {
+    loadScript('defer/html-sanitizer-bundle');
+  }.on('init'),
 
   /**
     If the buffer is cleared, clear out other state (post)

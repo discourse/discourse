@@ -10,6 +10,7 @@
 //
 
 // Stuff we need to load first
+//= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
 //= require ./discourse/lib/app-events
 //= require ./discourse/helpers/i18n
@@ -47,7 +48,6 @@
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
-//= require ./discourse/views/pagedown-preview
 //= require ./discourse/views/composer
 //= require ./discourse/routes/discourse_route
 //= require ./discourse/routes/build-topic-route
