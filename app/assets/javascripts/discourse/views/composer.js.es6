@@ -49,11 +49,6 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     Ember.run.scheduleOnce('afterRender', this, 'refreshPreview');
   }.observes('model.reply', 'model.hidePreview'),
 
-  focusIn() {
-    const controller = this.get('controller');
-    if (controller) controller.updateDraftStatus();
-  },
-
   movePanels(sizePx) {
     $('#main-outlet').css('padding-bottom', sizePx);
     $('.composer-popup').css('bottom', sizePx);

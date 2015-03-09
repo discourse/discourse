@@ -34,9 +34,6 @@ display: none !important; // can be removed if inline JS CSS is removed from com
   }
   #draft-status {
     color: scale-color($primary, $lightness: 75%);
-    &.flash {
-      color: $danger;
-    }
   }
   transition: height 0.4s ease;
   width: 100%;
