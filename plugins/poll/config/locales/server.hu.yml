@@ -1,0 +1,11 @@
+hu_HU:
+  js:
+    poll:
+      voteCount:
+        one: "1 szavazat"
+        other: "%{count} szavazat"
+      results:
+        show: Eredmények mutatása
+        hide: Eredmények elrejtése
+      close_poll: "Szavazás lezárása"
+      open_poll: "Szavazás megnyitása"
