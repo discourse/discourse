@@ -49,3 +49,6 @@ Logster.config.current_context = lambda{|env,&blk|
     ActiveRecord::Base.connection_handler.clear_active_connections!
   end
 }
+
+# TODO logster should be able to do this automatically
+Logster.config.subdirectory = "#{GlobalSetting.relative_url_root}/logs"

@@ -156,6 +156,10 @@ module Discourse
     require 'auth'
     Discourse.activate_plugins! unless Rails.env.test? and ENV['LOAD_PLUGINS'] != "1"
 
+    if GlobalSetting.relative_url_root.present?
+      config.relative_url_root = GlobalSetting.relative_url_root
+    end
+
     config.after_initialize do
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger

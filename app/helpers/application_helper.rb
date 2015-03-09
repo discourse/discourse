@@ -23,6 +23,10 @@ module ApplicationHelper
     end
   end
 
+  def path(path)
+    "#{GlobalSetting.relative_url_root}#{path}"
+  end
+
   def script(*args)
     if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
       tags = javascript_include_tag(*args, "crossorigin" => "anonymous")

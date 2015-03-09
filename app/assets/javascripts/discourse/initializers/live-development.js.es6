@@ -41,7 +41,7 @@ export default {
 
           // Reload handlebars
           var js = me.name.replace(".hbs", "").replace("app/assets/javascripts", "/assets");
-          $LAB.script(js + "?hash=" + me.hash).wait(function() {
+          Discourse.script(js + "?hash=" + me.hash).wait(function() {
             var templateName;
             templateName = js.replace(".js", "").replace("/assets/", "");
             return _.each(Ember.View.views, function(view) {
