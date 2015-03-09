@@ -242,31 +242,6 @@ Discourse.Composer = Discourse.Model.extend({
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
-
-  updateDraftStatus: function() {
-    var $title = $('#reply-title'),
-        $reply = $('#wmd-input');
-
-    // 'title' is focused
-    if ($title.is(':focus')) {
-      var titleDiff = this.get('missingTitleCharacters');
-      if (titleDiff > 0) {
-        this.flashDraftStatusForNewUser();
-        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_title', { n: titleDiff }));
-      }
-    // 'reply' is focused
-    } else if ($reply.is(':focus')) {
-      var replyDiff = this.get('missingReplyCharacters');
-      if (replyDiff > 0) {
-        return this.set('draftStatus', I18n.t('composer.min_length.need_more_for_reply', { n: replyDiff }));
-      }
-    }
-
-    // hide the counters if the currently focused text field is OK
-    this.set('draftStatus', null);
-
-  }.observes('missingTitleCharacters', 'missingReplyCharacters'),
-
   init: function() {
     this._super();
     var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
@@ -655,17 +630,9 @@ Discourse.Composer = Discourse.Model.extend({
     return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
       .then(function() {
         composer.set('draftStatus', I18n.t('composer.saved_draft_tip'));
-      }, function() {
+      }).catch(function() {
         composer.set('draftStatus', I18n.t('composer.drafts_offline'));
       });
-  },
-
-  flashDraftStatusForNewUser: function() {
-    var $draftStatus = $('#draft-status');
-    if (Discourse.User.currentProp('trust_level') === 0) {
-      $draftStatus.toggleClass('flash', true);
-      setTimeout(function() { $draftStatus.removeClass('flash'); }, 250);
-    }
   }
 
 });
