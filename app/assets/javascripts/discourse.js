@@ -5,10 +5,6 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,
 
-  script: function(url) {
-    return $LAB.script(this.getURL(url));
-  },
-
   getURL: function(url) {
     if (!url) { return url; }
 
