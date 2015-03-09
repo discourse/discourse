@@ -12,7 +12,8 @@ var parser = window.BetterMarkdown,
     initialized = false,
     emitters = [],
     hoisted,
-    preProcessors = [];
+    preProcessors = [],
+    escape = Handlebars.Utils.escapeExpression;
 
 /**
   Initialize our dialects for processing.
@@ -162,6 +163,69 @@ function hoister(t, target, replacement) {
   return t;
 }
 
+function outdent(t) {
+  return t.replace(/^([ ]{4}|\t)/gm, "");
+}
+
+function hideBackslashEscapedCharacters(t) {
+  return t.replace(/\\\\/g, "\u1E800")
+          .replace(/\\`/g, "\u1E8001");
+}
+
+function showBackslashEscapedCharacters(t) {
+  return t.replace(/\u1E8001/g, "\\`")
+          .replace(/\u1E800/g, "\\\\");
+}
+
+function hoistCodeBlocksAndSpans(text) {
+  // replace all "\`" with a single character
+  text = hideBackslashEscapedCharacters(text);
+
+  // <pre>...</pre> code blocks
+  text = text.replace(/(^\n*|\n\n)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
+    var hash = md5(content);
+    hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
+    return before + "<pre>" + hash + "</pre>";
+  });
+
+  // markdown code blocks
+  text = text.replace(/(^\n*|\n\n)((?:(?:[ ]{4}|\t).*\n*)+)/g, function(match, before, content, index) {
+    // make sure we aren't in a list
+    var previousLine = text.slice(0, index).trim().match(/.*$/);
+    if (previousLine && previousLine[0].length) {
+      previousLine = previousLine[0].trim();
+      if (/^(?:\*|\+|-|\d+\.)\s+/.test(previousLine)) {
+        return match;
+      }
+    }
+    // we can safely hoist the code block
+    var hash = md5(content);
+    // only remove trailing whitespace
+    content = content.replace(/\s+$/, "");
+    hoisted[hash] = escape(outdent(showBackslashEscapedCharacters(content)));
+    return before + "    " + hash + "\n";
+  });
+
+  // fenced code blocks (AKA GitHub code blocks)
+  text = text.replace(/(^\n*|\n\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
+    var hash = md5(content);
+    hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
+    return before + "```" + language + "\n" + hash + "\n```";
+  });
+
+  // code spans (double & single `)
+  ["``", "`"].forEach(function(delimiter) {
+    var regexp = new RegExp("(^|[^`])" + delimiter + "([^`\\n]+?)" + delimiter + "([^`]|$)", "g");
+    text = text.replace(regexp, function(_, before, content, after) {
+      var hash = md5(content);
+      hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
+      return before + delimiter + hash + delimiter + after;
+    });
+  });
+
+  // replace back all weird character with "\`"
+  return showBackslashEscapedCharacters(text);
+}
 
 /**
   An object used for rendering our dialects.
@@ -183,14 +247,19 @@ Discourse.Dialect = {
   cook: function(text, opts) {
     if (!initialized) { initializeDialects(); }
 
+    dialect.options = opts;
+
     // Helps us hoist out HTML
     hoisted = {};
 
+    // pre-hoist all code-blocks/spans
+    text = hoistCodeBlocksAndSpans(text);
+
+    // pre-processors
     preProcessors.forEach(function(p) {
       text = p(text, hoister);
     });
 
-    dialect.options = opts;
     var tree = parser.toHTMLTree(text, 'Discourse'),
         result = parser.renderJsonML(parseTree(tree));
 
@@ -203,12 +272,11 @@ Discourse.Dialect = {
     // If we hoisted out anything, put it back
     var keys = Object.keys(hoisted);
     if (keys.length) {
-      keys.forEach(function(k) {
-        result = result.replace(new RegExp(k,"g"), hoisted[k]);
+      keys.forEach(function(key) {
+        result = result.replace(new RegExp(key, "g"), hoisted[key]);
       });
     }
 
-    hoisted = {};
     return result.trim();
   },
 
