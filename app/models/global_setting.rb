@@ -102,15 +102,29 @@ class GlobalSetting
     end
   end
 
+  class BlankProvider < BaseProvider
+    def lookup(key, default)
+      default
+    end
+
+    def keys
+      []
+    end
+  end
+
 
   class << self
     attr_accessor :provider
   end
 
 
-  @provider =
-    FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
-    EnvProvider.new
+  if Rails.env == "test"
+    @provider = BlankProvider.new
+  else
+    @provider =
+      FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
+      EnvProvider.new
+  end
 
   load_defaults
 end
