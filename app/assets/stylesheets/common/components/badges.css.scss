@@ -55,7 +55,7 @@
     span.badge-category {
       color: $primary !important;
       vertical-align: text-top;
-      margin-top: -1px; //vertical alignment fix
+      line-height: 1;
       margin-left: 4px;
       display: inline-block;
 
@@ -162,6 +162,18 @@
       background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
       color: $primary !important;
     }
+
+    li.bullet>.badge-category {
+      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      color: $primary !important;
+
+      .badge-category-bg {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+      }
+    }
+
 
   }
 
