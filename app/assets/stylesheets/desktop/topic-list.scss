@@ -34,7 +34,7 @@
   .fa-thumb-tack { color: scale-color($primary, $lightness: 50%); }
   .fa-thumb-tack.unpinned { color: scale-color($primary, $lightness: 50%); }
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification), .fa-bookmark { color: scale-color($primary, $lightness: 50%); }
+  .fa-bookmark { color: scale-color($primary, $lightness: 50%); }
   th,
   td {
     padding: 12px 5px;
@@ -170,7 +170,6 @@
     color: $tertiary;
     font-size: 0.929em;
   }
-  a.title:visited:not(.badge-notification) {color: scale-color($tertiary, $lightness: 35%);}
 
   th.posts {
     position: relative;
