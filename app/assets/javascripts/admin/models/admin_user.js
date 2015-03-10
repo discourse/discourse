@@ -336,7 +336,6 @@ Discourse.AdminUser = Discourse.User.extend({
     var performAnonymize = function() {
       Discourse.ajax("/admin/users/" + user.get('id') + '/anonymize.json', {type: 'PUT'}).then(function(data) {
         if (data.success) {
-          bootbox.alert(I18n.t("admin.user.anonymize_successful"));
           if (data.username) {
             document.location = "/admin/users/" + data.username;
           } else {

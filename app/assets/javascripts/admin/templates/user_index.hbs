@@ -450,17 +450,27 @@
 
 <section>
   <hr/>
-  <button {{bind-attr class=":btn :btn-danger :pull-right anonymizeForbidden:hidden"}} {{action "anonymize" target="content"}} {{bind-attr disabled="anonymizeForbidden"}}>
-    <i class="fa fa-exclamation-triangle"></i>
-    {{i18n 'admin.user.anonymize'}}
-  </button>
+  <div class="pull-right">
+    {{#unless anonymizeForbidden}}
+      {{d-button label="admin.user.anonymize"
+                 icon="exclamation-triangle"
+                 class="btn btn-danger"
+                 disabled=anonymizeForbidden
+                 action="anonymize"}}
+    {{/unless}}
 
-  <button {{bind-attr class=":btn :btn-danger :pull-right deleteForbidden:hidden"}} {{action "destroy" target="content"}} {{bind-attr disabled="deleteForbidden"}}>
-    <i class="fa fa-exclamation-triangle"></i>
-    {{i18n 'admin.user.delete'}}
-  </button>
+    {{#unless deleteForbidden}}
+      {{d-button label="admin.user.delete"
+                 icon="exclamation-triangle"
+                 class="btn btn-danger"
+                 disabled=deleteForbidden
+                 action="destroy"}}
+    {{/unless}}
+  </div>
+
   {{#if deleteExplanation}}
     <div class="clearfix"></div>
+    <br/>
     <div class="pull-right"><i class="fa fa-exclamation-triangle"></i> {{deleteExplanation}}</div>
   {{/if}}
 </section>
