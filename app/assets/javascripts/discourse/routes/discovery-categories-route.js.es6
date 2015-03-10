@@ -1,4 +1,5 @@
-import ShowFooter from "discourse/mixins/show-footer";
+import ShowFooter from 'discourse/mixins/show-footer';
+import showModal from 'discourse/lib/show-modal';
 
 Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenComposer, ShowFooter, {
   renderTemplate() {
@@ -45,7 +46,7 @@ Discourse.DiscoveryCategoriesRoute = Discourse.Route.extend(Discourse.OpenCompos
       const groups = this.site.groups,
             everyoneName = groups.findBy('id', 0).name;
 
-      Discourse.Route.showModal(this, 'editCategory', Discourse.Category.create({
+      showModal('editCategory', Discourse.Category.create({
         color: 'AB9364', text_color: 'FFFFFF', group_permissions: [{group_name: everyoneName, permission_type: 1}],
         available_groups: groups.map(g => g.name),
         allow_badges: true

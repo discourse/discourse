@@ -1,11 +1,8 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
+import showModal from 'discourse/lib/show-modal';
 
 // This is happening outside of the app via popup
-function showModal(modal) {
-  const route = Discourse.__container__.lookup('route:application');
-  Discourse.Route.showModal(route, modal);
-}
 const AuthErrors =
   ['requires_invite', 'awaiting_approval', 'awaiting_confirmation', 'admin_not_allowed_from_ip_address',
    'not_allowed_from_ip_address'];

@@ -1,3 +1,5 @@
+import showModal from 'discourse/lib/show-modal';
+
 function unlessReadOnly(method) {
   return function() {
     if (this.site.get("isReadOnly")) {
@@ -74,31 +76,28 @@ const ApplicationRoute = Discourse.Route.extend({
     showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
 
     showForgotPassword() {
-      Discourse.Route.showModal(this, 'forgotPassword');
+      showModal('forgotPassword');
     },
 
     showNotActivated(props) {
-      Discourse.Route.showModal(this, 'notActivated');
+      showModal('notActivated');
       this.controllerFor('notActivated').setProperties(props);
     },
 
     showUploadSelector(composerView) {
-      Discourse.Route.showModal(this, 'uploadSelector');
+      showModal('uploadSelector');
       this.controllerFor('upload-selector').setProperties({ composerView: composerView });
     },
 
     showKeyboardShortcutsHelp() {
-      Discourse.Route.showModal(this, 'keyboardShortcutsHelp');
+      showModal('keyboardShortcutsHelp');
     },
 
     showSearchHelp() {
-      const self = this;
-
       // TODO: @EvitTrout how do we get a loading indicator here?
       Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(html){
-        Discourse.Route.showModal(self, 'searchHelp', html);
+        showModal('searchHelp', html);
       });
-
     },
 
     // Close the current modal, and destroy its state.
@@ -109,13 +108,13 @@ const ApplicationRoute = Discourse.Route.extend({
     /**
       Hide the modal, but keep it with all its state so that it can be shown again later.
       This is useful if you want to prompt for confirmation. hideModal, ask "Are you sure?",
-      user clicks "No", showModal. If user clicks "Yes", be sure to call closeModal.
+      user clicks "No", reopenModal. If user clicks "Yes", be sure to call closeModal.
     **/
     hideModal() {
       $('#discourse-modal').modal('hide');
     },
 
-    showModal() {
+    reopenModal() {
       $('#discourse-modal').modal('show');
     },
 
@@ -123,7 +122,7 @@ const ApplicationRoute = Discourse.Route.extend({
       const self = this;
       Discourse.Category.reloadById(category.get('id')).then(function (c) {
         self.site.updateCategory(c);
-        Discourse.Route.showModal(self, 'editCategory', c);
+        showModal(self, 'editCategory', c);
         self.controllerFor('editCategory').set('selectedTab', 'general');
       });
     },
@@ -135,6 +134,13 @@ const ApplicationRoute = Discourse.Route.extend({
 
     checkEmail: function (user) {
       user.checkEmail();
+    },
+
+    changeBulkTemplate(w) {
+      const controllerName = w.replace('modal/', ''),
+            factory = this.container.lookupFactory('controller:' + controllerName);
+
+      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     }
   },
 
@@ -164,7 +170,7 @@ const ApplicationRoute = Discourse.Route.extend({
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {
-      Discourse.Route.showModal(this, modal);
+      showModal(modal);
       if (notAuto) { notAuto(); }
     }
   },

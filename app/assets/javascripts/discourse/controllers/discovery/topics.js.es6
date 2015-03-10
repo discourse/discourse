@@ -1,11 +1,9 @@
 import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
-import NotificationLevels from 'discourse/lib/notification-levels';
+import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 
 var controllerOpts = {
   needs: ['discovery'],
-  bulkSelectEnabled: false,
-  selected: [],
   period: null,
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
@@ -53,7 +51,8 @@ var controllerOpts = {
       Discourse.TopicList.find(filter).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, self.get('category'));
 
-        self.setProperties({ model: list, selected: [] });
+        self.setProperties({ model: list });
+        self.resetSelected();
 
         var tracking = Discourse.TopicTrackingState.current();
         if (tracking) {
@@ -64,10 +63,6 @@ var controllerOpts = {
       });
     },
 
-    toggleBulkSelect: function() {
-      this.toggleProperty('bulkSelectEnabled');
-      this.get('selected').clear();
-    },
 
     resetNew: function() {
       var self = this;
@@ -76,39 +71,8 @@ var controllerOpts = {
       Discourse.Topic.resetNew().then(function() {
         self.send('refresh');
       });
-    },
-
-    dismissRead: function(operationType) {
-      var self = this,
-          selected = this.get('selected'),
-          operation;
-
-      if(operationType === "posts"){
-        operation = { type: 'dismiss_posts' };
-      } else {
-        operation = { type: 'change_notification_level',
-                        notification_level_id: NotificationLevels.REGULAR };
-      }
-
-      var promise;
-      if (selected.length > 0) {
-        promise = Discourse.Topic.bulkOperation(selected, operation);
-      } else {
-        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, this.get('category.id'));
-      }
-      promise.then(function(result) {
-        if (result && result.topic_ids) {
-          var tracker = Discourse.TopicTrackingState.current();
-          result.topic_ids.forEach(function(t) {
-            tracker.removeTopic(t);
-          });
-          tracker.incrementMessageCount();
-        }
-        self.send('refresh');
-      });
     }
   },
-
 
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
@@ -132,7 +96,6 @@ var controllerOpts = {
            this.get('topics.length') >= 30;
   }.property('filter', 'topics.length'),
 
-  canBulkSelect: Em.computed.alias('currentUser.staff'),
   hasTopics: Em.computed.gt('topics.length', 0),
   allLoaded: Em.computed.empty('more_topics_url'),
   latest: Discourse.computed.endWith('filter', 'latest'),
@@ -187,4 +150,4 @@ Ember.keys(queryParams).forEach(function(p) {
   }
 });
 
-export default DiscoveryController.extend(controllerOpts);
+export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);

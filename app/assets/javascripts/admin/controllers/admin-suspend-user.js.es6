@@ -19,7 +19,7 @@ export default ObjectController.extend(ModalFunctionality, {
           window.location.reload();
         }, function(e) {
           var error = I18n.t('admin.user.suspend_failed', { error: "http: " + e.status + " - " + e.body });
-          bootbox.alert(error, function() { self.send('showModal'); });
+          bootbox.alert(error, function() { self.send('reopenModal'); });
         });
       }
     }

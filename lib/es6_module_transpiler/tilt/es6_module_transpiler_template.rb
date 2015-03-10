@@ -106,6 +106,7 @@ module Tilt
 
           # HAX
           result = "Controller" if result == "ControllerController"
+          result = "Route" if result == "DiscourseRoute"
           result.gsub!(/Mixin$/, '')
           result.gsub!(/Model$/, '')
 

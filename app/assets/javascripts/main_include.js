@@ -49,7 +49,8 @@
 //= require ./discourse/components/notifications-button
 //= require ./discourse/components/topic-notifications-button
 //= require ./discourse/views/composer
-//= require ./discourse/routes/discourse_route
+//= require ./discourse/lib/show-modal
+//= require ./discourse/routes/discourse
 //= require ./discourse/routes/build-topic-route
 //= require ./discourse/routes/restricted-user
 //= require ./discourse/routes/user-topic-list

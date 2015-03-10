@@ -1,12 +1,14 @@
-Discourse.AdminBackupsRoute = Discourse.Route.extend({
+import showModal from 'discourse/lib/show-modal';
+
+export default Discourse.Route.extend({
 
   LOG_CHANNEL: "/admin/backups/logs",
 
-  activate: function() {
+  activate() {
     Discourse.MessageBus.subscribe(this.LOG_CHANNEL, this._processLogMessage.bind(this));
   },
 
-  _processLogMessage: function(log) {
+  _processLogMessage(log) {
     if (log.message === "[STARTED]") {
       this.controllerFor("adminBackups").set("isOperationRunning", true);
       this.controllerFor("adminBackupsLogs").clear();
@@ -25,7 +27,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
     }
   },
 
-  model: function() {
+  model() {
     return PreloadStore.getAndRemove("operations_status", function() {
       return Discourse.ajax("/admin/backups/status.json");
     }).then(function (status) {
@@ -37,35 +39,24 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
     });
   },
 
-  deactivate: function() {
+  deactivate() {
     Discourse.MessageBus.unsubscribe(this.LOG_CHANNEL);
   },
 
   actions: {
-    /**
-      Starts a backup and redirect the user to the logs tab
-
-      @method startBackup
-    **/
-    startBackup: function() {
-      Discourse.Route.showModal(this, 'admin_start_backup');
+    startBackup() {
+      showModal('admin_start_backup');
       this.controllerFor('modal').set('modalClass', 'start-backup-modal');
     },
 
-    backupStarted: function () {
+    backupStarted() {
       this.modelFor("adminBackups").set("isOperationRunning", true);
       this.transitionTo("admin.backups.logs");
       this.send("closeModal");
     },
 
-    /**
-      Destroys a backup
-
-      @method destroyBackup
-      @param {Discourse.Backup} backup the backup to destroy
-    **/
-    destroyBackup: function(backup) {
-      var self = this;
+    destroyBackup(backup) {
+      const self = this;
       bootbox.confirm(
         I18n.t("admin.backups.operations.destroy.confirm"),
         I18n.t("no_value"),
@@ -80,14 +71,8 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       );
     },
 
-    /**
-      Start a restore and redirect the user to the logs tab
-
-      @method startRestore
-      @param {Discourse.Backup} backup the backup to restore
-    **/
-    startRestore: function(backup) {
-      var self = this;
+    startRestore(backup) {
+      const self = this;
       bootbox.confirm(
         I18n.t("admin.backups.operations.restore.confirm"),
         I18n.t("no_value"),
@@ -105,13 +90,8 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       );
     },
 
-    /**
-      Cancels the current operation
-
-      @method cancelOperation
-    **/
-    cancelOperation: function() {
-      var self = this;
+    cancelOperation() {
+      const self = this;
       bootbox.confirm(
         I18n.t("admin.backups.operations.cancel.confirm"),
         I18n.t("no_value"),
@@ -126,12 +106,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       );
     },
 
-    /**
-      Rollback to previous working state
-
-      @method rollback
-    **/
-    rollback: function() {
+    rollback() {
       bootbox.confirm(
         I18n.t("admin.backups.operations.rollback.confirm"),
         I18n.t("no_value"),
@@ -142,8 +117,8 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       );
     },
 
-    uploadSuccess: function(filename) {
-      var self = this;
+    uploadSuccess(filename) {
+      const self = this;
       bootbox.alert(I18n.t("admin.backups.upload.success", { filename: filename }), function() {
         Discourse.Backup.find().then(function (backups) {
           self.controllerFor("adminBackupsIndex").set("model", backups);
@@ -151,7 +126,7 @@ Discourse.AdminBackupsRoute = Discourse.Route.extend({
       });
     },
 
-    uploadError: function(filename, message) {
+    uploadError(filename, message) {
       bootbox.alert(I18n.t("admin.backups.upload.error", { filename: filename, message: message }));
     }
   }

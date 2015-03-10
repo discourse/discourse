@@ -174,12 +174,12 @@ export default ObjectController.extend(ModalFunctionality, {
               self.flash(I18n.t('generic_error'));
             }
 
-            self.send('showModal');
+            self.send('reopenModal');
             self.displayErrors([I18n.t("category.delete_error")]);
             self.set('deleting', false);
           });
         } else {
-          self.send('showModal');
+          self.send('reopenModal');
           self.set('deleting', false);
         }
       });
