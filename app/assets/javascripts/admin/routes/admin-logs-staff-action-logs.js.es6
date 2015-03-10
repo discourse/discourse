@@ -1,3 +1,5 @@
+import showModal from 'discourse/lib/show-modal';
+
 export default Discourse.Route.extend({
   // TODO: make this automatic using an `{{outlet}}`
   renderTemplate: function() {
@@ -10,13 +12,13 @@ export default Discourse.Route.extend({
   },
 
   actions: {
-    showDetailsModal: function(logRecord) {
-      Discourse.Route.showModal(this, 'admin_staff_action_log_details', logRecord);
+    showDetailsModal(logRecord) {
+      showModal('admin_staff_action_log_details', logRecord);
       this.controllerFor('modal').set('modalClass', 'log-details-modal');
     },
 
-    showCustomDetailsModal: function(logRecord) {
-      Discourse.Route.showModal(this, logRecord.action_name + '_details', logRecord);
+    showCustomDetailsModal(logRecord) {
+      showModal(logRecord.action_name + '_details', logRecord);
       this.controllerFor('modal').set('modalClass', 'tabbed-modal log-details-modal');
     }
   }

@@ -16,7 +16,6 @@ addBulkButton('resetRead', 'reset_read');
 
 // Modal for performing bulk actions on topics
 export default Ember.ArrayController.extend(ModalFunctionality, {
-  needs: ['discovery/topics'],
   buttonRows: null,
 
   onShow: function() {
@@ -34,6 +33,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     if (row.length) { buttonRows.push(row); }
 
     this.set('buttonRows', buttonRows);
+    this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
   },
 
   perform: function(operation) {
@@ -66,9 +66,10 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
   },
 
   performAndRefresh: function(operation) {
-    var self = this;
+    const self = this;
     return this.perform(operation).then(function() {
-      self.get('controllers.discovery/topics').send('refresh');
+      const refreshTarget = self.get('refreshTarget');
+      if (refreshTarget) { refreshTarget.send('refresh'); }
       self.send('closeModal');
     });
   },
@@ -107,7 +108,8 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
         topics.forEach(function(t) {
           t.set('category', category);
         });
-        self.get('controllers.discovery/topics').send('refresh');
+        const refreshTarget = self.get('refreshTarget');
+        if (refreshTarget) { refreshTarget.send('refresh'); }
         self.send('closeModal');
       });
     },
