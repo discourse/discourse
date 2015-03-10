@@ -378,7 +378,7 @@ zh_CN:
         title: "当我不访问时，向我的邮箱发送最新信息："
         daily: "每天"
         weekly: "每周"
-        bi_weekly: "每两周"
+        every_two_weeks: "每两周"
       email_direct: "当有人引用我、回复我的帖子或提及@你时发送一封邮件给我"
       email_private_messages: "当有人给发私信给我时发送一封邮件给我"
       email_always: "即使在论坛中活跃时也接收电子邮件提醒"

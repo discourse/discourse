@@ -402,7 +402,7 @@ it:
         title: "Quando non visito il sito, invia un riassunto delle novità per email: "
         daily: "ogni giorno"
         weekly: "ogni settimana"
-        bi_weekly: "bisettimanale"
+        every_two_weeks: "bisettimanale"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio o menziona il mio @nome"
       email_private_messages: "Inviami un'email quando qualcuno mi scrive un messaggio privato"
       email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"

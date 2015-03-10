@@ -402,7 +402,7 @@ nb_NO:
         title: "Send meg sammendrag av hva som er nytt på e-post når jeg ikke er ofte innom:"
         daily: "daglig"
         weekly: "ukentlig"
-        bi_weekly: "hver andre uke"
+        every_two_weeks: "hver andre uke"
       email_direct: "Send meg e-post når noen siteter meg, svarer meg eller nevner mitt @brukernavn"
       email_private_messages: "Notta en email når noen sender deg en privat melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."

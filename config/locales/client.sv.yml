@@ -391,7 +391,7 @@ sv:
       email_digests:
         daily: "dagligen"
         weekly: "veckovis"
-        bi_weekly: "varannan vecka"
+        every_two_weeks: "varannan vecka"
       email_direct: "Skicka ett e-postmeddelande när någon citerar mig, svarar på mitt inlägg, eller nämner mitt @användarnamn"
       email_private_messages: "Skicka ett e-postmeddelande till mig när någon skickar mig ett privatmeddelande."
       email_always: "Ta emot notifieringar via mail även om jag är aktiv på forumet"

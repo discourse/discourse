@@ -401,7 +401,7 @@ ro:
         title: "Cand nu vizitaţi site-ul, veţi primii un email cu rezumatul noutăţilor:"
         daily: "zilnic"
         weekly: "săptămânal"
-        bi_weekly: "odată la două saptămâni"
+        every_two_weeks: "odată la două saptămâni"
 
       email_direct: "Primeşte un email când cineva te citeaza, iţi răspunde la postare,sau iţi menţionează @numele de utilizator"
       email_private_messages: "Primeşte un email când cineva trimite un mesaj privat."
