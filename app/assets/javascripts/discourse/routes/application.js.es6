@@ -122,7 +122,7 @@ const ApplicationRoute = Discourse.Route.extend({
       const self = this;
       Discourse.Category.reloadById(category.get('id')).then(function (c) {
         self.site.updateCategory(c);
-        showModal(self, 'editCategory', c);
+        showModal('editCategory', c);
         self.controllerFor('editCategory').set('selectedTab', 'general');
       });
     },
