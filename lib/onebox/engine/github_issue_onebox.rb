@@ -32,14 +32,15 @@ module Onebox
         status_color = {"open"=>"#6cc644","closed"=>"#bd2c00","merged"=>"#6e5494"}
         result = { link: @url,
                    title: "Issue: " + @raw["title"],
-                   content:short_content.gsub("<br>","\n"),
+                   content: short_content.gsub("<br>","\n"),
                    labels: @raw["labels"],
                    user: @raw['user'],
                    created_at: @raw['created_at'].split("T")[0], #get only date for now
-                   closed_at: (@raw['closed_at'].nil? ? "" : @raw['closed_at'].split("T")[0] ) ,
+                   closed_at: (@raw['closed_at'].nil? ? "" : @raw['closed_at'].split("T")[0]),
                    closed_by: @raw['closed_by'],
-                   # avatar: "https://www.gravatar.com/avatar/#{@raw['user']['gravatar_id']}?s=128",
-                   avatar:"https://avatars1.githubusercontent.com/u/#{@raw['user']['id']}?v=2&s=96"
+                   avatar: "https://avatars1.githubusercontent.com/u/#{@raw['user']['id']}?v=2&s=96",
+                   repository_path: "#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}",
+                   repository_url: "https://#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}",
                   }
       end
     end
