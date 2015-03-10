@@ -60,7 +60,7 @@ GEM
       timers (~> 4.0.0)
     certified (1.0.0)
     coderay (1.1.0)
-    connection_pool (2.1.1)
+    connection_pool (2.1.2)
     crass (1.0.1)
     daemons (1.1.9)
     debug_inspector (0.0.2)
@@ -212,7 +212,7 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-    memory_profiler (0.0.4)
+    memory_profiler (0.9.0)
     message_bus (1.0.6)
       eventmachine
       rack (>= 1.1.3)
