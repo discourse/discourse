@@ -48,7 +48,6 @@
   }
 
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
 
   .badge-notification {
     position: relative;
