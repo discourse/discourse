@@ -2052,7 +2052,6 @@ en:
         anonymize: "Anonymize User"
         anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
         anonymize_yes: "Yes, anonymize this account"
-        anonymize_successful: "The user was anonymized successfully."
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."

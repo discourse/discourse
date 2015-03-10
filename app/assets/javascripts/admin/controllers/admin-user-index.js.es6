@@ -92,6 +92,14 @@ export default ObjectController.extend(CanCheckEmails, {
           self.get('model').revokeApiKey();
         }
       });
+    },
+
+    anonymize: function() {
+      this.get('model').anonymize();
+    },
+
+    destroy: function() {
+      this.get('model').destroy();
     }
   }
 
