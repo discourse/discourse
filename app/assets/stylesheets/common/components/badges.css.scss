@@ -50,13 +50,19 @@
 
 
   &.bullet { //bullet category style
-    line-height: 1.25;
+    line-height: 1;
+    margin-right: 5px;
+
+    h3 & {
+      line-height: .9;
+    }
 
     span.badge-category {
       color: $primary !important;
       vertical-align: text-top;
       line-height: 1;
       margin-left: 4px;
+      padding-left: 2px;
       display: inline-block;
 
       #search-dropdown & {
@@ -171,6 +177,7 @@
         width: 10px;
         height: 10px;
         display: inline-block;
+        margin: 0 2px;
       }
     }
 
