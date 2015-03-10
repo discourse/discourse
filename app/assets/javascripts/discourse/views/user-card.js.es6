@@ -76,7 +76,11 @@ export default Discourse.View.extend(CleansUp, {
 
   _shown() {
     // After the card is shown, focus on the first link
-    Ember.run.scheduleOnce('afterRender', () => this.$('a:first').focus() );
+    //
+    // note: we DO NOT use afterRender here cause _willShow may
+    //  run after _shown, if we allowed this to happen the usercard
+    //  may be offscreen and we may scroll all the way to it on focus
+    Ember.run.next(null, () => this.$('a:first').focus() );
   },
 
   _willShow(target) {
