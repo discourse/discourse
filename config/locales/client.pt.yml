@@ -396,7 +396,7 @@ pt:
       email_digests:
         daily: "diariamente"
         weekly: "semanalmente"
-        bi_weekly: "a cada duas semanas"
+        every_two_weeks: "a cada duas semanas"
       email_always: "Não suprimir notificações de email quando estou ativo no sítio"
       other_settings: "Outros"
       categories_settings: "Categorias"

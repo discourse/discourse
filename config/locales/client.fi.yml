@@ -397,7 +397,7 @@ fi:
         title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         daily: "päivittäin"
         weekly: "viikottain"
-        bi_weekly: "joka toinen viikko"
+        every_two_weeks: "joka toinen viikko"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini tai viittaa @nimeeni."
       email_private_messages: "Lähetä minulle sähköposti jos joku lähettää minulle yksityisviestin"
       email_always: "Älä jätä lähettämättä sähköposti-ilmoituksia, vaikka olen aktiivinen palstalla."

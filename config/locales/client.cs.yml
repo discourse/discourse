@@ -425,7 +425,7 @@ cs:
         title: "Když tady dlouho nebudu, chci emailem zaslat co je nového:"
         daily: "denně"
         weekly: "týdně"
-        bi_weekly: "jednou za 14 dní"
+        every_two_weeks: "jednou za 14 dní"
       email_direct: "Upozornit emailem na moje citace, odpovědi na můj příspěvek a na @jmeno"
       email_private_messages: "Upozornit emailem na nové soukromé konverzace"
       email_always: "Posílat upozorňovací emaily i když jsem zrovna na webu aktivní"

@@ -379,7 +379,7 @@ zh_TW:
         title: "當我很久沒來此網站時，以電子郵件通知我最近有什麼新文章："
         daily: "每天"
         weekly: "每週"
-        bi_weekly: "每兩週"
+        every_two_weeks: "每兩週"
       email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
       email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
       email_always: "不要因為我在網站上活動而不寄信通知。"

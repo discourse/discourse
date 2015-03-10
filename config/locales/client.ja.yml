@@ -319,7 +319,7 @@ ja:
       email_digests:
         daily: "毎日"
         weekly: "毎週"
-        bi_weekly: "隔週"
+        every_two_weeks: "隔週"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"

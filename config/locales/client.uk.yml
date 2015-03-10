@@ -262,7 +262,7 @@ uk:
       email_digests:
         daily: "щодня"
         weekly: "щотижня"
-        bi_weekly: "кожні два тижні"
+        every_two_weeks: "кожні два тижні"
       other_settings: "Інше"
       categories_settings: "Категорії"
       new_topic_duration:
