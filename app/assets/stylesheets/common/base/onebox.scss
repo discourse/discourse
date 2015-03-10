@@ -105,6 +105,10 @@ aside.onebox {
   @include onebox-favicon('twitterstatus', 'twitter');
   @include onebox-favicon('wikipedia', 'wikipedia');
   @include onebox-favicon('githubblob', 'github');
+  @include onebox-favicon('githubcommit', 'github');
+  @include onebox-favicon('githubpullrequest', 'github');
+  @include onebox-favicon('githubissue', 'github');
+  @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
 
 
