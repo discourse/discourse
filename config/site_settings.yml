@@ -622,6 +622,7 @@ spam:
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
   num_flags_to_close_topic: 12
+  auto_respond_to_flag_actions: true
 
 rate_limits:
   unique_posts_mins:

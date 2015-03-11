@@ -460,9 +460,23 @@ describe PostAction do
 
   describe ".add_moderator_post_if_needed" do
 
-    it "should not generate a notification for auto-message" do
+    it "should not add a moderator post when it's disabled" do
       post = create_post
 
+      action = PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
+      action.reload
+      topic = action.related_post.topic
+      expect(topic.posts.count).to eq(1)
+
+      SiteSetting.expects(:auto_respond_to_flag_actions).returns(false)
+      PostAction.agree_flags!(post, admin)
+
+      topic.reload
+      expect(topic.posts.count).to eq(1)
+    end
+
+    it "should not generate a notification for auto-message" do
+      post = create_post
       PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
 
       PostAlerter.expects(:post_created).never
