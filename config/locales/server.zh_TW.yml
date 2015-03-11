@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_TW:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -575,7 +565,6 @@ zh_TW:
     default_external_links_in_new_tab: "以新分頁開啟所有外部連結，用戶可於個人偏好設定更改設定。"
     detect_custom_avatars: "是否檢測用會上傳了自訂的個人圖示"
     max_daily_gravatar_crawls: "一天內 Discourse 將自動檢查 Gravatar 自訂個人圖示的次數"
-    public_user_custom_fields: "用戶可設定公開顯示的自定欄位白名單"
     allow_profile_backgrounds: "允許使用者上傳個人檔案背景圖片"
     suppress_uncategorized_badge: "不在\"無分類\"的話題列表內顯示徽章。"
     autohighlight_all_code: "即使未顯示特定語言，仍為所有預編排程式套用程式碼顏色提示"

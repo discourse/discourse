@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 de:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "DD. MMM"
     short_date: "DD. MMM YYYY"
@@ -845,7 +835,6 @@ de:
     default_external_links_in_new_tab: "Öffne externe Links in einem neuen Tab. Benutzer können dies in ihren Einstellungen ändern."
     detect_custom_avatars: "Ob überprüft wird, dass Benutzer benutzerdefinierte Avatare hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
-    public_user_custom_fields: "Eine Whitelist von selbst definierten Feldern für einen Anwender, die öffentlich angezeigt werden können."
     allow_profile_backgrounds: "Erlaube Benutzern Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl von Beiträgen, die ein Benutzer in einem Thema am Stück schreiben darf, bevor er eine Erinnerung bezüglich zu vieler aufeinanderfolgender Antworten erhält."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Seite zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
@@ -968,7 +957,6 @@ de:
     active: "Dein Konto ist nun freigeschaltet und einsatzbereit."
     activate_email: "<p>Fast fertig!  Eine E-Mail mit einem Aktivierungscode wurde an Deine Mailadresse <b>%{email}</b> gesendet. <br>Dort findest Du die Anleitung, um Deinen Zugang zu aktivieren. </p><p>Solltest Du die Mail nicht vorfinden, kontrolliere bitte auch den Spamverdachts-Ordner. Gegebenenfalls kannst Du Dir von hier eine weitere Aktivierungs-Mail zusenden lassen. </p>"
     not_activated: "Du kannst Dich noch nicht anmelden. Wir haben dir eine Aktivierungs-E-Mail geschickt. Bitte folge zunächst den Anweisungen in dieser E-Mail, um dein Konto zu aktivieren."
-    not_allowed_from_ip_address: "Von dieser IP-Adresse können Sie sich nicht als %{username} anmelden."
     suspended: "Du kannst Dich bis zum %{date} nicht anmelden."
     suspended_with_reason: "Du kannst Dich bis zum %{date} nicht mehr anmelden. Grund des Ausschlusses: %{reason}"
     errors: "%{errors}"
