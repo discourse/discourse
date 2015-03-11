@@ -681,8 +681,6 @@ class User < ActiveRecord::Base
   def number_of_deleted_posts
     Post.with_deleted
         .where(user_id: self.id)
-        .where(user_deleted: false)
-        .where.not(deleted_by_id: self.id)
         .where.not(deleted_at: nil)
         .count
   end
