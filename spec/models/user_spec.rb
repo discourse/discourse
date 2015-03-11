@@ -1156,4 +1156,28 @@ describe User do
 
   end
 
+  describe "number_of_deleted_posts" do
+
+    let(:user) { Fabricate(:user, id: 2) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "counts all the posts" do
+      # at least 1 "unchanged" post
+      Fabricate(:post, user: user)
+
+      post_deleted_by_moderator = Fabricate(:post, user: user)
+      PostDestroyer.new(moderator, post_deleted_by_moderator).destroy
+
+      post_deleted_by_user = Fabricate(:post, user: user, post_number: 2)
+      PostDestroyer.new(user, post_deleted_by_user).destroy
+
+      # fake stub deletion
+      post_deleted_by_user.update_columns(updated_at: 2.days.ago)
+      PostDestroyer.destroy_stubs
+
+      expect(user.number_of_deleted_posts).to eq(2)
+    end
+
+  end
+
 end
