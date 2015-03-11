@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 fi:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMMM[ta] YYYY"
@@ -89,15 +79,15 @@ fi:
     start_discussion: "Aloita keskustelu"
     continue: "Jatka keskustelua"
     more_replies:
-      one: "1 vastaus lisää"
-      other: "%{count} vastausta lisää"
-    loading: "Haetaan viestejä..."
-    permalink: "Suora linkki"
-    imported_from: "Tässä viestiketju keskustellaan kirjoituksesta osoitteessa %{link}"
+      one: "1 kommentti lisää"
+      other: "%{count} kommenttia lisää"
+    loading: "Haetaan kommentteja..."
+    permalink: "Ikilinkki"
+    imported_from: "Tämä on kommenttiketju artikkelille %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 vastaus"
-      other: "%{count} vastausta"
+      one: "1 kommentti"
+      other: "%{count} kommenttia"
   too_many_mentions:
     zero: "Pahoittelut, et voi viitata muihin käyttäjiin."
     one: "Pahoittelut, voit viitata viestissä vain yhteen käyttäjään."
@@ -479,6 +469,7 @@ fi:
       xaxis: "Päivä"
       yaxis: "Vierailujen määrä"
     signups:
+      title: "Uudet käyttäjät"
       xaxis: "Päivä"
       yaxis: "Uusien käyttäjien määrä"
     topics:
@@ -921,7 +912,6 @@ fi:
     default_external_links_in_new_tab: "Avaa ulkoiset linkit uudessa välilehdessä. Käyttäjät voivat muuttaa tämän asetuksistaan."
     detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman avatarin."
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
-    public_user_custom_fields: "Whitelist käyttäjän mukautetuista kentistä, jotka voidaan näyttää julkisesti."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
@@ -1048,7 +1038,6 @@ fi:
     active: "Tilisi on aktivoitu ja valmiina käyttöön."
     activate_email: "<p>Olet melkein valmis! Lähetimme sähköpostin osoitteeseen <b>%{email}</b>. Seuraa viestin ohjeita aktivoidaksesi käyttäjätilisi.</p><p>Jos viesti ei tullut perille, tarkista roskapostikansiosta tai yritä kirjautua sisään, jolloin aktivointiviestin voi lähettää uudestaan.</p>"
     not_activated: "Et voi vielä kirjautua sisään. Lähetimme sinulle vahvistusviestin. Seuraa sähköpostiviestin ohjeita ottaaksesi tunnuksen käyttöön."
-    not_allowed_from_ip_address: "Et voi kirjautua käyttäjätunnuksella %{username} tästä IP-osoitteesta."
     suspended: "Et voi kirjautu sisään ennen %{date}."
     suspended_with_reason: "Et voi kirjautua sisään ennen %{date}. Hyllytyksen syy: %{reason}"
     errors: "%{errors}"
@@ -1691,6 +1680,7 @@ fi:
     body_blank: "body on tyhjä"
   color_schemes:
     base_theme_name: "Pohja"
+  about: "Tietoja"
   guidelines: "Ohjeet"
   privacy: "Yksityisyys"
   edit_this_page: "Muokkaa tätä sivua"
