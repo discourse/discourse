@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 pt:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "DD MMM"
     short_date: "DD MMM, YYYY"
@@ -810,7 +800,6 @@ pt:
     default_external_links_in_new_tab: "Abrir hiperligações externas num novo separador. Os utilizadores podem alterar isto nas suas preferências."
     detect_custom_avatars: "Se deve ou não haver uma verificação de que os utilizadores carregaram avatars personalizados."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá verificar o Gravatar para avatars personalizados, por dia"
-    public_user_custom_fields: "Lista de campos personalizados para um utilizador e que podem ser exibidos publicamente."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
     sequential_replies_threshold: "Número de mensagens que um utilizador tem que fazer em linha num tópico antes de ser relembrado acerca de demasiadas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
@@ -935,7 +924,6 @@ pt:
     active: "A sua conta está ativa e pronta para ser utilizada."
     activate_email: "<p> Está quase no final! Enviámos um email de ativação para <b>%{email}</b>. Por favor siga as instruções no email para ativar a sua conta.</p><p>Se não receber o email, verifique a sua pasta de spam, ou tente autenticar-se novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não pode iniciar sessão. Enviámos um email de ativação para si. Por favor siga as instruções no email para ativar a sua conta."
-    not_allowed_from_ip_address: "Não pode autenticar-se como %{username} a partir desse endereço IP."
     suspended: "Não pode iniciar sessão até %{date}."
     suspended_with_reason: "Não pode iniciar sessão até %{date}. Motivo da sua suspensão: %{reason}"
     errors: "%{errors}"
