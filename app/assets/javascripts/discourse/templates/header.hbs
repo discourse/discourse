@@ -52,14 +52,14 @@
             <a class='icon'
                data-dropdown="site-map-dropdown"
                data-render="renderSiteMap"
-               href="#"
+               href
                title='{{i18n 'site_map'}}'
                id="site-map">
                {{fa-icon "bars" label="site_map"}}
             </a>
           {{/if}}
-          {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+          {{#if flaggedPostsCount}}
+            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</a>
           {{/if}}
         </li>
         {{#if currentUser}}

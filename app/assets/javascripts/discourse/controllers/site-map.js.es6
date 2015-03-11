@@ -1,9 +1,8 @@
 export default Ember.ArrayController.extend({
-  needs: ['application'],
+  needs: ['application', 'header'],
 
   showBadgesLink: function(){return Discourse.SiteSettings.enable_badges;}.property(),
   showAdminLinks: Em.computed.alias('currentUser.staff'),
-  flaggedPostsCount: Em.computed.alias("currentUser.site_flagged_posts_count"),
 
   faqUrl: function() {
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');

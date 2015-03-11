@@ -1,13 +1,4 @@
-/**
-  This view handles rendering of the header of the site
-
-  @class HeaderView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-
-var originalZIndex;
+let originalZIndex;
 
 export default Discourse.View.extend({
   tagName: 'header',
@@ -19,7 +10,7 @@ export default Discourse.View.extend({
   showDropdown: function($target) {
     var self = this;
 
-    if(!this.get("renderDropdowns")){
+    if (!this.get("renderDropdowns")) {
       this.set("renderDropdowns", true);
       Em.run.next(function(){
         self.showDropdown($target);
@@ -27,30 +18,29 @@ export default Discourse.View.extend({
       return;
     }
 
-    var elementId = $target.data('dropdown') || $target.data('notifications'),
-        $dropdown = $("#" + elementId),
-        $li = $target.closest('li'),
-        $ul = $target.closest('ul'),
-        $html = $('html'),
-        $header = $('header'),
-        replyZIndex = parseInt($('#reply-control').css('z-index'), 10);
-
+    const elementId = $target.data('dropdown') || $target.data('notifications'),
+          $dropdown = $("#" + elementId),
+          $li = $target.closest('li'),
+          $ul = $target.closest('ul'),
+          $html = $('html'),
+          $header = $('header'),
+          replyZIndex = parseInt($('#reply-control').css('z-index'), 10);
 
     originalZIndex = originalZIndex || $('header').css('z-index');
 
-    if(replyZIndex > 0) {
+    if (replyZIndex > 0) {
       $header.css("z-index", replyZIndex + 1);
     }
 
-    var controller = self.get('controller');
-    if(controller && !controller.isDestroyed){
+    const controller = self.get('controller');
+    if (controller && !controller.isDestroyed) {
       controller.set('visibleDropdown', elementId);
     }
     // we need to ensure we are rendered,
     //  this optimises the speed of the initial render
-    var render = $target.data('render');
-    if(render){
-      if(!this.get(render)){
+    const render = $target.data('render');
+    if (render){
+      if (!this.get(render)){
         this.set(render, true);
         Em.run.next(this, function(){
           this.showDropdown.apply(self, [$target]);
@@ -59,20 +49,21 @@ export default Discourse.View.extend({
       }
     }
 
-    var hideDropdown = function() {
+    const hideDropdown = function() {
       $header.css("z-index", originalZIndex);
       $dropdown.fadeOut('fast');
       $li.removeClass('active');
       $html.data('hide-dropdown', null);
-      var controller = self.get('controller');
-      if(controller && !controller.isDestroyed){
+
+      const controller = self.get('controller');
+      if (controller && !controller.isDestroyed){
         controller.set('visibleDropdown', null);
       }
-      return $html.off('click.d-dropdown');
+      $html.off('click.d-dropdown');
     };
 
     // if a dropdown is active and the user clicks on it, close it
-    if($li.hasClass('active')) { return hideDropdown(); }
+    if ($li.hasClass('active')) { return hideDropdown(); }
     // otherwhise, mark it as active
     $li.addClass('active');
     // hide the other dropdowns
@@ -129,16 +120,16 @@ export default Discourse.View.extend({
 
   },
 
-  willDestroyElement: function() {
+  _tearDown: function() {
     $(window).unbind('scroll.discourse-dock');
     $(document).unbind('touchmove.discourse-dock');
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').off('click.notifications');
     this.$('a[data-dropdown]').off('click.dropdown');
-  },
+  }.on('willDestroyElement'),
 
-  didInsertElement: function() {
+  _setup: function() {
 
-    var self = this;
+    const self = this;
 
     this.$('a[data-dropdown]').on('click.dropdown', function(e) {
       self.showDropdown.apply(self, [$(e.currentTarget)]);
@@ -172,7 +163,5 @@ export default Discourse.View.extend({
         }
       }
     });
-  }
+  }.on('didInsertElement')
 });
-
-

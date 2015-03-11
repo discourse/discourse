@@ -47,25 +47,24 @@
 
 **/
 
-var _connectorCache;
+let _connectorCache;
 
 function findOutlets(collection, callback) {
 
-  var disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
+  const disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
 
   Ember.keys(collection).forEach(function(res) {
     if (res.indexOf("/connectors/") !== -1) {
       // Skip any disabled plugins
-      for (var i=0; i<disabledPlugins.length; i++) {
+      for (let i=0; i<disabledPlugins.length; i++) {
         if (res.indexOf("/" + disabledPlugins[i] + "/") !== -1) {
           return;
         }
       }
 
-      var segments = res.split("/"),
-          outletName = segments[segments.length-2],
-          uniqueName = segments[segments.length-1];
-
+      const segments = res.split("/"),
+            outletName = segments[segments.length-2],
+            uniqueName = segments[segments.length-1];
 
       callback(outletName, res, uniqueName);
     }
@@ -75,11 +74,11 @@ function findOutlets(collection, callback) {
 function buildConnectorCache() {
   _connectorCache = {};
 
-  var uniqueViews = {};
+  const uniqueViews = {};
   findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var viewClass = require(resource, null, null, true).default;
+    const viewClass = require(resource, null, null, true).default;
     uniqueViews[uniqueName] = viewClass;
     _connectorCache[outletName].pushObject(viewClass);
   });
@@ -87,8 +86,8 @@ function buildConnectorCache() {
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    var mixin = {templateName: resource.replace('javascripts/', '')},
-        viewClass = uniqueViews[uniqueName];
+    const mixin = {templateName: resource.replace('javascripts/', '')};
+    let viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
       // We are going to add it back with the proper template
@@ -104,21 +103,24 @@ export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
   if (_connectorCache[connectionName]) {
-    var viewClass;
-    var childViews = _connectorCache[connectionName];
+    const childViews = _connectorCache[connectionName];
 
     // If there is more than one view, create a container. Otherwise
     // just shove it in.
-    if (childViews.length > 1) {
-      viewClass = Ember.ContainerView.extend({
-        childViews: childViews
-      });
-    } else {
-      viewClass = childViews[0];
-    }
+    const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
     delete options.fn;  // we don't need the default template since we have a connector
-    return Ember.Handlebars.helpers.view.call(this, viewClass, options);
+    Ember.Handlebars.helpers.view.call(this, viewClass, options);
+
+    const cvs = options.data.view._childViews;
+    if (childViews.length > 1 && cvs && cvs.length) {
+      const inserted = cvs[cvs.length-1];
+      if (inserted) {
+        childViews.forEach(function(cv) {
+          inserted.pushObject(cv.create());
+        });
+      }
+    }
   } else if (options.fn) {
     // If a block is passed, render its content.
     return Ember.Handlebars.helpers.view.call(this,
