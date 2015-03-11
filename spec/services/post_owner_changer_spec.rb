@@ -70,7 +70,7 @@ describe PostOwnerChanger do
         p2user.user_stat.first_post_created_at.should == nil
         p1user.user_stat.topic_reply_count.should == 0
         p2user.user_stat.topic_reply_count.should == 0
-        [p1.created_at, p2.created_at].should include(user_a.user_stat.first_post_created_at)
+        user_a.user_stat.first_post_created_at.should be_present
       end
 
       it "updates UserAction records" do
