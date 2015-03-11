@@ -488,6 +488,7 @@ class Topic < ActiveRecord::Base
                                 raw: text,
                                 post_type: Post.types[:moderator_action],
                                 no_bump: opts[:bump].blank?,
+                                skip_notifications: opts[:skip_notifications],
                                 topic_id: self.id)
       new_post = creator.create
       increment!(:moderator_posts_count)
