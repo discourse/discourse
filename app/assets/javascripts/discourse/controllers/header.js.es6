@@ -1,6 +1,6 @@
 import DiscourseController from 'discourse/controllers/controller';
 
-export default DiscourseController.extend({
+const HeaderController = DiscourseController.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,
@@ -18,9 +18,9 @@ export default DiscourseController.extend({
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
-  _resetCachedNotifications: function(){
+  _resetCachedNotifications: function() {
     // a bit hacky, but if we have no focus, hide notifications first
-    var visible = $("#notifications-dropdown").is(":visible");
+    const visible = $("#notifications-dropdown").is(":visible");
 
     if(!Discourse.get("hasFocus")) {
       if(visible){
@@ -37,7 +37,7 @@ export default DiscourseController.extend({
   }.observes("currentUser.lastNotificationChange"),
 
   refreshNotifications: function(){
-    var self = this;
+    const self = this;
     if (self.get("loadingNotifications")) { return; }
 
     self.set("loadingNotifications", true);
@@ -56,14 +56,14 @@ export default DiscourseController.extend({
   },
 
   actions: {
-    toggleStar: function() {
-      var topic = this.get('topic');
+    toggleStar() {
+      const topic = this.get('topic');
       if (topic) topic.toggleStar();
       return false;
     },
 
-    showNotifications: function(headerView) {
-      var self = this;
+    showNotifications(headerView) {
+      const self = this;
 
       if (self.get('currentUser.unread_notifications') || self.get('currentUser.unread_private_messages') || !self.get('notifications')) {
         self.refreshNotifications();
@@ -71,5 +71,34 @@ export default DiscourseController.extend({
       headerView.showDropdownBySelector("#user-notifications");
     }
   }
-
 });
+
+// Allow plugins to add to the sum of "flags" above the site map
+const _flagProperties = [];
+function addFlagProperty(prop) {
+  _flagProperties.pushObject(prop);
+}
+
+let _appliedFlagProps = false;
+HeaderController.reopenClass({
+  create() {
+    // We only want to change the class the first time it's created
+    if (!_appliedFlagProps && _flagProperties.length) {
+      _appliedFlagProps = true;
+
+      const args = _flagProperties.slice();
+      args.push(function() {
+        let sum = 0;
+        _flagProperties.forEach((fp) => sum += (this.get(fp) || 0));
+        return sum;
+      });
+      HeaderController.reopen({ flaggedPostsCount: Ember.computed.apply(this, args) });
+    }
+    return this._super.apply(this, Array.prototype.slice.call(arguments));
+  }
+});
+
+addFlagProperty('currentUser.site_flagged_posts_count');
+
+export { addFlagProperty };
+export default HeaderController;
