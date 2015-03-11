@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 sq:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -813,7 +803,6 @@ sq:
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
     sequential_replies_threshold: "Number posts a user has to make in a row in a topic before being reminded about too many sequential replies. "
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
@@ -924,7 +913,6 @@ sq:
     active: "Your account is activated and ready to use."
     activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
-    not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
     errors: "%{errors}"

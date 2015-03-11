@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 zh_CN:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "MMMDo"
     short_date: "ll"
@@ -230,6 +220,7 @@ zh_CN:
             password:
               common: "是 10000 个最常用的密码之一。请用一个更安全的密码。"
               same_as_username: "与你的用户名相同。请使用一个更安全的密码。"
+              same_as_email: "与你的邮件地址相同。请使用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登录。"
         color_scheme_color:
@@ -906,7 +897,6 @@ zh_CN:
     default_external_links_in_new_tab: "在新标签页中打开外部链接。用户可以在参数设置中更改这个设置。"
     detect_custom_avatars: "是否检测用户上传了自定义头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
-    public_user_custom_fields: "可公开显示的用户自定义属性白名单"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "用户可以在一个主题内多次回复而不被提醒连续发送多个回复的通知。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
@@ -1026,7 +1016,7 @@ zh_CN:
     active: "你的帐号已经被激活，可以使用了。"
     activate_email: "<p>快完成了！我们发送了一封激活邮件到<b>%{email}</b>。请按照邮件中的步骤来激活你的帐号。</p><p>如果你没有收到邮件，请检查你的垃圾邮件收件箱，或者试试再登录一次，看看能不能收到另一封激活邮件。</p>"
     not_activated: "你还不能登录。我们发送了一封激活邮件给你，请按照邮件中的步骤来激活你的帐号。"
-    not_allowed_from_ip_address: "你不能以 %{username} 身份从该 IP 地址登录。"
+    not_allowed_from_ip_address: "您不能以 %{username} 身份从该 IP 地址登陆。"
     suspended: "你要等到 %{date} 之后才能登录。"
     suspended_with_reason: "你要等到 %{date} 之后才能登录。你被封禁的理由是 %{reason}"
     errors: "%{errors}"

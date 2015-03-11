@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 nl:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM YYYY"
@@ -757,7 +747,6 @@ nl:
     wait_approval: "Bedankt voor je inschrijving. We zullen je laten weten als je account is goedgekeurd."
     active: "Je account is actief en klaar voor gebruik!"
     not_activated: "Je kan nog niet inloggen. We hebben je een activatiemail gestuurd. Volg de instructies in de mail om je account te activeren."
-    not_allowed_from_ip_address: "Je kunt niet inloggen als %{username} vanaf dat IP adres."
     suspended: "Je kan tot %{date} niet inloggen."
     suspended_with_reason: "Je kan tot %{date} niet inloggen. Je hebt bent om de volgende reden geschorst: %{reden}"
     errors: "%{errors}"
