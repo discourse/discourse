@@ -688,7 +688,9 @@ developer:
     client: true
 
 embedding:
-  embeddable_host: ''
+  embeddable_host:
+      default: ''
+      regex: "^(?!http).+" # don't allow this to start with http:// or https://
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username:
