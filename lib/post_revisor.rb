@@ -200,19 +200,13 @@ class PostRevisor
   end
 
   def update_post
+    prev_owner, new_owner = nil, nil
     if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id
-      if prev_owner = User.find_by_id(@post.user_id)
-        prev_owner.user_stat.update_attributes({post_count: prev_owner.post_count - 1}.merge(
-          @post.is_first_post? ? {topic_count: prev_owner.topic_count - 1} : {}
-        ))
-      end
-      if new_owner = User.find_by_id(@fields["user_id"])
-        new_owner.user_stat.update_attributes({post_count: new_owner.post_count + 1}.merge(
-          @post.is_first_post? ? {topic_count: new_owner.topic_count + 1} : {}
-        ))
-      end
+      prev_owner = User.find_by_id(@post.user_id)
+      new_owner = User.find_by_id(@fields["user_id"])
+
       UserAction.where( target_post_id: @post.id,
-                        user_id: @post.user_id,
+                        user_id: prev_owner.id,
                         action_type: [UserAction::NEW_TOPIC, UserAction::REPLY, UserAction::RESPONSE] )
                 .find_each { |ua| ua.destroy }
       # UserActionObserver will create new UserAction records for the new owner
@@ -232,6 +226,28 @@ class PostRevisor
 
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
+
+    # post owner changed
+    if prev_owner && new_owner && prev_owner != new_owner
+      likes = UserAction.where( target_post_id: @post.id,
+                                user_id: prev_owner.id,
+                                action_type: UserAction::WAS_LIKED ).update_all(user_id: new_owner.id)
+
+      prev_owner.user_stat.post_count -= 1
+      prev_owner.user_stat.topic_count -= 1 if @post.is_first_post?
+      prev_owner.user_stat.likes_received -= likes
+      prev_owner.user_stat.update_topic_reply_count
+      if @post.created_at == prev_owner.user_stat.first_post_created_at
+        prev_owner.user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+      end
+      prev_owner.user_stat.save
+
+      new_owner.user_stat.post_count += 1
+      new_owner.user_stat.topic_count += 1 if @post.is_first_post?
+      new_owner.user_stat.likes_received += likes
+      new_owner.user_stat.update_topic_reply_count
+      new_owner.user_stat.save
+    end
   end
 
   def self_edit?
