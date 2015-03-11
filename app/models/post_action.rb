@@ -187,7 +187,7 @@ class PostAction < ActiveRecord::Base
     return if moderator_already_replied?(related_post.topic, moderator)
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
-    related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
+    related_post.topic.add_moderator_post(moderator, I18n.t(message_key), skip_notifications: true)
   end
 
   def moderator_already_replied?(topic, moderator)

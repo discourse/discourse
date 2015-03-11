@@ -28,7 +28,7 @@ describe PostAction do
       mod = moderator
       Group.refresh_automatic_groups!
 
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
+      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
 
       posts = Post.joins(:topic)
                   .select('posts.id, topics.subtype, posts.topic_id')
@@ -76,7 +76,7 @@ describe PostAction do
       it "creates a pm if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");
+        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message")
       end
     end
 
@@ -89,7 +89,7 @@ describe PostAction do
 
       it "sends an email to user if selected" do
         PostCreator.any_instance.expects(:create).returns(build(:post))
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message");
+        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message")
       end
     end
   end
@@ -454,6 +454,20 @@ describe PostAction do
         message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[post_action_type], message: "WAT")
         expect(message_id).to be_present
       end
+    end
+
+  end
+
+  describe ".add_moderator_post_if_needed" do
+
+    it "should not generate a notification for auto-message" do
+      post = create_post
+
+      PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
+
+      PostAlerter.expects(:post_created).never
+
+      PostAction.agree_flags!(post, admin)
     end
 
   end
