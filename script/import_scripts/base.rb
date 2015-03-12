@@ -47,7 +47,7 @@ class ImportScripts::Base
 
     puts "loading existing categories..."
     CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-      @categories_lookup[import_id] = Category.find(category_id.to_i)
+      @categories_lookup[import_id] = category_id
     end
 
     puts "loading existing posts..."
@@ -156,7 +156,7 @@ class ImportScripts::Base
   end
 
   # Get the Discourse Category id based on the id of the source category
-  def category_from_imported_category_id(import_id)
+  def category_id_from_imported_category_id(import_id)
     @categories_lookup[import_id] || @categories_lookup[import_id.to_s]
   end
 
@@ -330,7 +330,8 @@ class ImportScripts::Base
     results.each do |c|
       params = yield(c)
 
-      next if params.nil? # block returns nil to skip
+      # block returns nil to skip
+      next if params.nil? || category_id_from_imported_category_id(params[:id])
 
       # Basic massaging on the category name
       params[:name] = "Blank" if params[:name].blank?
@@ -347,13 +348,13 @@ class ImportScripts::Base
       end
 
       new_category = create_category(params, params[:id])
-      @categories_lookup[params[:id]] = new_category
+      @categories_lookup[params[:id]] = new_category.id
     end
   end
 
   def create_category(opts, import_id)
-    existing = category_from_imported_category_id(import_id) || Category.where("LOWER(name) = ?", opts[:name].downcase).first
-    return existing if existing
+    existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
+    return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
 
     post_create_action = opts.delete(:post_create_action)
 

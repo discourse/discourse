@@ -41,8 +41,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     create_categories(@client.query("SELECT id, parent, name, description, ordering FROM jos_kunena_categories ORDER BY parent, id;")) do |c|
       h = {id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i}
       if c['parent'].to_i > 0
-        parent = category_from_imported_category_id(c['parent'])
-        h[:parent_category_id] = parent.id if parent
+        h[:parent_category_id] = category_id_from_imported_category_id(c['parent'])
       end
       h
     end
@@ -121,7 +120,7 @@ class ImportScripts::Kunena < ImportScripts::Base
         mapped[:created_at] = Time.zone.at(m['time'])
 
         if m['id'] == m['thread']
-          mapped[:category] = category_from_imported_category_id(m['catid']).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(m['catid'])
           mapped[:title] = m['subject']
         else
           parent = topic_lookup_from_imported_post_id(m['parent'])
