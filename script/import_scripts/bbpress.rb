@@ -87,7 +87,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
         mapped[:custom_fields] = {import_id: post["id"]}
 
         if post["post_type"] == "topic"
-          mapped[:category] = category_from_imported_category_id(post["post_parent"]).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(post["post_parent"])
           mapped[:title] = CGI.unescapeHTML post["post_title"]
         else
           parent = topic_lookup_from_imported_post_id(post["post_parent"])

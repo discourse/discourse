@@ -69,8 +69,7 @@ class ImportScripts::MyBB < ImportScripts::Base
     create_categories(results) do |row|
       h = {id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description'])}
       if row['parent_id'].to_i > 0
-        parent = category_from_imported_category_id(row['parent_id'])
-        h[:parent_category_id] = parent.id if parent
+        h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
       end
       h
     end
@@ -125,7 +124,7 @@ class ImportScripts::MyBB < ImportScripts::Base
         mapped[:created_at] = Time.zone.at(m['post_time'])
 
         if m['id'] == m['first_post_id']
-          mapped[:category] = category_from_imported_category_id(m['category_id']).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(m['category_id'])
           mapped[:title] = CGI.unescapeHTML(m['title'])
         else
           parent = topic_lookup_from_imported_post_id(m['first_post_id'])
