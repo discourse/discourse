@@ -270,6 +270,7 @@ class ImportScripts::Ning < ImportScripts::Base
   end
 
   def process_ning_post_body(arg)
+    return "" if arg.nil?
     raw = arg.gsub("</p>\n", "</p>")
 
     # youtube iframe
