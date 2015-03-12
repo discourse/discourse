@@ -7,7 +7,7 @@ class CategoriesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :redirect]
 
   def redirect
-    redirect_to "/c/#{params[:path]}"
+    redirect_to path("/c/#{params[:path]}")
   end
 
   def index

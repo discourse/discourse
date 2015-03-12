@@ -1,9 +1,7 @@
 <script>
   window.assetPath = (function(){
-
     var map = <%= deferred_scripts %>;
-
-    return function(asset){ return map[asset]; };
+    return function(asset) { return map[asset]; };
   })();
 </script>
 

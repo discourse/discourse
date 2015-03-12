@@ -236,7 +236,7 @@ module BackupRestore
     end
 
     def switch_schema!
-      log "Switching schemas..."
+      log "Switching schemas... try reloading the site in 5 minutes, if successful, then reboot and restore is complete."
 
       sql = [
         "BEGIN;",

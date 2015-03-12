@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 fr:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -233,6 +223,7 @@ fr:
             password:
               common: "fait partie des 10000 mots de passe les plus utilisés. Merci d'en utiliser un plus sûr."
               same_as_username: "est aussi votre pseudo. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_email: "est aussi votre adresse courriel. Veuillez utiliser un mot de passe plus sécurisé."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
         color_scheme_color:
@@ -926,6 +917,7 @@ fr:
     allow_uploaded_avatars: "Autoriser les utilisateurs à envoyer leurs propres avatars."
     allow_animated_avatars: "Autoriser les utilisateurs à utiliser des avatars ens gif animés. ATTENTION: il est hautement recommandé d'exécuter la tâche rake avatars:refresh après avoir changé ce paramètre."
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
+    default_avatars: "URLs des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
     digest_topics: "Nombre maximum de sujets à afficher dans le courriel de résumé."
     digest_min_excerpt_length: "Taille minimum du résumé des messages dans les courriels, en caractères."
@@ -935,7 +927,8 @@ fr:
     default_external_links_in_new_tab: "Les liens externes s'ouvrent dans un nouvel onglet. Les utilisateurs peuvent modifier ceci dans leurs préférences."
     detect_custom_avatars: "Vérifier ou pas que les utilisateurs ont envoyés des avatars personnalisés."
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
-    public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être affichés publiquement."
+    public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
+    staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages qu'un utilisateur doit poster d'affilé dans un sujet avant d'être rappelé à l'ordre pour multiple réponses."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
@@ -976,6 +969,7 @@ fr:
       invalid_integer_max: "La valeur ne peut pas être supérieur à %{max}."
       invalid_integer: "La valeur doit être un entier."
       regex_mismatch: "La valeur ne correspond pas au format requis."
+      must_include_latest: "Le menu du haut doit contenir l'onglet 'latest'."
       invalid_string: "Valeur invalide."
       invalid_string_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       invalid_string_min: "Doit être d'au moins %{count} caractères."
@@ -1064,6 +1058,7 @@ fr:
     activate_email: "<p>Vous avez presque fini ! Un courriel de confirmation a été envoyé à <b>%{email}</b>. Suivez les instructions pour activer votre compte.</p><p>S'il ne vous parvient pas, vérifiez le répertoire des courriers indésirables ou essayez de vous reconnecter pour envoyer une nouvelle demande d'activation.</p>"
     not_activated: "Vous ne pouvez pas vous connecter pour le moment. Nous vous avons envoyé un courriel d'activation. Merci de suivre les instructions qui s'y trouve pour activer votre compte."
     not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant que %{username} depuis cette adresse IP."
+    admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
     suspended: "Vous ne pouvez pas vous connecter jusqu'au %{date}."
     suspended_with_reason: "Vous ne pouvez pas vous connecter jusqu'au %{date}. La raison de votre suspension est : %{reason}"
     errors: "%{errors}"
@@ -1929,3 +1924,8 @@ fr:
       <p>
         <code>rainbows category:parks status:open order:latest</code> recherchera les sujets qui contiennent le mot "rainbows", qui sont dans la catégorie "parks" et qui ne sont ni fermés ni archivé. Les résultats seront triés par la date du dernier message publié.
       </p>
+  badges:
+    long_descriptions:
+      first_flag: |
+        Les signalements sont essentiels pour la santé de la communauté. Si vous remarquez des messages qui requièrent l'attention d'un modérateur, s'il vous plaît
+        n'hésitez pas à les signaler. A partir du niveau de confiance 1, vous pouvez également utiliser le dialogue de signalement pour envoyer des <b>messages privés</b> aux autre utilisateurs.

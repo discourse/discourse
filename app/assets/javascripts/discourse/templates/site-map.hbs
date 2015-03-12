@@ -6,9 +6,9 @@
       </li>
       <li>
         <a href="/admin/flags/active" class="flagged-posts-link">
-          <i class='fa fa-flag'></i> {{i18n 'flags_title'}}
-          {{#if flaggedPostsCount}}
-            <span title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</span>
+          {{fa-icon "flag"}} {{i18n 'flags_title'}}
+          {{#if currentUser.site_flagged_posts_count}}
+            <span title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</span>
           {{/if}}
         </a>
       </li>

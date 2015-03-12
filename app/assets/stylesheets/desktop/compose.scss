@@ -93,17 +93,12 @@
   .toggle-preview {
     right: 5px;
   }
-  #file-uploading {
-    left: 51%;
-    font-size: 0.857em;
-    color: $primary;
-  }
-  #draft-status {
+  #draft-status, #file-uploading {
     right: 51%;
     color: $primary;
-    &.flash {
-      color: $danger;
-    }
+  }
+  #file-uploading {
+    font-size: 0.857em;
   }
   transition: height 0.4s ease;
   width: 100%;

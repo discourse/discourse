@@ -12,7 +12,7 @@
       <p><%= t 'activation.approval_required' %></p>
     <% else %>
       <p><%= t('activation.please_continue') %></p>
-      <p><a class="btn" href="/"><%= t('activation.continue_button', site_name: SiteSetting.title) -%></a></p>
+      <p><a class="btn" href="<%= path "/" %>"><%= t('activation.continue_button', site_name: SiteSetting.title) -%></a></p>
       <%= render partial: 'auto_redirect_home' %>
     <% end %>
   <%end%>

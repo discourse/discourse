@@ -52,11 +52,10 @@ export default Discourse.View.extend({
     var $combo = this.$(),
         val = this.get('value');
     if (val !== undefined && val !== null) {
-      $combo.val(val.toString());
+      $combo.select2('val', val.toString());
     } else {
-      $combo.val(null);
+      $combo.select2('val', null);
     }
-    $combo.trigger("liszt:updated");
   }.observes('value'),
 
   contentChanged: function() {

@@ -93,7 +93,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit_username!(user)
 
     # TODO proper error surfacing (result is a Model#save call)
-    result = user.change_username(params[:new_username], current_user)
+    result = UsernameChanger.change(user, params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
     render json: {
@@ -142,7 +142,7 @@ class UsersController < ApplicationController
 
   def my_redirect
     if current_user.present? && params[:path] =~ /^[a-z\-\/]+$/
-      redirect_to "/users/#{current_user.username}/#{params[:path]}"
+      redirect_to path("/users/#{current_user.username}/#{params[:path]}")
       return
     end
     raise Discourse::NotFound.new

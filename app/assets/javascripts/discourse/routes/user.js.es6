@@ -69,14 +69,14 @@ export default Discourse.Route.extend({
   activate: function() {
     this._super();
     var user = this.modelFor('user');
-    Discourse.MessageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
+    this.messageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
       user.loadUserAction(data);
     });
   },
 
   deactivate: function() {
     this._super();
-    Discourse.MessageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
+    this.messageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
 
     // Remove the search context
     this.controllerFor('search').set('searchContext', null);

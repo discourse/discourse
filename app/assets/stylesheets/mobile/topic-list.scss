@@ -48,7 +48,6 @@
   }
 
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
 
   .badge-notification {
     position: relative;
@@ -263,7 +262,6 @@ ol.category-breadcrumb {
 
 .category-dropdown-menu {
   height: 200px;
-  margin-top: 31px;
 
   a.badge-category {
     line-height: 26px !important;

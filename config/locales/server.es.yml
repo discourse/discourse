@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 es:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -238,6 +228,7 @@ es:
             password:
               common: "es una de las 10000 contraseñas más comunes. Por favor usa una contraseña más segura"
               same_as_username: "es la misma que tu nombre de usuario. Por favor, escoge una contraseña más segura."
+              same_as_email: "es el mismo que tu email. Por favor, utiliza una contraseña más segura."
             ip_address:
               signup_not_allowed: "El registro no está permitido para esta cuenta."
         color_scheme_color:
@@ -573,7 +564,7 @@ es:
       xaxis: "Día"
       yaxis: "Peticiones a la API de rastreadores web"
     page_view_total_reqs:
-      title: "Tota"
+      title: "Total"
       xaxis: "Día"
       yaxis: "Total peticiones a la API"
     http_background_reqs:
@@ -898,6 +889,7 @@ es:
     newuser_spam_host_threshold: "Cuántas veces un nuevo usuario puede publicar un enlace hacia mismo sitio dentro de `` newuser_spam_host_posts posts antes de ser considerado spam."
     white_listed_spam_host_domains: "Una lista de dominios a excluir de las pruebas de spam. A los nuevos usuarios no se les restringirá la posibilidad de crear posts con enlaces a estos dominios."
     staff_like_weight: "Qué ponderación extra otorgan los me gusta provenientes de los miembros del Staff."
+    topic_view_duration_hours: "Contar una nueva visita a un tema una vez por IP/Usuario cada N horas"
     levenshtein_distance_spammer_emails: "Al revisar coincidencias por correos electrónicos de spammers, qué número de caracteres permiten una coincidencia parcial."
     max_new_accounts_per_registration_ip: "Si ya hay (n) cuentas con nivel de confianza 0 desde esta IP (y ninguna es de un miembro del staff o de nivel de confianza 2 o más), prohibir nuevos registros desde esa IP."
     min_ban_entries_for_roll_up: "Al hacer clic en el botón Agrupar, se crea un nuevo rango de entradas para banear si hay al menos (N) entradas."
@@ -931,6 +923,7 @@ es:
     allow_uploaded_avatars: "Permitir a los usuarios subir su propio avatar personalizado."
     allow_animated_avatars: "Permitir a los usuarios usar avatares con imágenes animadas tipo gif. AVISO: ejecuta el rake task avatars:refresh después de cambiar esta opción."
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
+    default_avatars: "URLs de avatares que se utilizarán por defecto para nuevos usuarios."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
     digest_topics: "El número máximo de temas a mostrar en el resumen por email."
     digest_min_excerpt_length: "La extensión mínima, en caracteres, del extracto de un post en el resumen por email."
@@ -940,7 +933,8 @@ es:
     default_external_links_in_new_tab: "Abrir enlaces externos en una nueva pestaña. Los usuarios pueden cambiar esto en sus preferencias."
     detect_custom_avatars: "Verificar o no que los usuarios han subido su propio avatar personalizado."
     max_daily_gravatar_crawls: "Máximo número de veces que Discourse comprobará Gravatar en busca de avatares personalizados en un día"
-    public_user_custom_fields: "Una lista de los campos personalizados que un usuario puede mostrar públicamente."
+    public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
+    staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de posts consecutivos que un usuario publicará en un mismo tema hasta mostrarle un recordatorio sobre demasiadas repuestas seguidas."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
@@ -981,6 +975,7 @@ es:
       invalid_integer_max: "El valor no puede ser mayor que %{max}."
       invalid_integer: "El valor debe ser un entero. "
       regex_mismatch: "El valor introducido no tiene el formato requerido. "
+      must_include_latest: "El menú superior debe incluir la pestaña 'recientes'."
       invalid_string: "Valor inválido. "
       invalid_string_min_max: "Debe contener entre %{min}  y  %{max} caracteres."
       invalid_string_min: "Debe contener como mínimo %{min} caracteres. "
@@ -1069,6 +1064,7 @@ es:
     activate_email: "<p>¡Ya casi has terminado! Te enviamos un correo de activación a <b>%{email}</b>. Por favor sigue las instrucciones de ese correo para activar tu cuenta.</p><p>Si no llega, mira en la carpeta de spam, o intenta iniciar sesión de nuevo para enviar de nuevo otro correo de activación.</p>"
     not_activated: "Aún no puedes iniciar sesión. Te hemos enviado un email de activación. Por favor, sigue las instrucciones en el email para activar tu cuenta."
     not_allowed_from_ip_address: "No puedes iniciar sesión como %{username} desde esa dirección IP."
+    admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
     suspended: "No puedes iniciar sesión hasta %{date}."
     suspended_with_reason: "No puedes iniciar sesión hasta el %{date}. El motivo por el que tu cuenta fue suspendida: %{reason}"
     errors: "%{errors}"

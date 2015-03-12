@@ -1,9 +1,11 @@
+import showModal from 'discourse/lib/show-modal';
+
 export default Ember.Route.extend({
-  serialize: function(m) {
+  serialize(m) {
     return {badge_id: Em.get(m, 'id') || 'new'};
   },
 
-  model: function(params) {
+  model(params) {
     if (params.badge_id === "new") {
       return Discourse.Badge.create({
         name: I18n.t('admin.badges.new_badge')
@@ -13,22 +15,20 @@ export default Ember.Route.extend({
   },
 
   actions: {
-    saveError: function(e) {
-      var msg = I18n.t("generic_error");
+    saveError(e) {
+      let msg = I18n.t("generic_error");
       if (e.responseJSON && e.responseJSON.errors) {
         msg = I18n.t("generic_error_with_reason", {error: e.responseJSON.errors.join('. ')});
       }
       bootbox.alert(msg);
     },
 
-    editGroupings: function() {
-      var groupings = this.controllerFor('admin-badges').get('badgeGroupings');
-      Discourse.Route.showModal(this, 'admin_edit_badge_groupings', groupings);
+    editGroupings() {
+      const groupings = this.controllerFor('admin-badges').get('badgeGroupings');
+      showModal('admin_edit_badge_groupings', groupings);
     },
 
-    preview: function(badge, explain) {
-      var self = this;
-
+    preview(badge, explain) {
       badge.set('preview_loading', true);
       Discourse.ajax('/admin/badges/preview.json', {
         method: 'post',
@@ -36,11 +36,11 @@ export default Ember.Route.extend({
           sql: badge.get('query'),
           target_posts: !!badge.get('target_posts'),
           trigger: badge.get('trigger'),
-          explain: explain
+          explain
         }
       }).then(function(json) {
         badge.set('preview_loading', false);
-        Discourse.Route.showModal(self, 'admin_badge_preview', json);
+        showModal('admin_badge_preview', json);
       }).catch(function(error) {
         badge.set('preview_loading', false);
         Em.Logger.error(error);

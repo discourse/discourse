@@ -139,6 +139,7 @@ en:
     daily: "daily"
     weekly: "weekly"
     every_two_weeks: "every two weeks"
+    every_three_days: "every three days"
     max_of_count: "max of {{count}}"
     character_count:
       one: "{{count}} character"
@@ -451,8 +452,9 @@ en:
       email_digests:
         title: "When I don't visit here, send an email digest of what's new:"
         daily: "daily"
+        every_three_days: "every three days"
         weekly: "weekly"
-        bi_weekly: "every two weeks"
+        every_two_weeks: "every two weeks"
 
       email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
       email_private_messages: "Send me an email when someone private messages me"
@@ -678,10 +680,6 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
-      min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} to go"
-
       error:
         title_missing: "Title is required"
         title_too_short: "Title must be at least {{min}} characters"
@@ -814,6 +812,7 @@ en:
         close_topics: "Close Topics"
         archive_topics: "Archive Topics"
         notification_level: "Change Notification Level"
+        choose_new_category: "Choose the new category for the topics:"
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
@@ -1494,6 +1493,7 @@ en:
           title: "Top Weekly"
         daily:
           title: "Top Daily"
+        all: "All Time"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
@@ -1913,6 +1913,7 @@ en:
             delete_topic: "delete topic"
             delete_post: "delete post"
             impersonate: "impersonate"
+            anonymize_user: "anonymize user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -2049,8 +2050,13 @@ en:
         approve_success: "User approved and email sent with activation instructions."
         approve_bulk_success: "Success! All selected users have been approved and notified."
         time_read: "Read Time"
+        anonymize: "Anonymize User"
+        anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
+        anonymize_yes: "Yes, anonymize this account"
+        anonymize_failed: "There was a problem anonymizing the account."
         delete: "Delete User"
         delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
         delete_forbidden:
           one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
           other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
@@ -2161,6 +2167,7 @@ en:
         none: 'none'
         no_results: "No results found."
         clear_filter: "Clear"
+        add_url: "add URL"
         categories:
           all_results: 'All'
           required: 'Required'

@@ -379,7 +379,7 @@ tr_TR:
         title: "Burayı ziyaret etmediğim zamanlarda bana yeni şeylerin özetini içeren bir email yolla:"
         daily: "günlük"
         weekly: "haftalık"
-        bi_weekly: "her iki haftada bir"
+        every_two_weeks: "her iki haftada bir"
       email_direct: "Birisi gönderime cevap verdiğinde, benden alıntı yaptığında ya da benden @username bahsettiğinde bana bir email at"
       email_private_messages: "Biri bana özel mesaj yazdığında bana bir email at"
       email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"

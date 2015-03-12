@@ -1,6 +1,6 @@
 # name: poll
 # about: adds poll support to Discourse
-# version: 0.1
+# version: 0.2
 # authors: Vikhyat Korrapati
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
@@ -145,7 +145,9 @@ after_initialize do
 end
 
 # Poll UI.
+register_asset "javascripts/models/poll.js.es6"
 register_asset "javascripts/controllers/poll.js.es6"
+register_asset "javascripts/views/poll.js.es6"
 register_asset "javascripts/discourse/templates/poll.hbs"
 register_asset "javascripts/initializers/poll.js.es6"
 register_asset "javascripts/poll_bbcode.js", :server_side

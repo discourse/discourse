@@ -8,11 +8,13 @@ require_dependency 'crawler_detection'
 require_dependency 'json_error'
 require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
+require_dependency 'global_path'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
   include CanonicalURL::ControllerExtensions
   include JsonError
+  include GlobalPath
 
   serialization_scope :guardian
 
@@ -88,7 +90,7 @@ class ApplicationController < ActionController::Base
     if (request.format && request.format.json?) || request.xhr? || !request.get?
       rescue_discourse_actions(:not_logged_in, 403, true)
     else
-      redirect_to "/"
+      redirect_to path("/")
     end
 
   end
@@ -379,7 +381,7 @@ class ApplicationController < ActionController::Base
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
         if SiteSetting.enable_sso?
-          redirect_to '/session/sso'
+          redirect_to path('/session/sso')
         else
           redirect_to :login
         end
@@ -387,7 +389,7 @@ class ApplicationController < ActionController::Base
     end
 
     def block_if_readonly_mode
-      return if request.fullpath.start_with?("/admin/backups")
+      return if request.fullpath.start_with?(path "/admin/backups")
       raise Discourse::ReadOnly.new if !request.get? && Discourse.readonly_mode?
     end
 

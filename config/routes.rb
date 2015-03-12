@@ -25,7 +25,13 @@ Discourse::Application.routes.draw do
 
   resources :about
 
-  get "site" => "site#index"
+  get "site" => "site#site"
+  namespace :site do
+    get "settings"
+    get "custom_html"
+    get "banner"
+    get "emoji"
+  end
   get "site_customizations/:key" => "site_customizations#show"
 
   resources :forums
@@ -90,6 +96,7 @@ Discourse::Application.routes.draw do
       get "badges"
       get "leader_requirements" => "users#tl3_requirements"
       get "tl3_requirements"
+      put "anonymize"
     end
 
 

@@ -62,7 +62,7 @@ sinon.config = {
 window.assetPath = function() { return null; };
 
 // Stop the message bus so we don't get ajax calls
-Discourse.MessageBus.stop();
+window.MessageBus.stop();
 
 // Trick JSHint into allow document.write
 var d = document;

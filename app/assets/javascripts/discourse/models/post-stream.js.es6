@@ -35,7 +35,15 @@ const PostStream = Ember.Object.extend({
   }.property('stream.@each'),
 
   loadedAllPosts: function() {
-    if (!this.get('hasLoadedData')) { return false; }
+    if (!this.get('hasLoadedData')) {
+      return false;
+    }
+
+    // if we are staging a post assume all is loaded
+    if (this.get('lastPostId') === -1) {
+      return true;
+    }
+
     return !!this.get('posts').findProperty('id', this.get('lastPostId'));
   }.property('hasLoadedData', 'posts.@each.id', 'lastPostId'),
 
@@ -287,7 +295,8 @@ const PostStream = Ember.Object.extend({
   **/
   stagePost(post, user) {
     // We can't stage two posts simultaneously
-    if (this.get('stagingPost')) { return false; }
+    if (this.get('stagingPost')) { return "alreadyStaging"; }
+
     this.set('stagingPost', true);
 
     const topic = this.get('topic');
@@ -309,9 +318,10 @@ const PostStream = Ember.Object.extend({
     if (this.get('loadedAllPosts')) {
       this.appendPost(post);
       this.get('stream').addObject(post.get('id'));
+      return "staged";
     }
 
-    return true;
+    return "offScreen";
   },
 
   // Commit the post we staged. Call this after a save succeeds.

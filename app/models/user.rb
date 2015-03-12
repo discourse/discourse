@@ -187,12 +187,7 @@ class User < ActiveRecord::Base
   end
 
   def change_username(new_username, actor=nil)
-    if actor && actor != self
-      StaffActionLogger.new(actor).log_username_change(self, self.username, new_username)
-    end
-
-    self.username = new_username
-    save
+    UsernameChanger.change(self, new_username, actor)
   end
 
   def created_topic_count
@@ -686,8 +681,6 @@ class User < ActiveRecord::Base
   def number_of_deleted_posts
     Post.with_deleted
         .where(user_id: self.id)
-        .where(user_deleted: false)
-        .where.not(deleted_by_id: self.id)
         .where.not(deleted_at: nil)
         .count
   end
@@ -716,6 +709,10 @@ class User < ActiveRecord::Base
     UserHistory.for(self, :suspend_user).count
   end
 
+  def create_user_profile
+    UserProfile.create(user_id: id)
+  end
+
   protected
 
   def badge_grant
@@ -732,10 +729,6 @@ class User < ActiveRecord::Base
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
     end
-  end
-
-  def create_user_profile
-    UserProfile.create(user_id: id)
   end
 
   def ensure_in_trust_level_group

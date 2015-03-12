@@ -12,10 +12,11 @@ describe GlobalSetting::FileProvider do
     f = Tempfile.new('foo')
     f.write("  # this is a comment\n")
     f.write("\n")
-    f.write("a = 1000  # this is a comment\n")
+    f.write(" a = 1000  # this is a comment\n")
     f.write("b = \"10 # = 00\"  # this is a # comment\n")
     f.write("c = \'10 # = 00\' # this is a # comment\n")
     f.write("d =\n")
+    f.write("#f = 1\n")
     f.close
 
     provider = GlobalSetting::FileProvider.from(f.path)
@@ -25,6 +26,7 @@ describe GlobalSetting::FileProvider do
     expect(provider.lookup(:c,"")).to eq "10 # = 00"
     expect(provider.lookup(:d,"bob")).to eq nil
     expect(provider.lookup(:e,"bob")).to eq "bob"
+    expect(provider.lookup(:f,"bob")).to eq "bob"
 
     expect(provider.keys.sort).to eq [:a, :b, :c, :d]
 

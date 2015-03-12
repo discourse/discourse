@@ -1,23 +1,24 @@
 import ShowFooter from "discourse/mixins/show-footer";
 import RestrictedUserRoute from "discourse/routes/restricted-user";
+import showModal from 'discourse/lib/show-modal';
 
 export default RestrictedUserRoute.extend(ShowFooter, {
-  model: function() {
+  model() {
     return this.modelFor('user');
   },
 
-  setupController: function(controller, user) {
+  setupController(controller, user) {
     controller.setProperties({ model: user, newNameInput: user.get('name') });
   },
 
   actions: {
-    showAvatarSelector: function() {
-      Discourse.Route.showModal(this, 'avatar-selector');
+    showAvatarSelector() {
+      showModal('avatar-selector');
 
       // all the properties needed for displaying the avatar selector modal
-      var controller = this.controllerFor('avatar-selector');
-      var user = this.modelFor('user');
-      var props = user.getProperties(
+      const controller = this.controllerFor('avatar-selector');
+      const user = this.modelFor('user');
+      const props = user.getProperties(
         'username', 'email',
         'uploaded_avatar_id',
         'system_avatar_upload_id',
@@ -40,8 +41,8 @@ export default RestrictedUserRoute.extend(ShowFooter, {
     },
 
     saveAvatarSelection: function() {
-      var user = this.modelFor('user');
-      var avatarSelector = this.controllerFor('avatar-selector');
+      const user = this.modelFor('user');
+      const avatarSelector = this.controllerFor('avatar-selector');
 
       // sends the information to the server if it has changed
       if (avatarSelector.get('selectedUploadId') !== user.get('uploaded_avatar_id')) {

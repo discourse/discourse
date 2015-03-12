@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 cs:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D. MMM"
     short_date: "D. MMM, YYYY"

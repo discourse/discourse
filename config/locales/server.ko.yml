@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ko:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "MMM D"
     short_date: "YYYY-MMM-D"
@@ -751,7 +741,6 @@ ko:
     default_external_links_in_new_tab: "다른 싸이트의 링크는 새 탭으로 연다. 사용자는 자신의 설정에 따라 바꿀 수 있음"
     detect_custom_avatars: "사용자가 커스텀 아바타를 업로드 했는지 여부를 체크한다."
     max_daily_gravatar_crawls: "하루에 Discourse가 커스텀 아파타를 위해 Gravatar를 체크하는 최대 횟수"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
     allow_profile_backgrounds: "사용자에게 프로필 배경 이미지 업로드를 허용한다."
     enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용합니다, 그리고 PC용 화면으로 전환할 수 있습니다. 만약 커스텀 스타일 시트를 사용한다면 이것을 비활성화 시키세요."
     dominating_topic_minimum_percent: "한 토픽에서 한 사용자의 영향력을 결정하는 게시글 수의 퍼센트"
@@ -845,7 +834,6 @@ ko:
     wait_approval: "가입해 주셔서 감사합니다. 곧 활성화 메일이 도착할 것 입니다."
     active: "당신의 계정이 활성화되었습니다."
     not_activated: "당신은 아직 로그인 할 수 없습니다. 계정 활성화 이메일을 보냈습니다. 계정을 활성화하기 위해 지침을 따라주세요."
-    not_allowed_from_ip_address: "이 IP 주소에서 %{username} 으로 로그인 할 수 없습니다."
     suspended: "당신은 %{date} 까지 로그인할 수 없습니다. "
     suspended_with_reason: "당신은 %{date} 까지 로그인할 수 없습니다. 이유: %{reason}"
     errors: "%{errors}"

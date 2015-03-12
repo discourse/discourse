@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 pt_BR:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -910,7 +900,6 @@ pt_BR:
     default_external_links_in_new_tab: "Abrir links externos em uma nova guia. Os usuários podem mudar isso em suas preferências."
     detect_custom_avatars: "Se ou não deve se checar que os usuários fizeram upload de avatares personalizados."
     max_daily_gravatar_crawls: "Número máximo de vezes que o Discourse irá checar o Gravatar por avatares personalizados em um dia"
-    public_user_custom_fields: "Uma lista de permissões de campos personalizados para um usuário que pode ser mostrado publicamente."
     allow_profile_backgrounds: "Permitir usuários de fazerem upload de backgrounds para o perfil"
     sequential_replies_threshold: "Número de posts que um usuário precisa fazer em seguida num tópico antes de ser relembrado sobre muitas respostas sequenciais."
     enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o site completo. Desative isso se você quiser usar um estilo personalizado que é totalmente responsivo."
@@ -1036,7 +1025,6 @@ pt_BR:
     active: "A sua conta está ativa e pronta."
     activate_email: "<p>Você está quase lá! Enviamos um email de ativação para <b>%{email}</b>. Por favor, siga as instruções contidas nele para ativar sua conta.</p><p>Se ele não chegar, verifique sua pasta de spam, ou tente entrar novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
-    not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
     suspended_with_reason: "Você não pode entrar até %{date}. Razão da sua suspensão: %{reason}"
     errors: "%{errors}"

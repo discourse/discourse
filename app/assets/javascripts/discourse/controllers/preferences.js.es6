@@ -53,8 +53,9 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
+                      { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
-                      { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }],
+                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
                        { name: I18n.t('user.auto_track_options.always'), value: 0 },

@@ -1,15 +1,16 @@
-import ShowFooter from "discourse/mixins/show-footer";
+import ShowFooter from 'discourse/mixins/show-footer';
+import showModal from 'discourse/lib/show-modal';
 
 export default Discourse.Route.extend(ShowFooter, {
-  renderTemplate: function() {
+  renderTemplate() {
     this.render({ into: 'user' });
   },
 
-  model: function() {
+  model() {
     return Discourse.Invite.findInvitedBy(this.modelFor('user'));
   },
 
-  setupController: function(controller, model) {
+  setupController(controller, model) {
     controller.setProperties({
       model: model,
       user: this.controllerFor('user').get('model'),
@@ -19,16 +20,16 @@ export default Discourse.Route.extend(ShowFooter, {
   },
 
   actions: {
-    showInvite: function() {
-      Discourse.Route.showModal(this, 'invite', Discourse.User.current());
+    showInvite() {
+      showModal('invite', Discourse.User.current());
       this.controllerFor('invite').reset();
     },
 
-    uploadSuccess: function(filename) {
+    uploadSuccess(filename) {
       bootbox.alert(I18n.t("user.invited.bulk_invite.success", { filename: filename }));
     },
 
-    uploadError: function(filename, message) {
+    uploadError(filename, message) {
       bootbox.alert(I18n.t("user.invited.bulk_invite.error", { filename: filename, message: message }));
     }
   }

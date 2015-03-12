@@ -52,11 +52,10 @@ const TopicTrackingState = Discourse.Model.extend({
       }
     };
 
-    Discourse.MessageBus.subscribe("/new", process);
-    Discourse.MessageBus.subscribe("/latest", process);
-    const currentUser = Discourse.User.current();
-    if(currentUser) {
-      Discourse.MessageBus.subscribe("/unread/" + currentUser.id, process);
+    this.messageBus.subscribe("/new", process);
+    this.messageBus.subscribe("/latest", process);
+    if (this.currentUser) {
+      this.messageBus.subscribe("/unread/" + this.currentUser.get('id'), process);
     }
   },
 
@@ -293,8 +292,14 @@ const TopicTrackingState = Discourse.Model.extend({
 
 
 TopicTrackingState.reopenClass({
-  createFromStates(data){
-    const instance = Discourse.TopicTrackingState.create();
+  createFromStates(data) {
+
+    // TODO: This should be a model that does injection automatically
+    const container = Discourse.__container__,
+          messageBus = container.lookup('message-bus:main'),
+          currentUser = container.lookup('current-user:main'),
+          instance = Discourse.TopicTrackingState.create({ messageBus, currentUser });
+
     instance.loadStates(data);
     instance.establishChannels();
     return instance;

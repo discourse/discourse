@@ -402,7 +402,7 @@ es:
         title: "Cuando no visite la página, enviarme un correo con las últimas novedades."
         daily: "diariamente"
         weekly: "semanalmente"
-        bi_weekly: "cada dos semanas"
+        every_two_weeks: "cada dos semanas"
       email_direct: "Enviarme un email cuando alguien me cita, responde a mi post o menciona mi @usuario"
       email_private_messages: "Enviarme un email cuando alguien me mande un mensaje privado"
       email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"

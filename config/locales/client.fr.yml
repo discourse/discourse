@@ -402,7 +402,7 @@ fr:
         title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
         daily: "quotidien"
         weekly: "hebdomadaire"
-        bi_weekly: "tous les 15 jours"
+        every_two_weeks: "tous les 15 jours"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"

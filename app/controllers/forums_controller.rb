@@ -17,7 +17,7 @@ class ForumsController < ApplicationController
   end
 
   def home_redirect
-    redirect_to '/'
+    redirect_to path('/')
   end
 
 end

@@ -1024,6 +1024,7 @@ en:
 
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
+    topic_view_duration_hours: "Count new a topic view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -1034,6 +1035,8 @@ en:
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
     num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
+
+    auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -1067,6 +1070,7 @@ en:
     allow_uploaded_avatars: "Allow users to upload custom avatars."
     allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
+    default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
@@ -1077,7 +1081,8 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
+    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
+    staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -1100,7 +1105,7 @@ en:
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
 
-    embeddable_host: "Host that can embed the comments from this Discourse forum."
+    embeddable_host: "Host that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."

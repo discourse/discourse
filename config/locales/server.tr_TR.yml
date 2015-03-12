@@ -6,16 +6,6 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 tr_TR:
-  stringex:
-    characters:
-      number: "-"
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -886,7 +876,6 @@ tr_TR:
     default_external_links_in_new_tab: "Dış bağlantıları yeni sekmede aç. Üyeler, ayarlar sayfasından bu ayarı değiştirebilir."
     detect_custom_avatars: "Olsun ya da olmasın kullanıcıların özel avatar yükleyip yüklemediğini kontrol et."
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
-    public_user_custom_fields: "Kullanıcıların herkes tarafından görüntülenebilir özel alanlar oluşturmaları için beyaz liste."
     allow_profile_backgrounds: "Kullanıcıların profillerine arkaplan eklemesine izin ver."
     sequential_replies_threshold: "Kullanıcının ardarda çok fazla cevap gönderdiğine dair uyarı alması için, bir konuda üstüste yapması gereken gönderi sayısı. "
     enable_mobile_theme: "Mobil cihazlar mobil uyumlu temayı kullanır, dilerse masaüstü görünüme geçebilirler. Eğer özel, duyarlı bir stil kullanıyorsanız bunu devredışı bırakın."
@@ -1005,7 +994,6 @@ tr_TR:
     active: "Hesabınız etkinleştirildi ve kullanıma hazır."
     activate_email: "<p>Az kaldı! <b>%{email}</b> adresine bir etkinleştirme e-postası gönderdik. Hesabınızı etkinleştirmek için lütfen e-postadaki yönlendirmeleri takip edin.</p><p>Eğer e-postayı almadıysanız, gereksiz klasörünüzü kontrol edin ya da başka bir etkinleştirme e-postası daha göndermek için tekrar giriş yapmayı deneyin.</p>"
     not_activated: "Henüz giriş yapamazsınız. Size bir etkinleştirme e-postası gönderdik. Hesabınızı etkinleştirmek için lütfen e-postadaki yönlendirmeleri takip edin."
-    not_allowed_from_ip_address: "Bu IP adresinden %{username} kullanıcı adı ile giriş yapamazsınız."
     suspended: "%{date} tarihine kadar giriş yapamazsınız."
     suspended_with_reason: "%{date} tarihine kadar giriş yapamazsınız. Uzaklaştırılma nedeniniz: %{reason}"
     errors: "%{errors}"

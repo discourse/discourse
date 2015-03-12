@@ -351,10 +351,7 @@ class PostsController < ApplicationController
     offset = [params[:offset].to_i, 0].max
     limit = [(params[:limit] || 60).to_i, 100].min
 
-    posts = user_posts(user.id, offset, limit)
-              .where(user_deleted: false)
-              .where.not(deleted_by_id: user.id)
-              .where.not(deleted_at: nil)
+    posts = user_posts(user.id, offset, limit).where.not(deleted_at: nil)
 
     render_serialized(posts, AdminPostSerializer)
   end

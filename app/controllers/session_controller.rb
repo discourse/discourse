@@ -12,7 +12,7 @@ class SessionController < ApplicationController
 
   def sso
     if SiteSetting.enable_sso
-      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || '/')
+      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || path('/'))
     else
       render nothing: true, status: 404
     end
@@ -32,7 +32,7 @@ class SessionController < ApplicationController
         redirect_to sso.to_url(sso.return_sso_url)
       else
         session[:sso_payload] = request.query_string
-        redirect_to '/login'
+        redirect_to path('/login')
       end
     else
       render nothing: true, status: 404
@@ -47,7 +47,7 @@ class SessionController < ApplicationController
     raise "User #{params[:session_id]} not found" if user.blank?
 
     log_on_user(user)
-    redirect_to "/"
+    redirect_to path("/")
   end
 
   def sso_login
@@ -80,9 +80,9 @@ class SessionController < ApplicationController
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
-            return_path = "/" unless uri.host == Discourse.current_hostname
+            return_path = path("/") unless uri.host == Discourse.current_hostname
           rescue
-            return_path = "/"
+            return_path = path("/")
           end
         end
 

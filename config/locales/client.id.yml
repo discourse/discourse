@@ -287,7 +287,7 @@ id:
       email_digests:
         daily: "harian"
         weekly: "mingguan"
-        bi_weekly: "setiap dua minggu"
+        every_two_weeks: "setiap dua minggu"
       auto_track_options:
         never: "tidak pernah"
         always: "selalu"

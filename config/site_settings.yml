@@ -299,6 +299,9 @@ users:
   public_user_custom_fields:
     type: list
     default: ''
+  staff_user_custom_fields:
+    type: list
+    default: ''
 
 posting:
   min_post_length:
@@ -512,6 +515,10 @@ files:
     client: true
     default: false
   allow_animated_thumbnails: false
+  default_avatars:
+    default: ''
+    type: url_list
+    client: true
 
 trust:
   default_trust_level:
@@ -615,6 +622,7 @@ spam:
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
   num_flags_to_close_topic: 12
+  auto_respond_to_flag_actions: true
 
 rate_limits:
   unique_posts_mins:
@@ -680,7 +688,9 @@ developer:
     client: true
 
 embedding:
-  embeddable_host: ''
+  embeddable_host:
+      default: ''
+      regex: "^(?!http).+" # don't allow this to start with http:// or https://
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username:
@@ -743,6 +753,7 @@ uncategorized:
   new_topic_duration_minutes: 2880
   previous_visit_timeout_hours: 1
   staff_like_weight: 3
+  topic_view_duration_hours: 8
 
   # Summary mode
   summary_score_threshold: 15

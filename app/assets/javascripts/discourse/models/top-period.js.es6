@@ -21,6 +21,8 @@ export default Ember.Object.extend({
         title = "this_month";
       } else if (id === "daily") {
         title = "today";
+      } else if (id === "all") {
+        title = "all";
       }
 
       this.set('title', I18n.t("filters.top." + title));

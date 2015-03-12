@@ -57,6 +57,9 @@ Discourse.AdminUser = Discourse.User.extend({
 
   deleteAllPostsExplanation: function() {
     if (!this.get('can_delete_all_posts')) {
+      if (this.get('deleteForbidden') && this.get('staff')) {
+        return I18n.t('admin.user.delete_posts_forbidden_because_staff');
+      }
       if (this.get('post_count') > Discourse.SiteSettings.delete_all_posts_max) {
         return I18n.t('admin.user.cant_delete_all_too_many_posts', {count: Discourse.SiteSettings.delete_all_posts_max});
       } else {
@@ -65,7 +68,7 @@ Discourse.AdminUser = Discourse.User.extend({
     } else {
       return null;
     }
-  }.property('can_delete_all_posts'),
+  }.property('can_delete_all_posts', 'deleteForbidden'),
 
   deleteAllPosts: function() {
     var user = this;
@@ -323,6 +326,47 @@ Discourse.AdminUser = Discourse.User.extend({
       var error = I18n.t('admin.user.send_activation_email_failed', { error: "http: " + e.status + " - " + e.body });
       bootbox.alert(error);
     });
+  },
+
+  anonymizeForbidden: Em.computed.not("can_be_anonymized"),
+
+  anonymize: function() {
+    var user = this;
+
+    var performAnonymize = function() {
+      Discourse.ajax("/admin/users/" + user.get('id') + '/anonymize.json', {type: 'PUT'}).then(function(data) {
+        if (data.success) {
+          if (data.username) {
+            document.location = "/admin/users/" + data.username;
+          } else {
+            document.location = "/admin/users/list/active";
+          }
+        } else {
+          bootbox.alert(I18n.t("admin.user.anonymize_failed"));
+          if (data.user) {
+            user.setProperties(data.user);
+          }
+        }
+      }, function() {
+        bootbox.alert(I18n.t("admin.user.anonymize_failed"));
+      });
+    };
+
+    var message = I18n.t("admin.user.anonymize_confirm");
+
+    var buttons = [{
+      "label": I18n.t("composer.cancel"),
+      "class": "cancel",
+      "link":  true
+    }, {
+      "label": '<i class="fa fa-exclamation-triangle"></i>' + I18n.t('admin.user.anonymize_yes'),
+      "class": "btn btn-danger",
+      "callback": function(){
+        performAnonymize();
+      }
+    }];
+
+    bootbox.dialog(message, buttons, {"classes": "delete-user-modal"});
   },
 
   deleteForbidden: Em.computed.not("canBeDeleted"),

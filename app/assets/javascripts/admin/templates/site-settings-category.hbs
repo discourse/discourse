@@ -1,0 +1,10 @@
+{{#if filteredContent}}
+  <div class='form-horizontal settings'>
+    {{#each setting in filteredContent}}
+      {{site-setting setting=setting saveAction="saveSetting"}}
+    {{/each}}
+  </div>
+{{else}}
+  <br/>
+  {{i18n 'admin.site_settings.no_results'}}
+{{/if}}

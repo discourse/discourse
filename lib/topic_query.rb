@@ -129,8 +129,9 @@ class TopicQuery
 
   def list_category_topic_ids(category)
     query = default_results(category: category.id)
-    pinned_ids = query.where('pinned_at IS NOT NULL').order('pinned_at DESC').pluck(:id)
-    non_pinned_ids = query.where('pinned_at IS NULL').pluck(:id)
+    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id)
+                      .order('pinned_at DESC').pluck(:id)
+    non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
 
     (pinned_ids + non_pinned_ids)[0...@options[:per_page]]
   end
@@ -154,7 +155,7 @@ class TopicQuery
 
   def prioritize_pinned_topics(topics, options)
 
-    pinned_clause = options[:category] ? "" : "pinned_globally AND "
+    pinned_clause = options[:category_id] ? "topics.category_id = #{options[:category_id].to_i} AND" : "pinned_globally AND "
     pinned_clause << " pinned_at IS NOT NULL "
     if @user
       pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"

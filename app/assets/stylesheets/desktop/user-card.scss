@@ -3,7 +3,8 @@
 #user-card {
   position: absolute;
   width: 500px;
-  left: 20px;
+  left: -9999px;
+  top: -9999px;
   z-index: 990;
   box-shadow: 0 2px 6px rgba(0,0,0,.6);
   margin-top: -2px;

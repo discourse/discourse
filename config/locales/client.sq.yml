@@ -357,7 +357,7 @@ sq:
       email_digests:
         daily: "ditore"
         weekly: "javore"
-        bi_weekly: "çdo dy javë"
+        every_two_weeks: "çdo dy javë"
       email_always: "Do not suppress email notifications when I am active on the site"
       other_settings: "Tjetër"
       categories_settings: "Kategoritë"

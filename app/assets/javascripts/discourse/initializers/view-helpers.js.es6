@@ -1,5 +1,4 @@
 var helpers = ['input-tip',
-               'pagedown-editor',
                'category-chooser',
                'combo-box',
                'choose-topic',

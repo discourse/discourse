@@ -1,16 +1,13 @@
-/**
-   Subscribes to user events on the message bus
-**/
+// Subscribes to user events on the message bus
 export default {
   name: 'subscribe-user-notifications',
   after: 'message-bus',
-  initialize: function(container) {
-    var user = Discourse.User.current();
+  initialize(container) {
+    const user = container.lookup('current-user:main'),
+          site = container.lookup('site:main'),
+          siteSettings = container.lookup('site-settings:main'),
+          bus = container.lookup('message-bus:main');
 
-    var site = container.lookup('site:main'),
-        siteSettings = container.lookup('site-settings:main');
-
-    var bus = Discourse.MessageBus;
     bus.callbackInterval = siteSettings.anon_polling_interval;
     bus.backgroundCallbackInterval = siteSettings.background_polling_interval;
     bus.baseUrl = siteSettings.long_polling_base_url;
@@ -36,8 +33,8 @@ export default {
         });
       }
       bus.subscribe("/notification/" + user.get('id'), (function(data) {
-        var oldUnread = user.get('unread_notifications');
-        var oldPM = user.get('unread_private_messages');
+        const oldUnread = user.get('unread_notifications');
+        const oldPM = user.get('unread_private_messages');
 
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);

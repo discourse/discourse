@@ -474,6 +474,8 @@ class Topic < ActiveRecord::Base
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
+      CategoryUser.auto_watch_new_topic(self)
+      CategoryUser.auto_track_new_topic(self)
     end
 
     true
@@ -486,6 +488,7 @@ class Topic < ActiveRecord::Base
                                 raw: text,
                                 post_type: Post.types[:moderator_action],
                                 no_bump: opts[:bump].blank?,
+                                skip_notifications: opts[:skip_notifications],
                                 topic_id: self.id)
       new_post = creator.create
       increment!(:moderator_posts_count)

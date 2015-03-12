@@ -16,8 +16,9 @@ class PostOwnerChanger
         @topic.user = @new_owner if post.is_first_post?
         post.set_owner(@new_owner, @acting_user)
       end
-    end
 
-    @topic.update_statistics
+      @topic.update_statistics
+      @new_owner.user_stat.update(first_post_created_at: @new_owner.posts(true).order('created_at ASC').first.try(:created_at))
+    end
   end
 end

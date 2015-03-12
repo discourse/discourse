@@ -1,7 +1,7 @@
 var oldMobileView;
 
 moduleFor("controller:site-map", "controller:site-map", {
-  needs: ['controller:application'],
+  needs: ['controller:application', 'controller:header'],
 
   setup: function() {
     oldMobileView = Discourse.Mobile.mobileView;
@@ -19,16 +19,6 @@ test("showAdminLinks", function() {
 
   currentUser.set("staff", false);
   equal(controller.get("showAdminLinks"), false, "is false when current user is not a staff member");
-});
-
-test("flaggedPostsCount", function() {
-  const currentUser = Ember.Object.create({ site_flagged_posts_count: 5 });
-  const controller = this.subject({ currentUser });
-
-  equal(controller.get("flaggedPostsCount"), 5, "returns current user's flagged posts count");
-
-  currentUser.set("site_flagged_posts_count", 0);
-  equal(controller.get("flaggedPostsCount"), 0, "is bound (reacts to change of current user's flagged posts count)");
 });
 
 test("faqUrl returns faq url configured in site settings if it is set", function() {
