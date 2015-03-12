@@ -20,12 +20,28 @@ module PrettyText
       end
     end
 
-    # function here are available to v8
+    # functions here are available to v8
     def avatar_template(username)
       return "" unless username
       user = User.find_by(username_lower: username.downcase)
       return "" unless user.present?
-      schemaless absolute user.avatar_template
+
+
+      # TODO: Add support for ES6 and call `avatar-template` directly
+      if !user.uploaded_avatar_id && SiteSetting.default_avatars.present?
+        split_avatars = SiteSetting.default_avatars.split("\n")
+        if split_avatars.present?
+          hash = username.each_char.reduce(0) do |result, char|
+            [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+          end
+
+          avatar_template = split_avatars[hash.abs % split_avatars.size]
+        end
+      else
+        avatar_template = user.avatar_template
+      end
+
+      schemaless absolute avatar_template
     end
 
     def is_username_valid(username)
@@ -65,6 +81,8 @@ module PrettyText
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
+    ctx.eval("var modules = {};")
+
     decorate_context(ctx)
 
     ctx_load(ctx,
@@ -74,7 +92,7 @@ module PrettyText
       "app/assets/javascripts/discourse/dialects/dialect.js",
       "app/assets/javascripts/discourse/lib/utilities.js",
       "app/assets/javascripts/discourse/lib/html.js",
-      "app/assets/javascripts/discourse/lib/markdown.js"
+      "app/assets/javascripts/discourse/lib/markdown.js",
     )
 
     Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|

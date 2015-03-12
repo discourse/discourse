@@ -1,6 +1,7 @@
 import userSearch from 'discourse/lib/user-search';
 import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
+import avatarTemplate from 'discourse/lib/avatar-template';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -244,7 +245,10 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
         if (posts) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
-            return Discourse.Utilities.tinyAvatar(quotedPost.get("avatar_template"));
+            const username = quotedPost.get('username'),
+                  uploadId = quotedPost.get('uploaded_avatar_id');
+
+            return Discourse.Utilities.tinyAvatar(avatarTemplate(username, uploadId));
           }
         }
       }
