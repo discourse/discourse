@@ -181,11 +181,20 @@ function hoistCodeBlocksAndSpans(text) {
   // replace all "\`" with a single character
   text = hideBackslashEscapedCharacters(text);
 
+  // /!\ the order is important /!\
+
   // <pre>...</pre> code blocks
   text = text.replace(/(^\n*|\n\n)<pre>([\s\S]*?)<\/pre>/ig, function(_, before, content) {
     var hash = md5(content);
     hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
     return before + "<pre>" + hash + "</pre>";
+  });
+
+  // fenced code blocks (AKA GitHub code blocks)
+  text = text.replace(/(^\n*|\n\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
+    var hash = md5(content);
+    hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
+    return before + "```" + language + "\n" + hash + "\n```";
   });
 
   // markdown code blocks
@@ -204,13 +213,6 @@ function hoistCodeBlocksAndSpans(text) {
     content = content.replace(/\s+$/, "");
     hoisted[hash] = escape(outdent(showBackslashEscapedCharacters(content)));
     return before + "    " + hash + "\n";
-  });
-
-  // fenced code blocks (AKA GitHub code blocks)
-  text = text.replace(/(^\n*|\n\n)```([a-z0-9\-]*)\n([\s\S]*?)\n```/g, function(_, before, language, content) {
-    var hash = md5(content);
-    hoisted[hash] = escape(showBackslashEscapedCharacters(content.trim()));
-    return before + "```" + language + "\n" + hash + "\n```";
   });
 
   // code spans (double & single `)
