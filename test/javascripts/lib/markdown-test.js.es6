@@ -526,3 +526,9 @@ test("censoring", function() {
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words even if previous partial matches exist.");
 });
+
+test("code blocks/spans hoisting", function() {
+  cooked("```\n\n    some code\n```",
+         "<p><pre><code class=\"lang-auto\">some code</code></pre></p>",
+         "it works when nesting standard markdown code blocks within a fenced code block");
+});
