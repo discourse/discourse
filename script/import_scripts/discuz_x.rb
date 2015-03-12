@@ -171,8 +171,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         position: row['position'].to_i + max_position
       }
       if row['parent_id'].to_i > 0
-        parent = category_from_imported_category_id(row['parent_id'])
-        h[:parent_category_id] = parent.id if parent
+        h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
       end
       h
     end
@@ -217,7 +216,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
         mapped[:created_at] = Time.zone.at(m['post_time'])
 
         if m['is_first_post'] == 1
-          mapped[:category] = category_from_imported_category_id(m['category_id']).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(m['category_id'])
           mapped[:title] = CGI.unescapeHTML(m['title'])
           @first_post_id_by_topic_id[m['topic_id']] = m['id']
         else

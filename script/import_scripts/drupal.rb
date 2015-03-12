@@ -122,7 +122,7 @@ class ImportScripts::Drupal < ImportScripts::Base
         {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
-          category: category_from_imported_category_id(row['tid']).try(:name),
+          category: category_id_from_imported_category_id(row['tid']),
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: row['sticky'].to_i == 1 ? Time.zone.at(row['created']) : nil,
