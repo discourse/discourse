@@ -33,7 +33,16 @@ export default Ember.Component.extend({
     const self = this;
 
     loadScript("/javascripts/ace/ace.js").then(function() {
+
+      // this is a bit weird, unlike $LAB loadScript is not keeping
+      // relative directory which messes stuff up
+      // TODO: correct relative directory and get rid of this
+      _.each(["base","mode","theme","worker"], function(p){
+        ace.config.set(p +"Path", "/javascripts/ace");
+      });
+
       const editor = ace.edit(self.$('.ace')[0]);
+
       editor.setTheme("ace/theme/chrome");
       editor.setShowPrintMargin(false);
       editor.getSession().setMode("ace/mode/" + (self.get('mode')));

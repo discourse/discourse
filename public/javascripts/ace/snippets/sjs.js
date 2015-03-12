@@ -1,1 +1,1 @@
-ace.define("ace/snippets/sjs",["require","exports","module"],function(e,t,n){t.snippetText="",t.scope="sjs"})
+ace.define("ace/snippets/sjs",["require","exports","module"],function(e,t,n){"use strict";t.snippetText=undefined,t.scope="sjs"})
