@@ -200,7 +200,7 @@ class ImportScripts::Ning < ImportScripts::Base
           mapped[:user_id] = user_id_from_imported_user_id(topic["contributorName"]) || -1
           mapped[:created_at] = Time.zone.parse(topic["createdDate"])
           unless topic["category"].nil? || topic["category"].downcase == "uncategorized"
-            mapped[:category] = category_from_imported_category_id(topic["category"]).try(:name)
+            mapped[:category] = category_id_from_imported_category_id(topic["category"])
           end
           if topic["category"].nil? && default_category
             mapped[:category] = default_category

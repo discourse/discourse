@@ -145,7 +145,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       FROM {prefix}boards
       ORDER BY id_parent ASC, id_board ASC
     SQL
-      parent_id = category_from_imported_category_id(board[:id_parent]).id if board[:id_parent] > 0
+      parent_id = category_id_from_imported_category_id(board[:id_parent]) if board[:id_parent] > 0
       groups = (board[:member_groups] || "").split(/,/).map(&:to_i)
       restricted = !groups.include?(GUEST_GROUP) && !groups.include?(MEMBER_GROUP)
       {
@@ -257,7 +257,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         end
       }
       if message[:id_msg] == message[:id_first_msg]
-        post[:category] = category_from_imported_category_id(message[:id_board]).try(:name)
+        post[:category] = category_id_from_imported_category_id(message[:id_board])
         post[:title] = decode_entities(message[:subject])
       else
         parent = topic_lookup_from_imported_post_id(message[:id_first_msg])
