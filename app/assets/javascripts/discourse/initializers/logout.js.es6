@@ -1,16 +1,17 @@
-/**
-  Subscribe to "logout" change events via the Message Bus
-**/
+//  Subscribe to "logout" change events via the Message Bus
 export default {
   name: "logout",
   after: "message-bus",
 
-  initialize: function () {
-    if (!Discourse.MessageBus) { return; }
+  initialize: function (container) {
+    const messageBus = container.lookup('message-bus:main'),
+          siteSettings = container.lookup('site-settings:main');
 
-    Discourse.MessageBus.subscribe("/logout", function () {
+    if (!messageBus) { return; }
+
+    messageBus.subscribe("/logout", function () {
       var refresher = function() {
-        var redirect = Discourse.SiteSettings.logout_redirect;
+        var redirect = siteSettings.logout_redirect;
         if(redirect.length === 0){
           window.location.pathname = Discourse.getURL('/');
         } else {

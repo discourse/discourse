@@ -1,15 +1,14 @@
-/**
-  Subscribe to "read-only" status change events via the Message Bus
-**/
+// Subscribe to "read-only" status change events via the Message Bus
 export default {
   name: "read-only",
   after: "message-bus",
 
-  initialize: function (container) {
-    if (!Discourse.MessageBus) { return; }
+  initialize(container) {
+    const messageBus = container.lookup('message-bus:main');
+    if (!messageBus) { return; }
 
-    var site = container.lookup('site:main');
-    Discourse.MessageBus.subscribe("/site/read-only", function (enabled) {
+    const site = container.lookup('site:main');
+    messageBus.subscribe("/site/read-only", function (enabled) {
       site.set('isReadOnly', enabled);
     });
   }
