@@ -1,32 +1,32 @@
-var CLOSED = 'closed',
-    SAVING = 'saving',
-    OPEN = 'open',
-    DRAFT = 'draft',
+const CLOSED = 'closed',
+      SAVING = 'saving',
+      OPEN = 'open',
+      DRAFT = 'draft',
 
-    // The actions the composer can take
-    CREATE_TOPIC = 'createTopic',
-    PRIVATE_MESSAGE = 'privateMessage',
-    REPLY = 'reply',
-    EDIT = 'edit',
-    REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
+      // The actions the composer can take
+      CREATE_TOPIC = 'createTopic',
+      PRIVATE_MESSAGE = 'privateMessage',
+      REPLY = 'reply',
+      EDIT = 'edit',
+      REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
 
-    // When creating, these fields are moved into the post model from the composer model
-    _create_serializer = {
-      raw: 'reply',
-      title: 'title',
-      category: 'categoryId',
-      topic_id: 'topic.id',
-      is_warning: 'isWarning',
-      archetype: 'archetypeId',
-      target_usernames: 'targetUsernames'
-    },
+      // When creating, these fields are moved into the post model from the composer model
+      _create_serializer = {
+        raw: 'reply',
+        title: 'title',
+        category: 'categoryId',
+        topic_id: 'topic.id',
+        is_warning: 'isWarning',
+        archetype: 'archetypeId',
+        target_usernames: 'targetUsernames'
+      },
 
-    _edit_topic_serializer = {
-      title: 'topic.title',
-      categoryId: 'topic.category.id'
-    };
+      _edit_topic_serializer = {
+        title: 'topic.title',
+        categoryId: 'topic.category.id'
+      };
 
-Discourse.Composer = Discourse.Model.extend({
+const Composer = Discourse.Model.extend({
 
   archetypes: function() {
     return Discourse.Site.currentProp('archetypes');
@@ -46,7 +46,6 @@ Discourse.Composer = Discourse.Model.extend({
   viewOpen: Em.computed.equal('composeState', OPEN),
   viewDraft: Em.computed.equal('composeState', DRAFT),
 
-
   archetype: function() {
     return this.get('archetypes').findProperty('id', this.get('archetypeId'));
   }.property('archetypeId'),
@@ -61,18 +60,18 @@ Discourse.Composer = Discourse.Model.extend({
 
   // Determine the appropriate title for this action
   actionTitle: function() {
-    var topic = this.get('topic');
+    const topic = this.get('topic');
 
-    var postLink, topicLink;
+    let postLink, topicLink;
     if (topic) {
-      var postNumber = this.get('post.post_number');
+      const postNumber = this.get('post.post_number');
       postLink = "<a href='" + (topic.get('url')) + "/" + postNumber + "'>" +
         I18n.t("post.post_number", { number: postNumber }) + "</a>";
       topicLink = "<a href='" + (topic.get('url')) + "'> " + (Handlebars.Utils.escapeExpression(topic.get('title'))) + "</a>";
     }
 
-    var postDescription,
-        post = this.get('post');
+    let postDescription;
+    const post = this.get('post');
 
     if (post) {
       postDescription = I18n.t('post.' +  this.get('action'), {
@@ -82,8 +81,8 @@ Discourse.Composer = Discourse.Model.extend({
       });
 
       if (!Discourse.Mobile.mobileView) {
-        var replyUsername = post.get('reply_to_user.username');
-        var replyAvatarTemplate = post.get('reply_to_user.avatar_template');
+        const replyUsername = post.get('reply_to_user.username');
+        const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
         if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
           postDescription += " " + I18n.t("post.in_reply_to") + " " + Discourse.Utilities.tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
         }
@@ -164,7 +163,7 @@ Discourse.Composer = Discourse.Model.extend({
   }.property('action'),
 
   hasMetaData: function() {
-    var metaData = this.get('metaData');
+    const metaData = this.get('metaData');
     return metaData ? Em.isEmpty(Em.keys(this.get('metaData'))) : false;
   }.property('metaData'),
 
@@ -227,7 +226,7 @@ Discourse.Composer = Discourse.Model.extend({
     @property titleLength
   **/
   titleLength: function() {
-    var title = this.get('title') || "";
+    const title = this.get('title') || "";
     return title.replace(/\s+/img, " ").trim().length;
   }.property('title'),
 
@@ -237,17 +236,16 @@ Discourse.Composer = Discourse.Model.extend({
     @property replyLength
   **/
   replyLength: function() {
-    var reply = this.get('reply') || "";
+    let reply = this.get('reply') || "";
     while (Discourse.Quote.REGEXP.test(reply)) { reply = reply.replace(Discourse.Quote.REGEXP, ""); }
     return reply.replace(/\s+/img, " ").trim().length;
   }.property('reply'),
 
-  init: function() {
-    this._super();
-    var val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
+  _setupComposer: function() {
+    const val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
     this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
-  },
+  }.on('init'),
 
   /**
     Append text to the current reply
@@ -255,17 +253,16 @@ Discourse.Composer = Discourse.Model.extend({
     @method appendText
     @param {String} text the text to append
   **/
-  appendText: function(text,position,opts) {
-    var reply = (this.get('reply') || '');
+  appendText(text,position,opts) {
+    const reply = (this.get('reply') || '');
     position = typeof(position) === "number" ? position : reply.length;
 
-    var before = reply.slice(0, position) || '';
-    var after = reply.slice(position) || '';
+    let before = reply.slice(0, position) || '';
+    let after = reply.slice(position) || '';
 
-    var stripped, i;
-
-    if(opts && opts.block){
-      if(before.trim() !== ""){
+    let stripped, i;
+    if (opts && opts.block){
+      if (before.trim() !== ""){
         stripped = before.replace(/\r/g, "");
         for(i=0; i<2; i++){
           if(stripped[stripped.length - 1 - i] !== "\n"){
@@ -298,7 +295,7 @@ Discourse.Composer = Discourse.Model.extend({
     return before.length + text.length;
   },
 
-  togglePreview: function() {
+  togglePreview() {
     this.toggleProperty('showPreview');
     Discourse.KeyValueStore.set({ key: 'composer.showPreview', value: this.get('showPreview') });
   },
@@ -312,13 +309,13 @@ Discourse.Composer = Discourse.Model.extend({
        topic    - The topic we're replying to, if present
        quote    - If we're opening a reply from a quote, the quote we're making
   */
-  open: function(opts) {
+  open(opts) {
     if (!opts) opts = {};
     this.set('loading', false);
 
-    var replyBlank = Em.isEmpty(this.get("reply"));
+    const replyBlank = Em.isEmpty(this.get("reply"));
 
-    var composer = this;
+    const composer = this;
     if (!replyBlank &&
         (opts.action !== this.get('action') || ((opts.reply || opts.action === this.EDIT) && this.get('reply') !== this.get('originalText'))) &&
         !opts.tested) {
@@ -363,7 +360,7 @@ Discourse.Composer = Discourse.Model.extend({
     // If we are editing a post, load it.
     if (opts.action === EDIT && opts.post) {
 
-      var topicProps = this.serialize(_edit_topic_serializer);
+      const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
 
       this.setProperties(topicProps);
@@ -387,7 +384,7 @@ Discourse.Composer = Discourse.Model.extend({
     return false;
   },
 
-  save: function(opts) {
+  save(opts) {
     if( !this.get('cantSubmitPost') ) {
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
@@ -398,7 +395,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     @method clearState
   **/
-  clearState: function() {
+  clearState() {
     this.setProperties({
       originalText: null,
       reply: null,
@@ -410,11 +407,11 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   // When you edit a post
-  editPost: function(opts) {
-    var post = this.get('post'),
+  editPost(opts) {
+    const post = this.get('post'),
         oldCooked = post.get('cooked'),
-        self = this,
-        promise;
+        self = this;
+    let promise;
 
     // Update the title if we've changed it, otherwise consider it a
     // successful resolved promise
@@ -422,7 +419,7 @@ Discourse.Composer = Discourse.Model.extend({
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
 
-      var topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
+      const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
       promise = Discourse.Topic.update(this.get('topic'), topicProps);
     } else {
       promise = Ember.RSVP.resolve();
@@ -441,7 +438,7 @@ Discourse.Composer = Discourse.Model.extend({
         post.updateFromPost(result);
         self.clearState();
       }).catch(function(error) {
-        var response = $.parseJSON(error.responseText);
+        const response = $.parseJSON(error.responseText);
         if (response && response.errors) {
           return(response.errors[0]);
         } else {
@@ -453,14 +450,14 @@ Discourse.Composer = Discourse.Model.extend({
     });
   },
 
-  serialize: function(serializer, dest) {
+  serialize(serializer, dest) {
     if (!dest) {
       dest = {};
     }
 
-    var self = this;
+    const self = this;
     Object.keys(serializer).forEach(function(f) {
-      var val = self.get(serializer[f]);
+      const val = self.get(serializer[f]);
       if (typeof val !== 'undefined') {
         Ember.set(dest, f, val);
       }
@@ -469,15 +466,15 @@ Discourse.Composer = Discourse.Model.extend({
   },
 
   // Create a new Post
-  createPost: function(opts) {
-    var post = this.get('post'),
+  createPost(opts) {
+    const post = this.get('post'),
         topic = this.get('topic'),
         currentUser = Discourse.User.current(),
-        postStream = this.get('topic.postStream'),
-        addedToStream = false;
+        postStream = this.get('topic.postStream');
+    let addedToStream = false;
 
     // Build the post object
-    var createdPost = Discourse.Post.create({
+    const createdPost = Discourse.Post.create({
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
@@ -509,7 +506,7 @@ Discourse.Composer = Discourse.Model.extend({
       });
     }
 
-    var state = null;
+    let state = null;
 
     // If we're in a topic, we can append the post instantly.
     if (postStream) {
@@ -533,12 +530,12 @@ Discourse.Composer = Discourse.Model.extend({
       }
     }
 
-    var composer = this;
-    var promise =  new Ember.RSVP.Promise(function(resolve, reject) {
+    const composer = this;
+    const promise =  new Ember.RSVP.Promise(function(resolve, reject) {
 
       composer.set('composeState', SAVING);
       createdPost.save(function(result) {
-        var saving = true;
+        let saving = true;
 
         createdPost.updateFromJson(result);
 
@@ -555,7 +552,7 @@ Discourse.Composer = Discourse.Model.extend({
           saving = false;
 
           // Update topic_count for the category
-          var category = Discourse.Site.currentProp('categories').find(function(x) { return x.get('id') === (parseInt(createdPost.get('category'),10) || 1); });
+          const category = Discourse.Site.currentProp('categories').find(function(x) { return x.get('id') === (parseInt(createdPost.get('category'),10) || 1); });
           if (category) category.incrementProperty('topic_count');
           Discourse.notifyPropertyChange('globalNotice');
         }
@@ -578,9 +575,9 @@ Discourse.Composer = Discourse.Model.extend({
         composer.set('composeState', OPEN);
 
         // TODO extract error handling code
-        var parsedError;
+        let parsedError;
         try {
-          var parsedJSON = $.parseJSON(error.responseText);
+          const parsedJSON = $.parseJSON(error.responseText);
           if (parsedJSON.errors) {
             parsedError = parsedJSON.errors[0];
           } else if (parsedJSON.failed) {
@@ -599,11 +596,11 @@ Discourse.Composer = Discourse.Model.extend({
     return promise;
   },
 
-  getCookedHtml: function() {
+  getCookedHtml() {
     return $('#wmd-preview').html().replace(/<span class="marker"><\/span>/g, '');
   },
 
-  saveDraft: function() {
+  saveDraft() {
     // Do not save when drafts are disabled
     if (this.get('disableDrafts')) return;
     // Do not save when there is no reply
@@ -611,7 +608,7 @@ Discourse.Composer = Discourse.Model.extend({
     // Do not save when the reply's length is too small
     if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
 
-    var data = {
+    const data = {
       reply: this.get('reply'),
       action: this.get('action'),
       title: this.get('title'),
@@ -624,7 +621,7 @@ Discourse.Composer = Discourse.Model.extend({
 
     this.set('draftStatus', I18n.t('composer.saving_draft_tip'));
 
-    var composer = this;
+    const composer = this;
 
     // try to save the draft
     return Discourse.Draft.save(this.get('draftKey'), this.get('draftSequence'), data)
@@ -637,16 +634,21 @@ Discourse.Composer = Discourse.Model.extend({
 
 });
 
-Discourse.Composer.reopenClass({
+Composer.reopenClass({
 
-  open: function(opts) {
-    var composer = Discourse.Composer.create();
+  open(opts) {
+    const composer = Composer.create();
     composer.open(opts);
     return composer;
   },
 
-  loadDraft: function(draftKey, draftSequence, draft, topic) {
-    var composer;
+  loadDraft(opts) {
+    opts = opts || {};
+
+    let draft = opts.draft;
+    const draftKey = opts.draftKey;
+    const draftSequence = opts.draftSequence;
+
     try {
       if (draft && typeof draft === 'string') {
         draft = JSON.parse(draft);
@@ -656,13 +658,12 @@ Discourse.Composer.reopenClass({
       Discourse.Draft.clear(draftKey, draftSequence);
     }
     if (draft && ((draft.title && draft.title !== '') || (draft.reply && draft.reply !== ''))) {
-      composer = this.open({
-        draftKey: draftKey,
-        draftSequence: draftSequence,
-        topic: topic,
+      return this.open({
+        draftKey,
+        draftSequence,
         action: draft.action,
         title: draft.title,
-        categoryId: draft.categoryId,
+        categoryId: draft.categoryId || opts.categoryId,
         postId: draft.postId,
         archetypeId: draft.archetypeId,
         reply: draft.reply,
@@ -672,35 +673,36 @@ Discourse.Composer.reopenClass({
         composerState: DRAFT
       });
     }
-    return composer;
   },
 
-  serializeToTopic: function(fieldName, property) {
+  serializeToTopic(fieldName, property) {
     if (!property) { property = fieldName; }
     _edit_topic_serializer[fieldName] = property;
   },
 
-  serializeOnCreate: function(fieldName, property) {
+  serializeOnCreate(fieldName, property) {
     if (!property) { property = fieldName; }
     _create_serializer[fieldName] = property;
   },
 
-  serializedFieldsForCreate: function() {
+  serializedFieldsForCreate() {
     return Object.keys(_create_serializer);
   },
 
   // The status the compose view can have
-  CLOSED: CLOSED,
-  SAVING: SAVING,
-  OPEN: OPEN,
-  DRAFT: DRAFT,
+  CLOSED,
+  SAVING,
+  OPEN,
+  DRAFT,
 
   // The actions the composer can take
-  CREATE_TOPIC: CREATE_TOPIC,
-  PRIVATE_MESSAGE: PRIVATE_MESSAGE,
-  REPLY: REPLY,
-  EDIT: EDIT,
+  CREATE_TOPIC,
+  PRIVATE_MESSAGE,
+  REPLY,
+  EDIT,
 
   // Draft key
-  REPLY_AS_NEW_TOPIC_KEY: REPLY_AS_NEW_TOPIC_KEY
+  REPLY_AS_NEW_TOPIC_KEY
 });
+
+export default Composer;

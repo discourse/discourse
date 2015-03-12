@@ -410,7 +410,7 @@ export default DiscourseController.extend({
   // Given a potential instance and options, set the model for this composer.
   _setModel(composerModel, opts) {
     if (opts.draft) {
-      composerModel = Discourse.Composer.loadDraft(opts.draftKey, opts.draftSequence, opts.draft);
+      composerModel = Discourse.Composer.loadDraft(opts);
       if (composerModel) {
         composerModel.set('topic', opts.topic);
       }
