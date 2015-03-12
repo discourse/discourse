@@ -27,6 +27,8 @@ module Onebox
         end
 
         result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
+        result['repository_path'] = "#{URI(link).host}/#{URI(link).path.split('/')[1]}/#{URI(link).path.split('/')[2]}"
+        result['repository_url'] = "https://#{result['repository_path']}"
         result
       end
     end
