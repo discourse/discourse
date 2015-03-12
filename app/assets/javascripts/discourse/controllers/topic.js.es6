@@ -563,7 +563,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     this.unsubscribe();
 
     const self = this;
-    Discourse.MessageBus.subscribe("/topic/" + this.get('id'), function(data) {
+    this.messageBus.subscribe("/topic/" + this.get('id'), function(data) {
       const topic = self.get('model');
 
       if (data.notification_level_change) {
@@ -605,7 +605,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     if (!topicId) return;
 
     // there is a condition where the view never calls unsubscribe, navigate to a topic from a topic
-    Discourse.MessageBus.unsubscribe('/topic/*');
+    this.messageBus.unsubscribe('/topic/*');
   },
 
   // Topic related

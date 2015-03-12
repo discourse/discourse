@@ -2,53 +2,49 @@ import Session from 'discourse/models/session';
 import AppEvents from 'discourse/lib/app-events';
 import Store from 'discourse/models/store';
 
+function inject() {
+  const app = arguments[0],
+        name = arguments[1],
+        singletonName = Ember.String.underscore(name).replace(/_/, '-') + ':main';
+
+  Array.prototype.slice.call(arguments, 2).forEach(function(dest) {
+    app.inject(dest, name, singletonName);
+  });
+}
+
+function injectAll(app, name) {
+  inject(app, name, 'controller', 'component', 'route', 'view', 'model');
+}
+
 export default {
   name: "inject-objects",
   initialize(container, app) {
 
-    // Inject appEvents everywhere
     const appEvents = AppEvents.create();
     app.register('app-events:main', appEvents, { instantiate: false });
-
-    app.inject('controller', 'appEvents', 'app-events:main');
-    app.inject('component', 'appEvents', 'app-events:main');
-    app.inject('route', 'appEvents', 'app-events:main');
-    app.inject('view', 'appEvents', 'app-events:main');
-    app.inject('model', 'appEvents', 'app-events:main');
+    injectAll(app, 'appEvents');
     Discourse.URL.appEvents = appEvents;
 
     // Inject Discourse.Site to avoid using Discourse.Site.current()
     const site = Discourse.Site.current();
     app.register('site:main', site, { instantiate: false });
-    app.inject('controller', 'site', 'site:main');
-    app.inject('component', 'site', 'site:main');
-    app.inject('route', 'site', 'site:main');
-    app.inject('view', 'site', 'site:main');
-    app.inject('model', 'site', 'site:main');
+    injectAll(app, 'site');
 
     // Inject Discourse.SiteSettings to avoid using Discourse.SiteSettings globals
     app.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
-    app.inject('controller', 'siteSettings', 'site-settings:main');
-    app.inject('component', 'siteSettings', 'site-settings:main');
-    app.inject('route', 'siteSettings', 'site-settings:main');
-    app.inject('view', 'siteSettings', 'site-settings:main');
-    app.inject('model', 'siteSettings', 'site-settings:main');
+    injectAll(app, 'siteSettings');
 
     // Inject Session for transient data
     app.register('session:main', Session.current(), { instantiate: false });
-    app.inject('controller', 'session', 'session:main');
-    app.inject('component', 'session', 'session:main');
-    app.inject('route', 'session', 'session:main');
-    app.inject('view', 'session', 'session:main');
-    app.inject('model', 'session', 'session:main');
+    injectAll(app, 'session');
 
     app.register('current-user:main', Discourse.User.current(), { instantiate: false });
-    app.inject('component', 'currentUser', 'current-user:main');
-    app.inject('route', 'currentUser', 'current-user:main');
-    app.inject('controller', 'currentUser', 'current-user:main');
+    inject(app, 'currentUser', 'component', 'route', 'controller');
+
+    app.register('message-bus:main', window.MessageBus, { instantiate: false });
+    inject(app, 'messageBus', 'route', 'controller');
 
     app.register('store:main', Store);
-    app.inject('route', 'store', 'store:main');
-    app.inject('controller', 'store', 'store:main');
+    inject(app, 'store', 'route', 'controller');
   }
 };

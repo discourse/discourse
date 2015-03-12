@@ -1,1 +1,0 @@
-Discourse.MessageBus = window.MessageBus;
