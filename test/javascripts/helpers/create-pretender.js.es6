@@ -55,6 +55,15 @@ export default function() {
       return response({});
     });
 
+    this.get('/javascripts/jquery.magnific-popup-min.js', function() {
+      return response({});
+    });
+
+
+    this.get('/highlight.js', function() {
+      return response({});
+    });
+
     this.post('/session', function(request) {
       var data = parsePostData(request.requestBody);
 
