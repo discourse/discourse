@@ -35,7 +35,14 @@ export default function loadScript(url, opts) {
 
     if (Discourse.CDN && url[0] === "/") {
       // ensure stuff is rooted correctly
-      cdnUrl = Discourse.CDN.replace(/\/$/,"") + url;
+      cdnUrl = Discourse.CDN.replace(/\/$/,"");
+
+      // protocol agnostic so append protocol
+      if ( cdnUrl[0] === "/" && cdnUrl[1] === "/") {
+        cdnUrl = window.location.protocol + cdnUrl;
+      }
+
+      cdnUrl += url;
     }
 
     // Some javascript depends on the path of where it is loaded (ace editor)
