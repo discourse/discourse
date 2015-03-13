@@ -78,10 +78,15 @@ module SiteSettingExtension
         opts[:type] ||= :enum
       end
 
-      if opts[:choices]
+      if new_choices = opts[:choices]
+
+        if String === new_choices
+          new_choices = eval(new_choices)
+        end
+
         choices.has_key?(name) ?
-          choices[name].concat(opts[:choices]) :
-          choices[name] = opts[:choices]
+          choices[name].concat(new_choices) :
+          choices[name] = new_choices
       end
 
       if type = opts[:type]
