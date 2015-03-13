@@ -33,16 +33,9 @@ export default function loadScript(url, opts) {
 
     var cdnUrl = url;
 
+    // Scripts should always load from CDN
     if (Discourse.CDN && url[0] === "/" && url[1] !== "/") {
-      // ensure stuff is rooted correctly
-      cdnUrl = Discourse.CDN.replace(/\/$/,"");
-
-      // protocol agnostic so append protocol
-      if ( cdnUrl[0] === "/" && cdnUrl[1] === "/") {
-        cdnUrl = window.location.protocol + cdnUrl;
-      }
-
-      cdnUrl += url;
+      cdnUrl = Discourse.CDN.replace(/\/$/,"") + url;
     }
 
     // Some javascript depends on the path of where it is loaded (ace editor)
