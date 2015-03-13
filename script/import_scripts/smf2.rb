@@ -61,15 +61,11 @@ class ImportScripts::Smf2 < ImportScripts::Base
   end
 
   def execute
-    authorized_extensions = SiteSetting.authorized_extensions
-    SiteSetting.authorized_extensions = "*"
     import_groups
     import_users
     import_categories
     import_posts
     postprocess_posts
-  ensure
-    SiteSetting.authorized_extensions = authorized_extensions
   end
 
   def import_groups

@@ -43,6 +43,7 @@ class PostCreator
   #     meta_data             - Topic meta data hash
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
+  #     pinned_globally       - Is the topic pinned globally (optional)
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user

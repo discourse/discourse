@@ -32,6 +32,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
+    @site_settings_during_import
     @old_site_settings = {}
     @start_time = Time.now
 
@@ -94,17 +95,18 @@ class ImportScripts::Base
   end
 
   def change_site_settings
-    new_settings = {
+    @site_settings_during_import = {
       email_domains_blacklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
       min_private_message_post_length: 1,
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      disable_emails: true
+      disable_emails: true,
+      authorized_extensions: '*'
     }
 
-    new_settings.each do |key, value|
+    @site_settings_during_import.each do |key, value|
       @old_site_settings[key] = SiteSetting.send(key)
       SiteSetting.set(key, value)
     end
@@ -114,7 +116,8 @@ class ImportScripts::Base
 
   def reset_site_settings
     @old_site_settings.each do |key, value|
-      SiteSetting.set(key, value)
+      current_value = SiteSetting.send(key)
+      SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
     end
 
     RateLimiter.enable
@@ -467,6 +470,42 @@ class ImportScripts::Base
   ensure
     tmp.close rescue nil
     tmp.unlink rescue nil
+  end
+
+  # Iterate through a list of bookmark records to be imported.
+  # Takes a collection, and yields to the block for each element.
+  # Block should return a hash with the attributes for the bookmark.
+  # Required fields are :user_id and :post_id, where both ids are
+  # the values in the original datasource.
+  def create_bookmarks(results, opts={})
+    bookmarks_created = 0
+    bookmarks_skipped = 0
+    total = opts[:total] || results.size
+
+    user = User.new
+    post = Post.new
+
+    results.each do |result|
+      params = yield(result)
+
+      # only the IDs are needed, so this should be enough
+      user.id = user_id_from_imported_user_id(params[:user_id])
+      post.id = post_id_from_imported_post_id(params[:post_id])
+
+      if user.id.nil? || post.id.nil?
+        bookmarks_skipped += 1
+        puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
+      else
+        begin
+          PostAction.act(user, post, PostActionType.types[:bookmark])
+          bookmarks_created += 1
+        rescue PostAction::AlreadyActed
+          bookmarks_skipped += 1
+        end
+
+        print_status bookmarks_created + bookmarks_skipped + (opts[:offset] || 0), total
+      end
+    end
   end
 
   def close_inactive_topics(opts={})
