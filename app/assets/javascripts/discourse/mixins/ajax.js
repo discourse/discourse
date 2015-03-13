@@ -49,9 +49,11 @@ Discourse.Ajax = Em.Mixin.create({
 
     var performAjax = function(resolve, reject) {
 
+      args.headers = args.headers || {};
+
       if (_trackView && (!args.type || args.type === "GET")) {
         _trackView = false;
-        args.headers = { 'Discourse-Track-View': true };
+        args.headers['Discourse-Track-View'] = true;
       }
 
       args.success = function(xhr) {
@@ -79,6 +81,10 @@ Discourse.Ajax = Em.Mixin.create({
       // it will not be parsed as an object.
       if (!args.type) args.type = 'GET';
       if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
+
+      if (args.dataType === "script") {
+        args.headers['Discourse-Script'] = true;
+      }
 
       if (args.type === 'GET' && args.cache !== true) {
         args.cache = false;

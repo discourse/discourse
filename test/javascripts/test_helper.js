@@ -75,9 +75,6 @@ Discourse.injectTestHelpers();
 Discourse.runInitializers();
 Discourse.start();
 Discourse.Route.mapRoutes();
-Discourse.HighlightJSPath = "/highlight.js";
-// messy but we need to pass tests
-window.hljs = {highlightBlock: function(){}}
 
 // disable logster error reporting
 if (window.Logster) {
