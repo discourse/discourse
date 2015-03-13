@@ -47,6 +47,8 @@
 //= require_tree ./lib
 //= require_tree .
 //= require_self
+//
+//= require ../../public/javascripts/jquery.magnific-popup-min.js
 
 // sinon settings
 sinon.config = {
@@ -73,6 +75,9 @@ Discourse.injectTestHelpers();
 Discourse.runInitializers();
 Discourse.start();
 Discourse.Route.mapRoutes();
+Discourse.HighlightJSPath = "/highlight.js";
+// messy but we need to pass tests
+window.hljs = {highlightBlock: function(){}}
 
 // disable logster error reporting
 if (window.Logster) {
