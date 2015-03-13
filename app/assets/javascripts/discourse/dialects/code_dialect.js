@@ -2,13 +2,22 @@
   Support for various code blocks
 **/
 
-var acceptableCodeClasses =
-  ["auto", "1c", "actionscript", "apache", "applescript", "avrasm", "axapta", "bash", "brainfuck",
-   "clojure", "cmake", "coffeescript", "cpp", "cs", "css", "d", "delphi", "diff", "xml", "django", "dos",
-   "erlang-repl", "erlang", "glsl", "go", "handlebars", "haskell", "http", "ini", "java", "javascript",
-   "json", "lisp", "lua", "markdown", "matlab", "mel", "nginx", "nohighlight", "objectivec", "parser3",
-   "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql",
-   "tex", "text", "vala", "vbscript", "vhdl"];
+var acceptableCodeClasses;
+
+function init() {
+  acceptableCodeClasses = Discourse.SiteSettings.highlighted_languages.split("|");
+  if (Discourse.SiteSettings.highlighted_languages.length > 0) {
+    var regexpSource = "^lang-(" + "nohighlight|auto|" + Discourse.SiteSettings.highlighted_languages + ")$";
+    Discourse.Markdown.whiteListTag('code', 'class', new RegExp(regexpSource, "i"));
+  }
+}
+
+if (Discourse.SiteSettings && Discourse.SiteSettings.highlighted_languages) {
+  init();
+} else {
+  Discourse.initializer({initialize: init, name: 'load-acceptable-code-classes'});
+}
+
 
 var textCodeClasses = ["text", "pre", "plain"];
 
@@ -27,6 +36,7 @@ Discourse.Dialect.replaceBlock({
   emitter: function(blockContents, matches) {
 
     var klass = Discourse.SiteSettings.default_code_lang;
+
     if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }
@@ -69,6 +79,3 @@ Discourse.Dialect.on('parseNode', function (event) {
   }
 });
 
-// Whitelist the language classes
-var regexpSource = "^lang-(" + acceptableCodeClasses.join('|') + ")$";
-Discourse.Markdown.whiteListTag('code', 'class', new RegExp(regexpSource, "i"));

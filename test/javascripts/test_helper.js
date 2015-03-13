@@ -25,8 +25,6 @@
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
-//= require ../../public/javascripts/highlight.pack.js
-
 //= require vendor
 
 //= require htmlparser.js

@@ -86,7 +86,6 @@ module PrettyText
     decorate_context(ctx)
 
     ctx_load(ctx,
-      "public/javascripts/highlight.pack.js",
       "vendor/assets/javascripts/better_markdown.js",
       "app/assets/javascripts/defer/html-sanitizer-bundle.js",
       "app/assets/javascripts/discourse/dialects/dialect.js",

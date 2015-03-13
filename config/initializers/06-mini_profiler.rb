@@ -27,6 +27,7 @@ if defined?(Rack::MiniProfiler)
     (path !~ /assets/) &&
     (path !~ /\/user_avatar\//) &&
     (path !~ /\/letter_avatar\//) &&
+    (path !~ /\/highlight-js\//) &&
     (path !~ /qunit/) &&
     (path !~ /srv\/status/) &&
     (path !~ /commits-widget/) &&
