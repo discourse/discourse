@@ -33,7 +33,7 @@ export default function loadScript(url, opts) {
 
     var cdnUrl = url;
 
-    if (Discourse.CDN && url[0] === "/") {
+    if (Discourse.CDN && url[0] === "/" && url[1] !== "/") {
       // ensure stuff is rooted correctly
       cdnUrl = Discourse.CDN.replace(/\/$/,"");
 
