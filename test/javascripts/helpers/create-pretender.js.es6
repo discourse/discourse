@@ -1,7 +1,7 @@
 function parsePostData(query) {
-  var result = {};
+  const result = {};
   query.split("&").forEach(function(part) {
-    var item = part.split("=");
+    const item = part.split("=");
     result[item[0]] = decodeURIComponent(item[1]);
   });
   return result;
@@ -25,15 +25,15 @@ const _widgets = [
 ];
 
 export default function() {
-  var server = new Pretender(function() {
+  const server = new Pretender(function() {
 
     // Load any fixtures automatically
-    var self = this;
+    const self = this;
     Ember.keys(require._eak_seen).forEach(function(entry) {
       if (/^fixtures/.test(entry)) {
-        var fixture = require(entry, null, null, true);
+        const fixture = require(entry, null, null, true);
         if (fixture && fixture.default) {
-          var obj = fixture.default;
+          const obj = fixture.default;
           Ember.keys(obj).forEach(function(url) {
             self.get(url, function() {
               return response(obj[url]);
@@ -55,17 +55,8 @@ export default function() {
       return response({});
     });
 
-    this.get('/javascripts/jquery.magnific-popup-min.js', function() {
-      return response({});
-    });
-
-
-    this.get('/highlight.js', function() {
-      return response({});
-    });
-
     this.post('/session', function(request) {
-      var data = parsePostData(request.requestBody);
+      const data = parsePostData(request.requestBody);
 
       if (data.password === 'correct') {
         return response({username: 'eviltrout'});
@@ -130,9 +121,13 @@ export default function() {
   };
 
   server.unhandledRequest = function(verb, path) {
-    var error = 'Unhandled request in test environment: ' + path + ' (' + verb + ')';
+    const error = 'Unhandled request in test environment: ' + path + ' (' + verb + ')';
     window.console.error(error);
     throw error;
+  };
+
+  server.checkPassthrough = function(request) {
+    return request.requestHeaders['Discourse-Script'];
   };
 
   return server;
