@@ -43,7 +43,7 @@ export default function loadScript(url, opts) {
     if (opts.scriptTag) {
       loadWithTag(cdnUrl, cb);
     } else {
-      $.getScript(cdnUrl).then(cb);
+      Discourse.ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
     }
   });
 }
