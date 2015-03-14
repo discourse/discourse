@@ -94,6 +94,19 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     this.set('selectedReplies', []);
   }.on('init'),
 
+  _togglePinnedStates(property) {
+    const value = this.get('pinned_at') ? false : true,
+          topic = this.get('content');
+
+    // optimistic update
+    topic.setProperties({
+      pinned_at: value,
+      pinned_globally: value
+    });
+
+    return topic.saveStatus(property, value);
+  },
+
   actions: {
     deleteTopic() {
       this.deleteTopic();
@@ -352,13 +365,28 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     },
 
     togglePinned() {
-      // Note that this is different than clearPin
-      this.get('content').setStatus('pinned', this.get('pinned_at') ? false : true);
+      const value = this.get('pinned_at') ? false : true,
+            topic = this.get('content');
+
+      // optimistic update
+      topic.setProperties({
+        pinned_at: value ? moment() : null,
+        pinned_globally: false
+      });
+
+      return topic.saveStatus("pinned", value);
     },
 
-    togglePinnedGlobally() {
-      // Note that this is different than clearPin
-      this.get('content').setStatus('pinned_globally', this.get('pinned_at') ? false : true);
+    pinGlobally() {
+      const topic = this.get('content');
+
+      // optimistic update
+      topic.setProperties({
+        pinned_at: moment(),
+        pinned_globally: true
+      });
+
+      return topic.saveStatus("pinned_globally", true);
     },
 
     toggleArchived() {

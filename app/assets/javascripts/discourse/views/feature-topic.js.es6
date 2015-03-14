@@ -1,6 +1,6 @@
 import ModalBodyView from "discourse/views/modal-body";
 
 export default ModalBodyView.extend({
-  templateName: 'modal/forgot_password',
-  title: I18n.t('forgot_password.title'),
+  templateName: 'modal/feature-topic',
+  title: I18n.t('topic.feature_topic.title')
 });

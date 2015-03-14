@@ -36,7 +36,7 @@
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/view
 //= require ./discourse/views/container
-//= require ./discourse/views/modal_body_view
+//= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
 //= require ./discourse/views/combo-box
 //= require ./discourse/views/button
