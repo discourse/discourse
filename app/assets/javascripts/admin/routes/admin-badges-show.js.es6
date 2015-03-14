@@ -25,7 +25,7 @@ export default Ember.Route.extend({
 
     editGroupings() {
       const groupings = this.controllerFor('admin-badges').get('badgeGroupings');
-      showModal('admin_edit_badge_groupings', groupings);
+      showModal('modals/admin-edit-badge-groupings', groupings);
     },
 
     preview(badge, explain) {
@@ -40,7 +40,7 @@ export default Ember.Route.extend({
         }
       }).then(function(json) {
         badge.set('preview_loading', false);
-        showModal('admin_badge_preview', json);
+        showModal('modals/admin-badge-preview', json);
       }).catch(function(error) {
         badge.set('preview_loading', false);
         Em.Logger.error(error);

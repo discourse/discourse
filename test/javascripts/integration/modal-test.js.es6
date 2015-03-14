@@ -19,7 +19,7 @@ test("modal", function() {
 
   click('.login-button');
   andThen(function() {
-    ok(find('#discourse-modal:visible').length === 1, 'modal should appear');
+    ok(find('#discourse-modal:visible').length === 1, 'modal should reappear');
   });
 
   keyEvent('#main-outlet', 'keyup', 27);

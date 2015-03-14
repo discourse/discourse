@@ -102,7 +102,7 @@ const ApplicationRoute = Discourse.Route.extend({
 
     // Close the current modal, and destroy its state.
     closeModal() {
-      this.render('hide-modal', {into: 'modal', outlet: 'modalBody'});
+      this.render('hide-modal', { into: 'modal', outlet: 'modalBody' });
     },
 
     /**

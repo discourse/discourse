@@ -13,12 +13,13 @@ export default Discourse.Route.extend({
 
   actions: {
     showDetailsModal(logRecord) {
-      showModal('admin_staff_action_log_details', logRecord);
+      showModal('modals/admin-staff-action-log-details', logRecord);
       this.controllerFor('modal').set('modalClass', 'log-details-modal');
     },
 
     showCustomDetailsModal(logRecord) {
-      showModal(logRecord.action_name + '_details', logRecord);
+      const modalName = "modals/" + (logRecord.action_name + '_details').replace("_", "-");
+      showModal(modalName, logRecord);
       this.controllerFor('modal').set('modalClass', 'tabbed-modal log-details-modal');
     }
   }

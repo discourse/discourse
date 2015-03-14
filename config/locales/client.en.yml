@@ -973,10 +973,11 @@ en:
         open: "Open Topic"
         close: "Close Topic"
         auto_close: "Auto Close"
+        feature: "Feature Topic"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-        unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
         pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
@@ -1001,6 +1002,31 @@ en:
         title: 'Flag'
         help: 'privately flag this topic for attention or send a private notification about it'
         success_message: 'You successfully flagged this topic.'
+
+      feature_topic:
+        title: "Feature this topic"
+        pin: "Make this topic appear at the top of the {{categoryLink}} category."
+        confirm_pin: "Are you sure? You already have {{count}} pinned topics -- too many pinned topics can obscure other active topics."
+        unpin: "Remove this topic from the topic of the {{categoryLink}} category."
+        pin_note: "Users can unpin the topic individually for themselves."
+        already_pinned:
+          zero: "No topic currently pinned in {{categoryLink}}."
+          one: "Topic currently pinned in {{categoryLink}}: <strong>1.</strong>"
+          other: "Topics currently pinned in {{categoryLink}}: <strong>{{count}}</strong>."
+        pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
+        confirm_pin_globally: "Are you sure? You already have {{count}} globally pinned topics -- too many pinned topics can obscure other active topics."
+        unpin_globally: "Remove this topic from the top of all topic lists."
+        global_pin_note: "Users can unpin the topic individually for themselves."
+        already_pinned_globally:
+          zero: "No topic currently pinned globally."
+          one: "Topic currently pinned globally: <strong>1.</strong>"
+          other: "Topics currently pinned globally: <strong>{{count}}</strong>."
+        make_banner: "Make this topic into a banner that appears at the top of all pages."
+        remove_banner: "Remove the banner that appears at the top of all pages."
+        banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
+        already_banner:
+          zero: "There is currently no banner topic."
+          one: "There is currently a banner topic."
 
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
