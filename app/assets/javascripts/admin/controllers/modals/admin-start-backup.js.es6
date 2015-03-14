@@ -2,7 +2,6 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import Controller from 'discourse/controllers/controller';
 
 export default Controller.extend(ModalFunctionality, {
-
   needs: ["adminBackupsLogs"],
 
   _startBackup: function (withUploads) {
@@ -17,11 +16,11 @@ export default Controller.extend(ModalFunctionality, {
   actions: {
 
     startBackup: function () {
-      return this._startBackup();
+      this._startBackup();
     },
 
     startBackupWithoutUpload: function () {
-      return this._startBackup(false);
+      this._startBackup(false);
     },
 
     cancel: function () {
