@@ -45,7 +45,7 @@ export default Discourse.Route.extend({
 
   actions: {
     startBackup() {
-      showModal('admin_start_backup');
+      showModal('modals/admin-start-backup');
       this.controllerFor('modal').set('modalClass', 'start-backup-modal');
     },
 
