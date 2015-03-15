@@ -151,6 +151,7 @@ en:
     other: "Sorry, new users can only put %{count} links in a post."
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
+  topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
@@ -2322,4 +2323,3 @@ en:
         Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
         do not hesitate to flag. You may also use the flagging dialog to send <b>private messages</b> to users once you reach
         trust level 1.
-
