@@ -1,6 +1,6 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-
 require "mysql2"
+
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/mybb.rb
