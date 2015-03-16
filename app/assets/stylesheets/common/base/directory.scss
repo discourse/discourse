@@ -1,0 +1,46 @@
+.directory {
+  margin-bottom: 100px;
+
+  .period-chooser {
+    float: left;
+  }
+  .total-rows {
+    margin-top: 0.5em;
+    color: darken(scale-color-diff(), 20%);
+    float: right;
+  }
+  .spinner {
+    clear: both;
+  }
+
+  table {
+    width: 100%;
+    margin-top: 1em;
+    margin-bottom: 1em;
+
+    td, th {
+      padding: 0.5em;
+      text-align: left;
+      border-bottom: 1px solid scale-color-diff();
+    }
+
+    th.sortable {
+      cursor: pointer;
+
+      width: 13%;
+      i.fa {
+        margin-left: 1em;
+      }
+
+      &:hover {
+        background-color: scale-color-diff();
+      }
+    }
+
+    td.likes {
+      i {
+        color: $love;
+      }
+    }
+  }
+}

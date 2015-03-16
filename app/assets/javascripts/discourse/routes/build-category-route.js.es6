@@ -67,14 +67,13 @@ export default function(filter, params) {
 
     setupController: function(controller, model) {
       var topics = this.get('topics'),
-          periods = this.controllerFor('discovery').get('periods'),
           periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
 
       this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({
         model: topics,
         category: model,
-        period: periods.findBy('id', periodId),
+        period: periodId,
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
         order: topics.get('params.order'),

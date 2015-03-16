@@ -11,6 +11,10 @@ export default function() {
   });
   this.resource('topicBySlug', { path: '/t/:slug' });
 
+  this.resource('directory', function() {
+    this.route('show', {path: '/:period'});
+  });
+
   this.resource('discovery', { path: '/' }, function() {
     // top
     this.route('top');

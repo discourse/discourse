@@ -45,13 +45,11 @@ export default function(filter, extras) {
         })));
       }
 
-      const periods = this.controllerFor('discovery').get('periods'),
-            periodId = model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
-
+      const period = model.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
       const topicOpts = {
         model,
         category: null,
-        period: periods.findBy('id', periodId),
+        period,
         selected: [],
         expandGloballyPinned: true
       };

@@ -1,5 +1,4 @@
 import ObjectController from 'discourse/controllers/object';
-import TopPeriod from 'discourse/models/top-period';
 
 export default ObjectController.extend({
   needs: ['navigation/category', 'discovery/topics', 'application'],
@@ -15,7 +14,7 @@ export default ObjectController.extend({
   }.observes("loadedAllItems"),
 
   showMoreUrl(period) {
-    var url = '', category = this.get('category');
+    let url = '', category = this.get('category');
     if (category) {
       url = '/c/' + Discourse.Category.slugFor(category) + (this.get('noSubcategories') ? '/none' : '') + '/l';
     }
@@ -23,15 +22,10 @@ export default ObjectController.extend({
     return url;
   },
 
-  periods: function() {
-    const self = this,
-          periods = [];
-    this.site.get('periods').forEach(function(p) {
-      periods.pushObject(TopPeriod.create({ id: p,
-                                            showMoreUrl: self.showMoreUrl(p),
-                                            periods }));
-    });
-    return periods;
-  }.property('category', 'noSubcategories'),
+  actions: {
+    changePeriod(p) {
+      Discourse.URL.routeTo(this.showMoreUrl(p));
+    }
+  }
 
 });
