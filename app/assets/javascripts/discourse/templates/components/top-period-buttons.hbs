@@ -1,3 +1,5 @@
-{{#each p in period.availablePeriods}}
-  {{top-title-button period=p}}
+{{#each p in periods}}
+  {{#d-button action="changePeriod" actionParam=p}}
+    {{period-title p}}
+  {{/d-button}}
 {{/each}}

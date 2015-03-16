@@ -1,33 +1,30 @@
 export default Ember.Mixin.create({
 
   _watchProps: function() {
-    var args = this.get('rerenderTriggers');
+    const args = this.get('rerenderTriggers');
     if (!Ember.isNone(args)) {
-      var self = this;
-      args.forEach(function(k) {
-        self.addObserver(k, self.rerenderString);
-      });
+      args.forEach(k => this.addObserver(k, this.rerenderString));
     }
   }.on('init'),
 
-  render: function(buffer) {
+  render(buffer) {
     this.renderString(buffer);
   },
 
-  renderString: function(buffer){
-    var template = Discourse.__container__.lookup('template:' + this.rawTemplate);
+  renderString(buffer){
+    const template = Discourse.__container__.lookup('template:' + this.rawTemplate);
     if (template) {
       buffer.push(template(this));
     }
   },
 
-  _rerenderString: function() {
-    var buffer = [];
+  _rerenderString() {
+    const buffer = [];
     this.renderString(buffer);
     this.$().html(buffer.join(''));
   },
 
-  rerenderString: function() {
+  rerenderString() {
     Ember.run.once(this, '_rerenderString');
   }
 

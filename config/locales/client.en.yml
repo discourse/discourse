@@ -237,6 +237,19 @@ en:
       sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
+    directory:
+      title: "User Directory"
+      likes_given: "Likes Given"
+      likes_received: "Likes Received"
+      topics_entered: "Topics Entered"
+      time_read: "Time Read"
+      topic_count: "Topics"
+      post_count: "Replies"
+      no_results: "No results were found for this time period."
+      total_rows:
+        one: "1 user found"
+        other: "%{count} users found"
+
     groups:
       visible: "Group is visible to all users"
       title:

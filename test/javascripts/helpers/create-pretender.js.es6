@@ -7,6 +7,10 @@ function parsePostData(query) {
   return result;
 }
 
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 function response(code, obj) {
   if (typeof code === "object") {
     obj = code;
@@ -22,6 +26,11 @@ function success() {
 const _widgets = [
   {id: 123, name: 'Trout Lure'},
   {id: 124, name: 'Evil Repellant'}
+];
+
+const _moreWidgets = [
+  {id: 223, name: 'Bass Lure'},
+  {id: 224, name: 'Good Repellant'}
 ];
 
 export default function() {
@@ -101,12 +110,23 @@ export default function() {
 
     this.put('/widgets/:widget_id', function(request) {
       const w = _widgets.findBy('id', parseInt(request.params.widget_id));
-      const cloned = JSON.parse(JSON.stringify(w));
-      return response({ widget: cloned });
+      return response({ widget: clone(w) });
     });
 
-    this.get('/widgets', function() {
-      return response({ widgets: _widgets });
+    this.get('/widgets', function(request) {
+      let result = _widgets;
+
+      const qp = request.queryParams;
+      if (qp) {
+        if (qp.name) { result = result.filterBy('name', qp.name); }
+        if (qp.id) { result = result.filterBy('id', parseInt(qp.id)); }
+      }
+
+      return response({ widgets: result, total_rows_widgets: 4, load_more_widgets: '/load-more-widgets' });
+    });
+
+    this.get('/load-more-widgets', function() {
+      return response({ widgets: _moreWidgets, total_rows_widgets: 4, load_more_widgets: '/load-more-widgets' });
     });
 
     this.delete('/widgets/:widget_id', success);

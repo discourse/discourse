@@ -1,40 +1,49 @@
+import RestModel from 'discourse/models/rest';
+import ResultSet from 'discourse/models/result-set';
+
 const _identityMap = {};
 
-const RestModel = Ember.Object.extend({
-  update(attrs) {
-    const self = this,
-          type = this.get('__type');
-    return this.store.update(type, this.get('id'), attrs).then(function(result) {
-      if (result && result[type]) {
-        Object.keys(result).forEach(function(k) {
-          attrs[k] = result[k];
-        });
-      }
-      self.setProperties(attrs);
-      return result;
-    });
+export default Ember.Object.extend({
+  pluralize(thing) {
+    return thing + "s";
   },
 
-  destroyRecord() {
-    const type = this.get('__type');
-    return this.store.destroyRecord(type, this);
-  }
-});
-
-export default Ember.Object.extend({
   findAll(type) {
     const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     const self = this;
     return adapter.findAll(this, type).then(function(result) {
-      return result[Ember.String.underscore(type + 's')].map(obj => self._hydrate(type, obj));
+      return self._resultSet(type, result);
     });
   },
 
-  find(type, id) {
+  find(type, findArgs) {
     const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     const self = this;
-    return adapter.find(this, type, id).then(function(result) {
-      return self._hydrate(type, result[Ember.String.underscore(type)]);
+    return adapter.find(this, type, findArgs).then(function(result) {
+      if (typeof findArgs === "object") {
+        return self._resultSet(type, result);
+      } else {
+        return self._hydrate(type, result[Ember.String.underscore(type)]);
+      }
+    });
+  },
+
+  appendResults(resultSet, type, url) {
+    const self = this;
+
+    return Discourse.ajax(url).then(function(result) {
+      const typeName = Ember.String.underscore(self.pluralize(type)),
+            totalRows = result["total_rows_" + typeName] || result.get('totalRows'),
+            loadMoreUrl = result["load_more_" + typeName],
+            content = result[typeName].map(obj => self._hydrate(type, obj));
+
+      resultSet.setProperties({ totalRows, loadMoreUrl });
+      resultSet.get('content').pushObjects(content);
+
+      // If we've loaded them all, clear the load more URL
+      if (resultSet.get('length') >= totalRows) {
+        resultSet.set('loadMoreUrl', null);
+      }
     });
   },
 
@@ -61,6 +70,15 @@ export default Ember.Object.extend({
       if (forType) { delete forType[record.get('id')]; }
       return result;
     });
+  },
+
+  _resultSet(type, result) {
+    const typeName = Ember.String.underscore(this.pluralize(type)),
+          content = result[typeName].map(obj => this._hydrate(type, obj)),
+          totalRows = result["total_rows_" + typeName] || content.length,
+          loadMoreUrl = result["load_more_" + typeName];
+
+    return ResultSet.create({ content, totalRows, loadMoreUrl, store: this, __type: type });
   },
 
   _hydrate(type, obj) {

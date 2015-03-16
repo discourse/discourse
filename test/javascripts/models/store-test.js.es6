@@ -19,7 +19,20 @@ test('find', function() {
     store.find('widget', 123).then(function(w2) {
       equal(w, w2);
     });
+  });
+});
 
+test('find with object id', function() {
+  const store = createStore();
+  store.find('widget', {id: 123}).then(function(w) {
+    equal(w.get('firstObject.name'), 'Trout Lure');
+  });
+});
+
+test('find with query param', function() {
+  const store = createStore();
+  store.find('widget', {name: 'Trout Lure'}).then(function(w) {
+    equal(w.get('firstObject.id'), 123);
   });
 });
 
@@ -33,7 +46,7 @@ test('update', function() {
 test('findAll', function() {
   const store = createStore();
   store.findAll('widget').then(function(result) {
-    equal(result.length, 2);
+    equal(result.get('length'), 2);
     const w = result.findBy('id', 124);
     equal(w.get('name'), 'Evil Repellant');
   });

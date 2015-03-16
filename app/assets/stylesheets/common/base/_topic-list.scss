@@ -226,11 +226,12 @@ ol.category-breadcrumb {
 }
 
 .period-chooser {
-
+  display: inline-block;
   @include unselectable;
 
   h2 {
     float: left;
+    margin: 5px 0 10px;
   }
 
   button {
@@ -274,6 +275,10 @@ ol.category-breadcrumb {
 
 .top-title-buttons {
   display: inline;
+
+  button {
+    margin-right: 0.5em;
+  }
 }
 
 div.education {

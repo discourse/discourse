@@ -29,7 +29,6 @@
 //= require ./discourse/models/post-stream
 //= require ./discourse/models/topic-details
 //= require ./discourse/models/topic
-//= require ./discourse/models/top-period
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object
@@ -51,7 +50,6 @@
 //= require ./discourse/routes/user-topic-list
 //= require ./discourse/routes/user-activity-stream
 //= require ./discourse/routes/topic-from-params
-//= require ./discourse/components/top-title
 //= require ./discourse/components/text-field
 //= require ./discourse/components/visible
 //= require ./discourse/components/conditional-loading-spinner
