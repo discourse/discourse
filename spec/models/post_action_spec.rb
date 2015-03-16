@@ -54,18 +54,28 @@ describe PostAction do
       action.reload
       expect(action.deleted_at).to eq(nil)
 
-      # Acting on the flag should post an automated status message
+      # Acting on the flag should not post an automated status message (since a moderator already replied)
       expect(topic.posts.count).to eq(2)
       PostAction.agree_flags!(post, admin)
       topic.reload
-      expect(topic.posts.count).to eq(3)
-      expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
+      expect(topic.posts.count).to eq(2)
 
-      # Clearing the flags should not post another automated status message
+      # Clearing the flags should not post an automated status message
       PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
       PostAction.clear_flags!(post, admin)
       topic.reload
-      expect(topic.posts.count).to eq(3)
+      expect(topic.posts.count).to eq(2)
+
+      # Acting on the flag should post an automated status message
+      another_post = create_post
+      action = PostAction.act(codinghorror, another_post, PostActionType.types[:notify_moderators], message: "foobar")
+      topic = action.related_post.topic
+
+      expect(topic.posts.count).to eq(1)
+      PostAction.agree_flags!(another_post, admin)
+      topic.reload
+      expect(topic.posts.count).to eq(2)
+      expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
     end
 
     describe 'notify_moderators' do
