@@ -674,7 +674,7 @@ en:
 
       add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving"
+      saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
