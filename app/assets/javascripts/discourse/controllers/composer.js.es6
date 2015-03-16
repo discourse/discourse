@@ -259,6 +259,11 @@ export default DiscourseController.extend({
       }
     });
 
+    this.messageBus.pause();
+    promise.finally(function(){
+      self.messageBus.resume();
+    });
+
     return promise;
   },
 
