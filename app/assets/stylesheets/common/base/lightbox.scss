@@ -11,6 +11,7 @@
 
 .lightbox-wrapper {
   display: inline-block;
+  &, * { outline: 0; }
 }
 
 .meta {
