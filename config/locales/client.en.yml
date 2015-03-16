@@ -974,6 +974,7 @@ en:
         close: "Close Topic"
         auto_close: "Auto Close"
         feature: "Feature Topic"
+        remove_feature: "Remove Feature"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
         pin: "Pin Topic"

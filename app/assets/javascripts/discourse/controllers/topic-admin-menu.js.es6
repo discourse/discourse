@@ -4,6 +4,7 @@ import ObjectController from 'discourse/controllers/object';
 export default ObjectController.extend({
   menuVisible: false,
   showRecover: Em.computed.and('deleted', 'details.can_recover'),
+  isFeatured: Em.computed.or("pinned_at", "isBanner"),
 
   actions: {
     show: function() { this.set('menuVisible', true); },
