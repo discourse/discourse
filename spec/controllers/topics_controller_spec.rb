@@ -790,6 +790,20 @@ describe TopicsController do
       expect { xhr :post, :invite, topic_id: 1, email: 'jake@adventuretime.ooo' }.to raise_error(Discourse::NotLoggedIn)
     end
 
+    describe 'when logged in as group manager' do
+      let(:group_manager) { log_in }
+      let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+      let(:private_category)  { Fabricate(:private_category, group: group) }
+      let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
+      let(:recipient) { 'jake@adventuretime.ooo' }
+
+      it "should attach group to the invite" do
+        xhr :post, :invite, topic_id: group_private_topic.id, user: recipient
+        expect(response).to be_success
+        expect(Invite.find_by(email: recipient).groups).to eq([group])
+      end
+    end
+
     describe 'when logged in' do
       before do
         @topic = Fabricate(:topic, user: log_in)
@@ -806,7 +820,7 @@ describe TopicsController do
         end
       end
 
-      describe 'with permission' do
+      describe 'with admin permission' do
 
         let!(:admin) do
           log_in :admin

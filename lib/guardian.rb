@@ -197,6 +197,12 @@ class Guardian
     is_me?(user)
   end
 
+  def invitations_allowed?
+    !SiteSetting.enable_sso &&
+      SiteSetting.enable_local_logins &&
+      (!SiteSetting.must_approve_users? || is_staff?)
+  end
+
   def can_invite_to_forum?(groups=nil)
     authenticated? &&
     !SiteSetting.enable_sso &&
@@ -209,10 +215,21 @@ class Guardian
   end
 
   def can_invite_to?(object, group_ids=nil)
-    can_invite = can_see?(object) && can_invite_to_forum? && ( group_ids.blank? || is_admin? )
-    #TODO how should invite to PM work?
-    can_invite = can_invite && ( !object.category.read_restricted || is_admin? ) if object.is_a?(Topic) && object.category
-    can_invite
+    return false if ! authenticated?
+    return false if ! invitations_allowed?
+    return true if is_admin?
+    return false if ! can_see?(object)
+
+    return false if group_ids.present?
+
+    if object.is_a?(Topic) && object.category
+      if object.category.groups.any?
+        return true if object.category.groups.all? { |g| can_edit_group?(g) }
+      end
+      return false if object.category.read_restricted
+    end
+
+    user.has_trust_level?(TrustLevel[2])
   end
 
   def can_bulk_invite_to_forum?(user)
