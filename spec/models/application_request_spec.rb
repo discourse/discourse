@@ -71,6 +71,14 @@ describe ApplicationRequest do
     ApplicationRequest.http_total.first.count.should == 3
     ApplicationRequest.http_2xx.first.count.should == 2
     ApplicationRequest.http_3xx.first.count.should == 4
+  end
 
+  let(:private_api) { %i(req_id redis_key stats) }
+
+  it 'hides private api' do
+    expect(
+      described_class.singleton_class.private_instance_methods(false)
+    ).to eq private_api
+    expect private_api.none? { |m| described_class.respond_to?(m) }
   end
 end

@@ -7,7 +7,6 @@ class Unread
     @topic_user = topic_user
   end
 
-
   def unread_posts
     return 0 if do_not_notify?(@topic_user.notification_level)
     result = ((@topic_user.highest_seen_post_number||0) - (@topic_user.last_read_post_number||0))

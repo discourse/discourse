@@ -48,7 +48,6 @@ class DistributedMemoizer
     "memoize_" << key
   end
 
-  protected
   def self.get_lock(redis, redis_lock_key)
     redis.watch(redis_lock_key)
     current = redis.get(redis_lock_key)
@@ -61,6 +60,7 @@ class DistributedMemoizer
     end
 
     redis.unwatch
-    return result == ["OK"]
+    result == ["OK"]
   end
+  private_class_method :get_lock
 end

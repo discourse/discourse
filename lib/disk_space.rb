@@ -51,17 +51,15 @@ class DiskSpace
     if stats
       JSON.parse(stats)
     end
-
   end
-
-  protected
 
   def self.free(path)
     `df -Pk #{path} | awk 'NR==2 {print $4 * 1024;}'`.to_i
   end
+  private_class_method :free
 
   def self.used(path)
     `du -s #{path}`.to_i * 1024
   end
-
+  private_class_method :used
 end
