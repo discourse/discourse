@@ -4,6 +4,7 @@ Discourse.Emoji = {};
 Discourse.Emoji.ImageVersion = "0"
 
 var emoji = <%= Emoji.standard.map(&:name).flatten.inspect %>;
+var aliases = <%= Emoji.aliases.inspect.gsub("=>", ":") %>;
 
 var extendedEmoji = {};
 Discourse.Dialect.registerEmoji = function(code, url) {
@@ -13,18 +14,18 @@ Discourse.Dialect.registerEmoji = function(code, url) {
 
 Discourse.Emoji.list = function(){
   var list = emoji.slice(0);
+  _.each(aliases, function(v,k){ list.push(k); });
   _.each(extendedEmoji, function(v,k){ list.push(k); });
   return list;
 };
 
 var toSearch;
 
-var search = function(term, options) {
+Discourse.Emoji.search = function(term, options) {
   var maxResults = (options && options["maxResults"]) || -1;
-
-  toSearch = toSearch || emoji.concat(Object.keys(extendedEmoji));
-
   if (maxResults === 0) { return []; }
+
+  toSearch = toSearch || Discourse.Emoji.list();
 
   var i, results = [];
 
@@ -51,12 +52,17 @@ var search = function(term, options) {
   return results;
 }
 
-Discourse.Emoji.search = search;
-
 var emojiHash = {};
+// add all default emojis
 emoji.forEach(function(code){ emojiHash[code] = true; });
+// and their aliases
+for (var name in aliases) {
+  aliases[name].forEach(function(alias) {
+    emojiHash[alias] = true;
+  });
+}
 
-var urlFor = function(code) {
+Discourse.Emoji.urlFor = urlFor = function(code) {
   var url, set = Discourse.SiteSettings.emoji_set;
 
   code = code.toLowerCase();
@@ -66,6 +72,7 @@ var urlFor = function(code) {
   }
 
   if(!url && emojiHash.hasOwnProperty(code)) {
+    if (aliases.hasOwnProperty(code)) { code = aliases[code]; }
     url = Discourse.getURL('/images/emoji/' + set + '/' + code + '.png');
   }
 
@@ -79,8 +86,6 @@ var urlFor = function(code) {
 
   return url;
 }
-
-Discourse.Emoji.urlFor = urlFor;
 
 Discourse.Emoji.exists = function(code){
   code = code.toLowerCase();
@@ -98,27 +103,27 @@ function imageFor(code) {
 // Also support default emotions
 var translations = {
   ':)'   : 'smile',
-  ':-)'   : 'smile',
+  ':-)'  : 'smile',
   ':('   : 'frowning',
-  ':-('   : 'frowning',
+  ':-('  : 'frowning',
   ';)'   : 'wink',
-  ';-)'   : 'wink',
+  ';-)'  : 'wink',
   ':\'(' : 'cry',
-  ':\'-(' : 'cry',
-  ':-\'(' : 'cry',
+  ':\'-(': 'cry',
+  ':-\'(': 'cry',
   ':p'   : 'stuck_out_tongue',
   ':P'   : 'stuck_out_tongue',
-  ':-P'   : 'stuck_out_tongue',
+  ':-P'  : 'stuck_out_tongue',
   ':O'   : 'open_mouth',
-  ':-O'   : 'open_mouth',
+  ':-O'  : 'open_mouth',
   ':D'   : 'smiley',
-  ':-D'   : 'smiley',
+  ':-D'  : 'smiley',
   ':|'   : 'expressionless',
-  ':-|'   : 'expressionless',
+  ':-|'  : 'expressionless',
   ";P"   : 'stuck_out_tongue_winking_eye',
-  ";-P"   : 'stuck_out_tongue_winking_eye',
+  ";-P"  : 'stuck_out_tongue_winking_eye',
   ":$"   : 'blush',
-  ":-$"   : 'blush'
+  ":-$"  : 'blush'
 };
 
 Discourse.Emoji.translations = translations;
