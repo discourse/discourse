@@ -27,7 +27,6 @@ class PostSerializer < BasicPostSerializer
              :yours,
              :topic_id,
              :topic_slug,
-             :topic_auto_close_at,
              :display_username,
              :primary_group_name,
              :version,
@@ -70,10 +69,6 @@ class PostSerializer < BasicPostSerializer
 
   def topic_slug
     object.try(:topic).try(:slug)
-  end
-
-  def topic_auto_close_at
-    object.try(:topic).try(:auto_close_at)
   end
 
   def moderator?
