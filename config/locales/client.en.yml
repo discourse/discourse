@@ -179,6 +179,7 @@ en:
       not_bookmarked: "you've read this post; click to bookmark it"
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
+      confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     topic_count_latest:
       one: "{{count}} new or updated topic."
