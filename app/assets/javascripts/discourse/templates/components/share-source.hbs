@@ -1,1 +1,7 @@
-<a href {{action "share" source}} {{bind-attr title="title"}}><i {{bind-attr class=":fa source.iconClass"}}></i></a>
+<a href {{action "share" source}} {{bind-attr title="title"}}>
+  {{#if source.faIcon}}
+    <i {{bind-attr class=":fa source.faIcon"}}></i>
+  {{else}}
+    {{{source.htmlIcon}}}
+  {{/if}}
+</a>
