@@ -7,6 +7,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 class ImportScripts::MyBB < ImportScripts::Base
 
   MYBB_DB = "mybb_db"
+  TABLE_PREFIX = "mybb_"
   BATCH_SIZE = 1000
 
   def initialize
@@ -32,15 +33,15 @@ class ImportScripts::MyBB < ImportScripts::Base
     puts '', "creating users"
 
     total_count = mysql_query("SELECT count(*) count
-                                 FROM mybb_users u
-                                 JOIN mybb_usergroups g ON g.gid = u.usergroup
+                                 FROM #{TABLE_PREFIX}users u
+                                 JOIN #{TABLE_PREFIX}usergroups g ON g.gid = u.usergroup
                                 WHERE g.title != 'Banned';").first['count']
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query(
         "SELECT uid id, email email, username, regdate, g.title `group`
-           FROM mybb_users u
-           JOIN mybb_usergroups g ON g.gid = u.usergroup
+           FROM #{TABLE_PREFIX}users u
+           JOIN #{TABLE_PREFIX}usergroups g ON g.gid = u.usergroup
           WHERE g.title != 'Banned'
           ORDER BY u.uid ASC
           LIMIT #{BATCH_SIZE}
@@ -62,7 +63,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   def import_categories
     results = mysql_query("
       SELECT fid id, pid parent_id, left(name, 50) name, description
-        FROM mybb_forums
+        FROM #{TABLE_PREFIX}forums
     ORDER BY pid ASC, fid ASC
     ")
 
@@ -78,7 +79,7 @@ class ImportScripts::MyBB < ImportScripts::Base
   def import_posts
     puts "", "creating topics and posts"
 
-    total_count = mysql_query("SELECT count(*) count from mybb_posts").first["count"]
+    total_count = mysql_query("SELECT count(*) count from #{TABLE_PREFIX}posts").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query("
@@ -90,8 +91,8 @@ class ImportScripts::MyBB < ImportScripts::Base
                p.uid user_id,
                p.message raw,
                p.dateline post_time
-          FROM mybb_posts p,
-               mybb_threads t
+          FROM #{TABLE_PREFIX}posts p,
+               #{TABLE_PREFIX}threads t
          WHERE p.tid = t.tid
       ORDER BY p.dateline
          LIMIT #{BATCH_SIZE}
@@ -105,14 +106,14 @@ class ImportScripts::MyBB < ImportScripts::Base
         mapped = {}
 
         # If you have imported a phpbb forum to mybb previously there might
-        # be a problem with mybb_threads.firstpost. If these ids are wrong
+        # be a problem with #{TABLE_PREFIX}threads.firstpost. If these ids are wrong
         # the thread cannot be imported to discourse as the topic post is
         # missing. This query retrieves the first_post_id manually. As it
         # will decrease the performance it is commented out by default.
         # m['first_post_id'] = mysql_query("
         #   SELECT   p.pid id,
-        #   FROM     mybb_posts p,
-        #            mybb_threads t
+        #   FROM     #{TABLE_PREFIX}posts p,
+        #            #{TABLE_PREFIX}threads t
         #   WHERE    p.tid = #{m['topic_id']} AND t.tid = #{m['topic_id']}
         #   ORDER BY p.dateline
         #   LIMIT    1
