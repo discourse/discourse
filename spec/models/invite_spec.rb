@@ -127,6 +127,28 @@ describe Invite do
     end
   end
 
+  context 'to a group-private topic' do
+    let(:group) { Fabricate(:group) }
+    let(:private_category)  { Fabricate(:private_category, group: group) }
+    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+    let(:inviter) { group_private_topic.user }
+
+    before do
+      @invite = group_private_topic.invite_by_email(inviter, iceking)
+    end
+
+    it 'should add the groups to the invite' do
+      expect(@invite.groups).to eq([group])
+    end
+
+    context 'when duplicated' do
+      it 'should not duplicate the groups' do
+        expect(group_private_topic.invite_by_email(inviter, iceking)).to eq(@invite)
+        expect(@invite.groups).to eq([group])
+      end
+    end
+  end
+
   context 'an existing user' do
     let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     let(:coding_horror) { Fabricate(:coding_horror) }
