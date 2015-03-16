@@ -307,10 +307,10 @@ asyncTestDiscourse("loading a post's history", function() {
 
 test("staging and undoing a new post", function() {
   var postStream = buildStream(10101, [1]);
-  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
+  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1, topic_id: 10101}));
 
   var user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
-  var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post' });
+  var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post', topic_id: 10101 });
 
   var topic = postStream.get('topic');
   topic.setProperties({
@@ -346,9 +346,9 @@ test("staging and undoing a new post", function() {
 
 test("staging and committing a post", function() {
   var postStream = buildStream(10101, [1]);
-  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1}));
+  postStream.appendPost(Discourse.Post.create({id: 1, post_number: 1, topic_id: 10101}));
   var user = Discourse.User.create({username: 'eviltrout', name: 'eviltrout', id: 321});
-  var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post' });
+  var stagedPost = Discourse.Post.create({ raw: 'hello world this is my new post', topic_id: 10101 });
 
   var topic = postStream.get('topic');
   topic.set('posts_count', 1);
@@ -366,6 +366,7 @@ test("staging and committing a post", function() {
   postStream.commitPost(stagedPost);
   ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");
   ok(!postStream.get('loading'), "it is no longer loading");
+
   equal(postStream.get('filteredPostsCount'), 2, "it increases the filteredPostsCount");
 
   var found = postStream.findLoadedPost(stagedPost.get('id'));

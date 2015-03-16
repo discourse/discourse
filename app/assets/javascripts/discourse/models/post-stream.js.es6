@@ -327,13 +327,10 @@ const PostStream = Ember.Object.extend({
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
 
-    // cleanup
     if (this.get('topic.id') === post.get('topic_id')) {
       if (this.get('loadedAllPosts')) {
         this.appendPost(post);
-      } else {
-        // I guess we might as well keep the data
-        this.storePost(post);
+        this.get('stream').addObject(post.get('id'));
       }
     }
 
