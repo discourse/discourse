@@ -529,6 +529,6 @@ test("censoring", function() {
 
 test("code blocks/spans hoisting", function() {
   cooked("```\n\n    some code\n```",
-         "<p><pre><code class=\"lang-auto\">some code</code></pre></p>",
+         "<p><pre><code class=\"lang-auto\">    some code</code></pre></p>",
          "it works when nesting standard markdown code blocks within a fenced code block");
 });
