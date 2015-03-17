@@ -1683,6 +1683,10 @@ en:
         automatic: "Automatic"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+        custom:
+          title: "Custom Groups"
+        automatic:
+          title: "Automatic Groups"
 
       api:
         generate_master: "Generate Master API Key"
