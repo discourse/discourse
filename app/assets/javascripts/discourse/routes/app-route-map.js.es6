@@ -80,6 +80,7 @@ export default function() {
       this.route('about', { path: '/about-me' });
       this.route('badgeTitle', { path: '/badge_title' });
       this.route('card-badge', { path: '/card-badge' });
+      this.route('two-factor-authentication', { path: '/two-factor-authentication' });
     });
 
     this.route('invited');

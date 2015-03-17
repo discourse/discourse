@@ -95,7 +95,8 @@ class UserSerializer < BasicUserSerializer
                      :custom_avatar_upload_id,
                      :has_title_badges,
                      :card_image_badge,
-                     :card_image_badge_id
+                     :card_image_badge_id,
+                     :enabled_two_factor_authentication
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -238,6 +239,10 @@ class UserSerializer < BasicUserSerializer
 
   def new_topic_duration_minutes
     object.new_topic_duration_minutes || SiteSetting.new_topic_duration_minutes
+  end
+
+  def enabled_two_factor_authentication
+    object.enabled_two_factor_authentication?
   end
 
   def muted_category_ids

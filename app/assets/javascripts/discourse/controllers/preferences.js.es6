@@ -42,6 +42,10 @@ export default ObjectController.extend(CanCheckEmails, {
     return !this.siteSettings.enable_sso && this.siteSettings.enable_local_logins;
   }.property(),
 
+  canChangeTwoFactorAuthentication: function() {
+    return this.get('canChangePassword') && this.siteSettings.enable_two_factor_authentication;
+  }.property(),
+
   canReceiveDigest: function() {
     return !this.siteSettings.disable_digest_emails;
   }.property(),

@@ -84,6 +84,11 @@ const ApplicationRoute = Discourse.Route.extend({
       this.controllerFor('notActivated').setProperties(props);
     },
 
+    showTwoFactorAuthenticationCodeVerifier(props) {
+      showModal('twoFactorAuthenticationCodeVerifier');
+      this.controllerFor('twoFactorAuthenticationCodeVerifier').setProperties(props);
+    },
+
     showUploadSelector(composerView) {
       showModal('uploadSelector');
       this.controllerFor('upload-selector').setProperties({ composerView: composerView });

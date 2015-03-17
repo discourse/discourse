@@ -158,6 +158,16 @@ class SessionController < ApplicationController
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
   end
 
+  def verify_two_factor_authentication_code
+    user = User.find_by(email: session[:two_factor_authentication_user_email])
+    if user && user.authenticate_otp(params[:code])
+      user.update_attribute(:otp_verified_at, Time.zone.now)
+      login(user)
+    else
+      invalid_otp_code
+    end
+  end
+
   def forgot_password
     params.require(:login)
 
@@ -215,6 +225,10 @@ class SessionController < ApplicationController
     render json: {error: I18n.t("login.incorrect_username_email_or_password")}
   end
 
+  def invalid_otp_code
+    render json: { error: I18n.t("login.incorrect_otp_code") }
+  end
+
   def login_not_approved
     render json: {error: I18n.t("login.not_approved")}
   end
@@ -243,12 +257,19 @@ class SessionController < ApplicationController
                                             reason: user.suspend_reason}) }
   end
 
+  def required_otp
+    render json: { twoFactorAuthentication: true }
+  end
+
   def login(user)
     log_on_user(user)
 
     if payload = session.delete(:sso_payload)
       sso_provider(payload)
+    elsif !current_user
+      required_otp
     else
+      session[:two_factor_authentication_user_email] = nil
       render_serialized(user, UserSerializer)
     end
   end

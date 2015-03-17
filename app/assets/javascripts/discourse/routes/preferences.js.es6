@@ -40,7 +40,7 @@ export default RestrictedUserRoute.extend(ShowFooter, {
       controller.setProperties(props);
     },
 
-    saveAvatarSelection: function() {
+    saveAvatarSelection() {
       const user = this.modelFor('user');
       const avatarSelector = this.controllerFor('avatar-selector');
 

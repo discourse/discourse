@@ -69,20 +69,30 @@
     {{/if}}
 
     {{#if canChangePassword}}
-    <div class="control-group pref-password">
-      <label class="control-label">{{i18n 'user.password.title'}}</label>
-      <div class="controls">
-        <a href="#" {{action "changePassword"}} class='btn'><i class="fa fa-envelope"></i>
-          {{#if no_password}}
-            {{i18n 'user.change_password.set_password'}}
-          {{else}}
-            {{i18n 'user.change_password.action'}}
-          {{/if}}
-        </a>
-        {{passwordProgress}}
+      <div class="control-group pref-password">
+        <label class="control-label">{{i18n 'user.password.title'}}</label>
+        <div class="controls">
+          <a href="#" {{action "changePassword"}} class='btn'><i class="fa fa-envelope"></i>
+            {{#if no_password}}
+              {{i18n 'user.change_password.set_password'}}
+            {{else}}
+              {{i18n 'user.change_password.action'}}
+            {{/if}}
+          </a>
+          {{passwordProgress}}
+        </div>
       </div>
-    </div>
+
+      {{#if canChangeTwoFactorAuthentication}}
+        <div class="control-group pref-2fa-auth">
+          <label class="control-label">{{i18n 'user.two_factor_authentication.title'}}</label>
+          <div class="controls">
+            {{#link-to "preferences.two-factor-authentication" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+          </div>
+        </div>
+      {{/if}}
     {{/if}}
+
 
     <div class="control-group pref-avatar">
       <label class="control-label">{{i18n 'user.avatar.title'}}</label>

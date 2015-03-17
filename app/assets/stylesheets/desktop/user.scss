@@ -170,6 +170,30 @@
         border-bottom: 1px solid scale-color-diff();
       }
     }
+    table.otp-qr {
+      border-width: 0;
+      border-style: none;
+      border-color: #0000ff;
+      border-collapse: collapse;
+      width: 450px;
+      td {
+        border-width: 0;
+        border-style: none;
+        border-color: #0000ff;
+        border-collapse: collapse;
+        padding: 0;
+        margin: 0;
+        width: 10px;
+        height: 10px;
+
+        &.black {
+          background-color: #000;
+        }
+        &.white {
+          background-color: #fff;
+        }
+      }
+    }
   }
 
   .about {

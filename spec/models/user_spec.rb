@@ -1180,4 +1180,70 @@ describe User do
 
   end
 
+  context "Two Factor Authentication" do
+    describe ".refresh_otp_secret!" do
+      let(:user) { Fabricate.build :user }
+
+      it "generates otp secret key" do
+        user.refresh_otp_secret!
+        expect(user.otp_secret_key.length) == 16
+      end
+    end
+
+    describe ".enabled_two_factor_authentication?" do
+      let(:user) { Fabricate.build :user }
+
+      it "is false when the user disabled the 2FA" do
+        expect(user.enabled_two_factor_authentication?).to be false
+      end
+      it "is true when the user enabled 2FA" do
+        user.otp_secret_key_verified = true
+        expect(user.enabled_two_factor_authentication?).to be true
+      end
+    end
+
+    describe "generates correct otp code" do
+      before(:all) do
+        @user = Fabricate(:user, otp_secret_key: 'csyy65qugfrwocdj')
+        SiteSetting.title = 'Discourse'
+      end
+      after(:all) do
+        @user.destroy
+      end
+
+      it 'genereates provisioning url' do
+        expect(@user.otp_provisioning_url) == "otpauth://totp/Discourse?secret=csyy65qugfrwocdj"
+      end
+
+      context 'handles otp_code' do
+        it 'generates correct otp_code' do
+          Timecop.freeze("2050-02-01 00:00:00 +0000") do
+            expect(@user.otp_code) == '103061'
+          end
+          Timecop.freeze("2050-02-01 00:00:30 +0000") do
+            expect(@user.otp_code) == '022411'
+          end
+          Timecop.freeze("2050-02-01 00:01:00 +0000") do
+            expect(@user.otp_code) == '314663'
+          end
+          Timecop.freeze("2050-02-01 00:01:30 +0000") do
+            expect(@user.otp_code) == '561538'
+          end
+          Timecop.freeze("2050-02-01 00:02:00 +0000") do
+            expect(@user.otp_code) == '460982'
+          end
+        end
+        it 'verified otp code within 2 drift windows with 30s interval ' do
+          Timecop.freeze("2050-02-01 00:01:10 +0000") do
+            expect(@user.authenticate_otp('103061')).to be false
+            expect(@user.authenticate_otp('022411')).to be true
+            expect(@user.authenticate_otp('314663')).to be true
+            expect(@user.authenticate_otp('561538')).to be true
+            expect(@user.authenticate_otp('460982')).to be false
+          end
+        end
+      end
+    end
+  end
+
 end
