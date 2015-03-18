@@ -293,6 +293,7 @@ class ImportScripts::Base
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
     opts[:import_mode] = true
+    opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
 
     u = User.new(opts)
     u.custom_fields["import_id"] = import_id
