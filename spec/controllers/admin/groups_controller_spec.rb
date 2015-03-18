@@ -21,7 +21,6 @@ describe Admin::GroupsController do
       expect(response.status).to eq(200)
       expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
-        "automatic"=>false,
         "name"=>group.name,
         "user_count"=>1,
         "automatic"=>false,
