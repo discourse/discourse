@@ -141,6 +141,7 @@ pl_PL:
     daily: "dziennie"
     weekly: "tygodniowo"
     every_two_weeks: "co dwa tygodnie"
+    every_three_days: "co trzy dni"
     max_of_count: "max z {{count}}"
     character_count:
       one: "1 znak"
@@ -424,8 +425,9 @@ pl_PL:
       email_digests:
         title: "Gdy nie odwiedzam strony, wysyłaj e-mail z podsumowaniem aktywności:"
         daily: "codziennie"
+        every_three_days: "co trzy dni"
         weekly: "co tydzień"
-        every_two_weeks: "co 2 tygodnie"
+        every_two_weeks: "co dwa tygodnie"
       email_direct: "Wysyłaj powiadomienia gdy ktoś mnie cytuje, odpowiada na mój wpis lub wywołuje moją @nazwę"
       email_private_messages: "Wysyłaj powiadomienia, gdy ktoś wyśle mi prywatną wiadomość"
       email_always: "Wysyłaj powiadomienia email nawet gdy przejawiam aktywność na forum"
@@ -486,6 +488,7 @@ pl_PL:
         too_short: "Hasło jest za krótkie."
         common: "To hasło jest zbyt popularne."
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
+        same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło jest poprawne."
         instructions: "Co najmniej %{count} znaków."
       associated_accounts: "Powiązane konta"
@@ -596,6 +599,7 @@ pl_PL:
       requires_invite: "Przepraszamy, dostęp do tego forum jest tylko za zaproszeniem."
       not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy email aktywujący konto na adres <b>{{sentTo}}</b>. W celu aktywacji konta postępuj zgodnie z instrukcjami otrzymanymi w emailu."
       not_allowed_from_ip_address: "Nie możesz się zalogować z tego adresu IP."
+      admin_not_allowed_from_ip_address: "Nie możesz się zalogować jako admin z tego adresu IP."
       resend_activation_email: "Kliknij tutaj, aby ponownie wysłać email z aktywacją konta."
       sent_activation_email_again: "Wysłaliśmy do ciebie kolejny email z aktywacją konta na <b>{{currentEmail}}</b>. Zanim dotrze, może minąć kilka minut; pamiętaj, żeby sprawdzić folder ze spamem."
       google:
@@ -629,9 +633,6 @@ pl_PL:
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
       drafts_offline: "szkice offline"
-      min_length:
-        need_more_for_title: "jeszcze co najmniej {{n}} znaków w tytule"
-        need_more_for_reply: "jeszcze co najmniej {{n}} znaków"
       error:
         title_missing: "tytuł jest wymagany"
         title_too_short: "tytuł musi zawierać co najmniej {{min}} znaków"
@@ -753,6 +754,7 @@ pl_PL:
         close_topics: "Zamknij wpisy"
         archive_topics: "Zarchiwizuj tematy"
         notification_level: "Poziom powiadomień o zmianach"
+        choose_new_category: "Wybierz nową kategorię dla tematów:"
         selected:
           one: "Zaznaczono <b>1</b> temat."
           few: "Zaznaczono <b>{{count}}</b> tematy."
@@ -1399,6 +1401,7 @@ pl_PL:
           title: "Popularne w tym tygodniu"
         daily:
           title: "Popularne dzisiaj"
+        all: "Od zawsze"
         this_year: "W tym roku"
         this_month: "W tym miesiącu"
         this_week: "W tym tygodniu"
@@ -1800,6 +1803,7 @@ pl_PL:
             delete_topic: "usunięcie tematu"
             delete_post: "usunięcie wpisu"
             impersonate: "udawanie użytkownika"
+            anonymize_user: "anonimizuj użytkownika"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -1937,8 +1941,13 @@ pl_PL:
         approve_success: "Użytkownik zatwierdzony i został wysłany email z instrukcjami aktywacji."
         approve_bulk_success: "Sukces! Wszyscy wybrani użytkownicy zostali zatwierdzeni i powiadomieni."
         time_read: "Czas czytania"
+        anonymize: "Anonimizacja użytkownika"
+        anonymize_confirm: "Czy na pewno chcesz anonimizować to konto? Zmianie ulegnie nazwa użytkownika, e-mail oraz zawartość profilu."
+        anonymize_yes: "Tak, anonimizuj to konto."
+        anonymize_failed: "Wystąpił problem podczas anonimizacji konta."
         delete: "Usuń użytkownika"
         delete_forbidden_because_staff: "Admini i moderatorzy nie mogą zostać usunięci."
+        delete_posts_forbidden_because_staff: "Nie można usunąć wszystkich wpisów administratorów i moderatorów."
         delete_forbidden:
           one: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dzień.)"
           few: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dni.)"
@@ -2048,6 +2057,7 @@ pl_PL:
         none: 'żadne'
         no_results: "Brak wyników wyszukiwania"
         clear_filter: "Wyczyść"
+        add_url: "dodaj URL"
         categories:
           all_results: 'Wszystkie'
           required: 'Wymagane'

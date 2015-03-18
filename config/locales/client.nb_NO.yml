@@ -402,7 +402,6 @@ nb_NO:
         title: "Send meg sammendrag av hva som er nytt på e-post når jeg ikke er ofte innom:"
         daily: "daglig"
         weekly: "ukentlig"
-        every_two_weeks: "hver andre uke"
       email_direct: "Send meg e-post når noen siteter meg, svarer meg eller nevner mitt @brukernavn"
       email_private_messages: "Notta en email når noen sender deg en privat melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
@@ -410,6 +409,7 @@ nb_NO:
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Anse emner som nye når"
+        not_viewed: "Jeg har ikke sett på dem enda."
         last_here: "opprettet siden jeg var her sist"
         after_n_days:
           one: "opprettet den siste  {{count}} dagen"
@@ -600,9 +600,6 @@ nb_NO:
       saved_local_draft_tip: "lagret lokalt"
       similar_topics: "Emnet ditt har likheter med..."
       drafts_offline: "utkast offline"
-      min_length:
-        need_more_for_title: "{{n}} igen for tittelen"
-        need_more_for_reply: "{{n}} gjenstår"
       error:
         title_missing: "Tittel er påkrevd"
         title_too_short: "Tittel må være minst {{min}} tegn"
@@ -1256,12 +1253,6 @@ nb_NO:
     posts: "Innlegg"
     posts_lowercase: "innlegg"
     posts_long: "{{number}} innlegg i dette emnet"
-    posts_likes_MF: |
-      Dette emnet har {count, plural, one {1 post} other {# posts}} {ratio, select,
-        lavt {with a high like to post ratio}
-        medium {with a very high like to post ratio}
-        høyt {with an extremely high like to post ratio}
-        andre {}}
     original_post: "Originalt Innlegg"
     views: "Visninger"
     views_lowercase: "visninger"
@@ -1480,6 +1471,7 @@ nb_NO:
         name: "Navn"
         add: "Legg til"
         add_members: "Legg til medlemmer"
+        custom: "Tilpasset"
         automatic: "Automatisk"
       api:
         generate_master: "Generer Master API-nøkkel"
@@ -1499,6 +1491,7 @@ nb_NO:
         name: "Navn"
         version: "Versjon"
         change_settings: "Endre instillinger"
+        howto: "Hvordan innstallerer jeg plugins?"
       backups:
         title: "Sikkerhetskopieringer"
         menu:
@@ -1552,7 +1545,9 @@ nb_NO:
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
+        user_archive_confirm: "Er du sikker på at du vil laste ned innleggene dine?"
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
+        rate_limit_error: "Innlegg kan lastes ned en gang om dagen, vennligst prøv igjen i morgen."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter full medlemsliste i CSV format."
@@ -1568,6 +1563,7 @@ nb_NO:
         long_title: "Nettstedstilpasninger"
         css: "CSS"
         header: "Header"
+        top: "Topp"
         footer: "Footer"
         head_tag:
           text: "</head>"
@@ -1958,6 +1954,7 @@ nb_NO:
         none: 'intet'
         no_results: "Ingen treff funnet."
         clear_filter: "Tøm"
+        add_url: "legg til URL"
         categories:
           all_results: 'Alle'
           required: 'Påkrevd'
@@ -2143,6 +2140,8 @@ nb_NO:
         autobiographer:
           name: Selvbiograf
           description: Fylte ut informasjon om <a href="/my/preferences">brukerprofilen</a>
+        anniversary:
+          name: Jubileum
         nice_post:
           name: Fint innlegg
           description: Fått 10 liker for et innlegg. Dette merket kan bli tildelt flere ganger

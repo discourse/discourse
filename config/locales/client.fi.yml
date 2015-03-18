@@ -147,6 +147,7 @@ fi:
       user_count: "Uusia käyttäjiä"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Yhteystiedot"
+      contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
     bookmarked:
       title: "Kirjanmerkki"
     bookmarks:
@@ -397,7 +398,6 @@ fi:
         title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         daily: "päivittäin"
         weekly: "viikottain"
-        every_two_weeks: "joka toinen viikko"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini tai viittaa @nimeeni."
       email_private_messages: "Lähetä minulle sähköposti jos joku lähettää minulle yksityisviestin"
       email_always: "Älä jätä lähettämättä sähköposti-ilmoituksia, vaikka olen aktiivinen palstalla."
@@ -453,6 +453,8 @@ fi:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
         common: "Annettu salasana on liian yleinen."
+        same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
+        same_as_email: "Salasanasi on sama kuin sähköpostisi."
         ok: "Salasana vaikuttaa hyvältä."
         instructions: "Vähintään %{count} merkkiä."
       associated_accounts: "Kirjautumiset"
@@ -596,9 +598,6 @@ fi:
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
-      min_length:
-        need_more_for_title: "Tarvitaan vielä {{n}} merkkiä otsikkoon"
-        need_more_for_reply: "vielä {{n}}"
       error:
         title_missing: "Otsikko on pakollinen"
         title_too_short: "Otsikon täytyy olla vähintään {{min}} merkkiä pitkä"
@@ -1252,12 +1251,6 @@ fi:
     posts: "Viestejä"
     posts_lowercase: "viestejä"
     posts_long: "tässä ketjussa on {{number}} viestiä"
-    posts_likes_MF: |
-      Tässä ketjussa on {count, plural, one {1 viesti, jolla on} other {# viestiä, joilla on}} {ratio, select,
-      low {suuri määrä tykkäyksiä suhteessa viestien määrään}
-      med {erittäin suuri määrä tykkäyksiä suhteessa viestien määrään}
-      high {äärimmäisen suuri määrä tykkäyksiä suhteessa viestien määrään}
-      other {}}
     original_post: "Aloitusviesti"
     views: "Katselut"
     views_lowercase: "katselut"
@@ -1334,6 +1327,7 @@ fi:
           title: "Viikon huiput"
         daily:
           title: "Päivän huiput"
+        all: "Kaikki"
         this_year: "Tänä vuonna"
         this_month: "Tässä kuussa"
         this_week: "Tällä viikolla"
@@ -1377,6 +1371,8 @@ fi:
         backups: "varmuuskopiot"
         traffic_short: "Liikenne"
         traffic: "Sovelluksen web-pyynnöt"
+        page_views: "API pyynnöt"
+        page_views_short: "API pyynnöt"
         show_traffic_report: "Näytä yksityiskohtainen liikenneraportti"
         reports:
           today: "Tänään"
@@ -1554,6 +1550,7 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
+        user_archive_confirm: "Oletko varma, että haluat ladata viestisi?"
         success: "Vienti on käynnissä. Saat ilmoituksen yksityisviestillä, kun prosessi on valmis."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
         rate_limit_error: "Viestit voidaan ladata kerran päivässä, yritä uudestaan huomenna."
@@ -1564,6 +1561,9 @@ fi:
           screened_email: "Vie koko lista seulotuista sähköpostiosoitteista CSV-formaatissa."
           screened_ip: "Vie koko lista seulotuista IP-osoitteista CSV-formaatissa."
           screened_url: "Vie koko lista seulotuista URL-osoitteista CSV-formaatissa."
+      invite:
+        button_text: "Lähetä kutsut"
+        button_title: "Lähetä kutsut"
       customize:
         title: "Mukauta"
         long_title: "Sivuston mukautukset"
@@ -1965,6 +1965,7 @@ fi:
         none: 'ei mitään'
         no_results: "Ei tuloksia."
         clear_filter: "Tyhjennä"
+        add_url: "Lisää URL"
         categories:
           all_results: 'Kaikki'
           required: 'Pakolliset'
@@ -2004,6 +2005,8 @@ fi:
         delete: Poista
         delete_confirm: Oletko varma, että haluat poistaa tämän arvomerkin?
         revoke: Peruuta
+        reason: Syy
+        expand: Laajenna &hellip;
         revoke_confirm: Oletko varma, että haluat peruuttaa arvomerkin?
         edit_badges: Muokkaa arvomerkkejä
         grant_badge: Myönnä arvomerkki
@@ -2154,6 +2157,9 @@ fi:
         autobiographer:
           name: Muistelmien kirjoittaja
           description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
+        anniversary:
+          name: Vuosipäivä
+          description: Ollut vuoden aktiivinen jäsen, kirjoittanut vähintään kerran
         nice_post:
           name: Kiva viesti
           description: Sai 10 tykkäystä viestistä. Tämä arvomerkki voidaan myöntää useita kertoja

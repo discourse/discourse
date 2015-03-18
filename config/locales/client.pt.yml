@@ -396,7 +396,6 @@ pt:
       email_digests:
         daily: "diariamente"
         weekly: "semanalmente"
-        every_two_weeks: "a cada duas semanas"
       email_always: "Não suprimir notificações de email quando estou ativo no sítio"
       other_settings: "Outros"
       categories_settings: "Categorias"
@@ -588,9 +587,6 @@ pt:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "O seu tópico é similar a..."
       drafts_offline: "rascunhos offline"
-      min_length:
-        need_more_for_title: "{{n}} para avançar para o título"
-        need_more_for_reply: "{{n}} para avançar"
       error:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} caracteres."
@@ -1237,12 +1233,6 @@ pt:
     posts: "Mensagens"
     posts_lowercase: "mensagens"
     posts_long: "existem {{number}} mensagens neste tópico"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {1 mensagem} other {# mensagens}} {ratio, select,
-      low {com uma proporção de gostos alta}
-      med {com uma proporção de gostos muito alta}
-      high {com uma proporção de gostos extremamente alta}
-      other {}}
     original_post: "Mensagem Original"
     views: "Visualizações"
     views_lowercase: "visualizações"

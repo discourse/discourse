@@ -391,7 +391,6 @@ sv:
       email_digests:
         daily: "dagligen"
         weekly: "veckovis"
-        every_two_weeks: "varannan vecka"
       email_direct: "Skicka ett e-postmeddelande när någon citerar mig, svarar på mitt inlägg, eller nämner mitt @användarnamn"
       email_private_messages: "Skicka ett e-postmeddelande till mig när någon skickar mig ett privatmeddelande."
       email_always: "Ta emot notifieringar via mail även om jag är aktiv på forumet"
@@ -586,9 +585,6 @@ sv:
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Din tråd liknar..."
       drafts_offline: "utkast offline"
-      min_length:
-        need_more_for_title: "{{n}} tecken kvar för titeln"
-        need_more_for_reply: "{{n}} fler..."
       error:
         title_missing: "Du måste ange en rubrik"
         title_too_short: "Titeln måste vara minst {{min}} tecken lång."
@@ -1234,12 +1230,6 @@ sv:
     posts: "Inlägg"
     posts_lowercase: "inlägg"
     posts_long: "{{number}} inlägg i den här tråden"
-    posts_likes_MF: |
-      Det här ämnet har {count, plural, en {1 post} annan {# posts}} {ratio, välj,
-      låg {med en hög gilla mot inlägg ratio}
-      medel {med en väldigt hög gilla mot inlägg ratio}
-      hög {med en extremt hög gilla mot inlägg ratio}
-      annan {}}
     original_post: "Originalinlägg"
     views: "Visningar"
     views_lowercase: "visningar"

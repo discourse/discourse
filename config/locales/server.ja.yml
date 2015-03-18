@@ -18,12 +18,45 @@ ja:
   log_in: "ログイン"
   via: "%{username} via %{site_name}"
   is_reserved: "is reserved"
+  purge_reason: "アクティブでないアカウントは放棄されたとして削除されました"
   disable_remote_images_download_reason: "ディスク容量が不足しているため、リモートでの画像ダウンロードは無効になっています。"
   errors:
     messages:
       too_long_validation: "は、最大文字数(%{max}文字)を超えています。(入力したのは%{length}文字 ) "
       invalid_boolean: "無効なboolean."
+      taken: "は既に使用されています"
+      accepted: に同意する必要があります
+      blank: を入力してください
+      present: は入力しないでください
+      confirmation: "と%{attribute}の入力が一致しません"
       empty: 本文が未入力です。.
+      equal_to: は%{count}にしてください
+      even: は偶数にしてください
+      exclusion: は予約されています
+      greater_than: は%{count}より大きい値にしてください
+      greater_than_or_equal_to: は%{count}以上の値にしてください
+      inclusion: は一覧にありません
+      invalid: は不正な値です
+      less_than: は%{count}より小さい値にしてください
+      less_than_or_equal_to: は%{count}以下の値にしてください
+      not_a_number: は数値で入力してください
+      not_an_integer: は整数で入力してください
+      odd: は奇数にしてください
+      record_invalid: 'バリデーションに失敗しました。 %{errors}'
+      restrict_dependent_destroy:
+        one: "%{record}が存在しているので削除できません"
+        many: "%{record}が存在しているので削除できません。"
+      too_long:
+        other: は%{count}文字以内で入力してください
+      too_short:
+        other: は%{count}文字以上で入力してください
+      wrong_length:
+        other: は%{count}文字で入力してください
+      other_than: "は%{count}以外の値にしてください"
+    template:
+      body: '次のフィールドに問題があります:'
+      header:
+        other: '%{model} の保存中に%{count} 個のエラーが発生しました'
     embed:
       load_from_remote: "投稿の読み込みに失敗しました。"
   bulk_invite:
@@ -33,6 +66,8 @@ ja:
     backup_file_should_be_tar_gz: "バックアップファイルは .tar .gz 形式でなければいけません。"
     not_enough_space_on_disk: "このバックアップファイルをアップロードするディスクの空き容量が足りません。"
   not_logged_in: "ログインしてください。"
+  not_found: "リクエストされたURL、リソースは見つかりませんでした"
+  invalid_access: "リクエストしたリソースの閲覧が許可されていません"
   read_only_mode_enabled: "このサイトは読み取り専用モードです。会話は無効になっています。"
   too_many_replies:
     other: "申し訳ありません、新しいユーザーの同じトピックへの返信は、一時的に %{count} 回に制限されています。"
@@ -322,6 +357,7 @@ ja:
       yaxis: "新規ブックマーク数"
     starred:
       title: "お気に入り"
+      xaxis: "日"
     users_by_trust_level:
       title: "トラストレベル毎のユーザ"
       xaxis: "トラストレベル"
@@ -365,6 +401,8 @@ ja:
       title: "トップ被参照トピック"
       xaxis: "トピック"
       num_clicks: "クリック"
+    page_view_anon_reqs:
+      xaxis: "日"
   dashboard:
     rails_env_warning: "サーバは %{env} モードで起動中です。"
     ruby_version_warning: "現在起動中の Ruby 2.0.0 にはいくつか問題があります。パッチレベル p247 以降にアップグレードしてください。"

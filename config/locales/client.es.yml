@@ -112,7 +112,7 @@ es:
     guidelines: "Directrices"
     privacy_policy: "Política de Privacidad"
     privacy: "Privacidad"
-    terms_of_service: "Condiciones Generales de Uso"
+    terms_of_service: "Condiciones de uso"
     mobile_view: "Versión móvil"
     desktop_view: "Versión de escritorio"
     you: "Tú"
@@ -125,6 +125,7 @@ es:
     daily: "cada día"
     weekly: "cada semana"
     every_two_weeks: "cada dos semanas"
+    every_three_days: "cada tres días"
     max_of_count: "máximo de {{count}}"
     character_count:
       one: "{{count}} carácter"
@@ -401,6 +402,7 @@ es:
       email_digests:
         title: "Cuando no visite la página, enviarme un correo con las últimas novedades."
         daily: "diariamente"
+        every_three_days: "cada tres días"
         weekly: "semanalmente"
         every_two_weeks: "cada dos semanas"
       email_direct: "Enviarme un email cuando alguien me cita, responde a mi post o menciona mi @usuario"
@@ -459,6 +461,7 @@ es:
         too_short: "Tu contraseña es demasiada corta."
         common: "Esa contraseña es demasiado común."
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
+        same_as_email: "Tu contraseña es la misma que tu dirección de correo electrónico."
         ok: "Tu contraseña es válida."
         instructions: "Debe contener al menos %{count} caracteres."
       associated_accounts: "Inicios de sesión"
@@ -569,6 +572,7 @@ es:
       requires_invite: "Lo sentimos pero solo se puede acceder a este foro mediante invitación."
       not_activated: "No puedes iniciar sesión todavía. Anteriormente te hemos enviado un email de activación a <b>{{sentTo}}</b>. Por favor sigue las instrucciones en ese email para activar tu cuenta."
       not_allowed_from_ip_address: "No puedes iniciar sesión desde esa dirección IP."
+      admin_not_allowed_from_ip_address: "No puedes iniciar sesión como admin desde esta dirección IP."
       resend_activation_email: "Has clic aquí para enviar el email de activación nuevamente."
       sent_activation_email_again: "Te hemos enviado otro e-mail de activación a <b>{{currentemail}}</b>. Podría tardar algunos minutos en llegar; asegúrate de revisar tu carpeta de spam."
       google:
@@ -602,9 +606,6 @@ es:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
       drafts_offline: "borradores offline"
-      min_length:
-        need_more_for_title: "{{n}} para completar el título"
-        need_more_for_reply: "{{n}} para completar"
       error:
         title_missing: "Es necesario un título"
         title_too_short: "El título debe ser por lo menos de {{min}} caracteres."
@@ -726,6 +727,7 @@ es:
         close_topics: "Cerrar temas"
         archive_topics: "Archivar temas"
         notification_level: "Cambiar el Nivel de Notificación"
+        choose_new_category: "Elige una nueva categoría para los temas:"
         selected:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
@@ -1260,7 +1262,7 @@ es:
     posts_lowercase: "posts"
     posts_long: "{{number}} posts en este tema"
     posts_likes_MF: |
-      Este tema tiene {count, plural, one {1 post} other {# posts}} {ratio, select,
+      Este tema tiene {count, plural, one {1 respuesta} other {# respuestas}} {ratio, select,
         low {con una ratio de me gusta por post elevada}
         med {con una ratio de me gusta por post bastante elevada}
         high {con una ratio de me gusta por post elevadísima}
@@ -1341,6 +1343,7 @@ es:
           title: "Top de la semana"
         daily:
           title: "Top del día"
+        all: "Todo el tiempo"
         this_year: "Este año"
         this_month: "Este mes"
         this_week: "Esta semana"
@@ -1737,6 +1740,7 @@ es:
             delete_topic: "eliminar tema"
             delete_post: "eliminar post"
             impersonate: "impersonar"
+            anonymize_user: "anonimizar usuario"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."
@@ -1825,14 +1829,14 @@ es:
         unsuspend_failed: "Algo salió mal quitando ban a este usuario {{error}}"
         suspend_duration: "¿Cuánto tiempo le gustaría aplicar ban al usuario? (days)"
         suspend_duration_units: "(días)"
-        suspend_reason_label: "¿Por qué lo pospones? Este texto <b>será visible para todos</b> en la página de perfil del usuario, y además será mostrado al usuario cuando trate de ingresar en el sitio web. Mantenlo simplificado."
+        suspend_reason_label: "¿Por qué lo suspendes? Este texto <b>será visible para todos</b> en la página de perfil del usuario y se mostrará al usuario cuando intente iniciar sesión. Sé conciso."
         suspend_reason: "Causa"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todos los posts"
         delete_all_posts_confirm: "Estás a punto de borrar %{posts} posts y %{topics} temas. ¿Estás seguro?"
         suspend: "Suspender"
-        unsuspend: "Quitar ban"
-        suspended: "¿Baneado?"
+        unsuspend: "Quitar suspensión"
+        suspended: "¿Suspendido?"
         moderator: "¿Moderador?"
         admin: "¿Administrador?"
         blocked: "¿Bloqueado?"
@@ -1870,8 +1874,13 @@ es:
         approve_success: "Usuario aprobado y correo electrónico enviado con instrucciones para la activación."
         approve_bulk_success: "¡Perfecto! Todos los usuarios seleccionados han sido aprobados y notificados."
         time_read: "Tiempo de lectura"
+        anonymize: "Anonimizar usuario"
+        anonymize_confirm: "¿SEGURO que quieres hacer anónima esta cuenta? Esto cambiará el nombre de usuario y el email, y reseteará toda la información de perfil."
+        anonymize_yes: "Sí, hacer anónima esta cuenta."
+        anonymize_failed: "Hubo un problema al hacer anónima la cuenta."
         delete: "Borrar usuario"
         delete_forbidden_because_staff: "Administradores y moderadores no pueden ser eliminados"
+        delete_posts_forbidden_because_staff: "No se pueden eliminar todos los posts de admins y moderadores."
         delete_forbidden:
           one: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} día, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
           other: "Los usuarios no se pueden borrar si han sido registrados hace más de %{count} días, o si tienen publicaciones. Borra todas publicaciones antes de tratar de borrar un usuario."
@@ -1978,6 +1987,7 @@ es:
         none: 'ninguno'
         no_results: "Ningún resultado encontrado"
         clear_filter: "Limpiar filtro"
+        add_url: "añadir URL"
         categories:
           all_results: 'Todo'
           required: 'Requerido'

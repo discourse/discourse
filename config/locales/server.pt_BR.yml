@@ -71,6 +71,8 @@ pt_BR:
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
     not_enough_space_on_disk: "Não há espaço suficiente no disco para carregar este backup."
   not_logged_in: "Você precisa estar conectado para fazer isso."
+  not_found: "A URL ou recurso solicitado não pôde ser encontrado."
+  invalid_access: "Você não tem permissão para ver o recurso solicitado."
   read_only_mode_enabled: "O site está em modo somente leitura. As interações estão desativadas."
   too_many_replies:
     one: "Lamentamos, mas usuários novos estão temporariamente limitados a 1 resposta no mesmo tópico."
@@ -207,6 +209,8 @@ pt_BR:
           attributes:
             password:
               common: "é uma das 10000 senhas mais comuns. Por favor, use uma senha mais segura."
+              same_as_username: "é igual o seu nome de usuário. Por favor use uma senha mais segura."
+              same_as_email: "é igual o seu email. Por favor use uma senha mais segura."
             ip_address:
               signup_not_allowed: "Cadastro não é permitido a partir desta conta."
         color_scheme_color:
@@ -1491,6 +1495,7 @@ pt_BR:
     body_blank: "body está em branco"
   color_schemes:
     base_theme_name: "Base"
+  about: "Sobre"
   guidelines: "Diretrizes"
   privacy: "Privacidade"
   edit_this_page: "Editar esta página"

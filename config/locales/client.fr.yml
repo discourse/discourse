@@ -125,6 +125,7 @@ fr:
     daily: "quotidiennes"
     weekly: "hebdomadaires"
     every_two_weeks: "bi-mensuelles"
+    every_three_days: "tous les trois jours"
     max_of_count: "maximum sur {{count}}"
     character_count:
       one: "{{count}} caractère"
@@ -401,8 +402,9 @@ fr:
       email_digests:
         title: "Quand je ne visite pas ce site, m'envoyer un résumé des nouveautés par courriel:"
         daily: "quotidien"
+        every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
-        every_two_weeks: "tous les 15 jours"
+        every_two_weeks: "toutes les deux semaines"
       email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
@@ -459,6 +461,7 @@ fr:
         too_short: "Votre mot de passe est trop court."
         common: "Ce mot de passe est trop commun."
         same_as_username: "Votre mot de passe est le même que votre pseudo."
+        same_as_email: "Votre mot de passe est le même que votre adresse mail."
         ok: "Votre mot de passe semble correct."
         instructions: "Au moins %{count} caractères."
       associated_accounts: "Connexions"
@@ -569,6 +572,7 @@ fr:
       requires_invite: "Désolé, l'accès à ce forum est sur invitation seulement."
       not_activated: "Vous ne pouvez pas vous encore vous connecter. Nous avons envoyé un courriel d'activation à <b>{{sentTo}}</b>. Merci de suivre les instructions afin d'activer votre compte."
       not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
+      admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter comme administrateur depuis cette adresse IP."
       resend_activation_email: "Cliquez ici pour envoyer à nouveau le courriel d'activation."
       sent_activation_email_again: "Nous venons d'envoyer un nouveau courriel d'activation à <b>{{currentEmail}}</b>. Il peut prendre quelques minutes à arriver; n'oubliez pas de vérifier votre répertoire spam."
       google:
@@ -602,9 +606,6 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
-      min_length:
-        need_more_for_title: "{{n}} caractères restant pour le titre"
-        need_more_for_reply: "{{n}} restants"
       error:
         title_missing: "Le titre est obligatoire."
         title_too_short: "Le titre doit avoir au moins {{min}} caractères"
@@ -726,6 +727,7 @@ fr:
         close_topics: "Fermer les sujets"
         archive_topics: "Sujets archivés"
         notification_level: "Modifier le niveau de notification"
+        choose_new_category: "Choisissez la nouvelle catégorie pour les sujets :"
         selected:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
@@ -1264,7 +1266,7 @@ fr:
     posts_lowercase: "messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |
-      Ce sujet a {count, plural, one {1 message} other {# messages}}  {ratio, select,
+      Ce sujet a {count, plural, one {1 réponse} other {# réponses}}  {ratio, select,
       low {avec un haut ratio de J'aime/Message}
       med {avec un très haut ratio J'aime/Message}
       high {avec un énorme ratio J'aime/Message}
@@ -1345,6 +1347,7 @@ fr:
           title: "Top Hebdomadaire"
         daily:
           title: "Top Quotidien"
+        all: "depuis toujours"
         this_year: "Cette année"
         this_month: "Ce mois-ci"
         this_week: "Cette semaine"
@@ -1741,6 +1744,7 @@ fr:
             delete_topic: "supprimer le sujet"
             delete_post: "supprimer le message"
             impersonate: "incarner"
+            anonymize_user: "rendre l'utilisateur anonyme"
         screened_emails:
           title: "Courriels affichés"
           description: "Lorsque quelqu'un essaye de créé un nouveau compte, les adresses de courriel suivantes seront vérifiées et l'inscription sera bloquée, ou une autre action sera réalisée."
@@ -1874,8 +1878,13 @@ fr:
         approve_success: "Utilisateur approuvé et un courriel avec les instructions d'activation a été envoyé."
         approve_bulk_success: "Bravo! Tous les utlisateurs sélectionnés ont été approuvés et notifiés."
         time_read: "Temps de lecture"
+        anonymize: "Rendre l'utilisateur anonyme"
+        anonymize_confirm: "Êtes-vous sûr de vouloir rendre ce compte anonyme ? Ceci entraînera la modification du pseudo et de l'adresse courriel, et réinitialisera les informations du profil."
+        anonymize_yes: "Oui, rendre ce compte anonyme"
+        anonymize_failed: "Il y a eu un problème lors de l'anonymisation de ce compte."
         delete: "Supprimer l'utilisateur"
         delete_forbidden_because_staff: "Administrateurs et modérateurs ne peuvent pas être supprimés."
+        delete_posts_forbidden_because_staff: "Vous ne pouvez pas supprimer tous les messages des administrateurs ou des modérateurs."
         delete_forbidden:
           one: "Les utilisateurs ne peuvent pas être supprimés s'ils ont posté des messages Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jour ne peut pas être supprimé.)"
           other: "Les utilisateurs ne peuvent pas être supprimés s'ils ont crée des messages. Supprimer tous les messages avant d'essayer de supprimer un utilisateur. (Les messages plus vieux que %{count} jours ne peuvent pas être supprimés.)"
@@ -1982,6 +1991,7 @@ fr:
         none: 'rien'
         no_results: "Aucun résultat trouvé."
         clear_filter: "Effacer"
+        add_url: "ajouter URL"
         categories:
           all_results: 'Toutes'
           required: 'Requis'

@@ -391,7 +391,6 @@ nl:
       email_digests:
         daily: "dagelijks"
         weekly: "wekelijks"
-        every_two_weeks: "elke twee weken"
       email_always: "E-mailnotificaties niet onderdrukken als ik actief ben op de site"
       other_settings: "Overige"
       categories_settings: "Categorieën"
@@ -584,9 +583,6 @@ nl:
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Jouw topic lijkt op..."
       drafts_offline: "concepten offline"
-      min_length:
-        need_more_for_title: "Nog {{n}} tekens nodig voor de titel"
-        need_more_for_reply: "{{n}} te gaan"
       error:
         title_missing: "Titel is verplicht"
         title_too_short: "Titel moet uit minstens {{min}} tekens bestaan"
@@ -1195,12 +1191,6 @@ nl:
     posts: "Berichten"
     posts_lowercase: "berichten"
     posts_long: "er zijn {{number}} berichten in deze topic"
-    posts_likes_MF: |
-      Dit topic heeft {count, plural, one {1 post} other {# posts}} {ratio, select,
-        low {met een hoge likes per post verhouding}
-        med {met een erg hoge likes per post verhouding}
-        high {met een zeer hoge likes per post verhouding}
-        other {}}
     original_post: "Originele bericht"
     views: "Bekeken"
     views_lowercase: "weergaves"
