@@ -171,6 +171,6 @@ If anything needs to be improved in this guide, feel free to ask on [meta.discou
  [meta]: https://meta.discourse.org
    [do]: https://www.digitalocean.com/?refcode=5fa48ac82415
   [lts]: https://wiki.ubuntu.com/LTS
-  [jet]: http://www.mailjet.com/pricing
+  [jet]: https://www.mailjet.com/pricing
   [gun]: http://www.mailgun.com/
   [put]: http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html
