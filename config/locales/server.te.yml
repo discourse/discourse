@@ -503,6 +503,7 @@ te:
     page_view_total_reqs:
       title: "మొత్తం"
       xaxis: "రోజు"
+      yaxis: "మొత్తం API అభ్యర్ధనలు"
     http_background_reqs:
       title: "వెనుతలం"
       xaxis: "రోజు"
@@ -592,6 +593,7 @@ te:
     max_topics_in_first_day: "ఈ సైట్ లో వినియోగదారు మొదటి రోజున గరిష్ఠంగా ఎన్ని విషయాలకి అనుమతి ఉంది "
     max_replies_in_first_day: "ఈ సైట్ లో వినియోగదారు మొదటి రోజున గరిష్ఠంగా ఎన్ని జవాబులకు అనుమతి ఉంది "
     allow_moderators_to_create_categories: "మధ్యవర్తులు కొత్త వర్గాలు సృష్టించడానికి అనుమతించు"
+    topics_per_period_in_top_summary: "అప్రమేయ అగ్ర విషయాల సారాంశంలో చూపే అగ్ర విషయాల సంఖ్య."
     invite_expiry_days: "వాడుకరుల ఆహ్వాన కీ ఎన్ని రోజులు చెల్లుతుంది"
     min_password_length: "సంకేతపదపు కనీస పొడవు."
     max_likes_per_day: "వినియోగదారులు గరిష్ఠంగా రోజుకు చేయగలిగే లైక్‌ల సంఖ్య"

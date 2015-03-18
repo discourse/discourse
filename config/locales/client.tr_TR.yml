@@ -109,6 +109,7 @@ tr_TR:
     daily: "günlük"
     weekly: "haftalık"
     every_two_weeks: "her iki haftada bir"
+    every_three_days: "her üç gün"
     max_of_count: "azami {{count}}"
     character_count:
       other: "{{count}} karakter"
@@ -378,8 +379,9 @@ tr_TR:
       email_digests:
         title: "Burayı ziyaret etmediğim zamanlarda bana yeni şeylerin özetini içeren bir email yolla:"
         daily: "günlük"
+        every_three_days: "her üç gün"
         weekly: "haftalık"
-        every_two_weeks: "her iki haftada bir"
+        every_two_weeks: "her iki hafta"
       email_direct: "Birisi gönderime cevap verdiğinde, benden alıntı yaptığında ya da benden @username bahsettiğinde bana bir email at"
       email_private_messages: "Biri bana özel mesaj yazdığında bana bir email at"
       email_always: "Sayfada etkin olduğum anlarda da e-posta bildirimleri yollamaya devam et"
@@ -432,6 +434,7 @@ tr_TR:
         too_short: "Parolanız çok kısa."
         common: "Bu parola çok yaygın."
         same_as_username: "Şifreniz kullanıcı adınızla aynı."
+        same_as_email: "Şifreniz e-posta adresinizle aynı."
         ok: "Parolanız uygun gözüküyor."
         instructions: "En az %{count} karakter."
       associated_accounts: "Girişler"
@@ -542,6 +545,7 @@ tr_TR:
       requires_invite: "Üzgünüz, bu foruma sadece davetliler erişebilir."
       not_activated: "Henüz giriş yapamazsınız. Hesabınızı etkinleştirmek için lütfen daha önceden <b>{{sentTo}}</b> adresine yollanan etkinleştirme e-postasındaki açıklamaları okuyun."
       not_allowed_from_ip_address: "Bu IP adresiyle giriş yapamazsınız."
+      admin_not_allowed_from_ip_address: "Bu IP adresinden admin olarak giriş yapamazsınız."
       resend_activation_email: "Etkinleştirme e-postasını tekrar yollamak için buraya tıklayın. "
       sent_activation_email_again: "<b>{{currentEmail}}</b> adresine yeni bir etkinleştirme e-postası yolladık. Bu e-postanın size ulaşması bir kaç dakika sürebilir; spam klasörüzü kontrol etmeyi unutmayın."
       google:
@@ -575,9 +579,6 @@ tr_TR:
       saved_local_draft_tip: "yerele kaydedildi"
       similar_topics: "Konunuz bu konuya benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
-      min_length:
-        need_more_for_title: "başlığa gitmek için {{n}}"
-        need_more_for_reply: "{{n}} adet kaldı"
       error:
         title_missing: "Başlık gerekli"
         title_too_short: "Başlık en az {{min}} karakter olmalı"
@@ -699,6 +700,7 @@ tr_TR:
         close_topics: "Konuları Kapat"
         archive_topics: "Konuları Arşivle"
         notification_level: "Bildirim Seviyesini Değiştir"
+        choose_new_category: "Konular için yeni bir kategori seçin:"
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
       none:
@@ -1197,12 +1199,6 @@ tr_TR:
     posts: "Gönderi"
     posts_lowercase: "gönderi"
     posts_long: "bu konuda {{number}} gönderi var"
-    posts_likes_MF: |
-      Bu konuda {ratio, select,
-        low {beğeni/gönderi oranı yüksek}
-        med {beğeni/gönderi oranı çok yüksek}
-        high {beğeni/gönderi oranı aşırı yüksek}
-        other {}} {count, plural, one {1 gönderi} other {# gönderi}} var
     original_post: "Ana Gönderi"
     views: "Görüntüleme"
     views_lowercase: "görüntüleme"
@@ -1279,6 +1275,7 @@ tr_TR:
           title: "Haftanın En Popülerleri"
         daily:
           title: "Günün En Popülerleri"
+        all: "Tüm Zamanlar"
         this_year: "Bu yıl"
         this_month: "Bu ay"
         this_week: "Bu hafta"
@@ -1670,6 +1667,7 @@ tr_TR:
             delete_topic: "konuyu sil"
             delete_post: "gönderiyi sil"
             impersonate: "rolüne gir"
+            anonymize_user: "anonim kullanıcı"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir aksiyon alınacak."
@@ -1799,8 +1797,13 @@ tr_TR:
         approve_success: "Kullanıcı onaylandı ve etkinleştirme bilgilerini içeren bir e-posta yollandı."
         approve_bulk_success: "Tebrikler! Seçilen tüm kullanıcılar onaylandı ve bilgilendirildi."
         time_read: "Okunma Zamanı"
+        anonymize: "Anonim Kullanıcı"
+        anonymize_confirm: "Bu hesabı anonim yapmak istediğinize EMİN misiniz? Bu kullanıcı adı ve e-postayı değiştirip, tüm profil bilgilerini sıfırlayacaktır."
+        anonymize_yes: "Evet, bu hesap anonim"
+        anonymize_failed: "Hesap anonim yapılırken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
         delete_forbidden_because_staff: "Adminler ve moderatörler silinemez."
+        delete_posts_forbidden_because_staff: "Admin ve moderatörlerin tüm mesajları silinemez."
         delete_forbidden:
           other: "Gönderisi olan kullanıcılar silinemez. Kullanıcıyı silmeden önce tüm gönderilerini silin. (%{count} günden eski gönderiler silinemez.)"
         cant_delete_all_posts:
@@ -1904,6 +1907,7 @@ tr_TR:
         none: 'Hiçbiri'
         no_results: "Hiç sonuç bulunamadı."
         clear_filter: "Temizle"
+        add_url: "URL ekle"
         categories:
           all_results: 'Hepsi'
           required: 'Gerekli'

@@ -147,6 +147,7 @@ pt_BR:
       user_count: "Novos Usuários"
       active_user_count: "Usuários Ativos"
       contact: "Contate-nos"
+      contact_info: "Em caso de um evento crítico ou de urgência afetando este site, por favor contacte-nos em %{contact_info}."
     bookmarked:
       title: "Favorito"
       clear_bookmarks: "Limpar Favoritos"
@@ -401,7 +402,6 @@ pt_BR:
         title: "Quando eu não visitar aqui, envie um resumo via email do que há de novo:"
         daily: "diariamente"
         weekly: "semanalmente"
-        every_two_weeks: "duas em duas semanas"
       email_direct: "Me envie um email quando alguém me citar, responder ao meu post, ou mencionar meu @nomedeusuário"
       email_private_messages: "Me envie um email quando alguém me enviar mensagem particular"
       email_always: "Não suprimir notificações de email quando eu estiver ativo no site"
@@ -457,6 +457,8 @@ pt_BR:
         title: "Senha"
         too_short: "A sua senha é muito curta."
         common: "Essa senha é muito comum."
+        same_as_username: "Sua senha é a mesma que o seu nome de usuário."
+        same_as_email: "Sua senha é a mesma que o seu email."
         ok: "A sua senha parece boa."
         instructions: "Deve ter pelo menos %{count} caracteres."
       associated_accounts: "Logins"
@@ -567,6 +569,7 @@ pt_BR:
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Você não pode entrar ainda. Nós lhe enviamos um email de ativação anteriormente no endereço <b>{{sentTo}}</b>. Por favor siga as instruções contidas neste email para ativar a sua conta."
       not_allowed_from_ip_address: "Você não pode logar deste endereço IP."
+      admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
       resend_activation_email: "Clique aqui para enviar o email de ativação novamente."
       sent_activation_email_again: "Nós enviamos mais um email de ativação para você no endereço <b>{{currentEmail}}</b>. Pode ser que demore alguns minutos para chegar; verifique sempre sua caixa de spams."
       google:
@@ -600,9 +603,6 @@ pt_BR:
       saved_local_draft_tip: "salvo localmente"
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
-      min_length:
-        need_more_for_title: "Escreva no mínimo mais {{n}} caracteres"
-        need_more_for_reply: "{{n}} faltando"
       error:
         title_missing: "Título é obrigatório"
         title_too_short: "O título tem que ter no mínimo {{min}} caracteres"
@@ -1041,6 +1041,7 @@ pt_BR:
         people:
           off_topic: "{{icons}} marcado como off-topic"
           spam: "{{icons}} marcado como spam"
+          spam_with_url: "{{icons}} marcou <a href='{{postUrl}}'>isto como spam</a>"
           inappropriate: "{{icons}} marcado como inapropriado"
           notify_moderators: "{{icons}} notificaram os moderadores"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notificaram os moderadores</a>"
@@ -1256,12 +1257,6 @@ pt_BR:
     posts: "Mensagens"
     posts_lowercase: "posts"
     posts_long: "há {{number}} mensagens neste tópico"
-    posts_likes_MF: |
-      Este tópico tem {count, plural, one {1 post} other {# posts}} {ratio, select,
-        baixo {with a high post to like ratio}
-        médio {with a very high post to like ratio}
-        alto {with an extremely high post to like ratio}
-        outro {}}
     original_post: "Resposta original"
     views: "Visualizações"
     views_lowercase: "visualizações"
@@ -1338,6 +1333,7 @@ pt_BR:
           title: "Melhores da Semana"
         daily:
           title: "Melhores do Dia"
+        all: "Todo Tempo"
         this_year: "Neste ano"
         this_month: "Neste mes"
         this_week: "Nesta semana"
@@ -1381,6 +1377,7 @@ pt_BR:
         backups: "backups"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
+        page_views: "Solicitações de API"
         show_traffic_report: "Mostrar Relatório de Tráfego Detalhado"
         reports:
           today: "Hoje"
@@ -1558,6 +1555,7 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza de que quer reverter o banco de dados para o estado anterior?"
       export_csv:
+        user_archive_confirm: "Tem certeza que você quer baixar os seus tópicos?"
         success: "Exportação iniciada, você será notificado por mensagem particular quando o processo estiver completo."
         failed: "Falha na exportação. Por favor verifique os logs."
         rate_limit_error: "O download de posts pode ser feito apenas uma vez por dia, por favor, tente novamente amanhã."
@@ -1568,6 +1566,9 @@ pt_BR:
           screened_email: "Exportar lista completa de emails filtrados em formato CSV."
           screened_ip: "Exportar lista completa de IPs filtrados em formato CSV."
           screened_url: "Exportar lista completa de URLs filtradas em formato CSV."
+      invite:
+        button_text: "Enviar Convites"
+        button_title: "Enviar Convites"
       customize:
         title: "Personalizar"
         long_title: "Personalizações do Site"
@@ -1969,6 +1970,7 @@ pt_BR:
         none: 'nenhum'
         no_results: "Nenhum resultado encontrado."
         clear_filter: "Limpar"
+        add_url: "adicionar URL"
         categories:
           all_results: 'Todas'
           required: 'Requerido'
@@ -2008,6 +2010,7 @@ pt_BR:
         delete: Remover
         delete_confirm: Tem certeza de que deseja remover este emblema?
         revoke: Revogar
+        reason: Motivo
         revoke_confirm: Tem certeza de que deseja revogar este emblema?
         edit_badges: Editar Emblemas
         grant_badge: Conceder Emblema
@@ -2158,6 +2161,8 @@ pt_BR:
         autobiographer:
           name: Autobiógrafo
           description: Preencher informações do <a href="/my/preferences">perfil</a>
+        anniversary:
+          description: Membro ativo por um ano, postou ao menos uma vez
         nice_post:
           name: Post Legal
           description: Recebeu 10 curtidas em uma resposta. Esse emblema pode ser concedido várias vezes.

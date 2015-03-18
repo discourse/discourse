@@ -125,6 +125,7 @@ it:
     daily: "giornaliero"
     weekly: "settimanale"
     every_two_weeks: "bisettimanale"
+    every_three_days: "ogni tre giorni"
     max_of_count: "massimo di {{count}}"
     character_count:
       one: "{{count}} carattere"
@@ -139,21 +140,21 @@ it:
       our_moderators: "I Nostri Moderatori"
       stat:
         all_time: "Sempre"
-        last_7_days: "Ultimi 7 giorni"
-        last_30_days: "Ultimi 30 Giorni"
+        last_7_days: "ultimi 7 giorni"
+        last_30_days: "ultimi 30 giorni"
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
       user_count: "Nuovi Utenti"
       active_user_count: "Utenti Attivi"
       contact: "Contattaci"
-      contact_info: "In caso di un problema critico o questione urgente su questo sito, per favore contattaci su %{contact_info}."
+      contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
     bookmarked:
       title: "Segnalibro"
       clear_bookmarks: "Cancella Segnalibri"
       help:
-        bookmark: "Clicca per aggiungere ai segnalibri il primo post su questo topic"
-        unbookmark: "Clicca per rimuovere tutti i segnalibri in questo argomento"
+        bookmark: "Clicca per aggiungere un segnalibro al primo messaggio di questo argomento"
+        unbookmark: "Clicca per rimuovere tutti i segnalibri a questo argomento"
     bookmarks:
       not_logged_in: "spiacenti, devi essere connesso per aggiungere segnalibri ai messaggi"
       created: "hai inserito questo messaggio nei segnalibri."
@@ -401,8 +402,9 @@ it:
       email_digests:
         title: "Quando non visito il sito, invia un riassunto delle novità per email: "
         daily: "ogni giorno"
+        every_three_days: "ogni tre giorni"
         weekly: "ogni settimana"
-        every_two_weeks: "bisettimanale"
+        every_two_weeks: "ogni due settimane"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio o menziona il mio @nome"
       email_private_messages: "Inviami un'email quando qualcuno mi scrive un messaggio privato"
       email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"
@@ -459,6 +461,7 @@ it:
         too_short: "La password è troppo breve."
         common: "Questa password è troppo comune."
         same_as_username: "La tua password è uguale al tuo nome utente."
+        same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
         instructions: "Minimo %{count} caratteri."
       associated_accounts: "Login"
@@ -569,6 +572,7 @@ it:
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
       not_activated: "Non puoi ancora effettuare l'accesso. Abbiamo inviato un'email di attivazione a <b>{{sentTo}}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
       not_allowed_from_ip_address: "Non puoi collegarti con questo indirizzo IP."
+      admin_not_allowed_from_ip_address: "Non puoi collegarti come amministratore dal quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>{{currentEmail}}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella dello spam."
       google:
@@ -602,9 +606,6 @@ it:
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
-      min_length:
-        need_more_for_title: "{{n}} per andare al titolo"
-        need_more_for_reply: "ne mancano {{n}}"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -726,6 +727,7 @@ it:
         close_topics: "Chiudi Argomenti"
         archive_topics: "Archivia Argomenti"
         notification_level: "Cambia Livello Notifiche"
+        choose_new_category: "Scegli la nuova categoria per gli argomenti:"
         selected:
           one: "Hai selezionato <b>1</b> argomento."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
@@ -858,7 +860,7 @@ it:
           description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
       actions:
         recover: "Ripristina Argomento"
-        delete: "Cancella l'argomento"
+        delete: "Cancella Argomento"
         open: "Apri Argomento"
         close: "Chiudi Argomento"
         auto_close: "Chiudi Automaticamente"
@@ -981,7 +983,7 @@ it:
         attachment_too_large: "Spiacenti, il file che stai tentando di caricare è troppo grande (il massimo consentito è {{max_size_kb}}kb)."
         file_too_large: "Spiacenti, il file che stai cercando di caricare è troppo grande (la grandezza massima è {{max_size_kb}}kb)"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
-        too_many_dragged_and_dropped_files: "Mi dispiace, puoi trascinare e spostare solo 10 file alla volta."
+        too_many_dragged_and_dropped_files: "Spiacenti, puoi trascinare e rilasciare solo 10 file alla volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
@@ -1260,11 +1262,7 @@ it:
     posts_lowercase: "messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
     posts_likes_MF: |
-      Questo argomento ha {count, plural, one {1 messaggio} other {# messaggi}} {ratio, select,
-        low {con un alto rapporto "mi piace" / messaggi}
-        med {con un altissimo rapporto "mi piace" / messaggi}
-        high {con un estremamente alto rapporto "mi piace" / messaggi}
-        other {}}
+      Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
     views_lowercase: "visualizzazioni"
@@ -1341,6 +1339,7 @@ it:
           title: "Migliori della settimana"
         daily:
           title: "Migliori del giorno"
+        all: "Senza limiti di tempo"
         this_year: "Quest'anno"
         this_month: "Questo mese"
         this_week: "Questa settimana"
@@ -1504,12 +1503,12 @@ it:
         note_html: "Mantieni <strong>segreta</strong> questa chiave, tutti gli utenti che la possiedono possono creare messaggi per conto di altri."
       plugins:
         title: "Plugin"
-        installed: "Plugin installati"
+        installed: "Plugin Installati"
         name: "Nome"
         none_installed: "Non hai installato nessun plugin."
         version: "Versione"
-        change_settings: "Cambia le impostazioni"
-        howto: "Come installare i plugin?"
+        change_settings: "Cambia Impostazioni"
+        howto: "Come installo i plugin?"
       backups:
         title: "Backup"
         menu:
@@ -1563,7 +1562,7 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
-        user_archive_confirm: "Sei sicuro di voler scaricare i tuoi post?"
+        user_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio privato al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, prova ancora domani."
@@ -1737,6 +1736,7 @@ it:
             delete_topic: "cancella argomento"
             delete_post: "cancella messaggio"
             impersonate: "impersona"
+            anonymize_user: "rendi anonimo l'utente "
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."
@@ -1870,8 +1870,13 @@ it:
         approve_success: "Utente approvato ed email inviata con istruzioni di attivazione."
         approve_bulk_success: "Riuscito! Tutti gli utenti selezionati sono stati approvati e notificati."
         time_read: "Tempo di lettura"
+        anonymize: "Rendi Anonimo Utente "
+        anonymize_confirm: "Sei SICURO di voler rendere anonimo questo account? Verrà cambiato il nome utente e la email e reimpostate tutte le informazioni del profilo."
+        anonymize_yes: "Sì, rendi anonimo questo account"
+        anonymize_failed: "Si è verificato un problema nel rendere anonimo l'account."
         delete: "Cancella utente"
         delete_forbidden_because_staff: "Amministratori e moderatori non possono essere cancellati."
+        delete_posts_forbidden_because_staff: "Impossibile cancellare tutti i messaggi degli amministratori e dei moderatori."
         delete_forbidden:
           one: "Non è possibile cancellare utenti se hanno post attivi. Elimina tutti i posti prima di cancellare un utente (post più vecchi di %{count} giorni non possono essere cancellati)."
           other: "Non è possibile cancellare utenti se hanno messaggi. Elimina tutti i messaggi prima di cancellare un utente (i messaggi più vecchi di %{count} giorni non possono essere cancellati)."
@@ -1978,6 +1983,7 @@ it:
         none: 'nessuno'
         no_results: "Nessun risultato trovato."
         clear_filter: "Pulisci"
+        add_url: "aggiungi URL"
         categories:
           all_results: 'Tutti'
           required: 'Obbligatorie'
@@ -2013,7 +2019,7 @@ it:
           modal_title: Raggruppamento Targhette
         granted_by: Assegnata Da
         granted_at: Assegnata in data
-        reason_help: (Un link a un post o argomento)
+        reason_help: (Un collegamento a un messaggio o argomento)
         save: Salva
         delete: Cancella
         delete_confirm: Sei sicuro di voler cancellare questa targhetta?
@@ -2106,7 +2112,7 @@ it:
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
       actions:
         title: 'Azioni'
-        bookmark_topic: '<b>f</b> Segna argomento preferito'
+        bookmark_topic: '<b>f</b> Aggiungi/togli argomento nei segnalibri'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
         share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
@@ -2172,8 +2178,8 @@ it:
           name: Autobiografo
           description: Completato le informazioni del tuo <a href="/my/preferences">profilo</a> utente
         anniversary:
-          name: Anniversario
-          description: Membro attivo per un anno, ha postato almeno una volta
+          name: Compleanno
+          description: Membro attivo da un anno, ha scritto almeno una volta
         nice_post:
           name: Buon Messaggio
           description: Ricevuto 10 "mi piace" in un messaggio. Questa targhetta può essere assegnata più volte.

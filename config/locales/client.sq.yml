@@ -357,7 +357,6 @@ sq:
       email_digests:
         daily: "ditore"
         weekly: "javore"
-        every_two_weeks: "çdo dy javë"
       email_always: "Do not suppress email notifications when I am active on the site"
       other_settings: "Tjetër"
       categories_settings: "Kategoritë"
@@ -540,9 +539,6 @@ sq:
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
-      min_length:
-        need_more_for_title: "{{n}} to go for the title"
-        need_more_for_reply: "{{n}} shko tek"
       error:
         title_missing: "Title is required"
         title_too_short: "Title must be at least {{min}} characters"
@@ -1183,12 +1179,6 @@ sq:
     posts: "Postime"
     posts_lowercase: "postime"
     posts_long: "there are {{number}} posts in this topic"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
     original_post: "Postimi Origjinal"
     views: "Shikimet"
     views_lowercase: "shikime"

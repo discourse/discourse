@@ -125,6 +125,7 @@ de:
     daily: "täglich"
     weekly: "wöchentlich"
     every_two_weeks: "jede zweite Woche"
+    every_three_days: "alle drei Tage"
     max_of_count: "von max. {{count}}"
     character_count:
       one: "{{count}} Zeichen"
@@ -401,8 +402,9 @@ de:
       email_digests:
         title: "Schicke eine E-Mail mit Neuigkeiten, wenn ich länger nicht hier bin:"
         daily: "täglich"
+        every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
-        every_two_weeks: "alle zwei Wochen"
+        every_two_weeks: "alle drei Tage"
       email_direct: "Schicke eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
       email_private_messages: "Schicke eine E-Mail, wenn mir jemand eine private Nachricht sendet."
       email_always: "E-Mail-Benachrichtigungen nicht unterdrücken, während ich im Forum aktiv bin"
@@ -459,6 +461,7 @@ de:
         too_short: "Dein Passwort ist zu kurz."
         common: "Das Passwort wird zu häufig verwendet."
         same_as_username: "Dein Passwort entspricht deinem Benutzernamen."
+        same_as_email: "Dein Passwort entspricht deiner E-Mail-Adresse."
         ok: "Dein Passwort sieht in Ordnung aus."
         instructions: "Mindestens %{count} Zeichen."
       associated_accounts: "Anmeldeinformationen"
@@ -568,7 +571,8 @@ de:
       awaiting_approval: "Dein Konto wurde noch nicht von einem Mitarbeiter genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>{{sentTo}}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
-      not_allowed_from_ip_address: "Du kannst dich mit dieser IP-Adresse nicht anmelden."
+      not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
+      admin_not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht als Administrator anmelden."
       resend_activation_email: "Klicke hier, um eine neue Aktivierungsmail zu schicken."
       sent_activation_email_again: "Wir haben dir eine weitere E-Mail zur Aktivierung an <b>{{currentEmail}}</b> geschickt. Es könnte ein paar Minuten dauern, bis diese ankommt; sieh auch im Spam-Ordner nach."
       google:
@@ -602,9 +606,6 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit..."
       drafts_offline: "Entwürfe offline"
-      min_length:
-        need_more_for_title: "im Titel fehlen noch {{n}} Zeichen"
-        need_more_for_reply: "noch {{n}} Zeichen"
       error:
         title_missing: "Titel ist erforderlich"
         title_too_short: "Titel muss mindestens {{min}} Zeichen lang sein"
@@ -1262,11 +1263,7 @@ de:
     posts_lowercase: "Beiträge"
     posts_long: "dieses Thema enthält {{number}} Beiträge"
     posts_likes_MF: |
-      Dieses Thema hat {count, plural, one {1 Beitrag} other {# Beiträge}} {ratio, select,
-        low {mit einem hohen Verhältnis von Likes zu Beiträgen}
-        med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen}
-        high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen}
-        other {}}
+      Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
     views_lowercase: "Aufrufe"
@@ -1343,6 +1340,7 @@ de:
           title: "Angesagt wöchentlich"
         daily:
           title: "Angesagt täglich"
+        all: "Gesamte Zeit"
         this_year: "Dieses Jahr"
         this_month: "Dieser Monat"
         this_week: "Diese Woche"
@@ -1980,6 +1978,7 @@ de:
         none: 'keine'
         no_results: "Keine Ergebnisse gefunden."
         clear_filter: "Filter zurücksetzen"
+        add_url: "URL hinzufügen"
         categories:
           all_results: 'Alle'
           required: 'Erforderlich'

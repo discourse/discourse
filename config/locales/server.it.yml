@@ -214,6 +214,7 @@ it:
             password:
               common: "è una delle 10000 password più comuni. Usa una password più sicura."
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
+              same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         color_scheme_color:

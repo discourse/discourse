@@ -68,6 +68,7 @@ ja:
           other: "%{count} 日前"
     share:
       topic: 'このトピックのリンクをシェアする'
+      post: 'ポスト #%{postNumber}'
       close: '閉じる'
       twitter: 'Twitter でこのリンクを共有する'
       facebook: 'Facebook でこのリンクを共有する'
@@ -106,6 +107,7 @@ ja:
     daily: "毎日"
     weekly: "毎週"
     every_two_weeks: "隔週"
+    every_three_days: "３日毎"
     max_of_count: "最大 {{count}}"
     character_count:
       other: "{{count}} 文字"
@@ -120,7 +122,14 @@ ja:
       stat:
         all_time: "All Time"
         last_7_days: "過去7日間"
+        last_30_days: "過去30日間"
       topic_count: "トピック"
+      post_count: "ポスト"
+      user_count: "新規ユーザ"
+      active_user_count: "アクティブユーザ"
+    bookmarked:
+      title: "ブックマーク"
+      clear_bookmarks: "ブックマークをクリア"
     bookmarks:
       not_logged_in: "ポストをブックマークするには、ログインする必要があります"
       created: "このポストをブックマークしました"
@@ -223,6 +232,7 @@ ja:
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
+      download_archive: "自分の投稿をダウンロード"
       private_message: "プライベートメッセージ"
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
@@ -232,6 +242,8 @@ ja:
       invited_by: "招待者"
       trust_level: "トラストレベル"
       notifications: "通知"
+      dismiss_notifications: "全て既読にする"
+      dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
@@ -243,6 +255,7 @@ ja:
       admin_tooltip: "このユーザは管理者であり"
       suspended_notice: "このユーザは {{date}} までサスペンド状態です。"
       suspended_reason: "理由: "
+      mailing_list_mode: "投稿される度にメールで通知を受け取る(ミュートにしたトピック、カテゴリー以外)"
       watched_categories: "参加中"
       watched_categories_instructions: "このカテゴリに新しく投稿されたトピックを自動的に参加します。このカテゴリに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
       tracked_categories: "トラック中"
@@ -284,8 +297,10 @@ ja:
         error: "メールアドレス変更中にエラーが発生しました。既にこのアドレスが使われているのかもしれません。"
         success: "このアドレスにメールを送信しました。メールの指示に従って確認処理を行ってください。"
       change_avatar:
+        title: "プロフィール画像を変更"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, based on"
         refresh_gravatar_title: "グラバターを更新する"
+        letter_based: "システムプロフィール画像"
         uploaded_avatar: "カスタム画像"
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
@@ -293,12 +308,19 @@ ja:
         image_is_not_a_square: "警告: 画像が正方形ではなかったためクロップしました。"
       change_profile_background:
         title: "プロフィール背景"
+        instructions: "プロフィール背景は、幅850pxでセンタリングされます"
+      change_card_background:
+        title: "ユーザーカード背景"
+        instructions: "背景画像は、幅590pxでセンタリングされます"
       email:
         title: "メールアドレス"
+        instructions: "外部に公開されることはありません"
       name:
         title: "名前"
+        instructions: "フルネーム(任意)"
       username:
         title: "ユーザ名"
+        instructions: "空白を含まないユニークな名前を入力してください"
         global_mismatch: "既に利用されています。{{suggestion}} などはいかがでしょう？"
         not_available: "利用できません。{{suggestion}} などはいかがでしょう？"
         checking: "ユーザ名が利用可能か確認しています..."
@@ -314,12 +336,13 @@ ja:
       created: "参加時刻"
       log_out: "サインアウト"
       location: "所在地"
+      card_badge:
+        title: "ユーザーカードバッジ"
       website: "ウェブサイト"
       email_settings: "メール"
       email_digests:
         daily: "毎日"
         weekly: "毎週"
-        every_two_weeks: "隔週"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"
@@ -497,8 +520,6 @@ ja:
       saved_local_draft_tip: "ローカルに保存しました"
       similar_topics: "このトピックに似ているトピック..."
       drafts_offline: "オフラインで下書き"
-      min_length:
-        need_more_for_title: "タイトルにあと{{n}}文字必要"
       error:
         title_missing: "タイトルを入力してください。"
         title_too_short: "タイトルは{{min}}文字以上必要です。"
