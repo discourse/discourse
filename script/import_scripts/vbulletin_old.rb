@@ -1,6 +1,6 @@
+require "csv"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require "optparse"
-require "csv"
 
 class ImportScripts::VBulletinOld < ImportScripts::Base
 
