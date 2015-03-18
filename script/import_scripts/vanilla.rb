@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require "csv"
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Vanilla < ImportScripts::Base
 

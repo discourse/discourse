@@ -7,9 +7,8 @@
 # This script is tested only on Simplified Chinese Discuz! X instances
 # If you want to import data other than Simplified Chinese, email me.
 
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
-
 require 'mysql2'
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::DiscuzX < ImportScripts::Base
 
