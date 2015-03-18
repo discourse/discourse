@@ -53,6 +53,15 @@ he:
       too_short:
         one: קצר מידי (המינימום הנדרש הוא תו 1)
         other: קצר מידי (המינימום הנדרש הוא %{count} תוים)
+      wrong_length:
+        one: באורך שגוי (צריך להיות באורך תו אחד)
+        other: באורך שגוי (צריך להיות %{count} תוים)
+      other_than: "צריך להיות שונה מ-%{count}"
+    template:
+      body: 'היו בעיות עם השדות הבאים:'
+      header:
+        one: שגיאה מנעה מ-%{model} להישמר.
+        other: '%{count} שגיאות מנעו מ-%{model} להישמר.'
     embed:
       load_from_remote: "ארעה שגיאה בטעינת ההודעה הזו."
   bulk_invite:
@@ -62,6 +71,8 @@ he:
     backup_file_should_be_tar_gz: "קובץ הגיוי צריך להיות .tar.gz."
     not_enough_space_on_disk: "אין מספיק מקום על הדיסק כדי להעלות את הגיבוי הזה."
   not_logged_in: "אתה צריך להיות מחובר כדי לעשות את זה."
+  not_found: "המשאב או כתובת ה-URL המבוקשת לא נמצא/ה."
+  invalid_access: "אינך מורשה/מורשית לצפות במשאב שביקשת."
   read_only_mode_enabled: "האתר הזה במצב קריאה בלבד. פעולות אין אפשריות."
   too_many_replies:
     one: "אנחנו מצטערים, אבל משתמשים חדשים מוגבלים זמנים לתגובה אחת לאותו הנושא."
@@ -120,6 +131,7 @@ he:
     latest: "נושאים מדוברים"
     hot: "נושאים חמים"
   too_late_to_edit: "ההודעה הזו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או למחוק אותה."
+  excerpt_image: "תמונה"
   groups:
     errors:
       can_not_modify_automatic: "אתה לא יכול לשנות קבוצה אוטומטית"
@@ -198,6 +210,8 @@ he:
           attributes:
             password:
               common: "אחת מתוך 10000 הסיסמאות הנפוצות. אנא השתמשו בסיסמא בטוחה יותר."
+              same_as_username: "זהה לשם המשתמש/ת שלך. אנא השתמש/י בסיסמה בטוחה יותר."
+              same_as_email: "זהה לכתובת הדוא\"ל שלך. אנא השתמש/י בסיסמה בטוחה יותר."
             ip_address:
               signup_not_allowed: " הרשמה אינו מורשית מהחשבון הזה."
         color_scheme_color:
@@ -376,6 +390,8 @@ he:
       title: 'ספאם'
       description: 'ההודעה הזו היא פרסמות. היא לא מועילה או רלוונטית לשיחה הנוכחית, אבל קידומית באופייה.'
       long_form: 'דוגלל כספאם'
+      email_title: '"%{title}" סומן כספאם'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'לא ראוי'
       description: 'פרסום זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
@@ -447,6 +463,7 @@ he:
       xaxis: "יום"
       yaxis: "מספר ביקורים"
     signups:
+      title: "משתמשים חדשים"
       xaxis: "יום"
       yaxis: "מספר משתמשים חדשים"
     topics:
@@ -516,6 +533,46 @@ he:
       title: "נושאים מיוחסים"
       xaxis: "נושא"
       num_clicks: "לחיצות"
+    page_view_anon_reqs:
+      title: "אנונימי"
+      xaxis: "יום"
+      yaxis: "בקשות API אנונימיות"
+    page_view_logged_in_reqs:
+      title: "מחובר/ת"
+      xaxis: "יום"
+      yaxis: "בקשות API עם חיבור"
+    page_view_crawler_reqs:
+      title: "זחלן רשת"
+      xaxis: "יום"
+      yaxis: "בקשות API של זחלני רשת"
+    page_view_total_reqs:
+      title: "סה\"כ"
+      xaxis: "יום"
+      yaxis: "סך כל בקשות ה-API"
+    http_background_reqs:
+      title: "רקע"
+      xaxis: "יום"
+      yaxis: "בשקות שמשמשות לעדכונים חיים ולמעקב"
+    http_2xx_reqs:
+      title: "סטטוס 2xx (OK)"
+      xaxis: "יום"
+      yaxis: "בקשות מוצלחות (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
+      xaxis: "יום"
+      yaxis: "בקשות מופנות Redicrect HTTP 3xx (Redirect)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client Error)"
+      xaxis: "יום"
+      yaxis: "שגיאות לקוח (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (שגיאת שרת)"
+      xaxis: "יום"
+      yaxis: "שגיאות שרת (Status 5xx)"
+    http_total_reqs:
+      title: "סה\"כ"
+      xaxis: "יום"
+      yaxis: "סה\"כ הבקשות"
   dashboard:
     rails_env_warning: "השרת שלך רץ במצב %{env}."
     ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
@@ -534,7 +591,14 @@ he:
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your config/discourse.conf file and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
+    default_logo_warning: "כוונו את הסמלילים הגרפיים לשימוש באתר שלך. עדכנו את כתובת ה-URL של הלוגו, כתובת ה-URL ללוגו המוקטן, וכתובת ה-URL של ה-favicon. "
+    contact_email_missing: "הזינו כתובת דוא\"ל ליצירת קשר, בה ניתן יהיה ליצור עמכם קשר בנושאים דחופים בנוגע לאתר שלכם. עדכנו אותה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
+    contact_email_invalid: "כתובת הדוא\"ל ליצירת קשר של האתר אינה תקינה. עדכנו אותה ב <a href='/admin/site_settings'>הגדרות האתר</a>."
+    title_nag: "הזינו את השם של האתר שלך. עדכנו את הכותרת ב<a href='/admin/site_settings'>הגדרות האתר</a>."
+    site_description_missing: "הזינו משפט אחד לתיאור האתר שלך אשר יופיע בתוצאות מנועי חיפוש. עדכנו את תיאור האתר ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
+    site_contact_username_warning: "הזינו שם חשבון של חבר/ת צוות ידידותיים ממנו יישלחו אוטומטית הודעות פרטיות. עדכנו את שם המשתמש של הדמות ליצירת קשר ב <a href='/admin/site_settings'>הגדרות אתר</a>."
+    notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
   content_types:
     education_new_reply:
       title: "New User Education: First Replies"
@@ -583,6 +647,9 @@ he:
     allow_duplicate_topic_titles: "אשר/י נושאים עם כותרות זהות או משוכפלות."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     educate_until_posts: "כאשר המשתמש/ת מתחילים להקיש את (n) ההודעות הראשונות שלהם, הציגו פאנל הנחיה למשתמש באזור חיבור ההודעות."
+    title: "שם האתר הזה, כפי שהוא משתמש בתגית הכותרת."
+    site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
+    contact_email: "כתובת דוא\"ל של איש/אשת קשר האחראי לאתר זה. משמש להתראות חשובות, כמו סימונים שלא טופלו, כמו גם ליצירת קשר חירום בעמוד האודות."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "אחזור תמונות מכתובת URL רחוקה כדי להכניס את מימדי האורך והרוחב הנכונים."
     download_remote_images_to_local: "המרת תמונות מרחוק לתמונות מקומיות באמצעות הורדות; למניעת שגיאות של תמונות חסרות"
@@ -1537,3 +1604,5 @@ he:
       א0 נחליט לשנות את מדיניות הפרטיות שלנו, נפרסם שינויים אלו בעמוד זה.
 
       מסמך זה מפורסם תחת רשיון CC-BY-SA. הוא עודכן לאחרונה ב-31 למאי, 2013.
+  static:
+    search_help: "<h2>טיפים</h2>\n<p>\n<ul>\n  <li>כותרות מוצגות על פי סדר עדיפות, כך שכשיש ספק, חפשו: titles</li>\n  <li>מלים ייחודיות ולא מקובלות יציגו תמיד את התוצאות הטובות ביותר</li>\n  <li>כאשר זה אפשרי, צמצמו את החיפוש שלכם לקטגוריה, משתמש או נושא</li>\n</ul>\n</p>\n<h2>אפשרויות</h2>\n<p>\n  <table>\n  <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n  <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>\n  <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>\n  <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td>\n<code>in:private</code></td></tr>\n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n<td></td></tr>\n  </table>\n</p>\n<p>\n  <code>rainbows category:parks status:open order:latest</code> \nיחפש נושאים הכוללים את המילה \"rainbows\" בקטגוריה \"parks\" שאינם סגורים או מאורכבים, על פי סדר תאריך הפרסום האחרון.</p>\n"

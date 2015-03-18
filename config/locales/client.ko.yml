@@ -374,7 +374,6 @@ ko:
         title: "사이트 방문이 없을 경우, 새로운 글을 요약하여 메일로 보냄"
         daily: "매일"
         weekly: "매주"
-        every_two_weeks: "격주"
       email_direct: "누군가 나를 인용했을 때, 내 글에 답글을 달았을때, 혹은 내 이름을 언급했을때 이메일 보내기"
       email_private_messages: "누군가 나에게 개인 메시지를 보냈을때 이메일 보내기"
       email_always: "싸이트에 방문 중 일 때 이메일 알림을 보내지 마세요."
@@ -569,9 +568,6 @@ ko:
       saved_local_draft_tip: "로컬로 저장됩니다."
       similar_topics: "작성하려는 내용과 비슷한 토픽들..."
       drafts_offline: "초안"
-      min_length:
-        need_more_for_title: "제목을 {{n}}글자 더 입력해주세요"
-        need_more_for_reply: "{{n}} to go"
       error:
         title_missing: "제목은 필수 항목입니다"
         title_too_short: "제목은 최소 {{min}} 글자 이상이어야 합니다."
@@ -1190,12 +1186,6 @@ ko:
     posts: "게시물"
     posts_lowercase: "게시글"
     posts_long: "이 토픽의 게시물 수는 {{number}}개 입니다."
-    posts_likes_MF: |
-      이 토픽의 좋아요 현황: {count, plural, one {1 post} other {# posts}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
     original_post: "원본 게시물"
     views: "조회수"
     views_lowercase: "조회"

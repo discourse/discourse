@@ -125,6 +125,7 @@ te:
     daily: "ప్రతిరోజూ"
     weekly: "ప్రతీవారం"
     every_two_weeks: "రెండువారాలకోసారి"
+    every_three_days: "ప్రతి మూడు రోజులకీ"
     max_of_count: "{{count}} గరిష్టం"
     character_count:
       one: "{{count}} అక్షరం"
@@ -401,8 +402,9 @@ te:
       email_digests:
         title: "నేను ఇక్కడికి రాకపోతే, కొత్త విషయాలు నాకు ఈమెయిల్ గా పంపండి:"
         daily: "ప్రతీరోజు"
+        every_three_days: "ప్రతి మూడు రోజులకీ"
         weekly: "ప్రతీవారం"
-        every_two_weeks: "ప్రతీ రెండు వారాలకు"
+        every_two_weeks: "ప్రతి రెండు వారాలకీ"
       email_direct: "ఎవరన్నా నన్ను కోట్ చేసినా, నా టపాలకు జవాబిచ్చినా, నా @పేరు ప్రస్తావిస్తే నాకు ఈమెయిల్ పంపండి"
       email_private_messages: "ఎవరన్నా ప్రైవేటు సందేశం పంపితే నాకు ఈమెయిల్ పంపండి."
       email_always: "నేను ఈసైటుపై క్రియాశీలంగా ఉన్నా నాకు ఈమెయిల్ పంపుట ఆపవద్దు"
@@ -459,6 +461,7 @@ te:
         too_short: "మీ సంకేతపదం మరీ చిన్నది."
         common: "ఆ సంకేతపదం మరీ సాధారణం."
         same_as_username: "మీ సంకేతపదం మీ వినియోగదారుపేరు ని పోలి ఉంది."
+        same_as_email: "మీ సంకేతపదం మీ ఈమెయిల్ ను పోలి ఉంది."
         ok: "మీ సంకేతపదం బాగుంది."
         instructions: "కనీసం %{count}  అక్షరాలు ఉండాలి."
       associated_accounts: "లాగిన్లు"
@@ -569,6 +572,7 @@ te:
       requires_invite: "క్షమించాలి. ఈ పోరమ్ ప్రవేశం కేవలం ఆహ్వానితులకు మాత్రమే."
       not_activated: "మీరప్పుడే లాగిన్ అవ్వలేరు. గతంలో మేము మీకు చేతన ఈమెయల్ <b>{{sentTo}}</b> కు పంపాము. దయచేసి ఆ వేగులోని సూచనలు పాటించి మీ ఖాతాను చేతనం చేసుకోండి."
       not_allowed_from_ip_address: "ఆ ఐపీ చిరునామా నుండి మీరు లాగిన్ అవ్వలేరు."
+      admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
       resend_activation_email: "చేతన ఈమెయిల్ మరలా పంపడానికి ఇక్కడ నొక్కండి."
       sent_activation_email_again: "మీకు <b>{{currentEmail}}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
       google:
@@ -602,9 +606,6 @@ te:
       saved_local_draft_tip: "స్థానికంగా భద్రం"
       similar_topics: "మీ విషయం దీని వలె ఉంది..."
       drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
-      min_length:
-        need_more_for_title: "శీర్షికకు ఇంకా {{n}} కావాలి"
-        need_more_for_reply: "{{n}} కావాలి"
       error:
         title_missing: "శీర్షిక తప్పనిసరి"
         title_too_short: "శీర్షిక కనీసం  {{min}} అక్షరాలు ఉండాలి"
@@ -726,6 +727,7 @@ te:
         close_topics: "విషయాలు మూయు"
         archive_topics: "విషయాలు కట్టకట్టు"
         notification_level: "ప్రకటన స్థాయి మార్చు"
+        choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
         selected:
           one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."
           other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
@@ -1208,6 +1210,7 @@ te:
       take_action: "చర్య తీసుకో"
       notify_action: 'ప్రైవేటు సందేశం'
       delete_spammer: "స్పామరును తొలగించు"
+      delete_confirm: "మీరు ఈ వినియోగదారుని <b>%{టపాలు}</b> టపాలు మరియు <b>%{విషయాలు}</b> విషయాలు తొలగించబోతున్నారు, వారి ఖాతా తొలగించి,వారి IP అడ్రస్ నుండి సైన్‌అప్‌లు మూసివేయండి<b>%{ip_అడ్రస్}</b>, మరియు శాశ్వత మూసివేత జాబితాకి వారి ఈ-మెయిల్ అడ్రస్ <b>%{ఈ-మెయిల్}</b> ని కలపండి.మీరు నిజంగా ఈ వినియోగదారుని స్పామర్ గా భావిస్తున్నారా ?"
       yes_delete_spammer: "అవులు, స్పామరును తొలగించు"
       ip_address_missing: "వర్తించదు"
       hidden_email_address: "(దాయబడింది)"
@@ -1333,11 +1336,13 @@ te:
           title: "వారంలోని అగ్ర"
         daily:
           title: "రోజులోని  అగ్ర"
+        all: "మొత్తం సమయం"
         this_year: "ఈ సంవత్సరం"
         this_month: "ఈ నెల"
         this_week: "ఈ వారం"
         today: "ఈ రోజు"
         other_periods: "మరిన్ని అగ్ర విషయాలు చూడు"
+    browser_update: 'దురదృష్టవశాత్తు, <a href="http://www.discourse.org/faq/#browser">ఈ సైట్ లో పనిచేయడానికి మీ బ్రౌజర్ చాలా పాతది </a>. దయచేసి <a href="http://browsehappy.com">మీ బ్రౌజర్ ని నవీకరించండి</a>.'
     permission_types:
       full: "సృష్టించి / జవాబివ్వు / చూడు"
       create_post: "జవాబివ్వు / చూడు"
@@ -1477,6 +1482,7 @@ te:
         add_members: "సభ్యులను కలుపు"
         custom: "అనురూప"
         automatic: "స్వీయంగా"
+        automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా  ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
         automatic_membership_retroactive: "ఇప్పటికే నమోదిత వినియోగదారులను జోడించడానికి అదే ఇమెయిల్ డొమైన్ రూల్ వర్తిస్తుంది"
       api:
         generate_master: "మాస్టరు ఏపీఐ కీ ఉత్తపత్తించు"
@@ -1650,6 +1656,7 @@ te:
         all: "అన్నీ"
         sending_test: "పరీక్షా ఈమెయిల్ పంపుతున్నామ్..."
         error: "<b>దోషం</b> - %{server_error}"
+        test_error: "టెస్ట్ మెయిల్ పంపడంలో  ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
         sent: "పంపిన"
         skipped: "వదిలిన"
         sent_at: "వద్ద పంపారు"
@@ -1738,6 +1745,7 @@ te:
           domain: "డొమైన్"
         screened_ips:
           title: "స్క్రీన్ చేసిన ఐపీలు"
+          description: 'IP చిరునామాలు చూస్తారు.IP చిరునామాల "అనుమతి"లో మంచివరుస పాటించండి.'
           delete_confirm: "మీరు నిజంగా %{ip_address} కు ఈ నియమాన్ని తొలగించాలనుకుంటున్నారా? "
           rolled_up_some_subnets: "IP నిషేధిత ప్రవేశాలు ఈ సబ్‌నెట్స్‌కు విజయవంతంగా చేర్చారు: %{subnets}."
           rolled_up_no_subnet: "రోల్ అప్ చేయుటకు ఏమీ లేదు."
@@ -1757,6 +1765,7 @@ te:
           title: "దోష లాగులు"
       impersonate:
         title: "పరకాయప్రవేశించు"
+        help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
       users:
         title: 'సభ్యులు'
         create: 'అధికారి సభ్యుడిని కలుపు'
@@ -1809,9 +1818,11 @@ te:
         unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{దోషం}}"
         suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
         suspend_duration_units: "(రోజులు)"
+        suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
         suspend_reason: "కారణం"
         suspended_by: "సస్పెండు చేసినవారు"
         delete_all_posts: "అన్ని టపాలూ తొలగించు"
+        delete_all_posts_confirm: "మీరు తొలగించబడిన %{టపాలు} టపాలు మరియు %{విషయాలు} విషయాలు గురించి మాట్లాడుతున్నారు. ఖచ్చితమా ?"
         suspend: "సస్పెండు"
         unsuspend: "సస్పెండు తొలగించు"
         suspended: "సస్పెండయ్యాడా? "
@@ -1827,6 +1838,7 @@ te:
         impersonate: 'పరకాయప్రవేశం చేయి'
         ip_lookup: "ఐపీ లుకప్"
         log_out: "లాగవుట్"
+        logged_out: "వినియోగదారుడు అన్ని పరికరాలు లాగవుట్ చేశారు"
         revoke_admin: 'నిర్వాహకులు తొలగించారు'
         grant_admin: 'నిర్వాహకులు సమ్మతించారు'
         revoke_moderation: 'సమన్వయం నిలిపివేశారు'
@@ -1853,10 +1865,12 @@ te:
         time_read: "చదువు సమయం"
         delete: "సభ్యుడిని తొలగించు"
         delete_forbidden_because_staff: "అధికారులు మరియు నిర్వాహకులను తొలగించలేరు"
+        delete_posts_forbidden_because_staff: "నిర్వాహకుల మరియు పరిశీలకుల అన్ని టపాలు తొలగించలేము."
         delete_confirm: "మీరు నిజంగా ఈ వినియోగదారుని తొలగిద్దాం అనుకుంటున్నారా ? ఇది శాశ్వతం!"
         delete_and_block: "ఈ ఈ-మెయిల్ మరియు IP అడ్రస్ ను తొలగించండి మరియు <b>నిరోధించండి</b>"
         delete_dont_block: "తొలగింపు మాత్రమే"
         deleted: "ఈ సభ్యుడు తొలగించబడ్డాడు"
+        delete_failed: "వినియోగదారుని తొలగించుటలో ఒక దోషం ఉంది.వినియోగదారుని తొలగించడానికి   ప్రయత్నించకముందే టపాలు అన్ని తొలగించండి."
         send_activation_email: "చేతన ఈమెయిల్ పంపు"
         activation_email_sent: "ఒక చేతన ఈమెయిల్ పంపాము."
         send_activation_email_failed: "చేతన ఈమెయిల్ పంపుటలో దోషం  %{error}"
@@ -1875,6 +1889,10 @@ te:
         suspend_modal_title: "సభ్యుడిని సస్పెండు చేయి"
         trust_level_2_users: "నమ్మకం స్థాయి 2 సభ్యులు"
         trust_level_3_requirements: "నమ్మకపు స్థాయి 3 అవసరాలు"
+        trust_level_locked_tip: "నమ్మకపు స్థాయి బంధింపబడిఉంది, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించలేదు లేదా స్థాయి తగ్గించలేదు"
+        trust_level_unlocked_tip: "నమ్మకపు స్థాయి బంధింపబడలేదు, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించవచ్చు లేదా స్థాయి తగ్గించవచ్చు"
+        lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
+        unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
         tl3_requirements:
           title: "నమ్మకపు స్థాయి 3 అవసరాలు"
           table_title: "గత 100 రోజుల్లో:"
@@ -1882,6 +1900,7 @@ te:
           requirement_heading: "అవసరం"
           visits: "సందర్శనాలు"
           days: "రోజులు"
+          topics_replied_to: "విషయాలు సమాధానంగా"
           topics_viewed: "చూసిన విషయాలు "
           topics_viewed_all_time: "చూసిన విషయాలు (అన్ని వేళలా)"
           posts_read: "చదివిన టపాలు"
@@ -1892,7 +1911,15 @@ te:
           likes_received: "అందుకున్న ఇష్టాలు"
           likes_received_days: "స్వీకరించిన ఇష్టాలు:ప్రత్యేకమైన రోజులు"
           likes_received_users: "స్వీకరించిన ఇష్టాలు:ప్రత్యేకమైన వినియోగదారులు"
+          qualifies: "నమ్మకపు స్థాయి 3 కు అర్హత ."
+          does_not_qualify: "నమ్మకపు స్థాయి 3 కు అర్హత లేదు."
+          will_be_promoted: "త్వరలో స్థాయి పెరుగును."
+          will_be_demoted: "త్వరలో స్థాయి తగ్గును."
+          on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
+          locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
+          locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
         sso:
+          title: "ఒక సైన్ ఆన్"
           external_id: "బాహ్య ఐడీ"
           external_username: "సభ్యనామం"
           external_name: "పేరు"
@@ -1900,6 +1927,7 @@ te:
           external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
       user_fields:
         title: "సభ్య క్షేత్రాలు"
+        help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."
         create: "సభ్య క్షేత్రం సృష్టించు"
         untitled: "పేరులేని"
         name: "క్షేత్రం పేరు"
@@ -1911,9 +1939,11 @@ te:
         cancel: "రద్దు"
         delete_confirm: "మీరు నిజంగా ఈ సభ్య క్షేత్రం తొలగించాలనుకుంటున్నారా?"
         required:
+          title: "సైన్అప్ అవసరమా?"
           enabled: "కావాలి"
           disabled: "అవసరంలేదు"
         editable:
+          title: "సైన్అప్ తరువాత సవరించగలమా?"
           enabled: "సవరించదగిన"
           disabled: "సవరించలేని"
         show_on_profile:
@@ -1922,14 +1952,18 @@ te:
           disabled: "ప్రవరపై చూపబడలేదు"
         field_types:
           text: 'పాఠ్య క్షేత్రం'
+          confirm: 'ఖాయము'
       site_text:
+        none: "సవరణను ప్రారంభించడానికి విషయం రకాన్ని ఎంచుకోండి."
         title: 'పాఠ్య కాంటెంటు'
       site_settings:
+        show_overriden: 'ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు'
         title: 'అమరికలు'
         reset: 'రీసెట్'
         none: 'ఏదీకాదు'
         no_results: "ఏ ఫలితాలూ కనిపించలేదు."
         clear_filter: "శుభ్రపరుచు"
+        add_url: "URL కలుపు"
         categories:
           all_results: 'అన్నీ'
           required: 'కావాలి'
@@ -1945,6 +1979,7 @@ te:
           spam: 'స్పాము'
           rate_limits: 'రోట్ హద్దులు'
           developer: 'డవలపరు'
+          embedding: "దేనిలోనైనా ఒదుగు"
           legal: "న్యాయ"
           uncategorized: 'ఇతర'
           backups: "బ్యాకప్పులు"
@@ -1964,6 +1999,7 @@ te:
           modal_title: బ్యాడ్జ్ గ్రూపులు
         granted_by: ఇచ్చిన వారు
         granted_at: ఇచ్చిన సమయం
+        reason_help: (టపాకి లేదా విషయానికి లంకె )
         save: దాచు
         delete: తొలగించు
         delete_confirm: మీరు నిజంగా ఈ బ్యాడ్జి తొలగించాలనుకుంటున్నారా?
@@ -1974,24 +2010,44 @@ te:
         grant_badge: బ్యాడ్జి ఇవ్వు
         granted_badges: ఇచ్చిన బ్యాడ్జీలు
         grant: ఇవ్వు
+        no_user_badges: "%{పేరు} ఏ చిహ్నాలు మంజూరు చేయలేదు."
+        no_badges: మంజూరు చేసే చిహ్నాలు లేవు.
         none_selected: "ఆరంభించడానికి ఒక బ్యాడ్జీని ఎంచుకోండి."
+        allow_title: చిహ్నాన్ని శీర్షికగా వాడుకోవడానికి అనుమతి ఇవ్వండి.
+        multiple_grant: అనేకసార్లు మంజూరు చేయవచ్చు
+        listable: బహిరంగ చిహ్నాల పుటలో చూపండి
         enabled: బ్యాడ్జి చేతనం చేయి
         icon: ఐకాన్
         image: బొమ్మ
+        icon_help: "చిత్రానికి బ్రహ్మాండమైన ఫాంట్  లేదా URL గాని ఉపయోగించండి"
+        target_posts: టపాలు లక్ష్యంగా ప్రశ్న
+        show_posts: చిహ్నాల పుటలో మంజూరు అయిన చిహ్నాన్ని చూపండి
         trigger: ట్రిగ్గరు
         trigger_type:
           none: "రోజు ఉన్నతీకరించు"
+          post_action: "వినియోగదారుడు టపాపై పనిచేసినపుడు"
+          post_revision: "వినియోగదారుడు టపా సృష్టిస్తున్నప్పుడు లేదా సవరిస్తున్నప్పుడు"
+          trust_level_change: "వినియోగదారుడు నమ్మకపుస్థాయి మార్చినప్పుడు"
+          user_change: "వినియోగదారుడు సవరిస్తున్నపుడు లేదా సృష్టిస్తున్నపుడు"
         preview:
+          sql_error_header: "ప్రశ్నతో దోషం ఉంది."
           bad_count_warning:
             header: "హెచ్చరిక!"
+          grant_count:
+            zero: "ఏ చిహ్నాలు కేటాయించలేదు."
+            one: "<b>1</b> కేటాయించిన చిహ్నం."
+            other: "<b>%{లెక్క}</b> కేటాయించిన చిహ్నాలు."
           sample: "శాంపిలు:"
           grant:
+            with: <span class="username">%{వినియోగదారు పేరు}</span>
+            with_post: <span class="username">%{వినియోగదారు పేరు}</span> టపా కొరకు%{లంకె}
             with_post_time: <span class="సభ్యుల పేరు">%{username}</span> for post in %{link} at <span class="సమయం">%{time}</span>
       emoji:
         title: "ఇమోజి"
         add: "కొత్త ఇమోజి కలుపు"
         name: "పేరు"
         image: "బొమ్మ"
+        delete_confirm: "మీరు నిజంగా %{పేరు}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
     lightbox:
       download: "దిగుమతించు"
     search_help:
@@ -2000,26 +2056,35 @@ te:
       title: 'కీబోర్డు షార్ట్ కట్లు'
       jump_to:
         title: 'వెళ్లు'
+        home: '<b>g</b>, <b>h</b> హోమ్ (తాజా)'
         latest: '<b>g</b>, <b>l</b> తాజా'
         new: '<b>g</b>, <b>n</b> కొత్త'
         unread: '<b>g</b>, <b>u</b> చదవనవి'
         categories: '<b>g</b>, <b>c</b> వర్గాలు'
+        top: '<b>g</b>, <b>t</b> పైన'
       navigation:
         title: 'నావిగేషను'
         jump: '<b>#</b> టపాకు వెళ్లు #'
         back: '<b>u</b> వెనుకకు'
         open: '<b>o</b> or <b>ప్రవేశం</b> ఎంచుకున్న విషయం తెరువు'
+        next_prev: '<b>మార్పు</b>+<b>j</b>/<b>మార్పు</b>+<b>k</b> తర్వాతి/ముందరి విభాగం'
       application:
         title: 'అనువర్తనం'
         create: '<b>c</b> కొత్త టపా సృష్టించు'
         notifications: '<b>n</b> తెరచిన ప్రకటనలు'
         site_map_menu: '<b>=</b> సైట్ మెనూ తెరువు'
         user_profile_menu: '<b>p</b> యూజర్ మెనూ తెరువు'
+        show_incoming_updated_topics: '<b>.</b> నవీకరించిన విషయాలను చూపించండి'
         search: '<b>/</b> వెతుకు'
+        help: '<b>?</b> కీ బోర్డ్ సహాయాన్ని తెరువు'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> తీసివేసిన కొత్త/టపాలు'
+        dismiss_topics: '<b>x</b>, <b>t</b> తీసివేసిన విషయాలు'
       actions:
         title: 'చర్యలు'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> విషయం చేర్చు/విడదీయు'
         share_topic: '<b>shift</b>+<b>s</b> విషయం పంచు'
         share_post: '<b>s</b> టపా పంచు'
+        reply_as_new_topic: '<b>t</b> లంకె విషయంగా సమాధానం'
         reply_topic: '<b>shift</b>+<b>r</b> టపా కి సమాధానం'
         reply_post: '<b>r</b> టపా కి సమాధానం'
         like: '<b>l</b> టపా ని ఇష్టపడు'
@@ -2027,10 +2092,21 @@ te:
         bookmark: '<b>b</b>టపా పేజీక'
         edit: '<b>e</b> టపా సవరణ'
         delete: '<b>d</b> టపా తొలగించు'
+        mark_muted: '<b>m</b>, <b>m</b> విషయాన్ని ఆపివేయండి'
+        mark_regular: '<b>m</b>, <b>r</b> నిత్య (అప్రమేయ) విషయం'
+        mark_tracking: '<b>m</b>, <b>t</b> విషయం వెతుకు'
+        mark_watching: '<b>m</b>, <b>w</b> చూసిన విషయం'
     badges:
       title: బ్యాడ్జీలు
       allow_title: "శీర్షికగా కూడా వాడవచ్చు"
       multiple_grant: "పలుమార్లు బహూకరించవచ్చు"
+      more_badges:
+        one: "+%{count} కంటే"
+        other: "+%{count} ఇంకా"
+      granted:
+        one: "1 మంజూరు"
+        other: "%{లెక్క} మంజూరు"
+      select_badge_for_title: మీ శీర్షికగా ఉపయోగించడానికి ఒక చిహ్నాన్ని ఎంపిక చేయండి.
       none: "<none>"
       badge_grouping:
         getting_started:
@@ -2049,8 +2125,10 @@ te:
           description: తొలి టపా సవరణ
         basic_user:
           name: ప్రాథమిక
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">మంజూరు చేసిన</a> అన్ని ఆవశ్యక సామాజిక చర్యలు
         member:
           name: సభ్యుడు
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">మంజూరు చేసిన </a> ఆహ్వానాలు
         regular:
           name: రెగ్యులరు
         leader:
@@ -2060,20 +2138,28 @@ te:
           description: ఒక ఇష్టాన్ని అందుకున్నారు
         autobiographer:
           name: ఆత్మకధావాది
+          description: వినియోగదారు నింపిన <a href="/my/preferences">ఫ్రొపైల్ </a> సమాచారం
         anniversary:
           name: వార్షికోత్సవం
+          description: ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు
         nice_post:
           name: మంచి టపా
+          description: ఒక టపా 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         good_post:
           name: చాలా మంచి టపా
+          description: ఒక టపా 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         great_post:
           name: బహుమంచి టపా
+          description: ఒక టపా 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         nice_topic:
           name: మంచి విషయం
+          description: ఒక విషయం 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         good_topic:
           name: చాలా మంచి విషయం
+          description: ఒక విషయం 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         great_topic:
           name: బహుమంచి విషయం
+          description: ఒక విషయం 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
         nice_share:
           name: మంచి పంపకం
           description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు

@@ -25,6 +25,24 @@ ru:
     messages:
       too_long_validation: "не может быть длиннее %{max} символов, а введено %{length}."
       invalid_boolean: "Неправильное булевое значение."
+      taken: "уже занято"
+      accepted: должно быть принято
+      blank: не может быть пустым
+      present: должно быть пустым
+      confirmation: "не совпадает с %{attribute}"
+      empty: не может быть пустым
+      equal_to: должно быть равно %{count}
+      even: должно быть четным
+      exclusion: зарезервировано
+      greater_than: должно быть больше чем %{count}
+      greater_than_or_equal_to: должно быть больше или равно %{count}
+      inclusion: не включен в список
+      invalid: неверный
+      less_than: должен быть меньше %{count}
+      less_than_or_equal_to: должен быть меньше или равен %{count}
+      not_a_number: не число
+      not_an_integer: должно быть целым
+      odd: должно быть нечетным
     embed:
       load_from_remote: "Произошла ошибка при загрузке сообщения."
   bulk_invite:
@@ -441,6 +459,7 @@ ru:
       xaxis: "День"
       yaxis: "Количество визитов"
     signups:
+      title: "Новые пользователи"
       xaxis: "День"
       yaxis: "Количество новых пользователей"
     topics:
@@ -513,6 +532,7 @@ ru:
     page_view_anon_reqs:
       title: "Анонимы"
       xaxis: "Дата"
+      yaxis: "Анонимные запросы API"
     page_view_logged_in_reqs:
       title: "Пользователи"
       xaxis: "Дата"
@@ -530,8 +550,15 @@ ru:
       title: "Статус 2xx (OK)"
       xaxis: "Дата"
       yaxis: "Запросов"
+    http_3xx_reqs:
+      xaxis: "День"
+    http_4xx_reqs:
+      xaxis: "День"
+    http_5xx_reqs:
+      xaxis: "День"
     http_total_reqs:
       title: "Всего"
+      xaxis: "День"
       yaxis: "Всего"
   dashboard:
     rails_env_warning: "Ваш сервер работает в режиме %{env}."
@@ -1041,6 +1068,8 @@ ru:
         ```
         %{logs}
         ```
+    csv_export_failed:
+      subject_template: "Экспорт не удался"
     email_reject_trust_level:
       subject_template: "Проблема с письмом - недостаточный уровень доверия"
       text_body_template: |
@@ -1292,6 +1321,7 @@ ru:
     body_blank: "Cообщения письма пусто"
   color_schemes:
     base_theme_name: "Базовая"
+  about: "О нас"
   guidelines: "Руководство"
   privacy: "Политика конфиденциальности"
   edit_this_page: "Отредактировать эту страницу"

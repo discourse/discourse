@@ -130,6 +130,7 @@ zh_CN:
       user_count: "新用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
+      contact_info: "在遇到影响站点的重大错误或者紧急事件时，请通过 %{contact_info} 联系我们。"
     bookmarked:
       title: "书签"
       clear_bookmarks: "删除书签"
@@ -378,7 +379,6 @@ zh_CN:
         title: "当我不访问时，向我的邮箱发送最新信息："
         daily: "每天"
         weekly: "每周"
-        every_two_weeks: "每两周"
       email_direct: "当有人引用我、回复我的帖子或提及@你时发送一封邮件给我"
       email_private_messages: "当有人给发私信给我时发送一封邮件给我"
       email_always: "即使在论坛中活跃时也接收电子邮件提醒"
@@ -430,6 +430,8 @@ zh_CN:
         title: "密码"
         too_short: "你设置的密码太短了。"
         common: "你设置的密码太常见了。"
+        same_as_username: "你的密码与用户名相同。"
+        same_as_email: "你的密码与电子邮箱相同。"
         ok: "你设置的密码符合要求。"
         instructions: "至少需要 %{count} 个字符。"
       associated_accounts: "登录"
@@ -573,9 +575,6 @@ zh_CN:
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有些类似于..."
       drafts_offline: "离线草稿"
-      min_length:
-        need_more_for_title: "请给标题再输入至少 {{n}} 个字符"
-        need_more_for_reply: "还差 {{n}} 个……"
       error:
         title_missing: "缺少标题"
         title_too_short: "标题太短，至少 {{min}} 个字符"
@@ -1195,12 +1194,6 @@ zh_CN:
     posts: "帖子"
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
-    posts_likes_MF: |
-      这个主题有 {count, plural, other {# 个帖子}}，{ratio, select,
-      low {并被很多人赞了}
-      med {并被非常多人赞了}
-      high {并被特别多人赞了}
-      other {}}
     original_post: "原始帖"
     views: "浏览"
     views_lowercase: "浏览"
@@ -1937,10 +1930,13 @@ zh_CN:
           modal_title: 徽章组
         granted_by: 授予由
         granted_at: 授予于
+        reason_help: （一个至主题或帖子的链接）
         save: 保存
         delete: 删除
         delete_confirm: 你确定要删除此徽章吗？
         revoke: 撤销
+        reason: 理由
+        expand: 展开 &hellip;
         revoke_confirm: 你确定要撤销此徽章吗？
         edit_badges: 编辑徽章
         grant_badge: 授予徽章

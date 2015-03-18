@@ -125,6 +125,7 @@ he:
     daily: "יומית"
     weekly: "שבועית"
     every_two_weeks: "דו-שבועית"
+    every_three_days: "כל שלושה ימים"
     max_of_count: "מקסימום של {{count}}"
     character_count:
       one: "תו אחד"
@@ -147,6 +148,7 @@ he:
       user_count: "חדשים"
       active_user_count: "משתמשים פעילים"
       contact: "צרו קשר"
+      contact_info: "במקרה של ארוע בנושא חשוב או חירומים המשפיע על האתר, אנא צרו איתנו קשר ב:%{contact_info}."
     bookmarked:
       title: "סימניה"
       clear_bookmarks: "ניקוי סימניות"
@@ -296,7 +298,7 @@ he:
       suspended_reason: "הסיבה: "
       github_profile: "גיטהאב"
       mailing_list_mode: "שלחו לי דוא\"ל על כל פרסום חדש (אלא אם אשתיק את המעקב אחר הנושא או הקטגוריה)"
-      watched_categories: "נצפה"
+      watched_categories: "צופה"
       watched_categories_instructions: "את/ה תצפו אוטומטית בכל הנושאים החדשים בקטגוריות האלה ותקבלו התראות על כל ההודעות והנושאים החדשים. כמו כן כמות ההודעות החדשות ואלו שלא נקראו תופיע לצד כל נושא."
       tracked_categories: "במעקב"
       tracked_categories_instructions: "מעקב אוטומטי אחרי נושאים חדשים בקטגוריות אלו. מספר הפרסומים החדשים ואלו שלא נקראו יופיע לצד הנושא."
@@ -400,8 +402,9 @@ he:
       email_digests:
         title: "כשאיני מבקר/ת כאן, שלחו לי מייל עם תקציר העדכונים:"
         daily: "יומית"
+        every_three_days: "כל שלושה ימים"
         weekly: "שבועית"
-        every_two_weeks: "דו-שבועית"
+        every_two_weeks: "כל שבועיים"
       email_direct: "שלחו לי דואל כשמישהו/י מצטטים אותי, מגיבים לפרסום שלי או מזכירים את @שם_המשתמש/ת"
       email_private_messages: "שלחו לי דוא\"ל כשמישהו/מישהי שולחים לי מסר פרטי"
       email_always: "אל תמנעו התראות דוא\"ל כאשר אני פעיל/ה באתר"
@@ -457,6 +460,8 @@ he:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
         common: "הסיסמה הזו נפוצה מידי."
+        same_as_username: "הסיסמה שלך זהה לשם המשתמש/ת שלך."
+        same_as_email: "הסיסמה שלך זהה לכתובת הדוא\"ל שלך."
         ok: "הסיסמה שלך נראית טוב."
         instructions: "לפחות %{count} תווים."
       associated_accounts: "התחברויות"
@@ -567,6 +572,7 @@ he:
       requires_invite: "סליחה, גישה לפורום הזה היא בהזמנה בלבד."
       not_activated: "אינך יכול להתחבר עדיין. שלחנו לך דואר אלקטרוני להפעלת החשבון לכתובת: <b>{{sentTo}}</b>. יש לעקוב אחר ההוראות בדואר כדי להפעיל את החשבון."
       not_allowed_from_ip_address: "אינכם יכולים להתחבר מכתובת IP זו."
+      admin_not_allowed_from_ip_address: "אינך יכול/ה להתחבר כמנהל מערכת מכתובת IP זו."
       resend_activation_email: "יש ללחוץ כאן לשליחת דואר אלקטרוני חוזר להפעלת החשבון."
       sent_activation_email_again: "שלחנו לך הודעת דואר אלקטרוני נוספת להפעלת החשבון לכתובת <b>{{currentEmail}}</b>. זה יכול לקחת כמה דקות עד שיגיע, לא לשכוח לבדוק את תיבת דואר הזבל."
       google:
@@ -600,9 +606,6 @@ he:
       saved_local_draft_tip: "נשמר מקומית"
       similar_topics: "הנושא שלך דומה ל..."
       drafts_offline: "טיוטות מנותקות"
-      min_length:
-        need_more_for_title: "{{n}} תווים נשארו לכותרת"
-        need_more_for_reply: "עוד {{n}} "
       error:
         title_missing: "יש להזין כותרת."
         title_too_short: "על הכותרת להיות באורך {{min}} תווים לפחות."
@@ -724,6 +727,7 @@ he:
         close_topics: "סגירת נושאים"
         archive_topics: "ארכיון הנושאים"
         notification_level: "שינוי רמת התראה"
+        choose_new_category: "בחרו את הקטגוריה עבור הנושאים:"
         selected:
           one: "בחרת נושא <b>אחד</b>."
           other: "בחרת <b>{{count}}</b> נושאים."
@@ -1192,7 +1196,7 @@ he:
           title: "צופה"
           description: "תצפו באופן אוטומטי בכל הנושאים החדשים בקטגוריות אלה. תקבלו התראה על כל פרסום ונושא חדש, ובנוסף, סך הפרסומים החדשים ושלא נקראו יופיעו לצד הנושא."
         tracking:
-          title: "במעקב"
+          title: "עוקב"
           description: "תעקבו באופן אוטומטי אחרי כל הנושאים החדשים בקטגוריות אלה. סך הפרסומים החדשים ושלא נקראו יופיעו לצד הנושא."
         regular:
           title: "רגיל"
@@ -1339,6 +1343,7 @@ he:
           title: "המיטב השבועי"
         daily:
           title: "המיטב היומי"
+        all: "כל הזמנים"
         this_year: "השנה"
         this_month: "החודש"
         this_week: "השבוע"
@@ -1735,6 +1740,7 @@ he:
             delete_topic: "מחיקת נושא"
             delete_post: "מחיקת פרסום"
             impersonate: "התחזה"
+            anonymize_user: "הפיכת משתמש/ת לאנונימיים"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -1868,8 +1874,13 @@ he:
         approve_success: "משתמש אושר ונשלחה לו הודעות דואר אלקטרוני עם הוראות הפעלה"
         approve_bulk_success: "הצלחה! כל המשתמשים שנבחרו אושרו ויודעו על כך."
         time_read: "זמן קריאה"
+        anonymize: "הפיכת משתמש/ת לאנונימיים"
+        anonymize_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים להפוך חשבון זה לאנונימי? פעולה זו תשנה את שם המשתמש/ת וכתובת הדוא\"ל ותאתחל את כל המידע בפרופיל."
+        anonymize_yes: "כן, הפיכת חשבון זה לאנונימי"
+        anonymize_failed: "התרחשה בעיה בהפיכת חשבון זה לאנונימי."
         delete: "מחק משתמש"
         delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ראשיים ומנהלים."
+        delete_posts_forbidden_because_staff: "לא ניתן למחוק את כל הפרסומים של מנהלי מערכת ומפקחים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. מחק את כל ההודעות לפני ניסיון מחיקה של משתמש. (הודעות ישנות יותר מ-%{count} ימים לא ניתן למחוק.)"
           other: "לא ניתן למחוק משתמשים אם יש להם הודעות. מחק את כל ההודעות לפני ניסיון מחיקה של משתמש. (הודעות ישנות יותר מ-%{count} ימים לא ניתן למחוק.)"
@@ -1976,6 +1987,7 @@ he:
         none: 'ללא'
         no_results: "לא נמצאו תוצאות."
         clear_filter: "נקה"
+        add_url: "הוספת כתובת URL"
         categories:
           all_results: 'הכל'
           required: 'נדרש'
@@ -2011,10 +2023,13 @@ he:
           modal_title: תג קבוצות
         granted_by: הוענק ע"י
         granted_at: הוענק ב
+        reason_help: (קישור לפרסום או לנושא)
         save: שמור
         delete: מחק
         delete_confirm: אתה בטוח שברצונך למחוק את התג הזה?
         revoke: שלול
+        reason: סיבה
+        expand: הרחבה &hellip;
         revoke_confirm: אתה בטוח שברצונך לשלול את התג הזה?
         edit_badges: ערוך תגים
         grant_badge: הענק תג

@@ -125,6 +125,7 @@ da:
     daily: "dagligt"
     weekly: "ugentligt"
     every_two_weeks: "hver anden uge"
+    every_three_days: "hver tredje dag"
     max_of_count: "max af {{count}}"
     character_count:
       one: "{{count}} tegn"
@@ -147,6 +148,7 @@ da:
       user_count: "Nye brugere"
       active_user_count: "Aktive brugere"
       contact: "Kontakt os"
+      contact_info: "I tilfælde af kritiske situationer eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_emal}."
     bookmarked:
       title: "Bogmærke"
       clear_bookmarks: "Ryd Bogmærker"
@@ -400,6 +402,7 @@ da:
       email_digests:
         title: "Når jeg ikke besøger her, send mig en email med nyheder."
         daily: "dagligt"
+        every_three_days: "hver tredje dag"
         weekly: "ugenligt"
         every_two_weeks: "hver anden uge"
       email_direct: "Send mig en email når nogen citere mig, svar på mit indlæg, eller nævner mit @brugernavn"
@@ -457,6 +460,8 @@ da:
         title: "Adgangskode"
         too_short: "Din adgangskode er for kort."
         common: "Den adgangskode er for udbredt."
+        same_as_username: "Dit password er det samme som dit brugernavn."
+        same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
         instructions: "Mindst %{count} tegn"
       associated_accounts: "Logins"
@@ -567,6 +572,7 @@ da:
       requires_invite: "Beklager, det kræve en invitation at blive medlem af dette forum."
       not_activated: "Du kan ikke logge ind endnu. Vi har tidligere sendt en aktiverings-e-mail til dig på <b>{{sentTo}}</b>. Følg venligst instruktionerne i den e-mail for at aktivere din konto."
       not_allowed_from_ip_address: "Du kan ikke logge ind fra den IP adresse."
+      admin_not_allowed_from_ip_address: "Du kan ikke logge på som administrator fra denne IP adresse."
       resend_activation_email: "Klik her for at sende aktiverings-e-mail’en igen."
       sent_activation_email_again: "Vi har sendt endnu en aktiverings-e-mail til dig på <b>{{currentEmail}}</b>. Det kan tage nogen få minutter før den når frem; kontrollér også din spam-mappe."
       google:
@@ -600,9 +606,6 @@ da:
       saved_local_draft_tip: "gemt lokalt"
       similar_topics: "Dit emne minder om…"
       drafts_offline: "kladder offline"
-      min_length:
-        need_more_for_title: "der mangler {{n}} tegn i titlen"
-        need_more_for_reply: "{{n}} tilbage"
       error:
         title_missing: "Titlen er påkrævet"
         title_too_short: "Titlen skal være på mindst {{min}} tegn"
@@ -724,6 +727,7 @@ da:
         close_topics: "Luk indlæg"
         archive_topics: "Arkiver Emner"
         notification_level: "Skift niveau for underetninger"
+        choose_new_category: "Vælg den nye kategori for emnerne:"
         selected:
           one: "Du har valgt <b>1</b> indlæg."
           other: "Du har valgt <b>{{count}}</b> indlæg."
@@ -1258,10 +1262,10 @@ da:
     posts_lowercase: "indlæg"
     posts_long: "{{number}} indlæg i dette emne"
     posts_likes_MF: |
-      Dette emne har {count, plural, one {1 indlæg} other {# indlæg}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
+      Dette emne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
+        low {med et højt like pr. indlæg forhold}
+        med {med et meget højt like pr. indlæg forhold}
+        high {med et ekstremt højt like pr. indlæg forhold}
         other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
@@ -1339,6 +1343,7 @@ da:
           title: "Top ugentligt"
         daily:
           title: "Top dagligt"
+        all: "Alt"
         this_year: "Dette år"
         this_month: "Denne måned"
         this_week: "Denne uge"
@@ -1735,6 +1740,7 @@ da:
             delete_topic: "slet emne"
             delete_post: "slet indlæg"
             impersonate: "Udgiv dig for bruger"
+            anonymize_user: "anonymiser bruger"
         screened_emails:
           title: "Blokerede e-mails"
           description: "Følgende e-mail-adresser kontrolleres når nogen prøver at oprette en konto, og oprettelsen vil enten blive blokeret, eller der vil blive foretaget en anden handling."
@@ -1868,8 +1874,13 @@ da:
         approve_success: "Bruger godkendt og e-mail med aktiveringsvejledning sendt."
         approve_bulk_success: "Succes! Alle valgte brugere er blevet godkendt og underrettet."
         time_read: "Læsetid"
+        anonymize: "Anonymiser Bruger"
+        anonymize_confirm: "Er du HELT SIKKER på at du vil anonymisere denne konto? Dette vil ændre brugernavnet og email adressen, samt nulstille profil informationen."
+        anonymize_yes: "Ja, anonymiser denne konto"
+        anonymize_failed: "Der var problemer med at anonymisere denne konto."
         delete: "Slet bruger"
         delete_forbidden_because_staff: "Admins og moderatorer kan ikke slettes."
+        delete_posts_forbidden_because_staff: "Kan ikke slette alle indlæg fra administratorer og moderatorer."
         delete_forbidden:
           one: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dag siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
           other: "Brugere kan ikke slettes hvis de har oprettet sig for mere end %{count} dage siden, eller hvis de har oprettet indlæg. Slet alle indlæg før du forsøger at slette en bruger."
@@ -1976,6 +1987,7 @@ da:
         none: 'ingen'
         no_results: "Ingen resultater fundet."
         clear_filter: "Ryd"
+        add_url: "tilføj URL"
         categories:
           all_results: 'Alle'
           required: 'Obligatoriske'
@@ -2011,10 +2023,13 @@ da:
           modal_title: Badge grupperinger
         granted_by: Givet af
         granted_at: Givet på
+        reason_help: (Et link til et indlæg eller et emne)
         save: Gem
         delete: Slet
         delete_confirm: Er du sikker på du vil slette denne badge ?
         revoke: Fratag
+        reason: Grund
+        expand: Fold ud &hellip;
         revoke_confirm: Er du sikker på du vil fratage brugeren denne badge ?
         edit_badges: Rediger Badges
         grant_badge: Tildel Badge
