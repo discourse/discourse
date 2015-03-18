@@ -897,6 +897,7 @@ es:
     max_age_unmatched_ips: "Eliminar entradas de IP que no coincidan después de (N) días."
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos requerido para pausar un tema automáticamente para intervención"
     num_flags_to_close_topic: "Valor mínimo de reportes activos requerido para pausar un tema automáticamente para intervención"
+    auto_respond_to_flag_actions: "Activar la respuesta automática al deshacer un reporte."
     reply_by_email_enabled: "Habilitar la respuesta a temas por email."
     reply_by_email_address: "Plantilla para la dirección de email que aparecerá al recibir correos con la función de respuesta por email: %{reply_key}@respuesta.ejemplo.com o respuestas+%{reply_key}@ejemplo.com"
     disable_emails: "Impedir que Discourse envié cualquier tipo de e-mail."

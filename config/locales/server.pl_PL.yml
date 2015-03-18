@@ -70,6 +70,8 @@ pl_PL:
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
   not_logged_in: "Aby to zrobić musisz się zalogować."
+  not_found: "Żądany URL lub źródło nie mógł zostać znaleziony."
+  invalid_access: "Nie jesteś uprawniony by zobaczyć żądane źródło."
   read_only_mode_enabled: "Strona jest w trybie tylko do odczytu. Możliwość interakcji jest wyłączona."
   too_many_replies:
     one: "Przepraszamy, ale nowi użytkownicy są tymczasowo ograniczeni do 1 odpowiedzi w ramach  jednego tematu."
@@ -482,6 +484,7 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Liczba wizyt"
     signups:
+      title: "Nowi Użytkownicy"
       xaxis: "Dzień"
       yaxis: "Liczba nowych użytkowników"
     topics:
@@ -562,20 +565,31 @@ pl_PL:
     page_view_crawler_reqs:
       title: "Bot indeksujący"
       xaxis: "Dzień"
+      yaxis: "API robotów indeksujących żąda"
     page_view_total_reqs:
       title: "Łącznie"
       xaxis: "Dzień"
+      yaxis: "Razem żądań API"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
+      yaxis: "Żądania użyte w dynamicznej aktualizacji i śledzeniu"
     http_2xx_reqs:
+      title: "Status 2xx (OK)"
       xaxis: "Dzień"
+      yaxis: "Udane żądania (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Przekierowanie)"
       xaxis: "Dzień"
+      yaxis: "Przekierowanie żądań (Status 3xx)"
     http_4xx_reqs:
+      title: "HTTP 4xx (Błąd klienta)"
       xaxis: "Dzień"
+      yaxis: "Błędy klienta (Status 4xx)"
     http_5xx_reqs:
+      title: "HTTP 5xx (Błąd serwera)"
       xaxis: "Dzień"
+      yaxis: "Błędy serwera (Status 5xx)"
     http_total_reqs:
       title: "Łącznie"
       xaxis: "Dzień"
@@ -598,7 +612,10 @@ pl_PL:
     image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
     failing_emails_warning: '%{num_failed_jobs} prac emailowych nie powiodło się. Sprawdź plik config/discourse.conf i upewnij się, że ustawienia serwera poczty są poprawne. <a href="/sidekiq/retries" target="_blank">Zobacz nieudane prace w Sidekiqu</a>.'
     default_logo_warning: "Ustaw logo dla swojej strony. Zaktualizuj logo_url, logo_small_url i favicon_url tutaj: <a href='/admin/site_settings'>ustawienia strony</a>."
+    contact_email_missing: "Wprowadź kontaktowy adres e-mail strony, aby otrzymywać ważne powiadomienia w sprawie strony. Zaktualizuj to w <a href='/admin/site_settings'>Ustawieniach strony</a>. "
+    contact_email_invalid: "Kontaktowy adres email jest zły. Zaktualizuj to w  <a href='/admin/site_settings'>Ustawieniach strony</a>."
     title_nag: "Wprowadź nazwę swojej strony. Zaktualizuj tytuł w <a href='/admin/site_settings'>Ustawieniach strony</a>."
+    site_description_missing: "Wprowadź jedno zdanie opisujące Twoją stronę, które pojawi się w wynikach wyszukiwania. Zaktualizuj opis strony w <a href='/admin/site_settings'>Ustawieniach strony</a>."
     consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
   content_types:
     education_new_reply:

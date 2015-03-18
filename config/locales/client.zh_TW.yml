@@ -379,7 +379,6 @@ zh_TW:
         title: "當我很久沒來此網站時，以電子郵件通知我最近有什麼新文章："
         daily: "每天"
         weekly: "每週"
-        every_two_weeks: "每兩週"
       email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
       email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
       email_always: "不要因為我在網站上活動而不寄信通知。"
@@ -575,9 +574,6 @@ zh_TW:
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "與你的討論話題類似的討論..."
       drafts_offline: "離線草稿"
-      min_length:
-        need_more_for_title: "討論話題名稱還需要 {{n}} 個字"
-        need_more_for_reply: "還需要 {{n}} 個字"
       error:
         title_missing: "標題為必填欄位"
         title_too_short: "標題必須至少 {{min}} 個字"
@@ -1197,12 +1193,6 @@ zh_TW:
     posts: "文章"
     posts_lowercase: "文章"
     posts_long: "此討論話題有 {{number}} 篇文章"
-    posts_likes_MF: |
-      這個主題有 {count, plural, one {1 篇文章} other {# 篇文章}}，{ratio, select,
-      low {並被很多人按讚了}
-      med {並被非常多人按讚了}
-      high {並被特別多人按讚了}
-      other {}}
     original_post: "原始文章"
     views: "觀看"
     views_lowercase: "觀看"

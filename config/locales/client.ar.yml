@@ -123,9 +123,13 @@ ar:
       user_count: "مستخدمون جدد"
       active_user_count: "مستخدمون نشطون"
       contact: "اتصل بنا"
+      contact_info: "في حالة حدوث أي مشكلة حرجة أو مسألة عاجلة تؤثر على هذا الموقع، يرجى الاتصال بنا على %{contact_email}."
     bookmarked:
       title: "المفضلة"
       clear_bookmarks: "حذف المفضله"
+      help:
+        bookmark: "انقر هنا لإضافة أول رد في هذا الموضوع الى المفضلة"
+        unbookmark: "أنقر هنا لحذف كل المفضلة في هذا الموضوع"
     bookmarks:
       not_logged_in: "نعتذر يجب ان تكون متصلا لكي تقوم بإضافة هدا الموضوع للمفضلة"
       created: "لقد نجحت في إضافة الموضوع للمفضلة"
@@ -363,7 +367,6 @@ ar:
         title: "إرسال رسالة إلكترونية تحتوي على جديد الموقع عندما لا أزور الموقع"
         daily: "يومي"
         weekly: "اسبوعي"
-        every_two_weeks: "كل اسبوعين"
       email_direct: "تلقي رسالة إلكترونية عند اقتباس مشاركة لك  أو الرد على عليها أو في حالة ذكر اسمك @username"
       email_private_messages: "إرسال إشعار بالبريد الإلكتروني عندما يرسل لك شخصاً رسالة خاصة"
       email_always: "لاتفعل ارسال رسائل بريدية اذا كنت متفاعل مع الموقع"
@@ -550,9 +553,6 @@ ar:
       saved_local_draft_tip: "تم الحفظ محلياً"
       similar_topics: "موضوعك مشابه لـ ..."
       drafts_offline: "مسودات محفوظة "
-      min_length:
-        need_more_for_title: "{{n}} لذهاب الى العنوان"
-        need_more_for_reply: "{{n}} الذهاب الى"
       error:
         title_missing: "العنوان مطلوب"
         title_too_short: "العنوان يجب أن يكون اكثر  {{min}} حرف"
@@ -883,6 +883,7 @@ ar:
         attachment_too_large: "نعتذر، الملف الذي تريد رفعه كبير جداَ ( الحد الاقصى {{max_size_kb}} كيلوبايت )"
         file_too_large: "المعذرة، الملف الذي تحاول رفعه أكبر من المسموح به {{max_size_kb}} كيلوبايت"
         too_many_uploads: "نأسف, يمكنك رفع ملف واحد فقط في نفس الوقت."
+        too_many_dragged_and_dropped_files: "يمكنك سحب و إفلات ١٠ ملفات في الوقت الواحد كحد أقصى."
         upload_not_authorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به، الامتدادات المسموح بها هي {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع صور."
         attachment_upload_not_allowed_for_new_user: "نعتذر، المستخدمين الجدد لا يمكنهم رفع مرفقات."
@@ -1015,6 +1016,7 @@ ar:
       images: "الصور"
       auto_close_label: "الإغلاق التلقائي للمواضيع بعد:"
       auto_close_units: "ساعات"
+      email_in: "تعيين بريد إلكتروني خاص:"
       email_in_allow_strangers: "قبول بريد إلكتروني من مستخدمين لا يملكون حسابات"
       email_in_disabled: "إضافة مواضيع جديدة من خلال البريد الإلكتروني موقف في الوقت الحالي من خلال إعدادات الموقع. لتفعيل إضافة مواضيع جديدة من خلال البريد الإلكتروني,"
       email_in_disabled_click: 'قم بتفعيل خيار "email in" في الإعدادات'
@@ -1024,16 +1026,26 @@ ar:
       this_year: "هذه السنة"
       position: "المكان"
       default_position: "المكان الافتراضي"
+      position_disabled: "التصنيفات يتم عرضها حسب النشاط. لتغيير طريقة ترتيب التصنيفات، "
+      position_disabled_click: 'فعّل خيار " تثبيت مكان التصنيفات".'
+      parent: "التصنيف الأب"
       notifications:
         watching:
           title: "مشاهده "
+          description: "ستتابع بشكل تلقائي جديد هذه التصنيفات. سيتم إشعارك بكل مشاركة او موضوع، بالإضافة لذلك سيتم عرض عدد  المشاركات الغير مقروءة و الجديدة بجانب الموضوع."
         tracking:
           title: "تتبع "
+          description: "ستتابع بشكل تلقائي جديد هذه التصنيفات. سيتم إشعارك بكل مشاركة او موضوع، بالإضافة لذلك سيتم عرض عدد المشاركات الغير مقروءة و الجديدة بجانب الموضوع."
         regular:
           title: "طبيعي"
+          description: ".سيتم إشعارك إذا ذكر أحد ما اسمك أو رد على مشاركاتك"
         muted:
           title: "كتم"
+          description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في تبويب المواضيع الغير مقروءة."
     flagging:
+      title: 'شكرا لمساعدتك في إبقاء مجتمعنا نظيفاً.'
+      private_reminder: 'التبليغات ذات خصوصية، تظهر <b> فقط </b> للمشرفين'
+      action: 'التبليغ عن مشاركة'
       take_action: "أجراء العمليه "
       notify_action: 'رسائل خاصة'
       delete_spammer: "حذف مرسلي البريد المزعج"
@@ -1041,16 +1053,22 @@ ar:
       yes_delete_spammer: "نعم , حذف مرسلي البريد المزعج"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفي)"
+      submit_tooltip: "إرسال تبليغ"
+      take_action_tooltip: "الوصول إلى الحد الأعلى للتبليغات دون انتظار تبليغات أكثر من أعضاء الموقع."
+      cant: "المعذرة، لا يمكنك التبليغ عن هذه المشاركة في هذه اللحظة."
       formatted_name:
         off_topic: "خارج عن الموضوع"
+        inappropriate: "غير لائق"
         spam: "هذا سبام"
       custom_placeholder_notify_user: "كن محدد, استدلالي ودائما حسن الاخلاق"
+      custom_placeholder_notify_moderators: "ممكن تزودنا بمعلومات أكثر عن سبب عدم ارتياحك حول هذه المشاركة؟ زودنا ببعض الروابط و الأمثلة قدر الإمكان."
       custom_message:
         at_least: "ادخل على الاقل  {{n}} حرف"
         more: "{{n}} الذهاب الى"
         left: "{{n}} باقي"
     flagging_topic:
       title: "شكرا لمساعدتنا في ابقاء مجتمعنا نضيفا"
+      action: "التبليغ عن الموضوع"
       notify_action: "رسالة خاصة"
     topic_map:
       title: "ملخص الموضوع"
@@ -1073,17 +1091,105 @@ ar:
         help: "هذا الموضوع مثبت لك, سوف يتم عرضه في اول القسم"
       archived:
         help: "هذا الموضوع مؤرشف,لن تستطيع أن تعدل عليه"
+      invisible:
+        help: "هذا الموضوع غير مصنف لن يظهر في قائمة التصانيف ولايمكن الدخول عليه الابرابط مباشر."
     posts: "مشاركات"
     posts_lowercase: "مشاركات"
+    posts_long: "هناك {{number}} مشاركات في هذا الموضوع"
+    original_post: "المشاركة الاصلية"
+    views: "مشاهدات"
+    views_lowercase: "مشاهدات"
+    replies: "ردود "
+    views_long: "هذا الموضوع قد تمت مشاهدته  {{number}} مرات"
     activity: "النشاط"
     likes: "اعجابات"
     likes_lowercase: "اعجابات"
+    likes_long: "هناك {{number}} اعجابات في هذا الموضوع"
     users: "مستخدمين"
     users_lowercase: "مستخدمين"
     category_title: "قسم"
+    history: "تاريخ"
+    changed_by: "الكاتب {{author}}"
+    raw_email:
+      title: "البريد الإلكتروني"
+      not_available: "غير متوفر"
+    categories_list: "قائمة الاقسام"
+    filters:
+      with_topics: "%{filter} مواضيع"
+      with_category: "%{filter} %{category} مواضيع"
+      latest:
+        title: "آخر"
+        help: "مواضيع بآخر المشاركات"
+      hot:
+        title: "ساخن"
+        help: "مختارات من مواضيع ساخنة"
+      read:
+        title: "قراءة"
+        help: "مواضيع قمت بقراءتها بترتيب آخر قراءة"
+      categories:
+        title: "اقسام"
+        title_in: "قسم - {{categoryName}}"
+        help: "جميع المواضيع تتبع القسم"
+      unread:
+        title:
+          zero: "غير مقروء"
+          one: "غير مقروء (1)"
+          other: "غير مقروء ({{count}})"
+        help: "مواضيع أنت تشاهدها بمشاركات غير مقروءة "
+        lower_title_with_count:
+          one: "1 غير مقروء"
+          other: "{{count}} غير مقروء"
+      new:
+        lower_title_with_count:
+          one: "1 جديد"
+          other: "{{count}} جديد"
+        lower_title: "جديد"
+        title:
+          zero: "جديد"
+          one: "جديد (1)"
+          other: "جديد ({{count}})"
+        help: "مواضيع جديد في الايام السابقة"
+      posted:
+        title: "مشاركاتي"
+        help: "مواضيع شاركت بها "
+      bookmarks:
+        title: "المفضلة"
+        help: "مواضيع قمت بتفضيلها"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "آخر المواضيع في  {{categoryName}} قسم"
+      top:
+        title: "أعلى"
+        help: "أكثر المواضيع نشاطا خلال سنة, شهر, اسبوع او يوم"
+        yearly:
+          title: "الاعلى في السنة"
+        monthly:
+          title: "الاعلى في الشهر"
+        weekly:
+          title: "الاعلى في الاسبوع"
+        daily:
+          title: "الاعلى في اليوم"
+        all: "كل الاوقات"
+        this_year: "هذه السنة"
+        this_month: "هذا الشهر"
+        this_week: "هذا الاسبوع"
+        today: "اليوم"
+        other_periods: "الاطلاع على مواضيع زيادة"
+    browser_update: 'للأسف, <a href="http://www.discourse.org/faq/#browser">متصفحك قديم لكي يفتح هذه الصفحة</a>. Please <a href="http://browsehappy.com">قم بتحديث متصفحك</a>.'
+    permission_types:
+      full: "انشاء / رد / مشاهدة"
+      create_post: "رد / مشاهدة"
+      readonly: "مشاهدة"
   admin_js:
+    type_to_filter: "اكتب لتصفية"
     admin:
+      title: 'مدير المجتمع'
+      moderator: 'مراقب'
       dashboard:
+        title: "داشبورد"
         version: "الاصدار"
         critical_available: "يوجد تحديث هام."
         updates_available: "يوجد تحديثات."
@@ -1097,7 +1203,10 @@ ar:
         moderators: 'مراقبين:'
         admins: 'مدراء:'
         blocked: 'محظور:'
+        suspended: 'موقوف:'
         private_messages_title: "رسائل خاصة"
+        uploads: "عمليات الرفع"
+        backups: "النسخ الاحتياطية"
         reports:
           today: "اليوم"
           yesterday: "امس"
@@ -1113,42 +1222,267 @@ ar:
       flags:
         old: "قديم"
         active: "نشط"
+        defer_flag_title: "إزالة البلاغ، لا يتطلب منك إجراء في الوقت الحالي."
+        delete: "حذف"
+        delete_title: "حذف المشاركة المرتبطة بهذا البلاغ"
+        delete_post_defer_flag_title: "حذف المشاركة. اذا كانت المشاركة الاولى, احذف الموضوع"
+        delete_post_agree_flag: "حذف المشاركة مع الموافقة على البلاغ"
+        delete_post_agree_flag_title: "حذف المشاركة. اذا كانت المشاركة الاولى, احذف الموضوع"
+        delete_flag_modal_title: "حذف مع ..."
+        delete_spammer: "حذف مرسلي البريد المزعج"
+        delete_spammer_title: "احذف المستخدم مع مشاركاته و مواضيعه."
+        disagree_flag_unhide_post: "أختلف مع البلاغ، إعادة إظهار المشاركة."
+        disagree_flag_unhide_post_title: "حذف أي بلاغ يخص هذه المشاركة مع إظهارها مرة أخرى"
+        disagree_flag: "أختلف"
+        disagree_flag_title: "رفض هذا البلاغ لكونه خاطئ"
+        clear_topic_flags: "إتمام العملية"
+        clear_topic_flags_title: "تم فحص الموضوع وحل المشاكل المتعلقة به. إضغط على إتمام العملية لحذف هذه البلاغات."
+        more: "ردود أكثر..."
+        dispositions:
+          agreed: "متفق"
+          disagreed: "أختلف"
+          deferred: "مؤجل"
+        flagged_by: "مُبلّغ عنه بواسطة"
+        resolved_by: "تم حلّه بواسطة"
+        system: "النظام"
         error: "حدث خطأ ما"
+        no_results: "لا يوجد بلاغات."
+        visit_topic: "زيارة الموضوع لاتخاذ قرار"
+        was_edited: "تم تعديل المشاركة بعد أول بلاغ"
       groups:
+        primary: "المجموعة الأساسية"
+        no_primary: "(لايوجد مجموعة أساسية)"
         title: "مجموعات"
         edit: "تعديل المجموعة"
+        refresh: "تحديث"
+        new: "جديد"
+        selector_placeholder: "أدخل اسم المستخدم"
         name_placeholder: "اسم المجموعة, بدون مسافة, مثل قاعدة اسم المستخدم"
         about: "هنا عدّل على عضوية المجموعة والاسماء"
+        group_members: "اعضاء المجموعة"
         delete: "حذف"
         delete_confirm: "حذف هذة المجموعة؟"
         delete_failed: "لا يمكن حذف هذه المجموعة. اذا كانت هذة المجموعة مجموعة تلقائية, لا يمكن حذفها."
+        delete_member_confirm: "ازالة '%{username}' من  '%{group}' المجموعة?"
+        name: "الاسم"
+        add: "اضافة"
+        add_members: "اضافة عضو"
+        custom: "مخصص"
+        automatic: "تلقائي"
+        automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
+        automatic_membership_retroactive: "اضافة الاعضاء الذين يمتكلون عنوان ايميل مطابق للعنوان الموجود في القائمة."
       api:
+        generate_master: "Generate Master API Key"
+        none: "There are no active API keys right now"
+        user: "مستخدمين"
         title: "API"
         key: "API Key"
         generate: "إنشاء"
         regenerate: "إعادة إنشاء"
+        revoke: "Revoke"
+        confirm_regen: "هل أنت متأكد من استبدال مفتاح الAPI بالمفتاح الجديد ؟"
+        confirm_revoke: "هل أنت متأكد من رغبتك في تعطيل هذا المفتاح؟"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        all_users: "جميع المستخدمين"
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+      plugins:
+        title: "اضافات"
+        installed: "اضافات مثيته"
+        name: "الاسم"
+        none_installed: "لاتملك اي اضافة مثبته"
+        version: "الاصدار"
+        change_settings: "تغيير الاعدادت"
+        howto: "كيف اثبت اضافة؟"
+      backups:
+        title: "نسخة احتياطية"
+        menu:
+          backups: "نسخة احتياطية"
+          logs: "Logs"
+        none: "لاتوجد نسخ احتياطية"
+        read_only:
+          enable:
+            title: "تفعيل وضع القراءة فقط"
+            text: "تفعيل وضع القراءة فقط"
+            confirm: "هل أنت متأكد من تفعيل وضع القراءة فقط؟"
+          disable:
+            title: "تعطيل وضع القراءة فقط"
+            text: "تعطيل وضع القراءة فقط"
+        logs:
+          none: "No logs yet."
+        columns:
+          filename: "اسم الملف"
+          size: "حجم"
+        upload:
+          text: "رفع"
+          uploading: "يتم الرفع..."
+          success: "'{{filename}}' تم رفعه بنجاح."
+          error: "هناك مشكلة في رفع  '{{filename}}': {{message}}"
+        operations:
+          is_running: "هناك عملية مازالت تعمل ..."
+          failed: "الـ {{operation}} فشلت. الرجاء التحقق من logs."
+          cancel:
+            text: "إلغاء"
+            title: "الغاء العملية الحالية"
+            confirm: "هل أنت متأكد من رغبتك في الغاء العملية الحالية ؟"
+          backup:
+            text: "نسخة احتياطية"
+            title: "انشاء نسخة احتياطية"
+            confirm: "هل تريد انشاء نسخة احتياطية جديدة ؟"
+            without_uploads: "نعم (لا تضمن الملفات)"
+          download:
+            text: "تحميل"
+            title: "تحميل النسخة الاحتياطية"
+          destroy:
+            text: "حذف"
+            title: "حذف النسخة الاحتياطية"
+            confirm: "هل أنت متأكد من رغبتك في حذف النسخة الاحتياطية؟"
+          restore:
+            is_disabled: "Restore is disabled in the site settings."
+            text: "Restore"
+            title: "اعادة تخزين النسخة الاحتياطية"
+            confirm: "هل أنت متأكد من رغبتك في اعادة تخزين النسخة الاحتياطية؟"
+          rollback:
+            text: "اعادة السنخة السابقة"
+            title: "Rollback the database to previous working state"
+            confirm: "Are your sure you want to rollback the database to the previous working state?"
+      export_csv:
+        user_archive_confirm: "هل أنت متأكد من رغبتك في تحميل جميع مشاركاتك ؟"
+        success: "Export initiated, you will be notified via private message when the process is complete."
+        failed: "فشل في التصدير, الرجاء التحقق من الـ logs"
+        rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
+        button_text: "التصدير"
+        button_title:
+          user: "تصدير قائمة المستخدمين على شكل CSV"
+          staff_action: "تصدير قائمة الموظفين على شكل CSV."
+          screened_email: "Export full screened email list in CSV format."
+          screened_ip: "Export full screened IP list in CSV format."
+          screened_url: "Export full screened URL list in CSV format."
+      invite:
+        button_text: "ارسال دعوات"
+        button_title: "ارسال دعوات"
       customize:
         title: "تخصيص"
         long_title: "تخصيص الموقع"
+        css: "CSS"
+        header: "Header"
+        top: "Top"
+        footer: "Footer"
+        head_tag:
+          text: "</head>"
+          title: "HTML that will be inserted before the </head> tag"
+        body_tag:
+          text: "</body>"
+          title: "HTML that will be inserted before the </body> tag"
+        override_default: "Do not include standard style sheet"
         enabled: "تفعيل؟"
         preview: "معاينة"
+        undo_preview: "ازالة المعاينة"
+        rescue_preview: "الشكل الافتراضي"
+        explain_preview: "مشاهدة الموقع مع الثيم الجديد"
+        explain_undo_preview: "الرجوع الى الثيم السابق"
+        explain_rescue_preview: "مشاهدة الموقع مع الثيم الافتراضي"
         save: "حفظ"
         new: "جديد"
+        new_style: "ثيم جديد"
         delete: "حذف"
         delete_confirm: "حذف هذا التخصيص؟"
+        about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
+        color: "Color"
+        opacity: "Opacity"
+        copy: "نسخ"
+        css_html:
+          title: "CSS/HTML"
+          long_title: "CSS and HTML Customizations"
+        colors:
+          title: "اللون"
+          long_title: "نمط الألوان"
+          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
+          new_name: "New Color Scheme"
+          copy_name_prefix: "نسخة من"
+          delete_confirm: "حذف جميع الالوان؟"
+          undo: "تراجع"
+          undo_title: "التراجع عن تغيير اللن الى اللون السابق"
+          revert: "تراجع"
+          revert_title: "اعادة ضبط اللون الى اللون الافتراضي للموقع"
+          primary:
+            name: 'اساسي'
+            description: 'Most text, icons, and borders.'
+          secondary:
+            name: 'ثانوي'
+            description: 'اللون الاساسي للخلفية, والنص للايقونة'
+          tertiary:
+            name: 'tertiary'
+            description: 'الروابط، الأزرار، الإشعارات و أشياء أخرى.'
+          quaternary:
+            name: "رباعي"
+            description: "الروابط"
+          header_background:
+            name: "خلفية رأس الصفحة"
+            description: "لون الخلفية لرأس الصفحة الخاصة بالموقع"
+          header_primary:
+            name: "رأس الصفحة الأساسي"
+            description: "لون و أيقونات رأس الصفحة الخاصة بالموقع."
+          highlight:
+            name: 'تحديد'
+            description: 'لون خلفية النصوص و العناصر المحددة في جسم الصفحة مثل المشاركات و المواضيع.'
+          danger:
+            name: 'خطر'
+            description: 'لون  بعض الأوامر مثل حذف المشاركات و المواضيع'
+          success:
+            name: 'نجاح'
+            description: 'يستخدم لإظهار نجاح عملية ما.'
+          love:
+            name: 'إعجاب'
+            description: "لون زر الإعجاب."
+          wiki:
+            name: 'ويكي'
+            description: "اللون الأساسي المستخدم كخلفية لمشاركات الويكي."
       email:
         title: "بريد الكتروني"
         settings: "اعدادات"
+        all: "الكل"
+        sending_test: "إرسال بريد إلكتروني للتجربة..."
+        error: "<b>خطأ</b> - %{server_error}"
+        test_error: "حدث خطأ أثناء إرسال رسالة تجريبية. الرجاء فحص إعدادات البريد الإلكتروني و التأكد من أن الاستضافة لا تمنع مرور البريد الإلكتروني والمحاولة مرة أخرى."
+        sent: "تم الإرسال"
+        skipped: "تم التجاوز"
         sent_at: "أرسلت في"
+        time: "الوقت"
+        user: "المستخدم"
         email_type: "نوع البريد الكتروني"
         to_address: "الى العناوين"
         test_email_address: "عنوان البريد الكتروني للتجربة"
+        send_test: "ارسل رسالة تجربة"
         sent_test: "اٌرسلت!"
         delivery_method: "طريقة التسليم"
         refresh: "تحديث"
+        format: "التنسيق"
         html: "html"
         text: "نص"
         last_seen_user: "آخر مستخدم تواجد:"
+        logs:
+          filters:
+            user_placeholder: "اسم المستخدم"
+      logs:
+        delete: 'حذف'
+        edit: 'تعديل'
+        save: 'حفظ'
+        screened_actions:
+          block: "حظر"
+          do_nothing: "لا تفعل شيء"
+        staff_actions:
+          title: "عمليات المشرفين"
+          clear_filters: "إظهار الكل"
+          subject: "الموضوع"
+          when: "متى"
+          context: "السياق"
+          details: "التفاصيل"
+          previous_value: "معاينة"
+          new_value: "جديد"
+          diff: "الاختلافات"
+          show: "إظهار"
+          modal_title: "التفاصيل"
+          no_previous: "لا يوجد قيمة سابقة."
       users:
         title: 'مستخدمين'
         create: 'اضافة مدير'
@@ -1196,6 +1530,10 @@ ar:
         block_failed: 'حدث خطأ عند حظر هذا المستخدم.'
       site_settings:
         none: 'لا شيء'
+      badges:
+        save: حفظ
+        delete: حذف
+        reason: السبب
     badges:
       badge:
         first_share:
