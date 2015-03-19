@@ -247,8 +247,8 @@ en:
       post_count: "Replies"
       no_results: "No results were found for this time period."
       total_rows:
-        one: "1 user found"
-        other: "%{count} users found"
+        one: "1 user"
+        other: "%{count} users"
 
     groups:
       visible: "Group is visible to all users"

@@ -25,6 +25,9 @@ class UsersController < ApplicationController
                                                             :authorize_email,
                                                             :password_reset]
 
+  def index
+  end
+
   def show
     @user = fetch_user_from_params
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')

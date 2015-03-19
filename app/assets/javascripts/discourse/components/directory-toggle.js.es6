@@ -7,6 +7,12 @@ export default Ember.Component.extend(StringBuffer, {
   rerenderTriggers: ['order', 'asc'],
 
   renderString(buffer) {
+
+    const icon = this.get('icon');
+    if (icon) {
+      buffer.push(iconHTML(icon));
+    }
+
     const field = this.get('field');
     buffer.push(I18n.t('directory.' + field));
 

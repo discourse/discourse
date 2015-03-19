@@ -42,9 +42,13 @@ class DirectoryItem < ActiveRecord::Base
                   SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
                 FROM users AS u
                 LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id
+                LEFT OUTER JOIN topics AS t ON ua.target_topic_id = t.id
+                LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id
                 WHERE u.active
                   AND NOT u.blocked
                   AND COALESCE(ua.created_at, :since) >= :since
+                  AND t.deleted_at IS NULL
+                  AND p.deleted_at IS NULL
                   AND u.id > 0
                 GROUP BY u.id",
                 period_type: period_types[period_type],

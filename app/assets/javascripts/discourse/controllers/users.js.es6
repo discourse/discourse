@@ -1,5 +1,6 @@
 export default Ember.Controller.extend({
-  queryParams: ['order', 'asc'],
+  queryParams: ['period', 'order', 'asc'],
+  period: 'weekly',
   order: 'likes_received',
   asc: null,
 

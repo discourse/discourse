@@ -25,7 +25,6 @@ Discourse::Application.routes.draw do
 
   resources :about
 
-  resources :directory
   resources :directory_items
 
   get "site" => "site#site"
