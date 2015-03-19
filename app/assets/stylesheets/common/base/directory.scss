@@ -4,10 +4,12 @@
   .period-chooser {
     float: left;
   }
-  .total-rows {
-    margin-top: 0.5em;
-    color: darken(scale-color-diff(), 20%);
+  .filter-name {
     float: right;
+  }
+  .total-rows {
+    color: darken(scale-color-diff(), 20%);
+    text-align: right;
   }
   .spinner {
     clear: both;
@@ -15,7 +17,6 @@
 
   table {
     width: 100%;
-    margin-top: 1em;
     margin-bottom: 1em;
 
     td, th {

@@ -23,10 +23,23 @@ class DirectoryItemsController < ApplicationController
     end
     page = params[:page].to_i
 
+    user_ids = nil
+    if params[:name].present?
+      user_ids = UserSearch.new(params[:name]).search.pluck(:id)
+      if user_ids.present?
+        # Add the current user if we have at least one other match
+        if current_user && result.dup.where(user_id: user_ids).count > 0
+          user_ids << current_user.id
+        end
+        result = result.where(user_id: user_ids)
+      else
+        result = result.where('false')
+      end
+    end
 
     result = result.order('users.username')
     result_count = result.dup.count
-    result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page)
+    result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
     more_params = params.slice(:period, :order, :asc)
     more_params[:page] = page + 1
