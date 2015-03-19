@@ -1021,7 +1021,7 @@ en:
       feature_topic:
         title: "Feature this topic"
         pin: "Make this topic appear at the top of the {{categoryLink}} category."
-        confirm_ping: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
+        confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the topic of the {{categoryLink}} category."
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
