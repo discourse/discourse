@@ -29,7 +29,7 @@
                 <td>{{number item.model.post_count}}</td>
                 <td>{{number item.model.topics_entered}}</td>
                 {{#if showTimeRead}}
-                  <td>{{unbound item.model.time_read}}</td>
+                <td><span class='time-read'>{{unbound item.model.time_read}}</span></td>
                 {{/if}}
               </tr>
             {{/each}}

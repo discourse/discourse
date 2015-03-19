@@ -22,7 +22,11 @@
       padding: 0.5em;
       text-align: left;
       border-bottom: 1px solid scale-color-diff();
-      vertical-align: top;
+
+      .number, .time-read {
+        font-size: 1.4em;
+        color: darken(scale-color-diff(), 40%);
+      }
     }
 
     tr.me {
@@ -41,7 +45,7 @@
         margin-right: 0.5em;
       }
       i.fa-chevron-down, i.fa-chevron-up {
-        margin-left: 1em;
+        margin-left: 0.5em;
       }
 
       &:hover {
