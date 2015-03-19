@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe DirectoryItemsController do
 
-  it "requires an `id` param" do
+  it "requires a `period` param" do
     ->{ xhr :get, :index }.should raise_error
   end
 
-  it "requires a proper `id` param" do
-    xhr :get, :index, id: 'eviltrout'
+  it "requires a proper `period` param" do
+    xhr :get, :index, period: 'eviltrout'
     response.should_not be_success
   end
 
@@ -18,7 +18,7 @@ describe DirectoryItemsController do
     end
 
     it "succeeds with a valid value" do
-      xhr :get, :index, id: 'all'
+      xhr :get, :index, period: 'all'
       response.should be_success
       json = ::JSON.parse(response.body)
 

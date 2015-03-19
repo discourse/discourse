@@ -26,20 +26,19 @@
 
     th.sortable {
       cursor: pointer;
+      white-space: nowrap;
 
       width: 13%;
-      i.fa {
+      i.fa-heart {
+        color: $love;
+        margin-right: 0.5em;
+      }
+      i.fa-chevron-down, i.fa-chevron-up {
         margin-left: 1em;
       }
 
       &:hover {
         background-color: scale-color-diff();
-      }
-    }
-
-    td.likes {
-      i {
-        color: $love;
       }
     }
   }

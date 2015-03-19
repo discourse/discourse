@@ -2,8 +2,8 @@ class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
 
   def index
-    id = params.require(:id)
-    period_type = DirectoryItem.period_types[id.to_sym]
+    period = params.require(:period)
+    period_type = DirectoryItem.period_types[period.to_sym]
     raise Discourse::InvalidAccess.new(:period_type) unless period_type
 
     result = DirectoryItem.where(period_type: period_type).includes(:user)
@@ -24,7 +24,7 @@ class DirectoryItemsController < ApplicationController
 
     serialized = serialize_data(result, DirectoryItemSerializer)
 
-    more_params = params.slice(:id, :order, :asc)
+    more_params = params.slice(:period, :order, :asc)
     more_params[:page] = page + 1
 
     render_json_dump directory_items: serialized,

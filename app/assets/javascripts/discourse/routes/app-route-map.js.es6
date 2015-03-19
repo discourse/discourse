@@ -11,10 +11,6 @@ export default function() {
   });
   this.resource('topicBySlug', { path: '/t/:slug' });
 
-  this.resource('directory', function() {
-    this.route('show', {path: '/:period'});
-  });
-
   this.resource('discovery', { path: '/' }, function() {
     // top
     this.route('top');
@@ -56,6 +52,7 @@ export default function() {
   });
 
   // User routes
+  this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
     this.resource('userActivity', { path: '/activity' }, function() {
       var self = this;
