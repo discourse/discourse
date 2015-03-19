@@ -22,13 +22,15 @@ test('replyLength', function() {
 });
 
 test('missingReplyCharacters', function() {
-  var missingReplyCharacters = function(val, isPM, expected, message) {
-    var composer = Discourse.Composer.create({ reply: val, creatingPrivateMessage: isPM });
+  Discourse.SiteSettings.min_first_post_length = 40;
+  var missingReplyCharacters = function(val, isPM, isFirstPost, expected, message) {
+    var composer = Discourse.Composer.create({ reply: val, creatingPrivateMessage: isPM, creatingTopic: isFirstPost });
     equal(composer.get('missingReplyCharacters'), expected, message);
   };
 
-  missingReplyCharacters('hi', false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
-  missingReplyCharacters('hi', true,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
+  missingReplyCharacters('hi', false, false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
+  missingReplyCharacters('hi', false, true,  Discourse.SiteSettings.min_first_post_length - 2, 'too short first post');
+  missingReplyCharacters('hi', true, false,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
 });
 
 test('missingTitleCharacters', function() {
