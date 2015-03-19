@@ -22,10 +22,7 @@
           <tbody>
             {{#each item in model}}
               <tr>
-                <td>
-                  {{avatar item imageSize="tiny"}}
-                  {{#link-to 'user' item.username}}{{unbound item.username}}{{/link-to}}
-                </td>
+                <td>{{user-small user=item.user}}</td>
                 <td>{{number item.likes_received}}</td>
                 <td>{{number item.likes_given}}</td>
                 <td>{{number item.topic_count}}</td>
