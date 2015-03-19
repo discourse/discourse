@@ -58,16 +58,17 @@ export default ObjectController.extend(ModalFunctionality, {
       this._forwardAction(action);
     } else {
       this.send("hideModal");
-      const message = I18n.t("topic.feature_topic.confirm_" + name, { count: count });
       bootbox.confirm(
-        message, I18n.t("no_value"), I18n.t("yes_value"),
-        (confirmed) => confirmed ? this._forwardAction(action) : this.send("reopenModal")
+        I18n.t("topic.feature_topic.confirm_" + name, { count: count }),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        confirmed => confirmed ? this._forwardAction(action) : this.send("reopenModal")
       );
     }
   },
 
   actions: {
-    pin() { this._confirmBeforePinning(this.get("pinnedInCategoryCount"), "pin", "togglePinned"); },
+    pin() { this._forwardAction("togglePinned"); },
     pinGlobally() { this._confirmBeforePinning(this.get("pinnedGloballyCount"), "pin_globally", "pinGlobally"); },
     unpin() { this._forwardAction("togglePinned"); },
     makeBanner() { this._forwardAction("makeBanner"); },
