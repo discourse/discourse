@@ -3,7 +3,9 @@
 </div>
 
 <div class="user-detail">
-  <span class="username">{{#link-to 'user' user.username}}{{user.username}}{{/link-to}}</span>
-  <span class="name">{{user.name}}</span>
-  <span class="title">{{user.title}}</span>
+  <div class='name-line'>
+    <span class="username">{{#link-to 'user' user.username}}{{user.username}}{{/link-to}}</span>
+    <span class="name">{{name}}</span>
+  </div>
+  <div class="title">{{user.title}}</div>
 </div>

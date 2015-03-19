@@ -22,12 +22,10 @@ class DirectoryItemsController < ApplicationController
     result_count = result.dup.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page)
 
-    serialized = serialize_data(result, DirectoryItemSerializer)
-
     more_params = params.slice(:period, :order, :asc)
     more_params[:page] = page + 1
 
-    render_json_dump directory_items: serialized,
+    render_json_dump directory_items: serialize_data(result, DirectoryItemSerializer),
                      total_rows_directory_items: result_count,
                      load_more_directory_items: directory_items_path(more_params)
 
