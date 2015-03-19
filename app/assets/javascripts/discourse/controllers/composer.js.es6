@@ -267,12 +267,8 @@ export default DiscourseController.extend({
     return promise;
   },
 
-  /**
-    Checks to see if a reply has been typed. This is signaled by a keyUp
-    event in a view.
-
-    @method checkReplyLength
-  **/
+  // Checks to see if a reply has been typed.
+  // This is signaled by a keyUp event in a view.
   checkReplyLength() {
     if (this.present('model.reply')) {
       // Notify the composer messages controller that a reply has been typed. Some
@@ -281,12 +277,8 @@ export default DiscourseController.extend({
     }
   },
 
-  /**
-    Fired after a user stops typing. Considers whether to check for similar
-    topics based on the current composer state.
-
-    @method findSimilarTopics
-  **/
+  // Fired after a user stops typing.
+  // Considers whether to check for similar topics based on the current composer state.
   findSimilarTopics() {
     // We don't care about similar topics unless creating a topic
     if (!this.get('model.creatingTopic')) { return; }
