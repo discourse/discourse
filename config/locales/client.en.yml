@@ -239,8 +239,8 @@ en:
 
     directory:
       title: "User Directory"
-      likes_given: "Likes Given"
-      likes_received: "Likes Received"
+      likes_given: "Given"
+      likes_received: "Received"
       topics_entered: "Topics Entered"
       time_read: "Time Read"
       topic_count: "Topics"

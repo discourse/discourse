@@ -2,6 +2,18 @@ import showModal from 'discourse/lib/show-modal';
 
 const DiscourseRoute = Ember.Route.extend({
 
+  refreshModel: null,
+
+  refresh: function() {
+    // Implement `refreshModel` to avoid a full transition to ourselves
+    if (!this.refreshModel) { return this._super(); }
+
+    if (!this.router.router.activeTransition) {
+      const params = this.controller.getProperties(Object.keys(this.queryParams));
+      this.refreshModel(params);
+    }
+  },
+
   /**
     NOT called every time we enter a route on Discourse.
     Only called the FIRST time we enter a route.
