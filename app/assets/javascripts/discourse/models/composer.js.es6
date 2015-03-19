@@ -40,6 +40,8 @@ const Composer = Discourse.Model.extend({
     return this.get('creatingPrivateMessage') || this.get('topic.archetype') === 'private_message';
   }.property('creatingPrivateMessage', 'topic'),
 
+  topicFirstPost: Em.computed.or('creatingTopic', 'editingFirstPost'),
+
   editingPost: Em.computed.equal('action', EDIT),
   replyingToTopic: Em.computed.equal('action', REPLY),
 
@@ -215,10 +217,13 @@ const Composer = Discourse.Model.extend({
   minimumPostLength: function() {
     if( this.get('privateMessage') ) {
       return Discourse.SiteSettings.min_private_message_post_length;
+    } else if (this.get('topicFirstPost')) {
+      // first post (topic body)
+      return Discourse.SiteSettings.min_first_post_length;
     } else {
       return Discourse.SiteSettings.min_post_length;
     }
-  }.property('privateMessage'),
+  }.property('privateMessage', 'topicFirstPost'),
 
   /**
     Computes the length of the title minus non-significant whitespaces
