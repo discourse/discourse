@@ -1021,7 +1021,7 @@ en:
       feature_topic:
         title: "Feature this topic"
         pin: "Make this topic appear at the top of the {{categoryLink}} category."
-        confirm_pin: "Are you sure? You already have {{count}} pinned topics -- too many pinned topics can obscure other active topics."
+        confirm_ping: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
         unpin: "Remove this topic from the topic of the {{categoryLink}} category."
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
@@ -1029,7 +1029,7 @@ en:
           one: "Topic currently pinned in {{categoryLink}}: <strong>1.</strong>"
           other: "Topics currently pinned in {{categoryLink}}: <strong>{{count}}</strong>."
         pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
-        confirm_pin_globally: "Are you sure? You already have {{count}} globally pinned topics -- too many pinned topics can obscure other active topics."
+        confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         global_pin_note: "Users can unpin the topic individually for themselves."
         already_pinned_globally:
