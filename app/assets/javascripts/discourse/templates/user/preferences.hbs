@@ -54,7 +54,7 @@
           <div class="controls">
             <span class='static'>{{email}}</span>
             {{#if can_edit_email}}
-              {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+              {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
             {{/if}}
           </div>
           <div class='instructions'>
@@ -62,7 +62,7 @@
           </div>
         {{else}}
           <div class="controls">
-            <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+            {{d-button action="checkEmail" actionParam=this title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
           </div>
         {{/if}}
       </div>
@@ -72,7 +72,8 @@
     <div class="control-group pref-password">
       <label class="control-label">{{i18n 'user.password.title'}}</label>
       <div class="controls">
-        <a href="#" {{action "changePassword"}} class='btn'><i class="fa fa-envelope"></i>
+        <a href="#" {{action "changePassword"}} class='btn'>
+          {{fa-icon "envelope"}}
           {{#if no_password}}
             {{i18n 'user.change_password.set_password'}}
           {{else}}
@@ -87,9 +88,10 @@
     <div class="control-group pref-avatar">
       <label class="control-label">{{i18n 'user.avatar.title'}}</label>
       <div class="controls">
-        {{bound-avatar model "large"}}
+        {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
+        {{bound-avatar model "huge"}}
         {{#if allowAvatarUpload}}
-          <button {{action "showAvatarSelector"}} class="btn pad-left no-text">{{fa-icon "pencil"}}</button>
+          {{d-button action="showAvatarSelector" class="pad-left no-text" icon="pencil"}}
         {{else}}
           {{#unless ssoOverridesAvatar}}
             <a href="//gravatar.com/emails" target="_blank" title="{{i18n 'user.change_avatar.gravatar_title'}}" class="btn no-text">{{fa-icon "pencil"}}</a>
@@ -245,7 +247,7 @@
       <div class="control-group delete-account">
         <hr/>
         <div class="controls">
-            <button {{action "delete"}} {{bind-attr disabled="deleteDisabled"}} class="btn btn-danger"><i class="fa fa-trash-o"></i> {{i18n 'user.delete_account'}}</button>
+          {{d-button action="delete" disabled="deleteDisabled" class="btn-danger" icon="trash-o" label="user.delete_account"}}
         </div>
       </div>
     {{/if}}

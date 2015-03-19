@@ -2,9 +2,8 @@
 
 export default Discourse.Route.extend({
 
-  afterModel: function() {
-    var user = this.modelFor('user');
-    if (!user.get('can_edit')) {
+  afterModel() {
+    if (!this.modelFor('user').get('can_edit')) {
       this.replaceWith('userActivity');
     }
   }

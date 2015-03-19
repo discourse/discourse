@@ -170,6 +170,13 @@
         border-bottom: 1px solid scale-color-diff();
       }
     }
+
+    .pref-avatar {
+      .avatar {
+        max-width: 45px;
+        max-height: 45px;
+      }
+    }
   }
 
   .about {
