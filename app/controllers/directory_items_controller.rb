@@ -8,6 +8,10 @@ class DirectoryItemsController < ApplicationController
 
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
+    if current_user.present?
+      result = result.order("CASE WHEN users.id = #{current_user.id.to_i} THEN 0 ELSE 1 END")
+    end
+
     order = params[:order] || DirectoryItem.headings.first
     if DirectoryItem.headings.include?(order.to_sym)
       dir = params[:asc] ? 'ASC' : 'DESC'
@@ -18,6 +22,8 @@ class DirectoryItemsController < ApplicationController
       result = result.includes(:user_stat)
     end
     page = params[:page].to_i
+
+
     result = result.order('users.username')
     result_count = result.dup.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page)

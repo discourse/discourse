@@ -20,16 +20,16 @@
             {{/if}}
           </thead>
           <tbody>
-            {{#each item in model}}
-              <tr>
-                <td>{{user-small user=item.user}}</td>
-                <td>{{number item.likes_received}}</td>
-                <td>{{number item.likes_given}}</td>
-                <td>{{number item.topic_count}}</td>
-                <td>{{number item.post_count}}</td>
-                <td>{{number item.topics_entered}}</td>
+            {{#each item in model itemController="directory-item"}}
+              <tr {{bind-attr class="item.me"}}>
+                <td>{{user-small user=item.model.user}}</td>
+                <td>{{number item.model.likes_received}}</td>
+                <td>{{number item.model.likes_given}}</td>
+                <td>{{number item.model.topic_count}}</td>
+                <td>{{number item.model.post_count}}</td>
+                <td>{{number item.model.topics_entered}}</td>
                 {{#if showTimeRead}}
-                  <td>{{unbound item.time_read}}</td>
+                  <td>{{unbound item.model.time_read}}</td>
                 {{/if}}
               </tr>
             {{/each}}
