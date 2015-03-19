@@ -1,21 +1,21 @@
 integration("Topic Discovery");
 
-test("Visit Discovery Pages", function() {
+test("Visit Discovery Pages", () => {
   visit("/");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });
 
   visit("/c/bug");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
     ok($('body.category-bug').length, "has a custom css class for the category id on the body");
   });
 
   visit("/categories");
-  andThen(function() {
+  andThen(() => {
     ok($('body.category-bug').length === 0, "removes the custom category class");
 
     ok(exists('.category'), "has a list of categories");
@@ -23,7 +23,7 @@ test("Visit Discovery Pages", function() {
   });
 
   visit("/top");
-  andThen(function() {
+  andThen(() => {
     ok($('body.categories-list').length === 0, "removes the `categories-list` class");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });

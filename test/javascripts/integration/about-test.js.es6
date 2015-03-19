@@ -1,8 +1,8 @@
 integration("About");
 
-test("viewing", function() {
+test("viewing", () => {
   visit("/about");
-  andThen(function() {
+  andThen(() => {
     ok(exists('.about.admins .user-small'), 'has admins');
     ok(exists('.about.moderators .user-small'), 'has moderators');
     ok(exists('.about.stats tr td'), 'has stats');

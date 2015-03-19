@@ -1,9 +1,9 @@
 integration("Unknown");
 
-test("Unknown URL", function() {
+test("Unknown URL", () => {
   expect(1);
   visit("/url-that-doesn't-exist");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".page-not-found"), "The not found content is present");
   });
 });

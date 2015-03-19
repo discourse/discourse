@@ -4,39 +4,39 @@ integration("Login Required", {
   }
 });
 
-test("redirect", function() {
+test("redirect", () => {
   visit('/latest');
-  andThen(function() {
+  andThen(() => {
     equal(currentPath(), "login", "it redirects them to login");
   });
 
   click('#site-logo');
-  andThen(function() {
+  andThen(() => {
     equal(currentPath(), "login", "clicking the logo keeps them on login");
   });
 
   click('header .login-button');
-  andThen(function() {
+  andThen(() => {
     ok(exists('.login-modal'), "they can still access the login modal");
   });
 
   click('.modal-header .close');
-  andThen(function() {
+  andThen(() => {
     ok(!exists('.login-modal'), "it closes the login modal");
   });
 
   click('#search-button');
-  andThen(function() {
+  andThen(() => {
     ok(exists('.login-modal'), "clicking search opens the login modal");
   });
 
   click('.modal-header .close');
-  andThen(function() {
+  andThen(() => {
     ok(!exists('.login-modal'), "it closes the login modal");
   });
 
   click('#site-map');
-  andThen(function() {
+  andThen(() => {
     ok(exists('.login-modal'), "site map opens the login modal");
   });
 });

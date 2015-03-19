@@ -1,8 +1,8 @@
 integration("Header (Anonymous)");
 
-test("header", function() {
+test("header", () => {
   visit("/");
-  andThen(function() {
+  andThen(() => {
     ok(exists("header"), "is rendered");
     ok(exists(".logo-big"), "it renders the large logo by default");
     not(exists("#notifications-dropdown li"), "no notifications at first");
@@ -12,17 +12,17 @@ test("header", function() {
   });
 
   // Logo changing
-  andThen(function() {
+  andThen(() => {
     controllerFor('header').set("showExtraInfo", true);
   });
 
-  andThen(function() {
+  andThen(() => {
     ok(exists(".logo-small"), "it shows the small logo when `showExtraInfo` is enabled");
   });
 
   // Site Map
   click("#site-map");
-  andThen(function() {
+  andThen(() => {
     ok(exists('#site-map-dropdown'), "is rendered after user opens it");
     ok(exists("#site-map-dropdown .faq-link"), "it shows the faq link");
     ok(exists("#site-map-dropdown .category-links"), "has categories correctly bound");
@@ -30,14 +30,14 @@ test("header", function() {
 
   // Search
   click("#search-button");
-  andThen(function() {
+  andThen(() => {
     ok(exists("#search-dropdown:visible"), "after clicking a button search box opens");
     not(exists("#search-dropdown .heading"), "initially, immediately after opening, search box is empty");
   });
 
   // Perform Search
   fillIn("#search-term", "hello");
-  andThen(function() {
+  andThen(() => {
     ok(exists("#search-dropdown .heading"), "when user completes a search, search box shows search results");
     equal(find("#search-dropdown .results a:first").attr("href"), "/t/hello-bar-integration-issues/17638", "there is a search result");
   });

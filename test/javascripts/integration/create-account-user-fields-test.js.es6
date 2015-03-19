@@ -8,11 +8,11 @@ integration("Create Account - User Fields", {
   }
 });
 
-test("create account with user fields", function() {
+test("create account with user fields", () => {
   visit("/");
   click("header .sign-up-button");
 
-  andThen(function() {
+  andThen(() => {
     ok(exists('.create-account'), "it shows the create account modal");
     ok(exists('.user-field'), "it has at least one user field");
     ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled at first');
@@ -23,24 +23,24 @@ test("create account with user fields", function() {
   fillIn('#new-account-email', 'good.tuna@test.com');
   fillIn('#new-account-username', 'goodtuna');
 
-  andThen(function() {
+  andThen(() => {
     ok(exists('#username-validation.good'), 'the username validation is good');
     ok(exists('.modal-footer .btn-primary:disabled'), 'create account is still disabled due to lack of user fields');
   });
 
   fillIn(".user-field input[type=text]:first", "Barky");
 
-  andThen(function() {
+  andThen(() => {
     ok(exists('.modal-footer .btn-primary:disabled'), 'create account is disabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");
-  andThen(function() {
+  andThen(() => {
     not(exists('.modal-footer .btn-primary:disabled'), 'create account is enabled because field is not checked');
   });
 
   click(".user-field input[type=checkbox]");
-  andThen(function() {
+  andThen(() => {
     ok(exists('.modal-footer .btn-primary:disabled'), 'unclicking the checkbox disables the submit');
   });
 

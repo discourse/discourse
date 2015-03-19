@@ -385,7 +385,7 @@ const Composer = Discourse.Model.extend({
   },
 
   save(opts) {
-    if( !this.get('cantSubmitPost') ) {
+    if (!this.get('cantSubmitPost')) {
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
   },
@@ -409,8 +409,9 @@ const Composer = Discourse.Model.extend({
   // When you edit a post
   editPost(opts) {
     const post = this.get('post'),
-        oldCooked = post.get('cooked'),
-        self = this;
+          oldCooked = post.get('cooked'),
+          self = this;
+
     let promise;
 
     // Update the title if we've changed it, otherwise consider it a
@@ -418,7 +419,6 @@ const Composer = Discourse.Model.extend({
     if (this.get('title') &&
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
-
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
       promise = Discourse.Topic.update(this.get('topic'), topicProps);
     } else {
@@ -431,33 +431,26 @@ const Composer = Discourse.Model.extend({
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml()
     });
+
     this.set('composeState', CLOSED);
 
     return promise.then(function() {
       return post.save(function(result) {
         post.updateFromPost(result);
         self.clearState();
-      }).catch(function(error) {
-        const response = $.parseJSON(error.responseText);
-        if (response && response.errors) {
-          return(response.errors[0]);
-        } else {
-          return(I18n.t('generic_error'));
-        }
+      }, function (error) {
         post.set('cooked', oldCooked);
         self.set('composeState', OPEN);
+        const response = $.parseJSON(error.responseText);
+        throw response && response.errors ? response.errors[0] : I18n.t('generic_error');
       });
     });
   },
 
   serialize(serializer, dest) {
-    if (!dest) {
-      dest = {};
-    }
-
-    const self = this;
-    Object.keys(serializer).forEach(function(f) {
-      const val = self.get(serializer[f]);
+    dest = dest || {};
+    Object.keys(serializer).forEach(f => {
+      const val = this.get(serializer[f]);
       if (typeof val !== 'undefined') {
         Ember.set(dest, f, val);
       }
@@ -468,9 +461,10 @@ const Composer = Discourse.Model.extend({
   // Create a new Post
   createPost(opts) {
     const post = this.get('post'),
-        topic = this.get('topic'),
-        currentUser = Discourse.User.current(),
-        postStream = this.get('topic.postStream');
+          topic = this.get('topic'),
+          currentUser = Discourse.User.current(),
+          postStream = this.get('topic.postStream');
+
     let addedToStream = false;
 
     // Build the post object
@@ -530,10 +524,10 @@ const Composer = Discourse.Model.extend({
       }
     }
 
-    const composer = this;
-    const promise =  new Ember.RSVP.Promise(function(resolve, reject) {
-
+    const composer = this,
+          promise = new Ember.RSVP.Promise(function(resolve, reject) {
       composer.set('composeState', SAVING);
+
       createdPost.save(function(result) {
         let saving = true;
 
