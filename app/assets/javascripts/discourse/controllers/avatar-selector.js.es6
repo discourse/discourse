@@ -2,8 +2,10 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
+  uploadedAvatarTemplate: null,
+  hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'custom_avatar_upload_id'),
 
-  selectedUploadId: function(){
+  selectedUploadId: function() {
       switch (this.get("selected")) {
         case "system": return this.get("system_avatar_upload_id");
         case "gravatar": return this.get("gravatar_avatar_upload_id");
@@ -12,18 +14,16 @@ export default DiscourseController.extend(ModalFunctionality, {
   }.property('selected', 'system_avatar_upload_id', 'gravatar_avatar_upload_id', 'custom_avatar_upload_id'),
 
   actions: {
-    useUploadedAvatar: function() { this.set("selected", "uploaded"); },
-    useGravatar: function() { this.set("selected", "gravatar"); },
-    useSystem: function() { this.set("selected", "system"); },
-    refreshGravatar: function() {
-      var self = this;
-      self.set("gravatarRefreshDisabled", true);
-      Discourse
-          .ajax("/user_avatar/" + this.get("username") + "/refresh_gravatar", {method: 'POST'})
-          .then(function(result){
-            self.set("gravatarRefreshDisabled", false);
-            self.set("gravatar_avatar_upload_id", result.upload_id);
-          });
+    useUploadedAvatar() { this.set("selected", "uploaded"); },
+    useGravatar() { this.set("selected", "gravatar"); },
+    useSystem() { this.set("selected", "system"); },
+
+    refreshGravatar() {
+      this.set("gravatarRefreshDisabled", true);
+      return Discourse
+        .ajax("/user_avatar/" + this.get("username") + "/refresh_gravatar.json", { method: 'POST' })
+        .then(result => this.set("gravatar_avatar_upload_id", result.upload_id))
+        .finally(() => this.set("gravatarRefreshDisabled", false));
     }
   }
 

@@ -7,14 +7,14 @@
     <div>
       <input type="radio" id="gravatar" name="avatar" value="gravatar" {{action "useGravatar"}}>
       <label class="radio" for="gravatar">{{bound-avatar controller "large" gravatar_avatar_upload_id}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
-      <button href {{action "refreshGravatar"}} title="{{i18n 'user.change_avatar.refresh_gravatar_title'}}" {{bind-attr enabled="view.gravatarRefreshEnabled"}} class="btn no-text"><i class="fa fa-refresh"></i></button>
+      {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled class="no-text" icon="refresh"}}
     </div>
     <div>
       <input type="radio" id="uploaded_avatar" name="avatar" value="uploaded" {{action "useUploadedAvatar"}}>
       <label class="radio" for="uploaded_avatar">
-        {{#if view.hasUploadedAvatar}}
-          {{#if view.uploadedAvatarTemplate}}
-            {{bound-avatar-template view.uploadedAvatarTemplate "large"}}
+        {{#if hasUploadedAvatar}}
+          {{#if uploadedAvatarTemplate}}
+            {{bound-avatar-template uploadedAvatarTemplate "large"}}
           {{else}}
             {{bound-avatar controller "large" custom_avatar_upload_id}} {{i18n 'user.change_avatar.uploaded_avatar'}}
           {{/if}}
@@ -23,14 +23,14 @@
         {{/if}}
       </label>
       {{avatar-uploader username=username
-                        uploadedAvatarTemplate=view.uploadedAvatarTemplate
-                        custom_avatar_upload_id=controller.custom_avatar_upload_id
+                        uploadedAvatarTemplate=uploadedAvatarTemplate
+                        custom_avatar_upload_id=custom_avatar_upload_id
                         done="useUploadedAvatar"}}
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
-  <button class="btn btn-primary" {{action "saveAvatarSelection"}} {{bind-attr disabled="view.saveDisabled"}}>{{i18n 'save'}}</button>
+  {{d-button action="saveAvatarSelection" class="btn-primary" disabled=saveDisabled label="save"}}
   <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
 </div>
