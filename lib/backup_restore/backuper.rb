@@ -174,7 +174,7 @@ module BackupRestore
     def pg_dump_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
       host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
       port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
