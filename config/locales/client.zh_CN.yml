@@ -184,6 +184,18 @@ zh_CN:
       posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
       sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
+    directory:
+      title: "用户目录"
+      likes_given: "点赞数"
+      likes_received: "获赞数"
+      topics_entered: "参与帖子数"
+      time_read: "阅读时间"
+      topic_count: "帖子数"
+      post_count: "回复数"
+      no_results: "该时间段内没有结果."
+      total_rows:
+        one: "找到 1 个用户"
+        other: "找到 %{count} 个用户"
     groups:
       visible: "群组对所有用户可见"
       title:
@@ -1270,6 +1282,7 @@ zh_CN:
           title: "每周热门"
         daily:
           title: "每日热门"
+        all: "全部"
         this_year: "今年"
         this_month: "本月"
         this_week: "本周"
@@ -1408,8 +1421,12 @@ zh_CN:
         name: "名字"
         add: "添加"
         add_members: "添加成员"
-        custom: "定制"
-        automatic: "自动"
+        custom:
+          label: "定制"
+          title: "定制分组"
+        automatic:
+          label: "自动"
+          title: "自动分组"
         automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
         automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
       api:

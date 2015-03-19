@@ -184,6 +184,18 @@ zh_TW:
       posted_by_you: "作者為 <a href='{{userUrl}}'>你</a>"
       sent_by_user: "寄件者為 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "寄件者為 <a href='{{userUrl}}'>你</a>"
+    directory:
+      title: "用戶目錄"
+      likes_given: "點贊數"
+      likes_received: "獲贊數"
+      topics_entered: "參與帖子數"
+      time_read: "閱讀時間"
+      topic_count: "帖子數"
+      post_count: "回復數"
+      no_results: "該時間段內沒有結果."
+      total_rows:
+        one: "找到 1 個用戶"
+        other: "找到 %{count} 個用戶"
     groups:
       visible: "群組可被所有用戶看到"
       title:
@@ -1269,6 +1281,7 @@ zh_TW:
           title: "本週精選"
         daily:
           title: "本日精選"
+        all: "全部"
         this_year: "本年"
         this_month: "本月"
         this_week: "本週"
@@ -1407,8 +1420,12 @@ zh_TW:
         name: "名稱"
         add: "加入"
         add_members: "新增成員"
-        custom: "自訂"
-        automatic: "自動"
+        custom:
+          label: "自訂"
+          title: "自訂分組"
+        automatic:
+          label: "自動"
+          title: "自動分組"
         automatic_membership_email_domains: "註冊的用戶的電子郵件地址網域，完全符合列表裡某項時，會自動加進這個群組裡："
         automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
       api:
