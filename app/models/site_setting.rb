@@ -48,6 +48,10 @@ class SiteSetting < ActiveRecord::Base
     min_post_length..max_post_length
   end
 
+  def self.first_post_length
+    min_first_post_length..max_post_length
+  end
+
   def self.private_message_post_length
     min_private_message_post_length..max_post_length
   end

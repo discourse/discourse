@@ -25,7 +25,17 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def stripped_length(post)
-    range = post.topic.try(:private_message?) ? SiteSetting.private_message_post_length : SiteSetting.post_length
+    range = if post.topic.try(:private_message?)
+      # private message
+      SiteSetting.private_message_post_length
+    elsif ( post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0) )
+      # creating/editing first post
+      SiteSetting.first_post_length
+    else
+      # regular post
+      SiteSetting.post_length
+    end
+
     Validators::StrippedLengthValidator.validate(post, :raw, post.raw, range)
   end
 
