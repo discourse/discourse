@@ -1,0 +1,28 @@
+<div class="modal-body">
+  <form id='two-factor-authentication-form' method='post'>
+    <div>
+      <table>
+        <tr>
+          <td>
+            <label for='two-factor-authentication-code'>{{i18n 'login.code'}}&nbsp;</label>
+          </td>
+          <td>
+            {{text-field value=twoFactorAuthenticationCode placeholderKey="login.code_placeholder" id="two-factor-authentication-code" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+          </td>
+        </tr>
+      </table>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-large btn-primary"
+    {{action "verify"}}>
+    <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
+  </button>
+
+  {{#if authenticate}}
+    &nbsp; {{i18n 'login.authenticating'}}
+  {{/if}}
+
+  {{loading-spinner condition=showSpinner size="small"}}
+</div>

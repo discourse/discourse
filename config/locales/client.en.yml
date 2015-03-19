@@ -534,6 +534,19 @@ en:
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
         instructions: "At least %{count} characters."
+      two_factor_authentication:
+        title: "Two factor authentication"
+        configuration:
+          title: "Configure two factor authentication"
+          scan: "Scan the QR code"
+          enter_secret: "Or you can enter the secret to your devices manually"
+          verify: "Verify the code"
+          app_name: "Application name"
+          secret: "Secret key"
+          incorret_code: "Your code is invalid. Try again."
+          setup: 'You enabled the two factor authentication.'
+          revoke_label: "Revoke two factor authentication"
+          revoke: "Revoke"
 
       associated_accounts: "Logins"
       ip_address:
@@ -643,10 +656,14 @@ en:
       title: "Log In"
       username: "User"
       password: "Password"
+      verify_code_title: "Verify the code"
+      code: "Code"
+      code_placeholder: "Code"
       email_placeholder: "email or username"
       caps_lock_warning: "Caps Lock is on"
       error: "Unknown error"
       blank_username_or_password: "Please enter your email or username, and password."
+      blank_code: "Please enter your two factor authentication code."
       reset_password: 'Reset Password'
       logging_in: "Signing In..."
       or: "Or"

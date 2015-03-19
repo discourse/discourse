@@ -15,6 +15,8 @@ class User < ActiveRecord::Base
   include UrlHelper
   include HasCustomFields
 
+  TWO_FACTOR_AUTHENTICATION_INTERVAL = 30
+
   has_many :posts
   has_many :notifications, dependent: :destroy
   has_many :topic_users, dependent: :destroy
@@ -119,6 +121,10 @@ class User < ActiveRecord::Base
   module NewTopicDuration
     ALWAYS = -1
     LAST_VISIT = -2
+  end
+
+  def self.otp_digits
+    6
   end
 
   def self.max_password_length
@@ -711,6 +717,28 @@ class User < ActiveRecord::Base
 
   def create_user_profile
     UserProfile.create(user_id: id)
+  end
+
+  def refresh_otp_secret!
+    # be generated using RFC 3548 base32 key strings (for compatilibity with google authenticator)
+    update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+  end
+
+  def enabled_two_factor_authentication?
+    otp_secret_key_verified
+  end
+
+  def authenticate_otp(code)
+    # accept 2 drift windows
+    ROTP::TOTP.new(otp_secret_key, digits: User.otp_digits).verify_with_drift(code, TWO_FACTOR_AUTHENTICATION_INTERVAL, Time.zone.now)
+  end
+
+  def otp_code
+    ROTP::TOTP.new(otp_secret_key, digits: User.otp_digits).at(Time.zone.now, true)
+  end
+
+  def otp_provisioning_url(options = {})
+    ROTP::TOTP.new(otp_secret_key, options).provisioning_uri(SiteSetting.title)
   end
 
   protected

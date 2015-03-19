@@ -184,6 +184,9 @@ login:
   enable_local_logins:
     client: true
     default: true
+  enable_two_factor_authentication:
+    client: true
+    default: false
   allow_new_registrations:
     client: true
     default: true

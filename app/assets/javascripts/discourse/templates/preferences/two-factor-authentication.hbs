@@ -1,0 +1,76 @@
+<section class='user-content'>
+  <form class="form-horizontal">
+
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n 'user.two_factor_authentication.configuration.title'}}</h3>
+      </div>
+    </div>
+
+    {{#if enabledTwoFactorAuthentication}}
+      <div class="control-group">
+        <div class="controls">
+          <p>{{i18n 'user.two_factor_authentication.configuration.setup'}}</p>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label">{{i18n 'user.two_factor_authentication.configuration.revoke_label'}}</label>
+        <div class="controls">
+          {{d-button action="revoke" icon="minus-circle" label="user.two_factor_authentication.configuration.revoke" class="btn-primary"}}
+        </div>
+      </div>
+    {{else}}
+      <div class="control-group">
+        <label class="control-label">{{i18n 'user.two_factor_authentication.configuration.scan'}}</label>
+        <div class="controls">
+          <table class="otp-qr">
+            {{#each row in qr}}
+              <tr>
+                {{#each data in row}}
+                  <td {{bind-attr class="data:black:white"}}></td>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <p>{{i18n 'user.two_factor_authentication.configuration.enter_secret'}}</p>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">{{i18n 'user.two_factor_authentication.configuration.app_name'}}</label>
+        <div class="controls">
+          <label>{{appName}}</label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">{{i18n 'user.two_factor_authentication.configuration.secret'}}</label>
+        <div class="controls">
+          <label>{{secret}}</label>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">{{i18n 'user.two_factor_authentication.configuration.verify'}}</label>
+        <div class="controls">
+          {{input type="text" value=code class="input-xxlarge"}}
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <button class="btn btn-primary" {{bind-attr disabled=disableSave}} {{action "save"}}>{{savingStatus}}</button>
+          {{#if saved}}{{i18n 'saved'}}{{/if}}
+        </div>
+      </div>
+
+    {{/if}}
+
+
+  </form>
+</section>

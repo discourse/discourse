@@ -1231,6 +1231,7 @@ en:
   login:
     not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
     incorrect_username_email_or_password: "Incorrect username, email or password"
+    incorrect_otp_code: "Incorrect two factor authentication code"
     wait_approval: "Thanks for signing up. We will notify you when your account has been approved."
     active: "Your account is activated and ready to use."
     activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"

@@ -71,6 +71,9 @@ export default DiscourseController.extend(ModalFunctionality, {
             });
           }
           self.flash(result.error, 'error');
+        } else if (result.twoFactorAuthentication) {
+          self.set('loggingIn', false);
+          self.send('showTwoFactorAuthenticationCodeVerifier');
         } else {
           self.set('loggedIn', true);
           // Trigger the browser's password manager using the hidden static login form:

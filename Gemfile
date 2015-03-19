@@ -148,7 +148,8 @@ gem 'oj'
 gem 'pg'
 gem 'pry-rails', require: false
 gem 'rake'
-
+gem 'rotp'
+gem 'rqrcode'
 
 gem 'rest-client'
 gem 'rinku'

@@ -23,7 +23,8 @@ class UsersController < ApplicationController
                                                             :perform_account_activation,
                                                             :send_activation_email,
                                                             :authorize_email,
-                                                            :password_reset]
+                                                            :password_reset,
+                                                            :generate_two_factor_authentication_provisioning_url]
 
   def index
   end
@@ -61,6 +62,45 @@ class UsersController < ApplicationController
     end
 
     render nothing: true
+  end
+
+  def two_factor_authentication
+  end
+
+  def update_two_factor_authentication
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    if params[:secret] == user.otp_secret_key && user.authenticate_otp(params[:code])
+      user.update_attribute(:otp_secret_key_verified, true)
+      render(json: success_json)
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
+  def revoke_two_factor_authentication
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    if user.update_attributes(otp_secret_key_verified: false)
+      render json: success_json
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
+  def generate_two_factor_authentication_provisioning_url
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    if user.enabled_two_factor_authentication?
+      render json: success_json
+    else
+      user.refresh_otp_secret!
+
+      render json: { otp: RQRCode::QRCode.new(user.otp_provisioning_url, size: 7, level: :h) }
+    end
   end
 
   def user_preferences_redirect

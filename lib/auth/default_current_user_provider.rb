@@ -62,13 +62,18 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def log_on_user(user, session, cookies)
-    unless user.auth_token && user.auth_token.length == 32
-      user.auth_token = SecureRandom.hex(16)
-      user.save!
+    if has_verified_two_factor_authentication_code?(user)
+      unless user.auth_token && user.auth_token.length == 32
+        user.auth_token = SecureRandom.hex(16)
+        user.save!
+      end
+      cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
+
+      make_developer_admin(user)
+      @env[CURRENT_USER_KEY] = user
+    else
+      session[:two_factor_authentication_user_email] = user.email
     end
-    cookies.permanent[TOKEN_COOKIE] = { value: user.auth_token, httponly: true }
-    make_developer_admin(user)
-    @env[CURRENT_USER_KEY] = user
   end
 
   def make_developer_admin(user)
@@ -84,6 +89,7 @@ class Auth::DefaultCurrentUserProvider
   def log_off_user(session, cookies)
     if SiteSetting.log_out_strict && (user = current_user)
       user.auth_token = nil
+      user.otp_verified_at = nil
       user.save!
       MessageBus.publish "/logout", user.id, user_ids: [user.id]
     end
@@ -107,6 +113,15 @@ class Auth::DefaultCurrentUserProvider
   end
 
   protected
+
+  def has_verified_two_factor_authentication_code?(user)
+    # site setting need to be enabled & the user must verify the secret key via profile
+    if SiteSetting.enable_two_factor_authentication
+      user.enabled_two_factor_authentication? ? user.otp_verified_at : true
+    else
+      true
+    end
+  end
 
   def lookup_api_user(api_key_value, request)
     api_key = ApiKey.where(key: api_key_value).includes(:user).first

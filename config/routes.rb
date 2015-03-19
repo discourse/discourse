@@ -210,6 +210,7 @@ Discourse::Application.routes.draw do
   get "session/sso_provider" => "session#sso_provider"
   get "session/current" => "session#current"
   get "session/csrf" => "session#csrf"
+  post "session/verify_two_factor_authentication_code" => "session#verify_two_factor_authentication_code"
   get "composer-messages" => "composer_messages#index"
 
   resources :users, except: [:show, :update, :destroy] do
@@ -258,6 +259,10 @@ Discourse::Application.routes.draw do
   put "users/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/card-badge" => "users#card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/card-badge" => "users#update_card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/preferences/two-factor-authentication" => "users#two_factor_authentication", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/two-factor-authentication" => "users#update_two_factor_authentication", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username/preferences/two_factor_authentication/provisioning_url" => "users#generate_two_factor_authentication_provisioning_url", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "users/:username/preferences/revoke-two-factor-authentication" => "users#revoke_two_factor_authentication", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
