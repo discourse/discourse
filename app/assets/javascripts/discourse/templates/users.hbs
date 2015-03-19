@@ -1,11 +1,14 @@
 <div class="container">
   <div class='directory'>
 
-    {{period-chooser period=period}}
+    <div class='clearfix'>
+      {{period-chooser period=period}}
+      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
+    </div>
 
     {{#loading-spinner condition=model.loading}}
       {{#if model.length}}
-        <span class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</span>
+        <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
 
         <table>
           <thead>

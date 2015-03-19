@@ -238,6 +238,7 @@ en:
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
 
     directory:
+      filter_name: "filter by username"
       title: "User Directory"
       likes_given: "Given"
       likes_received: "Received"
@@ -245,7 +246,7 @@ en:
       time_read: "Time Read"
       topic_count: "Topics"
       post_count: "Replies"
-      no_results: "No results were found for this time period."
+      no_results: "No results were found."
       total_rows:
         one: "1 user"
         other: "%{count} users"
