@@ -5,12 +5,7 @@ export default Discourse.Route.extend({
     asc: { refreshModel: true }
   },
 
-  refreshModel(params) {
-    const controller = this.controllerFor('users');
-    controller.set('model.loading', true);
-
-    this.model(params).then(model => this.setupController(controller, model));
-  },
+  refreshQueryWithoutTransition: true,
 
   model(params) {
     // If we refresh via `refreshModel` set the old model to loading
