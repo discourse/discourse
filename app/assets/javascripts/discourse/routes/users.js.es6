@@ -8,7 +8,7 @@ export default Discourse.Route.extend({
 
   refreshQueryWithoutTransition: true,
 
-  resetController(controller, isExiting, transition) {
+  resetController(controller, isExiting) {
     if (isExiting) {
       controller.setProperties({
         period: 'weekly',
