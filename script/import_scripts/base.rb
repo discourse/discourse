@@ -99,6 +99,7 @@ class ImportScripts::Base
       email_domains_blacklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
+      min_first_post_length: 1,
       min_private_message_post_length: 1,
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
