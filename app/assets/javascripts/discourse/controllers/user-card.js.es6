@@ -49,10 +49,13 @@ export default Ember.Controller.extend({
 
     this.setProperties({ avatar: null, post: post, username: username });
 
-    // If we click the avatar again, close it (unless its diff element on the screen).
-    if (target === this.get('cardTarget') && wasVisible) {
-      this.setProperties({ visible: false, username: null, cardTarget: null });
-      return;
+    if (wasVisible) {
+      if (target === this.get('cardTarget')) {
+        this.close();
+        return;  // Same target, close it without loading the new user card
+      } else {
+        this.close();
+      }
     }
 
     if (username === currentUsername && this.get('userLoading') === username) {
@@ -60,32 +63,28 @@ export default Ember.Controller.extend({
       return;
     }
 
-    this.set('topicPostCount', null);
-
-    this.setProperties({ user: null, userLoading: username, cardTarget: target });
+    this.setProperties({ user: null, userLoading: username, cardTarget: target, topicPostCount: null });
 
     const args = { stats: false };
     args.include_post_count_for = this.get('controllers.topic.model.id');
 
-    const self = this;
-    return Discourse.User.findByUsername(username, args).then(function(user) {
-
+    return Discourse.User.findByUsername(username, args).then((user) => {
       if (user.topic_post_count) {
-        self.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
+        this.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
       }
       user = Discourse.User.create(user);
-      self.setProperties({ user, avatar: user, visible: true});
-      self.appEvents.trigger('usercard:shown');
-    }).catch(function(error) {
-      self.close();
+      this.setProperties({ user, avatar: user, visible: true });
+      this.appEvents.trigger('usercard:shown');
+    }).catch((error) => {
+      this.close();
       throw error;
-    }).finally(function() {
-      self.set('userLoading', null);
+    }).finally(() => {
+      this.set('userLoading', null);
     });
   },
 
   close() {
-    this.setProperties({ visible: false, cardTarget: null });
+    this.setProperties({ visible: false, username: null, cardTarget: null });
   },
 
   actions: {
