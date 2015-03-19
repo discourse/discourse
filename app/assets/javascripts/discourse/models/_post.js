@@ -123,7 +123,6 @@ Discourse.Post = Discourse.Model.extend({
   save: function(complete, error) {
     var self = this;
     if (!this.get('newPost')) {
-
       // We're updating a post
       return Discourse.ajax("/posts/" + (this.get('id')), {
         type: 'PUT',
@@ -137,13 +136,12 @@ Discourse.Post = Discourse.Model.extend({
         self.set('version', result.post.version);
         if (result.category) Discourse.Site.current().updateCategory(result.category);
         if (complete) complete(Discourse.Post.create(result.post));
-      }, function(result) {
+      }).catch(function(result) {
         // Post failed to update
         if (error) error(result);
       });
 
     } else {
-
       // We're saving a post
       var data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
       data.reply_to_post_number = this.get('reply_to_post_number');
@@ -162,7 +160,7 @@ Discourse.Post = Discourse.Model.extend({
       }).then(function(result) {
         // Post created
         if (complete) complete(Discourse.Post.create(result));
-      }, function(result) {
+      }).catch(function(result) {
         // Failed to create a post
         if (error) error(result);
       });

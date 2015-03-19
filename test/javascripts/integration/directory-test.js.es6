@@ -1,8 +1,8 @@
 integration("User Directory");
 
-test("Visit Page", function() {
+test("Visit Page", () => {
   visit("/directory/all");
-  andThen(function() {
+  andThen(() => {
     ok(exists('.directory table tr'), "has a list of users");
   });
 });

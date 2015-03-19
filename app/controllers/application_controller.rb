@@ -316,9 +316,7 @@ class ApplicationController < ActionController::Base
     #   type   - a machine-readable description of the error
     #   status - HTTP status code to return
     def render_json_error(obj, opts={})
-      if opts.is_a? Fixnum
-        opts = {status: opts}
-      end
+      opts = { status: opts } if opts.is_a?(Fixnum)
       render json: MultiJson.dump(create_errors_json(obj, opts[:type])), status: opts[:status] || 422
     end
 

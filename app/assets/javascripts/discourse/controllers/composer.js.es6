@@ -211,13 +211,13 @@ export default DiscourseController.extend({
       }
     }
 
-    var staged = false,
-        disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
-    var promise = composer.save({
+    var staged = false;
+    const disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
+
+    const promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
     }).then(function(opts) {
-
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
@@ -240,21 +240,21 @@ export default DiscourseController.extend({
           Discourse.URL.routeTo(opts.post.get('url'));
         }
       }
-    }, function(error) {
+    }).catch(function(error) {
       composer.set('disableDrafts', false);
       bootbox.alert(error);
     });
 
 
-    if ( this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
-         composer.get('topic.id') === this.get('controllers.topic.model.id') ) {
+    if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
+        composer.get('topic.id') === this.get('controllers.topic.model.id')) {
       staged = composer.get('stagedPost');
     }
 
     Em.run.schedule('afterRender', function() {
       if (staged && !disableJumpReply) {
-        var postNumber = staged.get('post_number');
-        Discourse.URL.jumpToPost(postNumber, {skipIfOnScreen: true});
+        const postNumber = staged.get('post_number');
+        Discourse.URL.jumpToPost(postNumber, { skipIfOnScreen: true });
         self.appEvents.trigger('post:highlight', postNumber);
       }
     });
