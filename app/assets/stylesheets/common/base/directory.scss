@@ -25,6 +25,12 @@
       vertical-align: top;
     }
 
+    tr.me {
+      td {
+        background-color: scale-color($highlight, $lightness: 50%);
+      }
+    }
+
     th.sortable {
       cursor: pointer;
       white-space: nowrap;
