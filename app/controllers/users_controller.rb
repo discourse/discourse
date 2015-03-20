@@ -73,7 +73,10 @@ class UsersController < ApplicationController
 
     if params[:user_fields].present?
       params[:custom_fields] = {} unless params[:custom_fields].present?
-      UserField.where(editable: true).each do |f|
+
+      fields = UserField.all
+      fields = fields.where(editable: true) unless current_user.staff?
+      fields.each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
         val = val[0...UserField.max_length] if val

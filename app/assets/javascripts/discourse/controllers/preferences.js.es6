@@ -19,12 +19,17 @@ export default ObjectController.extend(CanCheckEmails, {
   newNameInput: null,
 
   userFields: function() {
-    var siteUserFields = this.site.get('user_fields');
+    let siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      var userFields = this.get('user_fields');
-      return siteUserFields.filterProperty('editable', true).sortBy('field_type').map(function(uf) {
-        var val = userFields ? userFields[uf.get('id').toString()] : null;
-        return Ember.Object.create({value: val, field: uf});
+      const userFields = this.get('user_fields');
+
+      // Staff can edit fields that are not `editable`
+      if (!this.get('currentUser.staff')) {
+        siteUserFields = siteUserFields.filterProperty('editable', true);
+      }
+      return siteUserFields.sortBy('field_type').map(function(field) {
+        const value = userFields ? userFields[field.get('id').toString()] : null;
+        return Ember.Object.create({ value, field });
       });
     }
   }.property('user_fields.@each.value'),
@@ -82,16 +87,16 @@ export default ObjectController.extend(CanCheckEmails, {
 
   actions: {
 
-    save: function() {
-      var self = this;
+    save() {
+      const self = this;
       this.setProperties({ saving: true, saved: false });
 
-      var model = this.get('model'),
+      const model = this.get('model'),
           userFields = this.get('userFields');
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
-        var modelFields = model.get('user_fields');
+        const modelFields = model.get('user_fields');
         if (!Ember.isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
             modelFields[uf.get('field.id').toString()] = uf.get('value');
@@ -120,8 +125,8 @@ export default ObjectController.extend(CanCheckEmails, {
       });
     },
 
-    changePassword: function() {
-      var self = this;
+    changePassword() {
+      const self = this;
       if (!this.get('passwordProgress')) {
         this.set('passwordProgress', I18n.t("user.change_password.in_progress"));
         return this.get('model').changePassword().then(function() {
@@ -140,32 +145,31 @@ export default ObjectController.extend(CanCheckEmails, {
       }
     },
 
-    delete: function() {
+    delete() {
       this.set('deleting', true);
-      var self = this,
+      const self = this,
           message = I18n.t('user.delete_account_confirm'),
           model = this.get('model'),
-          buttons = [{
-        "label": I18n.t("cancel"),
-        "class": "cancel-inline",
-        "link":  true,
-        "callback": function() {
-          self.set('deleting', false);
-        }
-      }, {
-        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
-        "class": "btn btn-danger",
-        "callback": function() {
-          model.delete().then(function() {
-            bootbox.alert(I18n.t('user.deleted_yourself'), function() {
-              window.location.pathname = Discourse.getURL('/');
-            });
-          }, function() {
-            bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
-            self.set('deleting', false);
-          });
-        }
-      }];
+          buttons = [
+            { label: I18n.t("cancel"),
+              class: "cancel-inline",
+              link:  true,
+              callback: () => { this.set('deleting', false); }
+            },
+            { label: '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+              class: "btn btn-danger",
+              callback() {
+                model.delete().then(function() {
+                  bootbox.alert(I18n.t('user.deleted_yourself'), function() {
+                    window.location.pathname = Discourse.getURL('/');
+                  });
+                }, function() {
+                  bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
+                  self.set('deleting', false);
+                });
+              }
+            }
+          ];
       bootbox.dialog(message, buttons, {"classes": "delete-account"});
     }
   }

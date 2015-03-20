@@ -963,6 +963,21 @@ describe UsersController do
       end
     end
 
+    context "as a staff user" do
+      let!(:user) { log_in(:admin) }
+
+      context "uneditable field" do
+        let!(:user_field) { Fabricate(:user_field, editable: false) }
+
+        it "allows staff to edit the field" do
+          put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
+          expect(response).to be_success
+          expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+        end
+      end
+
+    end
+
     context 'with authenticated user' do
       context 'with permission to update' do
         let!(:user) { log_in(:user) }
