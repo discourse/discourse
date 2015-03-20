@@ -612,8 +612,15 @@ class ImportScripts::Base
   end
 
   def update_tl0
-    User.all.each do |user|
+    puts "", "setting users with no posts to trust level 0"
+
+    total_count = User.count
+    progress_count = 0
+
+    User.find_each do |user|
       user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      progress_count += 1
+      print_status(progress_count, total_count)
     end
   end
 
