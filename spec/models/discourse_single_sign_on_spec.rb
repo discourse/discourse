@@ -106,6 +106,28 @@ describe DiscourseSingleSignOn do
     expect(sso.nonce).to_not be_nil
   end
 
+  context 'welcome emails' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@example.com"
+      sso.external_id = "A"
+      sso
+    }
+
+    it "sends a welcome email by default" do
+      User.any_instance.expects(:enqueue_welcome_message).once
+      user = sso.lookup_or_create_user(ip_address)
+    end
+
+    it "suppresses the welcome email when asked to" do
+      User.any_instance.expects(:enqueue_welcome_message).never
+      sso.suppress_welcome_message = true
+      user = sso.lookup_or_create_user(ip_address)
+    end
+  end
+
   context 'when sso_overrides_avatar is enabled' do
     let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
     let!(:sso) {
