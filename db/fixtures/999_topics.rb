@@ -8,9 +8,14 @@ seed_welcome_topics = (Topic.where('id NOT IN (SELECT topic_id from categories w
 unless Rails.env.test?
   def create_static_page_topic(site_setting_key, title_key, body_key, body_override, category, description, params={})
     unless SiteSetting.send(site_setting_key) > 0
+      body = begin
+                I18n.t(body_key, params.merge(default: I18n.t(body_key, params.merge(locale: :en))))
+             rescue
+               I18n.t(body_key,  params.merge(locale: :en))
+             end
       creator = PostCreator.new( Discourse.system_user,
                                  title: I18n.t(title_key, default: I18n.t(title_key, locale: :en)),
-                                 raw: body_override.present? ? body_override : I18n.t(body_key, params.merge(default: I18n.t(body_key, params.merge(locale: :en)))),
+                                 raw: body_override.present? ? body_override : body,
                                  skip_validations: true,
                                  category: category ? category.name : nil)
       post = creator.create
@@ -42,10 +47,9 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the site design", skip_validations: true, category: staff ? staff.name : nil)
+  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic.body', default: I18n.t('assets_topic.body', locale: :en)), title: I18n.t('assets_topic.title', default: I18n.t('assets_topic.title', locale: :en)), skip_validations: true, category: staff ? staff.name : nil)
 
-  welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
-  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: I18n.t('welcome_topic.body', default: I18n.t('welcome_topic.body', locale: :en)), title: I18n.t('welcome_topic.title', default: I18n.t('welcome_topic.title', locale: :en)), skip_validations: true)
   post.topic.update_pinned(true, true)
 
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)
@@ -54,6 +58,5 @@ if seed_welcome_topics
     post.topic.update_pinned(true)
   end
 
-  welcome = File.read(Rails.root + 'docs/ADMIN-QUICK-START-GUIDE.md')
-  PostCreator.create(Discourse.system_user, raw: welcome, title: "READ ME FIRST: Admin Quick Start Guide", skip_validations: true, category: staff ? staff.name : nil)
+  PostCreator.create(Discourse.system_user, raw: I18n.t('admin_quick_start_guide_topic.body', default: I18n.t('admin_quick_start_guide_topic.body', locale: :en)), title: I18n.t('admin_quick_start_guide_topic.title', default: I18n.t('admin_quick_start_guide_topic.title', locale: :en)), skip_validations: true, category: staff ? staff.name : nil)
 end
