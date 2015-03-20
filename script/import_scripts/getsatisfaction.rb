@@ -35,8 +35,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     super
   end
 
-  def execute
 
+  def execute
     c = Category.find_by(name: 'Old Forum') ||
       Category.create!(name: 'Old Forum', user: Discourse.system_user)
 
@@ -83,18 +83,10 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
 
     File.open(filename).each_line do |line|
 
-      # escaping is mental here
-      line.gsub!(/\\(.{1})/){|m| m[-1] == '"'? '""': m[-1]}
       line.strip!
 
       current_row << "\n" unless current_row.empty?
       current_row << line
-
-      double_quote_count += line.scan('"').count
-
-      if double_quote_count % 2 == 1
-        next
-      end
 
       raw = begin
               CSV.parse(current_row, col_sep: ";")
@@ -110,6 +102,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
 
               current_row = ""
               double_quote_count = 0
+
               next
             end[0]
 
