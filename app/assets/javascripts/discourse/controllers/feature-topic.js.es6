@@ -29,23 +29,19 @@ export default ObjectController.extend(ModalFunctionality, {
   }.property("categoryLink", "pinnedInCategoryCount"),
 
   onShow() {
-    const self = this;
-
     this.set("loading", true);
 
     return Discourse.ajax("/topics/feature_stats.json", {
       data: { category_id: this.get("category.id") }
-    }).then(function(result) {
+    }).then(result => {
       if (result) {
-        self.setProperties({
+        this.setProperties({
           pinnedInCategoryCount: result.pinned_in_category_count,
           pinnedGloballyCount: result.pinned_globally_count,
           bannerCount: result.banner_count,
         });
       }
-    }).finally(function() {
-      self.set("loading", false);
-    });
+    }).finally(() => this.set("loading", false));
   },
 
   _forwardAction(name) {
