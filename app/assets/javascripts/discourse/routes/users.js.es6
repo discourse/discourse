@@ -8,6 +8,10 @@ export default Discourse.Route.extend({
 
   refreshQueryWithoutTransition: true,
 
+  titleToken() {
+    return I18n.t('directory.title');
+  },
+
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.setProperties({
