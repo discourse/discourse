@@ -54,6 +54,7 @@ class DirectoryItem < ActiveRecord::Base
                   AND p.deleted_at IS NULL
                   AND NOT (COALESCE(p.hidden, false))
                   AND NOT COALESCE(c.read_restricted, false)
+                  AND p.post_type != :moderator_action
                   AND u.id > 0
                 GROUP BY u.id",
                 period_type: period_types[period_type],
@@ -61,6 +62,7 @@ class DirectoryItem < ActiveRecord::Base
                 like_type: UserAction::LIKE,
                 was_liked_type: UserAction::WAS_LIKED,
                 new_topic_type: UserAction::NEW_TOPIC,
-                reply_type: UserAction::REPLY
+                reply_type: UserAction::REPLY,
+                moderator_action: Post.types[:moderator_action]
   end
 end
