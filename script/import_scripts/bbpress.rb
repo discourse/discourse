@@ -36,9 +36,14 @@ class ImportScripts::Bbpress < ImportScripts::Base
               user_registered created_at
          FROM #{table_name 'users'}", cache_rows: false)
 
+    puts '', "creating users"
+
     create_users(users_results) do |u|
       ActiveSupport::HashWithIndifferentAccess.new(u)
     end
+
+
+    puts '', '', "creating categories"
 
     create_categories(@client.query("SELECT id, post_name, post_parent from #{table_name 'posts'} WHERE post_type = 'forum' AND post_name != '' ORDER BY post_parent")) do |c|
       result = {id: c['id'], name: c['post_name']}
@@ -88,6 +93,9 @@ class ImportScripts::Bbpress < ImportScripts::Base
         mapped[:id] = post["id"]
         mapped[:user_id] = user_id_from_imported_user_id(post["post_author"]) || find_user_by_import_id(post["post_author"]).try(:id) || -1
         mapped[:raw] = post["post_content"]
+        if mapped[:raw]
+          mapped[:raw] = mapped[:raw].gsub("<pre><code>", "```\n").gsub("</code></pre>", "\n```")
+        end
         mapped[:created_at] = post["post_date"]
         mapped[:custom_fields] = {import_id: post["id"]}
 
