@@ -60,7 +60,7 @@ class DiscourseSingleSignOn < SingleSignOn
     if sso_record && (user = sso_record.user) && !user.active
       user.active = true
       user.save!
-      user.enqueue_welcome_message('welcome_user')
+      user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
     end
 
     custom_fields.each do |k,v|
