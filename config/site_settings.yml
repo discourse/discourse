@@ -738,6 +738,8 @@ backups:
     regex: "^[^\\.]*$"
 
 uncategorized:
+  enable_stringex: false
+
   version_checks:
     client: true
     default: true
