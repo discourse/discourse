@@ -62,7 +62,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Some exceptions
-  class RenderEmpty < Exception; end
+  class RenderEmpty < StandardError; end
 
   # Render nothing
   rescue_from RenderEmpty do
@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  class PluginDisabled < Exception; end
+  class PluginDisabled < StandardError; end
 
   # If a controller requires a plugin, it will raise an exception if that plugin is
   # disabled. This allows plugins to be disabled programatically.

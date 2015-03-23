@@ -186,7 +186,7 @@ module Jobs
 
   end
 
-  class HandledExceptionWrapper < Exception
+  class HandledExceptionWrapper < StandardError
     attr_accessor :wrapped
     def initialize(ex)
       super("Wrapped #{ex.class}: #{ex.message}")
