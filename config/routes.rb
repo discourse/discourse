@@ -222,6 +222,7 @@ Discourse::Application.routes.draw do
   resources :static
   post "login" => "static#enter"
   get "login" => "static#show", id: "login"
+  get "password-reset" => "static#show", id: "password_reset"
   get "faq" => "static#show", id: "faq"
   get "guidelines" => "static#show", id: "guidelines"
   get "tos" => "static#show", id: "tos"

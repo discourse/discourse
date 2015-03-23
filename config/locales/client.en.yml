@@ -629,7 +629,7 @@ en:
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
     forgot_password:
-      title: "Forgot Password"
+      title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
