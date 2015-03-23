@@ -531,4 +531,8 @@ test("code blocks/spans hoisting", function() {
   cooked("```\n\n    some code\n```",
          "<p><pre><code class=\"lang-auto\">    some code</code></pre></p>",
          "it works when nesting standard markdown code blocks within a fenced code block");
+
+  cooked("`$&`",
+         "<p><code>$&amp;</code></p>",
+         "it works even when hoisting special replacement patterns");
 });
