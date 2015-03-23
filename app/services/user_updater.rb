@@ -19,11 +19,6 @@ class UserUpdater
     :edit_history_public
   ]
 
-  PROFILE_ATTR = [
-    :location,
-    :dismissed_banner_key
-  ]
-
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
@@ -33,6 +28,9 @@ class UserUpdater
     user_profile = user.user_profile
     user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
     user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
+    user_profile.allow_private_messages = attributes.fetch(:allow_private_messages) {
+      user_profile.allow_private_messages
+    }
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }

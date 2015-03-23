@@ -393,12 +393,28 @@ describe PostCreator do
     let(:target_user1) { Fabricate(:coding_horror) }
     let(:target_user2) { Fabricate(:moderator) }
     let(:unrelated) { Fabricate(:user) }
-    let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
+
+    def create_pm(from, to)
+      PostCreator.create(from, title: 'hi there welcome to my topic',
                                raw: "this is my awesome message @#{unrelated.username_lower}",
                                archetype: Archetype.private_message,
-                               target_usernames: [target_user1.username, target_user2.username].join(','),
+                               target_usernames: to.join(','),
                                category: 1)
+    end
+
+    let(:post) do
+      create_pm(user, [target_user1.username, target_user2.username])
+    end
+
+    it 'disallows PM to end users that disable it' do
+      profile = target_user2.user_profile
+      profile.allow_private_messages = false
+      profile.save
+
+      post = create_pm(user, [target_user2.username])
+
+      expect(post).to be_nil
+
     end
 
     it 'acts correctly' do
@@ -476,10 +492,11 @@ describe PostCreator do
     end
     let(:unrelated) { Fabricate(:user) }
     let(:post) do
-      PostCreator.create(user, title: 'hi there welcome to my topic',
+      PostCreator.new(user, title: 'hi there welcome to my topic',
                                raw: "this is my awesome message @#{unrelated.username_lower}",
                                archetype: Archetype.private_message,
-                               target_group_names: group.name)
+                               target_group_names: group.name).create
+
     end
 
     it 'acts correctly' do
