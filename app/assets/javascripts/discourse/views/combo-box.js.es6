@@ -1,29 +1,22 @@
-/**
-  This view handles rendering of a combobox
-
-  @class ComboboxView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
+// This view handles rendering of a combobox
 export default Discourse.View.extend({
   tagName: 'select',
   attributeBindings: ['tabindex'],
   classNames: ['combobox'],
   valueAttribute: 'id',
 
-  buildData: function(o) {
-    var data = "";
-    if (this.dataAttributes) {
-      this.dataAttributes.forEach(function(a) {
-        data += "data-" + a + "=\"" + o.get(a) + "\" ";
+  buildData(o) {
+    let result = "";
+    if (this.resultAttributes) {
+      this.resultAttributes.forEach(function(a) {
+        result += "data-" + a + "=\"" + o.get(a) + "\" ";
       });
     }
-    return data;
+    return result;
   },
 
-  render: function(buffer) {
-    var nameProperty = this.get('nameProperty') || 'name',
+  render(buffer) {
+    const nameProperty = this.get('nameProperty') || 'name',
         none = this.get('none');
 
     // Add none option if required
@@ -33,23 +26,23 @@ export default Discourse.View.extend({
       buffer.push("<option value=\"\" " + this.buildData(none) + ">" + Em.get(none, nameProperty) + "</option>");
     }
 
-    var selected = this.get('value');
+    let selected = this.get('value');
     if (!Em.isNone(selected)) { selected = selected.toString(); }
 
     if (this.get('content')) {
-      var self = this;
+      const self = this;
       this.get('content').forEach(function(o) {
-        var val = o[self.get('valueAttribute')];
+        let val = o[self.get('valueAttribute')];
         if (!Em.isNone(val)) { val = val.toString(); }
 
-        var selectedText = (val === selected) ? "selected" : "";
+        const selectedText = (val === selected) ? "selected" : "";
         buffer.push("<option " + selectedText + " value=\"" + val + "\" " + self.buildData(o) + ">" + Handlebars.Utils.escapeExpression(Em.get(o, nameProperty)) + "</option>");
       });
     }
   },
 
   valueChanged: function() {
-    var $combo = this.$(),
+    const $combo = this.$(),
         val = this.get('value');
     if (val !== undefined && val !== null) {
       $combo.select2('val', val.toString());
@@ -63,7 +56,7 @@ export default Discourse.View.extend({
   }.observes('content.@each'),
 
   _initializeCombo: function() {
-    var $elem = this.$(),
+    const $elem = this.$(),
         self = this;
 
     // Workaround for https://github.com/emberjs/ember.js/issues/9813
@@ -74,9 +67,9 @@ export default Discourse.View.extend({
 
     $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
 
-    var castInteger = this.get('castInteger');
+    const castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
-      var val = $(e.target).val();
+      let val = $(e.target).val();
       if (val.length && castInteger) {
         val = parseInt(val, 10);
       }
@@ -84,9 +77,8 @@ export default Discourse.View.extend({
     });
   }.on('didInsertElement'),
 
-  willClearRender: function() {
-    var elementId = "s2id_" + this.$().attr('id');
-    Ember.$("#" + elementId).remove();
-  }
+  _destroyDropdown: function() {
+    this.$().select2('destroy');
+  }.on('willDestroyElement')
 
 });
