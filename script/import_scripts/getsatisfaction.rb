@@ -276,7 +276,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
         title: topic.subject,
         deleted: topic.removed == "1",
         closed: true,
-        body: topic.additional_detail && normalize_raw!(topic.additional_detail),
+        body: normalize_raw!(topic.additional_detail || topic.subject || "<missing>"),
         created_at: DateTime.parse(topic.created_at),
         user_id: topic.UserId,
         category: category.name
