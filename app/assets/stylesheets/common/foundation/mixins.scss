@@ -33,6 +33,19 @@
 // CSS3 properties
 // --------------------------------------------------
 
+// Clearfix
+
+@mixin clearfix() {
+    &:before,
+    &:after {
+        content: "";
+        display: table;
+    }
+    &:after {
+        clear: both;
+    }
+}
+
 // Border radius
 
 @mixin border-radius-all($radius) {
