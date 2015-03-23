@@ -55,6 +55,8 @@ class ImportScripts::Ning < ImportScripts::Base
     arg.gsub!(/^\(/, "")     # content of file is surround by ( )
     arg.gsub!(/\)$/, "")
 
+    arg.gsub!(/\]\]$/, "]")  # there can be an extra ] at the end
+
     arg.gsub!(/\}\{/, "},{") # missing commas sometimes!
 
     arg.gsub!("}]{", "},{")  # surprise square brackets
