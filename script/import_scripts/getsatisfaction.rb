@@ -318,8 +318,6 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     end
 
     import_post_batch!(posts, topic_map, count - posts.length, total) if posts.length > 0
-
-    exit
   end
 
 
