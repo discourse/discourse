@@ -95,8 +95,7 @@ class UserSerializer < BasicUserSerializer
                      :custom_avatar_upload_id,
                      :has_title_badges,
                      :card_image_badge,
-                     :card_image_badge_id,
-                     :allow_private_messages
+                     :card_image_badge_id
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -156,10 +155,6 @@ class UserSerializer < BasicUserSerializer
 
   def location
     object.user_profile.location
-  end
-
-  def allow_private_messages
-    object.user_profile.allow_private_messages
   end
 
   def can_edit

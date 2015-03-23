@@ -181,7 +181,6 @@ const User = Discourse.Model.extend({
                                'email_direct',
                                'email_always',
                                'email_private_messages',
-                               'allow_private_messages',
                                'dynamic_favicon',
                                'digest_after_days',
                                'new_topic_duration_minutes',

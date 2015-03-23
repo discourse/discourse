@@ -260,8 +260,6 @@ class Guardian
     (SiteSetting.enable_private_messages ||
       @user.username == SiteSetting.site_contact_username ||
       @user == Discourse.system_user) &&
-    # Only staff can send PMs to users that opt-out
-    (!target.is_a?(User) || is_staff? || target.user_profile.allow_private_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?)
   end
