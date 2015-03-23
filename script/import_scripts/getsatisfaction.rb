@@ -238,7 +238,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
 
 
         unless topic[:post_id]
-          mapped[:title] = post[:title]
+          mapped[:title] = post[:title] || "Topic title missing"
           topic[:post_id] = post[:id]
           mapped[:category] = post[:category]
         else
