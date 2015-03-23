@@ -256,12 +256,7 @@ const User = Discourse.Model.extend({
            ua.action_type === Discourse.UserAction.TYPES.topics;
   },
 
-  /**
-  The user's stat count, excluding PMs.
-
-    @property statsCountNonPM
-    @type {Integer}
-  **/
+  // The user's stat count, excluding PMs.
   statsCountNonPM: function() {
     var self = this;
 
@@ -275,12 +270,7 @@ const User = Discourse.Model.extend({
     return count;
   }.property('statsExcludingPms.@each.count'),
 
-  /**
-  The user's stats, excluding PMs.
-
-    @property statsExcludingPms
-    @type {Array}
-  **/
+  // The user's stats, excluding PMs.
   statsExcludingPms: function() {
     if (this.blank('stats')) return [];
     return this.get('stats').rejectProperty('isPM');
