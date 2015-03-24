@@ -364,18 +364,22 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     # Convert image bbcode
     s.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
 
-    # Remove the font tag
+    # Remove the font, p and backcolor tag
     # Discourse doesn't support the font tag
-    s.gsub!(/\[font=[^ \t\r\n\f\]]*?\]/i, '')
+    s.gsub!(/\[font=[^\]]*?\]/i, '')
     s.gsub!(/\[\/font\]/i, '')
+    s.gsub!(/\[p=[^\]]*?\]/i, '')
+    s.gsub!(/\[\/p\]/i, '')
+    s.gsub!(/\[backcolor=[^\]]*?\]/i, '')
+    s.gsub!(/\[\/backcolor\]/i, '')
 
     # Remove the size tag
     # I really have no idea what is this
-    s.gsub!(/\[size=[^ \t\r\n\f\]]*?\]/i, '')
+    s.gsub!(/\[size=[^\]]*?\]/i, '')
     s.gsub!(/\[\/size\]/i, '')
 
     # Remove the color tag
-    s.gsub!(/\[color=[^ \t\r\n\f\]]*?\]/i, '')
+    s.gsub!(/\[color=[^\]]*?\]/i, '')
     s.gsub!(/\[\/color\]/i, '')
 
     # Remove the hide tag
@@ -383,7 +387,7 @@ class ImportScripts::DiscuzX < ImportScripts::Base
 
     # Remove the align tag
     # still don't know what it is
-    s.gsub!(/\[align=[^ \t\r\n\f\]]*?\]/i, '')
+    s.gsub!(/\[align=[^\]]*?\]/i, '')
     s.gsub!(/\[\/align\]/i, "\n")
 
     # Convert code
