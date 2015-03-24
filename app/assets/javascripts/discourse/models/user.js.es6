@@ -189,7 +189,8 @@ const User = Discourse.Model.extend({
                                'enable_quoting',
                                'disable_jump_reply',
                                'custom_fields',
-                               'user_fields');
+                               'user_fields',
+                               'muted_usernames');
 
     ['muted','watched','tracked'].forEach(function(s){
       var cats = self.get(s + 'Categories').map(function(c){ return c.get('id')});

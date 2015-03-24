@@ -11,6 +11,15 @@ describe PostAlerter do
 
   context 'quotes' do
 
+    it 'does not notify for muted users' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
+
+      lambda {
+        PostAlerter.post_created(post)
+      }.should change(evil_trout.notifications, :count).by(0)
+    end
+
     it 'notifies a user by username' do
       lambda {
         create_post_with_alerts(raw: '[quote="EvilTrout, post:1"]whatup[/quote]')

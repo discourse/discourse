@@ -95,7 +95,8 @@ class UserSerializer < BasicUserSerializer
                      :custom_avatar_upload_id,
                      :has_title_badges,
                      :card_image_badge,
-                     :card_image_badge_id
+                     :card_image_badge_id,
+                     :muted_usernames
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -250,6 +251,10 @@ class UserSerializer < BasicUserSerializer
 
   def watched_category_ids
     CategoryUser.lookup(object, :watching).pluck(:category_id)
+  end
+
+  def muted_usernames
+    MutedUser.where(user_id: object.id).joins(:muted_user).pluck(:username)
   end
 
   def include_private_message_stats?

@@ -237,6 +237,14 @@
       <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
     </div>
 
+    <div class="control-group muting">
+      <label class="control-label">{{i18n 'user.users'}}</label>
+      <div class="controls category-controls">
+        <label>{{i18n 'user.muted_users'}}</label>
+        {{user-selector excludeCurrentUser=true usernames=muted_usernames class="user-selector"}}
+      </div>
+      <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
+    </div>
     <div class="control-group">
       <div class="controls">
         {{partial 'user/preferences/saveButton'}}

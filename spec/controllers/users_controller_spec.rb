@@ -983,13 +983,32 @@ describe UsersController do
         let!(:user) { log_in(:user) }
 
         it 'allows the update' do
-          put :update, username: user.username, name: 'Jim Tom', custom_fields: {test: :it}
+
+          user2 = Fabricate(:user)
+          user3 = Fabricate(:user)
+
+          put :update,
+                username: user.username,
+                name: 'Jim Tom',
+                custom_fields: {test: :it},
+                muted_usernames: "#{user2.username},#{user3.username}"
+
           expect(response).to be_success
 
           user.reload
 
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
+          expect(user.muted_users.pluck(:username).sort).to eq [user2.username,user3.username].sort
+
+          put :update,
+                username: user.username,
+                muted_usernames: ""
+
+          user.reload
+
+          expect(user.muted_users.pluck(:username).sort).to be_empty
+
         end
 
         context "with user fields" do
