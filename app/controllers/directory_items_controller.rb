@@ -8,10 +8,6 @@ class DirectoryItemsController < ApplicationController
 
     result = DirectoryItem.where(period_type: period_type).includes(:user)
 
-    if current_user.present?
-      result = result.order("CASE WHEN users.id = #{current_user.id.to_i} THEN 0 ELSE 1 END")
-    end
-
     order = params[:order] || DirectoryItem.headings.first
     if DirectoryItem.headings.include?(order.to_sym)
       dir = params[:asc] ? 'ASC' : 'DESC'
@@ -44,9 +40,14 @@ class DirectoryItemsController < ApplicationController
     more_params = params.slice(:period, :order, :asc)
     more_params[:page] = page + 1
 
-    render_json_dump directory_items: serialize_data(result, DirectoryItemSerializer),
-                     total_rows_directory_items: result_count,
-                     load_more_directory_items: directory_items_path(more_params)
+    # Put yourself at the top of the first page
+    if current_user.present? && page == 0 && result[0].user_id != current_user.id
+      your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
+      result.insert(0, your_item) if your_item
+    end
 
+    render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
+                     total_rows_directory_items: result_count,
+                     load_more_directory_items: directory_items_path(more_params))
   end
 end
