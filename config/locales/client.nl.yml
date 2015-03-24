@@ -145,9 +145,9 @@ nl:
       post_count: "Berichten"
       user_count: "Nieuwe leden"
       active_user_count: "Actieve leden"
-      contact: "Neem contact op"
+      contact: "Neem contact met ons op"
     bookmarked:
-      title: "Bewaar"
+      title: "Voeg toe aan favorieten"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt dit bericht aan je favorieten toegevoegd"
@@ -578,7 +578,6 @@ nl:
     composer:
       add_warning: "Dit is een officiële waarschuwing."
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
-      saving_draft_tip: "wordt opgeslagen"
       saved_draft_tip: "opgeslagen"
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Jouw topic lijkt op..."
@@ -825,8 +824,8 @@ nl:
         auto_close: "Automatisch sluiten"
         make_banner: "Zet topic in als banner"
         remove_banner: "Verwijder bannertopic"
-        unpin: "Ontpin topic"
         pin: "Pin topic vast"
+        unpin: "Ontpin topic"
         pin_globally: "Pin topic globaal vast"
         unarchive: "De-archiveer topic"
         archive: "Archiveer topic"
@@ -1402,8 +1401,6 @@ nl:
         name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
-        custom: "Aangepast"
-        automatic: "Automatisch"
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"

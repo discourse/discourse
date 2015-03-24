@@ -112,6 +112,7 @@ fr:
     other: "Désolé, les nouveaux utilisateurs ne peuvent insérer que %{count} liens."
   spamming_host: "Désolé, vous ne pouvez pas insérer de lien vers ce domaine."
   user_is_suspended: "Les utilisateurs suspendus ne sont pas autorisés à poster de messages."
+  topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez?"
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   has_already_been_used: "a déjà été utilisé"
   invalid_characters: "contient des caractères invalides"
@@ -594,7 +595,7 @@ fr:
     sidekiq_warning: 'Sidekiq n''est pas lancé. De nombreuses tâches, comme l''envoi des courriels, sont exécutées de manière asynchrone par sidekiq. Assurez-vous d''avoir au moins un processus sidekiq de lancé. <a href="https://github.com/mperham/sidekiq">En savoir plus sur sidekiq</a>.'
     queue_size_warning: 'Il y a %{queue_size} tâches dans la file d''attente, ce qui est beaucoup. Cela peut provenir d''un problème avec les processus Sidekiq, ou à un manque de processus Sidekiq travailleurs.'
     memory_warning: 'Votre serveur dispose de moins de 1 Go de mémoire vive. Au moins 1 Go de RAM est recommandé.'
-    enable_google_logins_warning: "Vous utilisez une version obsolète d'authentification via Google OpenID. Google ne supportera plus cette authentification à partir du 20 avril 2015. Veuillez commencer à utiliser l'authentification via Google Oauth2 le plus tôt possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Voir le guide pour en savoir plus</a>"
+    enable_google_logins_warning: "AVERTISSEMENT! Votre méthode actuelle d'authentication Google ne fonctionnera plus à partir du 20 avril 2015! Veuillez <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>passer à la nouvelle méthode dès maintenant!</a>"
     both_googles_warning: "Vous avez les options enable_google_logins et enable_google_oauth2_logins d'activer en même temps. Veuillez désactiver l'option enable_google_logins (obsolète)."
     google_oauth2_config_warning: 'Le serveur est configuré pour permettre l''authentification via Google Oauth2 (enable_google_oauth2_logins), mais les paramètres client id et client secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres du Site</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Voir le guide pour en savoir plus</a>.'
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
@@ -891,6 +892,7 @@ fr:
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillenace sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
+    auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
@@ -943,7 +945,8 @@ fr:
     default_code_lang: "Coloration syntaxique par défaut appliquée à la syntaxe des langages de programmation des blocs de code GitHub (lang-auto, Ruby, Python, etc)"
     warn_reviving_old_topic_age: "Lorsque quelqu'un commence à répondre à un sujet dont la dernière réponse est vielle de plusieurs jours, un avertissement sera affiché. Désactiver la fonctionnalité en indiquant: 0."
     autohighlight_all_code: "Forcer la mise en évidence de tout les textes dans les balises code, même si ils ne correspondent à aucun langage de programmation."
-    embeddable_host: "Hôte pouvant embarqué les commentaires de ce forum Discourse."
+    highlighted_languages: "Include les règles de mise en surbrillance de syntaxe. (Avertissement: l'ajout de trop de langages peut impacter les performances) voir l'exemple https://highlightjs.org/static/demo/"
+    embeddable_host: "Hôte qui peut incorporer des messages de ce forum Discourse. Nom d'hôte seulement, sans http://"
     feed_polling_enabled: "EMBARQUER UNIQUEMENT: Embarqué le flux RSS/ATOM en tant que messages."
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."

@@ -105,6 +105,7 @@ zh_CN:
     other: "抱歉，游客一次仅能贴 %{count} 条链接。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
+  topic_not_found: "出现问题。也许这个话题被关闭或删除。"
   just_posted_that: "与你最近发表的帖子太过相似"
   has_already_been_used: "已经被使用"
   invalid_characters: "包含无效字符"
@@ -565,7 +566,6 @@ zh_CN:
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
     queue_size_warning: '队列中的任务数为 %{queue_size}，任务较多。这可能因为 Sidekiq 进程出问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
-    enable_google_logins_warning: "你正在使用已被废弃的 Google OpenID 验证方式。Google 将在2015年4月20日停止支持 OpenID 登录。尽早开始使用 Google Oauth2。<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>点击了解更多</a>"
     both_googles_warning: "你在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
     google_oauth2_config_warning: '服务器允许使用 Google Oauth2 登录（enable_google_oauth2_logins），但是 client id 和 client secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。 <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">参考设定指南</a>。'
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
@@ -911,7 +911,6 @@ zh_CN:
     default_code_lang: "默认语法高亮语言，使用 GitHub 代码块（lang-auto、ruby、python或者其他等等。）"
     warn_reviving_old_topic_age: "当有人开始回复最后一贴超过一定天数前的主题时，将有一个警告显示，不鼓励他们复活一个老的讨论。将其设置为 0 以禁用。"
     autohighlight_all_code: "即使未显式设定语言，仍为所有预编排代码块应用语法高亮。"
-    embeddable_host: "能从这个 Discourse 论坛嵌入评论的主机。"
     feed_polling_enabled: "仅用于嵌入：是否将 RSS/ATOM 订阅为帖子。"
     feed_polling_url: "仅用于嵌入：RSS/ATOM 订阅的 URL。"
     embed_by_username: "创建嵌入主题的 Discourse 的用户名。"
@@ -1083,44 +1082,6 @@ zh_CN:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
-    text_body_template: |
-      这是一封测试电子邮件，发于：
-
-      [**%{base_url}**][0]
-
-      电子邮件分发很复杂。以下是一些重要的您应该检查的内容：
-
-      - 确定您设置了站点设置为 `notification email` 设置了正确的地址。**“来自”中指定的域名应和将要验证的域名一致。**
-
-      - 确定您会使用您的邮件客户端查看*电子邮件源代码*，这样您可以通过查看邮件头来获取重要线索。在 Gmail 中，可以通过每一封邮件下拉菜单中的“显示原始消息”来查看。
-
-      - **重要：** 您的 ISP 是否对您发送邮件的域名和IP作了反向DNS解析？您可以在此[测试您的反向枚举指针（PTR）记录][2]。如果您的 ISP 没有正确的反向 DNS 记录，那么很可能您的任何电子邮件都不会被成功发送。
-
-      - 您的域名的[发件人策略框架（SPF）记录][8]是否正确？您可以在此[测试您的SPF记录][1]。注意 TXT 是一种正确的官方 SPF 记录。
-
-      - 您域名的[域名密钥身份识别邮件（DKIM）记录][3]正确？这将显著提高邮件分发的成功率。在此[测试您的 DKIM 记录]。
-
-      - 如果您自己运行邮件服务器，检查确认您发送电子邮件的服务器IP [不在任何邮件黑名单中][4]。验证您的 DNS 记录的 HELO 消息中*确定无疑地*发送了符合要求的主机名。如果没有，那么会导致很多邮件服务商拒绝您的邮件。
-
-      （最简单的方法是在[Mandrill][md]或[Mailgun][mg]或[Mailjet][mj]注册免费账户，他们的免费账户对一个小社群是足够的。如果您希望在中国大陆提供稳定的服务，您可以考虑[SendCloud][sc]不过您仍然需要在 DNS 设置中设定 SPF 和 DKIM 记录！）
-
-      我们衷心希望您收到这封邮件，成功完成邮件发送测试！
-
-      祝好运！
-
-      您的朋友，[Discourse](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
-      [sc]: http://sendcloud.sohu.com/
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
     text_body_template: |

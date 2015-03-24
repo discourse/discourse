@@ -142,7 +142,7 @@ es:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
         last_30_days: "Últimos 30 días"
-      like_count: "Likes"
+      like_count: "Me Gusta"
       topic_count: "Temas"
       post_count: "Posts"
       user_count: "Nuevos usuarios"
@@ -161,6 +161,7 @@ es:
       not_bookmarked: "has leído este post, haz clic para marcarlo como favorito"
       last_read: "este es el último post que has leído; haz clic para marcarlo como favorito"
       remove: "Eliminar marcador"
+      confirm_clear: "¿Seguro que deseas borrar todos los marcadores de este tema?"
     topic_count_latest:
       one: "Un tema nuevo o actualizado."
       other: "{{count}} temas nuevos o actualizados."
@@ -205,6 +206,18 @@ es:
       posted_by_you: "Publicado por <a href='{{userUrl}}'>ti</a>"
       sent_by_user: "Enviado por <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Enviado por <a href='{{userUrl}}'>ti</a>"
+    directory:
+      title: "Directorio de usuario"
+      likes_given: "Me Gusta dados"
+      likes_received: "Me Gusta recibidos"
+      topics_entered: "Temas Vistos"
+      time_read: "Tiempo de Lectura"
+      topic_count: "Temas"
+      post_count: "Respuestas"
+      no_results: "No se han encontrado resultados para este período de tiempo."
+      total_rows:
+        one: "1 usuario encontrado"
+        other: "%{count} usuarios encontrados"
     groups:
       visible: "El grupo es visible para todos los usuarios"
       title:
@@ -601,7 +614,7 @@ es:
       emoji: "Emoji :smile:"
       add_warning: "Ésta es una advertencia oficial."
       posting_not_on_topic: "¿A qué tema quieres responder?"
-      saving_draft_tip: "guardando"
+      saving_draft_tip: "guardando..."
       saved_draft_tip: "guardado"
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "Tu tema es similar a..."
@@ -864,10 +877,12 @@ es:
         open: "Abrir tema"
         close: "Cerrar tema"
         auto_close: "Auto-cierre"
+        feature: "Característica del Tema"
+        remove_feature: "Quitar Característica"
         make_banner: "Tema de encabezado. "
         remove_banner: "Remover tema de encabezado. "
-        unpin: "Dejar de destacar"
         pin: "Destacar tema"
+        unpin: "Dejar de destacar"
         pin_globally: "Destacar tema globalmente"
         unarchive: "Desarchivar Tema"
         archive: "Archivar Tema"
@@ -888,6 +903,30 @@ es:
         title: 'Reportar'
         help: 'reportar de forma privada para atención de los moderadores o enviar una notificación privada sobre él'
         success_message: 'Has reportado este tema correctamente.'
+      feature_topic:
+        title: "Característica de este Tema"
+        pin: "Hacer que este tema aparecerá en la parte superior de la {{categoryLink}} categoría."
+        confirm_pin: "¿Estás seguro? Ya tiene {{count}} temas anclados - demasiados temas anclados pueden ocultar otros temas activos."
+        unpin: "Eliminar este tema desde el tema de la {{categoryLink}} categoría."
+        pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        already_pinned:
+          zero: "Actualmente no hay temas anclados en {{categoryLink}}."
+          one: "Tema anclado actualmente en {{categoryLink}}: <strong>1.</strong>"
+          other: "Temas anclados actualmente en {{categoryLink}}: <strong>{{count}}</strong>."
+        pin_globally: "Haz que este tema aparezca en la parte superior de todas las listas de temas, hasta que un miembro del personal le quite el anclaje."
+        confirm_pin_globally: "¿Estás seguro? Ya tiene {{count}} temas anclados a nivel global -- demasiados temas anclados pueden ocultar otros temas activos."
+        unpin_globally: "Eliminar este tema de la parte superior de todas las listas de temas."
+        global_pin_note: "Los usuarios pueden desanclar el tema de forma individual por sí mismos."
+        already_pinned_globally:
+          zero: "No hay temas anclados actualmente a nivel global."
+          one: "Tema anclado actualmente a nivel global: <strong>1.</strong>"
+          other: "Temas anclados actualmente a nivel global: <strong>{{count}}</strong>."
+        make_banner: "Hacer de este tema una pancarta que aparece en la parte superior de todas las páginas."
+        remove_banner: "Retire la pancarta que aparece en la parte superior de todas las páginas."
+        banner_note: "Los usuarios pueden descartar la pancarta cerrándola. Sólo un tema puede ser una pancarta en cualquier momento dado."
+        already_banner:
+          zero: "Actualmente no hay ningún tema como pancarta."
+          one: "Actualmente existe un tema como pancarta."
       inviting: "Invitando..."
       automatically_add_to_groups_optional: "Esta invitación incluye además acceso a estos grupos: (opcional, solo administradores)"
       automatically_add_to_groups_required: "Esta invitación incluye además acceso a estos grupos: (<b>Requerido</b>, solo administradores)"
@@ -1487,8 +1526,12 @@ es:
         name: "Nombre"
         add: "Añadir"
         add_members: "Añadir miembros"
-        custom: "Personalizado"
-        automatic: "Automático"
+        custom:
+          label: "Personalizar"
+          title: "Grupos Personalizados"
+        automatic:
+          label: "Automático"
+          title: "Grupos Automáticos"
         automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
       api:
