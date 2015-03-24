@@ -180,7 +180,7 @@ module Onebox
 
       # Generates the HTML for the embedded content
       def photo_type?
-        data[:type] =~ /photo/ || data[:type] =~ /image/
+        ( (data[:type] =~ /photo/ || data[:type] =~ /image/) && data[:type] !~ /photostream/ )
       end
 
       def article_type?
