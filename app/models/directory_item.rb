@@ -7,7 +7,9 @@ class DirectoryItem < ActiveRecord::Base
                    :likes_given,
                    :topics_entered,
                    :topic_count,
-                   :post_count]
+                   :post_count,
+                   :posts_read,
+                   :days_visited]
   end
 
   def self.period_types
@@ -31,13 +33,15 @@ class DirectoryItem < ActiveRecord::Base
             end
 
     exec_sql "INSERT INTO directory_items
-                (period_type, user_id, likes_received, likes_given, topics_entered, topic_count, post_count)
+                (period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
                 SELECT
                   :period_type,
                   u.id,
                   SUM(CASE WHEN ua.action_type = :was_liked_type THEN 1 ELSE 0 END),
                   SUM(CASE WHEN ua.action_type = :like_type THEN 1 ELSE 0 END),
-                  (SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at > :since),
+                  COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at >= :since), 0),
+                  COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at >= :since), 0),
+                  COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since), 0),
                   SUM(CASE WHEN ua.action_type = :new_topic_type THEN 1 ELSE 0 END),
                   SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
                 FROM users AS u
