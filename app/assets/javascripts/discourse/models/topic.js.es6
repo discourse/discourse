@@ -145,24 +145,16 @@ const Topic = Discourse.Model.extend({
 
   toggleStatus(property) {
     this.toggleProperty(property);
-    this.saveStatus(property, this.get(property) ? true : false);
-  },
-
-  setStatus(property, value) {
-    this.set(property, value);
-    this.saveStatus(property, value);
+    this.saveStatus(property, !!this.get(property));
   },
 
   saveStatus(property, value) {
     if (property === 'closed' && value === true) {
       this.set('details.auto_close_at', null);
     }
-    if (property === 'pinned') {
-      this.set('pinned_at', value ? moment() : null);
-    }
     return Discourse.ajax(this.get('url') + "/status", {
       type: 'PUT',
-      data: {status: property, enabled: value ? 'true' : 'false' }
+      data: { status: property, enabled: !!value }
     });
   },
 
@@ -187,63 +179,61 @@ const Topic = Discourse.Model.extend({
   }.property('word_count'),
 
   toggleBookmark() {
+    if (this.get("bookmarking")) { return; }
+    this.set("bookmarking", true);
+
     const self = this,
           stream = this.get('postStream'),
           posts = Em.get(stream, 'posts'),
-          firstPost = posts &&
-                      posts[0] &&
-                      posts[0].get('post_number') === 1 &&
-                      posts[0],
-          bookmark = !self.get('bookmarked');
+          firstPost = posts && posts[0] && posts[0].get('post_number') === 1 && posts[0],
+          bookmark = !this.get('bookmarked'),
+          path = bookmark ? '/bookmark' : '/remove_bookmarks';
 
-    var path = bookmark ? '/bookmark' : '/remove_bookmarks';
-    var unbookmarkedPosts = [],
-        bookmarkedPost;
+    const toggleBookmarkOnServer = function() {
+      return Discourse.ajax('/t/' + self.get('id') + path, {
+        type: 'PUT',
+      }).then(function() {
+        self.toggleProperty('bookmarked');
+        if (bookmark && firstPost) { firstPost.set('bookmarked', true); }
+        if (!bookmark && posts) {
+          posts.forEach((post) => post.get('bookmarked') && post.set('bookmarked', false));
+        }
+      }).catch(function(error) {
+        let showGenericError = true;
+        if (error && error.responseText) {
+          try {
+            bootbox.alert($.parseJSON(error.responseText).errors);
+            showGenericError = false;
+          } catch(e) { }
+        }
 
-    this.toggleProperty('bookmarked');
+        if (showGenericError) {
+          bootbox.alert(I18n.t('generic_error'));
+        }
 
-    if (bookmark && firstPost) {
-      firstPost.set('bookmarked', true);
-      bookmarkedPost = firstPost;
-    }
+        throw error;
+      }).finally(function() {
+        self.set("bookmarking", false);
+      });
+    };
 
+    let unbookmarkedPosts = [];
     if (!bookmark && posts) {
-      posts.forEach(function(post){
-          if(post.get('bookmarked')){
-            post.set('bookmarked', false);
-            unbookmarkedPosts.push(post);
-          }
-      });
+      posts.forEach((post) => post.get('bookmarked') && unbookmarkedPosts.push(post));
     }
 
-    return Discourse.ajax('/t/' + this.get('id') + path, {
-      type: 'PUT',
-    }).catch(function(error) {
-
-      self.toggleProperty('bookmarked');
-
-      if(bookmarkedPost) {
-        bookmarkedPost.set('bookmarked', false);
-      }
-
-      unbookmarkedPosts.forEach(function(p){
-        p.set('bookmarked', true);
-      });
-
-      let showGenericError = true;
-      if (error && error.responseText) {
-        try {
-          bootbox.alert($.parseJSON(error.responseText).errors);
-          showGenericError = false;
-        } catch(e){}
-      }
-
-      if(showGenericError){
-        bootbox.alert(I18n.t('generic_error'));
-      }
-
-      throw error;
-    });
+    if (unbookmarkedPosts.length > 1) {
+      return bootbox.confirm(
+        I18n.t("bookmarks.confirm_clear"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function (confirmed) {
+          if (confirmed) { return toggleBookmarkOnServer(); }
+        }
+      );
+    } else {
+      return toggleBookmarkOnServer();
+    }
   },
 
   createInvite(emailOrUsername, groupNames) {

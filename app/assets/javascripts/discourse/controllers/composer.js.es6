@@ -211,13 +211,13 @@ export default DiscourseController.extend({
       }
     }
 
-    var staged = false,
-        disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
-    var promise = composer.save({
+    var staged = false;
+    const disableJumpReply = Discourse.User.currentProp('disable_jump_reply');
+
+    const promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
     }).then(function(opts) {
-
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
@@ -240,34 +240,35 @@ export default DiscourseController.extend({
           Discourse.URL.routeTo(opts.post.get('url'));
         }
       }
-    }, function(error) {
+    }).catch(function(error) {
       composer.set('disableDrafts', false);
       bootbox.alert(error);
     });
 
 
-    if ( this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
-         composer.get('topic.id') === this.get('controllers.topic.model.id') ) {
+    if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
+        composer.get('topic.id') === this.get('controllers.topic.model.id')) {
       staged = composer.get('stagedPost');
     }
 
     Em.run.schedule('afterRender', function() {
       if (staged && !disableJumpReply) {
-        var postNumber = staged.get('post_number');
-        Discourse.URL.jumpToPost(postNumber, {skipIfOnScreen: true});
+        const postNumber = staged.get('post_number');
+        Discourse.URL.jumpToPost(postNumber, { skipIfOnScreen: true });
         self.appEvents.trigger('post:highlight', postNumber);
       }
+    });
+
+    this.messageBus.pause();
+    promise.finally(function(){
+      self.messageBus.resume();
     });
 
     return promise;
   },
 
-  /**
-    Checks to see if a reply has been typed. This is signaled by a keyUp
-    event in a view.
-
-    @method checkReplyLength
-  **/
+  // Checks to see if a reply has been typed.
+  // This is signaled by a keyUp event in a view.
   checkReplyLength() {
     if (this.present('model.reply')) {
       // Notify the composer messages controller that a reply has been typed. Some
@@ -276,12 +277,8 @@ export default DiscourseController.extend({
     }
   },
 
-  /**
-    Fired after a user stops typing. Considers whether to check for similar
-    topics based on the current composer state.
-
-    @method findSimilarTopics
-  **/
+  // Fired after a user stops typing.
+  // Considers whether to check for similar topics based on the current composer state.
   findSimilarTopics() {
     // We don't care about similar topics unless creating a topic
     if (!this.get('model.creatingTopic')) { return; }

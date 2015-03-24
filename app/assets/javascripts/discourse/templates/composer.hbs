@@ -95,7 +95,9 @@ so I'm going to stop rendering it until we figure out what's up
               <a {{bind-attr class=":mobile-file-upload view.isUploading:hidden"}}>{{i18n 'upload'}}</a>
               <input type="file" id="mobile-uploader" />
             {{/if}}
-            <div id='draft-status'>{{model.draftStatus}}</div>
+            <div id='draft-status' {{bind-attr class="view.isUploading:hidden"}}>
+              {{model.draftStatus}}
+            </div>
           </div>
         </div>
 

@@ -1,0 +1,83 @@
+<div class="modal-body feature-topic">
+  {{#if pinned_at}}
+    <div class="feature-section">
+      <div class="button">
+        {{d-button action="unpin" icon="thumb-tack" label="topic.actions.unpin" class="btn-primary"}}
+      </div>
+      <div class="desc">
+        <p>{{{unPinMessage}}}</p>
+        {{#if pinned_globally}}
+          <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
+          <p>
+            {{#loading-spinner size="small" condition=loading}}
+              {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+            {{/loading-spinner}}
+          </p>
+        {{else}}
+          <p>{{i18n "topic.feature_topic.pin_note"}}</p>
+          <p>
+            {{#loading-spinner size="small" condition=loading}}
+              {{{alreadyPinnedMessage}}}
+            {{/loading-spinner}}
+          </p>
+        {{/if}}
+      </div>
+    </div>
+  {{else}}
+    <div class="feature-section">
+      <div class="button">
+        {{d-button action="pin" icon="thumb-tack" label="topic.actions.pin" class="btn-primary"}}
+      </div>
+      <div class="desc">
+        <p>{{{pinMessage}}}</p>
+        <p>{{i18n "topic.feature_topic.pin_note"}}</p>
+        <p>
+          {{#loading-spinner size="small" condition=loading}}
+            {{{alreadyPinnedMessage}}}
+          {{/loading-spinner}}
+        </p>
+      </div>
+    </div>
+    <hr>
+    <div class="feature-section">
+      <div class="button">
+        {{d-button action="pinGlobally" icon="thumb-tack" label="topic.actions.pin_globally" class="btn-primary"}}
+      </div>
+      <div class="desc">
+        <p>{{i18n "topic.feature_topic.pin_globally"}}</p>
+        <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
+        <p>
+          {{#loading-spinner size="small" condition=loading}}
+            {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
+          {{/loading-spinner}}
+        </p>
+      </div>
+    </div>
+  {{/if}}
+  <hr>
+  <div class="feature-section">
+    <div class="button">
+      {{#if isBanner}}
+        {{d-button action="removeBanner" icon="thumb-tack" label="topic.actions.remove_banner" class="btn-primary"}}
+      {{else}}
+        {{d-button action="makeBanner" icon="thumb-tack" label="topic.actions.make_banner" class="btn-primary"}}
+      {{/if}}
+    </div>
+    <div class="desc">
+      {{#if isBanner}}
+        <p>{{i18n "topic.feature_topic.remove_banner"}}</p>
+      {{else}}
+        <p>{{i18n "topic.feature_topic.make_banner"}}</p>
+      {{/if}}
+      <p>{{i18n "topic.feature_topic.banner_note"}}</p>
+      <p>
+        {{#loading-spinner size="small" condition=loading}}
+          {{{i18n "topic.feature_topic.already_banner" count=bannerCount}}}
+        {{/loading-spinner}}
+      </p>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <a class="pull-right" {{action "closeModal"}}>{{i18n "cancel"}}</a>
+</div>

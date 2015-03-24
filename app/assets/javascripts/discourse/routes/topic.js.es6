@@ -59,6 +59,11 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
+    showFeatureTopic() {
+      showModal('featureTopic', this.modelFor('topic'));
+      this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
+    },
+
     showInvite() {
       showModal('invite', this.modelFor('topic'));
       this.controllerFor('invite').reset();

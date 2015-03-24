@@ -96,7 +96,7 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   height: 100%;
   z-index: $z-index-base + 3;
   position: fixed;
-  outline: none !important;
+  outline: 0 !important;
   -webkit-backface-visibility: hidden; // fixes webkit bug that can cause "false" scrollbar
 }
 
@@ -293,6 +293,7 @@ button {
   &:hover,
   &:focus {
     opacity: 1;
+    outline: 0;
     @if $IE7support {
       filter: unquote("alpha(opacity=#{1*100})");
     }
@@ -348,6 +349,7 @@ button {
     }
     &:hover,
     &:focus {
+      outline: 0;
       opacity: 1;
       @if $IE7support {
         filter: unquote("alpha(opacity=#{1*100})");

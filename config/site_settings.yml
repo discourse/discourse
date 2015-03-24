@@ -31,6 +31,7 @@ required:
   notification_email:
     default: 'noreply@unconfigured.discourse.org'
     type: email
+    shadowed_by_global: true
   site_contact_username:
     default: ''
     type: username
@@ -310,6 +311,12 @@ posting:
     default:
       test: 5
       default: 20
+  min_first_post_length:
+    client: true
+    min: 1
+    default:
+      test: 5
+      default: 20
   min_private_message_post_length:
     client: true
     min: 1
@@ -346,7 +353,7 @@ posting:
     default: 15
   enable_private_messages: true
   ninja_edit_window: 300
-  post_edit_time_limit: 262800
+  post_edit_time_limit: 86400
   edit_history_visible_to_public:
     client: true
     default: true
@@ -400,6 +407,11 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  highlighted_languages:
+    default: 'apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars'
+    choices: 'HighlightJs.languages'
+    type: list
+    client: true
   delete_old_hidden_posts: true
   censored_words:
     client: true

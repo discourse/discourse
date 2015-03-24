@@ -326,20 +326,17 @@ const PostStream = Ember.Object.extend({
 
   // Commit the post we staged. Call this after a save succeeds.
   commitPost(post) {
-    if (this.get('loadedAllPosts')) {
-      this.appendPost(post);
+
+    if (this.get('topic.id') === post.get('topic_id')) {
+      if (this.get('loadedAllPosts')) {
+        this.appendPost(post);
+        this.get('stream').addObject(post.get('id'));
+      }
     }
-    // Correct for a dangling deleted post, if needed
-    // compensating for message bus pumping in new posts while
-    // your post is in transit
-    if(this.get('topic.highest_post_number') < post.get('post_number')){
-      this.set('topic.highest_post_number', post.get('post_number'));
-    }
+
     this.get('stream').removeObject(-1);
     this.get('postIdentityMap').set(-1, null);
-    this.get('postIdentityMap').set(post.get('id'), post);
 
-    this.get('stream').addObject(post.get('id'));
     this.set('stagingPost', false);
   },
 

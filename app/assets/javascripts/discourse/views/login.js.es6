@@ -1,4 +1,6 @@
-export default Discourse.ModalBodyView.extend({
+import ModalBodyView from "discourse/views/modal-body";
+
+export default ModalBodyView.extend({
   templateName: 'modal/login',
   title: I18n.t('login.title'),
   classNames: ['login-modal'],
@@ -9,7 +11,7 @@ export default Discourse.ModalBodyView.extend({
   },
 
   _setup: function() {
-    var loginController = this.get('controller');
+    const loginController = this.get('controller');
 
     // Get username and password from the browser's password manager,
     // if it filled the hidden static login form:
@@ -18,10 +20,8 @@ export default Discourse.ModalBodyView.extend({
 
     Em.run.schedule('afterRender', function() {
       $('#login-account-password, #login-account-name').keydown(function(e) {
-        if (e.keyCode === 13) {
-          if (!loginController.get('loginDisabled')) {
-            loginController.send('login');
-          }
+        if (e.keyCode === 13 && !loginController.get('loginDisabled')) {
+          loginController.send('login');
         }
       });
     });

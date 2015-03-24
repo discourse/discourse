@@ -123,9 +123,17 @@ test("avatarUrl", function() {
   equal(utils.avatarUrl('/fake/template/{size}.png', 'large'), "/fake/template/" + rawSize(45) +  ".png", "different size");
 });
 
+var setDevicePixelRatio = function(value) {
+  if(Object.defineProperty) {
+    Object.defineProperty(window, "devicePixelRatio", { value: 2 })
+  } else {
+    window.devicePixelRatio = value;
+  }
+};
+
 test("avatarImg", function() {
   var oldRatio = window.devicePixelRatio;
-  window.devicePixelRatio = 2;
+  setDevicePixelRatio(2);
 
   var avatarTemplate = "/path/to/avatar/{size}.png";
   equal(utils.avatarImg({avatarTemplate: avatarTemplate, size: 'tiny'}),
@@ -143,7 +151,7 @@ test("avatarImg", function() {
   blank(utils.avatarImg({avatarTemplate: "", size: 'tiny'}),
         "it doesn't render avatars for invalid avatar template");
 
-  window.devicePixelRatio = oldRatio;
+  setDevicePixelRatio(oldRatio);
 });
 
 test("allowsAttachments", function() {

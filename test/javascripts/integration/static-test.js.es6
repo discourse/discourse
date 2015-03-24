@@ -1,28 +1,28 @@
 integration("Static");
 
-test("Static Pages", function() {
+test("Static Pages", () => {
   visit("/faq");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".body-page"), "The content is present");
   });
 
   visit("/guidelines");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".body-page"), "The content is present");
   });
 
   visit("/tos");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".body-page"), "The content is present");
   });
 
   visit("/privacy");
-  andThen(function() {
+  andThen(() => {
     ok(exists(".body-page"), "The content is present");
   });
 
   visit("/login");
-  andThen(function() {
+  andThen(() => {
     equal(currentPath(), "discovery.latest", "it redirects them to latest unless `login_required`");
   });
 });

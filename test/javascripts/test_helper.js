@@ -25,8 +25,6 @@
 // Pagedown customizations
 //= require ../../app/assets/javascripts/pagedown_custom.js
 
-//= require ../../public/javascripts/highlight.pack.js
-
 //= require vendor
 
 //= require htmlparser.js
@@ -49,6 +47,8 @@
 //= require_tree ./lib
 //= require_tree .
 //= require_self
+//
+//= require ../../public/javascripts/jquery.magnific-popup-min.js
 
 // sinon settings
 sinon.config = {

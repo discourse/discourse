@@ -32,6 +32,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
+    @site_settings_during_import
     @old_site_settings = {}
     @start_time = Time.now
 
@@ -47,7 +48,7 @@ class ImportScripts::Base
 
     puts "loading existing categories..."
     CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-      @categories_lookup[import_id] = Category.find(category_id.to_i)
+      @categories_lookup[import_id] = category_id
     end
 
     puts "loading existing posts..."
@@ -94,17 +95,19 @@ class ImportScripts::Base
   end
 
   def change_site_settings
-    new_settings = {
+    @site_settings_during_import = {
       email_domains_blacklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
+      min_first_post_length: 1,
       min_private_message_post_length: 1,
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      disable_emails: true
+      disable_emails: true,
+      authorized_extensions: '*'
     }
 
-    new_settings.each do |key, value|
+    @site_settings_during_import.each do |key, value|
       @old_site_settings[key] = SiteSetting.send(key)
       SiteSetting.set(key, value)
     end
@@ -114,7 +117,8 @@ class ImportScripts::Base
 
   def reset_site_settings
     @old_site_settings.each do |key, value|
-      SiteSetting.set(key, value)
+      current_value = SiteSetting.send(key)
+      SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
     end
 
     RateLimiter.enable
@@ -156,7 +160,7 @@ class ImportScripts::Base
   end
 
   # Get the Discourse Category id based on the id of the source category
-  def category_from_imported_category_id(import_id)
+  def category_id_from_imported_category_id(import_id)
     @categories_lookup[import_id] || @categories_lookup[import_id.to_s]
   end
 
@@ -290,6 +294,7 @@ class ImportScripts::Base
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
     opts[:import_mode] = true
+    opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
 
     u = User.new(opts)
     u.custom_fields["import_id"] = import_id
@@ -330,7 +335,8 @@ class ImportScripts::Base
     results.each do |c|
       params = yield(c)
 
-      next if params.nil? # block returns nil to skip
+      # block returns nil to skip
+      next if params.nil? || category_id_from_imported_category_id(params[:id])
 
       # Basic massaging on the category name
       params[:name] = "Blank" if params[:name].blank?
@@ -347,13 +353,13 @@ class ImportScripts::Base
       end
 
       new_category = create_category(params, params[:id])
-      @categories_lookup[params[:id]] = new_category
+      @categories_lookup[params[:id]] = new_category.id
     end
   end
 
   def create_category(opts, import_id)
-    existing = category_from_imported_category_id(import_id) || Category.where("LOWER(name) = ?", opts[:name].downcase).first
-    return existing if existing
+    existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
+    return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
 
     post_create_action = opts.delete(:post_create_action)
 
@@ -468,6 +474,42 @@ class ImportScripts::Base
     tmp.unlink rescue nil
   end
 
+  # Iterate through a list of bookmark records to be imported.
+  # Takes a collection, and yields to the block for each element.
+  # Block should return a hash with the attributes for the bookmark.
+  # Required fields are :user_id and :post_id, where both ids are
+  # the values in the original datasource.
+  def create_bookmarks(results, opts={})
+    bookmarks_created = 0
+    bookmarks_skipped = 0
+    total = opts[:total] || results.size
+
+    user = User.new
+    post = Post.new
+
+    results.each do |result|
+      params = yield(result)
+
+      # only the IDs are needed, so this should be enough
+      user.id = user_id_from_imported_user_id(params[:user_id])
+      post.id = post_id_from_imported_post_id(params[:post_id])
+
+      if user.id.nil? || post.id.nil?
+        bookmarks_skipped += 1
+        puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
+      else
+        begin
+          PostAction.act(user, post, PostActionType.types[:bookmark])
+          bookmarks_created += 1
+        rescue PostAction::AlreadyActed
+          bookmarks_skipped += 1
+        end
+
+        print_status bookmarks_created + bookmarks_skipped + (opts[:offset] || 0), total
+      end
+    end
+  end
+
   def close_inactive_topics(opts={})
     num_days = opts[:days] || 30
     puts '', "Closing topics that have been inactive for more than #{num_days} days."
@@ -570,8 +612,15 @@ class ImportScripts::Base
   end
 
   def update_tl0
-    User.all.each do |user|
+    puts "", "setting users with no posts to trust level 0"
+
+    total_count = User.count
+    progress_count = 0
+
+    User.find_each do |user|
       user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      progress_count += 1
+      print_status(progress_count, total_count)
     end
   end
 

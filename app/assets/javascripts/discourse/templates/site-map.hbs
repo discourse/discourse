@@ -22,6 +22,8 @@
       </li>
     {{/if}}
 
+    <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
+
     {{plugin-outlet "site-map-links"}}
 
     {{#if showKeyboardShortcuts}}

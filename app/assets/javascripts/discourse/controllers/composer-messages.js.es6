@@ -5,10 +5,9 @@ export default Ember.ArrayController.extend({
   // Whether we've checked our messages
   checkedMessages: false,
 
-  init() {
-    this._super();
+  _init: function() {
     this.reset();
-  },
+  }.on("init"),
 
   actions: {
     closeMessage(message) {
@@ -29,14 +28,11 @@ export default Ember.ArrayController.extend({
         this.pushObject(message);
         messagesByTemplate[templateName] = message;
       }
-    },
+    }
   },
 
-  /**
-    Resets all active messages. For example if composing a new post.
-
-    @method reset
-  **/
+  // Resets all active messages.
+  // For example if composing a new post.
   reset() {
     this.clear();
     this.setProperties({
@@ -46,42 +42,22 @@ export default Ember.ArrayController.extend({
     });
   },
 
-  /**
-    Called after the user has typed a reply. Some messages only get shown after being
-    typed.
-
-    @method typedReply
-  **/
+  // Called after the user has typed a reply.
+  // Some messages only get shown after being typed.
   typedReply() {
-    var self = this;
-    this.get('queuedForTyping').forEach(function(msg){
-      if(self.popup){
-        self.popup(msg);
-      }
-    });
+    this.get('queuedForTyping').forEach(msg => this.send("popup", msg));
   },
 
-  /**
-    Figure out if there are any messages that should be displayed above the composer.
-
-    @method queryFor
-    @params {Discourse.Composer} composer The composer model
-  **/
+  // Figure out if there are any messages that should be displayed above the composer.
   queryFor(composer) {
     if (this.get('checkedMessages')) { return; }
 
     const self = this;
-    let queuedForTyping = self.get('queuedForTyping');
+    var queuedForTyping = self.get('queuedForTyping');
 
-    Discourse.ComposerMessage.find(composer).then(function (messages) {
+    Discourse.ComposerMessage.find(composer).then(messages => {
       self.set('checkedMessages', true);
-      messages.forEach(function (msg) {
-        if (msg.wait_for_typing) {
-          queuedForTyping.addObject(msg);
-        } else {
-          self.popup(msg);
-        }
-      });
+      messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : self.send("popup", msg));
     });
   }
 

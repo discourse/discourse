@@ -86,3 +86,43 @@
 .new-private-message {
   margin-bottom: 15px;
 }
+
+.user-small {
+  display: inline-block;
+  width: 333px;
+  clear: both;
+
+  .user-image {
+    float: left;
+    padding-right: 4px;
+  }
+
+  .user-detail {
+    float: left;
+    width: 70%;
+    padding-left: 5px;
+    font-size: 13px;
+
+    .name-line {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .username a {
+      font-weight: bold;
+      color: scale-color($primary, $lightness: 30%);
+    }
+
+    .name {
+      margin-left: 5px;
+      color: scale-color($primary, $lightness: 30%);
+    }
+
+    .title {
+      margin-top: 3px;
+      color: scale-color($primary, $lightness: 50%);
+    }
+
+  }
+}

@@ -158,6 +158,19 @@ class TopicsController < ApplicationController
     render_serialized(topics, BasicTopicSerializer)
   end
 
+  def feature_stats
+    params.require(:category_id)
+    category_id = params[:category_id].to_i
+
+    topics = Topic.listable_topics.visible
+
+    render json: {
+      pinned_in_category_count: topics.where(category_id: category_id).where(pinned_globally: false).where.not(pinned_at: nil).count,
+      pinned_globally_count: topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
+      banner_count: topics.where(archetype: Archetype.banner).count,
+    }
+  end
+
   def status
     params.require(:status)
     params.require(:enabled)
@@ -492,7 +505,7 @@ class TopicsController < ApplicationController
   end
 
   def check_for_status_presence(key, attr)
-    invalid_param(key) unless %w(pinned_globally visible closed pinned archived).include?(attr)
+    invalid_param(key) unless %w(pinned pinned_globally visible closed archived).include?(attr)
   end
 
   def invalid_param(key)

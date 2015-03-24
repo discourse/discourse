@@ -1,0 +1,61 @@
+.directory {
+  margin-bottom: 100px;
+
+  .period-chooser {
+    float: left;
+  }
+  .filter-name {
+    float: right;
+  }
+  .total-rows {
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+    text-align: right;
+  }
+  .spinner {
+    clear: both;
+  }
+
+  table {
+    width: 100%;
+    margin-bottom: 1em;
+
+    td, th {
+      padding: 0.5em;
+      text-align: left;
+      border-bottom: 1px solid scale-color-diff();
+
+      .number, .time-read {
+        font-size: 1.4em;
+        color: dark-light-diff($primary, $secondary, 50%, -50%);
+      }
+    }
+
+    tr.me {
+      td {
+        background-color: scale-color($highlight, $lightness: 50%);
+
+        .username a, .name, .title, .number, .time-read {
+          color: scale-color($highlight, $lightness: -50%);
+        }
+      }
+    }
+
+    th.sortable {
+      cursor: pointer;
+      white-space: nowrap;
+
+      width: 13%;
+      i.fa-heart {
+        color: $love;
+        margin-right: 0.5em;
+      }
+      i.fa-chevron-down, i.fa-chevron-up {
+        margin-left: 0.5em;
+      }
+
+      &:hover {
+        background-color: scale-color-diff();
+      }
+    }
+  }
+}

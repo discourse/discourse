@@ -105,6 +105,7 @@ class TopicQuery
   end
 
   def list_topics_by(user)
+    @options[:filtered_to_user] = user.id
     create_list(:user_topics) do |topics|
       topics.where(user_id: user.id)
     end
@@ -281,6 +282,10 @@ class TopicQuery
       options.reverse_merge!(@options)
       options.reverse_merge!(per_page: per_page_setting)
 
+      # Whether to return visible topics
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @user && @user.id == options[:filtered_to_user]
+
       # Start with a list of all topics
       result = Topic.unscoped
 
@@ -310,7 +315,8 @@ class TopicQuery
       end
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
-      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+
+      result = result.visible if options[:visible]
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 

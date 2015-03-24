@@ -11,58 +11,61 @@ export default ObjectController.extend(CanCheckEmails, {
 
   primaryGroupDirty: Discourse.computed.propertyNotEqual('originalPrimaryGroupId', 'primary_group_id'),
 
-  custom_groups: Ember.computed.filter("model.groups", function(g){
-    return (!g.automatic && g.visible);
-  }),
+  automaticGroups: function() {
+    return this.get("model.automaticGroups").map((g) => g.name).join(", ");
+  }.property("model.automaticGroups"),
 
   userFields: function() {
-    var siteUserFields = this.site.get('user_fields'),
-        userFields = this.get('user_fields');
+    const siteUserFields = this.site.get('user_fields'),
+          userFields = this.get('user_fields');
 
     if (!Ember.isEmpty(siteUserFields)) {
       return siteUserFields.map(function(uf) {
-        var value = userFields ? userFields[uf.get('id').toString()] : null;
-        return {name: uf.get('name'), value: value};
+        let value = userFields ? userFields[uf.get('id').toString()] : null;
+        return { name: uf.get('name'), value: value };
       });
     }
     return [];
   }.property('user_fields.@each'),
 
   actions: {
-    toggleTitleEdit: function() {
+    toggleTitleEdit() {
       this.toggleProperty('editingTitle');
     },
 
-    saveTitle: function() {
-      Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
+    saveTitle() {
+      const self = this;
+
+      return Discourse.ajax("/users/" + this.get('username').toLowerCase(), {
         data: {title: this.get('title')},
         type: 'PUT'
-      }).then(null, function(e){
+      }).catch(function(e) {
         bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
+      }).finally(function() {
+        self.send('toggleTitleEdit');
       });
-
-      this.send('toggleTitleEdit');
     },
 
-    generateApiKey: function() {
+    generateApiKey() {
       this.get('model').generateApiKey();
     },
 
-    groupAdded: function(added){
+    groupAdded(added) {
       this.get('model').groupAdded(added).catch(function() {
         bootbox.alert(I18n.t('generic_error'));
       });
     },
 
-    groupRemoved: function(removed){
-      this.get('model').groupRemoved(removed).catch(function() {
+    groupRemoved(groupId) {
+      this.get('model').groupRemoved(groupId).catch(function() {
         bootbox.alert(I18n.t('generic_error'));
       });
     },
 
-    savePrimaryGroup: function() {
-      var self = this;
-      Discourse.ajax("/admin/users/" + this.get('id') + "/primary_group", {
+    savePrimaryGroup() {
+      const self = this;
+
+      return Discourse.ajax("/admin/users/" + this.get('id') + "/primary_group", {
         type: 'PUT',
         data: {primary_group_id: this.get('primary_group_id')}
       }).then(function () {
@@ -72,33 +75,41 @@ export default ObjectController.extend(CanCheckEmails, {
       });
     },
 
-    resetPrimaryGroup: function() {
+    resetPrimaryGroup() {
       this.set('primary_group_id', this.get('originalPrimaryGroupId'));
     },
 
-    regenerateApiKey: function() {
-      var self = this;
-      bootbox.confirm(I18n.t("admin.api.confirm_regen"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-        if (result) {
-          self.get('model').generateApiKey();
+    regenerateApiKey() {
+      const self = this;
+
+      bootbox.confirm(
+        I18n.t("admin.api.confirm_regen"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(result) {
+          if (result) { self.get('model').generateApiKey(); }
         }
-      });
+      );
     },
 
-    revokeApiKey: function() {
-      var self = this;
-      bootbox.confirm(I18n.t("admin.api.confirm_revoke"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
-        if (result) {
-          self.get('model').revokeApiKey();
+    revokeApiKey() {
+      const self = this;
+
+      bootbox.confirm(
+        I18n.t("admin.api.confirm_revoke"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(result) {
+          if (result) { self.get('model').revokeApiKey(); }
         }
-      });
+      );
     },
 
-    anonymize: function() {
+    anonymize() {
       this.get('model').anonymize();
     },
 
-    destroy: function() {
+    destroy() {
       this.get('model').destroy();
     }
   }

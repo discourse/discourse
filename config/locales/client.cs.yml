@@ -224,6 +224,19 @@ cs:
       posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"
       sent_by_user: "Posláno uživatelem <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Posláno <a href='{{userUrl}}'>vámi</a>"
+    directory:
+      title: "Seznam uživatelů"
+      likes_given: "Rozdaných libí se"
+      likes_received: "Obdržených líbí se"
+      topics_entered: "Navštívených témat"
+      time_read: "Čas strávený čtením"
+      topic_count: "Témata"
+      post_count: "Odpovědi"
+      no_results: "Pro toto období nebylo nic nalezeno"
+      total_rows:
+        one: "nalezen 1 uživatel"
+        few: "nalezeni %{count} uživatelé"
+        other: "nalezeno %{count} uživatelů"
     groups:
       visible: "Skupina je viditelná pro všechny uživatele"
       title:
@@ -425,7 +438,6 @@ cs:
         title: "Když tady dlouho nebudu, chci emailem zaslat co je nového:"
         daily: "denně"
         weekly: "týdně"
-        every_two_weeks: "jednou za 14 dní"
       email_direct: "Upozornit emailem na moje citace, odpovědi na můj příspěvek a na @jmeno"
       email_private_messages: "Upozornit emailem na nové soukromé konverzace"
       email_always: "Posílat upozorňovací emaily i když jsem zrovna na webu aktivní"
@@ -486,6 +498,7 @@ cs:
         too_short: "Vaše heslo je příliš krátké."
         common: "Toto heslo je používané moc často."
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
+        same_as_email: "Vaše heslo je stejné jako váš e-mail."
         ok: "Vaše heslo je v pořádku."
         instructions: "Alespo %{count} znaků."
       associated_accounts: "Přihlášení"
@@ -596,6 +609,7 @@ cs:
       requires_invite: "Promiňte, toto fórum je pouze pro zvané."
       not_activated: "Ještě se nemůžete přihlásit. Zaslali jsme vám aktivační email v <b>{{sentTo}}</b>. Prosím následujte instrukce v tomto emailu, abychom mohli váš účet aktivovat."
       not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit."
+      admin_not_allowed_from_ip_address: "Z této IP adresy se nemůžete přihlásit jako administrátor."
       resend_activation_email: "Klikněte sem pro zaslání aktivačního emailu."
       sent_activation_email_again: "Zaslali jsme vám další aktivační email na <b>{{currentEmail}}</b>. Může trvat několik minut, než vám dorazí. Zkontrolujte také vaši složku s nevyžádanou pošlou."
       google:
@@ -621,16 +635,13 @@ cs:
     twitter: "Twitter"
     emoji_one: "Emoji One"
     composer:
+      emoji: "Emoji :smile:"
       add_warning: "Toto je oficiální varování."
       posting_not_on_topic: "Rozepsali jste odpověď na téma \"{{title}}\", ale nyní máte otevřené jiné téma."
-      saving_draft_tip: "ukládám"
       saved_draft_tip: "uloženo"
       saved_local_draft_tip: "uloženo lokálně"
       similar_topics: "Podobná témata"
       drafts_offline: "koncepty offline"
-      min_length:
-        need_more_for_title: "ještě {{n}} znaků nadpisu tématu"
-        need_more_for_reply: "ještě {{n}} znaků"
       error:
         title_missing: "Název musí být vyplněn"
         title_too_short: "Název musí být dlouhý alespoň {{min}} znaků"
@@ -695,6 +706,7 @@ cs:
           examples: 'Zadejte počet hodin (24).'
     notifications:
       title: "oznámení o zmínkách pomocí @jméno, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
+      none: "Notifikace nebylo možné načíst."
       more: "zobrazit starší oznámení"
       total_flagged: "celkem nahlášeno příspěvků"
       mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
@@ -777,6 +789,7 @@ cs:
         unread: "Nejsou tu žádná další nepřečtená témata."
         category: "V kategorii {{category}} nejsou žádná další témata."
         top: "Nejsou tu žádná další populární témata."
+        bookmarks: "Žádná další oblíbená témata nejsou k dispozici."
     topic:
       filter_to: "{{post_count}} příspěvků v tématu"
       create: 'Nové téma'
@@ -894,10 +907,12 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         auto_close: "Automaticky zavřít"
+        feature: "Povýšit téma"
+        remove_feature: "Zrušit povýšení tématu"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-        unpin: "Odstranit připnutí"
         pin: "Připnout téma"
+        unpin: "Odstranit připnutí"
         pin_globally: "Připnout téma globálně"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
@@ -937,6 +952,7 @@ cs:
         to_forum: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit s pomocí kliknutí na odkaz. Nebude potřeba registrace."
         email_placeholder: 'jmeno@priklad.cz'
         success: "Zaslali jsme pozvánku na <b>{{email}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
+        error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem? (Pozvánky jsou omezeny)."
       login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
@@ -1313,12 +1329,6 @@ cs:
     posts: "Příspěvků"
     posts_lowercase: "příspěvky"
     posts_long: "v tomto tématu je {{number}} příspěvků"
-    posts_likes_MF: |
-      Toto téma má {count, plural, one {1 příspěvek} few {# příspěvky} other {# příspěvků}} {ratio, select,
-        low {s velkým poměrem líbí se na příspěvek}
-        med {s velmi velkým poměrem líbí se na příspěvek}
-        high {s extrémně velkým poměrem líbí se na příspěvek}
-        other {}}
     original_post: "Původní příspěvek"
     views: "Zobrazení"
     views_lowercase: "zobrazení"
@@ -1394,6 +1404,7 @@ cs:
           title: "Nejlepší podle týdne"
         daily:
           title: "Nejlepší podle dní"
+        all: "Za celou dobu"
         this_year: "Letos"
         this_month: "Tenhle měsíc"
         this_week: "Tenhle týden"
@@ -1542,8 +1553,6 @@ cs:
         name: "Jméno"
         add: "Přidat"
         add_members: "Přidat členy"
-        custom: "Přizpůsobené"
-        automatic: "Automatické"
         automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
         automatic_membership_retroactive: "Aplikovat stejné doménové pravidlo na už existující uživatele"
       api:

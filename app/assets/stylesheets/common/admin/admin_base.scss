@@ -33,6 +33,7 @@ td.flaggers td {
   margin-bottom: 50px;
   .admin-contents {
     padding: 8px;
+    @include clearfix();
   }
 
   .view-options {

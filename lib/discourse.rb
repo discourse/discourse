@@ -27,33 +27,33 @@ module Discourse
   end
 
   # Expected less matches than what we got in a find
-  class TooManyMatches < Exception; end
+  class TooManyMatches < StandardError; end
 
   # When they try to do something they should be logged in for
-  class NotLoggedIn < Exception; end
+  class NotLoggedIn < StandardError; end
 
   # When the input is somehow bad
-  class InvalidParameters < Exception; end
+  class InvalidParameters < StandardError; end
 
   # When they don't have permission to do something
-  class InvalidAccess < Exception; end
+  class InvalidAccess < StandardError; end
 
   # When something they want is not found
-  class NotFound < Exception; end
+  class NotFound < StandardError; end
 
   # When a setting is missing
-  class SiteSettingMissing < Exception; end
+  class SiteSettingMissing < StandardError; end
 
   # When ImageMagick is missing
-  class ImageMagickMissing < Exception; end
+  class ImageMagickMissing < StandardError; end
 
-  class InvalidPost < Exception; end
+  class InvalidPost < StandardError; end
 
   # When read-only mode is enabled
-  class ReadOnly < Exception; end
+  class ReadOnly < StandardError; end
 
   # Cross site request forgery
-  class CSRF < Exception; end
+  class CSRF < StandardError; end
 
   def self.filters
     @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]

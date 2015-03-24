@@ -189,7 +189,8 @@ const User = Discourse.Model.extend({
                                'enable_quoting',
                                'disable_jump_reply',
                                'custom_fields',
-                               'user_fields');
+                               'user_fields',
+                               'muted_usernames');
 
     ['muted','watched','tracked'].forEach(function(s){
       var cats = self.get(s + 'Categories').map(function(c){ return c.get('id')});
@@ -256,12 +257,7 @@ const User = Discourse.Model.extend({
            ua.action_type === Discourse.UserAction.TYPES.topics;
   },
 
-  /**
-  The user's stat count, excluding PMs.
-
-    @property statsCountNonPM
-    @type {Integer}
-  **/
+  // The user's stat count, excluding PMs.
   statsCountNonPM: function() {
     var self = this;
 
@@ -275,12 +271,7 @@ const User = Discourse.Model.extend({
     return count;
   }.property('statsExcludingPms.@each.count'),
 
-  /**
-  The user's stats, excluding PMs.
-
-    @property statsExcludingPms
-    @type {Array}
-  **/
+  // The user's stats, excluding PMs.
   statsExcludingPms: function() {
     if (this.blank('stats')) return [];
     return this.get('stats').rejectProperty('isPM');
@@ -436,14 +427,9 @@ const User = Discourse.Model.extend({
 
 User.reopenClass(Discourse.Singleton, {
 
-  /**
-    Find a `Discourse.User` for a given username.
-
-    @method findByUsername
-    @returns {Promise} a promise that resolves to a `Discourse.User`
-  **/
+  // Find a `Discourse.User` for a given username.
   findByUsername: function(username, options) {
-    var user = Discourse.User.create({username: username});
+    const user = Discourse.User.create({username: username});
     return user.findDetails(options);
   },
 

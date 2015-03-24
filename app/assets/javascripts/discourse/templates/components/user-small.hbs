@@ -1,9 +1,11 @@
 <div class="user-image">
-  {{#link-to 'user' user.username}}{{avatar user imageSize="large"}}{{/link-to}}
+  <a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="large"}}</a>
 </div>
 
 <div class="user-detail">
-  <span class="username">{{#link-to 'user' user.username}}{{user.username}}{{/link-to}}</span>
-  <span class="name">{{user.name}}</span>
-  <span class="title">{{user.title}}</span>
+  <div class='name-line'>
+    <span class="username"><a href="{{unbound userPath}}" data-user-card="{{unbound user.username}}">{{unbound user.username}}</a></span>
+    <span class="name">{{unbound name}}</span>
+  </div>
+  <div class="title">{{unbound user.title}}</div>
 </div>

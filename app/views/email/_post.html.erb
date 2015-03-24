@@ -2,10 +2,17 @@
   <tbody>
     <tr>
       <td class='user-avatar'>
-        <img src="<%= post.user.small_avatar_url%>" title="<%= post.user.username%>">
+        <img src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
       </td>
       <td>
-        <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a><br>
+        <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
+        <%- if SiteSetting.enable_names? && post.user.name.present? && post.user.name != post.user.username %>
+          <a class="user-name" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
+        <% end %>
+        <%- if post.user.title.present? %>
+          <span class='user-title'><%= post.user.title %></span>
+        <% end %>
+        <br>
         <span class='notification-date'><%= l post.created_at, format: :short_no_year %></span>
       </td>
     </tr>

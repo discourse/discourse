@@ -32,6 +32,9 @@ module Discourse
     require 'es6_module_transpiler/rails'
     require 'js_locale_helper'
 
+    # tiny file needed by site settings
+    require 'highlight_js/highlight_js'
+
     # mocha hates us, active_support/testing/mochaing.rb line 2 is requiring the wrong
     #  require, patched in source, on upgrade remove this
     if Rails.env.test? || Rails.env.development?

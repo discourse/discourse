@@ -5,7 +5,7 @@ require 'excon'
 module Jobs
   class CrawlTopicLink < Jobs::Base
 
-    class ReadEnough < Exception; end
+    class ReadEnough < StandardError; end
 
     # Retrieve a header regardless of case sensitivity
     def self.header_for(head, name)

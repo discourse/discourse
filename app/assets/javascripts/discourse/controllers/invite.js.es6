@@ -21,6 +21,7 @@ export default ObjectController.extend(ModalFunctionality, {
     if (this.get('saving')) return true;
     if (this.blank('email')) return true;
     if (!Discourse.Utilities.emailValid(this.get('email'))) return true;
+    if (this.get('model.details.can_invite_to')) return false;
     if (this.get('isPrivateTopic') && this.blank('groupNames')) return true;
     return false;
   }.property('email', 'isPrivateTopic', 'groupNames', 'saving'),

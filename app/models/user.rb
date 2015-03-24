@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   has_many :group_managers, dependent: :destroy
   has_many :managed_groups, through: :group_managers, source: :group
 
+  has_many :muted_user_records, class_name: 'MutedUser'
+  has_many :muted_users, through: :muted_user_records
+
   has_one :user_search_data, dependent: :destroy
   has_one :api_key, dependent: :destroy
 

@@ -179,6 +179,7 @@ en:
       not_bookmarked: "you've read this post; click to bookmark it"
       last_read: "this is the last post you've read; click to bookmark it"
       remove: "Remove Bookmark"
+      confirm_clear: "Are you sure you want to clear all the bookmarks from this topic?"
 
     topic_count_latest:
       one: "{{count}} new or updated topic."
@@ -235,6 +236,20 @@ en:
       posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
       sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+
+    directory:
+      filter_name: "filter by username"
+      title: "Users"
+      likes_given: "Given"
+      likes_received: "Received"
+      topics_entered: "Topics Entered"
+      time_read: "Time Read"
+      topic_count: "Topics"
+      post_count: "Replies"
+      no_results: "No results were found."
+      total_rows:
+        one: "1 user"
+        other: "%{count} users"
 
     groups:
       visible: "Group is visible to all users"
@@ -345,6 +360,9 @@ en:
       delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Messages"
       admin_delete: "Delete"
+      users: "Users"
+      muted_users: "Muted"
+      muted_users_instructions: "Suppress all notifications from these users."
 
       staff_counters:
         flags_given: "helpful flags"
@@ -614,7 +632,7 @@ en:
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
     forgot_password:
-      title: "Forgot Password"
+      title: "Password Reset"
       action: "I forgot my password"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Reset Password"
@@ -674,7 +692,7 @@ en:
 
       add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving"
+      saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
@@ -693,7 +711,7 @@ en:
       reply_here: "Reply Here"
       reply: "Reply"
       cancel: "Cancel"
-      create_topic: "New Topic"
+      create_topic: "Create Topic"
       create_pm: "Private Message"
       title: "Or press Ctrl+Enter"
 
@@ -975,8 +993,8 @@ en:
         auto_close: "Auto Close"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-        unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
         pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
@@ -1001,6 +1019,31 @@ en:
         title: 'Flag'
         help: 'privately flag this topic for attention or send a private notification about it'
         success_message: 'You successfully flagged this topic.'
+
+      feature_topic:
+        title: "Feature this topic"
+        pin: "Make this topic appear at the top of the {{categoryLink}} category."
+        confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
+        unpin: "Remove this topic from the top of the {{categoryLink}} category."
+        pin_note: "Users can unpin the topic individually for themselves."
+        already_pinned:
+          zero: "There are no topics pinned in {{categoryLink}}."
+          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+        pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
+        confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
+        unpin_globally: "Remove this topic from the top of all topic lists."
+        global_pin_note: "Users can unpin the topic individually for themselves."
+        already_pinned_globally:
+          zero: "There are no topics pinned globally."
+          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>"
+          other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        make_banner: "Make this topic into a banner that appears at the top of all pages."
+        remove_banner: "Remove the banner that appears at the top of all pages."
+        banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
+        already_banner:
+          zero: "There is no banner topic."
+          one: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
 
       inviting: "Inviting..."
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
@@ -1651,8 +1694,12 @@ en:
         name: "Name"
         add: "Add"
         add_members: "Add members"
-        custom: "Custom"
-        automatic: "Automatic"
+        custom:
+          label: "Custom"
+          title: "Custom Groups"
+        automatic:
+          label: "Automatic"
+          title: "Automatic Groups"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
 

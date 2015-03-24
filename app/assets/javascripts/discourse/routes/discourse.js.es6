@@ -2,6 +2,23 @@ import showModal from 'discourse/lib/show-modal';
 
 const DiscourseRoute = Ember.Route.extend({
 
+  // Set to true to refresh a model without a transition if a query param
+  // changes
+  resfreshQueryWithoutTransition: false,
+
+  refresh: function() {
+    if (!this.refreshQueryWithoutTransition) { return this._super(); }
+
+    if (!this.router.router.activeTransition) {
+      const controller = this.controller,
+            model = controller.get('model'),
+            params = this.controller.getProperties(Object.keys(this.queryParams));
+
+      model.set('loading', true);
+      this.model(params).then(model => this.setupController(controller, model));
+    }
+  },
+
   /**
     NOT called every time we enter a route on Discourse.
     Only called the FIRST time we enter a route.

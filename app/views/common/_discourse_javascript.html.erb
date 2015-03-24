@@ -41,6 +41,7 @@
   Discourse.start();
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
   Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
+  Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
 </script>
 
 <%= script 'browser-update' %>

@@ -13,12 +13,12 @@ export default Discourse.Route.extend({
 
   actions: {
     showAgreeFlagModal(flaggedPost) {
-      showModal('admin_agree_flag', flaggedPost);
+      showModal('modals/admin-agree-flag', flaggedPost);
       this.controllerFor('modal').set('modalClass', 'agree-flag-modal');
     },
 
     showDeleteFlagModal(flaggedPost) {
-      showModal('admin_delete_flag', flaggedPost);
+      showModal('modals/admin-delete-flag', flaggedPost);
       this.controllerFor('modal').set('modalClass', 'delete-flag-modal');
     }
 

@@ -2,12 +2,12 @@
 # `createdb bbpress`
 # `bundle exec rake db:migrate`
 
+require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-BB_PRESS_DB = "bbpress"
+BB_PRESS_DB = ENV['BBPRESS_DB'] || "bbpress"
 DB_TABLE_PREFIX = "wp_"
 
-require 'mysql2'
 
 class ImportScripts::Bbpress < ImportScripts::Base
 
@@ -36,12 +36,22 @@ class ImportScripts::Bbpress < ImportScripts::Base
               user_registered created_at
          FROM #{table_name 'users'}", cache_rows: false)
 
+    puts '', "creating users"
+
     create_users(users_results) do |u|
       ActiveSupport::HashWithIndifferentAccess.new(u)
     end
 
-    create_categories(@client.query("SELECT id, post_name from #{table_name 'posts'} WHERE post_type = 'forum' AND post_name != ''")) do |c|
-      {id: c['id'], name: c['post_name']}
+
+    puts '', '', "creating categories"
+
+    create_categories(@client.query("SELECT id, post_name, post_parent from #{table_name 'posts'} WHERE post_type = 'forum' AND post_name != '' ORDER BY post_parent")) do |c|
+      result = {id: c['id'], name: c['post_name']}
+      parent_id = c['post_parent'].to_i
+      if parent_id > 0
+        result[:parent_category_id] = category_id_from_imported_category_id(parent_id)
+      end
+      result
     end
 
     import_posts
@@ -83,11 +93,14 @@ class ImportScripts::Bbpress < ImportScripts::Base
         mapped[:id] = post["id"]
         mapped[:user_id] = user_id_from_imported_user_id(post["post_author"]) || find_user_by_import_id(post["post_author"]).try(:id) || -1
         mapped[:raw] = post["post_content"]
+        if mapped[:raw]
+          mapped[:raw] = mapped[:raw].gsub("<pre><code>", "```\n").gsub("</code></pre>", "\n```")
+        end
         mapped[:created_at] = post["post_date"]
         mapped[:custom_fields] = {import_id: post["id"]}
 
         if post["post_type"] == "topic"
-          mapped[:category] = category_from_imported_category_id(post["post_parent"]).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(post["post_parent"])
           mapped[:title] = CGI.unescapeHTML post["post_title"]
         else
           parent = topic_lookup_from_imported_post_id(post["post_parent"])

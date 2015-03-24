@@ -1,7 +1,7 @@
+require 'mysql2'
+
 require File.expand_path(File.dirname(__FILE__) + '/base.rb')
 
-require 'mysql2'
-require 'color'
 require 'htmlentities'
 require 'tsort'
 require 'set'
@@ -61,15 +61,11 @@ class ImportScripts::Smf2 < ImportScripts::Base
   end
 
   def execute
-    authorized_extensions = SiteSetting.authorized_extensions
-    SiteSetting.authorized_extensions = "*"
     import_groups
     import_users
     import_categories
     import_posts
     postprocess_posts
-  ensure
-    SiteSetting.authorized_extensions = authorized_extensions
   end
 
   def import_groups
@@ -145,7 +141,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
       FROM {prefix}boards
       ORDER BY id_parent ASC, id_board ASC
     SQL
-      parent_id = category_from_imported_category_id(board[:id_parent]).id if board[:id_parent] > 0
+      parent_id = category_id_from_imported_category_id(board[:id_parent]) if board[:id_parent] > 0
       groups = (board[:member_groups] || "").split(/,/).map(&:to_i)
       restricted = !groups.include?(GUEST_GROUP) && !groups.include?(MEMBER_GROUP)
       {
@@ -257,7 +253,7 @@ class ImportScripts::Smf2 < ImportScripts::Base
         end
       }
       if message[:id_msg] == message[:id_first_msg]
-        post[:category] = category_from_imported_category_id(message[:id_board]).try(:name)
+        post[:category] = category_id_from_imported_category_id(message[:id_board])
         post[:title] = decode_entities(message[:subject])
       else
         parent = topic_lookup_from_imported_post_id(message[:id_first_msg])

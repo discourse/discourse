@@ -5,46 +5,7 @@ section.about {
     margin-top: 10px;
   }
 
-  .user-small {
-    padding: 8px;
-    width: 205px;
-    height: 60px;
-    float: left;
 
-    .user-image {
-      float: left;
-      padding-right: 4px;
-    }
-
-    .user-detail {
-      float: left;
-      width: 70%;
-
-      span {
-        float: left;
-        width: 90%;
-        padding-left: 5px;
-      }
-
-      .username a {
-        font-weight: bold;
-        font-size: 16px;
-        color: scale-color($primary, $lightness: 30%);
-      }
-
-      .name {
-        font-size: 13px;
-        color: scale-color($primary, $lightness: 30%);
-      }
-
-      .title {
-        font-size: 13px;
-        color: scale-color($primary, $lightness: 50%);
-      }
-
-    }
-  }
-  
   p {
     margin: 10px 0;
   }

@@ -4,11 +4,6 @@
 // Pagedown customizations
 //= require ./pagedown_custom.js
 
-// This is a BUG we should fix
-// it is only required here cause preview is not loading it using LAB
-//= require highlight.pack.js
-//
-
 // Stuff we need to load first
 //= require ./discourse/lib/load-script
 //= require ./discourse/lib/notification-levels
@@ -27,6 +22,7 @@
 //= require ./discourse/lib/after-transition
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/avatar-template
+//= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/model
 //= require ./discourse/models/user_action
@@ -34,14 +30,13 @@
 //= require ./discourse/models/post-stream
 //= require ./discourse/models/topic-details
 //= require ./discourse/models/topic
-//= require ./discourse/models/top-period
 //= require ./discourse/controllers/controller
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/object
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/view
 //= require ./discourse/views/container
-//= require ./discourse/views/modal_body_view
+//= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
 //= require ./discourse/views/combo-box
 //= require ./discourse/views/button
@@ -56,7 +51,6 @@
 //= require ./discourse/routes/user-topic-list
 //= require ./discourse/routes/user-activity-stream
 //= require ./discourse/routes/topic-from-params
-//= require ./discourse/components/top-title
 //= require ./discourse/components/text-field
 //= require ./discourse/components/visible
 //= require ./discourse/components/conditional-loading-spinner

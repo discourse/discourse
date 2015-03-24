@@ -18,10 +18,46 @@ zh_TW:
   log_in: "登入"
   via: "%{username} 自 %{site_name}"
   is_reserved: "保留權利"
+  purge_reason: "自動刪除被遺棄、未啟用賬戶"
+  disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   errors:
+    format: '%{attribute} %{message}'
     messages:
       too_long_validation: "限制 %{max} 個字元，你已經輸入了 %{length} 個字元"
       invalid_boolean: "無效的真假值。"
+      taken: "已經被採用"
+      accepted: 必須被接受
+      blank: 不能空白
+      present: 必須空白
+      confirmation: "不匹配 %{attribute}"
+      empty: 不能空白
+      equal_to: 必須等於 %{count}
+      even: 必須是雙數
+      exclusion: 被保留
+      greater_than: 必須大於 %{count}
+      greater_than_or_equal_to: 必須大於或等於 %{count}
+      inclusion: 不包括在這列表中
+      invalid: 無效的
+      less_than: 必須少於 %{count}
+      less_than_or_equal_to: 必須少於或等於 %{count}
+      not_a_number: 不是數字
+      not_an_integer: 必須是整數
+      odd: 必須是單數
+      record_invalid: '驗證失敗： %{errors}'
+      restrict_dependent_destroy:
+        one: "不能刪除記錄，因為相關的 %{record} 存在"
+        many: "不能刪除記錄，因為相關的 %{record} 存在"
+      too_long:
+        other: 長度超過上限 (上限是 %{count} 字)
+      too_short:
+        other: 長度不足 (下限是 %{count} 字)
+      wrong_length:
+        other: 錯誤的長度 (應該為 %{count} 字)
+      other_than: "必須不是 %{count}"
+    template:
+      body: '以下的欄位出現問題:'
+      header:
+        other: '%{count} 個錯誤禁止 %{model} 被儲存'
     embed:
       load_from_remote: "載入文章時發生了錯誤"
   bulk_invite:
@@ -31,6 +67,8 @@ zh_TW:
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
     not_enough_space_on_disk: "沒有足夠的磁碟空間可供備份檔案上傳"
   not_logged_in: "你需要先登入才能那樣做。"
+  not_found: "所請求的URL或資源無法找到。"
+  invalid_access: "你不允許查看所請求的資源。"
   read_only_mode_enabled: "這個網站目前在唯讀模式，無法進行互動功能。"
   too_many_replies:
     other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
@@ -41,6 +79,7 @@ zh_TW:
       other: "%{count} 個更多回覆"
     loading: "討論串載入中⋯"
     permalink: "永久連結"
+    imported_from: "這是一個已從原 %{link} 中分離的主題"
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 個回覆"
@@ -66,6 +105,7 @@ zh_TW:
     other: "抱歉, 訪客每次只能貼 %{count} 條連結。"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
+  topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   just_posted_that: "與你最近發表的內容太相似"
   has_already_been_used: "已經被使用"
   invalid_characters: "包含無效字詞"
@@ -112,6 +152,16 @@ zh_TW:
       - 使用適合的字詞，能更容易使其他人 *找到* 你的主題，若你撰寫的內容屬於某個分類的話，應選擇張貼在該分類。
 
       其他的說明，[請查看我們的社群守則](/guidelines)。此資訊只在你的最早的 %{education_posts_text} 顯示。
+    new-reply: |
+      歡迎來到%{site_name} &mdash; **感謝你的貢獻！**
+
+      - 你的回覆是否以某種方式改善了討論？
+
+      - 請尊重所有社群成員。
+
+      - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
+
+      欲查看更多，[請查看我們的社群准則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
   activerecord:
     attributes:
       category:
@@ -128,6 +178,7 @@ zh_TW:
         topic:
           attributes:
             base:
+              warning_requires_pm: "你只能附加警告於私人訊息。"
               too_many_users: "你只能同時傳送警告給一位用戶。"
               cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
               no_user_selected: "你必須選擇有效用戶。"
@@ -135,6 +186,8 @@ zh_TW:
           attributes:
             password:
               common: "這個密碼是 10000 個最常用密碼之一，請使用一個更安全的密碼"
+              same_as_username: "與你的使用者名稱相同。請使用其他更安全的密碼。"
+              same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
             ip_address:
               signup_not_allowed: "不能使用這個帳戶進行登入"
         color_scheme_color:
@@ -147,6 +200,7 @@ zh_TW:
   vip_category_name: "貴賓室"
   vip_category_description: "信任等級高於 3 的用戶討論的分類"
   meta_category_name: "Meta"
+  meta_category_description: "討論關於這個網站，它的組織，它是如何運作，以及我們如何能夠改善它。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
   lounge_welcome:
@@ -177,6 +231,7 @@ zh_TW:
     elder:
       title: "領先用戶"
   rate_limiter:
+    slow_down: "你已經執行這個動作太多次，請稍後再試"
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     hours:
       other: "%{count} 小時"
@@ -250,26 +305,34 @@ zh_TW:
   activation:
     action: "啟用您的帳號"
     already_done: "抱歉，此帳號啟用連結已經失效。可能你的帳號已經啟用了。"
+    please_continue: "你的新帳號已啟用；即將轉到主頁。"
     continue_button: "繼續連接至 %{site_name}"
     welcome_to: "歡迎來到%{site_name}！"
     approval_required: "你的論壇帳號需要由板主手動審核後才可使用。當你的帳號獲得批准，你將收到電子郵件通知。"
   post_action_types:
     off_topic:
       title: '離題內容'
+      description: '此帖與該主題標題和第一帖而言所討論的主題無關，可能需要被移動。'
       long_form: '投訴為離題內容'
     spam:
       title: '垃圾內容'
       description: '此文章內容為廣告，與當前討論話題無關，只有促銷資訊。'
       long_form: '投訴為垃圾內容'
+      email_title: '“%{title}”被標記為垃圾'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不當內容'
+      description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
       title: '私人訊息 @{{username}}'
+      description: '此帖包含一些我想與該用戶私下直接交流的內容。不能執行標記操作。'
+      long_form: '已私信用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "其他"
+      description: '此帖需要版主按照以上未列出的原因處理。'
       long_form: '向板主回報問題發文'
       email_title: '一篇在 "%{title}" 裡的文章需要板主注意'
       email_body: "%{link}\n\n%{message}"
@@ -292,15 +355,24 @@ zh_TW:
       long_form: '投訴為垃圾內容'
     inappropriate:
       title: '不當內容'
+      description: '此主題內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_moderators:
+      title: "其他"
+      description: '該主題需要版主依據<a href="/guidelines">社群准則</a>、<a href="/tos">服務條款（TOS）</a>或其它未列出的原因來給予關注。'
+      long_form: '標記為需版主注意'
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>你的文章已被社群投訴，請 <a href="/my/private-messages">閱讀你的私人訊息</a>。</p>'
+    user_must_edit: '<p>你的帖子已經被社群標記並被臨時隱藏。</p>'
   archetypes:
     regular:
       title: "一般討論話題"
+    banner:
+      message:
+        make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其隱藏。"
+        remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
   unsubscribed:
     title: '取消訂閱'
     description: "你已經取消訂閱，我們不會再聯絡你。"
@@ -319,6 +391,7 @@ zh_TW:
       xaxis: "天"
       yaxis: "瀏覽量"
     signups:
+      title: "新用戶"
       xaxis: "天"
       yaxis: "新用戶數量"
     topics:
@@ -388,6 +461,46 @@ zh_TW:
       title: "最常引用的討論話題"
       xaxis: "討論話題"
       num_clicks: "點擊率"
+    page_view_anon_reqs:
+      title: "匿名"
+      xaxis: "天"
+      yaxis: "匿名的API訪問"
+    page_view_logged_in_reqs:
+      title: "已登入"
+      xaxis: "天"
+      yaxis: "已登入的API訪問"
+    page_view_crawler_reqs:
+      title: "網絡爬蟲"
+      xaxis: "天"
+      yaxis: "網絡爬蟲API請求"
+    page_view_total_reqs:
+      title: "總數"
+      xaxis: "天"
+      yaxis: "API 請求總數"
+    http_background_reqs:
+      title: "後台"
+      xaxis: "天"
+      yaxis: "實時更新和追蹤的請求"
+    http_2xx_reqs:
+      title: "狀態碼 2xx（正常）"
+      xaxis: "天"
+      yaxis: "正常的請求（狀態碼 2xx）"
+    http_3xx_reqs:
+      title: "HTTP 3xx（重新導向）"
+      xaxis: "天"
+      yaxis: "重新導向請求（狀態碼 3xx）"
+    http_4xx_reqs:
+      title: "HTTP 4xx（客戶端錯誤）"
+      xaxis: "天"
+      yaxis: "客戶端錯誤（狀態碼 4xx）"
+    http_5xx_reqs:
+      title: "HTTP 5xx（伺服器錯誤）"
+      xaxis: "天"
+      yaxis: "伺服器錯誤（狀態碼 5xx）"
+    http_total_reqs:
+      title: "總數"
+      xaxis: "天"
+      yaxis: "請求總數"
   dashboard:
     rails_env_warning: "伺服器現在運行 %{env} 模式。"
     ruby_version_warning: "如果你使用的 Ruby 版本是 2.0.0 ，這個版本有較多的問題，請升級至 p247 或以上的版本"
@@ -396,14 +509,24 @@ zh_TW:
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
     queue_size_warning: '排定中的任務數量為%{queue_size}，任務較多。這可能是因為 Sidekiq 程序出現問題, 或者需要更多的 Sidekiq 程序。'
     memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
-    enable_google_logins_warning: "你正在使用已作廢的 Google OpenID 認證方式。 Google 對於 Open ID 的支援將到 2015 年 4 月 20 日 為止。請儘早開始使用 Google Oauth2。<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>參閱教學指南</a>"
+    enable_google_logins_warning: "警告！當前的 Google 認證方法將於2015年4月20日結束！請<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>現在切換到新方法！</a>"
     both_googles_warning: "你已將網站設定中 enable_google_logins 和 enable_google_oauth2_logins 兩者皆勾選。請停用 enable_google_logins。"
     google_oauth2_config_warning: '伺服器設定為允許使用 Google Oauth2 註冊以及登入 (enable_google_oauth2_logins)，但未設定客戶端 id 和客戶端 secret 值。請至<a href="/admin/site_settings">網站設定</a>裡更改設定。<a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">參閱教學指南</a>。'
     facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
     github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
+    s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
+    s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
+    image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
     failing_emails_warning: '%{num_failed_jobs}個 email 任務失敗。請檢查 config/environments/production.rb 內 config.action_mailer 項目是否已正確設定。<a href=''/sidekiq/retries'' target=''_blank''>在 Sidekiq 中檢視失敗的任務</a>。'
+    default_logo_warning: "設置你網站的圖形logo。請在<a href='/admin/site_settings'>設定</a>中配置logo_url、logo_small_url和favicon_url。"
+    contact_email_missing: "輸入一個網站聯絡人的電郵地址，這樣在用戶在網站出現緊急狀況時能夠找到你。在<a href='/admin/site_settings'>設定</a>中更新它。"
+    contact_email_invalid: "網站聯絡電郵不正確。在<a href='/admin/site_settings'>設定</a>中修改。"
+    title_nag: "為網站給予一個名字。在<a href='/admin/site_settings'>設定</a>中更新標題。"
+    site_description_missing: "輸入一句話作為網站的簡介，將出現在搜索結果中。在<a href='/admin/site_settings'>設定</a>中更新 site_description。"
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
+    site_contact_username_warning: "輸入一個友善的職員帳戶名稱，並以他的名義發送重要的自動私信。在<a href='/admin/site_settings'>設定</a>中更新 site_contact_username。"
+    notification_email_warning: "通知郵件不是從你域名的一個有效地址發出的；電郵發送將會變得危險和不可靠。請在<a href='/admin/site_settings'>設定</a>中將 notification_email 設定一個有效的本機電郵地址。"
   content_types:
     education_new_reply:
       title: "新用戶教學：第一個回覆"
@@ -413,6 +536,7 @@ zh_TW:
       description: "在新用戶發表首兩個討論話題時，自動在編輯器上方彈出的說明資訊。"
     usage_tips:
       title: "新用戶指南"
+      description: "新用戶指引和重要信息"
     welcome_user:
       title: "歡迎: 新用戶"
       description: "當新用戶註冊後自動發送給他們的歡迎訊息。"
@@ -424,14 +548,19 @@ zh_TW:
       description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
     login_required:
       title: "請登入：首頁"
+      description: "當要求登錄時向未授權用戶顯示的文字。"
     head:
       title: "HTML 標頭"
       description: "將在 <head></head> 標籤中插入的 HTML"
     top:
       title: "頁面頂部"
+      description: "將在每一個頁面頂端（在頭部之後，在導航或者主題標題前）插入的 HTML。"
     bottom:
       title: "頁面底部"
+      description: "將在 </body> 標簽前被插入的 HTML。"
   site_settings:
+    censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
     default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
     allow_user_locale: "允許用戶選擇自己的語言介面"
     min_post_length: "文章允許的最小文字數"
@@ -445,52 +574,98 @@ zh_TW:
     uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
     allow_duplicate_topic_titles: "允許話題有相同，重複的標題"
     unique_posts_mins: "使用者再次發表包含相同內容文章的間隔時間"
+    educate_until_posts: "當用戶開始鍵入他們的前幾個 (n) 新帖子時，在編輯器上顯示教育面板視窗。"
+    title: "網站名字，用於 title 標籤。"
+    site_description: "用一句話描述這個網站，用於 meta description 標籤。"
+    contact_email: "本站管理員的電郵地址。用於緊急事項的通知，如未處理的標記，以及作為 /about 頁面中的緊急聯絡人。"
+    contact_url: "這個網站聯絡 URL。用作 /about 頁面中的緊急聯絡。"
     queue_jobs: "如果失敗佇列在排隊，使用 Sidekiq 消息引擎對不同的工作排隊"
     crawl_images: "允許從第三方 URL 取得圖片，來加入寬和高的數值"
+    download_remote_images_to_local: "下載外部鏈接的圖片到本機；以防圖片損壞。"
+    download_remote_images_threshold: "可用來下載外部圖片到本機最少的空間（百分比）"
     disabled_image_download_domains: "在此列表的網域名稱的遠端圖片將不會進行下載，用 | 分割多個域名"
     ninja_edit_window: "在 (n) 秒內 ，文章的編輯不產生新的文章版本歷史"
     post_edit_time_limit: "作者可以在發表文章後的 ( n ) 分鐘內編輯或刪除他們的文章，設 0 為永遠"
+    edit_history_visible_to_public: "允許任何人查看編輯過的帖子的舊版本。當禁用時，只有職員才能查看。"
+    delete_removed_posts_after: "帖子被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，帖子將被立即刪除。"
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
     show_subcategory_list: "進入分類時顯示子分類列表，而非話題列表"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
+    add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
     exclude_rel_nofollow_domains: "不添加 nofollow 標籤到一列逗號分割的功能變數名稱 （使用父系網域名，例如 tld.com，將自動允許子功能變數名稱，例如 sub.tld.com）"
     post_excerpt_maxlength: "文章摘要的最大文字長度"
+    post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
+    onebox_domains_whitelist: "對這些站點啟用 Onebox 的域名列表；這些域名應該支持 OpenGraph 或 oEmbed。在此測試它們：http://iframely.com/debug"
+    logo_url: "出現在你的網站左上角的標誌圖片；如果留空，將顯示網站標題。"
+    digest_logo_url: "電郵摘要使用的標誌。如果留空，則使用 `logo_url`。例如：http://example.com/logo.png"
+    logo_small_url: "出現在你網站左上角的小標誌圖片，當滾動後可見。如果留空，將顯示主頁圖標。"
     favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "移動瀏覽器左上角的固定標誌圖片。如果留空，將顯示網站標題。"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
+    notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
+    email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
+    email_subject: "標準郵件的自定義主題格式。參見 https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     use_https: "使用 SSL 安全套接層來瀏覽本站嗎？"
+    summary_score_threshold: "將一個帖子包含在“概括主題”中所需的最少分數"
     summary_posts_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小的文章的數量"
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當用戶點擊 \"此話題的摘要\"，顯示前面多少 % 的文章"
+    summary_max_results: "“概括主題”返回的最大帖子數量"
     enable_private_messages: "允許信任等級 1 之用戶建立私人訊息和私下交流"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
+    long_polling_base_url: "長輪詢的基本 URL（當用 CDN 分發動態內容，請設置此至原始拉取地址）例如：http://origin.site.com"
+    long_polling_interval: "當沒有數據向客戶端發送時伺服器端應等待的時間（僅對已登錄用戶有效）"
+    polling_interval: "當不再長輪詢時，已登錄的客戶端應該多久輪詢一次（單位 毫秒）"
     anon_polling_interval: "匿名使用者用戶端輪詢時間間隔（單位 毫秒）"
+    background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
     auto_track_topics_after: "經過多少毫秒之後一個討論話題就會被自動追蹤的全域預設值，用戶可以覆寫此設定 ( 0 為總是，-1 為永不 )"
     new_topic_duration_minutes: "一個討論話題在多少分鐘之內被視為新的討論話題的全域預設值，用戶可以覆寫此設定 ( -1 為總是，-2 為上一次瀏覽 )"
     flags_required_to_hide_post: "一篇文章累計多少個投訴之後會被自動隱藏，並向文章作者發送私人訊息通知（0為從不）"
     cooldown_minutes_after_hiding_posts: "如果一個文章因為標記而隱藏，用戶需要等待多少分鐘才能編輯該文章"
     max_topics_in_first_day: "新用戶第一天在這個站最大能建立的話題數量"
     max_replies_in_first_day: "新用戶第一天在這個站最大能建立的回覆數量"
+    num_flags_to_block_new_user: "如果一個新用戶的帖子被其他 num_users_to_block_new_user 個用戶標記為垃圾，隱藏他們的所有帖子並阻止其之後的發帖。0 表示禁用這個特性。"
+    num_users_to_block_new_user: "如果一個新用戶的帖子被許多其他用戶 num_flags_to_block_new_user 標記為垃圾，隱藏他們的所有帖子並阻止其之後發帖。0 表示禁用這個特性。"
     notify_mods_when_user_blocked: "若有用戶被自動封鎖，將發送訊息給所有板主。"
+    flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
+    post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（讚、標記等）所需等待的時間分隔（分鐘）"
     must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
     ga_tracking_code: "穀歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
     ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
+    ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 http://google.com/analytics"
+    ga_universal_domain_name: "Google 通用 Analytics (分析) 域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
+    enable_escaped_fragments: "如未偵測到爬蟲，退回使用 Google Ajax-Crawling API。參見 https://support.google.com/webmasters/answer/174992?hl=en"
     enable_noscript_support: "開啟noscript來對網路爬蟲來做標準的支援"
     allow_moderators_to_create_categories: "允許板主建立新分類"
+    cors_origins: "允許跨來源資源共享（CORS）。每個來源必須包括 http:// 或 https://。DISCOURSE_ENABLE_CORS 環境選項必須設置為 true 才能啟用 CORS 。"
+    top_menu: "選擇在主頁導航列包含哪些項目，以及排列次序。例如：latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "確定在文章功能表條包含哪些條目，以及排列順序。例如：like|edit|flag|delete|share|bookmark|reply"
+    post_menu_hidden_items: "帖子菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
+    site_contact_username: "系統給用戶發送自動私信時所使用的用戶名；如果留空將使用默認的系統帳戶。"
     send_welcome_message: "給所有的新用戶發送一個快速引導的私訊"
+    suppress_reply_directly_below: "當帖子只有一個回覆時，不顯示帖子的回覆數量。"
+    suppress_reply_directly_above: "當帖子只有一個回覆時，不顯示回覆到該帖的回覆。"
+    suppress_reply_when_quoting: "當帖子引用回覆時，不顯示可展開的回覆到某帖的標記。"
+    max_reply_history: "擴展回覆到某帖時顯示的最大回覆數量"
+    experimental_reply_expansion: "當展開回覆到某帖時隱藏直接回覆（實驗性）"
     topics_per_period_in_top_summary: "預設推薦話題的顯示數量"
     topics_per_period_in_top_page: "在展開 \"顯示更多\" 推薦話題列表的顯示數量"
     redirect_users_to_top_page: "將新用戶或長時間未使用的用戶自動重新導向至熱門頁面"
+    show_email_on_profile: "在用戶頁面顯示用戶的電郵地址（只有用戶自己和職員可見）"
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
+    enable_badges: "啟用勳章系統"
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
     email_domains_blacklist: "Email域名的黑名單，在此名單內的域名將無法註冊，例如：mailinator.com trashmail.net"
     email_domains_whitelist: "Email域名的白名單，使用者 \"必須\" 使用此帳號來註冊，注意：使用者如果使用其他Email的域名將無法註冊"
+    forgot_password_strict: "在找回密碼對話框中不告知用戶帳戶的存在。"
+    log_out_strict: "登出時，登出用戶所有設備上的所有時段"
+    version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"
     new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     port: "使用此 HTTP 埠而不是80埠。留空為不使用，主要用於開發調試"
     force_hostname: "指定 URL 裡的主機名稱。留空為不使用，主要用於開發調試"
@@ -498,9 +673,18 @@ zh_TW:
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
+    min_username_length: "最少帳戶名長度。警告：所有現有帳戶名少於此長度限制的用戶都將無法登入網站。"
+    max_username_length: "最大帳戶名長度。警告：所有現有帳戶名大於此限制長度的用戶都將無法登入網站。"
     min_password_length: "最小密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
+    enable_sso: "啟用通過外部網站單點登錄（注意：如果沒有正確設定就啟用可能會使所有人都無法登陸，包括你；同時禁用邀請功能）"
+    enable_sso_provider: "在 /session/sso_provider endpoint 必須設定 sso_secret 以實現 Discourse SSO 提供方協定"
     sso_url: "單點登入 URL 入口點"
+    sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
+    sso_overrides_email: "用 SSO 訊息中的外部電郵地址覆蓋本機電郵地址（警告：因為對本機電郵的統一處理，這個電郵地址可能不同）"
+    sso_overrides_username: "用 SSO 訊息中的外部帳戶名覆蓋本機帳戶名（警告：因為對本機帳戶名的統一處理，帳戶名的長度或者要求可能不同）"
+    sso_overrides_name: "用 SSO 訊息中的外部網站名覆蓋本機名字（警告：因為對本機名字的統一處理，這個名字可能不同）"
+    sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
     enable_google_logins: "( 已作廢 ) 啟用 Google 認證。這是已經被 Google 作廢的 Open ID 認證方式，新的安裝將無法使用。請改用 Google Oauth2。現有的安裝必須在 2015 年 4 月 20 日以前移轉至 Google Oauth2。"
@@ -520,8 +704,10 @@ zh_TW:
     allow_restore: "允許還原資料，注意此動作可能覆蓋「所有」網站資料！除非你計畫還原備份檔，否則請保持此設定為 false"
     maximum_backups: "磁碟備份的最大數量，舊的將會自動刪除"
     backup_daily: "每日自動對網站進行備份"
+    enable_s3_backups: "當完成備份後上傳備份到 S3。重要：需要在文件設定中填寫有效的 S3 驗證資料。"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
     active_user_rate_limit_secs: "更新“最後一次見到”資料的頻率，單位為秒"
+    verbose_localization: "在界面上顯示詳細的本地化提示"
     previous_visit_timeout_hours: "系統判斷一次瀏覽之後多少小時後為“上一次”瀏覽"
     rate_limit_create_topic: "建立新討論話題之後，用戶必須間隔多少秒 (n) 才能再建立新討論話題"
     rate_limit_create_post: "建立新文章之後，用戶必須間隔多少秒 (n) 才能再建立新文章"
@@ -533,13 +719,40 @@ zh_TW:
     max_edits_per_day: "每個用戶每天最大的\"編輯次數\"的數量"
     max_topics_per_day: "每個用戶每天最多建立\"討論話題\"的數量"
     max_private_messages_per_day: "每個用戶每天最多能發\"私訊\"的數量"
+    max_invites_per_day: "每個用戶每天最多能邀請用戶的數量。"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
+    clean_up_uploads: "移除孤立的已上傳檔案。警告：你可能想要在啟用這個設定前備份 /uploads 文件夾。"
+    clean_orphan_uploads_grace_period_hours: "刪除孤立的上傳檔案的寬限期（單位：小時）"
+    purge_deleted_uploads_grace_period_days: "徹底刪除孤立的上傳檔案的寬限期（單位：天）"
+    purge_unactivated_users_grace_period_days: "刪除未啓用的帳戶的寬限期（單位：天）。"
+    enable_s3_uploads: "上傳至 Amazon S3 存儲的地址。重要：需要有效的 S3 驗證資料（包括 access key id & secret access key）。"
+    s3_use_iam_profile: '使用 AWS EC2 IAM 角色來獲得鑰匙。注意：啟用這個會覆蓋“S3 access key id”和“S3 secret access key” 設定。'
+    s3_upload_bucket: "上傳檔案保存於 Amazon S3 的 bucket 名字。警告：必須為小寫，無句點，無下劃線。"
     s3_access_key_id: "上傳至 Amazon S3 的 access key id，將用於上傳圖片"
     s3_secret_access_key: "上傳至 Amazon S3 的 secret access key，將用於上傳圖片"
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
+    enable_flash_video_onebox: "在 Onebox 啟用嵌入 swf 和 flv (Adobe Flash) 的鏈接。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
     default_trust_level: "所有新用戶的預設等級 (0-4)"
+    tl1_requires_topics_entered: "新用戶升級到信任等級1所需要進入的主題數量。"
+    tl1_requires_read_posts: "新用戶升級到信任等級1所需要閱讀的帖子數量。"
+    tl1_requires_time_spent_mins: "新用戶升級到信任等級1所需要閱讀帖子消耗的時間（分鐘）。"
+    tl2_requires_topics_entered: "新用戶升級到信任等級2所需要進入的主題數量。"
+    tl2_requires_read_posts: "新用戶升級到信任等級2所需要閱讀的帖子數量。"
+    tl2_requires_time_spent_mins: "新用戶升級到信任等級2所需要閱讀帖子消耗的時間。（分鐘）"
+    tl2_requires_days_visited: "一個初級用戶升級到信任等級2所需要訪問網站的累計天數。"
+    tl2_requires_likes_received: "一個初級用戶升級到信任等級2所需要獲得的讚賞數。"
+    tl2_requires_likes_given: "一個初級用戶升級到信任等級2所需要付出的讚賞數。"
+    tl2_requires_topic_reply_count: "一個初級用戶升級到信任等級2所需要回覆的主題數量。"
+    tl3_requires_days_visited: "在最近 100 天內升至信任等級3所需的訪問網站的天數。（0到100）"
+    tl3_requires_topics_replied_to: "在最近 100 天內升至信任等級3所需的回覆主題的最少數量。（0或更高）"
+    tl3_requires_topics_viewed: "在最近 100 天內升至信任等級3所需的創建主題的百分比。（0到100）"
+    tl3_requires_posts_read: "在最近 100 天內升信任等級3所需的創建帖子的百分比。（0到100）"
+    tl3_requires_topics_viewed_all_time: "用戶升至信任等級3所需查看的最少主題數量。"
+    tl3_requires_posts_read_all_time: "用戶升至信任等級3所需查看的最少帖子數量。"
+    tl3_requires_max_flagged: "用戶在最近 100 天內升至信任等級3所需的必須沒有超過 x 個帖子被 x 個不同的用戶標記數量，x為數量。（0或更高）"
+    tl3_promotion_min_duration: "信任等級3的用戶可被降級至信任等級2前最少持續天數。"
     tl3_links_no_follow: "禁止從信任等級 3 之用戶所發表的連結中刪除 rel=nofollow 標籤"
     min_trust_to_create_topic: "建立話題最低所需的信任等級"
     min_trust_to_edit_wiki_post: "編輯被標示為維基的文章所需之最低信任等級。"
@@ -746,6 +959,10 @@ zh_TW:
     posted_by: "由 %{username} 張貼於 %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} 邀請你進行私人對話 '%{topic_title}'"
+      text_body_template: |
+        %{username} 邀請你在 %{site_name} 就 '%{topic_title}' 進行私下交流：
+
+        請訪問 %{base_url}%{url} 來查看該主題。
     user_replied:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
       text_body_template: |
@@ -788,14 +1005,25 @@ zh_TW:
         請瀏覽 %{base_url}%{url} 來回覆。
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
+      why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
       subject_template: "[%{site_name}] 於 %{date} 的摘要"
       new_activity: "在你的討論話題和文章裡的動態："
       top_topics: "熱門文章"
       other_new_topics: "熱門討論話題"
+      unsubscribe: "這封來自 %{site_link} 的摘要郵件是你一段時間沒有訪問後發送給你的。點擊 %{unsubscribe_link} 取消訂閱。"
       click_here: "點擊此處"
       from: "%{site_name} 摘要"
       read_more: "閱讀更多"
+      more_topics: "有其他 %{new_topics_since_seen} 個新主題。"
+      more_topics_category: "更多新主題："
       posts:
         other: "%{count} 篇文章"
     forgot_password:
@@ -809,6 +1037,8 @@ zh_TW:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] 設定密碼"
+    account_created:
+      subject_template: "[%{site_name}] 你的新帳號"
     authorize_email:
       subject_template: "[%{site_name}] 確認你的新電子郵箱位址"
       text_body_template: |
@@ -849,6 +1079,7 @@ zh_TW:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
   email_log:
     no_user: "無法找到 ID 為 %{user_id} 的使用者"
+    suspended_not_pm: "用戶被封鎖，這不是私信"
     seen_recently: "用戶最近活躍"
     post_not_found: "無法找到 ID 為 %{post_id} 的文章"
     notification_already_read: "這封通知 EMail 已被讀取"
@@ -862,12 +1093,18 @@ zh_TW:
     body_blank: "內容空白"
   color_schemes:
     base_theme_name: "基礎"
+  about: "關於"
   guidelines: "指導"
   privacy: "隱私政策"
+  edit_this_page: "編輯此頁"
   csv_export:
     boolean_yes: "是"
     boolean_no: "否"
+  static_topic_first_reply: |
+    編輯本主題的第一帖以改變 %{page_name} 頁面的內容。
   guidelines_topic:
     title: "FAQ / 使用守則"
+  tos_topic:
+    title: "服務條款"
   privacy_topic:
     title: "隱私政策"

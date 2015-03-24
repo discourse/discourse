@@ -151,6 +151,7 @@ en:
     other: "Sorry, new users can only put %{count} links in a post."
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
+  topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
@@ -675,7 +676,7 @@ en:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google OAuth2 as soon as possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>See this guide to learn more</a>"
+    enable_google_logins_warning: "WARNING! Support is ending for your current method of Google authentication on April 20, 2015! Please <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>switch to the new method now!</a>"
     both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
     google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
@@ -732,6 +733,7 @@ en:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
+    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
     min_private_message_post_length: "Minimum allowed post length in characters for private messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
@@ -1104,6 +1106,7 @@ en:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
+    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many langauges may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
     embeddable_host: "Host that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
@@ -1342,7 +1345,7 @@ en:
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
+      [mj]: https://www.mailjet.com/pricing
 
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
@@ -2321,4 +2324,3 @@ en:
         Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
         do not hesitate to flag. You may also use the flagging dialog to send <b>private messages</b> to users once you reach
         trust level 1.
-

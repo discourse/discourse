@@ -199,7 +199,7 @@ class ImportScripts::Bespoke < ImportScripts::Base
         topic = topics[post[:topic_id]]
 
         unless topic[:post_id]
-          mapped[:category] = category_from_imported_category_id(topic[:category_id]).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(topic[:category_id])
           mapped[:title] = post[:title]
           topic[:post_id] = post[:id]
         else

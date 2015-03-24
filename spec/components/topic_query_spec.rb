@@ -40,6 +40,18 @@ describe TopicQuery do
 
   end
 
+  context "list_topics_by" do
+
+    it "allows users to view their own invisible topics" do
+      topic = Fabricate(:topic, user: user)
+      invisible_topic = Fabricate(:topic, user: user, visible: false)
+
+      expect(TopicQuery.new(nil).list_topics_by(user).topics.count).to eq(1)
+      expect(TopicQuery.new(user).list_topics_by(user).topics.count).to eq(2)
+    end
+
+  end
+
   context 'bookmarks' do
     it "filters and returns bookmarks correctly" do
       post = Fabricate(:post)

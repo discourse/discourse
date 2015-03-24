@@ -2,6 +2,7 @@ import userSearch from 'discourse/lib/user-search';
 import afterTransition from 'discourse/lib/after-transition';
 import loadScript from 'discourse/lib/load-script';
 import avatarTemplate from 'discourse/lib/avatar-template';
+import positioningWorkaround from 'discourse/lib/safari-hacks';
 
 const ComposerView = Discourse.View.extend(Ember.Evented, {
   _lastKeyTimeout: null,
@@ -122,6 +123,9 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     afterTransition($replyControl, this.resize.bind(self));
     this.ensureMaximumDimensionForImagesInPreview();
     this.set('controller.view', this);
+
+    positioningWorkaround(this.$());
+
   }.on('didInsertElement'),
 
   _unlinkView: function() {

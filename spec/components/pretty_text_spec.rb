@@ -304,4 +304,8 @@ describe PrettyText do
     expect(PrettyText.cook("***\\****a")).to match_html("<p><strong><em>*</em></strong>a</p>")
   end
 
+  it 'can include code class correctly' do
+    expect(PrettyText.cook("```cpp\ncpp\n```")).to match_html("<p></p><pre><code class='lang-cpp'>cpp</code></pre>")
+  end
+
 end

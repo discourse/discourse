@@ -963,18 +963,52 @@ describe UsersController do
       end
     end
 
+    context "as a staff user" do
+      let!(:user) { log_in(:admin) }
+
+      context "uneditable field" do
+        let!(:user_field) { Fabricate(:user_field, editable: false) }
+
+        it "allows staff to edit the field" do
+          put :update, username: user.username, name: 'Jim Tom', user_fields: { user_field.id.to_s => 'happy' }
+          expect(response).to be_success
+          expect(user.user_fields[user_field.id.to_s]).to eq('happy')
+        end
+      end
+
+    end
+
     context 'with authenticated user' do
       context 'with permission to update' do
         let!(:user) { log_in(:user) }
 
         it 'allows the update' do
-          put :update, username: user.username, name: 'Jim Tom', custom_fields: {test: :it}
+
+          user2 = Fabricate(:user)
+          user3 = Fabricate(:user)
+
+          put :update,
+                username: user.username,
+                name: 'Jim Tom',
+                custom_fields: {test: :it},
+                muted_usernames: "#{user2.username},#{user3.username}"
+
           expect(response).to be_success
 
           user.reload
 
           expect(user.name).to eq 'Jim Tom'
           expect(user.custom_fields['test']).to eq 'it'
+          expect(user.muted_users.pluck(:username).sort).to eq [user2.username,user3.username].sort
+
+          put :update,
+                username: user.username,
+                muted_usernames: ""
+
+          user.reload
+
+          expect(user.muted_users.pluck(:username).sort).to be_empty
+
         end
 
         context "with user fields" do

@@ -31,13 +31,20 @@ export default function loadScript(url, opts) {
       resolve();
     };
 
+    var cdnUrl = url;
+
+    // Scripts should always load from CDN
+    if (Discourse.CDN && url[0] === "/" && url[1] !== "/") {
+      cdnUrl = Discourse.CDN.replace(/\/$/,"") + url;
+    }
+
     // Some javascript depends on the path of where it is loaded (ace editor)
     // to dynamically load more JS. In that case, add the `scriptTag: true`
     // option.
     if (opts.scriptTag) {
-      loadWithTag(url, cb);
+      loadWithTag(cdnUrl, cb);
     } else {
-      $.getScript(url).then(cb);
+      Discourse.ajax({url: cdnUrl, dataType: "script", cache: true}).then(cb);
     }
   });
 }

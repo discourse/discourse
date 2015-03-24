@@ -463,7 +463,6 @@ ko:
     sidekiq_warning: 'Sidekiq 이 현재 실행되고 있지 않습니다. Sidekiq는 이메일 전송 같은 많은 작업들을 비동기식으로 처리합니다. 적어도 하나의 sidekiq 프로세서를 실행시켜 주세요. <a href="https://github.com/mperham/sidekiq">Sidekiq 배우기</a>.'
     queue_size_warning: '큐 작업의 수가 %{queue_size} 개 입니다. 너무 많습니다. Sidekqi에 문제가 있을 수 있습니다. Sidekiq Worker를 더 추가하세요.'
     memory_warning: '당신의 서버는 1GB 이하 메모리로 실행되고 있습니다. 적어도 1GB 이상의 메모리를 사용하세요.'
-    enable_google_logins_warning: "곧 서비스 종료될 Google OpenID 인증 버젼을 사용 중입니다. Google은 해당 OpenID인증 서비스를 2015sus 4월 20일 부로 종료합니다. 가능한 빨리 Google OAuth2 인증을 사용해주세요. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>자세히 알아보기</a>"
     both_googles_warning: "이 사이트 세팅에서 Google OpenID 인증과 Google OAuth2 인증을 동시에 사용하기로 체크하였습니다. Google OpenID인증 설정(enable_google_logins)을 비활성화 해주세요."
     google_oauth2_config_warning: 'Google OAuth2 인증을 통한 로그인과 회원가입(enable_google_oauth2_logins)을 설정하였습니다. 하지만, 아직 Client ID와 Client Secret을 입력하지 않았습니다. <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">자세히 알아보기</a>.'
     facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
