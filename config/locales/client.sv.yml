@@ -580,7 +580,6 @@ sv:
     composer:
       add_warning: "Det här är en officiell varning"
       posting_not_on_topic: "Du svarar på tråden \"{{title}}\", men du besöker just nu en annan tråd."
-      saving_draft_tip: "sparar"
       saved_draft_tip: "sparat"
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Din tråd liknar..."
@@ -842,8 +841,8 @@ sv:
         auto_close: "Stäng Automatiskt"
         make_banner: "Banderollämne"
         remove_banner: "Radera Banderollämne"
-        unpin: "Avnåla Tråd"
         pin: "Nåla Tråd"
+        unpin: "Avnåla Tråd"
         pin_globally: "Nåla diskussionen globalt"
         unarchive: "Dearkivera Tråd"
         archive: "Arkivera Tråd"
@@ -1446,8 +1445,6 @@ sv:
         name: "Namn"
         add: "Lägg till"
         add_members: "Lägg till medlemmar"
-        custom: "Anpassad"
-        automatic: "Automatisk"
         automatic_membership_email_domains: "Användare som registrerar sig med en email där domänen liknar exact en av dom ovanstående domänerna kommer automatiskt att bli tillagd i den här gruppen:"
         automatic_membership_retroactive: "Avänd samma email domän regel för att lägga till nya avändare"
       api:

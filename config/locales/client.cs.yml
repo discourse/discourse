@@ -224,6 +224,19 @@ cs:
       posted_by_you: "Odesláno <a href='{{userUrl}}'>vámi</a>"
       sent_by_user: "Posláno uživatelem <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Posláno <a href='{{userUrl}}'>vámi</a>"
+    directory:
+      title: "Seznam uživatelů"
+      likes_given: "Rozdaných libí se"
+      likes_received: "Obdržených líbí se"
+      topics_entered: "Navštívených témat"
+      time_read: "Čas strávený čtením"
+      topic_count: "Témata"
+      post_count: "Odpovědi"
+      no_results: "Pro toto období nebylo nic nalezeno"
+      total_rows:
+        one: "nalezen 1 uživatel"
+        few: "nalezeni %{count} uživatelé"
+        other: "nalezeno %{count} uživatelů"
     groups:
       visible: "Skupina je viditelná pro všechny uživatele"
       title:
@@ -625,7 +638,6 @@ cs:
       emoji: "Emoji :smile:"
       add_warning: "Toto je oficiální varování."
       posting_not_on_topic: "Rozepsali jste odpověď na téma \"{{title}}\", ale nyní máte otevřené jiné téma."
-      saving_draft_tip: "ukládám"
       saved_draft_tip: "uloženo"
       saved_local_draft_tip: "uloženo lokálně"
       similar_topics: "Podobná témata"
@@ -895,10 +907,12 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         auto_close: "Automaticky zavřít"
+        feature: "Povýšit téma"
+        remove_feature: "Zrušit povýšení tématu"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-        unpin: "Odstranit připnutí"
         pin: "Připnout téma"
+        unpin: "Odstranit připnutí"
         pin_globally: "Připnout téma globálně"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
@@ -1390,6 +1404,7 @@ cs:
           title: "Nejlepší podle týdne"
         daily:
           title: "Nejlepší podle dní"
+        all: "Za celou dobu"
         this_year: "Letos"
         this_month: "Tenhle měsíc"
         this_week: "Tenhle týden"
@@ -1538,8 +1553,6 @@ cs:
         name: "Jméno"
         add: "Přidat"
         add_members: "Přidat členy"
-        custom: "Přizpůsobené"
-        automatic: "Automatické"
         automatic_membership_email_domains: "Uživatelé zaregistrovaní s emailem jehož doména se přesně shoduje s jednou z tohoto seznamu budou automaticky přidáni to této skupiny:"
         automatic_membership_retroactive: "Aplikovat stejné doménové pravidlo na už existující uživatele"
       api:
