@@ -264,6 +264,9 @@ var number = function(val) {
   if (val > 999) {
     return (val / 1000).toFixed(1) + "K";
   }
+  if (val > 999999) {
+    return (val / 1000000).toFixed(1) + "M";
+  }
   return val.toString();
 };
 
