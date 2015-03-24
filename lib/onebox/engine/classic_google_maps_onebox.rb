@@ -11,7 +11,7 @@ module Onebox
       end
 
       def to_html
-        "<iframe src=\"#{link}\" width=\"690px\" height=\"400px\" frameborder=\"0\" style=\"border:0\"></iframe>"
+        "<div style=\"background:transparent;position:relative;width:690px;height:400px;top:400px;margin-top:-400px;\" onClick=\"style.pointerEvents='none'\"></div> <iframe src=\"#{link}\" width=\"690px\" height=\"400px\" frameborder=\"0\" style=\"border:0\"></iframe>"
       end
 
       def placeholder_html
