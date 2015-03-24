@@ -105,6 +105,7 @@ tr_TR:
     other: "Üzgünüz, yeni kullanıcılar bir gönderiye sadece %{count} bağlantı ekleyebilirler."
   spamming_host: "Üzgünüz bu sunucuya bağlantı veremezsiniz."
   user_is_suspended: "Uzaklaştırılmış kullanıcılar gönderi yapamazlar."
+  topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
   just_posted_that: "yakın zamanda yaptığınız bir gönderiye çok benziyor"
   has_already_been_used: "önceden kullanıldı"
   invalid_characters: "geçersiz karakterler barındırıyor"
@@ -203,6 +204,7 @@ tr_TR:
             password:
               common: "En çok kullanılan 10000 paroladan biri. Lütfen daha güvenli bir parola seçin."
               same_as_username: "kullanıcı adınızla aynı. Lütfen daha güvenli bir şifre seçiniz."
+              same_as_email: "bu e-posta adresinizle aynı. Lütfen daha güvenli bir şifre seçiniz."
             ip_address:
               signup_not_allowed: "Bu hesaptan yeni üyelik oluşturulmasına izin verilmiyor."
         color_scheme_color:
@@ -547,7 +549,6 @@ tr_TR:
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
     queue_size_warning: 'Kuyrukta çok fazla, %{queue_size} tane iş var. Bu Sidekiq süreçleriyle ilgili bir sorunu gösteriyor olabilir, daha fazla Sidekiq işçisi eklemeniz gerekebilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
-    enable_google_logins_warning: "Google OpenID kimlik doğrulama sisteminin ıskartaya çıkartılmış bir sürümünü kullanıyorsunuz. Google OpenID'den desteğini 20 Nisan 2015'te çekecek. Bir an önce Google OAuth2 kullanmaya başlayın. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Daha fazlasını öğrenmek için bu rehberi okuyun</a>"
     both_googles_warning: "Site ayarlarında enable_google_logins ve enable_google_oauth2_logins ayarlarından her ikisi de etkin. enable_google_logins ayarını devre dışı bırakın."
     google_oauth2_config_warning: 'Sunucu Google OAuth2 (enable_google_oauth2_logins) ile üyelik oluşturulması ve giriş yapılmasına elveriyor, fakat the kullanıcı IDsi and gizli kullanıcı değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
     facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat app ID ve gizli app değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
@@ -890,7 +891,6 @@ tr_TR:
     default_code_lang: "GitHub kod bloklarına (lang-auto, ruby, python vs.) uygulanacak, varsayılan programlama dili sözdizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı mesajı çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
     autohighlight_all_code: "Tüm önceden formatlanan kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
-    embeddable_host: "Bu Discourse forumundan yorumların yerleştirilebileceği sunucu"
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
     embed_by_username: "Yerleştirilmiş konuları oluşturan kullanıcıya ait Discourse kullanıcı adı. "
@@ -1045,8 +1045,6 @@ tr_TR:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] E-posta Ulaştırma Testi"
-    text_body_template: "Bu aşağıdaki adresten gönderilen bir test emailidir\n\n[**%{base_url}**][0]\n\nEmailların ulaştırılması karışık bir meseledir. Öncelikle dikkat etmeniz gereken bir kaç önemli nokta:\n\n- Site ayarlarınızda 'bildiri emailları' için gönderen adresini doğru ayarladığınıza emin olun. **Yolladığınız emaillarda \"gönderen\" adresi olarak belirlediğiniz alan adı, emaillarınızın doğrulanacağı alan adıdır.**\n\n- Email başlıklarındaki önemli ipuçlarını yakalayabilmek için email istemcinizde emailların kaynak kodunu nasıl görüntüleyebileceğinizi öğrenin. Gmail'da, her emailin sağ üstündeki açılır menüden \"show original\" opsiyonuna tıklayabilirsiniz.\n\n- **ÖNEMLİ:** ISP'nizde email yollamak için kullanıdığınız alan adlarıyla IP adreslerinin eşleşmesini sağlayacak bir reverse DNS kaydı var mı? Buradan [reverse PTR kayıtlarınızı test edin][2]. Eğer ISP'niz doğru reverse DNS pointer kaydı girmezse, büyük ihtimal emaillarınızın hiç biri yerine ulaşmayacaktır.\n\n- Alan adınızın [SPF kaydı][8] doğru mu? Buradan [SPF kaydınızı test edin][1].  SPF için doğru resmi kayıt tipinin TXT olduğunu unutmayın.\n\n- Alan adınızın [DKIM kaydı][3] doğru mu? Bu emailların ulaştırılabilirliğini ciddi şekilde artıracaktır. Buradan [DKIM kaydınızı test edin][7].\n\n- Kendi email sunucunuzu kullanıyorsanız, email sunucunuzun IPlerinin [hiç bir email karalistesine][4] alınmadığına emin olun. Sunucunuzun, kesinlikle, HELLO mesajında DNS olarak çözümlenen tam tanımlanmış bilgisayar adı da gönderdiğinden emin olun. Göndermemesi, emailinizin bir çok email servisi tarafından reddedilmesine sebep olacaktır.\n\n(En kolayı, küçük topluluklar için rahat rahat yetecek sayıda bedava email yollama paketleri içeren, [Mandrill][md] veya [Mailgun][mg] veya [Mailjet][mj]'te ücretsiz hesap açmak. Tabi, gene DNS ayarlarınızda SPF ve DKIM kayıtlarını oluşturmanız gerekecek.)\n\nUmarız bu email ulaştırma testini başarıyla atlatmışsınızdır. \n\nİyi şanslar,\n\n[Discourse](http://www.discourse.org)'tan arkadaşlarınız\n\n[0]: %{base_url}\n[1]: http://www.kitterman.com/spf/validate.html\n[2]:\
-      \ http://mxtoolbox.com/ReverseLookup.aspx\n[3]: http://www.dkim.org/\n[4]: http://whatismyipaddress.com/blacklist-check\n[7]: http://dkimcore.org/tools/dkimrecordcheck.html\n[8]: http://www.openspf.org/SPF_Record_Syntax\n[md]: http://mandrill.com\n[mg]: http://www.mailgun.com/\n[mj]: https://www.mailjet.com/pricing\n"
   new_version_mailer:
     subject_template: "[%{site_name}] Yeni Discourse versiyonu, güncelleme var"
     text_body_template: |2

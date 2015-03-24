@@ -161,6 +161,7 @@ de:
       not_bookmarked: "Du hast diesen Beitrag gelesen. Klicke, um ein Lesezeichen zu setzen."
       last_read: "Das ist der letzte Beitrag, den du gelesen hast. Klicke, um ein Lesezeichen zu setzen."
       remove: "Lesezeichen entfernen"
+      confirm_clear: "Bist du sicher, dass du alle Lesezeichen in diesem Thema entfernen möchtest?"
     topic_count_latest:
       one: "{{count}} neues oder geändertes Thema."
       other: "{{count}} neue oder geänderte Themen."
@@ -205,6 +206,18 @@ de:
       posted_by_you: "Von <a href='{{userUrl}}'>dir</a> geschrieben"
       sent_by_user: "Von <a href='{{userUrl}}'>{{user}}</a> gesendet"
       sent_by_you: "Von <a href='{{userUrl}}'>dir</a> gesendet"
+    directory:
+      title: "Benutzerverzeichnis"
+      likes_given: "Abgegebene Likes"
+      likes_received: "Erhaltene Likes"
+      topics_entered: "Betrachtete Themen"
+      time_read: "Lesezeit"
+      topic_count: "Themen"
+      post_count: "Antworten"
+      no_results: "Keine Ergebnisse für den gewählten Zeitabschnitt gefunden."
+      total_rows:
+        one: "1 Benutzer gefunden"
+        other: "%{count} Benutzer gefunden"
     groups:
       visible: "Gruppe ist für alle Benutzer sichtbar"
       title:
@@ -601,7 +614,7 @@ de:
       emoji: "Emoji :smile:"
       add_warning: "Dies ist eine offizielle Warnung."
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
-      saving_draft_tip: "speichere"
+      saving_draft_tip: "wird gespeichert..."
       saved_draft_tip: "gespeichert"
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit..."
@@ -727,6 +740,7 @@ de:
         close_topics: "Themen schließen"
         archive_topics: "Themen archivieren"
         notification_level: "Benachrichtigungsstufe ändern"
+        choose_new_category: "Neue Kategorie für die gewählten Themen:"
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
           other: "Du hast <b>{{count}}</b> Themen ausgewählt."
@@ -865,10 +879,12 @@ de:
         open: "Thema öffnen"
         close: "Thema schließen"
         auto_close: "Automatisch schließen"
+        feature: "Thema hervorheben"
+        remove_feature: "Hervorhebung entfernen"
         make_banner: "Banner-Thema"
         remove_banner: "Kein Banner-Thema"
-        unpin: "Thema loslösen"
         pin: "Thema anheften"
+        unpin: "Thema loslösen"
         pin_globally: "Thema global anheften"
         unarchive: "Thema aus Archiv holen"
         archive: "Thema archivieren"
@@ -889,6 +905,30 @@ de:
         title: 'Melden'
         help: 'Dieses Thema den Moderatoren melden oder eine private Nachricht senden.'
         success_message: 'Du hast dieses Thema erfolgreich gemeldet.'
+      feature_topic:
+        title: "Thema hervorheben"
+        pin: "Das Thema immer am Anfang der {{categoryLink}} Kategorie anzeigen."
+        confirm_pin: "Bist du sicher? Es gibt bereits {{count}} angeheftete Themen -- zu viele angeheftete Themen können die Sichtbarkeit anderer aktiver Themen beeinträchtigen."
+        unpin: "Das Thema vom Anfang der {{categoryLink}} Kategorie loslösen."
+        pin_note: "Benutzer können das Thema für sich selbst loslösen."
+        already_pinned:
+          zero: "Momentan sind in {{categoryLink}} keine Themen angeheftet."
+          one: "Momentan in {{categoryLink}} angeheftete Themen: <strong>1</strong>."
+          other: "Momentan in {{categoryLink}} angeheftete Themen: <strong>{{count}}</strong>."
+        pin_globally: "Das Thema immer am Anfang aller Themenlisten anzeigen, bis ein Mitarbeiter es wieder loslöst."
+        confirm_pin_globally: "Bist du sicher? Es gibt bereits {{count}} global angeheftete Themen -- zu viele angeheftete Themen können die Sichtbarkeit anderer aktiver Themen beeinträchtigen."
+        unpin_globally: "Das Thema vom Anfang aller Themenlisten loslösen."
+        global_pin_note: "Benutzer können das Thema für sich selbst loslösen."
+        already_pinned_globally:
+          zero: "Momentan sind keine Themen global angeheftet."
+          one: "Momentan global angeheftete Themen: <strong>1</strong>."
+          other: "Momentan global angeheftete Themen: <strong>{{count}}</strong>."
+        make_banner: "Macht das Thema zu einem Ankündigungsbanner, welcher am Anfang aller Seiten angezeigt wird."
+        remove_banner: "Entfernt das Ankündigungsbanner vom Anfang aller Seiten."
+        banner_note: "Benutzer können das Ankündigungsbanner schließen und so für sich selbst dauerhaft ausblenden. Es kann zu jeder Zeit höchstens ein Thema ein Banner sein."
+        already_banner:
+          zero: "Momentan gibt es kein Ankündigungsbanner."
+          one: "Es gibt derzeit ein anderes Ankündigungsbanner."
       inviting: "Einladungen werden gesendet..."
       automatically_add_to_groups_optional: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen: (optional, nur Admin)"
       automatically_add_to_groups_required: "Diese Einladung beinhaltet auch Zugang zu folgenden Gruppen: (<b>erforderlich</b>, nur Admin)"
@@ -1484,8 +1524,12 @@ de:
         name: "Name"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
-        custom: "Benutzerdefiniert"
-        automatic: "Automatisch"
+        custom:
+          label: "Benutzerdefiniert"
+          title: "Benutzerdefinierte Gruppen"
+        automatic:
+          label: "Automatisch"
+          title: "Automatische Gruppen"
         automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
         automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
       api:
@@ -1571,9 +1615,9 @@ de:
         button_title:
           user: "Vollständige Benutzerliste im CSV-Format exportieren."
           staff_action: "Vollständiges Moderations-Protokoll im CSV-Format exportieren."
-          screened_email: "Vollständige Liste der überprüften E-Mail-Adressen im CSV-Format exportieren."
-          screened_ip: "Vollständige Liste der überprüften IP-Adressen im CSV-Format exportieren."
-          screened_url: "Vollständige Liste der überprüften URLs im CSV-Format exportieren."
+          screened_email: "Vollständige Liste der gefilterten E-Mail-Adressen im CSV-Format exportieren."
+          screened_ip: "Vollständige Liste der gefilterten IP-Adressen im CSV-Format exportieren."
+          screened_url: "Vollständige Liste der gefilterten URLs im CSV-Format exportieren."
       invite:
         button_text: "Einladungen versenden"
         button_title: "Einladungen versenden"
@@ -1737,22 +1781,23 @@ de:
             delete_topic: "Thema löschen"
             delete_post: "Beitrag löschen"
             impersonate: "Nutzersicht"
+            anonymize_user: "Benutzer anonymisieren"
         screened_emails:
-          title: "Überprüfte E-Mails"
+          title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."
           email: "E-Mail-Adresse"
           actions:
             allow: "Erlauben"
         screened_urls:
-          title: "Überprüfte URLs"
+          title: "Gefilterte URLs"
           description: "Die aufgelisteten URLs wurden in Beiträgen verwendet, die von Spammen erstellt wurden."
           url: "URL"
           domain: "Domain"
         screened_ips:
-          title: "Überprüfte IPs"
+          title: "Gefilterte IPs"
           description: 'IP-Adressen die beobachtet werden. Benutze „Erlauben“, um IP-Adressen auf die Whitelist zu setzen.'
           delete_confirm: "Möchtest du wirklich die Regel für %{ip_address} entfernen?"
-          roll_up_confirm: "Möchtest du wirklich die häufig blockierten IP-Adressen zu Subnetzen zusammenfassen?"
+          roll_up_confirm: "Möchtest du wirklich die häufig gefilterten IP-Adressen zu Subnetzen zusammenfassen?"
           rolled_up_some_subnets: "Die geblockten IP-Adressen wurden erfolgreich zu diesen Subnetzen zusammengefasst: %{subnets}"
           rolled_up_no_subnet: "Es gab nichts zum Zusammenfassen."
           actions:
@@ -1870,8 +1915,13 @@ de:
         approve_success: "Benutzer wurde genehmigt und eine E-Mail mit Anweisungen zur Aktivierung wurde gesendet."
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
+        anonymize: "Benutzer anonymisieren"
+        anonymize_confirm: "Willst du dieses Konto wirklich anonymisieren? Dadurch werden der Benutzername und die E-Mail-Adresse unkenntlich gemacht und alle Informationen im Profil entfernt."
+        anonymize_yes: "Ja, diesen Benutzer anonymisieren"
+        anonymize_failed: "Beim Anonymisieren des Benutzers ist ein Fehler aufgetreten."
         delete: "Benutzer löschen"
         delete_forbidden_because_staff: "Administratoren und Moderatoren können nicht gelöscht werden."
+        delete_posts_forbidden_because_staff: "Löschen aller Beiträge von Administratoren und Moderatoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst all dessen Beiträge, bevor du versuchst einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"

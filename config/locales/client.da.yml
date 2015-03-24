@@ -161,6 +161,7 @@ da:
       not_bookmarked: "Du har læst dette indlæg; klik for at bogmærke det"
       last_read: "Dette er det seneste indlæg, du har læst; klik for at bogmærke det"
       remove: "Fjern bogmærke"
+      confirm_clear: "Er du sikker på du vil slette alle bogmærker fra dette emne?"
     topic_count_latest:
       one: "{{count}} nyt eller opdateret emne."
       other: "{{count}} nye eller opdaterede emner."
@@ -205,6 +206,15 @@ da:
       posted_by_you: "Oprettet af <a href='{{userUrl}}'>dig</a>"
       sent_by_user: "Sendt af <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Sendt af <a href='{{userUrl}}'>dig</a>"
+    directory:
+      title: "Bruger liste"
+      likes_given: "Likes givet"
+      likes_received: "Likes modtaget"
+      topics_entered: "Emner indstastet"
+      time_read: "Læsetid"
+      topic_count: "Emner"
+      post_count: "Svar"
+      no_results: "Der blev ikke fundet nogen resultater for denne periode."
     groups:
       visible: "Gruppen er synlige for alle brugere"
       title:
@@ -601,7 +611,7 @@ da:
       emoji: "Emoji :smile:"
       add_warning: "Dette er en officiel advarsel."
       posting_not_on_topic: "Hvilket emne vil du svare på?"
-      saving_draft_tip: "gemmer"
+      saving_draft_tip: "gemmer..."
       saved_draft_tip: "gemt"
       saved_local_draft_tip: "gemt lokalt"
       similar_topics: "Dit emne minder om…"
@@ -864,10 +874,12 @@ da:
         open: "Åbn emne"
         close: "Luk emne"
         auto_close: "Luk automatisk"
+        feature: "Fremhævet Emne"
+        remove_feature: "Fjern Fremhævning"
         make_banner: "Banner emne"
         remove_banner: "Fjern banner emne"
-        unpin: "Frigør emne"
         pin: "Fastgør emne"
+        unpin: "Frigør emne"
         pin_globally: "Fastgør emnet globalt"
         unarchive: "Gendan emne fra arkiv"
         archive: "Arkivér emne"
@@ -888,6 +900,30 @@ da:
         title: 'Rapportér indlæg'
         help: 'gør moderator opmærksom på dette indlæg'
         success_message: 'Du har nu rapporteret dette emne til administrator.'
+      feature_topic:
+        title: "Fremhæv dette emne"
+        pin: "Lad dette emne stå i toppen af {{categoryLink}} kategorien."
+        confirm_pin: "Er du sikker? Du har allerede {{count}} pinnede emner -- for mange pinnede emner kan gør det uoverskueligt at finde de andre emner."
+        unpin: "Fjern dette emne fra titlen på {{categoryLink}} kategorien."
+        pin_note: "Brugere kan unpinne emnet individuelt."
+        already_pinned:
+          zero: "Ingen emner er pinnet lige nu i {{categoryLink}}."
+          one: "Emner der er pinnet i  {{categoryLink}}: <strong>1.</strong>"
+          other: "Emner der er pinnet i  {{categoryLink}}: <strong>{{count}}</strong>."
+        pin_globally: "Få dette emne til at stå i toppen af alle emne lister, indtil et medlem af \"staff\" unpinner det."
+        confirm_pin_globally: "Er du sikker? Du har allerede {{count}} globalt pinnede emner -- for mange pinnede emner, kan gøre det svært at finde andre aktive emner."
+        unpin_globally: "Fjern dette emne fra toppen af alle emne lister."
+        global_pin_note: "Brugere kan unpinne emnet individuelt."
+        already_pinned_globally:
+          zero: "Der er ingen globalt pinnede emner."
+          one: "Emner der er globalt pinnede: <strong>1.</strong>"
+          other: "Emner der er globalt pinnede: <strong>{{count}}</strong>"
+        make_banner: "Gør dette emne til en banner, der kommer til at stå i toppen på alle sider."
+        remove_banner: "Fjern banneret, der står på toppen af alle sider."
+        banner_note: "Brugere kan fjernet banneret ved at lukke det. Kun én banner kan være aktiv ad gangen."
+        already_banner:
+          zero: "Der er ingen banner emner lige nu."
+          one: "Der er et aktiv banner emne."
       inviting: "Inviterer…"
       automatically_add_to_groups_optional: "Denne invitation giver også adgang til disse grupper: (valgfrit, kun for administrator)"
       automatically_add_to_groups_required: "Denne invitation giver også adgang til disse grupper: (<b>Påkrævet</b>, kun for administrator)"
@@ -1487,8 +1523,12 @@ da:
         name: "Navn"
         add: "Tilføj"
         add_members: "Tilføj medlemmer"
-        custom: "Brugerdefineret"
-        automatic: "Automatisk"
+        custom:
+          label: "Brugerdefineret"
+          title: "Brugerdefinerede grupper"
+        automatic:
+          label: "Automatisk"
+          title: "Automatiske grupper"
         automatic_membership_email_domains: "Brugere der registrerer med et email domæne der præcist matcher et på denne liste, vil automatisk blive tilføjet til denne gruppe:"
         automatic_membership_retroactive: "Brug denne email domæne regel til at tilføje brugere der allerede er registrerede brugere"
       api:

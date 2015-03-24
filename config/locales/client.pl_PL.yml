@@ -178,6 +178,7 @@ pl_PL:
       not_bookmarked: "wpis przeczytany: kliknij, aby dodać zakładkę"
       last_read: "to ostatni przeczytany przez ciebie wpis: kliknij, aby dodać zakładkę"
       remove: "Usuń zakładkę"
+      confirm_clear: "Czy na pewno chcesz usunąć wszystkie zakładki ustawione w tym temacie?"
     topic_count_latest:
       one: "{{count}} nowy lub zaktualizowany temat"
       few: "{{count}} nowe lub zaktualizowane tematy"
@@ -225,6 +226,19 @@ pl_PL:
       posted_by_you: "Dodany przez <a href='{{userUrl}}'>ciebie</a>"
       sent_by_user: "Wysłano przez <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Wysłano przez <a href='{{userUrl}}'>Ciebie</a>"
+    directory:
+      title: "Lista użytkowników"
+      likes_given: "Przekazane ♥"
+      likes_received: "Otrzymane ♥"
+      topics_entered: "Utworzone tematy"
+      time_read: "Czas"
+      topic_count: "Tematy"
+      post_count: "Odpowiedzi"
+      no_results: "Nie znaleziono wyników dla wskazanego przedziału czasu."
+      total_rows:
+        one: "1 znaleziony użytkownik"
+        few: "%{count} znalezionych użytkowników"
+        other: "%{count} znalezionych użytkowników"
     groups:
       visible: "Grupa jest widoczna dla wszystkich użytkowników"
       title:
@@ -628,7 +642,7 @@ pl_PL:
       emoji: "Emoji :smile:"
       add_warning: "To jest oficjalne ostrzeżenie."
       posting_not_on_topic: "W którym temacie chcesz odpowiedzieć?"
-      saving_draft_tip: "zapisywanie"
+      saving_draft_tip: "zapisuję..."
       saved_draft_tip: "zapisano"
       saved_local_draft_tip: "zapisano lokalnie"
       similar_topics: "Twój temat jest podobny do…"
@@ -900,10 +914,12 @@ pl_PL:
         open: "Otwórz temat"
         close: "Zamknij temat"
         auto_close: "Zamknij automatycznie"
+        feature: "Wyróżnij temat"
+        remove_feature: "Cofnij wyróżnienie"
         make_banner: "Ustaw jako baner"
         remove_banner: "Wyłącz ten baner"
-        unpin: "Odepnij temat"
         pin: "Przypnij temat"
+        unpin: "Odepnij temat"
         pin_globally: "Przypnij temat globalnie"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
@@ -924,6 +940,30 @@ pl_PL:
         title: 'Zgłoś'
         help: 'zgłoś ten temat, aby zwrócić uwagę moderacji lub wyślij powiadomienie o nim'
         success_message: 'Ten temat został pomyślnie zgłoszony.'
+      feature_topic:
+        title: "Wyróżnij ten temat"
+        pin: "Wyróżnij ten temat przypinając go na górze w kategorii {{categoryLink}} "
+        confirm_pin: "Na pewno? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
+        unpin: "Usuń wyróżnienie dla tego tematu odpinając go z początku kategorii {{categoryLink}}"
+        pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        already_pinned:
+          zero: "Brak przypiętych tematów w {{categoryLink}}."
+          one: "Przypięte tematy w {{categoryLink}}: <strong>1.</strong>"
+          other: "Przypięte tematy w {{categoryLink}}: <strong>{{count}}</strong>."
+        pin_globally: "Wyróżnij ten temat przypinając go na górze wszystkich list."
+        confirm_pin_globally: "Na pewno? Masz już {{count}} przypiętych tematów -- zbyt wiele może obniżyć czytelność innych aktywnych tematów."
+        unpin_globally: "Usuń wyróżnienie dla tego tematu odpinając go z początku wszystkich list."
+        global_pin_note: "Użytkownicy mogą przypinać tematy dla samych siebie."
+        already_pinned_globally:
+          zero: "Brak przypiętych globalnie tematów."
+          one: "Globalnie przypięte tematy: <strong>1.</strong>"
+          other: "Globalnie przypięte tematy: <strong>{{count}}</strong>."
+        make_banner: "Ustaw ten temat jako baner wyświetlany na górze każdej strony."
+        remove_banner: "Usuń ten temat jako baner wyświetlany na górze każdej strony."
+        banner_note: "Użytkownicy mogą usunąć baner zamykając go przyciskiem. Tylko jeden temat może być banerem w danej chwili."
+        already_banner:
+          zero: "Baner nie jest obecnie ustawiony."
+          one: "Baner jest ustawiony."
       inviting: "Zapraszam…"
       automatically_add_to_groups_optional: "To zaproszenie daje dostęp do tych grup: (opcjonalne, tylko dla admina)"
       automatically_add_to_groups_required: "To zaproszenie daje dostęp do tych grup: (<b>Wymagane</b>, tylko dla admina)"
@@ -1550,8 +1590,12 @@ pl_PL:
         name: "Nazwa"
         add: "Dodaj"
         add_members: "Dodaj członków"
-        custom: "Personalizacje"
-        automatic: "Automatyczne"
+        custom:
+          label: "Niestandardowe"
+          title: "Grupy niestandardowe "
+        automatic:
+          label: "Automatyczne"
+          title: "Grupy automatyczne"
         automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
         automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
       api:

@@ -125,6 +125,7 @@ fi:
     daily: "päivittäin"
     weekly: "viikottain"
     every_two_weeks: "kahden viikon välein"
+    every_three_days: "joka kolmas päivä"
     max_of_count: "korkeintaan {{count}}"
     character_count:
       one: "{{count}} merkki"
@@ -147,9 +148,10 @@ fi:
       user_count: "Uusia käyttäjiä"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Yhteystiedot"
-      contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_email}."
+      contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
     bookmarked:
       title: "Kirjanmerkki"
+      clear_bookmarks: "Tyhjennä kirjanmerkit"
     bookmarks:
       not_logged_in: "pahoittelut, sinun täytyy kirjautua sisään voidaksesi lisätä viestin kirjanmerkin"
       created: "olet lisännyt tämän viestin kirjainmerkkeihisi"
@@ -200,6 +202,18 @@ fi:
       posted_by_you: "Kirjoittaja <a href='{{userUrl}}'>sinä</a>"
       sent_by_user: "Lähettäjä <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Lähettäjä <a href='{{userUrl}}'>sinä</a>"
+    directory:
+      title: "Käyttäjät"
+      likes_given: "Annetut tykkäykset"
+      likes_received: "Saadut tykkäykset"
+      topics_entered: "Mukana ketjuissa"
+      time_read: "Lukuaika"
+      topic_count: "Ketjut"
+      post_count: "Vastaukset"
+      no_results: "Tänä aikana ei löytynyt tuloksia"
+      total_rows:
+        one: "1 käyttäjä"
+        other: "%{count} käyttäjää"
     groups:
       visible: "Ryhmä näkyy kaikille käyttäjille"
       title:
@@ -397,7 +411,9 @@ fi:
       email_digests:
         title: "Lähetä tiivistelmä uusista viesteistä sähköpostilla, jos en käy sivustolla "
         daily: "päivittäin"
+        every_three_days: "joka kolmas päivä"
         weekly: "viikottain"
+        every_two_weeks: "joka toinen viikko"
       email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini tai viittaa @nimeeni."
       email_private_messages: "Lähetä minulle sähköposti jos joku lähettää minulle yksityisviestin"
       email_always: "Älä jätä lähettämättä sähköposti-ilmoituksia, vaikka olen aktiivinen palstalla."
@@ -593,7 +609,7 @@ fi:
       emoji: "Emoji :smile:"
       add_warning: "Tämä on virallinen varoitus."
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
-      saving_draft_tip: "tallennetaan"
+      saving_draft_tip: "tallennetaan..."
       saved_draft_tip: "tallennettu"
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
@@ -855,10 +871,12 @@ fi:
         open: "Avaa ketju"
         close: "Sulje ketju"
         auto_close: "Automaattinen sulkeminen"
+        feature: "Nosta ketju"
+        remove_feature: "Poista nosto"
         make_banner: "Tee ketjusta banneri"
         remove_banner: "Poista banneri"
-        unpin: "Poista ketjun kiinnitys"
         pin: "Kiinnitä ketju"
+        unpin: "Poista ketjun kiinnitys"
         pin_globally: "Kiinnitä ketju koko palstalle"
         unarchive: "Poista ketjun arkistointi"
         archive: "Arkistoi ketju"
@@ -879,6 +897,8 @@ fi:
         title: 'Liputa'
         help: 'liputa tämä ketju tai lähetä siitä yksityinen ilmoitus valvojalle'
         success_message: 'Ketjun liputus onnistui.'
+      feature_topic:
+        title: "Nosta tämä ketju"
       inviting: "Kutsutaan..."
       automatically_add_to_groups_optional: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (valinnainen, vain ylläpitäjille)"
       automatically_add_to_groups_required: "Tämä kutsu sisältää automaattisesti pääsyn ryhmiin: (<b>Vaaditaan</b>, vain ylläpitäjille)"
@@ -1471,8 +1491,8 @@ fi:
         name: "Nimi"
         add: "Lisää"
         add_members: "Lisää jäseniä"
-        custom: "Mukautetut"
-        automatic: "Automaattiset"
+        automatic:
+          label: "Automaattinen"
         automatic_membership_email_domains: "Käyttäjät, jotka luovat tunnuksen sähköpostiosoitteella, jonka verkkotunnus on tällä listalla, lisätään tähän ryhmään:"
         automatic_membership_retroactive: "Lisää jo olemassa olevat käyttäjät käyttäen samaa sääntöä verkkotunnuksista"
       api:

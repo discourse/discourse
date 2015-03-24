@@ -109,6 +109,7 @@ zh_TW:
     daily: "每天"
     weekly: "每週"
     every_two_weeks: "每兩週"
+    every_three_days: "每三天"
     max_of_count: "（最大 {{count}}）"
     character_count:
       other: "{{count}} 個字"
@@ -143,6 +144,7 @@ zh_TW:
       not_bookmarked: "你已閱讀過這篇文章，按此加上書籤"
       last_read: "這是你最後閱讀的文章，按此加上書籤"
       remove: "移除書籤"
+      confirm_clear: "你確定要刪除該主題的所有書籤嗎？"
     topic_count_latest:
       other: "有 {{count}} 個更新過或是新的討論話題。"
     topic_count_unread:
@@ -184,6 +186,17 @@ zh_TW:
       posted_by_you: "作者為 <a href='{{userUrl}}'>你</a>"
       sent_by_user: "寄件者為 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "寄件者為 <a href='{{userUrl}}'>你</a>"
+    directory:
+      title: "用戶目錄"
+      likes_given: "給予喜愛"
+      likes_received: "接受喜愛"
+      topics_entered: "進入話題"
+      time_read: "閱讀多少次"
+      topic_count: "話題"
+      post_count: "回覆"
+      no_results: "該時間段內沒有找到結果。"
+      total_rows:
+        other: "找到 %{count} 個用戶"
     groups:
       visible: "群組可被所有用戶看到"
       title:
@@ -378,7 +391,9 @@ zh_TW:
       email_digests:
         title: "當我很久沒來此網站時，以電子郵件通知我最近有什麼新文章："
         daily: "每天"
+        every_three_days: "每三天"
         weekly: "每週"
+        every_two_weeks: "每兩星期"
       email_direct: "當有人引用、回覆我的發文，或以 @用戶名稱 提到我時，請以電子郵件通知我。"
       email_private_messages: "當有人寄給我私人訊息時，以電子郵件通知我。"
       email_always: "不要因為我在網站上活動而不寄信通知。"
@@ -431,6 +446,7 @@ zh_TW:
         too_short: "你的密碼太短。"
         common: "此密碼太簡單。"
         same_as_username: "密碼與使用者名稱相同"
+        same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
         instructions: "至少 %{count} 個字。"
       associated_accounts: "登入"
@@ -541,6 +557,7 @@ zh_TW:
       requires_invite: "抱歉，只有受邀請者才能進入此論壇。"
       not_activated: "你還無法登入，我們之前曾將啟用帳號的電子郵件寄至 <b>{{sentTo}}</b>，請從該電子郵件啟用你的帳號。"
       not_allowed_from_ip_address: "你無法透過此 IP 登入。"
+      admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
       resend_activation_email: "按這裡重新寄出啟用帳號的電子郵件。"
       sent_activation_email_again: "我們已經將啟用帳號的電子郵件寄至 <b>{{currentEmail}}</b>，你可能幾分鐘後才會收到，如果一直沒收到，請檢查垃圾郵件資料夾。"
       google:
@@ -569,7 +586,7 @@ zh_TW:
       emoji: "Emoji :smile:"
       add_warning: "這是正式警告。"
       posting_not_on_topic: "你想要回覆哪個討論話題?"
-      saving_draft_tip: "正在儲存"
+      saving_draft_tip: "正在儲存..."
       saved_draft_tip: "儲存完畢"
       saved_local_draft_tip: "本地儲存完畢"
       similar_topics: "與你的討論話題類似的討論..."
@@ -826,8 +843,8 @@ zh_TW:
         auto_close: "自動關閉"
         make_banner: "橫幅討論話題"
         remove_banner: "移除橫幅討論話題"
-        unpin: "復原已置頂的討論話題"
         pin: "置頂討論話題"
+        unpin: "復原已置頂的討論話題"
         pin_globally: "全區置頂討論話題"
         unarchive: "復原已封存的討論話題"
         archive: "封存討論話題"
@@ -1269,6 +1286,7 @@ zh_TW:
           title: "本週精選"
         daily:
           title: "本日精選"
+        all: "所有時間"
         this_year: "本年"
         this_month: "本月"
         this_week: "本週"
@@ -1407,8 +1425,12 @@ zh_TW:
         name: "名稱"
         add: "加入"
         add_members: "新增成員"
-        custom: "自訂"
-        automatic: "自動"
+        custom:
+          label: "自訂"
+          title: "自訂群組"
+        automatic:
+          label: "自動"
+          title: "自動群組"
         automatic_membership_email_domains: "註冊的用戶的電子郵件地址網域，完全符合列表裡某項時，會自動加進這個群組裡："
         automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
       api:
@@ -1660,6 +1682,7 @@ zh_TW:
             delete_topic: "刪除討論話題"
             delete_post: "刪除文章"
             impersonate: "檢視"
+            anonymize_user: "匿名用戶"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"
@@ -1789,8 +1812,13 @@ zh_TW:
         approve_success: "用戶已獲得批准並送出啟用帳號的電子郵件。"
         approve_bulk_success: "完成! 已批准所有選取的用戶並送出通知。"
         time_read: "閱讀時間"
+        anonymize: "匿名用戶"
+        anonymize_confirm: "你確定要將這個帳戶變成匿名？這將改變用戶名和電子郵件，並重置所有個人資料信息。"
+        anonymize_yes: "是，將這個帳戶變成匿名"
+        anonymize_failed: "將這個帳戶變成匿名時發生錯誤。"
         delete: "刪除用戶"
         delete_forbidden_because_staff: "管理員與板主不可刪除。"
+        delete_posts_forbidden_because_staff: "無法刪除管理員和版主的所有帖子。"
         delete_forbidden:
           other: "不能刪除擁有文章的用戶。請先刪除所有文章後才能刪除該用戶。( 發表超過 %{count} 天的文章不能刪除 )"
         cant_delete_all_posts:
@@ -1894,6 +1922,7 @@ zh_TW:
         none: '無'
         no_results: "未找到任何結果。"
         clear_filter: "清除"
+        add_url: "加入網址"
         categories:
           all_results: '全部'
           required: '必要設定'

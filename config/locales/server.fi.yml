@@ -583,7 +583,6 @@ fi:
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on suuri. Tämä voi viitata ongelmaan Sidekiq prosess(e)issa, tai sinun voi olla järkevää lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
-    enable_google_logins_warning: "Käytät vanhentunutta versiota Googlen OpenID autentikaatiosta. Google lopettaa OpenID:n tuen 20.4.2015. Vaihda käyttämään OAuth2 autentikointia mahdollisimman nopeasti. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Lue lisää tästä englanninkielisestä ketjusta</a>"
     both_googles_warning: "Olet ottanut käyttöön sekä enable_google_logins että enable_google_oauth2_logins sivun asetuksissa. Ota  enable_google_logins pois käytöstä."
     google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
     facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
@@ -926,7 +925,6 @@ fi:
     default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen Github koodiblokeissa (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
-    embeddable_host: "Host, joka voi upottaa kommentteja tältä Discourse-palstalta."
     feed_polling_enabled: "VAIN UPOTUS: Upotetaanko RSS/ATOM syöte viesteinä."
     feed_polling_url: "VAIN UPOTUS: RSS/ATOM syötteen URL."
     embed_by_username: "Sen käyttäjän Discourse käyttäjänimi, joka luo upotetut ketjut."
@@ -1104,45 +1102,6 @@ fi:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
-    text_body_template: |
-      Tämä on testisähköposti sivustolta
-
-      [**%{base_url}**][0]
-
-      Sähköpostin toimitus on monimutkaista. Tässä on muutama tärkeä asia, jotka kannattaa tarkistaa ensin:
-
-      - *Varmista,* että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin varmennus tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
-
-      - Selvitä, miten sähköpostiohjelmassasi saa näkyville *sähköpostin raakadatan,* jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
-
-      - **TÄRKEÄÄ:** Onko palveluntarjoajasi syöttänyt reverse DNS kentän verkkotunnuksille ja IP osoitteille, joists lähetät sähköpostia? [Kokeile Reverse PTR tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer tietuetta, on hyvin epätodennäköistä, että mikään sähköposti menee perille.
-
-      - Onko verkkotunnuksesi [SPF record][8] oikein? [Kokeile SPF tietuetta][1] täällä. Huomaa, että TXT oikea tietuetyyppi SPF tietueelle.
-
-      - Onko verkkotunnuksesi [DKIM tietue][3] oikein? Tämä vaikuttaa merkittävästi sähköpostin toimitettavuuteen. [Kokeile DKIM tietuetta][7] täällä.
-
-      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP osoite [ei ole millään sähköpostin mustalla listalla][4].
-
-      - Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO viestissään, joka palauttaa oikean DNS tietueen. Jos näin ei ole, sähköposti hylätään monissa sähköpostipalveluissa.
-
-      (Helpoin tapa on luoda ilmainen tili [Mandrilliin][md], [Mailguniin][mg] tai [Mailjetiin][mj], joide ilmaiset palvelut riittävät hyvin piemen palstan käyttöön. Muista silti asettaa SPF ja DKIM tietueet DNS:ään!)
-
-      Toivottavasti tämä testisähköposti meni perille OK!
-
-      Onnea matkaan,
-
-      Ystäväsi [Discourselta](http://www.discourse.org)
-
-      [0]: %{base_url}
-      [1]: http://www.kitterman.com/spf/validate.html
-      [2]: http://mxtoolbox.com/ReverseLookup.aspx
-      [3]: http://www.dkim.org/
-      [4]: http://whatismyipaddress.com/blacklist-check
-      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
-      [8]: http://www.openspf.org/SPF_Record_Syntax
-      [md]: http://mandrill.com
-      [mg]: http://www.mailgun.com/
-      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse versio, päivitys saatavilla"
     text_body_template: |+

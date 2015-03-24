@@ -502,7 +502,6 @@ sq:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google OAuth2 as soon as possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>See this guide to learn more</a>"
     both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
     google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
@@ -816,7 +815,6 @@ sq:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    embeddable_host: "Host that can embed the comments from this Discourse forum."
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."

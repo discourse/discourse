@@ -185,6 +185,14 @@ tr_TR:
       posted_by_you: "<a href='{{userUrl}}'>Sizin</a> tarafınızdan gönderildi"
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> tarafından yollandı"
       sent_by_you: "<a href='{{userUrl}}'>Sizin</a> tarafınızdan yollandı"
+    directory:
+      title: "Kullanıcı Dizini"
+      likes_given: "Beğendikleriniz"
+      likes_received: "Beğenilenleriniz"
+      time_read: "Okuma Zamanı"
+      topic_count: "Konular"
+      post_count: "Cevaplar"
+      no_results: "Bu zaman aralığı için sonuç bulunamadı."
     groups:
       visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
       title:
@@ -574,7 +582,7 @@ tr_TR:
       emoji: "Emoji :smile:"
       add_warning: "Bu resmi bir uyarıdır."
       posting_not_on_topic: "Hangi konuyu cevaplamak istiyorsun?"
-      saving_draft_tip: "kaydediliyor"
+      saving_draft_tip: "kaydediliyor..."
       saved_draft_tip: "kaydedildi"
       saved_local_draft_tip: "yerele kaydedildi"
       similar_topics: "Konunuz bu konuya benziyor..."
@@ -832,8 +840,8 @@ tr_TR:
         auto_close: "Otomatik Kapatma"
         make_banner: "Manşet Konusu Yap"
         remove_banner: "Manşet Konusunu Kaldır"
-        unpin: "Konuyu Başa Tutturma"
         pin: "Konuyu Başa Tuttur"
+        unpin: "Konuyu Başa Tutturma"
         pin_globally: "Konuyu Her Yerde Başa Tuttur"
         unarchive: "Konuyu Arşivden Kaldır"
         archive: "Konuyu Arşivle"
@@ -1414,8 +1422,9 @@ tr_TR:
         name: "Ad"
         add: "Ekle"
         add_members: "Üye ekle"
-        custom: "Özel"
-        automatic: "Otomatik"
+        automatic:
+          label: "Otomatik"
+          title: "Otomatik Gruplar"
         automatic_membership_email_domains: "Bu listedeki bir email alan adıyla kaydolan kullanıcılar otomatik olarak bu gruba eklenecekler:"
         automatic_membership_retroactive: "Varolan kayıtlı kullanıcıları eklemek için aynı email alan adı kuralını uygula"
       api:

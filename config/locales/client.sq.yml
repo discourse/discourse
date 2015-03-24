@@ -84,6 +84,7 @@ sq:
           other: "%{count} ditë më parë"
     share:
       topic: 'shpërnda një lidhje tek kjo temë'
+      post: 'post #%{postNumber}'
       close: 'mbylle'
       twitter: 'shpërndaje këtë lidhe në Twitter'
       facebook: 'shpërndaje këtë lidhje ne Facebook'
@@ -141,6 +142,7 @@ sq:
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
+      contact: "Kontaktoni"
     bookmarks:
       not_logged_in: "ju duhet të jeni të identifikuar për të ruajtur temën."
       created: "ju ruajtët këtë temë"
@@ -191,6 +193,9 @@ sq:
       posted_by_you: "Postuar nga <a href='{{userUrl}}'>ju</a>"
       sent_by_user: "Dërguar nga <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Dërguar nga <a href='{{userUrl}}'>ju</a>"
+    directory:
+      time_read: "Koha e Leximit"
+      post_count: "Përgjigje"
     groups:
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
       title:
@@ -245,6 +250,7 @@ sq:
       organisation: Organizata
       phone: Telefoni
       trust_level: "TL"
+      read_time: "koha e leximit"
       post_count: "# postimeve"
     user:
       said: "{{username}}:"
@@ -534,7 +540,7 @@ sq:
     composer:
       add_warning: "This is an official warning."
       posting_not_on_topic: "Which topic do you want to reply to?"
-      saving_draft_tip: "saving"
+      saving_draft_tip: "duke e ruajtur..."
       saved_draft_tip: "saved"
       saved_local_draft_tip: "saved locally"
       similar_topics: "Your topic is similar to..."
@@ -552,6 +558,7 @@ sq:
       reply: "Përgjigju"
       cancel: "Anulo"
       create_topic: "Temë e Re"
+      create_pm: "Mesazh Privat"
       title: "Or press Ctrl+Enter"
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -793,8 +800,8 @@ sq:
         auto_close: "Mbyllje Automatike"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-        unpin: "Un-Pin Topic"
         pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
         pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
