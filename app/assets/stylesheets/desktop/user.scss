@@ -22,14 +22,16 @@
 }
 
 .user-preferences {
-  input.category-group {
-    width: 500px;
+  input.category-group, input.user-selector {
+    width: 530px;
   }
 
   textarea {
     width: 530px;
     height: 100px;
   }
+
+  input
 
   input[type=text] {
     @include small-width {
