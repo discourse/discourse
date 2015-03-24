@@ -34,6 +34,11 @@ class UsersController < ApplicationController
     if params[:stats].to_s == "false"
       user_serializer.omit_stats = true
     end
+    topic_id = params[:include_post_count_for].to_i
+    if topic_id != 0
+      user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
+    end
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)

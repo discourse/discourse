@@ -427,14 +427,9 @@ const User = Discourse.Model.extend({
 
 User.reopenClass(Discourse.Singleton, {
 
-  /**
-    Find a `Discourse.User` for a given username.
-
-    @method findByUsername
-    @returns {Promise} a promise that resolves to a `Discourse.User`
-  **/
+  // Find a `Discourse.User` for a given username.
   findByUsername: function(username, options) {
-    var user = Discourse.User.create({username: username});
+    const user = Discourse.User.create({username: username});
     return user.findDetails(options);
   },
 

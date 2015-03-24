@@ -1,6 +1,7 @@
 class UserSerializer < BasicUserSerializer
 
-  attr_accessor :omit_stats
+  attr_accessor :omit_stats,
+                :topic_post_count
 
   def self.staff_attributes(*attrs)
     attributes(*attrs)
@@ -62,7 +63,8 @@ class UserSerializer < BasicUserSerializer
              :has_title_badges,
              :edit_history_public,
              :custom_fields,
-             :user_fields
+             :user_fields,
+             :topic_post_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -291,6 +293,10 @@ class UserSerializer < BasicUserSerializer
 
   def include_user_fields?
     user_fields.present?
+  end
+
+  def include_topic_post_count?
+    topic_post_count.present?
   end
 
   def custom_fields
