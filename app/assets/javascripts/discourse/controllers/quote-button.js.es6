@@ -13,16 +13,14 @@ export default DiscourseController.extend({
     if (this.blank('buffer')) this.set('post', null);
   }.observes('buffer'),
 
-  /**
-    Save the currently selected text and displays the
-    "quote reply" button
-  **/
+  // Save the currently selected text and displays the
+  //  "quote reply" button
   selectText(postId) {
     // anonymous users cannot "quote-reply"
-    if (!Discourse.User.current()) return;
+    if (!this.currentUser) return;
 
-    // don't display the "quote-reply" button if we can't create a post
-    if (!this.get('controllers.topic.model.details.can_create_post')) return;
+    // don't display the "quote-reply" button if we can't at least reply as a new topic
+    if (!this.get('controllers.topic.model.details.can_reply_as_new_topic')) return;
 
     const selection = window.getSelection();
     // no selections
@@ -85,7 +83,15 @@ export default DiscourseController.extend({
   },
 
   quoteText() {
+
     const post = this.get('post');
+
+    // If we can't create a post, delegate to reply as new topic
+    if (!this.get('controllers.topic.model.details.can_create_post')) {
+      this.get('controllers.topic').send('replyAsNewTopic', post);
+      return;
+    }
+
     const composerController = this.get('controllers.composer');
     const composerOpts = {
       action: Discourse.Composer.REPLY,
