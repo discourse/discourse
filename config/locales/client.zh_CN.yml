@@ -109,6 +109,7 @@ zh_CN:
     daily: "每天"
     weekly: "每周"
     every_two_weeks: "每两周"
+    every_three_days: "每三天"
     max_of_count: "最多 {{count}}"
     character_count:
       other: "%{count} 个字符"
@@ -143,6 +144,7 @@ zh_CN:
       not_bookmarked: "你已经阅读过此帖；点此为其添加书签"
       last_read: "这是你阅读过的最后一帖；点此给它加上书签"
       remove: "删除书签"
+      confirm_clear: "你确定要删除该主题的所有书签吗？"
     topic_count_latest:
       other: "{{count}} 个新的或更新的主题。"
     topic_count_unread:
@@ -184,6 +186,17 @@ zh_CN:
       posted_by_you: "发起人 <a href='{{userUrl}}'>你</a>"
       sent_by_user: "发送人 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "发送人 <a href='{{userUrl}}'>你</a>"
+    directory:
+      title: "用户目录"
+      likes_given: "赞"
+      likes_received: "被赞"
+      topics_entered: "参与的主题"
+      time_read: "阅读时间"
+      topic_count: "主题"
+      post_count: "回复"
+      no_results: "该时间段内没有找到结果"
+      total_rows:
+        other: "找到 %{count} 个用户"
     groups:
       visible: "群组对所有用户可见"
       title:
@@ -378,7 +391,9 @@ zh_CN:
       email_digests:
         title: "当我不访问时，向我的邮箱发送最新信息："
         daily: "每天"
+        every_three_days: "每三天"
         weekly: "每周"
+        every_two_weeks: "每两周"
       email_direct: "当有人引用我、回复我的帖子或提及@你时发送一封邮件给我"
       email_private_messages: "当有人给发私信给我时发送一封邮件给我"
       email_always: "即使在论坛中活跃时也接收电子邮件提醒"
@@ -570,7 +585,7 @@ zh_CN:
       emoji: "Emoji :smile:"
       add_warning: "这是一个正式的警告。"
       posting_not_on_topic: "你想回复哪一个主题？"
-      saving_draft_tip: "保存中"
+      saving_draft_tip: "保存中……"
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有些类似于..."
@@ -827,8 +842,8 @@ zh_CN:
         auto_close: "自动关闭"
         make_banner: "横幅主题"
         remove_banner: "移除横幅主题"
-        unpin: "解除主题置顶"
         pin: "置顶主题"
+        unpin: "解除主题置顶"
         pin_globally: "全局置顶主题"
         unarchive: "解除主题存档"
         archive: "存档主题"
@@ -1408,8 +1423,12 @@ zh_CN:
         name: "名字"
         add: "添加"
         add_members: "添加成员"
-        custom: "定制"
-        automatic: "自动"
+        custom:
+          label: "定制"
+          title: "定制分组"
+        automatic:
+          label: "自动"
+          title: "自动分组"
         automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
         automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
       api:
@@ -1661,6 +1680,7 @@ zh_CN:
             delete_topic: "删除主题"
             delete_post: "删除帖子"
             impersonate: "检视"
+            anonymize_user: "匿名用户"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -1790,6 +1810,7 @@ zh_CN:
         approve_success: "用户已被批准， 激活邮件已发送。"
         approve_bulk_success: "成功！所有选定的用户已批准并通知。"
         time_read: "阅读次数"
+        anonymize: "匿名用户"
         delete: "删除用户"
         delete_forbidden_because_staff: "不能删除管理员和版主。"
         delete_forbidden:
@@ -1895,6 +1916,7 @@ zh_CN:
         none: '无'
         no_results: "找不到结果。"
         clear_filter: "清除"
+        add_url: "增加链接"
         categories:
           all_results: '全部'
           required: '必填'

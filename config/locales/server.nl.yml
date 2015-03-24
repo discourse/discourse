@@ -18,6 +18,8 @@ nl:
   log_in: "Inloggen"
   via: "%{username} via %{site_name}"
   is_reserved: "is gereserveerd"
+  purge_reason: "Automatisch verwijderd, account is nooit geactiveerd"
+  disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -34,6 +36,7 @@ nl:
       exclusion: is gereserveerd
       greater_than: moet groter zijn dan %{count}
       greater_than_or_equal_to: moet groter zijn dan of gelijk zijn aan %{count}
+      inclusion: komt niet voor in de lijst
       invalid: is ongeldig
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
@@ -41,6 +44,9 @@ nl:
       not_an_integer: moet een integer zijn
       odd: moet oneven zijn
       record_invalid: 'Validatie mislukt: %{errors}'
+      restrict_dependent_destroy:
+        one: "Kan record niet verwijderen omdat %{record} hiervan afhankelijk is"
+        many: "Kan record niet verwijderen omdat %{record} hiervan afhankelijk is"
       too_long:
         one: is te lang (maximum is één teken)
         other: is te lang (maximum is %{count} tekens)
@@ -50,6 +56,12 @@ nl:
       wrong_length:
         one: is de verkeerde lengte (moet één teken zijn)
         other: is de verkeerde lengte (moet %{count} tekens zijn)
+      other_than: "moet anders zijn dan %{count}"
+    template:
+      body: 'De volgende velden bevatten fouten:'
+      header:
+        one: 1 fout voorkomt dat deze %{model} opgeslagen kan worden
+        other: '%{count} fouten voorkomen dat deze %{model} opgeslagen kan worden'
     embed:
       load_from_remote: "Er ging iets mis bij het laden van dat bericht."
   bulk_invite:
@@ -59,6 +71,8 @@ nl:
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf vrij om deze backup te uploaden."
   not_logged_in: "Om dat te kunnen doen moet je ingelogd zijn."
+  not_found: "De opgevraagde URL of resource kan niet gevonden worden."
+  invalid_access: "Je hebt geen permissie om de opgevraagde resource te bekijken."
   read_only_mode_enabled: "De site is in read only modus. Interactie is niet mogelijk."
   too_many_replies:
     one: "Sorry, nieuwe gebruikers mogen één reactie plaatsen in hetzelfde topic."
@@ -98,6 +112,7 @@ nl:
     other: "Sorry, nieuwe leden kunnen %{count} links in een bericht opnemen."
   spamming_host: "Sorry, je kan niet linken naar die host."
   user_is_suspended: "Geschorste gebruikers mogen geen berichten meer plaatsen."
+  topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
   has_already_been_used: "is al eens gebruikt"
   invalid_characters: "bevat ongeldige tekens"
@@ -163,6 +178,14 @@ nl:
       Heb je al overwogen **[om naar je profielpagina te gaan](%{profile_path})** om een nieuwe afbeelding van jou te uploaden?
 
       Het is makkelijker om conversaties te volgen en interessante mensen te vinden als iedereen een unieke avatar heeft!
+    sequential_replies: |
+      ### Overweeg om op meerdere berichten ineens te reageren
+
+      In plaatst van een reactie per bericht te plaatsten, kan je ook meerdere berichten ineens citeren en @namen noemen in je reactie.
+
+      Je kan je vorige reactie wijzigen en er een citaat aan toevoegen door de betreffende tekst te selecteren en op de <b>citeer</b> knop te drukken die dan verschijnt.
+
+      Het is voor iedereen makkelijker om topics te lezen met minder losstaande reacties.
     dominating_topic: |
       ### Laat anderen meedoen in de conversatie
 
@@ -199,11 +222,14 @@ nl:
             base:
               warning_requires_pm: "Je kunt alleen waarschuwingen aan privéberichten toevoegen."
               too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
+              cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
               no_user_selected: "Je moet een geldige gebruiker selecteren."
         user:
           attributes:
             password:
               common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
+              same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als je email. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
         color_scheme_color:
@@ -374,6 +400,8 @@ nl:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Iets anders"
+      description: 'Dit bericht heeft de aandacht van een moderator nodig om een andere reden dan hier boven gespecificeerd.'
+      long_form: 'heeft dit gemarkeerd voor moderatie'
       email_title: 'Graag aandacht van een moderator voor een bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -400,6 +428,7 @@ nl:
     notify_moderators:
       title: "Iets anders"
       description: 'Dit topic moet door een moderator bekeken worden. Dit vanwege de <a href="/guidelines">regels</a>, <a href="%{tos_url}">voorwaarden</a> of vanwege een andere reden.'
+      long_form: 'heeft dit gemarkeerd voor moderatie'
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
   flagging:
