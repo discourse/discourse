@@ -34,7 +34,7 @@ function positioningWorkaround($fixedElement) {
         return;
       }
       fixedElement.style.top = window.scrollY + iPadOffset + 'px';
-    }, 500);
+    }, 400);
 
 
     if (fixedElement.style.position !== 'absolute') {
@@ -68,12 +68,22 @@ function positioningWorkaround($fixedElement) {
     self.addEventListener('blur', blurred);
   };
 
+  function attachTouchStart(elem, fn) {
+    if (!$(elem).data('listening')) {
+        elem.addEventListener('touchstart', fn);
+        $(elem).data('listening', true);
+    }
+  }
+
   const checkForInputs = _.debounce(function(){
+    $fixedElement.find('button,a').each(function(){
+      attachTouchStart(this, function(evt){
+        evt.preventDefault();
+        $(this).click();
+      });
+    });
     $fixedElement.find('input,textarea').each(function(){
-      if (!$(this).data('listening')) {
-        this.addEventListener('touchstart', positioningHack);
-        $(this).data('listening', true);
-      }
+      attachTouchStart(this, positioningHack);
     });
   }, 100);
 
