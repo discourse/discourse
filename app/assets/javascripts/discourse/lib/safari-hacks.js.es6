@@ -16,56 +16,68 @@ function positioningWorkaround($fixedElement) {
 
   const fixedElement = $fixedElement[0];
 
+  var done = false;
+
+  var blurredNow = function(evt) {
+    if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
+      // something in focus so skip
+      return;
+    }
+
+    done = true;
+    fixedElement.style.position = '';
+    fixedElement.style.top = '';
+    if (evt) {
+      evt.target.removeEventListener('blur', blurred);
+    }
+    $(window).off('scroll.position-hack');
+  };
+
+  var blurred = _.debounce(blurredNow, 250);
 
   var positioningHack = function(evt){
 
     const self = this;
-    var done = false;
+    done = false;
 
-    // allow for keyboard in iPad portrait
+    // we need this, otherwise changing focus means we never clear
+    self.addEventListener('blur', blurred);
+
+    if (fixedElement.style.position === 'absolute') {
+      if (this !== document.activeElement) {
+        evt.preventDefault();
+        self.focus();
+      }
+      return;
+    }
+
+    fixedElement.style.position = 'absolute';
+    // get out of the way while opening keyboard
+    fixedElement.style.top = '0px';
+
     var iPadOffset = 0;
     if (window.innerHeight > window.innerWidth && navigator.userAgent.match(/iPad/)) {
       // there is no way to get virtual keyboard height
       iPadOffset = 640 - $(fixedElement).height();
     }
 
+    var oldScrollY = 0;
+
     var positionElement = _.debounce(function(){
       if (done) {
         return;
       }
+      if (Math.abs(oldScrollY - window.scrollY) < 20) {
+        return;
+      }
+      oldScrollY = window.scrollY;
       fixedElement.style.top = window.scrollY + iPadOffset + 'px';
     }, 400);
 
+    $(window).on('scroll.position-hack', positionElement);
 
-    if (fixedElement.style.position !== 'absolute') {
-      evt.preventDefault();
-      fixedElement.style.position = 'absolute';
-      // get out of the way while opening keyboard
-      fixedElement.style.top = '0px';
-    }
-
-    $(window).on('scroll', positionElement);
-
-    var blurred = function() {
-      if (_.include($(document.activeElement).parents(), fixedElement)) {
-        // something in focus so skip
-        return;
-      }
-
-      done = true;
-      fixedElement.style.position = '';
-      fixedElement.style.top = '';
-      self.removeEventListener('blur', blurred);
-      $(window).off('scroll', positionElement);
-    };
-
-    blurred = _.debounce(blurred, 250);
-
-    if (this !== document.activeElement) {
-      self.focus();
-    }
-
-    self.addEventListener('blur', blurred);
+    evt.preventDefault();
+    self.focus();
   };
 
   function attachTouchStart(elem, fn) {
@@ -78,6 +90,7 @@ function positioningWorkaround($fixedElement) {
   const checkForInputs = _.debounce(function(){
     $fixedElement.find('button,a').each(function(){
       attachTouchStart(this, function(evt){
+        done = true;
         evt.preventDefault();
         $(this).click();
       });
