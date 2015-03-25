@@ -11,6 +11,21 @@ describe DirectoryItemsController do
     response.should_not be_success
   end
 
+  context "without data" do
+
+    context "and a logged in user" do
+      let!(:user) { log_in }
+
+      it "succeeds" do
+        xhr :get, :index, period: 'all'
+        response.should be_success
+        json = ::JSON.parse(response.body)
+      end
+    end
+
+  end
+
+
   context "with data" do
     before do
       Fabricate(:user)

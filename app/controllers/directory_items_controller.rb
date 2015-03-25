@@ -41,7 +41,7 @@ class DirectoryItemsController < ApplicationController
     more_params[:page] = page + 1
 
     # Put yourself at the top of the first page
-    if current_user.present? && page == 0 && result[0].user_id != current_user.id
+    if result.present? && current_user.present? && page == 0 && result[0].user_id != current_user.id
       your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
       result.insert(0, your_item) if your_item
     end
