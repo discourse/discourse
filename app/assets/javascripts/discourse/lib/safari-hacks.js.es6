@@ -20,24 +20,46 @@ function positioningWorkaround($fixedElement) {
   var positioningHack = function(evt){
 
     const self = this;
+    var done = false;
+
+    // allow for keyboard in iPad portrait
+    var iPadOffset = 0;
+    if (window.innerHeight > window.innerWidth && navigator.userAgent.match(/iPad/)) {
+      // there is no way to get virtual keyboard height
+      iPadOffset = 640 - $(fixedElement).height();
+    }
+
+    var positionElement = _.debounce(function(){
+      if (done) {
+        return;
+      }
+      fixedElement.style.top = window.scrollY + iPadOffset + 'px';
+    }, 350);
+
 
     if (fixedElement.style.position !== 'absolute') {
       evt.preventDefault();
       fixedElement.style.position = 'absolute';
-      fixedElement.style.top = (window.scrollY + $('.d-header').height() + 10) + 'px';
+      // get out of the way while opening keyboard
+      fixedElement.style.top = '0px';
     }
+
+    $(window).on('scroll', positionElement);
 
     var blurred = function() {
       if (_.include($(document.activeElement).parents(), fixedElement)) {
         // something in focus so skip
         return;
       }
+
+      done = true;
       fixedElement.style.position = '';
       fixedElement.style.top = '';
       self.removeEventListener('blur', blurred);
+      $(window).off('scroll', positionElement);
     };
 
-    blurred = _.debounce(blurred, 300);
+    blurred = _.debounce(blurred, 250);
 
     if (this !== document.activeElement) {
       self.focus();
