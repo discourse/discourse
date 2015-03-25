@@ -244,4 +244,20 @@ describe AdminDashboardData do
     end
   end
 
+  describe 's3_deprecation_warning' do
+    subject { described_class.new.s3_deprecation_warning }
+
+    it 'returns nil when using local storage' do
+      SiteSetting.stubs(:enable_s3_uploads).returns(false)
+      ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(90000000)
+      expect(subject).to be_nil
+    end
+
+    it 'returns a string when s3 storage' do
+      SiteSetting.stubs(:enable_s3_uploads).returns(true)
+      expect(subject).to_not be_nil
+    end
+
+  end
+
 end
