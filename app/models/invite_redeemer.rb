@@ -117,6 +117,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def delete_duplicate_invites
-    Invite.where('invites.email = ? and invites.id != ?', invite.email, invite.id).delete_all
+    Invite.where('invites.email = ? AND redeemed_at IS NULL AND invites.id != ?', invite.email, invite.id).delete_all
   end
 end
