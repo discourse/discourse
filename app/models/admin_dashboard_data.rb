@@ -42,7 +42,8 @@ class AdminDashboardData
       title_check,
       site_description_check,
       site_contact_username_check,
-      notification_email_check
+      notification_email_check,
+      s3_deprecation_warning
     ].compact
   end
 
@@ -184,6 +185,10 @@ class AdminDashboardData
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
+  end
+
+  def s3_deprecation_warning
+    I18n.t('dashboard.s3_deprecation_warning') if SiteSetting.enable_s3_uploads
   end
 
 end
