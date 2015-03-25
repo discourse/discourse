@@ -13,6 +13,14 @@ export default ModalBodyView.extend({
   title: function() { return uploadTranslate("title"); }.property(),
   uploadIcon: function() { return Discourse.Utilities.allowsAttachments() ? "fa-upload" : "fa-picture-o"; }.property(),
 
+  touchStart: function(evt) {
+    // HACK: workaround Safari iOS being really weird and not shipping click events
+    //  should be fairly harmless on other touch devices
+    if (evt.target.id === "filename-input") {
+      this.$('#filename-input').click();
+    }
+  },
+
   tip: function() {
     const source = this.get("controller.local") ? "local" : "remote",
           opts = { authorized_extensions: Discourse.Utilities.authorizedExtensions() };
