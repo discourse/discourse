@@ -198,6 +198,13 @@ describe Invite do
         expect(duplicate_invite).to be_nil
       end
 
+      it 'does not delete already redeemed invite' do
+        redeemed_invite = Fabricate(:invite, email: invite.email, invited_by: another_user, redeemed_at: 1.day.ago)
+        invite.redeem
+        used_invite = Invite.find_by(id: redeemed_invite.id)
+        expect(used_invite).not_to be_nil
+      end
+
     end
 
     context 'enqueues a job to email "set password" instructions' do
