@@ -157,20 +157,21 @@ const ApplicationRoute = Discourse.Route.extend({
       const returnPath = encodeURIComponent(window.location.pathname);
       window.location = Discourse.getURL('/session/sso?return_path=' + returnPath);
     } else {
-      this._autoLogin('login', () => this.controllerFor('login').resetForm());
+      this._autoLogin('login', 'login-modal', () => this.controllerFor('login').resetForm());
     }
   },
 
   handleShowCreateAccount() {
-    this._autoLogin('createAccount');
+    this._autoLogin('createAccount', 'create-account');
   },
 
-  _autoLogin(modal, notAuto) {
+  _autoLogin(modal, modalClass, notAuto) {
     const methods = Em.get('Discourse.LoginMethod.all');
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {
       showModal(modal);
+      this.controllerFor('modal').set('modalClass', modalClass);
       if (notAuto) { notAuto(); }
     }
   },

@@ -27,21 +27,31 @@
 .modal-backdrop,
 .modal-backdrop.fade.in {
   -webkit-animation: fade .3s;
-  animation: fade .3s;
+          animation: fade .3s;
   opacity: .9;
   filter: alpha(opacity=90);
 }
 
-//fade in
-
+// fade in
 @keyframes fade {
-  from {opacity: 0}
-  to {opacity: .9}
+  from { opacity: 0 }
+    to { opacity: .9 }
 }
 
 @-webkit-keyframes fade {
-  from {opacity: 0}
-  to {opacity: .9}
+  from { opacity: 0 }
+    to { opacity: .9 }
+}
+
+// slide in
+@keyframes slidein {
+  from { transform: translateY(-20%); }
+    to { transform: translateY(0); }
+}
+
+@-webkit-keyframes slidein {
+  from { transform: translateY(-20%); }
+    to { transform: translateY(0); }
 }
 
 .modal-outer-container {
@@ -59,6 +69,12 @@
 
   box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
+}
+
+.create-account.in .modal-inner-container,
+.login-modal.in .modal-inner-container {
+  -webkit-animation: slidein .3s;
+          animation: slidein .3s;
 }
 
 
