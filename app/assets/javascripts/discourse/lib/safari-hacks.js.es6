@@ -30,7 +30,6 @@ function positioningWorkaround($fixedElement) {
     if (evt) {
       evt.target.removeEventListener('blur', blurred);
     }
-    $(window).off('scroll.position-hack');
   };
 
   var blurred = _.debounce(blurredNow, 250);
@@ -63,7 +62,7 @@ function positioningWorkaround($fixedElement) {
 
     var oldScrollY = 0;
 
-    var positionElement = _.debounce(function(){
+    var positionElement = function(){
       if (done) {
         return;
       }
@@ -72,9 +71,10 @@ function positioningWorkaround($fixedElement) {
       }
       oldScrollY = window.scrollY;
       fixedElement.style.top = window.scrollY + iPadOffset + 'px';
-    }, 400);
+    };
 
-    $(window).on('scroll.position-hack', positionElement);
+    // position once, correctly, after keyboard is shown
+    setTimeout(positionElement, 500);
 
     evt.preventDefault();
     self.focus();
@@ -91,6 +91,7 @@ function positioningWorkaround($fixedElement) {
     $fixedElement.find('button,a').each(function(){
       attachTouchStart(this, function(evt){
         done = true;
+        $(document.activeElement).blur();
         evt.preventDefault();
         $(this).click();
       });
