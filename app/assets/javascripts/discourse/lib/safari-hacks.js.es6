@@ -34,7 +34,7 @@ function positioningWorkaround($fixedElement) {
         return;
       }
       fixedElement.style.top = window.scrollY + iPadOffset + 'px';
-    }, 350);
+    }, 500);
 
 
     if (fixedElement.style.position !== 'absolute') {
