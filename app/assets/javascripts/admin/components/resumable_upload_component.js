@@ -14,6 +14,7 @@ Discourse.ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuff
   tagName: "button",
   classNames: ["btn", "ru"],
   classNameBindings: ["isUploading"],
+  attributeBindings: ["translatedTitle:title"],
 
   resumable: null,
 
@@ -21,6 +22,11 @@ Discourse.ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuff
   progress: 0,
 
   rerenderTriggers: ['isUploading', 'progress'],
+
+  translatedTitle: function() {
+    const title = this.get('title');
+    return title ? I18n.t(title) : this.get('text');
+  }.property('title', 'text'),
 
   text: function() {
     if (this.get("isUploading")) {
