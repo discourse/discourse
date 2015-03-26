@@ -88,7 +88,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
     user_params = {
       email: email,
-      name:  User.suggest_name(try_name || try_username || email),
+      name:  try_name || User.suggest_name(try_username || email),
       username: UserNameSuggester.suggest(try_username || try_name || email),
       ip_address: ip_address
     }
@@ -120,7 +120,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if SiteSetting.sso_overrides_name && user.name != name
-      user.name = User.suggest_name(name || username || email)
+      user.name = name || User.suggest_name(username || email)
     end
 
     if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
