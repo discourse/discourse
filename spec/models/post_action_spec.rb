@@ -198,6 +198,28 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
+
+    it 'should generate notifications correctly' do
+      ActiveRecord::Base.observers.enable :all
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      Notification.count.should == 1
+
+      mutee = Fabricate(:user)
+
+      post = Fabricate(:post)
+      MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
+      PostAction.act(mutee, post, PostActionType.types[:like])
+
+      Notification.count.should == 1
+
+      # you can not mute admin, sorry
+      MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
+      PostAction.act(admin, post, PostActionType.types[:like])
+
+      Notification.count.should == 2
+
+    end
+
     it 'should increase the `like_count` and `like_score` when a user likes something' do
       PostAction.act(codinghorror, post, PostActionType.types[:like])
       post.reload
@@ -265,7 +287,7 @@ describe PostAction do
         # A post with no flags has 0 for flag counts
         expect(PostAction.flag_counts_for(post.id)).to eq([0, 0])
 
-        flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
+        _flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
         expect(PostAction.flag_counts_for(post.id)).to eq([0, 1])
 
         # If staff takes action, it is ranked higher
@@ -367,7 +389,7 @@ describe PostAction do
 
     it "can flag the topic instead of a post" do
       post1 = create_post
-      post2 = create_post(topic: post1.topic)
+      _post2 = create_post(topic: post1.topic)
       post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], { flag_topic: true })
       expect(post_action.targets_topic).to eq(true)
     end
