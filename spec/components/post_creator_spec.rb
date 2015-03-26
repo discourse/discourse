@@ -311,7 +311,8 @@ describe PostCreator do
 
     it "does not create the post" do
       GroupMessage.stubs(:create)
-      creator.create
+      post = creator.create
+
       expect(creator.errors).to be_present
       expect(creator.spam?).to eq(true)
     end
@@ -521,7 +522,7 @@ describe PostCreator do
     it 'can save a post' do
       creator = PostCreator.new(user, raw: 'q', title: 'q', skip_validations: true)
       creator.create
-      expect(creator.errors).to eq(nil)
+      expect(creator.errors).to be_blank
     end
   end
 
@@ -573,7 +574,8 @@ describe PostCreator do
   end
 
   it "doesn't strip starting whitespaces" do
-    post = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " }).create
+    pc = PostCreator.new(user, { title: "testing whitespace stripping", raw: "    <-- whitespaces -->    " })
+    post = pc.create
     expect(post.raw).to eq("    <-- whitespaces -->")
   end
 

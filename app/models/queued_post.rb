@@ -2,8 +2,6 @@ class QueuedPost < ActiveRecord::Base
 
   class InvalidStateTransition < StandardError; end;
 
-  serialize :post_options, JSON
-
   belongs_to :user
   belongs_to :topic
   belongs_to :approved_by, class_name: "User"
@@ -36,6 +34,8 @@ class QueuedPost < ActiveRecord::Base
     opts = {raw: raw}
     post_attributes.each {|a| opts[a] = post_options[a.to_s] }
 
+    opts[:cooking_options].symbolize_keys! if opts[:cooking_options]
+
     opts[:topic_id] = topic_id if topic_id
     opts
   end
@@ -52,6 +52,7 @@ class QueuedPost < ActiveRecord::Base
   end
 
   private
+
     def post_attributes
       [QueuedPost.attributes_by_queue[:base], QueuedPost.attributes_by_queue[queue.to_sym]].flatten.compact
     end
