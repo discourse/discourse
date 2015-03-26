@@ -27,15 +27,14 @@
   {{#if showDescription}}
     <section class='field'>
       <label>{{i18n 'category.description'}}</label>
-
       {{#if description}}
-        {{description}}
+        {{{description}}}
       {{else}}
         {{i18n 'category.no_description'}}
       {{/if}}
       {{#if topic_url}}
         <br/>
-        <button class="btn btn-small" {{action "showCategoryTopic"}}><i class="fa fa-pencil"></i>{{i18n 'category.change_in_category_topic'}}</button>
+        {{d-button class="btn-small" action="showCategoryTopic" icon="pencil" label="category.change_in_category_topic"}}
       {{/if}}
     </section>
   {{/if}}
