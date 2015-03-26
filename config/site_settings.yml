@@ -303,6 +303,9 @@ users:
   staff_user_custom_fields:
     type: list
     default: ''
+  enable_user_directory:
+    client: true
+    default: true
 
 posting:
   min_post_length:
