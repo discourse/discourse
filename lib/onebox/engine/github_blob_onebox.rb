@@ -199,7 +199,7 @@ module Onebox
                    #     as *side effects* of the `raw` method! They must all appear
                    #     AFTER the call to `raw`! Don't get bitten by this like I did!
                    content: raw,
-                   lang: @lang,
+                   lang: "lang-#{@lang}",
                    lines:  @selected_lines_array ,
                    has_lines: !@selected_lines_array.nil?,
                    selected_one_liner: @selected_one_liner,
