@@ -1542,57 +1542,75 @@
     };
 
     commandProto.doBold = function (chunk, postProcessing) {
-        return this.doBorI(chunk, postProcessing, 2, this.getString("boldexample"));
+        return this.doSurroundLines(chunk, postProcessing, 2, this.getString("boldexample"));
     };
 
     commandProto.doItalic = function (chunk, postProcessing) {
-        return this.doBorI(chunk, postProcessing, 1, this.getString("italicexample"));
+        return this.doSurroundLines(chunk, postProcessing, 1, this.getString("italicexample"));
     };
 
-    // chunk: The selected region that will be enclosed with */**
+    commandProto.doSurroundLines = function(realChunk, postProcessing, nStars, fallbackText) {
+        realChunk.trimWhitespace();
+
+        // Look for stars before and after, absorb them into the selection.
+        var starsBefore = /(\**$)/.exec(realChunk.before)[0];
+        var starsAfter = /(^\**)/.exec(realChunk.after)[0];
+
+        realChunk.before = realChunk.before.replace(/(\**$)/, "");
+        realChunk.after = realChunk.after.replace(/(^\**)/, "");
+
+        var lines = (starsBefore + realChunk.selection + starsAfter).split("\n");
+
+        // Don't show the fallback text if more than one line is selected,
+        // it's probably a break between paragraphs.
+        if(lines.length > 1) {
+          fallbackText = ""
+        }
+
+        for(var i=0; i<lines.length; i++) {
+            // Split before, selection and after up.
+            var lineMatch = lines[i].match(/^(\**)(.*?)(\**)$/);
+
+            var newChunk = new Chunks();
+            newChunk.before = lineMatch[1];
+            newChunk.selection = lineMatch[2];
+            newChunk.after = lineMatch[3];
+
+            this.doSurroundLine(newChunk, postProcessing, nStars, fallbackText);
+            lines[i] = newChunk.before + newChunk.selection + newChunk.after;
+        }
+        realChunk.selection = lines.join("\n");
+    };
+
+    // chunk: The selected region that will be enclosed with * or **
     // nStars: 1 for italics, 2 for bold
-    // insertText: If you just click the button without highlighting text, this gets inserted
-    commandProto.doBorI = function (chunk, postProcessing, nStars, insertText) {
-
-        // Get rid of whitespace and fixup newlines.
+    // fallbackText: If you just click the button without highlighting text, this gets inserted
+    commandProto.doSurroundLine = function (chunk, postProcessing, nStars, fallbackText) {
+        // Get rid of whitespace
         chunk.trimWhitespace();
-        chunk.selection = chunk.selection.replace(/\n{2,}/g, "\n");
 
-        // Look for stars before and after.  Is the chunk already marked up?
-        // note that these regex matches cannot fail
-        var starsBefore = /(\**$)/.exec(chunk.before)[0];
-        var starsAfter = /(^\**)/.exec(chunk.after)[0];
-
-        var prevStars = Math.min(starsBefore.length, starsAfter.length);
+        var minStars = Math.min(chunk.before.length, chunk.after.length);
 
         // Remove stars if we have to since the button acts as a toggle.
-        if ((prevStars >= nStars) && (prevStars != 2 || nStars != 1)) {
+        if ((minStars >= nStars) && (minStars != 2 || nStars != 1)) {
             chunk.before = chunk.before.replace(re("[*]{" + nStars + "}$", ""), "");
             chunk.after = chunk.after.replace(re("^[*]{" + nStars + "}", ""), "");
         }
-        else if (!chunk.selection && starsAfter) {
-            // It's not really clear why this code is necessary.  It just moves
-            // some arbitrary stuff around.
-            chunk.after = chunk.after.replace(/^([*_]*)/, "");
-            chunk.before = chunk.before.replace(/(\s?)$/, "");
-            var whitespace = re.$1;
-            chunk.before = chunk.before + starsAfter + whitespace;
-        }
         else {
-
             // In most cases, if you don't have any selected text and click the button
             // you'll get a selected, marked up region with the default text inserted.
-            if (!chunk.selection && !starsAfter) {
-                chunk.selection = insertText;
+            if (!chunk.selection && !chunk.after) {
+                chunk.selection = fallbackText;
             }
 
-            // Add the true markup.
-            var markup = nStars <= 1 ? "*" : "**"; // shouldn't the test be = ?
-            chunk.before = chunk.before + markup;
-            chunk.after = markup + chunk.after;
+            // Only operate if it's not a blank line
+            if(chunk.selection) {
+              // Add the true markup.
+              var markup = nStars === 1 ? "*" : "**";
+              chunk.before = chunk.before + markup;
+              chunk.after = markup + chunk.after;
+            }
         }
-
-        return;
     };
 
     commandProto.stripLinkDefs = function (text, defsToAdd) {
