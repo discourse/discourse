@@ -329,8 +329,8 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "Download My Posts"
-      new_private_message: "New Private Message"
-      private_message: "Private Message"
+      new_private_message: "New Message"
+      private_message: "Message"
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
@@ -482,7 +482,7 @@ en:
         every_two_weeks: "every two weeks"
 
       email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
-      email_private_messages: "Send me an email when someone private messages me"
+      email_private_messages: "Send me an email when someone messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
       other_settings: "Other"
@@ -534,7 +534,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
           uploading: "Uploading..."
-          success: "File uploaded successfully, you will be notified via private message when the process is complete."
+          success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
@@ -562,7 +562,7 @@ en:
       stream:
         posted_by: "Posted by"
         sent_by: "Sent by"
-        private_message: "private message"
+        private_message: "message"
         the_topic: "the topic"
 
     loading: "Loading..."
@@ -622,9 +622,9 @@ en:
       disable: "Show Deleted Posts"
 
     private_message_info:
-      title: "Private Message"
+      title: "Message"
       invite: "Invite Others..."
-      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
+      remove_allowed_user: "Do you really want to remove {{name}} from this message?"
 
     email: 'Email'
     username: 'Username'
@@ -719,7 +719,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Private Message"
+      create_pm: "Message"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -774,7 +774,7 @@ en:
           examples: 'Enter number of hours (24).'
 
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
+      title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       more: "view older notifications"
       total_flagged: "total flagged posts"
@@ -815,7 +815,7 @@ en:
         user: "Search posts by @{{username}}"
         category: "Search the \"{{category}}\" category"
         topic: "Search this topic"
-        private_messages: "Search private messages"
+        private_messages: "Search messages"
 
     site_map: "go to another topic list or category"
     go_back: 'go back'
@@ -870,7 +870,7 @@ en:
       filter_to: "{{post_count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
-      private_message: 'Start a private message'
+      private_message: 'Start a message'
       list: 'Topics'
       new: 'new topic'
       unread: 'unread'
@@ -969,13 +969,13 @@ en:
           "0": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
+          description: "You will be notified of every new post in this message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Watching"
           description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the private message. You will be notified if someone mentions your @name or replies to your post."
+          description: "A count of unread and new posts will appear next to the message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
           description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
@@ -984,10 +984,10 @@ en:
           description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post in the private message."
+          description: "You will be notified if someone mentions your @name or replies to your post in the message."
         muted_pm:
           title: "Muted"
-          description: "You will never be notified of anything about this private message."
+          description: "You will never be notified of anything about this message."
         muted:
           title: "Muted"
           description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
@@ -1057,11 +1057,11 @@ en:
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
 
       invite_private:
-        title: 'Invite to Private Message'
+        title: 'Invite to Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "We've invited that user to participate in this private message."
+        success: "We've invited that user to participate in this message."
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
 
@@ -1231,8 +1231,8 @@ en:
           inappropriate: "{{icons}} flagged this as inappropriate"
           notify_moderators: "{{icons}} notified moderators"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
+          notify_user: "{{icons}} sent a message"
+          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>message</a>"
           bookmark: "{{icons}} bookmarked this"
           like: "{{icons}} liked this"
           vote: "{{icons}} voted for this"
@@ -1241,7 +1241,7 @@ en:
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
           notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
+          notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
           vote: "You voted for this post"
@@ -1259,8 +1259,8 @@ en:
             one: "You and 1 other flagged this for moderation"
             other: "You and {{count}} other people flagged this for moderation"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one: "You and 1 other sent a message to this user"
+            other: "You and {{count}} other people sent a message to this user"
           bookmark:
             one: "You and 1 other bookmarked this post"
             other: "You and {{count}} other people bookmarked this post"
@@ -1284,8 +1284,8 @@ en:
             one: "1 person flagged this for moderation"
             other: "{{count}} people flagged this for moderation"
           notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one: "1 person sent a message to this user"
+            other: "{{count}} sent a message to this user"
           bookmark:
             one: "1 person bookmarked this post"
             other: "{{count}} people bookmarked this post"
@@ -1398,7 +1398,7 @@ en:
       private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
-      notify_action: 'Private message'
+      notify_action: 'Message'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1421,7 +1421,7 @@ en:
     flagging_topic:
       title: "Thanks for helping to keep our community civil!"
       action: "Flag Topic"
-      notify_action: "Private message"
+      notify_action: "Message"
 
     topic_map:
       title: "Topic Summary"
@@ -1586,8 +1586,8 @@ en:
         admins: 'Admins:'
         blocked: 'Blocked:'
         suspended: 'Suspended:'
-        private_messages_short: "PMs"
-        private_messages_title: "Private Messages"
+        private_messages_short: "Msgs"
+        private_messages_title: "Messages"
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"
@@ -1625,7 +1625,7 @@ en:
         agree_title: "Confirm this flag as valid and correct"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it"
         agree_flag_restore_post: "Agree (restore post)"
         agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
@@ -1785,7 +1785,7 @@ en:
 
       export_csv:
         user_archive_confirm: "Are you sure you want to download your posts?"
-        success: "Export initiated, you will be notified via private message when the process is complete."
+        success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
         rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
