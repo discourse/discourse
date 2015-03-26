@@ -54,6 +54,7 @@ module Onebox
           forbes.com
           foxnews.com
           funnyordie.com
+          gfycat.com
           groupon.com
           howtogeek.com
           huffingtonpost.com
