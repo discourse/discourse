@@ -112,7 +112,7 @@ class OptimizedImage < ActiveRecord::Base
       #{from}[0]
       -gravity center
       -background transparent
-      -thumbnail #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
       #{to}
     }
   end
@@ -123,7 +123,7 @@ class OptimizedImage < ActiveRecord::Base
       -coalesce
       -gravity center
       -background transparent
-      -thumbnail #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
       #{to}
     }
   end
