@@ -88,7 +88,9 @@ describe DiscourseSingleSignOn do
     sso.lookup_or_create_user(ip_address)
 
     admin.reload
+
     expect(admin.email).to eq("test@bob.com")
+    expect(admin.username).to eq "bob_the_admin"
   end
 
   it "can fill in data on way back" do
