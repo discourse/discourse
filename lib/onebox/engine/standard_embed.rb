@@ -6,12 +6,23 @@ module Onebox
         @@oembed_providers ||= {}
       end
 
+      def self.opengraph_providers
+        @@opengraph_providers ||= Array.new
+      end
+
       def self.add_oembed_provider(regexp, endpoint)
         oembed_providers[regexp] = endpoint
       end
 
+      def self.add_opengraph_provider(regexp)
+        opengraph_providers.push(regexp)
+      end
+
       # Some oembed providers (like meetup.com) don't provide links to themselves
       add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
+
+      # Sites that work better with OpenGraph
+      add_opengraph_provider /gfycat\.com\//
 
       def raw
         return @raw if @raw
@@ -26,7 +37,14 @@ module Onebox
         response = Onebox::Helpers.fetch_response(url)
         html_doc = Nokogiri::HTML(response.body)
 
-        # Determine if we should use OEmbed or OpenGraph
+        StandardEmbed.opengraph_providers.each do |regexp|
+          if url =~ regexp
+            @raw = parse_open_graph(html_doc, url)
+            return @raw if @raw
+          end
+        end
+
+        # Determine if we should use oEmbed or OpenGraph (prefers oEmbed)
         oembed_alternate = html_doc.at("//link[@type='application/json+oembed']") || html_doc.at("//link[@type='text/json+oembed']")
         fetch_oembed_raw(oembed_alternate)
 
