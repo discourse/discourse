@@ -369,7 +369,9 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(opts={})
+  def rebake!(opts=nil)
+    opts ||= {}
+
     new_cooked = cook(
       raw,
       topic_id: topic_id,
