@@ -35,7 +35,8 @@ class PostAlertObserver < ActiveRecord::Observer
       Notification.types[:liked],
       post,
       display_username: post_action.user.username,
-      post_action_id: post_action.id
+      post_action_id: post_action.id,
+      user_id: post_action.user_id
     )
   end
 
