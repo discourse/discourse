@@ -167,7 +167,7 @@ en:
   num_posts: "Posts:"
   num_participants: "Participants:"
   read_full_topic: "Read full topic"
-  private_message_abbrev: "PM"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
@@ -485,9 +485,9 @@ en:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Private Message @{{username}}'
+      title: 'Message @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
-      long_form: 'private messaged user'
+      long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -526,7 +526,7 @@ en:
       email_body: "%{link}\n\n%{message}"
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
+    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
 
   archetypes:
@@ -595,23 +595,23 @@ en:
     user_to_user_private_messages:
       title: "User-to-User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     system_private_messages:
       title: "System"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     moderator_warning_private_messages:
       title: "Moderator Warning"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     notify_moderators_private_messages:
       title: "Notify Moderators"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -692,7 +692,7 @@ en:
     title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated private messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
+    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
     s3_deprecation_warning: "WARNING! Amazon S3 will soon be deprecated for image/attachment storage. Please, follow the <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instructions</a> to migrate to local storage."
 
@@ -708,10 +708,10 @@ en:
       description: "Guidance and essential information for new users."
     welcome_user:
       title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
+      description: "A message automatically sent to all new users when they sign up."
     welcome_invite:
       title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+      description: "A message automatically sent to all new invited users when they accept the invitation from another user to participate."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
@@ -735,11 +735,11 @@ en:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
-    min_private_message_post_length: "Minimum allowed post length in characters for private messages"
+    min_private_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_private_message_title_length: "Minimum allowed title length for a private message in characters"
+    min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
@@ -788,7 +788,7 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
+    enable_private_messages: "Allow trust level 1 users to create messages and reply to messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -827,8 +827,8 @@ en:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    site_contact_username: "A valid staff username to send all automated private messages from. If left blank the default System account will be used."
-    send_welcome_message: "Send all new users a welcome private message with a quick start guide."
+    site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
+    send_welcome_message: "Send all new users a welcome message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
@@ -922,7 +922,7 @@ en:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_private_messages_per_day: "Maximum number of private messages users can create per day."
+    max_private_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
@@ -1155,8 +1155,8 @@ en:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
+    private_message: "%{display_username} sent you a message: %{link}"
+    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -1431,7 +1431,7 @@ en:
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started.
+        A few quick tips to get you started:
 
         ## Keep scrolling
 
@@ -1483,7 +1483,7 @@ en:
 
         <img src="/images/welcome/notification-panel.png" width="178" height="59">
 
-        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
+        Don't worry about missing a reply – you'll be emailed replies (and messages) if you aren't online when they arrive.
 
         ## When are conversations new?
 
@@ -1510,7 +1510,7 @@ en:
 
         Enjoy your stay!
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
@@ -1531,7 +1531,7 @@ en:
 
         Enjoy your stay!
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -1766,9 +1766,9 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
+        %{username} invited you to a message '%{topic_title}' on %{site_name}:
 
         Please visit this link to view the topic: %{base_url}%{url}
 
@@ -1892,7 +1892,7 @@ en:
 
         Enjoy your stay!
 
-        (If you need to privately communicate with [staff members](%{base_url}/about) as a new user, just reply to this private message.)
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     signup:
       subject_template: "[%{site_name}] Activate your new account"
@@ -1942,7 +1942,7 @@ en:
 
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is suspended, not a private message"
+    suspended_not_pm: "User is suspended, not a message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
@@ -2324,5 +2324,5 @@ en:
     long_descriptions:
       first_flag: |
         Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
-        do not hesitate to flag. You may also use the flagging dialog to send <b>private messages</b> to users once you reach
+        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to users once you reach
         trust level 1.
