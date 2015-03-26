@@ -311,6 +311,12 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
+  def first_day_user?
+    !staff? &&
+    trust_level < TrustLevel[2] &&
+    created_at >= 24.hours.ago
+  end
+
   def new_user?
     (created_at >= 24.hours.ago || trust_level == TrustLevel[0]) &&
       trust_level < TrustLevel[2] &&
@@ -560,10 +566,6 @@ class User < ActiveRecord::Base
 
   def has_uploaded_avatar
     uploaded_avatar.present?
-  end
-
-  def added_a_day_ago?
-    created_at > 1.day.ago
   end
 
   def generate_api_key(created_by)

@@ -250,7 +250,7 @@ class Topic < ActiveRecord::Base
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
     apply_per_day_rate_limit_for("topics", :max_topics_per_day)
-    limit_first_day_topics_per_day if user.added_a_day_ago?
+    limit_first_day_topics_per_day if user.first_day_user?
   end
 
   def limit_private_messages_per_day
