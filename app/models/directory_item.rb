@@ -24,6 +24,10 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.refresh_period!(period_type)
+
+    # Don't calculate it if the user directory is disabled
+    return unless SiteSetting.enable_user_directory?
+
     since = case period_type
             when :daily then 1.day.ago
             when :weekly then 1.week.ago
@@ -57,7 +61,6 @@ class DirectoryItem < ActiveRecord::Base
                   AND COALESCE(t.archetype, 'regular') = 'regular'
                   AND p.deleted_at IS NULL
                   AND (NOT (COALESCE(p.hidden, false)))
-                  AND (NOT COALESCE(c.read_restricted, false))
                   AND COALESCE(p.post_type, :regular_post_type) != :moderator_action
                   AND u.id > 0
                 GROUP BY u.id",

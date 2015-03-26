@@ -22,7 +22,9 @@
       </li>
     {{/if}}
 
-    <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
+    {{#if siteSettings.enable_user_directory}}
+      <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
+    {{/if}}
 
     {{plugin-outlet "site-map-links"}}
 

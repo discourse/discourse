@@ -2,6 +2,8 @@ class DirectoryItemsController < ApplicationController
   PAGE_SIZE = 50
 
   def index
+    raise Discourse::InvalidAccess.new(:enable_user_directory) unless SiteSetting.enable_user_directory?
+
     period = params.require(:period)
     period_type = DirectoryItem.period_types[period.to_sym]
     raise Discourse::InvalidAccess.new(:period_type) unless period_type
