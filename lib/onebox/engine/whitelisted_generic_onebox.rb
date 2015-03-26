@@ -54,7 +54,6 @@ module Onebox
           forbes.com
           foxnews.com
           funnyordie.com
-          gfycat.com
           groupon.com
           howtogeek.com
           huffingtonpost.com
@@ -131,7 +130,7 @@ module Onebox
       # include the entire page HTML. However for some providers like Imgur it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        ['Imgur', 'Meetup', 'Gfycat']
+        ['Imgur', 'Meetup']
       end
 
       def self.html_providers
