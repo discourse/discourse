@@ -114,7 +114,9 @@ class DiscourseSingleSignOn < SingleSignOn
       user.email = email
     end
 
-    if SiteSetting.sso_overrides_username && user.username != username
+    if SiteSetting.sso_overrides_username &&
+        user.username != username &&
+        user.username != UserNameSuggester.fix_username(username || name || email)
       user.username = UserNameSuggester.suggest(username || name || email)
     end
 
