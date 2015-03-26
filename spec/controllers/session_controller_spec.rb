@@ -89,7 +89,7 @@ describe SessionController do
 
     it 'respects IP restrictions on login' do
       sso = sso_for_ip_specs
-      user = DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
+      _user = DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
 
       sso = sso_for_ip_specs
       screened_ip = Fabricate(:screened_ip_address)
@@ -304,18 +304,6 @@ describe SessionController do
         expect(logged_on_user.email).to eq(@user.email)
       end
 
-      it 'does not change attributes for unchanged external attributes' do
-        @user.single_sign_on_record.external_username = @sso.username
-        @user.single_sign_on_record.external_email = @sso.email
-        @user.single_sign_on_record.external_name = @sso.name
-        @user.single_sign_on_record.save
-
-        get :sso_login, Rack::Utils.parse_query(@sso.payload)
-        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        expect(logged_on_user.username).to eq(@user.username)
-        expect(logged_on_user.email).to eq(@user.email)
-        expect(logged_on_user.name).to eq(@user.name)
-      end
     end
   end
 
