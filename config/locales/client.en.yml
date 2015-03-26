@@ -1739,18 +1739,19 @@ en:
         read_only:
           enable:
             title: "Enable the read-only mode"
-            text: "Enable read-only mode"
+            label: "Enable read-only mode"
             confirm: "Are you sure you want to enable the read-only mode?"
           disable:
             title: "Disable the read-only mode"
-            text: "Disable read-only mode"
+            label: "Disable read-only mode"
         logs:
           none: "No logs yet..."
         columns:
           filename: "Filename"
           size: "Size"
         upload:
-          text: "Upload"
+          label: "Upload"
+          title: "Upload a backup to this instance"
           uploading: "Uploading..."
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
@@ -1758,28 +1759,27 @@ en:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
-            text: "Cancel"
+            label: "Cancel"
             title: "Cancel the current operation"
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
-            text: "Backup"
+            label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
             without_uploads: "Yes (do not include files)"
           download:
-            text: "Download"
+            label: "Download"
             title: "Download the backup"
           destroy:
-            text: "Delete"
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is disabled in the site settings."
-            text: "Restore"
+            label: "Restore"
             title: "Restore the backup"
             confirm: "Are your sure you want to restore this backup?"
           rollback:
-            text: "Rollback"
+            label: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
