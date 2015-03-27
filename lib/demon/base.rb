@@ -154,7 +154,8 @@ class Demon::Base
       begin
         delete_pid_file
       ensure
-        exit
+        # TERM is way cleaner than exit
+        Process.kill("TERM", Process.pid)
       end
     end
 
