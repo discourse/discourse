@@ -41,6 +41,8 @@ body {
   background-size: cover;
   min-height: 100%;
 
+  @include clearfix;
+
   button.ok {
     background: $success;
     color: $secondary;
