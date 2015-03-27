@@ -2,22 +2,20 @@
 // add it to the body as the view is entered / left / model is changed.
 // This is used for keeping the `body` style in sync for the background image.
 export default {
-  _enterView: function() { this.get('archetype'); }.on('init'),
+  _init: function() { this.get('archetype'); }.on('init'),
 
-  _removeClasses() {
-    $('body').removeClass(function(idx, css) {
-      return (css.match(/\barchetype-\S+/g) || []).join(' ');
-    });
+  _cleanUp() {
+    $('body').removeClass((_, css) => (css.match(/\barchetype-\S+/g) || []).join(' '));
   },
 
-  _categoryChanged: function() {
+  _archetypeChanged: function() {
     const archetype = this.get('archetype');
-    this._removeClasses();
+    this._cleanUp();
 
     if (archetype) {
       $('body').addClass('archetype-' + archetype);
     }
   }.observes('archetype'),
 
-  _leaveView: function() { this._removeClasses(); }.on('willDestroyElement')
+  _willDestroyElement: function() { this._cleanUp(); }.on('willDestroyElement')
 };

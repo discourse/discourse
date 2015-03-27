@@ -5,9 +5,7 @@ export default {
   _enterView: function() { this.get('categoryFullSlug'); }.on('init'),
 
   _removeClasses() {
-    $('body').removeClass(function(idx, css) {
-      return (css.match(/\bcategory-\S+/g) || []).join(' ');
-    });
+    $('body').removeClass((_, css) => (css.match(/\bcategory-\S+/g) || []).join(' '));
   },
 
   _categoryChanged: function() {
