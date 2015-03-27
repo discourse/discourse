@@ -81,14 +81,18 @@ before_fork do |server, worker|
         alias :master_sleep_orig :master_sleep
 
         def max_rss
-          `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
+          rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
                 .split("\n")
                 .map(&:to_i)
-                .max * 1024
+                .max
+
+          rss ||= 0
+
+          rss * 1024
         end
 
         def out_of_memory?
-          max_allowed_size = [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].min;
+          max_allowed_size = [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes;
           max_rss > max_allowed_size
         end
 
@@ -99,19 +103,22 @@ before_fork do |server, worker|
           if @sidekiq_next_heartbeat_check < Time.new.to_i
 
             last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-            if false && out_of_memory?
+            restart = false
+
+            if out_of_memory?
               Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM), restarting" % (max_rss.to_f / 1.megabyte))
-              Demon::Sidekiq.restart
+              restart = true
             end
 
             if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
               STDERR.puts "Sidekiq heartbeat test failed, restarting"
               Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
 
-              Demon::Sidekiq.restart
+              restart = true
             end
             @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
 
+            Demon::Sidekiq.restart if restart
             $redis.client.disconnect
           end
         end
