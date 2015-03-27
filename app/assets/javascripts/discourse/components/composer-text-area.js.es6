@@ -6,11 +6,10 @@ export default Ember.TextArea.extend({
   }.property('placeholderKey'),
 
   _signalParentInsert: function() {
-    return this.get('parentView').childDidInsertElement(this);
+    this.get('parentView').childDidInsertElement(this);
   }.on('didInsertElement'),
 
   _signalParentDestroy: function() {
-    return this.get('parentView').childWillDestroyElement(this);
+    this.get('parentView').childWillDestroyElement(this);
   }.on('willDestroyElement')
 });
-

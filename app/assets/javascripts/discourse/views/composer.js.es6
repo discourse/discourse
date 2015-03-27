@@ -125,7 +125,6 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     this.set('controller.view', this);
 
     positioningWorkaround(this.$());
-
   }.on('didInsertElement'),
 
   _unlinkView: function() {
@@ -520,19 +519,25 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   },
 
   childDidInsertElement() {
-    return this.initEditor();
+    this.initEditor();
+
+    // Disable links in the preview
+    $('#wmd-preview').on('click.preview', (e) => {
+      e.preventDefault();
+      return false;
+    });
   },
 
   childWillDestroyElement() {
-    const self = this;
-
     this._unbindUploadTarget();
 
-    Em.run.next(function() {
+    $('#wmd-preview').off('click.preview');
+
+    Em.run.next(() => {
       $('#main-outlet').css('padding-bottom', 0);
       // need to wait a bit for the "slide down" transition of the composer
-      Em.run.later(function() {
-        self.appEvents.trigger("composer:closed");
+      Em.run.later(() => {
+        this.appEvents.trigger("composer:closed");
       }, 400);
     });
   },
