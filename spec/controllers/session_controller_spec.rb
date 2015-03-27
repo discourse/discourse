@@ -288,7 +288,7 @@ describe SessionController do
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user.username).to eq(@suggested_username)
         expect(logged_on_user.email).to eq("#{@reversed_username}@garbage.org")
-        expect(logged_on_user.name).to eq(@suggested_name)
+        expect(logged_on_user.name).to eq(@sso.name)
       end
 
       it 'does not change matching attributes for an existing account' do
