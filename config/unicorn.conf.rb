@@ -99,7 +99,7 @@ before_fork do |server, worker|
           if @sidekiq_next_heartbeat_check < Time.new.to_i
 
             last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
-            if out_of_memory?
+            if false && out_of_memory?
               Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM), restarting" % (max_rss.to_f / 1.megabyte))
               Demon::Sidekiq.restart
             end
