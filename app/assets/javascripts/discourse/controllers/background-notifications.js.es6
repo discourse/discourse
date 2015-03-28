@@ -106,7 +106,7 @@ export default Discourse.Controller.extend({
   },
 
   clickEventHandler() {
-    window.location.href = notificationUrl(firstUnseen);
+    Discourse.URL.routeTo(notificationUrl(firstUnseen));
     window.focus();
   },
 
