@@ -95,24 +95,31 @@ export default Discourse.Controller.extend({
         });
 
         const firstUnseen = unseen[0];
-        notification.addEventListener('click', function() {
-          window.location.href = notificationUrl(firstUnseen);
-          window.focus();
-        });
+
+        notification.addEventListener('click', self.clickEventHandler);
+        setTimeout(function() {
+          notification.close();
+          notification.removeEventListener('click', self.clickEventHandler);
+        }, 10 * 1000);
       });
     }
+  },
+
+  clickEventHandler() {
+    window.location.href = notificationUrl(firstUnseen);
+    window.focus();
   },
 
   // Utility function
   // Wraps Notification.requestPermission in a Promise
   requestPermission() {
     return new Ember.RSVP.Promise(function(resolve, reject) {
-      console.log('requesting');
       Notification.requestPermission(function(status) {
-        console.log('requested, status:', status);
         if (status === "granted") {
+          Em.Logger.info('Discourse desktop notifications are enabled.');
           resolve();
         } else {
+          Em.Logger.info('Discourse desktop notifications are disabled.');
           reject();
         }
       });
