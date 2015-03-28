@@ -6,7 +6,8 @@ export default {
     const user = container.lookup('current-user:main'),
           site = container.lookup('site:main'),
           siteSettings = container.lookup('site-settings:main'),
-          bus = container.lookup('message-bus:main');
+          bus = container.lookup('message-bus:main'),
+          bgController = container.lookup('controller:background-notifications');
 
     bus.callbackInterval = siteSettings.anon_polling_interval;
     bus.backgroundCallbackInterval = siteSettings.background_polling_interval;
@@ -44,6 +45,7 @@ export default {
 
         if(oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           user.set('lastNotificationChange', new Date());
+          bgController.notificationsChanged(user);
         }
       }), user.notification_channel_position);
 
