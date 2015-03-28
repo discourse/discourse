@@ -82,7 +82,7 @@ export default Discourse.Controller.extend({
           bodyParts.push(I18n.t(self.i18nKey(n), i18nOpts));
         });
 
-        const notificationTitle = I18n.t('notifications.popup_title', { count: unseenCount, site_title: Discourse.SiteSettings.title });
+        const notificationTitle = I18n.t('notifications.popup_title', { count: unreadCount, site_title: Discourse.SiteSettings.title });
         const notificationBody = bodyParts.join("\n");
         const notificationIcon = Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url;
         const notificationTag = self.get('notificationTagName');
