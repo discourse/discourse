@@ -63,7 +63,7 @@ export default Discourse.Controller.extend({
         const unreadCount = unread.length;
         const unseenCount = unseen.length;
 
-        if (unseenCount === 0) {
+        if (unreadCount === 0 || unseenCount === 0) {
           return;
         }
         if (typeof document.hidden !== "undefined" && !document.hidden) {
@@ -96,18 +96,20 @@ export default Discourse.Controller.extend({
 
         const firstUnseen = unseen[0];
 
-        notification.addEventListener('click', self.clickEventHandler);
+        function clickEventHandler() {
+          Discourse.URL.routeTo(notificationUrl(firstUnseen));
+          // Cannot delay this until the page renders :(
+          // due to trigger-based permissions
+          window.focus();
+        }
+
+        notification.addEventListener('click', clickEventHandler);
         setTimeout(function() {
           notification.close();
-          notification.removeEventListener('click', self.clickEventHandler);
+          notification.removeEventListener('click', clickEventHandler);
         }, 10 * 1000);
       });
     }
-  },
-
-  clickEventHandler() {
-    Discourse.URL.routeTo(notificationUrl(firstUnseen));
-    window.focus();
   },
 
   // Utility function
