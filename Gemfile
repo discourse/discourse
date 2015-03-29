@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
+# if there is a super emergency and rubygems is playing up, try
+#source 'http://production.cf.rubygems.org'
 
 module ::Kernel
   def rails_master?
-    ENV["RAILS_MASTER"]
+    ENV["RAILS_MASTER"] == '1'
   end
 end
 
@@ -65,60 +67,69 @@ unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
    end
 end
 
-# see: https://github.com/mbleigh/seed-fu/pull/54
-# taking forever to get changes upstream in seed-fu
-gem 'seed-fu-discourse', require: 'seed-fu'
 
 if rails_master?
+  gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
-  gem 'actionpack-action_caching', git: 'https://github.com/rails/actionpack-action_caching.git'
+  gem 'rails-observers', git: 'https://github.com/SamSaffron/rails-observers.git'
+  gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
+  gem 'seed-fu', '~> 2.3.3'
   gem 'rails'
-  gem 'actionpack-action_caching'
+  gem 'rails-observers'
 end
-gem 'rails-observers'
+
+gem 'actionpack-action_caching'
+
+# Rails 4.1.6+ will relax the mail gem version requirement to `~> 2.5, >= 2.5.4`.
+# However, mail gem 2.6.x currently does not work with discourse because of the
+# reference to `Mail::RFC2822Parser` in `lib/email.rb`. This ensure discourse
+# would continue to work with Rails 4.1.6+ when it is released.
+gem 'mail', '~> 2.5.4'
 
 #gem 'redis-rails'
 gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
-gem 'active_model_serializers'
+# We use some ams 0.8.0 features, need to amend code
+# to support 0.9 etc, bench needs to run and ensure no
+# perf regressions
+if rails_master?
+  gem 'active_model_serializers', github: 'rails-api/active_model_serializers', branch: '0-8-stable'
+else
+  gem 'active_model_serializers', '~> 0.8.0'
+end
 
 
 gem 'onebox'
 
 gem 'ember-rails'
-gem 'ember-source', '~> 1.2.0.1'
-gem 'handlebars-source', '~> 1.1.2'
+gem 'ember-source', '1.9.0.beta.4'
+gem 'handlebars-source', '2.0.0'
 gem 'barber'
+gem 'babel-transpiler'
 
 gem 'message_bus'
 gem 'rails_multisite', path: 'vendor/gems/rails_multisite'
 
 gem 'redcarpet', require: false
-gem 'airbrake', '3.1.2', require: false # errbit is broken with 3.1.3 for now
 gem 'eventmachine'
 gem 'fast_xs'
 
 gem 'fast_xor'
-gem 'fastimage'
-gem 'fog', '1.18.0', require: false
+
+# while we sort out https://github.com/sdsykes/fastimage/pull/46
+gem 'fastimage_discourse', require: 'fastimage'
+gem 'fog', '1.26.0', require: false
 gem 'unf', require: false
 
-# see: https://twitter.com/samsaffron/status/412360162297393152
-# Massive amount of changes made in branch we use, no PR upstreamed
-# We need to get this sorted
-# https://github.com/samsaffron/email_reply_parser
-gem 'email_reply_parser-discourse', require: 'email_reply_parser'
+gem 'email_reply_parser'
 
 # note: for image_optim to correctly work you need
 # sudo apt-get install -y advancecomp gifsicle jpegoptim libjpeg-progs optipng pngcrush
 #
 # Sam: held back, getting weird errors in latest
 gem 'image_optim', '0.9.1'
-# note: for image_sorcery to correctly work you need
-# sudo apt-get install -y imagemagick
-gem 'image_sorcery'
 gem 'multi_json'
 gem 'mustache'
 gem 'nokogiri'
@@ -127,11 +138,15 @@ gem 'omniauth-openid'
 gem 'openid-redis-store'
 gem 'omniauth-facebook'
 gem 'omniauth-twitter'
-gem 'omniauth-github'
+
+# forked while https://github.com/intridea/omniauth-github/pull/41 is being upstreamd
+gem 'omniauth-github-discourse', require: 'omniauth-github'
+
 gem 'omniauth-oauth2', require: false
+gem 'omniauth-google-oauth2'
 gem 'oj'
-# while resolving https://groups.google.com/forum/#!topic/ruby-pg/5_ylGmog1S4
-gem 'pg', '0.15.1'
+gem 'pg'
+gem 'pry-rails', require: false
 gem 'rake'
 
 
@@ -140,9 +155,9 @@ gem 'rinku'
 gem 'sanitize'
 gem 'sass'
 gem 'sidekiq'
-gem 'sidekiq-failures'
+
+# for sidekiq web
 gem 'sinatra', require: nil
-gem 'slim'  # required for sidekiq-web
 
 gem 'therubyracer'
 gem 'thin', require: false
@@ -153,8 +168,16 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-  gem 'sass-rails'
+
+  if rails_master?
+    gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
+  else
+    # later is breaking our asset compliation extensions
+    gem 'sass-rails', '4.0.2'
+  end
+
   gem 'uglifier'
+  gem 'rtlit', require: false # for css rtling
 end
 
 group :test do
@@ -163,10 +186,13 @@ group :test do
 end
 
 group :test, :development do
+  # while upgrading to 3
+  gem 'rspec', '2.99.0'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false
-  gem 'fabrication', require: false
+  # later appears to break Fabricate(:topic, category: category)
+  gem 'fabrication', '2.9.8', require: false
   gem 'qunit-rails'
   gem 'mocha', require: false
   gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
@@ -176,7 +202,6 @@ group :test, :development do
   gem 'simplecov', require: false
   gem 'timecop'
   gem 'rspec-given'
-  gem 'pry-rails'
   gem 'pry-nav'
   gem 'spork-rails'
 end
@@ -186,11 +211,8 @@ group :development do
   gem 'binding_of_caller'
   gem 'librarian', '>= 0.0.25', require: false
   gem 'annotate'
+  gem 'foreman', require: false
 end
-
-# Gem that enables support for plugins. It is required.
-# TODO: does this really need to be a gem ?
-gem 'discourse_plugin', path: 'vendor/gems/discourse_plugin'
 
 # this is an optional gem, it provides a high performance replacement
 # to String#blank? a method that is called quite frequently in current
@@ -200,24 +222,36 @@ gem 'fast_blank' #, github: "SamSaffron/fast_blank"
 # this provides a very efficient lru cache
 gem 'lru_redux'
 
+gem 'htmlentities', require: false
+
 # IMPORTANT: mini profiler monkey patches, so it better be required last
-#  If you want to amend mini profiler to do the monkey patches in the railstie
+#  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
-# used for caching, optional
-gem 'rack-cors', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
 
 # required for feed importing and embedding
+#
 gem 'ruby-readability', require: false
+
 gem 'simple-rss', require: false
+
+# TODO mri_22 should be here, but bundler was real slow to pick it up
+# not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
 gem 'stackprof', require: false, platform: :mri_21
+gem 'memory_profiler', require: false, platform: :mri_21
+
+gem 'rmmseg-cpp', require: false
+
+gem 'stringex', require: false
+
+gem 'logster'
 
 # perftools only works on 1.9 atm
 group :profile do

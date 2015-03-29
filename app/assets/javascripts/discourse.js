@@ -1,18 +1,13 @@
 /*global Favcount:true*/
+var DiscourseResolver = require('discourse/ember/resolver').default;
 
-/**
-  The main Discourse Application
-
-  @class Discourse
-  @extends Ember.Application
-**/
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
-
-  // Helps with integration tests
-  URL_FIXTURES: {},
+  _docTitle: document.title,
 
   getURL: function(url) {
+    if (!url) { return url; }
+
     // If it's a non relative URL, return it.
     if (url.indexOf('http') === 0) return url;
 
@@ -21,33 +16,39 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
       u = u.substring(0, u.length-1);
     }
     if (url.indexOf(u) !== -1) return url;
+
+    if(u.length > 0  && url[0] !== "/") {
+      // we got to root this
+      url = "/" + url;
+    }
+
     return u + url;
   },
 
-  Resolver: Discourse.Resolver,
+  getURLWithCDN: function(url) {
+    url = this.getURL(url);
+    if (Discourse.CDN) { url = Discourse.CDN + url; }
+    return url;
+  },
 
-  titleChanged: function() {
-    var title = "";
+  Resolver: DiscourseResolver,
 
-    if (this.get('title')) {
-      title += "" + (this.get('title')) + " - ";
+  _titleChanged: function() {
+    var title = this.get('_docTitle') || Discourse.SiteSettings.title;
+
+    // if we change this we can trigger changes on document.title
+    // only set if changed.
+    if($('title').text() !== title) {
+      $('title').text(title);
     }
-    title += Discourse.SiteSettings.title;
-    $('title').text(title);
 
     var notifyCount = this.get('notifyCount');
     if (notifyCount > 0 && !Discourse.User.currentProp('dynamic_favicon')) {
       title = "(" + notifyCount + ") " + title;
     }
 
-    if(title !== document.title) {
-      // chrome bug workaround see: http://stackoverflow.com/questions/2952384/changing-the-window-title-when-focussing-the-window-doesnt-work-in-chrome
-      window.setTimeout(function() {
-        document.title = ".";
-        document.title = title;
-      }, 200);
-    }
-  }.observes('title', 'hasFocus', 'notifyCount'),
+    document.title = title;
+  }.observes('_docTitle', 'hasFocus', 'notifyCount'),
 
   faviconChanged: function() {
     if(Discourse.User.currentProp('dynamic_favicon')) {
@@ -77,7 +78,14 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     Discourse.User.logout().then(function() {
       // Reloading will refresh unbound properties
       Discourse.KeyValueStore.abandonLocal();
-      window.location.pathname = Discourse.getURL('/');
+
+      var redirect = Discourse.SiteSettings.logout_redirect;
+      if(redirect.length === 0){
+        window.location.pathname = Discourse.getURL('/');
+      } else {
+        window.location.href = redirect;
+      }
+
     });
   },
 
@@ -87,46 +95,24 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
     return loginController.authenticationComplete(options);
   },
 
-  loginRequired: function() {
-    return Discourse.SiteSettings.login_required && !Discourse.User.current();
-  }.property(),
-
-  redirectIfLoginRequired: function(route) {
-    if(this.get('loginRequired')) { route.transitionTo('login'); }
-  },
-
-  /**
-    Add an initializer hook for after the Discourse Application starts up.
-
-    @method addInitializer
-    @param {Function} init the initializer to add.
-    @param {Boolean} immediate whether to execute the function right away.
-                      Default is false, for next run loop. If unsure, use false.
-  **/
-  addInitializer: function(init, immediate) {
-    Discourse.initializers = Discourse.initializers || [];
-    Discourse.initializers.push({fn: init, immediate: !!immediate});
-  },
-
   /**
     Start up the Discourse application by running all the initializers we've defined.
 
     @method start
   **/
   start: function() {
-    var initializers = this.initializers;
-    if (initializers) {
-      var self = this;
-      initializers.forEach(function (init) {
-        if (init.immediate) {
-          init.fn.call(self);
-        } else {
-          Em.run.next(function() {
-            init.fn.call(self);
-          });
-        }
-      });
-    }
+
+    $('noscript').remove();
+
+    // Load any ES6 initializers
+    Ember.keys(requirejs._eak_seen).forEach(function(key) {
+      if (/\/initializers\//.test(key)) {
+        var module = require(key, null, null, true);
+        if (!module) { throw new Error(key + ' must export an initializer.'); }
+        Discourse.initializer(module.default);
+      }
+    });
+
   },
 
   requiresRefresh: function(){
@@ -147,4 +133,5 @@ window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
 
 });
 
-Discourse.Router = Discourse.Router.reopen({ location: 'discourse_location' });
+// TODO: Remove this, it is in for backwards compatibiltiy with plugins
+Discourse.HasCurrentUser = {};

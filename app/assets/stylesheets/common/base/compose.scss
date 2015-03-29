@@ -1,0 +1,151 @@
+.autocomplete {
+  z-index: 999999;
+  position: absolute;
+  width: 240px;
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li {
+      border-bottom: 1px solid scale-color-diff();
+      a[href] {
+        padding: 5px;
+        display: block;
+        span.username {
+          color: darken($primary, 40%);
+          display: inline-block;
+        }
+        span.name {
+          font-size: 11px;
+          display: inline-block;
+          width: 90px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          vertical-align: middle;
+        }
+        &.selected {
+          background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+        }
+        @include hover {
+          background-color: dark-light-diff($highlight, $secondary, 90%, -80%);
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+div.ac-wrap.disabled {
+  input {
+    display:none;
+  }
+  .item a {
+    display:none;
+  }
+}
+
+
+div.ac-wrap {
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  padding: 5px 4px 1px 4px;
+  div.item {
+    float: left;
+    margin-bottom: 4px;
+    margin-right: 10px;
+    span {
+      height: 24px;
+      display: inline-block;
+      line-height: 20px;
+    }
+    a.remove {
+      margin-left: 4px;
+      font-size: 11px;
+      line-height: 10px;
+      padding: 1.5px 1.5px 1.5px 2.5px;
+      border-radius: 12px;
+      width: 10px;
+      display: inline-block;
+      border: 1px solid scale-color-diff();
+      &:hover {
+        background-color: scale-color($danger, $lightness: 75%);
+        border: 1px solid scale-color($danger, $lightness: 30%);
+        text-decoration: none;
+        color: $danger;
+      }
+    }
+  }
+  input[type="text"] {
+    float: left;
+    margin-bottom: 4px;
+    height: 24px;
+    display: block;
+    border: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
+#reply-control.topic #wmd-quote-post {
+  display: none;
+}
+
+.auto-close-fields {
+  div:not(:first-child) {
+    margin-top: 10px;
+  }
+  label {
+    font-size: 1em;
+  }
+  input {
+    width: 150px;
+  }
+  .examples {
+    color: lighten($primary, 40%);
+  }
+}
+
+.edit-auto-close-modal {
+  .btn.pull-right {
+    margin-right: 10px;
+  }
+  form {
+    margin: 0;
+  }
+  .auto-close-fields {
+    i.fa-clock-o {
+      font-size: 1.143em;
+    }
+    input {
+      margin: 0;
+    }
+  }
+}
+
+.edit-category-modal {
+  .auto-close-fields {
+    input[type=text] {
+      width: 50px;
+    }
+  }
+}
+
+#reply-control {
+  .composer-loading {
+    position: absolute;
+    left: 48%;
+    top: 20%;
+  }
+}
+
+// this removes the topmost margin from the first element in the topic post
+// if we don't do this, all posts would have extra space at the top
+#wmd-preview > *:first-child {
+  margin-top: 0;
+}
+.cooked > *:first-child {
+  margin-top: 0;
+}

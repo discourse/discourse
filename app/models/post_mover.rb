@@ -41,37 +41,56 @@ class PostMover
     notify_users_that_posts_have_moved
     update_statistics
     update_user_actions
+    set_last_post_user_id(destination_topic)
 
     destination_topic
   end
 
   def move_each_post
-    with_max_post_number do |max_post_number|
-      posts.each_with_index do |post, offset|
-        post.is_first_post? ? copy(post) : move(post, offset + max_post_number)
+    max_post_number = destination_topic.max_post_number + 1
+
+    @move_map = {}
+    @reply_count = {}
+    posts.each_with_index do |post, offset|
+      unless post.is_first_post?
+        @move_map[post.post_number] = offset + max_post_number
+      else
+        @move_map[post.post_number] = 1
       end
+      if post.reply_to_post_number.present?
+        @reply_count[post.reply_to_post_number] = (@reply_count[post.reply_to_post_number] || 0) + 1
+      end
+    end
+
+    posts.each do |post|
+      post.is_first_post? ? create_first_post(post) : move(post)
     end
   end
 
-  def copy(post)
-    PostCreator.create(
+  def create_first_post(post)
+    p = PostCreator.create(
       post.user,
       raw: post.raw,
       topic_id: destination_topic.id,
       acting_user: user
     )
+    p.update_column(:reply_count, @reply_count[1] || 0)
   end
 
-  def move(post, post_number)
+  def move(post)
     @first_post_number_moved ||= post.post_number
 
     Post.where(id: post.id, topic_id: original_topic.id).update_all(
       [
         ['post_number = :post_number',
+         'reply_to_post_number = :reply_to_post_number',
          'topic_id    = :topic_id',
-         'sort_order  = :post_number'
+         'sort_order  = :post_number',
+         'reply_count = :reply_count',
         ].join(', '),
-        post_number: post_number,
+        reply_count: @reply_count[post.post_number] || 0,
+        post_number: @move_map[post.post_number],
+        reply_to_post_number: @move_map[post.reply_to_post_number],
         topic_id: destination_topic.id
       ]
     )
@@ -105,15 +124,11 @@ class PostMover
   def create_moderator_post_in_original_topic
     original_topic.add_moderator_post(
       user,
-      I18n.t("move_posts.#{PostMover.move_types[@move_type].to_s}_moderator_post",
+      I18n.t("move_posts.#{PostMover.move_types[@move_type]}_moderator_post",
              count: post_ids.count,
              topic_link: "[#{destination_topic.title}](#{destination_topic.url})"),
       post_number: @first_post_number_moved
     )
-  end
-
-  def with_max_post_number
-    yield destination_topic.max_post_number + 1
   end
 
   def posts
@@ -122,5 +137,11 @@ class PostMover
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
       end
     end
+  end
+
+  def set_last_post_user_id(topic)
+    user_id = topic.posts.last.user_id rescue nil
+    return if user_id.nil?
+    topic.update_attribute :last_post_user_id, user_id
   end
 end

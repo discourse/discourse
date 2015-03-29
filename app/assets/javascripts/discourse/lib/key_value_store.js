@@ -5,6 +5,16 @@
   @namespace Discourse
   @module Discourse
 **/
+
+
+var safeLocalStorage;
+
+try {
+ safeLocalStorage = localStorage;
+} catch(e){
+ // cookies disabled, we don't care
+}
+
 Discourse.KeyValueStore = {
   initialized: false,
   context: "",
@@ -16,14 +26,14 @@ Discourse.KeyValueStore = {
 
   abandonLocal: function() {
     var i, k;
-    if (!(localStorage && this.initialized)) {
+    if (!(safeLocalStorage && this.initialized)) {
       return;
     }
-    i = localStorage.length - 1;
+    i = safeLocalStorage.length - 1;
     while (i >= 0) {
-      k = localStorage.key(i);
+      k = safeLocalStorage.key(i);
       if (k.substring(0, this.context.length) === this.context) {
-        localStorage.removeItem(k);
+        safeLocalStorage.removeItem(k);
       }
       i--;
     }
@@ -31,21 +41,21 @@ Discourse.KeyValueStore = {
   },
 
   remove: function(key) {
-    return localStorage.removeItem(this.context + key);
+    return safeLocalStorage.removeItem(this.context + key);
   },
 
   set: function(opts) {
-    if (!(localStorage && this.initialized)) {
+    if (!safeLocalStorage && this.initialized) {
       return false;
     }
-    localStorage[this.context + opts.key] = opts.value;
+    safeLocalStorage[this.context + opts.key] = opts.value;
   },
 
   get: function(key) {
-    if (!localStorage) {
+    if (!safeLocalStorage) {
       return null;
     }
-    return localStorage[this.context + key];
+    return safeLocalStorage[this.context + key];
   }
 };
 

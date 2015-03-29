@@ -12,21 +12,21 @@ describe TopMenuItem do
 
   it 'has a filter' do
     expect(items[0].filter).to eq('nope')
-    expect(items[0].has_filter?).to be_true
+    expect(items[0].has_filter?).to be_truthy
     expect(items[2].filter).to eq('not')
-    expect(items[2].has_filter?).to be_true
+    expect(items[2].has_filter?).to be_truthy
   end
 
   it 'does not have a filter' do
     expect(items[1].filter).to be_nil
-    expect(items[1].has_filter?).to be_false
+    expect(items[1].has_filter?).to be_falsey
     expect(items[3].filter).to be_nil
-    expect(items[3].has_filter?).to be_false
+    expect(items[3].has_filter?).to be_falsey
   end
 
   it "has a specific category" do
-    expect(items.first.has_specific_category?).to be_false
-    expect(items.last.has_specific_category?).to be_true
+    expect(items.first.has_specific_category?).to be_falsey
+    expect(items.last.has_specific_category?).to be_truthy
   end
 
   it "does not have a specific category" do

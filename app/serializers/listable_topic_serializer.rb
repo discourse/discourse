@@ -14,12 +14,26 @@ class ListableTopicSerializer < BasicTopicSerializer
              :unread,
              :new_posts,
              :pinned,
+             :unpinned,
              :excerpt,
              :visible,
              :closed,
-             :archived
+             :archived,
+             :is_warning,
+             :notification_level,
+             :bookmarked,
+             :liked
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
+
+  def liked
+    object.user_data && object.user_data.liked
+  end
+
+  def bookmarked
+    object.user_data && object.user_data.bookmarked
+  end
+
   def include_last_poster?
     object.include_last_poster
   end
@@ -35,8 +49,23 @@ class ListableTopicSerializer < BasicTopicSerializer
     false
   end
 
+  def is_warning
+    object.subtype == TopicSubtype.moderator_warning
+  end
+
+  def include_is_warning?
+    is_warning
+  end
+
   def unseen
     !seen
+  end
+
+  def notification_level
+    object.user_data.notification_level
+  end
+  def include_notification_level?
+    object.user_data.present?
   end
 
   def last_read_post_number
@@ -64,13 +93,12 @@ class ListableTopicSerializer < BasicTopicSerializer
     pinned
   end
 
-  def excerpt
-    # excerpt should be hoisted into topic, this is an N+1 query ... yuck
-    object.posts.by_post_number.first.try(:excerpt, 220, strip_links: true) || nil
+  def pinned
+    PinnedCheck.pinned?(object, object.user_data)
   end
 
-  def pinned
-    PinnedCheck.new(object, object.user_data).pinned?
+  def unpinned
+    PinnedCheck.unpinned?(object, object.user_data)
   end
 
   protected

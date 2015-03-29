@@ -1,37 +1,53 @@
 require 'v8'
 require 'nokogiri'
+require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 
 module PrettyText
 
   class Helpers
+    include UrlHelper
 
     def t(key, opts)
-      str = I18n.t("js." + key)
-      if opts
-        # TODO: server localisation has no parity with client
-        # should be fixed
-        str = str.dup
-        opts.each do |k,v|
-          str.gsub!("{{#{k}}}", v)
-        end
+      key = "js." + key
+      unless opts
+        return I18n.t(key)
+      else
+        str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
+        opts.each {|k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        return str
       end
-      str
     end
 
-    # function here are available to v8
+    # functions here are available to v8
     def avatar_template(username)
       return "" unless username
+      user = User.find_by(username_lower: username.downcase)
+      return "" unless user.present?
 
-      user = User.where(username_lower: username.downcase).first
-      user.avatar_template if user.present?
+
+      # TODO: Add support for ES6 and call `avatar-template` directly
+      if !user.uploaded_avatar_id && SiteSetting.default_avatars.present?
+        split_avatars = SiteSetting.default_avatars.split("\n")
+        if split_avatars.present?
+          hash = username.each_char.reduce(0) do |result, char|
+            [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+          end
+
+          avatar_template = split_avatars[hash.abs % split_avatars.size]
+        end
+      else
+        avatar_template = user.avatar_template
+      end
+
+      schemaless absolute avatar_template
     end
 
     def is_username_valid(username)
       return false unless username
       username = username.downcase
-      return User.exec_sql('select 1 from users where username_lower = ?', username).values.length == 1
+      User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
   end
 
@@ -53,32 +69,38 @@ module PrettyText
     ctx["helpers"] = Helpers.new
 
     ctx_load(ctx,
-             "vendor/assets/javascripts/md5.js",
-              "vendor/assets/javascripts/lodash.js",
-              "vendor/assets/javascripts/Markdown.Converter.js",
-              "lib/headless-ember.js",
-              "vendor/assets/javascripts/rsvp.js",
-              Rails.configuration.ember.handlebars_location)
+      "vendor/assets/javascripts/md5.js",
+      "vendor/assets/javascripts/lodash.js",
+      "vendor/assets/javascripts/Markdown.Converter.js",
+      "lib/headless-ember.js",
+      "vendor/assets/javascripts/rsvp.js",
+      Rails.configuration.ember.handlebars_location
+    )
 
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
+    ctx.eval("var modules = {};")
+
     decorate_context(ctx)
 
     ctx_load(ctx,
-              "vendor/assets/javascripts/better_markdown.js",
-              "app/assets/javascripts/defer/html-sanitizer-bundle.js",
-              "app/assets/javascripts/discourse/dialects/dialect.js",
-              "app/assets/javascripts/discourse/lib/utilities.js",
-              "app/assets/javascripts/discourse/lib/html.js",
-              "app/assets/javascripts/discourse/lib/markdown.js")
+      "vendor/assets/javascripts/better_markdown.js",
+      "app/assets/javascripts/defer/html-sanitizer-bundle.js",
+      "app/assets/javascripts/discourse/dialects/dialect.js",
+      "app/assets/javascripts/discourse/lib/utilities.js",
+      "app/assets/javascripts/discourse/lib/html.js",
+      "app/assets/javascripts/discourse/lib/markdown.js",
+    )
 
-    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].each do |dialect|
-      unless dialect =~ /\/dialect\.js$/
-        ctx.load(dialect)
-      end
+    Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
+      ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
     end
+
+    # emojis
+    emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    ctx.eval(emoji.result)
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -93,8 +115,8 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.js.handlebars') {|f| f.read}
-    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.js.handlebars') {|f| f.read}
+    ctx['quoteTemplate'] = File.read("#{app_root}/app/assets/javascripts/discourse/templates/quote.hbs")
+    ctx['quoteEmailTemplate'] = File.read("#{app_root}/lib/assets/quote_email.hbs")
     ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
@@ -111,14 +133,23 @@ module PrettyText
       return @ctx if @ctx
       @ctx = create_new_context
     end
+
     @ctx
+  end
+
+  def self.reset_context
+    @ctx_init.synchronize do
+      @ctx = nil
+    end
   end
 
   def self.decorate_context(context)
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+
+    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
+    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
   end
 
   def self.markdown(text, opts=nil)
@@ -144,9 +175,27 @@ module PrettyText
         end
       end
 
+      # custom emojis
+      Emoji.custom.each do |emoji|
+        context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
+      end
+
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
+    end
+
+    if baked.blank? && !(opts || {})[:skip_blank_test]
+      # we may have a js engine issue
+      test = markdown("a", skip_blank_test: true)
+      if test.blank?
+        Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
+        reset_context
+        opts ||= {}
+        opts = opts.dup
+        opts[:skip_blank_test] = true
+        baked = markdown(text, opts)
+      end
     end
 
     baked
@@ -175,7 +224,7 @@ module PrettyText
     whitelist = []
 
     domains = SiteSetting.exclude_rel_nofollow_domains
-    whitelist = domains.split(",") if domains.present?
+    whitelist = domains.split('|') if domains.present?
 
     site_uri = nil
     doc = Nokogiri::HTML.fragment(html)
@@ -200,15 +249,31 @@ module PrettyText
     doc.to_html
   end
 
+  class DetectedLink
+    attr_accessor :is_quote, :url
+
+    def initialize(url, is_quote=false)
+      @url = url
+      @is_quote = is_quote
+    end
+  end
+
+
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
     # remove href inside quotes
     doc.css("aside.quote a").each { |l| l["href"] = "" }
+
     # extract all links from the post
-    doc.css("a").each { |l| links << l["href"] unless l["href"].blank? }
+    doc.css("a").each { |l|
+      unless l["href"].blank?
+        links << DetectedLink.new(l["href"])
+      end
+    }
+
     # extract links to quotes
-    doc.css("aside.quote").each do |a|
+    doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic']
 
       url = "/t/topic/#{topic_id}"
@@ -216,13 +281,18 @@ module PrettyText
         url << "/#{post_number}"
       end
 
-      links << url
+      links << DetectedLink.new(url, true)
     end
 
     links
   end
 
   def self.excerpt(html, max_length, options={})
+    # TODO: properly fix this HACK in ExcerptParser without introducing XSS
+    doc = Nokogiri::HTML.fragment(html)
+    strip_image_wrapping(doc)
+    html = doc.to_html
+
     ExcerptParser.get_excerpt(html, max_length, options)
   end
 
@@ -231,23 +301,33 @@ module PrettyText
 
     # If the user is not basic, strip links from their bio
     fragment = Nokogiri::HTML.fragment(string)
-    fragment.css('a').each {|a| a.replace(a.text) }
+    fragment.css('a').each {|a| a.replace(a.inner_html) }
     fragment.to_html
   end
 
-  def self.make_all_links_absolute(html)
+  # Given a Nokogiri doc, convert all links to absolute
+  def self.make_all_links_absolute(doc)
     site_uri = nil
-    doc = Nokogiri::HTML.fragment(html)
     doc.css("a").each do |link|
       href = link["href"].to_s
       begin
         uri = URI(href)
         site_uri ||= URI(Discourse.base_url)
         link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
-      rescue URI::InvalidURIError
+      rescue URI::InvalidURIError, URI::InvalidComponentError
         # leave it
       end
     end
+  end
+
+  def self.strip_image_wrapping(doc)
+    doc.css(".lightbox-wrapper .meta").remove
+  end
+
+  def self.format_for_email(html)
+    doc = Nokogiri::HTML.fragment(html)
+    make_all_links_absolute(doc)
+    strip_image_wrapping(doc)
     doc.to_html
   end
 

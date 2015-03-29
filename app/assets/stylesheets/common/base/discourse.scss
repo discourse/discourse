@@ -1,0 +1,225 @@
+.container {
+  @extend .clearfix;
+  margin-right: auto;
+  margin-left: auto;
+  .contents {
+    position: relative;
+  }
+}
+
+.full-width {
+  margin-left: 12px;
+}
+
+big {
+  font-size: 28px;
+}
+
+small {
+  font-size: 9px;
+}
+
+//setting a static limit on big and small prevents nesting abuse
+
+
+blockquote {
+  background-color: scale-color-diff();
+  border-left: 5px solid darken(scale-color-diff(), 10%);
+  overflow: hidden;
+}
+
+a.no-href {
+  cursor: pointer;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-attachment: fixed;
+  background-size: cover;
+  min-height: 100%;
+
+  @include clearfix;
+
+  button.ok {
+    background: $success;
+    color: $secondary;
+    @include hover {
+      background: lighten($success, 10%);
+      color: $secondary;
+    }
+  }
+  button.cancel {
+    background: $danger;
+    color: $secondary;
+    @include hover {
+      background: lighten($danger, 10%);
+      color: $secondary;
+    }
+  }
+
+  .coldmap-high {
+    color: #91CDF5 !important;
+  }
+  .coldmap-med {
+    color: #91CDF5 !important;
+  }
+  .coldmap-low {
+    color: #91AFD2 !important;
+  }
+  .heatmap-high {
+    color: #fe7a15 !important;
+  }
+  .heatmap-med {
+    color: #cf7721 !important;
+  }
+  .heatmap-low {
+    color: #9b764f !important;
+  }
+
+  #loading-message {
+    position: absolute;
+    font-size: 2.143em;
+    text-align: center;
+    top: 120px;
+    left: 500px;
+    color: $primary;
+  }
+    .top-space {
+    margin-top: 10px;
+  }
+  ul.breadcrumb {
+    margin: 0 10px 0 10px;
+  }
+
+.message {
+    @include border-radius-all(8px);
+    background-color: $secondary;
+    padding: 14px;
+
+    h2 {
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.429em;
+    }
+  }
+    #footer {
+    .container {
+      height: 50px;
+      .contents {
+        padding-top: 10px;
+        a[href] {
+          color: $secondary;
+        }
+      }
+    }
+  }
+
+  .clear-transitions {
+    transition:none !important;
+  }
+
+.tip {
+  display: inline-block;
+  &.good {
+    color: $success;
+  }
+  &.bad {
+    color: $danger;
+  }
+}
+
+
+#wmd-input {
+  resize: none;
+}
+
+#pagedown-editor {
+  width: 540px;
+  background-color: $secondary;
+  padding: 0 10px 13px 10px;
+  border: 1px solid scale-color-diff();
+  .preview {
+    margin-top: 8px;
+    border: 1px dashed scale-color-diff();
+    padding: 8px 8px 0 8px;
+    p {
+      margin: 0 0 10px 0;
+    }
+  }
+  .preview.hidden {
+    display: none;
+  }
+}
+
+
+.avatar-wrapper {
+  background-color: $secondary;
+  display: inline-block;
+}
+
+.profiler-results.profiler-left {
+  top: 60px !important;
+}
+
+
+}
+
+.unread-private-messages {
+  color: $secondary;
+  background: $success;
+  &.badge-notification[href] {color: $secondary;}
+}
+
+.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear;
+}
+
+.fade.in {
+  opacity: 1;
+}
+
+@-webkit-keyframes rotate-forever {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes rotate-forever {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.inline-spinner {
+  display: inline-block;
+  margin: 0;
+}
+
+.spinner {
+  margin: 20px auto 20px auto;
+  position: relative;
+  -webkit-animation: rotate-forever 1s infinite linear;
+  animation: rotate-forever 1s infinite linear;
+  height: 30px;
+  width: 30px;
+  border: 4px solid dark-light-diff($primary, $secondary, 50%, -50%);
+  border-right-color: transparent;
+  border-radius: 50%;
+
+  &.small {
+    width: 10px;
+    height: 10px;
+    margin: 0;
+    display: inline-block;
+  }
+}

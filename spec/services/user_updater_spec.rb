@@ -14,12 +14,21 @@ describe UserUpdater do
       expect(user.reload.name).to eq 'Jim Tom'
     end
 
+    it 'updates bio' do
+      user = Fabricate(:user)
+      updater = described_class.new(acting_user, user)
+
+      updater.update(bio_raw: 'my new bio')
+
+      expect(user.reload.user_profile.bio_raw).to eq 'my new bio'
+    end
+
     context 'when update succeeds' do
       it 'returns true' do
         user = Fabricate(:user)
         updater = described_class.new(acting_user, user)
 
-        expect(updater.update).to be_true
+        expect(updater.update).to be_truthy
       end
     end
 
@@ -29,7 +38,7 @@ describe UserUpdater do
         user.stubs(save: false)
         updater = described_class.new(acting_user, user)
 
-        expect(updater.update).to be_false
+        expect(updater.update).to be_falsey
       end
     end
 
@@ -68,7 +77,7 @@ describe UserUpdater do
 
         updater.update(website: 'http://example.com')
 
-        expect(user.reload.website).to eq 'http://example.com'
+        expect(user.reload.user_profile.website).to eq 'http://example.com'
       end
     end
 
@@ -79,7 +88,19 @@ describe UserUpdater do
 
         updater.update(website: 'example.com')
 
-        expect(user.reload.website).to eq 'http://example.com'
+        expect(user.reload.user_profile.website).to eq 'http://example.com'
+      end
+    end
+
+    context 'when custom_fields is empty string' do
+      it "update is successful" do
+        user = Fabricate(:user)
+        user.custom_fields = {'import_username' => 'my_old_username'}
+        user.save
+        updater = described_class.new(acting_user, user)
+
+        updater.update(website: 'example.com', custom_fields: '')
+        user.reload.custom_fields.should == {'import_username' => 'my_old_username'}
       end
     end
   end

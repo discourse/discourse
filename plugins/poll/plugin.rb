@@ -1,7 +1,8 @@
 # name: poll
 # about: adds poll support to Discourse
-# version: 0.1
+# version: 0.2
 # authors: Vikhyat Korrapati
+# url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
 load File.expand_path("../poll.rb", __FILE__)
 
@@ -33,7 +34,7 @@ after_initialize do
 
         post = Post.find(params[:post_id])
         poll = PollPlugin::Poll.new(post)
-        unless poll.is_poll?
+        unless poll.has_poll_details?
           render status: 400, json: false
           return
         end
@@ -47,13 +48,58 @@ after_initialize do
 
         poll.set_vote!(current_user, params[:option])
 
+        MessageBus.publish("/topic/#{post.topic_id}", {
+                        id: post.id,
+                        post_number: post.post_number,
+                        updated_at: Time.now,
+                        type: "revised"
+                      },
+                      group_ids: post.topic.secure_group_ids
+        )
+
         render json: poll.serialize(current_user)
+      end
+
+      def toggle_close
+        post = Post.find(params[:post_id])
+        topic = post.topic
+        poll = PollPlugin::Poll.new(post)
+
+        # Make sure the user is allowed to close the poll.
+        Guardian.new(current_user).ensure_can_edit!(topic)
+
+        # Make sure this is actually a poll.
+        unless poll.has_poll_details?
+          render status: 400, json: false
+          return
+        end
+
+        # Make sure the topic is not closed.
+        if topic.closed?
+          render status: 400, json: false
+          return
+        end
+
+        # Modify topic title.
+        I18n.with_locale(topic.user.effective_locale) do
+          if topic.title =~ /^(#{I18n.t('poll.prefix').strip})\s?:/i
+            topic.title = topic.title.gsub(/^(#{I18n.t('poll.prefix').strip})\s?:/i, I18n.t('poll.closed_prefix') + ':')
+          elsif topic.title =~ /^(#{I18n.t('poll.closed_prefix').strip})\s?:/i
+            topic.title = topic.title.gsub(/^(#{I18n.t('poll.closed_prefix').strip})\s?:/i, I18n.t('poll.prefix') + ':')
+          end
+        end
+
+        topic.acting_user = current_user
+        topic.save!
+
+        render json: topic, serializer: BasicTopicSerializer
       end
     end
   end
 
   PollPlugin::Engine.routes.draw do
     put '/' => 'poll#vote'
+    put '/toggle_close' => 'poll#toggle_close'
   end
 
   Discourse::Application.routes.append do
@@ -93,25 +139,35 @@ after_initialize do
       PollPlugin::Poll.new(object).serialize(scope.user)
     end
     def include_poll_details?
-      PollPlugin::Poll.new(object).is_poll?
+      PollPlugin::Poll.new(object).has_poll_details?
     end
   end
 end
 
 # Poll UI.
-register_asset "javascripts/discourse/templates/poll.js.handlebars"
-register_asset "javascripts/poll_ui.js"
+register_asset "javascripts/models/poll.js.es6"
+register_asset "javascripts/controllers/poll.js.es6"
+register_asset "javascripts/views/poll.js.es6"
+register_asset "javascripts/discourse/templates/poll.hbs"
+register_asset "javascripts/initializers/poll.js.es6"
 register_asset "javascripts/poll_bbcode.js", :server_side
 
 register_css <<CSS
 
 .poll-ui table {
   margin-bottom: 5px;
+  margin-left: 20px;
 }
 
 .poll-ui tr {
   cursor: pointer;
 }
+
+.poll-ui .row {
+  padding-left: 15px;
+  padding-top: 10px;
+}
+
 
 .poll-ui td.radio input {
   margin-left: -10px !important;
@@ -134,8 +190,16 @@ register_css <<CSS
   background-color: #FFFFB3;
 }
 
-.poll-ui button {
-  border: none;
+.poll-ui button i.fa {
+  margin-right: 2px;
+}
+
+.poll-ui .radio {
+  margin-right: 0px;
+}
+
+.poll-ui .toggle-poll {
+  float: right;
 }
 
 CSS

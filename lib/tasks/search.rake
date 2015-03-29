@@ -3,7 +3,7 @@ task "search:reindex" => :environment do
     puts "Reindexing #{db}"
     puts ""
     puts "Posts:"
-    Post.exec_sql("select p.id, p.cooked, c.name category, t.title from
+    Post.exec_sql("select p.id, p.cooked, c.name category, t.title, p.post_number, t.id topic_id from
                    posts p
                    join topics t on t.id = p.topic_id
                    left join categories c on c.id = t.category_id
@@ -12,7 +12,11 @@ task "search:reindex" => :environment do
       cooked = p["cooked"]
       title = p["title"]
       category = p["cat"]
+      post_number = p["post_number"].to_i
+      topic_id = p["topic_id"].to_i
+
       SearchObserver.update_posts_index(post_id, cooked, title, category)
+      SearchObserver.update_topics_index(topic_id, title , cooked) if post_number == 1
 
       putc "."
     end

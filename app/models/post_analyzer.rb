@@ -11,18 +11,9 @@ class PostAnalyzer
   def cook(*args)
     cooked = PrettyText.cook(*args)
 
-    # cook all oneboxes, in the past we used to defer this
-    #  for some reason we decided to do this inline now
-    # TODO: discuss on http://meta.discourse.org what the correct thing is to do
-    #  keep in mind some oneboxes may take a long time to build
-    result = Oneboxer.apply(cooked) do |url, elem|
+    result = Oneboxer.apply(cooked) do |url, _|
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
-      begin
-        Oneboxer.onebox url
-      rescue => e
-        Rails.logger.warn("Failed to cook onebox: #{e.message} #{e.backtrace}")
-        nil
-      end
+      Oneboxer.cached_onebox url
     end
 
     cooked = result.to_html if result.changed?
@@ -56,12 +47,18 @@ class PostAnalyzer
 
     # strip quotes and code blocks
     cooked_stripped = cooked_document
-    cooked_stripped.search("aside.quote").remove
-    cooked_stripped.search("pre").remove
-    cooked_stripped.search("code").remove
+    cooked_stripped.css("aside.quote").remove
+    cooked_stripped.css("pre").remove
+    cooked_stripped.css("code").remove
 
     results = cooked_stripped.to_html.scan(PrettyText.mention_matcher)
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
+  end
+
+  # from rack ... compat with ruby 2.2
+  def self.parse_uri_rfc2396(uri)
+    @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
+    @parser.parse(uri)
   end
 
   # Count how many hosts are linked in the post
@@ -73,7 +70,7 @@ class PostAnalyzer
 
     raw_links.each do |u|
       begin
-        uri = URI.parse(u)
+        uri = self.class.parse_uri_rfc2396(u)
         host = uri.host
         @linked_hosts[host] ||= 1 unless host.nil?
       rescue URI::InvalidURIError

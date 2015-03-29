@@ -4,59 +4,40 @@ require_dependency 'site_setting_extension'
 
 describe SiteSetting do
 
-  describe 'call_discourse_hub?' do
-    it 'should be true when enforce_global_nicknames is true and discourse_org_access_key is set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
-      SiteSetting.call_discourse_hub?.should == true
-    end
-
-    it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
-      SiteSetting.stubs(:discourse_org_access_key).returns('asdfasfsafd')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-
-    it 'should be false when enforce_global_nicknames is true and discourse_org_access_key is not set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(true)
-      SiteSetting.stubs(:discourse_org_access_key).returns('')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-
-    it 'should be false when enforce_global_nicknames is false and discourse_org_access_key is not set' do
-      SiteSetting.stubs(:enforce_global_nicknames).returns(false)
-      SiteSetting.stubs(:discourse_org_access_key).returns('')
-      SiteSetting.call_discourse_hub?.should == false
-    end
-  end
-
   describe "normalized_embeddable_host" do
     it 'returns the `embeddable_host` value' do
       SiteSetting.stubs(:embeddable_host).returns("eviltrout.com")
-      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
     end
 
     it 'strip http from `embeddable_host` value' do
       SiteSetting.stubs(:embeddable_host).returns("http://eviltrout.com")
-      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
     end
 
     it 'strip https from `embeddable_host` value' do
       SiteSetting.stubs(:embeddable_host).returns("https://eviltrout.com")
-      SiteSetting.normalized_embeddable_host.should == "eviltrout.com"
+      expect(SiteSetting.normalized_embeddable_host).to eq("eviltrout.com")
     end
   end
 
   describe 'topic_title_length' do
     it 'returns a range of min/max topic title length' do
-      SiteSetting.topic_title_length.should ==
+      expect(SiteSetting.topic_title_length).to eq(
         (SiteSetting.defaults[:min_topic_title_length]..SiteSetting.defaults[:max_topic_title_length])
+      )
     end
   end
 
   describe 'post_length' do
     it 'returns a range of min/max post length' do
-      SiteSetting.post_length.should == (SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
+      expect(SiteSetting.post_length).to eq(SiteSetting.defaults[:min_post_length]..SiteSetting.defaults[:max_post_length])
+    end
+  end
+
+  describe 'first_post_length' do
+    it 'returns a range of min/max first post length' do
+      expect(SiteSetting.first_post_length).to eq(SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length])
     end
   end
 
@@ -88,7 +69,7 @@ describe SiteSetting do
   end
 
   describe "top_menu" do
-    before(:each) { SiteSetting.stubs(:top_menu).returns('one,-nope|two|three,-not|four,ignored|category/xyz') }
+    before { SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|category/xyz|latest' }
 
     describe "items" do
       let(:items) { SiteSetting.top_menu_items }
@@ -105,38 +86,16 @@ describe SiteSetting do
     end
   end
 
-  describe "authorized extensions" do
-
-    describe "authorized_uploads" do
-
-      it "trims spaces and leading dots" do
-        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp | .tar.gz")
-        SiteSetting.authorized_uploads.should == ["png", "jpeg", "txt", "bmp", "tar.gz"]
-      end
-
-    end
-
-    describe "authorized_images" do
-
-      it "filters non-image out" do
-        SiteSetting.stubs(:authorized_extensions).returns(" png | .jpeg|txt|bmp")
-        SiteSetting.authorized_images.should == ["png", "jpeg", "bmp"]
-      end
-
-    end
-
-  end
-
   describe "scheme" do
 
     it "returns http when ssl is disabled" do
-      SiteSetting.expects(:use_https).returns(false)
-      SiteSetting.scheme.should == "http"
+      SiteSetting.use_https = false
+      expect(SiteSetting.scheme).to eq("http")
     end
 
     it "returns https when using ssl" do
       SiteSetting.expects(:use_https).returns(true)
-      SiteSetting.scheme.should == "https"
+      expect(SiteSetting.scheme).to eq("https")
     end
 
   end

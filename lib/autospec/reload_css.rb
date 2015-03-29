@@ -11,7 +11,7 @@ class Autospec::ReloadCss
   watch(/\.css$/)
   watch(/\.ca?ss\.erb$/)
   watch(/\.s[ac]ss$/)
-  watch(/\.handlebars$/)
+  watch(/\.hbs$/)
 
   def self.message_bus
     MessageBus::Instance.new.tap do |bus|
@@ -24,14 +24,23 @@ class Autospec::ReloadCss
   end
 
   def self.run_on_change(paths)
+    if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
+      # todo connect to dev instead?
+      ActiveRecord::Base.establish_connection
+      s = DiscourseStylesheets.new(:desktop) # TODO: what about mobile?
+      s.compile
+      s.ensure_digestless_file
+      ActiveRecord::Base.clear_active_connections!
+      paths << "public" + s.stylesheet_relpath_no_digest
+    end
     paths.map! do |p|
       hash = nil
       fullpath = "#{Rails.root}/#{p}"
       hash = Digest::MD5.hexdigest(File.read(fullpath)) if File.exists?(fullpath)
-      p = p.sub /\.sass\.erb/, ""
-      p = p.sub /\.sass/, ""
-      p = p.sub /\.scss/, ""
-      p = p.sub /^app\/assets\/stylesheets/, "assets"
+      p = p.sub(/\.sass\.erb/, "")
+      p = p.sub(/\.sass/, "")
+      p = p.sub(/\.scss/, "")
+      p = p.sub(/^app\/assets\/stylesheets/, "assets")
       { name: p, hash: hash }
     end
     message_bus.publish "/file-change", paths

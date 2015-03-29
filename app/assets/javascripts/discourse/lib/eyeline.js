@@ -21,16 +21,12 @@ Discourse.Eyeline.prototype.update = function() {
       docViewBottom = docViewTop + windowHeight,
       $elements = $(this.selector),
       atBottom = false,
-      foundElement = false,
       bottomOffset = $elements.last().offset(),
       self = this;
 
   if (bottomOffset) {
     atBottom = (bottomOffset.top <= docViewBottom) && (bottomOffset.top >= docViewTop);
   }
-
-  // Whether we've seen any elements in this search
-  foundElement = false;
 
   return $elements.each(function(i, elem) {
     var $elem = $(elem),

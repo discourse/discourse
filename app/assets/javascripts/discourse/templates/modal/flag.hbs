@@ -1,0 +1,34 @@
+<div class="modal-body flag-modal">
+
+  <form>
+    {{#each f in flagsAvailable itemController="flag-action-type"}}
+      <div class='controls'>
+        <label class='radio'>
+          <input type='radio' id="radio_{{unbound f.name_key}}" {{action "changePostActionType" f}} name='post_action_type_index'> <strong>{{f.formattedName}}</strong>
+          {{#if f.showDescription}}
+            <div class='description'>{{{f.description}}}</div>
+          {{/if}}
+        </label>
+        {{#if f.showMessageInput}}
+          {{textarea name="message" class="flag-message" placeholder=f.customPlaceholder value=f.message}}
+          <div {{bind-attr class=":custom-message-length f.customMessageLengthClasses"}}>{{f.customMessageLength}}</div>
+        {{/if}}
+      </div>
+    {{else}}
+      {{i18n 'flagging.cant'}}
+    {{/each}}
+  </form>
+
+</div>
+<div class="modal-footer">
+  <button class='btn btn-primary' {{action "createFlag"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.submit_tooltip'}}">{{{submitText}}}</button>
+
+  {{#if canTakeAction}}
+    <button class='btn btn-danger' {{action "takeAction"}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.take_action_tooltip'}}"><i class="fa fa-gavel"></i>{{i18n 'flagging.take_action'}}</button>
+  {{/if}}
+
+  {{#if canDeleteSpammer}}
+    <button class="btn btn-danger" {{action "deleteSpammer" userDetails}} {{bind-attr disabled="submitDisabled"}} title="{{i18n 'flagging.delete_spammer'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'flagging.delete_spammer'}}</button>
+  {{/if}}
+  <span class="hint">{{{i18n 'flagging.private_reminder'}}}</span>
+</div>

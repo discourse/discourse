@@ -21,7 +21,8 @@ Discourse.ScreenedIpAddressFormComponent = Ember.Component.extend({
   actionNames: function() {
     return [
       {id: 'block',       name: I18n.t('admin.logs.screened_ips.actions.block')},
-      {id: 'do_nothing',  name: I18n.t('admin.logs.screened_ips.actions.do_nothing')}
+      {id: 'do_nothing',  name: I18n.t('admin.logs.screened_ips.actions.do_nothing')},
+      {id: 'allow_admin', name: I18n.t('admin.logs.screened_ips.actions.allow_admin')}
     ];
   }.property(),
 

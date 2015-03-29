@@ -41,7 +41,12 @@ Discourse::Application.configure do
   config.handlebars.precompile = true
 
   # allows users to use mini profiler
-  config.enable_mini_profiler = false
+  config.load_mini_profiler = false
+
+  # we don't need full logster support, but need to keep it working
+  config.after_initialize do
+    Logster.logger = Rails.logger
+  end
 
   # for profiling with perftools
   # config.middleware.use ::Rack::PerftoolsProfiler, default_printer: 'gif'

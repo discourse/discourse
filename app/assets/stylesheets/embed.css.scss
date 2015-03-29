@@ -1,6 +1,10 @@
 //= require ./vendor/normalize
 //= require ./common/foundation/base
 
+@import "./common/foundation/variables";
+@import "./common/foundation/colors";
+@import "./common/base/onebox";
+
 article.post {
   border-bottom: 1px solid #ddd;
 
@@ -8,37 +12,89 @@ article.post {
     background-color: #ffe5e5;
   }
 
+  .quote .title {
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    padding: 10px 10px 0 12px;
+    .avatar { margin-right: 7px; }
+  }
+
+  ol, ul {
+    clear: none;
+  }
+
+  blockquote {
+    padding: 10px 8px 10px 13px;
+    margin: 0 0 10px 0;
+    background-color: scale-color-diff();
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    overflow: hidden;
+    p {
+      margin: 0 0 10px 0;
+    }
+    p:last-of-type {
+      margin-bottom:0;
+    }
+  }
+
   .post-date {
     float: right;
     color: #aaa;
-    font-size: 12px;
-    margin: 4px 4px 0 0;
+    font-size: 0.857em;
+    margin: 10px 4px 0 0;
   }
 
   .author {
-    padding: 20px 0;
-    width: 92px;
+    padding: 10px 5px;
     float: left;
 
-    text-align: center;
+    img {
+      max-width: 45px;
+    }
+  }
 
-    h3 {
-      text-align: center;
-      color: #4a6b82;
-      font-size: 13px;
-      margin: 0;
-      word-wrap: break-word;
+  h3.username {
+    font-size: 0.929em;
+    margin: 0 0 10px 0;
+
+    a {
+      color: #5c5c5c
+    }
+    a.staff {
+      background-color: #ffffc2;
+    }
+
+    a.new-user {
+      color: scale-color($primary, $lightness: 70%);
+    }
+
+    span.title {
+      font-weight: normal;
+      color: #999;
     }
   }
 
   .cooked {
-    padding: 20px 0;
-    margin-left: 92px;
+    padding: 10px 0 20px 0;
+    margin-left: 65px;
+    word-wrap: break-word;
+    word-break: break-word;
 
+    pre {
+      white-space: pre-wrap;
+    }
+    img {
+      max-width:100%;
+    }
     p {
       margin: 0 0 1em 0;
     }
   }
+}
+
+img.emoji {
+  width: 20px;
+  height: 20px;
 }
 
 .post-replies {
@@ -48,25 +104,27 @@ article.post {
 }
 
 .in-reply-to {
-  font-size: 13px;
-  margin-top: 4px;
+  font-size: 0.929em;
+  text-align: center;
+  margin: 10px 20px 6px 0;
   display: inline-block;
-  color: #999;
+  float: right;
+  color: #0088cc;
 }
 
 .replies {
-  font-size: 15px;
+  font-size: 1.071em;
   color: #999;
 }
 
-header {
+header.embedded {
   padding: 10px 10px 20px 10px;
-  font-size: 18px;
+  font-size: 1.286em;
   border-bottom: 1px solid #ddd;
 }
 
 footer {
-  font-size: 18px;
+  font-size: 1.286em;
 
   .logo {
     margin-right: 10px;

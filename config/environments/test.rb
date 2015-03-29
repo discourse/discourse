@@ -40,7 +40,5 @@ Discourse::Application.configure do
   config.assets.compile = true
   config.assets.digest = false
 
-  # silence deprecation warnings in test
   config.eager_load = false
-  ActiveSupport::Deprecation.silenced = true
 end

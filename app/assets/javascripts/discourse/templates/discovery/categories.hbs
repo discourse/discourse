@@ -1,0 +1,65 @@
+{{#if categories}}
+  <div class='contents'>
+    <table class='topic-list categories'>
+      <thead>
+        <tr>
+          <th class='category'>{{i18n 'categories.category'}}</th>
+          <th class='latest'>{{i18n 'categories.latest'}}</th>
+          <th class='stats topics'>{{i18n 'categories.topics'}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each c in categories}}
+          <tr data-category_id='{{unbound c.id}}' {{bind-attr class="c.description_excerpt:has-description:no-description c.logo_url:has-logo:no-logo"}}>
+            <td class='category' style="border-color: #{{unbound c.color}}">
+              <div>
+                <div class="pull-left">
+                  {{category-title-link category=c}}
+                  {{#unless c.logo_url}}
+                    {{category-unread category=c}}
+                  {{/unless}}
+                </div>
+                <div class="clearfix"></div>
+              </div>
+              {{#if c.description_excerpt}}
+                <div class="category-description">
+                  {{{c.description_excerpt}}}
+                </div>
+
+                {{#if c.logo_url}}
+                  {{category-unread category=c}}
+                {{/if}}
+              {{/if}}
+              {{#if c.subcategories}}
+                <div class='subcategories'>
+                  {{#each s in c.subcategories}}
+                    {{category-link s hideParent="true"}}
+                    {{category-unread category=s}}
+                  {{/each}}
+                </div>
+              {{/if}}
+            </td>
+            <td {{bind-attr class="c.archived :latest"}}>
+              {{#each f in c.featuredTopics}}
+                {{featured-topic topic=f latestTopicOnly=latestTopicOnly action="showTopicEntrance"}}
+              {{/each}}
+            </td>
+            <td class='stats' {{bind-attr title="c.topicStatsTitle"}}>
+              <table class="categoryStats">
+                <tbody>
+                {{#each s in c.topicCountStats}}
+                  <tr>
+                    <td class="value">{{s.value}}</td>
+                    <td class="unit"> / {{s.unit}}</td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <footer class='topic-list-bottom'></footer>
+{{/if}}

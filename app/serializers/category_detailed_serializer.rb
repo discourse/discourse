@@ -26,7 +26,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def include_displayable_topics?
-    return displayable_topics.present?
+    displayable_topics.present?
   end
 
   def description_excerpt
@@ -72,7 +72,11 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def count_with_subcategories(method)
-    object.subcategories.inject(object.send(method) || 0) { |sum,c| sum += (c.send(method) || 0) }
+    count = object.send(method) || 0
+    object.subcategories.each do |category|
+      count += (object.send(method) || 0)
+    end
+    count
   end
 
 end

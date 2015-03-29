@@ -2,9 +2,8 @@ require 'spec_helper'
 
 describe CategoryFeaturedUser do
 
-  it { should belong_to :category }
-  it { should belong_to :user }
-
+  it { is_expected.to belong_to :category }
+  it { is_expected.to belong_to :user }
 
   context 'featuring users' do
 
@@ -14,11 +13,11 @@ describe CategoryFeaturedUser do
     end
 
     it 'has a featured user' do
-      CategoryFeaturedUser.count.should_not == 0
+      expect(CategoryFeaturedUser.count).to be(1)
     end
 
     it 'returns the user via the category association' do
-      @category.featured_users.should be_present
+      expect(@category.featured_users).to be_present
     end
 
   end

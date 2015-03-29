@@ -28,7 +28,7 @@ module Helpers
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     user = args.delete(:user) || Fabricate(:user)
     guardian = Guardian.new(user)
-    args[:category] = args[:category].name if Category === args[:category]
+    args[:category] = args[:category].name if args[:category].is_a?(Category)
     TopicCreator.create(user, guardian, args)
   end
 
@@ -37,7 +37,7 @@ module Helpers
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
     user = args.delete(:user) || Fabricate(:user)
-    args[:category] = args[:category].name if Category === args[:category]
+    args[:category] = args[:category].name if args[:category].is_a?(Category)
     PostCreator.create(user, args)
   end
 
@@ -51,4 +51,17 @@ module Helpers
     yield(guardian) if block_given?
     Guardian.stubs(new: guardian).with(user)
   end
+
+  def wait_for(&blk)
+    i = 0
+    result = false
+    while !result && i < 300
+      result = blk.call
+      i += 1
+      sleep 0.001
+    end
+
+    result.should == true
+  end
+
 end

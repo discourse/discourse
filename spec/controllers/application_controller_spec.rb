@@ -14,21 +14,14 @@ describe TopicsController do
   end
 
   it "doesn't store an incoming link when there's no referer" do
-    lambda {
+    expect {
       get :show, id: topic.id
-    }.should_not change(IncomingLink, :count)
+    }.not_to change(IncomingLink, :count)
   end
 
   it "doesn't raise an error on a very long link" do
     set_referer("http://#{'a' * 2000}.com")
-    lambda { get :show, {id: topic.id} }.should_not raise_error
-  end
-
-  it "stores an incoming link when there is an off-site referer" do
-    lambda {
-      set_referer("http://google.com/search")
-      get :show, {id: topic.id}
-    }.should change(IncomingLink, :count).by(1)
+    expect { get :show, {id: topic.id} }.not_to raise_error
   end
 
   describe "has_escaped_fragment?" do
@@ -40,8 +33,8 @@ describe TopicsController do
       end
 
       it "uses the application layout even with an escaped fragment param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
-        response.should render_template(layout: 'application')
+        get :show, {'topic_id' => topic.id, 'slug' => topic.slug,  '_escaped_fragment_' => 'true'}
+        expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
     end
@@ -52,14 +45,14 @@ describe TopicsController do
       end
 
       it "uses the application layout when there's no param" do
-        get :show, {'id' => topic.id}
-        response.should render_template(layout: 'application')
+        get :show, topic_id: topic.id, slug: topic.slug
+        expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
 
       it "uses the crawler layout when there's an _escaped_fragment_ param" do
-        get :show, {'id' => topic.id, '_escaped_fragment_' => 'true'}
-        response.should render_template(layout: 'crawler')
+        get :show, topic_id: topic.id, slug: topic.slug,  _escaped_fragment_: 'true'
+        expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
     end
@@ -73,8 +66,8 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(false)
       end
       it "renders with the application layout" do
-        get :show, {'id' => topic.id}
-        response.should render_template(layout: 'application')
+        get :show, topic_id: topic.id, slug: topic.slug
+        expect(response).to render_template(layout: 'application')
         assert_select "meta[name=fragment]", true, "it has the meta tag"
       end
     end
@@ -84,23 +77,10 @@ describe TopicsController do
         CrawlerDetection.expects(:crawler?).returns(true)
       end
       it "renders with the crawler layout" do
-        get :show, {'id' => topic.id}
-        response.should render_template(layout: 'crawler')
+        get :show, topic_id: topic.id, slug: topic.slug
+        expect(response).to render_template(layout: 'crawler')
         assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
       end
-    end
-
-  end
-
-  describe 'after inserting an incoming link' do
-
-    it 'sets last link correctly' do
-      set_referer("http://google.com/search")
-      get :show, {topic_id: topic.id}
-
-      last_link = IncomingLink.last
-      last_link.topic_id.should == topic.id
-      last_link.post_number.should == 1
     end
 
   end
@@ -114,7 +94,7 @@ describe TopicsController do
 
       get :show, {topic_id: topic.id}
 
-      I18n.locale.should == :fr
+      expect(I18n.locale).to eq(:fr)
     end
 
     it 'is sets the default locale when the setting not enabled' do
@@ -123,13 +103,22 @@ describe TopicsController do
 
       get :show, {topic_id: topic.id}
 
-      I18n.locale.should == :en
+      expect(I18n.locale).to eq(:en)
     end
   end
 
 end
 
 describe 'api' do
+
+  before do
+    ActionController::Base.allow_forgery_protection = true
+  end
+
+  after do
+    ActionController::Base.allow_forgery_protection = false
+  end
+
   describe PostsController do
     let(:user) do
       Fabricate(:user)
@@ -146,33 +135,31 @@ describe 'api' do
     it 'allows users with api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
       put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, format: :json
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'raises an error with a user key that does not match an optionally specified username' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
       put :bookmark, bookmarked: "true", post_id: post.id, api_key: api_key.key, api_username: 'made_up', format: :json
-      response.should_not be_success
+      expect(response).not_to be_success
     end
 
     it 'allows users with a master api key to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).once
       put :bookmark, bookmarked: "true", post_id: post.id, api_key: master_key.key, api_username: user.username, format: :json
-      response.should be_success
+      expect(response).to be_success
     end
 
     it 'disallows phonies to bookmark posts' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      lambda do
-        put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
-      end.should raise_error Discourse::NotLoggedIn
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: SecureRandom.hex(32), api_username: user.username, format: :json
+      expect(response.code.to_i).to eq(403)
     end
 
     it 'disallows blank api' do
       PostAction.expects(:act).with(user, post, PostActionType.types[:bookmark]).never
-      lambda do
-        put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
-      end.should raise_error Discourse::NotLoggedIn
+      put :bookmark, bookmarked: "true", post_id: post.id, api_key: "", api_username: user.username, format: :json
+      expect(response.code.to_i).to eq(403)
     end
   end
 end

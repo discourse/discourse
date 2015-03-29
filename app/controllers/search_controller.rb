@@ -3,7 +3,7 @@ require_dependency 'search'
 class SearchController < ApplicationController
 
   def self.valid_context_types
-    %w{user topic category}
+    %w{user topic category private_messages}
   end
 
   def query
@@ -11,20 +11,27 @@ class SearchController < ApplicationController
 
     search_args = {guardian: guardian}
     search_args[:type_filter] = params[:type_filter] if params[:type_filter].present?
+    if params[:include_blurbs].present?
+      search_args[:include_blurbs] = params[:include_blurbs] == "true"
+    end
+    search_args[:search_for_id] = true if params[:search_for_id].present?
 
     search_context = params[:search_context]
     if search_context.present?
       raise Discourse::InvalidParameters.new(:search_context) unless SearchController.valid_context_types.include?(search_context[:type])
       raise Discourse::InvalidParameters.new(:search_context) if search_context[:id].blank?
 
-      klass = search_context[:type].classify.constantize
-
       # A user is found by username
       context_obj = nil
-      if search_context[:type] == 'user'
-        context_obj = klass.where(username_lower: params[:search_context][:id].downcase).first
+      if ['user','private_messages'].include? search_context[:type]
+        context_obj = User.find_by(username_lower: params[:search_context][:id].downcase)
       else
-        context_obj = klass.where(id: params[:search_context][:id]).first
+        klass = search_context[:type].classify.constantize
+        context_obj = klass.find_by(id: params[:search_context][:id])
+      end
+
+      if search_context[:type] == 'private_messages'
+        search_args[:type_filter] = 'private_messages'
       end
 
       guardian.ensure_can_see!(context_obj)
@@ -32,7 +39,8 @@ class SearchController < ApplicationController
     end
 
     search = Search.new(params[:term], search_args.symbolize_keys)
-    render_json_dump(search.execute.as_json)
+    result = search.execute
+    render_serialized(result, GroupedSearchResultSerializer, :result => result)
   end
 
 end

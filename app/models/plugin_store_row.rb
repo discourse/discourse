@@ -15,4 +15,3 @@ end
 #
 #  index_plugin_store_rows_on_plugin_name_and_key  (plugin_name,key) UNIQUE
 #
-

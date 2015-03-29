@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ko:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "투표 옵션"
+  poll:
+    must_contain_poll_options: "투표 옵션 목록 포함 필수"
+    cannot_have_modified_options: "5분 뒤에는 수정할 수 없습니다. 바꾸고 싶다면 관리자에게 문의하세요."
+    cannot_add_or_remove_options: "수정만 가능하고 추가나 삭제가 불가능 합니다. 선택사항을 추가하거나 삭제하고 싶다면 이 토픽을 잠그고 다른 토픽을 생성해야합니다."
+    prefix: "투표"
+    closed_prefix: "투표 닫기"

@@ -7,8 +7,14 @@ class PostActionType < ActiveRecord::Base
     end
 
     def types
-      @types ||= Enum.new(:bookmark, :like, :off_topic, :inappropriate, :vote,
-                          :notify_user, :notify_moderators, :spam)
+      @types ||= Enum.new(:bookmark,
+                          :like,
+                          :off_topic,
+                          :inappropriate,
+                          :vote,
+                          :notify_user,
+                          :notify_moderators,
+                          :spam)
     end
 
     def auto_action_flag_types
@@ -17,6 +23,10 @@ class PostActionType < ActiveRecord::Base
 
     def public_types
       @public_types ||= types.except(*flag_types.keys << :notify_user)
+    end
+
+    def public_type_ids
+      @public_type_ids ||= public_types.values
     end
 
     def flag_types
@@ -50,4 +60,3 @@ end
 #  id         :integer          not null, primary key
 #  position   :integer          default(0), not null
 #
-

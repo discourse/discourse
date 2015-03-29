@@ -14,7 +14,6 @@ module Onebox
         uri = URI::parse(@url)
         route = Rails.application.routes.recognize_path(uri.path)
 
-        args = {original_url: @url}
 
         # Figure out what kind of onebox to show based on the URL
         case route[:controller]
@@ -23,8 +22,9 @@ module Onebox
           linked = "<a href='#{@url}'>#{@url}</a>"
           if route[:post_number].present? && route[:post_number].to_i > 1
             # Post Link
-            post = Post.where(topic_id: route[:topic_id], post_number: route[:post_number].to_i).first
+            post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number].to_i)
             return linked unless post
+            return linked if post.hidden
             return linked unless Guardian.new.can_see?(post)
 
             topic = post.topic
@@ -56,30 +56,23 @@ module Onebox
               }
             end
 
-            category = topic.category
-            if category
-              category = "<a href=\"/category/#{category.slug}\" class=\"badge badge-category\" style=\"background-color: ##{category.color}; color: ##{category.text_color}\">#{category.name}</a>"
-            end
-
             quote = post.excerpt(SiteSetting.post_onebox_maxlength)
-            args.merge! title: topic.title,
-                        avatar: PrettyText.avatar_img(topic.user.avatar_template, 'tiny'),
-                        posts_count: topic.posts_count,
-                        last_post: FreedomPatches::Rails4.time_ago_in_words(topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose'),
-                        age: FreedomPatches::Rails4.time_ago_in_words(topic.created_at, false, scope: :'datetime.distance_in_words_verbose'),
-                        views: topic.views,
-                        posters: posters,
-                        quote: quote,
-                        category: category,
-                        topic: topic.id
+            args = { original_url: @url,
+                     title: topic.title,
+                     avatar: PrettyText.avatar_img(topic.user.avatar_template, 'tiny'),
+                     posts_count: topic.posts_count,
+                     last_post: FreedomPatches::Rails4.time_ago_in_words(topic.last_posted_at, false, scope: :'datetime.distance_in_words_verbose'),
+                     age: FreedomPatches::Rails4.time_ago_in_words(topic.created_at, false, scope: :'datetime.distance_in_words_verbose'),
+                     views: topic.views,
+                     posters: posters,
+                     quote: quote,
+                     category_html: CategoryBadge.html_for(topic.category),
+                     topic: topic.id }
 
-            @template = 'topic'
+            return Mustache.render(File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs"), args)
           end
-
         end
 
-        return nil unless @template
-        Mustache.render(File.read("#{Rails.root}/lib/onebox/templates/discourse_#{@template}_onebox.handlebars"), args)
       rescue ActionController::RoutingError
         nil
       end

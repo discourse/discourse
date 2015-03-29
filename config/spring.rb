@@ -6,8 +6,6 @@
 # spring binstub rake
 # spring binstub rspec
 Spring.after_fork do
-  $redis.client.reconnect
-  Rails.cache.reconnect
-  MessageBus.after_fork
+  Discourse.after_fork
 end
 Spring::Commands::Rake.environment_matchers["spec"] = "test"

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe CategoryFeaturedTopic do
 
-  it { should belong_to :category }
-  it { should belong_to :topic }
+  it { is_expected.to belong_to :category }
+  it { is_expected.to belong_to :topic }
 
   context 'feature_topics_for' do
     let(:user)           { Fabricate(:user) }
@@ -13,15 +13,15 @@ describe CategoryFeaturedTopic do
     it "should feature topics for a secure category" do
 
       # so much dancing, I am thinking fixures make sense here.
-      user.change_trust_level!(:basic)
+      user.change_trust_level!(TrustLevel[1])
 
       category.set_permissions(:trust_level_1 => :full)
       category.save
 
-      uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
+      _uncategorized_post = PostCreator.create(user, raw: "this is my new post 123 post", title: "hello world")
 
       CategoryFeaturedTopic.feature_topics_for(category)
-      CategoryFeaturedTopic.count.should == 1
+      expect(CategoryFeaturedTopic.count).to be(1)
 
     end
 
@@ -29,7 +29,24 @@ describe CategoryFeaturedTopic do
       invisible_post = PostCreator.create(user, raw: "Don't look at this post because it's awful.", title: "not visible to anyone", category: category.id)
       invisible_post.topic.update_status('visible', false, Fabricate(:admin))
       CategoryFeaturedTopic.feature_topics_for(category)
-      CategoryFeaturedTopic.count.should == 1
+      expect(CategoryFeaturedTopic.count).to be(1)
+    end
+
+
+    it 'should feature stuff in the correct order' do
+
+      category = Fabricate(:category)
+      _t3 = Fabricate(:topic, category_id: category.id, bumped_at: 7.minutes.ago)
+      t2 = Fabricate(:topic, category_id: category.id, bumped_at: 4.minutes.ago)
+      t1 = Fabricate(:topic, category_id: category.id, bumped_at: 5.minutes.ago)
+      pinned = Fabricate(:topic, category_id: category.id, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago)
+
+      CategoryFeaturedTopic.feature_topics_for(category)
+
+      expect(
+        CategoryFeaturedTopic.where(category_id: category.id).pluck(:topic_id)
+      ).to eq([pinned.id, t2.id, t1.id])
+
     end
   end
 

@@ -1,6 +1,9 @@
 module JsLocaleHelper
 
   def self.output_locale(locale, translations = nil)
+    current_locale = I18n.locale
+    I18n.locale = locale.to_sym
+
     locale_str = locale.to_s
 
     # load default translations
@@ -10,6 +13,7 @@ module JsLocaleHelper
     Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
       plugin_translations.deep_merge! YAML::load(File.open(file))
     end
+
     # merge translations (plugin translations overwrite default translations)
     translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
 
@@ -19,7 +23,7 @@ module JsLocaleHelper
     # For now, let's leave it split out in the translation file in case we want to split
     # it again later, so we'll merge the JSON ourselves.
     admin_contents = translations[locale_str].delete('admin_js')
-    translations[locale_str]['js'].merge!(admin_contents) if admin_contents.present?
+    translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
     translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 
@@ -31,6 +35,9 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
+
+    I18n.locale = current_locale
+
     result
   end
 
@@ -43,7 +50,7 @@ module JsLocaleHelper
   end
 
   def self.moment_format_function(name)
-    format = I18n.t("dates." << name)
+    format = I18n.t("dates.#{name}")
     result = "moment.fn.#{name.camelize(:lower)} = function(){ return this.format('#{format}'); };\n"
   end
 
@@ -96,13 +103,13 @@ module JsLocaleHelper
   end
 
   def self.strip_out_message_formats!(hash, prefix = "", rval = {})
-    if Hash === hash
-      hash.each do |k,v|
-        if Hash === v
-          rval.merge!(strip_out_message_formats!(v, prefix + (prefix.length > 0 ? "." : "") << k, rval))
-        elsif k.to_s().end_with?("_MF")
-          rval[prefix + (prefix.length > 0 ? "." : "") << k] = v
-          hash.delete(k)
+    if hash.is_a?(Hash)
+      hash.each do |key, value|
+        if value.is_a?(Hash)
+          rval.merge!(strip_out_message_formats!(value, prefix + (prefix.length > 0 ? "." : "") << key, rval))
+        elsif key.to_s.end_with?("_MF")
+          rval[prefix + (prefix.length > 0 ? "." : "") << key] = value
+          hash.delete(key)
         end
       end
     end

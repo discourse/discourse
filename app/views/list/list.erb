@@ -1,11 +1,15 @@
 <div class="topic-list">
 <% @list.topics.each do |t| %>
-  <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+  <a href="<%= t.relative_url %>"><%= t.title %></a>
+  <% if !@category && t.category %>
+    [<a href="<%= t.category.url%>"><%= t.category.name %></a>]
+  <% end %>
+  <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
 <% end %>
 </div>
 
 
-<% if @list.topics.length > 0 %>
+<% if @list.topics.length > 0 && @list.more_topics_url %>
   <p>
   <% if params[:page].to_i > 0 %>
     <a href="<%= @list.prev_topics_url.sub('.json?','?') %>" rel="prev"><%= t 'prev_page'%></a> &nbsp;
@@ -14,18 +18,21 @@
   </p>
 <% end %>
 
-<p><%= t 'powered_by_html' %></p>
-
 <% if @rss %>
   <% content_for :head do %>
-    <%= auto_discovery_link_tag(:rss, {action: "#{@rss}_feed"}, title: I18n.t("rss_description.#{@rss}")) %>
+    <%= auto_discovery_link_tag(:rss, { action: "#{@rss}_feed" }, title: I18n.t("rss_description.#{@rss}")) %>
   <% end %>
 <% end %>
 
 <% if @category %>
   <% content_for :head do %>
-    <%= auto_discovery_link_tag(@category, {action: :category_feed, format: :rss}, title: t('rss_topics_in_category', category: @category.name), type: 'application/rss+xml') %>
+    <%= auto_discovery_link_tag(:rss, { action: :category_feed }, title: t('rss_topics_in_category', category: @category.name)) %>
   <% end %>
+<% end %>
+
+<% if @title %>
+  <% content_for :title do %><%= @title %><% end %>
+<% elsif @category %>
   <% content_for :title do %><%=@category.name%> <%=t('topics')%><% end %>
 <% elsif params[:page] %>
   <% content_for :title do %><%=t 'page_num', num: params[:page].to_i + 1 %><% end %>

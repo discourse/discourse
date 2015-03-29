@@ -69,6 +69,69 @@ before_fork do |server, worker|
       end
     end
 
+    sidekiqs = ENV['UNICORN_SIDEKIQS'].to_i
+    if sidekiqs > 0
+      puts "Starting up #{sidekiqs} supervised sidekiqs"
+
+      require 'demon/sidekiq'
+
+      Demon::Sidekiq.start(sidekiqs)
+
+      class ::Unicorn::HttpServer
+        alias :master_sleep_orig :master_sleep
+
+        def max_rss
+          rss = `ps -eo rss,args | grep sidekiq | grep -v grep | awk '{print $1}'`
+                .split("\n")
+                .map(&:to_i)
+                .max
+
+          rss ||= 0
+
+          rss * 1024
+        end
+
+        def out_of_memory?
+          max_allowed_size = [ENV['UNICORN_SIDEKIQ_MAX_RSS'].to_i, 500].max.megabytes;
+          max_rss > max_allowed_size
+        end
+
+        def check_sidekiq_heartbeat
+          @sidekiq_heartbeat_interval ||= 30.minutes
+          @sidekiq_next_heartbeat_check ||= Time.new.to_i + @sidekiq_heartbeat_interval
+
+          if @sidekiq_next_heartbeat_check < Time.new.to_i
+
+            last_heartbeat = Jobs::RunHeartbeat.last_heartbeat
+            restart = false
+
+            if out_of_memory?
+              Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM), restarting" % (max_rss.to_f / 1.megabyte))
+              restart = true
+            end
+
+            if last_heartbeat < Time.new.to_i - @sidekiq_heartbeat_interval
+              STDERR.puts "Sidekiq heartbeat test failed, restarting"
+              Rails.logger.warn "Sidekiq heartbeat test failed, restarting"
+
+              restart = true
+            end
+            @sidekiq_next_heartbeat_check = Time.new.to_i + @sidekiq_heartbeat_interval
+
+            Demon::Sidekiq.restart if restart
+            $redis.client.disconnect
+          end
+        end
+
+        def master_sleep(sec)
+          Demon::Sidekiq.ensure_running
+          check_sidekiq_heartbeat
+
+          master_sleep_orig(sec)
+        end
+      end
+    end
+
   end
 
   ActiveRecord::Base.connection.disconnect!
@@ -83,8 +146,5 @@ before_fork do |server, worker|
 end
 
 after_fork do |server, worker|
-  ActiveRecord::Base.establish_connection
-  $redis.client.reconnect
-  Rails.cache.reconnect
-  MessageBus.after_fork
+  Discourse.after_fork
 end

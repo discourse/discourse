@@ -23,7 +23,7 @@ test:
   host_names:
     - test.localhost
 
-# profile db is used for benchamarking using the script/bench.rb script
+# profile db is used for benchmarking using the script/bench.rb script
 profile:
   adapter: postgresql
   database: discourse_profile

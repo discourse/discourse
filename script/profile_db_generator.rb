@@ -49,7 +49,7 @@ def create_admin(seq)
     admin.password = "password"
     admin.save
     admin.grant_admin!
-    admin.change_trust_level!(:regular)
+    admin.change_trust_level!(TrustLevel[4])
     admin.email_tokens.update_all(confirmed: true)
   }
 end
@@ -95,9 +95,10 @@ puts
 puts "Creating 100 topics"
 
 topic_ids = 100.times.map do
-  topic = PostCreator.create(users.sample, raw: sentence, title: sentence[0..50].strip, category:  categories.sample.name, skip_validations: true)
+  post = PostCreator.create(users.sample, raw: sentence, title: sentence[0..50].strip, category:  categories.sample.name, skip_validations: true)
+
   putc "."
-  topic.id
+  post.topic_id
 end
 
 puts

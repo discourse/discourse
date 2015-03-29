@@ -1,0 +1,53 @@
+<div class="modal-body">
+  {{login-buttons action="externalLogin"}}
+  {{#if canLoginLocal}}
+    <form id='login-form' method='post'>
+      <div>
+        <table>
+          <tr>
+            <td>
+              <label for='login-account-name'>{{i18n 'login.username'}}&nbsp;</label>
+            </td>
+            <td>
+              {{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off"}}
+            </td>
+          </tr>
+          <tr>
+            <td>
+                <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
+            </td>
+            <td>
+                {{text-field value=loginPassword type="password" id="login-account-password" maxlength="200"}} &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <a id="forgot-password-link" {{action "showForgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </form>
+  {{/if}}
+  {{authMessage}}
+  <div id='login-alert' {{bind-attr class="alertClass"}}>{{alert}}</div>
+</div>
+<div class="modal-footer">
+  {{#if authenticate}}
+    {{i18n 'login.authenticating'}}
+  {{/if}}
+  {{#if canLoginLocal}}
+    <button class='btn btn-large btn-primary'
+      {{bind-attr disabled="loginDisabled"}}
+      {{action "login"}}>
+        <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
+    </button>
+
+    {{#if showSignupLink}}
+      <button class="btn btn-large" id="new-account-link" {{action "showCreateAccount"}}>
+        {{i18n 'create_account.title'}}
+      </button>
+    {{/if}}
+  {{/if}}
+</div>

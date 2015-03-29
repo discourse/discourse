@@ -1,8 +1,10 @@
-var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
-    relativeAgeMedium, relativeAgeMediumSpan, longDate, toTitleCase,
-    shortDate, shortDateNoYear, tinyDateYear, breakUp, relativeAgeTinyShowsYear;
+/* global BreakString:true */
 
-  /*
+var updateRelativeAge, autoUpdatingRelativeAge, relativeAge, relativeAgeTiny,
+    relativeAgeMedium, relativeAgeMediumSpan, longDate, longDateNoYear, toTitleCase,
+    shortDate, shortDateNoYear, tinyDateYear, relativeAgeTinyShowsYear;
+
+/*
 * memoize.js
 * by @philogb and @addyosmani
 * with further optimizations by @mathias
@@ -44,50 +46,9 @@ var cappedMemoize = function ( fn, max ) {
     };
 };
 
-breakUp = function(str, hint){
-  var rval = [];
-  var prev = str[0];
-  var cur;
-  var brk = "<wbr>&#8203;";
-
-  var hintPos = [];
-  if(hint) {
-    hint = hint.toLowerCase().split(/\s+/).reverse();
-    var current = 0;
-    while(hint.length > 0) {
-      var word = hint.pop();
-      if(word !== str.substr(current, word.length).toLowerCase()) {
-        break;
-      }
-      current += word.length;
-      hintPos.push(current);
-    }
-  }
-
-  rval.push(prev);
-  for (var i=1;i<str.length;i++) {
-    cur = str[i];
-    if(prev.match(/[^0-9]/) && cur.match(/[0-9]/)){
-      rval.push(brk);
-    } else if(i>1 && prev.match(/[A-Z]/) && cur.match(/[a-z]/)){
-      rval.pop();
-      rval.push(brk);
-      rval.push(prev);
-    } else if(prev.match(/[^A-Za-z0-9]/) && cur.match(/[a-zA-Z0-9]/)){
-      rval.push(brk);
-    } else if(hintPos.indexOf(i) > -1) {
-      rval.push(brk);
-    }
-
-    rval.push(cur);
-    prev = cur;
-  }
-
-  return rval.join("");
-
-};
-
-breakUp = cappedMemoize(breakUp, 100);
+var breakUp = cappedMemoize(function(str, hint){
+  return new BreakString(str).break(hint);
+}, 100);
 
 shortDate = function(date){
   return moment(date).format(I18n.t("dates.medium.date_year"));
@@ -114,6 +75,17 @@ longDate = function(dt) {
   return moment(dt).longDate();
 };
 
+// suppress year, if current year
+longDateNoYear = function(dt) {
+  if (!dt) return;
+
+  if ((new Date()).getFullYear() !== dt.getFullYear()) {
+    return moment(dt).format(I18n.t("dates.long_date_with_year"));
+  } else {
+    return moment(dt).format(I18n.t("dates.long_date_without_year"));
+  }
+};
+
 updateRelativeAge = function(elems) {
   // jQuery .each
   elems.each(function(){
@@ -123,8 +95,8 @@ updateRelativeAge = function(elems) {
 };
 
 autoUpdatingRelativeAge = function(date,options) {
-
   if (!date) return "";
+  if (+date === +new Date(0)) return "";
 
   options = options || {};
   var format = options.format || "tiny";
@@ -237,7 +209,7 @@ relativeAgeMediumSpan = function(distance, leaveAgo) {
 
 relativeAgeMedium = function(date, options){
   var displayDate, fiveDaysAgo, oneMinuteAgo, fullReadable, leaveAgo;
-  var wrapInSpan = options.wrapInSpan === false ? false : true;
+  var wrapInSpan = options.wrapInSpan !== false;
 
   leaveAgo = options.leaveAgo;
   var distance = Math.round((new Date() - date) / 1000);
@@ -289,6 +261,9 @@ var number = function(val) {
   val = parseInt(val, 10);
   if (isNaN(val)) val = 0;
 
+  if (val > 999999) {
+    return (val / 1000000).toFixed(1) + "M";
+  }
   if (val > 999) {
     return (val / 1000).toFixed(1) + "K";
   }
@@ -297,6 +272,7 @@ var number = function(val) {
 
 Discourse.Formatter = {
   longDate: longDate,
+  longDateNoYear: longDateNoYear,
   relativeAge: relativeAge,
   autoUpdatingRelativeAge: autoUpdatingRelativeAge,
   updateRelativeAge: updateRelativeAge,

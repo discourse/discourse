@@ -1,0 +1,24 @@
+{{#if bulkSelectEnabled}}
+<th class='star'>
+  <button class='btn bulk-select' title='{{i18n "topics.bulk.toggle"}}'><i class='fa fa-list'></i></button>
+</th>
+{{/if}}
+{{raw "topic-list-header-column" order='default' name='topic.title' showBulkToggle=toggleInTitle}}
+{{#unless hideCategory}}
+  {{raw "topic-list-header-column" sortable=sortable order='category' name='category_title'}}
+{{/unless}}
+{{#if showPosters}}
+  {{raw "topic-list-header-column" order='posters' name='users'}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='posts' name='replies'}}
+{{#if showParticipants}}
+  {{raw "topic-list-header-column" order='participants' name='users'}}
+{{/if}}
+{{#if showLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='likes' name='likes'}}
+{{/if}}
+{{#if showOpLikes}}
+  {{raw "topic-list-header-column" sortable=sortable number='true' order='op_likes' name='likes'}}
+{{/if}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='views' name='views'}}
+{{raw "topic-list-header-column" sortable=sortable number='true' order='activity' name='activity'}}

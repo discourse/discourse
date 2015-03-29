@@ -16,7 +16,10 @@ class TopicPostersSummary
     TopicPoster.new.tap do |topic_poster|
       topic_poster.user = user
       topic_poster.description = descriptions_for(user)
-      topic_poster.extras = 'latest' if is_latest_poster?(user)
+      if topic.last_post_user_id == user.id
+        topic_poster.extras = 'latest'
+        topic_poster.extras << ' single' if user_ids.uniq.size == 1
+      end
     end
   end
 
@@ -45,19 +48,15 @@ class TopicPostersSummary
     user_ids.zip([
       :original_poster,
       :most_recent_poster,
-      :most_posts,
+      :frequent_poster,
       :frequent_poster,
       :frequent_poster,
       :frequent_poster
-    ].map { |description| I18n.t(description) })
+      ].map { |description| I18n.t(description) })
   end
 
   def last_poster_is_topic_creator?
     topic.user_id == topic.last_post_user_id
-  end
-
-  def is_latest_poster?(user)
-    topic.last_post_user_id == user.id
   end
 
   def sorted_top_posters

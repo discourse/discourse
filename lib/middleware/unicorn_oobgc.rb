@@ -106,12 +106,12 @@ module Middleware::UnicornOobgc
       @max_delta ||= delta
 
       if delta > @max_delta
-        new_delta = (delta * 1.5).to_i
+        new_delta = (@max_delta * 1.5).to_i
         @max_delta = [new_delta, delta].min
       else
         # this may seem like a very tiny decay rate, but some apps using caching
         # can really mess stuff up, if our delta is too low the algorithm fails
-        new_delta = (delta * 0.995).to_i
+        new_delta = (@max_delta * 0.99).to_i
         @max_delta = [new_delta, delta].max
       end
 

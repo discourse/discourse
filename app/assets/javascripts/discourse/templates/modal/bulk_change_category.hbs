@@ -1,0 +1,7 @@
+<p>{{i18n "topics.bulk.choose_new_category"}}</p>
+
+<p>{{category-chooser value=newCategoryId}}</p>
+
+{{#loading-spinner condition=loading}}
+  {{d-button action="changeCategory" label="topics.bulk.change_category"}}
+{{/loading-spinner}}

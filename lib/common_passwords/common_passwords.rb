@@ -41,7 +41,7 @@ class CommonPasswords
 
     def self.load_passwords
       passwords = File.readlines(PASSWORD_FILE)
-      passwords[0,5000].map!(&:chomp).each do |pwd|
+      passwords.map!(&:chomp).each do |pwd|
         # slower, but a tad more compatible
         redis.sadd LIST_KEY, pwd
       end

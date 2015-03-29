@@ -5,7 +5,7 @@ class Validators::StrippedLengthValidator < ActiveModel::EachValidator
       stripped_length = value.strip.length
       record.errors.add attribute, (I18n.t('errors.messages.too_short', count: range.begin)) unless
           stripped_length >= range.begin
-      record.errors.add attribute, (I18n.t('errors.messages.too_long', count: range.end)) unless
+      record.errors.add attribute, (I18n.t('errors.messages.too_long_validation', max: range.end, length: stripped_length)) unless
           stripped_length <= range.end
     else
       record.errors.add attribute, (I18n.t('errors.messages.blank'))

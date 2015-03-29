@@ -6,7 +6,8 @@ class TopicLinkSerializer < ApplicationSerializer
              :internal,
              :reflection,
              :clicks,
-             :user_id
+             :user_id,
+             :domain
 
   def url
     object['url']
@@ -38,6 +39,10 @@ class TopicLinkSerializer < ApplicationSerializer
 
   def include_user_id?
     object['user_id'].present?
+  end
+
+  def domain
+    object['domain']
   end
 
 end

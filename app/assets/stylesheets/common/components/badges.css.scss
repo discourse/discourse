@@ -1,6 +1,3 @@
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 // --------------------------------------------------
 // Badges
 // --------------------------------------------------
@@ -15,36 +12,217 @@
   @include border-radius-all(10px);
 }
 
-// Category badge
+// Category badges
 // --------------------------------------------------
 
-.badge-category {
-  padding: 4px 6px;
-  color: $tertiary_text_color;
-  font-size: 12px;
+.badge-wrapper {
+  font-size: 0.857em;
   font-weight: bold;
   white-space: nowrap;
-  &[href] {
-  color: $tertiary_text_color;
-  }
-  &.restricted {
-    div {
+  display: inline-block;
+  position: relative;
+
+  &.bar { //bar category style
+    line-height: 1.25;
+    span.badge-category {
+      color: $primary !important;
+      padding: 3px;
+      vertical-align: text-top;
+      margin-top: -3px; //vertical alignment fix
       display: inline-block;
-      margin: 0;
+
+      .extra-info-wrapper & {
+        color: $header-primary !important;
+      }
+   }
+
+   .badge-category-parent-bg, .badge-category-bg {
+     display: inline-block;
+     padding: 1px;
+
+     &:before {
+       content: "\a0";
+     }
+
+   }
+
+  }
+
+
+  &.bullet { //bullet category style
+    line-height: 1;
+    margin-right: 5px;
+
+    h3 & {
+      line-height: .9;
+    }
+
+    span.badge-category {
+      color: $primary !important;
+      vertical-align: text-top;
+      line-height: 1;
+      margin-left: 4px;
+      padding-left: 2px;
+      display: inline;
+
+      #search-dropdown & {
+        margin-top: 0;
+      }
+
+      .extra-info-wrapper & {
+        color: $header-primary !important;
+      }
+   }
+
+   .badge-category-parent-bg, .badge-category-bg {
+     display: inline-block;
+     width: 10px;
+     height: 10px;
+     &:before {
+       content: "\a0";
+     }
+   }
+
+   span {
+     &.badge-category-parent-bg { //subcategory style
+       width: 5px;
+       & + .badge-category-bg {
+         width: 5px;
+       }
+     }
+   }
+
+ }
+
+
+  &.box {  //box category style (apply custom widths to the wrapper, not the children)
+    line-height: 1.5;
+    margin-top: 5px;
+
+    span {
+      display: block;
+
+      &.badge-category-bg, &.badge-category-parent-bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      &.badge-category-parent-bg { //subcategory style
+        width: calc(100% - 5px);
+        & + .badge-category-bg {
+          left: 5px;
+          width: calc(100% - 5px);
+          & + .badge-category {
+            margin-left: 5px;
+          }
+        }
+      }
+
+      &.badge-category {
+        position: relative;
+        padding: 0 5px;
+        margin-top: 2px;
+      }
     }
   }
+
+  span.badge-category {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    .d-dropdown & {
+      max-width: 100px;
+    }
+  }
+
 }
 
-.d-dropdown .badge-category {
-&.restricted {
-    div {
-      display: inline-block;
-      margin: 0;
-      padding-right: 6px;
-    }
-}}
+// Category badge dropdown
+// --------------------------------------------------
 
-h1 a.badge-category div {vertical-align: top;}
+
+.list-controls {
+.category-breadcrumb {
+  a.badge-category {
+      display: inline-block;
+      padding: 5px 8px;
+      line-height: 20px;
+    &.category-dropdown-button {
+      margin-left: -4px;
+      padding: 5px;
+      width: 13px;
+
+      .fa-caret-right {
+        margin-left: 2px;
+        }
+      }
+    }
+
+    li.bar>.badge-category:not(.home):first-child {
+      border-left: 5px solid;
+    }
+
+    li.bar>.badge-category {
+      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      color: $primary !important;
+    }
+
+    li.bullet>.badge-category {
+      background: dark-light-diff($primary, $secondary, 95%, -65%) !important;
+      color: $primary !important;
+
+      .badge-category-bg {
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin: 0 2px;
+      }
+    }
+
+
+  }
+
+  .category-dropdown-menu {
+    .badge-category {
+      &.home {
+        margin-left: 4px;
+        padding-left: 0;
+      }
+    }
+    .cat {
+        line-height: 0;
+      }
+    .badge-wrapper {
+      &.bar {
+        margin: 5px 0;
+        .badge-category {
+          max-width: 100px;
+        }
+      }
+      &.bullet {
+        margin: 5px;
+        .badge-category {
+          max-width: 100px;
+        }
+      }
+      &.box {
+        margin-top: 0;
+        width: 100%;
+        line-height: 1;
+        span.badge-category {
+          padding: 5px;
+        }
+      }
+
+    }
+
+  }
+
+}
+
+
 
 
 // Notification badge
@@ -52,26 +230,36 @@ h1 a.badge-category div {vertical-align: top;}
 
 .badge-notification {
   @extend %badge;
-  padding: 4px;
-  color: $tertiary_text_color;
+  padding: 4px 5px 2px 5px;
+  vertical-align: middle;
+  color: $secondary;
   font-size: 11px;
   line-height: 1;
-  min-width: 11px;
   text-align: center;
-  background-color: $badge-notification-background-color;
+  background-color: scale-color($primary, $lightness: 70%);
   &[href] {
-  color: $tertiary_text_color;
+  color: $secondary;
   }
 
   // New posts
 
   &.new-posts, &.unread-posts {
-    background-color: lighten($emphasis_text_color, 20%);
-    color: $tertiary_text_color;
+    background-color: scale-color($tertiary, $lightness: 50%);
+    color: $secondary;
     font-weight: normal;
   }
 
+  &.new-topic {
+    background-color: transparent;
+    color: scale-color($tertiary, $lightness: 20%);
+    font-weight: normal;
+    font-size: 0.929em;
+  }
 
+  &.new-topic::before {
+    content: "●";
+    margin-right: 2px;
+  }
 
   // Click count
 
@@ -82,6 +270,7 @@ h1 a.badge-category div {vertical-align: top;}
     color: #888;
     position: relative;
     margin-left: 2px;
+    border: none;
   }
 }
 
@@ -89,12 +278,11 @@ h1 a.badge-category div {vertical-align: top;}
 // --------------------------------------------------
 
 .badge-posts {
-  color: $badge-posts-color;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 1em;
   line-height: 1;
   &[href] {
-    color: $badge-posts-color;
+    color: scale-color($primary, $lightness: 40%);
   }
 }
 
@@ -103,11 +291,11 @@ h1 a.badge-category div {vertical-align: top;}
 
 .badge-group {
   @extend %badge;
-  padding: 3px 5px;
-  color: $primary_text_color;
-  text-shadow: 0 1px 0 rgba($secondary_shadow_color, 0.2);
-  background-color: #ddd;
-  border-color: #aaa;
-  font-size: 12px;
-  @include box-shadow(inset 0 1px 0 rgba($secondary_shadow_color, 0.52));
+  padding: 4px 5px 2px 5px;
+  color: $primary;
+  text-shadow: 0 1px 0 rgba($primary, 0.1);
+  background-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  border-color: dark-light-diff($primary, $secondary, 90%, -65%);
+  font-size: 0.857em;
+  box-shadow: inset 0 1px 0 rgba(0,0,0, 0.22);
 }

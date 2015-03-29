@@ -16,6 +16,8 @@ Discourse.AdminBackupsLogsRoute = Discourse.Route.extend({
         logsController.pushObjects(logs);
       }
     });
-  }
+  },
+
+  setupController: function() { /* prevent default behavior */ }
 
 });

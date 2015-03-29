@@ -17,4 +17,3 @@ end
 #
 #  index_group_users_on_group_id_and_user_id  (group_id,user_id) UNIQUE
 #
-

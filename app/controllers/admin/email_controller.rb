@@ -9,8 +9,12 @@ class Admin::EmailController < Admin::AdminController
 
   def test
     params.require(:email_address)
-    Jobs::TestEmail.new.execute(to_address: params[:email_address])
-    render nothing: true
+    begin
+      Jobs::TestEmail.new.execute(to_address: params[:email_address])
+      render nothing: true
+    rescue => e
+      render json: {errors: [e.message]}, status: 422
+    end
   end
 
   def all
@@ -48,7 +52,7 @@ class Admin::EmailController < Admin::AdminController
 
   def delivery_settings
     action_mailer_settings
-      .reject { |k, v| k == :password }
+      .reject { |k, _| k == :password }
       .map    { |k, v| { name: k, value: v }}
   end
 

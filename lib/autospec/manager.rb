@@ -63,7 +63,7 @@ class Autospec::Manager
   def ensure_all_specs_will_run
     puts "@@@@@@@@@@@@ ensure_all_specs_will_run" if @debug
     @runners.each do |runner|
-      @queue << ['spec', 'spec', runner] unless @queue.any? { |f, s, r| s == "spec" && r == runner }
+      @queue << ['spec', 'spec', runner] unless @queue.any? { |_, s, r| s == "spec" && r == runner }
     end
   end
 
@@ -152,7 +152,7 @@ class Autospec::Manager
     end
 
     Thread.start do
-      Listen.to('.', options) do |modified, added, removed|
+      Listen.to('.', options) do |modified, added, _|
         process_change([modified, added].flatten.compact)
       end
     end
@@ -187,7 +187,7 @@ class Autospec::Manager
         end
       end
       # special watcher for styles/templates
-      Autospec::ReloadCss::WATCHERS.each do |k,v|
+      Autospec::ReloadCss::WATCHERS.each do |k, _|
         matches = []
         matches << file if k.match(file)
         Autospec::ReloadCss.run_on_change(matches) if matches.present?
@@ -220,7 +220,7 @@ class Autospec::Manager
       puts "@@@@@@@@@@@@ #{@queue}" if @debug
       specs.each do |file, spec, runner|
         # make sure there's no other instance of this spec in the queue
-        @queue.delete_if { |f, s, r| s.strip == spec.strip && r == runner }
+        @queue.delete_if { |_, s, r| s.strip == spec.strip && r == runner }
         # deal with focused specs
         if @queue.first && @queue.first[0] == "focus"
           focus = @queue.shift

@@ -1,101 +1,369 @@
-require 'edit_rate_limiter'
+require "edit_rate_limiter"
 
 class PostRevisor
 
-  attr_reader :category_changed
+  # Helps us track changes to a topic.
+  #
+  # It's passed to `track_topic_fields` callbacks so they can record if they
+  # changed a value or not. This is needed for things like custom fields.
+  class TopicChanges
+    attr_reader :topic, :user
 
-  def initialize(post)
-    @post = post
-  end
+    def initialize(topic, user)
+      @topic = topic
+      @user = user
+      @changed = {}
+      @errored = false
+    end
 
-  def revise!(user, new_raw, opts = {})
-    @user, @new_raw, @opts = user, new_raw, opts
-    return false if not should_revise?
-    @post.acting_user = @user
-    revise_post
-    update_category_description
-    post_process_post
-    update_topic_word_counts
-    @post.advance_draft_sequence
+    def errored?
+      @errored
+    end
 
-    true
-  end
+    def guardian
+      @guardian ||= Guardian.new(@user)
+    end
 
-  private
+    def record_change(field_name, previous_val, new_val)
+      return if previous_val == new_val
+      diff[field_name] = [previous_val, new_val]
+    end
 
-  def should_revise?
-    @post.raw != @new_raw
-  end
+    def check_result(res)
+      @errored = true if !res
+    end
 
-  def revise_post
-    if should_create_new_version?
-      revise_and_create_new_version
-    else
-      update_post
+    def diff
+      @diff ||= {}
     end
   end
 
-  def get_revised_at
-    @opts[:revised_at] || Time.now
+  POST_TRACKED_FIELDS = %w{raw cooked edit_reason user_id wiki post_type}
+
+  attr_reader :category_changed
+
+  def initialize(post, topic=nil)
+    @post = post
+    @topic = topic || post.topic
+  end
+
+  def self.tracked_topic_fields
+    @@tracked_topic_fields ||= {}
+    @@tracked_topic_fields
+  end
+
+  def self.track_topic_field(field, &block)
+    tracked_topic_fields[field] = block
+
+    # Define it in the serializer unless it already has been defined
+    unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
+      PostRevisionSerializer.add_compared_field(field)
+    end
+  end
+
+  # Fields we want to record revisions for by default
+  track_topic_field(:title) do |tc, title|
+    tc.record_change('title', tc.topic.title, title)
+    tc.topic.title = title
+  end
+
+  track_topic_field(:category_id) do |tc, category_id|
+    tc.record_change('category_id', tc.topic.category_id, category_id)
+    tc.check_result(tc.topic.change_category_to_id(category_id))
+  end
+
+  # AVAILABLE OPTIONS:
+  # - revised_at: changes the date of the revision
+  # - force_new_version: bypass ninja-edit window
+  # - bypass_rate_limiter:
+  # - bypass_bump: do not bump the topic, even if last post
+  # - skip_validations: ask ActiveRecord to skip validations
+  def revise!(editor, fields, opts={})
+    @editor = editor
+    @fields = fields.with_indifferent_access
+    @opts = opts
+
+    @topic_changes = TopicChanges.new(@topic, editor)
+
+    # some normalization
+    @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
+    @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
+    @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
+
+    # always reset edit_reason unless provided
+    @fields[:edit_reason] = nil unless @fields.has_key?(:edit_reason)
+
+    return false unless should_revise?
+
+    @post.acting_user = @editor
+    @topic.acting_user = @editor
+    @revised_at = @opts[:revised_at] || Time.now
+    @last_version_at = @post.last_version_at || Time.now
+
+    @version_changed = false
+    @post_successfully_saved = true
+
+    @validate_post = true
+    @validate_post = @opts[:validate_post] if @opts.has_key?(:validate_post)
+    @validate_post = !@opts[:skip_validations] if @opts.has_key?(:skip_validations)
+
+    @validate_topic = true
+    @validate_topic = @opts[:validate_topic] if @opts.has_key?(:validate_topic)
+    @validate_topic = !@opts[:validate_topic] if @opts.has_key?(:skip_validations)
+
+    Post.transaction do
+      revise_post
+
+      # TODO: these callbacks are being called in a transaction
+      # it is kind of odd, because the callback is called "before_edit"
+      # but the post is already edited at this point
+      # Trouble is that much of the logic of should I edit? is deeper
+      # down so yanking this in front of the transaction will lead to
+      # false positive.
+      plugin_callbacks
+
+      revise_topic
+      advance_draft_sequence
+    end
+
+    # WARNING: do not pull this into the transaction
+    # it can fire events in sidekiq before the post is done saving
+    # leading to corrupt state
+    post_process_post
+
+    update_topic_word_counts
+    alert_users
+    publish_changes
+    grant_badge
+
+    successfully_saved_post_and_topic
+  end
+
+  def cleanup_whitespaces(raw)
+    TextCleaner.normalize_whitespaces(raw).gsub(/\s+\z/, "")
+  end
+
+  def should_revise?
+    post_changed? || topic_changed?
+  end
+
+  def post_changed?
+    POST_TRACKED_FIELDS.each do |field|
+      return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
+    end
+    false
+  end
+
+  def topic_changed?
+    PostRevisor.tracked_topic_fields.keys.any? {|f| @fields.has_key?(f)}
+  end
+
+  def revise_post
+    should_create_new_version? ? revise_and_create_new_version : revise
   end
 
   def should_create_new_version?
-    @post.last_editor_id != @user.id ||
-    get_revised_at - @post.last_version_at > SiteSetting.ninja_edit_window.to_i ||
+    edited_by_another_user? || !ninja_edit? || owner_changed? || force_new_version?
+  end
+
+  def edited_by_another_user?
+    @post.last_editor_id != @editor.id
+  end
+
+  def ninja_edit?
+    @revised_at - @last_version_at <= SiteSetting.ninja_edit_window.to_i
+  end
+
+  def owner_changed?
+    @fields.has_key?(:user_id) && @fields[:user_id] != @post.user_id
+  end
+
+  def force_new_version?
     @opts[:force_new_version] == true
   end
 
   def revise_and_create_new_version
-    Post.transaction do
-      @post.version += 1
-      @post.last_version_at = get_revised_at
-      update_post
-      EditRateLimiter.new(@post.user).performed! unless @opts[:bypass_rate_limiter] == true
-      bump_topic unless @opts[:bypass_bump]
-    end
+    @version_changed = true
+    @post.version += 1
+    @post.public_version += 1
+    @post.last_version_at = @revised_at
+
+    revise
+    perform_edit
+    bump_topic
   end
 
-  def bump_topic
-    unless Post.where('post_number > ? and topic_id = ?', @post.post_number, @post.topic_id).exists?
-      @post.topic.update_column(:bumped_at, Time.now)
-    end
-  end
-
-  def update_topic_word_counts
-    Topic.exec_sql("UPDATE topics SET word_count = (SELECT SUM(COALESCE(posts.word_count, 0))
-                                                    FROM posts WHERE posts.topic_id = :topic_id)
-                    WHERE topics.id = :topic_id", topic_id: @post.topic_id)
+  def revise
+    update_post
+    update_topic if topic_changed?
+    create_or_update_revision
   end
 
   def update_post
-    @post.raw = @new_raw
-    @post.word_count = @new_raw.scan(/\w+/).size
-    @post.last_editor_id = @user.id
-    @post.edit_reason = @opts[:edit_reason] if @opts[:edit_reason]
+    prev_owner, new_owner = nil, nil
+    if @fields.has_key?("user_id") && @fields["user_id"] != @post.user_id
+      prev_owner = User.find_by_id(@post.user_id)
+      new_owner = User.find_by_id(@fields["user_id"])
 
-    if @post.hidden && @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
-      @post.hidden = false
-      @post.hidden_reason_id = nil
-      @post.topic.update_attributes(visible: true)
-
-      PostAction.clear_flags!(@post, -1)
+      UserAction.where( target_post_id: @post.id,
+                        user_id: prev_owner.id,
+                        action_type: [UserAction::NEW_TOPIC, UserAction::REPLY, UserAction::RESPONSE] )
+                .find_each { |ua| ua.destroy }
+      # UserActionObserver will create new UserAction records for the new owner
     end
 
-    @post.extract_quoted_post_numbers
-    @post.save(validate: !@opts[:skip_validations])
+    POST_TRACKED_FIELDS.each do |field|
+      @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
+    end
 
+    @post.last_editor_id = @editor.id
+    @post.word_count     = @fields[:raw].scan(/\w+/).size if @fields.has_key?(:raw)
+    @post.self_edits    += 1 if self_edit?
+
+    clear_flags_and_unhide_post
+
+    @post.extract_quoted_post_numbers
+
+    @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
+
+    # post owner changed
+    if prev_owner && new_owner && prev_owner != new_owner
+      likes = UserAction.where( target_post_id: @post.id,
+                                user_id: prev_owner.id,
+                                action_type: UserAction::WAS_LIKED ).update_all(user_id: new_owner.id)
+
+      prev_owner.user_stat.post_count -= 1
+      prev_owner.user_stat.topic_count -= 1 if @post.is_first_post?
+      prev_owner.user_stat.likes_received -= likes
+      prev_owner.user_stat.update_topic_reply_count
+      if @post.created_at == prev_owner.user_stat.first_post_created_at
+        prev_owner.user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+      end
+      prev_owner.user_stat.save
+
+      new_owner.user_stat.post_count += 1
+      new_owner.user_stat.topic_count += 1 if @post.is_first_post?
+      new_owner.user_stat.likes_received += likes
+      new_owner.user_stat.update_topic_reply_count
+      new_owner.user_stat.save
+    end
+  end
+
+  def self_edit?
+    @editor == @post.user
+  end
+
+  def clear_flags_and_unhide_post
+    return unless editing_a_flagged_and_hidden_post?
+    PostAction.clear_flags!(@post, Discourse.system_user)
+    @post.unhide!
+  end
+
+  def editing_a_flagged_and_hidden_post?
+    self_edit? &&
+    @post.hidden &&
+    @post.hidden_reason_id == Post.hidden_reasons[:flag_threshold_reached]
+  end
+
+  def update_topic
+    Topic.transaction do
+      PostRevisor.tracked_topic_fields.each do |f, cb|
+        if !@topic_changes.errored? && @fields.has_key?(f)
+          cb.call(@topic_changes, @fields[f])
+        end
+      end
+
+      unless @topic_changes.errored?
+        @topic_changes.check_result(@topic.save(validate: @validate_topic))
+      end
+    end
+  end
+
+  def create_or_update_revision
+    # don't create an empty revision if something failed
+    return unless successfully_saved_post_and_topic
+    @version_changed ? create_revision : update_revision
+  end
+
+  def create_revision
+    modifications = post_changes.merge(@topic_changes.diff)
+    PostRevision.create!(
+      user_id: @post.last_editor_id,
+      post_id: @post.id,
+      number: @post.version,
+      modifications: modifications
+    )
+  end
+
+  def update_revision
+    return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
+    revision.user_id = @post.last_editor_id
+    modifications = post_changes.merge(@topic_changes.diff)
+    modifications.keys.each do |field|
+      if revision.modifications.has_key?(field)
+        old_value = revision.modifications[field][0]
+        new_value = modifications[field][1]
+        revision.modifications[field] = [old_value, new_value]
+      else
+        revision.modifications[field] = modifications[field]
+      end
+    end
+    revision.save if modifications.length
+  end
+
+  def post_changes
+    @post.previous_changes.slice(*POST_TRACKED_FIELDS)
+  end
+
+  def perform_edit
+    return if bypass_rate_limiter?
+    EditRateLimiter.new(@editor).performed!
+  end
+
+  def bypass_rate_limiter?
+    @opts[:bypass_rate_limiter] == true
+  end
+
+  def bump_topic
+    return if bypass_bump? || !is_last_post?
+    @topic.update_column(:bumped_at, Time.now)
+    TopicTrackingState.publish_latest(@topic)
+  end
+
+  def bypass_bump?
+    @opts[:bypass_bump] == true
+  end
+
+  def is_last_post?
+    !Post.where(topic_id: @topic.id)
+         .where("post_number > ?", @post.post_number)
+         .exists?
+  end
+
+  def plugin_callbacks
+    DiscourseEvent.trigger(:before_edit_post, @post)
+    DiscourseEvent.trigger(:validate_post, @post)
+  end
+
+  def revise_topic
+    return unless @post.post_number == 1
+
+    update_topic_excerpt
+    update_category_description
+  end
+
+  def update_topic_excerpt
+    excerpt = @post.excerpt(220, strip_links: true)
+    @topic.update_column(:excerpt, excerpt)
+    if @topic.archetype == "banner"
+      ApplicationController.banner_json_cache.clear
+    end
   end
 
   def update_category_description
-    # If we're revising the first post, we might have to update the category description
-    return unless @post.post_number == 1
+    return unless category = Category.find_by(topic_id: @topic.id)
 
-    # Is there a category with our topic id?
-    category = Category.where(topic_id: @post.topic_id).first
-    return unless category.present?
-
-    # If found, update its description
     body = @post.cooked
     matches = body.scan(/\<p\>(.*)\<\/p\>/)
     if matches && matches[0] && matches[0][0]
@@ -106,8 +374,40 @@ class PostRevisor
     end
   end
 
+  def advance_draft_sequence
+    @post.advance_draft_sequence
+  end
+
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
   end
+
+  def update_topic_word_counts
+    Topic.exec_sql("UPDATE topics
+                    SET word_count = (
+                      SELECT SUM(COALESCE(posts.word_count, 0))
+                      FROM posts
+                      WHERE posts.topic_id = :topic_id
+                    )
+                    WHERE topics.id = :topic_id", topic_id: @topic.id)
+  end
+
+  def alert_users
+    PostAlerter.new.after_save_post(@post)
+  end
+
+  def publish_changes
+    @post.publish_change_to_clients!(:revised)
+  end
+
+  def grant_badge
+    BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+  end
+
+  def successfully_saved_post_and_topic
+    @post_successfully_saved && !@topic_changes.errored?
+  end
+
 end
+

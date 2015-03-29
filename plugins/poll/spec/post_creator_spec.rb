@@ -15,11 +15,11 @@ describe PostCreator do
 
     it "cannot have options changed after 5 minutes" do
       poll_post.raw = "[poll]\n* option 1\n* option 2\n* option 3\n[/poll]"
-      poll_post.valid?.should be_true
+      poll_post.valid?.should == true
       poll_post.save
       Timecop.freeze(Time.now + 6.minutes) do
         poll_post.raw = "[poll]\n* option 1\n* option 2\n* option 3\n* option 4\n[/poll]"
-        poll_post.valid?.should be_false
+        poll_post.valid?.should == false
         poll_post.errors[:poll_options].should be_present
       end
     end
@@ -28,9 +28,9 @@ describe PostCreator do
       poll_post.last_editor_id = admin.id
       Timecop.freeze(Time.now + 6.minutes) do
         poll_post.raw = "[poll]\n* option 1\n* option 2\n* option 3\n* option 4.1\n[/poll]"
-        poll_post.valid?.should be_true
+        poll_post.valid?.should == true
         poll_post.raw = "[poll]\n* option 1\n* option 2\n* option 3\n[/poll]"
-        poll_post.valid?.should be_false
+        poll_post.valid?.should == false
       end
     end
   end

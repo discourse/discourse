@@ -9,31 +9,10 @@ class UserActionObserver < ActiveRecord::Observer
       log_topic(model)
     when (model.is_a?(Post))
       log_post(model)
-    when (model.is_a?(TopicUser))
-      log_topic_user(model)
     end
   end
 
-  def log_topic_user(model)
-    action = UserAction::STAR
-
-    row = {
-        action_type: action,
-        user_id: model.user_id,
-        acting_user_id: model.user_id,
-        target_topic_id: model.topic_id,
-        target_post_id: -1,
-        created_at: model.starred_at
-    }
-
-    if model.starred
-      UserAction.log_action!(row)
-    else
-      UserAction.remove_action!(row)
-    end
-  end
-
-  def self.log_notification(post, user, notification_type)
+  def self.log_notification(post, user, notification_type, acting_user_id=nil)
     action =
       case notification_type
         when Notification.types[:quoted]
@@ -46,13 +25,13 @@ class UserActionObserver < ActiveRecord::Observer
           UserAction::EDIT
       end
 
-    # like is skipped
-    return unless action && post && user
+    # skip any invalid items, eg failed to save post and so on
+    return unless action && post && user && post.id
 
     row = {
         action_type: action,
         user_id: user.id,
-        acting_user_id: (action == UserAction::EDIT) ? post.last_editor_id : post.user_id,
+        acting_user_id: acting_user_id || post.user_id,
         target_topic_id: post.topic_id,
         target_post_id: post.id
     }
@@ -132,12 +111,14 @@ class UserActionObserver < ActiveRecord::Observer
     action = UserAction::BOOKMARK if model.is_bookmark?
     action = UserAction::LIKE if model.is_like?
 
+    post = Post.with_deleted.where(id: model.post_id).first
+
     row = {
       action_type: action,
       user_id: model.user_id,
       acting_user_id: model.user_id,
       target_post_id: model.post_id,
-      target_topic_id: model.post.topic_id,
+      target_topic_id: post.topic_id,
       created_at: model.created_at
     }
 
@@ -149,7 +130,7 @@ class UserActionObserver < ActiveRecord::Observer
 
     if model.is_like?
       row[:action_type] = UserAction::WAS_LIKED
-      row[:user_id] = model.post.user_id
+      row[:user_id] = post.user_id
       if model.deleted_at.nil?
         UserAction.log_action!(row)
       else

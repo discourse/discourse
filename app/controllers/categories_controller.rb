@@ -2,17 +2,22 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :show]
+  before_filter :ensure_logged_in, except: [:index, :show, :redirect]
   before_filter :fetch_category, only: [:show, :update, :destroy]
-  skip_before_filter :check_xhr, only: [:index]
+  skip_before_filter :check_xhr, only: [:index, :redirect]
+
+  def redirect
+    redirect_to path("/c/#{params[:path]}")
+  end
 
   def index
     @description = SiteSetting.site_description
 
     options = {}
     options[:latest_posts] = params[:latest_posts] || SiteSetting.category_featured_topics
+    options[:parent_category_id] = params[:parent_category_id]
 
-    @list = CategoryList.new(guardian,options)
+    @list = CategoryList.new(guardian, options)
     @list.draft_key = Draft::NEW_TOPIC
     @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
     @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
@@ -23,6 +28,19 @@ class CategoriesController < ApplicationController
     respond_to do |format|
       format.html { render }
       format.json { render_serialized(@list, CategoryListSerializer) }
+    end
+  end
+
+  def upload
+    params.require(:image_type)
+    guardian.ensure_can_create!(Category)
+
+    file = params[:file] || params[:files].first
+    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, file.tempfile.size)
+    if upload.errors.blank?
+      render json: { url: upload.url, width: upload.width, height: upload.height }
+    else
+      render status: 422, text: upload.errors.full_messages
     end
   end
 
@@ -50,26 +68,52 @@ class CategoriesController < ApplicationController
   def create
     guardian.ensure_can_create!(Category)
 
+    position = category_params.delete(:position)
+
     @category = Category.create(category_params.merge(user: current_user))
     return render_json_error(@category) unless @category.save
 
-    @category.move_to(category_params[:position].to_i) if category_params[:position]
+    @category.move_to(position.to_i) if position
     render_serialized(@category, CategorySerializer)
   end
 
   def update
     guardian.ensure_can_edit!(@category)
-    json_result(@category, serializer: CategorySerializer) { |cat|
-      if category_params[:position]
-        category_params[:position] == 'default' ? cat.use_default_position : cat.move_to(category_params[:position].to_i)
-      end
+
+    json_result(@category, serializer: CategorySerializer) do |cat|
+
+      cat.move_to(category_params[:position].to_i) if category_params[:position]
+
       if category_params.key? :email_in and category_params[:email_in].length == 0
         # properly null the value so the database constrain doesn't catch us
         category_params[:email_in] = nil
       end
+
       category_params.delete(:position)
+
       cat.update_attributes(category_params)
-    }
+    end
+  end
+
+  def update_slug
+    @category = Category.find(params[:category_id].to_i)
+    guardian.ensure_can_edit!(@category)
+
+    custom_slug = params[:slug].to_s
+
+    if custom_slug.present? && @category.update_attributes(slug: custom_slug)
+      render json: success_json
+    else
+      render_json_error(@category)
+    end
+  end
+
+  def set_notifications
+    category_id = params[:category_id].to_i
+    notification_level = params[:notification_level].to_i
+
+    CategoryUser.set_notification_level_for_category(current_user, notification_level, category_id)
+    render json: success_json
   end
 
   def destroy
@@ -97,11 +141,22 @@ class CategoriesController < ApplicationController
           end
         end
 
-        params.permit(*required_param_keys, :position, :email_in, :email_in_allow_strangers, :parent_category_id, :auto_close_hours, :permissions => [*p.try(:keys)])
+        params.permit(*required_param_keys,
+                        :position,
+                        :email_in,
+                        :email_in_allow_strangers,
+                        :parent_category_id,
+                        :auto_close_hours,
+                        :auto_close_based_on_last_post,
+                        :logo_url,
+                        :background_url,
+                        :allow_badges,
+                        :slug,
+                        :permissions => [*p.try(:keys)])
       end
     end
 
     def fetch_category
-      @category = Category.where(slug: params[:id]).first || Category.where(id: params[:id].to_i).first
+      @category = Category.find_by(slug: params[:id]) || Category.find_by(id: params[:id].to_i)
     end
 end

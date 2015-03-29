@@ -1,0 +1,230 @@
+.modal-open {
+  .dropdown-menu {
+     z-index: 2050;
+  }
+  .popover {
+    z-index: 2060;
+  }
+  .tooltip {
+    z-index: 2070;
+  }
+
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1040;
+  background-color: #111;
+  &.fade {
+    opacity: 0;
+  }
+}
+
+.modal-backdrop,
+.modal-backdrop.fade.in {
+  -webkit-animation: fade .3s;
+          animation: fade .3s;
+  opacity: .9;
+  filter: alpha(opacity=90);
+}
+
+// fade in
+@keyframes fade {
+  from { opacity: 0 }
+    to { opacity: .9 }
+}
+
+@-webkit-keyframes fade {
+  from { opacity: 0 }
+    to { opacity: .9 }
+}
+
+// slide in
+@keyframes slidein {
+  from { transform: translateY(-20%); }
+    to { transform: translateY(0); }
+}
+
+@-webkit-keyframes slidein {
+  from { transform: translateY(-20%); }
+    to { transform: translateY(0); }
+}
+
+.modal-outer-container {
+  display:table;
+  width:100%;
+  height:100%;
+}
+
+.modal-inner-container {
+  max-width: 710px;
+  margin: 0 auto;
+  background-color: $secondary;
+  border: 1px solid scale-color-diff();
+  border: 1px solid scale-color-diff();
+
+  box-shadow: 0 3px 7px rgba(0,0,0, .8);
+  background-clip: padding-box;
+}
+
+.create-account.in .modal-inner-container,
+.login-modal.in .modal-inner-container {
+  -webkit-animation: slidein .3s;
+          animation: slidein .3s;
+}
+
+
+.modal {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  overflow: auto;
+}
+.modal-form {
+  margin-bottom: 0;
+}
+.modal-footer {
+  padding: 14px 15px 15px;
+  border-top: 1px solid scale-color-diff();
+}
+.modal-footer:before,
+.modal-footer:after {
+  display: table;
+  content: "";
+}
+.modal-footer:after {
+  clear: both;
+}
+
+.modal {
+    .nav {
+    padding: 10px 30px 10px 15px;
+    background-color: dark-light-diff($secondary, $primary, 10%, -15%);
+    li > a {
+      font-size: 1em;
+    }
+    border-bottom: 1px solid scale-color-diff();
+
+  }
+
+    &.hidden {
+    display: none;
+  }
+
+  .modal-body {
+    textarea {
+      width: 99%;
+      height: 80px;
+    }
+    label {
+      color: $primary;
+    }
+    p {
+      color: darken($primary, 40%);;
+      font-size: 0.929em;
+    }
+    .archetype-option {
+      margin-bottom: 20px;
+    }
+    .warning {
+      color: $danger !important;
+    }
+    .raw-email-textarea {
+      height: 300px;
+    }
+  }
+  .password-confirmation {
+    display: none;
+  }
+
+  section.field {
+    margin-bottom: 20px;
+  }
+  section.field .field-item {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
+.reply-where-modal {
+  .modal-footer {
+    .btn {
+      text-align: left;
+      font-size: 1.286em;
+      line-height: 20px;
+      width: 310px;
+      margin-bottom: 10px;
+      display: block;
+      margin-left: 0;
+      .topic-title {
+        font-size: 0.929em;
+        font-weight: normal;
+      }
+      &.btn-reply-here {
+        background: scale-color-diff();
+        text-shadow: none;
+        color: $primary;
+      }
+    }
+    .cancel {
+      float: right;
+      margin-right: 5px;
+    }
+  }
+}
+
+
+.delete-user-modal {
+  .modal-footer {
+    .btn {
+      font-weight: normal;
+      text-align: left;
+      font-size: 1em;
+      line-height: 20px;
+      margin-bottom: 10px;
+      display: inline-block;
+      margin-left: 0;
+    }
+    .cancel {
+      display: block;
+      margin-right: 5px;
+    }
+  }
+}
+
+.modal-footer .cancel-inline {
+  margin-left: 10px;
+}
+
+.invite-modal {
+  overflow: visible;
+  .ember-text-field {
+    width: 550px;
+  }
+}
+
+.permission-list{
+  list-style:none;
+  margin: 0 0 30px;
+  padding: 0;
+  .name {
+    margin-right: 20px;
+    display: inline-block;
+    min-width: 100px;
+  }
+  .permission {
+    margin-left: 20px;
+  }
+  .fa-times-circle {
+    margin-left: 5px;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+}

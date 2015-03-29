@@ -4,7 +4,8 @@ class ScreenedEmailSerializer < ApplicationSerializer
              :match_count,
              :last_match_at,
              :created_at,
-             :ip_address
+             :ip_address,
+             :id
 
   def action
     ScreenedEmail.actions.key(object.action_type).to_s

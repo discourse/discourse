@@ -29,8 +29,12 @@ class Site
     TrustLevel.all
   end
 
-  def group_names
-    @group_name ||= Group.pluck(:name)
+  def groups
+    @groups ||= Group.order(:name).map { |g| {:id => g.id, :name => g.name}}
+  end
+
+  def user_fields
+    UserField.all
   end
 
   def categories
@@ -39,12 +43,24 @@ class Site
         .secured(@guardian)
         .includes(:topic_only_relative_url)
         .order(:position)
-        .to_a
+
+      unless SiteSetting.allow_uncategorized_topics
+        categories = categories.where('categories.id <> ?', SiteSetting.uncategorized_category_id)
+      end
+
+      categories = categories.to_a
 
       allowed_topic_create = Set.new(Category.topic_create_allowed(@guardian).pluck(:id))
 
       by_id = {}
+
+      category_user = {}
+      unless @guardian.anonymous?
+        category_user = Hash[*CategoryUser.where(user: @guardian.user).pluck(:category_id, :notification_level).flatten]
+      end
+
       categories.each do |category|
+        category.notification_level = category_user[category.id]
         category.permission = CategoryGroup.permission_types[:full] if allowed_topic_create.include?(category.id)
         by_id[category.id] = category
       end
@@ -64,11 +80,12 @@ class Site
       return {
         periods: TopTopic.periods.map(&:to_s),
         filters: Discourse.filters.map(&:to_s),
+        user_fields: UserField.all
       }.to_json
     end
 
     site = Site.new(guardian)
-    MultiJson.dump(SiteSerializer.new(site, root: false))
+    MultiJson.dump(SiteSerializer.new(site, root: false, scope: guardian))
   end
 
 end

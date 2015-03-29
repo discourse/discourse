@@ -12,7 +12,7 @@ Discourse.EmailPreview.reopenClass({
   findDigest: function(lastSeenAt) {
 
     if (Em.isEmpty(lastSeenAt)) {
-      lastSeenAt = moment().subtract('days',7).format('YYYY-MM-DD');
+      lastSeenAt = moment().subtract(7, 'days').format('YYYY-MM-DD');
     }
 
     return Discourse.ajax("/admin/email/preview-digest.json", {

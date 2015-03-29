@@ -5,7 +5,7 @@ describe EmailController do
   context '.preferences_redirect' do
 
     it 'requires you to be logged in' do
-      lambda { get :preferences_redirect }.should raise_error(Discourse::NotLoggedIn)
+      expect { get :preferences_redirect }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -13,7 +13,7 @@ describe EmailController do
 
       it 'redirects to your user preferences' do
         get :preferences_redirect
-        response.should redirect_to("/users/#{user.username}/preferences")
+        expect(response).to redirect_to("/users/#{user.username}/preferences")
       end
     end
 
@@ -22,15 +22,16 @@ describe EmailController do
   context '.resubscribe' do
 
     let(:user) { Fabricate(:user, email_digests: false) }
+    let(:key) { DigestUnsubscribeKey.create_key_for(user) }
 
     context 'with a valid key' do
       before do
-        get :resubscribe, key: user.temporary_key
+        get :resubscribe, key: key
         user.reload
       end
 
       it 'subscribes the user' do
-        user.email_digests.should be_true
+        expect(user.email_digests).to eq(true)
       end
     end
 
@@ -39,19 +40,30 @@ describe EmailController do
   context '.unsubscribe' do
 
     let(:user) { Fabricate(:user) }
+    let(:key) { DigestUnsubscribeKey.create_key_for(user) }
 
     context 'with a valid key' do
       before do
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: key
         user.reload
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        expect(user.email_digests).to eq(false)
       end
 
-      it "does not set the not_found instance variable" do
-        assigns(:not_found).should be_blank
+      it "sets the appropriate instance variables" do
+        expect(assigns(:success)).to be_present
+      end
+    end
+
+    context "with an expired key or invalid key" do
+      before do
+        get :unsubscribe, key: 'watwatwat'
+      end
+
+      it "sets the appropriate instance variables" do
+        expect(assigns(:success)).to be_blank
       end
     end
 
@@ -59,16 +71,17 @@ describe EmailController do
       let!(:logged_in_user) { log_in(:coding_horror) }
 
       before do
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: key
         user.reload
       end
 
       it 'does not unsubscribe the user' do
-        user.email_digests.should be_true
+        expect(user.email_digests).to eq(true)
       end
 
-      it 'sets not found' do
-        assigns(:not_found).should be_true
+      it 'sets the appropriate instance variables' do
+        expect(assigns(:success)).to be_blank
+        expect(assigns(:different_user)).to be_present
       end
     end
 
@@ -76,22 +89,22 @@ describe EmailController do
 
       before do
         log_in_user(user)
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: DigestUnsubscribeKey.create_key_for(user)
         user.reload
       end
 
       it 'unsubscribes the user' do
-        user.email_digests.should be_false
+        expect(user.email_digests).to eq(false)
       end
 
-      it "doesn't set not found" do
-        assigns(:not_found).should be_blank
+      it 'sets the appropriate instance variables' do
+        expect(assigns(:success)).to be_present
       end
     end
 
     it "sets not_found when the key didn't match anything" do
       get :unsubscribe, key: 'asdfasdf'
-      assigns(:not_found).should be_true
+      expect(assigns(:not_found)).to eq(true)
     end
 
   end

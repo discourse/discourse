@@ -12,9 +12,6 @@ class LocaleSiteSetting < EnumSiteSetting
     end
   end
 
-
-  private
-
   @lock = Mutex.new
 
   def self.supported_locales
@@ -22,4 +19,5 @@ class LocaleSiteSetting < EnumSiteSetting
       @supported_locales ||= Dir.glob( File.join(Rails.root, 'config', 'locales', 'client.*.yml') ).map {|x| x.split('.')[-2]}.sort
     end
   end
+
 end

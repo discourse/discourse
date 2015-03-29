@@ -5,7 +5,7 @@ Discourse.Report = Discourse.Model.extend({
 
   valueAt: function(numDaysAgo) {
     if (this.data) {
-      var wantedDate = moment().subtract('days', numDaysAgo).format('YYYY-MM-DD');
+      var wantedDate = moment().subtract(numDaysAgo, 'days').format('YYYY-MM-DD');
       var item = this.data.find( function(d) { return d.x === wantedDate; } );
       if (item) {
         return item.y;
@@ -16,8 +16,8 @@ Discourse.Report = Discourse.Model.extend({
 
   sumDays: function(startDaysAgo, endDaysAgo) {
     if (this.data) {
-      var earliestDate = moment().subtract('days', endDaysAgo).startOf('day');
-      var latestDate = moment().subtract('days',startDaysAgo).startOf('day');
+      var earliestDate = moment().subtract(endDaysAgo, 'days').startOf('day');
+      var latestDate = moment().subtract(startDaysAgo, 'days').startOf('day');
       var d, sum = 0;
       _.each(this.data,function(datum){
         d = moment(datum.x);
@@ -92,9 +92,9 @@ Discourse.Report = Discourse.Model.extend({
   icon: function() {
     switch( this.get('type') ) {
     case 'flags':
-      return 'fa-flag';
+      return 'flag';
     case 'likes':
-      return 'fa-heart';
+      return 'heart';
     default:
       return null;
     }
@@ -131,14 +131,21 @@ Discourse.Report = Discourse.Model.extend({
 
   thirtyDayCountTitle: function() {
     return this.changeTitle( this.sumDays(1,30), this.get('prev30Days'), 'in the previous 30 day period');
+  }.property('data'),
+
+  dataReversed: function() {
+    return this.get('data').toArray().reverse();
   }.property('data')
 
 });
 
 Discourse.Report.reopenClass({
-  find: function(type) {
-    var model = Discourse.Report.create({type: type});
-    Discourse.ajax("/admin/reports/" + type).then(function (json) {
+  find: function(type, startDate, endDate) {
+
+    return Discourse.ajax("/admin/reports/" + type, {data: {
+      start_date: startDate,
+      end_date: endDate
+    }}).then(function (json) {
       // Add a percent field to each tuple
       var maxY = 0;
       json.report.data.forEach(function (row) {
@@ -149,9 +156,9 @@ Discourse.Report.reopenClass({
           row.percentage = Math.round((row.y / maxY) * 100);
         });
       }
-      model.mergeAttributes(json.report);
-      model.set('loaded', true);
+      var model = Discourse.Report.create({type: type});
+      model.setProperties(json.report);
+      return model;
     });
-    return(model);
   }
 });

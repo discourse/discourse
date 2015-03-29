@@ -20,7 +20,7 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
     result.email = email = data[:email]
     result.name = name = data[:name]
 
-    oauth2_user_info = Oauth2UserInfo.where(uid: oauth2_uid, provider: oauth2_provider).first
+    oauth2_user_info = Oauth2UserInfo.find_by(uid: oauth2_uid, provider: oauth2_provider)
 
     if !oauth2_user_info && @opts[:trusted] && user = User.find_by_email(email)
       oauth2_user_info = Oauth2UserInfo.create(uid: oauth2_uid,

@@ -30,9 +30,13 @@ Spork.prefork do
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+  Dir[Rails.root.join("spec/fabricators/*.rb")].each {|f| require f}
 
   # let's not run seed_fu every test
   SeedFu.quiet = true if SeedFu.respond_to? :quiet
+
+  SiteSetting.automatically_download_gravatars = false
+
   SeedFu.seed
 
   RSpec.configure do |config|
@@ -41,6 +45,7 @@ Spork.prefork do
     config.include MessageBus
     config.mock_framework = :mocha
     config.order = 'random'
+    config.infer_spec_type_from_file_location!
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
@@ -52,16 +57,63 @@ Spork.prefork do
     # rspec-rails.
     config.infer_base_class_for_anonymous_controllers = true
 
-    # if we need stuff post fork, pre tests run here
-    # config.before(:suite) do
-    # end
+    config.before(:suite) do
 
-    config.before do
+      Sidekiq.error_handlers.clear
+
+      # Ugly, but needed until we have a user creator
+      User.skip_callback(:create, :after, :ensure_in_trust_level_group)
+
+      DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
+      Discourse.current_user_provider = TestCurrentUserProvider
+
+      SiteSetting.refresh!
+
+      # Rebase defaults
+      #
+      # We nuke the DB storage provider from site settings, so need to yank out the existing settings
+      #  and pretend they are default.
+      # There are a bunch of settings that are seeded, they must be loaded as defaults
+      SiteSetting.current.each do |k,v|
+        SiteSetting.defaults[k] = v
+      end
+
+      require_dependency 'site_settings/local_process_provider'
+      SiteSetting.provider = SiteSettings::LocalProcessProvider.new
+    end
+
+    class DiscourseMockRedis < MockRedis
+      def without_namespace
+        self
+      end
+
+      def delete_prefixed(prefix)
+        keys("#{prefix}*").each { |k| del(k) }
+      end
+    end
+
+    config.before :each do |x|
+      # TODO not sure about this, we could use a mock redis implementation here:
+      #   this gives us really clean "flush" semantics, howere the side-effect is that
+      #   we are no longer using a clean redis implementation, a preferable solution may
+      #   be simply flushing before tests, trouble is that redis may be reused with dev
+      #   so that would mean the dev would act weird
+      #
+      #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
+      #
+      # $redis = DiscourseMockRedis.new
+      #
       # disable all observers, enable as needed during specs
+      #
       ActiveRecord::Base.observers.disable :all
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end
+
+      # very expensive IO operations
+      SiteSetting.automatically_download_gravatars = false
+
+      I18n.locale = :en
     end
 
     class TestCurrentUserProvider < Auth::DefaultCurrentUserProvider
@@ -76,31 +128,27 @@ Spork.prefork do
       end
     end
 
-    config.before(:all) do
-      DiscoursePluginRegistry.clear if ENV['LOAD_PLUGINS'] != "1"
-      Discourse.current_user_provider = TestCurrentUserProvider
-
-      # a bit odd, but this setting is actually preloaded
-      SiteSetting.defaults[:uncategorized_category_id] = SiteSetting.uncategorized_category_id
-
-      require_dependency 'site_settings/local_process_provider'
-      SiteSetting.provider = SiteSettings::LocalProcessProvider.new
-    end
-
   end
 
   def freeze_time(now=Time.now)
-    DateTime.stubs(:now).returns(DateTime.parse(now.to_s))
-    Time.stubs(:now).returns(Time.parse(now.to_s))
+    datetime = DateTime.parse(now.to_s)
+    time = Time.parse(now.to_s)
+
+    DateTime.stubs(:now).returns(datetime)
+    Time.stubs(:now).returns(time)
+  end
+
+  def file_from_fixtures(filename)
+    FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
+    FileUtils.cp("#{Rails.root}/spec/fixtures/images/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
+    File.new("#{Rails.root}/tmp/spec/#{filename}")
   end
 
 end
 
 Spork.each_run do
   # This code will be run each time you run your specs.
-  $redis.client.reconnect
-  Rails.cache.reconnect
-  MessageBus.after_fork
+  Discourse.after_fork
 end
 
 # --- Instructions ---

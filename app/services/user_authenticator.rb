@@ -1,4 +1,5 @@
 class UserAuthenticator
+
   def initialize(user, session, authenticator_finder = Users::OmniauthCallbacksController)
     @user = user
     @session = session[:authentication]
@@ -13,11 +14,12 @@ class UserAuthenticator
     end
   end
 
-  def finish
-    if authenticator
-      authenticator.after_create_account(@user, @session)
-    end
+  def has_authenticator?
+    !!authenticator
+  end
 
+  def finish
+    authenticator.after_create_account(@user, @session) if authenticator
     @session = nil
   end
 
@@ -36,4 +38,5 @@ class UserAuthenticator
   def authenticator_name
     @session && @session[:authenticator_name]
   end
+
 end

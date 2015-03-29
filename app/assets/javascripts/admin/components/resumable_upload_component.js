@@ -9,23 +9,24 @@
         error="errorAction"
         uploadText="UPLOAD"
     }}
-
-  @class ResumableUploadComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
 **/
-Discourse.ResumableUploadComponent = Ember.Component.extend({
+Discourse.ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, {
   tagName: "button",
   classNames: ["btn", "ru"],
   classNameBindings: ["isUploading"],
+  attributeBindings: ["translatedTitle:title"],
 
   resumable: null,
 
   isUploading: false,
   progress: 0,
 
-  shouldRerender: Discourse.View.renderIfChanged("isUploading", "progress"),
+  rerenderTriggers: ['isUploading', 'progress'],
+
+  translatedTitle: function() {
+    const title = this.get('title');
+    return title ? I18n.t(title) : this.get('text');
+  }.property('title', 'text'),
 
   text: function() {
     if (this.get("isUploading")) {
@@ -35,7 +36,7 @@ Discourse.ResumableUploadComponent = Ember.Component.extend({
     }
   }.property("isUploading", "progress"),
 
-  render: function(buffer) {
+  renderString: function(buffer) {
     var icon = this.get("isUploading") ? "times" : "upload";
     buffer.push("<i class='fa fa-" + icon + "'></i>");
     buffer.push("<span class='ru-label'>" + this.get("text") + "</span>");

@@ -1,0 +1,89 @@
+// styles that apply to the popup that appears when you show the edit history of a post
+
+.modal.history-modal {
+  #revision-numbers {
+    display: inline-block;
+    min-width: 96px;
+    text-align: center;
+  }
+  #revisions .row:first-of-type {
+    margin-top: 10px;
+  }
+  ins, .diff-ins {
+    code, img {
+      border: 2px solid $success;
+    }
+    img {
+      opacity: .75;
+      filter: alpha(opacity=75);
+    }
+    a {
+      color: $success;
+      text-decoration: none;
+    }
+  }
+  img.diff-ins, code.diff-ins {
+    border: 2px solid $success;
+  }
+  img.diff-ins {
+    opacity: .75;
+    filter: alpha(opacity=75);
+  }
+  .diff-ins {
+    background: scale-color($success, $lightness: 90%);
+  }
+  ins {
+    color: $success;
+    background: scale-color($success, $lightness: 90%);
+  }
+  del, .diff-del {
+    code, img {
+      border: 2px solid $danger;
+    }
+    img {
+      opacity: .5;
+      filter: alpha(opacity=50);
+    }
+    a {
+      color: $danger;
+      text-decoration: none;
+    }
+  }
+  img.diff-del, code.diff-del {
+    border: 2px solid $danger;
+  }
+  img.diff-del {
+    opacity: .5;
+    filter: alpha(opacity=50);
+  }
+  .diff-del {
+    background: scale-color($danger, $lightness: 60%);
+  }
+  del {
+    color: $danger;
+    background: scale-color($danger, $lightness: 60%);
+  }
+  span.date {
+    font-weight: bold;
+  }
+  span.edit-reason {
+    background-color: lighten($highlight, 23%);
+    padding: 3px 5px 5px 5px;
+  }
+  .fa-ban {
+    color: #f00;
+  }
+  .hidden-revision-either {
+    opacity: .5;
+  }
+  .hidden-revision-previous .row {
+    div:nth-of-type(1), td:nth-of-type(1) {
+      opacity: .5;
+    }
+  }
+  .hidden-revision-current .row {
+    div:nth-of-type(2), td:nth-of-type(2) {
+      opacity: .5;
+    }
+  }
+}

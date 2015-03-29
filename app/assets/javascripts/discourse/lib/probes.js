@@ -32,7 +32,8 @@
   clear = function() {
     window.probes = {
       clear: clear,
-      measure: measure
+      measure: measure,
+      displayProbes: displayProbes
     };
   };
 
@@ -113,6 +114,63 @@
     };
   };
 
+  var displayProbes = function(){
+     var pre;
+     var text = "";
+     var body = document.getElementsByTagName("body")[0];
+
+     for(var prop in window.probes){
+       var probe = window.probes[prop];
+       if(probe && probe.count){
+          text += prop + ": " + probe.time + " ( " + probe.count + " )\n";
+       }
+     }
+
+     pre = document.getElementById("__probes");
+
+     if(!body){
+       return;
+     }
+
+     if(pre){
+       pre.textContent = text;
+       pre.innerText = text;
+       return;
+     }
+
+     var div = document.createElement("div");
+     div.id = "__probes_wrapper";
+     div.setAttribute("style", "position: fixed; bottom: 25px; left: 50px; z-index: 99999; border: 1px solid #777; padding: 10px; background-color: rgba(255,255,255, 0.8);");
+
+     pre = document.createElement("pre");
+     pre.setAttribute("style", "margin:0 0 5px;");
+     pre.textContent = text;
+     pre.innerText = text;
+     pre.id = "__probes";
+
+     div.appendChild(pre);
+
+     var a = document.createElement('a');
+     a.href = "";
+     a.innerText = "clear";
+     a.addEventListener("click", function(e){
+        for(var prop in window.probes){
+          var probe = window.probes[prop];
+          if(probe && probe.count){
+            delete window.probes[prop];
+          }
+        }
+        displayProbes();
+        e.preventDefault();
+     });
+
+     div.appendChild(a);
+
+     body.appendChild(div);
+  };
+
+
+  // setInterval(displayProbes, 1000);
   clear();
 
 })();

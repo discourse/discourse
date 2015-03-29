@@ -37,6 +37,10 @@ class TopicSubtype
     'notify_user'
   end
 
+  def self.pending_users_reminder
+    'pending_users'
+  end
+
   def self.register(name, options={})
     @subtypes ||= {}
     @subtypes[name] = TopicSubtype.new(name, options)

@@ -6,17 +6,24 @@ class SiteSettings::YamlLoader
     @file = file
   end
 
+  def env_val(value)
+    if value.is_a?(Hash)
+      value.has_key?(Rails.env) ? value[Rails.env] : value['default']
+    else
+      value
+    end
+  end
+
   def load
     yaml = YAML.load_file(@file)
     yaml.keys.each do |category|
       yaml[category].each do |setting_name, hash|
         if hash.is_a?(Hash)
           # Get default value for the site setting:
-          value = hash.delete('default')
+          value = env_val(hash.delete('default'))
 
-          # If there's a different default value for each environment, choose the right one:
-          if value.is_a?(Hash)
-            value = value.has_key?(Rails.env) ? value[Rails.env] : value['default']
+          if hash.key?('hidden')
+            hash['hidden'] = env_val(hash.delete('hidden'))
           end
 
           yield category, setting_name, value, hash.symbolize_keys!

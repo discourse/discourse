@@ -1,0 +1,7 @@
+{{#if postStream.show_deleted}}
+  <p>{{i18n 'deleted_filter.disabled_description'}}</p>
+  <button class='btn btn-danger' {{action "toggleDeleted"}}>{{i18n 'deleted_filter.enable'}}</button>
+{{else}}
+  <p>{{i18n 'deleted_filter.enabled_description'}}</p>
+  <button class='btn btn-danger' {{action "toggleDeleted"}}>{{i18n 'deleted_filter.disable'}}</button>
+{{/if}}

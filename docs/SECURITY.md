@@ -41,6 +41,12 @@ Discourse extends the built-in Rails CSRF protection in the following ways:
 
 3. Certain pages are "cachable", we do not render the CSRF token (`<meta name='csrf-token' ...`) on any cachable pages. Instead when users are about to perform the first non GET request they retrieve the token just in time via `GET session/csrf`
 
+### DDOS
+
+If you install via our recommended Docker image in our [install guide][ig], nginx is the front end web server. For additional DDOS protection we recommend placing [HAProxy](http://haproxy.1wt.eu/) in front.
+
 ### Deployment concerns
 
-We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. See [our install guide](https://github.com/discourse/discourse/blob/master/docs/INSTALL-ubuntu.md) for details.
+We strongly recommend that the various Discourse processes (web server, sidekiq) run under a non-elevated account. This is handled automatically if you install via our recommended Docker image -- see [our install guide][ig] for details.
+
+[ig]: https://github.com/discourse/discourse/blob/master/docs/INSTALL.md

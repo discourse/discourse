@@ -1,0 +1,25 @@
+<div class="badges">
+
+  <div class='content-list span6'>
+    <h3>{{i18n 'admin.badges.title'}}</h3>
+    <ul>
+      {{#each badge in model}}
+      <li>
+        {{#link-to 'adminBadges.show' badge.id}}
+          {{badge-button badge=badge}}
+          {{#if badge.newBadge}}
+            <span class="list-badge">{{i18n 'filters.new.lower_title'}}</span>
+          {{/if}}
+        {{/link-to}}
+      </li>
+      {{/each}}
+    </ul>
+    {{#link-to 'adminBadges.show' 'new' class="btn"}}
+      {{fa-icon "plus"}} {{i18n 'admin.badges.new'}}
+    {{/link-to}}
+    <br>
+    <br>
+  </div>
+
+  {{outlet}}
+</div>

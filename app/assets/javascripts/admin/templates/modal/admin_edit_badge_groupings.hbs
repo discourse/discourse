@@ -1,0 +1,27 @@
+<div class="modal-body">
+  <div>
+    <ul class='badge-groupings'>
+    {{#each wc in workingCopy}}
+      <li>
+        {{#if wc.editing}}
+          {{input value=wc.name}}
+          <button {{action "save" wc}}><i class="fa fa-check"></i></button>
+        {{else}}
+          {{wc.name}}
+        {{/if}}
+        <div class='actions'>
+          <button {{action "edit" wc}}><i class="fa fa-pencil"></i></button>
+          <button {{action "up" wc}}><i class="fa fa-toggle-up"></i></button>
+          <button {{action "down" wc}}><i class="fa fa-toggle-down"></i></button>
+          <button {{action "delete" wc}}><i class="fa fa-times"></i></button>
+        </div>
+      </li>
+    {{/each}}
+    </ul>
+  </div>
+  <button class='btn' {{action "add"}}>{{i18n 'admin.badges.new'}}</button>
+</div>
+<div class="modal-footer">
+  <button class='btn btn-primary' {{action "saveAll"}} {{bind-attr disabled="submitDisabled"}}>{{i18n 'admin.badges.save'}}</button>
+  <a {{action "cancel"}}>{{i18n 'cancel'}}</a>
+</div>

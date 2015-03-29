@@ -12,16 +12,23 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     facebook_hash = session_info[:facebook]
 
     result.email = email = session_info[:email]
-    result.email_valid = true
+    result.email_valid = !email.blank?
     result.name = facebook_hash[:name]
 
     result.extra_data = facebook_hash
 
-    user_info = FacebookUserInfo.where(facebook_user_id: facebook_hash[:facebook_user_id]).first
+    user_info = FacebookUserInfo.find_by(facebook_user_id: facebook_hash[:facebook_user_id])
     result.user = user_info.try(:user)
 
-    if !result.user && !email.blank? && result.user = User.where(email: Email.downcase(email)).first
+    if !result.user && !email.blank? && result.user = User.find_by_email(email)
       FacebookUserInfo.create({user_id: result.user.id}.merge(facebook_hash))
+    end
+
+    if email.blank?
+      UserHistory.create(
+        action: UserHistory.actions[:facebook_no_email],
+        details: "name: #{facebook_hash[:name]}, facebook_user_id: #{facebook_hash[:facebook_user_id]}"
+      )
     end
 
     result

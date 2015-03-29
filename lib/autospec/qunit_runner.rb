@@ -24,7 +24,7 @@ module Autospec
 
     require "socket"
 
-    class PhantomJsNotInstalled < Exception; end
+    class PhantomJsNotInstalled < StandardError; end
 
     def initialize
       ensure_phantomjs_is_installed

@@ -29,7 +29,6 @@ describe AdminUserIndexQuery do
 
   end
 
-
   describe "users with trust level" do
 
     TrustLevel.levels.each do |key, value|
@@ -95,21 +94,25 @@ describe AdminUserIndexQuery do
   end
 
   describe "filtering" do
+
     context "by email fragment" do
+
       before(:each) { Fabricate(:user, email: "test1@example.com") }
 
       it "matches the email" do
         query = ::AdminUserIndexQuery.new({ filter: "est1" })
-        expect(query.find_users.count).to eq(1)
+        expect(query.find_users.count()).to eq(1)
       end
 
       it "matches the email using any case" do
         query = ::AdminUserIndexQuery.new({ filter: "Test1" })
-        expect(query.find_users.count).to eq(1)
+        expect(query.find_users.count()).to eq(1)
       end
+
     end
 
     context "by username fragment" do
+
       before(:each) { Fabricate(:user, username: "test_user_1") }
 
       it "matches the username" do
@@ -121,6 +124,17 @@ describe AdminUserIndexQuery do
         query = ::AdminUserIndexQuery.new({ filter: "User" })
         expect(query.find_users.count).to eq(1)
       end
+    end
+
+    context "by ip address fragment" do
+
+      let!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
+
+      it "matches the ip address" do
+        query = ::AdminUserIndexQuery.new({ filter: "117.207.94.9" })
+        expect(query.find_users.count()).to eq(1)
+      end
+
     end
 
   end

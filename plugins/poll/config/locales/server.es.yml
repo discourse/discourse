@@ -1,0 +1,18 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+es:
+  activerecord:
+    attributes:
+      post:
+        poll_options: "Opciones de la encuesta"
+  poll:
+    must_contain_poll_options: "debe contener una lista con las opciones de la encuesta"
+    cannot_have_modified_options: "pasados 5 minutos, no se pueden modificar las opciones de la encuesta. Contacta un moderador si necesitas cambiarlas"
+    cannot_add_or_remove_options: "solo se pueden modificar, no añadir ni eliminar. Si necesitas añadir o eliminar opciones deberías cerrar este tema y crear una encuesta nueva."
+    prefix: "Encuesta"
+    closed_prefix: "Encuesta cerrada"

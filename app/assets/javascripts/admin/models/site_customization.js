@@ -7,64 +7,63 @@
   @module Discourse
 **/
 Discourse.SiteCustomization = Discourse.Model.extend({
-  trackedProperties: ['enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'override_default_style'],
-
-  init: function() {
-    this._super();
-    this.startTrackingChanges();
-  },
+  trackedProperties: [
+    'enabled', 'name',
+    'stylesheet', 'header', 'top', 'footer',
+    'mobile_stylesheet', 'mobile_header', 'mobile_top', 'mobile_footer',
+    'head_tag', 'body_tag'
+  ],
 
   description: function() {
     return "" + this.name + (this.enabled ? ' (*)' : '');
-  }.property('selected', 'name'),
+  }.property('selected', 'name', 'enabled'),
 
   changed: function() {
+    var self = this;
 
-    var _this = this;
-    if(!this.originals) return false;
+    if (!this.originals) { return false; }
 
-    var changed = _.some(this.trackedProperties,function(p) {
-      return _this.originals[p] !== _this.get(p);
+    var changed = _.some(this.trackedProperties, function (p) {
+      return self.originals[p] !== self.get(p);
     });
 
-    if(changed){
-      this.set('savingStatus','');
-    }
+    if (changed) { this.set('savingStatus', ''); }
 
     return changed;
-
-  }.property('override_default_style', 'enabled', 'name', 'stylesheet', 'header', 'mobile_stylesheet', 'mobile_header', 'originals'),
+  }.property('enabled', 'name', 'originals',
+    'stylesheet', 'header', 'top', 'footer',
+    'mobile_stylesheet', 'mobile_header', 'mobile_top', 'mobile_footer',
+    'head_tag', 'body_tag'),
 
   startTrackingChanges: function() {
-    var _this = this;
+    var self = this;
     var originals = {};
-    _.each(this.trackedProperties,function(prop) {
-      originals[prop] = _this.get(prop);
-      return true;
+    _.each(this.trackedProperties, function (prop) {
+      originals[prop] = self.get(prop);
     });
     this.set('originals', originals);
-  },
+  }.on('init'),
 
-  previewUrl: function() {
-    return "/?preview-style=" + (this.get('key'));
-  }.property('key'),
-
-  disableSave: function() {
-    return !this.get('changed') || this.get('saving');
-  }.property('changed'),
-
+  previewUrl: function() { return "/?preview-style=" + this.get('key'); }.property('key'),
+  disableSave: function() { return !this.get('changed') || this.get('saving'); }.property('changed'),
 
   save: function() {
     this.set('savingStatus', I18n.t('saving'));
     this.set('saving',true);
+
     var data = {
       name: this.name,
       enabled: this.enabled,
       stylesheet: this.stylesheet,
       header: this.header,
+      top: this.top,
+      footer: this.footer,
       mobile_stylesheet: this.mobile_stylesheet,
       mobile_header: this.mobile_header,
-      override_default_style: this.override_default_style
+      mobile_top: this.mobile_top,
+      mobile_footer: this.mobile_footer,
+      head_tag: this.head_tag,
+      body_tag: this.body_tag
     };
 
     var siteCustomization = this;
@@ -80,38 +79,33 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       siteCustomization.set('saving',false);
       siteCustomization.startTrackingChanges();
     });
-
   },
 
   destroy: function() {
-    if(!this.id) return;
-    return Discourse.ajax("/admin/site_customizations/" + this.id, {
-      type: 'DELETE'
-    });
+    if (!this.id) return;
+    return Discourse.ajax("/admin/site_customizations/" + this.id, { type: 'DELETE' });
   }
-
 });
 
 var SiteCustomizations = Ember.ArrayProxy.extend({
   selectedItemChanged: function() {
     var selected = this.get('selectedItem');
-    _.each(this.get('content'),function(i) {
-      return i.set('selected', selected === i);
+    _.each(this.get('content'), function (i) {
+      i.set('selected', selected === i);
     });
   }.observes('selectedItem')
 });
 
 Discourse.SiteCustomization.reopenClass({
   findAll: function() {
-    var customizations = SiteCustomizations.create({ content: [], loading: true });
-    Discourse.ajax("/admin/site_customizations").then(function (data) {
+    return Discourse.ajax("/admin/site_customizations").then(function (data) {
+      var content = [];
       if (data) {
-        _.each(data.site_customizations,function(c) {
-          customizations.pushObject(Discourse.SiteCustomization.create(c.site_customizations));
+        content = data.site_customizations.map(function(c) {
+          return Discourse.SiteCustomization.create(c);
         });
       }
-      customizations.set('loading', false);
+      return SiteCustomizations.create({ content: content });
     });
-    return customizations;
   }
 });

@@ -1,0 +1,32 @@
+.body-page {
+
+  // Consistent vertical spacing
+  blockquote,
+  h1,
+  h2,
+  h3,
+  hr,
+  p,
+  pre,
+  ul,
+  ol,
+  table {
+    margin: 0 0 20px;
+    font-size: 1.143em;
+    line-height: 22px;
+  }
+
+  li {
+     margin-bottom: 8px;
+  }
+
+  ul:not(.nav-pills),
+  ol:not(.nav-pills) {
+    margin-left: 40px;
+  }
+
+  /* intended only for /faq, /guidelines, /tos, and /privacy */
+  width: 700px;
+  padding-left:20px;
+
+}

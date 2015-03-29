@@ -1,0 +1,7 @@
+<div class="modal-body">
+  {{#if rawEmail}}
+    {{textarea value=rawEmail class="raw-email-textarea"}}
+  {{else}}
+    {{i18n 'raw_email.not_available'}}
+  {{/if}}
+</div>

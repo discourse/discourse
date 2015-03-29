@@ -3,7 +3,7 @@ module ScreeningModel
 
   module ClassMethods
     def actions
-      @actions ||= Enum.new(:block, :do_nothing)
+      @actions ||= Enum.new(:block, :do_nothing, :allow_admin)
     end
 
     def default_action(action_key)

@@ -53,7 +53,7 @@ describe SiteSettings::YamlLoader do
 
   it "maintains order of categories" do
     receiver.load_yaml(simple)
-    receiver.categories.should == ['category1', 'category2', 'category3']
+    expect(receiver.categories).to eq(['category1', 'category2', 'category3'])
   end
 
   it "can load client settings" do

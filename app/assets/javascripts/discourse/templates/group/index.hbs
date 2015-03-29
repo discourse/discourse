@@ -1,0 +1,22 @@
+<div class='user-stream'>
+  {{#each p in model itemController="group/post"}}
+    <div class='item'>
+      <div class='clearfix info'>
+        {{#link-to 'user' p.user class="avatar-link"}}<div class='avatar-wrapper'>{{avatar p.user imageSize="large" extraClasses="actor" ignoreTitle="true"}}</div>{{/link-to}}
+        <span class='time'>{{format-date p.created_at leaveAgo="true"}}</span>
+        <span class="title">
+          <a href="{{unbound p.url}}">{{unbound p.title}}</a>
+        </span>
+        <span class="category">{{category-link p.category}}</span>
+        {{#if p.byName}}
+          <span class="name">
+            {{unbound p.byName}}
+          </span>
+        {{/if}}
+      </div>
+      <p class='excerpt'>
+      {{{unbound p.cooked}}}
+      </p>
+    </div>
+  {{/each}}
+</div>

@@ -10,10 +10,7 @@
 <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
 
 <%- if t.best_post.present? %>
- <%= raw(t.best_post.excerpt(1000,
-                            strip_links: true,
-                            text_entities: true,
-                            markdown_images: true)) %>
+ <%= raw(t.best_post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
 --------------------------------------------------------------------------------
 
 <%- end %>
@@ -36,7 +33,6 @@
 
 <%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
-     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_path(key: @user.temporary_key))))  %>
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_url(key: @unsubscribe_key, only_path: true))))  %>
 
 <%= raw(@markdown_linker.references) %>
-

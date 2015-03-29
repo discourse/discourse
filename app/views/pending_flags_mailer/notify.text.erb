@@ -1,0 +1,9 @@
+<%=t 'flags_reminder.flags_were_submitted', count: @hours %> <%=t 'flags_reminder.please_review' %>
+
+<%= Discourse.base_url + '/admin/flags/active' %>
+
+<% @posts.each do |post| %>
+ - <%= post[:title] %>: <%=t 'flags_reminder.post_number' %> <%= post[:post_number] %> - <%= post[:reason_counts] %>
+<% end %>
+
+<%=t 'flags_reminder.how_to_disable' %>

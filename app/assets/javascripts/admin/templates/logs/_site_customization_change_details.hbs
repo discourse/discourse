@@ -1,0 +1,73 @@
+<section class="field">
+  <b>{{i18n 'admin.customize.enabled'}}</b>: {{enabled}}
+</section>
+{{#if stylesheet}}
+  <section class="field">
+    <b>{{i18n 'admin.customize.css'}}</b>: ({{i18n 'character_count' count=stylesheet.length}})
+    <br/>
+    {{textarea value=stylesheet class="plain"}}
+  </section>
+{{/if}}
+{{#if mobile_stylesheet}}
+  <section class="field">
+    <b>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.css'}}</b>: ({{i18n 'character_count' count=mobile_stylesheet.length}})
+    <br/>
+    {{textarea value=mobile_stylesheet class="plain"}}
+  </section>
+{{/if}}
+{{#if header}}
+  <section class="field">
+    <b>{{i18n 'admin.customize.header'}}</b>: ({{i18n 'character_count' count=header.length}})
+    <br/>
+    {{textarea value=header class="plain"}}
+  </section>
+{{/if}}
+{{#if mobile_header}}
+  <section class="field">
+    <b>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.header'}}</b>: ({{i18n 'character_count' count=mobile_header.length}})
+    <br/>
+    {{textarea value=mobile_header class="plain"}}
+  </section>
+{{/if}}
+{{#if top}}
+  <section class="field">
+    <b>{{i18n 'admin.customize.top'}}</b>: ({{i18n 'character_count' count=top.length}})
+    <br/>
+    {{textarea value=top class="plain"}}
+  </section>
+{{/if}}
+{{#if mobile_top}}
+  <section class="field">
+    <b>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.top'}}</b>: ({{i18n 'character_count' count=mobile_top.length}})
+    <br/>
+    {{textarea value=mobile_top class="plain"}}
+  </section>
+{{/if}}
+{{#if footer}}
+  <section class="field">
+    <b>{{i18n 'admin.customize.footer'}}</b>: ({{i18n 'character_count' count=footer.length}})
+    <br/>
+    {{textarea value=footer class="plain"}}
+  </section>
+{{/if}}
+{{#if mobile_footer}}
+  <section class="field">
+    <b>{{fa-icon "mobile"}}&nbsp;{{i18n 'admin.customize.footer'}}</b>: ({{i18n 'character_count' count=mobile_footer.length}})
+    <br/>
+    {{textarea value=mobile_footer class="plain"}}
+  </section>
+{{/if}}
+{{#if head_tag}}
+  <section class="field">
+    <b>{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.head_tag.text'}}</b>: ({{i18n 'character_count' count=head_tag.length}})
+    <br/>
+    {{textarea value=head_tag class="plain"}}
+  </section>
+{{/if}}
+{{#if body_tag}}
+  <section class="field">
+    <b>{{fa-icon "file-text-o"}}&nbsp;{{i18n 'admin.customize.body_tag.text'}}</b>: ({{i18n 'character_count' count=body_tag.length}})
+    <br/>
+    {{textarea value=body_tag class="plain"}}
+  </section>
+{{/if}}

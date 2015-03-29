@@ -1,0 +1,10 @@
+{{#if showNewPM}}
+  <div class="clearfix">
+    <a class='btn btn-primary pull-right new-private-message' {{action "composePrivateMessage"}}>{{fa-icon "envelope"}}{{i18n 'user.new_private_message'}}</a>
+  </div>
+{{/if}}
+
+{{basic-topic-list topicList=model
+                   hideCategory=hideCategory
+                   showParticipants=showParticipants
+                   postsAction="showTopicEntrance"}}

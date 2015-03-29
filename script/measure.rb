@@ -1,5 +1,4 @@
-# using this script to try figure out why Rails 2 is slower that 1.9
-#
+# using this script to try figure out why Ruby 2 is slower than 1.9
 require 'flamegraph'
 
 Flamegraph.generate('test.html', fidelity: 2) do
@@ -23,7 +22,7 @@ def profile_allocations(name)
   initial_size = ObjectSpace.count_objects
   yield
   changes = ObjectSpace.count_objects
-  changes.each do |k,v|
+  changes.each do |k, _|
     changes[k] -= initial_size[k]
   end
   puts "#{name} changes"

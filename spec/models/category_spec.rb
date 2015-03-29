@@ -4,28 +4,35 @@ require 'spec_helper'
 require_dependency 'post_creator'
 
 describe Category do
-  it { should validate_presence_of :user_id }
-  it { should validate_presence_of :name }
+  it { is_expected.to validate_presence_of :user_id }
+  it { is_expected.to validate_presence_of :name }
 
   it 'validates uniqueness of name' do
     Fabricate(:category)
-    should validate_uniqueness_of(:name)
+    is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
-  it { should belong_to :topic }
-  it { should belong_to :user }
+  it 'validates uniqueness in case insensitive way' do
+    Fabricate(:category, name: "Cats")
+    cats = Fabricate.build(:category, name: "cats")
+    expect(cats).to_not be_valid
+    expect(cats.errors[:name]).to be_present
+  end
 
-  it { should have_many :topics }
-  it { should have_many :category_featured_topics }
-  it { should have_many :featured_topics }
-  it { should belong_to :parent_category}
+  describe "last_updated_at" do
+    it "returns a number value of when the category was last updated" do
+      last = Category.last_updated_at
+      expect(last).to be_present
+      expect(last.to_i).to eq(last)
+    end
+  end
 
   describe "resolve_permissions" do
     it "can determine read_restricted" do
       read_restricted, resolved = Category.resolve_permissions(:everyone => :full)
 
-      read_restricted.should be_false
-      resolved.should == []
+      expect(read_restricted).to be false
+      expect(resolved).to be_blank
     end
   end
 
@@ -34,7 +41,7 @@ describe Category do
 
       # NOTE we also have the uncategorized category ... hence the increased count
 
-      default_category = Fabricate(:category)
+      _default_category = Fabricate(:category)
       full_category = Fabricate(:category)
       can_post_category = Fabricate(:category)
       can_read_category = Fabricate(:category)
@@ -57,24 +64,24 @@ describe Category do
       can_read_category.save
 
       guardian = Guardian.new(admin)
-      Category.topic_create_allowed(guardian).count.should == 5
-      Category.post_create_allowed(guardian).count.should == 5
-      Category.secured(guardian).count.should == 5
+      expect(Category.topic_create_allowed(guardian).count).to be(5)
+      expect(Category.post_create_allowed(guardian).count).to be(5)
+      expect(Category.secured(guardian).count).to be(5)
 
       guardian = Guardian.new(user)
-      Category.secured(guardian).count.should == 5
-      Category.post_create_allowed(guardian).count.should == 4
-      Category.topic_create_allowed(guardian).count.should == 3 # explicitly allowed once, default allowed once
+      expect(Category.secured(guardian).count).to be(5)
+      expect(Category.post_create_allowed(guardian).count).to be(4)
+      expect(Category.topic_create_allowed(guardian).count).to be(3) # explicitly allowed once, default allowed once
 
       # everyone has special semantics, test it as well
       can_post_category.set_permissions(:everyone => :create_post)
       can_post_category.save
 
-      Category.post_create_allowed(guardian).count.should == 4
+      expect(Category.post_create_allowed(guardian).count).to be(4)
 
       # anonymous has permission to create no topics
       guardian = Guardian.new(nil)
-      Category.post_create_allowed(guardian).count.should == 0
+      expect(Category.post_create_allowed(guardian).count).to be(0)
 
     end
 
@@ -87,15 +94,15 @@ describe Category do
     let(:group) { Fabricate(:group) }
 
     it "secures categories correctly" do
-      category.read_restricted?.should be_false
+      expect(category.read_restricted?).to be false
 
       category.set_permissions({})
-      category.read_restricted?.should be_true
+      expect(category.read_restricted?).to be true
 
       category.set_permissions(:everyone => :full)
-      category.read_restricted?.should be_false
+      expect(category.read_restricted?).to be false
 
-      user.secure_categories.should be_empty
+      expect(user.secure_categories).to be_empty
 
       group.add(user)
       group.save
@@ -104,11 +111,11 @@ describe Category do
       category.save
 
       user.reload
-      user.secure_categories.should == [category]
+      expect(user.secure_categories).to eq([category])
     end
 
     it "lists all secured categories correctly" do
-      uncategorized = Category.first
+      uncategorized = Category.find(SiteSetting.uncategorized_category_id)
 
       group.add(user)
       category.set_permissions(group.id => :full)
@@ -116,48 +123,100 @@ describe Category do
       category_2.set_permissions(group.id => :full)
       category_2.save
 
-      Category.secured.should =~ [uncategorized]
-      Category.secured(Guardian.new(user)).should =~ [uncategorized,category, category_2]
+      expect(Category.secured).to match_array([uncategorized])
+      expect(Category.secured(Guardian.new(user))).to match_array([uncategorized,category, category_2])
     end
   end
 
   it "strips leading blanks" do
-    Fabricate(:category, name: " music").name.should == "music"
+    expect(Fabricate(:category, name: " music").name).to eq("music")
   end
 
   it "strips trailing blanks" do
-    Fabricate(:category, name: "bugs ").name.should == "bugs"
+    expect(Fabricate(:category, name: "bugs ").name).to eq("bugs")
   end
 
   it "strips leading and trailing blanks" do
-    Fabricate(:category, name: "  blanks ").name.should == "blanks"
+    expect(Fabricate(:category, name: "  blanks ").name).to eq("blanks")
+  end
+
+  it "sets name_lower" do
+    expect(Fabricate(:category, name: "Not MySQL").name_lower).to eq("not mysql")
+  end
+
+  it "has custom fields" do
+    category = Fabricate(:category, name: " music")
+    expect(category.custom_fields["a"]).to be_nil
+
+    category.custom_fields["bob"] = "marley"
+    category.custom_fields["jack"] = "black"
+    category.save
+
+    category = Category.find(category.id)
+    expect(category.custom_fields).to eq({"bob" => "marley", "jack" => "black"})
   end
 
   describe "short name" do
     let!(:category) { Fabricate(:category, name: 'xx') }
 
     it "creates the category" do
-      category.should be_present
+      expect(category).to be_present
     end
 
     it 'has one topic' do
-      Topic.where(category_id: category.id).count.should == 1
+      expect(Topic.where(category_id: category.id).count).to eq(1)
     end
   end
 
   describe 'non-english characters' do
-    let(:category) { Fabricate(:category, name: "電車男") }
+    let(:category) { Fabricate(:category, name: "测试") }
 
     it "creates a blank slug, this is OK." do
-      category.slug.should be_blank
+      expect(category.slug).to be_blank
+      expect(category.slug_for_url).to eq("#{category.id}-category")
+    end
+
+    it "creates a localized slug if default locale is zh_CN" do
+      SiteSetting.default_locale = 'zh_CN'
+      expect(category.slug).to_not be_blank
+      expect(category.slug_for_url).to eq("ce-shi")
     end
   end
 
   describe 'slug would be a number' do
-    let(:category) { Fabricate(:category, name: "電車男 2") }
+    let(:category) { Fabricate(:category, name: "2") }
 
     it 'creates a blank slug' do
-      category.slug.should be_blank
+      expect(category.slug).to be_blank
+      expect(category.slug_for_url).to eq("#{category.id}-category")
+    end
+  end
+
+  describe 'custom slug can be provided' do
+    it 'has the custom value' do
+      c = Fabricate(:category, name: "Cats", slug: "cats-category")
+      expect(c.slug).to eq("cats-category")
+    end
+
+    it 'and be sanitized' do
+      c = Fabricate(:category, name: 'Cats', slug: '  invalid slug')
+      c.slug.should == 'invalid-slug'
+    end
+
+    it 'fails if custom slug is duplicate with existing' do
+      c1 = Fabricate(:category, name: "Cats", slug: "cats")
+      c2 = Fabricate.build(:category, name: "More Cats", slug: "cats")
+      expect(c2).to_not be_valid
+      expect(c2.errors[:slug]).to be_present
+    end
+  end
+
+  describe 'description_text' do
+    it 'correctly generates text description as needed' do
+      c = Category.new
+      expect(c.description_text).to be_nil
+      c.description = "&lt;hello <a>test</a>."
+      expect(c.description_text).to eq("<hello test.")
     end
   end
 
@@ -168,59 +227,89 @@ describe Category do
     end
 
     it 'is created correctly' do
-      @category.slug.should == 'amazing-category'
+      expect(@category.slug).to eq('amazing-category')
+      expect(@category.slug_for_url).to eq(@category.slug)
 
-      @category.description.should be_blank
+      expect(@category.description).to be_blank
 
-      Topic.where(category_id: @category).count.should == 1
+      expect(Topic.where(category_id: @category).count).to eq(1)
 
-      @topic.should be_present
+      expect(@topic).to be_present
 
-      @topic.category.should == @category
+      expect(@topic.category).to eq(@category)
 
-      @topic.should be_visible
+      expect(@topic).to be_visible
 
-      @topic.pinned_at.should be_present
+      expect(@topic.pinned_at).to be_present
 
-      Guardian.new(@category.user).can_delete?(@topic).should be_false
+      expect(Guardian.new(@category.user).can_delete?(@topic)).to be false
 
-      @topic.posts.count.should == 1
+      expect(@topic.posts.count).to eq(1)
 
-      @category.topic_url.should be_present
+      expect(@category.topic_url).to be_present
 
-      @category.posts_week.should  == 0
-      @category.posts_month.should == 0
-      @category.posts_year.should  == 0
+      expect(@category.posts_week).to eq(0)
+      expect(@category.posts_month).to eq(0)
+      expect(@category.posts_year).to eq(0)
 
-      @category.topics_week.should  == 0
-      @category.topics_month.should == 0
-      @category.topics_year.should  == 0
+      expect(@category.topics_week).to eq(0)
+      expect(@category.topics_month).to eq(0)
+      expect(@category.topics_year).to eq(0)
+    end
+
+    it "renames the definition when renamed" do
+      @category.update_attributes(name: 'Troutfishing')
+      @topic.reload
+      expect(@topic.title).to match /Troutfishing/
+    end
+
+    it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
+      expect { @category.update_attributes(name: 'Troutfishing', topic_id: nil) }.to_not raise_error
     end
 
     it "should not set its description topic to auto-close" do
       category = Fabricate(:category, name: 'Closing Topics', auto_close_hours: 1)
-      category.topic.auto_close_at.should be_nil
+      expect(category.topic.auto_close_at).to be_nil
     end
 
     describe "creating a new category with the same slug" do
-      it "should have a blank slug" do
-        Fabricate(:category, name: "Amazing Categóry").slug.should be_blank
+      it "should have a blank slug if at the same level" do
+        category = Fabricate(:category, name: "Amazing Categóry")
+        expect(category.slug).to be_blank
+        expect(category.slug_for_url).to eq("#{category.id}-category")
+      end
+
+      it "doesn't have a blank slug if not at the same level" do
+        parent = Fabricate(:category, name: 'Other parent')
+        category = Fabricate(:category, name: "Amazing Categóry", parent_category_id: parent.id)
+        expect(category.slug).to eq('amazing-category')
+        expect(category.slug_for_url).to eq("amazing-category")
       end
     end
 
     describe "trying to change the category topic's category" do
       before do
         @new_cat = Fabricate(:category, name: '2nd Category', user: @category.user)
-        @topic.change_category(@new_cat.name)
+        @topic.change_category_to_id(@new_cat.id)
         @topic.reload
         @category.reload
       end
 
       it 'does not cause changes' do
-        @category.topic_count.should == 0
-        @topic.category.should == @category
-        @category.topic.should == @topic
+        expect(@category.topic_count).to eq(0)
+        expect(@topic.category).to eq(@category)
+        expect(@category.topic).to eq(@topic)
       end
+    end
+  end
+
+  describe "update" do
+    it "should enforce uniqueness of slug" do
+      Fabricate(:category, slug: "the-slug")
+      c2 = Fabricate(:category, slug: "different-slug")
+      c2.slug = "the-slug"
+      expect(c2).to_not be_valid
+      expect(c2.errors[:slug]).to be_present
     end
   end
 
@@ -233,8 +322,8 @@ describe Category do
     end
 
     it 'is deleted correctly' do
-      Category.exists?(id: @category_id).should be_false
-      Topic.exists?(id: @topic_id).should be_false
+      expect(Category.exists?(id: @category_id)).to be false
+      expect(Topic.exists?(id: @topic_id)).to be false
     end
   end
 
@@ -244,15 +333,15 @@ describe Category do
       post = create_post(category: category.name)
 
       category.reload
-      category.latest_post_id.should == post.id
-      category.latest_topic_id.should == post.topic_id
+      expect(category.latest_post_id).to eq(post.id)
+      expect(category.latest_topic_id).to eq(post.topic_id)
 
       post2 = create_post(category: category.name)
       post3 = create_post(topic_id: post.topic_id, category: category.name)
 
       category.reload
-      category.latest_post_id.should == post3.id
-      category.latest_topic_id.should == post2.topic_id
+      expect(category.latest_post_id).to eq(post3.id)
+      expect(category.latest_topic_id).to eq(post2.topic_id)
 
       post3.reload
 
@@ -260,7 +349,7 @@ describe Category do
       destroyer.destroy
 
       category.reload
-      category.latest_post_id.should == post2.id
+      expect(category.latest_post_id).to eq(post2.id)
     end
   end
 
@@ -277,14 +366,14 @@ describe Category do
       end
 
       it 'updates topic stats' do
-        @category.topics_week.should == 1
-        @category.topics_month.should == 1
-        @category.topics_year.should == 1
-        @category.topic_count.should == 1
-        @category.post_count.should == 1
-        @category.posts_year.should == 1
-        @category.posts_month.should == 1
-        @category.posts_week.should == 1
+        expect(@category.topics_week).to eq(1)
+        expect(@category.topics_month).to eq(1)
+        expect(@category.topics_year).to eq(1)
+        expect(@category.topic_count).to eq(1)
+        expect(@category.post_count).to eq(1)
+        expect(@category.posts_year).to eq(1)
+        expect(@category.posts_month).to eq(1)
+        expect(@category.posts_week).to eq(1)
       end
 
     end
@@ -298,14 +387,14 @@ describe Category do
       end
 
       it 'does not count deleted topics' do
-        @category.topics_week.should == 0
-        @category.topic_count.should == 0
-        @category.topics_month.should == 0
-        @category.topics_year.should == 0
-        @category.post_count.should == 0
-        @category.posts_year.should == 0
-        @category.posts_month.should == 0
-        @category.posts_week.should == 0
+        expect(@category.topics_week).to eq(0)
+        expect(@category.topic_count).to eq(0)
+        expect(@category.topics_month).to eq(0)
+        expect(@category.topics_year).to eq(0)
+        expect(@category.post_count).to eq(0)
+        expect(@category.posts_year).to eq(0)
+        expect(@category.posts_month).to eq(0)
+        expect(@category.posts_week).to eq(0)
       end
     end
 
@@ -314,17 +403,37 @@ describe Category do
         post = create_post(user: @category.user, category: @category.name)
 
         SiteSetting.stubs(:ninja_edit_window).returns(1.minute.to_i)
-        post.revise(post.user, 'updated body', revised_at: post.updated_at + 2.minutes)
+        post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 2.minutes)
 
         Category.update_stats
         @category.reload
       end
 
       it "doesn't count each version of a post" do
-        @category.post_count.should == 1
-        @category.posts_year.should == 1
-        @category.posts_month.should == 1
-        @category.posts_week.should == 1
+        expect(@category.post_count).to eq(1)
+        expect(@category.posts_year).to eq(1)
+        expect(@category.posts_month).to eq(1)
+        expect(@category.posts_week).to eq(1)
+      end
+    end
+
+    context 'for uncategorized category' do
+      before do
+        @uncategorized = Category.find(SiteSetting.uncategorized_category_id)
+        create_post(user: Fabricate(:user), category: @uncategorized.name)
+        Category.update_stats
+        @uncategorized.reload
+      end
+
+      it 'updates topic stats' do
+        expect(@uncategorized.topics_week).to eq(1)
+        expect(@uncategorized.topics_month).to eq(1)
+        expect(@uncategorized.topics_year).to eq(1)
+        expect(@uncategorized.topic_count).to eq(1)
+        expect(@uncategorized.post_count).to eq(1)
+        expect(@uncategorized.posts_year).to eq(1)
+        expect(@uncategorized.posts_month).to eq(1)
+        expect(@uncategorized.posts_week).to eq(1)
       end
     end
   end
@@ -332,7 +441,7 @@ describe Category do
   describe "#url" do
     it "builds a url for normal categories" do
       category = Fabricate(:category, name: "cats")
-      expect(category.url).to eq "/category/cats"
+      expect(category.url).to eq "/c/cats"
     end
 
     describe "for subcategories" do
@@ -340,8 +449,21 @@ describe Category do
         parent_category = Fabricate(:category, name: "parent")
         subcategory = Fabricate(:category, name: "child",
                                 parent_category_id: parent_category.id)
-        expect(subcategory.url).to eq "/category/parent/child"
+        expect(subcategory.url).to eq "/c/parent/child"
       end
+    end
+  end
+
+  describe "uncategorized" do
+    let(:cat) { Category.where(id: SiteSetting.uncategorized_category_id).first }
+
+    it "reports as `uncategorized?`" do
+      expect(cat).to be_uncategorized
+    end
+
+    it "cannot have a parent category" do
+      cat.parent_category_id = Fabricate(:category).id
+      expect(cat).to_not be_valid
     end
   end
 
@@ -351,27 +473,26 @@ describe Category do
 
     it "can be associated with a parent category" do
       sub_category = Fabricate.build(:category, parent_category_id: parent_category.id, user: user)
-      sub_category.should be_valid
-      sub_category.parent_category.should == parent_category
+      expect(sub_category).to be_valid
+      expect(sub_category.parent_category).to eq(parent_category)
     end
 
     it "cannot associate a category with itself" do
       category = Fabricate(:category, user: user)
       category.parent_category_id = category.id
-      category.should_not be_valid
+      expect(category).to_not be_valid
     end
 
     it "cannot have a category two levels deep" do
       sub_category = Fabricate(:category, parent_category_id: parent_category.id, user: user)
       nested_sub_category = Fabricate.build(:category, parent_category_id: sub_category.id, user: user)
-      nested_sub_category.should_not be_valid
-
+      expect(nested_sub_category).to_not be_valid
     end
 
     describe ".query_parent_category" do
       it "should return the parent category id given a parent slug" do
         parent_category.name = "Amazing Category"
-        parent_category.id.should == Category.query_parent_category(parent_category.slug)
+        expect(parent_category.id).to eq(Category.query_parent_category(parent_category.slug))
       end
     end
 
@@ -379,10 +500,22 @@ describe Category do
       it "should return the category" do
         category = Fabricate(:category, name: "Amazing Category", parent_category_id: parent_category.id, user: user)
         parent_category.name = "Amazing Parent Category"
-        category.should == Category.query_category(category.slug, parent_category.id)
+        expect(category).to eq(Category.query_category(category.slug, parent_category.id))
       end
     end
 
+  end
+
+  describe "find_by_email" do
+    it "is case insensitive" do
+      c1 = Fabricate(:category, email_in: 'lower@example.com')
+      c2 = Fabricate(:category, email_in: 'UPPER@EXAMPLE.COM')
+      c3 = Fabricate(:category, email_in: 'Mixed.Case@Example.COM')
+      expect(Category.find_by_email('LOWER@EXAMPLE.COM')).to eq(c1)
+      expect(Category.find_by_email('upper@example.com')).to eq(c2)
+      expect(Category.find_by_email('mixed.case@example.com')).to eq(c3)
+      expect(Category.find_by_email('MIXED.CASE@EXAMPLE.COM')).to eq(c3)
+    end
   end
 
 end

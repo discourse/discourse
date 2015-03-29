@@ -1,9 +1,24 @@
+require_dependency 'ip_addr'
+
 class Admin::ScreenedIpAddressesController < Admin::AdminController
 
   before_filter :fetch_screened_ip_address, only: [:update, :destroy]
 
   def index
-    screened_ip_addresses = ScreenedIpAddress.limit(200).order('id desc').to_a
+    filter = params[:filter]
+    filter = IPAddr.handle_wildcards(filter)
+
+    screened_ip_addresses = ScreenedIpAddress
+    screened_ip_addresses = screened_ip_addresses.where("cidr '#{filter}' >>= ip_address") if filter.present?
+    screened_ip_addresses = screened_ip_addresses.limit(200).order('match_count desc')
+
+    begin
+      screened_ip_addresses = screened_ip_addresses.to_a
+    rescue ActiveRecord::StatementInvalid
+      # postgresql throws a PG::InvalidTextRepresentation exception when filter isn't a valid cidr expression
+      screened_ip_addresses = []
+    end
+
     render_serialized(screened_ip_addresses, ScreenedIpAddressSerializer)
   end
 
@@ -27,6 +42,11 @@ class Admin::ScreenedIpAddressesController < Admin::AdminController
   def destroy
     @screened_ip_address.destroy
     render json: success_json
+  end
+
+  def roll_up
+    subnets = ScreenedIpAddress.roll_up(current_user)
+    render json: success_json.merge!({ subnets: subnets })
   end
 
   private

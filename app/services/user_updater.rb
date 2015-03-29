@@ -6,15 +6,17 @@ class UserUpdater
     muted_category_ids: :muted
   }
 
-  USER_ATTR =   [
-      :email_digests,
-      :email_always,
-      :email_direct,
-      :email_private_messages,
-      :external_links_in_new_tab,
-      :enable_quoting,
-      :dynamic_favicon,
-      :mailing_list_mode
+  USER_ATTR = [
+    :email_digests,
+    :email_always,
+    :email_direct,
+    :email_private_messages,
+    :external_links_in_new_tab,
+    :enable_quoting,
+    :dynamic_favicon,
+    :mailing_list_mode,
+    :disable_jump_reply,
+    :edit_history_public
   ]
 
   def initialize(actor, user)
@@ -23,9 +25,10 @@ class UserUpdater
   end
 
   def update(attributes = {})
-    user.website = format_url(attributes.fetch(:website) { user.website })
+    user_profile = user.user_profile
+    user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
+    user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
 
-    user.bio_raw = attributes.fetch(:bio_raw) { user.bio_raw }
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
     user.digest_after_days = attributes.fetch(:digest_after_days) { user.digest_after_days }
@@ -50,16 +53,54 @@ class UserUpdater
 
     USER_ATTR.each do |attribute|
       if attributes[attribute].present?
-        user.send("#{attribute.to_s}=", attributes[attribute] == 'true')
+        user.send("#{attribute}=", attributes[attribute] == 'true')
       end
     end
 
-    user.save
+    user_profile.location = attributes[:location]
+    user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
+
+    fields = attributes[:custom_fields]
+    if fields.present?
+      user.custom_fields = user.custom_fields.merge(fields)
+    end
+
+    User.transaction do
+
+      if attributes.key?(:muted_usernames)
+        update_muted_users(attributes[:muted_usernames])
+      end
+
+      user_profile.save && user.save
+    end
   end
 
   private
 
   attr_reader :user, :guardian
+
+  def update_muted_users(usernames)
+    usernames ||= ""
+    desired_ids = User.where(username: usernames.split(",")).pluck(:id)
+    if desired_ids.empty?
+      MutedUser.where(user_id: user.id).destroy_all
+    else
+      MutedUser.where('id not in (?)', desired_ids).destroy_all
+
+      # SQL is easier here than figuring out how to do the same in AR
+      MutedUser.exec_sql("INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
+                          SELECT :user_id, id, :now, :now
+                          FROM users
+                          WHERE
+                            id in (:desired_ids) AND
+                            id NOT IN (
+                              SELECT muted_user_id
+                              FROM muted_users
+                              WHERE user_id = :user_id
+                            )",
+                          now: Time.now, user_id: user.id, desired_ids: desired_ids)
+    end
+  end
 
   def format_url(website)
     if website =~ /^http/

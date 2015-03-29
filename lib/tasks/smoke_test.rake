@@ -1,11 +1,15 @@
 desc "run phantomjs based smoke tests on current build"
-task "smoke:test" => :environment do
+task "smoke:test" do
 
   phantom_path = File.expand_path('~/phantomjs/bin/phantomjs')
   phantom_path = nil unless File.exists?(phantom_path)
   phantom_path = phantom_path || 'phantomjs'
 
-  url = ENV["URL"] || Discourse.base_url
+  url = ENV["URL"]
+  if !url
+    require "#{Rails.root}/config/environment"
+    url = Discourse.base_url
+  end
 
   puts "Testing: #{url}"
 
@@ -17,9 +21,12 @@ task "smoke:test" => :environment do
     raise "TRIVIAL GET FAILED WITH #{res.code}"
   end
 
-  results = `#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}`
+  results = ""
+  IO.popen("#{phantom_path} #{Rails.root}/spec/phantom_js/smoke_test.js #{url}").each do |line|
+    puts line
+    results << line
+  end
 
-  puts results
   if results !~ /ALL PASSED/
     raise "FAILED"
   end

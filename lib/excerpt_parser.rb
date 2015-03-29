@@ -2,6 +2,8 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
 
   attr_reader :excerpt
 
+  SPAN_REGEX = /<\s*span[^>]*class\s*=\s*['|"]excerpt['|"][^>]*>/
+
   def initialize(length, options=nil)
     @length = length
     @excerpt = ""
@@ -10,20 +12,35 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     @strip_links = options[:strip_links] == true
     @text_entities = options[:text_entities] == true
     @markdown_images = options[:markdown_images] == true
+    @start_excerpt = false
   end
 
   def self.get_excerpt(html, length, options)
-    me = self.new(length,options)
+    html ||= ''
+    length = html.length if html.include?('excerpt') && SPAN_REGEX === html
+    me = self.new(length, options)
     parser = Nokogiri::HTML::SAX::Parser.new(me)
     catch(:done) do
-      parser.parse(html) unless html.nil?
+      parser.parse(html)
     end
-    me.excerpt.strip!
-    me.excerpt
+    excerpt = me.excerpt.strip
+    excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
+    excerpt
+  end
+
+  def escape_attribute(v)
+    return "" unless v
+
+    v = v.dup
+    v.gsub!("&", "&amp;")
+    v.gsub!("\"", "&#34;")
+    v.gsub!("<", "&lt;")
+    v.gsub!(">", "&gt;")
+    v
   end
 
   def include_tag(name, attributes)
-    characters("<#{name} #{attributes.map{|k,v| "#{k}='#{v}'"}.join(' ')}>", false, false, false)
+    characters("<#{name} #{attributes.map{|k,v| "#{k}=\"#{escape_attribute(v)}\""}.join(' ')}>", false, false, false)
   end
 
   def start_element(name, attributes=[])
@@ -39,7 +56,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         elsif attributes["title"]
           characters("[#{attributes["title"]}]")
         else
-          characters("[image]")
+          characters("[#{I18n.t 'excerpt_image'}]")
         end
 
         characters("(#{attributes['src']})") if @markdown_images
@@ -54,8 +71,13 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
         @in_quote = true
 
       when "div", "span"
+        if attributes.include?(["class", "excerpt"])
+          @excerpt = ""
+          @current_length = 0
+          @start_excerpt = true
+        end
         # Preserve spoilers
-        if attributes.any? {|x| x == ["class", "spoiler"] }
+        if attributes.include?(["class", "spoiler"])
           include_tag("span", attributes)
           @in_spoiler = true
         end
@@ -74,6 +96,7 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
     when "aside"
       @in_quote = false
     when "div", "span"
+      throw :done if @start_excerpt
       characters("</span>", false, false, false) if @in_spoiler
       @in_spoiler = false
     end

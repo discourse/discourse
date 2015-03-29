@@ -3,11 +3,11 @@ require "digest/sha1"
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
-  def self.create_for(upload, width, height)
+  def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
 
     # do we already have that thumbnail?
-    thumbnail = where(upload_id: upload.id, width: width, height: height).first
+    thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
     # make sure the previous thumbnail has not failed
     if thumbnail && thumbnail.url.blank?
@@ -15,27 +15,37 @@ class OptimizedImage < ActiveRecord::Base
       thumbnail = nil
     end
 
+    # return the previous thumbnail if any
+    return thumbnail unless thumbnail.nil?
+
     # create the thumbnail otherwise
-    unless thumbnail
-      @image_sorcery_loaded ||= require "image_sorcery"
+    external_copy = Discourse.store.download(upload) if Discourse.store.external?
+    original_path = if Discourse.store.external?
+      external_copy.try(:path)
+    else
+      Discourse.store.path_for(upload)
+    end
 
-      external_copy = Discourse.store.download(upload) if Discourse.store.external?
-      original_path = if Discourse.store.external?
-        external_copy.path
-      else
-        Discourse.store.path_for(upload)
-      end
-
+    if original_path.blank?
+      Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
+    else
       # create a temp file with the same extension as the original
       extension = File.extname(original_path)
       temp_file = Tempfile.new(["discourse-thumbnail", extension])
       temp_path = temp_file.path
 
-      if ImageSorcery.new("#{original_path}[0]").convert(temp_path, resize: "#{width}x#{height}!")
+      if extension =~ /\.svg$/i
+        FileUtils.cp(original_path, temp_path)
+        resized = true
+      else
+        resized = resize(original_path, temp_path, width, height, opts)
+      end
+
+      if resized
         thumbnail = OptimizedImage.create!(
           upload_id: upload.id,
           sha1: Digest::SHA1.file(temp_path).hexdigest,
-          extension: File.extname(temp_path),
+          extension: extension,
           width: width,
           height: height,
           url: "",
@@ -54,8 +64,11 @@ class OptimizedImage < ActiveRecord::Base
 
       # close && remove temp file
       temp_file.close!
-      # make sure we remove the cached copy from external stores
-      external_copy.close! if Discourse.store.external?
+    end
+
+    # make sure we remove the cached copy from external stores
+    if Discourse.store.external?
+      external_copy.try(:close!) rescue nil
     end
 
     thumbnail
@@ -66,6 +79,82 @@ class OptimizedImage < ActiveRecord::Base
       Discourse.store.remove_optimized_image(self)
       super
     end
+  end
+
+  def self.resize_instructions(from, to, dimensions, opts={})
+    # NOTE: ORDER is important!
+    %W{
+      #{from}[0]
+      -gravity center
+      -background transparent
+      -thumbnail #{dimensions}^
+      -extent #{dimensions}
+      -interpolate bicubic
+      -unsharp 2x0.5+0.7+0
+      -quality 98
+      #{to}
+    }
+  end
+
+  def self.resize_instructions_animated(from, to, dimensions, opts={})
+    %W{
+      #{from}
+      -coalesce
+      -gravity center
+      -thumbnail #{dimensions}^
+      -extent #{dimensions}
+      #{to}
+    }
+  end
+
+  def self.downsize_instructions(from, to, dimensions, opts={})
+    %W{
+      #{from}[0]
+      -gravity center
+      -background transparent
+      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      #{to}
+    }
+  end
+
+  def self.downsize_instructions_animated(from, to, dimensions, opts={})
+    %W{
+      #{from}
+      -coalesce
+      -gravity center
+      -background transparent
+      -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
+      #{to}
+    }
+  end
+
+  def self.resize(from, to, width, height, opts={})
+    optimize("resize", from, to, width, height, opts)
+  end
+
+  def self.downsize(from, to, max_width, max_height, opts={})
+    optimize("downsize", from, to, max_width, max_height, opts)
+  end
+
+  def self.optimize(operation, from, to, width, height, opts={})
+    dim = dimensions(width, height)
+    method_name = "#{operation}_instructions"
+    method_name += "_animated" if !!opts[:allow_animation] && from =~ /\.GIF$/i
+    instructions = self.send(method_name.to_sym, from, to, dim, opts)
+    convert_with(instructions)
+  end
+
+  def self.dimensions(width, height)
+    "#{width}x#{height}"
+  end
+
+  def self.convert_with(instructions)
+    `convert #{instructions.join(" ")}`
+
+    return false if $?.exitstatus != 0
+
+    ImageOptim.new.optimize_image(to) rescue nil
+    true
   end
 
 end
@@ -87,4 +176,3 @@ end
 #  index_optimized_images_on_upload_id                       (upload_id)
 #  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
 #
-

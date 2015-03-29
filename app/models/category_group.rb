@@ -19,4 +19,3 @@ end
 #  updated_at      :datetime         not null
 #  permission_type :integer          default(1)
 #
-

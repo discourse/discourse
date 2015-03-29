@@ -6,20 +6,20 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 ## First Steps
 
-1. Install and configure PostgreSQL 9.1+. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
+1. Install and configure PostgreSQL 9.1+.
+  1. Run `postgres -V` to see if you already have it.
+  1. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
 2. Install and configure Redis 2+.
-3. Install libxml2, g++, and make.
-4. Install Ruby 1.9.3 and Bundler.
-5. Clone the project and bundle.
-6. Copy `config/database.yml.development-sample` to `config/database.yml`. Copy `config/redis.yml.sample` to `config/redis.yml`. Edit the files to point to your postgres and redis instances.
-7. Create the "vagrant" user and the development and test databases in postgres. See the postgres section in "Building your own Vagrant VM", below.
-8. Install the seed data to set up an admin account and meta topic: `psql DATABASE_NAME < pg_dumps/production-image.sql`
-
+  1. Run `redis-server -v` to see if you already have it.
+3. Install ImageMagick
+4. Install libxml2, libpq-dev, g++, and make.
+5. Install Ruby 2.1.3 and Bundler.
+6. Clone the project and bundle.
 
 ## Before you start Rails
 
 1. `bundle install`
-2. `bundle exec rake db:migrate db:test:prepare db:seed_fu`
+2. `bundle exec rake db:create db:migrate db:test:prepare db:seed_fu`
 4. Try running the specs: `bundle exec rake autospec`
 5. `bundle exec rails server`
 
@@ -54,7 +54,7 @@ Vagrant version 1.1.2. With this Vagrantfile:
     ln -sf /usr/share/zoneinfo/Canada/Eastern /etc/localtime
     apt-get -yqq update
     apt-get -yqq install python-software-properties
-    apt-get -yqq install vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev
+    apt-get -yqq install vim curl expect debconf-utils git-core build-essential zlib1g-dev libssl-dev openssl libcurl4-openssl-dev libreadline6-dev libpcre3 libpcre3-dev imagemagick
 
 ## Unicode
 
@@ -103,12 +103,6 @@ Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
     host all all ::1/128 trust
     host all all 0.0.0.0/0 trust # wide-open
 
-Load the seed data (as vagrant user):
-
-    psql -d discourse_development < pg_dumps/development-image.sql
-
-(You may wish to try the `production-image.sql` file for a good seed for a production database.)
-
 ## Redis
 
     sudo su -
@@ -124,6 +118,22 @@ Load the seed data (as vagrant user):
     # Press enter to accept all the defaults
     /etc/init.d/redis_6379 start
 
+## Sending email (SMTP)
+
+By default, development.rb will attempt to connect locally to send email.
+
+```rb
+config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
+```
+
+Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
+outbound email and you can verify what is being sent.
+
+Note also that mail is sent asynchronously by Sidekiq, so you'll need to have it running to process jobs. Run it with this command:
+
+```
+bundle exec sidekiq
+```
 
 ## Phantomjs
 

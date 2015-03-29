@@ -9,7 +9,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
       raise Discourse::InvalidParameters.new(:message_type) unless args[:message_type].present?
 
-      user = User.where(id: args[:user_id]).first
+      user = User.find_by(id: args[:user_id])
       return if user.blank?
 
       system_message = SystemMessage.new(user)

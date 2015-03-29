@@ -11,7 +11,9 @@ tags
 dump.rdb
 
 .sass-cache/*
+public/csv/*
 public/plugins/*
+public/tombstone/*
 
 # Ignore bundler config
 /bin
@@ -22,6 +24,7 @@ public/plugins/*
 /coverage/*
 
 /public/assets/*
+/public/tombstone/*
 /bundle/*
 
 config/discourse.pill
@@ -36,9 +39,15 @@ config/discourse.conf
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-/plugins
 /logfile
 log/
+
+# Ignore plugins except for the bundled ones.
+/plugins/*
+!/plugins/emoji/
+!/plugins/lazyYT/
+!/plugins/poll/
+/plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
 

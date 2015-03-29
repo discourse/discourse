@@ -1,35 +1,34 @@
 <!DOCTYPE html>
-<html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>">
+<!--[if IE 9]><html lang="<%= SiteSetting.default_locale %>" class="ie9 <%= html_classes %>"><![endif]-->
+<!--[if (!IE 9) | (!IE)]><!--><html lang="<%= SiteSetting.default_locale %>" class="<%= html_classes %>"><!--<![endif]-->
   <head>
     <meta charset="utf-8">
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="<%= SiteSetting.site_description %>" name="description">
-    <meta content="" name="author">
-
-    <%- if SiteSetting.enable_escaped_fragments? %>
-    <meta name="fragment" content="!">
-    <%- end %>
-
-    <%= canonical_link_tag %>
-
-    <link rel="icon" type="image/png" href="<%=SiteSetting.favicon_url%>">
-    <link rel="apple-touch-icon" type="image/png" href="<%=SiteSetting.apple_touch_icon_url%>">
-
-    <%= javascript_include_tag "preload_store" %>
-    <%= javascript_include_tag "locales/#{I18n.locale}" %>
-    <%= javascript_include_tag "vendor" %>
-    <%= javascript_include_tag "application" %>
-    <%- if staff? %>
-      <%= javascript_include_tag "admin"%>
-    <%- end %>
-
-    <%= render :partial => "common/special_font_face" %>
-    <%= render :partial => "common/discourse_stylesheet" %>
-
+    <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
+    <%= render partial: "layouts/head" %>
+    <%= render partial: "common/special_font_face" %>
+    <%= render partial: "common/discourse_stylesheet" %>
     <%= discourse_csrf_tags %>
 
-    <%= raw SiteContent.content_for(:head) %>
+    <%- if SiteSetting.enable_escaped_fragments? %>
+      <meta name="fragment" content="!">
+    <%- end %>
+
+    <%- if shared_session_key %>
+      <meta name="shared_session_key" content="<%= shared_session_key %>">
+    <%- end %>
+
+    <%= script "preload_store" %>
+    <%= script "locales/#{I18n.locale}" %>
+    <%= script "vendor" %>
+    <%= script "application" %>
+    <%- if staff? %>
+      <%= script "admin"%>
+    <%- end %>
+
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
+    <%- end %>
 
     <%= render_google_universal_analytics_code %>
 
@@ -38,22 +37,15 @@
 
   <body>
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
-      <header class="d-header">
-        <div class="container">
-          <div class="contents">
-            <div class="row">
-              <div class="title span13">
-                <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      <%= render partial: 'header' %>
       <div id="main-outlet" class="container">
         <!-- preload-content: -->
         <%= yield %>
         <!-- :preload-content -->
       </div>
+      <footer id='noscript-footer'>
+        <p><%= t 'powered_by_html' %></p>
+      </footer>
     </noscript>
 
     <!--[if IE 9]><script type="text/javascript">ie = "new";</script><![endif]-->
@@ -65,12 +57,15 @@
     <section id='main'>
     </section>
 
+    <div id='offscreen-content'>
+    </div>
+
     <% unless current_user %>
       <form id='hidden-login-form' method="post" action="<%=login_path%>" style="display: none;">
         <input name="username" type="text"     id="signin_username">
         <input name="password" type="password" id="signin_password">
         <input name="redirect" type="hidden">
-        <input type="submit" id="signin-button" value="Log In">
+        <input type="submit" id="signin-button" value="<%= t 'log_in' %>">
       </form>
     <% end %>
 
@@ -84,13 +79,12 @@
 
     <%= yield :data %>
 
-    <footer id='bottom'></footer>
-
     <%= render :partial => "common/discourse_javascript" %>
 
     <%= render_google_analytics_code %>
 
-    <!-- Discourse Version: <%= Discourse::VERSION::STRING %> -->
-    <!-- Git Version: <%= Discourse.git_version %> -->
+    <%- unless customization_disabled? %>
+      <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
+    <%- end %>
   </body>
 </html>

@@ -1,4 +1,5 @@
 require_dependency "mobile_detection"
+require_dependency "crawler_detection"
 
 module Middleware
   class AnonymousCache
@@ -8,6 +9,9 @@ module Middleware
     end
 
     class Helper
+      USER_AGENT = "HTTP_USER_AGENT".freeze
+      RACK_SESSION = "rack.session".freeze
+
       def initialize(env)
         @env = env
       end
@@ -19,18 +23,29 @@ module Middleware
       def is_mobile?
         @is_mobile ||=
           begin
-            session = @env["rack.session"]
+            session = @env[RACK_SESSION]
             # don't initialize params until later otherwise
             # you get a broken params on the request
             params = {}
-            user_agent  = @env["HTTP_USER_AGENT"]
+            user_agent  = @env[USER_AGENT]
 
             MobileDetection.resolve_mobile_view!(user_agent,params,session) ? :true : :false
-          end == :true
+          end
+
+        @is_mobile == :true
+      end
+
+      def is_crawler?
+        @is_crawler ||=
+          begin
+            user_agent  = @env[USER_AGENT]
+            CrawlerDetection.crawler?(user_agent) ? :true : :false
+          end
+        @is_crawler == :true
       end
 
       def cache_key
-        @cache_key ||= "ANON_CACHE_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}"
+        @cache_key ||= "ANON_CACHE_#{@env["HTTP_ACCEPT"]}_#{@env["HTTP_HOST"]}#{@env["REQUEST_URI"]}|m=#{is_mobile?}|c=#{is_crawler?}"
       end
 
       def cache_key_body
@@ -45,8 +60,12 @@ module Middleware
         @env["REQUEST_METHOD"] == "GET"
       end
 
+      def has_auth_cookie?
+        CurrentUser.has_auth_cookie?(@env)
+      end
+
       def cacheable?
-        !!(!CurrentUser.has_auth_cookie?(@env) && get?)
+        !!(!has_auth_cookie? && get?)
       end
 
       def cached
@@ -69,7 +88,7 @@ module Middleware
         status,headers,response = result
 
         if status == 200 && cache_duration
-          headers_stripped = headers.dup.delete_if{|k,v| ["Set-Cookie","X-MiniProfiler-Ids"].include? k}
+          headers_stripped = headers.dup.delete_if{|k, _| ["Set-Cookie","X-MiniProfiler-Ids"].include? k}
           parts = []
           response.each do |part|
             parts << part

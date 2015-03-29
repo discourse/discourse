@@ -11,7 +11,7 @@ describe Jobs::CreateBackup do
 
   it "calls `backup!` when the daily backups are enabled" do
     SiteSetting.stubs(:backup_daily?).returns(true)
-    BackupRestore.expects(:backup!).with(Discourse.system_user.id, false).once
+    BackupRestore.expects(:backup!).with(Discourse.system_user.id, { publish_to_message_bus: false }).once
     Jobs::CreateBackup.new.execute({})
   end
 end

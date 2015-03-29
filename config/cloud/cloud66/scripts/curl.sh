@@ -5,10 +5,6 @@ if [ -f $FILE ]
 then
 	echo "File $FILE exists..."
 else
-	curl localhost
-    curl localhost
-    curl localhost
-    curl localhost
-    curl localhost
+	curl --retry 5 localhost
     touch /tmp/curl_done
 fi

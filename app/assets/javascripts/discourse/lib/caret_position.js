@@ -19,6 +19,10 @@ getCaret = function(el) {
 
 clone = null;
 
+$.fn.caret = function(){
+  return getCaret(this[0]);
+};
+
 /**
   This is a jQuery plugin to retrieve the caret position in a textarea
 
@@ -71,8 +75,6 @@ $.fn.caretPosition = function(options) {
     "line-height": important("line-height")
   });
 
-  before = void 0;
-  after = void 0;
   pos = options && (options.pos || options.pos === 0) ? options.pos : getCaret(textarea[0]);
   val = textarea.val().replace("\r", "");
   if (options && options.key) {

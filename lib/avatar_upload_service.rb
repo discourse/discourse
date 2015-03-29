@@ -1,43 +1,23 @@
+require_dependency "file_helper"
+
 class AvatarUploadService
 
   attr_accessor :source
-  attr_reader :filesize, :file
+  attr_reader :filesize, :filename, :file
 
   def initialize(file, source)
     @source = source
-    @file , @filesize = construct(file)
+    @file, @filename, @filesize = construct(file)
   end
 
   def construct(file)
     case source
     when :url
-      build_from_url(file)
+      tmp = FileHelper.download(file, SiteSetting.max_image_size_kb.kilobytes, "discourse-avatar")
+      [tmp, File.basename(URI.parse(file).path), tmp.size]
     when :image
-      [file, File.size(file.tempfile)]
+      [file.tempfile, file.original_filename, file.tempfile.size]
     end
-  end
-
-  private
-
-  def build_from_url(url)
-    temp = ::UriAdapter.new(url)
-    return temp.build_uploaded_file, temp.file_size
-  end
-
-end
-
-class AvatarUploadPolicy
-
-  def initialize(avatar)
-    @avatar = avatar
-  end
-
-  def max_size_kb
-    SiteSetting.max_image_size_kb.kilobytes
-  end
-
-  def too_big?
-    @avatar.filesize > max_size_kb
   end
 
 end

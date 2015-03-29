@@ -2,34 +2,37 @@ module SiteSettings; end
 
 class SiteSettings::LocalProcessProvider
 
+  attr_accessor :current_site
+
   Setting = Struct.new(:name, :value, :data_type) unless defined? SiteSettings::LocalProcessProvider::Setting
 
-  def initialize(defaults = {})
+  def settings
+    @settings[current_site] ||= {}
+  end
+
+  def initialize()
     @settings = {}
-    @defaults = {}
-    defaults.each do |name,(value,data_type)|
-      @defaults[name] = Setting.new(name,value,data_type)
-    end
+    self.current_site = "test"
   end
 
   def all
-    (@defaults.merge @settings).values
+    settings.values
   end
 
   def find(name)
-    @settings[name] || @defaults[name]
+    settings[name]
   end
 
   def save(name, value, data_type)
-    @settings[name] = Setting.new(name,value, data_type)
+    settings[name] = Setting.new(name,value, data_type)
   end
 
   def destroy(name)
-    @settings.delete(name)
+    settings.delete(name)
   end
 
-  def current_site
-    "test"
+  def clear
+    @settings[current_site] = {}
   end
 
 end

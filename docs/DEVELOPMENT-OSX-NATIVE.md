@@ -12,7 +12,7 @@ If you don't already have a Ruby environment that's tuned to your liking, you ca
 
 1. Install XCode and/or the XCode Command Line Tools from [Apple's developer site](https://developer.apple.com/downloads/index.action). This should also install Git.
 2. Clone the Discourse repo and cd into it.
-3. Run `scripts/osx_dev`.
+3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
 
 Of course, it is good to understand what the script is doing and why. The rest of this guide goes through what's happening.
@@ -25,7 +25,7 @@ You should see this:
 
 ```sh
 $ echo $LANG
-en_US.UTF
+en_US.UTF-8
 ```
 
 ## OS X Development Tools
@@ -46,7 +46,7 @@ RVM (below) can automatically install homebrew for you with the autolibs setting
 
 So, you will need to install Homebrew separately, based on the instructions at the website above, and then run the following from the command line:
 
-    brew tap homebrew/versions # roughly the same to adding a repo to apt/sources.list
+    brew tap homebrew/dupes # roughly the same to adding a repo to apt/sources.list
     brew install apple-gcc42
     gcc-4.2 -v # Test that it's installed and available
 
@@ -87,7 +87,7 @@ Either way, you'll now want to install the 'turbo' version of Ruby 2.0.
 
 OS X comes with Git (which is why the LibXML2 dance above will work before this step!), but I recommend you update to Homebrew's version:
 
-    brew install git # 1.8.5.3 is current
+    brew install git
 
 You should now be able to check out a clone of Discourse.
 
@@ -95,23 +95,23 @@ You should now be able to check out a clone of Discourse.
 
 Atlassan has a free Git client for OS X called [SourceTree](http://www.sourcetreeapp.com/download/) which can be extremely useful for keeping visual track of what's going on in Git-land. While it's arguably not a full substitute for command-line git (especially if you know the command line well), it's extremely powerful for a GUI version-control client.
 
-## Postgres 9.2
+## Postgres 9.3
 
-OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.App](http://postgresapp.com).
+OS X ships with Postgres 9.1.5, but you're better off going with the latest from Homebrew or [Postgres.app](http://postgresapp.com).
 
 ### Using Postgres.app
 
-After installing the [Postgres93 App](http://postgresapp.com/), there is some additional setup that is necessary for discourse to create a database on your machine.
+After installing [Postgres.app](http://postgresapp.com/), there are some additional setup steps that are necessary for discourse to create a database on your machine.
 
 Open this file:
 ```
-~/Library/Application Support/Postgres93/var/postgresql.conf
+~/Library/Application Support/Postgres/var-9.3/postgresql.conf
 ```
 And change these two lines so that postgres will create a socket in the folder discourse expects it to:
 ```
-unix_socket_directories = '/var/pgsql_socket'»# comma-separated list of directories
+unix_socket_directories = '/var/pgsql_socket'   # comma-separated list of directories
 #and
-unix_socket_permissions = 0777»·»·# begin with 0 to use octal notation
+unix_socket_permissions = 0777  # begin with 0 to use octal notation
 ```
 Then create the '/var/pgsql/' folder and set up the appropriate permission in your bash (this requires admin access)
 ```
@@ -124,6 +124,25 @@ Now you can restart Postgres.app and it will use this socket. Make sure you not 
 netstat -ln | grep PGSQL
 ```
 And you should be good to go!
+
+#### Troubleshooting
+
+If you get this error when starting `psql` from the command line:
+
+    psql: could not connect to server: No such file or directory
+    Is the server running locally and accepting
+    connections on Unix domain socket "/tmp/.s.PGSQL.5432"?
+    
+it is because it is still looking in the `/tmp` directory and not in `/var/pgsql_socket`.
+
+If running `psql -h /var/pgsql_socket` works then you need to configure the host in your `.bash_profile`:
+
+```
+export PGHOST="/var/pgsql_socket"
+````
+
+Then make sure to reload your config with: `source ~/.bash_profile`. Now `psql` should work.
+
 
 ### Using Homebrew:
 
@@ -141,7 +160,8 @@ In theory, you're not setting up with vagrant, either, and shouldn't need a vagr
     launchctl unload ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
     launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 
-    # Seed data relies on both 'postgres' and 'vagrant'
+### Seed data relies on both 'postgres' and 'vagrant'
+    
     createuser --createdb --superuser postgres
     createuser --createdb --superuser vagrant
 
@@ -166,6 +186,23 @@ That's about it.
 Homebrew loves you.
 
     brew install phantomjs
+
+## ImageMagick
+
+ImageMagick is used for generating avatars (including for test fixtures).
+
+    brew install imagemagick
+
+## Sending email (SMTP)
+
+By default, development.rb will attempt to connect locally to send email.
+
+```rb
+config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
+```
+
+Set up [MailCatcher](https://github.com/sj26/mailcatcher) so the app can intercept
+outbound email and you can verify what is being sent.
 
 ## Setting up your Discourse
 

@@ -1,6 +1,6 @@
 # Support for ensure_{blah}! methods.
 module EnsureMagic
-    
+
   def method_missing(method, *args, &block)
     if method.to_s =~ /^ensure_(.*)\!$/
       can_method = :"#{Regexp.last_match[1]}?"
@@ -18,5 +18,5 @@ module EnsureMagic
   def ensure_can_see!(obj)
     raise Discourse::InvalidAccess.new("Can't see #{obj}") unless can_see?(obj)
   end
- 
+
 end

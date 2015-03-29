@@ -98,8 +98,16 @@ Discourse.Singleton = Em.Mixin.create({
     } else {
       return instance.get(property);
     }
-  }
+  },
 
+  /**
+    Resets the current singleton. Useful in testing.
+
+    @method resetCurrent
+  **/
+  resetCurrent: function(val) {
+    this._current = val;
+  }
 });
 
 

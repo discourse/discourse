@@ -1,0 +1,11 @@
+<h2>{{period-title period}}</h2>
+<button>{{fa-icon "caret-down"}}</button>
+
+<div id='period-popup' {{bind-attr class="showPeriods::hidden :period-popup"}}>
+  <ul>
+    {{#each p in site.periods}}
+      <li><a href {{action "changePeriod" p}}>{{period-title p}}</a></li>
+    {{/each}}
+  </ul>
+</div>
+<div class='clearfix'></div>

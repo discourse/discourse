@@ -1,12 +1,12 @@
 // style that apply to the login popup
 
-@import "common/foundation/variables";
-@import "common/foundation/mixins";
-
 #login-buttons {
   button {
     margin: 0 5px 5px 0;
     min-width: 180px;
+    &:lang(zh_CN) {
+      min-width: 200px;
+    }
   }
   margin-top: 10px;
   margin-bottom: 20px;
@@ -14,14 +14,7 @@
 
 #login-form {
   a {
-    color: lighten($primary_text_color, 35%);
-    cursor: pointer;
-  }
-}
-
-.login-modal {
-  .fa-spinner {
-    font-size: 18px;
+    color: scale-color($primary, $lightness: 35%);
   }
 }
 
@@ -52,15 +45,12 @@
 
   tr.instructions {
     label {
-      color: lighten($primary_text_color, 60%);
+      color: scale-color($primary, $lightness: 50%);
     }
-  }
-
-  .fa-spinner {
-    font-size: 18px;
   }
 
   .tos-agree {
     margin-bottom: 12px;
   }
+
 }

@@ -3,11 +3,14 @@ class CategorySerializer < BasicCategorySerializer
   attributes :read_restricted,
              :available_groups,
              :auto_close_hours,
+             :auto_close_based_on_last_post,
              :group_permissions,
              :position,
              :email_in,
              :email_in_allow_strangers,
-             :can_delete
+             :can_delete,
+             :cannot_delete_reason,
+             :allow_badges
 
   def group_permissions
     @group_permissions ||= begin
@@ -18,7 +21,7 @@ class CategorySerializer < BasicCategorySerializer
         }
       end
       if perms.length == 0 && !object.read_restricted
-        perms << {permission_type: CategoryGroup.permission_types[:full], group_name: :everyone}
+        perms << { permission_type: CategoryGroup.permission_types[:full], group_name: :everyone }
       end
       perms
     end
@@ -28,13 +31,20 @@ class CategorySerializer < BasicCategorySerializer
     Group.order(:name).pluck(:name) - group_permissions.map{|g| g[:group_name]}
   end
 
-
   def can_delete
     true
   end
 
   def include_can_delete?
     scope && scope.can_delete?(object)
+  end
+
+  def cannot_delete_reason
+    scope && scope.cannot_delete_category_reason(object)
+  end
+
+  def include_cannot_delete_reason
+    !include_can_delete? && scope && scope.can_edit?(object)
   end
 
   def include_email_in?

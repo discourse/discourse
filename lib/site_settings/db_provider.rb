@@ -3,6 +3,10 @@ module SiteSettings; end
 class SiteSettings::DbProvider
 
   def initialize(model)
+    model.after_commit do
+      model.notify_changed!
+    end
+
     @model = model
   end
 
@@ -28,18 +32,18 @@ class SiteSettings::DbProvider
 
     return unless table_exists?
 
-    count = @model.where({
+    model = @model.find_by({
       name: name
-    }).update_all({
-      name: name,
-      value: value,
-      data_type: data_type,
-      updated_at: Time.now
     })
 
-    if count == 0
-      @model.create!(name: name, value: value, data_type: data_type)
-    end
+    model ||= @model.new
+
+    model.name = name
+    model.value =  value
+    model.data_type =  data_type
+
+    # save! used to ensure after_commit is called
+    model.save!
 
     true
   end

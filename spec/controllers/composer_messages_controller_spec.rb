@@ -5,7 +5,7 @@ describe ComposerMessagesController do
   context '.index' do
 
     it 'requires you to be logged in' do
-      lambda { xhr :get, :index }.should raise_error(Discourse::NotLoggedIn)
+      expect { xhr :get, :index }.to raise_error(Discourse::NotLoggedIn)
     end
 
     context 'when logged in' do
@@ -14,7 +14,7 @@ describe ComposerMessagesController do
 
       it 'redirects to your user preferences' do
         xhr :get, :index
-        response.should be_success
+        expect(response).to be_success
       end
 
       it 'delegates args to the finder' do

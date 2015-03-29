@@ -7,7 +7,14 @@
   @namespace Discourse
   @module Discourse
 **/
+
+var _trackView = false;
+
 Discourse.Ajax = Em.Mixin.create({
+
+  viewTrackingRequired: function() {
+    _trackView = true;
+  },
 
   /**
     Our own $.ajax method. Makes sure the .then method executes in an Ember runloop
@@ -34,39 +41,40 @@ Discourse.Ajax = Em.Mixin.create({
     }
 
     if (args.success) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'success' callback");
+      throw "Discourse.ajax should use promises, received 'success' callback";
     }
     if (args.error) {
-      Ember.Logger.error("DEPRECATION: Discourse.ajax should use promises, received 'error' callback");
+      throw "DEPRECATION: Discourse.ajax should use promises, received 'error' callback";
     }
 
-    // If we have URL_FIXTURES, load from there instead (testing)
-    var fixture = Discourse.URL_FIXTURES && Discourse.URL_FIXTURES[url];
-    if (fixture) {
-      return Ember.RSVP.resolve(fixture);
-    }
+    var performAjax = function(resolve, reject) {
 
-    var performAjax = function(promise) {
-      var oldSuccess = args.success;
+      args.headers = args.headers || {};
+
+      if (_trackView && (!args.type || args.type === "GET")) {
+        _trackView = false;
+        args.headers['Discourse-Track-View'] = true;
+      }
+
       args.success = function(xhr) {
-        Ember.run(promise, promise.resolve, xhr);
-        if (oldSuccess) oldSuccess(xhr);
+        Ember.run(null, resolve, xhr);
       };
 
-      var oldError = args.error;
-      args.error = function(xhr) {
-
+      args.error = function(xhr, textStatus) {
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
         if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
           Discourse.Session.current().set('csrfToken', null);
         }
 
-        // If it's a parseerror, don't reject
+        // If it's a parsererror, don't reject
         if (xhr.status === 200) return args.success(xhr);
 
-        Ember.run(promise, promise.reject, xhr);
-        if (oldError) oldError(xhr);
+        // Fill in some extra info
+        xhr.jqTextStatus = textStatus;
+        xhr.requestedUrl = url;
+
+        Ember.run(null, reject, xhr);
       };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header
@@ -74,21 +82,29 @@ Discourse.Ajax = Em.Mixin.create({
       if (!args.type) args.type = 'GET';
       if (!args.dataType && args.type.toUpperCase() === 'GET') args.dataType = 'json';
 
+      if (args.dataType === "script") {
+        args.headers['Discourse-Script'] = true;
+      }
+
+      if (args.type === 'GET' && args.cache !== true) {
+        args.cache = false;
+      }
+
       $.ajax(Discourse.getURL(url), args);
     };
 
     // For cached pages we strip out CSRF tokens, need to round trip to server prior to sending the
     //  request (bypass for GET, not needed)
     if(args.type && args.type.toUpperCase() !== 'GET' && !Discourse.Session.currentProp('csrfToken')){
-      return Ember.Deferred.promise(function(promise){
-        $.ajax(Discourse.getURL('/session/csrf'))
+      return new Ember.RSVP.Promise(function(resolve, reject){
+        $.ajax(Discourse.getURL('/session/csrf'), {cache: false})
            .success(function(result){
               Discourse.Session.currentProp('csrfToken', result.csrf);
-              performAjax(promise);
+              performAjax(resolve, reject);
            });
       });
     } else {
-      return Ember.Deferred.promise(performAjax);
+      return new Ember.RSVP.Promise(performAjax);
     }
   }
 

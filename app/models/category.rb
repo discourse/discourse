@@ -1,8 +1,10 @@
-require_dependency "concern/positionable"
+require_dependency 'distributed_cache'
+require_dependency 'sass/discourse_stylesheets'
 
 class Category < ActiveRecord::Base
 
-  include Concern::Positionable
+  include Positionable
+  include HasCustomFields
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -20,18 +22,26 @@ class Category < ActiveRecord::Base
   has_many :category_featured_users
   has_many :featured_users, through: :category_featured_users, source: :user
 
-  has_many :category_groups
+  has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
   validates :user_id, presence: true
-  validates :name, presence: true, uniqueness: true, length: { in: 1..50 }
+  validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
+                   presence: true,
+                   uniqueness: { scope: :parent_category_id, case_sensitive: false },
+                   length: { in: 1..50 }
   validate :parent_category_validator
 
-  before_validation :ensure_slug
+  validate :ensure_slug
   before_save :apply_permissions
+  before_save :downcase_email
+  before_save :downcase_name
   after_create :create_category_definition
   after_create :publish_categories_list
   after_destroy :publish_categories_list
+  after_update :rename_category_definition, if: :name_changed?
+
+  after_save :publish_discourse_stylesheet
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
@@ -67,8 +77,11 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :displayable_topics, :permission, :subcategory_ids
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
 
+  def self.last_updated_at
+    order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
+  end
 
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
@@ -97,25 +110,12 @@ class Category < ActiveRecord::Base
     end
   end
 
-  # Internal: Update category stats: # of topics and posts in past year, month, week for
-  # all categories.
   def self.update_stats
-    topics = Topic
-               .select("COUNT(*) topic_count")
-               .where("topics.category_id = categories.id")
-               .where("categories.topic_id <> topics.id OR categories.topic_id is null")
-               .visible
-
     topics_with_post_count = Topic
                               .select("topics.category_id, COUNT(*) topic_count, SUM(topics.posts_count) post_count")
                               .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
                               .group("topics.category_id")
                               .visible.to_sql
-
-    topics_year = topics.created_since(1.year.ago).to_sql
-    topics_month = topics.created_since(1.month.ago).to_sql
-    topics_week = topics.created_since(1.week.ago).to_sql
-
 
     Category.exec_sql <<SQL
     UPDATE categories c
@@ -127,26 +127,34 @@ class Category < ActiveRecord::Base
 
 SQL
 
-    posts = Post.select("count(*) post_count")
-                .joins(:topic)
-                .where('topics.category_id = categories.id')
-                .where('topics.visible = true')
-                .where("topics.id NOT IN (select cc.topic_id from categories cc WHERE topic_id IS NOT NULL)")
-                .where('posts.deleted_at IS NULL')
-                .where('posts.user_deleted = false')
+    # Yes, there are a lot of queries happening below.
+    # Performing a lot of queries is actually faster than using one big update
+    # statement with sub-selects on large databases with many categories,
+    # topics, and posts.
+    #
+    # The old method with the one query is here:
+    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
+    #
+    # If you refactor this, test performance on a large database.
 
-    posts_year = posts.created_since(1.year.ago).to_sql
-    posts_month = posts.created_since(1.month.ago).to_sql
-    posts_week = posts.created_since(1.week.ago).to_sql
+    Category.all.each do |c|
+      topics = c.topics.visible
+      topics = topics.where(['topics.id <> ?', c.topic_id]) if c.topic_id
+      c.topics_year  = topics.created_since(1.year.ago).count
+      c.topics_month = topics.created_since(1.month.ago).count
+      c.topics_week  = topics.created_since(1.week.ago).count
+      c.topics_day   = topics.created_since(1.day.ago).count
 
-    # TODO don't update unchanged data
-    Category.update_all("topics_year = (#{topics_year}),
-                         topics_month = (#{topics_month}),
-                         topics_week = (#{topics_week}),
-                         posts_year = (#{posts_year}),
-                         posts_month = (#{posts_month}),
-                         posts_week = (#{posts_week})")
+      posts = c.visible_posts
+      c.posts_year  = posts.created_since(1.year.ago).count
+      c.posts_month = posts.created_since(1.month.ago).count
+      c.posts_week  = posts.created_since(1.week.ago).count
+      c.posts_day   = posts.created_since(1.day.ago).count
+
+      c.save if c.changed?
+    end
   end
+
 
   def visible_posts
     query = Post.joins(:topic)
@@ -157,33 +165,6 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-  def topics_day
-    if val = $redis.get(topics_day_key)
-      val.to_i
-    else
-      val = self.topics.where(['topics.id <> ?', self.topic_id]).created_since(1.day.ago).visible.count
-      $redis.setex topics_day_key, 30.minutes.to_i, val
-      val
-    end
-  end
-
-  def topics_day_key
-    "topics_day:cat-#{self.id}"
-  end
-
-  def posts_day
-    if val = $redis.get(posts_day_key)
-      val.to_i
-    else
-      val = self.visible_posts.created_since(1.day.ago).count
-      $redis.setex posts_day_key, 30.minutes.to_i, val
-      val
-    end
-  end
-
-  def posts_day_key
-    "posts_day:cat-#{self.id}"
-  end
 
   # Internal: Generate the text of post prompting to enter category
   # description.
@@ -194,8 +175,9 @@ SQL
   def create_category_definition
     t = Topic.new(title: I18n.t("category.topic_prefix", category: name), user: user, pinned_at: Time.now, category_id: id)
     t.skip_callbacks = true
-    t.auto_close_hours = nil
-    t.save!
+    t.ignore_category_auto_close = true
+    t.set_auto_close(nil)
+    t.save!(validate: false)
     update_column(:topic_id, t.id)
     t.posts.create(raw: post_template, user: user)
   end
@@ -204,19 +186,39 @@ SQL
     topic_only_relative_url.try(:relative_url)
   end
 
-  def ensure_slug
-    if name.present?
-      self.name.strip!
-      self.slug = Slug.for(name)
+  def description_text
+    return nil unless description
 
-      return if self.slug.blank?
-
-      # If a category with that slug already exists, set the slug to nil so the category can be found
-      # another way.
-      category = Category.where(slug: self.slug)
-      category = category.where("id != ?", id) if id.present?
-      self.slug = '' if category.exists?
+    @@cache ||= LruRedux::ThreadSafeCache.new(100)
+    @@cache.getset(self.description) do
+      Nokogiri::HTML(self.description).text
     end
+
+  end
+
+  def duplicate_slug?
+    Category.where(slug: self.slug, parent_category_id: parent_category_id).where.not(id: id).any?
+  end
+
+  def ensure_slug
+    return unless name.present?
+
+    self.name.strip!
+
+    if slug.present?
+      # santized custom slug
+      self.slug = Slug.for(slug)
+      errors.add(:slug, 'is already in use') if duplicate_slug?
+    else
+      # auto slug
+      self.slug = Slug.for(name)
+      return if self.slug.blank?
+      self.slug = '' if duplicate_slug?
+    end
+  end
+
+  def slug_for_url
+    slug.present? ? self.slug : "#{self.id}-category"
   end
 
   def publish_categories_list
@@ -225,7 +227,8 @@ SQL
 
   def parent_category_validator
     if parent_category_id
-      errors.add(:parent_category_id, I18n.t("category.errors.self_parent")) if parent_category_id == id
+      errors.add(:base, I18n.t("category.errors.self_parent")) if parent_category_id == id
+      errors.add(:base, I18n.t("category.errors.uncategorized_parent")) if uncategorized?
 
       grandfather_id = Category.where(id: parent_category_id).pluck(:parent_category_id).first
       errors.add(:base, I18n.t("category.errors.depth")) if grandfather_id
@@ -271,6 +274,14 @@ SQL
     end
   end
 
+  def downcase_email
+    self.email_in = email_in.downcase if self.email_in
+  end
+
+  def downcase_name
+    self.name_lower = name.downcase if self.name
+  end
+
   def secure_group_ids
     if self.read_restricted?
       groups.pluck("groups.id")
@@ -305,11 +316,11 @@ SQL
     full = CategoryGroup.permission_types[:full]
 
     mapped = permissions.map do |group,permission|
-      group = group.id if Group === group
+      group = group.id if group.is_a?(Group)
 
       # subtle, using Group[] ensures the group exists in the DB
-      group = Group[group.to_sym].id unless Fixnum === group
-      permission = CategoryGroup.permission_types[permission] unless Fixnum === permission
+      group = Group[group.to_sym].id unless group.is_a?(Fixnum)
+      permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
 
       [group, permission]
     end
@@ -326,17 +337,17 @@ SQL
   end
 
   def self.query_parent_category(parent_slug)
-    self.where(slug: parent_slug).pluck(:id).first ||
+    self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
-  def self.query_category(slug, parent_category_id)
-    self.where(slug: slug, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(id: slug.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
+  def self.query_category(slug_or_id, parent_category_id)
+    self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
+    self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
   def self.find_by_email(email)
-    self.where(email_in: Email.downcase(email)).first
+    self.find_by(email_in: Email.downcase(email))
   end
 
   def has_children?
@@ -347,10 +358,44 @@ SQL
     id == SiteSetting.uncategorized_category_id
   end
 
+  @@url_cache = DistributedCache.new('category_url')
+
+  after_save do
+    # parent takes part in url calculation
+    # any change could invalidate multiples
+    @@url_cache.clear
+  end
+
+  def full_slug
+    url[3..-1].gsub("/", "-")
+  end
+
   def url
-    url = "/category"
-    url << "/#{parent_category.slug}" if parent_category_id
-    url << "/#{slug}"
+    url = @@url_cache[self.id]
+    unless url
+      url = "/c"
+      url << "/#{parent_category.slug}" if parent_category_id
+      url << "/#{slug}"
+      url.freeze
+
+      @@url_cache[self.id] = url
+    end
+
+    url
+  end
+
+  # If the name changes, try and update the category definition topic too if it's
+  # an exact match
+  def rename_category_definition
+    old_name = changed_attributes["name"]
+    return unless topic.present?
+    if topic.title == I18n.t("category.topic_prefix", category: old_name)
+      topic.update_column(:title, I18n.t("category.topic_prefix", category: name))
+    end
+  end
+
+  def publish_discourse_stylesheet
+    DiscourseStylesheets.cache.clear
   end
 end
 
@@ -358,33 +403,43 @@ end
 #
 # Table name: categories
 #
-#  id                 :integer          not null, primary key
-#  name               :string(50)       not null
-#  color              :string(6)        default("AB9364"), not null
-#  topic_id           :integer
-#  topic_count        :integer          default(0), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  user_id            :integer          not null
-#  topics_year        :integer
-#  topics_month       :integer
-#  topics_week        :integer
-#  slug               :string(255)      not null
-#  description        :text
-#  text_color         :string(6)        default("FFFFFF"), not null
-#  read_restricted    :boolean          default(FALSE), not null
-#  auto_close_hours   :float
-#  post_count         :integer          default(0), not null
-#  latest_post_id     :integer
-#  latest_topic_id    :integer
-#  position           :integer
-#  parent_category_id :integer
-#  posts_year         :integer
-#  posts_month        :integer
-#  posts_week         :integer
+#  id                            :integer          not null, primary key
+#  name                          :string(50)       not null
+#  color                         :string(6)        default("AB9364"), not null
+#  topic_id                      :integer
+#  topic_count                   :integer          default(0), not null
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  user_id                       :integer          not null
+#  topics_year                   :integer          default(0)
+#  topics_month                  :integer          default(0)
+#  topics_week                   :integer          default(0)
+#  slug                          :string(255)      not null
+#  description                   :text
+#  text_color                    :string(6)        default("FFFFFF"), not null
+#  read_restricted               :boolean          default(FALSE), not null
+#  auto_close_hours              :float
+#  post_count                    :integer          default(0), not null
+#  latest_post_id                :integer
+#  latest_topic_id               :integer
+#  position                      :integer
+#  parent_category_id            :integer
+#  posts_year                    :integer          default(0)
+#  posts_month                   :integer          default(0)
+#  posts_week                    :integer          default(0)
+#  email_in                      :string(255)
+#  email_in_allow_strangers      :boolean          default(FALSE)
+#  topics_day                    :integer          default(0)
+#  posts_day                     :integer          default(0)
+#  logo_url                      :string(255)
+#  background_url                :string(255)
+#  allow_badges                  :boolean          default(TRUE), not null
+#  name_lower                    :string(50)       not null
+#  auto_close_based_on_last_post :boolean          default(FALSE)
 #
 # Indexes
 #
-#  index_categories_on_forum_thread_count  (topic_count)
-#  index_categories_on_name                (name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  (name) UNIQUE
 #

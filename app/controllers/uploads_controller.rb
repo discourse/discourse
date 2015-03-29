@@ -4,43 +4,49 @@ class UploadsController < ApplicationController
 
   def create
     file = params[:file] || params[:files].first
+    filesize = file.tempfile.size
+    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, { content_type: file.content_type })
 
-    # check if the extension is allowed
-    unless SiteSetting.authorized_upload?(file)
-      text = I18n.t("upload.unauthorized", authorized_extensions: SiteSetting.authorized_extensions.gsub("|", ", "))
-      return render status: 415, text: text
+    if upload.errors.empty? && current_user.admin?
+      retain_hours = params[:retain_hours].to_i
+      upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
     end
 
-    # check the file size (note: this might also be done in the web server)
-    filesize = File.size(file.tempfile)
-    type = SiteSetting.authorized_image?(file) ? "image" : "attachment"
-    max_size_kb = SiteSetting.send("max_#{type}_size_kb").kilobytes
-    return render status: 413, text: I18n.t("upload.#{type}s.too_large", max_size_kb: max_size_kb) if filesize > max_size_kb
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
-    upload = Upload.create_for(current_user.id, file, filesize)
-
-    render_serialized(upload, UploadSerializer, root: false)
-
-  rescue FastImage::ImageFetchFailure
-    render status: 422, text: I18n.t("upload.images.fetch_failure")
-  rescue FastImage::UnknownImageType
-    render status: 422, text: I18n.t("upload.images.unknown_image_type")
-  rescue FastImage::SizeNotFound
-    render status: 422, text: I18n.t("upload.images.size_not_found")
+    if upload.errors.empty?
+      render_serialized(upload, UploadSerializer, root: false)
+    else
+      render status: 422, text: upload.errors.full_messages
+    end
   end
 
   def show
-    return render nothing: true, status: 404 unless Discourse.store.internal?
+    return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
-    id = params[:id].to_i
-    url = request.fullpath
+    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
+      return render_404 unless Discourse.store.internal?
+      return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
 
-    # the "url" parameter is here to prevent people from scanning the uploads using the id
-    upload = Upload.where(id: id, url: url).first
+      id = params[:id].to_i
+      url = request.fullpath
 
-    return render nothing: true, status: 404 unless upload
+      # the "url" parameter is here to prevent people from scanning the uploads using the id
+      if upload = (Upload.find_by(id: id, url: url) || Upload.find_by(sha1: params[:sha]))
+        opts = {filename: upload.original_filename}
+        opts[:disposition] = 'inline' if params[:inline]
+        send_file(Discourse.store.path_for(upload),opts)
+      else
+        render_404
+      end
+    end
+  end
 
-    send_file(Discourse.store.path_for(upload), filename: upload.original_filename)
+  protected
+
+  def render_404
+    render nothing: true, status: 404
   end
 
 end

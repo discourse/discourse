@@ -11,14 +11,14 @@ class AdminDashboardData
     'users_by_trust_level',
     'likes',
     'bookmarks',
-    'starred',
     'emails',
     'user_to_user_private_messages',
     'system_private_messages',
     'moderator_warning_private_messages',
     'notify_moderators_private_messages',
-    'notify_user_private_messages'
-  ]
+    'notify_user_private_messages',
+    'page_view_total_reqs'
+  ] + ApplicationRequest.req_types.keys.map{|r| r + "_reqs"}
 
   def problems
     [ rails_env_check,
@@ -27,6 +27,9 @@ class AdminDashboardData
       gc_checks,
       sidekiq_check || queue_size_check,
       ram_check,
+      old_google_config_check,
+      both_googles_config_check,
+      google_oauth2_config_check,
       facebook_config_check,
       twitter_config_check,
       github_config_check,
@@ -38,12 +41,12 @@ class AdminDashboardData
       send_consumer_email_check,
       title_check,
       site_description_check,
-      access_password_removal,
       site_contact_username_check,
       notification_email_check,
-      enforce_global_nicknames_check
+      s3_deprecation_warning
     ].compact
   end
+
 
   def self.fetch_stats
     AdminDashboardData.new
@@ -61,7 +64,7 @@ class AdminDashboardData
     AdminDashboardData.new.problems
   end
 
-  def as_json(options = nil)
+  def as_json(_options = nil)
     @json ||= {
       reports: REPORTS.map { |type| Report.find(type).as_json },
       admins: User.admins.count,
@@ -81,7 +84,7 @@ class AdminDashboardData
   end
 
   def rails_env_check
-    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env == 'production'
+    I18n.t("dashboard.rails_env_warning", env: Rails.env) unless Rails.env.production?
   end
 
   def host_names_check
@@ -106,8 +109,20 @@ class AdminDashboardData
     I18n.t('dashboard.memory_warning') if MemInfo.new.mem_total and MemInfo.new.mem_total < 1_000_000
   end
 
+  def old_google_config_check
+    I18n.t('dashboard.enable_google_logins_warning') if SiteSetting.enable_google_logins
+  end
+
+  def both_googles_config_check
+    I18n.t('dashboard.both_googles_warning') if SiteSetting.enable_google_logins && SiteSetting.enable_google_oauth2_logins
+  end
+
+  def google_oauth2_config_check
+    I18n.t('dashboard.google_oauth2_config_warning') if SiteSetting.enable_google_oauth2_logins && (SiteSetting.google_oauth2_client_id.blank? || SiteSetting.google_oauth2_client_secret.blank?)
+  end
+
   def facebook_config_check
-    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins and (SiteSetting.facebook_app_id.blank? or SiteSetting.facebook_app_secret.blank?)
+    I18n.t('dashboard.facebook_config_warning') if SiteSetting.enable_facebook_logins && (SiteSetting.facebook_app_id.blank? || SiteSetting.facebook_app_secret.blank?)
   end
 
   def twitter_config_check
@@ -119,7 +134,11 @@ class AdminDashboardData
   end
 
   def s3_config_check
-    I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads and (SiteSetting.s3_access_key_id.blank? or SiteSetting.s3_secret_access_key.blank? or SiteSetting.s3_upload_bucket.blank?)
+    bad_keys = (SiteSetting.s3_access_key_id.blank? or SiteSetting.s3_secret_access_key.blank?) and !SiteSetting.s3_use_iam_profile
+
+    return I18n.t('dashboard.s3_config_warning') if SiteSetting.enable_s3_uploads and (bad_keys or SiteSetting.s3_upload_bucket.blank?)
+    return I18n.t('dashboard.s3_backup_config_warning') if SiteSetting.enable_s3_backups and (bad_keys or SiteSetting.s3_backup_bucket.blank?)
+    nil
   end
 
   def image_magick_check
@@ -153,40 +172,23 @@ class AdminDashboardData
   end
 
   def send_consumer_email_check
-    I18n.t('dashboard.consumer_email_warning') if Rails.env == 'production' and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
+    I18n.t('dashboard.consumer_email_warning') if Rails.env.production? and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
   def site_contact_username_check
-    I18n.t('dashboard.site_contact_username_warning') if SiteSetting.site_contact_username.blank?
+    I18n.t('dashboard.site_contact_username_warning') if !SiteSetting.site_contact_username.present? || SiteSetting.site_contact_username == SiteSetting.defaults[:site_contact_username]
   end
 
   def notification_email_check
-    I18n.t('dashboard.notification_email_warning') if SiteSetting.notification_email.blank?
+    I18n.t('dashboard.notification_email_warning') if !SiteSetting.notification_email.present? || SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
   end
 
   def ruby_version_check
     I18n.t('dashboard.ruby_version_warning') if RUBY_VERSION == '2.0.0' and RUBY_PATCHLEVEL < 247
   end
 
-  def enforce_global_nicknames_check
-    I18n.t('dashboard.enforce_global_nicknames_warning') if SiteSetting.enforce_global_nicknames and !SiteSetting.discourse_org_access_key.present?
+  def s3_deprecation_warning
+    I18n.t('dashboard.s3_deprecation_warning') if SiteSetting.enable_s3_uploads
   end
-
-  # TODO: generalize this method of putting i18n keys with expiry in redis
-  #       that should be reported on the admin dashboard:
-  def access_password_removal
-    if i18n_key = $redis.get(AdminDashboardData.access_password_removal_key)
-      I18n.t(i18n_key)
-    end
-  end
-  def self.report_access_password_removal
-    $redis.setex access_password_removal_key, 172_800, 'dashboard.access_password_removal'
-  end
-
-  private
-
-    def self.access_password_removal_key
-      'dash-data:access_password_removal'
-    end
 
 end

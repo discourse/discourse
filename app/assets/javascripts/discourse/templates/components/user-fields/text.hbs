@@ -1,0 +1,6 @@
+<label>{{{field.name}}}</label>
+<div class='controls'>
+  {{input value=value maxlength=site.user_field_max_length}}
+  {{#if field.required}}<span class='required'>*</span>{{/if}}
+  <p>{{{field.description}}}</p>
+</div>

@@ -6,34 +6,34 @@ describe Email do
   describe "is_valid?" do
 
     it 'treats a good email as valid' do
-      Email.is_valid?('sam@sam.com').should be_true
+      expect(Email.is_valid?('sam@sam.com')).to eq(true)
     end
 
     it 'treats a bad email as invalid' do
-      Email.is_valid?('sam@sam').should be_false
+      expect(Email.is_valid?('sam@sam')).to eq(false)
     end
 
     it 'allows museum tld' do
-      Email.is_valid?('sam@nic.museum').should be_true
+      expect(Email.is_valid?('sam@nic.museum')).to eq(true)
     end
 
     it 'does not think a word is an email' do
-      Email.is_valid?('sam').should be_false
+      expect(Email.is_valid?('sam')).to eq(false)
     end
 
   end
 
   describe "downcase" do
 
-    it 'downcases only the host part' do
-      Email.downcase('SAM@GMAIL.COM').should == 'SAM@gmail.com'
-      Email.downcase('sam@GMAIL.COM').should_not == 'SAM@gmail.com'
+    it 'downcases local and host part' do
+      expect(Email.downcase('SAM@GMAIL.COM')).to eq('sam@gmail.com')
+      expect(Email.downcase('sam@GMAIL.COM')).to eq('sam@gmail.com')
     end
 
     it 'leaves invalid emails untouched' do
-      Email.downcase('SAM@GMAILCOM').should == 'SAM@GMAILCOM'
-      Email.downcase('samGMAIL.COM').should == 'samGMAIL.COM'
-      Email.downcase('sam@GM@AIL.COM').should == 'sam@GM@AIL.COM'
+      expect(Email.downcase('SAM@GMAILCOM')).to eq('SAM@GMAILCOM')
+      expect(Email.downcase('samGMAIL.COM')).to eq('samGMAIL.COM')
+      expect(Email.downcase('sam@GM@AIL.COM')).to eq('sam@GM@AIL.COM')
     end
 
   end

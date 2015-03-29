@@ -1,17 +1,60 @@
-/**
-  URL related functions.
+/*global LockOn:true*/
+var jumpScheduled = false,
+    rewrites = [];
 
-  @class URL
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.URL = Em.Object.createWithMixins({
+Discourse.URL = Ember.Object.createWithMixins({
 
   // Used for matching a topic
   TOPIC_REGEXP: /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/,
 
-  // Used for matching a /more URL
-  MORE_REGEXP: /\/more$/,
+  isJumpScheduled: function() {
+    return jumpScheduled;
+  },
+
+  /**
+    Jumps to a particular post in the stream
+  **/
+  jumpToPost: function(postNumber, opts) {
+    var holderId = '#post-cloak-' + postNumber;
+
+    var offset = function(){
+
+      var $header = $('header'),
+          $title = $('#topic-title'),
+          windowHeight = $(window).height() - $title.height(),
+          expectedOffset = $title.height() - $header.find('.contents').height() + (windowHeight / 5);
+
+      return $header.outerHeight(true) + ((expectedOffset < 0) ? 0 : expectedOffset);
+    };
+
+
+    Em.run.schedule('afterRender', function() {
+      if (postNumber === 1) {
+        $(window).scrollTop(0);
+        return;
+      }
+
+      var lockon = new LockOn(holderId, {offsetCalculator: offset});
+      var holder = $(holderId);
+
+      if(holder.length > 0 && opts && opts.skipIfOnScreen){
+
+        // if we are on screen skip
+        var elementTop = lockon.elementTop(),
+            scrollTop = $(window).scrollTop(),
+            windowHeight = $(window).height()-offset(),
+            height = holder.height();
+
+        if (elementTop > scrollTop &&
+            (elementTop + height) < (scrollTop + windowHeight)) {
+          return;
+        }
+      }
+
+      lockon.lock();
+
+    });
+  },
 
   /**
     Browser aware replaceState. Will only be invoked if the browser supports it.
@@ -31,9 +74,28 @@ Discourse.URL = Em.Object.createWithMixins({
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
         Em.run.next(function() {
           var location = Discourse.URL.get('router.location');
-          if (location && location.replaceURL) { location.replaceURL(path); }
+          if (location && location.replaceURL) {
+            location.replaceURL(path);
+          }
         });
     }
+  },
+
+  // Scroll to the same page, different anchor
+  scrollToId: function(id) {
+    if (Em.isEmpty(id)) { return; }
+
+    jumpScheduled = true;
+    Em.run.schedule('afterRender', function() {
+      var $elem = $(id);
+      if ($elem.length === 0) {
+        $elem = $("[name=" + id.replace('#', ''));
+      }
+      if ($elem.length > 0) {
+        $('html,body').scrollTop($elem.offset().top - $('header').height() - 15);
+        jumpScheduled = false;
+      }
+    });
   },
 
   /**
@@ -48,8 +110,22 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   routeTo: function(path) {
 
-    if(Discourse.get("requiresRefresh")){
+    if (Em.isEmpty(path)) { return; }
+
+    if (Discourse.get('requiresRefresh')) {
       document.location.href = path;
+      return;
+    }
+
+    // Protocol relative URLs
+    if (path.indexOf('//') === 0) {
+      document.location = path;
+      return;
+    }
+
+    // Scroll to the same page, different anchor
+    if (path.indexOf('#') === 0) {
+      this.scrollToId(path);
       return;
     }
 
@@ -63,34 +139,41 @@ Discourse.URL = Em.Object.createWithMixins({
       path = path.replace(rootURL, '');
     }
 
+    // Rewrite /my/* urls
+    if (path.indexOf('/my/') === 0) {
+      var currentUser = Discourse.User.current();
+      if (currentUser) {
+        path = path.replace('/my/', '/users/' + currentUser.get('username_lower') + "/");
+      } else {
+        document.location.href = "/404";
+        return;
+      }
+    }
+
+    rewrites.forEach(function(rw) {
+      path = path.replace(rw.regexp, rw.replacement);
+    });
+
+    if (this.navigatedToPost(oldPath, path)) { return; }
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
     // TODO: Extract into rules we can inject into the URL handler
     if (this.navigatedToHome(oldPath, path)) { return; }
-    if (this.navigatedToListMore(oldPath, path)) { return; }
-    if (this.navigatedToPost(oldPath, path)) { return; }
 
-    if (path.match(/^\/?users\/[^\/]+$/)) {
-      path += "/activity";
+    if (oldPath === path) {
+      // If navigating to the same path send an app event. Views can watch it
+      // and tell their controllers to refresh
+      this.appEvents.trigger('url:refresh');
     }
 
     return this.handleURL(path);
   },
 
-  /**
-    Replaces the query parameters in the URL. Use no parameters to clear them.
+  rewrite: function(regexp, replacement) {
+    rewrites.push({ regexp: regexp, replacement: replacement });
+  },
 
-    @method replaceQueryParams
-  **/
-  queryParams: Em.computed.alias('router.location.queryParams'),
-
-  /**
-    Redirect to a URL.
-    This has been extracted so it can be tested.
-
-    @method redirectTo
-  **/
   redirectTo: function(url) {
     window.location = Discourse.getURL(url);
   },
@@ -103,28 +186,11 @@ Discourse.URL = Em.Object.createWithMixins({
   **/
   isInternal: function(url) {
     if (url && url.length) {
+      if (url.indexOf('#') === 0) { return true; }
       if (url.indexOf('/') === 0) { return true; }
       if (url.indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^http/, 'https').indexOf(this.origin()) === 0) { return true; }
       if (url.replace(/^https/, 'http').indexOf(this.origin()) === 0) { return true; }
-    }
-    return false;
-  },
-
-
-  /**
-    @private
-
-    If we're viewing more topics, scroll to where we were previously.
-
-    @method navigatedToListMore
-    @param {String} oldPath the previous path we were on
-    @param {String} path the path we're navigating to
-  **/
-  navigatedToListMore: function(oldPath, path) {
-    // If we transition from a /more path, scroll to the top
-    if (this.MORE_REGEXP.exec(oldPath) && (oldPath.indexOf(path) === 0)) {
-      window.scrollTo(0, 0);
     }
     return false;
   },
@@ -152,7 +218,8 @@ Discourse.URL = Em.Object.createWithMixins({
       if (oldTopicId === newTopicId) {
         Discourse.URL.replaceState(path);
 
-        var topicController = Discourse.__container__.lookup('controller:topic'),
+        var container = Discourse.__container__,
+            topicController = container.lookup('controller:topic'),
             opts = {},
             postStream = topicController.get('postStream');
 
@@ -160,21 +227,25 @@ Discourse.URL = Em.Object.createWithMixins({
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }
         var closest = opts.nearPost || 1;
 
+        var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
             currentPost: closest,
-            progressPosition: closest,
-            highlightOnInsert: closest,
             enteredAt: new Date().getTime().toString()
           });
+          var closestPost = postStream.closestPostForPostNumber(closest),
+              progress = postStream.progressIndexOfPost(closestPost),
+              progressController = container.lookup('controller:topic-progress');
+
+          progressController.set('progressPosition', progress);
+          self.appEvents.trigger('post:highlight', closest);
         }).then(function() {
-          Discourse.TopicView.jumpToPost(closest);
+          Discourse.URL.jumpToPost(closest, {skipIfOnScreen: true});
         });
 
         // Abort routing, we have replaced our state.
         return true;
       }
-      this.set('queryParams', null);
     }
 
     return false;
@@ -189,15 +260,13 @@ Discourse.URL = Em.Object.createWithMixins({
     @param {String} path the path we're navigating to
   **/
   navigatedToHome: function(oldPath, path) {
-    var homepage = Discourse.User.current() ? Discourse.User.currentProp('homepage') : Discourse.Utilities.defaultHomepage();
+    var homepage = Discourse.Utilities.defaultHomepage();
 
-    if (path === "/" && (oldPath === "/" || oldPath === "/" + homepage)) {
-      // refresh the list
-      switch (homepage) {
-        case "top" :       { this.controllerFor('discoveryTop').send('refresh'); break; }
-        case "categories": { this.controllerFor('discoveryCategories').send('refresh'); break; }
-        default:           { this.controllerFor('discoveryTopics').send('refresh'); break; }
-      }
+    if (window.history &&
+        window.history.pushState &&
+        (path === "/" || path === "/" + homepage) &&
+        (oldPath === "/" || oldPath === "/" + homepage)) {
+      this.appEvents.trigger('url:refresh');
       return true;
     }
 
@@ -253,7 +322,30 @@ Discourse.URL = Em.Object.createWithMixins({
   handleURL: function(path) {
     var router = this.get('router');
     router.router.updateURL(path);
-    return router.handleURL(path);
+
+    var split = path.split('#'),
+        elementId;
+
+    if (split.length === 2) {
+      path = split[0];
+      elementId = split[1];
+    }
+
+    var transition = router.handleURL(path);
+    transition._discourse_intercepted = true;
+    transition.promise.then(function() {
+      if (elementId) {
+
+        jumpScheduled = true;
+        Em.run.next('afterRender', function() {
+          var offset = $('#' + elementId).offset();
+          if (offset && offset.top) {
+            $('html, body').scrollTop(offset.top - $('header').height() - 10);
+            jumpScheduled = false;
+          }
+        });
+      }
+    });
   }
 
 });

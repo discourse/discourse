@@ -5,6 +5,6 @@ class MigrateBookmarksToPostActions < ActiveRecord::Migration
 
   def down
     # I can reverse this, but not really worth the work
-    raise ActiveRecord::IrriversableMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 end

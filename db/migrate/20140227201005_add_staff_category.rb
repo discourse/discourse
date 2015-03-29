@@ -7,8 +7,8 @@ class AddStaffCategory < ActiveRecord::Migration
         name = I18n.t('staff_category_name')
         if Category.exec_sql("SELECT 1 FROM categories where name ilike '#{name}'").count == 0
           result = execute "INSERT INTO categories
-                          (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted)
-                   VALUES ('#{name}', '283890', 'FFFFFF', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true)
+                          (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
+                   VALUES ('#{name}', '283890', 'FFFFFF', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true, 2)
                    RETURNING id"
           category_id = result[0]["id"].to_i
 

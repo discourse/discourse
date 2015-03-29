@@ -1,0 +1,51 @@
+export default Ember.ArrayController.extend({
+  needs: ["adminBackups"],
+  status: Em.computed.alias("controllers.adminBackups"),
+  isOperationRunning: Em.computed.alias("status.isOperationRunning"),
+  restoreDisabled: Em.computed.alias("status.restoreDisabled"),
+
+  uploadLabel: function() { return I18n.t("admin.backups.upload.label"); }.property(),
+
+  restoreTitle: function() {
+    if (!this.get('status.allowRestore')) {
+      return "admin.backups.operations.restore.is_disabled";
+    } else if (this.get("status.isOperationRunning")) {
+      return "admin.backups.operations.is_running";
+    } else {
+      return "admin.backups.operations.restore.title";
+    }
+  }.property("status.{allowRestore,isOperationRunning}"),
+
+  actions: {
+
+    toggleReadOnlyMode() {
+      var self = this;
+      if (!this.site.get("isReadOnly")) {
+        bootbox.confirm(
+          I18n.t("admin.backups.read_only.enable.confirm"),
+          I18n.t("no_value"),
+          I18n.t("yes_value"),
+          function(confirmed) {
+            if (confirmed) {
+              Discourse.User.currentProp("hideReadOnlyAlert", true);
+              self._toggleReadOnlyMode(true);
+            }
+          }
+        );
+      } else {
+        this._toggleReadOnlyMode(false);
+      }
+    }
+
+  },
+
+  _toggleReadOnlyMode(enable) {
+    var site = this.site;
+    Discourse.ajax("/admin/backups/readonly", {
+      type: "PUT",
+      data: { enable: enable }
+    }).then(function() {
+      site.set("isReadOnly", enable);
+    });
+  }
+});

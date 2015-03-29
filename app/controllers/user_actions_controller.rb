@@ -1,4 +1,5 @@
 class UserActionsController < ApplicationController
+
   def index
     params.require(:username)
     params.permit(:filter, :offset)
@@ -21,12 +22,11 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render json: UserAction.stream_item(params[:id], guardian)
+    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
   end
 
   def private_messages
-    # todo
+    # DO NOT REMOVE
   end
-
 
 end
