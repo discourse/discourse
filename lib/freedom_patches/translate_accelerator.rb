@@ -65,6 +65,7 @@ module I18n
       k = [args, config.locale, config.backend.object_id]
       t = @cache.fetch(k) { found = false }
       unless found
+        load_locale(:en) unless @loaded_locales.include?(:en) # always load the en translation
         load_locale(config.locale) unless @loaded_locales.include?(config.locale)
         begin
           t = translate_no_cache(*args)
