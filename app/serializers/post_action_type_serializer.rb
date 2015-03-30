@@ -25,8 +25,9 @@ class PostActionTypeSerializer < ApplicationSerializer
 
   protected
 
-    def i18n(field, vars={})
-      I18n.t("post_action_types.#{object.name_key}.#{field}", vars)
+    def i18n(field, vars=nil)
+      key = "post_action_types.#{object.name_key}.#{field}"
+      vars ? I18n.t(key, vars) : I18n.t(key)
     end
 
 end
