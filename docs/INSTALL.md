@@ -28,6 +28,6 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 We take security very seriously at Discourse, and all our code is 100% open source and peer reviewed. Please read [our security guide](https://github.com/discourse/discourse/blob/master/docs/SECURITY.md) for an overview of security measures in Discourse.
 
-[basic]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-digital-ocean.md
+[basic]: https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md
 [advanced]: https://github.com/discourse/discourse_docker
 [swap]: https://meta.discourse.org/t/create-a-swapfile-for-your-linux-server/13880
