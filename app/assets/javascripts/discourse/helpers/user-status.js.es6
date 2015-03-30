@@ -1,20 +1,17 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
 const Safe = Handlebars.SafeString;
 
-registerUnbound('user-status', function(user) {
+export default Ember.Handlebars.makeBoundHelper(function(user, args) {
   if (!user) { return; }
 
-  var name = Handlebars.Utils.escapeExpression(user.get('name'));
+  const name = Handlebars.Utils.escapeExpression(user.get('name'));
+  const currentUser = args.hash.currentUser;
 
-  if(Discourse.User.currentProp("admin") || Discourse.User.currentProp("moderator")) {
-    if(user.get('admin')) {
-      var adminDesc = I18n.t('user.admin', {user: name});
-      return new Safe('<i class="fa fa-shield" title="' + adminDesc +  '" alt="' + adminDesc + '"></i>');
-    }
+  if (currentUser && user.get('admin') && currentUser.get('staff')) {
+    return new Safe(iconHTML('shield', { label: I18n.t('user.admin', { user: name }) }));
   }
-  if(user.get('moderator')){
-    var modDesc = I18n.t('user.moderator', {user: name});
-    return new Safe('<i class="fa fa-shield" title="' + modDesc +  '" alt="' + modDesc + '"></i>');
+  if (user.get('moderator')) {
+    return new Safe(iconHTML('shield', { label: I18n.t('user.moderator', { user: name }) }));
   }
 });
