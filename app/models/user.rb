@@ -646,7 +646,9 @@ class User < ActiveRecord::Base
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
 
-    Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
+    if self.uploaded_avatar_id_changed?
+      Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
+    end
   end
 
   def first_post_created_at
