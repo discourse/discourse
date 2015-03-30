@@ -645,6 +645,8 @@ class User < ActiveRecord::Base
     if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
+
+    Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
   end
 
   def first_post_created_at
