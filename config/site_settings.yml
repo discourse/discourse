@@ -509,7 +509,9 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  enable_s3_uploads: false
+  enable_s3_uploads:
+    default: false
+    client: true
   s3_use_iam_profile: false
   s3_access_key_id: ''
   s3_secret_access_key: ''
