@@ -644,6 +644,12 @@ class ImportScripts::Base
     print "\r%9d / %d (%5.1f%%)  " % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
   end
 
+  def print_spinner
+    @spinner_chars ||= %w{ | / - \\ }
+    @spinner_chars.push @spinner_chars.shift
+    print "\b#{@spinner_chars[0]}"
+  end
+
   def batches(batch_size)
     offset = 0
     loop do
