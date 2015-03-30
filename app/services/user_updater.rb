@@ -75,17 +75,13 @@ class UserUpdater
     end
   end
 
-  private
-
-  attr_reader :user, :guardian
-
   def update_muted_users(usernames)
     usernames ||= ""
     desired_ids = User.where(username: usernames.split(",")).pluck(:id)
     if desired_ids.empty?
       MutedUser.where(user_id: user.id).destroy_all
     else
-      MutedUser.where('id not in (?)', desired_ids).destroy_all
+      MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
 
       # SQL is easier here than figuring out how to do the same in AR
       MutedUser.exec_sql("INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
@@ -101,6 +97,10 @@ class UserUpdater
                           now: Time.now, user_id: user.id, desired_ids: desired_ids)
     end
   end
+
+  private
+
+  attr_reader :user, :guardian
 
   def format_url(website)
     if website =~ /^http/
