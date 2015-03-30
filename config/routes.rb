@@ -346,6 +346,9 @@ Discourse::Application.routes.draw do
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
+
+  get '/c', to: redirect('/categories')
+
   resources :categories, :except => :show
   post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
