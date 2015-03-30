@@ -50,7 +50,7 @@ class ListController < ApplicationController
   ].flatten
 
   # Create our filters
-  Discourse.filters.each do |filter|
+  Discourse.filters.each_with_index do |filter, idx|
     define_method(filter) do |options = nil|
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
@@ -68,7 +68,8 @@ class ListController < ApplicationController
         @description = SiteSetting.site_description
         @rss = filter
 
-        if use_crawler_layout?
+        # Note the first is the default and we don't add a title
+        if idx > 0 && use_crawler_layout?
           filter_title = I18n.t("js.filters.#{filter.to_s}.title")
           if list_opts[:category]
             @title = I18n.t('js.filters.with_category', filter: filter_title, category: Category.find(list_opts[:category]).name)
