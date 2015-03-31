@@ -97,7 +97,7 @@ Congratulations! You now have your own instance of Discourse!
 
 It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="http://www.discourse.org/images/install/congratulations-on-installing-discourse.png" width="690" height="342">
+<img src="http://www.discourse.org/images/install/congratulations-on-installing-discourse-1-3-beta.png">
 
 # Register New Account and Become Admin
 
