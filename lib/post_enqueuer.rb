@@ -11,7 +11,6 @@ class PostEnqueuer
   end
 
   def enqueue(args)
-
     queued_post = QueuedPost.new(queue: @queue,
                                  state: QueuedPost.states[:new],
                                  user_id: @user.id,

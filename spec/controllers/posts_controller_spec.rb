@@ -449,7 +449,7 @@ describe PostsController do
     include_examples 'action requires login', :post, :create
 
     context 'api' do
-      it 'allows dupes through' do
+      it 'memoizes duplicate requests' do
         raw = "this is a test post 123 #{SecureRandom.hash}"
         title = "this is a title #{SecureRandom.hash}"
 
@@ -478,16 +478,25 @@ describe PostsController do
       end
 
       it 'creates the post' do
-        PostCreator.any_instance.expects(:create).returns(new_post)
-
-        # Make sure our extensibility points are triggered
-        DiscourseEvent.expects(:trigger).with(:topic_created, new_post.topic, anything, user).once
-        DiscourseEvent.expects(:trigger).with(:post_created, new_post, anything, user).once
-
-        xhr :post, :create, {raw: 'test'}
+        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 
         expect(response).to be_success
-        expect(::JSON.parse(response.body)).to be_present
+        parsed = ::JSON.parse(response.body)
+
+        # Deprecated structure
+        expect(parsed['post']).to be_blank
+        expect(parsed['cooked']).to be_present
+      end
+
+      it "returns the nested post with a param" do
+        xhr :post, :create, {raw: 'this is the test content',
+                             title: 'this is the test title for the topic',
+                             nested_post: true}
+
+        expect(response).to be_success
+        parsed = ::JSON.parse(response.body)
+        expect(parsed['post']).to be_present
+        expect(parsed['post']['cooked']).to be_present
       end
 
       it 'protects against dupes' do
@@ -528,72 +537,73 @@ describe PostsController do
 
       context "parameters" do
 
-        let(:post_creator) { mock }
-
         before do
-          post_creator.expects(:create).returns(new_post)
-          post_creator.stubs(:errors).returns(nil)
+          # Just for performance, no reason to actually perform for these
+          # tests.
+          NewPostManager.stubs(:perform).returns(NewPostResult)
         end
 
         it "passes raw through" do
-          PostCreator.expects(:new).with(user, has_entries('raw' => 'hello')).returns(post_creator)
           xhr :post, :create, {raw: 'hello'}
+          expect(assigns(:manager_params)['raw']).to eq('hello')
         end
 
         it "passes title through" do
-          PostCreator.expects(:new).with(user, has_entries('title' => 'new topic title')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', title: 'new topic title'}
+          expect(assigns(:manager_params)['title']).to eq('new topic title')
         end
 
         it "passes topic_id through" do
-          PostCreator.expects(:new).with(user, has_entries('topic_id' => '1234')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', topic_id: 1234}
+          expect(assigns(:manager_params)['topic_id']).to eq('1234')
         end
 
         it "passes archetype through" do
-          PostCreator.expects(:new).with(user, has_entries('archetype' => 'private_message')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', archetype: 'private_message'}
+          expect(assigns(:manager_params)['archetype']).to eq('private_message')
         end
 
         it "passes category through" do
-          PostCreator.expects(:new).with(user, has_entries('category' => 'cool')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', category: 'cool'}
+          expect(assigns(:manager_params)['category']).to eq('cool')
         end
 
         it "passes target_usernames through" do
-          PostCreator.expects(:new).with(user, has_entries('target_usernames' => 'evil,trout')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', target_usernames: 'evil,trout'}
+          expect(assigns(:manager_params)['target_usernames']).to eq('evil,trout')
         end
 
         it "passes reply_to_post_number through" do
-          PostCreator.expects(:new).with(user, has_entries('reply_to_post_number' => '6789')).returns(post_creator)
           xhr :post, :create, {raw: 'hello', reply_to_post_number: 6789}
+          expect(assigns(:manager_params)['reply_to_post_number']).to eq('6789')
         end
 
         it "passes image_sizes through" do
-          PostCreator.expects(:new).with(user, has_entries('image_sizes' => {'width' => '100', 'height' => '200'})).returns(post_creator)
           xhr :post, :create, {raw: 'hello', image_sizes: {width: '100', height: '200'}}
+          expect(assigns(:manager_params)['image_sizes']['width']).to eq('100')
+          expect(assigns(:manager_params)['image_sizes']['height']).to eq('200')
         end
 
         it "passes meta_data through" do
-          PostCreator.expects(:new).with(user, has_entries('meta_data' => {'xyz' => 'abc'})).returns(post_creator)
           xhr :post, :create, {raw: 'hello', meta_data: {xyz: 'abc'}}
+          expect(assigns(:manager_params)['meta_data']['xyz']).to eq('abc')
         end
 
         context "is_warning" do
           it "doesn't pass `is_warning` through if you're not staff" do
-            PostCreator.expects(:new).with(user, Not(has_entries('is_warning' => true))).returns(post_creator)
             xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+            expect(assigns(:manager_params)['is_warning']).to eq(false)
           end
 
           it "passes `is_warning` through if you're staff" do
-            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => true)).returns(post_creator)
+            log_in(:moderator)
             xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'true'}
+            expect(assigns(:manager_params)['is_warning']).to eq(true)
           end
 
           it "passes `is_warning` as false through if you're staff" do
-            PostCreator.expects(:new).with(moderator, has_entries('is_warning' => false)).returns(post_creator)
             xhr :post, :create, {raw: 'hello', archetype: 'private_message', is_warning: 'false'}
+            expect(assigns(:manager_params)['is_warning']).to eq(false)
           end
 
         end

@@ -198,9 +198,9 @@ class ApplicationController < ActionController::Base
     @guardian ||= Guardian.new(current_user)
   end
 
-  def serialize_data(obj, serializer, opts={})
+  def serialize_data(obj, serializer, opts=nil)
     # If it's an array, apply the serializer as an each_serializer to the elements
-    serializer_opts = {scope: guardian}.merge!(opts)
+    serializer_opts = {scope: guardian}.merge!(opts || {})
     if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer
       ActiveModel::ArraySerializer.new(obj.to_ary, serializer_opts).as_json
@@ -213,12 +213,13 @@ class ApplicationController < ActionController::Base
   # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
   # Rails doesn't call MultiJson.dump when you pass it json: obj but
   # it seems we don't need whatever Rails is doing.
-  def render_serialized(obj, serializer, opts={})
-    render_json_dump(serialize_data(obj, serializer, opts))
+  def render_serialized(obj, serializer, opts=nil)
+    render_json_dump(serialize_data(obj, serializer, opts), opts)
   end
 
-  def render_json_dump(obj)
-    render json: MultiJson.dump(obj)
+  def render_json_dump(obj, opts=nil)
+    opts ||= {}
+    render json: MultiJson.dump(obj), status: opts[:status] || 200
   end
 
   def can_cache_content?

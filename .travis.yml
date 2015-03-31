@@ -8,6 +8,9 @@ env:
     - "RAILS_MASTER=1"
     - "RAILS_MASTER=0"
 
+addons:
+  postgresql: 9.3
+
 matrix:
   allow_failures:
     - rvm: 2.0.0

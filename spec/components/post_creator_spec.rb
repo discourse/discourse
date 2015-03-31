@@ -579,4 +579,37 @@ describe PostCreator do
     expect(post.raw).to eq("    <-- whitespaces -->")
   end
 
+  context "events" do
+    let(:topic) { Fabricate(:topic, user: user) }
+
+    before do
+      @posts_created = 0
+      @topics_created = 0
+
+      @increase_posts = -> (post, opts, user) { @posts_created += 1 }
+      @increase_topics = -> (topic, opts, user) { @topics_created += 1 }
+      DiscourseEvent.on(:post_created, &@increase_posts)
+      DiscourseEvent.on(:topic_created, &@increase_topics)
+    end
+
+    after do
+      DiscourseEvent.off(:post_created, &@increase_posts)
+      DiscourseEvent.off(:topic_created, &@increase_topics)
+    end
+
+    it "fires boths event when creating a topic" do
+      pc = PostCreator.new(user, raw: 'this is the new content for my topic', title: 'this is my new topic title')
+      post = pc.create
+      expect(@posts_created).to eq(1)
+      expect(@topics_created).to eq(1)
+    end
+
+    it "fires only the post event when creating a post" do
+      pc = PostCreator.new(user, topic_id: topic.id, raw: 'this is the new content for my post')
+      post = pc.create
+      expect(@posts_created).to eq(1)
+      expect(@topics_created).to eq(0)
+    end
+  end
+
 end

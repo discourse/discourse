@@ -47,8 +47,6 @@ module Discourse
   # When ImageMagick is missing
   class ImageMagickMissing < StandardError; end
 
-  class InvalidPost < StandardError; end
-
   # When read-only mode is enabled
   class ReadOnly < StandardError; end
 

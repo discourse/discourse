@@ -1,6 +1,8 @@
+require_dependency 'new_post_manager'
 require_dependency 'post_creator'
 require_dependency 'post_destroyer'
 require_dependency 'distributed_memoizer'
+require_dependency 'new_post_result_serializer'
 
 class PostsController < ApplicationController
 
@@ -76,49 +78,21 @@ class PostsController < ApplicationController
   end
 
   def create
-    params = create_params
+    @manager_params = create_params
+    manager = NewPostManager.new(current_user, @manager_params)
 
-    key = params_key(params)
-    error_json = nil
-
-    if (is_api?)
-      payload = DistributedMemoizer.memoize(key, 120) do
-        success, json = create_post(params)
-        unless success
-          error_json = json
-          raise Discourse::InvalidPost
-        end
-        json
+    if is_api?
+      memoized_payload = DistributedMemoizer.memoize(signature_for(@manager_params), 120) do
+        result = manager.perform
+        MultiJson.dump(serialize_data(result, NewPostResultSerializer, root: false))
       end
+
+      parsed_payload = JSON.parse(memoized_payload)
+      backwards_compatible_json(parsed_payload, parsed_payload['success'])
     else
-      success, payload = create_post(params)
-      unless success
-        error_json = payload
-        raise Discourse::InvalidPost
-      end
-    end
-
-    render json: payload
-
-  rescue Discourse::InvalidPost
-    render json: error_json, status: 422
-  end
-
-  def create_post(params)
-    post_creator = PostCreator.new(current_user, params)
-    post = post_creator.create
-
-    if post_creator.errors.present?
-      # If the post was spam, flag all the user's posts as spam
-      current_user.flag_linked_posts_as_spam if post_creator.spam?
-      [false, MultiJson.dump(errors: post_creator.errors.full_messages)]
-
-    else
-      DiscourseEvent.trigger(:topic_created, post.topic, params, current_user) unless params[:topic_id]
-      DiscourseEvent.trigger(:post_created, post, params, current_user)
-      post_serializer = PostSerializer.new(post, scope: guardian, root: false)
-      post_serializer.draft_sequence = DraftSequence.current(current_user, post.topic.draft_key)
-      [true, MultiJson.dump(post_serializer)]
+      result = manager.perform
+      json = serialize_data(result, NewPostResultSerializer, root: false)
+      backwards_compatible_json(json, result.success?)
     end
   end
 
@@ -358,6 +332,15 @@ class PostsController < ApplicationController
 
   protected
 
+  # We can't break the API for making posts. The new, queue supporting API
+  # doesn't return the post as the root JSON object, but as a nested object.
+  # If a param is present it uses that result structure.
+  def backwards_compatible_json(json_obj, success)
+    json_obj = json_obj[:post] || json_obj['post'] unless params[:nested_post]
+    render json: json_obj, status: (!!success) ? 200 : 422
+  end
+
+
   def find_post_revision_from_params
     post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
@@ -411,15 +394,6 @@ class PostsController < ApplicationController
          .limit(opts[:limit])
   end
 
-  def params_key(params)
-    "post##" << Digest::SHA1.hexdigest(params
-      .to_a
-      .concat([["user", current_user.id]])
-      .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
-        "#{x}:#{y}"
-      end)
-  end
-
   def create_params
     permitted = [
       :raw,
@@ -454,6 +428,8 @@ class PostsController < ApplicationController
     if current_user.staff?
       params.permit(:is_warning)
       result[:is_warning] = (params[:is_warning] == "true")
+    else
+      result[:is_warning] = false
     end
 
     PostRevisor.tracked_topic_fields.keys.each do |f|
@@ -467,6 +443,15 @@ class PostsController < ApplicationController
     result[:referrer] = request.env["HTTP_REFERER"]
 
     result
+  end
+
+  def signature_for(args)
+    "post##" << Digest::SHA1.hexdigest(args
+      .to_a
+      .concat([["user", current_user.id]])
+      .sort{|x,y| x[0] <=> y[0]}.join do |x,y|
+        "#{x}:#{y}"
+      end)
   end
 
   def too_late_to(action, post)
