@@ -105,7 +105,7 @@ There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; register a ne
 
 (If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-<img src="http://www.discourse.org/images/install/discourse-installed.png" width="690" height="350">
+<img src="http://www.discourse.org/images/install/discourse-installed-1-3-beta.png">
 
 You should see Staff topics and the [Admin Quick Start Guide](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md). It contains the next steps for further configuring and customizing your Discourse install.
 
