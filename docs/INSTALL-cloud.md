@@ -20,11 +20,11 @@ Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
 Replace `192.168.1.1` with the IP address of your Droplet.
 
-<img src="http://www.discourse.org/images/install/ssh-login-start.png" width="586" height="128">
+<img src="http://www.discourse.org/images/install/ssh-login-start-1-3-beta.png">
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
 
-<img src="http://www.discourse.org/images/install/ssh-login.png" width="584" height="300">
+<img src="http://www.discourse.org/images/install/ssh-login-1-3-beta.png">
 
 # Set up Swap (if needed)
 
@@ -36,7 +36,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     wget -qO- https://get.docker.io/ | sh
 
-<img src="http://www.discourse.org/images/install/wget-docker.png" width="586" height="452">
+<img src="http://www.discourse.org/images/install/wget-docker-1-3-beta.png">
 
 # Install Discourse
 
@@ -47,7 +47,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
 
-<img src="https://meta.discourse.org/uploads/default/33557/28f36eb5069e75c4.png" width="662" height="240">
+<img src="http://www.discourse.org/images/install/mkdir-var-docker-1-3-beta.png">
 
 # Edit Discourse Configuration
 
@@ -65,7 +65,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
-<img src="http://www.discourse.org/images/install/nano-screenshot.png" width="578" height="407">
+<img src="http://www.discourse.org/images/install/nano-screenshot-1-3-beta.png">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
@@ -91,7 +91,7 @@ After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="https://meta.discourse.org/uploads/default/33558/a988b9ec9ac5ff7a.png" width="669" height="233">
+<img src="http://www.discourse.org/images/install/launcher-start-app-1-3-beta.png">
 
 Congratulations! You now have your own instance of Discourse!
 
