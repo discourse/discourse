@@ -20,11 +20,11 @@ Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
 Replace `192.168.1.1` with the IP address of your Droplet.
 
-<img src="http://www.discourse.org/images/install/ssh-login-start-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/ssh-login-start-1-3-beta.png?v=1">
 
 You will be asked for permission to connect, type `yes`, then enter the root password from the email Digital Ocean sent you when the Droplet was set up. You may be prompted to change the root password, too.
 
-<img src="http://www.discourse.org/images/install/ssh-login-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/ssh-login-1-3-beta.png?v=1">
 
 # Set up Swap (if needed)
 
@@ -36,7 +36,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
     wget -qO- https://get.docker.io/ | sh
 
-<img src="http://www.discourse.org/images/install/wget-docker-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/install-git-1-3-beta.png?v=1">
 
 # Install Discourse
 
@@ -47,7 +47,7 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
     cd /var/discourse
     cp samples/standalone.yml containers/app.yml
 
-<img src="http://www.discourse.org/images/install/mkdir-var-docker-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/mkdir-var-docker-1-3-beta.png?v=1">
 
 # Edit Discourse Configuration
 
@@ -65,7 +65,7 @@ We recommend Nano because it works like a typical GUI text editor, just use your
 
 - If you are using a 1 GB instance, set `UNICORN_WORKERS` to 2 and `db_shared_buffers` to 128MB so you have more memory room.
 
-<img src="http://www.discourse.org/images/install/nano-screenshot-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/nano-screenshot-1-3-beta.png?v=1">
 
 After completing your edits, press <kbd>Ctrl</kbd><kbd>O</kbd> then <kbd>Enter</kbd> to save and <kbd>Ctrl</kbd><kbd>X</kbd> to exit.
 
@@ -91,13 +91,13 @@ After that completes, start Discourse:
 
     ./launcher start app
 
-<img src="http://www.discourse.org/images/install/launcher-start-app-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/launcher-start-app-1-3-beta.png?v=1">
 
 Congratulations! You now have your own instance of Discourse!
 
 It should be accessible via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can also visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="http://www.discourse.org/images/install/congratulations-on-installing-discourse-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/congratulations-on-installing-discourse-1-3-beta.png?v=1">
 
 # Register New Account and Become Admin
 
@@ -105,7 +105,7 @@ There is a reminder at the top about `DISCOURSE_DEVELOPER_EMAILS`; register a ne
 
 (If you *don't* get any email from your install, and are unable to register a new admin account, please see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-<img src="http://www.discourse.org/images/install/discourse-installed-1-3-beta.png">
+<img src="http://www.discourse.org/images/install/discourse-installed-1-3-beta.png?v=1">
 
 You should see Staff topics and the [Admin Quick Start Guide](https://github.com/discourse/discourse/blob/master/docs/ADMIN-QUICK-START-GUIDE.md). It contains the next steps for further configuring and customizing your Discourse install.
 
