@@ -1,20 +1,20 @@
-**Set up Discourse in the cloud under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [Digital Ocean][do], but these steps will work on any Docker-compatible cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [Digital Ocean][do], but these steps will work on any Docker-compatible cloud provider or local server.
 
-# Create New Digital Ocean Droplet
+# Create New Cloud Server
 
-[Sign up for Digital Ocean][do], update billing info, then begin creating your new cloud server (Droplet).
+[Sign up for Digital Ocean][do], update billing info, then create your new cloud server (Droplet).
 
-- Enter your domain `discourse.example.com` as the Droplet name.
+- Enter your domain `discourse.example.com` as the name.
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
 
-- The default of **Ubuntu 14.04 LTS x64** works fine. Always select the latest 64-bit [LTS distribution][lts].
+- The default of **Ubuntu 14.04 LTS x64** works fine. The latest 64-bit [LTS distribution][lts] is recommended.
 
-- Select a region that is geographically close to your users. New York is the default and a good choice for most US and European audiences.
+- The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
 Create your new Droplet. You will receive a mail from Digital Ocean with the root password to your Droplet. (However, if you know [how to use SSH keys](https://www.google.com/search?q=digitalocean+ssh+keys), you may not need a password to log in.)
 
-# Access Your Droplet
+# Access Your Cloud Server
 
 Connect to your Droplet via SSH, or use [Putty][put] on Windows:
 
