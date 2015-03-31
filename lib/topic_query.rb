@@ -189,7 +189,7 @@ class TopicQuery
     end
 
     topics = topics.to_a.each do |t|
-      t.allowed_user_ids = filter == :private_messags ? t.allowed_users.map{|u| u.id} : []
+      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 
     list = TopicList.new(filter, @user, topics.to_a, options.merge(@options))
