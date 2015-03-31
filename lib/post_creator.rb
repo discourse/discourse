@@ -134,6 +134,8 @@ class PostCreator
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+
+      trigger_after_events(@post)
     end
 
     if @post || @spam
@@ -168,6 +170,11 @@ class PostCreator
   end
 
   protected
+
+  def trigger_after_events(post)
+    DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
+    DiscourseEvent.trigger(:post_created, post, @opts, @user)
+  end
 
   def transaction(&blk)
     Post.transaction do
