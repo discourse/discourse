@@ -91,6 +91,7 @@ nl:
       google+: 'deel deze link op Google+'
       email: 'deel deze link via e-mail'
     topic_admin_menu: "Adminacties voor topic"
+    emails_are_disabled: "Alle uitgaande e-mails zijn uitgeschakeld door een beheerder. Geen enkele vorm van e-mail notificatie zal verstuurd worden"
     edit: 'bewerk de titel en categorie van deze topic'
     not_implemented: "Die functie is helaas nog niet beschikbaar. Sorry!"
     no_value: "Nee"
@@ -124,6 +125,7 @@ nl:
     daily: "dagelijks"
     weekly: "wekelijks"
     every_two_weeks: "elke twee weken"
+    every_three_days: "elke drie dagen"
     max_of_count: "maximaal {{count}}"
     character_count:
       one: "{{count}} teken"
@@ -146,14 +148,20 @@ nl:
       user_count: "Nieuwe leden"
       active_user_count: "Actieve leden"
       contact: "Neem contact met ons op"
+      contact_info: "In het geval van een kritieke probleem of dringende vraagstukken in verband met deze site neem contact op met ons op via% {contact_email}."
     bookmarked:
       title: "Voeg toe aan favorieten"
+      clear_bookmarks: "Verwijder favorieten"
+      help:
+        bookmark: "Klik om het eerste bericht in dit topic toe te voegen aan je favorierten"
+        unbookmark: "Klik om alle favorieten in dit topic te verwijderen"
     bookmarks:
       not_logged_in: "sorry, je moet ingelogd zijn om berichten aan je favorieten toe te kunnen voegen"
       created: "je hebt dit bericht aan je favorieten toegevoegd"
       not_bookmarked: "je hebt dit bericht gelezen; klik om het aan je favorieten toe te voegen"
       last_read: "dit is het laatste bericht dat je gelezen hebt; klik om het aan je favorieten toe te voegen"
       remove: "Verwijder favoriet"
+      confirm_clear: "Weet je zeker dat je alle favorieten in dit topic wilt verwijderen?"
     topic_count_latest:
       one: "{{count}} nieuwe of aangepaste discussie."
       other: "{{count}} nieuwe of bijgewerkte topics."
@@ -198,6 +206,19 @@ nl:
       posted_by_you: "Geplaatst door <a href='{{userUrl}}'>jou</a>"
       sent_by_user: "Verzonden door <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Verzonden door <a href='{{userUrl}}'>jou</a>"
+    directory:
+      filter_name: "filter op gebruikersnaam"
+      title: "Leden"
+      likes_given: "Gegeven"
+      likes_received: "Ontvangen"
+      topics_entered: "Topics Ingevoerd"
+      time_read: "Tijd Gelezen"
+      topic_count: "Topics"
+      post_count: "Antwoorden"
+      no_results: "Geen resultaten gevonden."
+      total_rows:
+        one: "1 lid"
+        other: "%{count} leden"
     groups:
       visible: "Groep is zichtbaar voor alle gebruikers"
       title:
@@ -303,6 +324,9 @@ nl:
       delete_yourself_not_allowed: "Je kan je account nu niet verwijderen. Neem contact op met een admin om je account te laten verwijderen."
       unread_message_count: "Berichten"
       admin_delete: "Verwijder"
+      users: "Leden"
+      muted_users: "Negeren"
+      muted_users_instructions: "Negeer alle meldingen van deze leden."
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -354,6 +378,10 @@ nl:
         ok: "We sturen een email ter bevestiging"
         invalid: "Vul een geldig email adres in "
         authenticated: "Je email is geauthenticeerd door  {{provider}}"
+        frequency:
+          zero: "We zullen je onmiddelijk e-mailen als je het ding waarover we je e-mailen niet gelezen hebt."
+          one: "We zullen je alleen maar e-mailen als we je de laatste paar minuten niet gezien hebben."
+          other: "We zullen je alleen maar e-mailen als we je de laatste {{count}} minuten niet gezien hebben."
       name:
         title: "Naam"
         instructions: "Je volledige naam (optioneel)"
@@ -389,14 +417,20 @@ nl:
       website: "Website"
       email_settings: "E-mail"
       email_digests:
+        title: "Stuur me een mail met de laatste updates wanneer ik de site niet bezoek:"
         daily: "dagelijks"
+        every_three_days: "elke drie dagen"
         weekly: "wekelijks"
+        every_two_weeks: "elke twee weken"
+      email_direct: "Ontvang een mail wanneer iemand je citeert, reageert op je bericht of je @gebruikersnaam noemt."
+      email_private_messages: "Ontvang een mail wanneer iemand je een privé-bericht heeft gestuurd."
       email_always: "E-mailnotificaties niet onderdrukken als ik actief ben op de site"
       other_settings: "Overige"
       categories_settings: "Categorieën"
       new_topic_duration:
         label: "Beschouw topics als nieuw wanneer"
         not_viewed: "Ik heb ze nog niet bekeken"
+        last_here: "aangemaakt sinds de laatste keer dat ik hier was"
         after_n_days:
           one: "gemaakt gisteren"
           other: "gemaakt in de afgelopen {{count}} dagen"
@@ -525,7 +559,6 @@ nl:
       title: "Maak een nieuw account"
       failed: "Er ging iets mis, wellicht is het e-mailadres al geregistreerd. Probeer de 'Wachtwoord vergeten'-link."
     forgot_password:
-      title: "Wachtwoord vergeten"
       action: "Ik ben mijn wachtwoord vergeten"
       invite: "Vul je gebruikersnaam of e-mailadres in en we sturen je een wachtwoord-herstel-mail."
       reset: "Herstel wachtwoord"
@@ -594,7 +627,6 @@ nl:
       reply_here: "Reageer hier"
       reply: "Reageer"
       cancel: "Annuleer"
-      create_topic: "Nieuw topic"
       create_pm: "Privé-bericht"
       title: "Of druk op Ctrl-Return"
       users_placeholder: "Voeg een lid toe"

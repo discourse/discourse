@@ -635,6 +635,7 @@ de:
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
     allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
+    min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
     min_private_message_post_length: "Minimale zulässige Beitragslänge in Zeichen für private Nachrichten"
     max_post_length: "Maximale zulässige Beitragslänge in Zeichen."
     min_topic_title_length: "Minimale zulässige Titellänge von Themen in Zeichen."

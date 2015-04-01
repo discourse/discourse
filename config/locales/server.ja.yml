@@ -578,6 +578,7 @@ ja:
     default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
     allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
+    min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
     min_private_message_post_length: "プライベートメッセージの投稿を許可する最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
@@ -717,6 +718,7 @@ ja:
     enable_s3_backups: "完了時にS3にバックアップをアップロードします。重要: 有効なS3 credentialsがファイル設定に必要です"
     s3_backup_bucket: "バックアップを保持するバケット。　警告: 必ずプライベートバケットになっていることを確認してください"
     active_user_rate_limit_secs: "'last_seen_at' フィールドを更新する頻度 (秒)"
+    verbose_localization: "ローカライゼーションtipsを展開するUIを表示する"
     previous_visit_timeout_hours: "'previous' visit とみなす時間 (時間)"
     rate_limit_create_topic: "トピック作成後、次のトピックを作成するまでにユーザが待たなければならない時間 (秒)"
     rate_limit_create_post: "ポスト投稿後、次のポストを投稿するまでにユーザが待たなければならない時間 (秒)"
@@ -858,9 +860,45 @@ ja:
     dominating_topic_minimum_percent: "ユーザがトピックを占拠しているとリマインドを行う、ポスト投稿支配率 "
     suppress_uncategorized_badge: "トピック一覧でカテゴライズされていないトピックのバッジは表示しない"
     global_notice: "緊急の内容を表示します。全ての訪問者の緊急バナーで注意を行います。隠すには空白に変更してください(HTMLが許可されています)"
+    enable_names: "ユーザーのプロフィール、ユーザーカード、メールアドレスでのフルネームを表示します。無効にすると、フルネームは非表示になります"
+    display_name_on_posts: "@usernameに加えて、ポストにユーザのフルネームを表示する"
+    invites_per_page: "ユーザページに表示されるデフォルトの招待数"
     short_progress_text_threshold: "プログレスバーが現在のポスト番号のみを表示するようになるポスト数のしきい値。プログレスバーの幅を変更した際には、この値を変更することをおすすめします。"
     default_code_lang: "Github コードブロックにデフォルトで適用されるプログラム言語シンタックスハイライト (lang-auto, ruby, python 等)"
+    warn_reviving_old_topic_age: "最後の返信がこの設定よりも古いトピックに返信すると、警告を表示します。0を設定すると無効になります"
+    autohighlight_all_code: "明示的に言語を指定しなくても、全てのコードブロックにコードハイライトを強制的に適用する"
+    highlighted_languages: "適用するシンタックスハイライトルール(警告: あまりに多くの言語を含むとパフォーマンスに影響を与えます) デモ:  https://highlightjs.org/static/demo/ "
+    embeddable_host: "このDiscourseフォーラムのコメントを埋め込む事が出来るHost。Host名のみ、http:// で始めない"
+    feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
+    feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
+    embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
+    embed_username_key_from_feed: "フィードからDsicourseユーザ名をプルするキー"
+    embed_truncate: "embedされた投稿をtruncateする"
+    embed_category: "embedトピックのカテゴリ"
+    embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
+    embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
+    notify_about_flags_after: "この数時間後に処理されていないフラグがある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
+    enable_cdn_js_debugging: "全てのJSにcrossorigin権限を追加することで、/logsに適切なエラーを表示することを許可する"
+    show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
+    vacuum_db_days: "DB領域を再利用するため、migration後にVACUUM FULL ANALYZEを実行する(0を設定すると無効化)"
+    prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
     enable_emoji: "絵文字を有効にする"
+    emoji_set: "How would you like your emoji?"
+    enforce_square_emoji: "絵文字のアスペクト比を強制的に揃える"
+    errors:
+      invalid_email: "不正なメールアドレスです"
+      invalid_username: "そのユーザ名のユーザは存在しません"
+      invalid_integer_min_max: "値は%{min}と%{max}の間である必要があります"
+      invalid_integer_min: "値は%{min}以上必要です"
+      invalid_integer_max: "値は%{max}以上にすることはできません"
+      invalid_integer: "値は整数で入力してください"
+      regex_mismatch: "値は、指定されたフォーマットと一致しませんでした"
+      must_include_latest: "トップメニューは'latest'タブを含む必要があります"
+      invalid_string: "不正な値です"
+      invalid_string_min_max: "文字数は%{min}と%{max}の間である必要があります"
+      invalid_string_min: "少なくとも%{min}文字は必要です"
+      invalid_string_max: "%{max}文字以下である必要があります"
+      invalid_reply_by_email_address: "値は'%{reply_key}'を含む必要があり、通知メールとは異なる必要があります"
   notification_types:
     mentioned: "%{link} で %{display_username} があなたをタグ付けしました"
     liked: "%{link} で %{display_username} があなたのポストを「いいね！」しました"
@@ -872,35 +910,87 @@ ja:
     private_message: "%{display_username} があなたにプラベートメッセージを送信しました: %{link}"
     invited_to_private_message: "%{display_username} がプライベートメッセージにあなたを招待しました: %{link}"
     invitee_accepted: "%{display_username} があなたの招待を受けました"
+    linked: "%{display_username} は%{link}であなたをリンクしました"
+    granted_badge: "あなたは%{link}を獲得しました"
   search:
+    within_post: "#%{post_number} by %{username}"
     types:
       category: 'カテゴリ'
+      topic: '結果'
       user: 'ユーザ'
+  sso:
+    not_found: "アカウントを検索、作成することができません。サイト管理者に連絡してください"
+    account_not_approved: "アカウントの承認は保留され、承認されると通知メールが届きます"
+    unknown_error: "情報の更新中にエラーが発生しました。サイト管理者に連絡してください"
+    timeout_expired: "ログインがタイムアウトしました。もう一度ログインを試してください"
   original_poster: "Original Poster"
   most_posts: "Most Posts"
   most_recent_poster: "Most Recent Poster"
   frequent_poster: "Frequent Poster"
+  redirected_to_top_reasons:
+    new_user: "コミュニティへようこそ！　これらが最も人気な最近のトピックです"
+    not_seen_in_a_month: "お帰りなさい！　最近見かけませんでしたね。　これらがあなたが離れてから最も人気のトピックです"
+  move_posts:
+    new_topic_moderator_post:
+      other: "%{count} 件のポストを新しいトピックに移動しました: %{topic_link}"
+    existing_topic_moderator_post:
+      other: "%{count} 件のポストを既存のトピックに移動しました: %{topic_link}"
+  change_owner:
+    post_revision_text: "%{old_user} から %{new_user}にownershipを移動させました"
+  emoji:
+    errors:
+      name_already_exists: "申し訳ありません。'%{name}'は既に別の絵文字で使われています"
+      error_while_storing_emoji: "申し訳ありません、絵文字の保存中にエラーが発生しました"
   topic_statuses:
     archived_enabled: "このトピックはアーカイブされました。すべての内容は凍結されており、一切の変更ができません。"
     archived_disabled: "このトピックはアーカイブ解除されました。凍結解除され、変更可能になりました。"
     closed_enabled: "このトピックは終了しました。新たに回答を投稿することはできません。"
     closed_disabled: "このトピックはオープンされました。新たに回答を投稿することができます。"
+    autoclosed_enabled_days:
+      other: "このトピックは%{count}日が経過したので自動的に終了しました。新たに回答を投稿することはできません"
+    autoclosed_enabled_hours:
+      other: "このトピックは%{count}時間が経過したので自動的に終了しました。新たに回答を投稿することはできません"
+    autoclosed_enabled_minutes:
+      other: "このトピックは%{count}分が経過したので自動的に終了しました。新たに回答を投稿することはできません"
+    autoclosed_enabled_lastpost_days:
+      other: "このトピックは最後の返信から%{count}日が経過したので自動的に終了しました。新たに回答を投稿することはできません"
+    autoclosed_enabled_lastpost_hours:
+      other: "このトピックは最後の返信から%{count}時間が経過したので自動的に終了しました。新たに回答を投稿することはできません"
+    autoclosed_enabled_lastpost_minutes:
+      other: "このトピックは最後の返信から%{count}分が経過したので自動的に終了しました。新たに回答を投稿することはできません"
     autoclosed_disabled: "このトピックは再オープンされました。新しい回答が投稿できるようになりました。。"
+    autoclosed_disabled_lastpost: "このトピックは再オープンされました。新しい回答が投稿できます"
+    pinned_enabled: "このトピックはピン留めされました。スタッフによって全てのユーザのピン留めが解除されるか、ユーザ自身がピン留め解除するまで、カテゴリのトップに表示されます"
     pinned_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません。"
+    pinned_globally_enabled: "このトピックはグローバルにピン留めされました。スタッフによって全てのユーザのピン留めが解除されるか、ユーザ自身がピン留め解除するまで、全てのカテゴリとトピック一覧のトップに表示されます"
+    pinned_globally_disabled: "このトピックのピン留めが解除されました。以後、カテゴリのトップに表示されません"
+    visible_enabled: "このトピックはリストされています。トピックリストに表示されます"
+    visible_disabled: "このトピックは非表示状態になりました。トピックリストには表示されません。直接リンク経由でのみこのトピックにアクセスできます"
   login:
     not_approved: "あなたのアカウントはまだ承認されていません。ログイン可能になった際にメールで通知いたします。"
     incorrect_username_email_or_password: "ユーザネーム、メールアドレス、またはパスワードが違います"
     wait_approval: "サインアップありがとうござました。アカウントが承認され次第メールにて通知いたします。"
     active: "アカウントが利用可能になりました。"
+    activate_email: "<p>ほぼ完了です！ アクティベーションメールを <b>%{email}</b>に送りました。アクティベートするために、メール内の指示に従ってください。</p><p>もし届かない場合、迷惑メールフォルダをチェックするか、アクティベーションメールを再送するために再度ログインしてください</p>"
     not_activated: "まだログインできません。メールを送信済ですので、メールの指示に従ってあなたのアカウントを有効にしてください。"
+    not_allowed_from_ip_address: "そのIPアドレスからは%{username} としてログインできません"
+    admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
     suspended: "%{date} までログインできません。"
     suspended_with_reason: "%{date} までログインできません。アカウントがサスペンドされた理由は次の通りです: %{reason}"
     errors: "%{errors}"
     not_available: "利用できません。%{suggestion} を試してみては?"
     something_already_taken: "エラーが発生しました。ユーザ名またはメールアドレスが既に使用中の可能性があります。パスワードリセットを行ってください。"
+    omniauth_error: "あなたの アカウントの認可に失敗しました。アカウントの認可を許可したか確認してください"
     omniauth_error_unknown: "ログインに失敗しました。もう一度試してください。"
+    new_registrations_disabled: "新規登録は、この時点で許可されていません"
+    password_too_long: "パスワードは200文字までです"
+    missing_user_field: "全てのユーザーフィールドの入力が終わっていません"
+    close_window: "ログインは完了しました。このウィンドウを閉じて続けてください"
   user:
+    no_accounts_associated: "関連づけられたアカウントはありませんでした"
     username:
+      short: "少なくとも%{min}文字は必要です"
+      long: "%{max}文字以下である必要があります"
       characters: "は英数字のみである必要があります"
       unique: "はユニークである必要があります"
       blank: "は空であってはなりません"
@@ -910,10 +1000,67 @@ ja:
       blocked: "は許可されていません。"
     ip_address:
       blocked: "はブロックされてます。"
+  invite_mailer:
+    subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
+    text_body_template: |
+      %{invitee_name} があなたを招待しました
+
+      > %{site_title} -- %{site_description}
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      もし興味があれば下のリンクをクリックしてください:
+
+      %{invite_link}
+
+      これは信頼されたユーザからの招待のため、すぐに議論に返答することができます
   invite_forum_mailer:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
+    text_body_template: |
+      %{invitee_name} があなたを招待しました
+
+      > %{site_title} -- %{site_description}
+
+      もし興味があれば下のリンクをクリックしてください:
+
+      %{invite_link}
+
+      これは信頼されたユーザからの招待のため、あなたはログインする必要がありません
+  invite_password_instructions:
+    subject_template: "%{site_name} アカウントのパスワードを設定"
+    text_body_template: |
+      %{site_name}の招待を受けてくれてありがとうございます -- ようこそ!
+
+      再度ログインする場合は、以下のリンクをクリックし、パスワードを設定してください:
+      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
+  new_version_mailer:
+    subject_template: "[%{site_name}] New Discourse version, update available"
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] update available"
+  flags_reminder:
+    flags_were_submitted:
+      other: "これらのフラグは%{count}時間以上前に作成されました"
+    please_review: "これを確認してください"
+    post_number: "投稿"
+    how_to_disable: ' "notify about flags after"設定でこのリマインダーを停止、頻度を変更することができます'
+    subject_template:
+      other: "%{count} 個のフラグが判断待ちです"
+  flag_reasons:
+    off_topic: "あなたの投稿やトピックは「オフトピック」としてフラグされています"
+    inappropriate: "あなたの投稿は「不適切」にフラグされています。コミュニティは攻撃的、 [コミュニティガイドライン](/guidelines)に違反だと判断しました"
+    spam: "あなたの投稿は「スパム」にフラグされています。コミュニティは営利目的、宣伝目的の書き込みの可能性があると判断しました"
+    notify_moderators: "あなたの投稿は「モデレータに通知」にフラグされています。コミュニティはモデレータの確認が必要の内容を含んでいると判断しました"
+  flags_dispositions:
+    agreed: "伝えてくれてありがとうございます。問題に同意し、調査しています"
+    agreed_and_deleted: "伝えてくれてありがとうございます。問題に同意し、投稿を削除します"
+    disagreed: "伝えてくれてありがとうございます。調査しています"
+    deferred: "伝えてくれてありがとうございます。調査しています"
+    deferred_and_deleted: "伝えてくれてありがとうございます。投稿を削除しました"
+  temporarily_closed_due_to_flags: "多くのコミュニティフラッグのため、トピックは一時的に停止されました"
   system_messages:
     post_hidden:
       subject_template: "コミュニティによるフラグによりポストが非表示になりました"
@@ -921,15 +1068,167 @@ ja:
       subject_template: "%{site_name} へようこそ!"
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
+    backup_succeeded:
+      subject_template: "バックアップは正常に完了しました"
+      text_body_template: "バックアップが完了しました.\n [admin > backup section](/admin/backups) から新しいバックアップがダウンロードできます"
+    backup_failed:
+      subject_template: "バックアップ失敗"
+      text_body_template: |
+        バックアップが失敗しました
+
+        ログ:
+
+        ```
+        %{logs}
+        ```
     restore_succeeded:
       subject_template: "復元が正常に完了しました"
       text_body_template: "復元に成功しました"
     restore_failed:
       subject_template: "復元に失敗しました"
+      text_body_template: |
+        リストアが失敗しました
+
+        ログ:
+
+        ```
+        %{logs}
+        ```
+    bulk_invite_succeeded:
+      subject_template: "一括ユーザー招待が正常に処理されました"
+      text_body_template: "一括ユーザー招待が処理され、%{sent}通の招待メールを送信しました"
+    bulk_invite_failed:
+      subject_template: "一括ユーザー招待がエラーを含み処理されました"
+      text_body_template: |
+        一括ユーザ招待が処理され、%{sent} 通の招待メールが送信され、%{failed}個のエラーが発生しました
+
+        ログ:
+
+        ```
+        %{logs}
+        ```
+    csv_export_succeeded:
+      subject_template: "データ出力完了"
+      text_body_template: |
+        データ出力が完了しました! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        このダウンロードリンクは48時間有効です
+    csv_export_failed:
+      subject_template: "データ出力失敗"
+      text_body_template: "申し訳ありません。データ出力に失敗しました。ログを確認するかスタッフメンバーに連絡してください"
+    email_reject_trust_level:
+      subject_template: "Email issue -- 不十分なトラストレベル"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        あなたのアカウントは、このアドレスに新しいトピックを投稿するために必要なトラストレベルに達していませんでした。不明な点がある場合は、スタッフメンバーに連絡してください。
+    email_reject_no_account:
+      subject_template: "Email issue -- 不明なアカウント"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
+
+        このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
+    email_reject_empty:
+      subject_template: "Email issue -- 本文なし"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        メールから本文を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
+
+        もし、本文を含んでいるのにこれを受け取った場合、メールにHTMLコンテンツを含んでください。(プレーンテキストだけではなく)
+    email_reject_parsing:
+      subject_template: "Email issue -- 認識されていないコンテンツ"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
+    email_reject_post_error:
+      subject_template: "Email issue -- 投稿エラー"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        複雑な書式、大きすぎるメッセージ、小さすぎるメッセージなど、複数の原因が考えられます。もう一度試してください。もし続くようであれば、ウェブサイトから投稿してください
+    email_reject_post_error_specified:
+      subject_template: "Email issue -- Posting error"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
+
+        理由:
+
+        %{post_error}
+
+        問題が修正できたら、もう一度試してください
+    email_reject_reply_key:
+      subject_template: "Email issue -- 不明なReply Key"
+      text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
+    email_reject_destination:
+      subject_template: "Email issue -- 不明な宛先"
+      text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n宛先が認識されませんでした。宛先(CC,BCCではなく)にサイトのアドレスがあること、スタッフから提供された正しいメールアドレスに送信していることを確認してください。\n\n"
+    email_reject_topic_not_found:
+      subject_template: "Email issue -- 存在しないトピック"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
+
+         トピックが見つかりませんでした。削除された可能性があります。不明な点がある場合は、スタッフメンバーに連絡してください。
+    email_reject_topic_closed:
+      subject_template: "Email issue -- 停止済みトピック"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
+
+        トピックは停止されています。不明な点がある場合は、スタッフメンバーに連絡してください。
+    email_reject_auto_generated:
+      subject_template: "Email issue -- 自動生成された返信"
+      text_body_template: |
+        申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
+
+        あなたの返信は自動生成されています。自動生成された返信は受け付けていません。不明な点がある場合は、スタッフメンバーに連絡してください。
+    email_error_notification:
+      subject_template: "Email issue -- POP認証エラー"
+      text_body_template: |
+        メールをポーリングするPOPサーバで認証エラーが発生しました。
+
+        [the site settings](%{base_url}/admin/site_settings/category/email)で、POP認証の設定を確認してください。
     too_many_spam_flags:
       subject_template: "新規アカウントのブロック"
+      text_body_template: |
+        こんにちは
+
+        コミュニティからのフラグによりあなたの投稿が非表示になったことをお知らせするために、%{site_name} から自動的に送信されています
+
+        スタッフメンバーが確認するまで、あなたのアカウントはトピックの作成、返答がブロックされています。
+
+        詳細については[コミュニティガイドライン](%{base_url}/guidelines)を参照してください。
     blocked_by_staff:
       subject_template: "アカウントのブロック"
+      text_body_template: |
+        こんにちは
+
+        スタッフメンバーによってブロックされたことをお知らせするために、%{site_name} から自動的に送信されています。
+
+        詳細については[コミュニティガイドライン](%{base_url}/guidelines)を参照してください。
+    user_automatically_blocked:
+      subject_template: "コミュニティフラッグによって新たにブロックされたユーザ%{username}"
+      text_body_template: |+
+        これは自動送信メッセージです。
+
+        複数のユーザが%{username}'のポストにフラグを立てているため、新規ユーザ[%{username}](%{base_url}%{user_url})は自動的にブロックされました。
+
+        フラグを確認してください(%{base_url}/admin/flags)。もし%{username}が間違ってブロックされた場合は、 このユーザの管理ページ(%{base_url}%{user_url})でブロック解除ボタンをクリックしてください。
+
+        この閾値はサイト設定の`block_new_user`で変更できます。
+
+    spam_post_blocked:
+      subject_template: "同一リンクの連続投稿による新規ユーザ %{username} のブロック"
+      text_body_template: |
+        これは自動送信メッセージです。
+
+        新規ユーザ[%{username}](%{base_url}%{user_url})は、%{domains}へのリンクを複数投稿しようとしましたが、スパムを避けるために投稿をブロックしました。ユーザは%{domains}のリンクを含まない投稿であれば引き続き作成可能です。
+
+        ユーザを確認してください。(%{base_url}%{user_url})
+
+        この設定はサイト設定の `newuser_spam_host_threshold` と `white_listed_spam_host_domains` で変更できます。
     unblocked:
       subject_template: "アカウントのブロック解除"
       text_body_template: |
@@ -945,8 +1244,12 @@ ja:
         新たなユーザが、フォーラム参加のための承認（もしくは拒否）待ち状態になっています。
 
         [管理者セクションで確認する](/admin/users/list/pending).
+    download_remote_images_disabled:
+      subject_template: "リモート画像のダウンロードを無効化"
+      text_body_template: "'download_remote_images_threshold'の制限に達したため、`download_remote_images_to_local`の設定は無効になりました"
   unsubscribe_link: "メール解除は [ユーザ設定画面](%{user_preferences_url}) で行ってください。"
   subject_re: "Re:"
+  subject_pm: "[プライベートメッセージ]"
   user_notifications:
     previous_discussion: "以前の回答"
     unsubscribe:
@@ -955,6 +1258,12 @@ ja:
     reply_by_email: "回答するにはこのメールに返信するか、ブラウザで %{base_url}%{url} にアクセスしてください。"
     visit_link_to_respond: "回答するにはブラウザで %{base_url}%{url} にアクセスしてください。"
     posted_by: "%{post_date} に %{username} が投稿"
+    user_invited_to_private_message_pm:
+      subject_template: "[%{site_name}] %{username} がプライベートメッセージにあなたを招待しました '%{topic_title}'"
+      text_body_template: |
+        %{username} があなたをプライベートメッセージに招待しました '%{topic_title}'  %{site_name}:
+
+        このリンクからトピックを参照してください: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
       text_body_template: |
@@ -991,14 +1300,27 @@ ja:
 
         ---
         %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
+      why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
       subject_template: "[%{site_name}] メールマガジン【%{date}】"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
       top_topics: "人気の投稿"
       other_new_topics: "人気のトピック"
+      unsubscribe: "このダイジェストは、あなたからのアクセスがしばらくない場合、%{site_link}から送信されます。配信停止はこちら %{unsubscribe_link}"
       click_here: "ここをクリック"
       from: "%{site_name} ダイジェスト"
       read_more: "もっと読む"
+      more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
+      more_topics_category: "もっと新しいトピック:"
       posts:
         other: "%{count} 投稿"
     forgot_password:
@@ -1010,6 +1332,15 @@ ja:
 
         新たなパスワードを設定する場合は次のリンクをクリックしてください:
         %{base_url}/users/password-reset/%{email_token}
+    set_password:
+      subject_template: "[%{site_name}] パスワード設定"
+    account_created:
+      subject_template: "[%{site_name}] あなたの新しいアカウント"
+      text_body_template: |
+        %{site_name}のあなたの新しいアカウントが作成されました。
+
+        以下のリンクをクリックしてパスワードを設定してください:
+        %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] メールアドレスの確認"
       text_body_template: |
@@ -1018,6 +1349,22 @@ ja:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
+      text_body_template: |
+        ようこそ %{site_name}へ！
+
+        スタッフメンバーはあなたの%{site_name}のアカウントを承認しました。
+
+        以下のリンクをクリックして新しいアカウントを確認してアクティベートしてください。
+        %{base_url}/users/activate-account/%{email_token}
+
+        もしリンクがクリック出来ない場合、リンクをコピーし、ブラウザのアドレスバーに貼付けてください。
+        %{new_user_tips}
+
+        マナー(%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
+
+        それではお楽しみください!
+
+        （もし個人的に[スタッフメンバー](%{base_url}/about)と連絡を取る必要がある場合、このプライベートメッセージに返信してください)
     signup:
       subject_template: "[%{site_name}] 新たなアカウントのアクティベーション"
       text_body_template: |
@@ -1029,15 +1376,60 @@ ja:
         もし上記リンクがクリックできない場合は、ブラウザのアドレスバーにリンクアドレスをコピー&ペーストしてください。
   page_not_found:
     title: "リクエストしたページは存在しないかモデレータによって削除されました。"
+    popular_topics: "人気"
+    recent_topics: "最新"
+    see_more: "もっと見る"
+    search_title: "サイトを検索"
+    search_google: "Google"
+  login_required:
+    welcome_message: |
+      #[%{title}へようこそ](#welcome)
+      アカウントが必要です。アカウントを作成するかログインしてください
+  terms_of_service:
+    title: "利用規約"
+    signup_form_message: '<a href="/tos" target="_blank">Terms of Service</a>を読んで同意しました'
   deleted: 'deleted'
   upload:
+    edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
     pasted_image_filename: "貼り付けた画像"
+    store_failure: "ユーザ#%{user_id}のアップロード#%{upload_id} の保存に失敗しました"
+    attachments:
+      too_large: "申し訳ありませんが、ファイルが大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)"
     images:
+      too_large: "申し訳ありませんが、画像が大きすぎてアップロードできません (最大サイズは %{max_size_kb}KB です)。リサイズして再アップロードしてください"
       fetch_failure: "申し訳ありませんが、画像取得中にエラーが発生しました。"
       unknown_image_type: "申し訳ありませんが、アップロードしようとしたファイルは画像ではないようです。"
       size_not_found: "申し訳ありませんが、画像のサイズを判定できませんでした。画像が壊れているかもしれません。"
   flag_reason:
     sockpuppet: "新規ユーザがトピックを作成し、同じ IP アドレスより別の新規ユーザが回答を投稿しました。サイトの flag_sockpuppets 設定を確認してください。"
+    spam_hosts: "この新規ユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください"
+  email_log:
+    no_user: "id %{user_id}のユーザーは見つかりませんでした"
+    suspended_not_pm: "User is suspended, not a private message"
+    seen_recently: "最近訪れたユーザ"
+    post_not_found: "id %{post_id}のポストは見つかりません"
+    notification_already_read: "メールが既読になったという通知です"
+    topic_nil: "post.topic is nil"
+    post_deleted: "投稿は投稿者によって削除されました"
+    already_read: "ユーザーはポストを既に読んだ"
+    message_blank: "メッセージが空"
+    message_to_blank: "メッセージの宛先(to)が空"
+  color_schemes:
+    base_theme_name: "ベース"
+  about: "About"
+  guidelines: "ガイドライン"
+  privacy: "プライバシー"
+  edit_this_page: "ページを編集"
+  csv_export:
+    boolean_yes: "はい"
+    boolean_no: "いいえ"
+  static_topic_first_reply: |+
+    %{page_name}ページのコンテンツを編集するには、このトピックの最初の投稿を編集してください
+
   guidelines_topic:
     title: "よくある質問/コミュニティガイドライン"
+  tos_topic:
+    title: "利用規約"
+  privacy_topic:
+    title: "プライバシーポリシー"
