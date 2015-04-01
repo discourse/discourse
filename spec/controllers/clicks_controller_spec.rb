@@ -25,6 +25,7 @@ describe ClicksController do
           TopicLinkClick.expects(:create_from).returns(nil)
           xhr :get, :track, url: 'http://discourse.org', post_id: 123
           expect(response).not_to be_redirect
+          expect(response.status).to eq(200)
         end
       end
 
@@ -47,6 +48,7 @@ describe ClicksController do
           TopicLinkClick.expects(:create_from).with('url' => url, 'post_id' => '123', 'ip' => '192.168.0.1', 'redirect' => 'false').returns(url)
           xhr :get, :track, url: url, post_id: 123, redirect: 'false'
           expect(response).not_to be_redirect
+          expect(response.status).to eq(204)
         end
 
       end

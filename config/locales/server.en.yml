@@ -1912,6 +1912,11 @@ en:
     search_title: "Search this site"
     search_google: "Google"
 
+  click_fail:
+    title: "Uh-oh - %{site_name}"
+    header: "Whoops! Something's wrong."
+    body: "It doesn't seem like that URL is in the post. To continue anyways, click the link below."
+
   login_required:
     welcome_message: |
       #[Welcome to %{title}](#welcome)

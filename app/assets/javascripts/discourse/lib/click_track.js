@@ -15,7 +15,7 @@ Discourse.ClickTrack = {
     @param {jQuery.Event} e The click event that occurred
   **/
   trackClick: function(e) {
-    if (Discourse.Utilities.selectedText()!=="") return false;  //cancle click if triggered as part of selection.
+    if (Discourse.Utilities.selectedText()!=="") return false;  // cancel click if triggered as part of selection.
     var $link = $(e.currentTarget);
     if ($link.hasClass('lightbox')) return true;
 
@@ -112,8 +112,9 @@ Discourse.ClickTrack = {
     // restore href
     setTimeout(function() {
       $link.removeClass('no-href');
-      $link.attr('href', $link.data('href'));
+      $link.attr('href', href);
       $link.data('href', null);
+      $link.data('auto-route', false);
     }, 50);
 
     // Otherwise, use a custom URL with a redirect

@@ -10,10 +10,13 @@ class ClicksController < ApplicationController
       @redirect_url = TopicLinkClick.create_from(params)
     end
 
-    # Sometimes we want to record a link without a 302. Since XHR has to load the redirected
-    # URL we want it to not return a 302 in those cases.
-    if params[:redirect] == 'false' || @redirect_url.blank?
-      render nothing: true
+    if @redirect_url.blank?
+      # Couldn't find the URL in the post. give the user an escape hatch
+      @given_url = params[:url]
+      render template: 'clicks/failure', layout: false
+    elsif params[:redirect] == 'false'
+      # This is set by the JS when we're tracking an internal link
+      render nothing: true, status: 204
     else
       redirect_to(@redirect_url)
     end
