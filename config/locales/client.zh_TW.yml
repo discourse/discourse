@@ -187,16 +187,17 @@ zh_TW:
       sent_by_user: "寄件者為 <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "寄件者為 <a href='{{userUrl}}'>你</a>"
     directory:
-      title: "用戶目錄"
-      likes_given: "給予喜愛"
-      likes_received: "接受喜愛"
+      filter_name: "通過用戶名過濾"
+      title: "用戶"
+      likes_given: "送出的"
+      likes_received: "收到的"
       topics_entered: "進入話題"
       time_read: "閱讀多少次"
       topic_count: "話題"
       post_count: "回覆"
-      no_results: "該時間段內沒有找到結果。"
+      no_results: "未找到任何結果。"
       total_rows:
-        other: "找到 %{count} 個用戶"
+        other: "%{count} 用戶"
     groups:
       visible: "群組可被所有用戶看到"
       title:
@@ -299,6 +300,9 @@ zh_TW:
       delete_yourself_not_allowed: "帳號不能刪除。請聯絡管理人。"
       unread_message_count: "訊息"
       admin_delete: "刪除"
+      users: "用戶"
+      muted_users: "靜音"
+      muted_users_instructions: "禁止來自這些用戶的所有通知。"
       staff_counters:
         flags_given: "有幫助的投訴"
         flagged_posts: "已投訴的文章"
@@ -530,7 +534,7 @@ zh_TW:
       title: "建立新帳號"
       failed: "發生了某些錯誤，可能此電子郵件地址已經註冊過，請試試看忘記密碼連結"
     forgot_password:
-      title: "忘記密碼"
+      title: "寄出密碼"
       action: "我忘了我的密碼"
       invite: "請輸入用戶名稱或電子郵件地址，我們將寄給你重設密碼的郵件。"
       reset: "重設密碼"
@@ -603,7 +607,7 @@ zh_TW:
       reply_here: "在此回覆"
       reply: "回覆"
       cancel: "取消"
-      create_topic: "發表話題"
+      create_topic: "建立討論話題"
       create_pm: "私人訊息"
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
@@ -712,6 +716,7 @@ zh_TW:
         close_topics: "關閉討論話題"
         archive_topics: "已封存的討論話題"
         notification_level: "改變通知等級"
+        choose_new_category: "為主題選擇新類別："
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
       none:
@@ -865,6 +870,10 @@ zh_TW:
         title: '投訴'
         help: '投訴此討論話題，或以私訊通知管理員'
         success_message: '已投訴此討論話題。'
+      feature_topic:
+        title: "擁有這個話題"
+        already_banner:
+          zero: "沒有頂置的話題。"
       inviting: "正在邀請..."
       automatically_add_to_groups_optional: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
       automatically_add_to_groups_required: "邀請時同時加入以下群組: (<b>必填</b>, 此為管理員設定)"

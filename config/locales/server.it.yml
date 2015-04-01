@@ -112,6 +112,7 @@ it:
     other: "Spiacenti, i nuovi utenti possono inserire solo %{count} collegamenti in un messaggio."
   spamming_host: "Spiacenti, non puoi inserire un collegamento verso quel dominio."
   user_is_suspended: "Agli utenti sospesi non è permesso creare messaggi."
+  topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   has_already_been_used: "è già stato usato"
   invalid_characters: "contiene caratteri non validi"
@@ -565,6 +566,7 @@ it:
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     queue_size_warning: 'Il numero di job in coda è %{queue_size}, troppo alto. Potrebbe esserci un problema con i processi Sidekiq, oppure potresti dover aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
+    enable_google_logins_warning: "ATTENZIONE! Il metodo di autenticazione che stai usando non verrà più supportato a partire dal  20 Aprile 2015. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Cambia metodo di autenticazione ora!</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -619,6 +621,7 @@ it:
     default_locale: "Il linguaggio di default di questa istanza Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
+    min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
     min_private_message_post_length: "Lunghezza minima in caratteri per i messaggi privati"
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     min_topic_title_length: "Numero minimo di caratteri per i titoli degli argomenti"
@@ -830,6 +833,8 @@ it:
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico per le etichette di categoria."
+    max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anchein nginx (client_max_body_size) o in apache."
+    max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
     max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."
@@ -849,12 +854,23 @@ it:
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
+    white_listed_spam_host_domains: "Una lista di domini esclusi dall'host spam testing. Ai nuovi utenti non verrà mai impedito di creare messaggi con link a questi domini."
+    staff_like_weight: "Peso extra attribuito ai \"mi piace\" fatti dallo staff."
+    topic_view_duration_hours: "Conta una nuova visita all'argomento una volta sola per IP/Utente ogni N ore"
+    levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
+    max_new_accounts_per_registration_ip: "Se vi sono già (n) account con rust level 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove registrazioni utente da questo IP."
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     disable_emails: "Evita che Discourse invii qualunque tipo di email"
+    pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
     pop3_polling_port: "La porta dell'account POP3."
+    pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
+    pop3_polling_username: "Il nome utente dell'account POP3 per la recezione di email."
+    pop3_polling_password: "La password dell'account POP3 per la recezione di email."
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
+    email_prefix: "L'[etichtta] utilizzata nell'oggetto delle email. Di default sarà 'titolo' se non impostato."
+    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi anziché assoluti. Per esempio, 7g anzichè 20 feb."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
@@ -910,6 +926,7 @@ it:
       topic: 'Risultati'
       user: 'Utenti'
   sso:
+    not_found: "Impossibile cercare o creare l'account, contatta l'amministratore del sito"
     account_not_approved: "L'account è in attesa di approvazione, riceverai una notifica per email una volta approvato"
     unknown_error: "Errore nell'aggiornamento delle informazioni, contatta l'amministratore del sito"
     timeout_expired: "Il tempo di autenticazione di questo account è scaduto, prova ad autenticarti nuovamente"
@@ -972,6 +989,7 @@ it:
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
+    omniauth_error: "Si è verificato un errore nell'autorizzazione del tuo account. Forse non hai approvato l'autorizzazione?"
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
@@ -1343,6 +1361,7 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
+      text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).\n\nBuona permanenza!\n\n(Se hai bisogno di comunicare privatamente con i [membri dello staff](%{base_url}/about), rispondi semplicemente a questo messaggio privato.)\n"
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |
@@ -1430,3 +1449,9 @@ it:
       \ di proteggere l'integrità del nostro sito pertanto accettiamo eventuali riscontri negativi sui siti terzi.\n\n\n<a name=\"coppa\"></a>\n\n## [Rispetto della legge sulla protezione della privacy online dei minori - Children's Online Privacy Protection Act Compliance - COPPA](#coppa)\n\nIl nostro sito, nonché i prodotti ed i servizi ad esso collegati, sono tutti diretti a persone maggiorenni. Se non si è maggiorenni secondo le leggi del proprio Paese, per il rispetto della COPPA ([Legge sulla protezione della privacy online dei minori]( http://en.wikipedia.org/wiki/Children's_Online_Privacy_Protection_Act)), non usare questo sito.\n\n<a name=\"online\"></a>\n\n## [Politica sulla privacy online](#online)\n\nLa presente politica sulla privacy online si applica soltanto alle informazioni raccolte attraverso il nostro sito e non alle informazioni fuori linea.\n\n<a name=\"consent\"></a>\n\n## [Consenso](#consent)\n\nUsando il nostro sito, accetti senza riserve la presente politica sulla privacy.\n\n<a name=\"changes\"></a>\n\n## [Cambiamenti alla politica sulla privacy](#changes)\n\nQualora decidessimo di cambiare la nostra politica sulla privacy, invieremo tali modifiche su questa pagina.\n\nQuesto documento è CC-BY-SA (http://it.wikipedia.org/wiki/Licenze_Creative_Commons). \nAggiornato il 31 maggio 2013.\n"
   static:
     search_help: "<h2>Suggerimenti</h2>\n<p> \n<ul> \n<li>La ricerca nei titoli è prioritaria, perciò, in caso di dubbi, cerca per titolo</li> \n<li>I risultati migliori si ottengono sempre con parole uniche e non comuni</li> \n<li>Quando possibile, circoscrivi l'ambito della ricerca a una categoria, a un utente o a un argomento in particolare</li> \n</ul> \n</p> \n<h2>Opzioni</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr> \n<tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> \n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n</table> \n</p> \n<p> \n<code>arcobaleni category:parchi status:open order:latest</code> ricercherà gli argomenti contenenti la parola \"arcobaleni\" nella categoria \"parchi\" che non siano chiusi o archiviati, ordinati secondo la data dell'ultimo messaggio. </p>\n"
+  badges:
+    long_descriptions:
+      first_flag: |
+        Le segnalazioni sono importanti per il benessere della nostra comunità.Se vedi dei messaggi che richiedono l''attenzione dei moderatori,
+        non esitare a segnalarli. Puoi anche usare la maschera di dialogo della segnalazione per mandare un <b>messaggio privato</b> agli utenti, una volta che raggiungi
+        trust level 1.
