@@ -423,7 +423,7 @@ button.select-post {
 
 
 .deleted {
-background-color: scale-color($danger, $lightness: 75%);
+  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
 }
 
 #show-topic-admin {
