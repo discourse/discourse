@@ -655,6 +655,7 @@ es:
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
     min_post_length: "Extensión mínima de los posts, en número de caracteres"
+    min_first_post_length: "Extensión mínima permitida en el primer mensaje (cuerpo del tema) en caracteres"
     min_private_message_post_length: "Extensión mínima de los posts en los mensajes privados, en número de caracteres"
     max_post_length: "Extensión máxima de los posts, en número de caracteres"
     min_topic_title_length: "Extensión mínima del título de los temas, en número de caracteres"
@@ -1123,6 +1124,43 @@ es:
       %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
+    text_body_template: |
+      Este es un correo electrónico de prueba de
+
+      [**%{base_url}**][0]
+
+      La entrega de correo electrónico es complicada. Aquí hay unas cuantas cosas importantes que deberías comprobar primero:
+
+      - *Asegúrate* de ajustar la dirección `notification email` desde: correctamente en los ajustes de tu sitio. **El dominio especificado en la dirección "from" de los emails que envíes es el dominio contra el que se validará tu email**.
+
+      - Entérate de como ver el código fuente del email desde tu cliente de correo, para que así puedas examinar las cabeceras para ver pistas importantes. En Gmail está la opción "mostrar original" en el menú de lista desplegable en la parte superior derecha de cada email.
+
+      - **IMPORTANTE:** ¿Tu ISP tiene registros de DNS inversa para asociar los nombres de dominio y las direcciones IP desde donde envías los correos? [Comprueba tu registro PTR Inverso][2] aquí. Si tu ISP no introduce el puntero de registro DNS inverso adecuado, es muy improbable que cualquiera de tus correos pueda ser entregado.
+
+      - ¿Es el [registro SPF][8] de tu dominio correcto? [Comprueba tu registro SPF][1] aquí. Ten en cuenta que TXT es el tipo de registro oficial correcto para SPF.
+
+      - ¿Es el [registro DKIM][3] de tu dominio correcto? Esto puede mejorar significativamente la entregabilidad de correos. [Comprueba tu registro DKIM][7] aquí.
+
+      - Si estás corriendo tu propio servidor de correo, asegúrate de que las IPs de tu servidor de correo [no están en ninguna lista negra de correos][4]. También verifica que definitivamente se está enviando un nombre de huésped "hostname" completamente cualificado que resuelva en DNS en su mensaje HELO. Si no es así, esto causará que tu correo sea denegado por muchos servicios de correo.
+
+      (La forma *fácil* es crear una cuenta gratuíta en [Mandrill][md] o [Mailgun][mg] o [Mailjet][mj], que proveen generosamente planes de mailing gratuítos y serán adecuados para pequeñas comunidades. ¡De todas formas todavía tendrás que configurar los registros SPF y DKIM en tus DNS!)
+
+      ¡Esperamos que recibas esta prueba de entregabilidad de correo electrónico correctamente!
+
+      Buena suerte,
+
+      Tus amigos de [Discourse](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: http://dkimcore.org/tools/dkimrecordcheck.html
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [md]: http://mandrill.com
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
   new_version_mailer:
     subject_template: "[%{site_name}] Nueva versión de Discourse, actualización disponible"
     text_body_template: |
@@ -1196,10 +1234,46 @@ es:
         Sin embargo, si el post es ocultado por la comunidad una segunda vez, este se mantendrá oculto hasta que sea atendido por el staff – y tal vez vez se tomen medidas, incluyendo la posible suspensión de tu cuenta.
 
         Para más información, por favor consulta nuestras [reglas de comunidad](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: "Este mensaje privado tiene algunos trucos rápidos para que puedas comenzar.\n\n## Sigue deslizando\n\nNo hay botones de página siguiente o números de página – para leer más, **¡simplemente sigue deslizando hacia abajo!**\n\nMientras llegan nuevos temas, estos aparecerán automáticamente.\n\n## ¿Dónde estoy?\n\n- Para buscar, tu página de usuario o el menú, usa los botones **icon <kbd>☰</kbd> en la parte superior derecha**. \n\n- Cualquier título de tema te llevará al siguiente mensaje no leído. Usa la hora de última actividad y la cuenta de mensaje para ir al principio o al final.\n\n- Mientras estás leyendo un tema, salta al inicio &uarr; seleccionando el título del tema. Selecciona la barra de progreso verde en la parte inferior derecha para los controles completos de navegación o usa las teclas <kbd>home</kbd> \"Inicio\" y <kbd>end</kbd> \"Fin\".\n\n    <img src=\"/images/welcome/progress-bar.png\"\
+        \ width=\"143\" height=\"39\">\n\n## ¿Cómo respondo?\n\n- Para responder al mensaje general, usa el botón de Respuesta <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> al final de la página.\n\n- Para responder a un mensaje en particular, usa el botón Respuesta <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> en ese mensaje.\n\n- Para llevar la conversación en una dirección distinta, pero manteniendo un enlace, usa <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> Responde como Tema enlazado a la derecha del mensaje.\n\n- Para citar a alguien en tu respuesta, selecciona el texto que quieras citar y presiona cualquier de los botones de Respuesta.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPara dar un toque a alguien en tu respuesta, menciona su nombre. Escribe `@` y un cuadro\
+        \ de autocompletado aparecerá.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji comunes](http://www.emoji.codes/), simplemente comienza escribiendo `:` o los tradicionales smileys `:)` :smile:\n\n## ¿Qué más puedo hacer?\n\nHay botones de acción al final de cada mensaje.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPara hacer saber a cualquiera que te agradó su mensaje, usa el botón **me gusta**. Si tienes algún problema con un mensaje, házselo saber privadamente al autor o bien a nuestro equipo usando el botón **reportar**.\n\nTambién puedes **compartir** el enlace a un mensaje o añadirlo a **favoritos** para referencia futura en tu página de usuario.\n\n## ¿Quién me está hablando?\n\nCuando alguien responde a tu mensaje, cita tu mensaje o menciona tu `@nombre_de_usuario`, un número aparecerá\
+        \ de forma inmediata en la parte superior derecha de la página. Úsalo para acceder a tus **notificaciones**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNo te preocupes si te pierdes una respuesta – se te enviará un correo electrónico con las respuestas directas (y mensajes privados) si no estas conectado cuando te lleguen.\n\n## ¿Cuándo son nuevas las conversaciones?\n\nPor defecto todas las conversaciones con menos de dos días de antigüedad son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por un periodo extenso de tiempo) serán automáticamente monitorizadas.\n\nVerás indicadores azules y de números al lado de estos temas:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\nPuedes cambiar el estado individual de notificación de cada tema a través del control\
+        \ al final del tema (también puede ajustarse por categoría). Para cambiar la forma en que monitorizas los temas, o definir una nueva, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences).\n\n## ¿Por qué no puedo hacer ciertas cosas?\n\nLos nuevos usuarios están de alguna forma limitados por razones de seguridad. Conforme vayas participando, irá ganando la confianza de la comunidad, te convertirás en un ciudadano de pleno derecho y estas limitaciones se te quitarán automáticamente. Con un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficientemente alto, incluso ganarás acceso a más habilidades para ayudarnos a administrar nuestra comunidad juntos.\n"
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
+      text_body_template: |
+        ¡Gracias por unirte a %{site_name} y bienvenido!
+
+        %{new_user_tips}
+
+        Nosotros creemos en una comunidad con [un comportamiento civilizado](%{base_url}/guidelines) de forma permamente.
+
+        ¡Disfruta de tu estancia!
+
+        (Si necesitas comunicarte de forma privada con [los miembros del equipo](%{base_url}/about)  como nuevo usuario, simplemente responde a este mensaje privado).
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
+      text_body_template: |
+        Gracias por aceptar tu invitación a %{site_name} -- ¡Bienvenido!
+
+        Hemos creado una nueva cuenta **%{username}** para tí, y ahora estás conectado con ella. Puedes cambiar tu nombre visitando [tu perfil de usuario][prefs].
+
+        Para conectarte más tarde:
+
+        1. Uitiliza siempre **la misma dirección de correo en la que recibiste tu invitación original** cuando te conectes. ¡De lo contrario no seremos capaces de saber si se trata de tí!
+
+        2. Crea una contraseña única para [tu perfil de usuario][prefs], y utilízala para conectarte.
+
+        %{new_user_tips}
+
+        Nosotros creemos en una comunidad con [un comportamiento civilizado](%{base_url}/guidelines) de forma permamente.
+
+        ¡Disfruta de tu estancia!
+
+         (Si necesitas comunicarte de forma privada con [los miembros del equipo](%{base_url}/about) como nuevo usuario, simplemente responde a este mensaje privado)
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: "La copia de seguridad fue exitosa.\nVisita la [sección admin > copia de seguridad](/admin/backups) para descargar tu nueva copia de seguridad."
@@ -1241,6 +1315,12 @@ es:
         ```
     csv_export_succeeded:
       subject_template: "Exportación de datos completada"
+      text_body_template: |
+        ¡Tu exportación de datos ha sido exitosa! :dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Este enlace de descarga será válido durante 48 horas.
     csv_export_failed:
       subject_template: "La exportación de datos falló"
       text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
@@ -1305,6 +1385,12 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         El tema está cerrado a respuestas. Si crees que esto es un error, contacta a un administrador.
+    email_reject_auto_generated:
+      subject_template: "Problema con el correo electrónico -- Respuesta Auto Generada."
+      text_body_template: |
+        Lo sentimos, pero tu mensaje de correo electrónico para %{destination} y (titulado %{former_title}) no funcionó.
+
+        Tu respuesta de correo fue auto generada y no aceptamos esto. Si crees que se trata de un error contacta con un miembro del equipo.
     email_error_notification:
       subject_template: "Error con el email -- Autenticación POP errónea"
       text_body_template: |
@@ -1472,6 +1558,23 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Tú solicitud ha sido aprobada en %{site_name}!"
+      text_body_template: |
+        ¡Bienvenido a %{site_name}!
+
+        Un miembro del equipo aprobó tu cuenta en %{site_name}.
+
+        Pulsa en el siguiente enlace para confirmar y activar tu nueva cuenta:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Si no puedes pulsar el enlace anterior, intenta copiarlo y pegarlo en la barra de direcciones de tu navegador de internet.
+
+        %{new_user_tips}
+
+        Nosotros creemos en una comunidad con [un comportamiento civilizado](%{base_url}/guidelines) de forma permamente.
+
+        ¡Disfruta de tu estancia!
+
+        (Si necesitas comunicarte de forma privada con [los miembros del equipo](%{base_url}/about) como nuevo usuario, simplemente responde a este mensaje privado).
     signup:
       subject_template: "[%{site_name}] Activa tu nueva cuenta"
       text_body_template: |
@@ -1542,3 +1645,31 @@ es:
     title: "Términos de Servicio"
   privacy_topic:
     title: "Políticas de Privacidad"
+  static:
+    search_help: |
+      <h2>Consejos</h2>
+      <p>
+      <ul>
+        <li>Las coincidencias de título están priorizadas, por lo que si tienes dudas, busca por títulos.</li>
+        <li>Las palabras únicas o poco comunes siempre producirán los mejores resultados.</li>
+        <li>Siempre que puedas, reduce el ámbito de tu búsqueda a una categoría en particular, usuario o tema</li>
+      </ul>
+      </p>
+      <h2>Opciones</h2>
+      <p>
+        <table>
+        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
+        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
+        <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
+        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
+        </table>
+      </p>
+      <p>
+        <code>arcoiris category:parks status:open order:latest</code> buscará temas que contengan la palabra "rainbows" en la categoría "parks" que no estén cerrados o archivados, y se ordenarán por la fecha del último mensaje.</p>
+  badges:
+    long_descriptions:
+      first_flag: |
+        Los reportes son críticos para mantener saludable tu comunidad. Si te enteras de algún mensaje que necesite atención del moderador por favor
+        no dudes en reportarlo. Tambien puedes usar el diálogo de reporte para enviar <b>mensajes privados</b> a los usuarios una vez que alcances
+        el nivel de confianza 1.
