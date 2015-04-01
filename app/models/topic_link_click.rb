@@ -13,6 +13,8 @@ class TopicLinkClick < ActiveRecord::Base
   validates_presence_of :topic_link_id
   validates_presence_of :ip_address
 
+  WHITELISTED_REDIRECT_HOSTNAMES = Set.new(%W{www.youtube.com youtu.be})
+
   # Create a click from a URL and post_id
   def self.create_from(args={})
     url = args[:url]
@@ -52,7 +54,10 @@ class TopicLinkClick < ActiveRecord::Base
       # If we have it somewhere else on the site, just allow the redirect.
       # This is likely due to a onebox of another topic.
       link = TopicLink.find_by(url: url)
-      return link.present? ? link.url : url
+      return link.url if link.present?
+
+      # Only redirect to whitelisted hostnames
+      return WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) ? url : nil
     end
 
     return url if args[:user_id] && link.user_id == args[:user_id]

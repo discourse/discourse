@@ -45,10 +45,15 @@ describe TopicLinkClick do
     context 'create_from' do
 
       context 'without a url' do
-        let(:click) { TopicLinkClick.create_from(url: "url that doesn't exist", post_id: @post.id, ip: '127.0.0.1') }
 
-        it "returns the url" do
-          expect(click).to eq("url that doesn't exist")
+        it "returns nil to prevent redirect exploit" do
+          click = TopicLinkClick.create_from(url: "http://url-that-doesnt-exist.com", post_id: @post.id, ip: '127.0.0.1')
+          expect(click).to eq(nil)
+        end
+
+        it "redirect to whitelisted hostnames" do
+          click = TopicLinkClick.create_from(url: "https://www.youtube.com/watch?v=jYd_5aggzd4", post_id: @post.id, ip: '127.0.0.1')
+          expect(click).to eq("https://www.youtube.com/watch?v=jYd_5aggzd4")
         end
       end
 
