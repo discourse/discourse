@@ -188,7 +188,7 @@ class PostAction < ActiveRecord::Base
     return if staff_already_replied?(related_post.topic)
     message_key = "flags_dispositions.#{disposition}"
     message_key << "_and_deleted" if delete_post
-    related_post.topic.add_moderator_post(moderator, I18n.t(message_key), skip_notifications: true)
+    related_post.topic.add_moderator_post(moderator, I18n.t(message_key))
   end
 
   def staff_already_replied?(topic)

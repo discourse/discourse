@@ -10,14 +10,14 @@ class PostAlerter
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
-        next if user.blank?
-
+      post.topic.all_allowed_users.reject do |user|
+        user.blank? ||
+        user.id == Discourse::SYSTEM_USER_ID ||
+        user.id == post.user_id
+      end.each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number
-          next unless post.reply_to_post.user_id == user.id
+          next unless post.reply_to_post_number || post.reply_to_post.user_id == user.id
         end
-
         create_notification(user, Notification.types[:private_message], post)
       end
     elsif post.post_type != Post.types[:moderator_action]
@@ -82,6 +82,7 @@ class PostAlerter
 
   def create_notification(user, type, post, opts={})
     return if user.blank?
+    return if user.id == Discourse::SYSTEM_USER_ID
 
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
