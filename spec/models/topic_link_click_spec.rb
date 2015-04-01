@@ -47,8 +47,8 @@ describe TopicLinkClick do
       context 'without a url' do
         let(:click) { TopicLinkClick.create_from(url: "url that doesn't exist", post_id: @post.id, ip: '127.0.0.1') }
 
-        it "returns nil" do
-          expect(click).to eq(nil)
+        it "returns the url" do
+          expect(click).to eq("url that doesn't exist")
         end
       end
 
