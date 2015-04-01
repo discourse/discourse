@@ -61,7 +61,8 @@ export default DiscourseController.extend({
       if (postId) {
         this.set('model.loading', true);
         const composer = this;
-        return Discourse.Post.load(postId).then(function(post) {
+
+        return this.store.find('post', postId).then(function(post) {
           const quote = Discourse.Quote.build(post, post.get("raw"));
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
@@ -412,7 +413,7 @@ export default DiscourseController.extend({
         composerModel.set('topic', opts.topic);
       }
     } else {
-      composerModel = composerModel || Discourse.Composer.create();
+      composerModel = composerModel || Discourse.Composer.create({ store: this.store });
       composerModel.open(opts);
     }
 

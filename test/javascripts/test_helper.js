@@ -59,7 +59,11 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.assetPath = function() { return null; };
+window.assetPath = function(url) {
+  if (url.indexOf('defer') === 0) {
+    return "/assets/" + url;
+  }
+};
 
 // Stop the message bus so we don't get ajax calls
 window.MessageBus.stop();

@@ -29,7 +29,7 @@ const CLOSED = 'closed',
 const Composer = Discourse.Model.extend({
 
   archetypes: function() {
-    return Discourse.Site.currentProp('archetypes');
+    return this.site.get('archetypes');
   }.property(),
 
   creatingTopic: Em.computed.equal('action', CREATE_TOPIC),
@@ -127,21 +127,16 @@ const Composer = Discourse.Model.extend({
     } else {
       // has a category? (when needed)
       return this.get('canCategorize') &&
-            !Discourse.SiteSettings.allow_uncategorized_topics &&
+            !this.siteSettings.allow_uncategorized_topics &&
             !this.get('categoryId') &&
-            !Discourse.User.currentProp('staff');
+            !this.user.get('staff');
     }
   }.property('loading', 'canEditTitle', 'titleLength', 'targetUsernames', 'replyLength', 'categoryId', 'missingReplyCharacters'),
 
-  /**
-    Is the title's length valid?
-
-    @property titleLengthValid
-  **/
   titleLengthValid: function() {
-    if (Discourse.User.currentProp('admin') && this.get('post.static_doc') && this.get('titleLength') > 0) return true;
+    if (this.user.get('admin') && this.get('post.static_doc') && this.get('titleLength') > 0) return true;
     if (this.get('titleLength') < this.get('minimumTitleLength')) return false;
-    return (this.get('titleLength') <= Discourse.SiteSettings.max_topic_title_length);
+    return (this.get('titleLength') <= this.siteSettings.max_topic_title_length);
   }.property('minimumTitleLength', 'titleLength', 'post.static_doc'),
 
   // The icon for the save button
@@ -194,9 +189,9 @@ const Composer = Discourse.Model.extend({
   **/
   minimumTitleLength: function() {
     if (this.get('privateMessage')) {
-      return Discourse.SiteSettings.min_private_message_title_length;
+      return this.siteSettings.min_private_message_title_length;
     } else {
-      return Discourse.SiteSettings.min_topic_title_length;
+      return this.siteSettings.min_topic_title_length;
     }
   }.property('privateMessage'),
 
@@ -216,12 +211,12 @@ const Composer = Discourse.Model.extend({
   **/
   minimumPostLength: function() {
     if( this.get('privateMessage') ) {
-      return Discourse.SiteSettings.min_private_message_post_length;
+      return this.siteSettings.min_private_message_post_length;
     } else if (this.get('topicFirstPost')) {
       // first post (topic body)
-      return Discourse.SiteSettings.min_first_post_length;
+      return this.siteSettings.min_first_post_length;
     } else {
-      return Discourse.SiteSettings.min_post_length;
+      return this.siteSettings.min_post_length;
     }
   }.property('privateMessage', 'topicFirstPost'),
 
@@ -249,7 +244,7 @@ const Composer = Discourse.Model.extend({
   _setupComposer: function() {
     const val = (Discourse.Mobile.mobileView ? false : (Discourse.KeyValueStore.get('composer.showPreview') || 'true'));
     this.set('showPreview', val === 'true');
-    this.set('archetypeId', Discourse.Site.currentProp('default_archetype'));
+    this.set('archetypeId', this.site.get('default_archetype'));
   }.on('init'),
 
   /**
@@ -349,15 +344,15 @@ const Composer = Discourse.Model.extend({
 
     this.setProperties({
       categoryId: opts.categoryId || this.get('topic.category.id'),
-      archetypeId: opts.archetypeId || Discourse.Site.currentProp('default_archetype'),
+      archetypeId: opts.archetypeId || this.site.get('default_archetype'),
       metaData: opts.metaData ? Em.Object.create(opts.metaData) : null,
       reply: opts.reply || this.get("reply") || ""
     });
 
     if (opts.postId) {
       this.set('loading', true);
-      Discourse.Post.load(opts.postId).then(function(result) {
-        composer.set('post', result);
+      this.store.find('post', opts.postId).then(function(post) {
+        composer.set('post', post);
         composer.set('loading', false);
       });
     }
@@ -370,10 +365,10 @@ const Composer = Discourse.Model.extend({
 
       this.setProperties(topicProps);
 
-      Discourse.Post.load(opts.post.get('id')).then(function(result) {
+      this.store.find('post', opts.post.get('id')).then(function(post) {
         composer.setProperties({
-          reply: result.get('raw'),
-          originalText: result.get('raw'),
+          reply: post.get('raw'),
+          originalText: post.get('raw'),
           loading: false
         });
       });
@@ -467,7 +462,7 @@ const Composer = Discourse.Model.extend({
   createPost(opts) {
     const post = this.get('post'),
           topic = this.get('topic'),
-          currentUser = Discourse.User.current(),
+          user = this.user,
           postStream = this.get('topic.postStream');
 
     let addedToStream = false;
@@ -477,17 +472,17 @@ const Composer = Discourse.Model.extend({
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
-      name: currentUser.get('name'),
-      display_username: currentUser.get('name'),
-      username: currentUser.get('username'),
-      user_id: currentUser.get('id'),
-      user_title: currentUser.get('title'),
-      uploaded_avatar_id: currentUser.get('uploaded_avatar_id'),
-      user_custom_fields: currentUser.get('custom_fields'),
-      post_type: Discourse.Site.currentProp('post_types.regular'),
+      name: user.get('name'),
+      display_username: user.get('name'),
+      username: user.get('username'),
+      user_id: user.get('id'),
+      user_title: user.get('title'),
+      uploaded_avatar_id: user.get('uploaded_avatar_id'),
+      user_custom_fields: user.get('custom_fields'),
+      post_type: this.site.get('post_types.regular'),
       actions_summary: [],
-      moderator: currentUser.get('moderator'),
-      admin: currentUser.get('admin'),
+      moderator: user.get('moderator'),
+      admin: user.get('admin'),
       yours: true,
       newPost: true,
       read: true
@@ -520,7 +515,7 @@ const Composer = Discourse.Model.extend({
       // we would need to handle oneboxes and other bits that are not even in the
       // engine, staging will just cause a blank post to render
       if (!_.isEmpty(createdPost.get('cooked'))) {
-        state = postStream.stagePost(createdPost, currentUser);
+        state = postStream.stagePost(createdPost, user);
 
         if(state === "alreadyStaging"){
           return;
@@ -529,69 +524,64 @@ const Composer = Discourse.Model.extend({
       }
     }
 
-    const composer = this,
-          promise = new Ember.RSVP.Promise(function(resolve, reject) {
-      composer.set('composeState', SAVING);
-
-      createdPost.save(function(result) {
-        let saving = true;
-
-        createdPost.updateFromJson(result);
-
-        if (topic) {
-          // It's no longer a new post
-          createdPost.set('newPost', false);
-          topic.set('draft_sequence', result.draft_sequence);
-          postStream.commitPost(createdPost);
-          addedToStream = true;
-        } else {
-          // We created a new topic, let's show it.
-          composer.set('composeState', CLOSED);
-          saving = false;
-
-          // Update topic_count for the category
-          const category = Discourse.Site.currentProp('categories').find(function(x) { return x.get('id') === (parseInt(createdPost.get('category'),10) || 1); });
-          if (category) category.incrementProperty('topic_count');
-          Discourse.notifyPropertyChange('globalNotice');
-        }
-
-        composer.clearState();
-        composer.set('createdPost', createdPost);
-
-        if (addedToStream) {
-          composer.set('composeState', CLOSED);
-        } else if (saving) {
-          composer.set('composeState', SAVING);
-        }
-
-        return resolve({ post: result });
-      }, function(error) {
-        // If an error occurs
-        if (postStream) {
-          postStream.undoPost(createdPost);
-        }
-        composer.set('composeState', OPEN);
-
-        // TODO extract error handling code
-        let parsedError;
-        try {
-          const parsedJSON = $.parseJSON(error.responseText);
-          if (parsedJSON.errors) {
-            parsedError = parsedJSON.errors[0];
-          } else if (parsedJSON.failed) {
-            parsedError = parsedJSON.message;
-          }
-        }
-        catch(ex) {
-          parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
-        }
-        reject(parsedError);
-      });
-    });
-
+    const composer = this;
+    composer.set('composeState', SAVING);
     composer.set("stagedPost", state === "staged" && createdPost);
 
-    return promise;
+    return createdPost.save().then(function(result) {
+      let saving = true;
+      createdPost.updateFromJson(result);
+
+      if (topic) {
+        // It's no longer a new post
+        createdPost.set('newPost', false);
+        topic.set('draft_sequence', result.draft_sequence);
+        postStream.commitPost(createdPost);
+        addedToStream = true;
+      } else {
+        // We created a new topic, let's show it.
+        composer.set('composeState', CLOSED);
+        saving = false;
+
+        // Update topic_count for the category
+        const category = composer.site.get('categories').find(function(x) { return x.get('id') === (parseInt(createdPost.get('category'),10) || 1); });
+        if (category) category.incrementProperty('topic_count');
+        Discourse.notifyPropertyChange('globalNotice');
+      }
+
+      composer.clearState();
+      composer.set('createdPost', createdPost);
+
+      if (addedToStream) {
+        composer.set('composeState', CLOSED);
+      } else if (saving) {
+        composer.set('composeState', SAVING);
+      }
+
+      return { post: result };
+    }).catch(function(error) {
+
+      // If an error occurs
+      if (postStream) {
+        postStream.undoPost(createdPost);
+      }
+      composer.set('composeState', OPEN);
+
+      // TODO extract error handling code
+      let parsedError;
+      try {
+        const parsedJSON = $.parseJSON(error.responseText);
+        if (parsedJSON.errors) {
+          parsedError = parsedJSON.errors[0];
+        } else if (parsedJSON.failed) {
+          parsedError = parsedJSON.message;
+        }
+      }
+      catch(ex) {
+        parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
+      }
+      throw parsedError;
+    });
   },
 
   getCookedHtml() {
@@ -604,7 +594,7 @@ const Composer = Discourse.Model.extend({
     // Do not save when there is no reply
     if (!this.get('reply')) return;
     // Do not save when the reply's length is too small
-    if (this.get('replyLength') < Discourse.SiteSettings.min_post_length) return;
+    if (this.get('replyLength') < this.siteSettings.min_post_length) return;
 
     const data = {
       reply: this.get('reply'),
@@ -671,6 +661,14 @@ Composer.reopenClass({
         composerState: DRAFT
       });
     }
+  },
+
+  create(args) {
+    args = args || {};
+    args.user = args.user || Discourse.User.current();
+    args.site = args.site || Discourse.Site.current();
+    args.siteSettings = args.siteSettings || Discourse.SiteSettings;
+    return this._super(args);
   },
 
   serializeToTopic(fieldName, property) {
