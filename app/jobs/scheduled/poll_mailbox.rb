@@ -70,6 +70,7 @@ module Jobs
         message = Mail::Message.new(mail_string)
         template_args[:former_title] = message.subject
         template_args[:destination] = message.to
+        template_args[:site_name] = SiteSetting.title
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
         Email::Sender.new(client_message, message_template).send
