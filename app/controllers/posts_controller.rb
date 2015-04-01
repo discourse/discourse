@@ -336,7 +336,11 @@ class PostsController < ApplicationController
   # doesn't return the post as the root JSON object, but as a nested object.
   # If a param is present it uses that result structure.
   def backwards_compatible_json(json_obj, success)
-    json_obj = json_obj[:post] || json_obj['post'] unless params[:nested_post]
+    json_obj.symbolize_keys!
+    if params[:nested_post].blank? && json_obj[:errors].blank?
+      json_obj = json_obj[:post]
+    end
+
     render json: json_obj, status: (!!success) ? 200 : 422
   end
 

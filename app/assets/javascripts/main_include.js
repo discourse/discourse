@@ -25,6 +25,7 @@
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
 //= require ./discourse/models/model
+//= require ./discourse/models/post
 //= require ./discourse/models/user_action
 //= require ./discourse/models/composer
 //= require ./discourse/models/post-stream

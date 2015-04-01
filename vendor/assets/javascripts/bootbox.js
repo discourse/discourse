@@ -427,16 +427,17 @@ var bootbox = window.bootbox || (function(document, $) {
         });
 
         // well, *if* we have a primary - give the first dom element focus
-        div.on('shown', function() {
+        div.on('shown.bs.modal', function() {
             div.find("a.btn-primary:first").focus();
         });
 
-        div.on('hidden', function() {
+        div.on('hidden.bs.modal', function() {
             div.remove();
         });
 
         // wire up button handlers
         div.on('click', '.modal-footer a', function(e) {
+          Ember.run(function() {
 
             var handler   = $(this).data("handler"),
                 cb        = callbacks[handler],
@@ -462,10 +463,11 @@ var bootbox = window.bootbox || (function(document, $) {
             if (hideModal !== false) {
                 div.modal("hide");
             }
+          });
         });
 
         // stick the modal right at the bottom of the main body out of the way
-        $("body").append(div);
+        (that.$body || $("body")).append(div);
 
         div.modal({
             // unless explicitly overridden take whatever our default backdrop value is

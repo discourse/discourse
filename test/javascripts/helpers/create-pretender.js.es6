@@ -2,7 +2,7 @@ function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
-    result[item[0]] = decodeURIComponent(item[1]);
+    result[item[0]] = decodeURIComponent(item[1]).replace(/\+/g, ' ');
   });
   return result;
 }
@@ -33,8 +33,15 @@ const _moreWidgets = [
   {id: 224, name: 'Good Repellant'}
 ];
 
+function loggedIn() {
+  return !!Discourse.User.current();
+}
+
 export default function() {
+
   const server = new Pretender(function() {
+
+    const fixturesByUrl = {};
 
     // Load any fixtures automatically
     const self = this;
@@ -44,12 +51,27 @@ export default function() {
         if (fixture && fixture.default) {
           const obj = fixture.default;
           Ember.keys(obj).forEach(function(url) {
+            fixturesByUrl[url] = obj[url];
             self.get(url, function() {
               return response(obj[url]);
             });
           });
         }
       }
+    });
+
+    this.get('/composer-messages', () => { return response([]); });
+
+    this.get("/latest.json", () => {
+      const json = fixturesByUrl['/latest.json'];
+
+      if (loggedIn()) {
+        // Stuff to let us post
+        json.topic_list.can_create_topic = true;
+        json.topic_list.draft_key = "new_topic";
+        json.topic_list.draft_sequence = 1;
+      }
+      return response(json);
     });
 
     this.get("/t/id_for/:slug", function() {
@@ -99,6 +121,33 @@ export default function() {
     this.delete('/posts/:post_id', success);
     this.put('/posts/:post_id/recover', success);
 
+    this.put('/posts/:post_id', (request) => {
+      return response({ post: {id: request.params.post_id, version: 2 } });
+    });
+
+    this.put('/t/:slug/:id', (request) => {
+      const data = parsePostData(request.requestBody);
+
+      return response(200, { basic_topic: {id: request.params.id,
+                                           title: data.title,
+                                           fancy_title: data.title,
+                                           slug: request.params.slug } })
+    });
+
+    this.post('/posts', function(request) {
+      const data = parsePostData(request.requestBody);
+
+      if (data.title === "this title triggers an error") {
+        return response(422, {errors: ['That title has already been taken']});
+      } else {
+        return response(200, {
+          success: true,
+          action: 'create_post',
+          post: {id: 12345, topic_id: 280, topic_slug: 'internationalization-localization'}
+        });
+      }
+    });
+
     this.get('/widgets/:widget_id', function(request) {
       const w = _widgets.findBy('id', parseInt(request.params.widget_id));
       if (w) {
@@ -130,8 +179,11 @@ export default function() {
     });
 
     this.delete('/widgets/:widget_id', success);
-  });
 
+    this.post('/topics/timings', function() {
+      return response(200, {});
+    });
+  });
 
   server.prepareBody = function(body){
     if (body && typeof body === "object") {

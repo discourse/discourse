@@ -323,7 +323,13 @@
     // Adds a listener callback to a DOM element which is fired on a specified
     // event.
     util.addEvent = function (elem, event, listener) {
-        elem.addEventListener(event, listener, false);
+      var wrapped = function() {
+        var wrappedArgs = Array.prototype.slice(arguments);
+        Ember.run(function() {
+          listener.call(this, wrappedArgs);
+        });
+      };
+      elem.addEventListener(event, wrapped, false);
     };
 
 
@@ -904,7 +910,7 @@
         // TODO allow us to inject this in (its our debouncer)
         var debounce = function(func,wait,trickle) {
           var timeout = null;
-          return function(){
+          return function() {
             var context = this;
             var args = arguments;
 
@@ -924,8 +930,8 @@
               currentWait = wait;
             }
 
-            if (timeout) { clearTimeout(timeout); }
-            timeout = setTimeout(later, currentWait);
+            if (timeout) { Ember.run.cancel(timeout); }
+            timeout = Ember.run.later(later, currentWait);
           }
         }
 

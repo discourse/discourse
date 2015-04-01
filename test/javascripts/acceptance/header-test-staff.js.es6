@@ -1,10 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Header (Staff)", {
-  user: { username: 'test',
-          staff: true,
-          site_flagged_posts_count: 1 }
-});
+acceptance("Header (Staff)", { loggedIn: true });
 
 test("header", () => {
   visit("/");
