@@ -338,7 +338,7 @@ span.post-count {
 
 .topic-post {
   &.moderator {
-    background-color: scale-color($highlight, $lightness: 75%);
+    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
   }
 }
 
