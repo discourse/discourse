@@ -1,23 +1,10 @@
-/**
-  Used for tracking when the user clicks on a link
+export default {
+  trackClick(e) {
+    // cancel click if triggered as part of selection.
+    if (Discourse.Utilities.selectedText() !== "") { return false; }
 
-  @class ClickTrack
-  @namespace Discourse
-  @module Discourse
-**/
-
-Discourse.ClickTrack = {
-
-  /**
-    Track a click on a link
-
-    @method trackClick
-    @param {jQuery.Event} e The click event that occurred
-  **/
-  trackClick: function(e) {
-    if (Discourse.Utilities.selectedText()!=="") return false;  //cancle click if triggered as part of selection.
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox')) return true;
+    if ($link.hasClass('lightbox')) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
         $article = $link.closest('article'),
@@ -25,9 +12,7 @@ Discourse.ClickTrack = {
         topicId = $('#topic').data('topic-id'),
         userId = $link.data('user-id');
 
-    if (!href || href.trim().length === 0){
-      return;
-    }
+    if (!href || href.trim().length === 0) { return; }
 
     if (!userId) userId = $article.data('user-id');
 

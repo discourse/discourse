@@ -1,5 +1,6 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
+import ClickTrack from 'discourse/lib/click-track';
 import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
@@ -55,7 +56,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Disco
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
 
-      return Discourse.ClickTrack.trackClick(e);
+      return ClickTrack.trackClick(e);
     });
 
   }.on('didInsertElement'),
