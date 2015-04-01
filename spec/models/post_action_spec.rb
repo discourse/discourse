@@ -507,15 +507,6 @@ describe PostAction do
       expect(topic.posts.count).to eq(1)
     end
 
-    it "should not generate a notification for auto-message" do
-      post = create_post
-      PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
-
-      PostAlerter.expects(:post_created).never
-
-      PostAction.agree_flags!(post, admin)
-    end
-
   end
 
 end

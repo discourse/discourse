@@ -97,7 +97,7 @@ class PostCreator
 
     if @post && @post.errors.empty?
       publish
-      PostAlerter.post_created(@post) unless @opts[:import_mode] || @opts[:skip_notifications]
+      PostAlerter.post_created(@post) unless @opts[:import_mode]
 
       track_latest_on_category
       enqueue_jobs
