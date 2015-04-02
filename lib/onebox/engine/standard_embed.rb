@@ -21,6 +21,7 @@ module Onebox
       # Some oembed providers (like meetup.com) don't provide links to themselves
       add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
       add_oembed_provider /www\.kickstarter\.com\//, 'https://www.kickstarter.com/services/oembed'
+      add_oembed_provider /www\.ted\.com\//, 'http://www.ted.com/services/v1/oembed.json'
 
       # Sites that work better with OpenGraph
       add_opengraph_provider /gfycat\.com\//
