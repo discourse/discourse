@@ -869,7 +869,7 @@ ro:
     email_time_window_mins: "Aşteaptă (n) minute până să trimiţi orice email de notificare, pentru a da utilizatorilor şansa să-şi editeze şi să-şi finalizeze postările."
     email_posts_context: "Câte răspunsuri precedente să fie incluse ca context în email-urile de notificare."
     flush_timings_secs: "Cât de frecvent se resetează timpul de pe server, în secunde."
-    max_word_length: "Lungimea maximă permisă a unui cuvânt, în caractere, în titlul discuţiei."
+    title_max_word_length: "Lungimea maximă permisă a unui cuvânt, în caractere, în titlul discuţiei."
     title_min_entropy: "Minimul de entropie (caractere unice, non-engelze ce definesc mai multe elemente) necesară pentru un titlu de discuţie."
     body_min_entropy: "Minimul de entropie (caractere unice, non-engleze ce definesc mai multe elemente) necesară pentru conţinutul unei postari."
 

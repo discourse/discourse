@@ -824,7 +824,7 @@ zh_CN:
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
     email_posts_context: "在通知邮件中包含的作为上下文的回复数量。"
     flush_timings_secs: "向服务器刷新时间数据的频率，以秒为单位。"
-    max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
+    title_max_word_length: "在主题的标题中，允许的词语长度的最大字符数。"
     title_min_entropy: "在主题的标题中，允许的最低熵值（单个字符）。"
     body_min_entropy: "在一个帖子内文中，允许的最低熵值（单个字符）。"
     title_fancy_entities: "转换主题标题中的 HTML 实体，参考：SmartyPants http://daringfireball.net/projects/smartypants/"

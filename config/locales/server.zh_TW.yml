@@ -769,7 +769,7 @@ zh_TW:
     email_time_window_mins: "等待多少 (n) 分鐘才給用戶發送通知電子郵件，好讓他們有機會自己來編輯和完善他們的帖子。"
     email_posts_context: "在通知電郵中包含的作為上下文的回覆數量。"
     flush_timings_secs: "刷新時間資料的頻率，以秒為單位"
-    max_word_length: "在討論話題的標題中，允許的詞彙最長字數"
+    title_max_word_length: "在討論話題的標題中，允許的詞彙最長字數"
     title_min_entropy: "在主題的標題中，允許的最低熵值（單字）。"
     body_min_entropy: "在一個帖子內文中，允許的最低熵值（單字）。"
     title_fancy_entities: "轉換討論話題標題中的 HTML 實體"

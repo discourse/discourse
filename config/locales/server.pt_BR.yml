@@ -832,7 +832,7 @@ pt_BR:
     create_thumbnails: "Criar thumbnails e lightbox para imagens que são muito largas para caber em uma postagem."
     email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários  uma chance de editarem e finalizarem seus posts."
     email_posts_context: "Quantas respostas prévias incluir como contexto em emails de notificação."
-    max_word_length: "O tamanho máximo permitido de uma palavra, em caracteres, num título de tópico."
+    title_max_word_length: "O tamanho máximo permitido de uma palavra, em caracteres, num título de tópico."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
     min_body_similar_length: "O tamanho mínimo do corpo de conteúdo de um post antes que ele seja checado por tópicos semelhantes."

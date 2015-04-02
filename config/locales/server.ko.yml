@@ -688,7 +688,7 @@ ko:
     email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 포스트의 변경하고 완료할 수 있는 기회를 준다."
     email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
     flush_timings_secs: "사용자의 이용 시간 데이터를 서버로 보내는 기간(초)"
-    max_word_length: "토픽 제목에 최대 단어 길이(글자 수)"
+    title_max_word_length: "토픽 제목에 최대 단어 길이(글자 수)"
     title_min_entropy: "토픽 제목에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     body_min_entropy: "포스트 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     title_fancy_entities: "토픽 제목에 일반 ASCII 문자로 만든 기호들을 보기 좋은 HTML로 변환시켜준다. 참고: SmartyPants http://daringfireball.net/projects/smartypants/"
