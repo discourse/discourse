@@ -64,7 +64,7 @@ module Discourse
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :top, :categories]
+    @anonymous_filters ||= [:latest, :top, :categories, :search]
   end
 
   def self.logged_in_filters
