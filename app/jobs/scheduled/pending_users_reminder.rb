@@ -3,7 +3,7 @@ require_dependency 'admin_user_index_query'
 module Jobs
 
   class PendingUsersReminder < Jobs::Scheduled
-    every 9.hours
+    every 2.hours
 
     def execute(args)
       if SiteSetting.must_approve_users
