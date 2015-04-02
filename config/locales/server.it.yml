@@ -825,7 +825,7 @@ it:
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
     email_posts_context: "Quante risposte precedenti inserire come contesto nelle email di notifica."
     flush_timings_secs: "Frequenza di svuotamento dei dati temporali verso il server, in secondi."
-    max_word_length: "Numero massimo di caratteri che compongono il titolo di un argomento."
+    title_max_word_length: "Numero massimo di caratteri che compongono il titolo di un argomento."
     title_min_entropy: "Minima entropia (caratteri unici) richiesti come titolo di un argomento."
     body_min_entropy: "Minima entropia (caratteri unici) richiesti come corpo di un messaggio."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli dell'argomento, tipo SmartyPants http://daringfireball.net/projects/smartypants/"

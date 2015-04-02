@@ -840,7 +840,7 @@ de:
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
     flush_timings_secs: "Sekunden, nach denen Zeiteinstellungen auf den Server übertragen werden."
-    max_word_length: "Maximale Wortlänge in Zeichen in Thementiteln."
+    title_max_word_length: "Maximale Wortlänge in Zeichen in Thementiteln."
     title_min_entropy: "Für Titel neuer Themen minimal erforderliche Entropie (einzigartige Zeichen)."
     body_min_entropy: "Für den Text neuer Beiträge minimal erforderliche Entropie (einzigartige Zeichen)."
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."

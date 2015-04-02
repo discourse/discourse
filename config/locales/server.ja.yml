@@ -779,7 +779,7 @@ ja:
     email_time_window_mins: "ユーザによるポストの最終編集チャンスを与えるために、通知用メール送信までに待つ時間 (分)"
     email_posts_context: "通知メールのコンテンツに含める回答の数"
     flush_timings_secs: "サーバにタイミングデータを送信する頻度 (秒)"
-    max_word_length: "トピックタイトルの最大文字数"
+    title_max_word_length: "トピックタイトルの最大文字数"
     title_min_entropy: "トピックタイトルの最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "ポスト本文の最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     title_fancy_entities: "トピックタイトルの一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
