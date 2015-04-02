@@ -43,9 +43,16 @@ class DirectoryItemsController < ApplicationController
     more_params[:page] = page + 1
 
     # Put yourself at the top of the first page
-    if result.present? && current_user.present? && page == 0 && result[0].user_id != current_user.id
-      your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
-      result.insert(0, your_item) if your_item
+    if result.present? && current_user.present? && page == 0
+
+      position = result.index {|r| r.user_id == current_user.id }
+
+      # Don't show the record unless you're not in the top positions already
+      if (position || 10) >= 10
+        your_item = DirectoryItem.where(period_type: period_type, user_id: current_user.id).first
+        result.insert(0, your_item) if your_item
+      end
+
     end
 
     render_json_dump(directory_items: serialize_data(result, DirectoryItemSerializer),
