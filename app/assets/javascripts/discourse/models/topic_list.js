@@ -42,7 +42,12 @@ Discourse.TopicList = Discourse.Model.extend({
         params = this.get('params');
 
     params.order = order || params.order;
-    params.ascending = ascending || params.ascending || true;
+
+    if (ascending === undefined) {
+      params.ascending = ascending;
+    } else {
+      params.ascending = ascending;
+    }
 
     this.set('loaded', false);
     var finder = finderFor(this.get('filter'), params);
