@@ -14,8 +14,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 [![](http://www.discourse.org/images/readme/howtogeek-1-3-beta.png)](http://discuss.howtogeek.com)
 [![](http://www.discourse.org/images/readme/newrelic-1-3-beta.png)](http://discuss.newrelic.com)
 [![](http://www.discourse.org/images/readme/turtlerock-1-3-beta.png)](https://talk.turtlerockstudios.com/)
-[![](http://www.discourse.org/images/readme/android-tablet-discourse-1-0.png)](http://discuss.atom.io)
-[![](http://www.discourse.org/images/readme/iphone-6-discourse-1-3-beta.png)](http://discourse.soylent.me)
+[![](http://www.discourse.org/images/readme/android-tablet-discourse-1-3-beta.png?v=2)](http://discuss.atom.io)
+[![](http://www.discourse.org/images/readme/iphone-6-discourse-1-3-beta.png?v=2)](http://discourse.soylent.me)
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
