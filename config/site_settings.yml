@@ -276,6 +276,9 @@ users:
   logout_redirect:
     client: true
     default: ''
+  full_name_required:
+    client: true
+    default: false
   enable_names:
     client: true
     default: true
