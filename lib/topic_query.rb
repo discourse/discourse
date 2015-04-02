@@ -70,6 +70,10 @@ class TopicQuery
     create_list(:latest, {}, latest_results)
   end
 
+  def list_search
+    create_list(:latest, {}, latest_results)
+  end
+
   def list_read
     create_list(:read, unordered: true) do |topics|
       topics.order('COALESCE(tu.last_visited_at, topics.bumped_at) DESC')

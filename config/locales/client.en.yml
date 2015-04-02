@@ -867,6 +867,7 @@ en:
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        search: "There are no more search results."
 
     topic:
       filter_to: "{{post_count}} posts in topic"
@@ -1497,6 +1498,9 @@ en:
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
+      search:
+        title: "Search"
+        help: "search all topics"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
