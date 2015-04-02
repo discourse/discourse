@@ -15,7 +15,7 @@ function searchForTerm(term, opts) {
     };
   }
 
-  return Discourse.ajax('/search/', { data: data }).then(function(results){
+  return Discourse.ajax('/search/', { data: data, method: 'POST' }).then(function(results){
     // Topics might not be included
     if (!results.topics) { results.topics = []; }
     if (!results.users) { results.users = []; }
