@@ -39,6 +39,10 @@ export default ObjectController.extend(CanCheckEmails, {
 
   canEditName: Discourse.computed.setting('enable_names'),
 
+  nameInstructions: function() {
+    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  }.property(),
+
   canSelectTitle: function() {
     return this.siteSettings.enable_badges && this.get('model.has_title_badges');
   }.property('model.badge_count'),
