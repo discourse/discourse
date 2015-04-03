@@ -12,5 +12,12 @@ export default Ember.View.extend({
       // the backdrop and makes it unclickable.
       $('.modal-header a.close').click();
     }
+  },
+
+  keyDown(e) {
+    // Delegate click to modal close when pressing ESC
+    if (e.which === 27) {
+      Em.run.next(() => $('.modal-header a.close').click());
+    }
   }
 });
