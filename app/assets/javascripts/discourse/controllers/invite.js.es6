@@ -87,11 +87,18 @@ export default ObjectController.extend(ModalFunctionality, {
     if (this.get('isMessage')) {
       return I18n.t('topic.invite_private.email_or_username');
     } else if (this.get('invitingToTopic')) {
-      return I18n.t('topic.invite_reply.to_topic');
+      // display instructions based on provided entity
+      if (this.blank('emailOrUsername')) {
+        return I18n.t('topic.invite_reply.to_topic_blank');
+      } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
+        return I18n.t('topic.invite_reply.to_topic_email');
+      } else {
+        return I18n.t('topic.invite_reply.to_topic_username');
+      }
     } else {
       return I18n.t('topic.invite_reply.to_forum');
     }
-  }.property('isMessage', 'invitingToTopic'),
+  }.property('isMessage', 'invitingToTopic', 'emailOrUsername'),
 
   /**
     Instructional text for the group selection.

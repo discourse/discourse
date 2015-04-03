@@ -789,7 +789,7 @@ en:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
-      invited_to_topic: "<i title='invited to topic' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1074,10 +1074,11 @@ en:
       invite_reply:
         title: 'Invite'
         action: 'Send Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "Enter a username to send a notification to an existing user with a link to this topic. Enter an email address to
-send an invitation via email that allows a new user to immediately reply to this topic."
+        help: 'invite others to this topic via email or notifications'
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+        to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
+        to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
+        to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
         success: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
