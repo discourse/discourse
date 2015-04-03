@@ -7,7 +7,7 @@ export default Discourse.View.extend({
 
     // Focus on first element
     if (!Discourse.Mobile.mobileView && this.get('focusInput')) {
-      Em.run.schedule('afterRender', () => this.$('input:first').focus() );
+      Em.run.schedule('afterRender', () => this.$('input:first').focus());
     }
 
     const title = this.get('title');
