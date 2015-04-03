@@ -1133,10 +1133,10 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply: "Replying to {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
       in_reply_to: "reply to"
