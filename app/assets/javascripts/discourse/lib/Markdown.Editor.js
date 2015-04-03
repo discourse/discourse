@@ -1282,19 +1282,6 @@
             }
         });
 
-        // Auto-indent on shift-enter
-        util.addEvent(inputBox, "keyup", function (key) {
-            if (key.shiftKey && !key.ctrlKey && !key.metaKey) {
-                var keyCode = key.charCode || key.keyCode;
-                // Character 13 is Enter
-                if (keyCode === 13) {
-                    var fakeButton = {};
-                    fakeButton.textOp = bindCommand("doAutoindent");
-                    doClick(fakeButton);
-                }
-            }
-        });
-
 
 
         // Perform the button's action.
@@ -1780,51 +1767,6 @@
                 ui.prompt(this.getString("linkdialog"), linkDefaultText, linkEnteredCallback);
             }
             return true;
-        }
-    };
-
-    // When making a list, hitting shift-enter will put your cursor on the next line
-    // at the current indent level.
-    commandProto.doAutoindent = function (chunk, postProcessing) {
-
-        var commandMgr = this,
-            fakeSelection = false;
-
-        chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]*\n$/, "\n\n");
-        chunk.before = chunk.before.replace(/(\n|^)[ ]{0,3}>[ \t]*\n$/, "\n\n");
-        chunk.before = chunk.before.replace(/(\n|^)[ \t]+\n$/, "\n\n");
-
-        // There's no selection, end the cursor wasn't at the end of the line:
-        // The user wants to split the current list item / code line / blockquote line
-        // (for the latter it doesn't really matter) in two. Temporarily select the
-        // (rest of the) line to achieve this.
-        if (!chunk.selection && !/^[ \t]*(?:\n|$)/.test(chunk.after)) {
-            chunk.after = chunk.after.replace(/^[^\n]*/, function (wholeMatch) {
-                chunk.selection = wholeMatch;
-                return "";
-            });
-            fakeSelection = true;
-        }
-
-        if (/(\n|^)[ ]{0,3}([*+-]|\d+[.])[ \t]+.*\n$/.test(chunk.before)) {
-            if (commandMgr.doList) {
-                commandMgr.doList(chunk);
-            }
-        }
-        if (/(\n|^)[ ]{0,3}>[ \t]+.*\n$/.test(chunk.before)) {
-            if (commandMgr.doBlockquote) {
-                commandMgr.doBlockquote(chunk);
-            }
-        }
-        if (/(\n|^)(\t|[ ]{4,}).*\n$/.test(chunk.before)) {
-            if (commandMgr.doCode) {
-                commandMgr.doCode(chunk);
-            }
-        }
-
-        if (fakeSelection) {
-            chunk.after = chunk.selection + chunk.after;
-            chunk.selection = "";
         }
     };
 
