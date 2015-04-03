@@ -534,7 +534,7 @@ files:
   allow_animated_avatars:
     client: true
     default: false
-  allow_animated_thumbnails: false
+  allow_animated_thumbnails: true
   default_avatars:
     default: ''
     type: url_list
