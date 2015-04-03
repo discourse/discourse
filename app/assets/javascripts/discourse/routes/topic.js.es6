@@ -69,16 +69,6 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
       this.controllerFor('invite').reset();
     },
 
-    showPrivateInvite() {
-      showModal('invitePrivate', this.modelFor('topic'));
-      this.controllerFor('invitePrivate').setProperties({
-        email: null,
-        error: false,
-        saving: false,
-        finished: false
-      });
-    },
-
     showHistory(post) {
       showModal('history', post);
       this.controllerFor('history').refresh(post.get("id"), "latest");
