@@ -33,13 +33,15 @@
           <li class='toggle-mobile'>
             <a {{bind-attr class="view.mobile:active"}} {{action "toggleMobile" target="view"}}>{{fa-icon "mobile"}}</a>
           </li>
-          <li class='toggle-maximize'><a {{action "toggleMaximize" target="view"}}>
-            {{#if view.maximized}}
-              {{fa-icon "compress"}}
-            {{else}}
-              {{fa-icon "expand"}}
-            {{/if}}
-          </a>
+          <li class='toggle-maximize'>
+            <a {{action "toggleMaximize" target="view"}}>
+              {{#if view.maximized}}
+                {{fa-icon "compress"}}
+              {{else}}
+                {{fa-icon "expand"}}
+              {{/if}}
+            </a>
+          </li>
         </ul>
       </div>
 
