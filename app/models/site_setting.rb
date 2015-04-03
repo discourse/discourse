@@ -22,7 +22,23 @@ class SiteSetting < ActiveRecord::Base
     end
   end
 
+  def self.override_default_settings(file)
+    return unless File.exist?(file)
+    SiteSettings::YamlLoader.new(file).load do |category, name, default, opts|
+      override_setting_default(name, default)
+    end
+  end
+
+  def self.refresh_defaults!
+    self.defaults.clear
+    override_default_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
+    refresh! # refresh to get the locale from env and db
+    override_default_settings(File.join(Rails.root, 'config', 'default_settings', "#{SiteSetting.default_locale}.yml"))
+    refresh! # refresh to set the settings in the current.
+  end
+
   load_settings(File.join(Rails.root, 'config', 'site_settings.yml'))
+  refresh_defaults!
 
   unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
     Dir[File.join(Rails.root, "plugins", "*", "config", "settings.yml")].each do |file|

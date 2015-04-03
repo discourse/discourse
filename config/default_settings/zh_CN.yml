@@ -1,0 +1,11 @@
+posting:
+  min_post_length: 8
+  min_first_post_length: 8
+  min_private_message_post_length: 4
+  min_topic_title_length: 5
+  uncategorized_description: 不需要分类的主题，或者不适用于任何分类的主题。
+  min_title_similar_length: 5
+  min_body_similar_length: 6
+
+uncategorized:
+  min_search_term_length: 2
