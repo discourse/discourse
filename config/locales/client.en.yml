@@ -484,7 +484,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
-      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
+      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
@@ -789,6 +789,7 @@ en:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1072,14 +1073,14 @@ en:
 
       invite_reply:
         title: 'Invite'
-        action: 'Email Invite'
+        action: 'Send Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
         to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
 
         email_placeholder: 'name@example.com'
-        success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user? (Invites are rate limited)"
+        success: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 

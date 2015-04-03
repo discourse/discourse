@@ -537,7 +537,7 @@ class Topic < ActiveRecord::Base
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil)
     if private_message?
-      # If the user exists, add them to the topic.
+      # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
 
@@ -555,7 +555,20 @@ class Topic < ActiveRecord::Base
       # NOTE callers expect an invite object if an invite was sent via email
       invite_by_email(invited_by, username_or_email, group_ids)
     else
-      false
+      # invite existing member to a topic
+      user = User.find_by_username_or_email(username_or_email)
+      if user && topic_allowed_users.create!(user_id: user.id)
+
+        # Notify the user they've been invited
+        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
+                                  topic_id: id,
+                                  post_number: 1,
+                                  data: { topic_title: title,
+                                          display_username: invited_by.username }.to_json)
+        return true
+      else
+        false
+      end
     end
   end
 

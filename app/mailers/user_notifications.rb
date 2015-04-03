@@ -124,6 +124,11 @@ class UserNotifications < ActionMailer::Base
     notification_email(user, opts)
   end
 
+  def user_invited_to_topic(user, opts)
+    opts[:show_category_in_subject] = true
+    notification_email(user, opts)
+  end
+
   def mailing_list_notify(user, post)
     send_notification_email(
       title: post.topic.title,
@@ -188,11 +193,12 @@ class UserNotifications < ActionMailer::Base
     use_site_subject = opts[:use_site_subject]
     add_re_to_subject = opts[:add_re_to_subject]
     show_category_in_subject = opts[:show_category_in_subject]
+    original_username = @notification.data_hash[:original_username] || @notification.data_hash[:display_username]
 
     send_notification_email(
       title: title,
       post: @post,
-      username: @notification.data_hash[:original_username],
+      username: original_username,
       from_alias: user_name,
       allow_reply_by_email: allow_reply_by_email,
       use_site_subject: use_site_subject,

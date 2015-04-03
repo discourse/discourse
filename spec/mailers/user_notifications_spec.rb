@@ -326,4 +326,11 @@ describe UserNotifications do
     end
   end
 
+  describe "user invited to a topic" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_topic }
+      include_examples "no reply by email"
+    end
+  end
+
 end

@@ -6,7 +6,7 @@ export default ObjectController.extend(ModalFunctionality, {
 
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
-  email: null,
+  emailOrUsername: null,
 
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
@@ -19,12 +19,12 @@ export default ObjectController.extend(ModalFunctionality, {
   **/
   disabled: function() {
     if (this.get('saving')) return true;
-    if (this.blank('email')) return true;
-    if (!Discourse.Utilities.emailValid(this.get('email'))) return true;
+    if (this.blank('emailOrUsername')) return true;
+    if ( !this.get('invitingToTopic') && !Discourse.Utilities.emailValid(this.get('emailOrUsername')) ) return true;
     if (this.get('model.details.can_invite_to')) return false;
     if (this.get('isPrivateTopic') && this.blank('groupNames')) return true;
     return false;
-  }.property('email', 'isPrivateTopic', 'groupNames', 'saving'),
+  }.property('emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'groupNames', 'saving'),
 
   /**
     The current text for the invite button
@@ -54,17 +54,44 @@ export default ObjectController.extend(ModalFunctionality, {
   isPrivateTopic: Em.computed.and('invitingToTopic', 'model.category.read_restricted'),
 
   /**
+    Is Message?
+
+    @property isMessage
+  **/
+  isMessage: Em.computed.equal('model.archetype', 'private_message'),
+
+  /**
+    Allow Existing Members? (username autocomplete)
+
+    @property allowExistingMembers
+  **/
+  allowExistingMembers: function() {
+    return this.get('invitingToTopic') && !this.get('isPrivateTopic');
+  }.property('invitingToTopic', 'isPrivateTopic'),
+
+  /**
+    Show Groups? (add invited user to private group)
+
+    @property showGroups
+  **/
+  showGroups: function() {
+    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic'));
+  }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'invitingToTopic'),
+
+  /**
     Instructional text for the modal.
 
     @property inviteInstructions
   **/
   inviteInstructions: function() {
-    if (this.get('invitingToTopic')) {
+    if (this.get('isMessage')) {
+      return I18n.t('topic.invite_private.email_or_username');
+    } else if (this.get('invitingToTopic')) {
       return I18n.t('topic.invite_reply.to_topic');
     } else {
       return I18n.t('topic.invite_reply.to_forum');
     }
-  }.property('invitingToTopic'),
+  }.property('isMessage', 'invitingToTopic'),
 
   /**
     Instructional text for the group selection.
@@ -92,8 +119,25 @@ export default ObjectController.extend(ModalFunctionality, {
     @property successMessage
   **/
   successMessage: function() {
-    return I18n.t('topic.invite_reply.success', { email: this.get('email') });
-  }.property('email'),
+    if (this.get('isMessage')) {
+      return I18n.t('topic.invite_private.success');
+    } else {
+      return I18n.t('topic.invite_reply.success', { emailOrUsername: this.get('emailOrUsername') });
+    }
+  }.property('isMessage', 'emailOrUsername'),
+
+  /**
+    The "error" text for when the invite fails.
+
+    @property errorMessage
+  **/
+  errorMessage: function() {
+    if (this.get('isMessage')) {
+      return I18n.t('topic.invite_private.error');
+    } else {
+      return I18n.t('topic.invite_reply.error');
+    }
+  }.property('isMessage'),
 
   /**
     Reset the modal to allow a new user to be invited.
@@ -102,7 +146,7 @@ export default ObjectController.extend(ModalFunctionality, {
   **/
   reset: function() {
     this.setProperties({
-      email: null,
+      emailOrUsername: null,
       groupNames: null,
       error: false,
       saving: false,
@@ -126,13 +170,15 @@ export default ObjectController.extend(ModalFunctionality, {
       var userInvitedController = this.get('controllers.user-invited');
 
       this.setProperties({ saving: true, error: false });
-      this.get('model').createInvite(this.get('email'), groupNames).then(function() {
+      this.get('model').createInvite(this.get('emailOrUsername'), groupNames).then(function(result) {
         self.setProperties({ saving: false, finished: true });
         if (!self.get('invitingToTopic')) {
           Discourse.Invite.findInvitedBy(Discourse.User.current()).then(function (invite_model) {
             userInvitedController.set('model', invite_model);
             userInvitedController.set('totalInvites', invite_model.invites.length);
           });
+        } else if (self.get('isMessage') && result && result.user) {
+          self.get('model.details.allowed_users').pushObject(result.user);
         }
       }).catch(function() {
         self.setProperties({ saving: false, error: true });

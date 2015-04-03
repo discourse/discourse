@@ -2,7 +2,7 @@
   {{#if error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
-      {{i18n 'topic.invite_reply.error'}}
+      {{errorMessage}}
     </div>
   {{/if}}
 
@@ -11,9 +11,13 @@
   {{else}}
 
     <label>{{inviteInstructions}}</label>
-    {{text-field value=email placeholderKey="topic.invite_reply.email_placeholder"}}
+    {{#if allowExistingMembers}}
+      {{user-selector single="true" allowAny=true usernames=emailOrUsername includeGroups="true" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
+    {{else}}
+      {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
+    {{/if}}
 
-    {{#if isAdmin}}
+    {{#if showGroups}}
       <label>{{{groupInstructions}}}</label>
       {{group-selector groupFinder=groupFinder groupNames=groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
