@@ -387,7 +387,7 @@ Discourse::Application.routes.draw do
   get "category/*path" => "categories#redirect"
 
   get "top" => "list#top"
-  post "search" => "search#query"
+  get "search/query" => "search#query"
 
   # Topics resource
   get "t/:id" => "topics#show"
