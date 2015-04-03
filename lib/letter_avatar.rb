@@ -78,7 +78,7 @@ class LetterAvatar
 
       `convert #{instructions.join(" ")}`
 
-      ImageOptim.new.optimize_image(filename) rescue nil
+      ImageOptim.new.optimize_image!(filename) rescue nil
 
       filename
     end
