@@ -2,7 +2,7 @@
   {{i18n 'admin.logs.screened_emails.description'}}
   <button class="btn pull-right" {{action "exportScreenedEmailList"}} title="{{i18n 'admin.export_csv.button_title.screened_email'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
 </p>
-</br>
+<br>
 
 {{#loading-spinner condition=loading}}
   {{#if model.length}}
