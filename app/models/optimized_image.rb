@@ -153,7 +153,7 @@ class OptimizedImage < ActiveRecord::Base
 
     return false if $?.exitstatus != 0
 
-    ImageOptim.new.optimize_image(to) rescue nil
+    ImageOptim.new.optimize_image!(to) rescue nil
     true
   end
 
