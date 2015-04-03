@@ -1075,7 +1075,8 @@ en:
         title: 'Invite'
         action: 'Send Invite'
         help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
+        to_topic: "Enter a username to send a notification to an existing user with a link to this topic. Enter an email address to
+send an invitation via email that allows a new user to immediately reply to this topic."
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
 
         email_placeholder: 'name@example.com'
