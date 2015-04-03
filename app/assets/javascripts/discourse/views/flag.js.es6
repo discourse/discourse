@@ -8,15 +8,13 @@ export default ModalBodyView.extend({
   }.property('controller.flagTopic'),
 
   selectedChanged: function() {
-    const self = this;
+    Em.run.next(() => {
+      this.$("input[type='radio']").prop('checked', false);
 
-    Em.run.next(function() {
-      self.$("input[type='radio']").prop('checked', false);
-
-      const nameKey = self.get('controller.selected.name_key');
+      const nameKey = this.get('controller.selected.name_key');
       if (!nameKey) { return; }
 
-      self.$('#radio_' + nameKey).prop('checked', 'true');
+      this.$('#radio_' + nameKey).prop('checked', 'true');
     });
   }.observes('controller.selected.name_key')
 });
