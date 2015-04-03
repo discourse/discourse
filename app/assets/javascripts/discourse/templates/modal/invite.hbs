@@ -5,18 +5,15 @@
       {{errorMessage}}
     </div>
   {{/if}}
-
   {{#if finished}}
     {{{successMessage}}}
   {{else}}
-
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
       {{user-selector single="true" allowAny=true usernames=emailOrUsername includeGroups="true" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
     {{else}}
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
     {{/if}}
-
     {{#if showGroups}}
       <label>{{{groupInstructions}}}</label>
       {{group-selector groupFinder=groupFinder groupNames=groupNames placeholderKey="topic.invite_private.group_name"}}
@@ -25,9 +22,8 @@
 </div>
 <div class="modal-footer">
   {{#if finished}}
-    <button class='btn btn-primary' {{action "closeModal"}}>{{i18n 'close'}}</button>
+    {{d-button class="btn-primary" action="closeModal" label="close"}}
   {{else}}
-    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "createInvite"}}><i class="fa fa-user-plus"></i>{{buttonTitle}}</button>
+    <button class='btn btn-primary' {{bind-attr disabled="disabled"}} {{action "createInvite"}}>{{fa-icon "user-plus"}}{{buttonTitle}}</button>
   {{/if}}
-
 </div>
