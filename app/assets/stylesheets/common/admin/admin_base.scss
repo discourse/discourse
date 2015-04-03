@@ -799,14 +799,14 @@ table.api-keys {
       }
 
       &.trending-up {
-        color: $success;
         i.up {
+          color: $success;
           display: inline;
         }
       }
       &.trending-down {
-        color: $danger;
         i.down {
+          color: $danger;
           display: inline;
         }
       }
