@@ -48,7 +48,8 @@ export default Em.ObjectController.extend({
     },
 
     removeMember(member) {
-      const message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("name") });
+      const self = this,
+            message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("name") });
       return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
         if (confirm) {
           self.get("model").removeMember(member);
