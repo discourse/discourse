@@ -1139,7 +1139,6 @@ en:
       edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
-      in_reply_to: "reply to"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
