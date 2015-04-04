@@ -36,7 +36,7 @@ class SearchObserver < ActiveRecord::Observer
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    search_data = title.force_encoding(Encoding::UTF_8).dup << " " << scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    search_data = title.dup << " " << scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
     update_index('topic', topic_id, search_data)
   end
 
