@@ -484,7 +484,7 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
-      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username or invites me to a topic"
+      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
       email_private_messages: "Send me an email when someone messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
