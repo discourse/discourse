@@ -1003,18 +1003,22 @@ en:
         delete: "Delete Topic"
         open: "Open Topic"
         close: "Close Topic"
-        auto_close: "Auto Close"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
-        pin: "Pin Topic"
-        unpin: "Un-Pin Topic"
-        pin_globally: "Pin Topic Globally"
+        multi_select: "Select Posts…"
+        auto_close: "Auto Close…"
+        pin: "Pin Topic…"
+        unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts"
+
+      feature:
+        pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
+        pin_globally: "Pin Topic Globally"
+        make_banner: "Banner Topic"
+        remove_banner: "Remove Banner Topic"
 
       reply:
         title: 'Reply'

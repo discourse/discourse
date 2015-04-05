@@ -2,7 +2,7 @@
   {{#if pinned_at}}
     <div class="feature-section">
       <div class="button">
-        {{d-button action="unpin" icon="thumb-tack" label="topic.actions.unpin" class="btn-primary"}}
+        {{d-button action="unpin" icon="thumb-tack" label="topic.feature.unpin" class="btn-primary"}}
       </div>
       <div class="desc">
         <p>{{{unPinMessage}}}</p>
@@ -26,7 +26,7 @@
   {{else}}
     <div class="feature-section">
       <div class="button">
-        {{d-button action="pin" icon="thumb-tack" label="topic.actions.pin" class="btn-primary"}}
+        {{d-button action="pin" icon="thumb-tack" label="topic.feature.pin" class="btn-primary"}}
       </div>
       <div class="desc">
         <p>{{{pinMessage}}}</p>
@@ -41,7 +41,7 @@
     <hr>
     <div class="feature-section">
       <div class="button">
-        {{d-button action="pinGlobally" icon="thumb-tack" label="topic.actions.pin_globally" class="btn-primary"}}
+        {{d-button action="pinGlobally" icon="thumb-tack" label="topic.feature.pin_globally" class="btn-primary"}}
       </div>
       <div class="desc">
         <p>{{i18n "topic.feature_topic.pin_globally"}}</p>
@@ -58,9 +58,9 @@
   <div class="feature-section">
     <div class="button">
       {{#if isBanner}}
-        {{d-button action="removeBanner" icon="thumb-tack" label="topic.actions.remove_banner" class="btn-primary"}}
+        {{d-button action="removeBanner" icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
       {{else}}
-        {{d-button action="makeBanner" icon="thumb-tack" label="topic.actions.make_banner" class="btn-primary"}}
+        {{d-button action="makeBanner" icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
       {{/if}}
     </div>
     <div class="desc">
