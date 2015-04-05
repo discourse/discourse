@@ -23,7 +23,7 @@ fa_IR:
   topics: "جُستارها"
   posts: "دیدگاه‌ها"
   loading: "بارگذاری..."
-  powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://www.discours.ir"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
+  powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
   via: "%{username} از %{site_name}"
   is_reserved: "محفوظ است"
@@ -73,7 +73,7 @@ fa_IR:
       other: "%{count} پاسخ دیگر"
     loading: "بارگزاری مبحث ..."
     permalink: " پیوند یکتا"
-    in_reply_to: "%{username}"
+    in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} پاسخ"
   too_many_mentions:
@@ -415,7 +415,20 @@ fa_IR:
       name_already_exists: "متأسفیم، در حال حاضر نام '{name}%' توسط ایموجی دیگری استفاده می‌شود."
       error_while_storing_emoji: "متأسفیم، در هنگام ذخیره‌سازی ایموجی خطایی رخ داده است."
   topic_statuses:
+    closed_enabled: "این موضوع در حال حاضر بسته شده است. پاسخ جدید دیگر مجاز نیست."
     closed_disabled: "موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
+    autoclosed_enabled_days:
+      other: "این موضوع به صورت خود کار بعد از %{count} روز بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_hours:
+      other: "این موضوع به صورت خود کار بعد از %{count} ساعت بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_minutes:
+      other: "این موضوع به صورت خود کار بعد از %{count} دقیقه بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_days:
+      other: "این موضوع به صورت خود کار بعد از %{count} روز بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_hours:
+      other: "این موضوع به صورت خود کار بعد از %{count} ساعت بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_minutes:
+      other: "این موضوع به صورت خود کار بعد از %{count} دقیقه بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
     autoclosed_disabled: "این موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     autoclosed_disabled_lastpost: "این موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
   login:
@@ -844,7 +857,7 @@ fa_IR:
       This document is CC-BY-SA. It was last updated May 31, 2013.
   static:
     search_help: |
-      <h2>Tips</h2>
+      <h2>راهنمایی</h2>
       <p>
       <ul>
         <li>Title matches are prioritized, so when in doubt, search for titles</li>
@@ -865,3 +878,74 @@ fa_IR:
       <p>
         <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
       </p>
+  badges:
+    long_descriptions:
+      autobiographer: |
+        اه اه اه
+        اه اه اه
+      first_like: |
+        اه اه اه
+        اه اه اه
+      first_link: |
+        اه اه اه
+        اه اه اه
+      first_quote: |
+        اه اه اه
+        اه اه اه
+      first_share: |
+        اه اه اه
+        اه اه اه
+      read_guidelines: |
+        اه اه اه
+        اه اه اه
+      reader: |
+        اه اه اه
+        اه اه اه
+      editor: |
+        اه اه اه
+        اه اه اه
+      nice_share: |
+        اه اه اه
+        اه اه اه
+      welcome: |
+        اه اه اه
+        اه اه اه
+      anniversary: |
+        اه اه اه
+        اه اه اه
+      good_share: |
+        اه اه اه
+        اه اه اه
+      great_share: |
+        اه اه اه
+        اه اه اه
+      nice_post: |
+        اه اه اه
+        اه اه اه
+      nice_topic: |
+        اه اه اه
+        اه اه اه
+      good_post: |
+        اه اه اه
+        اه اه اه
+      good_topic: |
+        اه اه اه
+        اه اه اه
+      great_post: |
+        اه اه اه
+        اه اه اه
+      great_topic: |
+        اه اه اه
+        اه اه اه
+      basic: |
+        اه اه اه
+        اه اه اه
+      member: |
+        اه اه اه
+        اه اه اه
+      regular: |
+        اه اه اه
+        اه اه اه
+      leader: |
+        اه اه اه
+        اه اه اه
