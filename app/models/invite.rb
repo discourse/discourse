@@ -66,7 +66,7 @@ class Invite < ActiveRecord::Base
     if topic.private_message?
       topic.grant_permission_to_user(user.email)
     elsif topic.category && topic.category.groups.any?
-      if Guardian.new(invited_by).can_invite_to?(topic)
+      if Guardian.new(invited_by).can_invite_to?(topic) && !SiteSetting.enable_sso
         (topic.category.groups - user.groups).each { |group| group.add(user) }
       end
     end
