@@ -56,6 +56,7 @@ export default RestrictedUserRoute.extend(ShowFooter, {
                 'gravatar_avatar_upload_id',
                 'custom_avatar_upload_id'
               ));
+              bootbox.alert(I18n.t("user.change_avatar.cache_notice"));
             });
       }
 
