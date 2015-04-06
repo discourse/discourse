@@ -2,6 +2,7 @@ import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend({
   needs: ['discovery', 'discovery/topics'],
+
   categories: function() {
     return Discourse.Category.list();
   }.property(),

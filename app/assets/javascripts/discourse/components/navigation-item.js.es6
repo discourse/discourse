@@ -10,14 +10,14 @@ export default Ember.Component.extend(StringBuffer, {
   title: function() {
     var categoryName = this.get('content.categoryName'),
         name = this.get('content.name'),
-        extra;
+        extra = {};
 
     if (categoryName) {
-      extra = { categoryName: categoryName };
       name = "category";
+      extra.categoryName = categoryName;
     }
-    return I18n.t("filters." + name + ".help", extra);
-  }.property("content.name"),
+    return I18n.t("filters." + name.replace("/", ".") + ".help", extra);
+  }.property("content.{categoryName,name}"),
 
   active: function() {
     return this.get('content.filterMode') === this.get('filterMode') ||
@@ -33,11 +33,11 @@ export default Ember.Component.extend(StringBuffer, {
       name = 'category';
       extra.categoryName = Discourse.Formatter.toTitleCase(categoryName);
     }
-    return I18n.t("filters." + name + ".title", extra);
-  }.property('content.count'),
+    return I18n.t("filters." + name.replace("/", ".") + ".title", extra);
+  }.property('content.{categoryName,name,count}'),
 
-  renderString: function(buffer) {
-    var content = this.get('content');
+  renderString(buffer) {
+    const content = this.get('content');
     buffer.push("<a href='" + content.get('href') + "'>");
     if (content.get('hasIcon')) {
       buffer.push("<span class='" + content.get('name') + "'></span>");

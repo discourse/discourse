@@ -1552,15 +1552,17 @@ en:
       top:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
+        all:
+          title: "All Time"
         yearly:
-          title: "Top Yearly"
+          title: "Yearly"
         monthly:
-          title: "Top Monthly"
+          title: "Monthly"
         weekly:
-          title: "Top Weekly"
+          title: "Weekly"
         daily:
-          title: "Top Daily"
-        all: "All Time"
+          title: "Daily"
+        all_time: "All Time"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
