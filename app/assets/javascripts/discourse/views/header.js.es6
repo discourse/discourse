@@ -125,6 +125,7 @@ export default Discourse.View.extend({
     $(document).unbind('touchmove.discourse-dock');
     this.$('a.unread-private-messages, a.unread-notifications, a[data-notifications]').off('click.notifications');
     this.$('a[data-dropdown]').off('click.dropdown');
+    $('body').off('keydown.header');
   }.on('willDestroyElement'),
 
   _setup: function() {
