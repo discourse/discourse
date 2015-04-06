@@ -43,15 +43,19 @@ export default ObjectController.extend(ModalFunctionality, {
 
   // Show Groups? (add invited user to private group)
   showGroups: function() {
-    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic'));
+    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso;
   }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'invitingToTopic'),
 
   // Instructional text for the modal.
   inviteInstructions: function() {
-    if (this.get('isMessage')) {
+    if (Discourse.SiteSettings.enable_sso) {
+      // inviting existing user when SSO enabled
+      return I18n.t('topic.invite_reply.sso_enabled');
+    } else if (this.get('isMessage')) {
+      // inviting to a message
       return I18n.t('topic.invite_private.email_or_username');
     } else if (this.get('invitingToTopic')) {
-      // display instructions based on provided entity
+      // when inviting to topic, display instructions based on provided entity
       if (this.blank('emailOrUsername')) {
         return I18n.t('topic.invite_reply.to_topic_blank');
       } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
@@ -60,6 +64,7 @@ export default ObjectController.extend(ModalFunctionality, {
         return I18n.t('topic.invite_reply.to_topic_username');
       }
     } else {
+      // inviting to forum
       return I18n.t('topic.invite_reply.to_forum');
     }
   }.property('isMessage', 'invitingToTopic', 'emailOrUsername'),
@@ -76,14 +81,24 @@ export default ObjectController.extend(ModalFunctionality, {
   },
 
   successMessage: function() {
-    return this.get('isMessage') ?
-            I18n.t('topic.invite_private.success') :
-            I18n.t('topic.invite_reply.success', { emailOrUsername: this.get('emailOrUsername') });
+    if (this.get('isMessage')) {
+      return I18n.t('topic.invite_private.success');
+    } else if ( Discourse.Utilities.emailValid(this.get('emailOrUsername')) ) {
+      return I18n.t('topic.invite_reply.success_email', { emailOrUsername: this.get('emailOrUsername') });
+    } else {
+      return I18n.t('topic.invite_reply.success_username');
+    }
   }.property('isMessage', 'emailOrUsername'),
 
   errorMessage: function() {
     return this.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error');
   }.property('isMessage'),
+
+  placeholderKey: function() {
+    return Discourse.SiteSettings.enable_sso ?
+            'topic.invite_reply.username_placeholder' :
+            'topic.invite_private.email_or_username_placeholder';
+  }.property(),
 
   // Reset the modal to allow a new user to be invited.
   reset() {

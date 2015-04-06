@@ -10,7 +10,7 @@
   {{else}}
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
-      {{user-selector single="true" allowAny=true usernames=emailOrUsername includeGroups="true" placeholderKey="topic.invite_private.email_or_username_placeholder"}}
+      {{user-selector single="true" allowAny=true usernames=emailOrUsername includeGroups="true" placeholderKey=placeholderKey}}
     {{else}}
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
     {{/if}}
