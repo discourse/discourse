@@ -1,4 +1,5 @@
-integration("User");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("User");
 
 function hasStream() {
   andThen(() => {

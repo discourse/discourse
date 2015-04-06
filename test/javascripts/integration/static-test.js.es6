@@ -1,4 +1,5 @@
-integration("Static");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Static");
 
 test("Static Pages", () => {
   visit("/faq");

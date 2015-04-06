@@ -1,4 +1,5 @@
-integration("User Directory");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("User Directory");
 
 test("Visit Page", function() {
   visit("/users");

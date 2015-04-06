@@ -1,4 +1,5 @@
-integration("Unknown");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Unknown");
 
 test("Unknown URL", () => {
   expect(1);

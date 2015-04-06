@@ -1,4 +1,6 @@
-integration("Login Required", {
+import { acceptance } from "helpers/qunit-helpers";
+
+acceptance("Login Required", {
   settings: {
     login_required: true
   }

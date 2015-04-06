@@ -1,6 +1,6 @@
-import { integration } from "helpers/qunit-helpers";
+import { acceptance } from "helpers/qunit-helpers";
 
-integration("Create Account - User Fields", {
+acceptance("Create Account - User Fields", {
   site: {
     user_fields: [{"id":34,"name":"I've read the terms of service","field_type":"confirm","required":true},
                   {"id":35,"name":"What is your pet's name?","field_type":"text","required":true},

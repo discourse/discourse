@@ -1,4 +1,5 @@
-integration("Topic Discovery");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Topic Discovery");
 
 test("Visit Discovery Pages", () => {
   visit("/");

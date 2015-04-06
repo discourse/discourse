@@ -1,4 +1,5 @@
-integration("Signing In");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Signing In");
 
 test("sign in", () => {
   visit("/");
