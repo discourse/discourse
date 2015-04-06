@@ -114,6 +114,7 @@ class Guardian
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
   alias :can_send_activation_email? :can_moderate?
+  alias :can_close? :can_moderate?
 
   def can_grant_badges?(_user)
     SiteSetting.enable_badges && is_staff?
