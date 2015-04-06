@@ -43,6 +43,7 @@ class PostMover
     update_user_actions
     set_last_post_user_id(destination_topic)
 
+    destination_topic.reload
     destination_topic
   end
 

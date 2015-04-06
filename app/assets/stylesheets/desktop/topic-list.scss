@@ -108,7 +108,16 @@
       }
     }
   }
-  
+
+  .posters a:first-child .avatar.latest:not(.single) {
+     box-shadow: 0 0 3px 1px desaturate(scale-color($tertiary, $lightness: 65%), 35%);
+     border: 2px solid desaturate(scale-color($tertiary, $lightness: 50%), 40%);
+     position: relative;
+     top: -2px;
+     left: -2px;
+  }
+
+
   .sortable {
     cursor: pointer;
     &:hover {
