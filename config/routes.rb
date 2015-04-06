@@ -224,9 +224,9 @@ Discourse::Application.routes.draw do
   get "login" => "static#show", id: "login"
   get "password-reset" => "static#show", id: "password_reset"
   get "faq" => "static#show", id: "faq"
-  get "guidelines" => "static#show", id: "guidelines"
-  get "tos" => "static#show", id: "tos"
-  get "privacy" => "static#show", id: "privacy"
+  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
+  get "tos" => "static#show", id: "tos", as: 'tos'
+  get "privacy" => "static#show", id: "privacy", as: 'privacy'
   get "signup" => "list#latest"
 
   post "users/read-faq" => "users#read_faq"
