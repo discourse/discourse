@@ -1,8 +1,7 @@
 require "backup_restore/backup_restore"
 
 module Jobs
-  class CreateBackup < Jobs::Scheduled
-    daily at: 3.hours
+  class CreateDailyBackup < Jobs::Base
     sidekiq_options retry: false
 
     def execute(args)
@@ -11,4 +10,3 @@ module Jobs
     end
   end
 end
-
