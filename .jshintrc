@@ -14,7 +14,6 @@
     "moduleForComponent",
     "Pretender",
     "sandbox",
-    "integration",
     "controllerFor",
     "test",
     "ok",

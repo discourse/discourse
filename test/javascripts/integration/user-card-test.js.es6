@@ -1,4 +1,5 @@
-integration("User Card");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("User Card");
 
 test("card", () => {
   visit('/');

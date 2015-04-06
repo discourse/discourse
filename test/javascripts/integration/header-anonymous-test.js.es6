@@ -1,4 +1,5 @@
-integration("Header (Anonymous)");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Header (Anonymous)");
 
 test("header", () => {
   visit("/");

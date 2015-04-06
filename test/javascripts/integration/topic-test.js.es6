@@ -1,4 +1,5 @@
-integration("View Topic");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("View Topic");
 
 test("Enter a Topic", () => {
   visit("/t/internationalization-localization/280");

@@ -1,4 +1,6 @@
-integration("Badges");
+import { acceptance } from "helpers/qunit-helpers";
+
+acceptance("Badges");
 
 test("Visit Badge Pages", () => {
   visit("/badges");

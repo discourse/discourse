@@ -1,4 +1,5 @@
-integration("Groups");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Groups");
 
 test("Browsing Groups", () => {
   visit("/groups/discourse");

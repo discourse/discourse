@@ -1,4 +1,5 @@
-integration("About");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("About");
 
 test("viewing", () => {
   visit("/about");

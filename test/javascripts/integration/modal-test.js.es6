@@ -1,4 +1,5 @@
-integration("Modal");
+import { acceptance } from "helpers/qunit-helpers";
+acceptance("Modal");
 
 test("modal", () => {
   visit('/');
