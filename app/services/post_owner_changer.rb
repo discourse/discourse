@@ -19,6 +19,7 @@ class PostOwnerChanger
 
       @topic.update_statistics
       @new_owner.user_stat.update(first_post_created_at: @new_owner.posts(true).order('created_at ASC').first.try(:created_at))
+      @topic.save!
     end
   end
 end
