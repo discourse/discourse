@@ -3,6 +3,7 @@ import DiscourseController from 'discourse/controllers/controller';
 
 export default DiscourseController.extend(ModalFunctionality, {
   uploadedAvatarTemplate: null,
+  saveDisabled: Em.computed.alias("uploading"),
   hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'custom_avatar_upload_id'),
 
   selectedUploadId: function() {
