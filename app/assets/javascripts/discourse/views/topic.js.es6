@@ -130,12 +130,12 @@ var TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Disco
     var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
         category = this.get('controller.content.category');
 
-    if(category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
+    if (Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
       category = null;
     }
 
     if (category) {
-      opts.catLink = categoryBadgeHTML(category);
+      opts.catLink = categoryBadgeHTML(category, {allowUncategorized: Discourse.SiteSettings.allow_uncategorized_topics && !Discourse.SiteSettings.suppress_uncategorized_badge});
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }
