@@ -1550,13 +1550,13 @@
 
         // Don't show the fallback text if more than one line is selected,
         // it's probably a break between paragraphs.
-        if(lines.length > 1) {
-          fallbackText = ""
+        if (lines.length > 1) {
+            fallbackText = "";
         }
 
         for(var i=0; i<lines.length; i++) {
             // Split before, selection and after up.
-            var lineMatch = lines[i].match(/^(\**)(.*?)(\**)$/);
+            var lineMatch = lines[i].match(/^(\s*\**)(.*?)(\**\s*)$/);
 
             var newChunk = new Chunks();
             newChunk.before = lineMatch[1];
@@ -1564,8 +1564,16 @@
             newChunk.after = lineMatch[3];
 
             this.doSurroundLine(newChunk, postProcessing, nStars, fallbackText);
-            lines[i] = newChunk.before + newChunk.selection + newChunk.after;
+
+            if (lines.length > 1) {
+                lines[i] = newChunk.before + newChunk.selection + newChunk.after;
+            } else {
+                realChunk.startTag = newChunk.before;
+                realChunk.endTag = newChunk.after;
+                lines[i] = newChunk.selection;
+            }
         }
+
         realChunk.selection = lines.join("\n");
     };
 
@@ -1591,11 +1599,11 @@
             }
 
             // Only operate if it's not a blank line
-            if(chunk.selection) {
-              // Add the true markup.
-              var markup = nStars === 1 ? "*" : "**";
-              chunk.before = chunk.before + markup;
-              chunk.after = markup + chunk.after;
+            if (chunk.selection) {
+                // Add the true markup.
+                var markup = nStars === 1 ? "*" : "**";
+                chunk.before = chunk.before + markup;
+                chunk.after = markup + chunk.after;
             }
         }
     };
