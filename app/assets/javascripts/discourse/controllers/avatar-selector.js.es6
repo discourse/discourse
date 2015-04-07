@@ -15,7 +15,7 @@ export default DiscourseController.extend(ModalFunctionality, {
   }.property('selected', 'system_avatar_upload_id', 'gravatar_avatar_upload_id', 'custom_avatar_upload_id'),
 
   allowImageUpload: function() {
-    return Discourse.Utilities.allowsImages()
+    return Discourse.Utilities.allowsImages();
   }.property(),
 
   actions: {
