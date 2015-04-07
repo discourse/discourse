@@ -16,14 +16,14 @@
 # http://yamllint.com/
 fa_IR:
   dates:
-    short_date_no_year: "روز ماه"
-    short_date: "روز ماه ،‌سال"
-    long_date: "ماه روز، سال ساعت:دقیقه"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
   title: "گفتمان"
-  topics: "جُستارها"
-  posts: "دیدگاه‌ها"
+  topics: "موضوعات"
+  posts: "نوشته ها"
   loading: "بارگذاری..."
-  powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://www.discours.ir"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
+  powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
   via: "%{username} از %{site_name}"
   is_reserved: "محفوظ است"
@@ -73,7 +73,7 @@ fa_IR:
       other: "%{count} پاسخ دیگر"
     loading: "بارگزاری مبحث ..."
     permalink: " پیوند یکتا"
-    in_reply_to: "%{username}"
+    in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} پاسخ"
   too_many_mentions:
@@ -111,6 +111,7 @@ fa_IR:
   num_posts: "ارسال ها:"
   num_participants: "اشتراک در :"
   read_full_topic: "مشاهده متن کامل"
+  private_message_abbrev: "پیام"
   rss_description:
     latest: "آخرین ارسال ها"
     hot: "جستارهای داغ"
@@ -263,6 +264,7 @@ fa_IR:
       title: 'نامناسب'
       long_form: 'این مورد نامناسب دانسته شد.'
     notify_user:
+      title: 'پیام @{{username}}'
       email_title: 'نوشته ی شما در "{title}%"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -314,13 +316,17 @@ fa_IR:
       xaxis: "روز"
       yaxis: "شمار پسندهای تازه"
     flags:
+      title: "پرچم ها"
       xaxis: "روز"
+      yaxis: "تعداد پرچم ها"
     bookmarks:
       title: "نشانک ها"
       xaxis: "روز"
+      yaxis: "تعداد نشانک های جدید"
     starred:
       title: "ستاره دار شد"
       xaxis: "روز"
+      yaxis: "تعداد موضوعات تازه آغاز شده"
     users_by_trust_level:
       xaxis: "سطح اعتماد"
       yaxis: "تعداد کاربران"
@@ -331,29 +337,36 @@ fa_IR:
     user_to_user_private_messages:
       title: "کاربر به کاربر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     system_private_messages:
       title: "سیستم"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     moderator_warning_private_messages:
       title: "هشدل مدیر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     notify_moderators_private_messages:
       title: "اطلاعیه مدیران"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     notify_user_private_messages:
       title: "اطلاعیه کاربر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     top_referrers:
       title: "رفتن به بالا"
       xaxis: "کاربر"
       num_clicks: "کلیک ها"
       num_topics: "موضوعات"
     top_traffic_sources:
+      title: "بالاترین ترافیک منابع"
       xaxis: "دومین"
       num_clicks: "کلیک ها"
       num_topics: "موضوعات"
       num_users: "کاربران"
     top_referred_topics:
+      title: "بالاترین موضوعات مورد مراجعه"
       xaxis: "موضوعات"
       num_clicks: "کلیک ها"
     page_view_anon_reqs:
@@ -392,8 +405,14 @@ fa_IR:
     head:
       title: "HTML head"
   site_settings:
+    default_locale: "زبان پیشفرض برای دیسکورس  (ISO 639-1 کد)"
+    allow_user_locale: "اجازه برای کاربران تا بتوانند زبان مورد نظر خود را انتخاب نماییند"
+    title: "نام این وب سایت،استفاده شده در عنوان تگ"
+    show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     allow_moderators_to_create_categories: "اجازه دادن به مدیران برای ساخت دسته‌بندی‌های جدید"
+    enable_badges: "فعال سازی سیستم مدال دهی"
     min_password_length: "حداقل طول رمز عبور"
+    suggested_topics: "نعداد موضوعات پیشنهادی در پایین هر موضوع"
     allow_uploaded_avatars: "اجازه دادن به کاربران برای بارگذاری آواتارهای سفارشی"
     enable_names: "نام کامل کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     enable_emoji: "فعالسازی ایموجی"
@@ -415,7 +434,20 @@ fa_IR:
       name_already_exists: "متأسفیم، در حال حاضر نام '{name}%' توسط ایموجی دیگری استفاده می‌شود."
       error_while_storing_emoji: "متأسفیم، در هنگام ذخیره‌سازی ایموجی خطایی رخ داده است."
   topic_statuses:
+    closed_enabled: "این موضوع در حال حاضر بسته شده است. پاسخ جدید دیگر مجاز نیست."
     closed_disabled: "موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
+    autoclosed_enabled_days:
+      other: "این موضوع به صورت خود کار بعد از %{count} روز بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_hours:
+      other: "این موضوع به صورت خود کار بعد از %{count} ساعت بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_minutes:
+      other: "این موضوع به صورت خود کار بعد از %{count} دقیقه بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_days:
+      other: "این موضوع به صورت خود کار بعد از %{count} روز بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_hours:
+      other: "این موضوع به صورت خود کار بعد از %{count} ساعت بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
+    autoclosed_enabled_lastpost_minutes:
+      other: "این موضوع به صورت خود کار بعد از %{count} دقیقه بعد از آخرین پاسخ بسته شد. پاسخ جدید دیگر مجاز نیست."
     autoclosed_disabled: "این موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
     autoclosed_disabled_lastpost: "این موضوع اکنون باز است. پاسخ‌های جدید اجازه‌ی ثبت دارند."
   login:
@@ -468,7 +500,10 @@ fa_IR:
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] بروزرسانی در دسترس"
   flags_reminder:
+    post_number: "نوشته"
     subject_template:
       other: "%{count} نشانه ها منتظر استفاده"
   system_messages:
@@ -493,18 +528,33 @@ fa_IR:
 
         ---
         {respond_instructions}%
+    user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+    user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+    user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
+      subject_template: "[%{site_name}] خلاصه"
       new_activity: "فعالیت جدید در موضوعات و نوشته‌های شما:"
       top_topics: "نوشته‌های محبوب"
       other_new_topics: "موضوعات محبوب"
       click_here: "اینجا کلیک کنید"
+      from: "%{site_name} خلاصه"
       read_more: "بیش‌تر بخوانید"
+      more_topics_category: "موضوعات جدید بیشتر"
       posts:
         other: "%{count} نوشته ها"
   page_not_found:
     popular_topics: "محبوب"
+    recent_topics: "اخیر"
     see_more: "بیشتر"
+    search_title: "جستجو در این سایت"
     search_google: "گوگل"
+  terms_of_service:
+    title: "شرایط استفاده از خدمات"
   deleted: 'حذف شد'
   upload:
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
@@ -844,7 +894,7 @@ fa_IR:
       This document is CC-BY-SA. It was last updated May 31, 2013.
   static:
     search_help: |
-      <h2>Tips</h2>
+      <h2>راهنمایی</h2>
       <p>
       <ul>
         <li>Title matches are prioritized, so when in doubt, search for titles</li>
@@ -852,7 +902,7 @@ fa_IR:
         <li>Whenever possible, scope your search to a particular category, user, or topic</li>
       </ul>
       </p>
-      <h2>Options</h2>
+      <h2>گزینه ها</h2>
       <p>
         <table>
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>
@@ -865,3 +915,74 @@ fa_IR:
       <p>
         <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
       </p>
+  badges:
+    long_descriptions:
+      autobiographer: |
+        اه اه اه
+        اه اه اه
+      first_like: |
+        اه اه اه
+        اه اه اه
+      first_link: |
+        اه اه اه
+        اه اه اه
+      first_quote: |
+        اه اه اه
+        اه اه اه
+      first_share: |
+        اه اه اه
+        اه اه اه
+      read_guidelines: |
+        اه اه اه
+        اه اه اه
+      reader: |
+        اه اه اه
+        اه اه اه
+      editor: |
+        اه اه اه
+        اه اه اه
+      nice_share: |
+        اه اه اه
+        اه اه اه
+      welcome: |
+        اه اه اه
+        اه اه اه
+      anniversary: |
+        اه اه اه
+        اه اه اه
+      good_share: |
+        اه اه اه
+        اه اه اه
+      great_share: |
+        اه اه اه
+        اه اه اه
+      nice_post: |
+        اه اه اه
+        اه اه اه
+      nice_topic: |
+        اه اه اه
+        اه اه اه
+      good_post: |
+        اه اه اه
+        اه اه اه
+      good_topic: |
+        اه اه اه
+        اه اه اه
+      great_post: |
+        اه اه اه
+        اه اه اه
+      great_topic: |
+        اه اه اه
+        اه اه اه
+      basic: |
+        اه اه اه
+        اه اه اه
+      member: |
+        اه اه اه
+        اه اه اه
+      regular: |
+        اه اه اه
+        اه اه اه
+      leader: |
+        اه اه اه
+        اه اه اه
