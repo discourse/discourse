@@ -15,6 +15,15 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
+  def ga_universal_json
+    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
+    result = {cookieDomain: cookie_domain}
+    if current_user.present?
+      result[:userId] = current_user.id
+    end
+    result.to_json.html_safe
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != '/'.freeze && current_user
       sk = "shared_session_key"
