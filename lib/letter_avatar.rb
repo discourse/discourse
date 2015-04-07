@@ -1,7 +1,7 @@
 class LetterAvatar
 
   # BUMP UP if avatar algorithm changes
-  VERSION = 2
+  VERSION = 3
 
   # Largest avatar generated, one day when pixel ratio hit 3
   # we will need to change this
@@ -24,7 +24,7 @@ class LetterAvatar
     end
 
     def version
-      "2_#{image_magick_version}"
+      "#{VERSION}_#{image_magick_version}"
     end
 
     def cache_path
@@ -68,15 +68,15 @@ class LetterAvatar
       stroke = darken(color, 0.8)
 
       instructions = %W{
-        -size 240x240
+        -size #{FULLSIZE}x#{FULLSIZE}
         xc:#{to_rgb(color)}
-        -pointsize 200
+        -pointsize 180
         -fill white
         -gravity Center
         -font 'Helvetica'
         -stroke #{to_rgb(stroke)}
         -strokewidth 2
-        -annotate -5+25 '#{letter}'
+        -annotate -0+20 '#{letter}'
         '#{filename}'
       }
 
