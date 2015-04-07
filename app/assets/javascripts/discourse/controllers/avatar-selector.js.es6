@@ -7,12 +7,16 @@ export default DiscourseController.extend(ModalFunctionality, {
   hasUploadedAvatar: Em.computed.or('uploadedAvatarTemplate', 'custom_avatar_upload_id'),
 
   selectedUploadId: function() {
-      switch (this.get("selected")) {
-        case "system": return this.get("system_avatar_upload_id");
-        case "gravatar": return this.get("gravatar_avatar_upload_id");
-        default: return this.get("custom_avatar_upload_id");
-      }
+    switch (this.get("selected")) {
+      case "system": return this.get("system_avatar_upload_id");
+      case "gravatar": return this.get("gravatar_avatar_upload_id");
+      default: return this.get("custom_avatar_upload_id");
+    }
   }.property('selected', 'system_avatar_upload_id', 'gravatar_avatar_upload_id', 'custom_avatar_upload_id'),
+
+  allowImageUpload: function() {
+    return Discourse.Utilities.allowsImages()
+  }.property(),
 
   actions: {
     useUploadedAvatar() { this.set("selected", "uploaded"); },
