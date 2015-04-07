@@ -1,5 +1,5 @@
-{{~#if view.renderDiv ~}}
-<div class='topic-statuses'>
+{{~#if view.addWrapper ~}}
+<span class='topic-statuses'>
 {{/if ~}}
 {{~#each status in view.statuses ~}}
 {{~#if status.href ~}}
@@ -8,6 +8,6 @@
 <{{status.openTag}} title='{{status.title}}' class='topic-status'><i class='fa fa-{{status.icon}}'></i></{{status.closeTag}}>
 {{~/if ~}}
 {{~/each}}
-{{~#if view.renderDiv ~}}
-</div>
+{{~#if view.addWrapper ~}}
+</span>
 {{/if ~}}
