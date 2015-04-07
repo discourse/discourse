@@ -23,8 +23,12 @@ class LetterAvatar
       end
     end
 
+    def version
+      "2_#{image_magick_version}"
+    end
+
     def cache_path
-      "public/uploads/letter_avatars/#{VERSION}"
+      "public/uploads/letter_avatars/#{version}"
     end
 
     def generate(username, size, opts = nil)
@@ -92,6 +96,27 @@ class LetterAvatar
     def to_rgb(color)
       r,g,b = color
       "'rgb(#{r},#{g},#{b})'"
+    end
+
+    def image_magick_version
+      @image_magick_version ||=
+        begin
+          Thread.new do
+            sleep 2
+            cleanup_old
+          end
+          Digest::MD5.hexdigest(`convert --version` << `convert -list font`)
+        end
+    end
+
+    def cleanup_old
+      skip = File.basename(cache_path)
+      parent_path = File.dirname(cache_path)
+      Dir.entries(parent_path).each do |path|
+        unless ['.','..'].include?(path) || path == skip
+          FileUtils.rm_rf(parent_path + "/" + path)
+        end
+      end
     end
   end
 
