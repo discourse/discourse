@@ -348,7 +348,7 @@ export default DiscourseController.extend({
 
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
-    if (Discourse.SiteSettings.show_subcategory_list) {
+    if (this.siteSettings.show_subcategory_list && opts.draftKey !== 'reply_as_new_topic') {
       this.set('scopedCategoryId', opts.categoryId);
     }
 
