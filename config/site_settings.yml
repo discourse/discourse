@@ -309,6 +309,12 @@ users:
   enable_user_directory:
     client: true
     default: true
+  allow_anonymous_posting:
+    default: false
+    client: true
+  anonymous_posting_min_trust_level:
+    default: 1
+    client: true
 
 posting:
   min_post_length:

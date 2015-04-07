@@ -229,6 +229,7 @@ Discourse::Application.routes.draw do
   get "privacy" => "static#show", id: "privacy", as: 'privacy'
   get "signup" => "list#latest"
 
+  post "users/toggle-anon" => "users#toggle_anon"
   post "users/read-faq" => "users#read_faq"
   get "users/search/users" => "users#search_users"
   get "users/account-created/" => "users#account_created"

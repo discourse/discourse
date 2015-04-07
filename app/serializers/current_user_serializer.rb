@@ -25,7 +25,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :disable_jump_reply,
              :custom_fields,
              :muted_category_ids,
-             :dismissed_banner_key
+             :dismissed_banner_key,
+             :is_anonymous
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -100,6 +101,12 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def dismissed_banner_key
     object.user_profile.dismissed_banner_key
+  end
+
+  def is_anonymous
+    SiteSetting.allow_anonymous_posting &&
+      object.trust_level >= 1 &&
+      object.custom_fields["master_id"].to_i > 0
   end
 
 end
