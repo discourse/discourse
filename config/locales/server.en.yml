@@ -44,6 +44,7 @@ en:
 
   purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  anonymous: "Anonymous"
 
   errors: &errors
     format: ! '%{attribute} %{message}'
@@ -1088,6 +1089,8 @@ en:
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
     enable_user_directory: "Provide a directory of users for browsing"
+    allow_anonymous_posting: "Allow users to switch to anonymous mode"
+    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 

@@ -309,6 +309,25 @@ describe UsersController do
     end
   end
 
+  describe '#toggle_anon' do
+    it 'allows you to toggle anon if enabled' do
+      SiteSetting.allow_anonymous_posting = true
+
+      user = log_in
+      user.trust_level = 1
+      user.save
+
+      post :toggle_anon
+      expect(response).to be_success
+      expect(session[:current_user_id]).to eq(AnonymousShadowCreator.get(user).id)
+
+      post :toggle_anon
+      expect(response).to be_success
+      expect(session[:current_user_id]).to eq(user.id)
+
+    end
+  end
+
   describe '#create' do
 
     before do
