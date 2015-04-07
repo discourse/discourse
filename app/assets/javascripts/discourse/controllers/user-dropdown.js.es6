@@ -3,7 +3,8 @@ export default Ember.ArrayController.extend({
 
   allowAnon: function(){
     return Discourse.SiteSettings.allow_anonymous_posting &&
-      Discourse.User.currentProp("trust_level") >= Discourse.SiteSettings.anonymous_posting_min_trust_level;
+      (Discourse.User.currentProp("trust_level") >= Discourse.SiteSettings.anonymous_posting_min_trust_level ||
+       this.get("isAnon"));
   }.property(),
 
   isAnon: function(){
