@@ -13,7 +13,7 @@
 # Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
 # Persian languages by http://discours.ir
 # To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/ 
+# http://yamllint.com/
 fa_IR:
   js:
     number:
