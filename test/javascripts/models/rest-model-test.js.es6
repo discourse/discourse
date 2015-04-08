@@ -1,6 +1,21 @@
 module('rest-model');
 
 import createStore from 'helpers/create-store';
+import RestModel from 'discourse/models/rest';
+
+test('munging', function() {
+  const store = createStore();
+  const Grape = RestModel.extend();
+  Grape.reopenClass({
+    munge: function(json) {
+      json.inverse = 1 - json.percent;
+      return json;
+    }
+  });
+
+  var g = Grape.create({ store, percent: 0.4 });
+  equal(g.get('inverse'), 0.6, 'it runs `munge` on `create`');
+});
 
 test('update', function() {
   const store = createStore();

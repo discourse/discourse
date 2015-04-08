@@ -5,7 +5,6 @@ let isTransitioning = false,
 const SCROLL_DELAY = 500;
 
 import ShowFooter from "discourse/mixins/show-footer";
-import Topic from 'discourse/models/topic';
 import showModal from 'discourse/lib/show-modal';
 
 const TopicRoute = Discourse.Route.extend(ShowFooter, {
@@ -153,7 +152,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
   model(params, transition) {
     const queryParams = transition.queryParams;
 
-    const topic = this.modelFor('topic');
+    let topic = this.modelFor('topic');
     if (topic && (topic.get('id') === parseInt(params.id, 10))) {
       this.setupParams(topic, queryParams);
       // If we have the existing model, refresh it
@@ -161,7 +160,8 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
         return topic;
       });
     } else {
-      return this.setupParams(Topic.create(_.omit(params, 'username_filters', 'filter')), queryParams);
+      topic = this.store.createRecord('topic', _.omit(params, 'username_filters', 'filter'));
+      return this.setupParams(topic, queryParams);
     }
   },
 

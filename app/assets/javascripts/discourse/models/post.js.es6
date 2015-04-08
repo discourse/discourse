@@ -394,32 +394,29 @@ const Post = RestModel.extend({
         throw e;
       });
   }
+
 });
 
 Post.reopenClass({
 
-  createActionSummary(result) {
-    if (result.actions_summary) {
+  munge(json) {
+    if (json.actions_summary) {
       const lookup = Em.Object.create();
       // this area should be optimized, it is creating way too many objects per post
-      result.actions_summary = result.actions_summary.map(function(a) {
-        a.post = result;
+      json.actions_summary = json.actions_summary.map(function(a) {
+        a.post = json;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         const actionSummary = Discourse.ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
         return actionSummary;
       });
-      result.set('actionByName', lookup);
+      json.actionByName = lookup;
     }
-  },
 
-  create(obj) {
-    const result = this._super.apply(this, arguments);
-    this.createActionSummary(result);
-    if (obj && obj.reply_to_user) {
-      result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));
+    if (json && json.reply_to_user) {
+      json.reply_to_user = Discourse.User.create(json.reply_to_user);
     }
-    return result;
+    return json;
   },
 
   updateBookmark(postId, bookmarked) {

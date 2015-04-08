@@ -413,7 +413,7 @@ export default DiscourseController.extend({
         composerModel.set('topic', opts.topic);
       }
     } else {
-      composerModel = composerModel || Discourse.Composer.create({ store: this.store });
+      composerModel = composerModel || this.store.createRecord('composer');
       composerModel.open(opts);
     }
 

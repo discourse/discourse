@@ -9,6 +9,28 @@ test('createRecord', function() {
   equal(widget.get('id'), 111);
 });
 
+test('createRecord without an `id`', function() {
+  const store = createStore();
+  const widget = store.createRecord('widget', {name: 'hello'});
+
+  ok(!widget.get('id'), 'there is no id');
+});
+
+test('createRecord without attributes', function() {
+  const store = createStore();
+  const widget = store.createRecord('widget');
+
+  ok(!widget.get('id'), 'there is no id');
+});
+
+test('createRecord with a record as attributes returns that record from the map', function() {
+  const store = createStore();
+  const widget = store.createRecord('widget', {id: 33});
+  const secondWidget = store.createRecord('widget', {id: 33});
+
+  equal(widget, secondWidget, 'they should be the same');
+});
+
 test('find', function() {
   const store = createStore();
   store.find('widget', 123).then(function(w) {
