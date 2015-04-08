@@ -725,6 +725,12 @@ class User < ActiveRecord::Base
     UserProfile.create(user_id: id)
   end
 
+  def anonymous?
+    SiteSetting.allow_anonymous_posting &&
+      trust_level >= 1 &&
+      custom_fields["master_id"].to_i > 0
+  end
+
   protected
 
   def badge_grant

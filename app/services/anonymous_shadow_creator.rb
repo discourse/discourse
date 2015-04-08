@@ -16,7 +16,14 @@ class AnonymousShadowCreator
        user.trust_level < SiteSetting.anonymous_posting_min_trust_level
 
     if (shadow_id = user.custom_fields["shadow_id"].to_i) > 0
-      User.find_by(id: shadow_id) || create_shadow(user)
+      shadow = User.find_by(id: shadow_id)
+
+      if shadow && shadow.post_count > 0 &&
+          shadow.last_posted_at < SiteSetting.anonymous_account_duration_minutes.minutes.ago
+        shadow = nil
+      end
+
+      shadow || create_shadow(user)
     else
       create_shadow(user)
     end
@@ -34,12 +41,16 @@ class AnonymousShadowCreator
         trust_level_locked: true,
         email_private_messages: false,
         email_digests: false,
-        created_at: user.created_at
+        created_at: 1.day.ago # bypass new user restrictions
       )
 
       shadow.email_tokens.update_all  confirmed: true
       shadow.activate
 
+
+      # can not hold dupes
+      UserCustomField.where(user_id: user.id,
+                            name: "shadow_id").destroy_all
 
       UserCustomField.create!(user_id: user.id,
                               name: "shadow_id",
