@@ -1,15 +1,18 @@
 
 let primaryTab;
 let liveEnabled;
-let seenNotificationDates = {};
 let notificationTagName;
 let mbClientId;
+let lastAction;
 
 const focusTrackerKey = "focus-tracker";
+const seenDataKey = "seen-notifications";
+const recentUpdateThreshold = 1000 * 60 * 2; // 2 minutes
+const idleThresholdTime = 1000 * 10; // 10 seconds
 
 function init(container) {
   liveEnabled = false;
-  requestPermission().then(function () {
+  requestPermission().then(function() {
     try {
       localStorage.getItem(focusTrackerKey);
     } catch (e) {
@@ -19,10 +22,14 @@ function init(container) {
     }
     liveEnabled = true;
     Em.Logger.info('Discourse desktop notifications are enabled.');
-
-    init2(container);
-
-  }).catch(function () {
+  }).then(function() {
+    try {
+      init2(container);
+    } catch (e) {
+      console.error(e);
+    }
+  }).catch(function(e) {
+    debugger;
     liveEnabled = false;
     Em.Logger.info('Discourse desktop notifications are disabled - permission denied.');
   });
@@ -30,17 +37,28 @@ function init(container) {
 
 function init2(container) {
   // Load up the current state of the notifications
-  seenNotificationDates = {};
-  Discourse.ajax("/notifications.json?silent=true").then(function(result) {
-    updateSeenNotificationDatesFrom(result);
-  });
+  const seenData = JSON.parse(localStorage.getItem(seenDataKey));
+  let markAllSeen = true;
+  if (seenData) {
+    const lastUpdatedAt = new Date(seenData.updated_at);
+    if (lastUpdatedAt.getTime() + recentUpdateThreshold > new Date().getTime()) {
+      // The following conditions are met:
+      //  - This is a new Discourse tab
+      //  - The seen notification data was updated in the last 2 minutes
+      // Therefore, there is no need to reset the data.
+      markAllSeen = false;
+    }
+  }
+  if (markAllSeen) {
+    Discourse.ajax("/notifications.json?silent=true").then(function(result) {
+      updateSeenNotificationDatesFrom(result);
+    });
+  }
 
   notificationTagName = "discourse-notification-popup-" + Discourse.SiteSettings.title;
 
   const messageBus = container.lookup('message-bus:main');
   mbClientId = messageBus.clientId;
-
-  console.info("My client ID is", mbClientId);
 
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
@@ -50,12 +68,10 @@ function init2(container) {
     }
     if (primaryTab) {
       primaryTab = false;
-      console.debug("Releasing focus to", e.oldValue);
     }
   });
   window.addEventListener("focus", function() {
     if (!primaryTab) {
-      console.debug("Grabbing focus from", localStorage.getItem(focusTrackerKey));
       primaryTab = true;
       localStorage.setItem(focusTrackerKey, mbClientId);
     }
@@ -66,8 +82,18 @@ function init2(container) {
   } else {
     primaryTab = true;
     localStorage.setItem(focusTrackerKey, mbClientId);
-    console.debug("Grabbing focus");
   }
+
+  document.addEventListener("scroll", resetIdle);
+  window.addEventListener("mouseover", resetIdle);
+  Discourse.PageTracker.on("change", resetIdle);
+}
+
+function resetIdle() {
+  lastAction = Date.now();
+}
+function isIdle() {
+  return lastAction + idleThresholdTime < Date.now();
 }
 
 // Call-in point from message bus
@@ -86,10 +112,15 @@ function onNotification(currentUser) {
       const unreadCount = unread.length;
       const unseenCount = unseen.length;
 
+
+      // If all notifications are seen, don't display
       if (unreadCount === 0 || unseenCount === 0) {
         return;
       }
-
+      // If active in last 10 seconds, don't display
+      if (!isIdle()) {
+        return;
+      }
 
       let bodyParts = [];
 
@@ -132,8 +163,32 @@ function onNotification(currentUser) {
   }
 }
 
-  // Utility function
-  // Wraps Notification.requestPermission in a Promise
+const DATA_VERSION = 2;
+function updateSeenNotificationDatesFrom(notifications) {
+  const oldSeenData = JSON.parse(localStorage.getItem(seenDataKey));
+  const oldSeenNotificationDates = (oldSeenData && oldSeenData.v === DATA_VERSION) ? oldSeenData.data : [];
+  let newSeenNotificationDates = [];
+  let previouslyUnseenNotifications = [];
+
+  notifications.forEach(function(notification) {
+    const dateString = new Date(notification.created_at).toUTCString();
+
+    if (oldSeenNotificationDates.indexOf(dateString) === -1) {
+      previouslyUnseenNotifications.push(notification);
+    }
+    newSeenNotificationDates.push(dateString);
+  });
+
+  localStorage.setItem(seenDataKey, JSON.stringify({
+    data: newSeenNotificationDates,
+    updated_at: new Date(),
+    v: DATA_VERSION
+  }));
+  return previouslyUnseenNotifications;
+}
+
+// Utility function
+// Wraps Notification.requestPermission in a Promise
 function requestPermission() {
   return new Ember.RSVP.Promise(function(resolve, reject) {
     Notification.requestPermission(function(status) {
@@ -153,25 +208,6 @@ function i18nKey(notification) {
     key += "_mul";
   }
   return key;
-}
-
-// Utility function
-function updateSeenNotificationDatesFrom(notifications) {
-  const oldSeenNotificationDates = seenNotificationDates;
-  let newSeenNotificationDates = {};
-  let previouslyUnseenNotifications = [];
-
-  notifications.forEach(function(notification) {
-    const dateString = new Date(notification.created_at).toUTCString();
-
-    if (!oldSeenNotificationDates[dateString]) {
-      previouslyUnseenNotifications.push(notification);
-    }
-    newSeenNotificationDates[dateString] = true;
-  });
-
-  seenNotificationDates = newSeenNotificationDates;
-  return previouslyUnseenNotifications;
 }
 
 // Exported for controllers/notification.js.es6
