@@ -131,7 +131,7 @@ export default function() {
       return response(200, { basic_topic: {id: request.params.id,
                                            title: data.title,
                                            fancy_title: data.title,
-                                           slug: request.params.slug } })
+                                           slug: request.params.slug } });
     });
 
     this.post('/posts', function(request) {

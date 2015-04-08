@@ -1,8 +1,9 @@
+import Presence from 'discourse/mixins/presence';
 import searchForTerm from 'discourse/lib/search-for-term';
 
 var _dontSearch = false;
 
-export default Em.Controller.extend(Discourse.Presence, {
+export default Em.Controller.extend(Presence, {
 
   contextType: function(key, value){
     if(arguments.length > 1) {

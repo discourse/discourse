@@ -1,4 +1,6 @@
-export default Ember.Object.extend({
+import Presence from 'discourse/mixins/presence';
+
+export default Ember.Object.extend(Presence, {
   update(attrs) {
     const self = this,
           type = this.get('__type');

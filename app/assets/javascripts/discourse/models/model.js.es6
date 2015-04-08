@@ -1,6 +1,8 @@
-Discourse.Model = Ember.Object.extend(Discourse.Presence);
+import Presence from 'discourse/mixins/presence';
 
-Discourse.Model.reopenClass({
+const Model = Ember.Object.extend(Presence);
+
+Model.reopenClass({
   extractByKey: function(collection, klass) {
     var retval = {};
     if (Ember.isEmpty(collection)) { return retval; }
@@ -11,3 +13,5 @@ Discourse.Model.reopenClass({
     return retval;
   }
 });
+
+export default Model;
