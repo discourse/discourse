@@ -1,4 +1,6 @@
 // Subscribes to user events on the message bus
+import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications'
+
 export default {
   name: 'subscribe-user-notifications',
   after: 'message-bus',
@@ -6,8 +8,7 @@ export default {
     const user = container.lookup('current-user:main'),
           site = container.lookup('site:main'),
           siteSettings = container.lookup('site-settings:main'),
-          bus = container.lookup('message-bus:main'),
-          bgController = container.lookup('controller:background-notifications');
+          bus = container.lookup('message-bus:main');
 
     bus.callbackInterval = siteSettings.anon_polling_interval;
     bus.backgroundCallbackInterval = siteSettings.background_polling_interval;
@@ -36,24 +37,26 @@ export default {
           user.set('post_queue_new_count', data.post_queue_new_count);
         });
       }
-      bus.subscribe("/notification/" + user.get('id'), (function(data) {
+      bus.subscribe("/notification/" + user.get('id'), function(data) {
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
 
-        if(oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
+        if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           user.set('lastNotificationChange', new Date());
-          bgController.notificationsChanged(user);
+          onNotification(user);
         }
-      }), user.notification_channel_position);
+      }, user.notification_channel_position);
 
       bus.subscribe("/categories", function(data){
         _.each(data.categories,function(c){
           site.updateCategory(c);
         });
       });
+
+      initDesktopNotifications(container);
     }
   }
 };

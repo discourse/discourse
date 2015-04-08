@@ -1,4 +1,5 @@
 import ObjectController from 'discourse/controllers/object';
+import { notificationUrl } from 'discourse/lib/desktop-notifications';
 
 var INVITED_TYPE= 8;
 
@@ -10,36 +11,17 @@ const NotificationController = ObjectController.extend({
 
   username: Em.computed.alias("data.display_username"),
 
-  safe(prop) {
-    let val = this.get(prop);
-    if (val) { val = Handlebars.Utils.escapeExpression(val); }
-    return val;
-  },
-
   // This is model logic
   // It belongs in a model
   // TODO deduplicate controllers/background-notifications.js
   url: function() {
-    const badgeId = this.safe("data.badge_id");
-    if (badgeId) {
-      const badgeName = this.safe("data.badge_name");
-      return Discourse.getURL('/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase());
-    }
-
-    const topicId = this.safe('topic_id');
-    if (topicId) {
-      return Discourse.Utilities.postUrl(this.safe("slug"), topicId, this.safe("post_number"));
-    }
-
-    if (this.get('notification_type') === INVITED_TYPE) {
-      return Discourse.getURL('/my/invited');
-    }
+    return notificationUrl(this);
   }.property("data.{badge_id,badge_name}", "slug", "topic_id", "post_number"),
 
   description: function() {
-    const badgeName = this.safe("data.badge_name");
-    if (badgeName) { return badgeName; }
-    return this.blank("data.topic_title") ? "" : this.safe("data.topic_title");
+    const badgeName = this.get("data.badge_name");
+    if (badgeName) { return Handlebars.Utils.escapeExpression(badgeName); }
+    return this.blank("data.topic_title") ? "" : Handlebars.Utils.escapeExpression(this.get("data.topic_title"));
   }.property("data.{badge_name,topic_title}")
 
 });
