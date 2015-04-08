@@ -8,7 +8,7 @@ module PostGuardian
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    if authenticated? && post
+    result = if authenticated? && post && !@user.anonymous?
 
       return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
 
@@ -37,6 +37,8 @@ module PostGuardian
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
     end
+
+    !!result
   end
 
   def can_defer_flags?(post)

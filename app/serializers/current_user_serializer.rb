@@ -104,9 +104,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def is_anonymous
-    SiteSetting.allow_anonymous_posting &&
-      object.trust_level >= 1 &&
-      object.custom_fields["master_id"].to_i > 0
+    object.anonymous?
   end
 
 end

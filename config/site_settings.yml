@@ -315,6 +315,8 @@ users:
   anonymous_posting_min_trust_level:
     default: 1
     client: true
+  anonymous_account_duration_minutes:
+    default: 10080
 
 posting:
   min_post_length:
