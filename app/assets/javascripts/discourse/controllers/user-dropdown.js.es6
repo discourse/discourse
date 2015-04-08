@@ -2,13 +2,13 @@ export default Ember.ArrayController.extend({
   showAdminLinks: Em.computed.alias("currentUser.staff"),
 
   allowAnon: function(){
-    return Discourse.SiteSettings.allow_anonymous_posting &&
-      (Discourse.User.currentProp("trust_level") >= Discourse.SiteSettings.anonymous_posting_min_trust_level ||
+    return this.siteSettings.allow_anonymous_posting &&
+      (this.get("currentUser.trust_level") >= this.siteSettings.anonymous_posting_min_trust_level ||
        this.get("isAnon"));
   }.property(),
 
   isAnon: function(){
-    return Discourse.User.currentProp("is_anonymous");
+    return this.get("currentUser.is_anonymous");
   }.property(),
 
   actions: {
