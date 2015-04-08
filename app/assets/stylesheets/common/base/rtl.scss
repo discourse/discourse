@@ -1,3 +1,17 @@
+
+// This is used to flip the .fa-caret-right icon
+@mixin rotate( $degrees ) {
+  -webkit-transform: rotate(#{$degrees}deg);
+  -moz-transform: rotate(#{$degrees}deg);
+  -ms-transform: rotate(#{$degrees}deg);
+  -o-transform: rotate(#{$degrees}deg);
+  transform: rotate(#{$degrees}deg);
+
+  filter:  progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=-#{sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)});
+  -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(sizingMethod='auto expand', M11=#{cos($degrees)}, M12=-#{sin($degrees)}, M21=#{sin($degrees)}, M22=#{cos($degrees)})";
+  zoom: 1;
+}
+
 .rtl {
 
   #main {
@@ -386,4 +400,924 @@
     float: right;
   }
 
-}
+  // Changes start here
+  #user-card {
+
+    .avatar-placeholder {
+      float: right;
+      padding-left: 10px;
+    }
+
+    .metadata h3 {
+      margin-left: 5px;
+    }
+
+    .bio {
+      clear: right;
+    }
+
+    img.avatar {
+      float: right;
+      margin: -53px 0 0 10px;
+    }
+
+    .usercard-controls {
+      float: left;
+    }
+
+    &.show-badges .names {
+      float: right;
+    }
+
+    &.show-badges .badge-section {
+      float: right;
+    }
+
+    .suspended {
+      clear: right;
+    }
+
+    .card-badge {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+    }
+  } // End of #user-card
+
+  // .topic-avatar
+  .topic-avatar {
+    float: right;
+  }
+
+  .topic-body {
+    padding: 12px 11px 15px 11px;
+  }
+
+  // .embedded-posts
+  .embedded-posts {
+
+    .topic-avatar {
+      padding-right: 15px;
+      padding-left: 0;
+    }
+
+    &.top {
+      margin-left: 0;
+      margin-right: 56px;
+    }
+
+    &.top.topic-body {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .fa-arrow-up,
+    .fa-arrow-down {
+      margin-left: 0;
+      margin-right: 5px;
+    }
+
+    .quote .title, blockquote, .onebox, .onebox-result {
+      border-left: none;
+      border-right: 5px solid darken(scale-color-diff(), 12%);
+    }
+
+  } // End of .embedded-posts
+
+  // #topic-progress
+  #topic-progress-wrapper {
+    left: 50%;
+  }
+
+  #topic-progress-expanded {
+    right: 345px;
+
+    .jump-form {
+      input[type="text"] {
+        float: right;
+      }
+      button.btn {
+        float: left;
+      }
+    }
+  }
+
+  @media all and (max-width: 940px) {
+    #topic-progress,
+    #topic-progress-expanded {
+      right: 295px;
+    }
+  }
+
+  @media all and (max-width: 870px) {
+    #topic-progress,
+    #topic-progress-expanded {
+      right: 210px;
+    }
+  }
+
+  @media all and (max-width: 724px) {
+    #topic-progress-wrapper {
+      left: 0;
+    }
+    #topic-progress,
+    #topic-progress-expanded {
+      right: auto;
+      left: 145px;
+    }
+  } // End of #topic-progress
+
+  // Set small logo margin -- this should be moved
+  .logo-small {
+    margin: 0 0 0 8px;
+  }
+
+  // #reply-control
+  #reply-control {
+
+    .composer-loading {
+      right: 48%;
+    }
+
+    .toggler {
+      left: 1px;
+    }
+
+    .toggle-preview {
+      left: 5px;
+    }
+
+    #draft-status,
+    #file-uploading {
+      left: 51%;
+    }
+
+    .control-row {
+      margin: 0 5px 0 0;
+    }
+  } // End of #reply-control
+
+  // PageDown editor styles
+  .wmd-spacer {
+    float: right;
+    margin-right: 5px;
+    margin-left: 8px;
+  }
+
+  .wmd-button {
+    padding-left: 3px;
+    padding-right: 2px;
+    margin-left: 5px;
+    float: right;
+  }
+
+  // styles that apply to the user page
+
+  .user-preferences {
+
+    .instructions {
+      margin-right: 160px;
+    }
+
+    .avatar {
+      margin-right: 3px;
+    }
+  }
+
+  .user-navigation {
+    margin-right: 0;
+    margin-left: 1.8018%;
+    float: right;
+
+    .avatar {
+      float: right;
+    }
+  }
+
+  .user-main {
+
+    table.group-members {
+      th.seen {
+        text-align: left;
+      }
+
+      td {
+        img {
+          margin-left: 10px;
+        }
+
+        span.last-seen-at {
+          float: left;
+        }
+      }
+    }
+
+    .user-right {
+      clear: none;
+      float: left;
+    }
+
+    .user-content {
+      .btn.right {
+        float: left
+      }
+
+      table {
+        th {
+          text-align: right;
+        }
+      }
+    }
+
+    .about {
+      .secondary {
+        dl dd {
+          margin: 0 0 0 10px;
+        }
+
+        dl dt {
+          margin: 0 0 0 5px;
+        }
+      }
+
+      .details {
+
+        h3 {
+          i:not(:first-of-type) {
+            margin-right: 10px;
+          }
+        }
+
+        .groups {
+          margin-right: 10px;
+        }
+
+        img.avatar {
+          margin: 0 0 10px 20px;
+          float: right;
+        }
+
+        .primary {
+          float: right;
+        }
+      }
+
+      .controls {
+        float: left;
+        text-align: left;
+
+        .right {
+          float: left;
+          margin-right: 5px;
+        }
+      }
+    }
+
+    .about.collapsed-info {
+      .details {
+        .primary {
+          text-align: right;
+
+          .avatar {
+            float: right;
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+
+    .user-stream {
+      .category {
+        margin-right: 3px;
+        margin-left: 0;
+      }
+
+      .time,
+      .delete-info {
+        float: left;
+        margin-left: 8px;
+      }
+
+      .avatar-link {
+        float: right;
+        margin-left: 4px;
+      }
+
+      .remove-bookmark {
+        float: left;
+      }
+      .notification {
+        p {
+          margin-right: 10px;
+        }
+
+        .time {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .staff-counters {
+      text-align: right;
+      > div {
+        margin: 0 0 0 10px;
+        &:first-of-type {
+          padding-right: 10px;
+        }
+      }
+    }
+
+    .user-field {
+      label {
+        float: right;
+        text-align: left;
+      }
+    }
+  } // End of user page styles
+
+  // Buttons
+
+  // Flip the caret
+  .fa-caret-right {
+    @include rotate(180);
+    margin-right: 5px;
+  }
+
+  // Navigation menus
+  .nav-pills {
+    > li {
+      float: right;
+      margin-right: 0;
+      margin-left: 5px;
+    }
+  }
+
+  // Position glyphs in .nav-stacked
+  .nav-stacked {
+    .glyph {
+      position: relative;
+      right: 2px;
+    }
+    a {
+      padding: 13px 30px 13px 13px;
+    }
+
+    // Creates a triangle that is reversed from the lrt one.
+    .active > a::before {
+      right: 90%;
+      top: 33%;
+      border: solid transparent;
+      content: " ";
+      position: absolute;
+      border-width: 8px;
+      border-right-color: $secondary;
+    }
+
+    .active > a::after {
+      border: none;
+    }
+  }
+
+  // header.scss -- rtl styles to override header.scss
+  button.login-button,
+  button.sign-up-button {
+    float: right;
+    .fa {
+      margin-right: 0;
+      margin-left: 3px;
+    }
+  }
+
+  button.sign-up-button {
+    margin-left: 7px;
+  }
+
+  .d-dropdown#notifications-dropdown {
+    li {
+      i {
+        float: right;
+        margin-left: 5px;
+      }
+      a {
+        padding: 4px 2px 3px 0;
+      }
+    }
+  }
+
+  .d-dropdown#search-dropdown {
+    .heading {
+      padding: 5px 5px 5px 0;
+    }
+  }
+
+  .search-context .show-help {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    text-align: left;
+  }
+
+  // topic-list.scss -- rtl styles to override topic-list.scss
+  #topic-title {
+    padding-right: 10px;
+  }
+  .container.posts {
+    padding-left: 10px;
+  }
+
+  // topic.scss -- rtl styles to override topic.scss
+  #topic-title {
+    .title-wrapper {
+      float: right;
+
+      .btn-small {
+        margin: 0 0 0 6px;
+      }
+
+      .private-message-glyph {
+        float: right;
+        margin: 0 0 0 5px;
+      }
+    }
+  }
+
+  // base/topic-admin-menu.scss -- rtl styles to override admin-menu.scss
+  .show-topic-admin {
+    top: 120px;
+    left: 10px;
+  }
+
+  .topic-admin-menu {
+    top: 120px;
+    left: 0 !important;
+  }
+
+  // desktop/topic-post.scss -- rtl styles to override topic-post.scss
+  #selected-posts {
+    padding-right: 20px;
+    margin-right: 330px;
+
+    button {
+      text-align: right;
+    }
+
+    h3 i {
+      margin-left: 7px;
+    }
+  }
+
+  // Notification options
+  .notification-options {
+    button {
+      float: right;
+    }
+
+    &.open .dropdown-menu {
+      right: 0;
+    }
+  }
+
+  // common/admin/admin_base.scss -- rtl styles to override admin_base.scss
+  .admin-contents table {
+    tr {
+      text-align: right;
+    }
+  }
+
+  .content-list li a span.count {
+    float: left;
+    margin-left: 10px;
+  }
+
+  .admin-content {
+    .view-options {
+      float: left;
+    }
+
+    table.report {
+      .bar-container {
+        float: right;
+        margin-left: 15px;
+
+        .bar {
+          text-align: left;
+          padding-left: 8px;
+        }
+      }
+    }
+  }
+
+  .ip-lookup {
+    .location-box {
+      left: 0;
+      padding: 12px 12px 5px 12px;
+    }
+  }
+
+  .admin-controls {
+    padding: 10px 0 3px 10px;
+
+    .controls {
+      margin-right: 10px;
+    }
+
+    button {
+      margin-left: 5px;
+    }
+
+    input[type=text] {
+      float: right;
+    }
+
+    .result-message {
+      padding-right: 10px;
+      padding-left: 0;
+    }
+
+    .search {
+      float: left;
+      margin-right: 10px;
+    }
+
+    .toggle {
+      float: left;
+    }
+
+    label {
+      margin-left: 5px;
+      margin-right: 0;
+    }
+  }
+
+  .admin-nav {
+    .nav-stacked {
+      border-left: none;
+    }
+  }
+
+  .admin-detail {
+    margin-right: 0;
+    border-right: solid 1px scale-color-diff();
+    padding: 30px 30px 30px 0;
+  }
+
+  .settings {
+    .setting {
+      .setting-label {
+        float: right;
+        margin-left: 12px;
+      }
+
+      .setting-value {
+        float: right;
+      }
+
+      .setting-controls {
+        float: right;
+      }
+
+      .input-setting-list {
+        li.sortable-placeholder {
+          padding: 3px 18px 3px 5px;
+          margin: 3px 5px 3px 0;
+        }
+      }
+    }
+  }
+
+  .user-controls {
+    text-align: left;
+  }
+
+  .display-row {
+    .field {
+      float: right;
+      margin-right: 12px;
+    }
+
+    .value {
+      float: right;
+      margin-right: 12px;
+    }
+
+    .long-value {
+      float: right;
+      margin-right: 12px;
+
+      button {
+        margin-right: 10px;
+        margin-left: 0;
+      }
+    }
+
+    .controls {
+      float: right;
+      margin-right: 12px;
+
+      .btn {
+        margin-left: 5px;
+      }
+    }
+  }
+
+  // Badges area
+  .badges {
+    .content-list ul {
+      .list-badge {
+        float: left;
+      }
+    }
+
+
+    .form-horizontal {
+      .delete-link {
+        margin-right: 15px;
+        margin-left: 0;
+      }
+    }
+
+    .buttons {
+      float: right;
+      .saving {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .badge-query-preview {
+    .grant-count, .sample, .error-header {
+      margin-right: 10px;
+    }
+  }
+
+  // Groups area
+  .groups {
+    .ac-wrap {
+      .item {
+        margin-left: 0 !important;
+      }
+    }
+  }
+
+  // Customise area
+  .customize {
+    .nav.nav-pills {
+      margin-right: 10px;
+      margin-left: 0;
+    }
+
+    .content-list, .current-style {
+      float: right;
+    }
+
+    .current-style {
+      padding-right: 10px;
+
+      .toggle-mobile {
+        left: 35px;
+      }
+
+      .toggle-maximize {
+        position: absolute;
+        left: -5px;
+      }
+
+      .delete-link {
+        margin-right: 15px;
+      }
+
+      .preview-link {
+        margin-right: 15px;
+      }
+
+      .status-actions {
+        float: left;
+        span {
+          margin-left: 10px;
+          margin-right: 0;
+        }
+      }
+
+      .buttons {
+        float: right;
+        .saving {
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .color-scheme {
+      .controls {
+        span, button, a {
+          margin-left: 10px;
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  .admin-flags {
+    th {
+      text-align: right;
+    }
+
+    .flaggers {
+      padding: 8px 5px 0 0;
+    }
+
+    .action {
+      text-align: left;
+    }
+  }
+
+  /* Dashboard */
+
+  .dashboard-left {
+    float: right;
+  }
+  .dashboard-right {
+    float: left;
+  }
+
+  table.api-keys {
+    th {
+      text-align: right;
+    }
+  }
+
+  .dashboard-stats {
+    margin-left: 40px;
+
+    table {
+      th.title {
+        text-align: right;
+      }
+    }
+
+    &.detected-problems {
+
+      .look-here {
+        float: right;
+      }
+
+      .problem-messages {
+        float: right;
+        margin-right: 1%;
+        .actions {
+          text-align: left;
+        }
+        ul {
+          margin-right: 0;
+          padding-right: 20px;
+        }
+      }
+    }
+
+    &.totals {
+      padding-right: 5px;
+      padding-left: 0;
+      .value {
+        text-align: right;
+        padding-right: 8px;
+        padding-left: 30px;
+      }
+    }
+  }
+
+  .commits-widget {
+    .commits-list {
+      li {
+        .left {
+          float: right;
+        }
+
+        .right {
+          margin-left: 0;
+          margin-right: 52px;
+        }
+      }
+    }
+  }
+
+  .content-list {
+    h3 {
+      padding-right: 5px;
+    }
+  }
+
+  .content-editor {
+    float: right;
+    width: 54.0540%;
+    margin-right: 1.8018%;
+    margin-left: 0;
+  }
+
+  // Logs
+
+  .admin-logs-table {
+    .btn {
+      .fa {
+        margin-left: 2px;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .screened-ip-address-form {
+    margin-right: 6px;
+    margin-left: 0;
+  }
+
+  .screened-ip-addresses {
+    .ip_address {
+      text-align: right;
+    }
+  }
+
+  .staff-action-logs-controls {
+    margin: 0 6px 20px 0;
+    a.filter {
+      i {
+        margin-right: 6px;
+        margin-left: 0;
+      }
+    }
+  }
+
+  .staff-action-logs-instructions {
+    margin: 0 10px 10px 0;
+  }
+
+  // Backups
+  .delete-flag-modal, .agree-flag-modal {
+    button {
+      margin: 10px 10px 10px 0;
+    }
+  }
+
+  .start-backup-modal {
+    .btn {
+      margin: 10px 5px 10px 0;
+    }
+    .btn:first-of-type {
+      margin-right: 10px;
+    }
+  }
+
+  @media all and (min-width: 320px) and (max-width: 500px) {
+
+    .site-settings-detail {
+      .settings .setting {
+        .setting-label {
+          float: right;
+        }
+      }
+    }
+
+    .admin-container {
+      h2 {
+        float: right;
+      }
+    }
+  }
+
+  .badge-groupings {
+    .actions {
+      float: left;
+      a {
+        margin-right: 5px;
+        margin-left: 0;
+      }
+    }
+  }
+
+  .user-fields {
+    .user-field {
+      .form-display {
+        float: right;
+      }
+
+      .form-element {
+        float: right;
+      }
+
+      .controls {
+        float: left;
+        text-align: left;
+      }
+    }
+  }
+
+  .url-list {
+    .url {
+      margin-left: 10px;
+      margin-right: 0;
+    }
+  }
+
+  // Arrange things -- float the .pull-left class to the right.
+  .admin-content {
+    .admin-nav.pull-left {
+      float: right;
+    }
+  }
