@@ -16,20 +16,21 @@ function init(container) {
     try {
       localStorage.getItem(focusTrackerKey);
     } catch (e) {
-      liveEnabled = false;
       Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
-      return;
+      return false;
     }
     liveEnabled = true;
     Em.Logger.info('Discourse desktop notifications are enabled.');
-  }).then(function() {
-    try {
-      init2(container);
-    } catch (e) {
-      console.error(e);
+    return true;
+  }).then(function(c) {
+    if (c) {
+      try {
+        init2(container);
+      } catch (e) {
+        console.error(e);
+      }
     }
   }).catch(function(e) {
-    debugger;
     liveEnabled = false;
     Em.Logger.info('Discourse desktop notifications are disabled - permission denied.');
   });
@@ -144,6 +145,10 @@ function onNotification(currentUser) {
         icon: notificationIcon,
         tag: notificationTagName
       });
+
+      // if (enableSound) {
+      //   soundElement.play();
+      // }
 
       const firstUnseen = unseen[0];
 
