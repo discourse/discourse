@@ -66,6 +66,7 @@
 //= require ./discourse/dialects/dialect
 //= require ./discourse/lib/emoji/emoji
 //= require ./discourse/lib/sharing
+//= require discourse/lib/desktop-notifications
 
 //= require_tree ./discourse/dialects
 //= require_tree ./discourse/controllers
