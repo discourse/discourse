@@ -1,4 +1,6 @@
-const Post = Discourse.Model.extend({
+import RestModel from 'discourse/models/rest';
+
+const Post = RestModel.extend({
 
   init() {
     this.set('replyHistory', []);

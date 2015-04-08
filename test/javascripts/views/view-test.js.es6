@@ -1,3 +1,5 @@
+import Presence from 'discourse/mixins/presence';
+
 var oldHelpers;
 
 module("Discourse.View", {
@@ -10,8 +12,8 @@ module("Discourse.View", {
   }
 });
 
-test("mixes in Discourse.Presence", function() {
-  ok(Discourse.Presence.detect(Discourse.View.create()));
+test("mixes in Presence", function() {
+  ok(Presence.detect(Discourse.View.create()));
 });
 
 test("registerHelper: enables embedding a child view in a parent view via dedicated, named helper instead of generic 'view' helper", function() {

@@ -1,3 +1,5 @@
+import Presence from 'discourse/mixins/presence';
+
 var SomeViewClass = Ember.View.extend();
 
 function containerHasOnlyOneChild(containerView, klass) {
@@ -17,9 +19,9 @@ function childHasProperty(containerView, name) {
 
 moduleFor("view:container");
 
-test("mixes in Discourse.Presence", function() {
+test("mixes in Presence", function() {
   var containerView = this.subject();
-  ok(Discourse.Presence.detect(containerView));
+  ok(Presence.detect(containerView));
 });
 
 test("attachViewWithArgs: creates a view of a given class with given properties and appends it to the container", function() {

@@ -1,4 +1,6 @@
-export default Ember.ArrayController.extend(Discourse.Presence, {
+import Presence from 'discourse/mixins/presence';
+
+export default Ember.ArrayController.extend(Presence, {
   filter: null,
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),

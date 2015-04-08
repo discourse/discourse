@@ -24,6 +24,7 @@
 //= require ./discourse/lib/avatar-template
 //= require ./discourse/lib/safari-hacks
 //= require_tree ./discourse/adapters
+//= require ./discourse/models/rest
 //= require ./discourse/models/model
 //= require ./discourse/models/post
 //= require ./discourse/models/user_action
@@ -36,6 +37,7 @@
 //= require ./discourse/controllers/object
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/view
+//= require ./discourse/views/grouped
 //= require ./discourse/views/container
 //= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
