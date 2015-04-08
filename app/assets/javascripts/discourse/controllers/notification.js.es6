@@ -3,7 +3,7 @@ import { notificationUrl } from 'discourse/lib/desktop-notifications';
 
 var INVITED_TYPE= 8;
 
-const NotificationController = ObjectController.extend({
+export default ObjectController.extend({
 
   scope: function() {
     return "notifications." + this.site.get("notificationLookup")[this.get("notification_type")];
@@ -11,9 +11,6 @@ const NotificationController = ObjectController.extend({
 
   username: Em.computed.alias("data.display_username"),
 
-  // This is model logic
-  // It belongs in a model
-  // TODO deduplicate controllers/background-notifications.js
   url: function() {
     return notificationUrl(this);
   }.property("data.{badge_id,badge_name}", "slug", "topic_id", "post_number"),
@@ -25,5 +22,3 @@ const NotificationController = ObjectController.extend({
   }.property("data.{badge_name,topic_title}")
 
 });
-
-export default NotificationController;
