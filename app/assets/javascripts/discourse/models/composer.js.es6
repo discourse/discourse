@@ -1,3 +1,7 @@
+import RestModel from 'discourse/models/rest';
+import Post from 'discourse/models/post';
+import Topic from 'discourse/models/topic';
+
 const CLOSED = 'closed',
       SAVING = 'saving',
       OPEN = 'open',
@@ -26,7 +30,7 @@ const CLOSED = 'closed',
         categoryId: 'topic.category.id'
       };
 
-const Composer = Discourse.Model.extend({
+const Composer = RestModel.extend({
 
   archetypes: function() {
     return this.site.get('archetypes');
@@ -420,7 +424,8 @@ const Composer = Discourse.Model.extend({
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
-      promise = Discourse.Topic.update(this.get('topic'), topicProps);
+
+       promise = Topic.update(this.get('topic'), topicProps);
     } else {
       promise = Ember.RSVP.resolve();
     }
@@ -468,7 +473,7 @@ const Composer = Discourse.Model.extend({
     let addedToStream = false;
 
     // Build the post object
-    const createdPost = Discourse.Post.create({
+    const createdPost = Post.create({
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,

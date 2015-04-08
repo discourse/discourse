@@ -1,7 +1,6 @@
-import TopicDetails from 'discourse/models/topic-details';
-import PostStream from 'discourse/models/post-stream';
+import RestModel from 'discourse/models/rest';
 
-const Topic = Discourse.Model.extend({
+const Topic = RestModel.extend({
 
   // returns createdAt if there's no bumped date
   bumpedAt: function() {
@@ -23,7 +22,7 @@ const Topic = Discourse.Model.extend({
   }.property('created_at'),
 
   postStream: function() {
-    return PostStream.create({topic: this});
+    return this.store.createRecord('postStream', {id: this.get('id'), topic: this});
   }.property(),
 
   replyCount: function() {
@@ -31,7 +30,7 @@ const Topic = Discourse.Model.extend({
   }.property('posts_count'),
 
   details: function() {
-    return TopicDetails.create({topic: this});
+    return this.store.createRecord('topicDetails', {id: this.get('id'), topic: this});
   }.property(),
 
   invisible: Em.computed.not('visible'),

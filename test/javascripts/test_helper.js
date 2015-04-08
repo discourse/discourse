@@ -90,6 +90,7 @@ if (window.Logster) {
 var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
     fixtures = require('fixtures/site_fixtures', null, null, false).default,
+    flushMap = require('discourse/models/store', null, null, false).flushMap,
     server;
 
 QUnit.testStart(function(ctx) {
@@ -120,6 +121,7 @@ QUnit.testDone(function() {
 
   // Destroy any modals
   $('.modal-backdrop').remove();
+  flushMap();
 
   server.shutdown();
 });

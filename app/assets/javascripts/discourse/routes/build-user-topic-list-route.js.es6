@@ -14,7 +14,7 @@ export default function (viewName, path) {
     },
 
     model: function() {
-      return Discourse.TopicList.find('topics/' + path + '/' + this.modelFor('user').get('username_lower'));
+      return this.store.findFiltered('topicList', {filter: 'topics/' + path + '/' + this.modelFor('user').get('username_lower')});
     },
 
     setupController: function() {

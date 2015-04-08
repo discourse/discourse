@@ -1,7 +1,14 @@
 import RestModel from 'discourse/models/rest';
 import ResultSet from 'discourse/models/result-set';
 
-const _identityMap = {};
+let _identityMap;
+
+// You should only call this if you're a test scaffold
+function flushMap() {
+  _identityMap = {};
+}
+
+flushMap();
 
 export default Ember.Object.extend({
   pluralize(thing) {
@@ -13,6 +20,15 @@ export default Ember.Object.extend({
     const self = this;
     return adapter.findAll(this, type).then(function(result) {
       return self._resultSet(type, result);
+    });
+  },
+
+  // Mostly for legacy, things like TopicList without ResultSets
+  findFiltered(type, findArgs) {
+    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
+    const self = this;
+    return adapter.find(this, type, findArgs).then(function(result) {
+      return self._build(type, result);
     });
   },
 
@@ -60,7 +76,8 @@ export default Ember.Object.extend({
   },
 
   createRecord(type, attrs) {
-    return this._hydrate(type, attrs);
+    attrs = attrs || {};
+    return !!attrs.id ? this._hydrate(type, attrs) : this._build(type, attrs);
   },
 
   destroyRecord(type, record) {
@@ -81,6 +98,19 @@ export default Ember.Object.extend({
     return ResultSet.create({ content, totalRows, loadMoreUrl, store: this, __type: type });
   },
 
+  _build(type, obj) {
+    obj.store = this;
+    obj.__type = type;
+
+    const klass = this.container.lookupFactory('model:' + type) || RestModel;
+    const model = klass.create(obj);
+
+    if (obj.id) {
+      _identityMap[type][obj.id] = model;
+    }
+    return model;
+  },
+
   _hydrate(type, obj) {
     if (!obj) { throw "Can't hydrate " + type + " of `null`"; }
     if (!obj.id) { throw "Can't hydrate " + type + " without an `id`"; }
@@ -88,18 +118,17 @@ export default Ember.Object.extend({
     _identityMap[type] = _identityMap[type] || {};
 
     const existing = _identityMap[type][obj.id];
+    if (existing === obj) { return existing; }
+
     if (existing) {
       delete obj.id;
-      existing.setProperties(obj);
+      const klass = this.container.lookupFactory('model:' + type) || RestModel;
+      existing.setProperties(klass.munge(obj));
       return existing;
     }
 
-    obj.store = this;
-    obj.__type = type;
-
-    const klass = this.container.lookupFactory('model:' + type) || RestModel;
-    const model = klass.create(obj);
-    _identityMap[type][obj.id] = model;
-    return model;
+    return this._build(type, obj);
   }
 });
+
+export { flushMap };

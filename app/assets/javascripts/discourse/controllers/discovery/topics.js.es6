@@ -48,7 +48,8 @@ var controllerOpts = {
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
-      Discourse.TopicList.find(filter).then(function(list) {
+
+      this.store.findFiltered('topicList', {filter}).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, self.get('category'));
 
         self.setProperties({ model: list });

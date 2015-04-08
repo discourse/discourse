@@ -1,4 +1,4 @@
-import { queryParams, filterQueryParams } from 'discourse/routes/build-topic-route';
+import { queryParams, filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
 
 // A helper function to create a category route with parameters
 export default function(filter, params) {
@@ -52,7 +52,7 @@ export default function(filter, params) {
       var findOpts = filterQueryParams(transition.queryParams, params),
           extras = { cached: this.isPoppedState(transition) };
 
-      return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
+      return findTopicList(this.store, listFilter, findOpts, extras).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, model);
         self.set('topics', list);
       });
