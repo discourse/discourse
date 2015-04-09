@@ -100,6 +100,8 @@ test("Create a Reply", () => {
 test("Edit the first post", () => {
   visit("/t/internationalization-localization/280");
 
+  ok(!exists('.topic-post:eq(0) .post-info.edits'), 'it has no edits icon at first');
+
   click('.topic-post:eq(0) button[data-action=showMoreActions]');
   click('.topic-post:eq(0) button[data-action=edit]');
   andThen(() => {
@@ -111,6 +113,7 @@ test("Edit the first post", () => {
   click('#reply-control button.create');
   andThen(() => {
     ok(!exists('#wmd-input'), 'it closes the composer');
+    ok(exists('.topic-post:eq(0) .post-info.edits'), 'it has the edits icon');
     ok(find('#topic-title h1').text().indexOf('This is the new text for the title') !== -1, 'it shows the new title');
     ok(find('.topic-post:eq(0) .cooked').text().indexOf('This is the new text for the post') !== -1, 'it updates the post');
   });

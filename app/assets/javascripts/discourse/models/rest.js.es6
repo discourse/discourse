@@ -1,20 +1,50 @@
 import Presence from 'discourse/mixins/presence';
 
 const RestModel = Ember.Object.extend(Presence, {
-  update(attrs) {
-    const self = this,
-          type = this.get('__type');
+  isNew: Ember.computed.equal('__state', 'new'),
+  isCreated: Ember.computed.equal('__state', 'created'),
 
-    const munge = this.__munge;
-    return this.store.update(type, this.get('id'), attrs).then(function(result) {
-      if (result && result[type]) {
-        Object.keys(result).forEach(function(k) {
-          attrs[k] = result[k];
-        });
-      }
-      self.setProperties(munge(attrs));
-      return result;
+  afterUpdate: Ember.K,
+
+  update(props) {
+    props = props || this.updateProperties();
+
+    const type = this.get('__type'),
+          store = this.get('store');
+
+    const self = this;
+    return store.update(type, this.get('id'), props).then(function(res) {
+      self.setProperties(self.__munge(res.payload || res.responseJson));
+      self.afterUpdate(res);
+      return res;
     });
+  },
+
+  _saveNew(props) {
+    props = props || this.createProperties();
+
+    const type = this.get('__type'),
+          store = this.get('store'),
+          adapter = store.adapterFor(type);
+
+    const self = this;
+    return adapter.createRecord(store, type, props).then(function(res) {
+      if (!res) { throw "Received no data back from createRecord"; }
+      self.setProperties(self.__munge(res.payload));
+
+      self.set('__state', 'created');
+
+      res.target = self;
+      return res;
+    });
+  },
+
+  createProperties() {
+    throw "You must overwrite `createProperties()` before saving a record";
+  },
+
+  save(props) {
+    return this.get('isNew') ? this._saveNew(props) : this.update(props);
   },
 
   destroyRecord() {
@@ -34,7 +64,7 @@ RestModel.reopenClass({
     args = args || {};
     if (!args.store) {
       const container = Discourse.__container__;
-      Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
+      // Ember.warn('Use `store.createRecord` to create records instead of `.create()`');
       args.store = container.lookup('store:main');
     }
 

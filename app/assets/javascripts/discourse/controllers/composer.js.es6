@@ -219,6 +219,7 @@ export default DiscourseController.extend({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
     }).then(function(opts) {
+
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
@@ -245,7 +246,6 @@ export default DiscourseController.extend({
       composer.set('disableDrafts', false);
       bootbox.alert(error);
     });
-
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
         composer.get('topic.id') === this.get('controllers.topic.model.id')) {

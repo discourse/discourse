@@ -1,5 +1,11 @@
 const ADMIN_MODELS = ['plugin'];
 
+export function Result(payload, responseJson) {
+  this.payload = payload;
+  this.responseJson = responseJson;
+  this.target = null;
+}
+
 export default Ember.Object.extend({
   pathFor(store, type, findArgs) {
     let path = "/" + Ember.String.underscore(store.pluralize(type));
@@ -35,7 +41,18 @@ export default Ember.Object.extend({
   update(store, type, id, attrs) {
     const data = {};
     data[Ember.String.underscore(type)] = attrs;
-    return Discourse.ajax(this.pathFor(store, type, id), { method: 'PUT', data });
+    return Discourse.ajax(this.pathFor(store, type, id), { method: 'PUT', data }).then(function(json) {
+      return new Result(json[type], json);
+    });
+  },
+
+  createRecord(store, type, attrs) {
+    const data = {};
+    const typeField = Ember.String.underscore(type);
+    data[typeField] = attrs;
+    return Discourse.ajax(this.pathFor(store, type), { method: 'POST', data }).then(function (json) {
+      return new Result(json[typeField], json);
+    });
   },
 
   destroyRecord(store, type, record) {

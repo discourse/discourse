@@ -15,6 +15,7 @@
 //= require ./discourse/helpers/register-unbound
 //= require ./discourse/mixins/scrolling
 //= require_tree ./discourse/mixins
+//= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/markdown
 //= require ./discourse/lib/search-for-term
 //= require ./discourse/lib/user-search
