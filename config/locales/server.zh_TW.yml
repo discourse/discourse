@@ -120,7 +120,6 @@ zh_TW:
   num_posts: "文章："
   num_participants: "參與者："
   read_full_topic: "閱讀整個話題"
-  private_message_abbrev: "私人訊息"
   rss_description:
     latest: "最新討論話題"
     hot: "熱門討論話題"
@@ -325,9 +324,7 @@ zh_TW:
       description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
-      title: '私人訊息 @{{username}}'
       description: '此帖包含一些我想與該用戶私下直接交流的內容。不能執行標記操作。'
-      long_form: '已私信用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -364,7 +361,6 @@ zh_TW:
       email_title: '此討論話題 "%{title}" 需要板主注意'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的文章已被社群投訴，請 <a href="/my/private-messages">閱讀你的私人訊息</a>。</p>'
     user_must_edit: '<p>你的帖子已經被社群標記並被臨時隱藏。</p>'
   archetypes:
     regular:
@@ -429,23 +425,18 @@ zh_TW:
     user_to_user_private_messages:
       title: "用戶對用戶"
       xaxis: "天"
-      yaxis: "私人訊息數量"
     system_private_messages:
       title: "系統"
       xaxis: "天"
-      yaxis: "訊息數量"
     moderator_warning_private_messages:
       title: "板主警告"
       xaxis: "天"
-      yaxis: "訊息數量"
     notify_moderators_private_messages:
       title: "板主通知"
       xaxis: "天"
-      yaxis: "訊息數量"
     notify_user_private_messages:
       title: "用戶通知"
       xaxis: "天"
-      yaxis: "訊息數量"
     top_referrers:
       title: "最高引用"
       xaxis: "用戶"
@@ -525,7 +516,6 @@ zh_TW:
     title_nag: "為網站給予一個名字。在<a href='/admin/site_settings'>設定</a>中更新標題。"
     site_description_missing: "輸入一句話作為網站的簡介，將出現在搜索結果中。在<a href='/admin/site_settings'>設定</a>中更新 site_description。"
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
-    site_contact_username_warning: "輸入一個友善的職員帳戶名稱，並以他的名義發送重要的自動私信。在<a href='/admin/site_settings'>設定</a>中更新 site_contact_username。"
     notification_email_warning: "通知郵件不是從你域名的一個有效地址發出的；電郵發送將會變得危險和不可靠。請在<a href='/admin/site_settings'>設定</a>中將 notification_email 設定一個有效的本機電郵地址。"
   content_types:
     education_new_reply:
@@ -539,10 +529,8 @@ zh_TW:
       description: "新用戶指引和重要信息"
     welcome_user:
       title: "歡迎: 新用戶"
-      description: "當新用戶註冊後自動發送給他們的歡迎訊息。"
     welcome_invite:
       title: "歡迎: 受邀請用戶"
-      description: "當新用戶通過接受用戶邀請加入論壇後, 自動發送給他們的歡迎訊息。"
     login_required_welcome_message:
       title: "請登入：歡迎訊息"
       description: "歡迎資訊只會在已啟用'login required'時向未登入的用戶顯示"
@@ -565,11 +553,9 @@ zh_TW:
     allow_user_locale: "允許用戶選擇自己的語言介面"
     min_post_length: "文章允許的最小文字數"
     min_first_post_length: "第一篇文章允許的最少文字數"
-    min_private_message_post_length: "私訊允許的最小文字數"
     max_post_length: "文章允許的最大文字數"
     min_topic_title_length: "標題允許的最小文字數"
     max_topic_title_length: "標題允許的最大文字數"
-    min_private_message_title_length: "私信標題允許的最小文字數"
     min_search_term_length: "搜尋條件允許的最小文字數"
     allow_uncategorized_topics: "允許發表未分類的討論話題"
     uncategorized_description: "\"未分類\"的分類的描述，留空則無描述"
@@ -603,7 +589,6 @@ zh_TW:
     digest_logo_url: "電郵摘要使用的標誌。如果留空，則使用 `logo_url`。例如：http://example.com/logo.png"
     logo_small_url: "出現在你網站左上角的小標誌圖片，當滾動後可見。如果留空，將顯示主頁圖標。"
     favicon_url: "你的網站圖示 (favicon)，參考 http://zh.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "移動瀏覽器左上角的固定標誌圖片。如果留空，將顯示網站標題。"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"
@@ -614,7 +599,6 @@ zh_TW:
     summary_likes_required: "如果使用了\"此話題的摘用\"，話題顯示時需滿足最小得到\"讚\"的數量"
     summary_percent_filter: "當用戶點擊 \"此話題的摘要\"，顯示前面多少 % 的文章"
     summary_max_results: "“概括主題”返回的最大帖子數量"
-    enable_private_messages: "允許信任等級 1 之用戶建立私人訊息和私下交流"
     enable_long_polling: "啟用消息匯流排使通知功能可以使用長輪詢（long polling）"
     long_polling_base_url: "長輪詢的基本 URL（當用 CDN 分發動態內容，請設置此至原始拉取地址）例如：http://origin.site.com"
     long_polling_interval: "當沒有數據向客戶端發送時伺服器端應等待的時間（僅對已登錄用戶有效）"
@@ -647,8 +631,6 @@ zh_TW:
     post_menu_hidden_items: "帖子菜單中默認隱藏的按鈕，點擊省略號後顯示。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     track_external_right_clicks: "追蹤外部連結的右鍵點擊 ( 例如：開啟於瀏覽器的新頁面 )，預設是關閉的，因為它會重寫URLs"
-    site_contact_username: "系統給用戶發送自動私信時所使用的用戶名；如果留空將使用默認的系統帳戶。"
-    send_welcome_message: "給所有的新用戶發送一個快速引導的私訊"
     suppress_reply_directly_below: "當帖子只有一個回覆時，不顯示帖子的回覆數量。"
     suppress_reply_directly_above: "當帖子只有一個回覆時，不顯示回覆到該帖的回覆。"
     suppress_reply_when_quoting: "當帖子引用回覆時，不顯示可展開的回覆到某帖的標記。"
@@ -684,7 +666,6 @@ zh_TW:
     sso_secret: "秘密字符串，用於驗證秘密的 SSO 訊息，請確保由 10 個字或以上組成"
     sso_overrides_email: "用 SSO 訊息中的外部電郵地址覆蓋本機電郵地址（警告：因為對本機電郵的統一處理，這個電郵地址可能不同）"
     sso_overrides_username: "用 SSO 訊息中的外部帳戶名覆蓋本機帳戶名（警告：因為對本機帳戶名的統一處理，帳戶名的長度或者要求可能不同）"
-    sso_overrides_name: "用 SSO 訊息中的外部網站名覆蓋本機名字（警告：因為對本機名字的統一處理，這個名字可能不同）"
     sso_overrides_avatar: "用 SSO 訊息中的外部網站頭像覆蓋用戶頭像。如果啟用，建議禁用 allow_uploaded_avatars"
     enable_local_logins: "啟用網站用戶名稱和密碼驗證 ( 注意：這必須啟用邀請才能有動作 )"
     allow_new_registrations: "允許新用戶註冊，如果取消選取，則沒有人能夠註冊"
@@ -719,7 +700,6 @@ zh_TW:
     max_bookmarks_per_day: "每個用戶每天最多能建立\"書籤\"的數量"
     max_edits_per_day: "每個用戶每天最大的\"編輯次數\"的數量"
     max_topics_per_day: "每個用戶每天最多建立\"討論話題\"的數量"
-    max_private_messages_per_day: "每個用戶每天最多能發\"私訊\"的數量"
     max_invites_per_day: "每個用戶每天最多能邀請用戶的數量。"
     suggested_topics: "討論話題下的推薦話題數量"
     limit_suggested_to_category: "目前的話題下只顯示同分類的推薦話題"
@@ -769,7 +749,6 @@ zh_TW:
     email_time_window_mins: "等待多少 (n) 分鐘才給用戶發送通知電子郵件，好讓他們有機會自己來編輯和完善他們的帖子。"
     email_posts_context: "在通知電郵中包含的作為上下文的回覆數量。"
     flush_timings_secs: "刷新時間資料的頻率，以秒為單位"
-    title_max_word_length: "在討論話題的標題中，允許的詞彙最長字數"
     title_min_entropy: "在主題的標題中，允許的最低熵值（單字）。"
     body_min_entropy: "在一個帖子內文中，允許的最低熵值（單字）。"
     title_fancy_entities: "轉換討論話題標題中的 HTML 實體"
@@ -864,8 +843,6 @@ zh_TW:
     edited: "%{display_username} 在 %{link} 編輯了你的文章"
     posted: "%{display_username} 發表了 %{link}"
     moved_post: "%{display_username} 把你的文章移動到了 %{link}"
-    private_message: "%{display_username} 發送給你一條訊息：%{link}"
-    invited_to_private_message: "%{display_username} 邀請你進行私人通訊：%{link}"
     invitee_accepted: "%{display_username} 接受了你的邀請"
     linked: "%{display_username} 在 %{link} 關連了你"
     granted_badge: "你獲得了 %{link}"
@@ -983,18 +960,6 @@ zh_TW:
       subject_template: "資料匯出完成"
     csv_export_failed:
       subject_template: "資料匯出失敗"
-    email_reject_trust_level:
-      subject_template: "EMail 錯誤 -- 尚未達到信任等級"
-    email_reject_no_account:
-      subject_template: "EMail 錯誤 -- 未知的帳戶"
-    email_reject_empty:
-      subject_template: "EMail 錯誤 -- 沒有內文"
-    email_reject_parsing:
-      subject_template: "EMail 錯誤 -- 內容無法識別"
-    email_reject_post_error:
-      subject_template: "EMail 錯誤 -- 發送錯誤"
-    email_error_notification:
-      subject_template: "EMail 錯誤 -- POP 驗證錯誤"
     too_many_spam_flags:
       subject_template: "新帳號已封鎖"
     blocked_by_staff:
@@ -1037,12 +1002,6 @@ zh_TW:
     reply_by_email: "要回應時，請回覆這封郵件，或在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     visit_link_to_respond: "要回應時，請在瀏覽器裡開啟 %{base_url}%{url} 網址。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} 邀請你進行私人對話 '%{topic_title}'"
-      text_body_template: |
-        %{username} 邀請你在 %{site_name} 就 '%{topic_title}' 進行私下交流：
-
-        請訪問 %{base_url}%{url} 來查看該主題。
     user_replied:
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
       text_body_template: |
@@ -1094,7 +1053,6 @@ zh_TW:
         %{respond_instructions}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
-      subject_template: "[%{site_name}] 於 %{date} 的摘要"
       new_activity: "在你的討論話題和文章裡的動態："
       top_topics: "熱門文章"
       other_new_topics: "熱門討論話題"
@@ -1159,7 +1117,6 @@ zh_TW:
     spam_hosts: "此新用戶嘗試發表多篇含有指向相同網域之連結的文章。請見網站設定中的 newuser_spam_host_threshold。"
   email_log:
     no_user: "無法找到 ID 為 %{user_id} 的使用者"
-    suspended_not_pm: "用戶被封鎖，這不是私信"
     seen_recently: "用戶最近活躍"
     post_not_found: "無法找到 ID 為 %{post_id} 的文章"
     notification_already_read: "這封通知 EMail 已被讀取"

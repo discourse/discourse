@@ -127,7 +127,6 @@ de:
   num_posts: "Beiträge:"
   num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
-  private_message_abbrev: "PN"
   rss_description:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
@@ -376,7 +375,7 @@ de:
   activation:
     action: "Aktiviere dein Benutzerkonto"
     already_done: "Entschuldige, dieser Link zur Aktivierung des Benutzerkontos ist nicht mehr gültig. Ist dein Konto schon aktiviert?"
-    please_continue: "Dein neuer Account ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
+    please_continue: "Dein neues Konto ist jetzt bestätigt; du wirst auf die Startseite weitergeleitet."
     continue_button: "Weiter zu %{site_name}"
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
@@ -396,9 +395,9 @@ de:
       description: 'Dieser Beitrag enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder <a href="/guidelines">unsere Richtlinien verletzend</a> auffassen würde.'
       long_form: 'dies als unangemessen gemeldet'
     notify_user:
-      title: 'Private Nachricht an {{username}}'
+      title: 'Nachricht an {{username}}'
       description: 'Dieser Beitrag enthält etwas, worüber ich mit dem Autor direkt und persönlich reden möchte. Wird nicht gemeldet.'
-      long_form: 'privat angeschriebener Benutzer'
+      long_form: 'angeschriebener Benutzer'
       email_title: 'Dein Beitrag in „%{title}“'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -435,7 +434,6 @@ de:
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Dein Beitrag wurde von der Community als Verstoß gemeldet. Bitte beachte <a href="/my/private-messages">deine privaten Nachrichten</a>.</p>'
     user_must_edit: '<p>Dieser Beitrag wurde von der Community gemeldet und ist vorübergehend ausgeblendet.</p>'
   archetypes:
     regular:
@@ -464,19 +462,19 @@ de:
     signups:
       title: "Neue Benutzer"
       xaxis: "Tag"
-      yaxis: "Zahl neuer Nutzer"
+      yaxis: "Anzahl neuer Nutzer"
     topics:
       title: "Themen"
       xaxis: "Day"
-      yaxis: "Zahl neuer Themen"
+      yaxis: "Anzahl neuer Themen"
     posts:
       title: "Beiträge"
       xaxis: "Tag"
-      yaxis: "Zahl neuer Beiträge"
+      yaxis: "Anzahl neuer Beiträge"
     likes:
       title: "„Gefällt mir“"
       xaxis: "Tag"
-      yaxis: "Zahl neuer „Gefällt mir“"
+      yaxis: "Anzahl neuer „Gefällt mir“"
     flags:
       title: "Meldungen"
       xaxis: "Tag"
@@ -500,23 +498,23 @@ de:
     user_to_user_private_messages:
       title: "Benutzer-zu-Benutzer"
       xaxis: "Tag"
-      yaxis: "Anzahl privater Nachrichten"
+      yaxis: "Anzahl der Nachrichten"
     system_private_messages:
       title: "System"
       xaxis: "Tag"
-      yaxis: "Anzahl privater Nachrichten"
+      yaxis: "Anzahl der Nachrichten"
     moderator_warning_private_messages:
       title: "Warnungen von Moderatoren"
       xaxis: "Tag"
-      yaxis: "Anzahl privater Nachrichten"
+      yaxis: "Anzahl der Nachrichten"
     notify_moderators_private_messages:
       title: "Meldungen an Moderatoren"
       xaxis: "Tag"
-      yaxis: "Anzahl privater Nachrichten"
+      yaxis: "Anzahl der Nachrichten"
     notify_user_private_messages:
       title: "Meldungen an Benutzer"
       xaxis: "Tag"
-      yaxis: "Anzahl privater Nachrichten"
+      yaxis: "Anzahl der Nachrichten"
     top_referrers:
       title: "Top Referrers"
       xaxis: "Benutzer"
@@ -596,7 +594,6 @@ de:
     title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
-    site_contact_username_warning: "Gib den Benutzernamen eines Mitarbeiters an, in dessen Namen wichtige, automatisch erzeugte private Nachrichten gesendet werden sollen. Ändere site_contact_username in den <a href='/admin/site_settings'>Einstellungen</a>."
     notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
   content_types:
     education_new_reply:
@@ -610,10 +607,9 @@ de:
       description: "Leitfaden und wichtige Informationen für neue Benutzer"
     welcome_user:
       title: "Willkommen: Neuer Benutzer"
-      description: "Eine private Nachricht welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
+      description: "Eine Nachricht, welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
     welcome_invite:
       title: "Willkommen: Eingeladener Benutzer"
-      description: "Eine private Nachricht welche automatisch an alle eingeladenen Benutzer gesendet wird, wenn diese die Einladung annehmen."
     login_required_welcome_message:
       title: "Anmeldung erforderlich: Willkommensnachricht"
       description: "Willkommensnachricht welche angezeigt wird wenn der Benutzer nicht angemeldet ist und die Einstellung 'login required' aktiviert ist."
@@ -636,11 +632,9 @@ de:
     allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
     min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
-    min_private_message_post_length: "Minimale zulässige Beitragslänge in Zeichen für private Nachrichten"
     max_post_length: "Maximale zulässige Beitragslänge in Zeichen."
     min_topic_title_length: "Minimale zulässige Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
-    min_private_message_title_length: "Minimale zulässige Titellänge von privaten Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
@@ -674,7 +668,6 @@ de:
     digest_logo_url: "Alternatives Logo, das oben in E-Mail-Zusammenfassungen verwendet wird. Wenn leer wird `logo_url` verwendet. Zum Beispiel: http://example.com/logo.png "
     logo_small_url: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Falls leer wird ein \"Home\" Zeichen angezeigt."
     favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Die statische Logo-Grafik oben links auf deiner Seite für mobile Geräte. Falls leer wird der Name der Seite angezeigt."
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
@@ -685,7 +678,6 @@ de:
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\" Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
-    enable_private_messages: "Erlaube Benutzern der Vertrauensstufe 1 das Erstellen von privaten Nachrichten und das Antworten auf private Nachrichten."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -718,8 +710,6 @@ de:
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Bestimme, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
-    site_contact_username: "Benutzername eines Mitarbeiters, in dessen Namen alle automatisch erzeugten privaten Nachrichten versendet werden sollen. Falls leer wird das Standardkonto \"system\" verwendet."
-    send_welcome_message: "Sende allen neuen Nutzern eine private Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
     suppress_reply_when_quoting: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der Beitrag den beantworteten Beitrag zitiert."
@@ -755,7 +745,6 @@ de:
     sso_secret: "Geheime Zeichenkette die als Schlüssel für die Authentifizierung von SSO-Informationen verwendet wird. Sollte unbedingt 10 Zeichen oder länger sein."
     sso_overrides_email: "Überschreibt lokale mit externer E-Mail-Adresse aus den SSO Daten (WARNUNG: es können dennoch Unterschiede auf Grund von Normalisierung lokaler E-Mail-Adressen auftreten)"
     sso_overrides_username: "Überschreibt lokale Benutzernamen mit externen Seiten-Usernamen von SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Unterschieden in Benutzernamenlängen/-anforderungen, auftreten)"
-    sso_overrides_name: "Überschreibt lokalen Namen mit Namen der externen Seite aus SSO Daten (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Namen auftreten)"
     sso_overrides_avatar: "Überschreibt den Avatar des Benutzers mit dem Avatar aus der SSO Payload. Wenn aktiv, dann sollte allow_uploaded_avatars deaktiviert werden."
     enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
@@ -790,7 +779,6 @@ de:
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Nutzer pro Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Nutzer pro Tag."
     max_topics_per_day: "Maximale Anzahl der Themen, die ein Nutzer pro Tag erstellen kann."
-    max_private_messages_per_day: "Maximale Zahl privater Nachrichten, die ein Nutzer pro Tag verschicken kann."
     max_invites_per_day: "Maximale Zahl an Einladungen, die ein Nutzer pro Tag verschicken kann."
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
@@ -840,7 +828,6 @@ de:
     email_time_window_mins: "Warte (n) Minuten, bevor Nutzern eine Hinweis-E-Mail geschickt wird, um ihnen Gelegenheit zu geben, ihre Beiträge abschließend bearbeiten zu können."
     email_posts_context: "Anzahl der Antworten welche als Konext einer Notifikations-Mail hinzugefügt werden."
     flush_timings_secs: "Sekunden, nach denen Zeiteinstellungen auf den Server übertragen werden."
-    title_max_word_length: "Maximale Wortlänge in Zeichen in Thementiteln."
     title_min_entropy: "Für Titel neuer Themen minimal erforderliche Entropie (einzigartige Zeichen)."
     body_min_entropy: "Für den Text neuer Beiträge minimal erforderliche Entropie (einzigartige Zeichen)."
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."
@@ -880,7 +867,7 @@ de:
     num_flags_to_close_topic: "Mindestanzahl aktiver \"Flags\" die notwendig sind um ein Thema automatisch zu pausieren bis es geprüft wird."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
-    reply_by_email_address: "Vorgabe der Antwort-Mail Adresse in der Form von: %{reply_key}@reply.myforum.com"
+    reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
     disable_emails: "Discourse daran hindern, jegliche Art von Emails zu verschicken"
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
     short_email_length: "Kurze E-Mail-Länge in Bytes"
@@ -972,8 +959,7 @@ de:
     edited: "%{display_username} hat deinen Beitrag in %{link} bearbeitet."
     posted: "%{display_username} hat einen Beitrag in %{link} erstellt."
     moved_post: "%{display_username} hat deinen Beitrag nach %{link} verschoben."
-    private_message: "%{display_username} hat Dir eine private Nachricht geschickt: %{link}"
-    invited_to_private_message: "%{display_username} hat Dich zu einem privaten Gespräch eingeladen: %{link}"
+    private_message: "%{display_username} hat Dir eine Nachricht geschickt: %{link}"
     invitee_accepted: "%{display_username} hat deine Einladung angenommen."
     linked: "%{display_username} hat dich auf %{link} verlinkt"
     granted_badge: "Sie haben %{link} verdient"
@@ -984,8 +970,8 @@ de:
       topic: 'Ergebnisse'
       user: 'Benutzer'
   sso:
-    not_found: "Account kann nicht gefunden oder erstellt werden, kontaktiere den Administrator."
-    account_not_approved: "Der Account wartet auf seine Überprüfung. Du bekommst eine E-Mail Benachrichtigung wenn er überprüft wurde."
+    not_found: "Konto kann nicht gefunden oder erstellt werden, kontaktiere den Administrator."
+    account_not_approved: "Das Konto wartet auf seine Überprüfung. Du bekommst eine E-Mail Benachrichtigung, wenn es überprüft wurde."
     unknown_error: "Die Informationen konnten nicht aktualisiert werden, kontaktiere den Administrator."
     timeout_expired: "Zeitüberschreitung beim Login. Bitte versuche dich erneut einzuloggen."
   original_poster: "Autor des ersten Beitrags"
@@ -1187,16 +1173,6 @@ de:
         Weitere Hilfestellung findest du in unseren [Community Richtlinien](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
-      text_body_template: |
-        Danke fürs Anmelden bei %{site_name}, sei willkommen!
-
-        %{new_user_tips}
-
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
-        Viel Spaß!
-
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese private Nachricht.)
     welcome_invite:
       subject_template: "Willkommen bei %{site_name}!"
     backup_succeeded:
@@ -1250,19 +1226,19 @@ de:
       subject_template: "Datenexport fehlgeschlagen"
       text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere einen Mitarbeiter oder sieh in die Logs."
     email_reject_trust_level:
-      subject_template: "E-Mail Problem -- Vertrauensstufe nicht ausreichend"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Ungenügende Vertrauensstufe"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) hat nicht funktioniert.
 
         Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
     email_reject_no_account:
-      subject_template: "E-Mail Problem -- Nutzerkonto unbekannt"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (titled %{former_title}) konnte nicht verarbeitet werden!
 
-        Es ist kein Account mit dieser E-Mail-Adresse bekannt. Versuche die Nachricht von einer anderen, m Forum registrierten E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
+        Es ist kein Konto mit dieser E-Mail-Adresse bekannt. Versuche die Nachricht von einer anderen, m Forum registrierten E-Mail-Adresse zu verschicken oder kontaktiere einen Mitarbeiter.
     email_reject_empty:
-      subject_template: "E-Mail Problem -- kein Inhalt"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) gab es ein Problem.
 
@@ -1270,19 +1246,19 @@ de:
 
         Wenn du diese Fehlermeldung erhälst obwohl die E-Mail einen gültigen Inhalt hatte, versuche es bitte noch einmal und sende die E-Mail dabei als HTML (nicht als "Nur Text").
     email_reject_parsing:
-      subject_template: "E-Mail Problem -- Inhalt nicht erkennbar"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (mit dem Titel %{former_title}) gab es ein Problem.
 
         Wir konnten in der eingesandten E-Mail deine Antwort nicht finden. **Bitte stelle sicher, dass deine gesamte Antwort zu Beginn der E-Mail steht** -- Inline-Antworten können wir leider nicht verarbeiten.
     email_reject_post_error:
-      subject_template: "E-Mail Problem -- Fehler beim Posten"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Fehler beim Posten"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
 
         Mögliche Gründe sind: komplexe Formatierung, Nachricht zu lang oder zu kurz. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_post_error_specified:
-      subject_template: "E-Mail Problem -- Fehler beim Posten"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Fehler beim Posten"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
 
@@ -1292,36 +1268,36 @@ de:
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_reply_key:
-      subject_template: "E-Mail Problem -- Antwort-Schlüssel unbekannt"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
       text_body_template: |
         Es tut uns leid, aber die E-Mail-Nachricht an %{destination} (Titel: „%{former_title}“) hat nicht geklappt.
         Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Kontaktiere einen Mitarbeiter.
     email_reject_destination:
-      subject_template: "E-Mail Problem -- To: Adresse unbekannt"
+      subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
       text_body_template: |
         Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (mit dem Title %{former_title}) gab es ein Problem.
 
         Keine der Empfänger-Adressen ist uns bekannt. Bitte stelle sicher, dass die Ziel-Adresse in einer "An:" Zeile steht (nicht "Cc:" oder "Bcc:") und dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
     email_reject_topic_not_found:
-      subject_template: "E-Mail Problem -- Thema nicht gefunden"
+      subject_template: "[%{site_name}] E-Mail Problem -- Thema nicht gefunden"
       text_body_template: |
         Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (mit dem Title %{former_title}) gab es ein Problem.
 
         Das Thema ist uns nicht bekannt oder es wurde gelöscht. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_topic_closed:
-      subject_template: "E-Mail Problem -- Thema geschlossen"
+      subject_template: "[%{site_name}] E-Mail Problem -- Thema geschlossen"
       text_body_template: |
         Entschuldigung, aber mit deiner E-Mail-Nachricht an %{destination} (mit dem Title %{former_title}) gab es ein Problem.
 
         Das Thema wurde geschlossen. Wenn du glaubst das dies ein Irrtum ist, nimm bitte Kontakt mit einem unserer Mitarbeiter auf.
     email_reject_auto_generated:
-      subject_template: "E-Mail Problem -- automatisch erzeugte Antwort"
+      subject_template: "[%{site_name}] E-Mail Problem -- Automatisch erzeugte Antwort"
       text_body_template: |
         Entschuldigung, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
 
         Wir nehmen keine automatisch generierten Antworten an. Wenn du glaubst dass dies ein Irrtum ist, dann kontaktiere bitte einen unserer Mitarbeiter.
     email_error_notification:
-      subject_template: "E-Mail Problem -- Fehler bei POP-Authentifizierung"
+      subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Es gab einen Authentifizierungsfehler beim Abrufen von Mails vom POP-Server.
 
@@ -1394,12 +1370,6 @@ de:
     reply_by_email: "Um zu Antworten, antworte auf diese Email oder besuche %{base_url}%{url} in deinem Browser."
     visit_link_to_respond: "Um zu Antworten, besuche %{base_url}%{url} in deinem Browser."
     posted_by: "Erstellt von %{username} am %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} hat dich zu einer privaten Nachricht eingeladen '%{topic_title}'"
-      text_body_template: |
-        %{username} hat dich zu einer privaten Nachricht '%{topic_title}' auf %{site_name} eingeladen:
-
-        Bitte besuche diesen Link zum Thema: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
       text_body_template: |
@@ -1447,7 +1417,7 @@ de:
         %{respond_instructions}
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
-      subject_template: "[%{site_name}] Kurzfassung für %{date}"
+      subject_template: "[%{site_name}] Übersicht"
       new_activity: "Neues in deinen Themen und Beiträgen:"
       top_topics: "Beliebte Beiträge"
       other_new_topics: "Beliebte Themen"
@@ -1472,18 +1442,18 @@ de:
     set_password:
       subject_template: "[%{site_name}] Setze Passwort"
       text_body_template: |
-        Jemand hat ein Passwort für deinen Account auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), das mit dieser validierten Emailadresse verknüpft ist, anmelden.
+        Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), das mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
 
         Wenn diese Anfrage nicht von dir kam, kannst du diese E-Mail einfach ignorieren.
 
-        Klicke auf den folgenden Link um ein Passwort auszuwählen:
+        Klicke auf den folgenden Link, um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Dein neues Konto"
       text_body_template: |
-        Ein neuer Account wurde für dich auf %{site_name} erstellt.
+        Ein neues Konto wurde für dich auf %{site_name} erstellt.
 
-        Klicke auf den folgenden Link um ein Passwort für deinen neuen Account zu setzen:
+        Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
     authorize_email:
       subject_template: "[%{site_name}] Bestätige deine neue Mailadresse"
@@ -1493,23 +1463,6 @@ de:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
-      text_body_template: |
-        Willkommen bei %{site_name}!
-
-        Ein Mitarbeiter von %{site_name} hat die Registrierung deines Nutzerkontos genehmigt.
-
-        Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Wenn der obige Link nicht klickbar ist, kopiere ihn in die Adresszeile deines Web-Browsers.
-
-        %{new_user_tips}
-
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
-
-        Viel Spaß!
-
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese private Nachricht.)
     signup:
       subject_template: "[%{site_name}] Aktiviere deinen neues Konto"
       text_body_template: |
@@ -1551,7 +1504,7 @@ de:
     spam_hosts: "Dieser Benutzer hat versucht mehrere Antworten mit Links zur selben Domain zu posten. Beachte die newuser_spam_host_threshold Einstellung."
   email_log:
     no_user: "Kann Benutzer mit ID %{user_id} nicht finden "
-    suspended_not_pm: "Benutzer ist gesperrt; keine private Nachricht"
+    suspended_not_pm: "Benutzer ist gesperrt, keine Nachricht"
     seen_recently: "Benutzer war kürzlich online"
     post_not_found: "Kann Beitrag mit ID %{post_id} nicht finden"
     notification_already_read: "Die Benachrichtigung dieser Mail wurde bereits gelesen"

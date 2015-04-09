@@ -1,19 +1,9 @@
 # encoding: utf-8
 #
-# This file contains content for the server portion of Discourse used by Ruby
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
-# To work with us on translations, see:
+# To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-# Persian language translate By http://discours.ir
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
 
 fa_IR:
   activerecord:
@@ -21,8 +11,8 @@ fa_IR:
       post:
         poll_options: "گزینه‌های نظرسنجی"
   poll:
-    must_contain_poll_options: "باید فهرستی از گزینه‌های نظرسنجی را بسازید"
+    must_contain_poll_options: "باید فهرستی شامل گزینه‌های نظرسنجی باشد"
     cannot_have_modified_options: "پس از گذشت ۵ دقیقه دیگر نمی‌توان ویرایش کرد. اگر تغییری در آن‌ها نیاز است با یکی از ناظمان تماس بگیرید."
-    cannot_add_or_remove_options: "تنها می‌تواند ویرایش شود، نه افزودنی و نه پاک کردنی. اگر به گزینه‌های افزودن و پاک کردن نیاز دارید، باید این جستار را قفل کنید و یکی دیگر بسازید."
+    cannot_add_or_remove_options: "تنها می‌تواند ویرایش شود، نه افزودنی و نه پاک کردنی. اگر به گزینه‌های اضافه و پاک کردن نیاز دارید، باید این جستار را قفل کنید و یکی دیگر بسازید."
     prefix: "نظرسنجی"
     closed_prefix: "اتمام نظرسنجی"

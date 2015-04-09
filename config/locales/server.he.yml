@@ -112,6 +112,7 @@ he:
     other: "סליחה, משתמשים חדשים יכולים להוסיף רק %{count} קישורים לכל היותר להודעה."
   spamming_host: "סליחה אך אינך יכול להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינפ  מורשים לפרסם"
+  topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראת אותו?"
   just_posted_that: "דומה מידי למה שפורסם לאחרונה"
   has_already_been_used: "כבר בשימוש"
   invalid_characters: "מכיל תווים לא חוקיים"
@@ -126,7 +127,6 @@ he:
   num_posts: "הודעות:"
   num_participants: "משתתפים:"
   read_full_topic: "קרא נושא מלא"
-  private_message_abbrev: "ה\"פ"
   rss_description:
     latest: "נושאים מדוברים"
     hot: "נושאים חמים"
@@ -168,6 +168,7 @@ he:
       האם שקלת **[לבקר בעמוד הפרופיל שלך](%{profile_path})** ולהעלות תמונה אישית שמייצגת אותך?
 
       יותר קל לעקוב אחרי דיוני הקהילה ולמצוא אנשים מעניינים בשיחות כשלכולם יש אוואטר ייחודי!
+    sequential_replies: "### שקלו להשיב לכמה פרסומים בבת אחת\n\nבמקום להשיב בתגובות עוקבות לנושא, שקלו בבקשה לפרסם תגובה אחת שכוללת ציטוטים מהפרסומים הקודמים או הפניות ל@שם_משתמש/ת.\n\nתוכל/י לערוך תגובה קודמת שלך כדי להוסיף ציטוט על ידי הדגשת הטקסט ובחירה בכפתור <b>ציטוט התגובה</b> שיופיע.\n\nקל יותר לכולם לקרוא נושאים עם מספר נמוך יחסית תגובות מעמיקות מאשר הרבה תגובות קצרות ונפרדות.\n \n"
     dominating_topic: |
       ### אפשר לאחרים להצטרף לשיחה
 
@@ -397,9 +398,7 @@ he:
       description: 'פרסום זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
-      title: 'מסר פרטי @{{username}}'
       description: 'פרסום זה מכיל משהו שארצה לשוחח עליו עם האדם הזה באופן ישיר ופרטי. אין צורך בסימון.'
-      long_form: 'הועבר מסר פרטי למשתמש/ת'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -436,7 +435,6 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p> ההודעה שלך סומנה על ידי הקהילה. אנא <a href="/my/private-messages"> בדוק/בדקי את ההודעת הפרטיות שלך </a> </p>'
     user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
@@ -501,23 +499,18 @@ he:
     user_to_user_private_messages:
       title: "משתמש למשתמש"
       xaxis: "יום"
-      yaxis: "מספר ההודעות הפרטיות"
     system_private_messages:
       title: "מערכת"
       xaxis: "יום"
-      yaxis: "מספר ההודעות הפרטיות"
     moderator_warning_private_messages:
       title: "אזהרות מנהל"
       xaxis: "יום"
-      yaxis: "מספר הודעות פרטיות"
     notify_moderators_private_messages:
       title: "התראה למנחים"
       xaxis: "יום"
-      yaxis: "מספר הודעות פרטיות"
     notify_user_private_messages:
       title: "התרע למשתמש"
       xaxis: "יום"
-      yaxis: "מספר הודעות פרטיות"
     top_referrers:
       title: "מיטב המפנים"
       xaxis: "משתמש"
@@ -581,6 +574,7 @@ he:
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
     queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
+    enable_google_logins_warning: "זהירות! התמיכה במתודת הזיהוי הנוכחית של גוגל מסתיימת ב-20 לאפריל 2015!\nאנא  <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> החליפו למתודה החדשה עכשיו!</a>"
     both_googles_warning: "שתי האפשרויות, enable_google_logins וגם enable_google_oauth2_logins מסומנים הגדרות האתר. בטלו את enable_google_logins."
     google_oauth2_config_warning: 'השרת מכוון לאפשר הרשמות והתחברות עם OAuth2 של גוגל (enable_google_oauth2_logins), אבל ערכי זהות הלקוח (client id) וסיסאת הלקוח (client secret) אינם מוגדרים. לכו ל<a href="/admin/site_settings"> הגדרות האתר </a> ועדכנו את הגדרות האתר. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank"> ראו מדריך זה כדי ללמוד עוד</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
@@ -596,7 +590,6 @@ he:
     title_nag: "הזינו את השם של האתר שלך. עדכנו את הכותרת ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     site_description_missing: "הזינו משפט אחד לתיאור האתר שלך אשר יופיע בתוצאות מנועי חיפוש. עדכנו את תיאור האתר ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "הזינו שם חשבון של חבר/ת צוות ידידותיים ממנו יישלחו אוטומטית הודעות פרטיות. עדכנו את שם המשתמש של הדמות ליצירת קשר ב <a href='/admin/site_settings'>הגדרות אתר</a>."
     notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
   content_types:
     education_new_reply:
@@ -610,10 +603,8 @@ he:
       description: "הדרכה ומידע חשוב למשתמשים חדשים."
     welcome_user:
       title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
     welcome_invite:
       title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
@@ -635,11 +626,10 @@ he:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "מספר התווים המותר כאורך מינימלי לפרסום הודעה"
-    min_private_message_post_length: "מספר התווים המותרים כאורך מינימלי של הודעות מסר פרטיות"
+    min_first_post_length: "אורך מינימלי מותר לפרסום ראשון (בגוף הפרסום) בתווים "
     max_post_length: "מספר התווים המקסימלי כאורך הודעה."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
-    min_private_message_title_length: "מספר התווים המינימלי המותר כאורך לכותרת למסר פרטי."
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "תיאור הקבוצה \"ללא קטגוריה\". השאירו ריק אם אין צורך בתיאור."
@@ -649,6 +639,7 @@ he:
     title: "שם האתר הזה, כפי שהוא משתמש בתגית הכותרת."
     site_description: "תארו את האתר הזה במשפט אחד, כפי שהוא מופיע במטא-תגית התיאור."
     contact_email: "כתובת דוא\"ל של איש/אשת קשר האחראי לאתר זה. משמש להתראות חשובות, כמו סימונים שלא טופלו, כמו גם ליצירת קשר חירום בעמוד האודות."
+    contact_url: "כתובת URL ליצירת קשר לעמוד זה. משמשת בטופס ה-/אודות לעניינים דחופים."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "אחזור תמונות מכתובת URL רחוקה כדי להכניס את מימדי האורך והרוחב הנכונים."
     download_remote_images_to_local: "המרת תמונות מרחוק לתמונות מקומיות באמצעות הורדות; למניעת שגיאות של תמונות חסרות"
@@ -668,7 +659,9 @@ he:
     post_excerpt_maxlength: "אורך מקסימלי של פרסום קטע / סיכום."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פרסום Discourse אחד בקופסא (oneboxed Discourse post)."
     onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
+    logo_url: "תמונת הלוגו שתופיע בצד שמאל למעלה באתר שלך; אם ישאר ריק, תוצג כותרת האתר הטקסטואלית."
     digest_logo_url: "הסמליל (לוגו) האלטרנטיבי שיופיע בראש מייל התקציר של האתר שלך. אם תשאירו משבצת זו ריק יופיע שם 'logo_url' במקום. לדוגמא: http://example.com/logo.png"
+    logo_small_url: "תמונת הלוגו הקטנה שתופיע בצד שמאל למעלה של האתר שלך, ומוצגת בגלילה למטה. אם ישאר ריק, תוצג גלופה בצורה של בית."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
@@ -680,7 +673,6 @@ he:
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
     summary_max_results: "מספר הפרסומים שיוחזרו באמצעות \"סיכום נושא זה\""
-    enable_private_messages: "אפשרו למשתמשים בעלי רמת אמון 1 ליצור מסרים פרטיים ולהשיב למסרים פרטיים"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
     long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
@@ -708,11 +700,11 @@ he:
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
     allow_moderators_to_create_categories: "Allow moderators to create new categories"
     cors_origins: "מקורות שאפשר לבצע להם בקשות קרוס-דומיין (Cross origin requests). כל מקור צריך לכלול את התחילית http:// או https:// . משתנה הסביבה DISCOURCE_ENABLE_CORS חייב להיות true כדי לאפשר CORS."
+    top_menu: "החליטו אילו פריטים יופיעו בניווט עמוד הבית ובאיזה סדר לדוגמא |אחרונים|חדשים|קטגוריות|מובילים|נקראו|פורסמו|סימניות"
     post_menu: "Determine which items appear on the post menu, and in what order. Example like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפרסום, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
     suppress_reply_when_quoting: "אל תציגו את הפרסום המקורי בפרסומים שמצטטים תגובות"
@@ -729,6 +721,7 @@ he:
     email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
     email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
     forgot_password_strict: "אל תעדכנו משתמשים על קיום חשבון כאשר הם משתמשים ב\"שכחתי סיסמא\"."
+    log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמ/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה של האדמין"
     new_version_emails: "שלחו דוא\"ל לכתובת של contact_email כשגרסא חדשה של Discourse זמינה."
     port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
@@ -741,10 +734,12 @@ he:
     max_username_length: "מספר תווים מקסימלי המותר לשם משתמש/ת. אזהרה: משתמשים קיימים עם שמות הארוכים מערך זה לא יוכלו להתחבר לאתר."
     min_password_length: "Minimum password length."
     block_common_passwords: "אל תאפשרו סיסמאות מתוך 10,000 הסיסמאות הנפוצות ביותר."
+    enable_sso: "אפשרו התחברות יחידה באמצעות אתר חיצוני (אזהרה: עלול למנוע מכל אחד/אחת להחבר, ובכלל זה את/ה!, אם לא תכוונו זזאת נכון בעת ההפעלה! כמו כן, אפשרות זו מבטלת הזמנות)"
+    enable_sso_provider: "הטמיעו את פרוטוקול הספק Discourse SSO בנקודת הקצה /session/sso_provider, דורש כיוון של sso_secret"
     sso_url: "URL of single sign on endpoint"
+    sso_secret: "מחרוזת סודית המשמשית לאמת באופן קרפיטוגרפי מידע SSO, וודאו שהיא באורך 10 תווים ומעלה"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמאת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
@@ -779,7 +774,7 @@ he:
     max_bookmarks_per_day: "מספר מקסימלי של סימניות למשתמש/ת ביום."
     max_edits_per_day: "מספר עריכות מקסימלי מותר למשתמש ליום."
     max_topics_per_day: "מספר מקסימלי של נושאים שמשתמש/ת יכולים ליצור ביום."
-    max_private_messages_per_day: "מספר מקסימלי של מסרים פרטיים שמשתמש/ת יכולים ליצור ביום."
+    max_invites_per_day: "מספר מקסימלי של הזמנות שיכולים משתמש/ת לשלוח ביום."
     suggested_topics: "מספר הנושאים המוצעים שיופיעו בתחתית הנושא המוצג."
     limit_suggested_to_category: "הצגת רק נושאים מהקטגוריה הנוכחית ברשימת הנושאים המומלצים."
     clean_up_uploads: "הסירו העלאות יתומות וללא הפניה כדי למנוע אירוח בלתי חוקי של חומר. אזהרה: אתם עלולי לרצות לגבות את תיקיית ה-/uploads שלכם לפנו שתאפשרו הגדרה זו."
@@ -828,7 +823,6 @@ he:
     email_time_window_mins: "המתינו (n) דקות לפני משלוח כל התראת מייל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפרסומים שלהם."
     email_posts_context: "כמה תגובות קודמות יש לכלול למתקן הקשר בהודעות דוא\"ל עם התראות."
     flush_timings_secs: "באיזו תדירות אנחנו מזרימים מידע לשרת, בשניות."
-    title_max_word_length: "האורך המקסימלי המותר למילה בכותרת נושא, בתווים. "
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים שאינם בשפת הכתיבה) המינימלית הנדרשת בגוף המסמך."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -947,8 +941,6 @@ he:
     edited: "%{display_username} ערך הודעה שלך ב %{link}"
     posted: "%{display_username} פרסם ב %{link}"
     moved_post: "%{display_username} העביר את ההודעה שלך ל %{link}"
-    private_message: "%{display_username} שלח לך הודעה פרטית: %{link}"
-    invited_to_private_message: "%{display_username} הזמין אותך להודעה פרטית: %{link}"
     invitee_accepted: "%{display_username} קיבל את הזמנתך"
     linked: "%{display_username} קישר אליך ב %{link}"
     granted_badge: "הרווחת %{link}"
@@ -1205,19 +1197,16 @@ he:
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_trust_level:
-      subject_template: "בעיית דוא\"ל - היעדר רמת אמון מספקת"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         אין לחשבון שלך את רמון האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת דוא"ל זו. אם אתם מאמינים כי זוהי שגיאה, צרו קשר עם אחד מאנשי הצוות.
     email_reject_no_account:
-      subject_template: "בעיית דוא\"ל - חשבון לא ידוע"
       text_body_template: |
         אנחנו מצטערים, אך הודעת הדוא"ל שלכם אל %{destination} (titled %{former_title}) לא עברה.
 
         לא ידוע לנו על חשבון משתמש/ת עם כתובת כזו. נסו לשלוח מכתובת דוא"ל אחרת, או צרו קשר עם אנשי הצוות שלנו.
     email_reject_empty:
-      subject_template: "בעיית דוא\"ל - אין תוכן"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל  %{destination} (titled %{former_title}) לא עבדה.
 
@@ -1225,19 +1214,16 @@ he:
 
         אם בדקתם זאת ו_כן_ כללתם תוכן נוסף, נסו שוב עם תוכן בצורת HTML בתוך המייל (לא רק טקסט פשוט- plain text).
     email_reject_parsing:
-      subject_template: "סוגיית דוא\"ל -- תוכן בלתי מוכר"
       text_body_template: |
         מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא עבדה.
 
         לא יכולנו למצוא את תגובתך באימייל המצורף. **אנא ודאו שתגובתכם נמצאת בראש המייל** - אין לנו יכולת לעבד תגובות מוטמעות (inline replies).
     email_reject_post_error:
-      subject_template: "בעיית דוא\"ל - שגיאת פרסום (Posting error)"
       text_body_template: |
         אנו מצטערים, אך מסר הדוא"ל שלך ל-%{destination}  (שכותרתו %{former_title}) לא עבר.
 
         סיבות אפשריות לעניין: מבנה מורכב, המסר ארוך מידי, המסר קצר מידי. אנא נסו שוב, או פרסמו באמצעות האתר עם הבעיה נמשכת.
     email_reject_post_error_specified:
-      subject_template: "בעיית דוא\"ל - שגיאה בפרסום."
       text_body_template: |
         אנחנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
@@ -1254,31 +1240,26 @@ he:
 
         If you can correct the problem, please try again.
     email_reject_reply_key:
-      subject_template: "בעיית דוא\"ל - מפתח תגובה (Reply) לא ידוע"
       text_body_template: |
         אנו מצטערים, אבל הודעת הדוא"ל שלך אל %{destination} (titled %{former_title}) לא עברה.
 
         מפתח התגובה לא קיים או לא מוכר, כך שאיננו יודעים לאיזה פרסום המייל הזה אמור להגיב. אנא צרו קשר עם אנשי הצוות.
     email_reject_destination:
-      subject_template: "בעיית דוא\"ל - מען (כתובת דוא\"ל) לא ידוע"
       text_body_template: |
         מצטערים, אבל הודעת הדוא"ל שלך ל-%{destination} עם הכותרת %{former_title} לא הצליחה.
 
         לא הצלחנו לזהות כתובות יעד. אנא ודא שכתובת האתר נמצאת בשדה "אל:", ולא ב-"עותק" או "עותק מוחבא (CC / BCC), ושאתה שולח לכתובת אימייל שסופקה בידי הצוות.
     email_reject_topic_not_found:
-      subject_template: "בעיית דוא\"ל -- הנושא לא נמצא"
       text_body_template: |
         אנחנו מצטערים, אך הודעת הדוא"ל שלך אל %{destination} (בנושא %{former_title}) לא נשלחה.
 
         הנושא לא נמצא, ייתכן והוא נמחק. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
     email_reject_topic_closed:
-      subject_template: "בעיית דוא\"ל -- הנושא נסגר"
       text_body_template: |
         אנחנו מצטערים, אך הודעת הדוא"ל ששלחת אל %{destination} (בנושא %{former_title}) לא עברה.
 
         הנושא נסגר. אם אתם מאמינים שמדובר בתקלה, צרו קשר עם איש/אשת צוות.
     email_error_notification:
-      subject_template: "תקלת דוא\"ל - שגיאת אישור POP"
       text_body_template: |
         התרחשה תקלת אימות בזמן שבדקנו הודעות מייל בשרת ה-POP.
 
@@ -1343,12 +1324,6 @@ he:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Posted by %{username} on %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1396,7 +1371,6 @@ he:
         %{respond_instructions}
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
-      subject_template: "[%{site_name}] Forum Activity for %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Recent posts the community enjoyed:"
       other_new_topics: "Other New Topics:"
@@ -1480,7 +1454,6 @@ he:
     spam_hosts: "המשתמש/ת החדשים ניסו ליצור כמה פרסומים עם קישורים לאותו מתחם (domain)ץ ראו את הגדרות האתר (newuser_spam_host_threshold)."
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "המשתמש/ת מושעים, לא מסר פרטי"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"

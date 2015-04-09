@@ -128,7 +128,6 @@ pl_PL:
   num_posts: "Wpisy:"
   num_participants: "Uczestnicy:"
   read_full_topic: "Przeczytaj cały temat"
-  private_message_abbrev: "PW"
   rss_description:
     latest: "Ostatnie wątki"
     hot: "Popularne wątki"
@@ -418,9 +417,7 @@ pl_PL:
       description: 'Ten wpis zawiera treści które umiarkowana osoba może uznać za wulgarne, obraźliwe lub naruszające <a href="/guidelines">wytyczne społeczności</a>.'
       long_form: 'oflagowano jako niewłaściwe'
     notify_user:
-      title: 'Prywatna wiadomość @{{username}}'
       description: 'Ten wpis zawiera coś o czym chciałbym porozmawiać z tą osobą bezpośrednio i prywatnie. Bez oflagowania.'
-      long_form: 'wysłał prywatną wiadomość do użytkownika'
       email_title: 'Twój wpis w "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -457,7 +454,6 @@ pl_PL:
       email_title: 'Temat "%{title}" wymaga uwagi moderatora'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Twój wpis został oflagowany przez społeczność. Sprawdź <a href="/my/private-messages">swoje prywatne wiadomości</a>.</p>'
     user_must_edit: '<p>Ten wpis został oflagowany przez społeczność i został tymczasowo ukryty.</p>'
   archetypes:
     regular:
@@ -522,23 +518,18 @@ pl_PL:
     user_to_user_private_messages:
       title: "Użytkownik-do-użytkownika"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     system_private_messages:
       title: "System"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     moderator_warning_private_messages:
       title: "Ostrzeżenia moderatorów"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     notify_moderators_private_messages:
       title: "Powiadomienia moderatorów"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     notify_user_private_messages:
       title: "Powiadom użytkownika"
       xaxis: "Dzień"
-      yaxis: "Liczba prywatnych wiadomości"
     top_referrers:
       title: "Najczęstszy referrerzy"
       xaxis: "Użytkownik"
@@ -628,10 +619,8 @@ pl_PL:
       description: "Przewodnik i inne informacje dla nowych użytkowników."
     welcome_user:
       title: "Przywitanie: Nowy użytkownik"
-      description: "Prywatna wiadomość automatycznie wysyłana do wszystkich nowych użytkowników po ich rejestracji."
     welcome_invite:
       title: "Przywitanie: Zaproszony użytkownik"
-      description: "Prywatna wiadomość automatycznie wysyłana do nowych użytkowników po zaakceptowaniu przez nich zaproszenia do udziału od innego użytkownika."
     login_required_welcome_message:
       title: "Wymagane logowanie: wiadomość powitalna"
       description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
@@ -653,11 +642,9 @@ pl_PL:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     min_post_length: "Minimalna długość wpisu w znakach"
-    min_private_message_post_length: "Minimalna długość wpisu w znakach dla prywatnych wiadomości"
     max_post_length: "Maksymalna długość wpisu, w znakach"
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
-    min_private_message_title_length: "Minimalna ilość znaków w tytule prywatnej wiadomości"
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii."
     uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
@@ -763,8 +750,6 @@ pl_PL:
     edited: "%{display_username} edytuje Twój wpis w %{link}"
     posted: "%{display_username} pisze w %{link}"
     moved_post: "%{display_username} przenosi twój wpis do %{link}"
-    private_message: "%{display_username} wysyła Ci prywatną wiadomość: %{link}"
-    invited_to_private_message: "%{display_username} zaprosił(-a) Cię do prywatnej wiadomości: %{link}"
     invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
   search:
     within_post: "#%{post_number} przez %{username}"
@@ -921,12 +906,6 @@ pl_PL:
     reply_by_email: "Aby odpowiedzieć odpisz na ten email lub otwórz %{base_url}%{url} w swojej przeglądarce."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Dodany przez %{username} w dniu %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} dołączył ciebie do prywatnego tematu '%{topic_title}'"
-      text_body_template: |
-        %{username} dołączył ciebie do prywatnego tematu '%{topic_title}' na %{site_name}:
-
-        Kliknij ten odnośnik by odwiedzić wskazany temat: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -973,7 +952,6 @@ pl_PL:
         ---
         %{respond_instructions}
     digest:
-      subject_template: "[%{site_name}] Podsumowanie dla %{date}"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
       top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"
