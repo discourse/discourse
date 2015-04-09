@@ -1,27 +1,18 @@
 # encoding: utf-8
-# This file contains content for the client portion of Discourse, sent out
-# to the Javascript app.
 #
-# To work with us on translations, see:
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-# Persian languages by http://discours.ir
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
+
 fa_IR:
   dates:
-    short_date_no_year: "روز ماه"
-    short_date: "روز ماه ،‌سال"
-    long_date: "ماه روز، سال ساعت:دقیقه"
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+    long_date: "MMMM D, YYYY h:mma"
   title: "گفتمان"
-  topics: "جُستارها"
-  posts: "دیدگاه‌ها"
+  topics: "موضوعات"
+  posts: "نوشته ها"
   loading: "بارگذاری..."
   powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
@@ -111,6 +102,7 @@ fa_IR:
   num_posts: "ارسال ها:"
   num_participants: "اشتراک در :"
   read_full_topic: "مشاهده متن کامل"
+  private_message_abbrev: "پیام"
   rss_description:
     latest: "آخرین ارسال ها"
     hot: "جستارهای داغ"
@@ -132,6 +124,60 @@ fa_IR:
   education:
     until_posts:
       other: "%{count} ارسال"
+    new-topic: |
+      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+
+      - Does the title accurately describe your topic? Does it sound interesting?
+
+      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+
+      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+    new-reply: |
+      Welcome to %{site_name} &mdash; **thanks for contributing!**
+
+      - Does your reply improve the conversation in some way?
+
+      - Be kind to your fellow community members.
+
+      - Constructive criticism is welcome, but criticize *ideas*, not people.
+
+      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+    avatar: |
+      ### How about a new picture for your account?
+
+      You've posted a few topics and replies, but your avatar isn't as unique as you are -- it's the same default avatar all new users have.
+
+      Have you considered **[visiting your user profile](%{profile_path})** and uploading a custom image that represents you?
+
+      It's easier to follow community discussions and find interesting people in conversations when everyone has a unique avatar!
+    sequential_replies: |
+      ### Consider replying to several posts at once
+
+      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
+
+      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+
+      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+    dominating_topic: |
+      ### Let others join the conversation
+
+      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+
+      Are you sure you're providing adequate time for other people to share their points of view, too?
+    too_many_replies: |
+      ### You have reached the reply limit for this topic
+
+      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+
+      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+    reviving_old_topic: |
+      ### Revive this topic?
+
+      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+
+      Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
       category:
@@ -166,8 +212,32 @@ fa_IR:
   vip_category_name: "زبان"
   meta_category_name: "متا"
   staff_category_name: "کارکنان"
+  assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
+  lounge_welcome:
+    body: |2
+
+      Congratulations! :confetti_ball:
+
+      If you can see this topic, you were recently promoted to **regular** (trust level 3).
+
+      You can now &hellip;
+
+      * Edit the title of any topic
+      * Change the category of any topic
+      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+      * Access a private Lounge category only visible to users at trust level 3 and higher
+      * Hide spam with a single flag
+
+      Here's the [current list of fellow regulars](/badges/3/regular). Be sure to say hi.
+
+      Thanks for being an important part of this community!
+
+      (For more information on trust levels, [see this topic][trust]. Please note that only members who continue to meet the requirements over time will remain regulars.)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "در رابطه با دسته بندی {category}% "
+    post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
     cannot_delete:
       uncategorized: "بدون دسته بندی را نمی توان حذف کرد"
       has_subcategories: "این دسته بندی به دلیل داشتن زیردسته قابل پاک شدن نیست."
@@ -263,6 +333,7 @@ fa_IR:
       title: 'نامناسب'
       long_form: 'این مورد نامناسب دانسته شد.'
     notify_user:
+      title: 'پیام @{{username}}'
       email_title: 'نوشته ی شما در "{title}%"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -314,14 +385,19 @@ fa_IR:
       xaxis: "روز"
       yaxis: "شمار پسندهای تازه"
     flags:
+      title: "پرچم ها"
       xaxis: "روز"
+      yaxis: "تعداد پرچم ها"
     bookmarks:
       title: "نشانک ها"
       xaxis: "روز"
+      yaxis: "تعداد نشانک های جدید"
     starred:
       title: "ستاره دار شد"
       xaxis: "روز"
+      yaxis: "تعداد موضوعات تازه آغاز شده"
     users_by_trust_level:
+      title: "کاربران بر اساس سطح اعتماد"
       xaxis: "سطح اعتماد"
       yaxis: "تعداد کاربران"
     emails:
@@ -331,29 +407,36 @@ fa_IR:
     user_to_user_private_messages:
       title: "کاربر به کاربر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     system_private_messages:
       title: "سیستم"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     moderator_warning_private_messages:
       title: "هشدل مدیر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     notify_moderators_private_messages:
       title: "اطلاعیه مدیران"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     notify_user_private_messages:
       title: "اطلاعیه کاربر"
       xaxis: "روز"
+      yaxis: "تعداد پیام ها"
     top_referrers:
       title: "رفتن به بالا"
       xaxis: "کاربر"
       num_clicks: "کلیک ها"
       num_topics: "موضوعات"
     top_traffic_sources:
+      title: "بالاترین ترافیک منابع"
       xaxis: "دومین"
       num_clicks: "کلیک ها"
       num_topics: "موضوعات"
       num_users: "کاربران"
     top_referred_topics:
+      title: "بالاترین موضوعات مورد مراجعه"
       xaxis: "موضوعات"
       num_clicks: "کلیک ها"
     page_view_anon_reqs:
@@ -386,23 +469,62 @@ fa_IR:
       title: "مجموع"
       xaxis: "روز"
       yaxis: "کل درخواست ها"
+  dashboard:
+    memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است،برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کنند.'
+    default_logo_warning: "یک لوگوی گرافیکی برای سایت خود انتخاب نمایید. تگ های logo_url, logo_small_url, و favicon_url را بروز رسانی کنید. <a href='/admin/site_settings'>تنظیمات سایت</a>"
   content_types:
     welcome_user:
       title: "خوش آمدیده اید : کاربر جدید"
     head:
       title: "HTML head"
   site_settings:
+    default_locale: "زبان پیشفرض برای دیسکورس  (ISO 639-1 کد)"
+    allow_user_locale: "اجازه برای کاربران تا بتوانند زبان مورد نظر خود را انتخاب نماییند"
+    title: "نام این وب سایت،استفاده شده در عنوان تگ"
+    show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     allow_moderators_to_create_categories: "اجازه دادن به مدیران برای ساخت دسته‌بندی‌های جدید"
+    enable_badges: "فعال سازی سیستم مدال دهی"
     min_password_length: "حداقل طول رمز عبور"
+    max_likes_per_day: "حداکثر تعداد پسند هر کاربر در روز"
+    max_flags_per_day: "حداکثر تعداد پرچم هر کاربر در روز"
+    max_bookmarks_per_day: "حداکثر تعداد نشانک هر کاربر در روز"
+    max_edits_per_day: "حداکثر تعداد ویرایش هر کاربر در روز"
+    max_topics_per_day: "حداکثر تعداد موضوعاتی که هر کاربر در روز می توانند ایجاد کند"
+    max_private_messages_per_day: "حداکثر تعداد پیام هایی که هر کاربر در روز می توانند ایجاد کند"
+    max_invites_per_day: "حداکثر تعداد دعوت نامه هایی که هر کاربر در روز می توانندارسال کند"
+    suggested_topics: "نعداد موضوعات پیشنهادی در پایین هر موضوع"
+    tl1_requires_topics_entered: "یک کاربر جدید چه تعداد موضوعاتی باید ایجاد کنید تا به سطح اعتماد 1 ترفیع پیدا کند."
+    tl1_requires_read_posts: "یک کاربر جدید چه تعداد نوشته باید ایجاد کنید تا به سطح اعتماد 1 ترفیع پیدا کند."
+    tl1_requires_time_spent_mins: "یک کاربر جدید چه مدت باید نوشته را بخواند تا به سطح اعتماد 1 ترفیع پیدا کند."
     allow_uploaded_avatars: "اجازه دادن به کاربران برای بارگذاری آواتارهای سفارشی"
     enable_names: "نام کامل کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     enable_emoji: "فعالسازی ایموجی"
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
+    errors:
+      invalid_email: "آدرس ایمیل نامعتبر"
+      invalid_username: "هیچ کاربری با این نام کاربری وجود ندارد."
+      invalid_integer: "مقدار باید یک عدد صحیح باشد."
+      invalid_string: "مقدار نامعتبر."
+  notification_types:
+    mentioned: "%{display_username} به شما اشاره شد در %{link}"
+    liked: "%{display_username} نوشته شما پسندیدهشد در %{link}"
+    replied: "%{display_username} به نوشته شما پاسخ داده شد در %{link}"
+    quoted: "%{display_username} از شما نقل قول شد در %{link}"
+    edited: "%{display_username} نوشته شما ویرایش شد در %{link}"
+    posted: "%{display_username} نوشته ارسال شد در %{link}"
+    moved_post: "%{display_username} نوشته شما منتقل شد به %{link}"
+    private_message: "%{display_username} یک پیام ارسال کنید: %{link}"
+    invitee_accepted: " %{display_username} دعوت نامه شما را پذیرفته شد "
+    linked: "%{display_username} شما پیوند خوردید در %{link}"
+    granted_badge: "شما وارد شدید %{link}"
   search:
+    within_post: "#%{post_number} توسط %{username}"
     types:
       category: 'دسته‌ها'
+      topic: 'درخواست ها'
       user: 'کاربران'
   original_poster: "نویسنده اصلی"
+  most_posts: "بیشترین نوشته ها"
   move_posts:
     new_topic_moderator_post:
       other: "من {count}% تا از نوشته‌ها را به این موضوع جدید انتقال دادم: {topic_link}%"
@@ -434,6 +556,7 @@ fa_IR:
   login:
     incorrect_username_email_or_password: "نام کاربری، ایمیل یا رمز عبور نادرست"
     active: "حساب کاربریتان فعال شده و آماده‌ی استفاده است."
+    activate_email: "<p>تقریبا ثبت نام انجام شد! ما ایمیل فعال سازی را برای ما ارسال کردیم <b>%{email}</b>. لطفا به ایمیل خود برای فعال سازی حساب کاربر خود مراجعه نمایید.</p><p> اگر ایمل فعال سازی نبود، لطفا پوشه اسپم ایمیل خود را برسی نمایید،اگر ایمیل ارسال نشده است با ورود به سایت دوباره ایمیل فعال سازی ارسال نمایید. </p>"
     not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
     suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
@@ -441,6 +564,11 @@ fa_IR:
     errors: "{errors}%"
     new_registrations_disabled: "ثبت حساب‌ کاربری جدید اکنون امکان‌پذیر نیست."
     password_too_long: "رمزهای عبور به 200 کاراکتر محدود شده‌اند."
+  user:
+    email:
+      blocked: "مجاز نیست."
+    ip_address:
+      blocked: "مسدود شده است."
   invite_password_instructions:
     subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
   test_mailer:
@@ -481,15 +609,22 @@ fa_IR:
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
       [mj]: https://www.mailjet.com/pricing
+  new_version_mailer_with_notes:
+    subject_template: "[%{site_name}] بروزرسانی در دسترس"
   flags_reminder:
+    post_number: "نوشته"
     subject_template:
       other: "%{count} نشانه ها منتظر استفاده"
   system_messages:
     welcome_invite:
       subject_template: "به %{site_name} خوش آمدید!"
+    backup_failed:
+      subject_template: "پشتیبان گیری با شکست مواجه شد."
     pending_users_reminder:
       subject_template:
         other: "%{count} کاربران منتظر تایید"
+  subject_re: "پاسخ:"
+  subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     unsubscribe:
@@ -506,18 +641,65 @@ fa_IR:
 
         ---
         {respond_instructions}%
+    user_quoted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_mentioned:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
+    user_posted_pm:
+      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{message}
+
+        %{context}
+
+        ---
+        %{respond_instructions}
     digest:
+      subject_template: "[%{site_name}] خلاصه"
       new_activity: "فعالیت جدید در موضوعات و نوشته‌های شما:"
       top_topics: "نوشته‌های محبوب"
       other_new_topics: "موضوعات محبوب"
       click_here: "اینجا کلیک کنید"
+      from: "%{site_name} خلاصه"
       read_more: "بیش‌تر بخوانید"
+      more_topics_category: "موضوعات جدید بیشتر"
       posts:
         other: "%{count} نوشته ها"
+    forgot_password:
+      subject_template: "[%{site_name}] باز یابی رمز عبور"
+    account_created:
+      subject_template: "[%{site_name}] حساب کاربری جدید شما"
   page_not_found:
     popular_topics: "محبوب"
+    recent_topics: "اخیر"
     see_more: "بیشتر"
+    search_title: "جستجو در این سایت"
     search_google: "گوگل"
+  terms_of_service:
+    title: "شرایط استفاده از خدمات"
   deleted: 'حذف شد'
   upload:
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
@@ -525,6 +707,8 @@ fa_IR:
       too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده باید {max_size_kb}% کیلوبایت باشد. )"
     images:
       unknown_image_type: "متأسفم، اما به نظر می‌رسد پرونده‌ای که می‌خواهید بارگذاری کنید، از نوع «تصویر» نیست."
+  email_log:
+    topic_nil: "پاسخ در نوشه صفر است"
   color_schemes:
     base_theme_name: "پایه"
   about: "درباره"
@@ -865,7 +1049,7 @@ fa_IR:
         <li>Whenever possible, scope your search to a particular category, user, or topic</li>
       </ul>
       </p>
-      <h2>Options</h2>
+      <h2>گزینه ها</h2>
       <p>
         <table>
         <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>

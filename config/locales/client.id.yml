@@ -195,8 +195,6 @@ id:
       '2': "Likes Diterima"
       '3': "Markah"
       '4': "Topik"
-      '5': "Post"
-      '6': "Balasan"
       '7': "Disebutkan"
       '9': "Kutipan"
       '10': "Bertanda Bintang"
@@ -233,8 +231,6 @@ id:
       mute: "Redam"
       edit: "Ubah Preferensi"
       download_archive: "Unduh Pos Saya"
-      new_private_message: "Pesan Pribadi Baru"
-      private_message: "Private Message"
       private_messages: "Messages"
       activity_stream: "Activity"
       bookmarks: "Markah"
@@ -302,7 +298,6 @@ id:
     last_seen: 'Terlihat'
     created: 'Dibuat'
     forgot_password:
-      title: "Lupa Password"
       action: "Saya lupa password"
     login:
       email_placeholder: "email atau username"

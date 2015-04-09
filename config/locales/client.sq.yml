@@ -215,8 +215,6 @@ sq:
       '2': "Pëlqime të marra"
       '3': "Të Preferuarat"
       '4': "Tema"
-      '5': "Postime"
-      '6': "Përgjigje"
       '7': "Përmendje"
       '9': "Citim"
       '10': "Shënuar"
@@ -257,7 +255,6 @@ sq:
       profile: "Profili"
       mute: "Mute"
       edit: "Ndrysho Preferencat"
-      private_message: "Mesazhet Private"
       private_messages: "Mesazhet"
       activity_stream: "Aktiviteti"
       preferences: "Preferencat"
@@ -328,7 +325,6 @@ sq:
         uploaded_avatar_empty: "Shto një foto të personalizuar"
         upload_title: "Ngarni foton tuaj"
         upload_picture: "Ngarko Foto"
-        image_is_not_a_square: "Vini Re: imazhi është përshtatur, pasi nuk ishte foto katrore."
       change_profile_background:
         title: "Sfondi Profilit"
         instructions: "Sfondi profilit do të vendoset në qendër dhe do të ketë një gjerësi prej 850px."
@@ -425,7 +421,6 @@ sq:
       stream:
         posted_by: "Postuar nga"
         sent_by: "Dërgura nga"
-        private_message: "mesazhet private"
         the_topic: "tema"
     loading: "Duke ngarkuar..."
     errors:
@@ -476,9 +471,7 @@ sq:
       enable: "Hide Deleted Posts"
       disable: "Show Deleted Posts"
     private_message_info:
-      title: "Mesazhet Private"
       invite: "Fto të tjerët..."
-      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
     email: 'Email'
     username: 'Username'
     last_seen: 'Parë'
@@ -490,7 +483,6 @@ sq:
       title: "Krijo një Llogari të Re"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
     forgot_password:
-      title: "Harruat Fjalëkalimin"
       action: "Kam harruar fjalëkalimin"
       invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Rivendos Fjalëkalimin"
@@ -557,8 +549,6 @@ sq:
       reply_here: "Përgjigju Këtu"
       reply: "Përgjigju"
       cancel: "Anulo"
-      create_topic: "Temë e Re"
-      create_pm: "Mesazh Privat"
       title: "Or press Ctrl+Enter"
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
@@ -608,10 +598,8 @@ sq:
           units: "(# i orëve)"
           examples: 'Enter number of hours (24).'
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali postimeve të sinjalizuar"
-      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -692,7 +680,6 @@ sq:
       filter_to: "{{post_count}} posts in topic"
       create: 'Temë e Re'
       create_long: 'Fillo një Diskutim të Ri'
-      private_message: 'Fillo një mesazh privat'
       list: 'Tema'
       new: 'temë e re'
       unread: 'unread'
@@ -770,13 +757,11 @@ sq:
           '0': 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Në vëzhgim"
           description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the private message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
           description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
@@ -785,10 +770,8 @@ sq:
           description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post in the private message."
         muted_pm:
           title: "Muted"
-          description: "You will never be notified of anything about this private message."
         muted:
           title: "Muted"
           description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
@@ -826,21 +809,15 @@ sq:
       automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
       invite_private:
-        title: 'Invite to Private Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Fto"
-        success: "We've invited that user to participate in this private message."
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
       invite_reply:
         title: 'Invite'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         email_placeholder: 'name@example.com'
-        success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
       login_reply: 'Përgjigju tek Diskutimi'
       filters:
         n_posts:
@@ -884,10 +861,8 @@ sq:
           one: You have selected <b>1</b> post.
           other: You have selected <b>{{count}}</b> posts.
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
       reply_topic: "Përgjigju tek {{link}}"
       quote_reply: "cito përgjigjen"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"
       in_reply_to: "përgjigju tek"
@@ -980,8 +955,6 @@ sq:
           inappropriate: "{{icons}} flagged this as inappropriate"
           notify_moderators: "{{icons}} notified moderators"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
           bookmark: "{{icons}} bookmarked this"
           like: "{{icons}} liked this"
           vote: "{{icons}} voted for this"
@@ -990,7 +963,6 @@ sq:
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
           notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
           vote: "You voted for this post"
@@ -1007,9 +979,6 @@ sq:
           notify_moderators:
             one: "You and 1 other flagged this for moderation"
             other: "You and {{count}} other people flagged this for moderation"
-          notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
           bookmark:
             one: "You and 1 other bookmarked this post"
             other: "You and {{count}} other people bookmarked this post"
@@ -1032,9 +1001,6 @@ sq:
           notify_moderators:
             one: "1 person flagged this for moderation"
             other: "{{count}} people flagged this for moderation"
-          notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
           bookmark:
             one: "1 person bookmarked this post"
             other: "{{count}} people bookmarked this post"
@@ -1138,7 +1104,6 @@ sq:
       private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
-      notify_action: 'Private message'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1160,7 +1125,6 @@ sq:
     flagging_topic:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Raporto Temën"
-      notify_action: "Mesazhet Private"
     topic_map:
       title: "Përmbledhja e Temës"
       links_shown: "show all {{totalLinks}} links..."
@@ -1295,8 +1259,6 @@ sq:
         admins: 'Administratorët:'
         blocked: 'Bllokuar:'
         suspended: 'Përjashtuar:'
-        private_messages_short: "MP"
-        private_messages_title: "Mesazhet Private"
         reports:
           today: "Sot"
           yesterday: "Dje"
@@ -1322,7 +1284,6 @@ sq:
         agree_title: "Confirm this flag as valid and correct"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
         agree_flag_restore_post: "Agree (restore post)"
         agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
@@ -1412,18 +1373,15 @@ sq:
         read_only:
           enable:
             title: "Enable the read-only mode"
-            text: "Enable read-only mode"
             confirm: "Are you sure you want to enable the read-only mode?"
           disable:
             title: "Disable the read-only mode"
-            text: "Disable read-only mode"
         logs:
           none: "No logs yet..."
         columns:
           filename: "Filename"
           size: "Size"
         upload:
-          text: "Ngarko"
           uploading: "Duke ngarkuar..."
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
@@ -1431,28 +1389,22 @@ sq:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
-            text: "Anulo"
             title: "Cancel the current operation"
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
-            text: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
             without_uploads: "Yes (do not include files)"
           download:
-            text: "Shkarko"
             title: "Download the backup"
           destroy:
-            text: "Fshij"
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is disabled in the site settings."
-            text: "Rikthe"
             title: "Restore the backup"
             confirm: "Are your sure you want to restore this backup?"
           rollback:
-            text: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:

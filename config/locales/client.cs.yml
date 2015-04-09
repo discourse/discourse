@@ -225,18 +225,18 @@ cs:
       sent_by_user: "Posláno uživatelem <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Posláno <a href='{{userUrl}}'>vámi</a>"
     directory:
-      title: "Seznam uživatelů"
-      likes_given: "Rozdaných libí se"
-      likes_received: "Obdržených líbí se"
-      topics_entered: "Navštívených témat"
+      filter_name: "Filtrovat podle uživatelského jména"
+      title: "Uživatelé"
+      likes_given: "Rozdáno"
+      likes_received: "Obdrženo"
       time_read: "Čas strávený čtením"
       topic_count: "Témata"
       post_count: "Odpovědi"
-      no_results: "Pro toto období nebylo nic nalezeno"
+      no_results: "Žádné výsledky"
       total_rows:
-        one: "nalezen 1 uživatel"
-        few: "nalezeni %{count} uživatelé"
-        other: "nalezeno %{count} uživatelů"
+        one: "1 uživatel"
+        few: "%{count} uživatelé"
+        other: "%{count} uživatelů"
     groups:
       visible: "Skupina je viditelná pro všechny uživatele"
       title:
@@ -257,8 +257,6 @@ cs:
       '2': "Obdržených 'líbí se'"
       '3': "Záložky"
       '4': "Témata"
-      '5': "Odpovědi"
-      '6': "Odezvy ostatních"
       '7': "Zmínění"
       '9': "Citace"
       '10': "Oblíbené"
@@ -307,8 +305,6 @@ cs:
       mute: "Ignorovat"
       edit: "Upravit nastavení"
       download_archive: "Stáhnout moje příspěvky"
-      new_private_message: "Nová soukromá zpráva"
-      private_message: "Soukromé zprávy"
       private_messages: "Zprávy"
       activity_stream: "Aktivita"
       preferences: "Nastavení"
@@ -383,7 +379,6 @@ cs:
         uploaded_avatar_empty: "Přidat vlastní obrázek"
         upload_title: "Nahrát obrázek"
         upload_picture: "Nahrát obrázek"
-        image_is_not_a_square: "Upozornění: ořízli jsem váš obrázek; nebyl to čtverec."
       change_profile_background:
         title: "Pozadí profilu"
         instructions: "Pozadí profilu je zarovnáno doprostřed a má výchozí šířku 850px."
@@ -438,8 +433,6 @@ cs:
         title: "Když tady dlouho nebudu, chci emailem zaslat co je nového:"
         daily: "denně"
         weekly: "týdně"
-      email_direct: "Upozornit emailem na moje citace, odpovědi na můj příspěvek a na @jmeno"
-      email_private_messages: "Upozornit emailem na nové soukromé konverzace"
       email_always: "Posílat upozorňovací emaily i když jsem zrovna na webu aktivní"
       other_settings: "Ostatní"
       categories_settings: "Kategorie"
@@ -491,7 +484,6 @@ cs:
           none: "Zatím jste nikoho nepozval. Můžete poslat individuální pozvánku nebo pozvat skupinu lidí naráz pomocí <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrání souboru</a>."
           text: "Hromadné pozvání s pomocí souboru"
           uploading: "Nahrávám..."
-          success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí soukromé zprávy."
           error: "Nastala chyba při nahrávání '{{filename}}': {{message}}"
       password:
         title: "Heslo"
@@ -515,7 +507,6 @@ cs:
       stream:
         posted_by: "Zaslal"
         sent_by: "Odeslal"
-        private_message: "soukromá zpráva"
         the_topic: "téma"
     loading: "Načítám..."
     errors:
@@ -568,9 +559,7 @@ cs:
       enable: "Schovat smazané příspěvky"
       disable: "Zobrazit smazané příspěvky"
     private_message_info:
-      title: "Soukromá konverzace"
       invite: "pozvat účastníka"
-      remove_allowed_user: "Určitě chcete {{name}} dát pryč z téhle soukromé zprávy?"
     email: 'Email'
     username: 'Uživatelské jméno'
     last_seen: 'Naposledy viděn'
@@ -582,7 +571,6 @@ cs:
       title: "Vytvořit nový účet"
       failed: "Něco se nepovedlo, možná je tato e-mailová adresa již použita. Zkuste použít formulář pro obnovení hesla."
     forgot_password:
-      title: "Zapomenuté heslo"
       action: "Zapomněl jsem své heslo"
       invite: "Vložte svoje uživatelské jméno nebo e-mailovou adresu a my vám zašleme postup pro obnovení hesla."
       reset: "Resetovat heslo"
@@ -654,8 +642,6 @@ cs:
       reply_here: "Odpovědět sem"
       reply: "Odpovědět"
       cancel: "Zrušit"
-      create_topic: "Nové Téma"
-      create_pm: "Soukromá zpráva"
       title: "Nebo zmáčkněte Ctrl+Enter"
       users_placeholder: "Přidat uživatele"
       title_placeholder: "O čem je ve zkratce tato diskuze?"
@@ -705,11 +691,9 @@ cs:
           units: "(počet hodin)"
           examples: 'Zadejte počet hodin (24).'
     notifications:
-      title: "oznámení o zmínkách pomocí @jméno, odpovědi na vaše příspěvky a témata, soukromé zprávy, atd."
       none: "Notifikace nebylo možné načíst."
       more: "zobrazit starší oznámení"
       total_flagged: "celkem nahlášeno příspěvků"
-      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -743,7 +727,6 @@ cs:
         user: "Vyhledat příspěvky od @{{username}}"
         category: "Vyhledat v kategorii „{{category}}“"
         topic: "Vyhledat v tomto tématu"
-        private_messages: "Hledat v soukromých zprávách"
     site_map: "přejít na jiný seznam témat nebo kategorii"
     go_back: 'jít zpět'
     not_logged_in_user: 'stránka uživatele s přehledem o aktuální činnosti a nastavení'
@@ -794,7 +777,6 @@ cs:
       filter_to: "{{post_count}} příspěvků v tématu"
       create: 'Nové téma'
       create_long: 'Vytvořit nové téma'
-      private_message: 'Vytvořit soukromou konverzaci'
       list: 'Témata'
       new: 'nové téma'
       unread: 'nepřečtený'
@@ -879,13 +861,11 @@ cs:
           '0': 'Ignorujete všechna oznámení z tohoto tématu.'
         watching_pm:
           title: "Hlídání"
-          description: "O každém novém příspěvku budete informováni pomocí soukromé zprávy. Vedle názvu tématu se objeví počet nepřečtených a nových příspěvků."
         watching:
           title: "Hlídané"
           description: "Budete informováni o každém novém příspěvku v tomto tématu. Vedle názvu tématu se objeví počet nepřečtených a nových příspěvků."
         tracking_pm:
           title: "Sledování"
-          description: "U soukromých zpráv se zobrazí počet nových a nepřečtených příspěvků. Budete uporozněni když vás někdo zmíní jako @jmeno nebo odpoví na váš příspěvek."
         tracking:
           title: "Sledované"
           description: "U tématu se zobrazí počet nepřečtených a nových příspěvků. Budete uporozněni když vás někdo zmíní jako @jmeno nebo odpoví na váš příspěvek."
@@ -894,10 +874,8 @@ cs:
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
         regular_pm:
           title: "Normální"
-          description: "Budete uporozněni když vás někdo zmíní jako @jmeno nebo odpoví na váš příspěvek v soukromé zprávě."
         muted_pm:
           title: "Ztišení"
-          description: "Nikdy nedostanete oznámení týkající se čehokoliv o této soukromé zprávě."
         muted:
           title: "Ztišené"
           description: "nebudete dostávat žádná oznámení k tomuto tématu a ani se nebude zobrazovat v seznamu nepřečtených témat."
@@ -907,8 +885,6 @@ cs:
         open: "Otevřít téma"
         close: "Zavřít téma"
         auto_close: "Automaticky zavřít"
-        feature: "Povýšit téma"
-        remove_feature: "Zrušit povýšení tématu"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
         pin: "Připnout téma"
@@ -937,22 +913,15 @@ cs:
       automatically_add_to_groups_optional: "Tato pozvánka obsahuje také přístup do této skupiny: (volitelné, pouze administrátor)"
       automatically_add_to_groups_required: "Tato pozvánka obsahuje také přístup do těchto skupin: (<b>Vyžadováno</b>, pouze administrátor)"
       invite_private:
-        title: 'Pozvat do soukromé konverzace'
         email_or_username: "Email nebo uživatelské jméno pozvaného"
         email_or_username_placeholder: "emailová adresa nebo uživatelské jméno"
         action: "Pozvat"
-        success: "Pozvali jsme tohoto uživatele, aby se připojil do této soukromé zprávy."
         error: "Bohužel nastala chyba při odesílání pozvánky."
         group_name: "název skupiny"
       invite_reply:
         title: 'Pozvat k diskuzi'
-        action: 'Odeslat pozvánku'
-        help: 'odeslat pozvánku přátelům, aby mohli na toto téma odpovědět jedním kliknutím'
-        to_topic: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit a odpovědět na toto téma pomocí kliknutí na odkaz. Nebude potřeba registrace."
         to_forum: "Pošleme krátký email dovolující vašemu příteli se okamžitě zapojit s pomocí kliknutí na odkaz. Nebude potřeba registrace."
         email_placeholder: 'jmeno@priklad.cz'
-        success: "Zaslali jsme pozvánku na <b>{{email}}</b>. Upozorníme vás až bude pozvánka použita. Své pozvánky můžete sledovat v tabulce pozvánek na svém uživatelském profilu."
-        error: "Bohužel se nepodařilo pozvat tuto osobu. Není již registrovaným uživatelem? (Pozvánky jsou omezeny)."
       login_reply: 'Přihlaste se, chcete-li odpovědět'
       filters:
         n_posts:
@@ -1000,10 +969,8 @@ cs:
           few: Máte označeny <b>{{count}}</b> příspěvky.
           other: Máte označeno <b>{{count}}</b> příspěvků.
     post:
-      reply: "Odpovídáte na {{link}} od {{replyAvatar}} {{username}}"
       reply_topic: "Odpověď na {{link}}"
       quote_reply: "odpověď s citací"
-      edit: "Editujete {{link}} od uživatele {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
       in_reply_to: "Odpovědět"
@@ -1101,8 +1068,6 @@ cs:
           inappropriate: "{{icons}} označili tento příspěvek jako nevhodný"
           notify_moderators: "{{icons}} nahlásili tento příspěvek"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>nahlásili tento příspěvek</a>"
-          notify_user: "{{icons}} zahájili soukromou konverzaci"
-          notify_user_with_url: "{{icons}} zahájijli a <a href='{{postUrl}}'>soukromou konverzaci</a>"
           bookmark: "{{icons}} si přidali příspěvek do záložek"
           like: "{{icons}} se líbí tento příspěvek"
           vote: "{{icons}} hlasovali pro tento příspěvek"
@@ -1111,7 +1076,6 @@ cs:
           spam: "Označili jste tento příspěvek jako spam"
           inappropriate: "Označili jste tento příspěvek jako nevhodný"
           notify_moderators: "Nahlásili jste tento příspěvek"
-          notify_user: "Zahájili jste soukromou konverzaci s tímto uživatelem"
           bookmark: "Přidali jste si tento příspěvek do záložek"
           like: "Toto se vám líbí"
           vote: "Hlasovali jste pro tento příspěvek"
@@ -1132,10 +1096,6 @@ cs:
             one: "Vy a 1 další člověk jste nahlásili tento příspěvek"
             few: "Vy a {{count}} další lidé jste nahlásili tento příspěvek"
             other: "Vy a {{count}} dalších lidí jste nahlásili tento příspěvek"
-          notify_user:
-            one: "Vy a 1 další člověk jste zahájili soukromou konverzaci s tímto uživatelem"
-            few: "Vy a {{count}} další lidé jste zahájili soukromou konverzaci s tímto uživatelem"
-            other: "Vy a {{count}} dalších lidí jste zahájili soukromou konverzaci s tímto uživatelem"
           bookmark:
             one: "Vy a 1 další člověk jste si přidali tento příspěvek do záložek"
             few: "Vy a {{count}} další lidé jste si přidali tento příspěvek do záložek"
@@ -1165,10 +1125,6 @@ cs:
             one: "1 člověk nahlásil tento příspěvek"
             few: "{{count}} lidé nahlásili tento příspěvek"
             other: "{{count}} lidí nahlásilo tento příspěvek"
-          notify_user:
-            one: "1 člověk zahájil soukromou konverzaci s tímto uživatelem"
-            few: "{{count}} lidé zahájili soukromou konverzaci s tímto uživatelem"
-            other: "{{count}} lidí zahájilo soukromou konverzaci s tímto uživatelem"
           bookmark:
             one: "1 člověk si přidal tento příspěvek do záložek"
             few: "{{count}} lidé si přidali tento příspěvek do záložek"
@@ -1277,7 +1233,6 @@ cs:
       private_reminder: 'nahlášení jsou soukromá, viditelná <b>pouze</b> pro správce'
       action: 'Nahlásit příspěvek'
       take_action: "Zakročit"
-      notify_action: 'Private message'
       delete_spammer: "Odstranit spamera"
       delete_confirm: "Chystáte se odstranit <b>%{posts}</b> příspěvků a <b>%{topics}</b> témat od tohoto uživatele, smazat jeho účet, a vložit jeho emailovou adresu <b>%{email}</b> na seznam permanentně blokovaných. Jste si jistí, že je tento uživatel opravdu spamer?"
       yes_delete_spammer: "Ano, odstranit spamera"
@@ -1298,7 +1253,6 @@ cs:
     flagging_topic:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit téma"
-      notify_action: "Private message"
     topic_map:
       title: "Souhrn tématu"
       links_shown: "zobrazit všech {{totalLinks}} odkazů..."
@@ -1441,8 +1395,6 @@ cs:
         admins: 'Administrátoři:'
         blocked: 'Blokováno:'
         suspended: 'Zakázáno:'
-        private_messages_short: "Soukromé zprávy"
-        private_messages_title: "Soukromé zprávy"
         space_free: "{{size}} prázdné"
         uploads: "Nahrané soubory"
         backups: "zálohy"
@@ -1476,7 +1428,6 @@ cs:
         agree_title: "Potvrdit toto hlášení jako právoplatné a korektní"
         agree_flag_modal_title: "Schvaluji a..."
         agree_flag_hide_post: "Schvaluji (skrýt příspěvek + poslat soukromou zprávu)"
-        agree_flag_hide_post_title: "Skrýt tento příspěvek a automaticky odeslat soukromou zprávu, která uživatele žádá o editaci"
         agree_flag_restore_post: "Schvaluji (obnovit příspěvek)"
         agree_flag_restore_post_title: "Obnovit tento příspěvek"
         agree_flag: "Souhlasit s hlášením"
@@ -1585,18 +1536,15 @@ cs:
         read_only:
           enable:
             title: "Zapnout režim jen pro čtení"
-            text: "Zapnout režim jen pro čtení"
             confirm: "Určitě chcete zapnout režim jen pro čtení?"
           disable:
             title: "Vypnout režim jen pro čtení"
-            text: "Disable read-only mode"
         logs:
           none: "Zatím je log prázdný..."
         columns:
           filename: "Název souboru"
           size: "Velikost"
         upload:
-          text: "Nahrát"
           uploading: "Nahrávání..."
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
@@ -1604,32 +1552,25 @@ cs:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
-            text: "Zrušit"
             title: "Cancel the current operation"
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
-            text: "Zálohovat"
             title: "Vytvořit zálohu"
             confirm: "Chcete začít novou zálohu?"
           download:
-            text: "Stáhnout"
             title: "Stáhnout zálohu"
           destroy:
-            text: "Smazat"
             title: "Odstranit zálohu"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is disabled in the site settings."
-            text: "Obnovit"
             title: "Restore the backup"
             confirm: "Are your sure you want to restore this backup?"
           rollback:
-            text: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       export_csv:
         user_archive_confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
-        success: "Exportování bylo zahájeno. O dokončení budete informováni pomocí soukromé zprávy."
         failed: "Exportování selhalo. Prosím zkontrolujte logy."
         rate_limit_error: "Příspěvky mohou být staženy jednou za den. Prosíme, zkuste to znovu zítra."
         button_text: "Export"

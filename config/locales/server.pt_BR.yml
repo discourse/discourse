@@ -126,7 +126,7 @@ pt_BR:
   num_posts: "Mensagens:"
   num_participants: "Participantes:"
   read_full_topic: "Ler tópico completo"
-  private_message_abbrev: "MP"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Últimos tópicos"
     hot: "Tópicos quentes"
@@ -397,9 +397,7 @@ pt_BR:
       description: 'Este post contém conteúdo que uma pessoa razoável consideraria ofensivo, abusivo, ou uma violação das <a href="/guidelines">nossas diretrizes da comunidade</a>.'
       long_form: 'sinalizado como inapropriado'
     notify_user:
-      title: 'Mensagem privada @{{username}}'
       description: 'Este post contém algo que eu quero falar com essa pessoa diretamente e em particular sobre. Não lançar uma flag.'
-      long_form: 'usuário de mensagem privada'
       email_title: 'Sobre a sua postagem "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -436,7 +434,6 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>A sua mensagem atingiu o nível máximo de sinalizações. Por favor leia as suas mensagens privadas.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -595,7 +592,6 @@ pt_BR:
     title_nag: "Digite o nome do seu site. Atualize o título nas <a href='/admin/site_settings'>Configurações do Site</a>."
     site_description_missing: "Digite uma frase de descrição do seu site que aparecerá em resultados de busca. Atualize site_description nas <a href='/admin/site_settings'>Configurações do Site</a>."
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
-    site_contact_username_warning: "Digite o nome de uma membro da equipe do site próximo por quem enviar mensagens particulares automáticas importantes. Atualize site_contact_username nas <a href='/admin/site_settings'>Configurações do Site</a>."
     notification_email_warning: "Emails de notificação não estão sendo enviados por um endereço de email válido no seu domínio; entrega de email será errática e não confiável. Por favor configure notification_email com um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Site</a>."
   content_types:
     education_new_reply:
@@ -609,10 +605,8 @@ pt_BR:
       description: "Dicas de uso comuns, informações essenciais do fórum, e orientação básica para usuários novos."
     welcome_user:
       title: "Boas-vindas: Usuário Novo"
-      description: "Uma mensagem particular enviada automaticamente para todos os usuários novos quando eles se registram."
     welcome_invite:
       title: "Boas-vindas: Usuário Convidado"
-      description: "Uma mensagem particular enviada automaticamente para todos os usuários convidados quando eles aceitam o convite de outro usuário para participar."
     login_required_welcome_message:
       title: "Boas-vindas: Login Solicitado"
       description: "Mensagem de boas-vindas que é exibida para usuários que não estão logados quando a configuração de 'login requerido' está ativada."
@@ -634,11 +628,9 @@ pt_BR:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
     min_post_length: "Comprimento mínimo permitido do post em caracteres"
-    min_private_message_post_length: "Comprimento mínimo permitido para mensagens privadas em caracteres"
     max_post_length: "Comprimento máximo permitido para o post em caracteres"
     min_topic_title_length: "Comprimento mínimo permitido para o título do post em caracteres"
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
-    min_private_message_title_length: "Comprimento mínimo permitido para a mensagem privada em caracteres"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
     allow_uncategorized_topics: "Permitir tópicos serem criados sem categoria."
     uncategorized_description: "A descrição da categoria Sem categoria. Deixe em branco para nenhuma descrição."
@@ -671,7 +663,6 @@ pt_BR:
     digest_logo_url: "O logo alternativo usado no topo do resumo de e-mails do seu site. Se deixar em branco `logo_url` será usado. eg: http://example.com/logo.png"
     logo_small_url: "A pequena imagem de logo no topo à esquerda do seu site, vista quando rolando a página abaixo. Se deixado em branco, um símbolo de homepage será mostrado."
     favicon_url: "Um favicon para o seu site"
-    mobile_logo_url: "A imagem posicionada fixada no topo à esquerda do site móvel. Se deixado em branco, o texto de título do site será usado."
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -682,7 +673,6 @@ pt_BR:
     summary_likes_required: "Curtidas mínimas em um tópico antes de 'Resumir este tópico, ficar habilitado"
     summary_percent_filter: "Quando um usuário clicar em 'Resumor este tópico', mostrar os melhores % mensagens"
     summary_max_results: "Máximo número de posts quando resumidos por Categoria "
-    enable_private_messages: "Permitir usuários de nível 1 a criar e responder mensagens privadas."
     enable_long_polling: "O sistema de mensagens das notificações pode fazer solicitações longas."
     long_polling_base_url: "URL Utilizada para \"long polling\" ( Quando um CDN for configurado, tenha certeza que essa configuração seja a padrão) ex: http://origin.site.com"
     long_polling_interval: "Tempo que o servidor deve aguardar antes de responder quando não existe nenhum dado para ser enviado. (apenas usuários logados)"
@@ -715,8 +705,6 @@ pt_BR:
     post_menu_hidden_items: "Os items de menu a ser escondidos por padrão no menu de postagem, a menos que uma elipse de expansão seja clicada."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
     track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
-    site_contact_username: "Um nome de usuário da staff para enviar todas as mensagens particulares em nome dele. Se deixado em branco, a conta padrão System será usada."
-    send_welcome_message: "Enviar a todos os novos usuários uma mensagem particular de boas vindas com um guia de início rápido."
     suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível em um post quando há apenas uma única resposta diretamente abaixo deste post."
     suppress_reply_directly_above: "Não mostrar a em-resposta-à expansível em um post quando há apenas uma única resposta diretamente acima deste post."
     suppress_reply_when_quoting: "Não mostrar a em-resposta-à expansível em um post quando o post cita a resposta."
@@ -750,7 +738,6 @@ pt_BR:
     sso_secret: "String secreta usada para autenticar criptograficamente informação de SSO, esteja certo de que possui 10 ou mais caracteres"
     sso_overrides_email: "Substitui e-mail local com site externo de e-mail do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de e-mails locais)"
     sso_overrides_username: "Substitui nome de usuário local com nome de usuário do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido a diferenças nos requerimentos de comprimento de nome de usuário)"
-    sso_overrides_name: "Substitui nome local com o nome do site externo do servidor SSO (ATENÇÃO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
     sso_overrides_avatar: "Substitui o avatar do usuário pelo avatar do site externo de SSO. Se habilitado, desabilitar allow_uploaded_avatars é altamente recomendado"
     allow_new_registrations: "Permitir registro de novos usuários. Desmarque isso para prevenir quem quer que seja de criar uma nova conta."
     enable_google_logins: "(obsoleto) Habilitar a autenticação do Google. Este é o método de autenticação OpenID que o Google está abandonando. Novas instalações não vai funcionar com isso. Use o Google Oauth2 ao invés. Instalações existentes devem passar para Google Oauth2 até 20 de Abril de 2015."
@@ -784,7 +771,6 @@ pt_BR:
     max_bookmarks_per_day: "Número máximo de novos favoritos por usuário por dia."
     max_edits_per_day: "Número máximo de edições que um usuário pode fazer por dia."
     max_topics_per_day: "Número máximo de postagens que um usuário pode criar por dia."
-    max_private_messages_per_day: "Número máximo de mensagens privadas que os usuários podem criar por dia."
     max_invites_per_day: "Número máximo de convites que um usuário pode enviar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Mostrar apenas tópicos da categoria atual em tópicos sugeridos."
@@ -832,7 +818,6 @@ pt_BR:
     create_thumbnails: "Criar thumbnails e lightbox para imagens que são muito largas para caber em uma postagem."
     email_time_window_mins: "Aguardar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos usuários  uma chance de editarem e finalizarem seus posts."
     email_posts_context: "Quantas respostas prévias incluir como contexto em emails de notificação."
-    title_max_word_length: "O tamanho máximo permitido de uma palavra, em caracteres, num título de tópico."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "O tamanho mínimo de um título antes que ele seja checado por tópicos semelhantes."
     min_body_similar_length: "O tamanho mínimo do corpo de conteúdo de um post antes que ele seja checado por tópicos semelhantes."
@@ -910,6 +895,7 @@ pt_BR:
     suppress_uncategorized_badge: "Não mostrar emblema para assuntos não categorizados em listas de tópicos"
     global_notice: "Mostrar um banner global URGENTE, de EMERGÊNCIA para todos os visitantes, mude para branco para esconder (HTML permitido)."
     disable_edit_notifications: "Desabilitar modificação de notificações pelo sistema quando 'download_remote_images_to_local' estiver ativado."
+    full_name_required: "Nome completo é um campo obrigatório do perfil do usuário."
     enable_names: "Mostrar o nome completo do usuário em seu perfil, cartão de usuário, e emails. Desabilitar para esconder o nome completo em todos os lugares."
     display_name_on_posts: "Também exibir o nome completo do usuário em suas mensagens"
     invites_per_page: "Mostrar convites padrões no página de usuário"
@@ -1027,6 +1013,8 @@ pt_BR:
     active: "A sua conta está ativa e pronta."
     activate_email: "<p>Você está quase lá! Enviamos um email de ativação para <b>%{email}</b>. Por favor, siga as instruções contidas nele para ativar sua conta.</p><p>Se ele não chegar, verifique sua pasta de spam, ou tente entrar novamente para enviar outro email de ativação.</p>"
     not_activated: "Ainda não podes fazer log in. Enviamos um email de ativação para você. Por favor siga as instruções no email para ativar a sua conta."
+    not_allowed_from_ip_address: "Você não pode entrar como %{username} a partir deste endereço IP."
+    admin_not_allowed_from_ip_address: "Você não pode entrar como administrador a partir deste endereço IP."
     suspended: "Você não pode entrar até %{date}."
     suspended_with_reason: "Você não pode entrar até %{date}. Razão da sua suspensão: %{reason}"
     errors: "%{errors}"
@@ -1221,31 +1209,27 @@ pt_BR:
       subject_template: "A exportação de dados falhou"
       text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."
     email_reject_trust_level:
-      subject_template: "Mensagem rejeitada"
       text_body_template: |
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou.
 
         Sua conta não tem o nível de confiança necessário para criar novos tópicos para este endereço de e-mail. Se você acredita que isso é um erro, entre em contato com um membro da equipe.
     email_reject_no_account:
-      subject_template: "Problema com Email -- Conta Desconhecida"
+      subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
       text_body_template: |
         Lamentamos, mas o seu e-mail para%{destination} (intutulado %{former_title}) não funcionou. Não há nenhum relato conhecido com este endereço de e-mail. Tente enviar a partir de um endereço de e-mail diferente, ou entre em contato com um membro da equipe.
     email_reject_empty:
-      subject_template: "Problemas no Email - Mensagem em Branco"
+      subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nós não conseguimos encontrar nenhum conteúdo no e-mail. Tenha certeza que você escreveu alguma coisa no topo do e-mail - nós não conseguimos analisar respostas em linha. Se você está recebendo isto, mas incluiu conteúdo, tente novamente com conteúdo em HTML no seu e-mail (não somente texto).
     email_reject_parsing:
-      subject_template: "Problemas no Email - Conteúdo desconhecido."
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Não conseguimos encontrar onde sua resposta estava no e-mail. **Tenha certeza de escrever a resposta no topo do e-mail** -- tudo após o início da mensagem respondida é descartado.
     email_reject_post_error:
-      subject_template: "Problemas no email - \"Posting Error\" "
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
 
         Algumas possíveis causas são: formatação complexa, mensagem muito grande, mensagem muito pequena. Por favor tente novamente, ou poste através do site se persistir.
     email_reject_post_error_specified:
-      subject_template: "Problemas no email - \"Posting Error\" "
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou.
 
@@ -1255,29 +1239,24 @@ pt_BR:
 
         Se você puder corrigir, por favor tente novamente.
     email_reject_reply_key:
-      subject_template: "Problemas no email - Sem endereço para retorno - \"Unknown Reply Key\""
       text_body_template: |
         Pedimos desculpas, mas seu email para %{destination} (titled %{former_title}) não foi enviado.
 
         O endereço de email do destinatário é desconhecido ou inválido, Contate um dos moderadores para relatar esse problema
     email_reject_destination:
-      subject_template: "Probelmas no Email - Email destinatário desconhecido"
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Nenhum dos endereços de destinatário são reconhecidos pelo fórum. Por favor tenha certeza que o fórum está na linha To: (não CC ou BCC), e que você está enviando para o endereço de e-mail fornecido pelos administradores.
     email_reject_topic_not_found:
-      subject_template: "Problema com o email -- Tópico Não Encontrado"
       text_body_template: |
         Nós nos desculpamos, mas sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
 
         O tópico não foi encontrado, ele pode ter sido excluído. Se você acredito que isso é um erro, entre em contato com um membro da staff.
     email_reject_topic_closed:
-      subject_template: "Problema com email -- Tópico Fechado"
       text_body_template: |
         Desculpe-nos, mas a sua mensagem de email para %{destination} (entitulada %{former_title}) não funcionou.
 
         O tópico está fechado. Se você acredita que isso é um erro, entre em contato com um membro da staff.
     email_error_notification:
-      subject_template: "Problema com o email -- Erro de authenticação POP"
       text_body_template: |
         Erro de autenticação ao baixar e-mails através do servidor POP.
 
@@ -1342,9 +1321,6 @@ pt_BR:
     reply_by_email: "Para responder, responda este email ou visite %{base_url}%{url} no seu navegador."
     visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
     posted_by: "Postado por %{username} em %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} convidou você para uma mensagem privada '%{topic_title}'"
-      text_body_template: "%{username} convidou você para a mensagem privada '%{topic_title}' em %{site_name}:\n \nPor favor, visite este link para ver o tópico: %{base_url}%{url}\n"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1396,7 +1372,6 @@ pt_BR:
         %{respond_instructions}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
-      subject_template: "[%{site_name}] Atividade do Fórum para %{date}"
       new_activity: "Nova atividade nos seus tópicos e postagens:"
       top_topics: "Tópicos populares"
       other_new_topics: "Tópicos populares"
@@ -1477,7 +1452,6 @@ pt_BR:
     spam_hosts: "Esse novo usuário tentou criar múltiplas postagens com links do mesmo domínio. Veja a configuração newuser_spam_host_threshold do site."
   email_log:
     no_user: "Não foi possível encontrar usuário com id %{user_id}"
-    suspended_not_pm: "Usuário está suspenso e e-mail não é uma mensagem privada"
     seen_recently: "Usuário viu recentemente"
     post_not_found: "Não foi possível encontrar uma mensagem com id %{post_id}"
     notification_already_read: "A notificação deste e-mail é sobre já foi lido"
@@ -1543,3 +1517,74 @@ pt_BR:
       <p>
         <code>arco-íris category:parques status:open order:latest</code> irá pesquisar por tópicos contendo a palavra "arco-íris" na categoria "parques" que não estiverem fechados ou arquivados, ordenados pela data do último post.
       </p>
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
+      anniversary: |
+        Blah blah blah
+        Blah blah blah
+      good_share: |
+        Blah blah blah
+        Blah blah blah
+      great_share: |
+        Blah blah blah
+        Blah blah blah
+      nice_post: |
+        Blah blah blah
+        Blah blah blah
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah

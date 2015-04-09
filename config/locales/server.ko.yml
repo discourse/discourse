@@ -84,7 +84,6 @@ ko:
   num_posts: "게시글 수:"
   num_participants: "참여자:"
   read_full_topic: "전체 토픽 읽기"
-  private_message_abbrev: "개인 메시지"
   rss_description:
     latest: "최신 토픽"
     hot: "인기 토픽들"
@@ -318,9 +317,7 @@ ko:
       description: '이 게시물은 다른 사용자들에게 공격적이나 모욕적 또는 침해적인 글을 담고 있습니다.'
       long_form: '부적절함으로 신고하기'
     notify_user:
-      title: '비공개 메세지 @{{username}}'
       description: '이 게시물에 내가 작성자와 직접 대화하고 싶은 내용이 있습니다. 신고에서 제외해주세요.'
-      long_form: '비공개 메세지'
       email_title: '"%{title}" 내의 당신의 게시글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -359,7 +356,6 @@ ko:
       email_title: '토픽 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>회원님의 포스트가 신고접수 되었습니다. <a href="/my/private-messages">개인 메시지</a>를 확인해주세요.</p>'
     user_must_edit: '<p>게시물이 신고되었기 때문에 일시적으로 보이지 않습니다.</p>'
   archetypes:
     regular:
@@ -423,23 +419,18 @@ ko:
     user_to_user_private_messages:
       title: "사용자대 사용자"
       xaxis: "일"
-      yaxis: "개인 메세지 수"
     system_private_messages:
       title: "시스템"
       xaxis: "일"
-      yaxis: "개인 메세지 수"
     moderator_warning_private_messages:
       title: "운영자 주의"
       xaxis: "일"
-      yaxis: "개인 메세지 수"
     notify_moderators_private_messages:
       title: "운영자에게 알리기"
       xaxis: "일"
-      yaxis: "개인 메세지 수"
     notify_user_private_messages:
       title: "사용자에게 알리기"
       xaxis: "일"
-      yaxis: "개인 메세지 수"
     top_referrers:
       title: "가장 많이 언급된 사용자들"
       xaxis: "사용자"
@@ -485,10 +476,8 @@ ko:
       description: "새로운 사용자를 위한 가이드와  팁."
     welcome_user:
       title: "환영: 새로운 사용자"
-      description: "새로운 사용자가 가입하면 자동으로 개인 메시지를 보냅니다."
     welcome_invite:
       title: "환영: 초대된 사용자"
-      description: "새로운 사용자가 초대고 수락하면 자동으로 개인 메시지를 보냅니다."
     login_required_welcome_message:
       title: "로그인 필요: Welcome Message"
       description: "'login required' 설정이 활성화 되어있으면 웰컴 메시지가 로그인 되지 않은 사용자들에게 보여집니다."
@@ -510,11 +499,9 @@ ko:
     default_locale: "Discourse 인스턴스가 사용하는 기본 언어 (ISO 639-1 Code)"
     allow_user_locale: "사용자에게 자신이 원하는 언어를 선택할 수 있는 옵션을 제공한다."
     min_post_length: "포스트의 최소 글자 수"
-    min_private_message_post_length: "개인 메시지를 보내기 위한 최소 글자 수"
     max_post_length: "포스트의 최대 글자 수"
     min_topic_title_length: "토픽 제목의 최소 글자 수"
     max_topic_title_length: "토픽 제목의 최대 글자 수"
-    min_private_message_title_length: "개인 메시지 제목의 최소 글자 수"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
     allow_uncategorized_topics: "카테고리없이 토픽이 생성되는 것을 허용한다."
     uncategorized_description: "'카테고리 없음' 카테고리의 설명, 설명을 쓰지 않으려면 빈칸으로 놔둔다."
@@ -555,7 +542,6 @@ ko:
     summary_likes_required: "하나의 토픽에 대하여 요약본 보기 모드가 활성화되기 전까지 요구되는 최소 좋아요 수"
     summary_percent_filter: "요약본 보기를 클릭시, 글 중에 몇 %의 상위 글을 보여줄 것인가?"
     summary_max_results: "이 주제에 대한 요약 글 최대 갯수"
-    enable_private_messages: "신뢰도 1 사용자들만 개인 메세지와 개인 메세지에 대한 답글을 허용합니다"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "토픽이 자동으로 추적되기까지의 기본 시간, 사용자에 따라 재정의 될 수 있음.(밀리초, 0 : 항상, -1 : 안함)"
@@ -581,7 +567,6 @@ ko:
     post_menu: "게시물 메뉴에 어떤 사항들이 무슨 순서로 올라올지 결정합니다. 예: like(좋아요)|edit(수정)|flag(신고)|delete(삭제)|share(공유)|bookmark(북마크)|reply(답글)"
     share_links: "공유 다이얼로그에 어떤 아이템이 어떤 순서로 나올지 결정"
     track_external_right_clicks: "우클릭한 외부 링크를 추적한다 (에: 새 탭 열기) 이 설정을 위해선 해당 URL를 다시 써야하는 이유로 기본값은 비활성화이다."
-    send_welcome_message: "신규 사용자에게 가입 환영 메세지를 보냅니까?"
     suppress_reply_directly_below: "게시글의 바로 아래에 단 하나의 댓글만 있는 경우 '댓글 수'를 보여주지 않음"
     suppress_reply_directly_above: "단 하나의 댓글 위의 게시글이 하나 있는 상황에서 '~에 대한 댓글'을 보여주지 않음."
     max_reply_history: "덧글 확장해서 보여지는 최대 갯수"
@@ -607,7 +592,6 @@ ko:
     sso_url: "SSO endpoint의 URL"
     sso_overrides_email: "내부에서 사용되는 이메일을 SSO로부터 부여받은 외부 이메일로 사용. (주의 : 내부에서 사용되는 이메일 표준화로 인해 불일치가 발생할 수 있)"
     sso_overrides_username: "내부에서 사용되는 사용자 이름을 SSO로부터 부여받은 외부 사용자 이름으로 사용. (주의 : 내부에서 사용되는 사용자 이름의 길이/요구조건의 차이점 때문에 불일치가 발생할 수 있)"
-    sso_overrides_name: "내부에서 사용되는 이름을 SSO로부터 부여받은 외부 이름으로 사용. (주의 : 내부에서 사용되는 이름의 표준화로 인해 불일치가 발생할 수 있)"
     enable_local_logins: "기존의 로컬 username, password에 의한 인증을 허용. (초대 기능이 필요하다면 이 기능을 허용해야 함)"
     allow_new_registrations: "새로운 사용자 가입을 허락함. 새로운 계정 생성을 막으려면 체크하지 않음."
     enable_google_logins: "(deprecated) Google 인증을 허용. OpenID로 인증하는 방식을 Google이 deprecated 하였습니다. 새 설치는 이 방법으로는 동작을 안할 것입니다.  대신에 Google Oauth2 사용할 수 있습니다. 기존 설치된 것은 2015년 4월20일까지 Google Oauth2로 이동해야 합니다."
@@ -641,7 +625,6 @@ ko:
     max_bookmarks_per_day: "사용자가 하루동안 할 수 있는 최대 북마크 개수"
     max_edits_per_day: "사용자가 하루동안 할 수 있는 최대 편집 수"
     max_topics_per_day: "사용자가 하루동안 생성할 수 있는 최대 토픽 개수"
-    max_private_messages_per_day: "사용자가 하루동안 생성할 수 있는 개인 메시지 개수"
     max_invites_per_day: "하루에 보낼 수 있는 초대장의 최대치입니다."
     suggested_topics: "토픽 아랫부분에 몇개의 토픽을 제안하여 보여준다."
     limit_suggested_to_category: "제안된 토픽은 현재의 카테고리에 있는 토픽 중에서만 보여준다."
@@ -688,7 +671,6 @@ ko:
     email_time_window_mins: "알림 메일을 보내기 전 대기 기간(분), 사용자에게 포스트의 변경하고 완료할 수 있는 기회를 준다."
     email_posts_context: "알림메일의 내용에 추가할 기존 답글 수"
     flush_timings_secs: "사용자의 이용 시간 데이터를 서버로 보내는 기간(초)"
-    title_max_word_length: "토픽 제목에 최대 단어 길이(글자 수)"
     title_min_entropy: "토픽 제목에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     body_min_entropy: "포스트 본문에 필요한 최소 엔트로피(서로 다른 글자들이 몇개 존재해야하는지)"
     title_fancy_entities: "토픽 제목에 일반 ASCII 문자로 만든 기호들을 보기 좋은 HTML로 변환시켜준다. 참고: SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -771,8 +753,6 @@ ko:
     edited: "%{display_username} 사용자가 %{link} 에서 당신의 글을 수정하였습니다."
     posted: "%{display_username} 사용자가 %{link} 에 글을 게시 했습니다."
     moved_post: "%{display_username} 사용자가 %{link} 에 당신의 게시글을 이동하였습니다."
-    private_message: "%{display_username} 사용자가 당신에게 개인 메시지를 보냈습니다: %{link}"
-    invited_to_private_message: "%{display_username} 사용자가 당신에게 개인 메시지로 초대하였습니다: %{link}"
     invitee_accepted: "%{display_username} 사용자가 당신의 초대를 수락하였습니다."
     linked: "%{display_username} 사용자가 %{link} 에서 당신을 링크했습니다."
     granted_badge: "당신은 %{link}를 획득했습니다."
@@ -909,20 +889,6 @@ ko:
     csv_export_failed:
       subject_template: "데이터 추출 실패"
       text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."
-    email_reject_no_account:
-      subject_template: "이메일 문제 -- 모르는 계정"
-    email_reject_empty:
-      subject_template: "이메일 문제 -- 컨텐츠 없음"
-    email_reject_post_error:
-      subject_template: "이메일 문제 -- 글쓰기 에러"
-    email_reject_post_error_specified:
-      subject_template: "이메일 문제 -- 글쓰기 에러"
-    email_reject_destination:
-      subject_template: "이메일 오류 -- 잘못된 주소"
-    email_reject_topic_not_found:
-      subject_template: "이메일 오류 -- 주제를 찾을 수 없습니다"
-    email_reject_topic_closed:
-      subject_template: "이메일 오류 -- 토픽이 닫힘"
     too_many_spam_flags:
       subject_template: "새로운 계정은 블락되었습니다."
     blocked_by_staff:
@@ -953,8 +919,6 @@ ko:
     reply_by_email: "응답하시려면 %{base_url}%{url} 를 방문하시거나 이메일에 답장하세요."
     visit_link_to_respond: "응답하시려면 %{base_url}%{url} 를 방문하세요."
     posted_by: "%{username} 사용자가 %{post_date}에 게시하였습니다."
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} 사용자가 당신을 개인 메시지에 초대했습니다. '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}'에 답글이 달렸습니다"
       text_body_template: |
@@ -1001,7 +965,6 @@ ko:
         ---
         %{respond_instructions}
     digest:
-      subject_template: "[%{site_name}] 요약 %{date}"
       new_activity: "당신의 토픽과 게시물에 등록된 새로운 활동:"
       top_topics: "인기 게시글"
       other_new_topics: "인기 토픽"
@@ -1066,7 +1029,6 @@ ko:
     sockpuppet: "새로운 사용자가 토픽을 만들었습니다. 그리고 같은 IP를 사용하는 새 사용자가 답글을 달았습니다. 사이트 설정의 flag_sockpuppets를 확인하세요."
   email_log:
     no_user: "ID %{user_id} 인 사용자를 찾을 수 없습니다"
-    suspended_not_pm: "사용자는 정지되어 메세지 불가"
     seen_recently: "최근 보여진 사용자"
     post_not_found: "해당하는 ID %{post_id} 을 찾을 수 없습니다. "
     notification_already_read: "이 알림 이미 읽은 것에 대한 이메일 입니다."

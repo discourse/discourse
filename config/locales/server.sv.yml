@@ -105,7 +105,6 @@ sv:
   num_posts: "Inlägg:"
   num_participants: "Deltagare"
   read_full_topic: "Läs hela ämnet"
-  private_message_abbrev: "PM"
   rss_description:
     latest: "Senaste trådar"
     hot: "Heta trådar"
@@ -384,23 +383,18 @@ sv:
     user_to_user_private_messages:
       title: "Användare-till-användare"
       xaxis: "Dag"
-      yaxis: "Antal privata meddelanden"
     system_private_messages:
       title: "System"
       xaxis: "Dag"
-      yaxis: "Antal privata meddelanden"
     moderator_warning_private_messages:
       title: "Varning från moderator"
       xaxis: "Dag"
-      yaxis: "Antal privata meddelanden"
     notify_moderators_private_messages:
       title: "Notifiera Moderatorer"
       xaxis: "Dag"
-      yaxis: "Antal privata meddelanden"
     notify_user_private_messages:
       title: "Notifiera användare"
       xaxis: "Dag"
-      yaxis: "Antal privata meddelanden"
     top_referrers:
       title: "Toppreferenter"
       xaxis: "Användare"
@@ -460,10 +454,8 @@ sv:
       description: "Pop up just-in-time guidance automatically displayed above the composer when new users begin typing their first two new topics."
     welcome_user:
       title: "Välkommen: Ny användare"
-      description: "A private message automatically sent to all new users when they sign up."
     welcome_invite:
       title: "Välkommen: Inbjuden användare"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
     login_required_welcome_message:
       title: "Inloggning krävs: Välkomstmeddelande"
       description: "Välkomstmeddelande som visas för utloggade användare när inställningen för 'inloggning krävs' är aktiv. "
@@ -524,8 +516,6 @@ sv:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
   search:
     types:
