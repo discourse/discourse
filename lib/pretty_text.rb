@@ -12,11 +12,11 @@ module PrettyText
     def t(key, opts)
       key = "js." + key
       unless opts
-        return I18n.t(key)
+        I18n.t(key)
       else
         str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each {|k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
-        return str
+        opts.each { |k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        str
       end
     end
 
@@ -25,7 +25,6 @@ module PrettyText
       return "" unless username
       user = User.find_by(username_lower: username.downcase)
       return "" unless user.present?
-
 
       # TODO: Add support for ES6 and call `avatar-template` directly
       if !user.uploaded_avatar_id && SiteSetting.default_avatars.present?
@@ -147,7 +146,6 @@ module PrettyText
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-
     context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
     context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
   end
@@ -166,7 +164,6 @@ module PrettyText
       context_opts = opts || {}
       context_opts[:sanitize] ||= true
       context['opts'] = context_opts
-
       context['raw'] = text
 
       if Post.white_listed_image_classes.present?
