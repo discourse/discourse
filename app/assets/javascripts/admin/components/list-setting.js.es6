@@ -21,7 +21,8 @@ export default Ember.Component.extend({
       tokenSeparators: ["|"],
       tags : this.get("choices") || [],
       width: 'off',
-      dropdownCss: this.get("choices") ? {} : {display: 'none'}
+      dropdownCss: this.get("choices") ? {} : {display: 'none'},
+      selectOnBlur: this.get("choices") ? false : true
     };
 
     var settingName = this.get('settingName');
