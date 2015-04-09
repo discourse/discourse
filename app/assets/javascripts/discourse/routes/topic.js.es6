@@ -43,52 +43,52 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
       this.controllerFor("topic-admin-menu").send("show");
     },
 
-    showFlags(post) {
-      showModal('flag', post);
+    showFlags(model) {
+      showModal('flag', { model });
       this.controllerFor('flag').setProperties({ selected: null });
     },
 
-    showFlagTopic(topic) {
-      showModal('flag', topic);
+    showFlagTopic(model) {
+      showModal('flag',  { model });
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
 
     showAutoClose() {
-      showModal('editTopicAutoClose', this.modelFor('topic'));
+      showModal('edit-topic-auto-close', { model: this.modelFor('topic'), title: 'topic.auto_close_title' });
       this.controllerFor('modal').set('modalClass', 'edit-auto-close-modal');
     },
 
     showFeatureTopic() {
-      showModal('featureTopic', this.modelFor('topic'));
+      showModal('featureTopic', { model: this.modelFor('topic'), title: 'topic.feature_topic.title' });
       this.controllerFor('modal').set('modalClass', 'feature-topic-modal');
     },
 
     showInvite() {
-      showModal('invite', this.modelFor('topic'));
+      showModal('invite', { model: this.modelFor('topic') });
       this.controllerFor('invite').reset();
     },
 
-    showHistory(post) {
-      showModal('history', post);
-      this.controllerFor('history').refresh(post.get("id"), "latest");
+    showHistory(model) {
+      showModal('history', { model });
+      this.controllerFor('history').refresh(model.get("id"), "latest");
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
-    showRawEmail(post) {
-      showModal('raw-email', post);
-      this.controllerFor('raw_email').loadRawEmail(post.get("id"));
+    showRawEmail(model) {
+      showModal('raw-email', { model });
+      this.controllerFor('raw_email').loadRawEmail(model.get("id"));
     },
 
     mergeTopic() {
-      showModal('mergeTopic', this.modelFor('topic'));
+      showModal('merge-topic', { model: this.modelFor('topic'), title: 'topic.merge_topic.title' });
     },
 
     splitTopic() {
-      showModal('split-topic', this.modelFor('topic'));
+      showModal('split-topic', { model: this.modelFor('topic') });
     },
 
     changeOwner() {
-      showModal('changeOwner', this.modelFor('topic'));
+      showModal('change-owner', { model: this.modelFor('topic'), title: 'topic.change_owner.title' });
     },
 
     // Use replaceState to update the URL once it changes

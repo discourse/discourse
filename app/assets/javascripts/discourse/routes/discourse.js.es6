@@ -1,5 +1,3 @@
-import showModal from 'discourse/lib/show-modal';
-
 const DiscourseRoute = Ember.Route.extend({
 
   // Set to true to refresh a model without a transition if a query param
@@ -210,11 +208,6 @@ DiscourseRoute.reopenClass({
 
       this.route('unknown', {path: '*path'});
     });
-  },
-
-  showModal: function(route, name, model) {
-    Ember.warn('DEPRECATED `Discourse.Route.showModal` - use `showModal` instead');
-    showModal(name, model);
   }
 
 });

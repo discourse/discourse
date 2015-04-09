@@ -21,7 +21,7 @@ export default Discourse.Route.extend(ShowFooter, {
 
   actions: {
     showInvite() {
-      showModal('invite', Discourse.User.current());
+      showModal('invite', { model: this.currentUser });
       this.controllerFor('invite').reset();
     },
 

@@ -81,8 +81,30 @@ test("Create a Topic", () => {
   });
 });
 
+test("Create an enqueued Topic", () => {
+  visit("/");
+  click('#create-topic');
+  fillIn('#reply-title', "Internationalization Localization");
+  fillIn('#wmd-input', "enqueue this content please");
+  click('#reply-control button.create');
+  andThen(() => {
+    ok(visible('#discourse-modal'), 'it pops up a modal');
+    equal(currentURL(), "/", "it doesn't change routes");
+  });
+
+  click('.modal-footer button');
+  andThen(() => {
+    ok(invisible('#discourse-modal'), 'the modal can be dismissed');
+  });
+});
+
+
 test("Create a Reply", () => {
   visit("/t/internationalization-localization/280");
+
+  andThen(() => {
+    ok(!exists('article[data-post-id=12345]'), 'the post is not in the DOM');
+  });
 
   click('#topic-footer-buttons .btn.create');
   andThen(() => {
@@ -93,7 +115,32 @@ test("Create a Reply", () => {
   fillIn('#wmd-input', 'this is the content of my reply');
   click('#reply-control button.create');
   andThen(() => {
-    exists('#post_12345', 'it inserts the post into the document');
+    equal(find('.cooked:last p').text(), 'this is the content of my reply');
+  });
+});
+
+test("Create an enqueued Reply", () => {
+  visit("/t/internationalization-localization/280");
+
+  click('#topic-footer-buttons .btn.create');
+  andThen(() => {
+    ok(exists('#wmd-input'), 'the composer input is visible');
+    ok(!exists('#reply-title'), 'there is no title since this is a reply');
+  });
+
+  fillIn('#wmd-input', 'enqueue this content please');
+  click('#reply-control button.create');
+  andThen(() => {
+    ok(find('.cooked:last p').text() !== 'enqueue this content please', "it doesn't insert the post");
+  });
+
+  andThen(() => {
+    ok(visible('#discourse-modal'), 'it pops up a modal');
+  });
+
+  click('.modal-footer button');
+  andThen(() => {
+    ok(invisible('#discourse-modal'), 'the modal can be dismissed');
   });
 });
 
@@ -118,3 +165,4 @@ test("Edit the first post", () => {
     ok(find('.topic-post:eq(0) .cooked').text().indexOf('This is the new text for the post') !== -1, 'it updates the post');
   });
 });
+

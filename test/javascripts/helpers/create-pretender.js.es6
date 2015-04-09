@@ -88,6 +88,8 @@ export default function() {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
     });
 
+    this.delete('/draft.json', success);
+
     this.get('/draft.json', function() {
       return response({});
     });
@@ -148,13 +150,17 @@ export default function() {
 
       if (data.title === "this title triggers an error") {
         return response(422, {errors: ['That title has already been taken']});
-      } else {
-        return response(200, {
-          success: true,
-          action: 'create_post',
-          post: {id: 12345, topic_id: 280, topic_slug: 'internationalization-localization'}
-        });
       }
+
+      if (data.raw === "enqueue this content please") {
+        return response(200, { success: true, action: 'enqueued' });
+      }
+
+      return response(200, {
+        success: true,
+        action: 'create_post',
+        post: {id: 12345, topic_id: 280, topic_slug: 'internationalization-localization'}
+      });
     });
 
     this.get('/widgets/:widget_id', function(request) {
