@@ -113,45 +113,33 @@ const Post = RestModel.extend({
     });
   }.property('actions_summary.@each.users', 'actions_summary.@each.count'),
 
-  save() {
-    const self = this;
-    if (!this.get('newPost')) {
-      // We're updating a post
-      return Discourse.ajax("/posts/" + (this.get('id')), {
-        type: 'PUT',
-        dataType: 'json',
-        data: {
-          post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
-          image_sizes: this.get('imageSizes')
-        }
-      }).then(function(result) {
-        // If we received a category update, update it
-        self.set('version', result.post.version);
-        if (result.category) Discourse.Site.current().updateCategory(result.category);
-        return Discourse.Post.create(result.post);
-      });
-
-    } else {
-      // We're saving a post
-      const data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
-      data.reply_to_post_number = this.get('reply_to_post_number');
-      data.image_sizes = this.get('imageSizes');
-      data.nested_post = true;
-
-      const metaData = this.get('metaData');
-      // Put the metaData into the request
-      if (metaData) {
-        data.meta_data = {};
-        Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
-      }
-
-      return Discourse.ajax("/posts", {
-        type: 'POST',
-        data: data
-      }).then(function(result) {
-        return Discourse.Post.create(result.post);
-      });
+  afterUpdate(res) {
+    if (res.category) {
+      Discourse.Site.current().updateCategory(res.category);
     }
+  },
+
+  updateProperties() {
+    return {
+      post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
+      image_sizes: this.get('imageSizes')
+    };
+  },
+
+  createProperties() {
+    const data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
+    data.reply_to_post_number = this.get('reply_to_post_number');
+    data.image_sizes = this.get('imageSizes');
+
+    const metaData = this.get('metaData');
+
+    // Put the metaData into the request
+    if (metaData) {
+      data.meta_data = {};
+      Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
+    }
+
+    return data;
   },
 
   // Expands the first post's content, if embedded and shortened.
@@ -264,50 +252,6 @@ const Post = RestModel.extend({
         }
       }
     });
-  },
-
-  /**
-    Updates a post from a JSON packet. This is normally done after the post is saved to refresh any
-    attributes.
-  **/
-  updateFromJson(obj) {
-    if (!obj) return;
-
-    let skip, oldVal;
-
-    // Update all the properties
-    const post = this;
-    _.each(obj, function(val,key) {
-      if (key !== 'actions_summary'){
-        oldVal = post[key];
-        skip = false;
-
-        if (val && val !== oldVal) {
-
-          if (key === "reply_to_user" && val && oldVal) {
-            skip = val.username === oldVal.username || Em.get(val, "username") === Em.get(oldVal, "username");
-          }
-
-          if(!skip) {
-            post.set(key, val);
-          }
-        }
-      }
-    });
-
-    // Rebuild actions summary
-    this.set('actions_summary', Em.A());
-    if (obj.actions_summary) {
-      const lookup = Em.Object.create();
-      _.each(obj.actions_summary,function(a) {
-        a.post = post;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        const actionSummary = Discourse.ActionSummary.create(a);
-        post.get('actions_summary').pushObject(actionSummary);
-        lookup.set(a.actionType.get('name_key'), actionSummary);
-      });
-      this.set('actionByName', lookup);
-    }
   },
 
   // Load replies to this post

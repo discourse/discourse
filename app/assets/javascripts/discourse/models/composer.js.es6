@@ -1,6 +1,6 @@
 import RestModel from 'discourse/models/rest';
-import Post from 'discourse/models/post';
 import Topic from 'discourse/models/topic';
+import { throwAjaxError } from 'discourse/lib/ajax-error';
 
 const CLOSED = 'closed',
       SAVING = 'saving',
@@ -430,25 +430,22 @@ const Composer = RestModel.extend({
       promise = Ember.RSVP.resolve();
     }
 
-    post.setProperties({
+    const props = {
       raw: this.get('reply'),
-      editReason: opts.editReason,
-      imageSizes: opts.imageSizes,
+      edit_reason: opts.editReason,
+      image_sizes: opts.imageSizes,
       cooked: this.getCookedHtml()
-    });
+    };
 
     this.set('composeState', CLOSED);
 
     return promise.then(function() {
-      return post.save(function(result) {
-        post.updateFromPost(result);
+      return post.save(props).then(function() {
         self.clearState();
-      }, function (error) {
+      }).catch(throwAjaxError(function() {
         post.set('cooked', oldCooked);
         self.set('composeState', OPEN);
-        const response = $.parseJSON(error.responseText);
-        throw response && response.errors ? response.errors[0] : I18n.t('generic_error');
-      });
+      }));
     });
   },
 
@@ -473,7 +470,7 @@ const Composer = RestModel.extend({
     let addedToStream = false;
 
     // Build the post object
-    const createdPost = Post.create({
+    const createdPost = this.store.createRecord('post', {
       imageSizes: opts.imageSizes,
       cooked: this.getCookedHtml(),
       reply_count: 0,
@@ -489,7 +486,6 @@ const Composer = RestModel.extend({
       moderator: user.get('moderator'),
       admin: user.get('admin'),
       yours: true,
-      newPost: true,
       read: true
     });
 
@@ -521,11 +517,7 @@ const Composer = RestModel.extend({
       // engine, staging will just cause a blank post to render
       if (!_.isEmpty(createdPost.get('cooked'))) {
         state = postStream.stagePost(createdPost, user);
-
-        if(state === "alreadyStaging"){
-          return;
-        }
-
+        if (state === "alreadyStaging") { return; }
       }
     }
 
@@ -534,13 +526,12 @@ const Composer = RestModel.extend({
     composer.set("stagedPost", state === "staged" && createdPost);
 
     return createdPost.save().then(function(result) {
+
       let saving = true;
-      createdPost.updateFromJson(result);
 
       if (topic) {
         // It's no longer a new post
-        createdPost.set('newPost', false);
-        topic.set('draft_sequence', result.draft_sequence);
+        topic.set('draft_sequence', result.target.draft_sequence);
         postStream.commitPost(createdPost);
         addedToStream = true;
       } else {
@@ -563,30 +554,13 @@ const Composer = RestModel.extend({
         composer.set('composeState', SAVING);
       }
 
-      return { post: result };
-    }).catch(function(error) {
-
-      // If an error occurs
+      return { post: createdPost };
+    }).catch(throwAjaxError(function() {
       if (postStream) {
         postStream.undoPost(createdPost);
       }
       composer.set('composeState', OPEN);
-
-      // TODO extract error handling code
-      let parsedError;
-      try {
-        const parsedJSON = $.parseJSON(error.responseText);
-        if (parsedJSON.errors) {
-          parsedError = parsedJSON.errors[0];
-        } else if (parsedJSON.failed) {
-          parsedError = parsedJSON.message;
-        }
-      }
-      catch(ex) {
-        parsedError = "Unknown error saving post, try again. Error: " + error.status + " " + error.statusText;
-      }
-      throw parsedError;
-    });
+    }));
   },
 
   getCookedHtml() {

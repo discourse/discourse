@@ -437,9 +437,10 @@ var bootbox = window.bootbox || (function(document, $) {
 
         // wire up button handlers
         div.on('click', '.modal-footer a', function(e) {
+          var self = this;
           Ember.run(function() {
 
-            var handler   = $(this).data("handler"),
+            var handler   = $(self).data("handler"),
                 cb        = callbacks[handler],
                 hideModal = null;
 

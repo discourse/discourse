@@ -16,26 +16,23 @@ export default Ember.Object.extend({
   },
 
   findAll(type) {
-    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     const self = this;
-    return adapter.findAll(this, type).then(function(result) {
+    return this.adapterFor(type).findAll(this, type).then(function(result) {
       return self._resultSet(type, result);
     });
   },
 
   // Mostly for legacy, things like TopicList without ResultSets
   findFiltered(type, findArgs) {
-    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     const self = this;
-    return adapter.find(this, type, findArgs).then(function(result) {
+    return this.adapterFor(type).find(this, type, findArgs).then(function(result) {
       return self._build(type, result);
     });
   },
 
   find(type, findArgs) {
-    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
     const self = this;
-    return adapter.find(this, type, findArgs).then(function(result) {
+    return this.adapterFor(type).find(this, type, findArgs).then(function(result) {
       if (typeof findArgs === "object") {
         return self._resultSet(type, result);
       } else {
@@ -64,8 +61,7 @@ export default Ember.Object.extend({
   },
 
   update(type, id, attrs) {
-    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
-    return adapter.update(this, type, id, attrs, function(result) {
+    return this.adapterFor(type).update(this, type, id, attrs, function(result) {
       if (result && result[type] && result[type].id) {
         const oldRecord = _identityMap[type][id];
         delete _identityMap[type][id];
@@ -81,8 +77,7 @@ export default Ember.Object.extend({
   },
 
   destroyRecord(type, record) {
-    const adapter = this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
-    return adapter.destroyRecord(this, type, record).then(function(result) {
+    return this.adapterFor(type).destroyRecord(this, type, record).then(function(result) {
       const forType = _identityMap[type];
       if (forType) { delete forType[record.get('id')]; }
       return result;
@@ -101,6 +96,7 @@ export default Ember.Object.extend({
   _build(type, obj) {
     obj.store = this;
     obj.__type = type;
+    obj.__state = obj.id ? "created" : "new";
 
     const klass = this.container.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);
@@ -109,6 +105,10 @@ export default Ember.Object.extend({
       _identityMap[type][obj.id] = model;
     }
     return model;
+  },
+
+  adapterFor(type) {
+    return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
   },
 
   _hydrate(type, obj) {

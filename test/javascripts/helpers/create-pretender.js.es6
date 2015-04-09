@@ -2,13 +2,19 @@ function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
-    result[item[0]] = decodeURIComponent(item[1]).replace(/\+/g, ' ');
+    const firstSeg = decodeURIComponent(item[0]);
+    const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
+
+    const val = decodeURIComponent(item[1]).replace(/\+/g, ' ');
+    if (m) {
+      result[m[1]] = result[m[1]] || {};
+      result[m[1]][m[2]] = val;
+    } else {
+      result[firstSeg] = val;
+    }
+
   });
   return result;
-}
-
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
 }
 
 function response(code, obj) {
@@ -122,7 +128,10 @@ export default function() {
     this.put('/posts/:post_id/recover', success);
 
     this.put('/posts/:post_id', (request) => {
-      return response({ post: {id: request.params.post_id, version: 2 } });
+      const data = parsePostData(request.requestBody);
+      data.post.id = request.params.post_id;
+      data.post.version = 2;
+      return response(200, data.post);
     });
 
     this.put('/t/:slug/:id', (request) => {
@@ -157,9 +166,15 @@ export default function() {
       }
     });
 
+    this.post('/widgets', function(request) {
+      const widget = parsePostData(request.requestBody).widget;
+      widget.id = 100;
+      return response(200, {widget});
+    });
+
     this.put('/widgets/:widget_id', function(request) {
-      const w = _widgets.findBy('id', parseInt(request.params.widget_id));
-      return response({ widget: clone(w) });
+      const widget = parsePostData(request.requestBody).widget;
+      return response({ widget });
     });
 
     this.get('/widgets', function(request) {

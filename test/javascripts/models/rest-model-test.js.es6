@@ -28,6 +28,21 @@ test('update', function() {
   });
 });
 
+test('save new', function() {
+  const store = createStore();
+  const widget = store.createRecord('widget');
+
+  ok(widget.get('isNew'), 'it is a new record');
+  ok(!widget.get('isCreated'), 'it is not created');
+
+  widget.save({ name: 'Evil Widget' }).then(function() {
+    ok(widget.get('id'), 'it has an id');
+    ok(widget.get('name'), 'Evil Widget');
+    ok(widget.get('isCreated'), 'it is created');
+    ok(!widget.get('isNew'), 'it is no longer new');
+  });
+});
+
 test('destroyRecord', function() {
   const store = createStore();
   store.find('widget', 123).then(function(widget) {
