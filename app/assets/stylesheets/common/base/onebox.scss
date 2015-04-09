@@ -142,6 +142,8 @@ aside.onebox {
 .onebox-avatar {
   height: 90px !important;
   width: 90px !important;
+  border-radius: 50%;
+  box-shadow: 0 0 6px 0 rgba(0, 0, 0, .3);
 }
 
 blockquote {
