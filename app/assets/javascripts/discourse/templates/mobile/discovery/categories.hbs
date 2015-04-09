@@ -37,7 +37,7 @@
             </div>
           </td>
           <td class='num posts'>{{number t.posts_count}}</td>
-          <td class='num age'><span class="{{cold-age-class t.created_at}}" title='{{raw-date t.created_at}}'>{{{format-age t.created_at}}}</span></td>
+          <td class='num age'><span class="{{cold-age-class t.last_posted_at}}" title='{{raw-date t.last_posted_at}}'>{{{format-age t.last_posted_at}}}</span></td>
         </tr>
 
       {{/each}}
