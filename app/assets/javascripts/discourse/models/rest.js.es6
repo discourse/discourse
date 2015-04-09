@@ -30,9 +30,13 @@ const RestModel = Ember.Object.extend(Presence, {
     const self = this;
     return adapter.createRecord(store, type, props).then(function(res) {
       if (!res) { throw "Received no data back from createRecord"; }
-      self.setProperties(self.__munge(res.payload));
 
-      self.set('__state', 'created');
+      // We can get a response back without properties, for example
+      // when a post is queued.
+      if (res.payload) {
+        self.setProperties(self.__munge(res.payload));
+        self.set('__state', 'created');
+      }
 
       res.target = self;
       return res;

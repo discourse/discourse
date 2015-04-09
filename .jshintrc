@@ -33,6 +33,8 @@
     "triggerEvent",
     "count",
     "exists",
+    "visible",
+    "invisible",
     "asyncTestDiscourse",
     "fixture",
     "find",

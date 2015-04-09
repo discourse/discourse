@@ -440,8 +440,9 @@ const Composer = RestModel.extend({
     this.set('composeState', CLOSED);
 
     return promise.then(function() {
-      return post.save(props).then(function() {
+      return post.save(props).then(function(result) {
         self.clearState();
+        return result;
       }).catch(throwAjaxError(function() {
         post.set('cooked', oldCooked);
         self.set('composeState', OPEN);
@@ -526,8 +527,12 @@ const Composer = RestModel.extend({
     composer.set("stagedPost", state === "staged" && createdPost);
 
     return createdPost.save().then(function(result) {
-
       let saving = true;
+
+      if (result.responseJson.action === "enqueued") {
+        if (postStream) { postStream.undoPost(createdPost); }
+        return result;
+      }
 
       if (topic) {
         // It's no longer a new post
@@ -554,7 +559,7 @@ const Composer = RestModel.extend({
         composer.set('composeState', SAVING);
       }
 
-      return { post: createdPost };
+      return result;
     }).catch(throwAjaxError(function() {
       if (postStream) {
         postStream.undoPost(createdPost);

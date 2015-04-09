@@ -218,14 +218,20 @@ export default DiscourseController.extend({
     const promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
-    }).then(function(opts) {
+    }).then(function(result) {
+
+      if (result.responseJson.action === "enqueued") {
+        self.send('postWasEnqueued');
+        self.destroyDraft();
+        self.close();
+        return result;
+      }
 
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
 
-      opts = opts || {};
       self.close();
 
       const currentUser = Discourse.User.current();
@@ -238,8 +244,9 @@ export default DiscourseController.extend({
       // TODO disableJumpReply is super crude, it needs to provide some sort
       // of notification to the end user
       if (!composer.get('replyingToTopic') || !disableJumpReply) {
-        if (opts.post && !staged) {
-          Discourse.URL.routeTo(opts.post.get('url'));
+        const post = result.target;
+        if (post && !staged) {
+          Discourse.URL.routeTo(post.get('url'));
         }
       }
     }).catch(function(error) {
