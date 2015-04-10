@@ -3,7 +3,7 @@
 .show-topic-admin {
   position: fixed;
   top: 120px;
-  right: 10px;
+ @include right(10px);
   z-index: 1000;
   outline: 0;
 }
@@ -11,13 +11,13 @@
 .topic-admin-menu {
   background-color: $secondary;
   width: 205px;
-  padding: 10px;
+  @include padding(10px);
   border: 1px solid scale-color-diff();
   z-index: 1001;
 
   ul {
     list-style: none;
-    margin: 10px 0 0 0;
+    @include margin(10px 0 0 0);
   }
 
   button {
@@ -42,9 +42,9 @@
     display: inline-block;
     vertical-align: middle;
     max-width: 60%;
-    margin-left: 10px;
+    @include margin-left(10px);
     p {
-      margin: 10px 0;
+      @include margin(10px 0);
     }
   }
 }
@@ -52,12 +52,12 @@
   .button {
     width: auto;
     display: block;
-    margin: 0 10px;
+    @include margin(0 10px);
   }
   .desc {
     display: block;
     clear: both;
     max-width: 90%;
-    margin: 0 10px;
+    @include margin(0 10px);
   }
 }
