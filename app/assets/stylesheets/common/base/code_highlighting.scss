@@ -1,12 +1,10 @@
 /*
-
 github.com style (c) Vasily Polovnyov <vast@whiteants.net>
-
 */
 
 .hljs {
   display: block;
-  padding: 0.5em;
+  @include padding(0.5em);
   color: #333;
 }
 
