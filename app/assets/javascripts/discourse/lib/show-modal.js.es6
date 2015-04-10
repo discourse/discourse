@@ -12,4 +12,6 @@ export default (name, model) => {
     if (controller.onShow) { controller.onShow(); }
     controller.set('flashMessage', null);
   }
+
+  return controller;
 };
