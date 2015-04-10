@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 .d-header {
-  left: 0;
+  @include left(0);
   z-index: 1000;
   padding-top: 3px;
   height: 60px;
@@ -41,10 +41,10 @@ and (max-width : 570px) {
   // Categories
 
   .btn {
-    padding: 2px 8px;
+    @include padding(2px 8px);
     margin-bottom: 2px;
     .fa {
-      margin-right: 5px;
+      @include margin-right(5px);
     }
   }
 }
@@ -64,7 +64,7 @@ and (max-width : 570px) {
 }
 
 .d-dropdown .searching {
-  right: 30px;
+ @include right(30px);
 }
 
 
