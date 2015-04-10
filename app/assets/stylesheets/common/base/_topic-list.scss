@@ -8,7 +8,7 @@
 .list-controls {
   #navigation-bar {
     .has-icon span:before {
-      margin-right: 4px;
+      @include margin-right(4px);
       font: 1.071em/0.9 "FontAwesome";
     }
   }
@@ -35,7 +35,7 @@
   th,
   td {
     line-height: 1.25;
-    text-align: left;
+    @include text-align(left);
     vertical-align: middle;
 
   }
@@ -54,7 +54,7 @@
   .main-link {
     font-size: 1.143em;
     a.title {
-      padding: 15px 0;
+      @include padding(15px 0);
     }
   }
 
@@ -64,17 +64,17 @@
     color: scale-color($primary, $lightness: 50%);
     word-wrap: break-word;
     line-height: 1.4;
-    padding-right: 20px;
+    @include padding-right(20px);
   }
   .topic-statuses:empty {
     display: none;
   }
   .topic-status {
-    margin-right: 4px;
-    padding: 0;
+    @include margin-right(4px);
+    @include padding(0);
     font-size: 1.071em;
     &:last-of-type {
-      margin-right: 0;
+      @include margin-right(0);
     }
   }
 
@@ -90,13 +90,13 @@
 
   .num.posts {
     a {
-      padding: 15px 5px;
+      @include padding(15px 5px);
     }
   }
 
   .num.activity {
     a {
-      padding: 15px 5px;
+      @include padding(15px 5px);
     }
   }
 
@@ -129,11 +129,11 @@
 
     table.categoryStats {
       td {
-        padding: 2px;
+        @include padding(2px);
         vertical-align: bottom;
         line-height: 24px;
-        &.value { text-align: right; font-size: 1.429em; }
-        &.unit  { text-align: left; }
+        &.value { @include text-align(right); font-size: 1.429em; }
+        &.unit  { @include text-align(left); }
       }
     }
 
@@ -150,7 +150,7 @@
 .list-controls {
   .category-dropdown-menu .home {
     color: $primary;
-    margin-left: 8px;
+    @include margin-left(8px);
   }
 
   clear: both;
@@ -159,11 +159,11 @@
 #list-area {
   margin-bottom: 100px;
   .empty-topic-list {
-    padding: 10px;
+    @include padding(10px);
   }
   .unseen {
     background-color: transparent;
-    padding: 0;
+    @include padding(0);
     border: 0;
     color: scale-color($danger, $lightness: 20%);
     font-size: 0.929em;
@@ -183,14 +183,14 @@
 
 ol.category-breadcrumb {
   display: block;
-  float: left;
+  @include float(left);
   list-style: none;
-  margin: 0 10px 0 0;
-  padding: 0;
+  @include margin(0 10px 0 0);
+  @include padding(0);
 
   li {
-    float: left;
-    margin-right: 5px;
+    @include float(left);
+    @include margin-right(5px);
   }
 }
 
@@ -210,7 +210,7 @@ ol.category-breadcrumb {
   a.badge-category {
     font-size: 0.929em;
     font-weight: bold;
-    float: none;
+    @include float(none);
     text-transform: none;
     max-width:200px;
     text-overflow:ellipsis;
@@ -223,7 +223,7 @@ ol.category-breadcrumb {
 }
 
 .topic-statuses .fa {
-  padding-right: 3px;
+  @include padding-right(3px);
 }
 
 .period-chooser {
@@ -231,8 +231,8 @@ ol.category-breadcrumb {
   @include unselectable;
 
   h2 {
-    float: left;
-    margin: 5px 0 10px;
+    @include float(left);
+    @include margin(5px 0 10px);
   }
 
   button {
@@ -240,7 +240,7 @@ ol.category-breadcrumb {
     background: transparent;
     border: 0;
     font-size: 1.429em;
-    padding: 5px 10px 0 10px;
+    @include padding(5px 10px 0 10px);
   }
 
   #period-popup {
@@ -248,7 +248,7 @@ ol.category-breadcrumb {
     @include unselectable;
 
     border: 1px solid scale-color-diff();
-    padding: 5px;
+    @include padding(5px);
     background: $secondary;
     position: absolute;
     z-index: 1110;
@@ -256,15 +256,15 @@ ol.category-breadcrumb {
 
     ul {
       list-style: none;
-      margin: 0;
-      padding: 0;
+      @include margin(0);
+      @include padding(0);
 
       li {
-        margin: 0;
-        padding: 0;
+        @include margin(0);
+        @include padding(0);
         a {
           display: block;
-          padding: 5px;
+          @include padding(5px);
         }
         &:hover {
           background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
@@ -278,7 +278,7 @@ ol.category-breadcrumb {
   display: inline;
 
   button {
-    margin-right: 0.5em;
+    @include margin-right(0.5em);
   }
 }
 
