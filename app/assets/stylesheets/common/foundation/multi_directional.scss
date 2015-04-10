@@ -1,12 +1,14 @@
-// These are the variables you have to work with:
-//$direction: ltr;
-//$default-float: left;
-//$opposite-float: right;
-//$default-direction: ltr;
-//$opposite-direction: rtl;
+$direction: ltr;
+$default-float: left;
+$opposite-float: right;
+
+//$direction: rtl;
+//$default-float: right;
+//$opposite-float: left;
 
 // Mixins
 
+// replaces float:
 @mixin float($dir) {
   @if $dir == left {
     float: $default-float;
@@ -17,6 +19,7 @@
   }
 }
 
+// replaces text-align:
 @mixin text-align($dir) {
   @if $dir == left {
     text-align: $default-float;
@@ -27,12 +30,22 @@
   }
 }
 
-@mixin padding-left($unit) {
-  padding-#{$default-float}: $unit;
+// replaces padding-left:
+@mixin padding-left($padding) {
+  @if $default-float == left {
+    padding-left: $padding;
+  } @else {
+    padding-right: $padding;
+  }
 }
 
-@mixin padding-right($unit) {
-  padding-#{$opposite-float}: $unit;
+// replaces padding-right:
+@mixin padding-right($padding) {
+  @if $default-float == left {
+    padding-right: $padding;
+  } @else {
+    padding-left: $padding;
+  }
 }
 
 // In case someone uses them
@@ -45,21 +58,22 @@
   padding-bottom: $unit;
 }
 
-@mixin padding($top, $right, $bottom, $left) {
-  @if $direction == ltr {
-    padding: $top $right $bottom $left;
+// replaces margin-left:
+@mixin margin-left($margin) {
+  @if $default-float == left {
+    margin-left: $margin;
   } @else {
-    padding: $top $left $bottom $right;
+    margin-right: $margin;
   }
 }
 
-
-@mixin margin-left($unit) {
-  margin-#{$default-float}: $unit;
-}
-
-@mixin margin-right($unit) {
-  margin-#{$opposite-float}: $unit;
+// replaces margin-right:
+@mixin margin-right($margin) {
+  @if $default-float == left {
+    margin-right: $margin;
+  } @else {
+    margin-left: $margin;
+  }
 }
 
 // In case someone uses them
@@ -72,11 +86,50 @@
   margin-bottom: $unit;
 }
 
-
-@mixin margin($top, $right, $bottom, $left) {
-  @if $direction == ltr {
-    margin: $top $right $bottom $left;
+// replaces margin:
+@mixin margin($margins) {
+  @if length($margins) < 4 {
+    margin:  $margins;
+  } @else if length($margins) == 4 {
+    @if $default-float == left {
+      margin: $margins;
+    } @else {
+      margin: nth($margins, 1) nth($margins, 4) nth($margins, 3) nth($margins, 2);
+    }
   } @else {
-    margin: $top $left $bottom $right;
+    // Deal with the possibility of 4 arguments plus !important
+  }
+}
+
+// replaces padding:
+@mixin padding($padding) {
+  @if length($padding) < 4 {
+    padding:  $padding;
+  } @else if length($padding) == 4 {
+    @if $default-float == left {
+      padding: $padding;
+    } @else {
+      padding: nth($padding, 1) nth($padding, 4) nth($padding, 3) nth($padding, 2);
+    }
+  } @else {
+    // Deal with the possibility of 4 arguments plus !important
+  }
+}
+
+// replaces left:
+@mixin left($amount) {
+  @if $default-float == left {
+    left: $amount;
+  } @else {
+    right: $amount;
+  }
+}
+
+// replaces right:
+@mixin right($amount) {
+  @if $default-float == left {
+    right: $amount;
+  } @else {
+    left: $amount;
   }
 }
