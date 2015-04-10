@@ -2,8 +2,8 @@
 // http://code.google.com/p/pagedown/
 
 .wmd-panel {
-  margin-left: 25%;
-  margin-right: 25%;
+  @include margin-left(25%);
+  @include margin-right(25%);
   width: 50%;
   min-width: 500px;
 }
@@ -13,30 +13,30 @@
 }
 
 .wmd-button-row {
-  margin-left: 5px;
-  margin-right: 5px;
+  @include margin-left(5px);
+  @include margin-right(5px);
   margin-bottom: 5px;
   margin-top: 5px;
-  padding: 0;
+  @include padding(0);
   height: 20px;
 }
 
 .wmd-spacer {
   width: 1px;
   height: 20px;
-  margin-right: 8px;
-  margin-left: 5px;
+  @include margin-right(8px);
+  @include margin-left(5px);
   background-color: scale-color-diff();
   display: inline-block;
-  float: left;
+  @include float(left);
 }
 
 .wmd-button {
   width: 20px;
   height: 20px;
-  padding-left: 2px;
-  padding-right: 3px;
-  margin-right: 5px;
+  @include padding-left(2px);
+  @include padding-right(3px);
+  @include margin-right(5px);
   background-repeat: no-repeat;
   background-position: 0 0;
   border: 0;
@@ -44,7 +44,7 @@
   height: 20px;
   position: relative;
   border: 0;
-  float: left;
+  @include float(left);
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
@@ -58,7 +58,7 @@
   background-position: 0 0;
   background-repeat: repeat;
   background: transparent;
-  padding: 4px;
+  @include padding(4px);
 }
 
 .wmd-button:hover {
