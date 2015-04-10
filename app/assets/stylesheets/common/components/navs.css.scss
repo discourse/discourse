@@ -6,7 +6,7 @@
 // --------------------------------------------------
 
 %nav {
-  margin-left: 0;
+  @include margin-left(0);
   list-style: none;
   > li > a {
     display: block;
@@ -21,11 +21,11 @@
   @extend %nav;
   @extend .clearfix;
   > li {
-    float: left;
-    margin-right: 5px;
+    @include float(left);
+    @include margin-right(5px);
     > a {
       border: none;
-      padding: 5px 12px;
+      @include padding(5px 12px);
       color: $primary;
       font-size: 1.143em;
       line-height: 20px;
@@ -47,7 +47,7 @@
 
 .nav-stacked {
   @extend %nav;
-  padding: 0;
+  @include padding(0);
   overflow: hidden;
   background: dark-light-diff($primary, $secondary, 90%, -75%);
   > li {
@@ -57,8 +57,8 @@
       border-bottom: 0;
     }
     > a {
-      margin: 0;
-      padding: 13px 13px 13px 30px;
+      @include margin(0);
+      @include padding(13px 13px 13px 30px);
       font-size: 1.143em;
       line-height: 20px;
       cursor: pointer;
@@ -73,7 +73,7 @@
 
   .active > a::after,
   {
-    left: 90%;
+    @include left(90%);
     top: 33%;
     border: solid transparent;
     content: " ";
@@ -92,7 +92,7 @@
     width: 30px;
     text-align: center;
     position: absolute;
-    left: 2px;
+    @include left(2px);
     line-height: 20px;
   }
 }
