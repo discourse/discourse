@@ -10,17 +10,17 @@
     min-height: 500px;
   }
   #revision-controls {
-    float: left;
+    @include float(left);
     .btn[disabled]:hover {
       color: $primary;
     }
   }
   #display-modes {
-    text-align: right;
+    @include text-align(right);
   }
   #revision-details {
     background-color: scale-color-diff();
-    padding: 5px;
+    @include padding(5px);
     margin-top: 10px;
   }
   #revisions {
