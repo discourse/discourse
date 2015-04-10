@@ -1632,6 +1632,13 @@ en:
 
         We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
 
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
+
     email_reject_post_error:
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
