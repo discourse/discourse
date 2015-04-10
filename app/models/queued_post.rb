@@ -26,6 +26,15 @@ class QueuedPost < ActiveRecord::Base
     @states ||= Enum.new(:new, :approved, :rejected)
   end
 
+  def self.new_count
+    where(state: states[:new]).count
+  end
+
+  def self.publish_new!
+    msg = { post_queue_new_count: QueuedPost.new_count }
+    MessageBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
+  end
+
   def reject!(rejected_by)
     change_to!(:rejected, rejected_by)
   end
@@ -73,6 +82,8 @@ class QueuedPost < ActiveRecord::Base
       # Update the record in memory too, and clear the dirty flag
       updates.each {|k, v| send("#{k}=", v) }
       changes_applied
+
+      QueuedPost.publish_new!
     end
 
 end

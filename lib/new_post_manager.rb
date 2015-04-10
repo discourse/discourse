@@ -43,6 +43,8 @@ class NewPostManager
     enqueuer = PostEnqueuer.new(@user, queue)
     post = enqueuer.enqueue(@args)
 
+    QueuedPost.publish_new! if post && post.errors.empty?
+
     result.check_errors_from(enqueuer)
     result
   end

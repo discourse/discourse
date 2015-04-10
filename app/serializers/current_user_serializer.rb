@@ -26,7 +26,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :custom_fields,
              :muted_category_ids,
              :dismissed_banner_key,
-             :is_anonymous
+             :is_anonymous,
+             :post_queue_new_count
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -105,6 +106,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def is_anonymous
     object.anonymous?
+  end
+
+  def post_queue_new_count
+    QueuedPost.new_count
+  end
+
+  def include_post_queue_new_count?
+    object.staff?
   end
 
 end

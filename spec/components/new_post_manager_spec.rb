@@ -52,7 +52,7 @@ describe NewPostManager do
       expect(result).to be_success
       expect(result.post).to be_blank
       expect(@counter).to be(1)
-      expect(QueuedPost.count).to be(0)
+      expect(QueuedPost.new_count).to be(0)
     end
 
     it "calls custom enqueuing handlers" do
@@ -63,7 +63,7 @@ describe NewPostManager do
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.post).to be_blank
-      expect(QueuedPost.count).to be(1)
+      expect(QueuedPost.new_count).to be(1)
       expect(@counter).to be(0)
     end
 

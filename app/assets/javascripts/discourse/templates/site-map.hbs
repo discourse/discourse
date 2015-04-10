@@ -26,6 +26,17 @@
       <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
     {{/if}}
 
+    {{#if currentUser.staff}}
+      <li>
+        <a href="/queued-posts">
+          {{i18n "queue.title"}}
+          {{#if currentUser.post_queue_new_count}}
+          <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
+          {{/if}}
+        </a>
+      </li>
+    {{/if}}
+
     {{plugin-outlet "site-map-links"}}
 
     {{#if showKeyboardShortcuts}}
