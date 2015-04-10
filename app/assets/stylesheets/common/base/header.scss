@@ -12,11 +12,11 @@
     }
 
     .contents {
-      margin: 8px 0;
+      @include margin(8px 0);
     }
 
     .title {
-      float: left;
+      @include float(left);
     }
 
     .valign-helper {
@@ -34,33 +34,33 @@
     }
 
     .panel {
-      float: right;
+      @include float(right);
       position: relative;
     }
 
     button.login-button, button.sign-up-button {
-      float: left;
+      @include float(left);
       margin-top: 7px;
-      padding: 6px 10px;
-      .fa { margin-right: 3px; }
+      @include padding(6px 10px);
+      .fa { @include margin-right(3px); }
     }
 
     button.login-button {
-      margin-left: 7px;
+      @include margin-left(7px);
     }
 
     .icons {
-      float: left;
+      @include float(left);
       text-align: center;
-      margin: 0 0 0 5px;
+      @include margin(0 0 0 5px);
       list-style: none;
 
       > li {
-        float: left;
+        @include float(left);
       }
       .icon {
         display: block;
-        padding: 3px;
+        @include padding(3px);
         color: scale-color($header_primary, $lightness: 50%);
         text-decoration: none;
         cursor: pointer;
@@ -94,7 +94,7 @@
           display: block;
           position: absolute;
           top: 100%;
-          left: 0;
+          @include left(0);
           z-index: 1101;
           width: 100%;
           height: 0;
@@ -119,14 +119,14 @@
         position: absolute;
         top: -9px;
         z-index: 1;
-        margin-left: 0;
+        @include margin-left(0);
       }
       .unread-notifications {
-        right: -4px;
+       @include right(-4px);
         background-color: scale-color($tertiary, $lightness: 50%);
       }
       .unread-private-messages {
-        left: -4px;
+        @include left(-4px);
       }
     }
     .flagged-posts {
@@ -140,11 +140,11 @@
     background: $secondary;
     max-height: 417px;
     top: 100%;
-    right: 0;
+   @include right(0);
     z-index: 1100;
     overflow: auto;
     border: 1px solid scale-color-diff();
-    padding: 5px;
+    @include padding(5px);
 
     box-shadow: 0 2px 2px rgba(0,0,0, .4);
 
@@ -156,7 +156,7 @@
   }
 
   ul {
-    margin: 0;
+    @include margin(0);
     list-style: none;
   }
 
@@ -170,7 +170,7 @@
 
       a {
         display: block;
-        padding: 5px;
+        @include padding(5px);
         transition: all linear .15s;
       }
 
@@ -178,7 +178,7 @@
         background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
         }
 
-      button {margin-left: 5px;}
+      button {@include margin-left(5px);}
   }
 
   .heading a:hover  {
@@ -197,15 +197,15 @@
     li {
       background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
       i {
-        float: left;
-        margin-right: 5px;
+        @include float(left);
+        @include margin-right(5px);
         padding-top: 2px;
       }
       span { color: $primary; }
       &:hover a { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
-      a { padding: 4px 0 3px 2px; }
+      a { @include padding(4px 0 3px 2px); }
       p {
-        margin: 0;
+        @include margin(0);
         overflow: hidden;
       }
     }
@@ -221,13 +221,13 @@
       background-color: $secondary;
     }
     .none {
-      padding: 5px;
+      @include padding(5px);
     }
     .spinner {
       width: 20px;
       height: 20px;
       border-width: 2px;
-      margin: 0 auto;
+      @include margin(0 auto);
     }
     /* as a big ol' click target, don't let text inside be selected */
     @include unselectable;
@@ -237,8 +237,8 @@
 
   &#site-map-dropdown {
     .heading {
-      padding: 5px 5px 5px 0;
-      a {padding: 0 5px;}
+      @include padding(5px 5px 5px 0);
+      a {@include padding(0 5px);}
     }
   }
 
@@ -246,9 +246,9 @@
 
   &#search-dropdown {
     .heading {
-      padding: 5px 0 5px 5px;
+      @include padding(5px 0 5px 5px);
     .filter {
-      padding: 0 5px;
+      @include padding(0 5px);
     }
      }
   }
@@ -256,49 +256,49 @@
   input[type='text'] {
     width: 518px;
     height: 22px;
-    margin: 5px;
-    padding: 5px;
+    @include margin(5px);
+    @include padding(5px);
   }
 
   .search-context {
-    padding: 0 5px;
+    @include padding(0 5px);
     label { margin-bottom: 0; }
   }
 
   .searching {
     position: absolute;
     top: 0;
-    right: 0;
+   @include right(0);
     .spinner {
       width: 10px;
       height: 10px;
       border-width: 2px;
-      margin: 20px 0 0 0;
+      @include margin(20px 0 0 0);
       }
   }
   // I am ghetto using this to display "Show More".. be warned
   .no-results {
-    padding: 5px;
+    @include padding(5px);
     text-align: center;
   }
   .filter {
-    padding: 0;
+    @include padding(0);
     &:hover {background: transparent;}
   }
 
   // Categories
 
   .category {
-    float: left;
+    @include float(left);
     background-color: transparent;
     width: 45%;
-    margin: 5px 5px 0 5px;
+    @include margin(5px 5px 0 5px);
     .box {margin-top: 0;}
     .badge-notification {
       color: scale-color($primary, $lightness: 50%);
       background-color: transparent;
       vertical-align: top;
-      padding: 5px 5px 2px 5px;
+      @include padding(5px 5px 2px 5px);
     }
   }
 
@@ -307,10 +307,10 @@
   }
 
   .btn {
-    padding: 2px 8px;
+    @include padding(2px 8px);
     margin-bottom: 2px;
     .fa {
-      margin-right: 5px;
+      @include margin-right(5px);
     }
   }
 }
@@ -320,16 +320,16 @@
     line-height: 0.8em;
   }
   .topic-title {
-    margin-right: 6px;
+    @include margin-right(6px);
   }
 
   .topic-statuses {
-    float: none;
+    @include float(none);
     display: inline-block;
     color: scale-color($primary, $lightness: 50%);
-    margin: 0;
+    @include margin(0);
     .fa {
-      margin: 0;
+      @include margin(0);
     }
   }
 }
@@ -344,7 +344,7 @@
 
 .search-context .show-help {
   position: absolute;
-  right: 10px;
+ @include right(10px);
   top: 0;
 }
 
@@ -364,7 +364,7 @@
 }
 
 #search-help table td {
-  padding-right: 10px;
+  @include padding-right(10px);
 }
 
 // we don't need this X to clear field
