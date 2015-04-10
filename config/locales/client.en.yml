@@ -1728,6 +1728,8 @@ en:
         automatic: "Automatic"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+        default_title: "Default title for all users in this group"
+        primary_group: "Automatically set as primary group"
 
       api:
         generate_master: "Generate Master API Key"
