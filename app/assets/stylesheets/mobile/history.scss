@@ -10,7 +10,7 @@
   }
   #revision-details {
     background-color: scale-color-diff();
-    padding: 5px;
+    @include padding(5px);
     margin-top: 10px;
   }
   img {
