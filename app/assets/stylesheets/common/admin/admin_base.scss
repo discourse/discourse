@@ -1,12 +1,12 @@
-// these are the styles associated with the Discourse admin section
+@import "common/foundation/multi_directional";
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
 
 .admin-contents table {
   width: 100%;
-  tr {text-align: left;}
-  td, th {padding: 8px;}
+  tr {@include text-align(left);}
+  td, th {@include padding(8px);}
   th {border-top: 1px solid scale-color-diff();}
   td {border-bottom: 1px solid scale-color-diff(); border-top: 1px solid scale-color-diff();}
   tr:hover { background-color: darken($secondary, 2.5%); }
@@ -21,10 +21,10 @@ td.flaggers td {
 
 .content-list li a span.count {
   font-size: 0.857em;
-  float: right;
-  margin-right: 10px;
+  @include float(right);
+  @include margin-right(10px);
   background-color: scale-color-diff();
-  padding: 2px 5px;
+  @include padding(2px 5px);
   border-radius: 5px;
   color: $primary;
 }
@@ -32,12 +32,12 @@ td.flaggers td {
 .admin-content {
   margin-bottom: 50px;
   .admin-contents {
-    padding: 8px;
+    @include padding(8px);
     @include clearfix();
   }
 
   .view-options {
-    float: right;
+    @include float(right);
   }
   table.report {
     margin-top: 20px;
@@ -48,9 +48,9 @@ td.flaggers td {
     }
 
     .bar-container {
-      float: left;
+      @include float(left);
       width: 300px;
-      margin-right: 15px;
+      @include margin-right(15px);
       margin-bottom: 5px;
       display: inline-block;
 
@@ -58,8 +58,8 @@ td.flaggers td {
         margin-top: 5px;
         background-color: $tertiary;
         display: inline-block;
-        text-align: right;
-        padding-right: 8px;
+        @include text-align(right);
+        @include padding-right(8px);
         color: $secondary;
       }
     }
@@ -73,19 +73,19 @@ td.flaggers td {
   .location-box {
     position: absolute;
     width: 460px;
-    right: 0px;
+   @include right(0px);
     z-index: 990;
     box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
     background-color: $secondary;
-    padding: 12px 12px 5px;
+    @include padding(12px 12px 5px);
 
     .other-accounts {
-      margin: 5px 0 0;
+      @include margin(5px 0 0);
       max-height: 200px;
       overflow: auto;
       width: 455px;
-      ul { margin: 0; }
+      ul { @include margin(0); }
       li { list-style: none; }
       tr td:first-of-type { width: 130px; }
     }
@@ -102,7 +102,7 @@ td.flaggers td {
 
 .admin-controls {
   background-color: dark-light-diff($primary, $secondary, 90%, -75%);
-  padding: 10px 10px 3px 0;
+  @include padding(10px 10px 3px 0);
   height: 35px;
   .nav.nav-pills {
     li.active {
@@ -121,19 +121,19 @@ td.flaggers td {
     color: $primary;
   }
   .controls {
-    margin-left: 10px;
+    @include margin-left(10px);
   }
   button {
-    margin-right: 5px;
+    @include margin-right(5px);
 
   }
   input[type=text] {
     display: inline-block;
-    float: left;
+    @include float(left);
   }
   .result-message {
     display: inline-block;
-    padding-left: 10px;
+    @include padding-left(10px);
     padding-top: 5px;
   }
   .username {
@@ -142,15 +142,15 @@ td.flaggers td {
     }
   }
   .search {
-    float: right;
-    margin-left: 10px;
+    @include float(right);
+    @include margin-left(10px);
     label {
       margin-top: 5px;
     }
   }
   .toggle {
     margin-top: 8px;
-    float: right;
+    @include float(right);
 
     span {
       font-weight: bold;
@@ -158,7 +158,7 @@ td.flaggers td {
   }
   label {
     display: inline-block;
-    margin-right: 5px;
+    @include margin-right(5px);
   }
 }
 
@@ -197,9 +197,9 @@ td.flaggers td {
 .admin-detail {
   width: 76.5765%;
   min-height: 800px;
-  margin-left: 0;
+  @include margin-left(0);
   border-left: solid 1px scale-color-diff();
-  padding: 30px 0 30px 30px;
+  @include padding(30px 0 30px 30px);
 }
 
 .settings {
@@ -207,12 +207,12 @@ td.flaggers td {
     padding-bottom: 20px;
 
     .setting-label {
-      float: left;
+      @include float(left);
       width: 17.6576%;
-      margin-right: 12px;
+      @include margin-right(12px);
     }
     .setting-value {
-      float: left;
+      @include float(left);
       width: 53%;
       .select2-container {
         width: 100%;
@@ -222,7 +222,7 @@ td.flaggers td {
       }
     }
     .setting-controls {
-      float: left;
+      @include float(left);
     }
     .input-setting-string {
       width: 404px;
@@ -231,7 +231,7 @@ td.flaggers td {
     }
     .input-setting-list {
       width: 408px;
-      padding: 1px;
+      @include padding(1px);
       background-color: $secondary;
       border: 1px solid scale-color-diff();
       border-radius: 3px;
@@ -246,8 +246,8 @@ td.flaggers td {
       }
 
       li.sortable-placeholder {
-        padding: 3px 5px 3px 18px;
-        margin: 3px 0px 3px 5px;
+        @include padding(3px 5px 3px 18px);
+        @include margin(3px 0px 3px 5px);
         position: relative;
         line-height: 13px;
         cursor: default;
@@ -299,15 +299,15 @@ section.details {
   h1 {
     font-size: 1.286em;
     color: $primary;
-    padding: 5px 10px;
-    margin: 30px 0 5px 0;
+    @include padding(5px 10px);
+    @include margin(30px 0 5px 0);
     border-bottom: 5px solid scale-color-diff();
   }
 }
 
 #selected-controls {
   background-color: scale-color($tertiary, $lightness: 75%);
-  padding: 8px;
+  @include padding(8px);
   min-height: 27px;
   position: fixed;
   bottom: 0;
@@ -315,9 +315,9 @@ section.details {
 }
 
 .user-controls {
-  padding: 5px;
+  @include padding(5px);
   clear: both;
-  text-align: right;
+  @include text-align(right);
 }
 
 .display-row.associations .value {
@@ -326,7 +326,7 @@ section.details {
 
 .display-row {
   line-height: 30px;
-  padding: 5px;
+  @include padding(5px);
   &:nth-of-type(1) {
     border-top: 0;
   }
@@ -344,31 +344,31 @@ section.details {
   .field {
     font-weight: bold;
     width: 17.65765%;
-    float: left;
-    margin-left: 12px;
+    @include float(left);
+    @include margin-left(12px);
   }
   .value {
     width: 250px;
-    float: left;
-    margin-left: 12px;
+    @include float(left);
+    @include margin-left(12px);
   }
   .long-value {
     width: 800px;
-    float: left;
-    margin-left: 12px;
+    @include float(left);
+    @include margin-left(12px);
     font-size: 0.929em;
 
     button {
-      margin-left: 10px;
+      @include margin-left(10px);
     }
   }
 
   .controls {
     width: 480px;
-    float: left;
-    margin-left: 12px;
+    @include float(left);
+    @include margin-left(12px);
     .btn {
-      margin-right: 5px;
+      @include margin-right(5px);
     }
   }
 }
@@ -379,10 +379,10 @@ section.details {
     margin-bottom: 10px;
 
     .list-badge {
-      float: right;
+      @include float(right);
       font-size: 11px;
       font-weight: normal;
-      padding: 0 6px;
+      @include padding(0 6px);
       color: $secondary;
       background-color: scale-color($tertiary, $lightness: 50%);
       border-radius: 3px;
@@ -390,10 +390,10 @@ section.details {
   }
 
   .current-badge {
-    margin: 20px;
+    @include margin(20px);
 
     p.help {
-      margin: 0;
+      @include margin(0);
       color: scale-color($primary, $lightness: 40%);
       font-size: 0.9em;
     }
@@ -401,7 +401,7 @@ section.details {
 
   .form-horizontal {
     .delete-link {
-      margin-left: 15px;
+      @include margin-left(15px);
       margin-top: 5px;
     }
     textarea {
@@ -410,17 +410,17 @@ section.details {
   }
 
   .current-badge-actions {
-    margin: 10px;
-    padding: 10px;
+    @include margin(10px);
+    @include padding(10px);
     border-top: 1px solid scale-color($primary, $lightness: 80%);
   }
 
   .buttons {
-    float: left;
+    @include float(left);
     width: 200px;
     .saving {
-      padding: 5px 0 0 0;
-      margin-left: 10px;
+      @include padding(5px 0 0 0);
+      @include margin-left(10px);
       width: 80px;
       color: $primary;
     }
@@ -429,30 +429,30 @@ section.details {
 
 .badge-query-preview {
   .grant-count, .sample, .error-header {
-    margin-left: 10px;
+    @include margin-left(10px);
   }
 
   .badge-errors {
     font-size: 1em;
     line-height: 16px;
-    padding: 4px;
+    @include padding(4px);
     background-color: scale-color-diff();
   }
 
   .badge-query-plan {
     font-size: 0.857em;
     line-height: 13px;
-    padding: 4px;
+    @include padding(4px);
     background-color: scale-color-diff();
   }
 
   .count-warning {
     background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
-    margin: 0 0 7px 0;
-    padding: 10px 20px;
+    @include margin(0 0 7px 0);
+    @include padding(10px 20px);
 
     p {
-      margin: 0;
+      @include margin(0);
     }
     .heading {
       color: $danger;
@@ -468,7 +468,7 @@ section.details {
     border-color: scale-color($primary, $lightness: 75%);
     .item {
       width: 190px;
-      margin-right: 0 !important;
+      @include margin-right(0 !important);
     }
   }
   .next, .previous {
@@ -501,26 +501,26 @@ section.details {
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 0;
-    right: 0;
+    @include left(0);
+   @include right(0);
     z-index: 100000;
     background-color: white;
     width: 100%;
-    padding: 0;
-    margin: 0;
+    @include padding(0);
+    @include margin(0);
     .wrapper {
       position: absolute;
       top: 20px;
       bottom: 10px;
-      left: 20px;
-      right: 20px;
+      @include left(20px);
+     @include right(20px);
     }
   }
   .nav.nav-pills {
-    margin-left: 10px;
+    @include margin-left(10px);
   }
   .content-list, .current-style {
-    float: left;
+    @include float(left);
   }
   .content-list ul {
     margin-bottom: 10px;
@@ -531,21 +531,21 @@ section.details {
     }
     .toggle-mobile {
       position: absolute;
-      right: 35px;
+     @include right(35px);
       font-size: 20px;
     }
     .toggle-maximize {
       position: absolute;
-      right: -5px;
+     @include right(-5px);
     }
     .delete-link {
-      margin-left: 15px;
+      @include margin-left(15px);
       margin-top: 5px;
     }
     .preview-link {
-      margin-left: 15px;
+      @include margin-left(15px);
     }
-    padding-left: 10px;
+    @include padding-left(10px);
     width: 70%;
     .style-name {
       width: 350px;
@@ -573,24 +573,24 @@ section.details {
     }
     .ace_editor {
       position: absolute;
-      left: 0;
-      right: 0;
+      @include left(0);
+     @include right(0);
       top: 0;
       bottom: 0;
     }
     .status-actions {
-      float: right;
+      @include float(right);
       margin-top: 7px;
       span {
-        margin-right: 10px;
+        @include margin-right(10px);
       }
     }
     .buttons {
-      float: left;
+      @include float(left);
       width: 200px;
       .saving {
-        padding: 5px 0 0 0;
-        margin-left: 10px;
+        @include padding(5px 0 0 0);
+        @include margin-left(10px);
         width: 80px;
         color: $primary;
       }
@@ -599,7 +599,7 @@ section.details {
   .color-scheme {
     .controls {
       span, button, a {
-        margin-right: 10px;
+        @include margin-right(10px);
       }
     }
   }
@@ -628,16 +628,16 @@ section.details {
   .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
   .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
   td { vertical-align: top; }
-  th { text-align: left; }
+  th { @include text-align(left); }
   .user {
     width: 25px;
-    padding: 8px 0 0 0;
+    @include padding(8px 0 0 0);
     text-align: center;
   }
   .excerpt {
     max-width: 700px;
     width: 75%;
-    padding: 8px;
+    @include padding(8px);
     word-wrap: break-word;
     .fa { display: inline-block; }
     h3 {
@@ -649,7 +649,7 @@ section.details {
   }
   .flaggers {
     font-size: 11px;
-    padding: 8px 0 0 5px;
+    @include padding(8px 0 0 5px);
     .avatar {
       width: 25px;
     }
@@ -661,18 +661,18 @@ section.details {
     }
     td {
       vertical-align: middle;
-      padding: 3px;
+      @include padding(3px);
       line-height: 1.4;
     }
   }
   .action {
-     button { margin: 4px; }
-     text-align: right;
+     button { @include margin(4px); }
+     @include text-align(right);
      padding-bottom: 20px;
   }
   td p {
     font-size: 0.929em;
-    margin: 0 0 5px 0;
+    @include margin(0 0 5px 0);
   }
   .flagged-posts { background: $danger; }
 }
@@ -680,19 +680,19 @@ section.details {
 /* Dashboard */
 
 .dashboard-left {
-  float: left;
+  @include float(left);
   margin-top: 10px;
   width: 60%;
 }
 .dashboard-right {
-  float: right;
+  @include float(right);
   margin-top: 10px;
   width: 40%;
 
 
   .dashboard-stats {
     width: 100%;
-    margin-left: 0;
+    @include margin-left(0);
   }
 }
 
@@ -746,12 +746,12 @@ table.api-keys {
   width: 100%;
 
   th {
-    text-align: left;
-    padding: 5px;
+    @include text-align(left);
+    @include padding(5px);
   }
 
   td {
-    padding: 5px;
+    @include padding(5px);
   }
 
   td.key {
@@ -761,7 +761,7 @@ table.api-keys {
 
 .dashboard-stats {
   margin-bottom: 30px;
-  margin-right: 40px;
+  @include margin-right(40px);
   h4 {
     font-weight: normal;
     margin-bottom: 8px;
@@ -782,7 +782,7 @@ table.api-keys {
       background: dark-light-diff($primary, $secondary, 80%, -65%);
     }
     th.title {
-      text-align: left;
+      @include text-align(left);
     }
     thead {
       tr:hover > td {
@@ -825,8 +825,8 @@ table.api-keys {
     margin-top: 10px;
 
     .look-here {
-      float: left;
-      margin: 20px 10px 0 10px;
+      @include float(left);
+      @include margin(20px 10px 0 10px);
 
       .fa {
         font-size: 2.286em
@@ -837,21 +837,21 @@ table.api-keys {
     }
 
     .problem-messages {
-      float: left;
+      @include float(left);
       width: 80%;
-      margin-left: 1%;
+      @include margin-left(1%);
       a {
         text-decoration: underline;
       }
       .actions {
-        text-align: right;
+        @include text-align(right);
       }
       .btn {
         background: dark-light-diff($primary, $secondary, 80%, -85%);
       }
       ul {
-        margin-left: 0;
-        padding-left: 20px;
+        @include margin-left(0);
+        @include padding-left(20px);
       li {
         margin-bottom: 10px;
         }
@@ -864,12 +864,12 @@ table.api-keys {
       width: auto;
     }
     margin-top: 12px;
-    padding-left: 5px;
+    @include padding-left(5px);
     .value {
-      text-align: left;
+      @include text-align(left);
       font-weight: bold;
-      padding-left: 8px;
-      padding-right: 30px;
+      @include padding-left(8px);
+      @include padding-right(30px);
     }
   }
 
@@ -897,8 +897,8 @@ table.api-keys {
   margin-bottom: 36px;
 
   ul, li {
-    margin: 0;
-    padding: 0;
+    @include margin(0);
+    @include padding(0);
   }
   ul {
     list-style: none;
@@ -920,7 +920,7 @@ table.api-keys {
 
     h1 {
       font-size: 1.286em;
-      margin: 5px 0 0 8px;
+      @include margin(5px 0 0 8px);
       display: inline-block;
       line-height: 1.0em;
     }
@@ -937,19 +937,19 @@ table.api-keys {
     li {
       @extend .clearfix;
       line-height: 1.0em;
-      padding: 6px 8px;
+      @include padding(6px 8px);
     background-color: scale-color-diff();
       .left {
-        float: left;
+        @include float(left);
       }
       .right {
-        margin-left: 52px;
+        @include margin-left(52px);
       }
 
       img {
         margin-top: 2px;
         border: solid 1px scale-color-diff();
-        padding: 2px;
+        @include padding(2px);
         background-color: $secondary;
       }
 
@@ -992,13 +992,13 @@ table.api-keys {
   h3 {
     color: dark-light-diff($primary, $secondary, 50%, -60%);
     font-size: 1.071em;
-    padding-left: 5px;
+    @include padding-left(5px);
     margin-bottom: 10px;
   }
 
   ul {
     list-style: none;
-    margin: 0;
+    @include margin(0);
 
     li:first-of-type {
       border-top: 1px solid scale-color-diff();
@@ -1009,7 +1009,7 @@ table.api-keys {
 
     li a {
       display: block;
-      padding: 10px;
+      @include padding(10px);
       color: $primary;
 
       &:hover {
@@ -1028,9 +1028,9 @@ table.api-keys {
 .content-editor {
   min-height: 500px;
 
-  float: left;
+  @include float(left);
   width: 54.0540%;
-  margin-left: 1.8018%;
+  @include margin-left(1.8018%);
 
   p.description {
     color: $primary;
@@ -1061,8 +1061,8 @@ table.api-keys {
   }
   .ace_editor {
     position: absolute;
-    left: 0;
-    right: 0;
+    @include left(0);
+   @include right(0);
     top: 0;
     bottom: 0;
   }
@@ -1082,12 +1082,12 @@ table.api-keys {
 
 .admin-logs-table {
   input.ember-text-field {
-    padding: 1px 4px;
+    @include padding(1px 4px);
   }
   .btn {
-    padding: 2px 8px;
+    @include padding(2px 8px);
     .fa {
-      margin-right: 2px;
+      @include margin-right(2px);
     }
   }
 }
@@ -1103,7 +1103,7 @@ table.api-keys {
 }
 
 .screened-ip-address-form {
-  margin-left: 6px;
+  @include margin-left(6px);
   .combobox {
     width: 130px;
   }
@@ -1118,7 +1118,7 @@ table.api-keys {
 .screened-ip-addresses {
   .ip_address {
     width: 150px;
-    text-align: left;
+    @include text-align(left);
     input {
       width: 130px;
     }
@@ -1164,11 +1164,11 @@ table.api-keys {
 }
 
 .staff-action-logs-controls {
-  margin: 0 0 20px 6px;
+  @include margin(0 0 20px 6px);
   a.filter {
     display: inline-block;
     background-color: scale-color($primary, $lightness: 75%);
-    padding: 3px 10px;
+    @include padding(3px 10px);
     border-radius: 3px;
 
     color: $primary;
@@ -1182,13 +1182,13 @@ table.api-keys {
       font-weight: bold;
     }
     i {
-      margin-left: 6px;
+      @include margin-left(6px);
     }
   }
 }
 
 .staff-action-logs-instructions {
-  margin: 0 0 10px 10px;
+  @include margin(0 0 10px 10px);
 }
 
 // Ember.ListView
@@ -1212,7 +1212,7 @@ table.api-keys {
   }
   .col.heading {
     font-weight: bold;
-    padding: 4px 0;
+    @include padding(4px 0);
   }
   .col {
     display: inline-block;
@@ -1278,7 +1278,7 @@ button.ru {
 .ru-progress {
   position: absolute;
   top: 0;
-  left: 0;
+  @include left(0);
   height: 100%;
   background: rgba(0, 175, 0, 0.3);
 }
@@ -1294,17 +1294,17 @@ button.ru {
 .delete-flag-modal, .agree-flag-modal {
   button {
     display: block;
-    margin: 10px 0 10px 10px;
-    padding: 10px 15px;
+    @include margin(10px 0 10px 10px);
+    @include padding(10px 15px);
   }
 }
 
 .start-backup-modal {
   .btn {
-    margin: 10px 0 10px 5px;
+    @include margin(10px 0 10px 5px);
   }
   .btn:first-of-type {
-    margin-left: 10px;
+    @include margin-left(10px);
   }
 }
 
@@ -1320,16 +1320,16 @@ and (max-width : 850px) {
 and (min-width : 320px)
 and (max-width : 500px) {
 
-.full-width { margin: 0; }
+.full-width { @include margin(0); }
 .site-settings-nav { width: 100%; }
 .site-settings-detail {
   width: 100%;
-  padding: 0;
+  @include padding(0);
   border: none;
 
   .settings .setting {
       .setting-label {
-      float: left;
+      @include float(left);
       width: 100%;
       h3 {
         margin-bottom: 5px;
@@ -1360,16 +1360,16 @@ and (max-width : 500px) {
 
   .admin-container {
     h2 {
-      float: left;
+      @include float(left);
       }
   }
 
   .dashboard-left, .dashboard-right { width: 100%; }
-  .dashboard-stats { margin: 0; }
+  .dashboard-stats { @include margin(0); }
 
   .badges {
-    .current-badge {margin: 70px 0 0 0;}
-    .current-badge-actions {padding: 0;}
+    .current-badge {@include margin(70px 0 0 0);}
+    .current-badge-actions {@include padding(0);}
   }
 
   .customize .content-list, .customize .current-style {
@@ -1379,18 +1379,18 @@ and (max-width : 500px) {
 
 .badge-groupings {
   list-style: none;
-  margin: 0;
-  padding: 10px 3px;
+  @include margin(0);
+  @include padding(10px 3px);
   li {
-    padding: 6px 0;
+    @include padding(6px 0);
     width: 600px;
     border-bottom: 1px solid #dfdfdf;
   }
   .actions {
     font-size: 1.214em;
-    float: right;
+    @include float(right);
     a {
-      margin-left: 5px;
+      @include margin-left(5px);
     }
   }
 }
@@ -1412,24 +1412,24 @@ tr.not-activated {
   }
 
   .user-field {
-    padding: 10px;
+    @include padding(10px);
     margin-bottom: 10px;
     border-bottom: 1px solid scale-color-diff();
 
     .form-display {
       width: 25%;
       display: inline-block;
-      float: left;
+      @include float(left);
     }
 
     .form-element {
-      float: left;
+      @include float(left);
       width: 25%;
     }
 
     .controls {
-      float: right;
-      text-align: right;
+      @include float(right);
+      @include text-align(right);
       width: 20%;
     }
 
@@ -1452,8 +1452,8 @@ table#user-badges {
 .url-list {
   .url {
     border-bottom: 1px solid #ddd;
-    padding: 3px;
-    margin-right: 10px;
+    @include padding(3px);
+    @include margin-right(10px);
 
     white-space: nowrap;
     overflow: hidden;
@@ -1467,4 +1467,3 @@ table#user-badges {
   input[type=text] {
     width: 90%;
   }
-}
