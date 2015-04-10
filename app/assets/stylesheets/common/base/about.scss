@@ -7,7 +7,7 @@ section.about {
 
 
   p {
-    margin: 10px 0;
+    @include margin(10px 0);
   }
 
   table {
@@ -15,11 +15,11 @@ section.about {
     width: 90%;
 
     th {
-      text-align: left;
+      @include text-align(left);
     }
 
     td, th {
-      padding: 10px 5px 5px 5px;
+      @include padding(10px 5px 5px 5px);
       border-bottom: 1px solid lighten($primary, 70%);
       line-height: 1.0em;
     }
