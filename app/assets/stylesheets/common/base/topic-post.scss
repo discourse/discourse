@@ -1,11 +1,11 @@
 .names {
- float: left;
+ @include float(left);
  .username {
    font-weight: bold;
  }
  span {
    font-size: 0.929em;
-   padding-right: 8px;
+   @include padding-right(8px);
    display: inline-block;
    max-width: 280px;
    white-space: nowrap;
@@ -17,7 +17,7 @@
  }
  .fa {
    font-size: 11px;
-   margin-left: 3px;
+   @include margin-left(3px);
    color: scale-color($primary, $lightness: 40%);
  }
   .new_user a, .user-title, .user-title a {
@@ -28,7 +28,7 @@
 // global styles for the cooked HTML content in posts (and preview)
 .cooked, #wmd-preview {
   word-wrap: break-word;
-  h1, h2, h3, h4, h5, h6 { margin: 30px 0 10px; }
+  h1, h2, h3, h4, h5, h6 { @include margin(30px 0 10px); }
   h1 { line-height: 1em; } /* normalize.css sets h1 font size but not line height */
   a { word-wrap: break-word; }
 }
@@ -44,16 +44,16 @@ aside.quote {
   margin-top: 1em;
   margin-bottom: 1em;
 
-  .badge-wrapper { margin-left: 5px; }
+  .badge-wrapper { @include margin-left(5px); }
 
   .title {
     border-left: 5px solid darken(scale-color-diff(), 10%);
     background-color: scale-color-diff();
     color: scale-color($primary, $lightness: 30%);
     // IE will screw up the blockquote underneath if bottom padding is 0px
-    padding: 12px 12px 1px 12px;
+    @include padding(12px 12px 1px 12px);
     /* blockquote is underneath this and has top margin */
-    .avatar { margin-right: 7px; }
+    .avatar { @include margin-right(7px); }
     img { margin-top: -4px; }
     @include unselectable;
   }
@@ -70,13 +70,13 @@ aside.quote {
 
 .cooked .highlight {
   background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
-  padding: 2px;
-  margin: -2px;
+  @include padding(2px);
+  @include margin(-2px);
 }
 
 .post-action {
   .undo-action, .act-action{
-    margin-left: 5px;
+    @include margin-left(5px);
   }
 }
 
@@ -86,15 +86,15 @@ aside.quote {
 
 
 .quote-controls {
-  float: right;
+  @include float(right);
   a {
-    margin: 0;
+    @include margin(0);
   }
 
   .back:before, .quote-other-topic:before
   {
     display: inline-block;
-    margin-left: 8px;
+    @include margin-left(8px);
     font-family: "FontAwesome";
     position: relative;
     z-index: 20;
@@ -112,7 +112,7 @@ aside.quote {
   position: absolute;
   background-color: scale-color($primary, $lightness: 50%);
   color: $secondary;
-  padding: 10px;
+  @include padding(10px);
   z-index: 401;
 
   &:before {
@@ -138,7 +138,7 @@ aside.quote {
 
 .post-info {
   &.wiki, &.via-email {
-    margin-right: 5px;
+    @include margin-right(5px);
     i.fa {
       font-size: 1em;
     }
@@ -159,7 +159,7 @@ pre {
   code {
     white-space: pre-wrap;
     display: block;
-    padding: 5px 10px;
+    @include padding(5px 10px);
     color: $primary;
     background: scale-color-diff();
     max-height: 500px;
@@ -176,8 +176,8 @@ kbd
   display: inline-block;
   font-size: 0.857em;
   line-height: 1.4;
-  margin: 0 .1em;
-  padding: .1em .6em;
+  @include margin(0 .1em);
+  @include padding(.1em .6em);
 
   // don't allow more than 3 nested elements to prevent FF from crashing
   // cf. http://what.thedailywtf.com/t/nested-elements/7927
