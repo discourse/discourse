@@ -152,6 +152,23 @@ describe Jobs::PollMailbox do
           end
         end
       end
+
+      describe "user in restricted group" do
+
+        it "raises InvalidAccess error" do
+          restricted_group = Fabricate(:group)
+          restricted_group.add(user)
+          restricted_group.save
+
+          category.set_permissions(restricted_group => :readonly)
+          category.save
+
+          expect_exception Discourse::InvalidAccess
+
+          poller.handle_mail(email)
+          expect(email).to be_deleted
+        end
+      end
     end
 
     describe "a valid reply" do
