@@ -3,7 +3,7 @@
 // --------------------------------------------------
 
 #banner {
-  margin: 10px;
+  @include margin(10px);
 
   @media all and (max-height: 499px) {
     max-height: 100px;
