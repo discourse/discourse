@@ -23,7 +23,7 @@ img {
   max-width: 100%;
 }
 .row {
-  @include margin-left(-12px);
+  margin-left: -12px;
 }
 .row:before,
 .row:after {
@@ -34,8 +34,8 @@ img {
   clear: both;
 }
 [class*="span"] {
-  @include float(left);
- @include margin-left(12px);
+  float: left;
+  margin-left: 12px;
 }
 .span24 {
   width: 1236px;
@@ -62,12 +62,12 @@ img {
   margin-left: 116px;
 }
 .offset1 {
-  @include margin-left(64px);
+  margin-left: 64px;
 }
 
 button.btn::-moz-focus-inner,
 input[type="submit"].btn::-moz-focus-inner {
-  @include padding(0);
+  padding: 0;
   border: 0;
 }
 .btn-group {
@@ -82,11 +82,11 @@ input[type="submit"].btn::-moz-focus-inner {
   clear: both;
 }
 .btn-group + .btn-group {
-  @include margin-left(5px);
+  margin-left: 5px;
 }
 .btn-group > .btn {
   position: relative;
-  @include float(left);
+  float: left;
 }
 .btn-group > .btn:hover,
 .btn-group > .btn:focus,
@@ -119,13 +119,13 @@ input[type="submit"].btn::-moz-focus-inner {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  @include left(0);
+  left: 0;
   z-index: 1000;
   display: none;
-  @include float(left);
+  float: left;
   min-width: 160px;
-  @include padding(4px 0);
-  @include margin(1px 0 0);	
+  padding: 4px 0;
+  margin: 1px 0 0;
   list-style: none;
   background-color: #ffffff;
   border: 1px solid #ccc;
@@ -136,7 +136,7 @@ input[type="submit"].btn::-moz-focus-inner {
 }
 .dropdown-menu a {
   display: block;
-  @include padding(3px 15px);
+  padding: 3px 15px;
   clear: both;
   font-weight: normal;
   line-height: 18px;
@@ -179,7 +179,7 @@ body {
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @include margin(0);	
+    margin: 0;
     font-family: inherit;
     font-weight: bold;
     color: inherit;
@@ -216,13 +216,13 @@ body {
   }
 
   blockquote {
-    @include margin(15px 0 8px);	
+    margin: 15px 0 8px;
   }
   li {
     line-height: 18px;
   }
   form {
-    @include margin(0 0 18px);	
+    margin: 0 0 18px;
   }
   label, input, button, select, textarea {
     font-size: 0.929em;
@@ -238,7 +238,7 @@ body {
   }
   select, textarea {
     display: inline-block;
-    @include padding(4px);
+    padding: 4px;
     margin-bottom: 9px;
     font-size: 0.929em;
     line-height: 18px;
@@ -248,7 +248,7 @@ body {
     &[type="text"], &[type="password"], &[type="datetime"], &[type="datetime-local"], &[type="date"], &[type="month"], &[type="time"], &[type="week"], &[type="number"], &[type="email"], &[type="url"], &[type="search"], &[type="tel"], &[type="color"] {
       display: inline-block;
       height: 18px;
-      @include padding(4px);
+      padding: 4px;
       margin-bottom: 9px;
       font-size: 0.929em;
       line-height: 18px;
@@ -291,7 +291,7 @@ body {
 
   input {
     &[type="radio"], &[type="checkbox"] {
-      @include margin(3px 0);	
+      margin: 3px 0;
       line-height: normal;
       cursor: pointer;
     }
@@ -325,11 +325,11 @@ body {
   }
   .radio, .checkbox {
     min-height: 18px;
-    @include padding-left(18px);
+    padding-left: 18px;
   }
   .radio input[type="radio"], .checkbox input[type="checkbox"] {
-    @include float(left);
-    @include margin-left(-18px)
+    float: left;
+    margin-left: -18px;
   }
   .controls > {
     .radio:first-child, .checkbox:first-child {
@@ -343,14 +343,14 @@ body {
     vertical-align: middle;
   }
   .radio.inline .radio.inline, .checkbox.inline .checkbox.inline {
-    @include margin-left(10px)
+    margin-left: 10px;
   }
   .input-xxlarge {
     width: 530px;
   }
   input[class*="span"], select[class*="span"], textarea[class*="span"] {
     float: none;
-    @include margin-left(0);
+    margin-left: 0;
   }
   .input-append {
     input[class*="span"] {
@@ -363,7 +363,7 @@ body {
     }
   }
   input, textarea {
-    @include margin-left(0);
+    margin-left: 0;
   }
   input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     cursor: not-allowed;
@@ -457,7 +457,7 @@ body {
     width: auto;
     height: 18px;
     min-width: 16px;
-    @include padding(4px 5px);
+    padding: 4px 5px;
     font-weight: normal;
     line-height: 18px;
     text-align: center;
@@ -467,7 +467,7 @@ body {
     border: 1px solid #cccccc;
   }
   .input-prepend .add-on, .input-append .add-on, .input-prepend .btn, .input-append .btn {
-    @include margin-left(-1px);
+    margin-left: -1px;
     border-radius: 0;
   }
   .input-prepend .active, .input-append .active {
@@ -476,7 +476,7 @@ body {
   }
   .input-prepend {
     .add-on, .btn {
-      @include margin-right(-1px);
+      margin-right: -1px;
     }
     .add-on:first-child, .btn:first-child {
       border-radius: 3px 0 0 3px;
@@ -495,11 +495,11 @@ body {
       border-radius: 0;
     }
     .add-on:first-child, .btn:first-child {
-      @include margin-right(-1px);
+      margin-right: -1px;
       border-radius: 3px 0 0 3px;
     }
     .add-on:last-child, .btn:last-child {
-      @include margin-left(-1px);
+      margin-left: -1px;
       border-radius: 0 3px 3px 0;
     }
   }
@@ -529,23 +529,23 @@ body {
       }
     }
     .control-indent {
-      @include margin-left(20px);
+      margin-left: 20px;
       margin-bottom: 10px;
     }
     .control-label {
-      @include float(left);
+      float: left;
       width: 140px;
       padding-top: 5px;
       text-align: right;
       font-weight: bold;
     }
     .controls {
-      @include margin-left(160px);
+      margin-left: 160px;
     }
   }
 
   .alert {
-    @include padding(8px 35px 8px 14px);
+    padding: 8px 35px 8px 14px;
     margin-bottom: 18px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     background-color: #fcf8e3;
@@ -556,7 +556,7 @@ body {
   .alert .close {
     position: relative;
     top: -2px;
-    @include right(-21px);
+    right: -21px;
     line-height: 18px;
   }
   .alert-success {
@@ -576,7 +576,7 @@ body {
   }
   .alert {
     .close {
-      @include float(right);
+      float: right;
       font-size: 1.429em;
       font-weight: bold;
       line-height: 18px;
@@ -593,7 +593,7 @@ body {
       }
     }
     button.close {
-      @include padding(0);
+      padding: 0;
       cursor: pointer;
       background: transparent;
       border: 0;
@@ -618,9 +618,9 @@ table {
   width: 100%;
   margin-bottom: 20px;
   th, td {
-   @include padding(8px);
+    padding: 8px;
     line-height: 20px;
-    @include text-align(left);
+    text-align: left;
     vertical-align: top;
     border-top: 1px solid #dddddd;
   }
@@ -652,7 +652,7 @@ table {
 
 .table-condensed {
   th, td {
-    @include padding(4px 5px);
+    padding: 4px 5px;
   }
 }
 
@@ -665,7 +665,7 @@ table {
 table [class*=span] {
   display: table-cell;
   float: none;
- @include margin-left(0);
+  margin-left: 0;
 }
 
 .table {
