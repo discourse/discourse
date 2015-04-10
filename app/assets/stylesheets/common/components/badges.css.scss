@@ -26,7 +26,7 @@
     line-height: 1.25;
     span.badge-category {
       color: $primary !important;
-      padding: 3px;
+      @include padding(3px);
       vertical-align: text-top;
       margin-top: -3px; //vertical alignment fix
       display: inline-block;
@@ -38,7 +38,7 @@
 
    .badge-category-parent-bg, .badge-category-bg {
      display: inline-block;
-     padding: 1px;
+     @include padding(1px);
 
      &:before {
        content: "\a0";
@@ -51,7 +51,7 @@
 
   &.bullet { //bullet category style
     line-height: 1;
-    margin-right: 5px;
+    @include margin-right(5px);
 
     h3 & {
       line-height: .9;
@@ -61,8 +61,8 @@
       color: $primary !important;
       vertical-align: text-top;
       line-height: 1;
-      margin-left: 4px;
-      padding-left: 2px;
+      @include margin-left(4px);
+      @include padding-left(2px);
       display: inline;
 
       #search-dropdown & {
@@ -111,17 +111,17 @@
       &.badge-category-parent-bg { //subcategory style
         width: calc(100% - 5px);
         & + .badge-category-bg {
-          left: 5px;
+          @include left(5px);
           width: calc(100% - 5px);
           & + .badge-category {
-            margin-left: 5px;
+            @include margin-left(5px);
           }
         }
       }
 
       &.badge-category {
         position: relative;
-        padding: 0 5px;
+        @include padding(0 5px);
         margin-top: 2px;
       }
     }
@@ -147,15 +147,15 @@
 .category-breadcrumb {
   a.badge-category {
       display: inline-block;
-      padding: 5px 8px;
+      @include padding(5px 8px);
       line-height: 20px;
     &.category-dropdown-button {
-      margin-left: -4px;
-      padding: 5px;
+      @include margin-left(-4px);
+      @include padding(5px);
       width: 13px;
 
       .fa-caret-right {
-        margin-left: 2px;
+        @include margin-left(2px);
         }
       }
     }
@@ -177,7 +177,7 @@
         width: 10px;
         height: 10px;
         display: inline-block;
-        margin: 0 2px;
+        @include margin(0 2px);
       }
     }
 
@@ -187,8 +187,8 @@
   .category-dropdown-menu {
     .badge-category {
       &.home {
-        margin-left: 4px;
-        padding-left: 0;
+        @include margin-left(4px);
+        @include padding-left(0);
       }
     }
     .cat {
@@ -196,13 +196,13 @@
       }
     .badge-wrapper {
       &.bar {
-        margin: 5px 0;
+        @include margin(5px 0);
         .badge-category {
           max-width: 100px;
         }
       }
       &.bullet {
-        margin: 5px;
+        @include margin(5px);
         .badge-category {
           max-width: 100px;
         }
@@ -212,7 +212,7 @@
         width: 100%;
         line-height: 1;
         span.badge-category {
-          padding: 5px;
+          @include padding(5px);
         }
       }
 
@@ -230,7 +230,7 @@
 
 .badge-notification {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  @include padding(4px 5px 2px 5px);
   vertical-align: middle;
   color: $secondary;
   font-size: 11px;
@@ -258,7 +258,7 @@
 
   &.new-topic::before {
     content: "●";
-    margin-right: 2px;
+    @include margin-right(2px);
   }
 
   // Click count
@@ -269,7 +269,7 @@
     top: -1px;
     color: #888;
     position: relative;
-    margin-left: 2px;
+    @include margin-left(2px);
     border: none;
   }
 }
@@ -291,7 +291,7 @@
 
 .badge-group {
   @extend %badge;
-  padding: 4px 5px 2px 5px;
+  @include padding(4px 5px 2px 5px);
   color: $primary;
   text-shadow: 0 1px 0 rgba($primary, 0.1);
   background-color: dark-light-diff($primary, $secondary, 90%, -65%);
