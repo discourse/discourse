@@ -35,18 +35,18 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 10px 0 10px 10px;
+  @include padding(10px 0 10px 10px);
   width: 95%;
 }
 
 // an ember metamorph is inserted between btn's sometimes, breaking this rule, but only on mobile for some reason:
 // .modal-footer .btn + .btn {
 .modal-footer .btn {
-  margin-right: 5px;
+  @include margin-right(5px);
   margin-bottom: 5px;
 }
 .modal-footer .btn-group .btn + .btn {
-  margin-left: -1px;
+  @include margin-left(-1px);
 }
 
 .modal-footer span.hint { display: none; }
@@ -59,15 +59,15 @@
   }
   h3 {
     font-size: 1.286em;
-    padding-left: 15px;
+    @include padding-left(15px);
     margin-bottom: 5px;
   }
 }
 .close {
-  float: right;
+  @include float(right);
   font-size: 1.714em;
-  padding: 10px 15px 5px 5px;
-  margin: -15px 0 0 0;
+  @include padding(10px 15px 5px 5px);
+  @include margin(-15px 0 0 0);
   color: $primary;
 }
 
@@ -77,7 +77,7 @@
   }
 
   input[type=radio] {
-    margin-right: 10px;
+    @include margin-right(10px);
   }
 
   button {
@@ -99,13 +99,13 @@
 }
 
 .custom-message-length {
-  margin: -10px 0 10px 20px;
+  @include margin(-10px 0 10px 20px);
   color: scale-color($primary, $lightness: 70%);
   font-size: 85%;
 }
 
 .flag-message {
-  margin-left: 20px;
+  @include margin-left(20px);
   width: 95% !important;
 }
 
@@ -118,11 +118,11 @@
     height: 310px;
   }
   .secure-category-options {
-    margin: 10px 0 0 16px;
+    @include margin(10px 0 0 16px);
     .badge-list {
-      margin: 10px 0;
+      @include margin(10px 0);
       li {
-        margin: 0 4px 8px 0;
+        @include margin(0 4px 8px 0);
         a {
           color: #888;
           cursor: pointer;
@@ -151,7 +151,7 @@
 }
 
 .alert {
-  padding: 5px;
+  @include padding(5px);
   &.alert-success {
     background-color:  scale-color($success, $lightness: 90%);
     color: $success;
@@ -172,10 +172,10 @@
 }
 
 #search-help h2 {
-  margin: 0;
+  @include margin(0);
   font-size: 0.857em;
 }
 
 #search-help p {
- margin: 5px;
+ @include margin(5px);
 }
