@@ -11,7 +11,7 @@
   ul,
   ol,
   table {
-    margin: 0 0 20px;
+    @include margin(0 0 20px);
     font-size: 1.143em;
     line-height: 22px;
   }
@@ -22,7 +22,7 @@
 
   ul:not(.nav-pills),
   ol:not(.nav-pills) {
-    margin-left: 40px;
+    @include margin-left(40px);
   }
 
   /* intended only for /faq, /guidelines, /tos, and /privacy */
