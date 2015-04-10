@@ -74,7 +74,7 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
 // Transluscent overlay
 .mfp-bg {
   top: 0;
-  left: 0;
+  @include left(0);
   width: 100%;
   height: 100%;
   z-index: $z-index-base + 2;
@@ -91,7 +91,7 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
 // Wrapper for popup
 .mfp-wrap {
   top: 0;
-  left: 0;
+  @include left(0);
   width: 100%;
   height: 100%;
   z-index: $z-index-base + 3;
@@ -106,9 +106,9 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   position: absolute;
   width: 100%;
   height: 100%;
-  left: 0;
+  @include left(0);
   top: 0;
-  padding: 0 $popup-padding-left;
+  @include padding(0 $popup-padding-left);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -138,8 +138,8 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   position: relative;
   display: inline-block;
   vertical-align: middle;
-  margin: 0 auto;
-  text-align: left;
+  @include margin(0 auto);
+  @include text-align(left);
   z-index: $z-index-base + 5;
 }
 .mfp-inline-holder,
@@ -196,9 +196,9 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
     border: 0 !important;
     clip: rect(0 0 0 0) !important;
     height: 1px !important;
-    margin: -1px !important;
+    @include margin(-1px !important);
     overflow: hidden !important;
-    padding: 0 !important;
+    @include padding(0 !important);
     position: absolute !important;
     width: 1px !important;
   }
@@ -221,8 +221,8 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   width: auto;
   text-align: center;
   margin-top: -0.8em;
-  left: 8px;
-  right: 8px;
+  @include left(8px);
+ @include right(8px);
   z-index: $z-index-base + 4;
   a {
     color: $controls-text-color;
@@ -256,13 +256,13 @@ button {
     border: 0;
     -webkit-appearance: none;
     display: block;
-    padding: 0;
+    @include padding(0);
     z-index: $z-index-base + 6;
     -webkit-box-shadow: none;
     box-shadow: none;
   }
   &::-moz-focus-inner {
-      padding: 0;
+      @include padding(0);
       border: 0
   }
 }
@@ -275,7 +275,7 @@ button {
   line-height: 44px;
 
   position: absolute;
-  right: 0;
+ @include right(0);
   top: 0;
   text-decoration: none;
   text-align: center;
@@ -283,7 +283,7 @@ button {
   @if $IE7support {
     filter: unquote("alpha(opacity=#{$controls-opacity*100})");
   }
-  padding: 0 0 18px 10px;
+  @include padding(0 0 18px 10px);
   color: $controls-color;
 
   font-style: normal;
@@ -312,9 +312,9 @@ button {
 .mfp-iframe-holder {
   .mfp-close {
     color: $controls-color;
-    right: -6px;
-    text-align: right;
-    padding-right: 6px;
+   @include right(-6px);
+    @include text-align(right);
+    @include padding-right(6px);
     width: 100%;
   }
 }
@@ -323,7 +323,7 @@ button {
 .mfp-counter {
   position: absolute;
   top: 0;
-  right: 0;
+ @include right(0);
   color: $controls-text-color;
   font-size: 0.857em;
   line-height: 18px;
@@ -337,10 +337,10 @@ button {
     @if $IE7support {
       filter: unquote("alpha(opacity=#{$controls-opacity*100})");
     }
-    margin: 0;
+    @include margin(0);
     top: 50%;
     margin-top: -55px;
-    padding: 0;
+    @include padding(0);
     width: 90px;
     height: 110px;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
@@ -364,10 +364,10 @@ button {
       width: 0;
       height: 0;
       position: absolute;
-      left: 0;
+      @include left(0);
       top: 0;
       margin-top: 35px;
-      margin-left: 35px;
+      @include margin-left(35px);
       border: medium inset transparent;
     }
 
@@ -388,22 +388,22 @@ button {
   }
 
   .mfp-arrow-left {
-    left: 0;
+    @include left(0);
 
     &:after,
     .mfp-a {
       border-right: 17px solid #FFF;
-      margin-left: 31px;
+      @include margin-left(31px);
     }
     &:before,
     .mfp-b {
-      margin-left: 25px;
+      @include margin-left(25px);
       border-right: 27px solid #3f3f3f;
     }
   }
 
   .mfp-arrow-right {
-    right: 0;
+   @include right(0);
     &:after,
     .mfp-a {
       border-left: 17px solid #FFF;
@@ -441,7 +441,7 @@ button {
       position: absolute;
       display: block;
       top: 0;
-      left: 0;
+      @include left(0);
       width: 100%;
       height: 100%;
       box-shadow: $shadow;
@@ -466,8 +466,8 @@ button {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-      padding: $image-padding-top 0 $image-padding-bottom;
-      margin: 0 auto;
+      @include padding($image-padding-top 0 $image-padding-bottom);
+      @include margin(0 auto);
     }
   }
 
@@ -477,11 +477,11 @@ button {
     &:after {
       content: '';
       position: absolute;
-      left: 0;
+      @include left(0);
       top: $image-padding-top;
       bottom: $image-padding-bottom;
       display: block;
-      right: 0;
+     @include right(0);
       width: auto;
       height: auto;
       z-index: -1;
@@ -495,29 +495,29 @@ button {
       line-height: 14px;
     }
     figure {
-      margin: 0;
+      @include margin(0);
     }
   }
   .mfp-bottom-bar {
     margin-top: -$image-padding-bottom + 4;
     position: absolute;
     top: 100%;
-    left: 0;
+    @include left(0);
     width: 100%;
     cursor: auto;
   }
   .mfp-title {
-    text-align: left;
+    @include text-align(left);
     line-height: 18px;
     color: $caption-title-color;
     word-wrap: break-word;
-    padding-right: 36px; // leave some space for counter at right side
+    @include padding-right(36px); // leave some space for counter at right side
 
     // add the download icon
     a.image-source-link:before {
       content: "\f019";
       font-family: FontAwesome;
-      padding-right: 5px;
+      @include padding-right(5px);
     }
   }
 
@@ -543,12 +543,12 @@ button {
        */
       .mfp-img-mobile {
         .mfp-image-holder {
-          padding-left: 0;
-          padding-right: 0;
+          @include padding-left(0);
+          @include padding-right(0);
         }
         img {
           &.mfp-img {
-            padding: 0;
+            @include padding(0);
           }
         }
         .mfp-figure {
@@ -559,37 +559,37 @@ button {
           }
           small {
             display: inline;
-            margin-left: 5px;
+            @include margin-left(5px);
           }
         }
         .mfp-bottom-bar {
           background: rgba(0,0,0,0.6);
           bottom: 0;
-          margin: 0;
+          @include margin(0);
           top: auto;
-          padding: 3px 5px;
+          @include padding(3px 5px);
           position: fixed;
           -webkit-box-sizing: border-box;
           -moz-box-sizing: border-box;
           box-sizing: border-box;
           &:empty {
-            padding: 0;
+            @include padding(0);
           }
         }
         .mfp-counter {
-          right: 5px;
+         @include right(5px);
           top: 3px;
         }
         .mfp-close {
           top: 0;
-          right: 0;
+         @include right(0);
           width: 35px;
           height: 35px;
           line-height: 35px;
           background: rgba(0, 0, 0, 0.6);
           position: fixed;
           text-align: center;
-          padding: 0;
+          @include padding(0);
         }
       }
     }
@@ -613,8 +613,8 @@ button {
     -webkit-transform-origin: 100%;
   }
   .mfp-container {
-    padding-left: $popup-padding-left-mobile;
-    padding-right: $popup-padding-left-mobile;
+    @include padding-left($popup-padding-left-mobile);
+    @include padding-right($popup-padding-left-mobile);
   }
 }
 
@@ -625,24 +625,24 @@ button {
 @if $IE7support {
   .mfp-ie7 {
     .mfp-img {
-      padding: 0;
+      @include padding(0);
     }
     .mfp-bottom-bar {
       width: 600px;
-      left: 50%;
-      margin-left: -300px;
+      @include left(50%);
+      @include margin-left(-300px);
       margin-top: 5px;
       padding-bottom: 5px;
     }
     .mfp-container {
-      padding: 0;
+      @include padding(0);
     }
     .mfp-content {
       padding-top: 44px;
     }
     .mfp-close {
       top: 0;
-      right: 0;
+     @include right(0);
       padding-top: 0;
     }
   }
