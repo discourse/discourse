@@ -4,15 +4,15 @@ img.avatar {
 
 .container {
   @extend .clearfix;
-  margin-right: auto;
-  margin-left: auto;
+  @include margin-right(auto);
+  @include margin-left(auto);
   .contents {
     position: relative;
   }
 }
 
 .full-width {
-  margin-left: 12px;
+  @include margin-left(12px);
 }
 
 big {
@@ -88,20 +88,20 @@ body {
     font-size: 2.143em;
     text-align: center;
     top: 120px;
-    left: 500px;
+    @include left(500px);
     color: $primary;
   }
     .top-space {
     margin-top: 10px;
   }
   ul.breadcrumb {
-    margin: 0 10px 0 10px;
+    @include margin(0 10px 0 10px);
   }
 
 .message {
     @include border-radius-all(8px);
     background-color: $secondary;
-    padding: 14px;
+    @include padding(14px);
 
     h2 {
       margin-bottom: 20px;
@@ -144,14 +144,14 @@ body {
 #pagedown-editor {
   width: 540px;
   background-color: $secondary;
-  padding: 0 10px 13px 10px;
+  @include padding(0 10px 13px 10px);
   border: 1px solid scale-color-diff();
   .preview {
     margin-top: 8px;
     border: 1px dashed scale-color-diff();
-    padding: 8px 8px 0 8px;
+    @include padding(8px 8px 0 8px);
     p {
-      margin: 0 0 10px 0;
+      @include margin(0 0 10px 0);
     }
   }
   .preview.hidden {
@@ -207,11 +207,11 @@ body {
 
 .inline-spinner {
   display: inline-block;
-  margin: 0;
+  @include margin(0);
 }
 
 .spinner {
-  margin: 20px auto 20px auto;
+  @include margin(20px auto 20px auto);
   position: relative;
   -webkit-animation: rotate-forever 1s infinite linear;
   animation: rotate-forever 1s infinite linear;
@@ -224,7 +224,7 @@ body {
   &.small {
     width: 10px;
     height: 10px;
-    margin: 0;
+    @include margin(0);
     display: inline-block;
   }
 }
