@@ -85,7 +85,6 @@ sq:
   num_posts: "Postime:"
   num_participants: "Pjesëmarrësit:"
   read_full_topic: "Lexo temën e plotë"
-  private_message_abbrev: "PM"
   rss_description:
     latest: "Temat e fundit"
     hot: "Temat Kryesore"
@@ -359,9 +358,7 @@ sq:
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Mesazh Privat @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
-      long_form: 'mesazh privat anëtarit'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -398,7 +395,6 @@ sq:
       email_title: 'The topic "%{title}" requires moderator attention'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
   archetypes:
     regular:
@@ -462,23 +458,18 @@ sq:
     user_to_user_private_messages:
       title: "User-to-User"
       xaxis: "Ditë"
-      yaxis: "Number of private messages"
     system_private_messages:
       title: "Sistem"
       xaxis: "Ditë"
-      yaxis: "Number of private messages"
     moderator_warning_private_messages:
       title: "Moderator Warning"
       xaxis: "Ditë"
-      yaxis: "Number of private messages"
     notify_moderators_private_messages:
       title: "Notify Moderators"
       xaxis: "Ditë"
-      yaxis: "Number of private messages"
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Ditë"
-      yaxis: "Number of private messages"
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -524,10 +515,8 @@ sq:
       description: "Guidance and essential information for new users."
     welcome_user:
       title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
     welcome_invite:
       title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
@@ -549,11 +538,9 @@ sq:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
-    min_private_message_post_length: "Minimum allowed post length in characters for private messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_private_message_title_length: "Minimum allowed title length for a private message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
@@ -591,7 +578,6 @@ sq:
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
-    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
     long_polling_interval: "Amount of time the server should wait before responding to clients when there is no data to send (logged on users only)"
@@ -623,7 +609,6 @@ sq:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    send_welcome_message: "Send all new users a welcome private message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
@@ -655,7 +640,6 @@ sq:
     sso_url: "URL of single sign on endpoint"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
@@ -690,7 +674,6 @@ sq:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_private_messages_per_day: "Maximum number of private messages users can create per day."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     clean_up_uploads: "Remove orphan unreferenced uploads to prevent illegal hosting. WARNING: you may want to back up of your /uploads directory before enabling this setting."
@@ -738,7 +721,6 @@ sq:
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
-    title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -849,8 +831,6 @@ sq:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -1087,19 +1067,16 @@ sq:
         %{logs}
         ```
     email_reject_trust_level:
-      subject_template: "Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
     email_reject_no_account:
-      subject_template: "Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
     email_reject_empty:
-      subject_template: "Email issue -- No Content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -1107,19 +1084,16 @@ sq:
 
         If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
     email_reject_parsing:
-      subject_template: "Email issue -- Content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
     email_reject_post_error:
-      subject_template: "Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
     email_reject_post_error_specified:
-      subject_template: "Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -1129,31 +1103,26 @@ sq:
 
         If you can correct the problem, please try again.
     email_reject_reply_key:
-      subject_template: "Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
     email_reject_destination:
-      subject_template: "Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
     email_reject_topic_not_found:
-      subject_template: "Email issue -- Topic Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The topic is not found, it may have been deleted. If you believe this is in error, contact a staff member.
     email_reject_topic_closed:
-      subject_template: "Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The topic is closed. If you believe this is in error, contact a staff member.
     email_error_notification:
-      subject_template: "Email issue -- POP authentication error"
       text_body_template: |
         There has been an authentication error while polling mails from the POP server.
 
@@ -1226,12 +1195,6 @@ sq:
     reply_by_email: "To respond, reply to this email or visit %{base_url}%{url} in your browser."
     visit_link_to_respond: "To respond, visit %{base_url}%{url} in your browser."
     posted_by: "Posted by %{username} on %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1278,7 +1241,6 @@ sq:
         ---
         %{respond_instructions}
     digest:
-      subject_template: "[%{site_name}] Përmbledhja për %{date}"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
@@ -1362,7 +1324,6 @@ sq:
     spam_hosts: "This new user tried to create multiple posts with links to the same domain. See the newuser_spam_host_threshold site setting."
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is suspended, not a private message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"

@@ -59,7 +59,6 @@ uk:
   num_posts: "Дописи:"
   num_participants: "Учасники:"
   read_full_topic: "Читати тему цілком"
-  private_message_abbrev: "ПП"
   rss_description:
     latest: "Останні теми"
     hot: "Гарячі теми"
@@ -252,23 +251,18 @@ uk:
     user_to_user_private_messages:
       title: "Користувач користувачу"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     system_private_messages:
       title: "Системні"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     moderator_warning_private_messages:
       title: "Попередження модератора"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     notify_moderators_private_messages:
       title: "Сповіщення модераторів"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     notify_user_private_messages:
       title: "Сповіщення користувача"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     top_referrers:
       title: "Дали найбільше посилань"
       xaxis: "Користувач"
@@ -308,10 +302,8 @@ uk:
       description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові теми."
     welcome_user:
       title: "Вітання: Новий користувач"
-      description: "Приватне повідомлення, що автоматично надсилається всім новим користувачам під час реєстрації."
     welcome_invite:
       title: "Вітання: Запрошений користувач"
-      description: "Приватне повідомлення, що автоматично надсилається всім новим запрошеним користувачам, коли вони приймають запрошення взяти участь від іншого користувача."
     login_required_welcome_message:
       title: "Потрібно увійти: Вітальне повідомлення"
       description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
@@ -329,7 +321,6 @@ uk:
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
-    min_private_message_title_length: "Мінімальна допустима довжина назви для приватного повідомлення в символах"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_uncategorized_topics: "Дозволити створювати теми без категорії."
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
@@ -365,7 +356,6 @@ uk:
     sso_url: "URL of single sign on endpoint"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
     twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
@@ -420,8 +410,6 @@ uk:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
   search:
     types:
@@ -483,8 +471,6 @@ uk:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    email_reject_empty:
-      subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:
       subject_template: "Новий обліковий запис заблоковано"
     blocked_by_staff:
@@ -513,12 +499,6 @@ uk:
     reply_by_email: "Щоб відповісти, надішліть відповідь на цей лист або відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     visit_link_to_respond: "Щоб відповісти, відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     posted_by: "Опубліковано %{username} %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

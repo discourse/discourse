@@ -127,7 +127,7 @@ fr:
   num_posts: "Messages :"
   num_participants: "Participants :"
   read_full_topic: "Lire le sujet en entier"
-  private_message_abbrev: "MP"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Sujets récents"
     hot: "Sujets populaires"
@@ -411,9 +411,9 @@ fr:
       description: 'Ce message contient du contenu qu''une personne raisonnable jugerait offensant, abusif ou en violation du <a href="/guidelines">règlement de notre communauté</a>.'
       long_form: 'signalé comme inapproprié'
     notify_user:
-      title: 'Contacter @{{username}} en privé'
+      title: 'Contacter @{{username}}'
       description: 'Ce message contient quelque chose sur lequel je souhaite discuter en privé avec cet utilisateur. N''envoi pas de signalement.'
-      long_form: 'utilisateur contacté en privé'
+      long_form: 'utilisateur contacté'
       email_title: 'Votre message sur "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -450,7 +450,7 @@ fr:
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/private-messages">regarder vos messages privés</a>.</p>'
+    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/private-messages">regarder vos messages</a>.</p>'
     user_must_edit: '<p>Ce message a été signalé par la communauté et temporairement masqué.</p>'
   archetypes:
     regular:
@@ -515,23 +515,23 @@ fr:
     user_to_user_private_messages:
       title: "Utilisateur à Utilisateur"
       xaxis: "Jour"
-      yaxis: "Nombre de messages privés"
+      yaxis: "Nombre de messages"
     system_private_messages:
       title: "Système"
       xaxis: "Jour"
-      yaxis: "Nombre de messages privés"
+      yaxis: "Nombre de messages"
     moderator_warning_private_messages:
       title: "Avertissements aux modérateurs"
       xaxis: "Jour"
-      yaxis: "Nombre de messages privés"
+      yaxis: "Nombre de messages"
     notify_moderators_private_messages:
       title: "Notifications aux modérateurs"
       xaxis: "Jour"
-      yaxis: "Nombre de messages privés"
+      yaxis: "Nombre de messages"
     notify_user_private_messages:
       title: "Notifications aux utilisateurs"
       xaxis: "Jour"
-      yaxis: "Nombre de messages privés"
+      yaxis: "Nombre de messages"
     top_referrers:
       title: "Meilleurs référants"
       xaxis: "Utilisateurs"
@@ -611,8 +611,9 @@ fr:
     title_nag: "Saisissez le nom de votre site. Modifier le titre sous <a href='/admin/site_settings'>Paramètres du site</a>."
     site_description_missing: "Saisissez une phrase courte qui décrira votre site et apparaîtra dans les moteurs de recherche. Mettez site_description à jour dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     consumer_email_warning: "Votre site est configuré pour envoyer les courriels en utilisant Gmail (ou un autre site de courriels pour utilisateur standard). <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi de courriels afin d'assurer une meilleure délivrabilité."
-    site_contact_username_warning: "Saisissez le pseudo d'un responsable sympathique à partir de laquele seront envoyés les messages privés importants. Mettez à jour site_contact_username dans les <a href='/admin/site_settings'>Paramètres du site</a>."
+    site_contact_username_warning: "Saisissez le pseudo d'un responsable sympathique qui enverra automatiquement les messages importants. Mettez à jour site_contact_username dans les <a href='/admin/site_settings'>paramètres du site</a>."
     notification_email_warning: "Les courriels de notification ne serot pas envoyés depuis une adresse de courriel valide sur votre domaine ; l'envoie des courriels sera aléatoire et peu fiable. Veuillez saisir une adresse de courriel locale dans notification_email  dans les <a href='/admin/site_settings'>Paramètres du site</a>."
+    s3_deprecation_warning: "ATTENTION ! Le support d'Amazon S3 pour l'hébergement des images et des pièces jointes va bientôt être abandonné. Merci de suivre <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ces instructions</a> pour migrer vers de l'hébergement local."
   content_types:
     education_new_reply:
       title: "Education du nouvel utlisateur : premières réponses"
@@ -625,10 +626,10 @@ fr:
       description: "Conseil et informations essentielles pour les nouveaux utilisateurs."
     welcome_user:
       title: "Bienvenue : nouvel utilisateur"
-      description: "Un message privé envoyé automatiquement à tous les nouveaux utilisateurs lorsqu'ils s'enregistrent."
+      description: "Un message envoyé automatiquement à tous les nouveaux utilisateurs lorsqu'ils s'enregistrent."
     welcome_invite:
       title: "Bienvenue : utilisateur invité"
-      description: "Un message privé envoyé automatiquement à tous les utilisateurs invités lorsqu'ils acceptent l'invitation d'un membre à participer au forum."
+      description: "Un message envoyé automatiquement à tous les invités lorsqu'ils acceptent l'invitation d'un utilisateur à participer au forum."
     login_required_welcome_message:
       title: "Connexion requise : message d'accueil"
       description: "Message d'accueil qui est affiché pour déconnecter les utilisateurs quand le paramètre 'connexion obligatoire' est activé."
@@ -651,11 +652,11 @@ fr:
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
-    min_private_message_post_length: "Longueur minimale autorisée des messages privés en nombre de caractères"
+    min_private_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
-    min_private_message_title_length: "Longueur minimale autorisée pour un titre de message privé en nombre de caractères"
+    min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     allow_uncategorized_topics: "Autoriser la création de sujet sans catégorie."
     uncategorized_description: "La description de la catégorie Sans catégorie. Laissez vide pour ne pas avoir de description."
@@ -689,7 +690,7 @@ fr:
     digest_logo_url: "Le logo alternatif qui sera utilisé dans les courriels de votre site. Si non renseigné, alors `logo_url` sera utilisé, par exemple : http://example.com/logo.png"
     logo_small_url: "La petite image logo affiché en haut à gauche du site quand la page est défilée vers le bas. Si vide, une glyphe 'maison' sera affichée."
     favicon_url: "Le favicon de votre site, voir http://fr.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "L'image logo avec position fixe en haut à gauche de votre site en mode mobile. Si vide, le titre du site sera affiché."
+    mobile_logo_url: "Le logo fixé en haut à gauche de votre site mobile. Si vide, `logo_url` sera utilisé."
     apple_touch_icon_url: "Icône utilisée pour les appareils d'Apple. Taille recommandée 144 px par 144 px."
     notification_email: "L'adresse de courriel dans le champs De qui sera utilisée pour envoyer les courriels systèmes essentiels. Le nom de domaine spécifié  doit avoir les informations SPF, DKIM et PTR inversé renseignés correctement pour que le courriel arrive à destination."
     email_custom_headers: "Une liste délimité par des (|) pipes d'entêtes de courriel"
@@ -700,7 +701,7 @@ fr:
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
-    enable_private_messages: "Autoriser les utilisateurs du niveau de confiance 1 à créer des messages et conversations privés."
+    enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à y répondre"
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
@@ -733,8 +734,8 @@ fr:
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
     share_links: "Choix des éléments qui doivent apparaître dans la fenêtre de partage, et leur ordre."
     track_external_right_clicks: "Suivi des clics sur les liens externes (ex: ouverture dans un nouvel onglet) désactivé par défaut car nécessite une ré-écriture de toutes les urls"
-    site_contact_username: "Un pseudo de responsable à partir de laquelle seront envoyés les message privés. Si laissé vide, le compte système sera utilisé."
-    send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message privé avec un guide de démarrage rapide."
+    site_contact_username: "Un pseudo de responsable valide pour envoyer tous les message automatiques. Si laissé vide, le compte système sera utilisé."
+    send_welcome_message: "Envoyer à tous les nouveaux utilisateurs un message de bienvenue avec un guide de démarrage rapide."
     suppress_reply_directly_below: "Ne pas afficher le panneau extensible des réponses d'un message quand la seule réponse est juste en dessous ce dernier."
     suppress_reply_directly_above: "Ne pas afficher 'en réponse à' sur un message quand la seule réponse est juste en dessus de ce dernier."
     suppress_reply_when_quoting: "Ne pas affiché le panneau \"En réponse à\" sur un message qui répond à une citation."
@@ -770,7 +771,7 @@ fr:
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
     sso_overrides_email: "Surcharger les adresses de courriel locales avec les adresses de courriel  externes d'un SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les adresses de courriel)"
     sso_overrides_username: "Surcharger les pseudos avec les pseudos du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les pseudos)"
-    sso_overrides_name: "Surcharger les noms locaux avec les noms externes du SSO (ATTENTION: Des écarts peuvent se produire due aux règles locales sur les noms)"
+    sso_overrides_name: "Surcharger les noms locaux avec les noms du site fournissant l'authentification unique"
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
     enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
     allow_new_registrations: "Autorise l'inscription des nouveaux utilisateurs. Décocher pour prévenir la création de nouveau compte."
@@ -805,7 +806,7 @@ fr:
     max_bookmarks_per_day: "Nombre maximum de signets par utilisateur et par jour."
     max_edits_per_day: "Nombre maximum de modifications par utilisateur chaque jour."
     max_topics_per_day: "Nombre maximum de sujet qu'utilisateur peut créer par jour."
-    max_private_messages_per_day: "Nombre maximum de message privé qu'utilisateur peut créer par jour."
+    max_private_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
@@ -855,7 +856,6 @@ fr:
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
     flush_timings_secs: "A quelle fréquence les données de timing doivent être vider, en secondes."
-    title_max_word_length: "Le nombre maximum de mots, en caractères, dans un titre de sujet."
     title_min_entropy: "L'entropie minimale (caractères unique, les caractères en langues étrangères compte pour plus) requise pour le titre d'un sujet."
     body_min_entropy: "L'entropie minimale (caractères unique, les caractères en langues étrangères compte pour plus) requise pour le corps d'un message."
     title_fancy_entities: "Convertir les caractères ASCII commun en jolies entitées HTML dans les titres des sujets, comme SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -933,6 +933,7 @@ fr:
     max_daily_gravatar_crawls: "Nombre maximum de fois que Discourse vérifiera Gravatar pour des avatars personnalisés en une journée."
     public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
     staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
+    enable_user_directory: "Fournir un répertoire des utilisateurs pour la navigation"
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages qu'un utilisateur doit poster d'affilé dans un sujet avant d'être rappelé à l'ordre pour multiple réponses."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
@@ -988,8 +989,9 @@ fr:
     edited: "%{display_username} a modifié votre message dans %{link}"
     posted: "%{display_username} a répondu à %{link}"
     moved_post: "%{display_username} a déplacé votre message vers %{link}"
-    private_message: "%{display_username} vous a envoyé un message privé: %{link}"
-    invited_to_private_message: "%{display_username} vous a invité dans une conversation privée: %{link}"
+    private_message: "%{display_username} vous a envoyé un message : %{link}"
+    invited_to_private_message: "%{display_username} vous a invité dans une conversation : %{link}"
+    invited_to_topic: "%{display_username} vous a invité dans une discussion: %{link}"
     invitee_accepted: "%{display_username} a accepté votre invitation"
     linked: "%{display_username} a mentionné l'un de vos messages : %{link}"
     granted_badge: "Vous avez gagné %{link}"
@@ -1240,18 +1242,12 @@ fr:
         Cependant, si le message est signalé par la communauté une seconde fois, il restera marqué jusqu’à l'intervention d'un modérateur – et ils pourront prendre d'autres mesures y compris l'éventuelle suspension de votre compte.
 
         Pour plus d'informations, merci de vous en référer aux [règles de la communauté](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: "Ce message privé contient quelques astuces pour vous aider à démarrer rapidement.\n\n## Continuez de descendre\n\nIl n'y a pas de bouton Page Suivante ni de numéro de page – pour en lire plus, **il vous suffit de descendre !**\n\nLorsque de nouvelles réponses arrivent, elles apparaissent automatiquement. \n\n## Où suis-je ?\n\n- Pour la recherche, votre page d'utilisateur, ou le menu, utiliser les **boutons icônes <kbd>☰</kbd> en haut à droite**.\n\n- Dans la liste des sujets, le titre vous emmènera toujours vers le prochain message non lu. Utiliser les colonnes Activité ou Messages pour allez au premier ou au dernier message. \n\n- Lorsque vous lisez un sujet, retournez en haut de celui &uarr; en cliquant sur le titre. Cliquez sur la barre de progression en bas à droite pour avoir une navigation complète, ou utilisez les touches <kbd>Home</kbd> et <kbd>Fin</kbd>. \n\n    <img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Comment je réponds ?\n\n- Pour répondre au sujet dans sa globalité, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> tout en bas de la page.\n\n- Pour répondre à un message spécifique, utilisez le bouton \"Répondre\" <img src=\"/images/welcome/reply-post.png\" width=\"\
-        29\" height=\"25\"> sur le message.\n\n - Si vous voulez continuer le sujet dans une section différente, mais garder le lien entre votre sujet et le message qui vous l'a inspiré, utilisez la fonction Répondre en créant un nouveau sujet <img src=\"/images/welcome/reply-as-linked-topic.png\" width=\"15\" height=\"25\"> à droite de chaque message.\n\nPour citer quelqu'un dans votre message, sélectionnez le texte que vous voulez citer et appuyez sur un des boutons Répondre.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\n\nPour mentionner le pseudo d'un utilisateur, commencez à taper `@` et une liste d'auto-complétion apparaîtra.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nConcernant les [icones Emoji](http://www.emoji.codes/), commencez par écrire `:` ou le traditionnel smiley `:)` :smile: \n\n## Que puis-je faire d'autre ?\n\nÀ la fin de chaque message il y a un ensemble de boutons pour les différentes actions possibles.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPour faire savoir à quelqu'un que vous avez apprécié son message, cliquez sur le bouton *j'aime** en bas du message. Si vous voyez un problème avec un message, n'hésitez pas à cliquer sur le bouton **signaler**\
-        \ pour avertir en privé l'auteur ou les modérateurs du contenu de ce message.\n\nVous pouvez aussi **partager** un liens vers un message ou l'ajouter à vos **signets** pour le retrouver sur votre page d'utilisateur. \n\n## Qui me parle ?\n\nWhen someone replies to your post, quotes your post, or mentions your `@username`, a number will immediately appear at the top right of the page. Use it access your **notifications**.\n\nQuand quelqu'un répond à votre message, vous cite, ou mentionne votre `@pseudo`, un nombre apparaitra immédiatement en haut à droite de la page. Utilisez-le pour consulter vos **notifications**.\n\n<img src=\"/images/welcome/notification-panel.png\" width=\"178\" height=\"59\">\n\nNe soyez pas inquiêt de manquer des notifications –  \nLes réponses directes (et les messages privés) vous seront envoyés par courriel si vous n'êtes pas présent sur le site lorsqu'ils sont envoyés. \n\n## Quand est-ce qu'une conversation est nouvelle ?\n\nBy default all conversations less than two days old are considered new, and any conversation you've participated in (replied to, created, or read for an extended period) will automatically be tracked.\n\nPar défaut, toutes les conversations de moins de deux jours sont considérées comme nouvelles, et chaque sujets auxquels vous avez participé\
-        \ (répondus, créés ou lu pendant un long moment) seront automatiquements suivis. \n\nYou will see the blue new and number indicators next to these topics:\nVous verrez le badge bleu de nouveauté et le nombre de nouveaux messages au côté de ces discussions:\n\n<img src=\"/images/welcome/topics-new-unread.png\" width=\"368\" height=\"89\">\n\n\nYou can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).\n\nVous pouvez modifier l'état du suivi des notifications d'une discussion en utilisant les boutons en bas de la discussion (vous pouvez également le modiifer au niveau des catégories).\nPour changer la façon dont vous suivez les discussions, ou pour définir de nouveaux suivis, consultez [vos préférences utilisateurs](%{base_url}/my/preferences). \n\n## Quelles sont les choses que je ne peux pas faire ?\n\nLes nouveaux utilisateurs sont limités pour des raisons de sécurité. Plus vous participerez, plus vous gagnerez la confiance de la communauté et les restrictions disparaîtrons. A plus haut [niveau de confiance](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous gagnerez de nouvelles compétences\
-        \ pour nous aider à gérer la communauté. \n"
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir rejoint %{site_name}, et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](%{base_url}/about), répondez simplement à ce message privé.)\n"
+      text_body_template: "Merci d'avoir rejoint %{site_name} et bienvenue ! \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps. \n\nAmusez-vous bien ! \n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)\n"
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name}, et bienvenue !\n\nNous vous avons crée un pseudo : **%{username}**, mais vous pouvez le changer quand vous voulez en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Utiliser **toujours la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [page de profil utilisateur][prefs], et vous connecter avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si en tant que nouvel utilisateur vous avez besoin de communiquer de façon privée avec un [responsable](%{base_url}/about), répondez simplement à ce message privé).\n\n[prefs] : %{user_preferences_url}\n"
+      text_body_template: "Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !\n\nNous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].\n\nPour vous reconnecter :\n\n1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.\n\n2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec. \n\n%{new_user_tips}\n\nNous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.\n\nAmusez-vous bien !\n\n(Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).\n\n[prefs] : %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: "La sauvegarde a été un succès.\nVisitez la section [Administration > sauvegardes](/admin/backups) pour télécharger votre dernière sauvegarde."
@@ -1303,19 +1299,16 @@ fr:
       subject_template: "Échec de l'exportation des données "
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consultez les logs ou contactez un modérateur."
     email_reject_trust_level:
-      subject_template: "Problème de courriel - Niveau de confiance insuffisant "
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre compte n'a pas le niveau de confiance requis pour créer un nouveau sujet via cette adresse de courriel. Si vous pouvez que c'est une erreur, contacter un membre de l'équipe du site.
     email_reject_no_account:
-      subject_template: "Problème de courriel - Compte utilisateur inconnu"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
         Aucun compte d'utilisateur avec cette adresse existe. Essayez de l'envoyer depuis une autre adresse, ou contactez un membre de l'équipe.
     email_reject_empty:
-      subject_template: "Problème de courriel - Sans contenu"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
@@ -1323,19 +1316,16 @@ fr:
 
         Si vous avez reçu ce message et que vous _pensez_ avoir envoyé du contenu, réenvoyez-le au format HTML (et non pas seulement au format text brut) .
     email_reject_parsing:
-      subject_template: "Problème de courriel - Contenu non reconnu."
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Nous n'avons pas trouvé votre réponse dans ce courriel. **Assurez-vous d'avoir écrit votre réponse tout en haut du courriel** -- il nous est impossible de traiter les réponses imbriquées.
     email_reject_post_error:
-      subject_template: "Problème de courriel - Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Cela peut-être à cause de: format trop complexe, message trop long ou trop court. Veuillez réessayer, ou rédigé votre message directement sur le site si le problème persiste.
     email_reject_post_error_specified:
-      subject_template: "Problème de courriel - Erreur d'envoi d'un message"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -1345,37 +1335,31 @@ fr:
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
     email_reject_reply_key:
-      subject_template: "Problème de courriel -- Mauvaise clé de réponse"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         La clé de réponse du fournisseur est invalide ou inconnu, et nous ne pouvons pas savoir à quel sujet s’adresse cette réponse. Contactez un membre de l'équipe du site.
     email_reject_destination:
-      subject_template: "Problème de courriel - Adresse de destinataire inconnue"
       text_body_template: |
         Nous sommes désolé, mais l'envoi de votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Aucune adresse de destination n'est reconnue. Veuillez vérifier que l'adresse du site est bien renseignée dans le champs To: (et non dans les champs C:: ou Bcc:), et que vous envoyez bien à l'adresse de courriel fournie par l'équipe.
     email_reject_topic_not_found:
-      subject_template: "Erreur de courriel -- Le sujet est introuvable"
       text_body_template: |
         Nous sommes désolé, mais votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le sujet est introuvable et a peut-être été supprimé. Si vous considérez que c'est une erreur, contacter un responsable.
     email_reject_topic_closed:
-      subject_template: "Erreur de courriel -- Le sujet est fermé"
       text_body_template: |
         Nous sommes désolé, mais votre courriel à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Le sujet est fermé. Si vous considérez que c'est une erreur, contacter un responsable.
     email_reject_auto_generated:
-      subject_template: "Problème de courriel - Réponse automatique"
       text_body_template: |
         Nous sommes désolé, mais votre email à destination de {destination} (intitulé %{former_title}) n'a pas fonctionné.
 
         Votre réponse était générée automatiquement, ce que nous n'acceptons pas. Si vous considérez qu'il s'agit d'une erreur, prenez contact avec un responsable.
     email_error_notification:
-      subject_template: "Problème de courriel  - Erreur d'authentification POP3"
       text_body_template: |
         Il y a eu un erreur d'authentification lors de la récupération des courriels depuis le serveur POP.
 
@@ -1449,12 +1433,11 @@ fr:
     visit_link_to_respond: "Pour répondre, visitez %{base_url}%{url} avec votre navigateur."
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} vous a invité(e) à une conversation privée '%{topic_title}'"
-      text_body_template: |+
-        %{username} vous a invité(e) à une conversation privée '%{topic_title}' sur %{site_name}:
+      subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
+      text_body_template: |
+        %{username} vous a invité à la conversation '%{topic_title}' sur %{site_name} :
 
-        Merci de visiter ce lien pour voir le sujet: %{base_url}%{url}
-
+        Veuillez suivre ce lien pour voir le sujet : %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1502,7 +1485,7 @@ fr:
         %{respond_instructions}
     digest:
       why: "Voici un bref résumé de ce qu'il s'est passé sur %{site_link} depuis votre dernière visite le %{last_seen_at}"
-      subject_template: "[%{site_name}] Résumé du %{date}"
+      subject_template: "[%{site_name}] Résumé"
       new_activity: "Nouvelles activités sur vos sujets et messages :"
       top_topics: "Messages populaires"
       other_new_topics: "Sujets populaires"
@@ -1549,7 +1532,7 @@ fr:
 
         Cliquez sur le lien suivant pour confirmer et activer votre nouveau compte : %{base_url}/users/activate-account/%{email_token}
 
-        Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
+        Si le lien ci-dessus n'est pas cliquable, essayez de le copier-coller dans la barre d'adresse de votre navigateur web.
 
         %{new_user_tips}
 
@@ -1557,7 +1540,7 @@ fr:
 
         Amusez-vous bien !
 
-        (Si vous voulez communiquer en privée avec [staff members](%{base_url}/about) en tant que nouveau membre, répondez à ce message privé.)
+        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     signup:
       subject_template: "[%{site_name}] Activer votre nouveau compte"
       text_body_template: |
@@ -1599,7 +1582,7 @@ fr:
     spam_hosts: "Cet utilisateur a essayé de créer plusieurs messages avec des liens vers le même domaine. Voir le paramétrage du site newuser_spam_host_threshold."
   email_log:
     no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
-    suspended_not_pm: "L'utilisateur est suspendu, pas de message privé"
+    suspended_not_pm: "L'utilisateur est suspendu, pas de message"
     seen_recently: "L'utilisateur a été vu récemment"
     post_not_found: "Impossible de trouver le message avec l'id %{post_id}"
     notification_already_read: "La notification de ce courriel a déjà été lue"
@@ -1932,5 +1915,5 @@ fr:
   badges:
     long_descriptions:
       first_flag: |
-        Les signalements sont essentiels pour la santé de la communauté. Si vous remarquez des messages qui requièrent l'attention d'un modérateur, s'il vous plaît
-        n'hésitez pas à les signaler. A partir du niveau de confiance 1, vous pouvez également utiliser le dialogue de signalement pour envoyer des <b>messages privés</b> aux autre utilisateurs.
+        Les signalements sont essentiels à la santé de la communauté. Si vous remarquez des messages qui requièrent l'attention d'un modérateur, s'il vous plaît,
+        n'hésitez pas à les signaler. À partir du niveau de confiance 1, vous pouvez également utiliser le formulaire de signalement pour envoyer des <b>messages</b> aux autres utilisateurs.

@@ -88,7 +88,6 @@ cs:
   num_posts: "Příspěvky:"
   num_participants: "Účastníci:"
   read_full_topic: "Číst celé téma"
-  private_message_abbrev: "SZ"
   rss_description:
     latest: "Poslední témata"
     hot: "Populární témata"
@@ -463,23 +462,18 @@ cs:
     user_to_user_private_messages:
       title: "Uživatelské soukromé zprávy"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
     system_private_messages:
       title: "Systémové soukromé zprávy"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
     moderator_warning_private_messages:
       title: "Moderátorská varování"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
     notify_moderators_private_messages:
       title: "Moderátorská upozornění"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
     notify_user_private_messages:
       title: "Uživatelská upozornění"
       xaxis: "Den"
-      yaxis: "Počet soukromých zpráv"
     top_referrers:
       title: "Odkazovatelé"
       xaxis: "Uživatel"
@@ -522,10 +516,8 @@ cs:
       title: "Příručka pro nové uživatele"
     welcome_user:
       title: "Uvítání: Nový uživatel"
-      description: "Soukromá zpráva, která je automaticky zaslaná novým uživatelům, když se zaregistrují."
     welcome_invite:
       title: "Uvítání: Pozvaný uživatel"
-      description: "Soukromá zpráva, která je automaticky zaslaná novým pozvaným uživatelům, když přijmou pozvánku."
     login_required_welcome_message:
       title: "Vyžadováno přihlášení: Uvítací zpráva"
       description: "Uvítací zpráva, která je zobrazena nepřihlášeným uživatelům, je-li zapnuto nastavení 'vyžadovat přihlášení'."
@@ -578,7 +570,6 @@ cs:
     sso_url: "URL pro single sign on"
     sso_overrides_email: "Přepisuje místní email tím z dat SSO (VAROVÁNÍ: v důsledku normalizování lokálních emailů může dojít k nesrovnalostem)"
     sso_overrides_username: "Přepisuje místní uživatelské jméno tím z dat SSO (VAROVÁNÍ: kvůli rozdílnostem v požadavcích na uživatelské jméno může dojít k nesrovnalostem)"
-    sso_overrides_name: "Přepisuje místní jméno tím z dat SSO (VAROVÁNÍ: kvůli normalizování místního jména může dojít k nesrovnalostem)"
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
@@ -598,7 +589,6 @@ cs:
     max_flags_per_day: "Maximální počet nahlášení, která smí uživatel za den poslat."
     max_edits_per_day: "Maximální počet úprav, které smí uživatel za den udělat."
     max_topics_per_day: "Maximální počet témat, který smí uživatel za den vytvořit."
-    max_private_messages_per_day: "Maximální počet soukromých zpráv, které smí uživatel za den poslat."
     clean_orphan_uploads_grace_period_hours: "Grace period (in hours) before an orphan upload is removed."
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
@@ -629,8 +619,6 @@ cs:
     edited: "%{display_username} upravil váš příspěvek v %{link}"
     posted: "%{display_username} zaslal příspěvek do %{link}"
     moved_post: "%{display_username} přesunul váš příspěvek do %{link}"
-    private_message: "%{display_username} vám zaslal soukromou zprávu: %{link}"
-    invited_to_private_message: "%{display_username} vás pozval k soukromé zprávě: %{link}"
     invitee_accepted: "%{display_username} přijal vaši pozvánku"
   search:
     types:
@@ -735,12 +723,6 @@ cs:
     reply_by_email: "Pro odpověd stačí odepsat na tento email, nebo navštivte %{base_url}%{url} ve vašem prohlížeči."
     visit_link_to_respond: "Pro odpověď navštive %{base_url}%{url} ve vašem prohlížeči."
     posted_by: "Zaslal uživatel %{username} dne %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} vás citoval v '%{topic_title}'"
       text_body_template: |

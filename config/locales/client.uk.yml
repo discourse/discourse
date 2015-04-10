@@ -176,8 +176,6 @@ uk:
       '2': "Отримані вподобання"
       '3': "Закладки"
       '4': "Теми"
-      '5': "Дописи"
-      '6': "Відповіді"
       '7': "Згадки"
       '9': "Цитати"
       '10': "Позначені зірочкою"
@@ -217,8 +215,6 @@ uk:
       mute: "Mute"
       edit: "Редагувати налаштування"
       download_archive: "Завантажити мої дописи"
-      new_private_message: "Нове приватне повідомлення"
-      private_message: "Приватне повідомлення"
       private_messages: "Повідомлення"
       activity_stream: "Активність"
       preferences: "Налаштування"
@@ -291,7 +287,6 @@ uk:
         uploaded_avatar_empty: "Додати інше зображення"
         upload_title: "Завантажити своє зображення"
         upload_picture: "Завантажити зображення"
-        image_is_not_a_square: "Попередження: ми обрізали Ваше зображення, оскільки воно не квадратне."
       change_profile_background:
         title: "Фон профіля"
         instructions: "Фон профіля буде відцентровано, його ширина 850 пікселів (за замовчуванням)."
@@ -370,7 +365,6 @@ uk:
       stream:
         posted_by: "Опубліковано"
         sent_by: "Надіслано"
-        private_message: "приватне повідомлення"
         the_topic: "тема"
     loading: "Завантаження..."
     errors:
@@ -409,9 +403,7 @@ uk:
       disabled_description: "Видалені дописи в цій темі показано."
       enable: "Сховати Видалені Дописи"
     private_message_info:
-      title: "Приватне повідомлення"
       invite: "Запросити інших..."
-      remove_allowed_user: "Ви точно хочете видалити {{name}} з цього приватного повідомлення?"
     email: 'Електронна пошта'
     username: 'Ім''я користувача'
     last_seen: 'Помічено востаннє'
@@ -422,7 +414,6 @@ uk:
       title: "Створити Новий Обліковий Запис"
       failed: "Щось пішло не так; скоріше за все, цю електронну пошту вже зареєстровано, спробуйте посилання Забув пароль"
     forgot_password:
-      title: "Забув(ла) пароль"
       action: "Я забув(ла) свій пароль"
       invite: "Введіть своє ім'я користувача або адресу електронної скриньки, і ми надішлемо Вам лист для скинення пароля."
       reset: "Скинути пароль"
@@ -478,8 +469,6 @@ uk:
       reply_here: "Відповісти тут"
       reply: "Відповісти"
       cancel: "Скасувати"
-      create_topic: "Нова тема"
-      create_pm: "Приватне повідомлення"
       title: "Or press Ctrl+Enter"
       users_placeholder: "Додати користувача"
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
@@ -518,10 +507,8 @@ uk:
       toggler: "показати або сховати панель редагування"
       admin_options_title: "Необов'язкові налаштування персоналу для цієї теми"
     notifications:
-      title: "Сповіщення про згадку Вашого @імені, відповіді на Ваші дописи та теми, приватні повідомлення, тощо"
       more: "переглянути старіші сповіщення"
       total_flagged: "всього дописів, на які поскаржилися"
-      mentioned: "<i title='згадав' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='Цитування' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='Відповідь від' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
     upload_selector:
@@ -573,7 +560,6 @@ uk:
       filter_to: "Показати {{post_count}} дописів в темі"
       create: 'Нова тема'
       create_long: 'Створити нову тему'
-      private_message: 'Надіслати приватне повідомлення'
       list: 'Теми'
       new: 'нова тема'
       title: 'Тема'
@@ -635,7 +621,6 @@ uk:
           title: "Звичайно"
         muted_pm:
           title: "Ігнорувати"
-          description: "Ви ніколи не будете отримувати жодних сповіщень з цієї приватної переписки."
         muted:
           title: "Ігнорувати"
           description: "Ви ніколи не будете отримувати жодних сповіщень з цієї теми, і вона не буде відображатися у Вашій вкладці \"Непрочитані\"."
@@ -666,15 +651,12 @@ uk:
         success_message: 'You successfully flagged this topic.'
       inviting: "Запрошуємо..."
       invite_private:
-        title: 'Запросити до приватного повідомлення'
         email_or_username: "Електронна скринька або ім'я запрошуваного користувача"
         email_or_username_placeholder: "електронна скринька або ім'я користувача"
         action: "Запросити"
         error: "Даруйте, під час запрошення цього користувача сталася помилка."
       invite_reply:
         title: 'Запрошення'
-        action: 'Надіслати запрошення'
-        help: 'надіслати запрошення друзям, щоб вони могли відповісти на цю тему в один клац'
         email_placeholder: 'електронна скринька'
       split_topic:
         title: "Перенесення до нової теми"
@@ -709,10 +691,8 @@ uk:
           few: 'Ви обрали дописів: <b>{{count}}</b>.'
           other: 'Ви обрали дописів: <b>{{count}}</b>.'
     post:
-      reply: "У відповідь на {{link}} користувача {{replyAvatar}} {{username}}"
       reply_topic: "Відповідь на {{link}}"
       quote_reply: "відповісти на цитату"
-      edit: "Редагування {{link}} користувача {{replyAvatar}} {{username}}"
       edit_reason: "Причина: "
       post_number: "допис {{number}}"
       in_reply_to: "Відповісти"
@@ -781,8 +761,6 @@ uk:
         people:
           notify_moderators: "Звернули увагу модераторів: {{icons}}"
           notify_moderators_with_url: "<a href='{{postUrl}}'>Звернули увагу модераторів</a>: {{icons}}"
-          notify_user: "Надіслали приватне повідомлення: {{icons}}"
-          notify_user_with_url: "Надіслали <a href='{{postUrl}}'>приватне повідомлення</a>: {{icons}}"
           bookmark: "Лишили тут закладку: {{icons}}"
           like: "Вподобали це: {{icons}}"
           vote: "Проголосували за це: {{icons}}"
@@ -791,7 +769,6 @@ uk:
           spam: "Ви поскаржилися на це як на спам"
           inappropriate: "Ви поскаржилися на це як на неприпустиме"
           notify_moderators: "Ви позначили допис для модерації"
-          notify_user: "Ви надіслали приватне повідомлення цьому користувачу"
           bookmark: "Ви лишили тут закладку"
           like: "Ви це вподобали"
           vote: "Ви проголосували за цей допис"
@@ -869,7 +846,6 @@ uk:
     flagging:
       action: 'Поскаржитися на допис'
       take_action: "Вжити заходів"
-      notify_action: 'Сповістити'
       delete_spammer: "Видалити спамера"
       delete_confirm: "Ви збираєтеся видалити <b>%{posts}</b> дописів і <b>%{topics}</b> тем цього користувача, видалити його обліковий запис, заблокувати реєстрації з його IP-адреси <b>%{ip_address}</b> та додати його електронну скриньку <b>%{email}</b> до чорного списку заблокованих адрес. Ви впевнені, що цей користувач дійсно спамер?"
       yes_delete_spammer: "Так, видалити спамера"
@@ -880,7 +856,6 @@ uk:
         left: "залишилось {{n}}"
     flagging_topic:
       action: "Flag Topic"
-      notify_action: "Notify"
     topic_map:
       title: "Підсумок теми"
       links_shown: "показати всі {{totalLinks}} посилання..."
@@ -987,8 +962,6 @@ uk:
         admins: 'Адміни:'
         blocked: 'Заблоковані:'
         suspended: 'Призупинені:'
-        private_messages_short: "ПП"
-        private_messages_title: "Приватні повідомлення"
         reports:
           today: "Сьогодні"
           yesterday: "Вчора"
@@ -1066,11 +1039,9 @@ uk:
         read_only:
           enable:
             title: "Enable the read-only mode"
-            text: "Enable read-only mode"
             confirm: "Are you sure you want to enable the read-only mode?"
           disable:
             title: "Disable the read-only mode"
-            text: "Disable read-only mode"
         logs:
           none: "No logs yet..."
         columns:
@@ -1083,26 +1054,20 @@ uk:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
-            text: "Cancel"
             title: "Cancel the current operation"
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
-            text: "Backup"
             title: "Create a backup"
           download:
-            text: "Download"
             title: "Download the backup"
           destroy:
-            text: "Delete"
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is disabled in the site settings."
-            text: "Restore"
             title: "Restore the backup"
             confirm: "Are your sure you want to restore this backup?"
           rollback:
-            text: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
       customize:
