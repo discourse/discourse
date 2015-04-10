@@ -1,9 +1,9 @@
 .post-info a {color: #aaa;}
 
 .topic-meta-data-inside {
-  float: right;
+  @include float(right);
   margin-top: -38px;
-  margin-right: 5px;
+  @include margin-right(5px);
 }
 
 
@@ -11,11 +11,11 @@
   display: inline-block;
 }
 
-.edits {margin-right: 5px;}
+.edits {@include margin-right(5px);}
 
 #topic-title {
   margin-bottom: 20px;
-  margin: 0 60px 10px 20px;
+  @include margin(0 60px 10px 20px);
   h1 {
     font-size: 1.5em;
     line-height: 1.25em;
@@ -38,13 +38,13 @@
 /* both blocks that appear under the standard post control buttons */
 .notification-options, .pinned-options {
   clear: both;
-  float: left;
+  @include float(left);
   margin-top: 0px;
   padding-top: 1px;
 }
 
 #topic-closing-info {
-  margin-left: 10px;
+  @include margin-left(10px);
 }
 
 .docked #topic-progress {
@@ -54,23 +54,23 @@
 #topic-progress-wrapper {
   position: fixed;
   width: 0;
-  right: 0;
+ @include right(0);
   bottom: 0;
   z-index: 500;
-  margin-right: 145px;
+  @include margin-right(145px);
   outline: 1px solid transparent;
 }
 
 #topic-progress-expanded {
   border: 1px solid scale-color-diff();
-  padding: 5px;
+  @include padding(5px);
   background: $secondary;
   box-shadow: 0 0px 2px rgba(0,0,0, .2);
 
   position: absolute;
   bottom: 34px;
   width: 133px;
-  padding: 5px;
+  @include padding(5px);
 
   button.full {
     width: 100%;
@@ -84,7 +84,7 @@
   }
   .jump-form {
     input[type="text"] {
-      float: left;
+      @include float(left);
       width: 45px;
       height: 20px;
       text-align: center;
@@ -130,7 +130,7 @@
   }
   i.fa {
     position: absolute;
-    right: 8px;
+   @include right(8px);
     bottom: 9px;
     z-index: 1;
   }
@@ -145,18 +145,18 @@
 }
 
 .topic-error {
-  padding: 18px;
+  @include padding(18px);
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
+  @include margin-left(auto);
+  @include margin-right(auto);
   font-size: 1.714em;
   line-height: 1.1em;
 
   .topic-retry {
     display: block;
     margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
+    @include margin-left(auto);
+    @include margin-right(auto);
   }
 }
 
@@ -176,11 +176,11 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 .title-wrapper {
   input#edit-title {
     width: 95%;
-    padding: 5px;
+    @include padding(5px);
   }
   .btn-small {
-    padding: 8px 12px;
-    margin: 6px 6px 0 0;
+    @include padding(8px 12px);
+    @include margin(6px 6px 0 0);
   }
   .select2-container {
     margin-top: 8px;
