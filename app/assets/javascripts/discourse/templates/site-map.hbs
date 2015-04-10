@@ -28,12 +28,12 @@
 
     {{#if currentUser.staff}}
       <li>
-        <a href="/queued-posts">
+        {{#link-to 'queued-posts'}}
           {{i18n "queue.title"}}
           {{#if currentUser.post_queue_new_count}}
           <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
           {{/if}}
-        </a>
+        {{/link-to}}
       </li>
     {{/if}}
 

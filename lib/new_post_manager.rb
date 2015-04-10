@@ -21,7 +21,7 @@ class NewPostManager
 
   def initialize(user, args)
     @user = user
-    @args = args
+    @args = args.delete_if {|_, v| v.nil?}
   end
 
   def perform
@@ -41,10 +41,16 @@ class NewPostManager
   def enqueue(queue)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)
-    post = enqueuer.enqueue(@args)
 
-    QueuedPost.publish_new! if post && post.errors.empty?
+    queued_args = {post_options: @args.dup}
+    queued_args[:raw] = queued_args[:post_options].delete(:raw)
+    queued_args[:topic_id] = queued_args[:post_options].delete(:topic_id)
 
+    post = enqueuer.enqueue(queued_args)
+
+    QueuedPost.broadcast_new! if post && post.errors.empty?
+
+    result.queued_post = post
     result.check_errors_from(enqueuer)
     result
   end

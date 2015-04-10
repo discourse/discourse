@@ -1,0 +1,20 @@
+.queued-posts {
+  .queued-post {
+    padding: 1em 0;
+
+    .poster {
+      width: 70px;
+      float: left;
+    }
+    .cooked {
+      width: $topic-body-width;
+      float: left;
+    }
+    h4.title {
+      margin-bottom: 1em;
+    }
+
+    border-bottom: 1px solid darken(scale-color-diff(), 10%);
+  }
+}
+

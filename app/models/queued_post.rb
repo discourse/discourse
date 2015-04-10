@@ -30,7 +30,7 @@ class QueuedPost < ActiveRecord::Base
     where(state: states[:new]).count
   end
 
-  def self.publish_new!
+  def self.broadcast_new!
     msg = { post_queue_new_count: QueuedPost.new_count }
     MessageBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
   end
@@ -60,10 +60,14 @@ class QueuedPost < ActiveRecord::Base
     created_post
   end
 
+  def self.all_attributes_for(queue)
+    [QueuedPost.attributes_by_queue[:base], QueuedPost.attributes_by_queue[queue.to_sym]].flatten.compact
+  end
+
   private
 
     def post_attributes
-      [QueuedPost.attributes_by_queue[:base], QueuedPost.attributes_by_queue[queue.to_sym]].flatten.compact
+      QueuedPost.all_attributes_for(queue)
     end
 
     def change_to!(state, changed_by)
@@ -83,7 +87,7 @@ class QueuedPost < ActiveRecord::Base
       updates.each {|k, v| send("#{k}=", v) }
       changes_applied
 
-      QueuedPost.publish_new!
+      QueuedPost.broadcast_new!
     end
 
 end

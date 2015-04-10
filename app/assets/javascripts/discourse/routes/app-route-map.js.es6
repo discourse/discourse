@@ -93,4 +93,6 @@ export default function() {
   this.resource('badges', function() {
     this.route('show', {path: '/:id/:slug'});
   });
+
+  this.resource('queued-posts', { path: '/queued-posts' });
 }

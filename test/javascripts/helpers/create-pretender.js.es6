@@ -94,6 +94,16 @@ export default function() {
       return response({});
     });
 
+    this.put('/queued_posts/:queued_post_id', function(request) {
+      return response({ queued_post: {id: request.params.queued_post_id } });
+    });
+
+    this.get('/queued_posts', function() {
+      return response({
+        queued_posts: [{id: 1}]
+      });
+    });
+
     this.post('/session', function(request) {
       const data = parsePostData(request.requestBody);
 
