@@ -11,7 +11,7 @@ body {
   .boxed {
     height: 100%;
     .contents {
-      padding: 10px;
+      @include padding(10px);
     }
     &.white {
       background-color: $secondary;
@@ -19,7 +19,7 @@ body {
   }
   #main {
     position: relative;
-    
+
     img.avatar {
       &.header {
         width: 45px;
@@ -48,9 +48,9 @@ body {
 
 blockquote {
   /* 13px left is intentional here to properly align with post quotes */
-  padding: 10px 8px 10px 13px;
+  @include padding(10px 8px 10px 13px);
   p {
-    margin: 0 0 10px 0;
+    @include margin(0 0 10px 0);
   }
   p:last-of-type {
     margin-bottom:0;
@@ -82,8 +82,8 @@ blockquote {
 // we must remove margins for text site titles
 h2#site-text-logo
 {
-  margin: 0;
-  margin-left: 10px;
+  @include margin(0);
+  @include margin-left(10px);
 }
 
 // categories should not be bold on mobile; they fight with the topic title too much
