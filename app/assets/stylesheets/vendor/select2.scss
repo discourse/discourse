@@ -28,7 +28,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 .select2-container .select2-choice {
     display: block;
     height: 26px;
-    padding: 0 0 0 8px;
+    @include padding(0 0 0 8px);
     overflow: hidden;
     position: relative;
 
