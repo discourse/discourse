@@ -23,16 +23,7 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.new
 
     group.name = (params[:name] || '').strip
-    group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
-    group.visible = params[:visible] == "true"
-    group.automatic_membership_email_domains = params[:automatic_membership_email_domains]
-    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true"
-
-    if group.save
-      render_serialized(group, BasicGroupSerializer)
-    else
-      render_json_error group
-    end
+    save_group(group)
   end
 
   def update
@@ -40,10 +31,20 @@ class Admin::GroupsController < Admin::AdminController
 
     # group rename is ignored for automatic groups
     group.name = params[:name] if params[:name] && !group.automatic
+    save_group(group)
+  end
+
+  def save_group(group)
     group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
     group.visible = params[:visible] == "true"
-    group.automatic_membership_email_domains = params[:automatic_membership_email_domains]
-    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true"
+
+    group.automatic_membership_email_domains = params[:automatic_membership_email_domains] unless group.automatic
+    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true" unless group.automatic
+
+    group.primary_group = group.automatic ? false : params["primary_group"] == "true"
+
+    title = params[:title] if params[:title].present?
+    group.title = group.automatic ? nil : title
 
     if group.save
       render_serialized(group, BasicGroupSerializer)
