@@ -24,7 +24,7 @@
     margin-top: 15px;
 
     button {
-      margin: 0 20px;
+      @include margin(0 20px);
     }
   }
 }
