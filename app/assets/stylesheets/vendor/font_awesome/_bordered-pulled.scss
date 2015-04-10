@@ -11,6 +11,6 @@
 .pull-left { float: left; }
 
 .#{$fa-css-prefix} {
-  &.pull-left { margin-right: .3em; }
+  &.pull-left { @include margin-right(.3em); }
   &.pull-right { margin-left: .3em; }
 }
