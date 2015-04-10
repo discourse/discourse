@@ -1,0 +1,30 @@
+<div class='container'>
+  <div class='queued-posts'>
+    {{#each post in model}}
+    <div class='queued-post'>
+      {{#if post.title}}
+      <h4 class='title'>{{post.title}}</h4>
+      {{/if}}
+      <div class='poster'>
+        {{avatar post.user imageSize="large"}}
+      </div>
+      <div class='cooked'>
+        <div class='names'>
+          <span class='username'>{{post.user.username}}</span>
+        </div>
+        <div class='clearfix'></div>
+
+        {{{cook-text post.raw}}}
+
+        <div class='queue-controls'>
+          {{d-button action="approve" actionParam=post label="queue.approve" icon="check" class="btn-primary approve"}}
+          {{d-button action="reject" actionParam=post label="queue.reject" icon="times" class="btn-warning reject"}}
+        </div>
+      </div>
+      <div class='clearfix'></div>
+    </div>
+    {{else}}
+      <p>{{i18n "queue.none"}}</p>
+    {{/each}}
+  </div>
+</div>

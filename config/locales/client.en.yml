@@ -226,7 +226,10 @@ en:
         placeholder: "type the topic title here"
 
     queue:
+      approve: 'Approve Post'
+      reject: 'Reject Post'
       title: "Needs Approval"
+      none: "There are no posts to review."
 
       approval:
         title: "Post Needs Approval"

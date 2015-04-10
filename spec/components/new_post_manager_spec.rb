@@ -32,7 +32,7 @@ describe NewPostManager do
         result
       end
 
-      @queue_handler = -> (manager) { manager.args[:raw] =~ /queue me/ ? manager.enqueue('test') : nil }
+      @queue_handler = -> (manager) { manager.args[:raw] =~ /queue me/ ? manager.enqueue('new_topic') : nil }
 
       NewPostManager.add_handler(&@counter_handler)
       NewPostManager.add_handler(&@queue_handler)
@@ -56,10 +56,14 @@ describe NewPostManager do
     end
 
     it "calls custom enqueuing handlers" do
-      manager = NewPostManager.new(topic.user, raw: 'to the handler I say enqueue me!', topic_id: topic.id)
+      manager = NewPostManager.new(topic.user, raw: 'to the handler I say enqueue me!', title: 'this is the title of the queued post')
 
       result = manager.perform
 
+      enqueued = result.queued_post
+
+      expect(enqueued).to be_present
+      expect(enqueued.post_options['title']).to eq('this is the title of the queued post')
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
       expect(result.post).to be_blank
