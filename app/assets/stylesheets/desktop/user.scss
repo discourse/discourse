@@ -57,21 +57,21 @@
   }
   .instructions {
     color: scale-color($primary, $lightness: 50%);
-    margin-left: 160px;
+    @include margin-left(160px);
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: 80%;
     line-height: 1.4em;
   }
   .avatar {
-    margin-left: 3px;
+    @include margin-left(3px);
   }
   .instructions a[href] {
     color: $tertiary;
   }
   .warning {
     background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
+    @include padding(5px 8px);
     color: $secondary;
     width: 520px;
   }
@@ -93,13 +93,13 @@
 
 .user-navigation {
   width: 21.62%;
-  margin-right: 1.8018%;
-  float: left;
+  @include margin-right(1.8018%);
+  @include float(left);
   margin-top: 20px;
 
   h3 {
     color: $primary;
-    margin: 20px 0 10px 0;
+    @include margin(20px 0 10px 0);
   }
 
 }
@@ -116,17 +116,17 @@
       text-overflow: ellipsis;
     }
     th.seen {
-      text-align: right;
+      @include text-align(right);
     }
     td.avatar {
       width: 60px;
     }
     td {
       img {
-        margin-right: 10px;
+        @include margin-right(10px);
       }
       span.last-seen-at {
-        float: right;
+        @include float(right);
         color: $primary;
       }
     }
@@ -138,12 +138,12 @@
 
   .user-right {
     width: 75%;
-    float: right;
+    @include float(right);
     margin-top: 20px;
   }
 
   .user-content {
-    padding: 10px 8px;
+    @include padding(10px 8px);
     background-color: $secondary;
     border: 1px solid scale-color-diff();
     margin-bottom: 10px;
@@ -162,13 +162,13 @@
       margin-top: 10px;
 
       th {
-        text-align: left;
+        @include text-align(left);
         border-bottom: 1px solid scale-color-diff();
-        padding: 5px;
+        @include padding(5px);
       }
 
       td {
-        padding: 5px;
+        @include padding(5px);
         border-bottom: 1px solid scale-color-diff();
       }
     }
@@ -191,31 +191,31 @@
 
     &.group {
       .details {
-        padding: 15px;
-        margin: 0;
+        @include padding(15px);
+        @include margin(0);
       }
     }
 
   .secondary {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
     font-size: 0.929em;
-      .btn { padding: 3px 12px; }
+      .btn { @include padding(3px 12px); }
 
       dl dd {
         display: inline;
-        margin: 0 10px 0 0;
-        padding: 0;
+        @include margin(0 10px 0 0);
+        @include padding(0);
       }
 
       dl dt {
         display: inline-block;
-        margin: 0 5px 0 0;
-        padding: 0;
+        @include margin(0 5px 0 0);
+        @include padding(0);
       }
 
       dl {
-        margin: 0;
-        padding: 8px 10px;
+        @include margin(0);
+        @include padding(8px 10px);
       }
 
       dd {
@@ -235,12 +235,12 @@
 
       dt {
         color: dark-light-diff($secondary, $primary, 50%, -40%);
-        margin: 0;
+        @include margin(0);
       }
     }
 
     .details {
-      padding: 15px 15px 4px 15px;
+      @include padding(15px 15px 4px 15px);
       margin-top: -200px;
       background: rgba($primary, .85);
       transition: margin .15s linear;
@@ -264,20 +264,20 @@
       h3 {
         font-weight: normal;
         font-size: 1em;
-        margin: 5px 0;
+        @include margin(5px 0);
         i:not(:first-of-type) {
-          margin-left: 10px;
+          @include margin-left(10px);
         }
       }
 
       .groups {
-        margin-left: 10px;
+        @include margin-left(10px);
         display: inline;
         }
 
       img.avatar {
-        margin: 0 20px 10px 0;
-        float: left;
+        @include margin(0 20px 10px 0);
+        @include float(left);
         transition: all .1s linear;
       }
 
@@ -288,13 +288,13 @@
       .primary {
         width: 100%;
         position: relative;
-        float: left;
+        @include float(left);
         color: $secondary;
 
         h1 {font-weight: bold;}
 
         .primary-textual {
-          padding: 3px;
+          @include padding(3px);
           a[href] {
             color: $secondary;
 
@@ -324,20 +324,20 @@
     }
 
     .controls {
-      padding: 0 0 12px 0;
-      float: right;
-      text-align: right;
+      @include padding(0 0 12px 0);
+      @include float(right);
+      @include text-align(right);
       width: 180px;
       ul {list-style-type: none;}
       a {
-        padding: 5px 10px;
+        @include padding(5px 10px);
         width: 140px;
         margin-bottom: 10px;
         }
 
       .right {
-        float: right;
-        margin-left: 5px;
+        @include float(right);
+        @include margin-left(5px);
       }
     }
   }
@@ -349,7 +349,7 @@
       ul {
         li {display: inline;}
         a {
-          padding: 5px 10px;
+          @include padding(5px 10px);
           margin-bottom: 10px;
           width: auto;
           }
@@ -367,19 +367,19 @@
     }
 
     .details {
-      padding: 12px 15px 2px 15px;
+      @include padding(12px 15px 2px 15px);
       margin-top: 0;
       background: rgba($primary, 1);
       .bio { display: none; }
 
       .primary {
-        text-align: left;
+        @include text-align(left);
         margin-top: 0;
         width: 100%;
 
         .avatar {
-          float: left;
-          margin-right: 10px;
+          @include float(left);
+          @include margin-right(10px);
           width: 45px;
           height: 45px;
         }
@@ -403,10 +403,10 @@
 
   .user-stream {
     .category {
-      margin-left: 3px;
+      @include margin-left(3px);
     }
     .excerpt {
-      margin: 5px 0;
+      @include margin(5px 0);
       font-size: 0.929em;
       word-wrap: break-word;
       color: $primary;
@@ -423,7 +423,7 @@
       opacity: 0.4;
     }
     .item {
-      padding: 20px 8px 15px 8px;
+      @include padding(20px 8px 15px 8px);
       background-color: $secondary;
       border-bottom: 1px solid scale-color-diff();
     }
@@ -435,17 +435,17 @@
     }
     .time, .delete-info {
       display: block;
-      float: right;
+      @include float(right);
       color: lighten($primary, 40%);
-      margin-right: 8px;
+      @include margin-right(8px);
       font-size: 11px;
     }
     .delete-info i {
       font-size: 1em;
     }
     .avatar-link {
-      float: left;
-      margin-right: 4px;
+      @include float(left);
+      @include margin-right(4px);
     }
     .title {
       display: block;
@@ -466,10 +466,10 @@
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);
-      padding: 3px 5px 5px 5px;
+      @include padding(3px 5px 5px 5px);
     }
     .remove-bookmark {
-      float: right;
+      @include float(right);
       margin-top: -4px;
     }
     .notification {
@@ -480,14 +480,14 @@
       li { display: inline-block; }
       p {
         display: inline-block;
-        margin-left: 10px;
+        @include margin-left(10px);
         span {
           color: $primary;
         }
       }
       .time {
         display: inline-block;
-        margin-left: 10px;
+        @include margin-left(10px);
         float: none;
       }
       // common/base/header.scss
@@ -499,17 +499,17 @@
   }
 
   .staff-counters {
-    text-align: left;
+    @include text-align(left);
     background: $primary;
     > div {
-      margin: 0 10px 0 0;
+      @include margin(0 10px 0 0);
       display: inline-block;
-      padding: 5px 0;
+      @include padding(5px 0);
       &:first-of-type {
-        padding-left: 10px;
+        @include padding-left(10px);
         }
       span {
-        padding: 1px 5px;
+        @include padding(1px 5px);
         border-radius: 10px;
         }
 
@@ -554,8 +554,8 @@
   .user-field {
     label {
       width: 140px;
-      float: left;
-      text-align: right;
+      @include float(left);
+      @include text-align(right);
       font-weight: bold;
     }
     input[type=text] {
@@ -564,7 +564,7 @@
     .controls {
       label {
         width: auto;
-        text-align: left;
+        @include text-align(left);
         font-weight: normal;
         float: auto;
       }
