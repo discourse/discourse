@@ -285,7 +285,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 /* results */
 .select2-results {
     max-height: 200px;
-    padding: 0 0 0 4px;
+    @include padding-left(0);
     margin: 4px 4px 4px 0;
     position: relative;
     overflow-x: hidden;
