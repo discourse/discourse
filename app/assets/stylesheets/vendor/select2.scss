@@ -322,13 +322,13 @@ Version: @@ver@@ Timestamp: @@timestamp@@
               user-select: none;
 }
 
-.select2-results-dept-1 .select2-result-label { padding-left: 20px }
-.select2-results-dept-2 .select2-result-label { padding-left: 40px }
-.select2-results-dept-3 .select2-result-label { padding-left: 60px }
-.select2-results-dept-4 .select2-result-label { padding-left: 80px }
-.select2-results-dept-5 .select2-result-label { padding-left: 100px }
-.select2-results-dept-6 .select2-result-label { padding-left: 110px }
-.select2-results-dept-7 .select2-result-label { padding-left: 120px }
+.select2-results-dept-1 .select2-result-label { @include padding-left(20px); }
+.select2-results-dept-2 .select2-result-label { @include padding-left(40px);}
+.select2-results-dept-3 .select2-result-label { @include padding-left(60px);}
+.select2-results-dept-4 .select2-result-label { @include padding-left(80px); }
+.select2-results-dept-5 .select2-result-label { @include padding-left(100px); }
+.select2-results-dept-6 .select2-result-label { @include padding-left(110px); }
+.select2-results-dept-7 .select2-result-label { @include padding-left(120px); }
 
 .select2-results .select2-highlighted {
     background: dark-light-diff($highlight, $secondary, 50%, -80%);
