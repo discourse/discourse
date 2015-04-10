@@ -39,10 +39,10 @@ a {
 hr {
   display: block;
   height: 1px;
-  margin: 1em 0;
+  @include margin(1em 0);
   border: 0;
   border-top: 1px solid scale-color-diff();
-  padding: 0;
+  @include padding(0);
 }
 
 // Lists
@@ -51,8 +51,8 @@ hr {
 ul,
 ol,
 dd {
-  margin: 0 0 9px 25px;
-  padding: 0;
+  @include margin(0 0 9px 25px);
+  @include padding(0);
 }
 
 
@@ -78,9 +78,9 @@ img {
 // --------------------------------------------------
 
 fieldset {
-  margin: 0;
+  @include margin(0);
   border: 0;
-  padding: 0;
+  @include padding(0);
 }
 
 pre code {
