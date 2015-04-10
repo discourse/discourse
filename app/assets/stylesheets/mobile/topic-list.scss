@@ -6,22 +6,22 @@
 // --------------------------------------------------
 
 .list-controls {
-  margin: 5px;
+  @include margin(5px);
   .nav {
-    float: left;
-    margin-right: 15px;
+    @include float(left);
+    @include margin-right(15px);
     li {
       margin-top: 5px;
     }
   }
   .btn {
-    float: right;
-    margin-left: 8px;
+    @include float(right);
+    @include margin-left(8px);
   }
 }
 
 .list-container .full-width {
-  margin-left: 0;
+  @include margin-left(0);
 }
 
 // Base list
@@ -43,7 +43,7 @@
 
   th,
   td {
-    padding: 7px 5px;
+    @include padding(7px 5px);
     color: scale-color($primary, $lightness: 50%);
   }
 
@@ -58,7 +58,7 @@
   .topic-item-stats {
     margin-top: 8px;
     .category, .num, .last-poster {
-      float: left;
+      @include float(left);
     }
     .category a {
       max-width: 160px;
@@ -75,7 +75,7 @@
   .age {
     white-space: nowrap;
     a {
-      padding: 15px 10px 15px 5px;
+      @include padding(15px 10px 15px 5px);
     }
   }
 }
@@ -90,7 +90,7 @@ tr.category-topic-link:nth-of-type(odd) {
 .topic-list.categories {
   td.latest {
     vertical-align: top;
-    padding: 5px;
+    @include padding(5px);
   }
 
   .badge-category {
@@ -107,7 +107,7 @@ tr.category-topic-link:nth-of-type(odd) {
       clear: left;
     }
     @include not-mobile-portrait  {
-      float: right;
+      @include float(right);
     }
   }
   .latest {
@@ -115,7 +115,7 @@ tr.category-topic-link:nth-of-type(odd) {
     @include mobile-landscape { width: 270px; }
     @include tablet-landscape { width: 450px; }
     .featured-topic {
-      margin: 8px 0;
+      @include margin(8px 0);
       a.last-posted-at, a.last-posted-at:visited {
         color: scale-color($primary, $lightness: 50%);
       }
@@ -141,20 +141,20 @@ tr.category-topic-link:nth-of-type(odd) {
   margin-bottom: 10px;
 
   th .badge-category {
-    margin: 0;
+    @include margin(0);
     font-size: 110%;
   }
 
 
   .posters {
-    float: left;
+    @include float(left);
   }
   > footer {
     border-top: 0;
-    padding: 7px 10px;
+    @include padding(7px 10px);
     figure {
-      float: left;
-      margin: 3px 7px 0 0;
+      @include float(left);
+      @include margin(3px 7px 0 0);
       color: scale-color($primary, $lightness: 10%);
       font-weight: bold;
       font-size: 0.857em;
@@ -164,15 +164,15 @@ tr.category-topic-link:nth-of-type(odd) {
       font-weight: normal;
     }
     .btn {
-      float: right;
-      margin-left: 7px;
+      @include float(right);
+      @include margin-left(7px);
     }
   }
 }
 
 
 .topic-list-bottom {
-  margin: 20px 12px 0 12px;
+  @include margin(20px 12px 0 12px);
 }
 
 
@@ -181,7 +181,7 @@ tr.category-topic-link:nth-of-type(odd) {
 
 .list-controls {
   .category-dropdown-button {
-    padding: 4px 10px 4px 8px;
+    @include padding(4px 10px 4px 8px);
   }
 }
 
@@ -206,18 +206,18 @@ tr.category-topic-link:nth-of-type(odd) {
   border-right: 4px solid transparent;
   border-left: 4px solid transparent;
   content: "";
-  margin-left: 5px;
+  @include margin-left(5px);
 }
 .dropdown-menu {
   position: relative;
   top: 100%;
-  left: 0;
+  @include left(0);
   z-index: 1000;
   display: none;
-  float: left;
+  @include float(left);
   width: 280px;
-  padding: 4px 0;
-  margin: 1px 0 0;
+  @include padding(4px 0);
+  @include margin(1px 0 0);
   list-style: none;
   background-color: $secondary;
   border: 1px solid scale-color-diff();
@@ -231,7 +231,7 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 .dropdown-menu a {
   display: block;
-  padding: 3px 15px;
+  @include padding(3px 15px);
   clear: both;
   font-weight: normal;
   line-height: 18px;
@@ -257,7 +257,7 @@ tr.category-topic-link:nth-of-type(odd) {
 }
 
 ol.category-breadcrumb {
-  margin: 5px 10px 0 0;
+  @include margin(5px 10px 0 0);
 }
 
 .category-dropdown-menu {
@@ -270,9 +270,9 @@ ol.category-breadcrumb {
 }
 
 .top-lists {
-  h2 { margin-left: 10px; }
+  h2 { @include margin-left(10px); }
   .topic-list { padding-bottom: 10px; }
-  .btn-default.pull-right { margin-right: 10px; }
+  .btn-default.pull-right { @include margin-right(10px); }
 }
 
 .category-notification-menu {
@@ -287,7 +287,7 @@ ol.category-breadcrumb {
 .category-logo {
   display: block;
   max-width: 100%;
-  padding: 8px 0;
+  @include padding(8px 0);
 }
 
 .period-chooser {
@@ -297,13 +297,13 @@ ol.category-breadcrumb {
 }
 
 button.dismiss-read {
-  margin-right: 10px;
+  @include margin-right(10px);
 }
 
 // base defines extra padding for easier click/top of title field
 // this is a bit too much for mobile
 td.main-link {
   a.title {
-    padding: 5px 10px 5px 0;
+    @include padding(5px 10px 5px 0);
   }
 }
