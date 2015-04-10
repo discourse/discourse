@@ -7,8 +7,8 @@
 
 .btn {
   display: inline-block;
-  margin: 0;
-  padding: 6px 12px;
+  @include margin(0);
+  @include padding(6px 12px);
   font-weight: 500;
   font-size: 1em;
   line-height: 18px;
@@ -24,11 +24,11 @@
     opacity: 0.4;
   }
   .fa {
-    margin-right: 7px;
+    @include margin-right(7px);
   }
   &.no-text {
     .fa {
-      margin-right: 0;
+      @include margin-right(0);
       line-height: 10px;
     }
   }
@@ -127,7 +127,7 @@
     color: $secondary;
   }
   &:before {
-    margin-right: 7px;
+    @include margin-right(7px);
     font-family: zocial;
     line-height: 0.9;
   }
@@ -172,7 +172,7 @@
 // Small
 
 .btn-small {
-  padding: 3px 6px;
+  @include padding(3px 6px);
   font-size: 0.857em;
   line-height: 16px;
 }
@@ -180,7 +180,7 @@
 // Large
 
 .btn-large {
-  padding: 9px 18px;
+  @include padding(9px 18px);
   font-size: 1.143em;
   line-height: 20px;
 }
