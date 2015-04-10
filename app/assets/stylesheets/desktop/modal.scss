@@ -1,3 +1,4 @@
+
 // base styles for every modal popup used in Discourse
 
 .modal-middle-container {
@@ -9,12 +10,12 @@
 .bootbox.modal {
   position: fixed;
   top: 50%;
-  left: 50%;
+  @include left(50%);
   z-index: 1050;
   overflow: auto;
   width: 610px;
   height: auto;
-  margin: -250px 0 0 -305px;
+  @include margin(-250px 0 0 -305px);
   background-color: $secondary;
   border: 1px solid scale-color-diff();
   border: 1px solid scale-color-diff();
@@ -32,24 +33,24 @@
 .modal-body {
   overflow-y: auto;
   max-height: 400px;
-  padding: 15px;
+  @include padding(15px);
 }
 
 .modal-footer .btn + .btn {
-  margin-left: 5px;
+  @include margin-left(5px);
   margin-bottom: 0;
 }
 .modal-footer .btn.right {
-  float: right;
+  @include float(right);
 }
 
 .modal-footer .btn-group .btn + .btn {
-  margin-left: -1px;
+  @include margin-left(-1px);
 }
 
 .modal-footer span.hint {
   color: scale-color($primary, $lightness: 70%);
-  float: right;
+  @include float(right);
   line-height: 30px;
 }
 
@@ -57,12 +58,12 @@
   border-bottom: 1px solid scale-color-diff();
   h3 {
     font-size: 1.429em;
-    padding: 10px 15px 7px;
+    @include padding(10px 15px 7px);
   }
-  .close {margin: 10px;}
+  .close {@include margin(10px);}
 }
 .close {
-  float: right;
+  @include float(right);
   font-size: 1.429em;
   text-decoration: none;
   color: scale-color($primary, $lightness: 35%);
@@ -77,7 +78,7 @@
     width: 430px;
 
     .select2-drop {
-      left: -9000px;
+      @include left(-9000px);
       width: 428px;
     }
     .select2-search input {
@@ -91,13 +92,13 @@
 }
 
 .custom-message-length {
-  margin: -10px 0 10px 20px;
+  @include margin(-10px 0 10px 20px);
   color: scale-color($primary, $lightness: 70%);
   font-size: 85%;
 }
 
 .flag-message {
-  margin-left: 20px;
+  @include margin-left(20px);
   width: 95% !important;
 }
 
@@ -109,11 +110,11 @@
     padding-bottom: 0;
   }
   .secure-category-options {
-    margin: 10px 0 0 16px;
+    @include margin(10px 0 0 16px);
     .badge-list {
-      margin: 10px 0;
+      @include margin(10px 0);
       li {
-        margin: 0 4px 8px 0;
+        @include margin(0 4px 8px 0);
         a {
           color: scale-color($primary, $lightness: 50%);
           cursor: pointer;
@@ -126,8 +127,8 @@
   }
 
   .cannot_delete_reason {
-    float: right;
-    text-align: right;
+    @include float(right);
+    @include text-align(right);
     max-width: 380px;
     color: scale-color($primary, $lightness: 60%);
   }
@@ -165,7 +166,7 @@
     }
 
     input[type=radio] {
-      margin-right: 10px;
+      @include margin-right(10px);
     }
 
     button {
@@ -184,7 +185,7 @@
 }
 
 .upload-options {
-  margin-left: 20px;
+  @include margin-left(20px);
   margin-top: 20px;
 }
 .uploaded-avatar {
