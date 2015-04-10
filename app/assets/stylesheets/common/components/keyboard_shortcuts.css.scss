@@ -21,7 +21,7 @@
   }
   ul {
     list-style: none;
-    margin-left: 0;
+    @include margin-left(0);
 
     li {
       margin: 5px 0
@@ -32,7 +32,7 @@
       background: #eee;
       border-style: solid;
       border-color: #ccc #aaa #888 #bbb;
-      padding: 2px 6px;
+      @include padding(2px 6px);
       border-radius: 4px;
       box-shadow: 0 2px 0 rgba(0,0,0,0.2),0 0 0 1px #fff inset;
       background-color: #fafafa;
