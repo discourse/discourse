@@ -285,7 +285,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 /* results */
 .select2-results {
     max-height: 200px;
-    @include padding-left(0);
+    padding: 0 0 0 4px;
     margin: 4px 4px 4px 0;
     position: relative;
     overflow-x: hidden;
@@ -295,7 +295,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 
 .select2-results ul.select2-result-sub {
     margin: 0;
-    padding-left: 0;
+    @include padding-left(0);
 }
 
 .select2-results li {
@@ -606,4 +606,3 @@ html[dir="rtl"] .select2-search-choice-close {
     .select2-search input {
         background-position: 100% -21px !important;
     }
-}
