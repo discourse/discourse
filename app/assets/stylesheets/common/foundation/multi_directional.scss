@@ -1,0 +1,82 @@
+// These are the variables you have to work with:
+//$direction: ltr;
+//$default-float: left;
+//$opposite-float: right;
+//$default-direction: ltr;
+//$opposite-direction: rtl;
+
+// Mixins
+
+@mixin float($dir) {
+  @if $dir == left {
+    float: $default-float;
+  } @else if $dir == right {
+    float: $opposite-float;
+  } @else {
+    float: $dir;
+  }
+}
+
+@mixin text-align($dir) {
+  @if $dir == left {
+    text-align: $default-float;
+  } @else if $dir == right {
+    text-align: $opposite-float;
+  } @else {
+    text-align: $dir;
+  }
+}
+
+@mixin padding-left($unit) {
+  padding-#{$default-float}: $unit;
+}
+
+@mixin padding-right($unit) {
+  padding-#{$opposite-float}: $unit;
+}
+
+// In case someone uses them
+
+@mixin padding-top($unit) {
+  padding-top: $unit;
+}
+
+@mixin padding-bottom($unit) {
+  padding-bottom: $unit;
+}
+
+@mixin padding($top, $right, $bottom, $left) {
+  @if $direction == ltr {
+    padding: $top $right $bottom $left;
+  } @else {
+    padding: $top $left $bottom $right;
+  }
+}
+
+
+@mixin margin-left($unit) {
+  margin-#{$default-float}: $unit;
+}
+
+@mixin margin-right($unit) {
+  margin-#{$opposite-float}: $unit;
+}
+
+// In case someone uses them
+
+@mixin margin-top($unit) {
+  margin-top: $unit;
+}
+
+@mixin margin-bottom($unit) {
+  margin-bottom: $unit;
+}
+
+
+@mixin margin($top, $right, $bottom, $left) {
+  @if $direction == ltr {
+    margin: $top $right $bottom $left;
+  } @else {
+    margin: $top $left $bottom $right;
+  }
+}
