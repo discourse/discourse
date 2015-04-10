@@ -120,7 +120,6 @@ ja:
   num_posts: "ポスト:"
   num_participants: "参加者:"
   read_full_topic: "Read full topic"
-  private_message_abbrev: "PM"
   rss_description:
     latest: "最新トピック"
     hot: "ホットトピック"
@@ -341,9 +340,7 @@ ja:
       description: 'この投稿は、誹謗中傷、恫喝、名誉毀損、わいせつ、犯罪行為など他人を不快にさせる内容を含んでいる。'
       long_form: '不適切フラグをたてる'
     notify_user:
-      title: 'プライベートメッセージ @{{username}}'
       description: 'この投稿やトピックを書いた人に、直接メッセージを送る。（フラグを付けません）'
-      long_form: 'プライベートメッセージを送ったユーザ'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -380,7 +377,6 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>あなたの投稿はコミュニティにフラグを付けられました。<a href="/my/private-messages">受信トレイ</a>に確認してください。</p>'
     user_must_edit: '<p>この投稿はコミュニティにフラグを付けられまして、非表示されています。</p>'
   archetypes:
     regular:
@@ -445,23 +441,18 @@ ja:
     user_to_user_private_messages:
       title: "ユーザ to ユーザ"
       xaxis: "日"
-      yaxis: "プライベートメッセージの数"
     system_private_messages:
       title: "システム"
       xaxis: "日"
-      yaxis: "プライベートメッセージの数"
     moderator_warning_private_messages:
       title: "モデレータ警告"
       xaxis: "日"
-      yaxis: "プライベートメッセージの数"
     notify_moderators_private_messages:
       title: "管理人に通知"
       xaxis: "日"
-      yaxis: "プライベートメッセージの数"
     notify_user_private_messages:
       title: "ユーザ通知"
       xaxis: "日"
-      yaxis: "プライベートメッセージの数"
     top_referrers:
       title: "トップリファラ"
       xaxis: "ユーザ"
@@ -539,7 +530,6 @@ ja:
     title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
-    site_contact_username_warning: "重要な自動的に送信されるプライベートメッセージを送信するために、フレンドリーなスタッフ名を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   content_types:
     education_new_reply:
@@ -553,10 +543,8 @@ ja:
       description: "新規ユーザのための重要な情報とガイダンス"
     welcome_user:
       title: "ウェルカムメッセージ: 新規ユーザ"
-      description: "サインアップした全ての新規ユーザに自動送信されるプライベートメッセージの内容。"
     welcome_invite:
       title: "ウェルカムメッセージ: 招待ユーザ"
-      description: "ユーザより招待された全ての外部ユーザに自動送信されるプライベートメッセージの内容。"
     login_required_welcome_message:
       title: "ウェルカムメッセージ: 要ログイン"
       description: "'login required' 設定有効時に、ユーザに対してログインを促すメッセージの内容。"
@@ -579,11 +567,9 @@ ja:
     allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
-    min_private_message_post_length: "プライベートメッセージの投稿を許可する最少の文字数"
     max_post_length: "投稿を許可する最大の文字数"
     min_topic_title_length: "トピックタイトルとして許可する最小の文字数"
     max_topic_title_length: "トピックタイトルとして許可する最大の文字数"
-    min_private_message_title_length: "プライベートメッセージのタイトルとして許可する最少の文字数"
     min_search_term_length: "検索ワードとして有効にする最小の文字数"
     allow_uncategorized_topics: "カテゴリなしのトピック作成を許可するか。"
     uncategorized_description: "未分類カテゴリについての説明。存在しない場合は空白のままにします"
@@ -617,7 +603,6 @@ ja:
     digest_logo_url: "サイトのメールに使用されるロゴです。空白の場合`logo_url`が使用されます。 eg: http://example.com/logo.png"
     logo_small_url: "スクロールしたときに表示されるトップ左上のロゴ画像です。空白の場合、ホームグリフが表示されます"
     favicon_url: "サイトの favicon。参照: http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "モバイルサイトでトップ左上に固定で表示されるロゴです。空白の場合、サイトタイトルが表示されます"
     apple_touch_icon_url: "Apple のタッチデバイス用のアイコン。推奨サイズは 144px x 144px"
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "カスタムメールヘッダのリスト (パイプ(バーティカルバー) 区切り)"
@@ -628,7 +613,6 @@ ja:
     summary_likes_required: "'トピックサマリー'が有効になるために必要な最小「いいね!」数"
     summary_percent_filter: "ユーザが'トピックサマリー'をクリックしたとき, 上位何パーセントのポストを表示するか"
     summary_max_results: "'トピックサマリー'として返却される最大ポスト数"
-    enable_private_messages: "トラストレベル1のユーザーにプライベートメッセージの作成と受信を許可する"
     enable_long_polling: "通知用のメッセージバスによるロングポーリングの利用を許可する"
     long_polling_base_url: "ロングポーリングのベースURL(CDNが動的コンテンツを配信している場合、これをoriginに指定してください) eg: http://origin.site.com"
     long_polling_interval: "ユーザに送信するデータが存在しないとき、サーバが待機する時間(ログインユーザーのみ)"
@@ -661,8 +645,6 @@ ja:
     post_menu_hidden_items: "展開記号がクリックされない限り、ポストのメニュー項目を隠します"
     share_links: "シェアダイアログに表示する項目、表示順を指定"
     track_external_right_clicks: "右クリックされた外部リンクをトラックする (例: 新しいタブで開く)。URL のリライトを要するためデフォルトでは無効化されています"
-    site_contact_username: "自動送信されるプライベートメッセージを送信する有効なスタッフユーザ名。空白の場合、システムアカウントが使用されます"
-    send_welcome_message: "全ての新規ユーザにクイックスタートガイド付きのウェルカムプライベートメッセージを送信する"
     suppress_reply_directly_below: "ポストに回答が１つしかない場合、ポストの回答数を表示しない"
     suppress_reply_directly_above: "ポストに回答が１つしかない場合、ポストのin-reply-toを表示しない"
     suppress_reply_when_quoting: "ポストが引用返信だった場合、ポストのin-reply-toを表示しない"
@@ -697,7 +679,6 @@ ja:
     sso_secret: "SSO認証情報の暗号化に利用する秘密の文字列。10文字以上である必要があります"
     sso_overrides_email: "SSOペイロードから取得した外部サイトのメールアドレスでローカルのメールアドレスを上書きする(警告: 不一致が原因でローカルのメールアドレスの正規化が発生する可能性があります)"
     sso_overrides_username: "SSOペイロードから取得した外部サイトのユーザ名でローカルのユーザ名を上書きする(警告: 不一致が原因でユーザ名の長さ/要件に違いがでる可能性があります) "
-    sso_overrides_name: "SSOペイロードから取得した外部サイトの名前でローカルの名前を上書きする(警告: 不一致が原因でユーザの正規化が発生する可能性があります) "
     sso_overrides_avatar: "SSOペイロードから取得した外部サイトのプロフィール画像でローカルのプロフィール画像を上書きする。有効にする場合、プロフィール画像のアップデートを無効にする事を強く薦めます"
     enable_local_logins: "ローカルのユーザ名、パスワードでのログインを有効にする (注意: 招待を使用するには有効にする必要があります)"
     allow_new_registrations: "新規ユーザー登録を許可。誰でもユーザーを作れるのを防ぐには、チェックを外してください。"
@@ -729,7 +710,6 @@ ja:
     max_bookmarks_per_day: "ユーザが一日にブックマークできる最大数"
     max_edits_per_day: "ユーザが一日に編集できる最大数"
     max_topics_per_day: "ユーザが一日に作成できるトピックの最大数"
-    max_private_messages_per_day: "ユーザが一日に作成できるプライベートメッセージの最大数"
     max_invites_per_day: "ユーザが一日に招待できる最大数"
     suggested_topics: "トピック下部に表示されるおすすめトピックの数"
     limit_suggested_to_category: "現在参照しているトピックのカテゴリからトピックをサジェストする"
@@ -779,7 +759,6 @@ ja:
     email_time_window_mins: "ユーザによるポストの最終編集チャンスを与えるために、通知用メール送信までに待つ時間 (分)"
     email_posts_context: "通知メールのコンテンツに含める回答の数"
     flush_timings_secs: "サーバにタイミングデータを送信する頻度 (秒)"
-    title_max_word_length: "トピックタイトルの最大文字数"
     title_min_entropy: "トピックタイトルの最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     body_min_entropy: "ポスト本文の最小許容エントロピー (ユニークキャラクターや英語以外の単語を含むとより大きな値になります)"
     title_fancy_entities: "トピックタイトルの一般的な ASCII 文字をファンシーな HTML エンティティに変換する; SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -907,8 +886,6 @@ ja:
     edited: "%{link} で %{display_username} があなたのポストを編集しました"
     posted: "%{link} に %{display_username} がポストを投稿しました"
     moved_post: "%{display_username} があなたのポストを %{link} に移動しました"
-    private_message: "%{display_username} があなたにプラベートメッセージを送信しました: %{link}"
-    invited_to_private_message: "%{display_username} がプライベートメッセージにあなたを招待しました: %{link}"
     invitee_accepted: "%{display_username} があなたの招待を受けました"
     linked: "%{display_username} は%{link}であなたをリンクしました"
     granted_badge: "あなたは%{link}を獲得しました"
@@ -1119,19 +1096,16 @@ ja:
       subject_template: "データ出力失敗"
       text_body_template: "申し訳ありません。データ出力に失敗しました。ログを確認するかスタッフメンバーに連絡してください"
     email_reject_trust_level:
-      subject_template: "Email issue -- 不十分なトラストレベル"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
         あなたのアカウントは、このアドレスに新しいトピックを投稿するために必要なトラストレベルに達していませんでした。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_reject_no_account:
-      subject_template: "Email issue -- 不明なアカウント"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         このメールアドレスを持つユーザーアカウントがありませんでした。違うメールアドレスから送信するか、スタッフメンバーに連絡してください。
     email_reject_empty:
-      subject_template: "Email issue -- 本文なし"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
@@ -1139,19 +1113,16 @@ ja:
 
         もし、本文を含んでいるのにこれを受け取った場合、メールにHTMLコンテンツを含んでください。(プレーンテキストだけではなく)
     email_reject_parsing:
-      subject_template: "Email issue -- 認識されていないコンテンツ"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     email_reject_post_error:
-      subject_template: "Email issue -- 投稿エラー"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
         複雑な書式、大きすぎるメッセージ、小さすぎるメッセージなど、複数の原因が考えられます。もう一度試してください。もし続くようであれば、ウェブサイトから投稿してください
     email_reject_post_error_specified:
-      subject_template: "Email issue -- Posting error"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
 
@@ -1161,31 +1132,25 @@ ja:
 
         問題が修正できたら、もう一度試してください
     email_reject_reply_key:
-      subject_template: "Email issue -- 不明なReply Key"
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n提供されたreply keyが無効または不明のため、このメールがどの返答なのかがわかりません。スタッフメンバーに連絡してください。\n"
     email_reject_destination:
-      subject_template: "Email issue -- 不明な宛先"
       text_body_template: "申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。 \n\n宛先が認識されませんでした。宛先(CC,BCCではなく)にサイトのアドレスがあること、スタッフから提供された正しいメールアドレスに送信していることを確認してください。\n\n"
     email_reject_topic_not_found:
-      subject_template: "Email issue -- 存在しないトピック"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
          トピックが見つかりませんでした。削除された可能性があります。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_reject_topic_closed:
-      subject_template: "Email issue -- 停止済みトピック"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         トピックは停止されています。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_reject_auto_generated:
-      subject_template: "Email issue -- 自動生成された返信"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした。
 
         あなたの返信は自動生成されています。自動生成された返信は受け付けていません。不明な点がある場合は、スタッフメンバーに連絡してください。
     email_error_notification:
-      subject_template: "Email issue -- POP認証エラー"
       text_body_template: |
         メールをポーリングするPOPサーバで認証エラーが発生しました。
 
@@ -1258,12 +1223,6 @@ ja:
     reply_by_email: "回答するにはこのメールに返信するか、ブラウザで %{base_url}%{url} にアクセスしてください。"
     visit_link_to_respond: "回答するにはブラウザで %{base_url}%{url} にアクセスしてください。"
     posted_by: "%{post_date} に %{username} が投稿"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} がプライベートメッセージにあなたを招待しました '%{topic_title}'"
-      text_body_template: |
-        %{username} があなたをプライベートメッセージに招待しました '%{topic_title}'  %{site_name}:
-
-        このリンクからトピックを参照してください: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] '%{topic_title}' 内のあなたのポストに新たな回答が投稿されました"
       text_body_template: |
@@ -1311,7 +1270,6 @@ ja:
         %{respond_instructions}
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      subject_template: "[%{site_name}] メールマガジン【%{date}】"
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
       top_topics: "人気の投稿"
       other_new_topics: "人気のトピック"
@@ -1349,22 +1307,6 @@ ja:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
-      text_body_template: |
-        ようこそ %{site_name}へ！
-
-        スタッフメンバーはあなたの%{site_name}のアカウントを承認しました。
-
-        以下のリンクをクリックして新しいアカウントを確認してアクティベートしてください。
-        %{base_url}/users/activate-account/%{email_token}
-
-        もしリンクがクリック出来ない場合、リンクをコピーし、ブラウザのアドレスバーに貼付けてください。
-        %{new_user_tips}
-
-        マナー(%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
-
-        それではお楽しみください!
-
-        （もし個人的に[スタッフメンバー](%{base_url}/about)と連絡を取る必要がある場合、このプライベートメッセージに返信してください)
     signup:
       subject_template: "[%{site_name}] 新たなアカウントのアクティベーション"
       text_body_template: |
@@ -1406,7 +1348,6 @@ ja:
     spam_hosts: "この新規ユーザは同一ドメインへのリンクを含むポストを複数作成しようとしました。サイトの newuser_spam_host_threshold 設定を確認してください"
   email_log:
     no_user: "id %{user_id}のユーザーは見つかりませんでした"
-    suspended_not_pm: "User is suspended, not a private message"
     seen_recently: "最近訪れたユーザ"
     post_not_found: "id %{post_id}のポストは見つかりません"
     notification_already_read: "メールが既読になったという通知です"

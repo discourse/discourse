@@ -86,7 +86,6 @@ pt:
   num_posts: "Mensagens:"
   num_participants: "Participantes:"
   read_full_topic: "Ler tópico completo"
-  private_message_abbrev: "MP"
   rss_description:
     latest: "Tópicos recentes"
     hot: "Tópicos quentes"
@@ -349,9 +348,7 @@ pt:
       description: 'Esta mensagem contém conteúdo que uma pessoa sensata iria considerar ofensivo, abusivo, ou como uma violação das <a href="/guidelines"> diretrizes da nossa comunidade</a>.'
       long_form: 'sinalizou isto como inapropriado'
     notify_user:
-      title: 'Mensagem Privada @{{username}}'
       description: 'Esta mensagem contém algo sobre o qual quero falar com esta pessoa diretamente e em privado. Não representa motivo para ter alguma sinalização.'
-      long_form: 'utilizador com mensagens privadas'
       email_title: 'A sua mensagem em "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -388,7 +385,6 @@ pt:
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>A sua mensagem foi sinalizada pela comunidade. Por favor <a href="/my/private-messages">consulte as sua mensagens privadas</a>.</p>'
     user_must_edit: '<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>'
   archetypes:
     regular:
@@ -452,23 +448,18 @@ pt:
     user_to_user_private_messages:
       title: "Utilizador-a-Utilizador"
       xaxis: "Dia"
-      yaxis: "Número de mensagens privadas"
     system_private_messages:
       title: "Sistema"
       xaxis: "Dia"
-      yaxis: "Número de mensagens privadas"
     moderator_warning_private_messages:
       title: "Alerta ao Moderador"
       xaxis: "Dia"
-      yaxis: "Número de mensagens privadas"
     notify_moderators_private_messages:
       title: "Notificação aos Moderadores"
       xaxis: "Dia"
-      yaxis: "Número de mensagens privadas"
     notify_user_private_messages:
       title: "Notificar o Uilizador"
       xaxis: "Dia"
-      yaxis: "Número de mensagens privadas"
     top_referrers:
       title: "As Melhores Referências"
       xaxis: "Utilizador"
@@ -514,10 +505,8 @@ pt:
       description: "Orientação e informação essencial para novos utilizadores."
     welcome_user:
       title: "Bem-vindo: Novo Utilizador"
-      description: "Mensagem privada enviada automaticamente para todos os novos utilizadores quando estes se registam."
     welcome_invite:
       title: "Bem-vindo: Utilizador Convidado"
-      description: "Mensagem privada enviada automaticamente para todos os novos utilizadores convidados assim que aceitam o convite de outro utilizador para participar."
     login_required_welcome_message:
       title: "Início de Sessão Obrigatório: Mensagem de Boas-vindas"
       description: "Mensagem de boas-vindas exibida a utilizadores que não têm sessão iniciada quando a configuração 'início de sessão obrigatório' está ativa."
@@ -539,11 +528,9 @@ pt:
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir aos utilizadores escolherem a sua própria língua preferencial para a interface."
     min_post_length: "Tamanho mínimo permitido por mensagem, em caracteres"
-    min_private_message_post_length: "Tamanho mínimo permitido para mensagens privadas, em caracteres"
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
-    min_private_message_title_length: "Tamanho mínimo permitido por título de cada tópico nas mensagens privadas, em caracteres"
     min_search_term_length: "Tamanho mínimo válido para termos de pesquisa, em caracteres"
     allow_uncategorized_topics: "Permitir a criação de tópicos sem categoria."
     uncategorized_description: "Descrição da categoria sem classificação. Deixar em branco para nenhuma descrição."
@@ -581,7 +568,6 @@ pt:
     summary_likes_required: "Número mínimo de gostos num tópico antes que 'Resumir Este Tópico' seja ativo."
     summary_percent_filter: "Quando um utilizador clica em 'Resumir Este Tópico', mostrar as melhores %  de mensagens"
     summary_max_results: "Número máximo de mensagens devolvidas por 'Resumo deste Tópico'"
-    enable_private_messages: "Permitir que utilizadores de nível de confiança 1 possam criar e responder a mensagens privadas"
     enable_long_polling: "O sistema de mensagens usado para notificações pode fazer solicitações longas"
     long_polling_base_url: "URL base usada para solicitação ao servidor (quando um CDN serve conteúdo dinâmico, certifique-se de configurá-lo para a 'pull' original) ex: http://origem.sítio.com"
     long_polling_interval: "Quantidade de tempo que um servidor deve esperar antes de notificar os clientes quando não há dados para serem enviados (apenas utilizadores ligados)"
@@ -613,7 +599,6 @@ pt:
     post_menu_hidden_items: "Os elementos do menu a serem escondidos por defeito no menu de mensagens a não ser que se clique na elipse de expansão."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
     track_external_right_clicks: "Acompanhar cliques externos que são clicados com o botão direito (ex: abrir num novo separador) desativado por padrão pois este reescreve URLs"
-    send_welcome_message: "Enviar a todos os novos utilizadores uma mensagem privada de boas-vindas com um guia de inicio rápido."
     suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível quando há apenas uma única resposta diretamente abaixo desta publicação."
     suppress_reply_directly_above: "Não mostrar em-resposta-a expansível quando há apenas uma única resposta diretamente acima desta publicação."
     suppress_reply_when_quoting: "Não mostraR em-resposta-a expansível numa mensagem quando esta cita uma resposta."
@@ -645,7 +630,6 @@ pt:
     sso_url: "URL da inscrição única"
     sso_overrides_email: "Substitui o email local por um email externo de um SSO (AVISO: discrepâncias podem ocorrer devido a normalização de emails locais)"
     sso_overrides_username: "Substitui nomes de utilizador locais por nomes de utilizadores externos de um SSO (AVISO: discrepâncias podem ocorrer diferenças no nome de utilizador length/requirements)"
-    sso_overrides_name: "Substitui o nome local por um nome externo de um SSO (AVISO: discrepâncias podem ocorrer devido à normalização de nomes locais)"
     sso_overrides_avatar: "Substitui o avatar do utilizador com avatares externos de um SSO. Se ativo, é altamente recomendada a desativação de allow_uploaded_avatars"
     enable_local_logins: "Ativar contas com nome de utilizador e senha de forma local (Nota: isto tem que estar ativo para que os convites funcionem)"
     allow_new_registrations: "Permitir registo de novos utilizadores. Desmarcar isto para prevenir que alguém crie uma nova conta."
@@ -680,7 +664,6 @@ pt:
     max_bookmarks_per_day: "Número máximo de marcadores por utilizador por dia."
     max_edits_per_day: "Número máximo de edições por utilizador por dia."
     max_topics_per_day: "Número máximo de tópicos que um utilizador pode criar por dia."
-    max_private_messages_per_day: "Número máximo de mensagens privadas que os utilizadores podem criar por dia."
     suggested_topics: "Número de tópicos sugeridos mostrados no final de um tópico."
     limit_suggested_to_category: "Apenas mostrar tópicos da categoria atual nos tópicos sugeridos."
     clean_up_uploads: "Remover carregamentos orfãos não referenciados para prevenir alojamento ilegal. AVISO: poderá querer criar uma cópia de segurança da diretoria /uploads antes de ativar esta configuração."
@@ -729,7 +712,6 @@ pt:
     email_time_window_mins: "Esperar (n) minutos antes de enviar quaisquer emails de notificação, para dar aos utilizadores a hipótese de editarem e finalizarem as suas mensagens."
     email_posts_context: "Quantas respostas prévias a serem incluídas como contexto em emails de notificação."
     flush_timings_secs: "Com que frequência o servidor é alimentado com dados de sincronização, em segundos."
-    title_max_word_length: "Tamanho máximo permitido de palavras, em caracteres, no título de um tópico."
     title_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o título de um tópico."
     body_min_entropy: "Entropia mínima (caracteres únicos, contagem não-inglesa para mais) necessária para o corpo de uma mensagem."
     title_fancy_entities: "Converter caracteres ASCII comuns em entidades HTML nos títulos dos tópicos, ala SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -848,8 +830,6 @@ pt:
     edited: "%{display_username} editou a sua mensagem em %{link}"
     posted: "%{display_username} publicou em %{link}"
     moved_post: "%{display_username} moveu a sua mensagem para %{link}"
-    private_message: "%{display_username} enviou-te uma mensagem privada: %{link}"
-    invited_to_private_message: "%{display_username} convidou-te para uma conversa privada: %{link}"
     invitee_accepted: "%{display_username} aceitou o seu convite"
     linked: "%{display_username} hiperligou-o em %{link}"
     granted_badge: "Ganhou %{link}"
@@ -1104,19 +1084,16 @@ pt:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."
     email_reject_trust_level:
-      subject_template: "Problema de email -- Nível de Confiança Insuficiente"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         A sua conta não tem o nível de confiança necessário para publicar novos tópicos para este endereço de email. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_no_account:
-      subject_template: "Problema de email -- Conta Desconhecida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         Não há nenhuma conta de utilizador conhecida com este endereço de email. Tente enviar a partir de um endereço de email diferente, ou contacte um membro do pessoal.
     email_reject_empty:
-      subject_template: "Problema de email -- Sem Conteúdo"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
@@ -1124,19 +1101,16 @@ pt:
 
         Se está a ter este erro e se _realmente_ colocou conteúdo, tente novamente com conteúdo HTML incluído no seu email (e não apenas texto simples).
     email_reject_parsing:
-      subject_template: "Problema de email -- Conteúdo não reconhecido"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         Não conseguimos encontrar nenhuma resposta no email fornecido. **Certifique-se que a sua resposta está no topo do email** -- não conseguimos processar respostas em linha.
     email_reject_post_error:
-      subject_template: "Problema de email -- Erro de publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         Algumas causas possíveis são: formatação complexa, mensagem demasiado grande, mensagem demasiado pequena. Por favor tente novamente, ou publique através do sítio se isto continuar.
     email_reject_post_error_specified:
-      subject_template: "Problema de email -- Erro de publicação"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
@@ -1146,31 +1120,26 @@ pt:
 
         Se conseguir corrigir o problema, tente novamente.
     email_reject_reply_key:
-      subject_template: "Problema de email -- Chave de Resposta Desconhecida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         A chave de resposta fornecida é inválida ou desconhecida, por isso não sabemos a que resposta corresponde este email. Contacte um membro do pessoal.
     email_reject_destination:
-      subject_template: "Problema de email -- Endereço Para: Desconhecido"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         Nenhum dos endereços de destino é reconhecido. Por favor, certifique-se que o endereço do sítio está na linha Para: (não em Cc: ou em Bcc:), e que está a enviar para o endereço de email correto fornecido pelo pessoal.
     email_reject_topic_not_found:
-      subject_template: "Problema de email -- Tópico Não Encontrado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         O tópico não foi encontrado, poderá ter sido eliminado. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_reject_topic_closed:
-      subject_template: "Problema de email -- Tópico Encerrado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email para %{destination} (titled %{former_title}) não funcionou.
 
         O tópico está fechado. Se acredita que isto é um erro, contacte um membro do pessoal.
     email_error_notification:
-      subject_template: "Problema de email -- Erro de autenticação POP"
       text_body_template: |
         Ocorreu um erro de autenticação  ao recuperar emails do servidor POP.
 
@@ -1243,12 +1212,6 @@ pt:
     reply_by_email: "Para responder, responda a este email ou visite %{base_url}%{url} no seu navegador."
     visit_link_to_respond: "Para responder visite %{base_url}%{url} no seu navegador."
     posted_by: "Publicado por %{username} em %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} convidou-o para uma mensagem privada '%{topic_title}'"
-      text_body_template: |
-        %{username} convidou-o para uma mensagem privada '%{topic_title}' em %{site_name}:
-
-        Por favor visite a hiperligação para visualizar este tópico: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1296,7 +1259,6 @@ pt:
         %{respond_instructions}
     digest:
       why: "Um breve sumário de %{site_link} desde a sua última visita em %{last_seen_at}"
-      subject_template: "[%{site_name}] Resumo para %{date}"
       new_activity: "Nova atividade nos seus tópicos e mensagens:"
       top_topics: "Mensagens populares"
       other_new_topics: "Tópicos populares"
@@ -1380,7 +1342,6 @@ pt:
     spam_hosts: "Este novo utilizador tentou criar múltiplas mensagens com hiperligações ao mesmo domínio. Verifique as configurações do sítio em newuser_spam_host_threshold."
   email_log:
     no_user: "Não foi possível encontrar o utilizador com o id %{user_id}"
-    suspended_not_pm: "O utilizador está suspenso, sem mensagens privadas"
     seen_recently: "O utilizador foi visto recentemente"
     post_not_found: "Não foi possível encontrar a mensagem com o id %{post_id}"
     notification_already_read: "A notificação sobre o qual este email se trata já foi lida"

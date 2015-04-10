@@ -120,7 +120,6 @@ tr_TR:
   num_posts: "Gönderiler:"
   num_participants: "Katılımcılar:"
   read_full_topic: "Konunun tamamını okuyun"
-  private_message_abbrev: "Özel Mesaj"
   rss_description:
     latest: "En son konular"
     hot: "Sıcak konular"
@@ -365,9 +364,7 @@ tr_TR:
       description: 'Bu gönderi saldırgan, kötüleyici ya da <a href="/guidelines">topluluk yönergelerini</a> ihlal eden içerik barındırmaktadır. '
       long_form: 'uygunsuz olarak bayraklanmış'
     notify_user:
-      title: 'Özel Mesaj @{{username}}'
       description: 'Bu gönderi, bu kişiyle doğrudan veya özel olarak konuşmamı gerektiren içeriğe sahip. Bayraklanacak bir durum yok.'
-      long_form: 'kullanıcıya özel mesaj yollandı'
       email_title: '"%{title}" başlıklı gönderiniz'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -404,7 +401,6 @@ tr_TR:
       email_title: '"%{title}" konu başlığının moderatör tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Gönderiniz topluluk tarafından bayraklandı. Lütfen <a href="/my/private-messages">özel mesajlarınıza göz atın</a>.</p>'
     user_must_edit: '<p>Bu gönderi topluluk tarafından bayraklandı ve geçici olarak gizlendi.</p>'
   archetypes:
     regular:
@@ -469,23 +465,18 @@ tr_TR:
     user_to_user_private_messages:
       title: "Kullanıcıdan Kullanıcıya"
       xaxis: "Gün"
-      yaxis: "Özel mesajların sayısı"
     system_private_messages:
       title: "Sistem"
       xaxis: "Gün"
-      yaxis: "Özel mesajların sayısı"
     moderator_warning_private_messages:
       title: "Moderatör Uyarısı"
       xaxis: "Gün"
-      yaxis: "Özel mesajların sayısı"
     notify_moderators_private_messages:
       title: "Moderatörleri Bilgilendir"
       xaxis: "Gün"
-      yaxis: "Özel mesajların sayısı"
     notify_user_private_messages:
       title: "Kullanıcıyı Bilgilendir"
       xaxis: "Gün"
-      yaxis: "Özel mesajların sayısı"
     top_referrers:
       title: "En Çok Atıfta Bulunanlar"
       xaxis: "Kullanıcı"
@@ -564,7 +555,6 @@ tr_TR:
     title_nag: "Sitenizin ismini girin. Site ismini <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
     site_description_missing: "Arama sonuçlarında gözükecek, sitenizi açıklayan tek bir cümle girin. <a href='/admin/site_settings'>Site Ayarları</a> sayfasından site açıklamasını güncelleyin."
     consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, emaillarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
-    site_contact_username_warning: "Otomatik yollanan önemli özel mesajları gönderen kişi olarak gözükecek yardımsever adminin kullanıcı adını girin. <a href='/admin/site_settings'>Site Ayarları&lt;/a> sayfasından güncelleyin. "
     notification_email_warning: "Bildiri emaillari alan adınıza bağlı geçerli bir email adresinden yollanmıyor; emaillar düzenli ve güvenilir bir şekilde ulaşmayabilir. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasından notification_email değeri için geçerli bir yerel email adresi girin."
   content_types:
     education_new_reply:
@@ -578,10 +568,8 @@ tr_TR:
       description: "Yeni kullanıcılar için kılavuz ve gerekli bilgiler."
     welcome_user:
       title: "Hoşgeldiniz: Yeni Kullanıcı"
-      description: "Tüm yeni kullanıcılara, ilk üye olduklarında otomatik olarak gönderilen özel mesaj. "
     welcome_invite:
       title: "Hoşgeldiniz: Davetli Kullanıcı"
-      description: "Bir başka kullanıcı tarafından davet edilen yeni kullanıcılara, daveti kabul ettiklerinde gönderilen otomatik özel mesaj."
     login_required_welcome_message:
       title: "Giriş Yapmak Zorunlu: Hoşgeldiniz Mesajı"
       description: "'Giriş yapmak zorunlu' ayarı etkinleştirildiğinde, sisteme giriş yapmamış olan ziyaretçilere gözüken hoşgeldiniz mesajı. "
@@ -603,11 +591,9 @@ tr_TR:
     default_locale: "Bu Discourse yüklemesinin  (ISO 639-1 Code) varsayılan dili"
     allow_user_locale: "Kullanıcıların arayüz için kendi istedikleri dili seçmesine izin ver"
     min_post_length: "Gönderide olması gereken en az karakter sayısı"
-    min_private_message_post_length: "Özel mesaj gönderilerinde olması gereken en az karakter sayısı"
     max_post_length: "Gönderide izin verilen en fazla karakter sayısı"
     min_topic_title_length: "Konuda olması gereken en az karakter sayısı"
     max_topic_title_length: "Konu başlığında izin verilen en fazla karakter sayısı"
-    min_private_message_title_length: "Özel mesajın başlığında olabilecek en az karakter sayısı"
     min_search_term_length: "Arama için girilecek kelimede olması gereken en az karakter sayısı"
     allow_uncategorized_topics: "Konuların kategori seçmeden oluşturulmasına izin ver."
     uncategorized_description: "Kategorisiz kategorisinin tanıtımı. Boş bırakabilirsiniz."
@@ -640,7 +626,6 @@ tr_TR:
     digest_logo_url: "Sitenizin özet e-postalarının üst kısmında kullanılacak logo. Boş bırakılırsa `logo_url` kullanılacak. örn: http://example.com/logo.png"
     logo_small_url: "Sitenizin sol üstünde yer alacak, sayfayı aşağı kaydırdığınızda gözükecek küçük logo. Boş bırakılırsa, ana sayfa glifi gözükecek."
     favicon_url: "Site favikonunuz. Bakın; http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "Mobil sitenizin sol üstünde yer alacak sabit pozisyonlu logo resmi. Boş bırakılırsa, sitenin ismi kullanılacak."
     apple_touch_icon_url: "Apple dokunmatik cihazları için kullanılan ikon. Önerilen boyut; 144 x 144 pixel."
     notification_email: "Tüm önemli sistem e-postaları için kullanılacak olan gönderen e-posta adresi. E-postaların başarıyla ulaşması için buraya girilen alan adının SPF, DKIM ve reverse PTR kayıtlarının doğru yapılması lazım."
     email_custom_headers: "Sınırlandırılmış özel e-posta başlıkları listesi"
@@ -651,7 +636,6 @@ tr_TR:
     summary_likes_required: "'Bu Konuyu Özetle'nin etkinleştirilmesi için konuda olması gereken en az beğeni sayısı"
     summary_percent_filter: "Kullanıcı 'Bu Konuyu Özetle'ye tıkladığında, gönderinin ilk % kısmını göster"
     summary_max_results: "'Bu Konuyu Özetle'den dönen en fazla gönderi sayısı"
-    enable_private_messages: "Güven seviyesi 1 olan kullanıcıların özel mesaj oluşturmasına ve özel mesajlara cevap vermesine izin ver"
     enable_long_polling: "Bildiri için kullanılan message bus uzun sorgular yapabilir"
     long_polling_base_url: "Uzun sorgular için kullanılan baz URL (CDN dinamik içerik sunuyorsa, bunu origin olarak ayarladığına emin ol) ör: http://origin.site.com"
     long_polling_interval: "Gönderilecek bilgi olmadığı zaman sunucunun kullanıcılara geri dönmeden önce beklemesi gereken zaman (sadece giriş yapmış kullanıcın için)"
@@ -684,8 +668,6 @@ tr_TR:
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
     track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi varsayılan ayarlarda devre dışı bırakılmıştır."
-    site_contact_username: "Tüm otomatik özel mesajlar için gönderen kişi olarak gözükecek geçerli bir görevli kullanıcı adı. Boş bırakılırsa varsayılan Sistem hesabı kullanılacak."
-    send_welcome_message: "Tüm yeni kullanıcılara bir hoşgeldiniz özel mesajı ile beraber hızlı başlangıç kılavuzu gönderin."
     suppress_reply_directly_below: "Bu gönderinin direk altında sadece tek bir cevap varsa, gönderideki açılabilir cevap sayısı bölümünü gösterme."
     suppress_reply_directly_above: "Bu gönderinin direk üstünde sadece tek bir cevap varsa, gönderideki açılabilir hangi-cevaba-istinaden-cevapla bölümünü gösterme."
     suppress_reply_when_quoting: "Gönderi cevabı alıntılarsa, gönderideki açılabilir hangi-cevaba-istinaden-cevapla bölümünü gösterme."
@@ -719,7 +701,6 @@ tr_TR:
     sso_secret: "TOA bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
     sso_overrides_email: "SSO yararlı yükündeki dış site e-postasını yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
     sso_overrides_username: "SSO yararlı yükündeki dış site kullanıcı adını yerel kullanıcı adının üzerine yazar (DİKKAT: kullanıcı adı uzunlukları/gereksinimleri arasındaki farklılıklardan ötürü uyuşmazlıklar yaşanabilir)"
-    sso_overrides_name: "SSO yararlı yükündeki dış site ismini yerel ismin üzerine yazar (DİKKAT: yerel isimlerin normalizasyon sürecinde uyuşmazlıklar doğabilir)"
     sso_overrides_avatar: "SSO yararlı yükündeki dış site avatarını kullanıcı avatarının üzerine yazar Eğer etkinleştirildiyse, allow_uploaded_avatars ayarının devre dışı bırakılması şiddetle önerilir"
     enable_local_logins: "Yerel kullanıcı adı ve parola bazlı hesap girişlerini etkinleştir. (Not: davetiyelerin çalışabilmesi için bu ayarın etkinleştirilmesi gerekli)"
     allow_new_registrations: "Yeni kayıtlara izin ver. Yeni hesap oluşturulmasını engellemek için burayı işaretlemeyin."
@@ -754,7 +735,6 @@ tr_TR:
     max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla işaretleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
-    max_private_messages_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla özel mesaj sayısı."
     max_invites_per_day: "Bir günde, bir kullanıcının yollayabileceği maksimum davet sayısı."
     suggested_topics: "Konunun en altında yer alan, önerilen konu sayısı. "
     limit_suggested_to_category: "Önerilen konularda sadece kullanıcının bulunduğu kategoriye ait konuları göster."
@@ -804,7 +784,6 @@ tr_TR:
     email_time_window_mins: "Kullanıcılara, gönderilerini düzenlemelerine ve tamamlamalarına fırsat vermek için herhangi bir bildiri e-postası göndermeden önce (n) dakika bekleyin."
     email_posts_context: "Genel durumu göstermek amaçlı, bildiri e-postalarında yer alacak önceki cevap sayısı."
     flush_timings_secs: "Zaman verisinin sunucuya atılma sıklığı, saniye olarak."
-    title_max_word_length: "Konu başlığında bulunabilecek en fazla karakter sayısı."
     title_min_entropy: "Konu başlığı için gereken en az entropi (tekil karakter, ingilizce-dışı karakterler daha fazla sayılır)"
     body_min_entropy: "Gönderi içeriği için gereken en az entropi (tekil karakter, ingilizce-dışı karakterler daha fazla sayılır)"
     title_fancy_entities: "SmartyPants tarzında, konu başlıklarında ASCII karakterlerini süslü HTML öğelerine çevir: http://daringfireball.net/projects/smartypants/"
@@ -928,8 +907,6 @@ tr_TR:
     edited: "%{display_username} gönderinizi düzenledi: %{link}"
     posted: "%{display_username} gönderi oluşturdu %{link}"
     moved_post: "%{display_username} gönderinizi buraya taşıdı: %{link}"
-    private_message: "%{display_username} size özel mesaj gönderi: %{link}"
-    invited_to_private_message: "%{display_username} sizi özel mesaja davet etti: %{link}"
     invitee_accepted: "%{display_username} davetinizi kabul etti"
     linked: "%{display_username} size %{link} sayfasında bağlantı verdi"
     granted_badge: "%{link} kazandınız"
@@ -1104,90 +1081,10 @@ tr_TR:
     post_hidden:
       subject_template: "Topluluk tarafından bayraklandığı için gönderiniz gizlendi"
       text_body_template: "Merhaba,\n\nBu, gönderinizin gizlendiğini haber vermek için %{site_name} sitesinden gönderilmiş otomatik bir mesajdır.\n\n%{base_url}%{url}\n\n%{flag_reason}\n\nGönderiniz gizlenmeden önce birden fazla kullanıcı tarafından bayraklandı. Lütfen, bu geri bildirimler doğrultusunda gönderinizi nasıl düzelteceğinizi düşünün. **Gönderinizi %{edit_delay} dakika sonra düzenleyebilirsiniz, otomatik olarak tekrar yayına alınacaktır.** Bu sistemdeki güven seviyenizi yükseltecektir. \n\nAncak, eğer gönderiniz kullanıcılar tarafından ikinci kere gizlenirse, görevliler tarafından incelenene kadar gizli kalacaktır - ve hesabınızın askıya alınması dahil olmak üzere farklı önlemler alınabilir.\n\nDaha fazla bilgi için, lütfen [topluluk yönergelerine bakın](%{base_url}/guidelines).\n\n"
-    usage_tips:
-      text_body_template: |
-        Bu özel mesaj, hemen harekete geçebilmeniz için bir kaç pratik tavsiye içerir.
-
-        ## Sayfayı aşağı kaydırmaya devam edin
-
-        Farkettiğiniz gibi sonraki herhangi bir sayfa butonu ya da sayfa sayısı yok - daha fazla okumak için, **sayfayı aşağı kaydırmanız yeterli!**
-
-        Yeni gönderiler geldikçe, otomatik olarak görünürler.
-
-        ## Neredeyim?
-
-        - Arma, kullanıcı sayfanız, veya menü için **sağ üstteki <kbd>☰</kbd> ikonlu butona** tıklayın.
-
-        - Herhangi bir konu başlığı sizi bir sonraki okunmamış gönderiye götürür. En üst veya en alta gitmek için son aktivite zamanı ve gönderi sayısını kullanın.
-
-        - Bir konuyu okurken, konu başlığına tıklayarak en üste &uarr; zıpla. Tüm navigasyonla ilgili kontroller için sağ alttaki yeşil ilerleme barını seç, veya <kbd>home</kbd> and <kbd>end</kbd> tuşlarını kullan.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Nasıl cevaplarım?
-
-        - Genel olarak konuya cevap vermek için, sayfanın en altındaki Cevapla butonunu <img src="/images/welcome/reply-topic.png" width="29" height="25">  kullanın.
-
-        - Belirli bir gönderiye cevap vermek için, o gönderinin altında bulunan Cevapla butonunu <img src="/images/welcome/reply-post.png" width="29" height="25"> kullanın.
-
-        - Sohbeti bölmeden başka bir yöne çekmek için, bgönderinin sağındaki <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Bağlantılı Konu Oluştururarak Cevapla'ya tıklayın.
-
-        Cevabınızda birinden alıntı yapmak için, alıntı yapmak istediğiniz metni seçin ve sonrasında herhangi bir Cevapla butonuma tıklayın.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Cevabınızda birine ping atmak istiyorsanız, o kişinin isminden bahsedin. `@` yazdığınız an otomatik tamamlayıcı pop-up'ı belirecektir.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        [Standart Emoji](http://www.emoji.codes/) için, `:` yazın ya da gülücük `:)` atın :smile:
-
-        ## Başka neler yapabilirim?
-
-        Her gönderinin altında aksiyon butonları var.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Birine gönderisini beğendiğinizi belirtmek istiyorsanız, **beğen** butonunu kullanın. Gönderiyle ilgili bir sorun görüyorsanız, görevlilere durumu bildirmek için **bayrakla** butonunu kullanın.
-
-        **Paylaş** butonu aracılığıyla gönderiye bir bağlantı paylaşabilir, veya **işaretle** butonu ile gönderiyi işaretleyip sonrasında kullanıcı sayfanızdan kolayca ulaşabilirsiniz.
-
-        ## Kim benimle konuşuyor?
-
-        Biri gönderinize cevap verir, gönderinizi alıntılar, ya da `@kullanıcıadı` nızdan bahsederse, sayfanızın en sağ üstünde bir sayı hemen beliriverir. Bu sayıya tıklayarak **bildiriler**inize ulaşabilirsiniz.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Bir cevabı kaçıracaksınız diye kaygılanmayın – çevrimiçi değilseniz direk cevaplar (ve özel mesajlar) geldikçe tarafınıza bilgilendirme emaili atılır.
-
-        ## Hangi durumda sohbetler yeni sayılır?
-
-        Varsayılan olarak, üzerinden henüz iki gün geçmemiş tüm sohbetler yeni sayılır. Katıldığınız (cevapladığınız, oluşturduğunuz, veya uzun bir süre okuduğunuz) tüm sohbetler otomatik olarak takip edilir.
-
-        Bu konuların yanında mavi yeni ve sayı işaretlerini göreceksiniz.
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Herhangi bir konunun bildiri durumunu o konunun altın bulunan kontrol aracılığıyla değiştirebilirsiniz. (Bu ayar kategori bazında da yapılabilir.)  Konuları nasıl takip ettiğinizi ya da yeninin tanımını değiştirmek için, [kullanıcı ayarlarınıza](/my/preferences) göz atın.
-
-        ## Bazı şeyleri niye yapamıyorum?
-
-        Güvenlik sebeplerin ötürü yeni kullanıcılar bazı kısıtlamalara tabidir. Burada sohbetlere katıldıkça, topluluğun güvenini kazanırsınız, onun tam bir parçası haline gelirsiniz ve bu limitler de otomatik olarak kalkar. En yüksek [güvenlik seviyelerinde](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ise topluluğumuzu birlikte yönetmemize yardımcı olabilmenizi sağlayacak yetkiler kazanırsınız.
     welcome_user:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
-      text_body_template: |
-        %{site_name} sitesine katıldığınız için teşekkür ederiz, hoşgeldiniz!
-
-        %{new_user_tips}
-
-        Biz her zaman [medeni topluluk davranışına](%{base_url}/guidelines) inanıyoruz.
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](/about) iletişim kurmak isterseniz, bu özel mesajı cevaplamanız yeterli.)
-
-        Ziyaretinizin keyfini çıkarın!
     welcome_invite:
       subject_template: "%{site_name} sitesine hoşgeldiniz!"
-      text_body_template: "%{site_name} sitesine olan daveti kabul ettiğiniz için teşekkür ederiz -- hoşgeldiniz!\n\nSizin için otomatik olarak bir kullanıcı adı oluşturduk: **%{username}**, ancak [kullanıcı profil sayfasınızı][prefs] ziyaret ederek istediğiniz zaman değişiklik yapabilirsiniz.\n\nTekrar giriş yapmak için aşağıdaki seçeneklerden birini kullanabilirsiniz:\n\n1. İstediğiniz giriş seçeneğini kullanarak giriş yapın -- ancak davetiyenizin gönderildiği email adresiyle eşleşmiş olmalı. Yoksa giriş yapanın siz olduğunuzu anlamamız mümkün değil!\n\n2. [Kullanıcı profili sayfanızda][prefs] size özel parolanızı oluşturun ve bunu kullanarak giriş yapın. \n\n%{new_user_tips}\n\n[Sivil toplum davranışlarına](%{base_url}/guidelines) olan inancımız daimidir.\n\nKaldığınız sürenin keyfini çıkarın!\n\n[prefs]: %{user_preferences_url}\n"
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: "Yedekleme başarıyla tamamlandı.\n\n[admin > backup section](/admin/backups) bölümünden yeni yedeği indirebilirsiniz."
@@ -1238,16 +1135,13 @@ tr_TR:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
       text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."
     email_reject_trust_level:
-      subject_template: "E-posta sorunu -- Yetersiz Güven Seviyesi"
       text_body_template: "Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.\n\nBu e-posta adresine yeni gönderiler oluşturmanız için, hesabınız yeterli güven seviyesine sahip değil. Bir hata olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.\n \n"
     email_reject_no_account:
-      subject_template: "E-posta sorunu -- Bilinmeyen Hesap "
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Bu e-posta adresine sahip bir kullanıcı bulunamadı. Başka bir e-posta adresinden göndermeyi deneyin ya da bir görevli ile iletişime geçin.
     email_reject_empty:
-      subject_template: "E-posta sorunu -- İçerik Yok"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
@@ -1255,19 +1149,16 @@ tr_TR:
 
         E-postanızda içerik olduğu halde bu mesajı aldıysanız, bir sefer de HTML içeriği ile göndermeyi deneyin (sadece düz metin olarak değil).
     email_reject_parsing:
-      subject_template: "E-posta sorunu -- Bilinmeyen içerik"
       text_body_template: |
         Üzgünüz, ama  %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu.
 
         E-postada herhangi bir cevap bulamadık. **Cevabınızın e-posta'nın en üstünde yer aldığından emin olun** -- aralardaki cevapları işleyemiyoruz.
     email_reject_post_error:
-      subject_template: "E-posta sorunu -- Gönderim hatası"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Bir kaç muhtemel neden: karmaşık format, çok uzun mesaj, çok kısa mesaj. Lütfen tekrar deneyin, sorun devam ederse websitesi üzerinden gönderin.
     email_reject_post_error_specified:
-      subject_template: "E-posta sorunu -- Gönderim hatası"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
@@ -1277,37 +1168,31 @@ tr_TR:
 
         Sorunu düzeltebilirseniz, lütfen tekrar deneyin.
     email_reject_reply_key:
-      subject_template: "E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Cevap anahtarı geçersiz ya da bulunamıyor, bu nedenle de bu mesajın neye cevaben gönderildiğini bilemiyoruz. Bir görevli ile iletişime geçin.
     email_reject_destination:
-      subject_template: "E-posta sorunu -- Bilinmeyen Alıcı Adresi"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başarısız oldu.
 
         Gönderilen adreslerinin hiçbiri bilinmiyor. Site adresinin To: kısmında olduğundan (Cc: ya da Bcc: değil) ve görevliler tarafından sağlanan doğru email adresine yolladığınızdan emin olun.
     email_reject_topic_not_found:
-      subject_template: "E-posta sorunu -- Konu Bulunamadı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu.
 
         Konu bulunamadı, silinmiş olabilir. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_topic_closed:
-      subject_template: "E-posta sorunu -- Konu Kapatıldı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz e-posta başarısız oldu.
 
         Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_reject_auto_generated:
-      subject_template: "E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
       text_body_template: |
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermek istediğiniz email başarısız oldu.
 
         Konu kapatılmış. Yanlışlık olduğunu düşünüyorsanız, bir görevli ile iletişime geçin.
     email_error_notification:
-      subject_template: "E-posta sorunu -- POP doğrulama hatası"
       text_body_template: |
         Mailler POP sunucusundan çağrılırken bir doğrulama hatası oluştu.
 
@@ -1369,12 +1254,6 @@ tr_TR:
     reply_by_email: "Karşılık vermek için, bu e-postayı cevaplayın ya da %{base_url}%{url} sayfasını internet tarayıcınızda ziyaret edin."
     visit_link_to_respond: "Karşılık vermek için, %{base_url}%{url} sayfasını internet tarayıcınızda ziyaret edin."
     posted_by: "%{post_date} tarihinde %{username} tarafından gönderildi"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} sizi '%{topic_title}' başlıklı özel mesaja davet etti"
-      text_body_template: |
-        %{username} sizi %{site_name} sitesinde, '%{topic_title}' başlıklı bir özel mesaja davet etti:
-
-        Konuyu görüntülemek için lütfen bu bağlantıyı ziyaret edin: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1433,7 +1312,6 @@ tr_TR:
         %{respond_instructions}
     digest:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
-      subject_template: "[%{site_name}] Özeti %{date}"
       new_activity: "Konu ve gönderilerinizdeki yeni aktiviteler:"
       top_topics: "Popüler gönderiler"
       other_new_topics: "Popüler konular"
@@ -1478,22 +1356,6 @@ tr_TR:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} sitesinde hesabınız onaylandı!"
-      text_body_template: |+
-        %{site_name} sitesine hoşgeldiniz!
-
-        %{site_name} sitesindeki hesabınız bir görevli tarafından onaylandı.
-
-        Aşağıdaki linke tıklayın ve yeni hesabınızı aktive edin:
-        %{base_url}/users/activate-account/%{email_token}
-
-        Eğer link tıklanabilir değilse, linki kopyalayıp tarayıcınızın adres çubuğuna yapıştırmayı deneyebilirsiniz.
-
-        %{new_user_tips}
-
-        Her zaman [civilized community behavior](%{base_url}/guidelines) olması gerektiğine inanıyoruz.
-
-        Keyfinize bakın!
-
     signup:
       subject_template: "[%{site_name}] Yeni hesabınızı etkinleştirin"
       text_body_template: |
@@ -1535,7 +1397,6 @@ tr_TR:
     spam_hosts: "Bu yeni kullanıcı aynı alan adına bağlantı içeren birden fazla gönderi oluşturmaya çalıştı. Site ayarları sayfasındaki newuser_spam_host_threshold değerine göz atın."
   email_log:
     no_user: "%{user_id} id'sine sahip bir kullanıcı bulunamadı"
-    suspended_not_pm: "Kullanıcı uzaklaştırıldı, özel mesaj değil"
     seen_recently: "Kullanıcı kısa süre önce görüldü"
     post_not_found: "%{post_id} id'sine sahip bir gönderi bulunamadı"
     notification_already_read: "Bu e-postanın içerdiği bildiri önceden okundu"

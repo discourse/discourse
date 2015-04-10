@@ -382,9 +382,9 @@ it:
       description: 'Questo messaggio ha dei contenuti che una persona ragionevole considererebbe offensivi, aggressivi o una violazione delle <a href="/guidelines">linee guida della comunità</a>.'
       long_form: 'segnalato come inappropriato'
     notify_user:
-      title: 'Messaggio Privato @{{username}}'
+      title: 'Messaggio @{{username}}'
       description: 'Vorrei discutere direttamente e privatamente con l''autore di questo messaggio. Non voglio attivare una segnalazione.'
-      long_form: 'messaggio privato inviato'
+      long_form: 'messaggio inviato'
       email_title: 'Il tuo messaggio su "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -421,7 +421,7 @@ it:
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/private-messages">Controlla i tuoi messaggi privati</a>.</p>'
+    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/private-messages">Controlla i tuoi messaggi</a>.</p>'
     user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
   archetypes:
     regular:
@@ -486,23 +486,23 @@ it:
     user_to_user_private_messages:
       title: "Utente-a-Utente"
       xaxis: "Giorno"
-      yaxis: "Numero di messaggi privati"
+      yaxis: "Numero di messaggi"
     system_private_messages:
       title: "Sistema"
       xaxis: "Giorno"
-      yaxis: "Numero di messaggi privati"
+      yaxis: "Numero di messaggi"
     moderator_warning_private_messages:
       title: "Segnalazione Moderatore"
       xaxis: "Giorno"
-      yaxis: "Numero di messaggi privati"
+      yaxis: "Numero di messaggi"
     notify_moderators_private_messages:
       title: "Notifica i Moderatori"
       xaxis: "Giorno"
-      yaxis: "Numero di messaggi privati"
+      yaxis: "Numero di messaggi"
     notify_user_private_messages:
       title: "Notifiche Utente"
       xaxis: "Giorno"
-      yaxis: "Numero di messaggi privati"
+      yaxis: "Numero di messaggi"
     top_referrers:
       title: "Migliori Referrer"
       xaxis: "Utente"
@@ -582,7 +582,7 @@ it:
     title_nag: "Inserisci il nome del tuo sito. Aggiorna il titolo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     site_description_missing: "Scrivi una breve descrizione del sito che comparirà nei risultati di ricerca. Aggiorna site_description nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
-    site_contact_username_warning: "Scrivi il nome di un membro dello staff disponibile, da cui inviare messaggi privati importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
+    site_contact_username_warning: "Inserisci il nome di un membro dello staff da cui inviare messaggi importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
   content_types:
     education_new_reply:
@@ -596,10 +596,10 @@ it:
       description: "Guida e informazioni essenziali per nuovi utenti."
     welcome_user:
       title: "Benvenuto: Nuovo Utente"
-      description: "Verrà inviato automaticamente un messaggio privato a tutti i nuovi utenti dopo la registrazione."
+      description: "Verrà inviato automaticamente un messaggio a tutti i nuovi utenti dopo la registrazione."
     welcome_invite:
       title: "Benvenuto: Utente Invitato"
-      description: "Verrà inviato automaticamente un messaggio privato a tutti gli utenti invitati quando accettano l'invito a partecipare da parte di un altro utente."
+      description: "Verrà inviato automaticamente un messaggio a tutti gli utenti invitati quando accettano l'invito a partecipare da parte di un altro utente."
     login_required_welcome_message:
       title: "Accesso Richiesto: Messaggio di Benvenuto"
       description: "Messaggio che viene mostrato agli utenti non collegati quando l'impostazione \"login obbligatorio\" è attiva."
@@ -622,11 +622,11 @@ it:
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"
     min_post_length: "Lunghezza minima dei messaggi in caratteri"
     min_first_post_length: "Lunghezza minima del primo messaggio (corpo del testo), in caratteri"
-    min_private_message_post_length: "Lunghezza minima in caratteri per i messaggi privati"
+    min_private_message_post_length: "Lunghezza minima in caratteri per i messaggi"
     max_post_length: "Lunghezza massima dei messaggi in caratteri"
     min_topic_title_length: "Numero minimo di caratteri per i titoli degli argomenti"
     max_topic_title_length: "Numero massimo di caratteri per i titoli degli argomenti"
-    min_private_message_title_length: "Numero minimo di caratteri necessari per un messaggio privato"
+    min_private_message_title_length: "Numero minimo di caratteri per un messaggio"
     min_search_term_length: "Numero minimo di caratteri per le parole cercate"
     allow_uncategorized_topics: "Permetti la creazione di argomenti senza categoria."
     uncategorized_description: "La descrizione della categoria \"Non classificato\". Lascia vuoto per nessuna descrizione."
@@ -660,7 +660,7 @@ it:
     digest_logo_url: "Il logo alternativo usato in cima alla email di riepilogo. Se lasciato vuoto, sarà utilizzato il campo `logo_url`. es: http://example.com/logo.png"
     logo_small_url: "La piccola immagine del logo in alto a sinistra sul tuo sito, che appare quando si scorre in giù. Se non impostato, verrà mostrato l'icona di una casa."
     favicon_url: "La favicon del tuo sito, vedi http://it.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "L'immagine del logo a posizione fissa usata in alto a sinistra del sito mobile. Se non impostato, verrà usato il testo del titolo del sito."
+    mobile_logo_url: "L'immagine del logo a posizione fissa usata in alto a sinistra del sito mobile. Se non impostato, verrà usato `logo_url`."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
     email_custom_headers: "Una lista di intestazioni email personalizzate delimitata da una barra verticale (pipe |)"
@@ -671,7 +671,7 @@ it:
     summary_likes_required: "Minimo numero di \"Mi piace\" in un argomento affinché venga abilitato 'Riassumi Questo Argomento'"
     summary_percent_filter: "Quando un utente clicca su 'Riassumi Questo Argomento', mostra i primi % messaggi"
     summary_max_results: "Massimo numero di messaggi mostrati in 'Riassumi Argomento'"
-    enable_private_messages: "Autorizza gli utenti con livello di esperienza 1 a creare e rispondere a messaggi privati"
+    enable_private_messages: "Autorizza gli utenti con livello di esperienza 1 a creare e rispondere ai messaggi"
     enable_long_polling: "Il message bus per le notifiche può usare il long polling"
     long_polling_base_url: "URL di base usato per il long polling (quando una CDN serve contenuto dinamico, bisogna impostarlo come origin pull) es. http://origin.site.com"
     long_polling_interval: "Tempo di attesa prima che il server risponda ai client che non ci sono dati da trasmettere (solo per utenti autenticati)"
@@ -704,8 +704,8 @@ it:
     post_menu_hidden_items: "Le voci di menu da nascondere per difetto nel menu di composizione del messaggio, a meno che non vengano premuti i punti di sospensione per espanderle."
     share_links: "Determina quali elementi appaiono nella finestra di condivisione e in quale ordine."
     track_external_right_clicks: "Segui i collegamenti esterni sui quali viene fatto click destro (es: apri in una nuova tab). Disabilitato di default perché riscrive le URL"
-    site_contact_username: "Un nome utente valido dello staff da cui inviare tutti i messaggi privati automatici. Se lasciato vuoto verrà usato l'account System di default."
-    send_welcome_message: "Invia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
+    site_contact_username: "Un utente dello staff valido da cui inviare tutti i messaggi automatici. Se lasciato vuoto verrà usato l'account System di default."
+    send_welcome_message: "nvia a tutti i nuovi utenti un messaggio di benvenuto con una guida di avvio rapido."
     suppress_reply_directly_below: "Non mostrare il conteggio espandibile delle risposte quando c'è una sola risposta sotto quel messaggio."
     suppress_reply_directly_above: "Non mostrare in-risposta-a espandibile in un messaggio quando c'è una sola risposta sopra quel messaggio. "
     suppress_reply_when_quoting: "Non mostrare in-risposta-a espandibile in un messaggio quando il messaggio include la citazione."
@@ -741,7 +741,7 @@ it:
     sso_secret: "Stringa segreta utilizzata per autenticare crittograficamente le informazioni SSO, assicurati che sia lunga almeno 10 caratteri"
     sso_overrides_email: "Sostituisce le email locali con quelle del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero avvenire discrepanze a causa delle direttive per le email locali)"
     sso_overrides_username: "Sovrascrive il nome utente locale con quello del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero verificarsi discrepanze a causa delle differenze tra lunghezza effettiva e richiesta del nome utente)"
-    sso_overrides_name: "Sovrascrive il nome locale con quello del sito esterno con cui ci si è connessi tramite SSO (ATTENZIONE: potrebbero verificarsi discrepanze a causa della normalizzazione dei nomi locali)"
+    sso_overrides_name: "Sovrascrive il nome locale con quello del sito esterno con cui ci si è connessi tramite SSO "
     sso_overrides_avatar: "Sostituisce l'avatar dell'utente con un avatar su un sito esterno usando SSO. Se abilitato, si raccomanda di disabilitare allow_uploaded_avatars"
     enable_local_logins: "Abilita account basati su login con nome utente e password locali. (Nota: deve essere abilitato affinché funzionino gli inviti)"
     allow_new_registrations: "Abilita la registrazione di nuovi utenti. Se deselezionato, non sarà possibile creare nuovi account."
@@ -776,7 +776,7 @@ it:
     max_bookmarks_per_day: "Massimo numero di segnalibri per utente al giorno."
     max_edits_per_day: "Massimo numero di modifiche per utente al giorno."
     max_topics_per_day: "Massimo numero di argomenti che un utente può creare al giorno."
-    max_private_messages_per_day: "Numero massimo di messaggi privati che gli utenti possono creare al giorno."
+    max_private_messages_per_day: "Numero massimo di messaggi che gli utenti possono creare al giorno."
     max_invites_per_day: "Numero massimo di inviti che un utente può inviare in un giorno."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
@@ -825,7 +825,7 @@ it:
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
     email_posts_context: "Quante risposte precedenti inserire come contesto nelle email di notifica."
     flush_timings_secs: "Frequenza di svuotamento dei dati temporali verso il server, in secondi."
-    title_max_word_length: "Numero massimo di caratteri che compongono il titolo di un argomento."
+    title_max_word_length: "La lunghezza massima di una parola, in caratteri, nel titolo di un argomento."
     title_min_entropy: "Minima entropia (caratteri unici) richiesti come titolo di un argomento."
     body_min_entropy: "Minima entropia (caratteri unici) richiesti come corpo di un messaggio."
     title_fancy_entities: "Converti caratteri ASCII comuni in HTML nei titoli dell'argomento, tipo SmartyPants http://daringfireball.net/projects/smartypants/"
@@ -855,21 +855,21 @@ it:
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
     white_listed_spam_host_domains: "Una lista di domini esclusi dall'host spam testing. Ai nuovi utenti non verrà mai impedito di creare messaggi con link a questi domini."
-    staff_like_weight: "Peso extra attribuito ai \"mi piace\" fatti dallo staff."
+    staff_like_weight: "Peso extra attribuito ai \"mi piace\" dati dallo staff."
     topic_view_duration_hours: "Conta una nuova visita all'argomento una volta sola per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
-    max_new_accounts_per_registration_ip: "Se vi sono già (n) account con rust level 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove registrazioni utente da questo IP."
+    max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di esperienza 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove registrazioni utente da questo IP."
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     disable_emails: "Evita che Discourse invii qualunque tipo di email"
     pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
     pop3_polling_port: "La porta dell'account POP3."
     pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
-    pop3_polling_username: "Il nome utente dell'account POP3 per la recezione di email."
-    pop3_polling_password: "La password dell'account POP3 per la recezione di email."
+    pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
+    pop3_polling_password: "La password dell'account POP3 per la ricezione di email."
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
-    email_prefix: "L'[etichtta] utilizzata nell'oggetto delle email. Di default sarà 'titolo' se non impostato."
+    email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi anziché assoluti. Per esempio, 7g anzichè 20 feb."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
@@ -914,8 +914,6 @@ it:
     edited: "%{display_username} ha modificato il tuo messaggio in %{link}"
     posted: "%{display_username} ha commentato in %{link}"
     moved_post: "%{display_username} ha spostato il tuo messaggio in %{link}"
-    private_message: "%{display_username} ti ha inviato un messaggio privato: %{link}"
-    invited_to_private_message: "%{display_username} ti ha invitato in un messaggio privato: %{link}"
     invitee_accepted: "%{display_username} ha accettato il tuo invito"
     linked: "%{display_username} ti ha collegato in %{link}"
     granted_badge: "Hai guadagnato %{link}"
@@ -989,7 +987,7 @@ it:
     errors: "%{errors}"
     not_available: "Non disponibile. Prova %{suggestion}?"
     something_already_taken: "Qualcosa è andato storto, forse il nome utente o l'email sono già registrati. Prova a recuperare la password."
-    omniauth_error: "Si è verificato un errore nell'autorizzazione del tuo account. Forse non hai approvato l'autorizzazione?"
+    omniauth_error: "Si è verificato un errore nell'autorizzazione del tuo account. Hai approvato l'autorizzazione?"
     omniauth_error_unknown: "Qualcosa è andato storto durante il collegamento, per favore riprova."
     new_registrations_disabled: "Non sono permesse nuove registrazioni al momento."
     password_too_long: "Le password sono limitate a 200 caratteri."
@@ -1066,100 +1064,10 @@ it:
         Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.
 
          Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Questo messaggio privato contiene alcune indicazioni per cominciare.
-
-        ## Continua a scorrere la pagina
-
-        Non ci sono pulsanti o numeri delle pagine successive - per leggere di più, **scorri semplicemente in giù la pagina**
-
-        I nuovi post compariranno automaticamente man mano.
-
-        ## Dove mi trovo?
-
-        - Per fare una ricerca, per la tua pagina utente o per il menu, **usa i pulsanti icona <kbd>☰</kbd> in alto a destra**.
-
-        - Il titolo di una discussione porta sempre al prossimo post non letto. Usa la data dell'ultima attività per saltare rapidamente al primo o ultimo post in una discussione.
-
-        - Quando leggi una discussione, vai in cima &uarr; selezionando il titolo della discussione. Seleziona la barra di avanzamento verde che si trova in basso a destra per mostrare tutti i controlli di navigazione, o usa i tasti <kbd>inizio</kbd> e <kbd>fine</kbd> della tastiera.
-
-            <img src="/images/welcome/progress-bar.png" width="143" height="39">
-
-        ## Come faccio a rispondere?
-
-        - Per rispondere alla discussione generale, usa il pulsante Rispondi <img src="/images/welcome/reply-topic.png" width="29" height="25">  in fondo alla pagina.
-
-        - Per rispondere a un post specifico, usa il pulsante Rispondi <img src="/images/welcome/reply-post.png" width="29" height="25"> su quel messaggio.
-
-        - Per portare la conversazione in una nuova direzione, ma mantenendole collegate, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Rispondi come nuovo argomento alla destra del messaggio.
-
-        Per citare qualcuno nella tua risposta, seleziona il testo che desideri citare e fai clic su uno dei pulsanti Rispondi.
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Per mandare una notifica a qualcuno nella tua risposta, menziona il suo nome. Scrivere `@` ed apparirà un completatore automatico.
-
-        <img src="/images/welcome/username-completion.png" width="230" height="131">
-
-        For [standard Emoji](http://www.emoji.codes/), just start typing `:` or the traditional smileys `:)` :smile:
-
-        ## Che altro posso fare?
-
-        In fondo a ogni messaggio ci sono dei pulsanti attivi.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Per dire a qualcuno che ti è piaciuto il suo messaggio, usa il bottone **Mi piace** in fondo al messaggio. Se trovi un messaggio con dei problemi, usa subito il bottone **Segnala** in fondo al post e fallo sapere privatamente all'autore o allo staff.
-
-        Puoi anche **condividere** un link a un messaggio, o fare un **segnalibro** di un messaggio per usarlo più tardi sulla tua pagina utente.
-
-        ## Chi sta parlando con me?
-
-        Quando qualcuno risponde a un tuo post, lo cita o menziona il tuo `@nome`, comparirà un numero sul pulsante delle conversazioni in alto a destra nella pagina. Usalo accedere alle tue **notifiche**.
-
-        <img src="/images/welcome/notification-panel.png" width="178" height="59">
-
-        Non preoccuparti di perdere delle risposte – se non sei online quando arrivano, ti verranno inviate per email le risposte dirette (e i messaggi privati) che arrivano.
-
-        ## Quand'è che le conversazioni sono nuove?
-
-        Di norma tutte le conversazioni più recenti di due giorni si considerano nuove, e verrà seguita automaticamente ogni conversazione a cui tu abbia partecipato (risposto, creato, o letto per un certo tempo).
-
-        Vedrai gli indicatori blu "nuovo" e "numero" accanto a queste conversazioni:
-
-        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Puoi modificare le impostazioni di notifica di ciascuna discussione con i controlli in fondo al topic (questa impostazione si può anche definire per ciascuna categoria). Per modificare il modo in cui segui le discussioni, o la definizione di nuovo, vedi le [tue preferenze utente](%{baseurl}/my/preferences).
-
-        ## Perché non posso fare certe cose?
-
-        Per ragioni di sicurezza i nuovo utenti hanno alcune limitazioni. Man mano che parteciperai guadagnerai la fiducia della comunità, ne diverrai partecipante a pieno titolo  e questi limiti verranno rimossi automaticamente. Ad un [livello di fiducia](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) sufficientemente alto guadagnerai ulteriori capacità per aiutarci a gestire insieme questa comunità.
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n %{new_user_tips} \n\nNoi crediamo sempre in un [comportamento comunitario civile](%{base_url}/guidelines). \n\nBuona permanenza!\n\n(Se vuoi comunicare in privato con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio privato.)\n"
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: |
-        Grazie per aver accettato l'invito a %{site_name} -- benvenuto/a!
-
-        Ti abbiamo creato il nuovo account **%{username}** e sei autenticato sul sito. Puoi cambiare il tuo nome visitando [il tuo profilo utente][prefs].
-
-        Per fare login in futuro:
-
-        1. **Usa sempre lo stesso indirizzo email dell'invito originale** quando fai login. Altrimenti non capiremo che sei tu!
-
-        2. Crea una password unica per [il tuo profilo utente][prefs], e usala per fare login.
-
-        %{new_user_tips}
-
-        Crediamo nei [comportamenti civili della comunità](%{base_url}/guidelines), sempre.
-
-        Buona permanenza!
-
-        (Se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio privato.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completato correttamente"
     backup_failed:
@@ -1195,25 +1103,11 @@ it:
     csv_export_failed:
       subject_template: "Esportazione dati fallita"
     email_reject_trust_level:
-      subject_template: "Problema email -- Livello Esperienza insufficente"
       text_body_template: |
         Ci dispiace, ma il tuo messaggio email per %{destination} (con il titolo %{former_title}) non è stato processato.
 
         Il tuo utente non ha il livello di esperienza richiesto per inviare nuovi argomenti a questo indirizzo email. Se credi che ciò sia un errore, contatta un membro dello staff.
-    email_reject_no_account:
-      subject_template: "Problema relativo all'email -- Account Sconosciuto"
-    email_reject_empty:
-      subject_template: "Problema relativo all'email -- Nessun Contenuto"
-    email_reject_parsing:
-      subject_template: "Problema relativo all'email -- Contenuto non riconosciuto"
-    email_reject_post_error:
-      subject_template: "Problema email -- Errore di invio"
-    email_reject_post_error_specified:
-      subject_template: "Problema email -- Errore di invio"
-    email_reject_topic_not_found:
-      subject_template: "Problema relativo all'email -- Argomento Non Trovato"
     email_reject_topic_closed:
-      subject_template: "Problema email -- Argomento Chiuso"
       text_body_template: |
         Spiacenti, ma la tua email a %{destination} (intitolato %{former_title}) non è andata a buon fine.
 
@@ -1241,6 +1135,14 @@ it:
         La soglia può essere modificata tramite l'impostazione del sito `block_new_user`.
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
+      text_body_template: |
+        Questo è un messaggio automatico.
+
+        Il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con link a %{domains}, ma questi messaggi sono stati bloccati per evitare spam. L'utente è ancora in grado di creare post ma senza link verso %{domains}.
+
+        Per favore [controlla questo utente](%{base_url}%{user_url}).
+
+        Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold` e `white_listed_spam_host_domains` del sito.
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1269,11 +1171,17 @@ it:
     visit_link_to_respond: "Per rispondere, visita %{base_url}%{url}"
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} ti invita alla conversazione privata '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
+      text_body_template: |
+        %{username} ti ha invitato alla discussione '%{topic_title}' su %{site_name}:
+
+        Segui questo link per leggere: %{base_url}%{url}
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} ti invita al partecipare allla discussione '%{topic_title}'"
       text_body_template: |
         %{username} ti ha invitato alla conversazione privata '%{topic_title}' su %{site_name}:
 
-        Segui questo collegamento per visualizzare l'argomento: %{base_url}%{url}
+        Segui questo link per visualizzare il topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1321,7 +1229,7 @@ it:
         %{respond_instructions}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
-      subject_template: "[%{site_name}] Riepilogo del %{date}"
+      subject_template: "[%{site_name}] Riepilogo"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
@@ -1361,7 +1269,7 @@ it:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines).\n\nBuona permanenza!\n\n(Se hai bisogno di comunicare privatamente con i [membri dello staff](%{base_url}/about), rispondi semplicemente a questo messaggio privato.)\n"
+      text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo fermamente in un [comportamento comunitario civile](%{base_url}/guidelines) sempre.\n\nBuona permanenza!\n\n(Se hai bisogno di comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio privato.)\n"
     signup:
       subject_template: "[%{site_name}] Attiva il tuo nuovo account"
       text_body_template: |
@@ -1403,7 +1311,7 @@ it:
     spam_hosts: "Questo nuovo utente ha tentato di creare più messaggi con collegamenti allo stesso dominio. Guarda l'impostazione newuser_spam_host_threeshold."
   email_log:
     no_user: "Non trovo l'utente con l'id %{user_id}"
-    suspended_not_pm: "L'utente è stato sospeso, questo non è un messaggio privato."
+    suspended_not_pm: "L'utente è sospeso, non è un messaggio"
     seen_recently: "L'utente è stato visto di recente"
     post_not_found: "Non trovo un messaggio con id %{post_id}"
     notification_already_read: "La notifica per cui è stata inviata questa mail è già stata letta"
@@ -1417,6 +1325,7 @@ it:
     body_blank: "il corpo è vuoto"
   color_schemes:
     base_theme_name: "Base"
+  about: "Informazioni su"
   guidelines: "Linee Guida"
   privacy: "Privacy"
   edit_this_page: "Modifica questa pagina"
@@ -1451,7 +1360,8 @@ it:
     search_help: "<h2>Suggerimenti</h2>\n<p> \n<ul> \n<li>La ricerca nei titoli è prioritaria, perciò, in caso di dubbi, cerca per titolo</li> \n<li>I risultati migliori si ottengono sempre con parole uniche e non comuni</li> \n<li>Quando possibile, circoscrivi l'ambito della ricerca a una categoria, a un utente o a un argomento in particolare</li> \n</ul> \n</p> \n<h2>Opzioni</h2> \n<p> \n<table> \n<tr><td><code>order:views</code></td><td><code>order:latest</code></td><td colspan=3></td></tr>\n<tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr> \n<tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr> \n<tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr> \n<tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>\n</table> \n</p> \n<p> \n<code>arcobaleni category:parchi status:open order:latest</code> ricercherà gli argomenti contenenti la parola \"arcobaleni\" nella categoria \"parchi\" che non siano chiusi o archiviati, ordinati secondo la data dell'ultimo messaggio. </p>\n"
   badges:
     long_descriptions:
-      first_flag: |
-        Le segnalazioni sono importanti per il benessere della nostra comunità.Se vedi dei messaggi che richiedono l''attenzione dei moderatori,
-        non esitare a segnalarli. Puoi anche usare la maschera di dialogo della segnalazione per mandare un <b>messaggio privato</b> agli utenti, una volta che raggiungi
-        trust level 1.
+      first_flag: "Le segnalazioni sono importanti per il benessere della tua comunità. Se noti dei messaggi che richiedono l'attenzione dei moderatori, non esitare a segnalarli. Puoi anche usare la finestra di segnalazione per inviare un <b>messaggio</b> agli utenti, una volta che avrai raggiunto il \nlivello di esperienza 1.\n"
+      anniversary: "Bla bla bla \nBla bla bla \n"
+      good_share: "Bla bla bla \nBla bla bla\n"
+      great_share: "Bla bla bla \nBla bla bla \n"
+      nice_post: "Bla bla bla \nBla bla bla \n"
