@@ -1,10 +1,10 @@
-$direction: ltr;
-$default-float: left;
-$opposite-float: right;
+//$direction: ltr;
+//$default-float: left;
+//$opposite-float: right;
 
-//$direction: rtl;
-//$default-float: right;
-//$opposite-float: left;
+$direction: rtl;
+$default-float: right;
+$opposite-float: left;
 
 // Mixins
 
@@ -48,16 +48,6 @@ $opposite-float: right;
   }
 }
 
-// In case someone uses them
-
-@mixin padding-top($unit) {
-  padding-top: $unit;
-}
-
-@mixin padding-bottom($unit) {
-  padding-bottom: $unit;
-}
-
 // replaces margin-left:
 @mixin margin-left($margin) {
   @if $default-float == left {
@@ -74,16 +64,6 @@ $opposite-float: right;
   } @else {
     margin-left: $margin;
   }
-}
-
-// In case someone uses them
-
-@mixin margin-top($unit) {
-  margin-top: $unit;
-}
-
-@mixin margin-bottom($unit) {
-  margin-bottom: $unit;
 }
 
 // replaces margin:
