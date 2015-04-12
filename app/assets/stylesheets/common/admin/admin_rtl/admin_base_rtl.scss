@@ -1,0 +1,1474 @@
+/ these are the styles associated with the Discourse admin section
+// Set the layout direction.
+$disc-direction: rtl;
+
+@import "common/foundation/multi_directional_mixins";
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
+
+.admin-contents table {
+  width: 100%;
+  tr {@include text-align(left);}
+  td, th {@include padding(8px);}
+  th {border-top: 1px solid scale-color-diff();}
+  td {border-bottom: 1px solid scale-color-diff(); border-top: 1px solid scale-color-diff();}
+  tr:hover { background-color: darken($secondary, 2.5%); }
+  tr.selected { background-color: lighten($primary, 80%); }
+  .filters input { margin-bottom: 0; }
+}
+
+td.flaggers td {
+  border-bottom: none;
+  border-top: none;
+}
+
+.content-list li a span.count {
+  font-size: 0.857em;
+  @include float(right);
+  @include margin-right(10px);
+  background-color: scale-color-diff();
+  @include padding(2px 5px);
+  border-radius: 5px;
+  color: $primary;
+}
+
+.admin-content {
+  margin-bottom: 50px;
+  .admin-contents {
+    @include padding(8px);
+    @include clearfix();
+  }
+
+  .view-options {
+    @include float(right);
+  }
+  table.report {
+    margin-top: 20px;
+    tr {
+      th:nth-of-type(1) {
+        width: 20%;
+      }
+    }
+
+    .bar-container {
+      @include float(left);
+      width: 300px;
+      @include margin-right(15px);
+      margin-bottom: 5px;
+      display: inline-block;
+
+      .bar {
+        margin-top: 5px;
+        background-color: $tertiary;
+        display: inline-block;
+        @include text-align(right);
+        @include padding-right(8px);
+        color: $secondary;
+      }
+    }
+  }
+}
+
+.ip-lookup {
+  position: relative;
+  display: inline-block;
+
+  .location-box {
+    position: absolute;
+    width: 460px;
+    @include right(0px);
+    z-index: 990;
+    box-shadow: 0 2px 6px rgba(0,0,0, .8);
+    margin-top: -2px;
+    background-color: $secondary;
+    @include padding(12px 12px 5px);
+
+    .other-accounts {
+      @include margin(5px 0 0);
+      max-height: 200px;
+      overflow: auto;
+      width: 455px;
+      ul { @include margin(0); }
+      li { list-style: none; }
+      tr td:first-of-type { width: 130px; }
+    }
+  }
+}
+
+.admin-container {
+  margin-top: 20px;
+}
+
+.admin-title {
+  height: 45px;
+}
+
+.admin-controls {
+  background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+  @include padding(10px 10px 3px 0);
+  height: 35px;
+  .nav.nav-pills {
+    li.active {
+      a {
+        border-color: scale-color-diff();
+        background-color: lighten($primary, 40%);
+        &:hover {
+          background-color: lighten($primary, 40%);
+        }
+      }
+    }
+  }
+  h1 {
+    font-size: 1.429em;
+    line-height: 25px;
+    color: $primary;
+  }
+  .controls {
+    @include margin-left(10px);
+  }
+  button {
+    @include margin-right(5px);
+
+  }
+  input[type=text] {
+    display: inline-block;
+    @include float(left);
+  }
+  .result-message {
+    display: inline-block;
+    @include padding-left(10px);
+    padding-top: 5px;
+  }
+  .username {
+    input[type=text] {
+      width: 240px;
+    }
+  }
+  .search {
+    @include float(right);
+    @include margin-left(10px);
+    label {
+      margin-top: 5px;
+    }
+  }
+  .toggle {
+    margin-top: 8px;
+    @include float(right);
+
+    span {
+      font-weight: bold;
+    }
+  }
+  label {
+    display: inline-block;
+    @include margin-right(5px);
+  }
+}
+
+.groups, .badges {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+
+    & > div {
+      margin-top: 10px;
+    }
+
+    input, textarea, select {
+      width: 350px;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+    }
+  }
+}
+
+.admin-nav {
+  width: 18.018%;
+  margin-top: 30px;
+  .nav-stacked {
+    border-right: none;
+  }
+  li a.active {
+    color: $secondary;
+    background-color: $quaternary;
+  }
+}
+
+.admin-detail {
+  width: 76.5765%;
+  min-height: 800px;
+  @include margin-left(0);
+  border-left: solid 1px scale-color-diff();
+  @include padding(30px 0 30px 30px);
+}
+
+.settings {
+  .setting {
+    padding-bottom: 20px;
+
+    .setting-label {
+      @include float(left);
+      width: 17.6576%;
+      @include margin-right(12px);
+    }
+    .setting-value {
+      @include float(left);
+      width: 53%;
+      .select2-container {
+        width: 100%;
+      }
+      .select2-container-multi .select2-choices {
+        border: none;
+      }
+    }
+    .setting-controls {
+      @include float(left);
+    }
+    .input-setting-string {
+      width: 404px;
+      @include medium-width { width: 314px; }
+      @include small-width  { width: 284px; }
+    }
+    .input-setting-list {
+      width: 408px;
+      @include padding(1px);
+      background-color: $secondary;
+      border: 1px solid scale-color-diff();
+      border-radius: 3px;
+      box-shadow: inset 0 1px 1px rgba(51, 51, 51, 0.3);
+      transition: border linear 0.2s, box-shadow linear 0.2s;
+
+      li.select2-search-choice {
+        cursor: pointer;
+        .select2-search-choice-close {
+          content: "x"
+        }
+      }
+
+      li.sortable-placeholder {
+        @include padding(3px 5px 3px 18px);
+        @include margin(3px 0px 3px 5px);
+        position: relative;
+        line-height: 13px;
+        cursor: default;
+        border: 1px dashed #AAA;
+        border-radius: 3px;
+        background-clip: padding-box;
+        -moz-user-select: none;
+        background-color: none;
+        width: 3em;
+        height: 1em;
+      }
+
+    }
+
+    .desc, .validation-error {
+      padding-top: 3px;
+      font-size: 80%;
+      line-height: 1.4em;
+    }
+
+    .validation-error {
+      color: $danger;
+    }
+
+    .desc {
+      color: scale-color($primary, $lightness: 50%);
+    }
+
+    h3 {
+      font-size: 0.929em;
+      font-weight: normal;
+    }
+  }
+
+  .setting.overridden {
+    h3 {
+      color: scale-color($highlight, $lightness: -50%);
+    }
+  }
+
+  .setting.overridden.string {
+    input[type=text] {
+      background-color: dark-light-diff($highlight, $secondary, 50%, -60%);
+    }
+  }
+}
+
+section.details {
+  h1 {
+    font-size: 1.286em;
+    color: $primary;
+    @include padding(5px 10px);
+    @include margin(30px 0 5px 0);
+    border-bottom: 5px solid scale-color-diff();
+  }
+}
+
+#selected-controls {
+  background-color: scale-color($tertiary, $lightness: 75%);
+  @include padding(8px);
+  min-height: 27px;
+  position: fixed;
+  bottom: 0;
+  width: 1075px;
+}
+
+.user-controls {
+  @include padding(5px);
+  clear: both;
+  @include text-align(right);
+}
+
+.display-row.associations .value {
+  width: 750px;
+}
+
+.display-row {
+  line-height: 30px;
+  @include padding(5px);
+  &:nth-of-type(1) {
+    border-top: 0;
+  }
+  &.highlight-danger {
+    background-color: scale-color($danger, $lightness: 50%);
+  }
+  border-top: 1px solid scale-color-diff();
+  &:before, &:after {
+    display: table;
+    content: "";
+  }
+  &:after {
+    clear: both;
+  }
+  .field {
+    font-weight: bold;
+    width: 17.65765%;
+    @include float(left);
+    @include margin-left(12px);
+  }
+  .value {
+    width: 250px;
+    @include float(left);
+    @include margin-left(12px);
+  }
+  .long-value {
+    width: 800px;
+    @include float(left);
+    @include margin-left(12px);
+    font-size: 0.929em;
+
+    button {
+      @include margin-left(10px);
+    }
+  }
+
+  .controls {
+    width: 480px;
+    @include float(left);
+    @include margin-left(12px);
+    .btn {
+      @include margin-right(5px);
+    }
+  }
+}
+
+// Badges area
+.badges {
+  .content-list ul {
+    margin-bottom: 10px;
+
+    .list-badge {
+      @include float(right);
+      font-size: 11px;
+      font-weight: normal;
+      @include padding(0 6px);
+      color: $secondary;
+      background-color: scale-color($tertiary, $lightness: 50%);
+      border-radius: 3px;
+    }
+  }
+
+  .current-badge {
+    @include margin(20px);
+
+    p.help {
+      @include margin(0);
+      color: scale-color($primary, $lightness: 40%);
+      font-size: 0.9em;
+    }
+  }
+
+  .form-horizontal {
+    .delete-link {
+      @include margin-left(15px);
+      margin-top: 5px;
+    }
+    textarea {
+      height: 200px;
+    }
+  }
+
+  .current-badge-actions {
+    @include margin(10px);
+    @include padding(10px);
+    border-top: 1px solid scale-color($primary, $lightness: 80%);
+  }
+
+  .buttons {
+    @include float(left);
+    width: 200px;
+    .saving {
+      @include padding(5px 0 0 0);
+      @include margin-left(10px);
+      width: 80px;
+      color: $primary;
+    }
+  }
+}
+
+.badge-query-preview {
+  .grant-count, .sample, .error-header {
+    @include margin-left(10px);
+  }
+
+  .badge-errors {
+    font-size: 1em;
+    line-height: 16px;
+    @include padding(4px);
+    background-color: scale-color-diff();
+  }
+
+  .badge-query-plan {
+    font-size: 0.857em;
+    line-height: 13px;
+    @include padding(4px);
+    background-color: scale-color-diff();
+  }
+
+  .count-warning {
+    background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
+    @include margin(0 0 7px 0);
+    @include padding(10px 20px);
+
+    p {
+      @include margin(0);
+    }
+    .heading {
+      color: $danger;
+      font-weight: bold;
+    }
+  }
+}
+
+// Groups area
+.groups {
+  .ac-wrap {
+    width: 100% !important;
+    border-color: scale-color($primary, $lightness: 75%);
+    .item {
+      width: 190px;
+      @include margin-right(0 !important);
+    }
+  }
+  .next, .previous {
+    color: #333 !important;
+    &.disabled {
+      color: #aaa !important;
+    }
+  }
+  .btn.add {
+    margin-top: 7px;
+  }
+  .controls {
+    margin-top: 10px;
+  }
+  .select2-container {
+    width: 100%;
+  }
+  .select2-choices {
+    width: 100%;
+    border-color: scale-color($primary, $lightness: 75%);
+  }
+}
+
+// Customise area
+.customize {
+  .admin-footer {
+    margin-top: 20px;
+  }
+  .current-style.maximized {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    @include left(0);
+    @include right(0);
+    z-index: 100000;
+    background-color: white;
+    width: 100%;
+    @include padding(0);
+    @include margin(0);
+    .wrapper {
+      position: absolute;
+      top: 20px;
+      bottom: 10px;
+      @include left(20px);
+      @include right(20px);
+    }
+  }
+  .nav.nav-pills {
+    @include margin-left(10px);
+  }
+  .content-list, .current-style {
+    @include float(left);
+  }
+  .content-list ul {
+    margin-bottom: 10px;
+  }
+  .current-style {
+    .nav.nav-pills{
+      position: relative;
+    }
+    .toggle-mobile {
+      position: absolute;
+      @include right(35px);
+      font-size: 20px;
+    }
+    .toggle-maximize {
+      position: absolute;
+      @include right(-5px);
+    }
+    .delete-link {
+      @include margin-left(15px);
+      margin-top: 5px;
+    }
+    .preview-link {
+      @include margin-left(15px);
+    }
+    @include padding-left(10px);
+    width: 70%;
+    .style-name {
+      width: 350px;
+      height: 25px;
+    }
+    .ace-wrapper {
+      position: relative;
+      height: 400px;
+      width: 100%;
+    }
+    &.maximized {
+      .admin-container {
+        position: absolute;
+        bottom: 50px;
+        top: 80px;
+        width: 100%;
+      }
+      .admin-footer {
+        position: absolute;
+        bottom: 10px;
+      }
+      .ace-wrapper {
+        height: 100%;
+      }
+    }
+    .ace_editor {
+      position: absolute;
+      @include left(0);
+      @include right(0);
+      top: 0;
+      bottom: 0;
+    }
+    .status-actions {
+      @include float(right);
+      margin-top: 7px;
+      span {
+        @include margin-right(10px);
+      }
+    }
+    .buttons {
+      @include float(left);
+      width: 200px;
+      .saving {
+        @include padding(5px 0 0 0);
+        @include margin-left(10px);
+        width: 80px;
+        color: $primary;
+      }
+    }
+  }
+  .color-scheme {
+    .controls {
+      span, button, a {
+        @include margin-right(10px);
+      }
+    }
+  }
+  .colors {
+    thead th       { border: none; }
+    td.hex         { width: 100px; }
+    td.actions     { width: 200px; }
+    .hex-input     { width: 80px; margin-bottom: 0; }
+    .hex           { @include text-align(center); }
+    .description   { color: scale-color($primary, $lightness: 50%); }
+
+    .invalid .hex input {
+      background-color: white;
+      color: black;
+      border-color: $danger;
+    }
+  }
+}
+
+
+.admin-flags {
+  table-layout: fixed;
+
+  .hidden-post td.excerpt, .hidden-post td.user { opacity: 0.5; }
+  .deleted td.excerpt, .deleted td.user { background-color: scale-color($danger, $lightness: 70%); }
+  .message { background-color: dark-light-diff($highlight, $secondary, 50%, -70%); }
+  .message:hover { background-color: dark-light-diff($highlight, $secondary, 60%, -60%); }
+  td { vertical-align: top; }
+  th { @include text-align(left); }
+  .user {
+    width: 25px;
+    @include padding(8px 0 0 0);
+    @include text-align(center);
+  }
+  .excerpt {
+    max-width: 700px;
+    width: 75%;
+    @include padding(8px);
+    word-wrap: break-word;
+    .fa { display: inline-block; }
+    h3 {
+      max-height: 1.2em;
+      overflow: hidden;
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+  }
+  .flaggers {
+    font-size: 11px;
+    @include padding(8px 0 0 5px);
+    .avatar {
+      width: 25px;
+    }
+    table {
+      max-width: 145px;
+    }
+    tr {
+      height: 44px;
+    }
+    td {
+      vertical-align: middle;
+      @include padding(3px);
+      line-height: 1.4;
+    }
+  }
+  .action {
+    button { @include margin(4px); }
+    @include text-align(right);
+    padding-bottom: 20px;
+  }
+  td p {
+    font-size: 0.929em;
+    @include margin(0 0 5px 0);
+  }
+  .flagged-posts { background: $danger; }
+}
+
+/* Dashboard */
+
+.dashboard-left {
+  @include float(left);
+  margin-top: 10px;
+  width: 60%;
+}
+.dashboard-right {
+  @include float(right);
+  margin-top: 10px;
+  width: 40%;
+
+
+  .dashboard-stats {
+    width: 100%;
+    @include margin-left(0);
+  }
+}
+
+.version-check {
+  margin-top: 10px;
+
+  .version-number {
+    font-size: 1.286em;
+    font-weight: bold;
+    @include text-align(center);
+  }
+
+  .face {
+    width: 20px;
+  }
+
+  .version-notes .fa {
+    vertical-align: bottom;
+  }
+
+  &.critical .version-notes .normal-note {
+    display: none;
+  }
+  &.normal .version-notes .critical-note {
+    display: none;
+  }
+
+  .fa {
+    font-size: 1.857em;
+  }
+
+  .up-to-date {
+    color: $success;
+  }
+  .updates-available {
+    color: $danger;
+  }
+  .critical-updates-available {
+    color: $danger;
+  }
+}
+
+.update-nag {
+  i.fa {
+    font-size: 1.429em;
+  }
+}
+
+table.api-keys {
+  margin-top: 10px;
+  width: 100%;
+
+  th {
+    @include text-align(left);
+    @include padding(5px);
+  }
+
+  td {
+    @include padding(5px);
+  }
+
+  td.key {
+    font-size: 0.857em;
+  }
+}
+
+.dashboard-stats {
+  margin-bottom: 30px;
+  @include margin-right(40px);
+  h4 {
+    font-weight: normal;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+
+    .title {
+      i.fa {
+        color: $primary;
+      }
+    }
+
+    th {
+      font-weight: normal;
+      @include text-align(center);
+      background: dark-light-diff($primary, $secondary, 80%, -65%);
+    }
+    th.title {
+      @include text-align(left);
+    }
+    thead {
+      tr:hover > td {
+        background-color: $secondary;
+      }
+    }
+
+    td.value {
+      font-weight: bold;
+      @include text-align(center);
+
+      i {
+        display: none;
+      }
+
+      &.trending-up {
+        i.up {
+          color: $success;
+          display: inline;
+        }
+      }
+      &.trending-down {
+        i.down {
+          color: $danger;
+          display: inline;
+        }
+      }
+      &.no-change {
+        i.down {
+          display: inline;
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  &.detected-problems {
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
+    margin-bottom: 20px;
+    margin-top: 10px;
+
+    .look-here {
+      @include float(left);
+      @include margin(20px 10px 0 10px);
+
+      .fa {
+        font-size: 2.286em
+      ;
+        vertical-align: middle;
+        color: $primary
+      }
+    }
+
+    .problem-messages {
+      @include float(left);
+      width: 80%;
+      @include margin-left(1%);
+      a {
+        text-decoration: underline;
+      }
+      .actions {
+        @include text-align(right);
+      }
+      .btn {
+        background: dark-light-diff($primary, $secondary, 80%, -85%);
+      }
+      ul {
+        @include margin-left(0);
+        @include padding-left(20px);
+        li {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+
+  &.totals {
+    table {
+      width: auto;
+    }
+    margin-top: 12px;
+    @include padding-left(5px);
+    .value {
+      @include text-align(left);
+      font-weight: bold;
+      @include padding-left(8px);
+      @include padding-right(30px);
+    }
+  }
+
+  &.trust-levels {
+    margin-bottom: 0;
+    table {
+      margin-bottom: 0;
+    }
+    td.value {
+      width: 45px;
+    }
+  }
+
+  .referred-topic-title {
+    width: 355px;
+    @include medium-width { width: 305px; }
+    @include small-width  { width: 265px; }
+  }
+}
+
+
+.commits-widget {
+  border: solid 1px scale-color-diff();
+  height: 180px;
+  margin-bottom: 36px;
+
+  ul, li {
+    @include margin(0);
+    @include padding(0);
+  }
+  ul {
+    list-style: none;
+  }
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .header {
+    color: $primary;
+    font-weight: bold;
+    height: 30px;
+    background: dark-light-diff($primary, $secondary, 80%, -75%);
+    cursor: pointer;
+
+    h1 {
+      font-size: 1.286em;
+      @include margin(5px 0 0 8px);
+      display: inline-block;
+      line-height: 1.0em;
+    }
+  }
+
+  .header:hover h1 {
+    color: $tertiary;
+  }
+
+  .commits-list {
+    height: 149px;
+    overflow-y:auto;
+
+    li {
+      @extend .clearfix;
+      line-height: 1.0em;
+      @include padding(6px 8px);
+      background-color: scale-color-diff();
+      .left {
+        @include float(left);
+      }
+      .right {
+        @include margin-left(52px);
+      }
+
+      img {
+        margin-top: 2px;
+        border: solid 1px scale-color-diff();
+        @include padding(2px);
+        background-color: $secondary;
+      }
+
+      .commit-message {
+        color: $primary;
+        font-size: 0.857em;
+        font-weight: bold;
+      }
+
+      .commit-meta {
+        color: $primary;
+        font-size: 0.857em;
+      }
+
+      .committer-name {
+        font-weight: bold;
+        color: $primary;
+      }
+    }
+    li:last-child {
+      border: none;
+    }
+  }
+
+  // Always show the scrollbar:
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: dark-light-diff($primary, $secondary, 90%, -75%);
+    -webkit-border-radius: 3px;
+  }
+  ::-webkit-scrollbar-track {
+    border-left: solid 1px scale-color-diff();
+  }
+}
+
+.content-list {
+
+  h3 {
+    color: dark-light-diff($primary, $secondary, 50%, -60%);
+    font-size: 1.071em;
+    @include padding-left(5px);
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style: none;
+    @include margin(0);
+
+    li:first-of-type {
+      border-top: 1px solid scale-color-diff();
+    }
+    li {
+      border-bottom: 1px solid scale-color-diff();
+    }
+
+    li a {
+      display: block;
+      @include padding(10px);
+      color: $primary;
+
+      &:hover {
+        background-color: scale-color-diff();
+        color: $primary;
+      }
+
+      &.active {
+        font-weight: bold;
+        color: $primary;
+      }
+    }
+  }
+}
+
+.content-editor {
+  min-height: 500px;
+
+  @include float(left);
+  width: 54.0540%;
+  margin-left: 1.8018%;
+
+  p.description {
+    color: $primary;
+  }
+
+  .controls {
+    margin-top: 10px;
+  }
+
+  #pagedown-editor {
+    width: 98%;
+  }
+
+  textarea.plain {
+    width: 98%;
+    height: 200px;
+  }
+
+  #wmd-input {
+    width: 98%;
+    height: 200px;
+  }
+
+  .ace-wrapper {
+    position: relative;
+    height: 600px;
+    width: 100%;
+  }
+  .ace_editor {
+    position: absolute;
+    @include left(0);
+    @include right(0);
+    top: 0;
+    bottom: 0;
+  }
+
+}
+
+.row.groups {
+  input[type='text'] {
+    width: 500px;
+  }
+  input#group-users {
+    width: 600px;
+  }
+}
+
+// Logs
+
+.admin-logs-table {
+  input.ember-text-field {
+    @include padding(1px 4px);
+  }
+  .btn {
+    @include padding(2px 8px);
+    .fa {
+      @include margin-right(2px);
+    }
+  }
+}
+
+.screened-emails, .screened-urls, .screened-ip-addresses {
+  .email, .url, .domain {
+    width: 300px;
+  }
+  .action, .match_count, .last_match_at, .created_at {
+    @include text-align(center);
+    width: 9.9099%;
+  }
+}
+
+.screened-ip-address-form {
+  @include margin-left(6px);
+  .combobox {
+    width: 130px;
+  }
+}
+
+.screened-emails, .screened-urls {
+  .ip_address {
+    width: 9.9099%;
+    @include text-align(center);
+  }
+}
+.screened-ip-addresses {
+  .ip_address {
+    width: 150px;
+    @include text-align(left);
+    input {
+      width: 130px;
+    }
+  }
+  .col.actions {
+    width: 275px;
+    padding-top: 4px;
+    a {
+      text-decoration: underline;
+    }
+  }
+}
+
+.staff-actions {
+  width: 100%;
+  .action {
+    width: 10.810%;
+  }
+  .staff_user {
+    width: 9.009%;
+  }
+  .subject {
+    width: 18.018%;
+  }
+  .created_at {
+    width: 4.5045%;
+  }
+  .context {
+    width: 18.018%;
+  }
+  .created_at {
+    @include text-align(center);
+  }
+  .details {
+    width: 300px;
+    a {
+      text-decoration: underline;
+    }
+    &.value {
+      height: 70px;
+    }
+  }
+}
+
+.staff-action-logs-controls {
+  @include margin(0 0 20px 6px);
+  a.filter {
+    display: inline-block;
+    background-color: scale-color($primary, $lightness: 75%);
+    @include padding(3px 10px);
+    border-radius: 3px;
+
+    color: $primary;
+    &:hover {
+      color: $primary;
+      background-color: scale-color-diff();
+
+
+    }
+    .label {
+      font-weight: bold;
+    }
+    i {
+      @include margin-left(6px);
+    }
+  }
+}
+
+.staff-action-logs-instructions {
+  @include margin(0 0 10px 10px);
+}
+
+// Ember.ListView
+
+.ember-list-view {
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+.ember-list-item-view {
+  position: absolute;
+}
+
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses {
+
+  border-bottom: dotted 1px scale-color($primary, $lightness: 75%);
+
+  .heading-container {
+    width: 100%;
+    background-color: scale-color-diff();
+  }
+  .col.heading {
+    font-weight: bold;
+    @include padding(4px 0);
+  }
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .ember-list-item-view {
+    width: 100%;
+    border-top: solid 1px scale-color-diff();
+  }
+}
+
+.log-details-modal {
+  .modal-tab {
+    width: 95%;
+  }
+}
+
+.tl3-requirements {
+  .fa-check {
+    color: $success;
+  }
+  .fa-times {
+    color: $danger;
+  }
+}
+
+// Backups
+// --------------------------------------------------
+
+$rollback: #3D9970;
+$rollback-dark: darken($rollback, 10%) !default;
+$rollback-darker: darken($rollback, 20%) !default;
+
+.btn-rollback {
+  color: $secondary;
+  background: $rollback;
+  &:hover {
+    background: $rollback-dark;
+  }
+  &:active {
+    @include linear-gradient($rollback-darker, $rollback-dark);
+  }
+  &[disabled] {
+    background: $rollback;
+  }
+}
+
+.admin-backups-logs {
+  max-height: 500px;
+  overflow: auto;
+}
+
+
+button.ru {
+  position: relative;
+  min-width: 110px;
+}
+
+.ru-progress {
+  position: absolute;
+  top: 0;
+  @include left(0);
+  height: 100%;
+  background: rgba(0, 175, 0, 0.3);
+}
+
+.is-uploading:hover .ru-progress {
+  background: rgba(200, 0, 0, 0.3);
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.delete-flag-modal, .agree-flag-modal {
+  button {
+    display: block;
+    @include margin(10px 0 10px 10px);
+    @include padding(10px 15px);
+  }
+}
+
+.start-backup-modal {
+  .btn {
+    @include margin(10px 0 10px 5px);
+  }
+  .btn:first-of-type {
+    @include margin-left(10px);
+  }
+}
+
+@media all
+and (max-width : 850px) {
+  .nav-stacked {
+    .glyph {width: auto; position: relative;}
+    > li > a {padding: 13px}
+  }
+}
+
+@media all
+and (min-width : 320px)
+and (max-width : 500px) {
+
+  .full-width { @include margin(0); }
+  .site-settings-nav { width: 100%; }
+  .site-settings-detail {
+    width: 100%;
+    @include padding(0);
+    border: none;
+
+    .settings .setting {
+      .setting-label {
+        @include float(left);
+        width: 100%;
+        h3 {
+          margin-bottom: 5px;
+          font-weight: bold;
+          margin-top: 25px;
+        }
+      }
+      .setting-value {
+        width: 100%;
+      }
+      label {
+        font-size: 0.929em;
+      }
+    }
+  }
+
+  .content-editor {
+    width: 100%;
+    #pagedown-editor {
+      box-sizing: border-box;
+    }
+  }
+
+  div.ac-wrap {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .admin-container {
+    h2 {
+      @include float(left);
+    }
+  }
+
+  .dashboard-left, .dashboard-right { width: 100%; }
+  .dashboard-stats { @include margin(0); }
+
+  .badges {
+    .current-badge {@include margin(70px 0 0 0);}
+    .current-badge-actions {@include padding(0);}
+  }
+
+  .customize .content-list, .customize .current-style {
+    width: 100%;
+  }
+}
+
+.badge-groupings {
+  list-style: none;
+  @include margin(0);
+  @include padding(10px 3px);
+  li {
+    @include padding(6px 0);
+    width: 600px;
+    border-bottom: 1px solid #dfdfdf;
+  }
+  .actions {
+    font-size: 1.214em;
+    @include float(right);
+    a {
+      @include margin-left(5px);
+    }
+  }
+}
+
+tr.not-activated {
+  td, td a, td a:visited {
+    color: #bbb;
+  }
+}
+.details.not-activated {
+  .username .value, .email .value a, .email .value a:visited {
+    color: #bbb;
+  }
+}
+
+.user-fields {
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  .user-field {
+    @include padding(10px);
+    margin-bottom: 10px;
+    border-bottom: 1px solid scale-color-diff();
+
+    .form-display {
+      width: 25%;
+      display: inline-block;
+      @include float(left);
+    }
+
+    .form-element {
+      @include float(left);
+      width: 25%;
+    }
+
+    .controls {
+      @include float(right);
+      @include text-align(right);
+      width: 20%;
+    }
+
+    .clearfix {
+      clear: both;
+    }
+  }
+}
+
+.preview {
+  margin-top: 5px;
+}
+
+table#user-badges {
+  .reason {
+    max-width: 200px;
+  }
+}
+
+.url-list {
+  .url {
+    border-bottom: 1px solid #ddd;
+    @include padding(3px);
+    @include margin-right(10px);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .urls {
+    margin-bottom: 10px;
+  }
+
+  input[type=text] {
+    width: 90%;
+  }
+}
