@@ -1,0 +1,16 @@
+@import "vendor/normalize";
+
+// Define the layout direction with the global $disc-direction variable
+$disc-direction: rtl;
+
+@import "common/foundation/multi_directional_mixins";
+@import "common/foundation/helpers";
+@import "common/foundation/base";
+@import "vendor/font_awesome/font-awesome";
+@import "vendor/select2";
+@import "common/foundation/mixins";
+@import "common/foundation/variables";
+@import "common/components/*";
+@import "common/input_tip";
+@import "common/topic-entrance";
+@import "common/base/*";
