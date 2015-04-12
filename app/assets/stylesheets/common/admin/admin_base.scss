@@ -1,6 +1,8 @@
 // these are the styles associated with the Discourse admin section
+// Set the layout direction.
+$disc-direction: ltr;
 
-
+@import "common/foundation/multi_directional_mixins";
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
