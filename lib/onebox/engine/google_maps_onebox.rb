@@ -1,9 +1,37 @@
 module Onebox
   module Engine
+    class CustomGoogleMapsOnebox
+      include Engine
+
+      matches_regexp %r/^(https?:)?\/\/www\.google\.[\w.]{2,}\/maps\/d\/(?:edit|viewer|embed)\?mid=.+$/
+
+      def initialize(link, cache = nil, timeout = nil)
+        super(url_for(link, "embed"), cache, timeout)
+        @thumbnail = url_for(link, "thumbnail")
+      end
+
+      def to_html
+        Helpers.click_to_scroll_div + "<iframe src=\"#{link}\" width=\"690\" height=\"400\" frameborder=\"0\" style=\"border:0\"></iframe>"
+      end
+
+      def placeholder_html
+        "<img src=\"#{CGI.escapeHTML(@thumbnail)}\" width=\"120\" height=\"120\"/>"
+      end
+
+      private
+
+      def url_for(link, kind)
+        uri = URI(link)
+        uri.path = uri.path.sub(/(?<=^\/maps\/d\/)\w+$/, kind)
+        uri.to_s
+      end
+
+    end
+
     class ClassicGoogleMapsOnebox
       include Engine
 
-      matches_regexp /^(https?:)?\/\/((maps|www)\.google\.[\w.]{2,}|goo\.gl)\/maps?.+$/
+      matches_regexp %r/^(https?:)?\/\/((maps|www)\.google\.[\w.]{2,}|goo\.gl)\/maps(?:\/(?!d\/)|\?)/
 
       def initialize(link, cache = nil, timeout = nil)
         super(link, cache, timeout)
@@ -11,7 +39,7 @@ module Onebox
       end
 
       def to_html
-        "<div style=\"background:transparent;position:relative;width:690px;height:400px;top:400px;margin-top:-400px;\" onClick=\"style.pointerEvents='none'\"></div> <iframe src=\"#{link}\" width=\"690px\" height=\"400px\" frameborder=\"0\" style=\"border:0\"></iframe>"
+        Helpers.click_to_scroll_div + "<iframe src=\"#{link}\" width=\"690\" height=\"400\" frameborder=\"0\" style=\"border:0\"></iframe>"
       end
 
       def placeholder_html
@@ -29,6 +57,7 @@ module Onebox
 
         @url = follow_redirect(@url) if @url.include?("www.google")
         query = Hash[*URI(@url).query.split("&").map{|a|a.split("=")}.flatten]
+        raise ArgumentError unless (query.has_key?("spn") || query.has_key?("sspn")) && (query.has_key?("ll") || query.has_key?("sll"))
         @url += "&ll=#{query["sll"]}" if !query["ll"]
         @url += "&spn=#{query["sspn"]}" if !query["spn"]
         if !@placeholder

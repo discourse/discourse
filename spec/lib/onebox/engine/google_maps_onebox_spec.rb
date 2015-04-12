@@ -49,4 +49,28 @@ describe Onebox::Engine::ClassicGoogleMapsOnebox do
     it_should_behave_like "embeddable", :short
   end
 
+  context "maps/d/ url" do
+    let(:link) { "https://www.google.com/maps/d/edit?mid=zPYyZFrHi1MU.kX85W_Y2y2_E" }
+    it "isn't accepted" do
+      expect{ subject }.to raise_exception(ArgumentError)
+    end
+  end
+
+end
+
+describe Onebox::Engine::CustomGoogleMapsOnebox do
+  subject { described_class.new(link) }
+  let(:link) { "https://www.google.com/maps/d/edit?mid=zPYyZFrHi1MU.kX85W_Y2y2_E" }
+
+  it "rewrites url correctly" do
+    subject.url.should == "https://www.google.com/maps/d/embed?mid=zPYyZFrHi1MU.kX85W_Y2y2_E"
+  end
+
+  it "produces an iframe" do
+    subject.to_html.should include("iframe")
+  end
+
+  it "produces a placeholder image" do
+    subject.placeholder_html.should include("img")
+  end
 end

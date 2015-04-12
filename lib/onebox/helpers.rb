@@ -51,5 +51,9 @@ module Onebox
           response.error!
       end
     end
+
+    def self.click_to_scroll_div(width = 690, height = 400)
+      "<div style=\"background:transparent;position:relative;width:#{width}px;height:#{height}px;top:#{height}px;margin-top:-#{height}px;\" onClick=\"style.pointerEvents='none'\"></div>"
+    end
   end
 end
