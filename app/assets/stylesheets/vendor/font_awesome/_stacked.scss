@@ -1,3 +1,4 @@
+
 // Stacked Icons
 // -------------------------
 
@@ -11,9 +12,9 @@
 }
 .#{$fa-css-prefix}-stack-1x, .#{$fa-css-prefix}-stack-2x {
   position: absolute;
-  left: 0;
+  @include left(0);
   width: 100%;
-  text-align: center;
+  @include text-align(center);
 }
 .#{$fa-css-prefix}-stack-1x { line-height: inherit; }
 .#{$fa-css-prefix}-stack-2x { font-size: 2em; }
