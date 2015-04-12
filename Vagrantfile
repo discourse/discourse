@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
 
-  config.vm.provision :shell, :inline => "apt-get -qq update && apt-get -qq -y install ruby1.9.3 build-essential && gem install chef --no-rdoc --no-ri --conservative"
+  config.vm.provision :shell, :inline => "set -x apt-get -qq update && apt-get -qq -y install ruby1.9.3 build-essential && gem install chef --no-rdoc --no-ri --conservative && cd /vagrant && bundle install && bundle exec rake db:migrate && bundle exec rails s"
 
   chef_cookbooks_path = ["chef/cookbooks"]
 
