@@ -1,4 +1,9 @@
+// these are the styles associated with the Discourse admin section
 
+
+@import "common/foundation/variables";
+@import "common/foundation/mixins";
+@import "common/foundation/helpers";
 .admin-contents table {
   width: 100%;
   tr {@include text-align(left);}
