@@ -3,16 +3,16 @@
 
 .#{$fa-css-prefix}-ul {
   @include padding-left(0);
-  margin-left: $fa-li-width;
+  @include margin-left($fa-li-width);
   list-style-type: none;
   > li { position: relative; }
 }
 .#{$fa-css-prefix}-li {
   position: absolute;
-  left: -$fa-li-width;
+  @include left(-$fa-li-width);
   width: $fa-li-width;
   top: (2em / 14);
-  text-align: center;
+  @include text-align(center);
   &.#{$fa-css-prefix}-lg {
     left: -$fa-li-width + (4em / 14);
   }
