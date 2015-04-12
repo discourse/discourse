@@ -1,0 +1,345 @@
+// I'm testing this at http://sassmeister.com/ so I'll just copy the whole mixin
+// source file here.
+
+// Set the global $disc-direction;
+// This is set in the main manifest file.
+// For testing we will define it here and change it throughout this file.
+$disc-direction: ltr;
+
+// Utility functions
+
+// Make sure $disc-direction is defined.
+@function disc-is-defined($value) {
+  @if not global-variable-exists($value) {
+    @error "<$#{$value}> must be defined for this to work";
+  }
+  @return $value;
+}
+
+// Set the html direction -- it has to happen somewhere, maybe not here.
+// Throw an error if direction is not defined;
+html {
+  direction: disc-is-defined(disc-direction);
+}
+
+// Returns the current default float direction.
+// Will return an error if $disc-direction is not defined. This is the only place
+// we are checking for that.
+@function disc-default-float() {
+  @if disc-is-defined(disc-direction) {
+    @return if($disc-direction == ltr, left, right); // if() is the sass ternary operator.
+  }
+}
+
+// Swaps values right/left and top/bottom. It passes all other values unaltered.
+@function disc-switch-direction($dir) {
+  @if $dir == left {
+    @return right;
+  } @elseif $dir == right {
+    @return left;
+  } @elseif $dir == top {
+    @return bottom;
+  } @elseif $dir == bottom {
+    @return top;
+  } @else {
+    @return $dir;
+  }
+}
+
+// Utility mixins
+
+// Append a direction onto a property name and give it a length value.
+@mixin property-direction-length($property, $direction, $length) {
+  #{$property}-#{$direction}: $length;
+}
+
+// Create a margin of a given direction and length.
+@mixin margin-direction-length($direction, $length) {
+  margin-#{$direction}: $length;
+}
+
+// Create padding of a given direction and length.
+@mixin padding-direction-length($direction, $length) {
+  padding-#{$direction}: $length;
+}
+
+// Used to align a property to either left of right.
+// This is used to create the float and text-align mixins.
+@mixin property-align($property, $alignment) {
+  @if disc-default-float() == left {
+    #{$property}: $alignment;
+  } @else {
+    #{$property}: disc-switch-direction($alignment);
+  }
+}
+
+// Used to create the left and right mixins.
+@mixin position-distance($position, $dist) {
+  @if disc-default-float() == left {
+    #{$position}: $dist;
+  } @else {
+    $position: disc-switch-direction($position);
+    #{$position}: $dist;
+  }
+}
+
+// Remove the nth item from a list. It's used to remove the !important flag from a list
+// in the next function.
+@function disc-remove-nth($list, $index) {
+  $result: ();
+  $index: if($index < 0, length($list) + $index + 1, $index);
+  @for $i from 1 through length($list) {
+    @if $i != $index {
+      $result: append($result, nth($list, $i));
+    }
+  }
+  @return $result;
+}
+
+// Used to create the margin and padding mixins - takes a list as an argument to
+// simplify search-and-replace in Discourse source code.
+// Create a property with values of $lengths. The lengths are structured to represent
+// the css pattern for margin and padding arguments.If disc-default-float() == right _and_ there
+// are four length elements, switch the right/left values - the second and fourth elements on the list.
+@mixin property-with-lengths($property, $lengths) {
+  $arg-list-length: length($lengths);
+  $important: null;
+  $property-lengths: ();
+
+  // If the last value of the lengths list is !important, remove it and update the !important variable
+  @if nth($lengths, $arg-list-length) == '!important' {
+    $property-lengths: disc-remove-nth($lengths, $arg-list-length);
+    $important: !important;
+  } @else {
+    $property-lengths: $lengths;
+  }
+
+  // If there are less than 4 values, they are symmetrical for left and right,
+  // we can leave them alone.
+  @if length($property-lengths) < 4 {
+    #{$property}: $property-lengths if($important, $important, null); // `if()` is the sass ternary operator
+  } @elseif length($property-lengths) == 4 {
+    @if disc-default-float() == left {
+      #{$property}: $property-lengths if($important, $important, null);
+    } @else {
+      // Default float is right - we need to switch the left and right values.
+      #{$property}: nth($property-lengths, 1) nth($property-lengths, 4)
+      nth($property-lengths, 3) nth($property-lengths, 2) if($important, $important, null);
+    }
+  } @else {
+    @warn "The `property-with-lengths()` function can take a maximum of 4 lengths";
+  }
+}
+
+// 'Public' mixins
+
+// Used to switch the left/right float values depending on the disc-default-float() value;
+// To be used as a replacement for float: $dir;
+@mixin float($dir) {
+  @include property-align(float, $dir);
+}
+
+// To be used as a replacement for text-align: $dir;
+@mixin text-align($dir) {
+  @include property-align(text-align, $dir);
+}
+
+// To be used in place of margin-left: $length;
+@mixin margin-left($length) {
+  $dir: if(disc-default-float() == left, left, right);
+  @include margin-direction-length($dir, $length);
+}
+
+// To be used in place of margin-right: $length;
+@mixin margin-right($length) {
+  $dir: if(disc-default-float() == left, right, left);
+  @include margin-direction-length($dir, $length);
+}
+
+// To be used in place of padding-left: $length;
+@mixin padding-left($length) {
+  $dir: if(disc-default-float() == left, left, right);
+  @include padding-direction-length($dir, $length);
+}
+
+// To be used in place of padding-right: $length;
+@mixin padding-right($length) {
+  $dir: if(disc-default-float() == left, right, left);
+  @include padding-direction-length($dir, $length);
+}
+
+// To be used in place of margin: $lengths;
+@mixin margin($lengths) {
+  @include property-with-lengths(margin, $lengths);
+}
+
+// To be used in place of padding: $lengths;
+@mixin padding($lengths) {
+  @include property-with-lengths(padding, $lengths);
+}
+
+// To be used in place of left: $dist;
+@mixin left($dist) {
+  @include position-distance(left, $dist);
+}
+
+// To be used in place of right: $dist;
+@mixin right($dist)  {
+  @include position-distance(right, $dist);
+}
+
+/* Tests */
+// -----------------------------------------------------------------------------
+
+/* Direction LTR */
+$disc-direction: ltr;
+
+.test-box-ltr {
+  /* float */
+  @include float(left); /* expect float: left; */
+  @include float(right); /* expect float: right; */
+  @include float(none); /* expect float: none; */
+  @include float(foo); /* expect float: foo; */
+  @include float(this mixin has no error checking); /* expect float: this mixin has no error checking */
+
+  /* text-align */
+  @include text-align(left); /* expect text-align: left; */
+  @include text-align(right); /* expect text-align: right; */
+  @include text-align(center); /* expect text-align: center; */
+  @include text-align(justify); /* expect text-align: justify; */
+  @include text-align(initial); /* expect text-align: initial; */
+  @include text-align(this mixin will let anything past); /* expect text-align: this mixin will let anything past; */
+
+  /* margin-left */
+  @include margin-left(3px); /* expect margin-left: 3px; */
+  @include margin-left(3px !important); /* expect margin-left: 3px !important */
+  @include margin-left(3px 12px); /* expect margin-left: 3px 12px; -- we can add some error checking */
+
+  /* margin-right */
+  @include margin-right(3px); /* expect margin-right: 3px; */
+  @include margin-right(3px !important); /* expect margin-right: 3px !important */
+  @include margin-right(3px 12px); /* expect margin-right: 3px 12px; -- we can add some error checking */
+
+  /* padding-left */
+  @include padding-left(3px); /* expect padding-left: 3px; */
+  @include padding-left(3px !important); /* expect padding-left: 3px !important */
+  @include padding-left(3px 12px); /* expect padding-left: 3px 12px; -- we can add some error checking */
+
+  /* padding-right */
+  @include padding-right(3px); /* expect padding-right: 3px; */
+  @include padding-right(3px !important); /* expect padding-right: 3px !important */
+  @include padding-right(3px 12px); /* expect padding-right: 3px 12px; -- we can add some error checking */
+
+  /* padding */
+  @include padding(12px); /* expect padding: 12px; */
+  @include padding(12px !important); /* expect padding: 12px !important; */
+  @include padding(12px 3px); /* expect padding: 12px 3px; */
+  @include padding(12px 3px !important); /* expect padding: 12px 3px !important; */
+  @include padding(12px 3px 100px); /* expect padding: 12px 3px 100px; */
+  @include padding(12px 3px 100px !important); /* expect padding: 12px 3px 100px !important; */
+  @include padding(12px 3px 100px 50px); /* expect padding: 12px 3px 100px 50px; */
+  @include padding(12px 3px 100px 50px !important); /* expect padding: 12px 3px 100px 50px !important; */
+  @include padding(one two three four); /* expect padding: one two three four; */
+  @include padding(one two three four !important); /* expect padding: one two three four !important; */
+  @include padding(one two three four five); /* expect error */
+
+  /* margin */
+  @include margin(12px); /* expect margin: 12px; */
+  @include margin(12px !important); /* expect margin: 12px !important; */
+  @include margin(12px 3px); /* expect margin: 12px 3px; */
+  @include margin(12px 3px !important); /* expect margin: 12px 3px !important; */
+  @include margin(12px 3px 100px); /* expect margin: 12px 3px 100px; */
+  @include margin(12px 3px 100px !important); /* expect margin: 12px 3px 100px !important; */
+  @include margin(12px 3px 100px 50px); /* expect margin: 12px 3px 100px 50px; */
+  @include margin(12px 3px 100px 50px !important); /* expect margin: 12px 3px 100px 50px !important; */
+  @include margin(one two three four); /* expect margin: one two three four; */
+  @include margin(one two three four !important); /* expect margin: one two three four !important; */
+  @include margin(one two three four five); /* expect error */
+
+  /* left */
+  @include left(3em); /* expect left: 3em; */
+  @include left(foo); /* expect left: foo; */
+  @include left(this lets anything past); /* expect left: this lets anything past; */
+
+  /* right */
+  @include right(3em); /* expect right: 3em; */
+  @include right(foo); /* expect right: foo; */
+  @include right(this lets anything past); /* expect right: this lets anything past; */
+}
+
+/* Change direction to RTL */
+// -----------------------------------------------------------------------------
+$disc-direction: rtl;
+
+.test-box-rtl {
+  /* float */
+  @include float(left); /* expect float: right; */
+  @include float(right); /* expect float: left; */
+  @include float(none); /* expect float: none; */
+  @include float(foo); /* expect float: foo; */
+  @include float(this mixin has no error checking); /* expect float: this mixin has no error checking */
+
+  /* text-align */
+  @include text-align(left); /* expect text-align: right; */
+  @include text-align(right); /* expect text-align: left; */
+  @include text-align(center); /* expect text-align: center; */
+  @include text-align(justify); /* expect text-align: justify; */
+  @include text-align(initial); /* expect text-align: initial; */
+  @include text-align(this mixin will let anything past); /* expect text-align: this mixin will let anything past; */
+
+  /* margin-left */
+  @include margin-left(3px); /* expect margin-right: 3px; */
+  @include margin-left(3px !important); /* expect margin-right: 3px !important */
+  @include margin-left(3px 12px); /* expect margin-right: 3px 12px; -- we can add some error checking */
+
+  /* margin-right */
+  @include margin-right(3px); /* expect margin-left: 3px; */
+  @include margin-right(3px !important); /* expect margin-left: 3px !important */
+  @include margin-right(3px 12px); /* expect margin-left: 3px 12px; -- we can add some error checking */
+
+  /* padding-left */
+  @include padding-left(3px); /* expect padding-right: 3px; */
+  @include padding-left(3px !important); /* expect padding-right: 3px !important */
+  @include padding-left(3px 12px); /* expect padding-right: 3px 12px; -- we can add some error checking */
+
+  /* padding-right */
+  @include padding-right(3px); /* expect padding-left: 3px; */
+  @include padding-right(3px !important); /* expect padding-left: 3px !important */
+  @include padding-right(3px 12px); /* expect padding-left: 3px 12px; -- we can add some error checking */
+
+  /* padding */
+  @include padding(12px); /* expect padding: 12px; */
+  @include padding(12px !important); /* expect padding: 12px !important; */
+  @include padding(12px 3px); /* expect padding: 12px 3px; */
+  @include padding(12px 3px !important); /* expect padding: 12px 3px !important; */
+  @include padding(12px 3px 100px); /* expect padding: 12px 3px 100px; */
+  @include padding(12px 3px 100px !important); /* expect padding: 12px 3px 100px !important; */
+  @include padding(12px 3px 100px 50px); /* expect padding: 12px 50px 100px 3px; */
+  @include padding(12px 3px 100px 50px !important); /* expect padding: 12px 50px 100px 3px !important; */
+  @include padding(one two three four); /* expect padding: one four three two; */
+  @include padding(one two three four !important); /* expect padding: one four three two !important; */
+  @include padding(one two three four five); /* expect error */
+
+  /* margin */
+  @include margin(12px); /* expect margin: 12px; */
+  @include margin(12px !important); /* expect margin: 12px !important; */
+  @include margin(12px 3px); /* expect margin: 12px 3px; */
+  @include margin(12px 3px !important); /* expect margin: 12px 3px !important; */
+  @include margin(12px 3px 100px); /* expect margin: 12px 3px 100px; */
+  @include margin(12px 3px 100px !important); /* expect margin: 12px 3px 100px !important; */
+  @include margin(12px 3px 100px 50px); /* expect margin: 12px 50px 100px 3px; */
+  @include margin(12px 3px 100px 50px !important); /* expect margin: 12px 50px 100px 3px !important; */
+  @include margin(one two three four); /* expect margin: one four three two; */
+  @include margin(one two three four !important); /* expect margin: one four three two !important; */
+  @include margin(one two three four five); /* expect error */
+
+  /* left */
+  @include left(3em); /* expect right: 3em; */
+  @include left(foo); /* expect right: foo; */
+  @include left(this lets anything past); /* expect right: this lets anything past; */
+
+  /* right */
+  @include right(3em); /* expect left: 3em; */
+  @include right(foo); /* expect left: foo; */
+  @include right(this lets anything past); /* expect right: this lets anything past; */
+}
