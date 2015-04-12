@@ -1,8 +1,14 @@
+
 $disc-direction: ltr;
 @import "./common/foundation/multi_directional_mixins";
 
 //= require ./vendor/normalize
 //= require ./common/foundation/base
+
+@import "./common/foundation/variables";
+@import "./common/foundation/colors";
+@import "./common/base/onebox";
+
 article.post {
   border-bottom: 1px solid #ddd;
 
