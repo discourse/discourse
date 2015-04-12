@@ -1,0 +1,150 @@
+$disc-direction: rtl;
+@import "./common/foundation/multi_directional_mixins";
+
+//= require ./vendor/normalize
+//= require ./common/foundation/base
+
+@import "./common/foundation/variables";
+@import "./common/foundation/colors";
+@import "./common/base/onebox";
+
+article.post {
+  border-bottom: 1px solid #ddd;
+
+  &.deleted {
+    background-color: #ffe5e5;
+  }
+
+  .quote .title {
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    background-color: scale-color-diff();
+    @include padding(10px 10px 0 12px);
+    .avatar { @include margin-right(7px); }
+  }
+
+  ol, ul {
+    clear: none;
+  }
+
+  blockquote {
+    @include padding(10px 8px 10px 13px);
+    @include margin(0 0 10px 0);
+    background-color: scale-color-diff();
+    border-left: 5px solid darken(scale-color-diff(), 10%);
+    overflow: hidden;
+    p {
+      @include margin(0 0 10px 0);
+    }
+    p:last-of-type {
+      margin-bottom:0;
+    }
+  }
+
+  .post-date {
+    @include float(right);
+    color: #aaa;
+    font-size: 0.857em;
+    @include margin(10px 4px 0 0);
+  }
+
+  .author {
+    @include padding(10px 5px);
+    @include float(left);
+
+    img {
+      max-width: 45px;
+    }
+  }
+
+  h3.username {
+    font-size: 0.929em;
+    @include margin(0 0 10px 0);
+
+    a {
+      color: #5c5c5c
+    }
+    a.staff {
+      background-color: #ffffc2;
+    }
+
+    a.new-user {
+      color: scale-color($primary, $lightness: 70%);
+    }
+
+    span.title {
+      font-weight: normal;
+      color: #999;
+    }
+  }
+
+  .cooked {
+    @include padding(10px 0 20px 0);
+    @include margin-left(65px);
+    word-wrap: break-word;
+    word-break: break-word;
+
+    pre {
+      white-space: pre-wrap;
+    }
+    img {
+      max-width:100%;
+    }
+    p {
+      @include margin(0 0 1em 0);
+    }
+  }
+}
+
+img.emoji {
+  width: 20px;
+  height: 20px;
+}
+
+.post-replies {
+  background-color: #eee;
+  @include padding(5px);
+  display: inline-block;
+}
+
+.in-reply-to {
+  font-size: 0.929em;
+  @include text-align(center);
+  @include margin(10px 20px 6px 0);
+  display: inline-block;
+  @include float(right);
+  color: #0088cc;
+}
+
+.replies {
+  font-size: 1.071em;
+  color: #999;
+}
+
+header.embedded {
+  @include padding(10px 10px 20px 10px);
+  font-size: 1.286em;
+  border-bottom: 1px solid #ddd;
+}
+
+footer {
+  font-size: 1.286em;
+
+  .logo {
+    @include margin-right(10px);
+    margin-top: 10px;
+  }
+
+  a[href].button {
+    @include margin(10px 0 0 10px);
+  }
+}
+
+.logo {
+  @include float(right);
+  max-height: 30px;
+}
+
+a[href].button {
+  background-color: #eee;
+  @include padding(5px);
+  display: inline-block;
