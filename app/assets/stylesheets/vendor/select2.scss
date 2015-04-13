@@ -264,7 +264,7 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 
 .select2-dropdown-open .select2-choice .select2-arrow {
     background: transparent;
-    border-left: none;
+    @include border-left(none);
     filter: none;
 }
 .select2-dropdown-open .select2-choice .select2-arrow b {
@@ -322,13 +322,13 @@ Version: @@ver@@ Timestamp: @@timestamp@@
               user-select: none;
 }
 
-.select2-results-dept-1 .select2-result-label { padding-left: 20px }
-.select2-results-dept-2 .select2-result-label { padding-left: 40px }
-.select2-results-dept-3 .select2-result-label { padding-left: 60px }
-.select2-results-dept-4 .select2-result-label { padding-left: 80px }
-.select2-results-dept-5 .select2-result-label { padding-left: 100px }
-.select2-results-dept-6 .select2-result-label { padding-left: 110px }
-.select2-results-dept-7 .select2-result-label { padding-left: 120px }
+.select2-results-dept-1 .select2-result-label { @include padding-left(20px); }
+.select2-results-dept-2 .select2-result-label { @include padding-left(40px); }
+.select2-results-dept-3 .select2-result-label { @include padding-left(60px); }
+.select2-results-dept-4 .select2-result-label { @include padding-left(80px); }
+.select2-results-dept-5 .select2-result-label { @include padding-left(100px); }
+.select2-results-dept-6 .select2-result-label { @include padding-left(110px); }
+.select2-results-dept-7 .select2-result-label { @include padding-left(120px); }
 
 .select2-results .select2-highlighted {
     background: dark-light-diff($highlight, $secondary, 50%, -80%);
@@ -398,7 +398,7 @@ disabled look for disabled choices in the results dropdown
 .select2-container.select2-container-disabled .select2-choice .select2-arrow {
     background-color: #f4f4f4;
     background-image: none;
-    border-left: 0;
+    @include border-left(0);
 }
 
 .select2-container.select2-container-disabled .select2-choice abbr {
@@ -606,4 +606,3 @@ html[dir="rtl"] .select2-search-choice-close {
     .select2-search input {
         background-position: 100% -21px !important;
     }
-}
