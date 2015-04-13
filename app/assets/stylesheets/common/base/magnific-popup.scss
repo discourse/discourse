@@ -102,7 +102,7 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
 
 // Root container
 .mfp-container {
-  text-align: center;
+  @include text-align(center);
   position: absolute;
   width: 100%;
   height: 100%;
@@ -219,10 +219,10 @@ $use-visuallyhidden:              false !default; // Hide content from browsers,
   position: absolute;
   top: 50%;
   width: auto;
-  text-align: center;
+  @include text-align(center);
   margin-top: -0.8em;
   @include left(8px);
- @include right(8px);
+  @include right(8px);
   z-index: $z-index-base + 4;
   a {
     color: $controls-text-color;
@@ -275,10 +275,10 @@ button {
   line-height: 44px;
 
   position: absolute;
- @include right(0);
+  @include right(0);
   top: 0;
   text-decoration: none;
-  text-align: center;
+  @include text-align(center);
   opacity: $controls-opacity;
   @if $IE7support {
     filter: unquote("alpha(opacity=#{$controls-opacity*100})");
@@ -312,7 +312,7 @@ button {
 .mfp-iframe-holder {
   .mfp-close {
     color: $controls-color;
-   @include right(-6px);
+    @include right(-6px);
     @include text-align(right);
     @include padding-right(6px);
     width: 100%;
@@ -323,7 +323,7 @@ button {
 .mfp-counter {
   position: absolute;
   top: 0;
- @include right(0);
+  @include right(0);
   color: $controls-text-color;
   font-size: 0.857em;
   line-height: 18px;
@@ -392,26 +392,26 @@ button {
 
     &:after,
     .mfp-a {
-      border-right: 17px solid #FFF;
+      @include border-right(17px solid #FFF);
       @include margin-left(31px);
     }
     &:before,
     .mfp-b {
       @include margin-left(25px);
-      border-right: 27px solid #3f3f3f;
+      @include border-right(27px solid #3f3f3f);
     }
   }
 
   .mfp-arrow-right {
-   @include right(0);
+    @include right(0);
     &:after,
     .mfp-a {
-      border-left: 17px solid #FFF;
-      margin-left: 39px
+      @include border-left(17px solid #FFF);
+      @include margin-left(39px);
     }
     &:before,
     .mfp-b {
-      border-left: 27px solid #3f3f3f;
+      @include border-left(27px solid #3f3f3f);
     }
   }
 }
@@ -481,7 +481,7 @@ button {
       top: $image-padding-top;
       bottom: $image-padding-bottom;
       display: block;
-     @include right(0);
+      @include right(0);
       width: auto;
       height: auto;
       z-index: -1;
@@ -577,18 +577,18 @@ button {
           }
         }
         .mfp-counter {
-         @include right(5px);
+          @include right(5px);
           top: 3px;
         }
         .mfp-close {
           top: 0;
-         @include right(0);
+          @include right(0);
           width: 35px;
           height: 35px;
           line-height: 35px;
           background: rgba(0, 0, 0, 0.6);
           position: fixed;
-          text-align: center;
+          @include text-align(center);
           @include padding(0);
         }
       }
@@ -642,7 +642,7 @@ button {
     }
     .mfp-close {
       top: 0;
-     @include right(0);
+      @include right(0);
       padding-top: 0;
     }
   }
