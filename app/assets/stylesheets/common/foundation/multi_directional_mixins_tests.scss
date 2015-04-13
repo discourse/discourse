@@ -8,27 +8,14 @@ $disc-direction: ltr;
 
 // Utility functions
 
-// Make sure $disc-direction is defined.
-@function disc-is-defined($value) {
-  @if not global-variable-exists($value) {
-    @error "<$#{$value}> must be defined for this to work";
-  }
-  @return $value;
-}
-
 // Set the html direction -- it has to happen somewhere, maybe not here.
-// Throw an error if direction is not defined;
 html {
-  direction: disc-is-defined(disc-direction);
+  direction: $disc-direction;
 }
 
 // Returns the current default float direction.
-// Will return an error if $disc-direction is not defined. This is the only place
-// we are checking for that.
 @function disc-default-float() {
-  @if disc-is-defined(disc-direction) {
-    @return if($disc-direction == ltr, left, right); // if() is the sass ternary operator.
-  }
+  @return if($disc-direction == ltr, left, right); // if() is the sass ternary operator.
 }
 
 // Swaps values right/left and top/bottom. It passes all other values unaltered.
@@ -81,6 +68,12 @@ html {
     $position: disc-switch-direction($position);
     #{$position}: $dist;
   }
+}
+
+// Creates a border of the given direction and properties - used in the border-left()
+// and border-right() mixins.
+@mixin border-direction($dir, $border-properties) {
+  border-#{$dir}: $border-properties;
 }
 
 // Remove the nth item from a list. It's used to remove the !important flag from a list
@@ -166,6 +159,18 @@ html {
 @mixin padding-right($length) {
   $dir: if(disc-default-float() == left, right, left);
   @include padding-direction-length($dir, $length);
+}
+
+// To be used in place of border-left: $properties;
+@mixin border-left($border-properties) {
+  $dir: if(disc-default-float() == left, left, right);
+  @include border-direction( $dir, $border-properties);
+}
+
+// To be used in place of border-right: $properties;
+@mixin border-right($border-properties) {
+  $dir: if(disc-default-float() == left, right, left);
+  @include border-direction($dir, $border-properties);
 }
 
 // To be used in place of margin: $lengths;
@@ -265,6 +270,14 @@ $disc-direction: ltr;
   @include right(3em); /* expect right: 3em; */
   @include right(foo); /* expect right: foo; */
   @include right(this lets anything past); /* expect right: this lets anything past; */
+
+  /* border-right */
+  @include border-right(3px solid yellow); /* expect border-right: 3px solid yellow; */
+  @include border-right(3px); /* expect border-right: 3px; */
+
+  /* border-left */
+  @include border-left(3px solid yellow); /* expect border-left: 3px solid yellow; */
+  @include border-left(3px); /* expect border-left: 3px; */
 }
 
 /* Change direction to RTL */
@@ -342,4 +355,12 @@ $disc-direction: rtl;
   @include right(3em); /* expect left: 3em; */
   @include right(foo); /* expect left: foo; */
   @include right(this lets anything past); /* expect right: this lets anything past; */
+
+  /* border-right */
+  @include border-right(3px solid yellow); /* expect border-left: 3px solid yellow; */
+  @include border-right(3px); /* expect border-left: 3px; */
+
+  /* border-left */
+  @include border-left(3px solid yellow); /* expect border-right: 3px solid yellow; */
+  @include border-left(3px); /* expect border-right: 3px; */
 }
