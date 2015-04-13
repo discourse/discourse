@@ -2,7 +2,7 @@
   background-color: scale-color-diff();
   @include padding(5px 15px);
   color: $primary;
-  text-align: center;
+  @include text-align(center);
   @include margin(10px 0);
 }
 
@@ -41,7 +41,7 @@ button {
     position: relative;
   }
   &.expand-post {
-    margin:10px 0 10px 0;
+    @include margin(10px 0 10px 0);
   }
   &.has-like {color: $love;}
   .read-icon {
@@ -133,7 +133,7 @@ button {
 a.reply-to-tab {
   position: absolute;
   z-index: 400;
- @include right(80px);
+  @include right(80px);
   color: scale-color($primary, $lightness: 50%);
   span { display: none; }
 }
@@ -145,7 +145,7 @@ a.star {
 }
 
 .topic-post .boxed .contents {
-  float: none;
+  @include float(none);
   padding-top: 5px;
   clear: both;
   position: relative;
@@ -188,10 +188,10 @@ a.star {
     }
     .post-count {
       position: absolute;
-     @include right(3px);
+      @include right(3px);
       border-radius: 100px;
       @include padding(4px 5px 2px 5px);
-      text-align: center;
+      @include text-align(center);
       font-weight: normal;
       font-size: 11px;
       line-height: 1;
@@ -222,7 +222,7 @@ a.star {
       @include float(left);
       @include padding(7px 8px);
       &:last-of-type {
-        border-right: 0;
+        @include border-right(0);
       }
     }
     a, .number {
@@ -261,7 +261,7 @@ a.star {
 
   td {
     vertical-align: top;
-    padding:1px;
+    @include padding(1px);
   }
 
   .buttons {
@@ -269,7 +269,7 @@ a.star {
     .btn {
       border: 0;
       border-bottom: 1px solid scale-color-diff();
-      border-left: 1px solid scale-color-diff();
+      @include border-left(1px solid scale-color-diff());
       @include padding(0 15px);
       color: $primary;
       background: scale-color-diff();
@@ -380,7 +380,7 @@ iframe {
 #share-link {
   width: 290px;
   @include left(auto);
- @include right(4px);
+  @include right(4px);
 }
 
 #selected-posts {
@@ -428,8 +428,8 @@ button.select-post {
 
 #show-topic-admin {
   color: scale-color($primary, $lightness: 50%);
- @include right(0);
-  border-right: 0;
+  @include right(0);
+  @include border-right(0);
   @include padding-right(4px);
   @include padding-left(5px);
 }
