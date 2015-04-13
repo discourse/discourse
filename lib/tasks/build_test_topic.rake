@@ -25,7 +25,7 @@ task 'build_test_topic' => :environment do
   first_post = PostCreator.new(evil_trout, raw: "This is the original post.", title: "pushState/replaceState test topic").create
   topic = first_post.topic
 
-  topic_url = "#{Discourse.base_url}/t/#{Slug.for(topic.title)}/#{topic.id}"
+  topic_url = "#{Discourse.base_url}/t/#{Slug.for(topic.title, 'topic')}/#{topic.id}"
 
   99.times do |i|
     post_number = (i + 2)

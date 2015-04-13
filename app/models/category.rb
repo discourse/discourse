@@ -207,13 +207,17 @@ SQL
 
     if slug.present?
       # santized custom slug
-      self.slug = Slug.for(slug)
+      self.slug = Slug.for(Rack::Utils.unescape(slug), '')
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
       # auto slug
-      self.slug = Slug.for(name)
-      return if self.slug.blank?
+      self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
+    end
+    # only allow to use category itself id. new_record doesn't have a id.
+    unless new_record?
+      match_id = /(\d+)-category/.match(self.slug)
+      errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
 
@@ -338,11 +342,13 @@ SQL
 
   def self.query_parent_category(parent_slug)
     self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
+    self.where(slug: Rack::Utils.escape_path(parent_slug), parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
   def self.query_category(slug_or_id, parent_category_id)
     self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
+    self.where(slug: Rack::Utils.escape_path(slug_or_id), parent_category_id: parent_category_id).includes(:featured_users).first ||
     self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 

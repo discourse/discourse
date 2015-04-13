@@ -48,7 +48,7 @@ module Onebox
             return linked unless Guardian.new.can_see?(post)
 
             topic = post.topic
-            slug = Slug.for(topic.title)
+            slug = Slug.for(topic.title, 'topic')
 
             excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
             excerpt.gsub!("\n"," ")
