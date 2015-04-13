@@ -774,6 +774,43 @@ describe PostsController do
         expect(response).to be_success
       end
 
+      it "doesn't return secured categories for moderators if they don't have access" do
+        user = Fabricate(:user)
+        admin = Fabricate(:admin)
+        moderator = Fabricate(:moderator)
+
+        group = Fabricate(:group)
+        group.add(user)
+        group.appoint_manager(user)
+
+        secured_category = Fabricate(:private_category, group: group)
+        secured_post = create_post(user: user, category: secured_category)
+        PostDestroyer.new(admin, secured_post).destroy
+
+        log_in(:moderator)
+        xhr :get, :deleted_posts, username: user.username
+        expect(response).to be_success
+
+        data = JSON.parse(response.body)
+        expect(data.length).to eq(0)
+      end
+
+      it "doesn't return PMs for moderators" do
+        user = Fabricate(:user)
+        admin = Fabricate(:admin)
+        moderator = Fabricate(:moderator)
+
+        pm_post = create_post(user: user, archetype: 'private_message', target_usernames: [admin.username])
+        PostDestroyer.new(admin, pm_post).destroy
+
+        log_in(:moderator)
+        xhr :get, :deleted_posts, username: user.username
+        expect(response).to be_success
+
+        data = JSON.parse(response.body)
+        expect(data.length).to eq(0)
+      end
+
       it "only shows posts deleted by other users" do
         user = Fabricate(:user)
         admin = Fabricate(:admin)
