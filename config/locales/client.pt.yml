@@ -819,18 +819,11 @@ pt:
         delete: "Eliminar Tópico"
         open: "Abrir Tópico"
         close: "Fechar Tópico"
-        auto_close: "Fechar Automaticamente"
-        make_banner: "Apresentar tópico como Banner"
-        remove_banner: "Remover apresentação do tópico como banner"
-        pin: "Destacar Tópico"
-        unpin: "Remover Destaque do Tópico"
-        pin_globally: "Destacar Tópico Globalmente"
         unarchive: "Desarquivar Tópico"
         archive: "Arquivar Tópico"
         invisible: "Tornar Não Listado"
         visible: "Tornar Listado"
         reset_read: "Repor Data de Leitura"
-        multi_select: "Selecionar Mensagens"
       reply:
         title: 'Responder'
         help: 'começa a compor uma resposta a este tópico'
@@ -904,7 +897,6 @@ pt:
       quote_reply: "citar resposta"
       edit_reason: "Motivo:"
       post_number: "mensagem {{number}}"
-      in_reply_to: "responder a"
       last_edited_on: "mensagem editada pela última vez em"
       reply_as_new_topic: "Responder como tópico hiperligado"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"
@@ -1258,14 +1250,6 @@ pt:
       top:
         title: "Os Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
-        yearly:
-          title: "Os Melhores do Ano"
-        monthly:
-          title: "Os Melhores do Mês"
-        weekly:
-          title: "Os Melhores da Semana"
-        daily:
-          title: "Os Melhores do Dia"
         this_year: "Este ano"
         this_month: "Este mês"
         this_week: "Esta semana"

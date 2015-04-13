@@ -1434,10 +1434,6 @@ fr:
     posted_by: "Ecrit par %{username} le %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation '%{topic_title}'"
-      text_body_template: |
-        %{username} vous a invité à la conversation '%{topic_title}' sur %{site_name} :
-
-        Veuillez suivre ce lien pour voir le sujet : %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

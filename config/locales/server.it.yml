@@ -20,6 +20,7 @@ it:
   is_reserved: "è riservato"
   purge_reason: "Cancellato automaticamente come account abbandonato e mai attivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
+  anonymous: "Anonimo"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -120,6 +121,7 @@ it:
   next_page: "pagina seguente →"
   prev_page: "← pagina precedente"
   page_num: "Pagina %{num}"
+  home_title: "Home"
   topics_in_category: "Argomenti nella categoria '%{category}'"
   rss_posts_in_topic: "RSS feed di '%{topic}'"
   rss_topics_in_category: "RSS feed degli argomenti nella categoria '%{category}'"
@@ -859,10 +861,15 @@ it:
     topic_view_duration_hours: "Conta una nuova visita all'argomento una volta sola per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
     max_new_accounts_per_registration_ip: "Se vi sono già (n) account con livello di esperienza 0 da questo IP (e nessuno è membro dello staff o TL2 o superiore), non accettare nuove registrazioni utente da questo IP."
+    num_flaggers_to_close_topic: "Il numero minimo di segnalatori univoci richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
+    num_flags_to_close_topic: "Il numero minimo di segnalazioni attive richiesto affinché un argomento venga messo in pausa fino all'intervento di un moderatore"
     reply_by_email_enabled: "Abilita la possibilità di rispondere ai messaggi tramite email."
     reply_by_email_address: "Modello per rispondere via email, per esempio: %{reply_key}@risposta.esempio.com o risposte+%{reply_key}@esempio.com"
     disable_emails: "Evita che Discourse invii qualunque tipo di email"
+    strip_images_from_short_emails: "Elimina le immagini dalle email aventi dimensione inferiore a 2800 Byte."
+    short_email_length: "Lunghezza delle email brevi in Byte"
     pop3_polling_enabled: "Cerca le risposte via email tramite POP3."
+    pop3_polling_ssl: "Usa SSL per la connessione al server POP3 (raccomandato)."
     pop3_polling_port: "La porta dell'account POP3."
     pop3_polling_host: "L'host a cui collegarsi per ricevere email via POP3."
     pop3_polling_username: "Il nome utente dell'account POP3 per la ricezione di email."
@@ -1064,6 +1071,75 @@ it:
         Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.
 
          Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Ecco alcuni veloci consigli per cominciare.
+
+        ## Continua a scorrere la pagina
+
+        Non ci sono pulsanti o numeri delle pagine successive - per leggere di più, **scorri semplicemente in giù la pagina**
+
+        I nuovi post compariranno automaticamente man mano.
+
+        ## Dove mi trovo?
+
+        - Per fare una ricerca, per la tua pagina utente o per il menu, **usa i pulsanti icona <kbd>☰</kbd> in alto a destra**.
+
+        - Il titolo di una discussione porta sempre al prossimo post non letto. Usa la data dell'ultima attività per saltare rapidamente al primo o ultimo post in una discussione.
+
+        - Quando leggi una discussione, vai in cima &uarr; selezionando il titolo della discussione. Seleziona la barra di avanzamento verde che si trova in basso a destra per mostrare tutti i controlli di navigazione, o usa i tasti <kbd>inizio</kbd> e <kbd>fine</kbd> della tastiera.
+
+            <img src="/images/welcome/progress-bar.png" width="143" height="39">
+
+        ## Come faccio a rispondere?
+
+        - Per rispondere alla discussione generale, usa il pulsante Rispondi <img src="/images/welcome/reply-topic.png" width="29" height="25">  in fondo alla pagina.
+
+        - Per rispondere a un post specifico, usa il pulsante Rispondi <img src="/images/welcome/reply-post.png" width="29" height="25"> su quel messaggio.
+
+        - Per portare la conversazione in una nuova direzione, ma mantenendole collegate, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Rispondi come nuovo argomento alla destra del messaggio.
+
+        Per citare qualcuno nella tua risposta, seleziona il testo che desideri citare e fai clic su uno dei pulsanti Rispondi.
+
+        <img src="/images/welcome/quote-reply.png" width="350" height="129">
+
+        Per mandare una notifica a qualcuno nella tua risposta, menziona il suo nome. Scrivere `@` ed apparirà un completatore automatico.
+
+        <img src="/images/welcome/username-completion.png" width="230" height="131">
+
+        For [standard Emoji](http://www.emoji.codes/), just start typing `:` or the traditional smileys `:)` :smile:
+
+        ## Che altro posso fare?
+
+        In fondo a ogni messaggio ci sono dei pulsanti attivi.
+
+        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Per dire a qualcuno che ti è piaciuto il suo messaggio, usa il bottone **Mi piace** in fondo al messaggio. Se trovi un messaggio con dei problemi, usa subito il bottone **Segnala** in fondo al post e fallo sapere privatamente all'autore o allo staff.
+
+        Puoi anche **condividere** un link a un messaggio, o fare un **segnalibro** di un messaggio per usarlo più tardi sulla tua pagina utente.
+
+        ## Chi sta parlando con me?
+
+        Quando qualcuno risponde a un tuo post, lo cita o menziona il tuo `@nome`, comparirà un numero sul pulsante delle conversazioni in alto a destra nella pagina. Usalo accedere alle tue **notifiche**.
+
+        <img src="/images/welcome/notification-panel.png" width="178" height="59">
+
+        Non preoccuparti di perdere delle risposte – se non sei online quando arrivano, ti verranno inviate per email le risposte dirette (e i messaggi privati) che arrivano.
+
+        ## Quand'è che le conversazioni sono nuove?
+
+        Di norma tutte le conversazioni più recenti di due giorni si considerano nuove, e verrà seguita automaticamente ogni conversazione a cui tu abbia partecipato (risposto, creato, o letto per un certo tempo).
+
+        Vedrai gli indicatori blu "nuovo" e "numero" accanto a queste conversazioni:
+
+        <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Puoi modificare le impostazioni di notifica di ciascuna discussione con i controlli in fondo al topic (questa impostazione si può anche definire per ciascuna categoria). Per modificare il modo in cui segui le discussioni, o la definizione di nuovo, vedi le [tue preferenze utente](/my/preferences).
+
+        ## Perché non posso fare certe cose?
+
+        Per ragioni di sicurezza i nuovo utenti hanno alcune limitazioni. Man mano che parteciperai guadagnerai la fiducia della comunità, ne diverrai partecipante a pieno titolo  e questi limiti verranno rimossi automaticamente. Ad un [livello di fiducia](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) sufficientemente alto guadagnerai ulteriori capacità per aiutarci a gestire insieme questa comunità.
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
     welcome_invite:
@@ -1172,16 +1248,8 @@ it:
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
-      text_body_template: |
-        %{username} ti ha invitato alla discussione '%{topic_title}' su %{site_name}:
-
-        Segui questo link per leggere: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare allla discussione '%{topic_title}'"
-      text_body_template: |
-        %{username} ti ha invitato alla conversazione privata '%{topic_title}' su %{site_name}:
-
-        Segui questo link per visualizzare il topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

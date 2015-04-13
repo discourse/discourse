@@ -92,6 +92,7 @@ he:
       email: 'שלח קישור בדוא"ל'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
+    s3_deprecation_warning: "אזהרה! Amazon S3 יהיה בקרוב לא מומלץ לשימוש לאכסון צרופות/image. אנא עקבו אחר <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'> ההנחיות </a> להעברה לאכסון מקומי."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -185,6 +186,8 @@ he:
     undo: "ביטול (Undo)"
     revert: "לחזור"
     failed: "נכשל"
+    switch_to_anon: "מצב אנונימי"
+    switch_from_anon: "יצאה ממצב אנונימי"
     banner:
       close: "שחרור באנר זה."
     choose_topic:
@@ -211,10 +214,18 @@ he:
       title: "משתמשים"
       likes_given: "ניתנ/ו"
       likes_received: "התקבל/ו"
+      topics_entered: "כניסות"
+      topics_entered_long: "נושאים אליהם נכנסת"
       time_read: "זמן קריאה"
       topic_count: "נושאים"
+      topic_count_long: "נושאים שנוצרו"
       post_count: "תגובות"
+      post_count_long: "תגובות שפורסמו"
       no_results: "לא נמצאו תוצאות"
+      days_visited: "ביקורים"
+      days_visited_long: "ימים לביקור"
+      posts_read: "נקראו"
+      posts_read_long: "פרסומים שנקראו"
       total_rows:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
@@ -237,6 +248,8 @@ he:
       '2': "לייקים שהתקבלו"
       '3': "מועדפים"
       '4': "נושאים"
+      '5': "תשובות"
+      '6': "תגובות"
       '7': "אזכורים"
       '9': "ציטוטים"
       '10': "כוכבים"
@@ -283,6 +296,8 @@ he:
       mute: "השתק"
       edit: "ערוך העדפות"
       download_archive: "הורדת הפרסומים שלי"
+      new_private_message: "הודעה חדשה"
+      private_message: "הודעה"
       private_messages: "הודעות"
       activity_stream: "פעילות"
       preferences: "העדפות"
@@ -360,6 +375,8 @@ he:
         uploaded_avatar_empty: "הוסף תמונה אישית"
         upload_title: "העלה את התמונה שלך"
         upload_picture: "העלאת תמונה"
+        image_is_not_a_square: "אזהרה: קיצצנו את התמונה שלך; האורך והרוחב לא היו שווים."
+        cache_notice: "שינית בהצלחה את האווטר שלך אבל יתכן ויקח קצת זמן עד שהשינוי יופיע בשל עניני זכרון מטמון בדפדפן."
       change_profile_background:
         title: "שינוי רקע פרופיל"
         instructions: "רקעי הפרופיל ימורכזו ויוצגו ברוחב ברירת מחדל של 850px."
@@ -379,6 +396,7 @@ he:
       name:
         title: "שם"
         instructions: "שמך המלא (רשות)"
+        instructions_required: "שמך המלא"
         too_short: "השם שלך קצר מידי"
         ok: "השם נראה טוב"
       username:
@@ -416,6 +434,8 @@ he:
         every_three_days: "כל שלושה ימים"
         weekly: "שבועית"
         every_two_weeks: "כל שבועיים"
+      email_direct: "שלחו לי דוא\"ל כשמישהו/י מצטטים אותי, מגיבם לפרסום שלי, מזכירים את @שם_המשתמש/ת שלי, או מזמינים אותי לנושא"
+      email_private_messages: "שלחו לי דוא\"ל כשמישהו/י שולחים לי מסר"
       email_always: "אל תמנעו התראות דוא\"ל כאשר אני פעיל/ה באתר"
       other_settings: "אחר"
       categories_settings: "קטגוריות"
@@ -463,6 +483,7 @@ he:
           none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
           text: "הזמנה קבוצתית מקובץ"
           uploading: "העלאה..."
+          success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
           error: "חלה תקלה בהעלאת \"'{{filename}}': \n{{message}}"
       password:
         title: "סיסמה"
@@ -486,6 +507,7 @@ he:
       stream:
         posted_by: "פורסם על ידי"
         sent_by: "נשלח על ידי"
+        private_message: "הודעה"
         the_topic: "הנושא"
     loading: "טוען..."
     errors:
@@ -538,7 +560,9 @@ he:
       enable: "הסתר פרסומים שנמחקו"
       disable: "הצגת פרסומים שנמחקו"
     private_message_info:
+      title: "הודעה"
       invite: "הזמינו אחרים..."
+      remove_allowed_user: "האם את/ה באמת רוצה להסיר את {{name}} מהודעה זו?"
     email: 'דוא"ל'
     username: 'שם משתמש'
     last_seen: 'נצפה'
@@ -624,6 +648,7 @@ he:
       reply: "תגובה"
       cancel: "ביטול"
       create_topic: "יצירת נושא"
+      create_pm: "הודעה"
       title: "או לחץ Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
@@ -673,9 +698,11 @@ he:
           units: "(# מספר שעות)"
           examples: 'הזינו מספר שעות (24).'
     notifications:
+      title: "התראות אודות אזכור @שם, תגובות לפרסומים ולנושאים שלך, הודעות וכו'"
       none: "לא ניתן לטעון כעת התראות."
       more: "הצגת התראות ישנות יותר"
       total_flagged: "סך הכל נושאים מדוגללים"
+      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -683,6 +710,7 @@ he:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> אישר/ה את הזמנתך</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> הזיז/ה {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -709,6 +737,7 @@ he:
         user: "חיפוש פרסומים לפי @{{username}}"
         category: "חיפוש בקטגוריה \"{{category}}\""
         topic: "חפשו בנושא זה"
+        private_messages: "חיפוש הודעות"
     site_map: "לך לרשימת נושאים או קטגוריה אחרת"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
@@ -742,6 +771,7 @@ he:
         bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה {{category}}."
         top: "אין נושאים מובילים."
+        search: "אין תוצאות חיפוש"
         educate:
           new: '<p>הנושאים החדשים שלך יופיעו כאן.</p><p> כברירת מחדל, נושאים נחשבים חדשים ויופיעו עם האינדיקציה <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;"> חדש </span> אם הם נוצרו ב-2 הימים האחרונים. .</p><p> תוכלו לשנות זאת ב <a href="%{userPrefsUrl}">העדפות </a>.</p>'
           unread: '<p> הנושאים הלא-נקראים שלך מופיעים כאן.</p><p>כברירת מחדל נושאים נחשבים ככאלה שלא נקראו ויוצגו כ- <span class="badge new-posts badge-notification">1</span> אם את/ה:</p><ul><li> יצרת את הנושא</li></ul><p>או אם כיוונתם את הנושא הזה להיות תחת מעקב או צפייה באמצעות כפתור ההתראות שבתחתית כל נושא. </p><p> את/ה יכולים לשנות זאת ב<a href="%{userPrefsUrl}">העדפות</a>.</p>'
@@ -755,10 +785,12 @@ he:
         category: "אין עוד נושאים בקטגוריה {{category}}."
         top: "אין עוד נושאים מובילים."
         bookmarks: "אין עוד סימניות לנושאים."
+        search: "אין עוד תוצאות חיפוש"
     topic:
       filter_to: "{{post_count}} הודעות בנושא"
       create: 'נושא חדש'
       create_long: 'יצירת נושא חדש'
+      private_message: 'תחילת הודעה'
       list: 'נושאים'
       new: 'נושא חדש'
       unread: 'לא נקרא/ו'
@@ -836,11 +868,13 @@ he:
           '0': 'אתה מתעלם מכל ההתראות בנושא זה.'
         watching_pm:
           title: "צופה"
+          description: "תקבל/י התראה על כל פרסום בהודעה זו. גם סך הפרסומים החדשים ואלו שלא נקראו יופיעו לצד הנושא."
         watching:
           title: "צופה"
           description: "תקבל/י התראה על כל פרסום חדש תחת נושא זה. סך הפרסומים החדשים ושלא נקראו יופיע גם לצד הנושא."
         tracking_pm:
           title: "עוקב"
+          description: "סך הפרסומים החדשים ואלו שלא נקראו יופיע לצד ההודעה. תקבל/י התראה אם מישהו/י יזכירו את @שם_המשתמש/ת שלך או יגיבו לפרסום שלך."
         tracking:
           title: "עוקב"
           description: "סך הפרסום החדשים והלא נקראים יופיע לצד הנושא. תקבלו התראה אם מישהו יזכיר את @שם_המשתמש שלך או ישיב על פרסום שלך."
@@ -849,8 +883,10 @@ he:
           description: "תרבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
         regular_pm:
           title: "רגיל"
+          description: "תקבל/י התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או יגיב לפרסום שלך בהודעה."
         muted_pm:
           title: "מושתק"
+          description: "לעולם לא תקבל/י התראה לשום דבר בנוגע להודעה זו."
         muted:
           title: "מושתק"
           description: "לעולם לא תקבל/י התראות על הנושא הזה, והוא לא יופיע בעמוד הלא נקראו שלך."
@@ -859,18 +895,21 @@ he:
         delete: "מחק נושא"
         open: "פתח נושא"
         close: "נעל נושא"
-        auto_close: "נעילה אוטומטית"
-        make_banner: "נושא הבאנר"
-        remove_banner: "הסרת נושא הבאנר"
-        pin: "נעץ נושא"
-        unpin: "בטל נעיצת נושא"
-        pin_globally: "נעץ נושא גלובלית"
+        multi_select: "בחר/י פרסומים..."
+        auto_close: "סגירה אוטומטית..."
+        pin: "נעיצת נושא.."
+        unpin: "שחרור נעיצת נושא..."
         unarchive: "הוצא נושא מארכיון"
         archive: "הכנס נושא לארכיון"
         invisible: "הסתרה"
         visible: "גילוי"
         reset_read: "אפס מידע שנקרא"
-        multi_select: "בחר הודעות"
+      feature:
+        pin: "נעיצת נושא"
+        unpin: "שחרור נעיצת נושא"
+        pin_globally: "נעיצת נושא גלובלית"
+        make_banner: "באנר נושא"
+        remove_banner: "הסרת באנר נושא"
       reply:
         title: 'תגובה'
         help: 'החל בכתיבת הודעה לנושא זה'
@@ -965,7 +1004,6 @@ he:
       quote_reply: "תגובה עם ציטוט"
       edit_reason: "סיבה: "
       post_number: "הודעה {{number}}"
-      in_reply_to: "השב ל"
       last_edited_on: "הודעה נערכה לאחרונה ב"
       reply_as_new_topic: "תגובה כנושא מקושר"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
@@ -1332,15 +1370,6 @@ he:
       top:
         title: "מובילים"
         help: "הנושאים הפעילים ביותר בשנה, חודש, שבוע או יום האחרונים"
-        yearly:
-          title: "מובילים שנתי"
-        monthly:
-          title: "מובילים חודשי"
-        weekly:
-          title: "המיטב השבועי"
-        daily:
-          title: "המיטב היומי"
-        all: "כל הזמנים"
         this_year: "השנה"
         this_month: "החודש"
         this_week: "השבוע"

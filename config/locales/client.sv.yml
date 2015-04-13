@@ -839,18 +839,11 @@ sv:
         delete: "Radera Tråd"
         open: "Öppna Tråd"
         close: "Stäng Tråd"
-        auto_close: "Stäng Automatiskt"
-        make_banner: "Banderollämne"
-        remove_banner: "Radera Banderollämne"
-        pin: "Nåla Tråd"
-        unpin: "Avnåla Tråd"
-        pin_globally: "Nåla diskussionen globalt"
         unarchive: "Dearkivera Tråd"
         archive: "Arkivera Tråd"
         invisible: "Markera Olistad"
         visible: "Markera Listad"
         reset_read: "Återställ Läsdata"
-        multi_select: "Markera inlägg"
       reply:
         title: 'Svara'
         help: 'börja komponera ett svar till denna tråd'
@@ -924,7 +917,6 @@ sv:
       quote_reply: "citatsvar"
       edit_reason: "Anledning:"
       post_number: "inlägg {{number}}"
-      in_reply_to: "svara till"
       last_edited_on: "inlägg senast ändrat den"
       reply_as_new_topic: "Svara i ny tråd"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
@@ -1279,14 +1271,6 @@ sv:
       top:
         title: "Topp"
         help: "de mest aktiva ämnena det senaste året, månaden, veckan och dagen"
-        yearly:
-          title: "Topp i år"
-        monthly:
-          title: "Topp denna månad"
-        weekly:
-          title: "Topp denna vecka"
-        daily:
-          title: "Topp idag"
         this_year: "I år"
         this_month: "Den här månaden"
         this_week: "Den här veckan"
