@@ -200,7 +200,7 @@ nav.post-controls {
     position: absolute;
     @include text-align(left);
     bottom: -2px;
-   @include right(15px);
+    @include right(15px);
     z-index: 1000;
     display: none;
 
@@ -280,7 +280,7 @@ nav.post-controls {
 
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
-    border-left: 5px solid darken(scale-color-diff(), 12%);
+    @include border-left(5px solid darken(scale-color-diff(), 12%));
   }
 
   .topic-meta-data {
@@ -350,10 +350,10 @@ a.star {
     }
     .post-count {
       position: absolute;
-     @include right(3px);
+      @include right(3px);
       border-radius: 100px;
       @include padding(4px 5px 2px 5px);
-      text-align: center;
+      @include text-align(center);
       font-weight: normal;
       font-size: 11px;
       line-height: 1;
@@ -372,14 +372,14 @@ a.star {
   }
 
   .map {
-    .secondary {text-align: center;}
+    .secondary {@include text-align(center);}
     li {
       @include float(left);
       @include padding(7px 10px);
       &:last-of-type {
-        border-right: 0;
+        @include border-right(0);
       }
-      &:nth-child(3) { text-align:center; }
+      &:nth-child(3) { @include text-align(center); }
     }
     a, .number {
       line-height: 20px;
@@ -413,7 +413,7 @@ a.star {
 
   td {
     vertical-align: top;
-    padding:1px;
+    @include padding(1px);
   }
 
   .buttons {
@@ -614,7 +614,7 @@ a.mention {
 }
 
 #show-topic-admin {
- @include right(20px);
+  @include right(20px);
   @include padding(5px 8px);
   margin-top: 5px;
 
@@ -654,11 +654,11 @@ blockquote {
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
       background: darken(scale-color-diff(), 5%);
-      border-left: 5px solid darken(scale-color-diff(), 12%);
+      @include border-left(5px solid darken(scale-color-diff(), 12%));
     }
 
     aside.quote>blockquote, aside.quote>.title {
-      border-left: 0;
+      @include border-left(0);
     }
   }
 
@@ -738,7 +738,7 @@ $topic-avatar-width: 45px;
   @include padding(5px 0);
   color: lighten($primary, 30%);
   cursor: pointer;
-  text-align: center;
+  @include text-align(center);
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
@@ -755,8 +755,8 @@ $topic-avatar-width: 45px;
   height: 0;
   vertical-align: middle;
   border-top: 4px solid $primary;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+  @include border-right(4px solid transparent);
+  @include border-left(4px solid transparent);
   content: "";
   @include margin-left(5px);
 }
@@ -977,7 +977,7 @@ span.highlighted {
 .read-state {
   color: scale-color($tertiary, $lightness: 50%);
   position: absolute;
- @include right(-2px);
+  @include right(-2px);
   top: 13px;
   font-size: 0.571em;
 }
@@ -1003,7 +1003,7 @@ and (max-width : 870px) {
   }
 
   .post-cloak .reply-to-tab {
-     @include right(15%);
+      @include right(15%);
     }
 
   .topic-body {
@@ -1033,4 +1033,5 @@ and (max-width : 767px) {
   .names {
     span {display: block;}
   }
+
 }
