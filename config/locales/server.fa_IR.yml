@@ -18,9 +18,13 @@ fa_IR:
   log_in: "ورود"
   via: "%{username} از %{site_name}"
   is_reserved: "محفوظ است"
+  purge_reason: "بطور خودکار پاک شد بدلیل استفاده نشدن٬ حساب کاربری غیرفعال"
+  disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
+  anonymous: "ناشناس"
   errors:
     format: '%{attribute} %{message}'
     messages:
+      too_long_validation: "محدود به  %{max} کاراکتر; شما وارد  %{length} کردید "
       invalid_boolean: "اعشار نامعتبر است."
       taken: "انتخاب شده است"
       accepted: باید تایید شده باشد
@@ -41,6 +45,15 @@ fa_IR:
       not_an_integer: باید یک عدد صحیح باشد
       odd: باید یک عدد فرد باشد
       record_invalid: 'عملیات با خطا مواجه شد : %{errors}'
+      restrict_dependent_destroy:
+        one: "نمی توان سابقه را پاک کرد زیرا یک %{record} وابسته وجود دارد."
+        many: "نمی توان سابقه را پاک کرد زیرا یک %{record} وابسته وجود دارد."
+      too_long:
+        other: آیا خیلی طولانی است ( حداکثر %{count} کاراکتر است)
+      too_short:
+        other: آیا خیلی کوتاه است (حداقل%{count} کاراکتر است)
+      wrong_length:
+        other: آیا طولش اشتباه است (باید %{count} کاراکتر باشد)
       other_than: "باید غیر از {count}% باشد"
     template:
       body: 'مشکلاتی با زمینه های دنبال شده وجود دارد:'
@@ -49,6 +62,7 @@ fa_IR:
   bulk_invite:
     file_should_be_csv: "قالب پرونده‌ی بارگذاری شده باید csv و یا txt باشد."
   backup:
+    operation_already_running: "یک عملیات در حال اجراست. کار جدیدی نمی توان شروع کرد."
     backup_file_should_be_tar_gz: "پرونده‌ی پشتیبان باید یک فایل فشرده با پسوند tar.gz. باشد."
     not_enough_space_on_disk: "فضای کافی برای بارگذاری این پشتیبان وجود ندارد."
   not_logged_in: "برای اینکار شما باید وارد شوید."
@@ -88,6 +102,8 @@ fa_IR:
     one: "متأسفیم، کاربران تازه تنها می‌توانند در هر دیدگاه یک پیوند بگذارند."
     other: "متأسفیم، کاربران تازه تنها می‌توانند در هر دیدگاه %{count} پیوند بگذارند."
   spamming_host: "متأسفانه شما نمی‌توانید پیوندی با آن نشانی را بفرستید."
+  user_is_suspended: "کاربر تعلیق شده نمی‌تواند نوشته ای بگذارد."
+  topic_not_found: "یک مشکلی وجود دارد.  شاید این جستار بسته شده یا پاک شده همزمان که داشتی نگاهش می کردی ؟"
   just_posted_that: "به آن‌چه که به‌تازگی فرستادید بسیار نزدیک است"
   has_already_been_used: "پیش‌تر استفاده شده است"
   invalid_characters: "نویسه‌های نامعتبر در بر دارد."
@@ -95,6 +111,7 @@ fa_IR:
   next_page: "صفحه بعد ←"
   prev_page: "→ صفحه قبل"
   page_num: "صفحه %{num}"
+  home_title: "خانه"
   topics_in_category: "جستارهای دستهٔ‌ «%{category}»"
   rss_posts_in_topic: "خوراک «%{topic}»"
   rss_topics_in_category: "خوارک جستارهای دستهٔ «%{category}»"
@@ -201,6 +218,7 @@ fa_IR:
         user:
           attributes:
             password:
+              common: "این یکی از 10000 رمز عبور مرسوم است. لطفا از رمز عبور امن تری استفاده کنید. "
               same_as_username: "همانند نام کاربری شما است. لطفا از رمز عبور امن تری استفاده نمایید."
               same_as_email: "همانند ایمیل شما است. لطفا از رمز عبور امن تری استفاده نمایید."
             ip_address:
@@ -210,10 +228,14 @@ fa_IR:
             hex:
               invalid: "این یک رنگ معتبر نیست"
   vip_category_name: "زبان"
+  vip_category_description: "دسته مخصوص برای اعضا با سطح اعتماد 3 و بالاتر."
   meta_category_name: "متا"
+  meta_category_description: "گفتگو در مورد سایت٬ این سازمان٬ چگونه کار می کنه٬ و چطور می توانیم آن را بهبود ببخشیم. "
   staff_category_name: "کارکنان"
+  staff_category_description: "بخش خصوصی برای گفتگوی مدیران. جستارها فقط برای مدیران و گردانندگان قابل رویت است."
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
+    title: "به انجمن خوش آمدید"
     body: |2
 
       Congratulations! :confetti_ball:
@@ -238,9 +260,14 @@ fa_IR:
   category:
     topic_prefix: "در رابطه با دسته بندی {category}% "
     post_template: "%{replace_paragraph}\n\nUse the following paragraphs for a longer description, as well as to establish any category guidelines or rules.\n\nSome things to consider in any discussion replies below:\n\n- What is this category for? Why should people select this category for their topic?\n\n- How is this different than the other categories we already have?\n\n- Do we need this category?\n\n- Should we merge this with another category, or split it into more categories?\n"
+    errors:
+      uncategorized_parent: "بدون دسته بندی نمی تواند طبقه خانواده داشته باشد"
     cannot_delete:
       uncategorized: "بدون دسته بندی را نمی توان حذف کرد"
       has_subcategories: "این دسته بندی به دلیل داشتن زیردسته قابل پاک شدن نیست."
+      topic_exists:
+        other: "این دسته بندی باید پاک شود زیرا این جستار دارای %{count} است. قدیمی ترین جستار  %{topic_link}."
+      topic_exists_no_oldest: "این دسته را نمی توان پاک کرد زیرا تعداد جستار %{count} است "
   trust_levels:
     newuser:
       title: "کاربر جدید"
@@ -254,6 +281,7 @@ fa_IR:
       title: "رهبر"
   rate_limiter:
     slow_down: "شما این عمل را بیش از حد انجام داده اید، بعدا دوباره تلاش کنید"
+    too_many_requests: "ما روزانه  محدودیت زمانی داریم برای اینکه این اقدام چند بار انجام شود. لطفا صبر کنید  %{time_left} قبل ازاینکه دوباره تلاش کنید. "
     hours:
       other: "%{count} ساعت"
     minutes:
@@ -315,29 +343,44 @@ fa_IR:
     update: 'به‌روز کردن گذرواژه'
     save: 'تنظیم رمز عبور'
     title: 'بازیابی گذرواژه'
+    success: "شما با موفقیت رمز عبورتان را تغییر دادید و الان وارد سیستم هستید. "
     success_unapproved: "شما با موفقیت رمز عبورتان را تغییر دادید."
     continue: "برو به %{site_name}"
   change_email:
     confirmed: "ایمیل شما به روز شد."
     please_continue: "برو به %{site_name}"
+    error: "در تغییر ایمیلتان خطایی روی داد. شاید آن نشانی از پیش در حال استفاده است؟"
   activation:
     action: "حساب کاربریتان را فعال کنید"
+    already_done: "متاسفیم٬‌ این پیوند تاییدیه حساب کاربری دیگر معتبر نیست. شاید حساب کاربری شما در حال حاضر فعال است."
+    please_continue: "حساب کاربری جدید شما تایید شد; شما به صفحه اصلی هدایت می شوید. "
     continue_button: "برو به %{site_name}"
     welcome_to: "به %{site_name} خوش آمدید!"
+    approval_required: "مدیر باید حساب کاربری را بصورت دستی تایید کند برای دسترسی به این انجمن. شما ایمیلی مبنی به تایید حساب کاربریتان دریافت می کنید. "
   post_action_types:
+    off_topic:
+      title: 'جستار های قدیمی'
+      long_form: 'ابن جستار قدیمی را پرچم بزن'
     spam:
       title: 'هرزنامه'
+      description: 'این نوشته یک آگهی است. این برای جستار فعلی مفید یا مربوط نیست٬ ولی ماهیت آن تبلیغاتی است. '
       long_form: 'نشانه گذاری به عنوان هرزنامه'
+      email_title: '"%{title}"  به عنوان هرزنامه پرچم زده شد'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'نامناسب'
       long_form: 'این مورد نامناسب دانسته شد.'
     notify_user:
       title: 'پیام @{{username}}'
+      description: 'محتوای این نوشته چیزی هست که من می خوام بصورت خصوصی و مستقیم درباره آن حرف بزنم. برای دیگران پرچم گزاری نکن.'
+      long_form: 'به کاربر پیام داده شد'
       email_title: 'نوشته ی شما در "{title}%"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
+      description: 'این نوشته نیاز به توجه مدیر دارد به دلیل  دیگری که در پایین لیست نشده است '
+      long_form: 'این را برای توجه مدیر پرچم بزن '
+      email_title: 'یک پست در "%{title}" نیاز به توجه مدیر دارد'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'نشانک گذاری'
@@ -354,15 +397,40 @@ fa_IR:
   topic_flag_types:
     spam:
       title: 'هرز نامه'
+      description: 'این موضوع یک تبلیغات است. این برای سایت مفید یا مربط نیست٬ ولی تبلغات طبیعی است.'
+      long_form: 'پرچم گزاری به عنوان یک هرزنامه'
     inappropriate:
       title: 'نامناسب'
+      description: 'محتوای این موضوع شامل مواردی میشود که یک شخص می تونه آن را  توهین آمیز٬ آزار دهنده٬‌ یا نقض  <a href="/guidelines"> قوانین انجمن باشد. '
+      long_form: 'پرچم گزاری شده به عنوان نامناسب'
     notify_moderators:
       title: "یک چیز دیگر"
+      description: 'این موضوع نیاز به توجه مدیر دارد بر اساس <a href="/guidelines"> دستورعمل های سایت</a>, <a href="%{tos_url}"> TOS</a>, یا به دلیل دیگری که اینجا اشاره نشده است. '
+      long_form: 'این را برای توجه مدیر پرچم گزاری کن'
+      email_title: 'این موضوع "%{title}" نیاز به توجه مدیر دارد. '
       email_body: "%{link}\n\n%{message}"
+  flagging:
+    you_must_edit: '<p>نوشته شما توسط انجمن پرچم گزاری شده. لطفا <a href="/my/private-messages"> پیامت را نگاه کن</a>.</p>'
+    user_must_edit: '<p> این نوشته توسط انجمن پرچم گزاری شده و بطور موقت مخفی شده است.</p>'
+  archetypes:
+    regular:
+      title: "موضوع عادی"
+    banner:
+      message:
+        make: "این موضوع در حال حاضر بنر است. این در بالای در تمام صفحه ها نمایش داده می شود تا زمانی که توسط کاربر رد بشود. "
+        remove: "این موضوع دیگر در بنر نیست. دیگر در بالای در صفحه ها به نمایش در نمی آید. "
   unsubscribed:
     title: 'اشتراک لغو شده'
     description: "اشتراک شما لغو شد. دیگر با شما تماس نخواهیم گرفت!"
+    oops: "در صورتی که قصد انجام این کار را نداشتید٬ پایین را کلیک کنید."
     error: "خطا در لغو اشتراک"
+    preferences_link: "شما همچنین می توانید لغو اشتراک کنید از digest ایمیل در <a href='/my/preferences'> صفحه تنظیمات </a>"
+    different_user_description: "شما در حال حاضر وارد سیستم شده اید به عنوان یک کاربر دیگر که ایمیل digest برایش ارسال شد. لطفا از سیسیتم خارج شوید و دوباره تلاش کنید."
+    not_found_description: "متاسفیم٬‌ ما نمی توانیم اشتراک شما را لغو کنیم. ممکن است پیوند در ایمیل شما منقضی شده است. "
+  resubscribe:
+    action: "اشتراک دوباره"
+    title: " دوباره اشتراک شده!"
+    description: "شما دوباره به اشتراک در آمدید."
   reports:
     visits:
       title: "بازدید کاربران"
@@ -442,25 +510,34 @@ fa_IR:
     page_view_anon_reqs:
       title: "ناشناس"
       xaxis: "روز"
+      yaxis: "درخواست های ناشناس API"
     page_view_logged_in_reqs:
       title: "وارد شده در"
       xaxis: "روز"
+      yaxis: "وارد شده در درخواست های API"
     page_view_crawler_reqs:
       title: "خزنده وب"
       xaxis: "روز"
     page_view_total_reqs:
       title: "کل"
       xaxis: "روز"
+      yaxis: "تمام درخواست API"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
+      yaxis: "درخواست  برای به روز رسانی زنده و پیگیری استفاده شد "
     http_2xx_reqs:
+      title: "وضعیت 2xx (OK)"
       xaxis: "روز"
+      yaxis: "درخواست با موفقیت (Status 2xx)"
     http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
       xaxis: "روز"
+      yaxis: "تغییر مسیر درخواست (Status 3xx)"
     http_4xx_reqs:
       title: "HTTP 4xx (ارور کلاینت)"
       xaxis: "روز"
+      yaxis: "Client Errors (Status 4xx)"
     http_5xx_reqs:
       title: "HTTP 5xx (ارور سرور)"
       xaxis: "روز"
@@ -470,17 +547,54 @@ fa_IR:
       xaxis: "روز"
       yaxis: "کل درخواست ها"
   dashboard:
+    rails_env_warning: "سرور شما در حال اجراست در %{env} حالت "
+    ruby_version_warning: "شما نسخه  Ruby 2.0.0 را اجرا کرده اید که  به مشکل دارا بودن شناخته شده است. به روز کنید به  بخش 247 یا بعدتر"
     memory_warning: 'سرور شما با کمتر از 1 گیگ رم راه اندازی شده است،برای دیسکورس حداقل 1 گیگ رم لازم است تا به درستی کار کنند.'
     default_logo_warning: "یک لوگوی گرافیکی برای سایت خود انتخاب نمایید. تگ های logo_url, logo_small_url, و favicon_url را بروز رسانی کنید. <a href='/admin/site_settings'>تنظیمات سایت</a>"
+    title_nag: "اسمت را در وب سایت وارد کن. عنوان به روز کن در <a href='/admin/site_settings'> تنظیمات سایت </a>."
+    site_description_missing: "یک جمله برای توضیحات سایتت وارد کن که در جستجو نشان داده بشود. توضیحات سایتت را به روز کن در اینجا <a href='/admin/site_settings'> تنظیمات سایت </a>."
   content_types:
+    education_new_reply:
+      title: "آموزش کاربر جدید: پاسخ های اول"
+    education_new_topic:
+      title: "آموزش کاربر جدید: موضوع های اول"
+    usage_tips:
+      title: "راهنما برای کاربر جدید"
+      description: "راهنما و اطلاعات ضروری برای کاربران جدید "
     welcome_user:
       title: "خوش آمدیده اید : کاربر جدید"
+      description: "این پیام بصورت خودکار به تمام کاربران جدید وقتی نام نویسی می کنند ارسال می شود. "
+    welcome_invite:
+      title: "خوش آمدید: کاربران دعوت شده"
+      description: "این پیام به صورت خودکار به تمام کاربران دعوت شده جدید ارسال می شود وقتی دعوتنامه را از طرف کاربر دیگری برای شرکت قبول می کنند. "
+    login_required_welcome_message:
+      title: "ورود مورد نیاز است: پیام خوش آمدید "
+      description: "پیام خوش آمدید به کاربرانی  که از سیستم خارج شده اند نشان داده می شود وقتی که تنظیمات ورود به سیستم روشن است."
+    login_required:
+      title: "ورود مورد نیاز است: صفحه اصلی"
+      description: "نوشته نشان داده شده برای کاربران غیرمجاز است وقتی که ورود مورد نیاز است در سایت. "
     head:
       title: "HTML head"
+    top:
+      title: "بالای صفحه ها "
+    bottom:
+      title: "پایین صفحه ها"
+      description: "HTML که قبل از </body> تگ به آن اضافه می شه  "
   site_settings:
+    censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
+    delete_old_hidden_posts: "پاک کردن خودکار تمام نوشته هایی که بیش از 30 روز بصورت پنهان باقی می مانند. "
     default_locale: "زبان پیشفرض برای دیسکورس  (ISO 639-1 کد)"
     allow_user_locale: "اجازه برای کاربران تا بتوانند زبان مورد نظر خود را انتخاب نماییند"
+    min_post_length: "حداقل طول نوشته در کاراکتر"
+    min_first_post_length: "حداقل طول نوشته در کاراکتر (topic body)"
+    min_private_message_post_length: "حداقل طول نوشته  کاراکتر در پیام ها "
+    max_post_length: "حداکثر طول نوشته در کاراکتر"
+    min_topic_title_length: "حداقل طول عنوان نوشته در  کاراکتر"
+    max_topic_title_length: "حداکثر طول مجاز عنوان جستار در کاراکتر"
+    min_private_message_title_length: "حداقل طول مجاز عنوان برای پیام در کاراکتر"
+    allow_uncategorized_topics: "به جستار اجازه ساخت بده بدون دسته بندی "
     title: "نام این وب سایت،استفاده شده در عنوان تگ"
+    site_description: "سایتت را در یک جمله توصیف کن٬‌ همنطور که در تگ متا توضیح داده شده بود"
     show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     allow_moderators_to_create_categories: "اجازه دادن به مدیران برای ساخت دسته‌بندی‌های جدید"
     enable_badges: "فعال سازی سیستم مدال دهی"
@@ -496,6 +610,25 @@ fa_IR:
     tl1_requires_topics_entered: "یک کاربر جدید چه تعداد موضوعاتی باید ایجاد کنید تا به سطح اعتماد 1 ترفیع پیدا کند."
     tl1_requires_read_posts: "یک کاربر جدید چه تعداد نوشته باید ایجاد کنید تا به سطح اعتماد 1 ترفیع پیدا کند."
     tl1_requires_time_spent_mins: "یک کاربر جدید چه مدت باید نوشته را بخواند تا به سطح اعتماد 1 ترفیع پیدا کند."
+    tl2_requires_topics_entered: "کاربر چندتا از جستار را باید وارد کنه به بتونه به سطح اعتماد 2 برسد."
+    tl2_requires_read_posts: "کاربر چندتا نوشته باید بخواند تا بتواند به سطح اعتماد 2 برسد"
+    tl2_requires_time_spent_mins: "کاربر چند دقیقه باید نوشته ها را بخواند تا بتواند به سطح اعتماد 2  برسد."
+    tl2_requires_days_visited: "کاربر چند روز باید از سایت بازدید بکند تا بتواند به سطح اعتماد  2 برسد. "
+    tl2_requires_likes_received: "کاربر چندین پسند باید دریافت کند قبل از اینکه به سطح اعتماد  2 برسد."
+    tl2_requires_likes_given: "کاربر چندین لایک باید بزند تا بتواند به سطح اعتماد 2 برسد. "
+    tl2_requires_topic_reply_count: "کاربرچندین پاسخ باید بدهد قبل از اینکه به سطح اعتماد 2 برسد."
+    tl3_requires_days_visited: "حداقل روزهایی که روز که کاربر نیاز با بازدید از سایت دارد در  100 روز گذشته تا بتواند به سطح اعتماد  3 برسد.  (0 to 100)"
+    tl3_requires_topics_replied_to: "حداقل تعداد جستارهایی که کاربر نیاز به پاسخ دارد در 100 روز گذشته تا بتواند سطح اعتماد 3 را بدست آورد.  (0 to 100)"
+    tl3_requires_topics_viewed_all_time: "حداقل تعداد جستار ها که کاربر نیاز به بازدید دارد تا بتواند به سطح اعتماد  3 برسد."
+    tl3_requires_posts_read_all_time: "حداقل تعداد نوشته ها که کاربر نیاز به خواندن دارد تا بتواند به سطح اعتماد  3 برسد."
+    min_trust_to_create_topic: "حداقل سطح اعتمادی که برای  ساخت جستار جدید مورد نیاز است. "
+    min_trust_to_edit_wiki_post: "حداقل سطح اعتمادی  برای ویرایش نوشته ای که بعنوان ویکی نشانه گزاری شده است. "
+    newuser_max_links: "چند پیوند کاربر جدید می تواند  به نوشته اضافه کند. "
+    newuser_max_images: "چند عکس کاربر جدید می تواند به نوشته اضافه کند."
+    newuser_max_attachments: "چند پیوست کاربر جدید می تواند اضافه کند به پست. "
+    newuser_max_mentions_per_post: "حداکثر تعداد  @name اطلاعیه ها که کاربر جدید در یک پست می تواند استفاده کند. "
+    newuser_max_replies_per_topic: "حداکثر تعداد پاسخهایی که کاربر جدید می تواند در یک جستار بدهد قبل از اینکه شخص دیگری پاسخ دهد. "
+    max_mentions_per_post: "حداکثر تعداد @name اطلاعیه هایی که کسی می تواند در یک نوشته استفاده کند. "
     allow_uploaded_avatars: "اجازه دادن به کاربران برای بارگذاری آواتارهای سفارشی"
     enable_names: "نام کامل کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
     enable_emoji: "فعالسازی ایموجی"
@@ -620,6 +753,8 @@ fa_IR:
       subject_template: "به %{site_name} خوش آمدید!"
     backup_failed:
       subject_template: "پشتیبان گیری با شکست مواجه شد."
+    restore_failed:
+      subject_template: "بازگردانی ناموفق"
     pending_users_reminder:
       subject_template:
         other: "%{count} کاربران منتظر تایید"
@@ -690,25 +825,62 @@ fa_IR:
         other: "%{count} نوشته ها"
     forgot_password:
       subject_template: "[%{site_name}] باز یابی رمز عبور"
+    set_password:
+      subject_template: "تنظیم رمز عبور [%{site_name}] "
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
+      text_body_template: "حساب کاربری جدید برای شما ساخته شد در  %{site_name}\n\nبر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان: \n\n%{base_url}/users/password-reset/%{email_token}\n"
+    authorize_email:
+      subject_template: "آدرس ایمیل جدید را تایید کنید برای [%{site_name}]"
+      text_body_template: "آدرس ایمیل جدید را تایید کنید برای %{site_name} با کلیک کردن بر پیوند پیش رو : \n\n\n%{base_url}/users/authorize-email/%{email_token}\n"
+    signup_after_approval:
+      subject_template: "شما تایید شدید %{site_name}! "
+      text_body_template: "خوش آمدید به  %{site_name}!\n\nیکی از مدیران حساب کاربری شما را تایید کرد در %{site_name}.\n\nبر روی پیوند پیش رو کلیک کنید تا حساب کاربری شما تایید شود: \n%{base_url}/users/activate-account/%{email_token}\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n\n%{new_user_tips}\n\n\nما به  [رفتار انجمن متمدن] معتقدیم (%{base_url}/guidelines) برای  همیشه. \n\nاز بودنتان در اینجا لذت ببرید! \n\n( اگر شما نیاز  به ارتباط با مدیران را دارید[staff members](%{base_url}/about) به عنوان یک کاربر جدید٬ لطفا به این پیام پاسخ دهید.)\n"
+    signup:
+      subject_template: "[%{site_name}] حساب کاربری جدیدتان را فعال کنید"
+      text_body_template: "خوش آمدید به %{site_name}!\n\n\nبرای فعال نمودن حساب کاربریتان بر روی پیوند پیش رو کلیک کنید: \n\n%{base_url}/users/activate-account/%{email_token}\n\n\nاگر پیوند بالا قابل کلیک کردن نیست٬ پیوند را کپی کنید و در مرور گر وب انتقال دهید. \n"
   page_not_found:
+    title: "صفحه ای که درخواست کردید وجود ندارد یا خصوصی است. "
     popular_topics: "محبوب"
     recent_topics: "اخیر"
     see_more: "بیشتر"
     search_title: "جستجو در این سایت"
     search_google: "گوگل"
+  login_required:
+    welcome_message: "#[خوش آمدید به  %{title}](#welcome)\n\nحساب کاربری نیاز داره به.  لطفا حساب کاربری درست کنید یا وارد سیستم بشید برای ادامه. \n"
   terms_of_service:
     title: "شرایط استفاده از خدمات"
+    signup_form_message: 'من خواندم و قبول می کنم  <a href="/tos" target="_blank">شرایط و ضوابط استفاده از سرویس</a>.'
   deleted: 'حذف شد'
   upload:
+    edit_reason: "کپی عکس های محلی دانلود شد"
     unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
+    pasted_image_filename: "تصویر جایگذاری شد"
+    store_failure: "برای ذخیره آپلود انجام نشد#%{upload_id} برای کاربر #%{user_id}."
     attachments:
       too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده باید {max_size_kb}% کیلوبایت باشد. )"
     images:
+      too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
+      fetch_failure: "متأسفیم، در هنگام  کشیدن عکس خطایی رخ داده است."
       unknown_image_type: "متأسفم، اما به نظر می‌رسد پرونده‌ای که می‌خواهید بارگذاری کنید، از نوع «تصویر» نیست."
+      size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما خراب است. "
+  flag_reason:
+    sockpuppet: "یک کاربر جدید یک جستار جدید ساخته٬ و کاربر جدید دیگری با  همان آدرس  IP پاسخ داده. نگاه کن به گزارش٬ sockpuppets  تنظیمات سایت "
+    spam_hosts: "این کاربر جدید چند نوشته جدید بوجود آورده با پیوندهایی به همان  دامنه. کارابران جدید را ببین _اسپم_میزبان_بخش تنظیمات سایت"
   email_log:
+    no_user: "کاربری با این ID پیدا نمی شود%{user_id}"
+    suspended_not_pm: "کاربر معلق شده٬ نه پیام "
+    seen_recently: "کاربر به تازگی دیده شد"
+    post_not_found: "نوشته ای با این ID پیدا نمی شود %{post_id}"
+    notification_already_read: "آگاه سازی این ایمیل قبلا خوانده شده"
     topic_nil: "پاسخ در نوشه صفر است"
+    post_deleted: "نوشته توسط نویسنده حذفظ شده است"
+    user_suspended: "کاربر معلق شده بود"
+    already_read: "کاربر قبلا این پست را خوانده"
+    message_blank: "پیام خالی است"
+    message_to_blank: "پیام به  خالی است"
+    text_part_body_blank: "text_part بدنه خالی است "
+    body_blank: "بدنه خالی است "
   color_schemes:
     base_theme_name: "پایه"
   about: "درباره"
@@ -718,6 +890,8 @@ fa_IR:
   csv_export:
     boolean_yes: "بله"
     boolean_no: "خیر"
+  static_topic_first_reply: |
+    نوشته اول این جستار را ویرایش کن برای عوض کردن محتویا ت%{page_name} صفحه.
   guidelines_topic:
     title: "پرسش و پاسخ / دستورالعمل"
     body: |
@@ -1064,72 +1238,32 @@ fa_IR:
       </p>
   badges:
     long_descriptions:
-      autobiographer: |
-        اه اه اه
-        اه اه اه
-      first_like: |
-        اه اه اه
-        اه اه اه
-      first_link: |
-        اه اه اه
-        اه اه اه
-      first_quote: |
-        اه اه اه
-        اه اه اه
-      first_share: |
-        اه اه اه
-        اه اه اه
-      read_guidelines: |
-        اه اه اه
-        اه اه اه
-      reader: |
-        اه اه اه
-        اه اه اه
-      editor: |
-        اه اه اه
-        اه اه اه
-      nice_share: |
-        اه اه اه
-        اه اه اه
-      welcome: |
-        اه اه اه
-        اه اه اه
-      anniversary: |
-        اه اه اه
-        اه اه اه
-      good_share: |
-        اه اه اه
-        اه اه اه
-      great_share: |
-        اه اه اه
-        اه اه اه
-      nice_post: |
-        اه اه اه
-        اه اه اه
-      nice_topic: |
-        اه اه اه
-        اه اه اه
-      good_post: |
-        اه اه اه
-        اه اه اه
-      good_topic: |
-        اه اه اه
-        اه اه اه
-      great_post: |
-        اه اه اه
-        اه اه اه
-      great_topic: |
-        اه اه اه
-        اه اه اه
-      basic: |
-        اه اه اه
-        اه اه اه
-      member: |
-        اه اه اه
-        اه اه اه
-      regular: |
-        اه اه اه
-        اه اه اه
-      leader: |
-        اه اه اه
-        اه اه اه
+      autobiographer: "بلا بلا بلا \nبلا بلا بلا \n"
+      first_like: "بلا بلا بلا \nبلا بلا بلا \n"
+      first_link: "بلا بلا بلا \nبلا بلا بلا\n"
+      first_quote: "بلا بلا بلا \nبلا بلا بلا \n"
+      first_share: "بلا بلا بلا \nبلا بلا بلا \n"
+      read_guidelines: "بلا بلا بلا \nبلا بلا بلا \n"
+      reader: "بلا بلا بلا \nبلا بلا بلا \n"
+      editor: "بلا بلا بلا \nبلا بلا بلا \n"
+      first_flag: |
+        پرچم گزاری برای سلامت انجمن بسیار مهمه. اگر متوجه شدی که نوشته ای نیاز به مدیر داره لطفا اون را پرچم گزاری کن
+
+        از پرچم گزاری دریغ نکن. شاید برای گفتگوی پرچم گزاری استفاده کنید برای ارسال<b> پیام ها <b> به کاربران وقتی
+
+         سطح اعتماد 1 را بدست آوردند.
+      nice_share: "بلا بلا بلا \nبلا بلا بلا \n"
+      welcome: "بلا بلا بلا \nبلا بلا بلا \n"
+      anniversary: "بلا بلا بلا \nبلا بلا بلا \n"
+      good_share: "بلا بلا بلا \nبلا بلا بلا \n"
+      great_share: "بلا بلا بلا \nبلا بلا بلا \n"
+      nice_post: "بلا بلا بلا \nبلا بلا بلا \n"
+      nice_topic: "بلا بلا بلا \nبلا بلا بلا \n"
+      good_post: "بلا بلا بلا \nبلا بلا بلا \n"
+      good_topic: "بلا بلا بلا \nبلا بلا بلا \n"
+      great_post: "بلا بلا بلا \nبلا بلا بلا \n"
+      great_topic: "بلا بلا بلا \nبلا بلا بلا \n"
+      basic: "بلا بلا بلا \nبلا بلا بلا \n"
+      member: "بلا بلا بلا \nبلا بلا بلا \n"
+      regular: "بلا بلا بلا \nبلا بلا بلا \n"
+      leader: "بلا بلا بلا \nبلا بلا بلا \n"

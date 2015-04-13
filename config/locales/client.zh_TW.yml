@@ -824,18 +824,11 @@ zh_TW:
         delete: "刪除討論話題"
         open: "開放討論話題"
         close: "關閉討論話題"
-        auto_close: "自動關閉"
-        make_banner: "橫幅討論話題"
-        remove_banner: "移除橫幅討論話題"
-        pin: "置頂討論話題"
-        unpin: "復原已置頂的討論話題"
-        pin_globally: "全區置頂討論話題"
         unarchive: "復原已封存的討論話題"
         archive: "封存討論話題"
         invisible: "不出現在列表上"
         visible: "出現在列表上"
         reset_read: "重置讀取資料"
-        multi_select: "選取要移動的文章"
       reply:
         title: '回覆'
         help: '回覆此討論話題'
@@ -908,7 +901,6 @@ zh_TW:
       quote_reply: "引用回覆"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
-      in_reply_to: "回覆"
       last_edited_on: "文章最近編輯的時間"
       reply_as_new_topic: "回覆為關連的討論話題"
       continue_discussion: "繼續 {{postLink}} 的討論:"
@@ -1248,15 +1240,6 @@ zh_TW:
       top:
         title: "精選"
         help: "在本年、月、週或日最熱門的討論話題"
-        yearly:
-          title: "本年精選"
-        monthly:
-          title: "本月精選"
-        weekly:
-          title: "本週精選"
-        daily:
-          title: "本日精選"
-        all: "所有時間"
         this_year: "本年"
         this_month: "本月"
         this_week: "本週"

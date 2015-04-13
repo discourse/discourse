@@ -186,6 +186,8 @@ de:
     undo: "Rückgängig machen"
     revert: "Verwerfen"
     failed: "Fehlgeschlagen"
+    switch_to_anon: "Anonymer Modus"
+    switch_from_anon: "Anonymen Modus beenden"
     banner:
       close: "Diesen Banner ausblenden."
     choose_topic:
@@ -431,7 +433,6 @@ de:
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
         every_two_weeks: "alle drei Tage"
-      email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet oder meinen @Namen erwähnt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "E-Mail-Benachrichtigungen nicht unterdrücken, während ich im Forum aktiv bin"
       other_settings: "Andere"
@@ -894,18 +895,21 @@ de:
         delete: "Thema löschen"
         open: "Thema öffnen"
         close: "Thema schließen"
-        auto_close: "Automatisch schließen"
-        make_banner: "Banner-Thema"
-        remove_banner: "Kein Banner-Thema"
-        pin: "Thema anheften"
-        unpin: "Thema loslösen"
-        pin_globally: "Thema global anheften"
+        multi_select: "Beiträge auswählen..."
+        auto_close: "Automatisch schließen…"
+        pin: "Thema anheften..."
+        unpin: "Thema loslösen..."
         unarchive: "Thema aus Archiv holen"
         archive: "Thema archivieren"
         invisible: "Unsichtbar machen"
         visible: "Sichtbar machen"
         reset_read: "„Gelesen“ zurücksetzen"
-        multi_select: "Beiträge auswählen"
+      feature:
+        pin: "Thema anheften"
+        unpin: "Thema loslösen"
+        pin_globally: "Thema global anheften"
+        make_banner: "Ankündigungsbanner"
+        remove_banner: "Ankündigungsbanner entfernen"
       reply:
         title: 'Antworten'
         help: 'beginne damit eine Antwort auf dieses Thema zu verfassen'
@@ -956,6 +960,7 @@ de:
         group_name: "Gruppenname"
       invite_reply:
         title: 'Einladen'
+        username_placeholder: "Benutzername"
         action: 'Einladung versenden'
         help: 'per E-Mail oder Benachrichtigung weitere Personen zu diesem Thema einladen'
         to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
@@ -1011,7 +1016,6 @@ de:
       edit: "Du bearbeitest {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
-      in_reply_to: "als Antwort auf"
       last_edited_on: "Beitrag zuletzt bearbeitet am"
       reply_as_new_topic: "Mit verknüpftem Thema antworten"
       continue_discussion: "Fortsetzung der Diskussion von {{postLink}}:"
@@ -1388,15 +1392,17 @@ de:
       top:
         title: "Angesagt"
         help: "die aktivsten Themen in diesem Jahr, in diesem Monat, in dieser Woche und heute"
+        all:
+          title: "Gesamt"
         yearly:
-          title: "Angesagt jährlich"
+          title: "Jährlich"
         monthly:
-          title: "Angesagt monatlich"
+          title: "Monatlich"
         weekly:
-          title: "Angesagt wöchentlich"
+          title: "Wöchentlich"
         daily:
-          title: "Angesagt täglich"
-        all: "Gesamte Zeit"
+          title: "Täglich"
+        all_time: "Gesamt"
         this_year: "Dieses Jahr"
         this_month: "Dieser Monat"
         this_week: "Diese Woche"

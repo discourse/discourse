@@ -824,18 +824,11 @@ ja:
         delete: "トピック削除"
         open: "トピックを開く"
         close: "トピックを終了する"
-        auto_close: "自動終了"
-        make_banner: "バナートピック"
-        remove_banner: "バナートピックを削除"
-        pin: "トピックのピン留め"
-        unpin: "トピックのピン留め解除"
-        pin_globally: "トピックを全サイト的にピン留めする"
         unarchive: "トピックのアーカイブ解除"
         archive: "トピックのアーカイブ"
         invisible: "リストされないようにする"
         visible: "リストする"
         reset_read: "読み込みデータをリセット"
-        multi_select: "移動するポストを選択"
       reply:
         title: '回答'
         help: 'このトピックに回答する'
@@ -925,7 +918,6 @@ ja:
       quote_reply: "引用して回答"
       edit_reason: "理由: "
       post_number: "ポスト{{number}}"
-      in_reply_to: "こちらへの回答"
       last_edited_on: "ポストの最終編集日"
       reply_as_new_topic: "リンクトピックとして引用返信"
       continue_discussion: "{{postLink}} からの議論を継続:"
@@ -1271,15 +1263,6 @@ ja:
       top:
         title: "トップ"
         help: "過去年間、月間、週間及び日間のアクティブトピック"
-        yearly:
-          title: "年間トップ"
-        monthly:
-          title: "月間トップ"
-        weekly:
-          title: "週間トップ"
-        daily:
-          title: "日間トップ"
-        all: "全て"
         this_year: "今年"
         this_month: "今月"
         this_week: "今週"

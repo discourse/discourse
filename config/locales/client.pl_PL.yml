@@ -206,6 +206,8 @@ pl_PL:
     undo: "Cofnij"
     revert: "Przywróć"
     failed: "Niepowodzenie"
+    switch_to_anon: "Tryb anonimowy"
+    switch_from_anon: "Zakończ tryb anonimowy"
     banner:
       close: "Zamknij ten baner."
     choose_topic:
@@ -398,6 +400,7 @@ pl_PL:
         upload_title: "Wyślij swoją grafikę"
         upload_picture: "Wyślij grafikę"
         image_is_not_a_square: "Uwaga: grafika została przycięta ponieważ jej wysokość i szerokość nie były równe. "
+        cache_notice: "Twój awatar został pomyślnie zmieniony, ale nowa wersja może pojawić się za jakiś czas z uwagi na cache przeglądarki."
       change_profile_background:
         title: "Tło profilu"
         instructions: "Tła w profilach są wycentrowane i posiadają domyślną szerokość 850px."
@@ -455,7 +458,7 @@ pl_PL:
         every_three_days: "co trzy dni"
         weekly: "co tydzień"
         every_two_weeks: "co dwa tygodnie"
-      email_direct: "Wysyłaj e-mail  gdy ktoś mnie cytuje, odpowiada na mój wpis wywołuje moją @nazwę lub zaprasza mnie do tematu."
+      email_direct: "Wysyłaj e-mail gdy ktoś mnie cytuje, odpowiada na mój wpis, wywołuje moją @nazwę lub zaprasza mnie do tematu."
       email_private_messages: "Wyślij e-mail, gdy ktoś napisze mi prywatną wiadomość"
       email_always: "Wysyłaj powiadomienia email nawet gdy przejawiam aktywność na forum"
       other_settings: "Inne"
@@ -929,18 +932,21 @@ pl_PL:
         delete: "Usuń temat"
         open: "Otwórz temat"
         close: "Zamknij temat"
-        auto_close: "Zamknij automatycznie"
-        make_banner: "Ustaw jako baner"
-        remove_banner: "Wyłącz ten baner"
-        pin: "Przypnij temat"
-        unpin: "Odepnij temat"
-        pin_globally: "Przypnij temat globalnie"
+        multi_select: "Wybierz wpisy…"
+        auto_close: "Zamknij automatycznie…"
+        pin: "Przypnij temat…"
+        unpin: "Odepnij temat…"
         unarchive: "Przywróć z archiwum"
         archive: "Archiwizuj temat"
         invisible: "Ustaw jako niewidoczny"
         visible: "Ustaw jako widoczny"
         reset_read: "Zresetuj przeczytane dane"
-        multi_select: "Wybierz wpisy"
+      feature:
+        pin: "Przypnij temat"
+        unpin: "Odepnij temat"
+        pin_globally: "Przypnij temat globalnie"
+        make_banner: "Ustaw jako baner"
+        remove_banner: "Wyłącz baner"
       reply:
         title: 'Odpowiedz'
         help: 'zacznij pisać odpowiedź'
@@ -991,14 +997,17 @@ pl_PL:
         group_name: "nazwa grupy"
       invite_reply:
         title: 'Zaproś'
+        username_placeholder: "nazwa użytkownika"
         action: 'Wyślij zaproszenie'
         help: 'zaproś innych do tego tematu e-mailem lub powiadomieniem'
         to_forum: "Wyślemy krótki email pozwalający twojemu znajomemu błyskawicznie dołączyć przez kliknięcie w link (bez logowania)."
+        sso_enabled: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_email: "Wprowadzony został adres e-mail. Wyślemy tam zaproszenie umożliwiające wskazanej osobie odpowiedź w tym temacie."
         to_topic_username: "Wprowadzono nazwę użytkownika. Wskazane konto otrzyma powiadomienie z linkiem do tematu."
         email_placeholder: 'nazwa@example.com'
-        success: "Wysłaliśmy zaproszenie do <b>{{emailOrUsername}}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
+        success_email: "Wysłaliśmy zaproszenie do <b>{{emailOrUsername}}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
+        success_username: "Wskazany użytkownik został zaproszony do udziału w tym temacie."
         error: "Przepraszamy, nie udało się zaprosić wskazanej osoby. Być może została już zaproszona? (Lub wysyłasz zbyt wiele zaproszeń)"
       login_reply: 'Zaloguj się, aby odpowiedzieć'
       filters:
@@ -1054,7 +1063,6 @@ pl_PL:
       edit: "Edycja {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Powód"
       post_number: "wpis {{number}}"
-      in_reply_to: "w odpowiedzi na"
       last_edited_on: "ostatnia edycja wpisu"
       reply_as_new_topic: "Odpowiedz w nowym temacie"
       continue_discussion: "Kontynuując dyskusję z {{postLink}}:"
@@ -1452,15 +1460,17 @@ pl_PL:
       top:
         title: "Popularne"
         help: "popularne tematy w ubiegłym roku, miesiącu, tygodniu lub dniu"
+        all:
+          title: "Cały czas"
         yearly:
-          title: "Popularne w tym roku"
+          title: "Rocznie"
         monthly:
-          title: "Popularne w tym miesiącu"
+          title: "Miesięcznie"
         weekly:
-          title: "Popularne w tym tygodniu"
+          title: "Tygodniowo"
         daily:
-          title: "Popularne dzisiaj"
-        all: "Od zawsze"
+          title: "Dziennie"
+        all_time: "Cały czas"
         this_year: "W tym roku"
         this_month: "W tym miesiącu"
         this_week: "W tym tygodniu"

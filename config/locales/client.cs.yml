@@ -229,10 +229,18 @@ cs:
       title: "Uživatelé"
       likes_given: "Rozdáno"
       likes_received: "Obdrženo"
+      topics_entered: "Navštíveno"
+      topics_entered_long: "Témat navštíveno"
       time_read: "Čas strávený čtením"
       topic_count: "Témata"
+      topic_count_long: "Témat vytvořeno"
       post_count: "Odpovědi"
+      post_count_long: "Odpovědí"
       no_results: "Žádné výsledky"
+      days_visited: "Návštěv"
+      days_visited_long: "Dní navštíveno"
+      posts_read: "Přečteno"
+      posts_read_long: "Příspěvků přečteno"
       total_rows:
         one: "1 uživatel"
         few: "%{count} uživatelé"
@@ -341,6 +349,8 @@ cs:
       delete_yourself_not_allowed: "Váš účet teď nejde odstranit. Obraťte se na správce aby váš účet smazal za vás."
       unread_message_count: "Zprávy"
       admin_delete: "Smazat"
+      muted_users: "Zjišení"
+      muted_users_instructions: "Umlčet všechny notifikace od těchto uživatelů."
       staff_counters:
         flags_given: "užitečná nahlášení"
         flagged_posts: "nahlášených příspěvků"
@@ -876,6 +886,7 @@ cs:
           title: "Normální"
         muted_pm:
           title: "Ztišení"
+          description: "Nikdy nedostanete oznámení týkající se čehokoliv v této zprávě."
         muted:
           title: "Ztišené"
           description: "nebudete dostávat žádná oznámení k tomuto tématu a ani se nebude zobrazovat v seznamu nepřečtených témat."
@@ -884,18 +895,11 @@ cs:
         delete: "Odstranit téma"
         open: "Otevřít téma"
         close: "Zavřít téma"
-        auto_close: "Automaticky zavřít"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
-        pin: "Připnout téma"
-        unpin: "Odstranit připnutí"
-        pin_globally: "Připnout téma globálně"
         unarchive: "Navrátit z archivu"
         archive: "Archivovat téma"
         invisible: "Zneviditelnit"
         visible: "Zviditelnit"
         reset_read: "Vynulovat počet čtení"
-        multi_select: "Výběr více příspěvků"
       reply:
         title: 'Odpovědět'
         help: 'začněte psát odpověď na toto téma'
@@ -973,7 +977,6 @@ cs:
       quote_reply: "odpověď s citací"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
-      in_reply_to: "Odpovědět"
       last_edited_on: "příspěvek naposledy upraven"
       reply_as_new_topic: "Odpovědět v propojeném tématu"
       continue_discussion: "Pokračující diskuze z {{postLink}}:"
@@ -1350,15 +1353,7 @@ cs:
       top:
         title: "Nejlepší"
         help: "výběr nejlepších témat za rok, měsíc, týden nebo den"
-        yearly:
-          title: "Nejlepší podle let"
-        monthly:
-          title: "Nejlepší podle měsíce"
-        weekly:
-          title: "Nejlepší podle týdne"
-        daily:
-          title: "Nejlepší podle dní"
-        all: "Za celou dobu"
+        all_time: "Za celou dobu"
         this_year: "Letos"
         this_month: "Tenhle měsíc"
         this_week: "Tenhle týden"

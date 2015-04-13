@@ -92,7 +92,7 @@ it:
       email: 'invia questo collegamento via email'
     topic_admin_menu: "azioni amministrative sull'argomento"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
-    s3_deprecation_warning: "ATTENZIONE! Amazon S3 sarà presto obsoleto per l'archiviazione di immagini/allegati. Per favore segua le istruzioni al <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>link</a> per spostare i file sull'archiviazione locale."
+    s3_deprecation_warning: "ATTENZIONE! Amazon S3 sarà presto reso obsoleto per l'archiviazione di immagini/allegati. Segui le <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>istruzioni</a> per migrare all'archiviazione locale."
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -186,6 +186,8 @@ it:
     undo: "Annulla"
     revert: "Ripristina"
     failed: "Fallito"
+    switch_to_anon: "Modalità Anonima"
+    switch_from_anon: "Esci Modalità Anonima"
     banner:
       close: "Nascondi questo banner."
     choose_topic:
@@ -333,7 +335,7 @@ it:
       unread_message_count: "Messaggi"
       admin_delete: "Cancella"
       users: "Utenti"
-      muted_users: "Senza Audio"
+      muted_users: "Azzittiti"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       staff_counters:
         flags_given: "segnalazioni utili"
@@ -374,6 +376,7 @@ it:
         upload_title: "Carica la tua foto"
         upload_picture: "Carica Immagine"
         image_is_not_a_square: "Attenzione: abbiamo ritagliato la tua immagine; l'altezza e la larghezza non erano uguali."
+        cache_notice: "Il tuo avatar è stato cambiato ma ci potrebbe volere un po' prima che appaia a causa della cache del browser."
       change_profile_background:
         title: "Sfondo Profilo"
         instructions: "Gli sfondi del profilo saranno centrati e avranno per difetto un'ampiezza di 850px."
@@ -431,7 +434,7 @@ it:
         every_three_days: "ogni tre giorni"
         weekly: "ogni settimana"
         every_two_weeks: "ogni due settimane"
-      email_direct: "Mandami una mail quando qualcuno mi cita, risponde ad un mio post, menziona il mio @username o mi coinvolge in una dicussione."
+      email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio, menziona il mio @nome o mi invita ad un argomento"
       email_private_messages: "Inviami una email quando qualcuno mi scrive un messaggio"
       email_always: "Non sospendere le notifiche via email anche quando sono attivo sul sito"
       other_settings: "Altro"
@@ -707,6 +710,7 @@ it:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>ha accettato il tuo invito</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -887,18 +891,11 @@ it:
         delete: "Cancella Argomento"
         open: "Apri Argomento"
         close: "Chiudi Argomento"
-        auto_close: "Chiudi Automaticamente"
-        make_banner: "Argomento Annuncio"
-        remove_banner: "Rimuovi Argomento Annuncio"
-        pin: "Appunta Argomento"
-        unpin: "Spunta Argomento"
-        pin_globally: "Appunta Argomento Globalmente"
         unarchive: "De-archivia Argomento"
         archive: "Archivia Argomento"
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
-        multi_select: "Seleziona Messaggi"
       reply:
         title: 'Rispondi'
         help: 'inizia a scrivere una risposta a questo argomento'
@@ -982,7 +979,6 @@ it:
       quote_reply: "rispondi citando"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
-      in_reply_to: "rispondi a"
       last_edited_on: "ultima modifica al messaggio:"
       reply_as_new_topic: "Rispondi come Argomento collegato"
       continue_discussion: "Continua la discussione da {{postLink}}:"
@@ -1357,15 +1353,6 @@ it:
       top:
         title: "Di Punta"
         help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
-        yearly:
-          title: "Migliori dell'anno"
-        monthly:
-          title: "Migliori del mese"
-        weekly:
-          title: "Migliori della settimana"
-        daily:
-          title: "Migliori del giorno"
-        all: "Di Sempre"
         this_year: "Quest'anno"
         this_month: "Questo mese"
         this_week: "Questa settimana"

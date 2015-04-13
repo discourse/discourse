@@ -882,18 +882,11 @@ da:
         delete: "Slet emne"
         open: "Åbn emne"
         close: "Luk emne"
-        auto_close: "Luk automatisk"
-        make_banner: "Banner emne"
-        remove_banner: "Fjern banner emne"
-        pin: "Fastgør emne"
-        unpin: "Frigør emne"
-        pin_globally: "Fastgør emnet globalt"
         unarchive: "Gendan emne fra arkiv"
         archive: "Arkivér emne"
         invisible: "Gør ulistet"
         visible: "Går listet"
         reset_read: "Glem hvilke emner jeg har læst"
-        multi_select: "Vælg emner der skal flyttes"
       reply:
         title: 'Svar'
         help: 'begynd at skrive et svar til dette emne'
@@ -977,7 +970,6 @@ da:
       quote_reply: "citér svar"
       edit_reason: "Reason: "
       post_number: "indlæg {{number}}"
-      in_reply_to: "som svar til"
       last_edited_on: "indlæg sidst redigeret den"
       reply_as_new_topic: "Svar som linket emne"
       continue_discussion: "Fortsætter debatten fra {{postLink}}:"
@@ -1344,15 +1336,6 @@ da:
       top:
         title: "Top"
         help: "de mest aktive emner i det sidse år, måned, uge og dag"
-        yearly:
-          title: "Top årligt"
-        monthly:
-          title: "Top månedligt"
-        weekly:
-          title: "Top ugentligt"
-        daily:
-          title: "Top dagligt"
-        all: "Alt"
         this_year: "Dette år"
         this_month: "Denne måned"
         this_week: "Denne uge"

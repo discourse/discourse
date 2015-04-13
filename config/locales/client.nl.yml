@@ -882,16 +882,9 @@ nl:
         delete: "Verwijder topic"
         open: "Open topic"
         close: "Sluit topic"
-        auto_close: "Automatisch sluiten"
-        make_banner: "Zet topic in als banner"
-        remove_banner: "Verwijder bannertopic"
-        pin: "Pin topic vast"
-        unpin: "Ontpin topic"
-        pin_globally: "Pin topic globaal vast"
         unarchive: "De-archiveer topic"
         archive: "Archiveer topic"
         reset_read: "Reset leesdata"
-        multi_select: "Selecteer berichten"
       reply:
         title: 'Reageer'
         help: 'Schrijf een reactie op deze topic'
@@ -966,7 +959,6 @@ nl:
       quote_reply: "citeer"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
-      in_reply_to: "reageer op"
       last_edited_on: "bericht gewijzig op"
       reply_as_new_topic: "Reageer als gelinkt topic"
       continue_discussion: "Voortzetting van de discussie {{postLink}}:"
@@ -1302,14 +1294,6 @@ nl:
       top:
         title: "Top"
         help: "de meest actieve topics van het afgelopen jaar, maand of dag"
-        yearly:
-          title: "Jaarlijkse top"
-        monthly:
-          title: "Maandlijkse top"
-        weekly:
-          title: "Wekelijkse top"
-        daily:
-          title: "Dagelijkse top"
         this_year: "Dit jaar"
         this_month: "Deze maand"
         this_week: "Deze week"

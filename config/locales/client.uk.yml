@@ -629,13 +629,9 @@ uk:
         delete: "Видалити тему"
         open: "Відкрити тему"
         close: "Закрити тему"
-        auto_close: "Автоматичне закриття"
-        pin: "Закріпити тему"
-        unpin: "Відкріпити тему"
         unarchive: "Розархівувати тему"
         archive: "Заархівувати тему"
         reset_read: "Скинути дані про прочитаність"
-        multi_select: "Перемістити дописи"
       reply:
         title: 'Відповісти'
         help: 'почати складати відповідь на цю тему'
@@ -695,7 +691,6 @@ uk:
       quote_reply: "відповісти на цитату"
       edit_reason: "Причина: "
       post_number: "допис {{number}}"
-      in_reply_to: "Відповісти"
       last_edited_on: "допис востаннє редаговано"
       continue_discussion: "В продовження дискусії {{postLink}}:"
       follow_quote: "перейти до цитованого допису"
@@ -919,14 +914,6 @@ uk:
         help: "Останні теми в категорії {{categoryName}}"
       top:
         title: "Top"
-        yearly:
-          title: "Top Yearly"
-        monthly:
-          title: "Top Monthly"
-        weekly:
-          title: "Top Weekly"
-        daily:
-          title: "Top Daily"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
