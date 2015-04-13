@@ -79,7 +79,7 @@
   }
 
   .num {
-    text-align: center;
+    @include text-align(center);
     a:not(.badge-posts) {
       color: inherit;
     }
@@ -119,7 +119,7 @@
     vertical-align: top;
     padding-top: 15px;
     padding-bottom: 15px;
-    border-left: 6px solid;
+    @include border-left(6px solid);
   }
   td.stats {
     .unit {
