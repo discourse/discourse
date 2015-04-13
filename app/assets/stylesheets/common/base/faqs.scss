@@ -27,6 +27,5 @@
 
   /* intended only for /faq, /guidelines, /tos, and /privacy */
   width: 700px;
-  padding-left:20px;
-
+  @include padding-left(20px);
 }
