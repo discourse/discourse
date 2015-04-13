@@ -163,7 +163,7 @@
     width: 300px;
   }
   .btn {
-    float: none !important;
+    @include float(none !important);
   }
 }
 
