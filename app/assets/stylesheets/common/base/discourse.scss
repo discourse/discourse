@@ -28,7 +28,7 @@ small {
 
 blockquote {
   background-color: scale-color-diff();
-  border-left: 5px solid darken(scale-color-diff(), 10%);
+  @include border-left(5px solid darken(scale-color-diff(), 10%));
   overflow: hidden;
 }
 
@@ -86,7 +86,7 @@ body {
   #loading-message {
     position: absolute;
     font-size: 2.143em;
-    text-align: center;
+    @include text-align(center);
     top: 120px;
     @include left(500px);
     color: $primary;
