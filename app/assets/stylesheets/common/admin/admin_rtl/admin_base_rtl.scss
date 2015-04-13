@@ -1,4 +1,5 @@
-/ these are the styles associated with the Discourse admin section
+
+// these are the styles associated with the Discourse admin section
 // Set the layout direction.
 $disc-direction: rtl;
 
@@ -190,7 +191,7 @@ td.flaggers td {
   width: 18.018%;
   margin-top: 30px;
   .nav-stacked {
-    border-right: none;
+    @include border-right(none);
   }
   li a.active {
     color: $secondary;
@@ -202,7 +203,7 @@ td.flaggers td {
   width: 76.5765%;
   min-height: 800px;
   @include margin-left(0);
-  border-left: solid 1px scale-color-diff();
+  @include border-left(solid 1px scale-color-diff());
   @include padding(30px 0 30px 30px);
 }
 
@@ -987,7 +988,7 @@ table.api-keys {
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px scale-color-diff();
+    @include border-left(solid 1px scale-color-diff());
   }
 }
 
@@ -1034,8 +1035,7 @@ table.api-keys {
 
   @include float(left);
   width: 54.0540%;
-  margin-left: 1.8018%;
-
+  @include margin-left(1.8018%);
   p.description {
     color: $primary;
   }
@@ -1316,7 +1316,7 @@ button.ru {
 and (max-width : 850px) {
   .nav-stacked {
     .glyph {width: auto; position: relative;}
-    > li > a {padding: 13px}
+    > li > a {@include padding(13px);}
   }
 }
 
