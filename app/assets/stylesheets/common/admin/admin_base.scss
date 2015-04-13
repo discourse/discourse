@@ -6,6 +6,7 @@ $disc-direction: ltr;
 @import "common/foundation/variables";
 @import "common/foundation/mixins";
 @import "common/foundation/helpers";
+
 .admin-contents table {
   width: 100%;
   tr {@include text-align(left);}
@@ -76,7 +77,7 @@ td.flaggers td {
   .location-box {
     position: absolute;
     width: 460px;
-   @include right(0px);
+    @include right(0px);
     z-index: 990;
     box-shadow: 0 2px 6px rgba(0,0,0, .8);
     margin-top: -2px;
@@ -189,7 +190,7 @@ td.flaggers td {
   width: 18.018%;
   margin-top: 30px;
   .nav-stacked {
-    border-right: none;
+    @include border-right(none);
   }
   li a.active {
     color: $secondary;
@@ -201,7 +202,7 @@ td.flaggers td {
   width: 76.5765%;
   min-height: 800px;
   @include margin-left(0);
-  border-left: solid 1px scale-color-diff();
+  @include border-left(solid 1px scale-color-diff());
   @include padding(30px 0 30px 30px);
 }
 
@@ -505,7 +506,7 @@ section.details {
     top: 0;
     bottom: 0;
     @include left(0);
-   @include right(0);
+    @include right(0);
     z-index: 100000;
     background-color: white;
     width: 100%;
@@ -516,7 +517,7 @@ section.details {
       top: 20px;
       bottom: 10px;
       @include left(20px);
-     @include right(20px);
+      @include right(20px);
     }
   }
   .nav.nav-pills {
@@ -534,12 +535,12 @@ section.details {
     }
     .toggle-mobile {
       position: absolute;
-     @include right(35px);
+      @include right(35px);
       font-size: 20px;
     }
     .toggle-maximize {
       position: absolute;
-     @include right(-5px);
+      @include right(-5px);
     }
     .delete-link {
       @include margin-left(15px);
@@ -577,7 +578,7 @@ section.details {
     .ace_editor {
       position: absolute;
       @include left(0);
-     @include right(0);
+      @include right(0);
       top: 0;
       bottom: 0;
     }
@@ -611,7 +612,7 @@ section.details {
     td.hex         { width: 100px; }
     td.actions     { width: 200px; }
     .hex-input     { width: 80px; margin-bottom: 0; }
-    .hex           { text-align: center; }
+    .hex           { @include text-align(center); }
     .description   { color: scale-color($primary, $lightness: 50%); }
 
     .invalid .hex input {
@@ -635,7 +636,7 @@ section.details {
   .user {
     width: 25px;
     @include padding(8px 0 0 0);
-    text-align: center;
+    @include text-align(center);
   }
   .excerpt {
     max-width: 700px;
@@ -705,7 +706,7 @@ section.details {
   .version-number {
     font-size: 1.286em;
     font-weight: bold;
-    text-align: center;
+    @include text-align(center);
   }
 
   .face {
@@ -781,7 +782,7 @@ table.api-keys {
 
     th {
       font-weight: normal;
-      text-align: center;
+      @include text-align(center);
       background: dark-light-diff($primary, $secondary, 80%, -65%);
     }
     th.title {
@@ -795,7 +796,7 @@ table.api-keys {
 
     td.value {
       font-weight: bold;
-      text-align: center;
+      @include text-align(center);
 
       i {
         display: none;
@@ -986,7 +987,7 @@ table.api-keys {
     -webkit-border-radius: 3px;
   }
   ::-webkit-scrollbar-track {
-    border-left: solid 1px scale-color-diff();
+    @include border-left(solid 1px scale-color-diff());
   }
 }
 
@@ -1065,7 +1066,7 @@ table.api-keys {
   .ace_editor {
     position: absolute;
     @include left(0);
-   @include right(0);
+    @include right(0);
     top: 0;
     bottom: 0;
   }
@@ -1100,7 +1101,7 @@ table.api-keys {
     width: 300px;
   }
   .action, .match_count, .last_match_at, .created_at {
-    text-align: center;
+    @include text-align(center);
     width: 9.9099%;
   }
 }
@@ -1115,7 +1116,7 @@ table.api-keys {
 .screened-emails, .screened-urls {
   .ip_address {
     width: 9.9099%;
-    text-align: center;
+    @include text-align(center);
   }
 }
 .screened-ip-addresses {
@@ -1153,7 +1154,7 @@ table.api-keys {
     width: 18.018%;
   }
   .created_at {
-    text-align: center;
+    @include text-align(center);
   }
   .details {
     width: 300px;
@@ -1315,7 +1316,7 @@ button.ru {
 and (max-width : 850px) {
   .nav-stacked {
     .glyph {width: auto; position: relative;}
-    > li > a {padding: 13px}
+    > li > a {@include padding(13px);}
   }
 }
 
@@ -1470,3 +1471,4 @@ table#user-badges {
   input[type=text] {
     width: 90%;
   }
+}
