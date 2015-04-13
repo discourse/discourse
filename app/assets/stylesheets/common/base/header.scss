@@ -51,7 +51,7 @@
 
     .icons {
       @include float(left);
-      text-align: center;
+      @include text-align(center);
       @include margin(0 0 0 5px);
       list-style: none;
 
@@ -65,8 +65,8 @@
         text-decoration: none;
         cursor: pointer;
         border-top: 1px solid transparent;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
+        @include border-left(1px solid transparent);
+        @include border-right(1px solid transparent);
         transition: all linear .15s;
 
 
@@ -74,8 +74,8 @@
           color: $primary;
           background-color:  scale-color-diff();
           border-top: 1px solid transparent;
-          border-left: 1px solid transparent;
-          border-right: 1px solid transparent;
+          @include border-left(1px solid transparent);
+          @include border-right(1px solid transparent);
         }
         &:active {
           color: $primary;
@@ -88,8 +88,8 @@
         background-color: $secondary;
         cursor: default;
         border-top: 1px solid scale-color-diff();
-        border-left: 1px solid scale-color-diff();
-        border-right: 1px solid scale-color-diff();
+        @include border-left(1px solid scale-color-diff());
+        @include border-right(1px solid scale-color-diff());
         &:after {
           display: block;
           position: absolute;
@@ -122,7 +122,7 @@
         @include margin-left(0);
       }
       .unread-notifications {
-       @include right(-4px);
+        @include right(-4px);
         background-color: scale-color($tertiary, $lightness: 50%);
       }
       .unread-private-messages {
@@ -140,7 +140,7 @@
     background: $secondary;
     max-height: 417px;
     top: 100%;
-   @include right(0);
+    @include right(0);
     z-index: 1100;
     overflow: auto;
     border: 1px solid scale-color-diff();
@@ -268,7 +268,7 @@
   .searching {
     position: absolute;
     top: 0;
-   @include right(0);
+    @include right(0);
     .spinner {
       width: 10px;
       height: 10px;
@@ -279,7 +279,7 @@
   // I am ghetto using this to display "Show More".. be warned
   .no-results {
     @include padding(5px);
-    text-align: center;
+    @include text-align(center);
   }
   .filter {
     @include padding(0);
@@ -344,7 +344,7 @@
 
 .search-context .show-help {
   position: absolute;
- @include right(10px);
+  @include right(10px);
   top: 0;
 }
 
