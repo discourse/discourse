@@ -1,4 +1,3 @@
-
 $disc-direction: ltr;
 @import "./common/foundation/multi_directional_mixins";
 
@@ -17,7 +16,7 @@ article.post {
   }
 
   .quote .title {
-    border-left: 5px solid darken(scale-color-diff(), 10%);
+    @include border-left(5px solid darken(scale-color-diff(), 10%));
     background-color: scale-color-diff();
     @include padding(10px 10px 0 12px);
     .avatar { @include margin-right(7px); }
@@ -31,7 +30,7 @@ article.post {
     @include padding(10px 8px 10px 13px);
     @include margin(0 0 10px 0);
     background-color: scale-color-diff();
-    border-left: 5px solid darken(scale-color-diff(), 10%);
+    @include border-left(5px solid darken(scale-color-diff(), 10%));
     overflow: hidden;
     p {
       @include margin(0 0 10px 0);
@@ -109,7 +108,7 @@ img.emoji {
 
 .in-reply-to {
   font-size: 0.929em;
-  text-align: center;
+  @include text-align(center);
   @include margin(10px 20px 6px 0);
   display: inline-block;
   @include float(right);
