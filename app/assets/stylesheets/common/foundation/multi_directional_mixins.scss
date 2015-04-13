@@ -2,29 +2,16 @@
 // This is set in the main manifest file.
 // $disc-direction: ltr;
 
+// Set the html direction -- it has to happen somewhere, maybe not here.
+html {
+  direction: $disc-direction;
+}
+
 // Utility functions
 
-// Make sure $disc-direction is defined.
-@function disc-is-defined($value) {
-  @if not global-variable-exists($value) {
-    @warn "$disc-direction must be defined for this to work";
-  }
-  @return $value;
-}
-
-// Set the html direction -- it has to happen somewhere, maybe not here.
-// Throw an error if direction is not defined;
-html {
-  direction: disc-is-defined($disc-direction);
-}
-
 // Returns the current default float direction.
-// Will return an error if $disc-direction is not defined. This is the only place
-// we are checking for that.
 @function disc-default-float() {
-  @if disc-is-defined(disc-direction) {
-    @return if($disc-direction == ltr, left, right); // if() is the sass ternary operator.
-  }
+  @return if($disc-direction == ltr, left, right); // if() is the sass ternary operator.
 }
 
 // Swaps values right/left and top/bottom. It passes all other values unaltered.
