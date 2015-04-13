@@ -150,7 +150,7 @@
     box-sizing: border-box;
 
     .btn.right {
-      float: right
+      @include float(right);
     }
 
     h2 {
@@ -488,7 +488,7 @@
       .time {
         display: inline-block;
         @include margin-left(10px);
-        float: none;
+        @include float(none);
       }
       // common/base/header.scss
       .fa, .icon {
@@ -527,7 +527,7 @@
     display: inline-block;
     height: 30px;
     width: 30px;
-    text-align: center;
+    @include text-align(center);
     vertical-align: middle;
     line-height: 30px;
   }
@@ -566,7 +566,7 @@
         width: auto;
         @include text-align(left);
         font-weight: normal;
-        float: auto;
+        @include float(auto);
       }
       p {
         color: scale-color($primary, $lightness: 50%);
