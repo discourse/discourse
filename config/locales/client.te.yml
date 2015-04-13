@@ -839,18 +839,11 @@ te:
         delete: "విషయం తొలగించు"
         open: "విషయం తెరువు"
         close: "విషయం మూయు"
-        auto_close: "స్వీయ మూయు"
-        make_banner: "బ్యానరు విషయం"
-        remove_banner: "బ్యానరు విషయం తొలగించు"
-        pin: "విషయం గుచ్చు"
-        unpin: "విషయం అగ్గుచ్చు"
-        pin_globally: "సార్వత్రికంగా విషయాన్ని గుచ్చు"
         unarchive: "విషయాన్ని కట్టవిప్పు"
         archive: "విషయాన్ని కట్టకట్టు"
         invisible: "అజ్జాబితాగా గుర్తించు"
         visible: "జాబితాగా గుర్తించు"
         reset_read: "చదివిన గణాంకాలను రీసెట్ చేయి"
-        multi_select: "టపాలు ఎంచుకో"
       reply:
         title: 'జవాబు'
         help: 'ఈ విషయానికి జవాబివ్వుట ప్రారంభించు'
@@ -924,7 +917,6 @@ te:
       quote_reply: "కోట్ జవాబు"
       edit_reason: "కారణం:"
       post_number: "టపా {{number}}"
-      in_reply_to: "దీనికి జవాబు"
       last_edited_on: "టపా చివర సవరించిన కాలం"
       reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
       continue_discussion: "{{postLink}} నుండి చర్చ కొనసాగుతుంది;"
@@ -1285,15 +1277,6 @@ te:
       top:
         title: "అగ్ర"
         help: "గత సంవత్సరం, నెల, వారం లేదా రోజులోని అత్యంత క్రియాశీల విషయాలు"
-        yearly:
-          title: "సంవత్సరంలోని అగ్ర"
-        monthly:
-          title: "నెలలోని అగ్ర"
-        weekly:
-          title: "వారంలోని అగ్ర"
-        daily:
-          title: "రోజులోని  అగ్ర"
-        all: "మొత్తం సమయం"
         this_year: "ఈ సంవత్సరం"
         this_month: "ఈ నెల"
         this_week: "ఈ వారం"

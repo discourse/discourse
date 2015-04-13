@@ -186,6 +186,8 @@ pt_BR:
     undo: "Desfazer"
     revert: "Reverter"
     failed: "Falhou"
+    switch_to_anon: "Modo Anônimo"
+    switch_from_anon: "Sair Modo Anônimo"
     banner:
       close: "Ignorar este banner."
     choose_topic:
@@ -374,6 +376,7 @@ pt_BR:
         upload_title: "Enviar sua foto"
         upload_picture: "Enviar imagem"
         image_is_not_a_square: "Aviso: nós cortamos sua imagem; largura e altura não eram iguais."
+        cache_notice: "Seu avatar foi alterado com sucesso mas pode levar algum tempo para aparecer devido ao cache do navegador."
       change_profile_background:
         title: "Fundo do perfil"
         instructions: "Fundos do perfil será centralizado e tera uma largura padrão de 850px."
@@ -431,7 +434,7 @@ pt_BR:
         every_three_days: "a cada três dias"
         weekly: "semanalmente"
         every_two_weeks: "a cada duas semanas"
-      email_direct: "Me envie um email quando alguém me citar, responder ao meu post, ou mencionar meu @usuario ou me convidar para um tópico"
+      email_direct: "Me envie um email quando alguém me citar, responder minhas mensagens, mencionar meu @usuário, ou me convidar para um tópico"
       email_private_messages: "Me envie um email quando alguém me enviar mensagem particular"
       email_always: "Não suprimir notificações de email quando eu estiver ativo no site"
       other_settings: "Outros"
@@ -892,18 +895,21 @@ pt_BR:
         delete: "Apagar tópico"
         open: "Abrir tópico"
         close: "Fechar tópico"
-        auto_close: "Fechar automaticamente"
-        make_banner: "Banner do Tópico"
-        remove_banner: "Remover Banner do Tópico"
-        pin: "Destacar tópico"
-        unpin: "Remover destaque do tópico"
-        pin_globally: "Fixar Tópico Globalmente"
+        multi_select: "Selecionar Mensagens..."
+        auto_close: "Fechar automaticamente..."
+        pin: "Fixar Tópico..."
+        unpin: "Desafixar Tópico..."
         unarchive: "Desarquivar tópico"
         archive: "Arquivar tópico"
         invisible: "Tornar Invisível"
         visible: "Tornar Visível"
         reset_read: "Repor data de leitura"
-        multi_select: "Selecionar mensagens"
+      feature:
+        pin: "Fixar Tópico"
+        unpin: "Desafixar Tópico"
+        pin_globally: "Fixar Tópico Globalmente"
+        make_banner: "Banner Tópico"
+        remove_banner: "Remover Banner Tópico"
       reply:
         title: 'Responder'
         help: 'comece a compor uma resposta a este tópico'
@@ -917,6 +923,30 @@ pt_BR:
         title: 'Sinalizar'
         help: 'sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isso'
         success_message: 'Você sinalizou com sucesso este tópico.'
+      feature_topic:
+        title: "Destacar este tópico"
+        pin: "Fazer este tópico aparecer no inicio da {{categoryLink}} categoria."
+        confirm_pin: "Você já tem {{count}} tópicos fixos. Muitos tópicos fixados podem atrapalhar usuários novos e anônimos. Tem certeza que quer fixar outro tópico nesta categoria?"
+        unpin: "Remover este tópico do inicio da {{categoryLink}} categoria."
+        pin_note: "Usuários podem desafixar o tópico individualmente para si."
+        already_pinned:
+          zero: "Não existem tópicos fixados em {{categoryLink}}."
+          one: "Tópicos atualmente fixados em {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Tópicos atualmente fixados {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "Fazer este tópico aparecer no inicio de todas as listas de tópicos, até um membro da equipe desafixar ele. "
+        confirm_pin_globally: "Você já tem {{count}} tópicos fixados globalmente. Muitos tópicos fixados podem prejudicar usuários novos e anônimos. Tem certeza que quer fixar outro tópico globalmente?"
+        unpin_globally: "Remover este tópico do inicio de todas as listas de tópicos."
+        global_pin_note: "Usuários podem desafixar o tópico individualmente para si."
+        already_pinned_globally:
+          zero: "Não existem tópicos fixados globalmente."
+          one: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Tópicos atualmente fixados globalmente: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        make_banner: "Tornar este tópico em um banner que apareça no inicio de todas as páginas."
+        remove_banner: "Remover o banner que aparece no inicio de todas as páginas."
+        banner_note: "Usuários podem dispensar o banner fechando-o. Apenas um tópico pode ser colocado como banner a cada momento."
+        already_banner:
+          zero: "Não existe tópico banner."
+          one: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico banner."
       inviting: "Convidando..."
       automatically_add_to_groups_optional: "Esse convite também inclui o acesso a esses grupos:  (<b>Opacional</b>, admins apenas)"
       automatically_add_to_groups_required: "Esse convite também inclui o acesso a esses grupos:  (<b>Necessário</b>, admins apenas)"
@@ -930,10 +960,17 @@ pt_BR:
         group_name: "nome do grupo"
       invite_reply:
         title: 'Convite'
+        username_placeholder: "nome de usuário"
         action: 'Enviar Convites'
+        help: 'Convidar outros para este tópico por email ou notificação'
         to_forum: "Nós vamos mandar um email curto permitindo seu amigo a entrar e responder a esse tópico clicando em um link, sem necessidade de entrar."
+        sso_enabled: "Entrar o nome de usuário da pessoa que você gostaria de convidar para este tópico."
+        to_topic_blank: "Entrar o nome de usuário ou endereço de email da pessoa que você gostaria de convidar para este tópico."
+        to_topic_email: "Você digitou um endereço de email. Nós enviaremos um convite por email que permite seu amigo responder imediatamente a este tópico."
+        to_topic_username: "Você entrou um nome de usuário. Nós enviaremos uma notificação para esse usuário com um link convidando-o a esse tópico."
         email_placeholder: 'nome@exemplo.com'
-        success: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Você saberá quando eles utilizarem o convite. Você pode ir até a seção de Convites na sua página de usuário para saber quem você já convidou."
+        success_email: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
+        success_username: "Nós convidamos o usuário para participar neste tópico."
         error: "Desculpe, nós não pudemos convidar esta pessoa. Talvez já seja usuário? (convites têm taxa limitada)"
       login_reply: 'Logar para Responder'
       filters:
@@ -984,7 +1021,6 @@ pt_BR:
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
-      in_reply_to: "responder para"
       last_edited_on: "resposta editada pela última vez em"
       reply_as_new_topic: "Responder como um Tópico linkado"
       continue_discussion: "Continuando a discussão do {{postLink}}:"
@@ -1365,15 +1401,17 @@ pt_BR:
       top:
         title: "Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
+        all:
+          title: "Tempo Todo"
         yearly:
-          title: "Melhores do Ano"
+          title: "Anualmente"
         monthly:
-          title: "Melhores do Mes"
+          title: "Mensalmente"
         weekly:
-          title: "Melhores da Semana"
+          title: "Semanalmente"
         daily:
-          title: "Melhores do Dia"
-        all: "Todo Tempo"
+          title: "Diariamente"
+        all_time: "Tempo Todo"
         this_year: "Neste ano"
         this_month: "Neste mes"
         this_week: "Nesta semana"
@@ -1564,6 +1602,7 @@ pt_BR:
           size: "Tamanho"
         upload:
           label: "Enviar"
+          title: "Carregar um backup para esta instância"
           uploading: "Subindo..."
           success: "'{{filename}}' foi carregado com sucesso."
           error: "Houve um erro ao carregar '{{filename}}': {{message}}"
@@ -1769,6 +1808,7 @@ pt_BR:
             delete_topic: "apagar tópico"
             delete_post: "apagar mensagem"
             impersonate: "personificar"
+            anonymize_user: "tornar usuário anônimo"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -1902,8 +1942,13 @@ pt_BR:
         approve_success: "Usuário aprovado e email enviado com instruções de ativação."
         approve_bulk_success: "Sucesso! Todos os usuários selecionados foram aprovados e notificados."
         time_read: "Tempo de leitura"
+        anonymize: "Tornar usuário anônimo"
+        anonymize_confirm: "Você TEM CERTEZA que gostaria de tornar esta conta anônima? Esta mudança irá alterar o nome de usuário e email, e resetar todas informações do perfil."
+        anonymize_yes: "Sim, tornar esta conta anônima"
+        anonymize_failed: "Ocorreu um problema ao tornar a conta anônima."
         delete: "Apagar Usuário"
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser excluidos."
+        delete_posts_forbidden_because_staff: "Não posso deletar todas as mensagens de administradores e moderadores."
         delete_forbidden:
           one: "Usuários não podem ser excluídos se eles têm mensagens. Excluir todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dia não podem ser excluídas.)"
           other: "Usuários não podem ser excluídos se eles têm mensagens. Remova todas as mensagens antes de tentar excluir um usuário. (Mensagens mais antigas que %{count} dias não podem ser excluídas.)"

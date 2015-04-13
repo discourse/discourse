@@ -143,6 +143,8 @@ sq:
       topic_count: "Tema"
       post_count: "Postime"
       contact: "Kontaktoni"
+    bookmarked:
+      title: "Të Preferuarat"
     bookmarks:
       not_logged_in: "ju duhet të jeni të identifikuar për të ruajtur temën."
       created: "ju ruajtët këtë temë"
@@ -780,18 +782,11 @@ sq:
         delete: "Fshi Diskutimin"
         open: "Fillo Diskutim"
         close: "Mbyll Diskutimin"
-        auto_close: "Mbyllje Automatike"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
-        pin: "Pin Topic"
-        unpin: "Un-Pin Topic"
-        pin_globally: "Pin Topic Globally"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts"
       reply:
         title: 'Përgjigju'
         help: 'begin composing a reply to this topic'
@@ -865,7 +860,6 @@ sq:
       quote_reply: "cito përgjigjen"
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"
-      in_reply_to: "përgjigju tek"
       last_edited_on: "redaktimi fundit u krye me"
       reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
@@ -1215,14 +1209,6 @@ sq:
       top:
         title: "Kryesoret"
         help: "the most active topics in the last year, month, week or day"
-        yearly:
-          title: "Top Vjetore"
-        monthly:
-          title: "Top Mujore"
-        weekly:
-          title: "Top Weekly"
-        daily:
-          title: "Top Daily"
         this_year: "Këtë vit"
         this_month: "Këtë muaj"
         this_week: "Këtë javë"

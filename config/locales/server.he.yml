@@ -20,6 +20,7 @@ he:
   is_reserved: "שמור"
   purge_reason: "נמחק באופן אוטומטי כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
+  anonymous: "אנונימי"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -120,6 +121,7 @@ he:
   next_page: "עמוד הבא ←"
   prev_page: "→ עמוד קודם"
   page_num: "עמוד %{num}"
+  home_title: "בית"
   topics_in_category: "נושאים בקטגוריה '%{category}'"
   rss_posts_in_topic: "תזרים RSS '%{topic}'"
   rss_topics_in_category: "תזרים RSS של נושאים בקטגוריה '%{category}'"
@@ -127,6 +129,7 @@ he:
   num_posts: "הודעות:"
   num_participants: "משתתפים:"
   read_full_topic: "קרא נושא מלא"
+  private_message_abbrev: "הודעה"
   rss_description:
     latest: "נושאים מדוברים"
     hot: "נושאים חמים"
@@ -398,7 +401,9 @@ he:
       description: 'פרסום זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
+      title: 'הודעה ל-@{{username}}'
       description: 'פרסום זה מכיל משהו שארצה לשוחח עליו עם האדם הזה באופן ישיר ופרטי. אין צורך בסימון.'
+      long_form: 'הודעה נשלחה למשתמש/ת'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -435,6 +440,7 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/private-messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
     user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
@@ -499,18 +505,23 @@ he:
     user_to_user_private_messages:
       title: "משתמש למשתמש"
       xaxis: "יום"
+      yaxis: "מספר ההודעות"
     system_private_messages:
       title: "מערכת"
       xaxis: "יום"
+      yaxis: "מספר ההודעות"
     moderator_warning_private_messages:
       title: "אזהרות מנהל"
       xaxis: "יום"
+      yaxis: "מספר ההודעות"
     notify_moderators_private_messages:
       title: "התראה למנחים"
       xaxis: "יום"
+      yaxis: "מספר ההודעות"
     notify_user_private_messages:
       title: "התרע למשתמש"
       xaxis: "יום"
+      yaxis: "מספר ההודעות"
     top_referrers:
       title: "מיטב המפנים"
       xaxis: "משתמש"
@@ -590,7 +601,9 @@ he:
     title_nag: "הזינו את השם של האתר שלך. עדכנו את הכותרת ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     site_description_missing: "הזינו משפט אחד לתיאור האתר שלך אשר יופיע בתוצאות מנועי חיפוש. עדכנו את תיאור האתר ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
+    site_contact_username_warning: "הזינו שם חשבון ידידותי של אי/אשת צות ממנו ישלחו הודעות אוטומטיות חשובות. עדכנו את site_contact_username ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
+    s3_deprecation_warning: "אזהרה! Amazon S3 יהיה בקרוב לא מומלץ לשימוש לאכסון צרופות/image. אנא עקבו אחר <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'> ההנחיות </a> להעברה לאכסון מקומי."
   content_types:
     education_new_reply:
       title: "New User Education: First Replies"
@@ -603,8 +616,10 @@ he:
       description: "הדרכה ומידע חשוב למשתמשים חדשים."
     welcome_user:
       title: "Welcome: New User"
+      description: "הודעה שנשלחת באופן אוטומטי לכל המשתמשים החדשים כאשר הם נרשמים."
     welcome_invite:
       title: "Welcome: Invited User"
+      description: "הודעה שנשלחת באופן אוטומטי לכל המשתמשים המוזמנים כאשר הם מקבלים את ההזמנה ממשתמש אחר."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
@@ -627,9 +642,11 @@ he:
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "מספר התווים המותר כאורך מינימלי לפרסום הודעה"
     min_first_post_length: "אורך מינימלי מותר לפרסום ראשון (בגוף הפרסום) בתווים "
+    min_private_message_post_length: "אורך הפרסום המינמלי המותר בתווים להודעות"
     max_post_length: "מספר התווים המקסימלי כאורך הודעה."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
+    min_private_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
     min_search_term_length: "מספר התווים המינמלי התקין כאורך מונח לחיפוש"
     allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "תיאור הקבוצה \"ללא קטגוריה\". השאירו ריק אם אין צורך בתיאור."
@@ -663,6 +680,7 @@ he:
     digest_logo_url: "הסמליל (לוגו) האלטרנטיבי שיופיע בראש מייל התקציר של האתר שלך. אם תשאירו משבצת זו ריק יופיע שם 'logo_url' במקום. לדוגמא: http://example.com/logo.png"
     logo_small_url: "תמונת הלוגו הקטנה שתופיע בצד שמאל למעלה של האתר שלך, ומוצגת בגלילה למטה. אם ישאר ריק, תוצג גלופה בצורה של בית."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "מיקומה הקבוע של תמונת הלוגו בצד השמאלי העליון של האתר הנייד שלך. אם יושאר ריק 'logo_url' ישמש כאן."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "הטופס: נעשה שימוש בכתובת הדוא\"ל כאשר שולחים את כל הודעות המערכת הנדרשות. כדי שהודעות הדוא\"ל יגיעו, המתחם (domain) המצויין כאן חייב לכלול SPF, DKIM ורשומות reverse PTR מוגדרים כהלכה."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -673,6 +691,7 @@ he:
     summary_likes_required: "מינימום הלייקים לנושא לפני שהאפשרות \"סיכום נושא זה\" תתאפשר"
     summary_percent_filter: "כאשר משתמש/ת מקליקים על \"סיכום נושא זה\", הציגו את  % o הפרסומים הראשונים"
     summary_max_results: "מספר הפרסומים שיוחזרו באמצעות \"סיכום נושא זה\""
+    enable_private_messages: "אפשרו למשתמשים בעלי רמת_אמון 1 ליצור הודעות ולהגיב להודעות"
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "בסיס ה-URL שנמצא בשימוש עבור long polling (כאשר CDN מחזיר תוכן דינמי, זכרו להגדיר את ערך זה ל-Origin pull, דוגמת http://origin.site.com)"
     long_polling_interval: "כמות הזמן שהשרת צריך לחכות לפני שעונה ללקוחות, כאשר אין מידע לשליחה (משתמשים רשומים מחוברים למערכת בלבד)"
@@ -705,6 +724,8 @@ he:
     post_menu_hidden_items: "פריטי התפריט להסתרה כברירת מחדל בתפריט הפרסום, אלא אם כן נלחץ לחצן ההרחבה."
     share_links: "החלט אילו פריטים יופיעו בתיבת השיתוף, ובאיזה סדר."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
+    site_contact_username: "שם משתמש/ת תקין ממנו ישלחו הודעות פרטיות. אם ישאר ריק חשבון ברירת המחדל של המערכת ישמש לכך."
+    send_welcome_message: "שלחו כל המשתמשים החדשים הודעת \"ברוכים הבאים\" פרטים עם הדרכה ראשונית כיצד להתחיל."
     suppress_reply_directly_below: "אל תציגו את סך התגובות המצטבר בפרסום כאשר ישנה תגובה ישירה אחת לפרסום זה."
     suppress_reply_directly_above: "אל תציגו את את אפשרות ההרחבה \"בתגובה ל..\" לפרסום כאשר יש רק תגובה אחת ישירה מעל לפרסום זה."
     suppress_reply_when_quoting: "אל תציגו את הפרסום המקורי בפרסומים שמצטטים תגובות"
@@ -774,6 +795,7 @@ he:
     max_bookmarks_per_day: "מספר מקסימלי של סימניות למשתמש/ת ביום."
     max_edits_per_day: "מספר עריכות מקסימלי מותר למשתמש ליום."
     max_topics_per_day: "מספר מקסימלי של נושאים שמשתמש/ת יכולים ליצור ביום."
+    max_private_messages_per_day: "מספר מקסימלי של הודעות שמשתמש/ת יכולים ליצור ביום."
     max_invites_per_day: "מספר מקסימלי של הזמנות שיכולים משתמש/ת לשלוח ביום."
     suggested_topics: "מספר הנושאים המוצעים שיופיעו בתחתית הנושא המוצג."
     limit_suggested_to_category: "הצגת רק נושאים מהקטגוריה הנוכחית ברשימת הנושאים המומלצים."
@@ -823,12 +845,14 @@ he:
     email_time_window_mins: "המתינו (n) דקות לפני משלוח כל התראת מייל, כדי לאפשר למשתמשים הזדמנות לערוך ולוודא באופן סופי את הפרסומים שלהם."
     email_posts_context: "כמה תגובות קודמות יש לכלול למתקן הקשר בהודעות דוא\"ל עם התראות."
     flush_timings_secs: "באיזו תדירות אנחנו מזרימים מידע לשרת, בשניות."
+    title_max_word_length: "האורך המקסימלי המותר למילה בכותרת נושא, בתווים. "
     title_min_entropy: "האנטרופיה (תווים ייחודים שאינם בשפת הכתיבה) המינימלית הנדרשת בכותרת נושא."
     body_min_entropy: "האנטרופיה (תוים ייחודיים שאינם בשפת הכתיבה) המינימלית הנדרשת בגוף המסמך."
     title_fancy_entities: "Convert common ASCII characters to fancy HTML entities in topic titles, ala SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "האורך המינימלי של כותרת לפני שהיא נבדקת עבור איתור נושאים דומים."
     min_body_similar_length: "האורך המינימלי של גוף הפרסום לפני שהוא ייבדק לאיתור נושאים דומים."
     category_colors: "רשימה של ערכי צבעים האקסדיצמלים מותרים לסימון קטגוריות."
+    category_style: "סגנון ויזואלי עבור תגי קטגוריות."
     max_image_size_kb: "גודל קובץ מקסימלי להעלאה בקילו-בייטים (kB). ערך זה חייב להיות מוגדרת גם ב-nginx (client_max_body_size) / apache או בפרוקסי."
     max_attachment_size_kb: "הגודל המקסימלי בקילובייטים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של הרחבות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
@@ -859,6 +883,7 @@ he:
     max_age_unmatched_ips: "מחק ערכי IP לא תואמים שמוצגים לאחר (N) ימים."
     num_flaggers_to_close_topic: "מספר מינימלי של מסמנים שונים שנדרש כדי להשהות באופן אוטומטי אפשות להתערב בנושא"
     num_flags_to_close_topic: "מספר מינימלי של סימונים פעילים שנדרש כדי להשהות באופן אוטומטי את היכולת להתערב בנושא"
+    auto_respond_to_flag_actions: "אפשרו תגובה אוטמטית עם הסרת סימון."
     reply_by_email_enabled: "אפשרו  תגובה לנושאים באמצעות הדוא\"ל."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
@@ -885,13 +910,22 @@ he:
     allow_uploaded_avatars: "אפשרו למשתמשים להעלות אווטרים מותאמים אישית."
     allow_animated_avatars: "אפשרו למשתמשים להשתמש באווטרים מסוג GIF אנימציה. אזהרה: הריצו את האווטרים: רעננו לאחר שינוי הגדרה זו."
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
+    default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "מספר הנושאים המקסימלי להצגה במייל סיכום."
     digest_min_excerpt_length: "מספר התווים המינימלי למובאות מתוך הפרסום במייל הסיכום."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    suppress_digest_email_after_days: "השהיית מיילים מסכמים עבור משתמשים שלא נראו באתר במשך יותר מ(n) ימים."
+    disable_digest_emails: "נטרול דוא\"ל סיכום לכל המשתמשים."
     default_external_links_in_new_tab: "Open external links in a new tab. Users can change this in their preferences."
     detect_custom_avatars: "האם לבדוק אם משתמשם העלו אווטרים מותאמים אישית."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
+    public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
+    staff_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים לאנשי צוות."
+    enable_user_directory: "ספקו ספריייה של משתמשים לגלישה"
+    allow_anonymous_posting: "אפשרו למשתמשים לעבור למצב אנונימי"
+    anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
+    anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכ משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפרסומים שעל משתמש להכין ברצף בפרסום לפני שיקבל תזכורת בנוגע ליותר מידי תגובות עוקבות."
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
@@ -899,12 +933,16 @@ he:
     suppress_uncategorized_badge: "אל תציגו את התג (badge) לנושאים נטולי קטגוריה ברשימת הנושאים."
     global_notice: "הציגו הודעת אזהרה דחופה כללית לכל המבקרים, החליפו לריק כדי להסתיר אותה (ניתן להשתמש ב-HTML)."
     disable_edit_notifications: "ביטול התראות עריכה על ידי משתמש המערכת כאשר 'download_remote_images_to_local' פעיל."
+    full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
+    enable_names: "הצגת השם המלא של המשתמש/ת בעמודי הפרופיל שלהם, בכרטיסי המשתמ ובדוא\"ל שלהם. נטרול הסתרת השם המלא בכל מקום."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
     invites_per_page: "ברירת המחדל, הזמנות המוצגות בעמוד המשתמש."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "כאשר מישהו/מישהי מתחילים להגיב לנושא שבו התגובה האחרונה היא בת יותר מכמה ימים, אזהרה תוצג. בטלו אפשרות זו באמצעות הזנה של 0."
     autohighlight_all_code: "לחייב שימוש בקוד הדגשה לכל קוד מעוצב מראש (preformatted code blocks) אפילו אם הם אינם מציינים את השפה."
+    highlighted_languages: "הכללת הדגשת שגיאות תחביר. (אזהרה: הכללת שפות רבות מידי עשוי להשפיע על הביצוע) ראו: https://highlightjs.org/static/demo/ להדגמה"
+    embeddable_host: "מארח (Host) אשר יכול להטמיע את התגובות מפורום Discourse זה. שם מארח בלבד, ללא http:// בהתחלה"
     feed_polling_enabled: "הטמעה בלבד: האם לעמבד פידים של  RSS/ATOM כפרסומים."
     feed_polling_url: "הטמעה בלבד: URL של פיד RSS/ATOM להטמעה."
     embed_by_username: "שם המשתמש של המשתמש/ת שיוצר את הנושאים המוטמעים."
@@ -921,6 +959,7 @@ he:
     prevent_anons_from_downloading_files: "מונע ממשתמשים אנונימיים להוריד צרופות (attachments). אזהרה: דבר זה ימנע מכל משאב שאינו תמונה ופורסם כצרופה לעבוד."
     enable_emoji: "אפשרו emoji"
     emoji_set: "איך אתם אוהבים את ה-emoji שלכם?"
+    enforce_square_emoji: "חובת מימדי ריבועיים בכל ה-emojis."
     errors:
       invalid_email: "כתובת דוא\"ל לא קיימת."
       invalid_username: "אין משתמש/ת עם שם משתמש כזה."

@@ -859,18 +859,11 @@ nb_NO:
         delete: "slett emne"
         open: "Åpne Emne"
         close: "Lukk Emne"
-        auto_close: "Auto-Lukk"
-        make_banner: "Banneremne"
-        remove_banner: "Fjern banneremne"
-        pin: "Fastsett emne"
-        unpin: "Løsgjør emne"
-        pin_globally: "Fastsett emne globalt"
         unarchive: "Uarkiver Emne"
         archive: "Arkiver Emne"
         invisible: "Skjul Emnet"
         visible: "Vist Emnet"
         reset_read: "Tilbakestill Lesedata"
-        multi_select: "Velg for Sammenslåing/Oppdeling"
       reply:
         title: 'Svar'
         help: 'begynn å skrive et svar til dette emnet'
@@ -951,7 +944,6 @@ nb_NO:
       quote_reply: "siter svar"
       edit_reason: "Begrunnelse:"
       post_number: "post {{number}}"
-      in_reply_to: "svar til"
       last_edited_on: "innlegg sist redigert"
       reply_as_new_topic: "Svar med lenket emne"
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
@@ -1312,15 +1304,6 @@ nb_NO:
       top:
         title: "Aktive"
         help: "de mest aktive emnene det siste året, den siste måneden, den siste uken eller i dag"
-        yearly:
-          title: "Årlig mest aktive"
-        monthly:
-          title: "Månedlig mest aktive"
-        weekly:
-          title: "Ukentlig mest aktive"
-        daily:
-          title: "Daglig mest aktive"
-        all: "Totalt"
         this_year: "Dette året"
         this_month: "Denne måneden"
         this_week: "Denne uken"

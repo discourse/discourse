@@ -186,6 +186,8 @@ es:
     undo: "Deshacer"
     revert: "Revertir"
     failed: "Falló"
+    switch_to_anon: "Modo Anónimo"
+    switch_from_anon: "Salir de Modo Anónimo"
     banner:
       close: "Descartar este banner."
     choose_topic:
@@ -374,6 +376,7 @@ es:
         upload_title: "Sube tu foto"
         upload_picture: "Subir Imagen"
         image_is_not_a_square: "Advertencia: hemos recortado su imagen; la anchura y la altura no eran iguales."
+        cache_notice: "Has cambiado tu avatar correctamente, podría tardar un poco en aparecer debido al caching del navegador."
       change_profile_background:
         title: "Fondo de perfil"
         instructions: "Fondos de perfil serán centrados y tendrán un ancho por default de 850px."
@@ -431,7 +434,7 @@ es:
         every_three_days: "cada tres días"
         weekly: "semanalmente"
         every_two_weeks: "cada dos semanas"
-      email_direct: "Envíame un correo electrónico cuando alguien me cita, en las respuestas de mi post, o mencione mi @nombre de usuario o me invite a un tema"
+      email_direct: "Envíame un email cuando alguien me cite, responda a mis posts, mencione mi @usuario o me invite a un tema"
       email_private_messages: "Notifícame por email cuando alguien me envíe un mensaje"
       email_always: "No detener notificaciones por e-mail cuando estoy activo en el sitio"
       other_settings: "Otros"
@@ -892,18 +895,21 @@ es:
         delete: "Eliminar tema"
         open: "Abrir tema"
         close: "Cerrar tema"
-        auto_close: "Auto-cierre"
-        make_banner: "Tema de encabezado (banner). "
-        remove_banner: "Descartar tema como encabezado (banner). "
-        pin: "Destacar tema"
-        unpin: "Dejar de destacar"
-        pin_globally: "Destacar tema globalmente"
+        multi_select: "Seleccionar posts..."
+        auto_close: "Auto-cierre..."
+        pin: "Destacar tema..."
+        unpin: "Dejar de destacar..."
         unarchive: "Desarchivar Tema"
         archive: "Archivar Tema"
         invisible: "Hacer invisible"
         visible: "Hacer visible"
         reset_read: "Restablecer datos de lectura"
-        multi_select: "Seleccionar posts para mover o eliminar"
+      feature:
+        pin: "Destacar tema"
+        unpin: "Dejar de destacar tema"
+        pin_globally: "Destacar tema globalmente"
+        make_banner: "Tema de encabezado"
+        remove_banner: "Remover tema de encabezado"
       reply:
         title: 'Responder'
         help: 'comienza a escribir una respuesta a este tema'
@@ -954,14 +960,17 @@ es:
         group_name: "nombre del grupo"
       invite_reply:
         title: 'Invitar'
+        username_placeholder: "nombre de usuario"
         action: 'Enviar invitación'
         help: 'invitar a otros a este tema a través del correo electrónico o de las notificaciones'
         to_forum: "Enviaremos un correo electrónico breve permitiendo a tu amigo unirse inmediatamente al hacer clic en un enlace, sin necesidad de iniciar sesión."
+        sso_enabled: "Introduce el nombre de usuario de la persona a la que quieres invitar a este tema."
         to_topic_blank: "Introduzca el nombre de usuario o dirección de correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ha introducido una dirección de correo electrónico. Nosotros te enviaremos una invitación que le permita a su amigo responder inmediatamente a este tema."
         to_topic_username: "Ha introducido un nombre de usuario. Le enviaremos una notificación a ese usuario con un enlace invitándolo a este tema."
         email_placeholder: 'nombre@ejemplo.com'
-        success: "Hemos enviado una invitación a <b>{{emailOrUsername}}</b>. Le notificaremos cuando se utilice la invitación. Compruebe la ficha de invitaciones en su página de usuario para realizar un seguimiento de sus invitaciones."
+        success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
+        success_username: "Hemos invitado a ese usuario a participar en este tema."
         error: "Lo sentimos, no pudimos invitar a esa persona. Tal vez ya han sido invitados? (La tasa de invitaciones son limitadas)"
       login_reply: 'Inicia Sesión para Responder'
       filters:
@@ -1012,7 +1021,6 @@ es:
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
-      in_reply_to: "responder a"
       last_edited_on: "post editado por última ven en"
       reply_as_new_topic: "Responder como tema enlazado"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
@@ -1331,8 +1339,8 @@ es:
     likes: "Likes"
     likes_lowercase: "Likes"
     likes_long: "este tema tiene {{number}} me gusta"
-    users: "Participantes"
-    users_lowercase: "Usuarios"
+    users: "Usuarios"
+    users_lowercase: "usuarios"
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"
@@ -1393,15 +1401,17 @@ es:
       top:
         title: "Top"
         help: "los temas más con más actividad del último año, mes, semana, o día"
+        all:
+          title: "Siempre"
         yearly:
-          title: "Top del año"
+          title: "Año"
         monthly:
-          title: "Top del mes"
+          title: "Mes"
         weekly:
-          title: "Top de la semana"
+          title: "Semana"
         daily:
-          title: "Top del día"
-        all: "Todo el tiempo"
+          title: "Día"
+        all_time: "Siempre"
         this_year: "Este año"
         this_month: "Este mes"
         this_week: "Esta semana"

@@ -817,18 +817,11 @@ ko:
         delete: "토픽 삭제"
         open: "토픽 열기"
         close: "토픽 닫기"
-        auto_close: "자동으로 닫기"
-        make_banner: "배너 토픽"
-        remove_banner: "배너 토픽 제거"
-        pin: "토픽 고정"
-        unpin: "토픽 고정 취소"
-        pin_globally: "전체 공지글로 설정하기"
         unarchive: "보관 안된 토픽"
         archive: "보관된 토픽"
         invisible: "목록에서 제외하기"
         visible: "목록에 넣기"
         reset_read: "값 재설정"
-        multi_select: "게시글 이동을 위한 다중 선택"
       reply:
         title: '답글'
         help: '이 토픽에 대한 답글 구성 시작'
@@ -897,7 +890,6 @@ ko:
       quote_reply: "인용한 답글"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 게시물"
-      in_reply_to: "답글 to"
       last_edited_on: "마지막으로 편집:"
       reply_as_new_topic: "링크된 토픽으로 답글 작성하기"
       continue_discussion: "{{postLink}}에서 토론을 계속:"
@@ -1236,14 +1228,6 @@ ko:
       top:
         title: "인기"
         help: "작년 또는 지난 달, 지난 주, 어제에 활발했던 토픽"
-        yearly:
-          title: "연간 인기글"
-        monthly:
-          title: "월간 인기글"
-        weekly:
-          title: "주간 인기글"
-        daily:
-          title: "일간 인기글"
         this_year: "이번 년도"
         this_month: "이번 달"
         this_week: "이번 주"
