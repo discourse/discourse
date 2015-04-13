@@ -66,6 +66,12 @@ html {
   }
 }
 
+// Creates a border of the given direction and properties - used in the border-left()
+// and border-right() mixins.
+@mixin border-direction($dir, $border-properties) {
+  border-#{$dir}: $border-properties;
+}
+
 // Remove the nth item from a list. It's used to remove the !important flag from a list
 // in the next function.
 @function disc-remove-nth($list, $index) {
@@ -151,6 +157,19 @@ html {
   @include padding-direction-length($dir, $length);
 }
 
+// To be used in place of border-left: $properties;
+@mixin border-left($border-properties) {
+  $dir: if(disc-default-float() == left, left, right);
+  @include border-direction( $dir, $border-properties);
+}
+
+// To be used in place of border-right: $properties;
+@mixin border-right($border-properties) {
+  $dir: if(disc-default-float() == left, right, left);
+  @include border-direction($dir, $border-properties);
+}
+
+
 // To be used in place of margin: $lengths;
 @mixin margin($lengths) {
   @include property-with-lengths(margin, $lengths);
@@ -170,3 +189,4 @@ html {
 @mixin right($dist)  {
   @include position-distance(right, $dist);
 }
+
