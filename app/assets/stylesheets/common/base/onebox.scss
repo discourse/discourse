@@ -13,7 +13,7 @@ a.loading-onebox {
 .onebox-result {
   margin-top: 15px;
   @include padding(12px 25px 12px 12px);
-  border-left: 5px solid darken(scale-color-diff(), 10%);
+  @include border-left(5px solid darken(scale-color-diff(), 10%));
   background: scale-color-diff();
   font-size: 1em;
   > .source {
@@ -69,11 +69,11 @@ a.loading-onebox {
 .onebox-result {
   .onebox-result-body {
     img.verdict {
-      float: none;
+      @include float(none);
       @include margin-right(7px);
     }
     img.popcorn {
-      float: none;
+      @include float(none);
       @include margin-left(20px);
       @include margin-right(5px);
     }
@@ -90,7 +90,7 @@ a.loading-onebox {
 
 aside.onebox {
   @include padding(12px 25px 12px 12px);
-  border-left: 5px solid darken(scale-color-diff(), 10%);
+  @include border-left(5px solid darken(scale-color-diff(), 10%));
   background: scale-color-diff();
   font-size: 1em;
 
@@ -147,7 +147,7 @@ aside.onebox {
 blockquote {
   aside.onebox {
     background: darken(scale-color-diff(), 5%);
-    border-left: 5px solid darken(scale-color-diff(), 12%);
+    @include border-left(5px solid darken(scale-color-diff(), 12%));
   }
 }
 
@@ -159,8 +159,8 @@ pre.onebox code ol.lines li:before {
   @include left(-40px);
   background: #F7F7F7;
   color:#AFAFAF;
-  text-align:right;
-  padding-right:5px;
+  @include text-align(right);
+  @include padding-right(5px);
   font-size:12px;
   line-height: 1.9em;
   content: counter(li-counter);
@@ -169,12 +169,12 @@ pre.onebox code ol.lines li:before {
 
 
 pre.onebox code ol{
-	margin-left:0px;
+	@include margin-left(0px);
 	line-height:1.5em;
 }
 pre.onebox code li{
 	background-color:#fff;
-	padding-left:5px;
+	@include padding-left(5px);
 }
 
 pre.onebox code ol.lines{
@@ -186,7 +186,7 @@ pre.onebox code ol.lines li {
 	list-style-type: none;
 	@include padding-left(5px);
 	@include margin-left(0px);
-	border-left: 1px solid #CFCFCF;
+	@include border-left(1px solid #CFCFCF);
 	min-height: 1.5em; //show empty li lines
   white-space: pre;
 }
@@ -203,14 +203,14 @@ pre.onebox code {
 .onebox-body .github-commit-status {
   background: #F5F5F5;
   border-radius: 5px;
-  margin:0px 0px 5px 100px;
+  @include margin(0px 0px 5px 100px);
   @include padding(10px);
 }
 
 .onebox-body .status_tag {
   display:inline-block;
   color:#fff;
-  padding:1px 4px;
+  @include padding(1px 4px);
   border-radius:3px;
   font-weight:bold;
   margin-bottom:5px;
@@ -234,5 +234,5 @@ pre.onebox code {
 }
 
 .onebox-body .github-content-right{
-  margin-left:100px;
+  @include margin-left(100px);
 }
