@@ -214,14 +214,12 @@ class Guardian
     return false unless ( SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?) )
     return true if is_admin?
     return false if ! can_see?(object)
-
     return false if group_ids.present?
 
     if object.is_a?(Topic) && object.category
       if object.category.groups.any?
         return true if object.category.groups.all? { |g| can_edit_group?(g) }
       end
-      return false if object.category.read_restricted
     end
 
     user.has_trust_level?(TrustLevel[2])
