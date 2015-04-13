@@ -431,7 +431,6 @@ fr:
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
-      email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
       other_settings: "Autre"
@@ -896,18 +895,11 @@ fr:
         delete: "Supprimer Sujet"
         open: "Ouvrir Sujet"
         close: "Fermer le sujet"
-        auto_close: "Fermeture automatique"
-        make_banner: "Bannière de sujet"
-        remove_banner: "Retirer la bannière de sujet"
-        pin: "Épingler le sujet"
-        unpin: "De-épingler le sujet"
-        pin_globally: "Épingler le sujet globalement"
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
         invisible: "Retirer de la liste des sujets"
         visible: "Afficher dans la liste des sujets"
         reset_read: "Réinitialiser les lectures"
-        multi_select: "Sélectionner les messages"
       reply:
         title: 'Répondre'
         help: 'commencez à répondre à ce sujet'
@@ -965,7 +957,6 @@ fr:
         to_topic_email: "Vous avez entré une adresse email. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
         to_topic_username: "Vous avez entré un nom d'utilisateur. Nous allons envoyer une notification à cet utilisateur avec un lien l'invitant sur ce sujet."
         email_placeholder: 'nom@exemple.com'
-        success: "Nous avons envoyé un email à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il aura répondu à votre invitation. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         error: "Désolé, nous n'avons pas pu inviter cette personne. Elle a peut-être déjà été invitée ? (Le nombre d'invitations est limité)"
       login_reply: 'Se connecter pour répondre'
       filters:
@@ -1016,7 +1007,6 @@ fr:
       edit: "Éditer {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
-      in_reply_to: "répondre à"
       last_edited_on: "message dernièrement édité le"
       reply_as_new_topic: "Répondre en créant un sujet lié"
       continue_discussion: "Suite du sujet {{postLink}}:"
@@ -1397,15 +1387,6 @@ fr:
       top:
         title: "Top"
         help: "les meilleurs sujets de l'année, du mois, de la semaine ou du jour"
-        yearly:
-          title: "Top Annuel"
-        monthly:
-          title: "Top Mensuel"
-        weekly:
-          title: "Top Hebdomadaire"
-        daily:
-          title: "Top Quotidien"
-        all: "depuis toujours"
         this_year: "Cette année"
         this_month: "Ce mois-ci"
         this_week: "Cette semaine"

@@ -818,18 +818,11 @@ tr_TR:
         delete: "Konuyu Sil"
         open: "Konuyu Aç"
         close: "Konuyu Kapat"
-        auto_close: "Otomatik Kapatma"
-        make_banner: "Manşet Konusu Yap"
-        remove_banner: "Manşet Konusunu Kaldır"
-        pin: "Konuyu Başa Tuttur"
-        unpin: "Konuyu Başa Tutturma"
-        pin_globally: "Konuyu Her Yerde Başa Tuttur"
         unarchive: "Konuyu Arşivden Kaldır"
         archive: "Konuyu Arşivle"
         invisible: "Listelenmemiş Yap"
         visible: "Listelenmiş Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
-        multi_select: "Gönderileri Seç"
       reply:
         title: 'Cevapla'
         help: 'bu konuya bir cevap oluşturmaya başlayın'
@@ -898,7 +891,6 @@ tr_TR:
       quote_reply: "alıntıyla cevapla"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
-      in_reply_to: "cevapla"
       last_edited_on: "gönderinin en son düzenlenme tarihi"
       reply_as_new_topic: "Bağlantılı Konu Oluşturarak Cevapla"
       continue_discussion: "{{postLink}} Gönderisinden tartışmaya devam ediliyor:"
@@ -1238,15 +1230,6 @@ tr_TR:
       top:
         title: "En Popüler"
         help: "geçtiğimiz yıl, ay, hafta veya gündeki en etkin başlıklar"
-        yearly:
-          title: "Yılın En Popülerleri"
-        monthly:
-          title: "Ayın En Popülerleri"
-        weekly:
-          title: "Haftanın En Popülerleri"
-        daily:
-          title: "Günün En Popülerleri"
-        all: "Tüm Zamanlar"
         this_year: "Bu yıl"
         this_month: "Bu ay"
         this_week: "Bu hafta"

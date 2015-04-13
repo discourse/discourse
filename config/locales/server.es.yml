@@ -20,6 +20,7 @@ es:
   is_reserved: "está reservado"
   purge_reason: "Eliminada automáticamente como cuenta abandonada, sin activar"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
+  anonymous: "Anónimos"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -120,6 +121,7 @@ es:
   next_page: "siguiente página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
+  home_title: "Inicio"
   topics_in_category: "Temas en la categoría '%{category}'"
   rss_posts_in_topic: "Feed RSS de '%{topic}'"
   rss_topics_in_category: "Feed RSS de los temas en la categoría '%{category}'"
@@ -1458,16 +1460,8 @@ es:
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
-      text_body_template: |
-        %{username} te ha invitado a ver un mensaje '%{topic_title}' en %{site_name}:
-
-        Por favor visita el siguiente enlace para ver el hilo: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} te ha invitado a un tema '%{topic_title}'"
-      text_body_template: |
-        %{username} te ha invitado a un tema '%{topic_title}' en %{site_name}:
-
-        Por favor, visite este enlace para ver el tema: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

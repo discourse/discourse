@@ -151,7 +151,7 @@ zh_CN:
     topic_count_unread:
       other: "{{count}} 未读主题。"
     topic_count_new:
-      other: "{{count}} 个新主题。"
+      other: "近期有 {{count}} 个主题。"
     click_to_show: "点此显示。"
     preview: "预览"
     cancel: "取消"
@@ -166,6 +166,8 @@ zh_CN:
     undo: "重做"
     revert: "撤销"
     failed: "失败"
+    switch_to_anon: "匿名模式"
+    switch_from_anon: "退出匿名模式"
     banner:
       close: "隐藏横幅。"
     choose_topic:
@@ -238,14 +240,14 @@ zh_CN:
       no_subcategory: "无"
       category: "分类"
       posts: "新帖子"
-      topics: "新主题"
+      topics: "近期"
       latest: "最新"
       latest_by: "最新发表："
       toggle_ordering: "排序控制"
       subcategories: "子分类"
-      topic_stats: "新主题的数量。"
+      topic_stats: "近期主题的数量。"
       topic_stat_sentence:
-        other: "在过去的 %{unit} 中有 %{count} 个新主题"
+        other: "在过去的 %{unit} 中有 %{count} 个主题"
       post_stats: "新帖子的数量。"
       post_stat_sentence:
         other: "在过去的 %{unit} 中有 %{count} 个新帖子"
@@ -298,7 +300,7 @@ zh_CN:
       mailing_list_mode: "每有一个新帖就发送一封邮件给我（除非我屏蔽了主题或者分类）"
       watched_categories: "已关注"
       watched_categories_instructions: "你将自动关注这些分类的所有新主题。你将收到新的帖子和主题的通知，并且会在靠近话题列表的地方增加一个关于未读和新帖子的数字。"
-      tracked_categories: "已跟踪"
+      tracked_categories: "已追踪"
       tracked_categories_instructions: "你将会自动追踪这些分类中的所有新主题。未读和新帖子数量将出现在每个主题后。"
       muted_categories: "已屏蔽"
       muted_categories_instructions: "你不会收到这些分类的新主题的任何通知，他们也不会出现在你的未读标签中。"
@@ -312,7 +314,7 @@ zh_CN:
       muted_users: "忽略"
       muted_users_instructions: "禁止任何关于这些用户的通知。"
       staff_counters:
-        flags_given: "有用的标记"
+        flags_given: "有效标记"
         flagged_posts: "被报告的帖子"
         deleted_posts: "删除的帖子"
         suspensions: "禁用的"
@@ -350,6 +352,7 @@ zh_CN:
         upload_title: "上传图片"
         upload_picture: "上传图片"
         image_is_not_a_square: "注意：我们已经裁剪了你的图片；它不是正方形的。"
+        cache_notice: "你已经成功地修改了头像，但是由于浏览器缓存，你可能要等待新头像生效。"
       change_profile_background:
         title: "个人资料背景"
         instructions: "个人资料背景将被居中，且默认宽度为 850px。"
@@ -365,11 +368,11 @@ zh_CN:
         frequency:
           zero: "如果你没有阅读过我们想寄给你的内容，我们会立即发送电子邮件给你。"
           one: "如果你很久都没有出现了，我们才会发送电子邮件给你。"
-          other: "我们只会在您最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
+          other: "我们只会在你最近 {{count}} 分钟内没有访问时才会发送电子邮件给你。"
       name:
         title: "名字"
         instructions: "你的全名（可选）"
-        instructions_required: "您的全名"
+        instructions_required: "你的全名"
         too_short: "你设置的名字太短了"
         ok: "你的名字符合要求"
       username:
@@ -413,7 +416,7 @@ zh_CN:
       other_settings: "其它"
       categories_settings: "分类"
       new_topic_duration:
-        label: "认为主题是新主题的条件："
+        label: "近期主题的条件："
         not_viewed: "我还没有浏览它们"
         last_here: "在你最近一次访问之后创建的"
         after_n_days:
@@ -741,7 +744,7 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>这里是你的新主题。</p><p>默认情况下，最近两天创建的主题是新主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
+          new: '<p>你讲发表新的主题。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
           unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
       bottom:
         latest: "没有更多主题可看了。"
@@ -819,7 +822,7 @@ zh_CN:
           '3_2': '因为你在关注此主题，所以你将收到相关通知。'
           '3_1': '因为你创建了此主题，所以你将收到相关通知。'
           '3': '因为你在关注此主题，所以你将收到相关通知。'
-          '2_8': '因为你在跟踪此分类，所以你将收到相关通知。'
+          '2_8': '因为你在追踪此分类，所以你将收到相关通知。'
           '2_4': '因为你在此主题内发表了回复，所以你将收到相关通知。'
           '2_2': '因为你在追踪此主题，所以你将收到相关通知。'
           '2': '因为你<a href="/users/{{username}}/preferences">阅读了此主题</a>，所以你将收到相关通知。'
@@ -830,13 +833,13 @@ zh_CN:
           '0': '你将忽略关于此主题的所有通知。'
         watching_pm:
           title: "关注"
-          description: "一旦消息中有新消息，您都会收到通知。未读和新帖子的数量将显示在主题列表的每个主题后。"
+          description: "一旦消息中有新消息，你都会收到通知。未读和新帖子的数量将显示在主题列表的每个主题后。"
         watching:
           title: "关注"
           description: "一旦有关于这个主题的新帖子发表，你都会收到通知。未读贴的数量将出现在主题列表中每个主题的标题后。"
         tracking_pm:
           title: "追踪"
-          description: "未读和新帖子的数量将出现在消息旁。您只会在别人@你或回复你的主题时才会被提醒。"
+          description: "未读和新帖子的数量将出现在消息旁。你只会在别人@你或回复你的主题时才会被提醒。"
         tracking:
           title: "追踪"
           description: "未读贴和新帖的数量将出现在主题列表中每个主题的标题后。你只会在别人@你或有人回复了你的帖子时才会收到通知。"
@@ -857,18 +860,21 @@ zh_CN:
         delete: "删除主题"
         open: "打开主题"
         close: "关闭主题"
-        auto_close: "自动关闭"
-        make_banner: "横幅主题"
-        remove_banner: "移除横幅主题"
-        pin: "置顶主题"
-        unpin: "解除主题置顶"
-        pin_globally: "全局置顶主题"
+        multi_select: "选择帖子..."
+        auto_close: "自动关闭..."
+        pin: "置顶主题..."
+        unpin: "解除主题置顶..."
         unarchive: "解除主题存档"
         archive: "存档主题"
         invisible: "使其不列于主题列表"
         visible: "使其列于主题列表"
         reset_read: "重置阅读数据"
-        multi_select: "选择帖子"
+      feature:
+        pin: "置顶主题"
+        unpin: "解除主题置顶"
+        pin_globally: "全局置顶主题"
+        make_banner: "横幅主题"
+        remove_banner: "移除横幅主题"
       reply:
         title: '回复'
         help: '开始给本主题撰写回复'
@@ -919,14 +925,17 @@ zh_CN:
         group_name: "群组名"
       invite_reply:
         title: ' 邀请'
+        username_placeholder: "用户名"
         action: '发送邀请'
         help: '邮件或通知邀请其他人至主题'
         to_forum: "我们将发送一封简洁的邮件让你的朋友通过点击一个链接参与讨论，不需要登录。"
+        sso_enabled: "输入你想邀请的用户的用户名至该主题。"
         to_topic_blank: "输入你想邀请的用户的用户名或邮箱地址至该主题"
         to_topic_email: "你已经输入了邮箱地址。我们将发送一封邮件邀请让你的朋友可直接回复该主题。"
         to_topic_username: "你已经输入了用户名。我们将发送提醒至该用户，其中将包含一个邀请他们至该主题的链接。"
         email_placeholder: '电子邮箱地址'
-        success: "我们发了一封邀请邮件给 <b>{{emailOrUsername}}</b>。我们将在邀请被接受后通知您。检查您的用户中的邀请标签页来追踪您的邀请。"
+        success_email: "我们发了一封邀请邮件给 <b>{{emailOrUsername}}</b>。我们将在邀请被接受后通知你。检查你的用户中的邀请标签页来追踪你的邀请。"
+        success_username: "我们已经邀请了该用户参与该主题。"
         error: "抱歉，我们不能邀请这个人。可能他已经被邀请了？（邀请还有频率限制）"
       login_reply: '登录后回复'
       filters:
@@ -972,7 +981,6 @@ zh_CN:
       edit: "编辑 {{replyAvatar}} {{username}} 发表的 {{link}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
-      in_reply_to: "回复给"
       last_edited_on: "最后修改于"
       reply_as_new_topic: "回复为联结主题"
       continue_discussion: "从 {{postLink}} 继续讨论："
@@ -1254,10 +1262,10 @@ zh_CN:
     posts_lowercase: "帖子"
     posts_long: "本主题有 {{number}} 个帖子"
     posts_likes_MF: |
-      这个主题有 {count, plural, one {1 个回复}其他{# 回复数}} {ratio, select,
-      low {with a high like to like ratio}
-      med {with a very high post to like ratio}
-      high {with an extremely high post to like ratio}
+      这个主题有 {count, plural, other {# 个帖子}}{ratio, select,
+      low {，有很多人赞了该帖}
+      med {，有非常多人赞了该帖}
+      high {，大多数人赞了该帖}
       other {}}
     original_post: "原始帖"
     views: "浏览"
@@ -1307,13 +1315,13 @@ zh_CN:
           other: "{{count}} 条未读"
       new:
         lower_title_with_count:
-          one: "1 个新主题"
-          other: "{{count}} 个新主题"
-        lower_title: "新主题"
+          one: "1 个近期主题"
+          other: "{{count}} 个近期主题"
+        lower_title: "近期主题"
         title:
-          zero: "新主题"
-          one: "新主题（1）"
-          other: "新主题（{{count}}）"
+          zero: "近期主题"
+          one: "近期主题（1）"
+          other: "近期主题（{{count}}）"
         help: "最近几天创建的主题"
       posted:
         title: "我的帖子"
@@ -1330,15 +1338,17 @@ zh_CN:
       top:
         title: "热门"
         help: "最近一年、一月、一周或一天的最活跃主题"
+        all:
+          title: "不限时间"
         yearly:
-          title: "年度热门"
+          title: "年度"
         monthly:
-          title: "月度热门"
+          title: "月度"
         weekly:
-          title: "每周热门"
+          title: "每周"
         daily:
-          title: "每日热门"
-        all: "时间不限"
+          title: "每天"
+        all_time: "不限时间"
         this_year: "今年"
         this_month: "本月"
         this_week: "本周"
@@ -2075,7 +2085,7 @@ zh_CN:
         title: '跳转'
         home: '<b>g</b> 然后 <b>h</b> 首页（最新内容）'
         latest: '<b>g</b> 然后 <b>l</b> 最新内容'
-        new: '<b>g</b> 然后 <b>n</b> 新主题'
+        new: '<b>g</b> 然后 <b>n</b> 近期主题'
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
         top: '<b>g</b>, <b>t</b> 顶部'
