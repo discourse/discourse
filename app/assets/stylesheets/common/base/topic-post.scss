@@ -47,7 +47,7 @@ aside.quote {
   .badge-wrapper { @include margin-left(5px); }
 
   .title {
-    border-left: 5px solid darken(scale-color-diff(), 10%);
+    @include border-left(5px solid darken(scale-color-diff(), 10%));
     background-color: scale-color-diff();
     color: scale-color($primary, $lightness: 30%);
     // IE will screw up the blockquote underneath if bottom padding is 0px
