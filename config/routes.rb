@@ -8,7 +8,7 @@ require_dependency "permalink_constraint"
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
 USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
-BACKUP_ROUTE_FORMAT = /[a-zA-Z0-9\-_]*\d{4}(-\d{2}){2}-\d{6}\.tar\.gz/i unless defined? BACKUP_ROUTE_FORMAT
+BACKUP_ROUTE_FORMAT = /[a-zA-Z0-9\-_]*\d{4}(-\d{2}){2}-\d{6}\.(tar\.gz|t?gz)/i unless defined? BACKUP_ROUTE_FORMAT
 
 Discourse::Application.routes.draw do
 
@@ -224,11 +224,12 @@ Discourse::Application.routes.draw do
   get "login" => "static#show", id: "login"
   get "password-reset" => "static#show", id: "password_reset"
   get "faq" => "static#show", id: "faq"
-  get "guidelines" => "static#show", id: "guidelines"
-  get "tos" => "static#show", id: "tos"
-  get "privacy" => "static#show", id: "privacy"
+  get "guidelines" => "static#show", id: "guidelines", as: 'guidelines'
+  get "tos" => "static#show", id: "tos", as: 'tos'
+  get "privacy" => "static#show", id: "privacy", as: 'privacy'
   get "signup" => "list#latest"
 
+  post "users/toggle-anon" => "users#toggle_anon"
   post "users/read-faq" => "users#read_faq"
   get "users/search/users" => "users#search_users"
   get "users/account-created/" => "users#account_created"
@@ -346,6 +347,9 @@ Discourse::Application.routes.draw do
   get "/badges/:id(/:slug)" => "badges#show"
   resources :user_badges, only: [:index, :create, :destroy]
 
+
+  get '/c', to: redirect('/categories')
+
   resources :categories, :except => :show
   post "category/uploads" => "categories#upload"
   post "category/:category_id/move" => "categories#move"
@@ -384,7 +388,7 @@ Discourse::Application.routes.draw do
   get "category/*path" => "categories#redirect"
 
   get "top" => "list#top"
-  get "search" => "search#query"
+  get "search/query" => "search#query"
 
   # Topics resource
   get "t/:id" => "topics#show"

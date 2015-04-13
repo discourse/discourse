@@ -6,7 +6,7 @@ require_dependency 'rate_limiter'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
@@ -343,6 +343,18 @@ class UsersController < ApplicationController
     @success = I18n.t(message)
   end
 
+  def toggle_anon
+    user = AnonymousShadowCreator.get_master(current_user) ||
+           AnonymousShadowCreator.get(current_user)
+
+    if user
+      log_on_user(user)
+      render json: success_json
+    else
+      render json: failed_json, status: 403
+    end
+  end
+
   def change_email
     params.require(:email)
     user = fetch_user_from_params
@@ -605,17 +617,12 @@ class UsersController < ApplicationController
       return false if is_api?
 
       params[:password_confirmation] != honeypot_value ||
-        params[:challenge] != challenge_value.try(:reverse)
+      params[:challenge] != challenge_value.try(:reverse)
     end
 
     def user_params
-      params.permit(
-        :name,
-        :email,
-        :password,
-        :username,
-        :active
-      ).merge(ip_address: request.ip, registration_ip_address: request.ip)
+      params.permit(:name, :email, :password, :username, :active)
+            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip)
     end
 
     def fail_with(key)

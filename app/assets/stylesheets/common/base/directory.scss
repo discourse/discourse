@@ -32,7 +32,7 @@
 
     tr.me {
       td {
-        background-color: scale-color($highlight, $lightness: 50%);
+        background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
 
         .username a, .name, .title, .number, .time-read {
           color: scale-color($highlight, $lightness: -50%);

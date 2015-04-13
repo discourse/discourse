@@ -114,6 +114,7 @@ class Guardian
   alias :can_move_posts? :can_moderate?
   alias :can_see_flags? :can_moderate?
   alias :can_send_activation_email? :can_moderate?
+  alias :can_close? :can_moderate?
 
   def can_grant_badges?(_user)
     SiteSetting.enable_badges && is_staff?
@@ -197,12 +198,6 @@ class Guardian
     is_me?(user)
   end
 
-  def invitations_allowed?
-    !SiteSetting.enable_sso &&
-      SiteSetting.enable_local_logins &&
-      (!SiteSetting.must_approve_users? || is_staff?)
-  end
-
   def can_invite_to_forum?(groups=nil)
     authenticated? &&
     !SiteSetting.enable_sso &&
@@ -216,7 +211,7 @@ class Guardian
 
   def can_invite_to?(object, group_ids=nil)
     return false if ! authenticated?
-    return false if ! invitations_allowed?
+    return false unless ( SiteSetting.enable_local_logins && (!SiteSetting.must_approve_users? || is_staff?) )
     return true if is_admin?
     return false if ! can_see?(object)
 

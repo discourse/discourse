@@ -88,7 +88,7 @@ class DiscourseSingleSignOn < SingleSignOn
 
     user_params = {
       email: email,
-      name:  User.suggest_name(try_name || try_username || email),
+      name:  try_name || User.suggest_name(try_username || email),
       username: UserNameSuggester.suggest(try_username || try_name || email),
       ip_address: ip_address
     }
@@ -110,21 +110,17 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
-    if SiteSetting.sso_overrides_email && email != sso_record.external_email
-      # set the user's email to whatever came in the payload
+    if SiteSetting.sso_overrides_email && user.email != email
       user.email = email
     end
 
-    if SiteSetting.sso_overrides_username && username != sso_record.external_username && user.username != username
-      # we have an external username change, and the user's current username doesn't match
-      # run it through the UserNameSuggester to override it
-      user.username = UserNameSuggester.suggest(username || name || email)
+    if SiteSetting.sso_overrides_username &&
+        user.username != username
+      user.username = UserNameSuggester.suggest(username || name || email, user.username)
     end
 
-    if SiteSetting.sso_overrides_name && name != sso_record.external_name && user.name != name
-      # we have an external name change, and the user's current name doesn't match
-      # run it through the name suggester to override it
-      user.name = User.suggest_name(name || username || email)
+    if SiteSetting.sso_overrides_name && user.name != name
+      user.name = name || User.suggest_name(username || email)
     end
 
     if SiteSetting.sso_overrides_avatar && avatar_url.present? && (

@@ -41,8 +41,13 @@ Discourse.TopicList = Discourse.Model.extend({
     var self = this,
         params = this.get('params');
 
-    params.order = order;
-    params.ascending = ascending;
+    params.order = order || params.order;
+
+    if (ascending === undefined) {
+      params.ascending = ascending;
+    } else {
+      params.ascending = ascending;
+    }
 
     this.set('loaded', false);
     var finder = finderFor(this.get('filter'), params);

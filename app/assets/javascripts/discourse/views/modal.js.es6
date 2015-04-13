@@ -2,8 +2,24 @@ export default Ember.View.extend({
   elementId: 'discourse-modal',
   templateName: 'modal/modal',
   classNameBindings: [':modal', ':hidden', 'controller.modalClass'],
+  attributeBindings: ['data-keyboard'],
 
-  click: function(e) {
+  // We handle ESC ourselves
+  'data-keyboard': 'false',
+
+  _bindOnInsert: function() {
+    $('html').on('keydown.discourse-modal', e => {
+      if (e.which === 27) {
+        Em.run.next(() => $('.modal-header a.close').click());
+      }
+    });
+  }.on('didInsertElement'),
+
+  _bindOnDestroy: function() {
+    $('html').off('keydown.discourse-modal');
+  }.on('willDestroyElement'),
+
+  click(e) {
     const $target = $(e.target);
     if ($target.hasClass("modal-middle-container") ||
         $target.hasClass("modal-outer-container")) {

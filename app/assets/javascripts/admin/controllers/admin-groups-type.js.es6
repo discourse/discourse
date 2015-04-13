@@ -1,6 +1,9 @@
 export default Ember.ArrayController.extend({
   sortProperties: ['name'],
   refreshingAutoGroups: false,
+  isAuto: function(){
+    return this.get('type') === 'automatic';
+  }.property('type'),
 
   actions: {
     refreshAutoGroups: function(){

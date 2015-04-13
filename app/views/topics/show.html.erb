@@ -1,40 +1,52 @@
 <h2>
-   <%= render_topic_title(@topic_view.topic) %>
+  <%= render_topic_title(@topic_view.topic) %>
 </h2>
-<% if c = @topic_view.topic.category %>
-  <%= link_to c.name, c.url %>
-<% end %>
-<hr/>
+
+<div itemscope itemtype='http://schema.org/BreadcrumbList'>
+  <% categories_breadcrumb(@topic_view.topic).each_with_index do |c,i| %>
+    <span itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <%= link_to c[:url], itemprop: 'item' do %>
+        <span itemprop='name'><%= c[:name] %></span>
+      <% end %>
+    </span>
+    <meta itemprop='position' content='<%= i + 1 %>'>
+  <% end %>
+</div>
+<hr>
 
 <% @topic_view.posts.each do |post| %>
-  <% if post.user %>
-    <div class='creator'>
-      <b><%= post.user.username %></b>
-       <%= "(#{post.user.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names?) %> —
-       <%= post.created_at.to_formatted_s(:iso8601) %> —
-       #<%= post.post_number %>
-    </div>
-    <div class='post'>
-      <% if post.hidden %>
-        <%= t('flagging.user_must_edit').html_safe %>
-      <% else %>
-        <%= post.cooked.html_safe %>
-      <% end %>
-    </div>
-    <hr/>
-  <% end %>
+  <div itemscope itemtype='http://schema.org/Article'>
+    <% if (u = post.user) %>
+      <div class='creator'>
+        <span>
+          <a href='/users/<%= u.username %>'><b itemprop='author'><%= u.username %></b></a>
+           <%= "(#{u.name})" if (SiteSetting.display_name_on_posts && SiteSetting.enable_names? && !u.name.blank?) %>
+           <time datetime='<%= post.created_at.to_formatted_s(:iso8601) %>' itemprop='datePublished'>
+             <%= post.created_at %>
+           </time>
+        </span>
+        <span itemprop='position'>#<%= post.post_number %></span>
+      </div>
+      <div class='post' itemprop='articleBody'>
+        <%= post.hidden ? t('flagging.user_must_edit').html_safe : post.cooked.html_safe %>
+      </div>
+      <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
+      <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
+      <hr>
+    <% end %>
+  </div>
 <% end %>
 
-
-<p>
-  <% if @topic_view.prev_page %>
-    <%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev' %>
-  <% end %>
-  <% if @topic_view.next_page %>
-    <b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next' %></b>
-  <% end %>
-</p>
-
+<% if @topic_view.prev_page || @topic_view.next_page %>
+  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% if @topic_view.prev_page %>
+      <span itemprop='url'><%= link_to t(:prev_page), @topic_view.prev_page_path, rel: 'prev', itemprop: 'name' %></span>
+    <% end %>
+    <% if @topic_view.next_page %>
+      <span itemprop='url'><b><%= link_to t(:next_page), @topic_view.next_page_path, rel: 'next', itemprop: 'name' %></b></span>
+    <% end %>
+  </div>
+<% end %>
 
 <% content_for :head do %>
   <%= auto_discovery_link_tag(@topic_view, {action: :feed, slug: @topic_view.topic.slug, topic_id: @topic_view.topic.id}, title: t('rss_posts_in_topic', topic: @topic_view.title), type: 'application/rss+xml') %>

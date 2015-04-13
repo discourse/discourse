@@ -100,20 +100,25 @@ class ImportScripts::Smf2 < ImportScripts::Base
       LEFT JOIN {prefix}attachments AS b ON a.id_member = b.id_member
     SQL
       group_ids = [ member[:id_group], *member[:additional_groups].split(',').map(&:to_i) ]
+      create_time = Time.zone.at(member[:date_registered]) rescue Time.now
+      last_seen_time = Time.zone.at(member[:last_login]) rescue nil
+      ip_addr = IPAddr.new(member[:member_ip]) rescue nil
       {
         id: member[:id_member],
         username: member[:member_name],
-        created_at: Time.zone.at(member[:date_registered]),
+        created_at: create_time,
         name: member[:real_name],
         email: member[:email_address],
         active: member[:is_activated] == 1,
         approved: member[:is_activated] == 1,
-        last_seen_at: Time.zone.at(member[:last_login]),
+        last_seen_at: last_seen_time,
         date_of_birth: member[:birthdate],
-        ip_address: IPAddr.new(member[:member_ip]),
+        ip_address: ip_addr,
         admin: group_ids.include?(ADMIN_GROUP),
         moderator: group_ids.include?(MODERATORS_GROUP),
+
         post_create_action: proc do |user|
+          user.update(created_at: create_time) if create_time < user.created_at
           GroupUser.transaction do
             group_ids.each do |gid|
               group_id = group_id_from_imported_group_id(gid) and

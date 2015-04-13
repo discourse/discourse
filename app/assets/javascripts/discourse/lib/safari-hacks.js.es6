@@ -16,42 +16,88 @@ function positioningWorkaround($fixedElement) {
 
   const fixedElement = $fixedElement[0];
 
+  var done = false;
+
+  var blurredNow = function(evt) {
+    if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
+      // something in focus so skip
+      return;
+    }
+
+    done = true;
+    fixedElement.style.position = '';
+    fixedElement.style.top = '';
+    if (evt) {
+      evt.target.removeEventListener('blur', blurred);
+    }
+  };
+
+  var blurred = _.debounce(blurredNow, 250);
 
   var positioningHack = function(evt){
 
     const self = this;
+    done = false;
 
-    if (fixedElement.style.position !== 'absolute') {
-      evt.preventDefault();
-      fixedElement.style.position = 'absolute';
-      fixedElement.style.top = (window.scrollY + $('.d-header').height() + 10) + 'px';
+    // we need this, otherwise changing focus means we never clear
+    self.addEventListener('blur', blurred);
+
+    if (fixedElement.style.position === 'absolute') {
+      if (this !== document.activeElement) {
+        evt.preventDefault();
+        self.focus();
+      }
+      return;
     }
 
-    var blurred = function() {
-      if (_.include($(document.activeElement).parents(), fixedElement)) {
-        // something in focus so skip
+    fixedElement.style.position = 'absolute';
+    // get out of the way while opening keyboard
+    fixedElement.style.top = '0px';
+
+    var iPadOffset = 0;
+    if (window.innerHeight > window.innerWidth && navigator.userAgent.match(/iPad/)) {
+      // there is no way to get virtual keyboard height
+      iPadOffset = 640 - $(fixedElement).height();
+    }
+
+    var oldScrollY = 0;
+
+    var positionElement = function(){
+      if (done) {
         return;
       }
-      fixedElement.style.position = '';
-      fixedElement.style.top = '';
-      self.removeEventListener('blur', blurred);
+      if (Math.abs(oldScrollY - window.scrollY) < 20) {
+        return;
+      }
+      oldScrollY = window.scrollY;
+      fixedElement.style.top = window.scrollY + iPadOffset + 'px';
     };
 
-    blurred = _.debounce(blurred, 300);
+    // position once, correctly, after keyboard is shown
+    setTimeout(positionElement, 500);
 
-    if (this !== document.activeElement) {
-      self.focus();
-    }
-
-    self.addEventListener('blur', blurred);
+    evt.preventDefault();
+    self.focus();
   };
 
+  function attachTouchStart(elem, fn) {
+    if (!$(elem).data('listening')) {
+        elem.addEventListener('touchstart', fn);
+        $(elem).data('listening', true);
+    }
+  }
+
   const checkForInputs = _.debounce(function(){
+    $fixedElement.find('button,a').each(function(){
+      attachTouchStart(this, function(evt){
+        done = true;
+        $(document.activeElement).blur();
+        evt.preventDefault();
+        $(this).click();
+      });
+    });
     $fixedElement.find('input,textarea').each(function(){
-      if (!$(this).data('listening')) {
-        this.addEventListener('touchstart', positioningHack);
-        $(this).data('listening', true);
-      }
+      attachTouchStart(this, positioningHack);
     });
   }, 100);
 

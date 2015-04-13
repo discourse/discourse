@@ -83,29 +83,6 @@
     </div>
   </div>
 
-  {{#if currentUser.admin}}
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.automatic.title'}}</div>
-      <div class='value'>{{automaticGroups}}</div>
-    </div>
-    <div class='display-row'>
-      <div class='field'>{{i18n 'admin.groups.custom.title'}}</div>
-      <div class='value'>
-        {{admin-group-selector selected=customGroups available=availableGroups}}
-      </div>
-      <div class='controls'>
-        {{#if customGroups}}
-          {{i18n 'admin.groups.primary'}}
-          {{combo-box content=customGroups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
-        {{/if}}
-        {{#if primaryGroupDirty}}
-          {{d-button icon="check" class="ok no-text" action="savePrimaryGroup"}}
-          {{d-button icon="times" class="cancel no-text" action="resetPrimaryGroup"}}
-        {{/if}}
-      </div>
-    </div>
-  {{/if}}
-
   <div class='display-row'>
     <div class='field'>{{i18n 'user.ip_address.title'}}</div>
     <div class='value'>{{ip_address}}</div>
@@ -158,7 +135,6 @@
     {{/each}}
   </section>
 {{/if}}
-
 
 <section class='details'>
   <h1>{{i18n 'admin.user.permissions'}}</h1>
@@ -353,6 +329,33 @@
       {{/if}}
     </div>
   </div>
+</section>
+
+<section class='details'>
+  <h1>{{i18n 'admin.groups.title'}}</h1>
+
+  {{#if currentUser.admin}}
+    <div class='display-row'>
+      <div class='field'>{{i18n 'admin.groups.automatic'}}</div>
+      <div class='value'>{{automaticGroups}}</div>
+    </div>
+    <div class='display-row'>
+      <div class='field'>{{i18n 'admin.groups.custom'}}</div>
+      <div class='value'>
+        {{admin-group-selector selected=customGroups available=availableGroups}}
+      </div>
+      <div class='controls'>
+        {{#if customGroups}}
+          {{i18n 'admin.groups.primary'}}
+          {{combo-box content=customGroups value=primary_group_id nameProperty="name" none="admin.groups.no_primary"}}
+        {{/if}}
+        {{#if primaryGroupDirty}}
+          {{d-button icon="check" class="ok no-text" action="savePrimaryGroup"}}
+          {{d-button icon="times" class="cancel no-text" action="resetPrimaryGroup"}}
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
 </section>
 
 <section class='details'>

@@ -86,7 +86,7 @@ const Composer = Discourse.Model.extend({
         const replyUsername = post.get('reply_to_user.username');
         const replyAvatarTemplate = post.get('reply_to_user.avatar_template');
         if (replyUsername && replyAvatarTemplate && this.get('action') === EDIT) {
-          postDescription += " " + I18n.t("post.in_reply_to") + " " + Discourse.Utilities.tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
+          postDescription += " <i class='fa fa-mail-forward reply-to-glyph'></i> " + Discourse.Utilities.tinyAvatar(replyAvatarTemplate) + " " + replyUsername;
         }
       }
     }
@@ -542,7 +542,6 @@ const Composer = Discourse.Model.extend({
           // It's no longer a new post
           createdPost.set('newPost', false);
           topic.set('draft_sequence', result.draft_sequence);
-          topic.set('details.auto_close_at', result.topic_auto_close_at);
           postStream.commitPost(createdPost);
           addedToStream = true;
         } else {

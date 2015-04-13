@@ -127,8 +127,6 @@ var helpers = require("helpers/qunit-helpers");
 window.asyncTestDiscourse = helpers.asyncTestDiscourse;
 window.controllerFor = helpers.controllerFor;
 window.fixture = helpers.fixture;
-window.integration = helpers.integration;
-
 
 Ember.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {

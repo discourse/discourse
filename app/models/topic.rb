@@ -250,7 +250,7 @@ class Topic < ActiveRecord::Base
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
     apply_per_day_rate_limit_for("topics", :max_topics_per_day)
-    limit_first_day_topics_per_day if user.added_a_day_ago?
+    limit_first_day_topics_per_day if user.first_day_user?
   end
 
   def limit_private_messages_per_day
@@ -537,7 +537,7 @@ class Topic < ActiveRecord::Base
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil)
     if private_message?
-      # If the user exists, add them to the topic.
+      # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
 
@@ -551,11 +551,24 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    if username_or_email =~ /^.+@.+$/
+    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso
       # NOTE callers expect an invite object if an invite was sent via email
       invite_by_email(invited_by, username_or_email, group_ids)
     else
-      false
+      # invite existing member to a topic
+      user = User.find_by_username(username_or_email)
+      if user && topic_allowed_users.create!(user_id: user.id)
+
+        # Notify the user they've been invited
+        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
+                                  topic_id: id,
+                                  post_number: 1,
+                                  data: { topic_title: title,
+                                          display_username: invited_by.username }.to_json)
+        return true
+      else
+        false
+      end
     end
   end
 

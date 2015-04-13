@@ -112,7 +112,6 @@ da:
   num_posts: "Indlæg:"
   num_participants: "Deltagere:"
   read_full_topic: "Læs hele emnet"
-  private_message_abbrev: "PM"
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
@@ -395,8 +394,6 @@ da:
     notify_moderators:
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"
-  flagging:
-    you_must_edit: '<p>Dit indlæg er blevet flaget for mange gange. Se venligst <a href="/my/private-messages">dine private beskeder</a>.</p>'
   archetypes:
     regular:
       title: "Almindeligt emne"
@@ -459,23 +456,18 @@ da:
     user_to_user_private_messages:
       title: "Bruger-til-bruger"
       xaxis: "Dag"
-      yaxis: "Antal private beskeder"
     system_private_messages:
       title: "System"
       xaxis: "Dag"
-      yaxis: "Antal private beskeder"
     moderator_warning_private_messages:
       title: "Moderatoradvarsler"
       xaxis: "Dag"
-      yaxis: "Antal private beskeder"
     notify_moderators_private_messages:
       title: "Underret moderatorer"
       xaxis: "Dag"
-      yaxis: "Antal private beskeder"
     notify_user_private_messages:
       title: "Underret bruger"
       xaxis: "Dag"
-      yaxis: "Antal private beskeder"
     top_referrers:
       title: "Top henvisere"
       xaxis: "bruger"
@@ -532,10 +524,8 @@ da:
       description: "Vejledning og vigtig information til nye brugere."
     welcome_user:
       title: "Velkomst: Ny bruger"
-      description: "En privat besked som automatisk sendes til nye brugere når de tilmelder sig."
     welcome_invite:
       title: "Velkomst: Inviteret bruger"
-      description: "En privat besked som automatisk sendes til alle nye inviterede brugere når de accepterer en anden brugers invitation."
     login_required_welcome_message:
       title: "Log ind påkrævet: Velkomstbesked"
       description: "Velkomstbesked som vises til anonyme brugere når indstillingen 'log ind påkrævet' er aktiveret."
@@ -553,11 +543,9 @@ da:
   site_settings:
     default_locale: "Standardsproget for denne Discourse-instans (ISO 639-1 kode)."
     min_post_length: "Minimumlængde tilladt for indlæg i tegn"
-    min_private_message_post_length: "Minimumlængde tilladt for private beskeder i tegn"
     max_post_length: "Maksimal længde af indlæg i tegn"
     min_topic_title_length: "Minimumslængde af emnetitel i tegn."
     max_topic_title_length: "Maksimumslængde af emnetitel i tegn."
-    min_private_message_title_length: "Minimumslængde af titel på privat besked i tegn"
     allow_uncategorized_topics: "Tillad emner at blive oprettet uden en kategori."
     unique_posts_mins: "Hvor mange minutter der skal gå før en bruger kan skrive et indlæg med det samme indhold igen."
     queue_jobs: "KUN FOR UDVIKLERE! ADVARSEL! Brug sidekiq som jobkø. Hvis dette slås fra går dit site i stykker."
@@ -623,8 +611,6 @@ da:
     edited: "%{display_username} redigerede dit indlæg i %{link}"
     posted: "%{display_username} skrev et indlæg i %{link}"
     moved_post: "%{display_username} flyttede dit indlæg til %{link}"
-    private_message: "%{display_username} sendte dig en privat besked: %{link}"
-    invited_to_private_message: "%{display_username} inviterede dig til en privat samtale: %{link}"
     invitee_accepted: "%{display_username} accepterede din invitation"
   search:
     types:
@@ -687,16 +673,6 @@ da:
       subject_template: "Indlæg skjult på grund af feedback fra brugerne"
     welcome_user:
       subject_template: "Velkommen til %{site_name}!"
-      text_body_template: |
-        Tak fordi du oprettede dig på %{site_name} - og velkommen!
-
-        %{new_user_tips}
-
-        Vi tror på [civiliseret opførsel](%{base_url}/guidelines) til alle tider.
-
-        Nyd dit ophold!
-
-        (Hvis du har brug for at kommunikere privat med [staben](%{base_url}/about) som en ny bruger, kan du bare svare på denne private besked.)
     welcome_invite:
       subject_template: "Velkommen til %{site_name}!"
     too_many_spam_flags:
@@ -728,12 +704,6 @@ da:
     reply_by_email: "For at svare kan du svare på denne e-mail eller gå til %{base_url}%{url} i din browser."
     visit_link_to_respond: "For at svare kan du gå til %{base_url}%{url} i din browser."
     posted_by: "Oprettet af %{username} den %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} inviterede dig til en privat besked '%{topic_title}'"
-      text_body_template: |
-        %{username} inviterede dig til en privat besked '%{topic_title}' på %{site_name}
-
-        Besøg dette link for at se emnet: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
       text_body_template: |
@@ -781,7 +751,6 @@ da:
         %{respond_instructions}
     digest:
       why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
-      subject_template: "[%{site_name}] Uddrag for %{date}"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"

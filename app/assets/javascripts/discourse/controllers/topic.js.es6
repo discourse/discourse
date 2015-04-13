@@ -427,8 +427,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       }).then(function() {
         return Em.isEmpty(quotedText) ? Discourse.Post.loadQuote(post.get('id')) : quotedText;
       }).then(function(q) {
-        const postUrl = "" + location.protocol + "//" + location.host + (post.get('url')),
-              postLink = "[" + self.get('title') + "](" + postUrl + ")";
+        const postUrl = "" + location.protocol + "//" + location.host + post.get('url'),
+              postLink = "[" + Handlebars.escapeExpression(self.get('title')) + "](" + postUrl + ")";
         composerController.appendText(I18n.t("post.continue_discussion", { postLink: postLink }) + "\n\n" + q);
       });
     },

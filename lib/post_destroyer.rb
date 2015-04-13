@@ -72,7 +72,6 @@ class PostDestroyer
       if @post.topic
         make_previous_post_the_last_one
         clear_user_posted_flag
-        feature_users_in_the_topic
         Topic.reset_highest(@post.topic_id)
       end
       trash_public_post_actions
@@ -92,6 +91,7 @@ class PostDestroyer
       TopicUser.update_post_action_cache(topic_id: @post.topic_id)
     end
 
+    feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
   end
 
@@ -136,7 +136,7 @@ class PostDestroyer
   end
 
   def feature_users_in_the_topic
-    Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
+    Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id)
   end
 
   def trash_public_post_actions

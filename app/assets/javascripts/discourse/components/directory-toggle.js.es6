@@ -4,7 +4,13 @@ import { iconHTML } from 'discourse/helpers/fa-icon';
 export default Ember.Component.extend(StringBuffer, {
   tagName: 'th',
   classNames: ['sortable'],
+  attributeBindings: ['title'],
   rerenderTriggers: ['order', 'asc'],
+
+  title: function() {
+    const labelKey = 'directory.' + this.get('field');
+    return I18n.t(labelKey + '_long', { defaultValue: I18n.t(labelKey) });
+  }.property('field'),
 
   renderString(buffer) {
 

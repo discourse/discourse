@@ -2,8 +2,8 @@
 
 import siteFixtures from 'fixtures/site_fixtures';
 
-function integration(name, options) {
-  module("Integration: " + name, {
+function acceptance(name, options) {
+  module("Acceptance: " + name, {
     setup: function() {
       Ember.run(Discourse, Discourse.advanceReadiness);
 
@@ -61,4 +61,4 @@ function fixture(selector) {
   return $("#qunit-fixture");
 }
 
-export { integration, controllerFor, asyncTestDiscourse, fixture };
+export { acceptance, controllerFor, asyncTestDiscourse, fixture };

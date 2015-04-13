@@ -18,6 +18,8 @@
             {{directory-toggle field="topic_count" order=order asc=asc}}
             {{directory-toggle field="post_count" order=order asc=asc}}
             {{directory-toggle field="topics_entered" order=order asc=asc}}
+            {{directory-toggle field="posts_read" order=order asc=asc}}
+            {{directory-toggle field="days_visited" order=order asc=asc}}
             {{#if showTimeRead}}
               <th>{{i18n "directory.time_read"}}</th>
             {{/if}}
@@ -31,6 +33,8 @@
                 <td>{{number item.model.topic_count}}</td>
                 <td>{{number item.model.post_count}}</td>
                 <td>{{number item.model.topics_entered}}</td>
+                <td>{{number item.model.posts_read}}</td>
+                <td>{{number item.model.days_visited}}</td>
                 {{#if showTimeRead}}
                 <td><span class='time-read'>{{unbound item.model.time_read}}</span></td>
                 {{/if}}

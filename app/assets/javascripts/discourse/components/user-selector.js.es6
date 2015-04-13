@@ -57,6 +57,10 @@ export default TextField.extend({
     });
   }.on('didInsertElement'),
 
+  _removeAutocomplete: function() {
+    this.$().autocomplete('destroy');
+  }.on('willDestroyElement'),
+
   // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
   _clearInput: function() {
     if (arguments.length > 1) {

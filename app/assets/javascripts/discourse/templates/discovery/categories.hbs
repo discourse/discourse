@@ -15,12 +15,9 @@
               <div>
                 <div class="pull-left">
                   {{category-title-link category=c}}
-                  {{#if c.unreadTopics}}
-                    <a href="{{unbound c.unreadUrl}}" class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count=c.unreadTopics}}'>{{i18n 'filters.unread.lower_title_with_count' count=c.unreadTopics}}</a>
-                  {{/if}}
-                  {{#if c.newTopics}}
-                    <a href="{{unbound c.newUrl}}" class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count=c.newTopics}}'>{{i18n 'filters.new.lower_title_with_count' count=c.newTopics}}</a>
-                  {{/if}}
+                  {{#unless c.logo_url}}
+                    {{category-unread category=c}}
+                  {{/unless}}
                 </div>
                 <div class="clearfix"></div>
               </div>
@@ -28,17 +25,16 @@
                 <div class="category-description">
                   {{{c.description_excerpt}}}
                 </div>
+
+                {{#if c.logo_url}}
+                  {{category-unread category=c}}
+                {{/if}}
               {{/if}}
               {{#if c.subcategories}}
                 <div class='subcategories'>
                   {{#each s in c.subcategories}}
                     {{category-link s hideParent="true"}}
-                    {{#if s.unreadTopics}}
-                      <a href={{unbound s.unreadUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.unread_topics' count=s.unreadTopics}}'>{{unbound s.unreadTopics}}</a>
-                    {{/if}}
-                    {{#if s.newTopics}}
-                      <a href={{unbound s.newUrl}} class='badge new-posts badge-notification' title='{{i18n 'topic.new_topics' count=s.newTopics}}'>{{unbound s.newTopics}}</a>
-                    {{/if}}
+                    {{category-unread category=s}}
                   {{/each}}
                 </div>
               {{/if}}

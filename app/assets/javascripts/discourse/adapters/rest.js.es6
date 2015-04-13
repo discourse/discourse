@@ -4,7 +4,7 @@ export default Ember.Object.extend({
   pathFor(store, type, findArgs) {
     let path = "/" + Ember.String.underscore(store.pluralize(type));
 
-    if (ADMIN_MODELS.indexOf(type) !== -1) { path = "/admin/" + path; }
+    if (ADMIN_MODELS.indexOf(type) !== -1) { path = "/admin" + path; }
 
     if (findArgs) {
       if (typeof findArgs === "object") {

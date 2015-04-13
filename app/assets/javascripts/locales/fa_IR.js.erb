@@ -1,0 +1,7 @@
+//= depend_on 'client.fa_IR.yml'
+//= require locales/i18n
+<%= JsLocaleHelper.output_locale(:fa_IR) %>
+
+I18n.pluralizationRules['fa_IR'] = function (n) {
+   return "other";
+};

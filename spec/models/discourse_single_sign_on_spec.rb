@@ -62,6 +62,40 @@ describe DiscourseSingleSignOn do
     expect(user).to_not be_nil
   end
 
+  it "can override name / email / username" do
+    admin = Fabricate(:admin)
+
+    SiteSetting.sso_overrides_name = true
+    SiteSetting.sso_overrides_email = true
+    SiteSetting.sso_overrides_username = true
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "bob%the$admin"
+    sso.name = "Bob Admin"
+    sso.email = admin.email
+    sso.external_id = "A"
+
+    sso.lookup_or_create_user(ip_address)
+
+    admin.reload
+
+    expect(admin.name).to eq "Bob Admin"
+    expect(admin.username).to eq "bob_the_admin"
+    expect(admin.email).to eq admin.email
+
+    sso.email = "TEST@bob.com"
+
+    sso.name = "Louis C.K."
+
+    sso.lookup_or_create_user(ip_address)
+
+    admin.reload
+
+    expect(admin.email).to eq("test@bob.com")
+    expect(admin.username).to eq "bob_the_admin"
+    expect(admin.name).to eq "Louis C.K."
+  end
+
   it "can fill in data on way back" do
     sso = make_sso
 

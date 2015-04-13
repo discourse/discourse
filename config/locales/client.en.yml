@@ -105,6 +105,8 @@ en:
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
+    s3_deprecation_warning: "WARNING! Amazon S3 will soon be deprecated for image/attachment storage. Please, follow the <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instructions</a> to migrate to local storage."
+
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "No"
@@ -211,6 +213,9 @@ en:
     revert: "Revert"
     failed: "Failed"
 
+    switch_to_anon: "Anonymous Mode"
+    switch_from_anon: "Exit Anonymous Mode"
+
     banner:
       close: "Dismiss this banner."
 
@@ -242,11 +247,18 @@ en:
       title: "Users"
       likes_given: "Given"
       likes_received: "Received"
-      topics_entered: "Topics Entered"
+      topics_entered: "Entered"
+      topics_entered_long: "Topics Entered"
       time_read: "Time Read"
       topic_count: "Topics"
+      topic_count_long: "Topics Created"
       post_count: "Replies"
+      post_count_long: "Replies Posted"
       no_results: "No results were found."
+      days_visited: "Visits"
+      days_visited_long: "Days Visited"
+      posts_read: "Read"
+      posts_read_long: "Posts Read"
       total_rows:
         one: "1 user"
         other: "%{count} users"
@@ -271,8 +283,8 @@ en:
       "2": "Likes Received"
       "3": "Bookmarks"
       "4": "Topics"
-      "5": "Posts"
-      "6": "Replies"
+      "5": "Replies"
+      "6": "Responses"
       "7": "Mentions"
       "9": "Quotes"
       "10": "Starred"
@@ -322,8 +334,8 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "Download My Posts"
-      new_private_message: "New Private Message"
-      private_message: "Private Message"
+      new_private_message: "New Message"
+      private_message: "Message"
       private_messages: "Messages"
       activity_stream: "Activity"
       preferences: "Preferences"
@@ -408,7 +420,8 @@ en:
         uploaded_avatar_empty: "Add a custom picture"
         upload_title: "Upload your picture"
         upload_picture: "Upload Picture"
-        image_is_not_a_square: "Warning: we've cropped your image; it is not square."
+        image_is_not_a_square: "Warning: we've cropped your image; width and height were not equal."
+        cache_notice: "You've successfully changed your avatar but it might take some time to appear due to browser caching."
 
       change_profile_background:
         title: "Profile Background"
@@ -432,6 +445,7 @@ en:
       name:
         title: "Name"
         instructions: "Your full name (optional)"
+        instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
@@ -474,8 +488,8 @@ en:
         weekly: "weekly"
         every_two_weeks: "every two weeks"
 
-      email_direct: "Send me an email when someone quotes me, replies to my post, or mentions my @username"
-      email_private_messages: "Send me an email when someone private messages me"
+      email_direct: "Send me an email when someone quotes me, replies to my post, mentions my @username, or invites me to a topic"
+      email_private_messages: "Send me an email when someone messages me"
       email_always: "Do not suppress email notifications when I am active on the site"
 
       other_settings: "Other"
@@ -527,7 +541,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
           uploading: "Uploading..."
-          success: "File uploaded successfully, you will be notified via private message when the process is complete."
+          success: "File uploaded successfully, you will be notified via message when the process is complete."
           error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
@@ -555,7 +569,7 @@ en:
       stream:
         posted_by: "Posted by"
         sent_by: "Sent by"
-        private_message: "private message"
+        private_message: "message"
         the_topic: "the topic"
 
     loading: "Loading..."
@@ -615,9 +629,9 @@ en:
       disable: "Show Deleted Posts"
 
     private_message_info:
-      title: "Private Message"
+      title: "Message"
       invite: "Invite Others..."
-      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
+      remove_allowed_user: "Do you really want to remove {{name}} from this message?"
 
     email: 'Email'
     username: 'Username'
@@ -712,7 +726,7 @@ en:
       reply: "Reply"
       cancel: "Cancel"
       create_topic: "Create Topic"
-      create_pm: "Private Message"
+      create_pm: "Message"
       title: "Or press Ctrl+Enter"
 
       users_placeholder: "Add a user"
@@ -767,11 +781,11 @@ en:
           examples: 'Enter number of hours (24).'
 
     notifications:
-      title: "notifications of @name mentions, replies to your posts and topics, private messages, etc"
+      title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
       more: "view older notifications"
       total_flagged: "total flagged posts"
-      mentioned: "<i title='mentioned' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -779,6 +793,7 @@ en:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -808,7 +823,7 @@ en:
         user: "Search posts by @{{username}}"
         category: "Search the \"{{category}}\" category"
         topic: "Search this topic"
-        private_messages: "Search private messages"
+        private_messages: "Search messages"
 
     site_map: "go to another topic list or category"
     go_back: 'go back'
@@ -845,6 +860,7 @@ en:
         bookmarks: "You have no bookmarked topics yet."
         category: "There are no {{category}} topics."
         top: "There are no top topics."
+        search: "There are no search results."
         educate:
           new: '<p>Your new topics appear here.</p><p>By default, topics are considered new and will show a <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">new</span> indicator if they were created in the last 2 days.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
           unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>You can change this in your <a href="%{userPrefsUrl}">preferences</a>.</p>'
@@ -858,12 +874,13 @@ en:
         category: "There are no more {{category}} topics."
         top: "There are no more top topics."
         bookmarks: "There are no more bookmarked topics."
+        search: "There are no more search results."
 
     topic:
       filter_to: "{{post_count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
-      private_message: 'Start a private message'
+      private_message: 'Start a message'
       list: 'Topics'
       new: 'new topic'
       unread: 'unread'
@@ -962,13 +979,13 @@ en:
           "0": 'You are ignoring all notifications on this topic.'
         watching_pm:
           title: "Watching"
-          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
+          description: "You will be notified of every new post in this message. A count of unread and new posts will also appear next to the topic."
         watching:
           title: "Watching"
           description: "You will be notified of every new post in this topic. A count of unread and new posts will also appear next to the topic."
         tracking_pm:
           title: "Tracking"
-          description: "A count of unread and new posts will appear next to the private message. You will be notified if someone mentions your @name or replies to your post."
+          description: "A count of unread and new posts will appear next to the message. You will be notified if someone mentions your @name or replies to your post."
         tracking:
           title: "Tracking"
           description: "A count of unread and new posts will appear next to the topic. You will be notified if someone mentions your @name or replies to your post. "
@@ -977,10 +994,10 @@ en:
           description: "You will be notified if someone mentions your @name or replies to your post."
         regular_pm:
           title: "Regular"
-          description: "You will be notified if someone mentions your @name or replies to your post in the private message."
+          description: "You will be notified if someone mentions your @name or replies to your post in the message."
         muted_pm:
           title: "Muted"
-          description: "You will never be notified of anything about this private message."
+          description: "You will never be notified of anything about this message."
         muted:
           title: "Muted"
           description: "You will never be notified of anything about this topic, and it will not appear on your unread tab."
@@ -990,18 +1007,22 @@ en:
         delete: "Delete Topic"
         open: "Open Topic"
         close: "Close Topic"
-        auto_close: "Auto Close"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
-        pin: "Pin Topic"
-        unpin: "Un-Pin Topic"
-        pin_globally: "Pin Topic Globally"
+        multi_select: "Select Posts…"
+        auto_close: "Auto Close…"
+        pin: "Pin Topic…"
+        unpin: "Un-Pin Topic…"
         unarchive: "Unarchive Topic"
         archive: "Archive Topic"
         invisible: "Make Unlisted"
         visible: "Make Listed"
         reset_read: "Reset Read Data"
-        multi_select: "Select Posts"
+
+      feature:
+        pin: "Pin Topic"
+        unpin: "Un-Pin Topic"
+        pin_globally: "Pin Topic Globally"
+        make_banner: "Banner Topic"
+        remove_banner: "Remove Banner Topic"
 
       reply:
         title: 'Reply'
@@ -1028,15 +1049,15 @@ en:
         pin_note: "Users can unpin the topic individually for themselves."
         already_pinned:
           zero: "There are no topics pinned in {{categoryLink}}."
-          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
-          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>"
+          one: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Topics currently pinned in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
         pin_globally: "Make this topic appear at the top of all topic lists, until a staff member unpins it."
         confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
         unpin_globally: "Remove this topic from the top of all topic lists."
         global_pin_note: "Users can unpin the topic individually for themselves."
         already_pinned_globally:
           zero: "There are no topics pinned globally."
-          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>"
+          one: "Topics currently pinned globally: <strong class='badge badge-notification unread'>1</strong>."
           other: "Topics currently pinned globally: <strong class='badge badge-notification unread'>{{count}}</strong>."
         make_banner: "Make this topic into a banner that appears at the top of all pages."
         remove_banner: "Remove the banner that appears at the top of all pages."
@@ -1050,24 +1071,29 @@ en:
       automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
 
       invite_private:
-        title: 'Invite to Private Message'
+        title: 'Invite to Message'
         email_or_username: "Invitee's Email or Username"
         email_or_username_placeholder: "email address or username"
         action: "Invite"
-        success: "We've invited that user to participate in this private message."
+        success: "We've invited that user to participate in this message."
         error: "Sorry, there was an error inviting that user."
         group_name: "group name"
 
       invite_reply:
         title: 'Invite'
-        action: 'Email Invite'
-        help: 'send invitations to friends so they can reply to this topic with a single click'
-        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
+        username_placeholder: "username"
+        action: 'Send Invite'
+        help: 'invite others to this topic via email or notifications'
         to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+        sso_enabled: "Enter the username of the person you'd like to invite to this topic."
+        to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
+        to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
+        to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
-        success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
-        error: "Sorry, we couldn't invite that person. Perhaps they are already a user? (Invites are rate limited)"
+        success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        success_username: "We've invited that user to participate in this topic."
+        error: "Sorry, we couldn't invite that person. Perhaps they have already been invited? (Invites are rate limited)"
 
       login_reply: 'Log In to Reply'
 
@@ -1118,13 +1144,12 @@ en:
           other: "You have selected <b>{{count}}</b> posts."
 
     post:
-      reply: "Replying to {{link}} by {{replyAvatar}} {{username}}"
+      reply: "Replying to {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "Reply to {{link}}"
       quote_reply: "quote reply"
-      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
-      in_reply_to: "reply to"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
@@ -1224,8 +1249,8 @@ en:
           inappropriate: "{{icons}} flagged this as inappropriate"
           notify_moderators: "{{icons}} notified moderators"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
-          notify_user: "{{icons}} sent a private message"
-          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
+          notify_user: "{{icons}} sent a message"
+          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>message</a>"
           bookmark: "{{icons}} bookmarked this"
           like: "{{icons}} liked this"
           vote: "{{icons}} voted for this"
@@ -1234,7 +1259,7 @@ en:
           spam: "You flagged this as spam"
           inappropriate: "You flagged this as inappropriate"
           notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a private message to this user"
+          notify_user: "You sent a message to this user"
           bookmark: "You bookmarked this post"
           like: "You liked this"
           vote: "You voted for this post"
@@ -1252,8 +1277,8 @@ en:
             one: "You and 1 other flagged this for moderation"
             other: "You and {{count}} other people flagged this for moderation"
           notify_user:
-            one: "You and 1 other sent a private message to this user"
-            other: "You and {{count}} other people sent a private message to this user"
+            one: "You and 1 other sent a message to this user"
+            other: "You and {{count}} other people sent a message to this user"
           bookmark:
             one: "You and 1 other bookmarked this post"
             other: "You and {{count}} other people bookmarked this post"
@@ -1277,8 +1302,8 @@ en:
             one: "1 person flagged this for moderation"
             other: "{{count}} people flagged this for moderation"
           notify_user:
-            one: "1 person sent a private message to this user"
-            other: "{{count}} sent a private message to this user"
+            one: "1 person sent a message to this user"
+            other: "{{count}} sent a message to this user"
           bookmark:
             one: "1 person bookmarked this post"
             other: "{{count}} people bookmarked this post"
@@ -1391,7 +1416,7 @@ en:
       private_reminder: 'flags are private, <b>only</b> visible to staff'
       action: 'Flag Post'
       take_action: "Take Action"
-      notify_action: 'Private message'
+      notify_action: 'Message'
       delete_spammer: "Delete Spammer"
       delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
@@ -1414,7 +1439,7 @@ en:
     flagging_topic:
       title: "Thanks for helping to keep our community civil!"
       action: "Flag Topic"
-      notify_action: "Private message"
+      notify_action: "Message"
 
     topic_map:
       title: "Topic Summary"
@@ -1488,6 +1513,9 @@ en:
       read:
         title: "Read"
         help: "topics you've read, in the order that you last read them"
+      search:
+        title: "Search"
+        help: "search all topics"
       categories:
         title: "Categories"
         title_in: "Category - {{categoryName}}"
@@ -1528,15 +1556,17 @@ en:
       top:
         title: "Top"
         help: "the most active topics in the last year, month, week or day"
+        all:
+          title: "All Time"
         yearly:
-          title: "Top Yearly"
+          title: "Yearly"
         monthly:
-          title: "Top Monthly"
+          title: "Monthly"
         weekly:
-          title: "Top Weekly"
+          title: "Weekly"
         daily:
-          title: "Top Daily"
-        all: "All Time"
+          title: "Daily"
+        all_time: "All Time"
         this_year: "This year"
         this_month: "This month"
         this_week: "This week"
@@ -1579,8 +1609,8 @@ en:
         admins: 'Admins:'
         blocked: 'Blocked:'
         suspended: 'Suspended:'
-        private_messages_short: "PMs"
-        private_messages_title: "Private Messages"
+        private_messages_short: "Msgs"
+        private_messages_title: "Messages"
         space_free: "{{size}} free"
         uploads: "uploads"
         backups: "backups"
@@ -1618,7 +1648,7 @@ en:
         agree_title: "Confirm this flag as valid and correct"
         agree_flag_modal_title: "Agree and..."
         agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it"
         agree_flag_restore_post: "Agree (restore post)"
         agree_flag_restore_post_title: "Restore this post"
         agree_flag: "Agree with flag"
@@ -1694,14 +1724,12 @@ en:
         name: "Name"
         add: "Add"
         add_members: "Add members"
-        custom:
-          label: "Custom"
-          title: "Custom Groups"
-        automatic:
-          label: "Automatic"
-          title: "Automatic Groups"
+        custom: "Custom"
+        automatic: "Automatic"
         automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
         automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
+        default_title: "Default title for all users in this group"
+        primary_group: "Automatically set as primary group"
 
       api:
         generate_master: "Generate Master API Key"
@@ -1736,18 +1764,19 @@ en:
         read_only:
           enable:
             title: "Enable the read-only mode"
-            text: "Enable read-only mode"
+            label: "Enable read-only mode"
             confirm: "Are you sure you want to enable the read-only mode?"
           disable:
             title: "Disable the read-only mode"
-            text: "Disable read-only mode"
+            label: "Disable read-only mode"
         logs:
           none: "No logs yet..."
         columns:
           filename: "Filename"
           size: "Size"
         upload:
-          text: "Upload"
+          label: "Upload"
+          title: "Upload a backup to this instance"
           uploading: "Uploading..."
           success: "'{{filename}}' has successfully been uploaded."
           error: "There has been an error while uploading '{{filename}}': {{message}}"
@@ -1755,34 +1784,33 @@ en:
           is_running: "An operation is currently running..."
           failed: "The {{operation}} failed. Please check the logs."
           cancel:
-            text: "Cancel"
+            label: "Cancel"
             title: "Cancel the current operation"
             confirm: "Are you sure you want to cancel the current operation?"
           backup:
-            text: "Backup"
+            label: "Backup"
             title: "Create a backup"
             confirm: "Do you want to start a new backup?"
             without_uploads: "Yes (do not include files)"
           download:
-            text: "Download"
+            label: "Download"
             title: "Download the backup"
           destroy:
-            text: "Delete"
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
           restore:
             is_disabled: "Restore is disabled in the site settings."
-            text: "Restore"
+            label: "Restore"
             title: "Restore the backup"
             confirm: "Are your sure you want to restore this backup?"
           rollback:
-            text: "Rollback"
+            label: "Rollback"
             title: "Rollback the database to previous working state"
             confirm: "Are your sure you want to rollback the database to the previous working state?"
 
       export_csv:
         user_archive_confirm: "Are you sure you want to download your posts?"
-        success: "Export initiated, you will be notified via private message when the process is complete."
+        success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
         rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"

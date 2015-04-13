@@ -276,6 +276,9 @@ users:
   logout_redirect:
     client: true
     default: ''
+  full_name_required:
+    client: true
+    default: false
   enable_names:
     client: true
     default: true
@@ -303,6 +306,17 @@ users:
   staff_user_custom_fields:
     type: list
     default: ''
+  enable_user_directory:
+    client: true
+    default: true
+  allow_anonymous_posting:
+    default: false
+    client: true
+  anonymous_posting_min_trust_level:
+    default: 1
+    client: true
+  anonymous_account_duration_minutes:
+    default: 10080
 
 posting:
   min_post_length:
@@ -382,7 +396,7 @@ posting:
   max_mentions_per_post: 10
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
-  max_word_length: 30
+  title_max_word_length: 30
   newuser_max_links: 2
   newuser_max_images:
     client: true
@@ -475,7 +489,7 @@ files:
     default: 3072
   max_attachment_size_kb:
     client: true
-    default: 1024
+    default: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
@@ -506,7 +520,9 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  enable_s3_uploads: false
+  enable_s3_uploads:
+    default: false
+    client: true
   s3_use_iam_profile: false
   s3_access_key_id: ''
   s3_secret_access_key: ''
@@ -526,7 +542,7 @@ files:
   allow_animated_avatars:
     client: true
     default: false
-  allow_animated_thumbnails: false
+  allow_animated_thumbnails: true
   default_avatars:
     default: ''
     type: url_list

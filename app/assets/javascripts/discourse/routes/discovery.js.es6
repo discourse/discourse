@@ -9,7 +9,8 @@ const DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.Ope
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
-    if (transition.targetName.indexOf("discovery.top") === -1 &&
+    if (transition.intent.url === "/" &&
+        transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
       Discourse.User.currentProp("should_be_redirected_to_top", false);
       this.replaceWith("discovery.top");

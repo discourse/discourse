@@ -55,13 +55,13 @@
                 <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
               {{/if}}
               {{#if canInviteToForum}}
-                <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "envelope-o"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+                <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1>{{username}} {{user-status model}}</h1>
+            <h1>{{username}} {{user-status model currentUser=currentUser}}</h1>
             <h2>{{name}}</h2>
             {{#if title}}
               <h3>{{title}}</h3>

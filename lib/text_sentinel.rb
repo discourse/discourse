@@ -30,7 +30,7 @@ class TextSentinel
     else
       (SiteSetting.min_topic_title_length.to_f * ENTROPY_SCALE).to_i
     end
-    TextSentinel.new(text, min_entropy: entropy, max_word_length: SiteSetting.max_word_length)
+    TextSentinel.new(text, min_entropy: entropy, max_word_length: SiteSetting.title_max_word_length)
   end
 
   # Entropy is a number of how many unique characters the string needs.

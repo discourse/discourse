@@ -722,21 +722,17 @@ describe User do
 
   end
 
-  describe "#added_a_day_ago?" do
-    context "when user is more than a day old" do
-      subject(:user) { Fabricate(:user, created_at: Date.today - 2.days) }
+  describe "#first_day_user?" do
 
-      it "returns false" do
-        expect(user).to_not be_added_a_day_ago
-      end
+    def test_user?(opts={})
+      Fabricate.build(:user, {created_at: Time.now}.merge(opts)).first_day_user?
     end
 
-    context "is less than a day old" do
-      subject(:user) { Fabricate(:user) }
-
-      it "returns true" do
-        expect(user).to be_added_a_day_ago
-      end
+    it "works" do
+      expect(test_user?).to eq(true)
+      expect(test_user?(moderator: true)).to eq(false)
+      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
+      expect(test_user?(created_at: 2.days.ago)).to eq(false)
     end
   end
 
@@ -1178,6 +1174,27 @@ describe User do
       expect(user.number_of_deleted_posts).to eq(2)
     end
 
+  end
+
+  describe "new_user?" do
+    it "correctly detects new user" do
+      user = User.new(created_at: Time.now, trust_level: TrustLevel[0])
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[1]
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[2]
+
+      expect(user.new_user?).to eq(false)
+
+      user.trust_level = TrustLevel[0]
+      user.moderator = true
+
+      expect(user.new_user?).to eq(false)
+    end
   end
 
 end

@@ -624,9 +624,6 @@ const PostStream = Ember.Object.extend({
         return existing;
       }
 
-      // Update the auto_close_at value of the topic
-      this.set("topic.details.auto_close_at", post.get("topic_auto_close_at"));
-
       post.set('topic', this.get('topic'));
       postIdentityMap.set(post.get('id'), post);
 

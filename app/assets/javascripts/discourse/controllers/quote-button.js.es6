@@ -19,8 +19,11 @@ export default DiscourseController.extend({
     // anonymous users cannot "quote-reply"
     if (!this.currentUser) return;
 
-    // don't display the "quote-reply" button if we can't at least reply as a new topic
-    if (!this.get('controllers.topic.model.details.can_reply_as_new_topic')) return;
+    // don't display the "quote-reply" button if we can't reply
+    const topicDetails = this.get('controllers.topic.model.details');
+    if (!(topicDetails.get('can_reply_as_new_topic') || topicDetails.get('can_create_post'))) {
+      return;
+    }
 
     const selection = window.getSelection();
     // no selections

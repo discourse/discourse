@@ -335,7 +335,7 @@ class PostsController < ApplicationController
     offset = [params[:offset].to_i, 0].max
     limit = [(params[:limit] || 60).to_i, 100].min
 
-    posts = user_posts(user.id, offset, limit)
+    posts = user_posts(guardian, user.id, offset: offset, limit: limit)
               .where(id: PostAction.where(post_action_type_id: PostActionType.notify_flag_type_ids)
                                    .where(disagreed_at: nil)
                                    .select(:post_id))
@@ -351,7 +351,7 @@ class PostsController < ApplicationController
     offset = [params[:offset].to_i, 0].max
     limit = [(params[:limit] || 60).to_i, 100].min
 
-    posts = user_posts(user.id, offset, limit).where.not(deleted_at: nil)
+    posts = user_posts(guardian, user.id, offset: offset, limit: limit).where.not(deleted_at: nil)
 
     render_serialized(posts, AdminPostSerializer)
   end
@@ -389,13 +389,26 @@ class PostsController < ApplicationController
 
   private
 
-  def user_posts(user_id, offset=0, limit=60)
-    Post.includes(:user, :topic, :deleted_by, :user_actions)
-        .with_deleted
-        .where(user_id: user_id)
-        .order(created_at: :desc)
-        .offset(offset)
-        .limit(limit)
+  def user_posts(guardian, user_id, opts)
+    posts = Post.includes(:user, :topic, :deleted_by, :user_actions)
+                .where(user_id: user_id)
+                .with_deleted
+                .order(created_at: :desc)
+
+    if guardian.user.moderator?
+
+      # Awful hack, but you can't seem to remove the `default_scope` when joining
+      # So instead I grab the topics separately
+      topic_ids = posts.dup.pluck(:topic_id)
+      secured_category_ids = guardian.secure_category_ids
+      topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: 'private_message')
+      topics = topics.secured(guardian)
+
+      posts = posts.where(topic_id: topics.pluck(:id))
+    end
+
+    posts.offset(opts[:offset])
+         .limit(opts[:limit])
   end
 
   def params_key(params)

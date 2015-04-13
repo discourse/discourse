@@ -98,4 +98,22 @@ describe UserEmailObserver do
 
   end
 
+  context 'user_invited_to_topic' do
+
+    let(:user) { Fabricate(:user) }
+    let!(:notification) { Fabricate(:notification, user: user, notification_type: 13) }
+
+    it "enqueues a job for the email" do
+      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, type: :user_invited_to_topic, user_id: notification.user_id, notification_id: notification.id)
+      UserEmailObserver.send(:new).after_commit(notification)
+    end
+
+    it "doesn't enqueue an email if the user has mention emails disabled" do
+      user.expects(:email_direct?).returns(false)
+      Jobs.expects(:enqueue_in).with(SiteSetting.email_time_window_mins.minutes, :user_email, has_entry(type: :user_invited_to_topic)).never
+      UserEmailObserver.send(:new).after_commit(notification)
+    end
+
+  end
+
 end

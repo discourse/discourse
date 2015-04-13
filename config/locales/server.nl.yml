@@ -127,7 +127,6 @@ nl:
   num_posts: "Berichten:"
   num_participants: "Deelnemers:"
   read_full_topic: "Lees volledige topic"
-  private_message_abbrev: "PB"
   rss_description:
     latest: "Nieuwste topics"
     hot: "Hot topics"
@@ -394,7 +393,6 @@ nl:
       description: 'Dit bericht bevat inhoud dat iemand als beledigend, discriminerend of kwetsend kan ervaren. Ook kan het een overtreding van <a href="/guidelines">de regels</a> zijn.'
       long_form: 'heeft dit als ongepast gemeld'
     notify_user:
-      title: 'Privebericht @{{username}}'
       description: 'Dit bericht bevat iets waarover ik je graag persoonlijk en privé wil spreken. Dit zet geen vlag.'
       email_title: 'Uw bericht in ''%{title}'''
       email_body: "%{link}\n\n%{message}"
@@ -432,7 +430,6 @@ nl:
       email_title: 'De topic "%{title}" moet door een moderator worden bekeken'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Je bericht is gemarkeerd door andere gebruikers van dit forum. Kijk bij je <a href="/my/private-messages">privéberichten</a> om te zien waarom.</p>'
     user_must_edit: '<p>Je bericht heeft het maximaal aantal moderatie-meldingen gekregen en is daarom tijdelijk onzichtbaar.</p>'
   archetypes:
     regular:
@@ -491,23 +488,18 @@ nl:
     user_to_user_private_messages:
       title: "Lid-naar-lid"
       xaxis: "Dag"
-      yaxis: "Aantal privéberichten"
     system_private_messages:
       title: "Systeem"
       xaxis: "Dag"
-      yaxis: "Aantal privéberichten"
     moderator_warning_private_messages:
       title: "Moderatiewaarschuwing"
       xaxis: "Dag"
-      yaxis: "Aantal privéberichten"
     notify_moderators_private_messages:
       title: "Licht moderators in"
       xaxis: "Dag"
-      yaxis: "Aantal privéberichten"
     notify_user_private_messages:
       title: "Licht persoon in"
       xaxis: "Dag"
-      yaxis: "Aantal privé-berichten"
     top_referrers:
       title: "Top verwijzingen"
       xaxis: "Lid"
@@ -583,10 +575,8 @@ nl:
       description: "Hulp en essentiële informatie voor nieuwe leden."
     welcome_user:
       title: "Welkom: Nieuw lid"
-      description: "Een privébericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze zich inschrijven."
     welcome_invite:
       title: "Welkom: Uitgenodigd lid"
-      description: "Een privébericht dat automatisch naar alle nieuwe leden wordt gestuurd als ze ingaan op de uitnodiging om aan het forum deel te nemen door een ander lid."
     login_required_welcome_message:
       title: "Inloggen vereist: Welkomstbericht"
       description: "Welcomstbericht dat getoond wordt aan uitgelogde gebruikers als 'login required' is ingesteld."
@@ -605,11 +595,9 @@ nl:
     default_locale: "De standaard taal van dit Discourse forum (ISO 639-1 code)"
     allow_user_locale: "Gebruikers kunnen zelf een taal instellen voor de interface van de site"
     min_post_length: "Minimum lengte van een bericht in tekens"
-    min_private_message_post_length: "Minimum lengte van een privé-bericht in tekens"
     max_post_length: "Maximum lengte van een bericht in tekens"
     min_topic_title_length: "Minimum lengte van een topictitel"
     max_topic_title_length: "Maximum lengte van een topictitel"
-    min_private_message_title_length: "Minimum lengte van de titel van een privé-bericht in tekens"
     min_search_term_length: "Minimum lengte van een zoekterm in tekens"
     allow_uncategorized_topics: "Sta topics zonder categorie toe"
     allow_duplicate_topic_titles: "Sta topics met dezelfde titels toe"
@@ -658,7 +646,6 @@ nl:
     sso_url: "URL van single sign on eindpunt"
     sso_overrides_email: "Gebruikt het mailadres van de SSO service i.p.v. het lokaal opgegegeven adres. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale mailadressen)"
     sso_overrides_username: "Gebruikt de gebruikersnaam van de SSO service i.p.v. de lokaal gekozen gebruikersnaam. (WAARSCHUWING: er kunnen discrepanties ontstaan door verschillen in eisen aan bijv. de lengte van de gebruikersnaam)"
-    sso_overrides_name: "Gebruikt de naam die gebruikt wordt bij de SSO service i.p.v. de lokaal opgegeven naam. (WAARSCHUWING: er kunnen discrepanties ontstaan door normalisatie van lokale namen)"
     enable_yahoo_logins: "Zet inloggen met Yahoo! aan"
     google_oauth2_client_id: "Client ID van je Google applicatie."
     google_oauth2_client_secret: "Client secret van je Google applicatie."
@@ -731,8 +718,6 @@ nl:
     edited: "%{display_username} bewerkte je bericht in %{link}"
     posted: "%{display_username} heeft een bericht geplaatst in %{link}"
     moved_post: "%{display_username} verplaatste je bericht naar %{link}"
-    private_message: "%{display_username} heeft je een privé-bericht gestuurd: %{link}"
-    invited_to_private_message: "%{display_username} heeft je uitgenodigd voor een privé-bericht: %{link}"
     invitee_accepted: "%{display_username} heeft je uitnodiging geaccepteerd"
     linked: "%{display_username} heeft je gelinkt in %{link}"
     granted_badge: "%{link} is aan jou toegekend"
@@ -835,26 +820,6 @@ nl:
       subject_template: "Welkom bij %{site_name}!"
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
-      text_body_template: |
-        Bedankt voor het accepteren van je uitnodiging voor %{site_name} en welkom op ons forum!
-
-        We hebben een automatisch een gebruikersnaam voor je aangemaakt: **%{username}** en je bent nu ingelogd. Je kan je gebruikersnaam nog veranderen door naar  [je gebruikersprofiel][prefs] te gaan. Dit is zeker aan te raden als je gebruikersnaam wat onduidelijk is.
-
-        Om nogmaals in te loggen kan je het volgende doen:
-
-        1. Gebruik altijd **hetzelfde e-mailadres** als waarop je je originele uitnodiging hebt ontvangen. Anders weten we niet zeker dat jij het bent!
-
-        2. Maak een uniek wachtwoord aan in [je gebruikersprofiel][prefs] en log daarmee in.
-
-        %{new_user_tips}
-
-        We geloven altijd in [beschaafd gemeenschappelijk gedrag](%{base_url}/faq).
-
-        Nogmaals, welkom!
-
-        (Mocht je, als nieuwe gebruiker, een privebericht aan een van de [stafleden](%{base_url}/about) willen sturen, reageer dan op dit bericht.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup succesvol uitgevoerd"
     backup_failed:
@@ -877,13 +842,11 @@ nl:
     csv_export_failed:
       subject_template: "Export mislukt"
     email_reject_topic_not_found:
-      subject_template: "E-mailprobleem -- Topic niet gevonden"
       text_body_template: |
         Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
 
         De betreffende topic is niet gevonden. Als je denkt dat dit niet klopt, neem dan contact op met een staflid.
     email_reject_topic_closed:
-      subject_template: "E-mailprobleem --- Topic gesloten"
       text_body_template: |
         Je e-mailbericht aan %{destination} (titel %{former_title}) is niet goed verwerkt.
 
@@ -955,12 +918,6 @@ nl:
     reply_by_email: "Beantwoord deze mail om te reageren op dit forumbericht, of ga naar %{base_url}%{url} in je browser."
     visit_link_to_respond: "Ga naar %{base_url}%{url} in je browser om te reageren."
     posted_by: "Geplaatst door %{username} op %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} heeft je uitgenodigd voor een privé-gesprek '%{topic_title}'"
-      text_body_template: |
-        %{username} heeft je uitgenodigd voor een privé-gesprek '%{topic_title}' op %{site_name}:
-
-        Bezoek deze link om de topic te bekijken: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1008,7 +965,6 @@ nl:
         %{respond_instructions}
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
-      subject_template: "[%{site_name}] Samenvatting voor %{date}"
       new_activity: "Nieuwe reacties op je topics en berichten:"
       top_topics: "Populaire berichten"
       other_new_topics: "Populaire topics"
@@ -1095,7 +1051,6 @@ nl:
     spam_hosts: "Deze nieuwe gebruiker probeerde om meerdere berichten met links naar hetzelfde domein te plaatsen. Zie de newuser_spam_host_threshold instelling."
   email_log:
     no_user: "Kan geen gebruiker met id %{user_id} vinden"
-    suspended_not_pm: "De gebruiker is geschorst, geen privébericht"
     seen_recently: "Gebruiker was recentelijk nog online"
     post_not_found: "Kan geen bericht met id %{post_id} vinden"
     notification_already_read: "De notificatie waar deze mail voor is is al gezien"

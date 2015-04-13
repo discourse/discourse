@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
   validates :email, presence: true, uniqueness: true
   validates :email, email: true, if: :email_changed?
   validate :password_validator
+  validates :name, user_full_name: true, if: :name_changed?
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   after_initialize :add_trust_level
@@ -311,8 +312,16 @@ class User < ActiveRecord::Base
     self.password_hash == hash_password(password, salt)
   end
 
+  def first_day_user?
+    !staff? &&
+    trust_level < TrustLevel[2] &&
+    created_at >= 24.hours.ago
+  end
+
   def new_user?
-    created_at >= 24.hours.ago || trust_level == TrustLevel[0]
+    (created_at >= 24.hours.ago || trust_level == TrustLevel[0]) &&
+      trust_level < TrustLevel[2] &&
+      !staff?
   end
 
   def seen_before?
@@ -560,10 +569,6 @@ class User < ActiveRecord::Base
     uploaded_avatar.present?
   end
 
-  def added_a_day_ago?
-    created_at > 1.day.ago
-  end
-
   def generate_api_key(created_by)
     if api_key.present?
       api_key.regenerate!(created_by)
@@ -641,6 +646,10 @@ class User < ActiveRecord::Base
     if SiteSetting.automatically_download_gravatars? && !avatar.last_gravatar_download_attempt
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
+
+    if self.uploaded_avatar_id_changed?
+      Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
+    end
   end
 
   def first_post_created_at
@@ -714,6 +723,12 @@ class User < ActiveRecord::Base
 
   def create_user_profile
     UserProfile.create(user_id: id)
+  end
+
+  def anonymous?
+    SiteSetting.allow_anonymous_posting &&
+      trust_level >= 1 &&
+      custom_fields["master_id"].to_i > 0
   end
 
   protected

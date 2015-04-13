@@ -25,6 +25,13 @@
       <%= yield %>
     </div>
     <footer class="container">
+      <nav itemscope itemtype='http://schema.org/SiteNavigationElement'>
+        <a href='/'><%= t 'home_title' %></a>
+        <%= link_to t('js.filters.categories.title'), categories_path %>
+        <%= link_to t('guidelines_topic.title'), guidelines_path %>
+        <%= link_to t('tos_topic.title'), tos_path %>
+        <%= link_to t('privacy_topic.title'), privacy_path %>
+      </nav>
       <p><%= t 'powered_by_html' %></p>
     </footer>
     <%= render_google_analytics_code %>

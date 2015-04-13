@@ -1,8 +1,10 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
+import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
+import ClickTrack from 'discourse/lib/click-track';
 import { listenForViewEvent } from 'discourse/lib/app-events';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
-var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
+var TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
@@ -18,6 +20,8 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
 
   postStream: Em.computed.alias('controller.postStream'),
+
+  archetype: Em.computed.alias('topic.archetype'),
 
   _composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
@@ -52,7 +56,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
 
-      return Discourse.ClickTrack.trackClick(e);
+      return ClickTrack.trackClick(e);
     });
 
   }.on('didInsertElement'),
