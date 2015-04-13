@@ -203,8 +203,8 @@ tr.category-topic-link:nth-of-type(odd) {
   height: 0;
   vertical-align: middle;
   border-top: 4px solid $primary;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+  @include border-right(4px solid transparent);
+  @include border-left(4px solid transparent);
   content: "";
   @include margin-left(5px);
 }
