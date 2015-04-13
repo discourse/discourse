@@ -11,9 +11,9 @@ body img.emoji {
 .emoji-modal {
   z-index: 10000;
   position: fixed;
-  margin-left: -195px;
+  @include margin-left(-195px);
   margin-top: -100px;
-  left: 50%;
+  @include left(50%);
   top: 50%;
   background-color: #dadada;
 }
@@ -24,7 +24,7 @@ body img.emoji {
 }
 
 .emoji-page a {
-  padding: 8px;
+  @include padding(8px);
   display: block;
   border-radius: 20px;
 }
@@ -42,7 +42,7 @@ body img.emoji {
 .emoji-modal-wrapper {
   z-index: 9999;
   position: fixed;
-  left: 0;
+  @include left(0);
   top: 0;
   width: 100%;
   height: 100%;
@@ -51,18 +51,18 @@ body img.emoji {
 }
 
 .emoji-modal .toolbar {
-  margin: 0;
+  @include margin(0);
   margin-top: 8px;
   margin-bottom: 5px
 }
 
 .emoji-modal .toolbar li {
   display: inline;
-  padding-right: 1px;
+  @include padding-right(1px);
 }
 
 .emoji-modal .toolbar li a {
-  padding: 8px;
+  @include padding(8px);
   background-color: #dadada;
 }
 
@@ -72,27 +72,27 @@ body img.emoji {
 
 .emoji-modal .info {
   height: 30px;
-  margin-left: 8px;
+  @include margin-left(8px);
   margin-top: 15px;
   margin-bottom: 0px;
 }
 
 .emoji-modal .info span {
-  margin-left: 5px;
+  @include margin-left(5px);
   font-weight: bold;
 }
 
 .emoji-modal .info {
-  float: left;
+  @include float(left);
 }
 .emoji-modal .nav {
-  float: right;
+  @include float(right);
   margin-top: 15px;
 }
 
 .emoji-modal .nav span {
   color: #aaa;
-  margin-right: 10px;
+  @include margin-right(10px);
 }
 
 .emoji-modal .nav a {

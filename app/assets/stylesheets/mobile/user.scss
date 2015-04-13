@@ -3,7 +3,7 @@
 .user-preferences {
   .control-group {
     // border-bottom: 1px solid #e5e5e5;
-    padding: 8px 36px 8px 8px;
+    @include padding(8px 36px 8px 8px);
   }
   .control-label {
     font-weight: bold;
@@ -15,7 +15,7 @@
   .static {
     color: $primary;
     margin-top: 5px;
-    margin-left: 5px;
+    @include margin-left(5px);
     display: inline-block;
   }
   .instructions {
@@ -26,7 +26,7 @@
     padding-top: 8px;
   }
   .avatar {
-    margin-left: 3px;
+    @include margin-left(3px);
   }
   .instructions a[href] {
     color: $primary;
@@ -34,14 +34,14 @@
   .warning {
     @include border-radius-all(6px);
     background-color: $danger;
-    padding: 5px 8px;
+    @include padding(5px 8px);
     color: $primary;
     width: 520px;
   }
 
   .other .controls-dropdown {
     margin-top: 10px;
-    padding-left: 5px;
+    @include padding-left(5px);
     select {
       width: 280px;
     }
@@ -60,7 +60,7 @@
     overflow: auto;
     display: block;
     width: 100%;
-    padding: 5px 8px;
+    @include padding(5px 8px);
   }
 
   .bio-composer #wmd-quote-post {
@@ -119,14 +119,14 @@
     line-height: 1.4em;
   }
   .avatar {
-    margin-left: 3px;
+    @include margin-left(3px);
   }
   .instructions a[href] {
     color: $tertiary;
   }
   .warning {
     background-color: scale-color($danger, $lightness: 30%);
-    padding: 5px 8px;
+    @include padding(5px 8px);
     color: $secondary;
   }
 
@@ -146,7 +146,7 @@
 
   h3 {
     color: $primary;
-    margin: 10px;
+    @include margin(10px);
   }
 
 }
@@ -154,7 +154,7 @@
 .user-main {
 
   width: 100%;
-  float: left;
+  @include float(left);
   margin-bottom: 50px;
 
 
@@ -167,24 +167,24 @@
       text-overflow: ellipsis;
     }
     th.seen {
-      text-align: right;
+      @include text-align(right);
     }
     td.avatar {
       width: 60px;
     }
     td {
       img {
-        margin-right: 10px;
+        @include margin-right(10px);
       }
       span.last-seen-at {
-        float: right;
+        @include float(right);
         color: $primary;
       }
     }
   }
 
   .user-content {
-    padding: 10px 8px;
+    @include padding(10px 8px);
     background-color: $secondary;
     border: 1px solid scale-color-diff();
     margin-bottom: 10px;
@@ -192,7 +192,7 @@
     margin-top: 20px;
 
     .btn.right {
-      float: right
+      @include float(right);
     }
 
     h2 {
@@ -204,13 +204,13 @@
       margin-top: 10px;
 
       th {
-        text-align: left;
+        @include text-align(left);
         border-bottom: 1px solid scale-color-diff();
-        padding: 5px;
+        @include padding(5px);
       }
 
       td {
-        padding: 5px;
+        @include padding(5px);
         border-bottom: 1px solid scale-color-diff();
       }
     }
@@ -228,11 +228,11 @@
   .secondary {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
     font-size: 0.929em;
-      .btn { padding: 3px 12px; }
+      .btn { @include padding(3px 12px); }
 
       dl dd {
-        margin: 0 15px 0 5px;
-        padding: 0;
+        @include margin(0 15px 0 5px);
+        @include padding(0);
       }
 
       dl dt {
@@ -240,8 +240,8 @@
       }
 
       dl {
-        padding: 10px 15px;
-        margin: 0;
+        @include padding(10px 15px);
+        @include margin(0);
       }
 
       dd {
@@ -252,18 +252,18 @@
 
       dt {
         color: dark-light-diff($secondary, $primary, 50%, -40%);
-        margin: 0;
+        @include margin(0);
       }
     }
 
     .details {
-      padding: 15px 15px 4px 15px;
+      @include padding(15px 15px 4px 15px);
       background-color: rgba($primary, .9);
 
       h1 {
         font-size: 2.143em;
         font-weight: normal;
-        margin: 10px 0 0 0;
+        @include margin(10px 0 0 0);
       }
 
       h2 {
@@ -279,20 +279,20 @@
       h3 {
         font-weight: normal;
         font-size: 1em;
-        margin: 5px 0;
+        @include margin(5px 0);
         i:not(:first-of-type) {
-          margin-left: 10px;
+          @include margin-left(10px);
         }
       }
 
       .groups {
-        margin-left: 10px;
+        @include margin-left(10px);
         display: inline;
         }
 
       img.avatar {
-        float: left;
-        margin-right: 15px;
+        @include float(left);
+        @include margin-right(15px);
       }
 
       .suspended {
@@ -302,13 +302,13 @@
       .primary {
         width: 100%;
         position: relative;
-        float: left;
+        @include float(left);
         color: dark-light-diff($secondary, $primary, 75%, 0%);
 
         h1 {font-weight: bold;}
 
         .primary-textual {
-          float: left;
+          @include float(left);
           a[href] {
             color: dark-light-diff($secondary, $primary, 75%, -10%);
           }
@@ -334,14 +334,14 @@
 
     .controls {
       width: 160px;
-      float: right;
-      text-align: right;
+      @include float(right);
+      @include text-align(right);
       ul {
         list-style-type: none;
-        margin: 0;
+        @include margin(0);
       }
       a {
-        padding: 5px 10px;
+        @include padding(5px 10px);
         width: 140px;
         margin-bottom: 10px;
       }
@@ -364,19 +364,19 @@
   }
 
     .details {
-      padding: 12px 15px 2px 15px;
+      @include padding(12px 15px 2px 15px);
       margin-top: 0;
       background: rgba($primary, 1);
       .bio { display: none; }
 
       .primary {
-        text-align: left;
+        @include text-align(left);
         margin-top: 0;
         width: 100%;
 
         .avatar {
-          float: left;
-          margin-right: 10px;
+          @include float(left);
+          @include margin-right(10px);
           width: 45px;
           height: 45px;
         }
@@ -399,9 +399,9 @@
 
 
   .user-stream {
-    padding: 0 10px;
+    @include padding(0 10px);
     .excerpt {
-      margin: 5px 0;
+      @include margin(5px 0);
       font-size: 0.929em;
       word-wrap: break-word;
       color: $primary;
@@ -418,7 +418,7 @@
       opacity: 0.4;
     }
     .item {
-      padding: 20px 0 15px 0;
+      @include padding(20px 0 15px 0);
       background-color: $secondary;
       border-bottom: 1px solid scale-color-diff();
     }
@@ -430,7 +430,7 @@
     }
     .time, .delete-info {
       display: block;
-      float: right;
+      @include float(right);
       color: lighten($primary, 40%);
       font-size: 11px;
     }
@@ -438,8 +438,8 @@
       font-size: 1em;
     }
     .avatar-link {
-      float: left;
-      margin-right: 4px;
+      @include float(left);
+      @include margin-right(4px);
     }
     .title {
       display: block;
@@ -460,10 +460,10 @@
     }
     .edit-reason {
       background-color: scale-color($highlight, $lightness: 25%);
-      padding: 3px 5px 5px 5px;
+      @include padding(3px 5px 5px 5px);
     }
     .remove-bookmark {
-      float: right;
+      @include float(right);
       margin-top: -4px;
     }
     .notification {
@@ -474,15 +474,15 @@
       li { display: inline-block; }
       p {
         display: inline-block;
-        margin-left: 10px;
+        @include margin-left(10px);
         span {
           color: $primary;
         }
       }
       .time {
         display: inline-block;
-        margin-left: 10px;
-        float: none;
+        @include margin-left(10px);
+        @include float(none);
       }
       // common/base/header.scss
       .fa, .icon {
@@ -493,19 +493,19 @@
   }
 
   .staff-counters {
-    text-align: left;
+    @include text-align(left);
     background: $primary;
-    padding: 7px 0;
+    @include padding(7px 0);
     display: inline;
     > div {
-      margin: 0 10px 0 0;
+      @include margin(0 10px 0 0);
       display: inline-block;
-      padding: 5px 0;
+      @include padding(5px 0);
       &:first-of-type {
-        padding-left: 10px;
+        @include padding-left(10px);
         }
       span {
-        padding: 1px 5px;
+        @include padding(1px 5px);
         border-radius: 10px;
         }
 
@@ -522,7 +522,7 @@
     display: inline-block;
     height: 30px;
     width: 30px;
-    text-align: center;
+    @include text-align(center);
     vertical-align: middle;
     line-height: 30px;
   }
@@ -549,8 +549,8 @@
   .user-field {
     label {
       width: 140px;
-      float: left;
-      text-align: right;
+      @include float(left);
+      @include text-align(right);
       font-weight: bold;
     }
     input[type=text] {
@@ -559,9 +559,9 @@
     .controls {
       label {
         width: auto;
-        text-align: left;
+        @include text-align(left);
         font-weight: normal;
-        float: auto;
+        @include float(auto);
       }
       p {
         color: scale-color($primary, $lightness: 50%);

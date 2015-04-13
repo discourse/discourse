@@ -1,10 +1,10 @@
 .alert {
-  margin: 15px 0 5px 0;
+  @include margin(15px 0 5px 0);
 }
 
 // there are (n) new or updated topics, click to show
 .alert.alert-info {
-    margin: 0;
-    padding: 15px;
+    @include margin(0);
+    @include padding(15px);
     font-size: 1.1em;
 }

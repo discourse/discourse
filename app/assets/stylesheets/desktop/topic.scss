@@ -1,10 +1,10 @@
 .post-actions {
   @include unselectable;
   clear: both;
-  text-align: right;
+  @include text-align(right);
   .post-action {
     display: inline-block;
-    margin-left: 10px;
+    @include margin-left(10px);
     margin-top: 10px;
   }
 }
@@ -13,7 +13,7 @@
   margin-top: 20px;
 }
 
-.edits {margin-right: 5px;}
+.edits {@include margin-right(5px);}
 
 #topic-title {
   z-index: 1000;
@@ -22,13 +22,13 @@
   .star {
     font-size: 1.429em;
     margin-top: 6px;
-    margin-right: 6px;
+    @include margin-right(6px);
   }
   #edit-title { width: 500px; }
   .category-combobox {
     width: 350px;
     .select2-drop {
-      left: -9000px;
+      @include left(-9000px);
       width: 248px;
     }
     .select2-search input {
@@ -37,7 +37,7 @@
   }
   h1 {
     font-size: 1.8em;
-    margin: 0;
+    @include margin(0);
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
@@ -49,7 +49,7 @@
   }
   .select2-container {
     vertical-align: middle;
-    margin-right: 5px;
+    @include margin-right(5px);
     margin-bottom: 2px;
   }
   .private-message-glyph { display: none; }
@@ -59,8 +59,8 @@
 
 .private-message-glyph {
   color: scale-color($primary, $lightness: 75%);
-  float: left;
-  margin: 0 5px 0 0;
+  @include float(left);
+  @include margin(0 5px 0 0);
 }
 .private_message #topic-title .private-message-glyph { display: inline; }
 
@@ -68,12 +68,12 @@ a.reply-new {
   margin-top: 3px;
   color: scale-color($primary, $lightness: 50%);
   i {
-    margin-right: 3px;
+    @include margin-right(3px);
     background: $secondary;
-    padding: 1.5px 3px;
+    @include padding(1.5px 3px);
     border-radius: 20px;
     transition: all linear .15s;
-    margin-left: -20px;
+    @include margin-left(-20px);
   }
 }
 
@@ -85,19 +85,19 @@ a:hover.reply-new {
 }
 
 .topic-error {
-  padding: 18px;
+  @include padding(18px);
   width: 60%;
-  margin-left: auto;
-  margin-right: auto;
+  @include margin-left(auto);
+  @include margin-right(auto);
   font-size: 1.714em;
-  text-align: center;
+  @include text-align(center);
   line-height: 1.1em;
 
   .topic-retry {
     display: block;
     margin-top: 28px;
-    margin-left: auto;
-    margin-right: auto;
+    @include margin-left(auto);
+    @include margin-right(auto);
   }
 }
 
@@ -109,7 +109,7 @@ a:hover.reply-new {
 
 #topic-progress-wrapper {
   position: fixed;
-  right: 50%;
+  @include right(50%);
   width: 0;
   bottom: 0;
   z-index: 500;
@@ -122,14 +122,14 @@ a:hover.reply-new {
 
 #topic-progress-expanded {
   border: 1px solid scale-color-diff();
-  padding: 5px;
+  @include padding(5px);
   background: $secondary;
   @include box-shadow(0 0px 2px rgba(0,0,0, .2));
 
   position: relative;
-  left: 345px;
+  @include left(345px);
   width: 133px;
-  padding: 5px;
+  @include padding(5px);
 
   button.full {
     width: 100%;
@@ -143,26 +143,26 @@ a:hover.reply-new {
   }
   .jump-form {
     input[type="text"] {
-      float: left;
+      @include float(left);
       width: 45px;
       height: 20px;
-      text-align: center;
+      @include text-align(center);
       margin-bottom: 0;
       font-size: 1.143em;
     }
     button.btn {
-      float: right;
+      @include float(right);
       width: 55px;
     }
   }
   button.btn.jump-bottom {
-    margin: 5px 0 0 0;
+    @include margin(5px 0 0 0);
   }
 }
 
 #topic-progress {
   position: relative;
-  left: 345px;
+  @include left(345px);
   &.hidden {
     display: none;
   }
@@ -182,12 +182,12 @@ a:hover.reply-new {
     position: relative;
     top: 9px;
     width: 100%;
-    text-align: center;
+    @include text-align(center);
     z-index: 1;
   }
   i.fa {
     position: absolute;
-    right: 8px;
+    @include right(8px);
     bottom: 9px;
     z-index: 1;
   }
@@ -201,7 +201,7 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  scale-color-diff();
+    @include border-right(1px solid  scale-color-diff());
     background-color:  desaturate(dark-light-diff($success, $secondary, 60%, -35%), 30%);
     transition: width .75s;
 
@@ -219,7 +219,7 @@ a:hover.reply-new {
 
 #topic-filter {
   background-color: scale-color($highlight, $lightness: 25%);
-  padding: 8px;
+  @include padding(8px);
   bottom: 0;
   position: fixed;
   width: 100%;
@@ -231,7 +231,7 @@ a:hover.reply-new {
 and (max-width : 940px) {
 
   #topic-progress, #topic-progress-expanded {
-    left: 295px;
+    @include left(295px);
     }
 }
 
@@ -240,7 +240,7 @@ and (max-width : 940px) {
 and (max-width : 870px) {
 
   #topic-progress, #topic-progress-expanded {
-    left: 210px;
+    @include left(210px);
     }
 
 }
@@ -250,8 +250,8 @@ and (max-width : 870px) {
 and (max-width : 724px) {
 
   #topic-progress-wrapper {
-    right: 0;
-    #topic-progress, #topic-progress-expanded { left: auto; right: 145px;  }
+    @include right(0);
+    #topic-progress, #topic-progress-expanded { @include left(auto); @include right(145px);  }
   }
 
 }

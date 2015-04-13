@@ -1,14 +1,14 @@
 #topic-entrance {
 
   border: 1px solid scale-color-diff();
-  padding: 5px;
+  @include padding(5px);
   background: $secondary;
   box-shadow: 0 0px 2px rgba(0,0,0, .2);
   z-index: 100;
 
   position: absolute;
   width: 133px;
-  padding: 5px;
+  @include padding(5px);
 
   @include unselectable;
 
@@ -24,6 +24,6 @@
     }
   }
   button.btn.jump-bottom {
-    margin: 5px 0 0 0;
+    @include margin(5px 0 0 0);
   }
 }

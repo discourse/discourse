@@ -7,13 +7,13 @@
 
 .list-controls {
   .nav {
-    float: left;
+    @include float(left);
     margin-bottom: 18px;
   }
 
   .btn {
-    float: right;
-    margin-left: 8px;
+    @include float(right);
+    @include margin-left(8px);
     margin-bottom: 10px;
     font-size: 1.143em;
     font-weight: normal;
@@ -25,7 +25,7 @@
 
 
   a.badge-category {
-    padding: 3px 12px;
+    @include padding(3px 12px);
     font-size: 1.143em;
   }
 
@@ -35,19 +35,19 @@
 // --------------------------------------------------
 
 .topic-list {
-  margin: 0 0 10px;
+  @include margin(0 0 10px);
   .fa-thumb-tack { color: scale-color($primary, $lightness: 50%); }
   .fa-thumb-tack.unpinned { color: scale-color($primary, $lightness: 50%); }
   a.title {color: $primary;}
   .fa-bookmark { color: scale-color($primary, $lightness: 50%); }
   th,
   td {
-    padding: 12px 5px;
+    @include padding(12px 5px);
     &:first-of-type {
-      padding-left: 10px;
+      @include padding-left(10px);
     }
     &:last-of-type {
-      padding-right: 10px;
+      @include padding-right(10px);
     }
   }
   th {
@@ -66,7 +66,7 @@
     }
   }
   button.bulk-select {
-    padding: 0;
+    @include padding(0);
     background: transparent;
     &:hover {
       color: scale-color-diff();
@@ -75,12 +75,12 @@
 
   .star {
     width: 20px;
-    padding-right: 0;
+    @include padding-right(0);
     .fa-star {
       position: relative;
     }
     + .main-link {
-      padding-left: 5px;
+      @include padding-left(5px);
     }
   }
 
@@ -89,7 +89,7 @@
     top: -2px;
     &.new-topic {
       top: -1px;
-      padding-left: 5px;
+      @include padding-left(5px);
     }
   }
 
@@ -101,10 +101,10 @@
   }
   .posters {
     > a {
-      float: left;
-      margin-right: 4px;
+      @include float(left);
+      @include margin-right(4px);
       &:last-of-type {
-        margin-right: 0;
+        @include margin-right(0);
       }
     }
   }
@@ -114,7 +114,7 @@
      border: 2px solid desaturate(scale-color($tertiary, $lightness: 50%), 40%);
      position: relative;
      top: -2px;
-     left: -2px;
+     @include left(-2px);
   }
 
 
@@ -139,16 +139,16 @@
     clear: both;
     width: auto;
     color: scale-color($primary, $lightness: 50%);
-    text-align: left;
+    @include text-align(left);
     font-size: 12px;
     margin-top: 5px;
     .fa {
-      margin-right: 2px;
+      @include margin-right(2px);
     }
     a {
       font-size: 11px;
       color: scale-color($primary, $lightness: 50%);
-      margin-right: 3px;
+      @include margin-right(3px);
       line-height: 20px;
     }
   }
@@ -196,7 +196,7 @@
   }
   td.latest {
     vertical-align: top;
-    padding: 8px;
+    @include padding(8px);
     padding-top: 0;
   }
   .last-user-info {
@@ -214,7 +214,7 @@
       display: inline-block;
       font-size: 1.286em;
       i {
-        margin-right: 5px;
+        @include margin-right(5px);
       }
       a[href] {
         color: $primary;
@@ -232,7 +232,7 @@
   }
 
   .featured-topic {
-    margin: 10px 0 0;
+    @include margin(10px 0 0);
     /* topic status glyphs */
     i {
       color: scale-color($primary, $lightness: 50%) !important;
@@ -250,17 +250,17 @@
 }
 
 .topic-list-bottom {
-  margin: 20px 0;
+  @include margin(20px 0);
 }
 
 // Misc. stuff
 // --------------------------------------------------
 
-#list-area .top-lists h2 { margin: 5px 0 10px; }
+#list-area .top-lists h2 { @include margin(5px 0 10px); }
 
 #list-area {
   h2 {
-    margin: 20px 0 10px;
+    @include margin(20px 0 10px);
   }
 }
 
@@ -271,22 +271,22 @@
 
 #bulk-select {
   position: fixed;
-  right: 20px;
-  padding: 5px;
+ @include right(20px);
+  @include padding(5px);
   background-color: $secondary;
 }
 
 button.dismiss-read {
-  float: right;
+  @include float(right);
   margin-bottom: 5px;
-  margin-left: 10px;
+  @include margin-left(10px);
 }
 
 .category-notification-menu .dropdown-menu {
-  right: 0;
+ @include right(0);
   top: 30px;
   bottom: auto;
-  left: auto;
+  @include left(auto);
 }
 
 .category-heading {
@@ -299,9 +299,9 @@ button.dismiss-read {
 
 .category-logo {
   max-height: 150px;
-  float: left;
+  @include float(left);
   margin-bottom: 15px;
-  margin-right: 15px;
+  @include margin-right(15px);
 }
 
 /* Tablet (portrait) ----------- */
@@ -312,21 +312,21 @@ and (max-width : 850px) {
   // add some left padding to topics otherwise everything is 100% flush
   // with left edge in portrait tablet, which looks awful
   #topic-title {
-    padding-left: 10px;
+    @include padding-left(10px);
   }
   .container.posts {
-    padding-left: 10px;
+    @include padding-left(10px);
   }
 
   .nav-pills {
     > li > a {
       font-size: 1em;
-      padding: 5px 10px ;
+      @include padding(5px 10px );
       }
   }
 
   .list-controls {
-    padding: 0 5px;
+    @include padding(0 5px);
 
     .btn {
         font-size: 1em
@@ -344,27 +344,27 @@ and (max-width : 850px) {
 
   .topic-list {
     .categories td.category {
-      padding-left: 10px;
+      @include padding-left(10px);
       }
    th:first-of-type {
-     padding: 12px 5px;
+     @include padding(12px 5px);
      }
    th {
      .btn .fa {
-       margin-right: 2px;
+       @include margin-right(2px);
        }
      }
    th, td {
-      padding: 12px 2px;
+      @include padding(12px 2px);
       font-size: 0.929em;
      }
     .star {
-      padding: 12px 5px;
+      @include padding(12px 5px);
       width: auto;
       }
     .main-link {
       font-size: 1.071em;
-      padding: 12px 8px 12px 0px;
+      @include padding(12px 8px 12px 0px);
       }
 
     .likes {
@@ -372,10 +372,10 @@ and (max-width : 850px) {
       }
     .category {
       min-width: 0;
-      padding: 0;
+      @include padding(0);
       }
     .topic-excerpt {
-      padding-right: 20px;
+      @include padding-right(20px);
       }
     th.posters {
       text-align: center;
@@ -387,7 +387,7 @@ and (max-width : 850px) {
          display: none;
          }
        a.latest {
-         padding: 0 8px;
+         @include padding(0 8px);
          }
        }
   }

@@ -1,14 +1,14 @@
 .alert {
-  padding: 8px 35px 8px 14px;
+  @include padding(8px 35px 8px 14px);
   background-color: scale-color($danger, $lightness: 75%);
   color: #c09853;
 
   .close {
     position: relative;
     top: -2px;
-    right: -21px;
+   @include right(-21px);
     line-height: 18px;
-    float: right;
+    @include float(right);
     font-size: 1.429em;
     font-weight: bold;
     line-height: 18px;
@@ -24,7 +24,7 @@
     }
   }
   button.close {
-    padding: 0;
+    @include padding(0);
     cursor: pointer;
     background: transparent;
     border: 0;

@@ -1,10 +1,10 @@
 #topic-title {
 
   .title-wrapper {
-    float: left;
+    @include float(left);
     width: 90%;
     .btn-small {
-      margin: 0 6px 0 0;
+      @include margin(0 6px 0 0);
     }
   }
 

@@ -1,16 +1,16 @@
 .upload-selector {
   label {
     display: inline-block;
-    padding-left: 10px;
+    @include padding-left(10px);
   }
   .radios {
     height: 60px;
     .inputs {
-      float: right;
+      @include float(right);
       width: 75%;
       input {
         width: 90%;
-        margin: 0 0 5px 0;
+        @include margin(0 0 5px 0);
       }
       input[type="file"] {
         font-size: 1em;
@@ -21,7 +21,7 @@
       }
       .hint {
         font-style: italic;
-        margin: 5px 0 0 0;
+        @include margin(5px 0 0 0);
       }
     }
   }
@@ -35,8 +35,8 @@
 }
 
 .image-upload-controls {
-  padding: 10px;
+  @include padding(10px);
   label.btn {
-    padding: 7px 10px 5px 10px;
+    @include padding(7px 10px 5px 10px);
   }
 }

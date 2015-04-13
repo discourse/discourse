@@ -1,6 +1,7 @@
+
 // these are the styles associated with the Discourse admin section
 // Set the layout direction.
-$disc-direction: ltr;
+$disc-direction: rtl;
 
 @import "common/foundation/multi_directional_mixins";
 @import "common/foundation/variables";
@@ -670,9 +671,9 @@ section.details {
     }
   }
   .action {
-     button { @include margin(4px); }
-     @include text-align(right);
-     padding-bottom: 20px;
+    button { @include margin(4px); }
+    @include text-align(right);
+    padding-bottom: 20px;
   }
   td p {
     font-size: 0.929em;
@@ -834,7 +835,7 @@ table.api-keys {
 
       .fa {
         font-size: 2.286em
-;
+      ;
         vertical-align: middle;
         color: $primary
       }
@@ -856,12 +857,12 @@ table.api-keys {
       ul {
         @include margin-left(0);
         @include padding-left(20px);
-      li {
-        margin-bottom: 10px;
+        li {
+          margin-bottom: 10px;
         }
       }
+    }
   }
-}
 
   &.totals {
     table {
@@ -942,7 +943,7 @@ table.api-keys {
       @extend .clearfix;
       line-height: 1.0em;
       @include padding(6px 8px);
-    background-color: scale-color-diff();
+      background-color: scale-color-diff();
       .left {
         @include float(left);
       }
@@ -1035,7 +1036,6 @@ table.api-keys {
   @include float(left);
   width: 54.0540%;
   @include margin-left(1.8018%);
-
   p.description {
     color: $primary;
   }
@@ -1324,48 +1324,48 @@ and (max-width : 850px) {
 and (min-width : 320px)
 and (max-width : 500px) {
 
-.full-width { @include margin(0); }
-.site-settings-nav { width: 100%; }
-.site-settings-detail {
-  width: 100%;
-  @include padding(0);
-  border: none;
+  .full-width { @include margin(0); }
+  .site-settings-nav { width: 100%; }
+  .site-settings-detail {
+    width: 100%;
+    @include padding(0);
+    border: none;
 
-  .settings .setting {
+    .settings .setting {
       .setting-label {
-      @include float(left);
-      width: 100%;
-      h3 {
-        margin-bottom: 5px;
-        font-weight: bold;
-        margin-top: 25px;
+        @include float(left);
+        width: 100%;
+        h3 {
+          margin-bottom: 5px;
+          font-weight: bold;
+          margin-top: 25px;
         }
       }
       .setting-value {
         width: 100%;
-        }
+      }
       label {
         font-size: 0.929em;
-        }
+      }
     }
   }
 
   .content-editor {
     width: 100%;
-      #pagedown-editor {
-        box-sizing: border-box;
-      }
+    #pagedown-editor {
+      box-sizing: border-box;
+    }
   }
 
   div.ac-wrap {
     width: 100% !important;
     box-sizing: border-box;
-    }
+  }
 
   .admin-container {
     h2 {
       @include float(left);
-      }
+    }
   }
 
   .dashboard-left, .dashboard-right { width: 100%; }
@@ -1444,7 +1444,7 @@ tr.not-activated {
 }
 
 .preview {
- margin-top: 5px;
+  margin-top: 5px;
 }
 
 table#user-badges {

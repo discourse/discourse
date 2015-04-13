@@ -6,11 +6,11 @@
 // --------------------------------------------------
 
 .pull-left {
-  float: left;
+  @include float(left);
 }
 
 .pull-right {
-  float: right;
+  @include float(right);
 }
 
 // Element visibility
@@ -33,8 +33,8 @@
   position: absolute;
   width: 1px;
   height: 1px;
-  padding: 0;
-  margin: -1px;
+  @include padding(0);
+  @include margin(-1px);
   overflow: hidden;
   clip: rect(0,0,0,0);
   border: 0;
