@@ -57,7 +57,7 @@
   .searching {
     position: absolute;
     top: 0;
-   @include right(25px);
+    @include right(25px);
   }
 
   input[type='text'] {
