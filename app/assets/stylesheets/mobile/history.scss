@@ -1,6 +1,6 @@
 .modal.history-modal {
   button {
-    float: none;
+    @include float(none);
   }
   #display-modes {
     display: none;
