@@ -427,7 +427,8 @@ class TopicsController < ApplicationController
   end
 
   def slugs_do_not_match
-    params[:slug] && @topic_view.topic.slug != params[:slug]
+    params[:slug] && (@topic_view.topic.slug != params[:slug] &&
+                      @topic_view.topic.slug != Rack::Utils.escape_path(params[:slug])) # maybe percent encoded
   end
 
   def redirect_to_correct_topic(topic, post_number=nil)

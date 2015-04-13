@@ -14,10 +14,11 @@ class AddLoungeCategory < ActiveRecord::Migration
 
         result = execute "INSERT INTO categories
                         (name, color, text_color, created_at, updated_at, user_id, slug, description, read_restricted, position)
-                 VALUES ('#{name}', 'EEEEEE', '652D90', now(), now(), -1, '#{Slug.for(name)}', '#{description}', true, 3)
+                 VALUES ('#{name}', 'EEEEEE', '652D90', now(), now(), -1, '', '#{description}', true, 3)
                  RETURNING id"
         category_id = result[0]["id"].to_i
 
+        execute "UPDATE categories SET slug='#{Slug.for(name, "#{category_id}-category")}' WHERE id=#{category_id}"
         execute "INSERT INTO site_settings(name, data_type, value, created_at, updated_at)
                  VALUES ('lounge_category_id', 3, #{category_id}, now(), now())"
       end
