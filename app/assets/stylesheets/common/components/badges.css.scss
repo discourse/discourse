@@ -161,7 +161,7 @@
     }
 
     li.bar>.badge-category:not(.home):first-child {
-      border-left: 5px solid;
+      @include border-left(5px solid);
     }
 
     li.bar>.badge-category {
@@ -235,7 +235,7 @@
   color: $secondary;
   font-size: 11px;
   line-height: 1;
-  text-align: center;
+  @include text-align(center);
   background-color: scale-color($primary, $lightness: 70%);
   &[href] {
   color: $secondary;
