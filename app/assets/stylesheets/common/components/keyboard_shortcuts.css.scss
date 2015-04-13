@@ -1,10 +1,10 @@
 .topic-list-item td:first-child, .topic-post {
-  border-left: 1px solid transparent;
+  @include border-left(1px solid transparent);
 }
 
 .topic-list tr.selected td:first-child, .topic-list-item.selected td:first-child, .topic-post.selected {
   box-shadow: -2px 0 0 $danger;
-  border-left: 1px solid $danger;
+  @include border-left(1px solid $danger);
 }
 
 .topic-list-item.selected {
@@ -24,7 +24,7 @@
     @include margin-left(0);
 
     li {
-      margin: 5px 0
+      @include margin(5px 0);
     }
 
     b {
