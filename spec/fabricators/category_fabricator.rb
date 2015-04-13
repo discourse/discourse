@@ -22,6 +22,6 @@ Fabricator(:private_category, from: :category) do
   user
   after_build do |cat, transients|
     cat.update!(read_restricted: true)
-    cat.category_groups.build(group_id: transients[:group].id, permission_type: :full)
+    cat.category_groups.build(group_id: transients[:group].id, permission_type: CategoryGroup.permission_types[:full])
   end
 end
