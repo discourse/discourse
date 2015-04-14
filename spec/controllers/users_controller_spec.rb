@@ -266,13 +266,19 @@ describe UsersController do
 
     context 'valid token' do
       it 'returns success' do
-        user = Fabricate(:user)
+        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
         token = user.email_tokens.create(email: user.email).token
+
+        old_token = user.auth_token
 
         get :password_reset, token: token
         put :password_reset, token: token, password: 'newpassword'
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
+
+        user.reload
+        expect(user.auth_token).to_not eq old_token
+        expect(user.auth_token.length).to eq 32
       end
     end
 
