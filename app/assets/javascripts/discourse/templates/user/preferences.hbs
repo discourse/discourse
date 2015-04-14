@@ -197,14 +197,15 @@
 
     <div class="control-group other">
       <label class="control-label">{{i18n 'user.other_settings'}}</label>
-      <div class="controls controls-dropdown">
-        <label>{{i18n 'user.auto_track_topics'}}</label>
-        {{combo-box valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
-      </div>
 
       <div class="controls controls-dropdown">
         <label>{{i18n 'user.new_topic_duration.label'}}</label>
         {{combo-box valueAttribute="value" content=considerNewTopicOptions value=new_topic_duration_minutes}}
+      </div>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n 'user.auto_track_topics'}}</label>
+        {{combo-box valueAttribute="value" content=autoTrackDurations value=auto_track_topics_after_msecs}}
       </div>
 
       {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=external_links_in_new_tab}}
