@@ -60,6 +60,22 @@ describe PostTiming do
     end
   end
 
+  describe 'safeguard' do
+    it "doesn't store timings that are larger than the account lifetime" do
+      user = Fabricate(:user, created_at: 3.minutes.ago)
+      post = Fabricate(:post)
+
+      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 123]])
+      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      expect(msecs).to eq(123)
+
+      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 10.minutes.to_i * 1000]])
+      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      expect(msecs).to eq(123)
+    end
+
+  end
+
   describe 'process_timings' do
 
     # integration test
