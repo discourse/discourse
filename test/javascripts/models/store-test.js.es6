@@ -88,3 +88,11 @@ test('destroyRecord', function() {
     });
   });
 });
+
+test('find embedded', function() {
+  const store = createStore();
+  store.find('fruit', 1).then(function(f) {
+    ok(f.get('farmer'), 'it has the embedded object');
+  });
+});
+

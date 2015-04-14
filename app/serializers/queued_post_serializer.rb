@@ -1,4 +1,5 @@
 class QueuedPostSerializer < ApplicationSerializer
+
   attributes :id,
              :queue,
              :user_id,
@@ -11,4 +12,6 @@ class QueuedPostSerializer < ApplicationSerializer
              :created_at
 
   has_one :user, serializer: BasicUserSerializer, embed: :object
+  has_one :topic, serializer: BasicTopicSerializer
+
 end

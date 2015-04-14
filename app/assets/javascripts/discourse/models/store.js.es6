@@ -36,7 +36,7 @@ export default Ember.Object.extend({
       if (typeof findArgs === "object") {
         return self._resultSet(type, result);
       } else {
-        return self._hydrate(type, result[Ember.String.underscore(type)]);
+        return self._hydrate(type, result[Ember.String.underscore(type)], result);
       }
     });
   },
@@ -48,7 +48,7 @@ export default Ember.Object.extend({
       const typeName = Ember.String.underscore(self.pluralize(type)),
             totalRows = result["total_rows_" + typeName] || result.get('totalRows'),
             loadMoreUrl = result["load_more_" + typeName],
-            content = result[typeName].map(obj => self._hydrate(type, obj));
+            content = result[typeName].map(obj => self._hydrate(type, obj, result));
 
       resultSet.setProperties({ totalRows, loadMoreUrl });
       resultSet.get('content').pushObjects(content);
@@ -86,7 +86,7 @@ export default Ember.Object.extend({
 
   _resultSet(type, result) {
     const typeName = Ember.String.underscore(this.pluralize(type)),
-          content = result[typeName].map(obj => this._hydrate(type, obj)),
+          content = result[typeName].map(obj => this._hydrate(type, obj, result)),
           totalRows = result["total_rows_" + typeName] || content.length,
           loadMoreUrl = result["load_more_" + typeName];
 
@@ -111,9 +111,38 @@ export default Ember.Object.extend({
     return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
   },
 
-  _hydrate(type, obj) {
+  _hydrateEmbedded(obj, root) {
+    const self = this;
+    Object.keys(obj).forEach(function(k) {
+      const m = /(.+)\_id$/.exec(k);
+      if (m) {
+        const subType = m[1];
+        const collection = root[self.pluralize(subType)];
+        if (collection) {
+          const found = collection.findProperty('id', obj[k]);
+          if (found) {
+            const hydrated = self._hydrate(subType, found, root);
+            if (hydrated) {
+              obj[subType] = hydrated;
+              delete obj[k];
+            }
+          }
+        }
+      }
+    });
+  },
+
+  _hydrate(type, obj, root) {
     if (!obj) { throw "Can't hydrate " + type + " of `null`"; }
     if (!obj.id) { throw "Can't hydrate " + type + " without an `id`"; }
+
+    root = root || obj;
+
+    // Experimental: If serialized with a certain option we'll wire up embedded objects
+    // automatically.
+    if (root.__rest_serializer === "1") {
+      this._hydrateEmbedded(obj, root);
+    }
 
     _identityMap[type] = _identityMap[type] || {};
 

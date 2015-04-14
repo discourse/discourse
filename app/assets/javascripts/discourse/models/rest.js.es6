@@ -3,24 +3,30 @@ import Presence from 'discourse/mixins/presence';
 const RestModel = Ember.Object.extend(Presence, {
   isNew: Ember.computed.equal('__state', 'new'),
   isCreated: Ember.computed.equal('__state', 'created'),
+  isSaving: false,
 
   afterUpdate: Ember.K,
 
   update(props) {
+    if (this.get('isSaving')) { return Ember.RSVP.reject(); }
+
     props = props || this.updateProperties();
 
     const type = this.get('__type'),
           store = this.get('store');
 
     const self = this;
+    self.set('isSaving', true);
     return store.update(type, this.get('id'), props).then(function(res) {
       self.setProperties(self.__munge(res.payload || res.responseJson));
       self.afterUpdate(res);
       return res;
-    });
+    }).finally(() => this.set('isSaving', false));
   },
 
   _saveNew(props) {
+    if (this.get('isSaving')) { return Ember.RSVP.reject(); }
+
     props = props || this.createProperties();
 
     const type = this.get('__type'),
@@ -28,6 +34,7 @@ const RestModel = Ember.Object.extend(Presence, {
           adapter = store.adapterFor(type);
 
     const self = this;
+    self.set('isSaving', true);
     return adapter.createRecord(store, type, props).then(function(res) {
       if (!res) { throw "Received no data back from createRecord"; }
 
@@ -40,7 +47,7 @@ const RestModel = Ember.Object.extend(Presence, {
 
       res.target = self;
       return res;
-    });
+    }).finally(() => this.set('isSaving', false));
   },
 
   createProperties() {

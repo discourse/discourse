@@ -1,16 +1,16 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
+function updateState(state) {
+  return function(post) {
+    post.update({ state }).then(() => {
+      this.get('model').removeObject(post);
+    }).catch(popupAjaxError);
+  };
+}
+
 export default Ember.Controller.extend({
-
   actions: {
-    approve(post) {
-      post.update({ state: 'approved' }).then(() => {
-        this.get('model').removeObject(post);
-      });
-    },
-
-    reject(post) {
-      post.update({ state: 'rejected' }).then(() => {
-        this.get('model').removeObject(post);
-      });
-    }
+    approve: updateState('approved'),
+    reject: updateState('rejected')
   }
 });

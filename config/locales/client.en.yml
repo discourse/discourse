@@ -226,6 +226,7 @@ en:
         placeholder: "type the topic title here"
 
     queue:
+      topic: "Topic:"
       approve: 'Approve Post'
       reject: 'Reject Post'
       title: "Needs Approval"
