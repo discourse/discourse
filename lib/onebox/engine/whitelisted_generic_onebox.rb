@@ -62,6 +62,7 @@ module Onebox
           hulu.com
           ign.com
           ikea.com
+          imdb.com
           imgur.com
           indiatimes.com
           instagr.am
