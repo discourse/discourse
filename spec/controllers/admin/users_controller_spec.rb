@@ -187,7 +187,7 @@ describe Admin::UsersController do
 
     context '.trust_level' do
       before do
-        @another_user = Fabricate(:coding_horror)
+        @another_user = Fabricate(:coding_horror, created_at: 1.month.ago)
       end
 
       it "raises an error when the user doesn't have permission" do
