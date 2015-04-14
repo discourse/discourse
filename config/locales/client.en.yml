@@ -509,7 +509,7 @@ en:
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
-        always: "always"
+        immediately: "immediately"
         after_n_seconds:
           one: "after 1 second"
           other: "after {{count}} seconds"
