@@ -1,6 +1,9 @@
 // This route is used for retrieving a topic based on params
 export default Discourse.Route.extend({
 
+  // Avoid default model hook
+  model: function() { return; },
+
   setupController: function(controller, params) {
     params = params || {};
     params.track_visit = true;

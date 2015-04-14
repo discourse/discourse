@@ -2,7 +2,7 @@ import { acceptance } from "helpers/qunit-helpers";
 acceptance("View Topic");
 
 test("Enter a Topic", () => {
-  visit("/t/internationalization-localization/280");
+  visit("/t/internationalization-localization/280/1");
   andThen(() => {
     ok(exists("#topic"), "The topic was rendered");
     ok(exists("#topic .post-cloak"), "The topic has cloaked posts");

@@ -7,22 +7,7 @@ describe QueuedPost do
     let(:topic) { Fabricate(:topic) }
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
-    let(:qp) { QueuedPost.create(queue: 'new_post',
-                                 state: QueuedPost.states[:new],
-                                 user_id: user.id,
-                                 topic_id: topic.id,
-                                 raw: 'This post should be queued up',
-                                 post_options: {
-                                   reply_to_post_number: 1,
-                                   via_email: true,
-                                   raw_email: 'store_me',
-                                   auto_track: true,
-                                   custom_fields: { hello: 'world' },
-                                   cooking_options: { cat: 'hat' },
-                                   cook_method: Post.cook_methods[:raw_html],
-                                   not_create_option: true,
-                                   image_sizes: {"http://foo.bar/image.png" => {"width" => 0, "height" => 222}}
-                                 }) }
+    let(:qp) { Fabricate(:queued_post, topic: topic, user: user) }
 
     it "returns the appropriate options for posting" do
       create_options = qp.create_options

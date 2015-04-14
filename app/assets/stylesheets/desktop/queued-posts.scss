@@ -10,8 +10,10 @@
       width: $topic-body-width;
       float: left;
     }
-    h4.title {
-      margin-bottom: 1em;
+
+    .post-title {
+      color: darken(scale-color-diff(), 50%);
+      font-weight: bold;
     }
 
     border-bottom: 1px solid darken(scale-color-diff(), 10%);

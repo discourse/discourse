@@ -173,6 +173,14 @@ export default function() {
       });
     });
 
+    this.get('/fruits/:id', function() {
+      return response({
+        __rest_serializer: "1",
+        fruit: {id: 1, name: 'apple', farmer_id: 1},
+        farmers: [{id: 1, name: 'Evil Trout'}]
+      });
+    });
+
     this.get('/widgets/:widget_id', function(request) {
       const w = _widgets.findBy('id', parseInt(request.params.widget_id));
       if (w) {

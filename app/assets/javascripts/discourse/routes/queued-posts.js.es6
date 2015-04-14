@@ -5,4 +5,3 @@ export default DiscourseRoute.extend({
     return this.store.find('queuedPost', {status: 'new'});
   }
 });
-
