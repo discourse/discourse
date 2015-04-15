@@ -77,6 +77,7 @@ class LetterAvatar
         -stroke #{to_rgb(stroke)}
         -strokewidth 2
         -annotate -0+20 '#{letter}'
+        -depth 8
         '#{filename}'
       }
 
