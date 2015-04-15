@@ -98,7 +98,7 @@ describe QueuedPost do
         expect(topic.category).to eq(category)
       end
 
-      it "doesn't create the post and topic" do
+      it "rejecting doesn't create the post and topic" do
         topic_count, post_count = Topic.count, Post.count
 
         qp.reject!(admin)
