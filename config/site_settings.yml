@@ -675,6 +675,9 @@ rate_limits:
   max_invites_per_day: 10
   max_topics_in_first_day: 5
   max_replies_in_first_day: 10
+  tl2_additional_likes_per_day_multiplier: 1.5
+  tl3_additional_likes_per_day_multiplier: 2
+  tl4_additional_likes_per_day_multiplier: 3
 
 developer:
   force_hostname:
