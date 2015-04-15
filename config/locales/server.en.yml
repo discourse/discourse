@@ -180,6 +180,7 @@ en:
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
+      member_already_exist: "'%{username}' is already a member of this group."
     default_names:
       everyone: "everyone"
       admins: "admins"

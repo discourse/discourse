@@ -83,7 +83,11 @@ class Admin::GroupsController < Admin::AdminController
     end
 
     users.each do |user|
-      group.add(user)
+      if !group.users.include?(user)
+        group.add(user)
+      else
+        return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
+      end
     end
 
     if group.save
