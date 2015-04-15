@@ -19,6 +19,15 @@ class NewPostManager
     handlers << block
   end
 
+  def self.default_handler(manager)
+    if (manager.user.post_count < SiteSetting.approve_post_count) ||
+       (manager.user.trust_level < SiteSetting.approve_unless_trust_level)
+      return manager.enqueue('default')
+    end
+  end
+
+  add_handler {|manager| default_handler(manager) }
+
   def initialize(user, args)
     @user = user
     @args = args.delete_if {|_, v| v.nil?}

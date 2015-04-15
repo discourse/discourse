@@ -441,6 +441,11 @@ posting:
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
     default: true
+  approve_post_count:
+    default: 0
+  approve_unless_trust_level:
+    default: 0
+    enum: 'TrustLevelSetting'
 
 email:
   email_time_window_mins:
