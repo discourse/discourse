@@ -506,6 +506,33 @@ describe PostAction do
       topic.reload
       expect(topic.posts.count).to eq(1)
     end
+  end
+
+  describe "rate limiting" do
+
+    def limiter(tl)
+      user = Fabricate.build(:user)
+      user.trust_level = tl
+      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[:like])
+      action.post_action_rate_limiter
+    end
+
+    it "should scale up like limits depending on liker" do
+      expect(limiter(0).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(1).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
+      expect(limiter(3).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
+      expect(limiter(4).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = -1
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = 0.8
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = "bob"
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+    end
 
   end
 

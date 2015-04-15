@@ -320,7 +320,16 @@ class PostAction < ActiveRecord::Base
 
     %w(like flag bookmark).each do |type|
       if send("is_#{type}?")
-        @rate_limiter = RateLimiter.new(user, "create_#{type}", SiteSetting.send("max_#{type}s_per_day"), 1.day.to_i)
+        limit = SiteSetting.send("max_#{type}s_per_day")
+
+        if is_like? && user && user.trust_level >= 2
+          multiplier = SiteSetting.send("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
+          multiplier = 1.0 if multiplier < 1.0
+
+          limit = (limit * multiplier ).to_i
+        end
+
+        @rate_limiter = RateLimiter.new(user, "create_#{type}",limit, 1.day.to_i)
         return @rate_limiter
       end
     end
