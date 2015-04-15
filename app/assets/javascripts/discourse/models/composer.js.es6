@@ -487,7 +487,8 @@ const Composer = RestModel.extend({
       moderator: user.get('moderator'),
       admin: user.get('admin'),
       yours: true,
-      read: true
+      read: true,
+      wiki: false
     });
 
     this.serialize(_create_serializer, createdPost);

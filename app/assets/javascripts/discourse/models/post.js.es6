@@ -1,4 +1,5 @@
 import RestModel from 'discourse/models/rest';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 const Post = RestModel.extend({
 
@@ -79,13 +80,7 @@ const Post = RestModel.extend({
       data: data
     }).then(function () {
       self.incrementProperty("version");
-    }, function (error) {
-      if (error && error.responseText) {
-        bootbox.alert($.parseJSON(error.responseText).errors[0]);
-      } else {
-        bootbox.alert(I18n.t("generic_error"));
-      }
-    });
+    }).catch(popupAjaxError);
   },
 
   internalLinks: function() {
