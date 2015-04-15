@@ -17,6 +17,42 @@ describe NewPostManager do
     end
   end
 
+  context "default handler" do
+    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id) }
+
+    context 'with the settings zeroed out' do
+      before do
+        SiteSetting.approve_post_count = 0
+        SiteSetting.approve_unless_trust_level = 0
+      end
+
+      it "doesn't return a result action" do
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+    end
+
+    context 'with a high approval post count' do
+      before do
+        SiteSetting.approve_post_count = 100
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+
+    context 'with a high trust level setting' do
+      before do
+        SiteSetting.approve_unless_trust_level = 4
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+  end
+
   context "extensibility" do
 
     before do
