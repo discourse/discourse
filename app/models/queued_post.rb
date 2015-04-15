@@ -7,21 +7,6 @@ class QueuedPost < ActiveRecord::Base
   belongs_to :approved_by, class_name: "User"
   belongs_to :rejected_by, class_name: "User"
 
-  def self.attributes_by_queue
-    @attributes_by_queue ||= {
-      base: [:archetype,
-             :via_email,
-             :raw_email,
-             :auto_track,
-             :custom_fields,
-             :cooking_options,
-             :cook_method,
-             :image_sizes],
-      new_post: [:reply_to_post_number],
-      new_topic: [:title, :category, :meta_data, :archetype],
-    }
-  end
-
   def self.states
     @states ||= Enum.new(:new, :approved, :rejected)
   end
@@ -41,10 +26,9 @@ class QueuedPost < ActiveRecord::Base
 
   def create_options
     opts = {raw: raw}
-    post_attributes.each {|a| opts[a] = post_options[a.to_s] }
+    opts.merge!(post_options.symbolize_keys)
 
     opts[:cooking_options].symbolize_keys! if opts[:cooking_options]
-
     opts[:topic_id] = topic_id if topic_id
     opts
   end
@@ -60,15 +44,7 @@ class QueuedPost < ActiveRecord::Base
     created_post
   end
 
-  def self.all_attributes_for(queue)
-    [QueuedPost.attributes_by_queue[:base], QueuedPost.attributes_by_queue[queue.to_sym]].flatten.compact
-  end
-
   private
-
-    def post_attributes
-      QueuedPost.all_attributes_for(queue)
-    end
 
     def change_to!(state, changed_by)
       state_val = QueuedPost.states[state]
