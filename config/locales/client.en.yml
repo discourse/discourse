@@ -227,10 +227,13 @@ en:
 
     queue:
       topic: "Topic:"
-      approve: 'Approve Post'
-      reject: 'Reject Post'
+      approve: 'Approve'
+      reject: 'Reject'
       title: "Needs Approval"
       none: "There are no posts to review."
+      edit: "Edit"
+      cancel: "Cancel"
+      confirm: "Save Changes"
 
       approval:
         title: "Post Needs Approval"

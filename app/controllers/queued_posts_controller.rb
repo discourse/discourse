@@ -15,6 +15,10 @@ class QueuedPostsController < ApplicationController
   def update
     qp = QueuedPost.where(id: params[:id]).first
 
+    if params[:queued_post][:raw].present?
+      qp.update_column(:raw, params[:queued_post][:raw])
+    end
+
     state = params[:queued_post][:state]
     if state == 'approved'
       qp.approve!(current_user)
