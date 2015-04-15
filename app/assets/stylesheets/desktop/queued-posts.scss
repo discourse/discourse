@@ -14,6 +14,10 @@
     .post-title {
       color: darken(scale-color-diff(), 50%);
       font-weight: bold;
+
+      .badge-wrapper {
+        margin-left: 1em;
+      }
     }
 
     border-bottom: 1px solid darken(scale-color-diff(), 10%);

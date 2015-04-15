@@ -111,22 +111,32 @@ export default Ember.Object.extend({
     return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
   },
 
+  _lookupSubType(subType, id, root) {
+
+    // cheat: we know we already have categories in memory
+    if (subType === 'category') {
+      return Discourse.Category.findById(id);
+    }
+
+    const collection = root[this.pluralize(subType)];
+    if (collection) {
+      const found = collection.findProperty('id', id);
+      if (found) {
+        return this._hydrate(subType, found, root);
+      }
+    }
+  },
+
   _hydrateEmbedded(obj, root) {
     const self = this;
     Object.keys(obj).forEach(function(k) {
       const m = /(.+)\_id$/.exec(k);
       if (m) {
         const subType = m[1];
-        const collection = root[self.pluralize(subType)];
-        if (collection) {
-          const found = collection.findProperty('id', obj[k]);
-          if (found) {
-            const hydrated = self._hydrate(subType, found, root);
-            if (hydrated) {
-              obj[subType] = hydrated;
-              delete obj[k];
-            }
-          }
+        const hydrated = self._lookupSubType(subType, obj[k], root);
+        if (hydrated) {
+          obj[subType] = hydrated;
+          delete obj[k];
         }
       }
     });
