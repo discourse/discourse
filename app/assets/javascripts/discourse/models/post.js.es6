@@ -332,6 +332,13 @@ const Post = RestModel.extend({
         if (bookmarkedTopic) {self.set("topic.bookmarked", false); }
         throw e;
       });
+  },
+
+  updateActionsSummary(json) {
+    if (json && json.id === this.get('id')) {
+      json = Post.munge(json);
+      this.set('actions_summary', json.actions_summary);
+    }
   }
 
 });
@@ -343,7 +350,6 @@ Post.reopenClass({
       const lookup = Em.Object.create();
       // this area should be optimized, it is creating way too many objects per post
       json.actions_summary = json.actions_summary.map(function(a) {
-        a.post = json;
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
         const actionSummary = Discourse.ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;

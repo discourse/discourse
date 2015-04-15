@@ -150,7 +150,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     toggleLike(post) {
       const likeAction = post.get('actionByName.like');
       if (likeAction && likeAction.get('canToggle')) {
-        likeAction.toggle();
+        likeAction.toggle(post);
       }
     },
 
