@@ -9,8 +9,19 @@
     .cooked {
       width: $topic-body-width;
       float: left;
+
+      #wmd-input {
+        width: 98%;
+        height: 15em;
+      }
     }
 
+    .queue-controls {
+      button {
+        float: left;
+        margin-right: 0.5em;
+      }
+    }
     .post-title {
       color: darken(scale-color-diff(), 50%);
       font-weight: bold;

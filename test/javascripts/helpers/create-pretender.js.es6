@@ -104,7 +104,7 @@ export default function() {
 
     this.get('/queued_posts', function() {
       return response({
-        queued_posts: [{id: 1}]
+        queued_posts: [{id: 1, raw: 'queued post text'}]
       });
     });
 

@@ -1,41 +1,63 @@
 <div class='container'>
   <div class='queued-posts'>
-    {{#each post in model}}
+    {{#each ctrl in model itemController='queued-post'}}
       <div class='queued-post'>
         <div class='poster'>
-          {{avatar post.user imageSize="large"}}
+          {{avatar ctrl.post.user imageSize="large"}}
         </div>
         <div class='cooked'>
           <div class='names'>
-            <span class='username'>{{post.user.username}}</span>
+            <span class='username'>{{ctrl.post.user.username}}</span>
           </div>
           <div class='clearfix'></div>
 
           <span class='post-title'>
             {{i18n "queue.topic"}}
-            {{#if post.topic}}
-              {{topic-link post.topic}}
+            {{#if ctrl.post.topic}}
+              {{topic-link ctrl.post.topic}}
             {{else}}
-              {{post.post_options.title}}
+              {{ctrl.post.post_options.title}}
             {{/if}}
-            {{category-badge post.category}}
+            {{category-badge ctrl.post.category}}
           </span>
 
-          {{{cook-text post.raw}}}
+          <div class='body'>
+            {{#if ctrl.editing}}
+              {{pagedown-editor value=ctrl.buffered.raw}}
+            {{else}}
+              {{{cook-text ctrl.post.raw}}}
+            {{/if}}
+          </div>
 
           <div class='queue-controls'>
-            {{d-button action="approve"
-                       actionParam=post
-                       disabled=post.isSaving
-                       label="queue.approve"
-                       icon="check"
-                       class="btn-primary approve"}}
-            {{d-button action="reject"
-                       actionParam=post
-                       disabled=post.isSaving
-                       label="queue.reject"
-                       icon="times"
-                       class="btn-warning reject"}}
+            {{#if ctrl.editing}}
+              {{d-button action="confirmEdit"
+                         label="queue.confirm"
+                         disabled=ctrl.post.isSaving
+                         class="btn-primary confirm"}}
+              {{d-button action="cancelEdit"
+                         label="queue.cancel"
+                         icon="times"
+                         disabled=ctrl.post.isSaving
+                         class="btn-danger cancel"}}
+
+            {{else}}
+              {{d-button action="approve"
+                         disabled=ctrl.post.isSaving
+                         label="queue.approve"
+                         icon="check"
+                         class="btn-primary approve"}}
+              {{d-button action="reject"
+                         disabled=ctrl.post.isSaving
+                         label="queue.reject"
+                         icon="times"
+                         class="btn-danger reject"}}
+              {{d-button action="edit"
+                         disabled=ctrl.post.isSaving
+                         label="queue.edit"
+                         icon="pencil"
+                         class="edit"}}
+            {{/if}}
           </div>
         </div>
         <div class='clearfix'></div>
