@@ -2,7 +2,7 @@
 export default Discourse.Route.extend({
 
   // Avoid default model hook
-  model: function() { return; },
+  model: function(p) { return p; },
 
   setupController: function(controller, params) {
     params = params || {};
