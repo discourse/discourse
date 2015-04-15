@@ -80,6 +80,10 @@ export default function() {
       return response(json);
     });
 
+    this.get("/t/280.json", function() {
+      return response(fixturesByUrl['/t/280/1.json']);
+    });
+
     this.get("/t/id_for/:slug", function() {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });
