@@ -136,6 +136,16 @@ describe Admin::GroupsController do
       end
     end
 
+    it "returns 422 if member already exists" do
+      group = Fabricate(:group)
+      existing_member = Fabricate(:user)
+      group.add(existing_member)
+      group.save
+
+      xhr :put, :add_members, id: group.id, usernames: existing_member.username
+      expect(response.status).to eq(422)
+    end
+
   end
 
   context ".remove_member" do
