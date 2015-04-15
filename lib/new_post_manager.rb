@@ -21,7 +21,7 @@ class NewPostManager
 
   def self.default_handler(manager)
     if (manager.user.post_count < SiteSetting.approve_post_count) ||
-       (manager.user.trust_level < SiteSetting.approve_unless_trust_level)
+       (manager.user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
       return manager.enqueue('default')
     end
   end
