@@ -1,5 +1,5 @@
 Fabricator(:queued_post) do
-  queue 'new_post'
+  queue 'test'
   state QueuedPost.states[:new]
   user
   topic

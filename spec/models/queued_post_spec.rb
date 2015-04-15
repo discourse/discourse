@@ -63,7 +63,7 @@ describe QueuedPost do
 
     context "with a valid topic" do
       let!(:category) { Fabricate(:category) }
-      let(:qp) { QueuedPost.create(queue: 'new_topic',
+      let(:qp) { QueuedPost.create(queue: 'eviltrout',
                                    state: QueuedPost.states[:new],
                                    user_id: user.id,
                                    raw: 'This post should be queued up',
