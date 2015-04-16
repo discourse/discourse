@@ -490,6 +490,18 @@ describe PostAction do
 
   end
 
+  describe ".lookup_for" do
+    it "returns the correct map" do
+      user = Fabricate(:user)
+      post = Fabricate(:post)
+      post_action = PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)
+
+      map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
+
+      expect(map).to eq({post.topic_id => [post.post_number]})
+    end
+  end
+
   describe ".add_moderator_post_if_needed" do
 
     it "should not add a moderator post when it's disabled" do
