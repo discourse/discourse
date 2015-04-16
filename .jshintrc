@@ -35,6 +35,7 @@
     "exists",
     "visible",
     "invisible",
+    "selectDropdown",
     "asyncTestDiscourse",
     "fixture",
     "find",

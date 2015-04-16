@@ -1,17 +1,33 @@
 import { acceptance } from "helpers/qunit-helpers";
-acceptance("View Topic");
+acceptance("Topic", { loggedIn: true });
 
-test("Enter a Topic", () => {
-  visit("/t/internationalization-localization/280/1");
+test("Showing and hiding the edit controls", () => {
+  visit("/t/internationalization-localization/280");
+
+  click('#topic-title .fa-pencil');
+
   andThen(() => {
-    ok(exists("#topic"), "The topic was rendered");
-    ok(exists("#topic .cooked"), "The topic has cooked posts");
+    ok(exists('#edit-title'), 'it shows the editing controls');
+  });
+
+  fillIn('#edit-title', 'this is the new title');
+  click('#topic-title .cancel-edit');
+  andThen(() => {
+    ok(!exists('#edit-title'), 'it hides the editing controls');
   });
 });
 
-test("Enter without an id", () => {
-  visit("/t/internationalization-localization");
+test("Updating the topic title and category", () => {
+  visit("/t/internationalization-localization/280");
+  click('#topic-title .fa-pencil');
+
+  fillIn('#edit-title', 'this is the new title');
+  selectDropdown('.category-combobox', 4);
+
+  click('#topic-title .submit-edit');
+
   andThen(() => {
-    ok(exists("#topic"), "The topic was rendered");
+    equal(find('#topic-title .badge-category').text(), 'faq', 'it displays the new category');
+    equal(find('.fancy-title').text().trim(), 'this is the new title', 'it displays the new title');
   });
 });

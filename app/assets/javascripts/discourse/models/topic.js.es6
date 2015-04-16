@@ -40,18 +40,18 @@ const Topic = RestModel.extend({
     return ({ type: 'topic', id: this.get('id') });
   }.property('id'),
 
-  category: function() {
-    const categoryId = this.get('category_id');
-    if (categoryId) {
-      return Discourse.Category.list().findProperty('id', categoryId);
-    }
+  _categoryIdChanged: function() {
+    this.set('category', Discourse.Category.findById(this.get('category_id')));
+  }.observes('category_id').on('init'),
 
+  _categoryNameChanged: function() {
     const categoryName = this.get('categoryName');
+    let category;
     if (categoryName) {
-      return Discourse.Category.list().findProperty('name', categoryName);
+      category = Discourse.Category.list().findProperty('name', categoryName);
     }
-    return null;
-  }.property('category_id', 'categoryName'),
+    this.set('category', category);
+  }.observes('categoryName'),
 
   categoryClass: function() {
     return 'category-' + this.get('category.fullSlug');
@@ -407,7 +407,6 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
-
       topic.setProperties(props);
     });
   },
