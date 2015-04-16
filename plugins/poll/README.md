@@ -7,6 +7,11 @@ Allows you to add a poll to the first post of a topic.
 1. Make your topic title start with "Poll: "
 2. Include a list in your post (the **first list** will be used)
 
+Important note:
+
+Make sure you have the "Poll: " prefix in the title right from the start.
+Editing the title to include it later is not possible atm.
+
 ## Closing the poll
 
 Change the start of the topic title from "Poll: " to "Closed Poll: ". This feature uses the locale of the user who started the topic.
