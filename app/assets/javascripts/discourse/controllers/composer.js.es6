@@ -220,7 +220,7 @@ export default DiscourseController.extend({
       editReason: this.get("editReason")
     }).then(function(result) {
 
-      if (result.responseJson.action === "enqueued") {
+      if (result.responseJson && result.responseJson.action === "enqueued") {
         self.send('postWasEnqueued');
         self.destroyDraft();
         self.close();
