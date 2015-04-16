@@ -18,7 +18,16 @@ const RestModel = Ember.Object.extend(Presence, {
     const self = this;
     self.set('isSaving', true);
     return store.update(type, this.get('id'), props).then(function(res) {
-      self.setProperties(self.__munge(res.payload || res.responseJson));
+
+      res = self.__munge(res.payload || res.responseJson);
+
+      console.log(res);
+      if (res.success === "OK") {
+        Ember.warn("An update call should return the updated attributes");
+        res = props;
+      }
+
+      self.setProperties(res);
       self.afterUpdate(res);
       return res;
     }).finally(() => this.set('isSaving', false));
