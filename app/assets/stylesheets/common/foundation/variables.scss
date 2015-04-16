@@ -26,6 +26,17 @@ $base-font-size: 14px !default;
 $base-line-height: 19px !default; 
 $base-font-family: Helvetica, Arial, sans-serif !default;
 
+// Directions
+// --------------------------------------------------
+$direction: ltr;
+//$direction: rtl;
+
+$default-float: left;
+$opposite-float: right;
+$default-direction: ltr;
+$opposite-direction: rtl;
+// End  Directions 
+
 /* These files don't actually exist. They're injected by DiscourseSassImporter. */
 @import "theme_variables";
 @import "plugins_variables";

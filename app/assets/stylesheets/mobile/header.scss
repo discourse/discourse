@@ -13,7 +13,7 @@
     max-width: 140px;
     height: 39px;
     overflow: hidden;
-    padding: 0;
+    @include padding(0);
     text-overflow: clip;
   }
 
@@ -57,7 +57,7 @@
   .searching {
     position: absolute;
     top: 0;
-    right: 25px;
+    @include right(25px);
   }
 
   input[type='text'] {
@@ -70,9 +70,9 @@
   }
 
   .btn {
-    padding: 2px 8px;
+    @include padding(2px 8px);
     .fa {
-      margin-right: 5px;
+      @include margin-right(5px);
     }
   }
 }
@@ -86,5 +86,5 @@
 }
 
 .d-dropdown#search-dropdown .heading {
-  padding: 0;
+  @include padding(0);
 }

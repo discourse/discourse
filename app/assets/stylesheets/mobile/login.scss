@@ -7,7 +7,7 @@
 
 #login-buttons {
   button {
-    margin: 0 0 5px 0;
+    @include margin(0 0 5px 0);
   }
   display: inline-block;
 }
@@ -16,9 +16,9 @@
   a {
     color: scale-color($primary, $lightness: 35%);
   }
-  label { float: left; display: block; }
+  label { @include float(left); display: block; }
   textarea, input, select {font-size: 1.143em; clear: left; margin-top: 0; }
-  td { padding: 4px; }
+  td { @include padding(4px); }
 }
 
 a#new-account-link { white-space:nowrap; }
@@ -29,9 +29,9 @@ a#new-account-link { white-space:nowrap; }
   cursor: pointer;
 }
 
-a#forgot-password-link {clear: left; float: left; }
+a#forgot-password-link {clear: left; @include float(left); }
 
-.btn-primary {margin-bottom: 10px; font-size: 15; float: left;}
+.btn-primary {margin-bottom: 10px; font-size: 15; @include float(left);}
 
 .create-account .modal-body {
   input[type=text], input[type=email], input[type=password] {
@@ -48,7 +48,7 @@ a#forgot-password-link {clear: left; float: left; }
 
   tr.input {
     td.label {
-      padding-right: 5px;
+      @include padding-right(5px);
     }
   }
 }
@@ -69,7 +69,7 @@ a#forgot-password-link {clear: left; float: left; }
       width: 184px;
     }
     .controls {
-      margin-left: 85px;
+      @include margin-left(85px);
     }
   }
 }

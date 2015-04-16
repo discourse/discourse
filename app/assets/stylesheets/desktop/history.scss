@@ -1,61 +1,73 @@
-// styles that apply to the popup that appears when you show the edit history of a post
+// --------------------------------------------------
+// Discourse header
+// --------------------------------------------------
 
-.modal.history-modal {
+.d-header {
+  @include left(0);
+  z-index: 1000;
+  padding-top: 3px;
+  height: 60px;
+  .fa-home {
+    padding:8px;
+    font-size: 2.1em;
+  }
+}
+
+@media all
+and (max-width : 570px) {
+  .extra-info-wrapper {display: none;}
+}
+
+#main {
+  position: relative;
+}
+
+#main-outlet {
+  padding-top: 82px;
+}
+
+// Dropdowns
+// --------------------------------------------------
+
+.d-dropdown {
+  width: 320px;
+  overflow: auto;
+  // Common
+
+  .heading {
+    border-top: 1px solid scale-color-diff();
+  }
+
+  // Categories
+
   .btn {
-    // remove transitions on the buttons in the history modal
-    transition: none;
-  }
-  .modal-inner-container {
-    min-width: 960px;
-    min-height: 500px;
-  }
-  #revision-controls {
-    float: left;
-    .btn[disabled]:hover {
-      color: $primary;
+    @include padding(2px 8px);
+    margin-bottom: 2px;
+    .fa {
+      @include margin-right(5px);
     }
   }
-  #display-modes {
-    text-align: right;
+}
+
+.search-link .blurb {
+  color: scale-color($primary, $lightness: 45%);
+  display: block;
+  word-wrap: break-word;
+  font-size: 11px;
+  .search-highlight {
+    color: scale-color($primary, $lightness: 25%);
   }
-  #revision-details {
-    background-color: scale-color-diff();
-    padding: 5px;
-    margin-top: 10px;
-  }
-  #revisions {
-    word-wrap: break-word;
-    table {
-      margin-top: 10px;
-    }
-  }
-  img {
-    max-width: 670px;
-    height: auto;
-  }
-  .inline-diff {
-    width: 670px;
-  }
-  .markdown {
-    font-family: monospace;
-    font-size: 0.857em;
-    width: 100%;
-    border-collapse: collapse;
-    border-spacing: 0;
-    td {
-      width: 50%;
-      vertical-align: top;
-      max-width: 440px;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-    }
-  }
-  .span8, .markdown {
-    img {
-      max-width: 400px;
-    }
-  }
-  .modal-header {
-    height: 42px;
-  }
+}
+
+.d-dropdown#search-dropdown {
+  width: 540px;
+}
+
+.d-dropdown .searching {
+ @include right(30px);
+}
+
+
+#search-dropdown .results {
+  max-height: 500px;
 }

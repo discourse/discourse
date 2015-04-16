@@ -2,14 +2,14 @@
   margin-bottom: 100px;
 
   .period-chooser {
-    float: left;
+    @include float(left);
   }
   .filter-name {
-    float: right;
+    @include float(right);
   }
   .total-rows {
     color: dark-light-diff($primary, $secondary, 50%, -50%);
-    text-align: right;
+    @include text-align(right);
   }
   .spinner {
     clear: both;
@@ -20,8 +20,8 @@
     margin-bottom: 1em;
 
     td, th {
-      padding: 0.5em;
-      text-align: left;
+      @include padding(0.5em);
+      @include text-align(left);
       border-bottom: 1px solid scale-color-diff();
 
       .number, .time-read {
@@ -47,10 +47,10 @@
       width: 13%;
       i.fa-heart {
         color: $love;
-        margin-right: 0.5em;
+        @include margin-right(0.5em);
       }
       i.fa-chevron-down, i.fa-chevron-up {
-        margin-left: 0.5em;
+        @include margin-left(0.5em);
       }
 
       &:hover {

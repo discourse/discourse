@@ -1,16 +1,16 @@
 /* Default badge styles. */
 .user-badge {
-  padding: 3px 8px;
+  @include padding(3px 8px);
   color: $primary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
   line-height: 19px;
-  margin: 0;
+  @include margin(0);
   display: inline-block;
   background-color: $secondary;
   margin-bottom: 3px;
 
   .fa {
-    padding-right: 3px;
+    @include padding-right(3px);
     font-size: 1.4em;
     vertical-align: bottom;
   }
@@ -41,7 +41,7 @@
     max-width: 80px;
     text-align: center;
     vertical-align: top;
-    margin: 10px;
+    @include margin(10px);
     border: none;
 
     .fa {
@@ -66,7 +66,7 @@
 
 /* Badge listing in /badges. */
 table.badges-listing {
-  margin: 20px 0;
+  @include margin(20px 0);
   border-bottom: 1px solid scale-color-diff();
   width: 90%;
 
@@ -84,7 +84,7 @@ table.badges-listing {
   }
 
   td {
-    padding: 10px 0px;
+    @include padding(10px 0px);
   }
 
   td.granted{
@@ -100,12 +100,12 @@ table.badges-listing {
 
   td.badge, td.grant-count {
     white-space: nowrap;
-    padding-right: 10px;
+    @include padding-right(10px);
   }
 
   td.info {
     font-size: 0.9em;
-    text-align: right;
+    @include text-align(right);
   }
 
   td.description {
@@ -121,12 +121,12 @@ table.badges-listing {
   .badge-user {
     text-align: center;
     width: 100px;
-    padding: 5px 10px;
+    @include padding(5px 10px);
     margin-bottom: 10px;
     display: inline-block;
 
     .details {
-      margin: 0 10px;
+      @include margin(0 10px);
       padding-top: 3px;
       color: $primary;
     }
@@ -141,21 +141,21 @@ table.badges-listing {
 
 .show-badge .user-badge-with-posts .badge-user {
   width: 45%;
-  padding: 0 0 0 4%;
+  @include padding(0 0 0 4%);
   margin-bottom: 20px;
 
   .badge-info {
     width: 100px;
     display: block;
-    float: left;
+    @include float(left);
   }
 
   .post-link {
     width: 250px;
     display: block;
-    float: left;
-    margin-left: 18px;
-    text-align: left;
+    @include float(left);
+    @include margin-left(18px);
+    @include text-align(left);
   }
 }
 

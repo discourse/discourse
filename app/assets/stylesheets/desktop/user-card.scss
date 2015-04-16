@@ -1,9 +1,10 @@
+
 // styles that apply to the "share" popup when sharing a link to a post or topic
 
 #user-card {
   position: absolute;
   width: 500px;
-  left: -9999px;
+  @include left(-9999px);
   top: -9999px;
   z-index: 990;
   box-shadow: 0 2px 6px rgba(0,0,0,.6);
@@ -28,7 +29,7 @@
   }
 
   .card-content {
-    padding: 12px 12px 0 12px;
+    @include padding(12px 12px 0 12px);
     background: rgba($primary, .85);
     margin-top: 80px;
 
@@ -50,8 +51,8 @@
   .avatar-placeholder {
     width: 120px;
     height: 120px;
-    float: left;
-    padding-right: 10px;
+    @include float(left);
+    @include padding-right(10px);
   }
 
   h1 {
@@ -116,7 +117,7 @@
     padding-top: 5px;
     h3 {
       display: inline;
-      margin-right: 5px;
+      @include margin-right(5px);
       .desc, a {
         color: dark-light-diff($secondary, $primary, 50%, -50%);
       }
@@ -136,7 +137,7 @@
   }
 
   .bio {
-    padding: 15px 0 0 0;
+    @include padding(15px 0 0 0);
     clear: left;
 
     a {
@@ -157,24 +158,24 @@
   }
 
   img.avatar {
-    float: left;
-    margin-right: 10px;
+    @include float(left);
+    @include margin-right(10px);
     margin-top: -53px;
   }
 
   p {
-    margin: 0 0 5px 0;
+    @include margin(0 0 5px 0);
   }
 
   .btn {
-    margin: 0 0 7px 0;
+    @include margin(0 0 7px 0);
     box-sizing: border-box;
   }
 
   .usercard-controls {
     list-style-type: none;
-    float: right;
-    margin: 0;
+    @include float(right);
+    @include margin(0);
 
     a {width: 100%; min-width: 150px;}
   }
@@ -187,7 +188,7 @@
     width: 580px;
 
     .names {
-      float: left;
+      @include float(left);
       height: 60px;
       position: relative;
       width: 45%;
@@ -203,7 +204,7 @@
     }
 
     .badge-section {
-      float: left;
+      @include float(left);
       width: 500px;
       padding-bottom: 10px;
       margin-top: 5px;
@@ -223,7 +224,7 @@
 
     .more-user-badges {
       @extend .user-badge;
-      padding: 3px 8px;
+      @include padding(3px 8px);
     }
   }
 
@@ -239,7 +240,7 @@
       max-width: 120px;
     }
     position: absolute;
-    right: 12px;
+   @include right(12px);
     bottom: 12px;
     font-size: 2.143em;
     i {color: $secondary;}

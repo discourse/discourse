@@ -3,7 +3,7 @@
 // hack, this needs to be done cleaner
 #private-message-users {
   width: 400px;
-  float: left;
+  @include float(left);
 }
 
 .add-warning {
@@ -11,13 +11,13 @@
   display: inline-block;
   position: relative;
   top: -30px;
-  margin-left: 20px;
+  @include margin-left(20px);
 }
 
 .composer-popup-container {
   max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
+  @include margin-left(auto);
+  @include margin-right(auto);
 }
 
 .composer-popup {
@@ -38,7 +38,7 @@
   }
 
   a.close {
-    float: right;
+    @include float(right);
     color: $primary;
     opacity: 0.5;
     font-size: 1.071em;
@@ -48,14 +48,14 @@
     opacity: 1.0;
   }
 
-  padding: 10px;
+  @include padding(10px);
   width: 600px;
   position: absolute;
 
   ul.topics {
     list-style: none;
-    margin: 0;
-    padding: 0;
+    @include margin(0);
+    @include padding(0);
 
     li {
       font-weight: normal;
@@ -78,7 +78,7 @@
 }
 
 .composer-popup:nth-of-type(2) {
-  margin-left: 10px;
+  @include margin-left(10px);
 }
 
 // hide cancel upload link on IE9 (not supported)
@@ -91,10 +91,10 @@
     margin-top: 0;
   }
   .toggle-preview {
-    right: 5px;
+   @include right(5px);
   }
   #draft-status, #file-uploading {
-    right: 51%;
+   @include right(51%);
     color: $primary;
   }
   #file-uploading {
@@ -110,21 +110,21 @@
   position: fixed;
   .toggler {
     width: 15px;
-    right: 1px;
+   @include right(1px);
     position: absolute;
     font-size: 1.071em;
     color: $primary;
-    padding: 0 10px 5px 10px;
+    @include padding(0 10px 5px 10px);
     &:before {
       font-family: "FontAwesome";
       content: "\f078";
     }
   }
   a.cancel {
-    padding-left: 7px;
+    @include padding-left(7px);
   }
   .control-row {
-    margin: 0 0 0 5px;
+    @include margin(0 0 0 5px);
   }
   .saving-text {
     display: none;
@@ -174,11 +174,11 @@
   }
   .reply-area {
     max-width: 1500px;
-    margin-left: auto;
-    margin-right: auto;
+    @include margin-left(auto);
+    @include margin-right(auto);
     float: none;
     .ac-wrap {
-      padding-left: 10px;
+      @include padding-left(10px);
     }
   }
 
@@ -190,8 +190,8 @@
     }
     .contents {
       input#reply-title {
-        padding: 7px 10px;
-        margin: 6px 10px 3px 0;
+        @include padding(7px 10px);
+        @include margin(6px 10px 3px 0);
         color: $primary;
 
       }
@@ -207,7 +207,7 @@
     }
   }
   .contents {
-    padding: 10px;
+    @include padding(10px);
     min-width: 1280px;
     .form-element {
       display: inline-block;
@@ -228,7 +228,7 @@
         @include small-width { width: 220px; }
 
         .select2-drop {
-          left: -9000px;
+          @include left(-9000px);
           width: 428px;
           @include medium-width { width: 283px; }
           @include small-width { width: 218px; }
@@ -243,18 +243,18 @@
     .edit-reason-input {
       display: inline-block;
       position: absolute;
-      margin-left: 10px;
+      @include margin-left(10px);
       top: 18px;
       #edit-reason {
-        margin: 0;
-        padding: 5px;
-        float: left;
+        @include margin(0);
+        @include padding(5px);
+        @include float(left);
       }
     }
     #reply-title {
       color: $primary;
-      margin-right: 10px;
-      float: left;
+      @include margin-right(10px);
+      @include float(left);
       &:disabled {
         background-color: scale-color-diff();
       }
@@ -312,12 +312,12 @@
   }
   .title-input .popup-tip {
     width: 300px;
-    left: -8px;
+    @include left(-8px);
     margin-top: 8px;
   }
   .category-input .popup-tip {
     width: 240px;
-    left: 432px;
+    @include left(432px);
     top: -19px;
   }
 }
@@ -345,8 +345,8 @@
     }
   }
   .wmd-controls {
-    left: 30px;
-    right: 30px;
+    @include left(30px);
+   @include right(30px);
     position: absolute;
     bottom: 48px;
     top: 50px;
@@ -357,14 +357,14 @@
       width: 100%;
       height: 100%;
       min-height: 100%;
-      padding: 7px;
-      margin: 0;
+      @include padding(7px);
+      @include margin(0);
       background-color: $secondary;
       word-wrap: break-word;
     }
     #wmd-input, #wmd-preview-scroller {
       position: absolute;
-      left: 0;
+      @include left(0);
       top: 0;
       border: 0px;
       border-top: 30px solid transparent;
@@ -386,21 +386,21 @@
       box-sizing: border-box;
       height: 100%;
       min-height: 100%;
-      margin: 0;
-      padding: 0;
+      @include margin(0);
+      @include padding(0);
       width: 50%;
     }
     .textarea-wrapper {
-      padding-right: 5px;
-      float: left;
+      @include padding-right(5px);
+      @include float(left);
       .popup-tip {
         margin-top: 3px;
-        right: 4px;
+       @include right(4px);
       }
     }
     .preview-wrapper {
-      padding-left: 5px;
-      float: right;
+      @include padding-left(5px);
+      @include float(right);
     }
   }
   #wmd-button-bar {
@@ -413,16 +413,16 @@
 }
 
 .control-row.reply-area {
-  padding-left: 20px;
-  padding-right: 20px;
+  @include padding-left(20px);
+  @include padding-right(20px);
 }
 
 @media all and (min-width: 1550px) {
   #reply-control {
     .wmd-controls {
       width: 1450px;
-      left: auto;
-      right: auto;
+      @include left(auto);
+     @include right(auto);
     }
   }
 }

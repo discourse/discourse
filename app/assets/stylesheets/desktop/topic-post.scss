@@ -1,12 +1,12 @@
 .container {
   @extend .clearfix;
   max-width: $large-width;
-  margin-right: auto;
-  margin-left: auto;
+  @include margin-right(auto);
+  @include margin-left(auto);
 }
 
 .full-width {
-  margin-left: 0;
+  @include margin-left(0);
 }
 
 h1 .topic-statuses .topic-status i {
@@ -15,7 +15,7 @@ h1 .topic-statuses .topic-status i {
 }
 
 .logo-small {
-  margin-right: 8px;
+  @include margin-right(8px);
   width: auto;
   max-width: 80px;
   height: auto;
@@ -23,7 +23,7 @@ h1 .topic-statuses .topic-status i {
   }
 
 .post-cloak {
-  padding: 0;
+  @include padding(0);
 
   &:first-of-type {
     border-top: none;
@@ -32,8 +32,8 @@ h1 .topic-statuses .topic-status i {
 .reply-to-tab {
   z-index: 400;
   font-size: 0.929em;
-  float: right;
-  margin: 1px 25px 0 0;
+  @include float(right);
+  @include margin(1px 25px 0 0);
   color: scale-color($primary, $lightness: 50%);
 }
 
@@ -73,21 +73,21 @@ section.post-menu-area {
 }
 
 nav.post-controls {
-    padding: 0;
+    @include padding(0);
     button {
     color: scale-color($primary, $lightness: 60%);
-    margin-right: 2px;
+    @include margin-right(2px);
   }
 
   span.badge-posts {
-    margin-right: 5px;
+    @include margin-right(5px);
     transition: all linear 0.15s;
 
   }
 
   .actions {
-    text-align: right;
-    float: right;
+    @include text-align(right);
+    @include float(right);
     display: inline-block;
     .more-actions {
       display: none;
@@ -97,24 +97,24 @@ nav.post-controls {
 
   .show-replies {
     background: dark-light-diff($primary, $secondary, 90%, -65%);
-    padding: 8px 15px;
-    margin-left: 0;
+    @include padding(8px 15px);
+    @include margin-left(0);
     span.badge-posts {color: scale-color($primary, $lightness: 60%);}
     &:hover {
       background: dark-light-diff($primary, $secondary, 90%, -65%);
       span.badge-posts {color: $primary;}
     }
     i {
-      margin-left: 5px;
+      @include margin-left(5px);
     }
   }
 
   button.create {
-    margin-right: 0;
+    @include margin-right(0);
     color: $tertiary;
     background: dark-light-diff($tertiary, $secondary, 90%, -65%);
-    padding: 8px 20px;
-    margin-left: 10px;
+    @include padding(8px 20px);
+    @include margin-left(10px);
 
     &:hover {  color: $secondary;
       background: dark-light-diff($tertiary, $secondary, 0%, -20%)
@@ -129,16 +129,16 @@ nav.post-controls {
   }
 
   .create i {
-    margin-right: 5px;
+    @include margin-right(5px);
   }
 
   button {
     font-size: 1.143em;
-    padding: 8px 10px;
+    @include padding(8px 10px);
     vertical-align: top;
     background: transparent;
     border: none;
-    margin-left: 3px;
+    @include margin-left(3px);
     transition: all linear 0.15s;
 
          &:hover {
@@ -172,7 +172,7 @@ nav.post-controls {
           background: transparent;
         }
 
-        &.bookmark {padding: 8px 11px; }
+        &.bookmark {@include padding(8px 11px); }
 
         .read-icon {
           &:before {
@@ -195,12 +195,12 @@ nav.post-controls {
   .post-admin-menu {
     background-color: $secondary;
     width: 205px;
-    padding: 10px;
+    @include padding(10px);
     border: 1px solid scale-color-diff();
     position: absolute;
-    text-align: left;
+    @include text-align(left);
     bottom: -2px;
-    right: 15px;
+    @include right(15px);
     z-index: 1000;
     display: none;
 
@@ -212,7 +212,7 @@ nav.post-controls {
 
     ul {
       list-style: none;
-      margin: 10px 0 0 0;
+      @include margin(10px 0 0 0);
     }
 
     li {
@@ -221,7 +221,7 @@ nav.post-controls {
 
       i.fa {
         width: 14px;
-        margin-right: 14px;
+        @include margin-right(14px);
       }
     }
   }
@@ -229,7 +229,7 @@ nav.post-controls {
 
 .embedded-posts {
   background: dark-light-diff($primary, $secondary, 90%, -65%) !important;
-  h1, h2, h3 { margin: 10px 0; }
+  h1, h2, h3 { @include margin(10px 0); }
   a.mention { background: darken(scale-color-diff(), 10%); }
 
   .topic-body {
@@ -239,11 +239,11 @@ nav.post-controls {
     // WARNING: overflow hide is required for quoted / embedded images
     // which expect "normal" post width, but expansions are narrower
     overflow: hidden;
-    padding: 10px 15px 15px 15px;
+    @include padding(10px 15px 15px 15px);
   }
 
   .topic-avatar {
-    padding-left: 15px;
+    @include padding-left(15px);
     padding-top: 0;
   }
 
@@ -263,16 +263,16 @@ nav.post-controls {
 
   // top means "in reply to expansion" above a post
   &.top {
-    margin-left: 56px;
+    @include margin-left(56px);
     width: 701px;
   }
   &.top.topic-body {
-    padding-left: 0;
-    padding-right: 0;
+    @include padding-left(0);
+    @include padding-right(0);
   }
 
   .post-date { color: scale-color($primary, $lightness: 50%); }
-  .fa-arrow-up, .fa-arrow-down { margin-left: 5px; }
+  .fa-arrow-up, .fa-arrow-down { @include margin-left(5px); }
   .row {
     border-top: 1px solid darken(scale-color-diff(), 10%);
   }
@@ -280,7 +280,7 @@ nav.post-controls {
 
   .quote .title, blockquote, .onebox, .onebox-result {
     background: darken(scale-color-diff(), 5%);
-    border-left: 5px solid darken(scale-color-diff(), 12%);
+    @include border-left(5px solid darken(scale-color-diff(), 12%));
   }
 
   .topic-meta-data {
@@ -300,18 +300,18 @@ nav.post-controls {
 
 .post-action {
   .relative-date {
-    margin-left: 5px;
+    @include margin-left(5px);
   }
-  .avatar { margin-right: 2px; }
+  .avatar { @include margin-right(2px); }
 }
 
 a.star {
   display: inline-block;
-  float: left;
+  @include float(left);
 }
 
 .topic-map {
-  margin: 20px 0 0 0;
+  @include margin(20px 0 0 0);
   background: dark-light-diff($primary, $secondary, 90%, -65%);
 
   .buttons .btn {
@@ -325,7 +325,7 @@ a.star {
   }
 
   h4 {
-    margin: 1px 0 2px 0;
+    @include margin(1px 0 2px 0);
     color: scale-color($primary, $lightness: 50%);
     font-weight: normal;
     font-size: 0.857em;
@@ -333,7 +333,7 @@ a.star {
   }
 
   ul {
-    margin: 0;
+    @include margin(0);
     list-style: none;
   }
 
@@ -344,16 +344,16 @@ a.star {
 
   .avatars {
     > div {
-      float: left;
+      @include float(left);
       position: relative;
-      margin: 3px 0;
+      @include margin(3px 0);
     }
     .post-count {
       position: absolute;
-      right: 3px;
+      @include right(3px);
       border-radius: 100px;
-      padding: 4px 5px 2px 5px;
-      text-align: center;
+      @include padding(4px 5px 2px 5px);
+      @include text-align(center);
       font-weight: normal;
       font-size: 11px;
       line-height: 1;
@@ -367,19 +367,19 @@ a.star {
   }
 
   .avatar {
-    float: left;
-    margin-right: 4px;
+    @include float(left);
+    @include margin-right(4px);
   }
 
   .map {
-    .secondary {text-align: center;}
+    .secondary {@include text-align(center);}
     li {
-      float: left;
-      padding: 7px 10px;
+      @include float(left);
+      @include padding(7px 10px);
       &:last-of-type {
-        border-right: 0;
+        @include border-right(0);
       }
-      &:nth-child(3) { text-align:center; }
+      &:nth-child(3) { @include text-align(center); }
     }
     a, .number {
       line-height: 20px;
@@ -388,13 +388,13 @@ a.star {
       color: $primary;
     }
     .avatar  a {
-      float: left;
+      @include float(left);
     }
   }
   .avatars,
   .links,
   .information {
-    padding: 7px 10px 15px 10px;
+    @include padding(7px 10px 15px 10px);
     color: $primary;
   }
   .information {
@@ -402,26 +402,26 @@ a.star {
   }
 
   .participants { // PMs //
-    .user {float: left; margin: 7px 20px 7px 0;}
+    .user {@include float(left); @include margin(7px 20px 7px 0);}
   }
 
   .topic-links {
     .badge-notification {
-      margin: 1px 5px 5px 0;
+      @include margin(1px 5px 5px 0);
     }
   }
 
   td {
     vertical-align: top;
-    padding:1px;
+    @include padding(1px);
   }
 
   .buttons {
-    float: right;
+    @include float(right);
     .btn {
       border: 0;
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -75%);
-      padding: 0 23px;
+      @include padding(0 23px);
       color: $primary;
       background: dark-light-diff($primary, $secondary, 80%, -75%);
       &:hover {
@@ -437,7 +437,7 @@ a.star {
         padding-bottom: 1px;
       }
       .fa {
-        margin: 0;
+        @include margin(0);
         font-size: 1.286em;
         line-height: 52px;
       }
@@ -446,7 +446,7 @@ a.star {
 }
 
 #topic-footer-buttons {
-  padding: 10px 10px 0 0;
+  @include padding(10px 10px 0 0);
   p {
     line-height: 32px;
     color: $primary;
@@ -454,14 +454,14 @@ a.star {
   .btn {
     outline: 0;
     margin-bottom: 5px;
-    margin-right: 10px;
+    @include margin-right(10px);
     .fa-bookmark.bookmarked { color: $tertiary; }
   }
 }
 
 #suggested-topics {
   clear: left;
-  padding: 20px 0 15px 0;
+  @include padding(20px 0 15px 0);
   .topic-list {
     > tbody > tr {
       &:nth-child(odd) {
@@ -487,7 +487,7 @@ a.star {
 }
 
 #suggested-topics .topic-statuses .topic-status {
-  padding: 0;
+  @include padding(0);
   i {
     font-size:15px;
   }
@@ -551,7 +551,7 @@ video {
 /* default docked header CSS for all topics, including those without categories */
 .extra-info {
   h1 {
-    margin: 5px 0 0 0;
+    @include margin(5px 0 0 0);
     font-size: 1.6em;
     line-height: 1.3em;
   }
@@ -565,7 +565,7 @@ video {
 .extra-info.two-rows {
   h1 {
     line-height: 1.1em;
-    margin: 0;
+    @include margin(0);
   }
 }
 
@@ -579,12 +579,12 @@ video {
 }
 
 .dropdown-toggle {
-  float: left;
+  @include float(left);
   position: relative;
 }
 
 a.mention {
-  padding: 2px 4px;
+  @include padding(2px 4px);
   color: $primary;
   background: scale-color-diff();
 }
@@ -604,18 +604,18 @@ a.mention {
 
 #share-link {
   width: 365px;
-  margin-left: -4px;
+  @include margin-left(-4px);
 }
 
 .post-select {
-  float: right;
-  margin-right: 20px;
+  @include float(right);
+  @include margin-right(20px);
   margin-top: -20px;
 }
 
 #show-topic-admin {
-  right: 20px;
-  padding: 5px 8px;
+  @include right(20px);
+  @include padding(5px 8px);
   margin-top: 5px;
 
 }
@@ -629,7 +629,7 @@ a.mention {
 }
 
 .info-line {
-  margin: 10px 0;
+  @include margin(10px 0);
   color: $primary;
 }
 
@@ -637,9 +637,9 @@ a.mention {
 /* solo quotes */
 blockquote {
   /* leave browser defaults for top and bottom here */
-  margin-left: 0;
-  margin-right: 0;
-  padding: 12px;
+  @include margin-left(0);
+  @include margin-right(0);
+  @include padding(12px);
   a.mention {background: darken(scale-color-diff(), 10%);}
 }
 
@@ -654,11 +654,11 @@ blockquote {
   aside {
     .quote, .title, blockquote, .onebox, .onebox-result {
       background: darken(scale-color-diff(), 5%);
-      border-left: 5px solid darken(scale-color-diff(), 12%);
+      @include border-left(5px solid darken(scale-color-diff(), 12%));
     }
 
     aside.quote>blockquote, aside.quote>.title {
-      border-left: 0;
+      @include border-left(0);
     }
   }
 
@@ -671,20 +671,20 @@ blockquote {
   width: 100%;
   box-sizing: border-box;
   z-index: 1;
-  padding-left: 757px;
+  @include padding-left(757px);
 
-  ul {margin: 0;}
+  ul {@include margin(0);}
   li {margin-bottom: 10px;}
   i {font-size: 0.857em;}
 
   .reply-new {
-    padding-left: 27px;
+    @include padding-left(27px);
     display:block;
     overflow:hidden;
   }
 
   .track-link {
-    padding-left: 10px;
+    @include padding-left(10px);
     display: block;
     overflow: hidden;
     }
@@ -696,14 +696,14 @@ blockquote {
     word-wrap: break-word;
     a i {
       position: relative;
-      margin-right: 7px;
+      @include margin-right(7px);
       margin-top: -2px;
-      margin-left: -17px;
+      @include margin-left(-17px);
     }
 
     a.toggle-more {
       display: block;
-      text-align: right;
+      @include text-align(right);
     }
 
   }
@@ -715,11 +715,11 @@ $topic-body-width-padding: 11px;
 $topic-avatar-width: 45px;
 .topic-body {
   width: $topic-body-width;
-  float: left;
+  @include float(left);
   position: relative;
   z-index: 2;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
-  padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
+  @include padding(12px $topic-body-width-padding 15px $topic-body-width-padding);
   &.highlighted {
     background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
   }
@@ -728,17 +728,17 @@ $topic-avatar-width: 45px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding-top: 15px;
   width: $topic-avatar-width;
-  float: left;
+  @include float(left);
   position: relative;
   z-index: 2;
 }
 
 .gap {
   background-color: scale-color-diff();
-  padding: 5px 0;
+  @include padding(5px 0);
   color: lighten($primary, 30%);
   cursor: pointer;
-  text-align: center;
+  @include text-align(center);
   width: calc(#{$topic-avatar-width} + #{$topic-body-width} + 2 * #{$topic-body-width-padding});
 }
 
@@ -755,20 +755,20 @@ $topic-avatar-width: 45px;
   height: 0;
   vertical-align: middle;
   border-top: 4px solid $primary;
-  border-right: 4px solid transparent;
-  border-left: 4px solid transparent;
+  @include border-right(4px solid transparent);
+  @include border-left(4px solid transparent);
   content: "";
-  margin-left: 5px;
+  @include margin-left(5px);
 }
 .dropdown-menu {
   position: absolute;
   bottom: 115%;
-  left: 0;
+  @include left(0);
   z-index: 1000;
   display: none;
-  float: left;
+  @include float(left);
   width: 550px;
-  margin: 1px 0 0;
+  @include margin(1px 0 0);
   list-style: none;
   background-color: $secondary;
   border: 1px solid scale-color-diff();
@@ -779,7 +779,7 @@ $topic-avatar-width: 45px;
 }
 .dropdown-menu a {
   display: block;
-  padding: 9px;
+  @include padding(9px);
   clear: both;
   font-weight: normal;
   line-height: 18px;
@@ -787,7 +787,7 @@ $topic-avatar-width: 45px;
   transition: all linear .15s;
 
   & > div {
-    margin-left: 26px;
+    @include margin-left(26px);
   }
 }
 .dropdown-menu li > a:hover,
@@ -809,7 +809,7 @@ $topic-avatar-width: 45px;
 
 .dropdown-menu .icon {
   margin-top: 3px;
-  float: left;
+  @include float(left);
   font-size: 1.286em;
 }
 
@@ -820,22 +820,22 @@ $topic-avatar-width: 45px;
 
 #selected-posts {
 
-  padding-left: 20px;
-  margin-left: 330px;
+  @include padding-left(20px);
+  @include margin-left(330px);
   width: 200px;
   position: fixed;
   z-index: 1000;
-  left: 50%;
+  @include left(50%);
   background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
   border: 1px solid $tertiary;
-  padding: 5px;
+  @include padding(5px);
   margin-bottom: 5px;
 
   button {
     width: 180px;
-    margin: 4px auto;
+    @include margin(4px auto);
     display: inline-block;
-    text-align: left;
+    @include text-align(left);
   }
 
   &.hidden {
@@ -846,17 +846,17 @@ $topic-avatar-width: 45px;
   }
   p {
     font-size: 0.929em;
-    margin: 0 0 10px 0;
+    @include margin(0 0 10px 0);
   }
   p.cancel {
-    margin: 10px 0 0 0;
+    @include margin(10px 0 0 0);
   }
   h3 {
     font-size: 1.786em;
     color: $primary;
     margin-bottom: 5px;
     i {
-      margin-right: 7px;
+      @include margin-right(7px);
     }
   }
   .btn {
@@ -907,7 +907,7 @@ $topic-avatar-width: 45px;
 
     .select-posts {
       position: absolute;
-      left: 100%;
+      @include left(100%);
       z-index: 490;
       top: 8px;
       width: 800px;
@@ -915,7 +915,7 @@ $topic-avatar-width: 45px;
       background-color: $secondary;
 
       button {
-        margin-left: 8px;
+        @include margin-left(8px);
         background-color: scale-color($primary, $lightness: 70%);
         border: 1px solid scale-color($primary, $lightness: 60%);
         color: $primary;
@@ -926,7 +926,7 @@ $topic-avatar-width: 45px;
 
 a.attachment:before {
   display: inline-block;
-  margin-right: 4px;
+  @include margin-right(4px);
   font-family: "FontAwesome";
   content: "\f019";
 }
@@ -938,7 +938,7 @@ a.attachment:before {
 .deleted-topic .gutter:before {
     display: block;
     position: absolute;
-    left: 767px;
+    @include left(767px);
     color: rgba(dark-light-diff($primary, $secondary, 90%, -65%) , .8);
     font: 6.429em/1 FontAwesome;
     content: "\f014";
@@ -958,7 +958,7 @@ a.attachment:before {
 
  .post-info  {
    display: inline-block;
-   float: right;
+   @include float(right);
    font-size: 0.929em;
    margin-top: 1px;
    a {color: scale-color($primary, $lightness: 50%);}
@@ -977,7 +977,7 @@ span.highlighted {
 .read-state {
   color: scale-color($tertiary, $lightness: 50%);
   position: absolute;
-  right: -2px;
+  @include right(-2px);
   top: 13px;
   font-size: 0.571em;
 }
@@ -1003,14 +1003,14 @@ and (max-width : 870px) {
   }
 
   .post-cloak .reply-to-tab {
-      right: 15%;
+      @include right(15%);
     }
 
   .topic-body {
       box-sizing: border-box;
       width: calc(100% - 47px); //100% - [width of .topic-avatar + 2px]
 
-      padding-left: 2%;
+      @include padding-left(2%);
     }
 
   .embedded-posts {

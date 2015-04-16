@@ -2,11 +2,11 @@
 
 #share-link {
   position: absolute;
-  left: 20px;
+  @include left(20px);
   z-index: 1200;
   box-shadow: 0 1px 5px rgba(0,0,0, .4);
   background-color: $secondary;
-  padding: 6px 10px 10px 10px;
+  @include padding(6px 10px 10px 10px);
   width: 300px;
   display: none;
   &.visible {
@@ -19,20 +19,20 @@
     clear: both;
   }
   .share-for-touch {
-    margin: 14px 0;
+    @include margin(14px 0);
   }
   h3 {
     font-size: 0.929em;
   }
   .social-link {
-    margin-left: 2px;
-    margin-right: 8px;
-    float: left;
+    @include margin-left(2px);
+    @include margin-right(8px);
+    @include float(left);
     font-size: 1.571em;
   }
   .link {
-    margin-right: 2px;
-    float: right;
+    @include margin-right(2px);
+    @include float(right);
     font-size: 1.429em;
     a {
       color: $primary;
@@ -40,13 +40,13 @@
   }
 
   h3 {
-    margin: 5px 0;
-    float: left;
+    @include margin(5px 0);
+    @include float(left);
   }
 
   .date {
-    float: right;
-    margin: 5px;
+    @include float(right);
+    @include margin(5px);
     color: scale-color($primary, $lightness: 50%);
   }
 

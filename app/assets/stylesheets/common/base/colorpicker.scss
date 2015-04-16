@@ -14,12 +14,12 @@
     display: inline-block;
     vertical-align: middle;
     padding-top: 4px;
-    padding-left: 15px;
+    @include padding-left(15px);
     max-width: 300px;
 
     .colorpicker {
       border: 1px solid scale-color-diff();
-      margin-right: 2px;
+      @include margin-right(2px);
       width: 16px;
       height: 16px;
       font-size: 0.286em

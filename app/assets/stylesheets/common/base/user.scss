@@ -11,7 +11,7 @@
     color: $primary;
   }
   .avatar-link {
-    margin-right: 3px;
+    @include margin-right(3px);
   }
 }
 
@@ -35,8 +35,8 @@
 }
 
 .notification-buttons {
-  margin: 10px 0;
-  text-align: right;
+  @include margin(10px 0);
+  @include text-align(right);
 }
 
 .user-navigation {
@@ -45,12 +45,12 @@
     height: 50px;
   }
   .avatar {
-    float: left;
+    @include float(left);
     width: 45px;
   }
   nav.buttons {
     width: 180px;
-    padding: 0;
+    @include padding(0);
     .btn {
       width: 100%;
       margin-bottom: 5px;
@@ -71,7 +71,7 @@
 .avatar-selector {
   label {
     display: inline-block;
-    margin-right: 10px;
+    @include margin-right(10px);
   }
   #avatar-input {
     width: 0;
@@ -79,7 +79,7 @@
     overflow: hidden;
   }
   .avatar {
-    margin: 5px 10px 5px 0;
+    @include margin(5px 10px 5px 0);
   }
 }
 
@@ -93,14 +93,14 @@
   clear: both;
 
   .user-image {
-    float: left;
-    padding-right: 4px;
+    @include float(left);
+    @include padding-right(4px);
   }
 
   .user-detail {
-    float: left;
+    @include float(left);
     width: 70%;
-    padding-left: 5px;
+    @include padding-left(5px);
     font-size: 13px;
 
     .name-line {
@@ -115,7 +115,7 @@
     }
 
     .name {
-      margin-left: 5px;
+      @include margin-left(5px);
       color: scale-color($primary, $lightness: 30%);
     }
 

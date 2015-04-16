@@ -1,4 +1,4 @@
-.modal-open {
+modal-open {
   .dropdown-menu {
      z-index: 2050;
   }
@@ -14,9 +14,9 @@
 .modal-backdrop {
   position: fixed;
   top: 0;
-  right: 0;
+ @include right(0);
   bottom: 0;
-  left: 0;
+  @include left(0);
   z-index: 1040;
   background-color: #111;
   &.fade {
@@ -62,7 +62,7 @@
 
 .modal-inner-container {
   max-width: 710px;
-  margin: 0 auto;
+  @include margin(0 auto);
   background-color: $secondary;
   border: 1px solid scale-color-diff();
   border: 1px solid scale-color-diff();
@@ -90,7 +90,7 @@
   margin-bottom: 0;
 }
 .modal-footer {
-  padding: 14px 15px 15px;
+  @include padding(14px 15px 15px);
   border-top: 1px solid scale-color-diff();
 }
 .modal-footer:before,
@@ -104,7 +104,7 @@
 
 .modal {
     .nav {
-    padding: 10px 30px 10px 15px;
+    @include padding(10px 30px 10px 15px);
     background-color: dark-light-diff($secondary, $primary, 10%, -15%);
     li > a {
       font-size: 1em;
@@ -148,20 +148,20 @@
   }
   section.field .field-item {
     display: inline-block;
-    margin-right: 10px;
+    @include margin-right(10px);
   }
 }
 
 .reply-where-modal {
   .modal-footer {
     .btn {
-      text-align: left;
+      @include text-align(left);
       font-size: 1.286em;
       line-height: 20px;
       width: 310px;
       margin-bottom: 10px;
       display: block;
-      margin-left: 0;
+      @include margin-left(0);
       .topic-title {
         font-size: 0.929em;
         font-weight: normal;
@@ -173,8 +173,8 @@
       }
     }
     .cancel {
-      float: right;
-      margin-right: 5px;
+      @include float(right);
+      @include margin-right(5px);
     }
   }
 }
@@ -184,22 +184,22 @@
   .modal-footer {
     .btn {
       font-weight: normal;
-      text-align: left;
+      @include text-align(left);
       font-size: 1em;
       line-height: 20px;
       margin-bottom: 10px;
       display: inline-block;
-      margin-left: 0;
+      @include margin-left(0);
     }
     .cancel {
       display: block;
-      margin-right: 5px;
+      @include margin-right(5px);
     }
   }
 }
 
 .modal-footer .cancel-inline {
-  margin-left: 10px;
+  @include margin-left(10px);
 }
 
 .invite-modal {
@@ -211,18 +211,18 @@
 
 .permission-list{
   list-style:none;
-  margin: 0 0 30px;
-  padding: 0;
+  @include margin(0 0 30px);
+  @include padding(0);
   .name {
-    margin-right: 20px;
+    @include margin-right(20px);
     display: inline-block;
     min-width: 100px;
   }
   .permission {
-    margin-left: 20px;
+    @include margin-left(20px);
   }
   .fa-times-circle {
-    margin-left: 5px;
+    @include margin-left(5px);
   }
   li {
     margin-bottom: 10px;

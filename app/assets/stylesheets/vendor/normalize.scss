@@ -17,7 +17,7 @@ html {
  */
 
 body {
-  margin: 0;
+  @include margin(0);
 }
 
 /* HTML5 display definitions
@@ -199,7 +199,7 @@ svg:not(:root) {
  */
 
 figure {
-  margin: 1em 40px;
+  @include margin(1em 40px);
 }
 
 /**
@@ -254,7 +254,7 @@ select,
 textarea {
   color: inherit; /* 1 */
   font: inherit; /* 2 */
-  margin: 0; /* 3 */
+  @include margin(0); /* 3 */
 }
 
 /**
@@ -309,7 +309,7 @@ html input[disabled] {
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
-  padding: 0;
+  @include padding(0);
 }
 
 /**
@@ -332,7 +332,7 @@ input {
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box; /* 1 */
-  padding: 0; /* 2 */
+  @include padding(0); /* 2 */
 }
 
 /**
@@ -376,7 +376,7 @@ input[type="search"]::-webkit-search-decoration {
 
 fieldset {
   border: 1px solid #c0c0c0;
-  margin: 0 2px;
+  @include margin(0 2px);
   padding: 0.35em 0.625em 0.75em;
 }
 
@@ -387,7 +387,7 @@ fieldset {
 
 legend {
   border: 0; /* 1 */
-  padding: 0; /* 2 */
+  @include padding(0); /* 2 */
 }
 
 /**
@@ -421,5 +421,5 @@ table {
 
 td,
 th {
-  padding: 0;
+  @include padding(0);
 }

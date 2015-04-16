@@ -1,7 +1,7 @@
 @import "vendor/normalize";
 
 // Define the layout direction with the global $disc-direction variable
-$disc-direction: ltr;
+$disc-direction: rtl;
 
 @import "common/foundation/multi_directional_mixins";
 @import "common/foundation/helpers";
