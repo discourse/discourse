@@ -32,6 +32,7 @@ class DiscourseIIFE < Sprockets::Processor
                      .sub("/app/assets/javascripts", "")
                      .sub("/test/javascripts", "")
       res << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['/assets#{req_path}'] = #{data.to_json};\n"
+      res << "\n//@ sourceURL=/#{context.logical_path}\n"
     end
 
     res
