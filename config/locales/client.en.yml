@@ -123,7 +123,9 @@ en:
     show_more: "show more"
     show_help: "help"
     links: "Links"
-    links_lowercase: "links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -628,7 +630,10 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Last post
-    last_post_lowercase: last post
+    last_reply_lowercase: last reply
+    replies_lowercase:
+      one: reply
+      other: replies
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -1497,15 +1502,21 @@ en:
         other {}}
     original_post: "Original Post"
     views: "Views"
-    views_lowercase: "views"
+    views_lowercase:
+      one: "view"
+      other: "views"
     replies: "Replies"
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
-    likes_lowercase: "likes"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "there are {{number}} likes in this topic"
     users: "Users"
-    users_lowercase: "users"
+    users_lowercase:
+      one: "user"
+      other: "users"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"
