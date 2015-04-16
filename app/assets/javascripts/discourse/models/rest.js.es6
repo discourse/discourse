@@ -21,7 +21,6 @@ const RestModel = Ember.Object.extend(Presence, {
 
       res = self.__munge(res.payload || res.responseJson);
 
-      console.log(res);
       if (res.success === "OK") {
         Ember.warn("An update call should return the updated attributes");
         res = props;
