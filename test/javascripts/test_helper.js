@@ -115,6 +115,9 @@ QUnit.testStart(function(ctx) {
   }
 });
 
+// Don't cloak in testing
+Ember.CloakedCollectionView = Ember.CollectionView;
+
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
