@@ -13,27 +13,28 @@ function updateState(state) {
 export default Ember.Controller.extend(BufferedContent, {
   needs: ['queued-posts'],
   post: Ember.computed.alias('model'),
+  currentlyEditing: Ember.computed.alias('controllers.queued-posts.editing'),
 
-  editing: false,
+  editing: Discourse.computed.propertyEqual('model', 'currentlyEditing'),
 
   actions: {
     approve: updateState('approved'),
     reject: updateState('rejected'),
 
     edit() {
-      this.set('editing', true);
+      this.set('currentlyEditing', this.get('model'));
     },
 
     confirmEdit() {
       this.get('post').update({ raw: this.get('buffered.raw') }).then(() => {
         this.commitBuffer();
-        this.set('editing', false);
+        this.set('currentlyEditing', null);
       });
     },
 
     cancelEdit() {
       this.rollbackBuffer();
-      this.set('editing', false);
+      this.set('currentlyEditing', null);
     }
   }
 });
