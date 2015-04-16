@@ -174,6 +174,14 @@ describe CategoriesController do
         end
       end
 
+      it "returns 422 if email_in address is already in use for other category" do
+        @other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com" )
+        xhr :put, :update, id: @category.id, name: "Email", email_in: "mail@examle.com", color: "ff0", text_color: "fff"
+
+        expect(response).not_to be_success
+        expect(response.code.to_i).to eq(422)
+      end
+
       describe "success" do
 
         it "updates the group correctly" do
