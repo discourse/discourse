@@ -244,8 +244,13 @@ gem 'simple-rss', require: false
 # TODO mri_22 should be here, but bundler was real slow to pick it up
 # not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
-gem 'stackprof', require: false, platform: :mri_21
-gem 'memory_profiler', require: false, platform: :mri_21
+
+begin
+  gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
+  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
+rescue Bundler::GemfileError
+  STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
+end
 
 gem 'rmmseg-cpp', require: false
 
