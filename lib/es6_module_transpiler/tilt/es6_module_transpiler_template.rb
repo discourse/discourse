@@ -127,7 +127,6 @@ module Tilt
         req_path = "/assets/#{scope.logical_path}.#{extension}"
 
         @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{data.to_json};\n"
-        @output << "\n//@ sourceURL=/#{scope.logical_path}\n"
       end
 
       @output
