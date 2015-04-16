@@ -7,7 +7,8 @@ export default TextField.extend({
     var self = this,
         selected = [],
         currentUser = this.currentUser,
-        includeGroups = this.get('includeGroups') === 'true';
+        includeGroups = this.get('includeGroups') === 'true',
+        allowedUsers = this.get('allowedUsers') === 'true';
 
     function excludedUsernames() {
       if (currentUser && self.get('excludeCurrentUser')) {
@@ -27,7 +28,8 @@ export default TextField.extend({
           term: term.replace(/[^a-zA-Z0-9_]/, ''),
           topicId: self.get('topicId'),
           exclude: excludedUsernames(),
-          includeGroups: includeGroups
+          includeGroups,
+          allowedUsers
         });
       },
 
