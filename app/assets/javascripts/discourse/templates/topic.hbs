@@ -22,8 +22,8 @@
 
             {{plugin-outlet "edit-topic"}}
 
-            {{d-button action="finishedEditingTopic" class="btn-primary btn-small no-text" icon="check"}}
-            {{d-button action="cancelEditingTopic" class="btn-small no-text" icon="times"}}
+            {{d-button action="finishedEditingTopic" class="btn-primary btn-small no-text submit-edit" icon="check"}}
+            {{d-button action="cancelEditingTopic" class="btn-small no-text cancel-edit" icon="times"}}
           {{else}}
             <h1>
               {{#unless is_warning}}
@@ -32,7 +32,7 @@
 
               {{#if details.loaded}}
                 {{topic-status topic=model}}
-                <a href='{{unbound url}}' {{action "jumpTop"}}>
+                <a href='{{unbound url}}' {{action "jumpTop"}} class='fancy-title'>
                   {{{fancy_title}}}
                 </a>
               {{/if}}
