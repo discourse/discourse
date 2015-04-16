@@ -1109,6 +1109,7 @@ en:
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
         to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
+        to_username: "Enter the username of the person you'd like to invite. We'll send a notification to that user with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
         success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."

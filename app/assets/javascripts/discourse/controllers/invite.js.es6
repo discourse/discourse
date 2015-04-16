@@ -15,11 +15,15 @@ export default ObjectController.extend(ModalFunctionality, {
   disabled: function() {
     if (this.get('saving')) return true;
     if (this.blank('emailOrUsername')) return true;
+    // when inviting to forum, email must be valid
     if (!this.get('invitingToTopic') && !Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
+    // normal users (not admin) can't invite users to private topic via email
+    if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
+    // when invting to private topic via email, group name must be specified
+    if (this.get('isPrivateTopic') && this.blank('groupNames') && Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
     if (this.get('model.details.can_invite_to')) return false;
-    if (this.get('isPrivateTopic') && this.blank('groupNames')) return true;
     return false;
-  }.property('emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'groupNames', 'saving'),
+  }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'groupNames', 'saving'),
 
   buttonTitle: function() {
     return this.get('saving') ? I18n.t('topic.inviting') : I18n.t('topic.invite_reply.action');
@@ -31,20 +35,23 @@ export default ObjectController.extend(ModalFunctionality, {
     return this.get('model') !== Discourse.User.current();
   }.property('model'),
 
+  topicId: Ember.computed.alias('model.id'),
+
   // Is Private Topic? (i.e. visible only to specific group members)
   isPrivateTopic: Em.computed.and('invitingToTopic', 'model.category.read_restricted'),
 
+  // Is Private Message?
   isMessage: Em.computed.equal('model.archetype', 'private_message'),
 
   // Allow Existing Members? (username autocomplete)
   allowExistingMembers: function() {
-    return this.get('invitingToTopic') && !this.get('isPrivateTopic');
-  }.property('invitingToTopic', 'isPrivateTopic'),
+    return this.get('invitingToTopic');
+  }.property('invitingToTopic'),
 
   // Show Groups? (add invited user to private group)
   showGroups: function() {
-    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso;
-  }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'invitingToTopic'),
+    return this.get('isAdmin') && (Discourse.Utilities.emailValid(this.get('emailOrUsername')) || this.get('isPrivateTopic') || !this.get('invitingToTopic')) && !Discourse.SiteSettings.enable_sso && !this.get('isMessage');
+  }.property('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic'),
 
   // Instructional text for the modal.
   inviteInstructions: function() {
@@ -55,13 +62,19 @@ export default ObjectController.extend(ModalFunctionality, {
       // inviting to a message
       return I18n.t('topic.invite_private.email_or_username');
     } else if (this.get('invitingToTopic')) {
-      // when inviting to topic, display instructions based on provided entity
-      if (this.blank('emailOrUsername')) {
-        return I18n.t('topic.invite_reply.to_topic_blank');
-      } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
-        return I18n.t('topic.invite_reply.to_topic_email');
+      // inviting to a private/public topic
+      if (this.get('isPrivateTopic') && !this.get('isAdmin')) {
+        // inviting to a private topic and is not admin
+        return I18n.t('topic.invite_reply.to_username');
       } else {
-        return I18n.t('topic.invite_reply.to_topic_username');
+        // when inviting to a topic, display instructions based on provided entity
+        if (this.blank('emailOrUsername')) {
+          return I18n.t('topic.invite_reply.to_topic_blank');
+        } else if (Discourse.Utilities.emailValid(this.get('emailOrUsername'))) {
+          return I18n.t('topic.invite_reply.to_topic_email');
+        } else {
+          return I18n.t('topic.invite_reply.to_topic_username');
+        }
       }
     } else {
       // inviting to forum
