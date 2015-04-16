@@ -152,6 +152,11 @@ TopicList.reopenClass({
     return store.findFiltered('topicList', {filter, params});
   },
 
+  list(filter) {
+    Ember.warn('`Discourse.TopicList.list` is deprecated. Use the store instead');
+    return this.find(filter);
+  },
+
   // Sets `hideCategory` if all topics in the last have a particular category
   hideUniformCategory(list, category) {
     const hideCategory = !list.get('topics').any(function (t) { return t.get('category') !== category; });
