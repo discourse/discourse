@@ -99,7 +99,7 @@ QUnit.testStart(function(ctx) {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
-  Discourse.BaseUrl = "";
+  Discourse.BaseUrl = "localhost";
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
   PreloadStore.reset();
