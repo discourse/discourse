@@ -41,8 +41,8 @@ Discourse::Application.configure do
   config.load_mini_profiler = true
 
   require 'middleware/turbo_dev'
-  require 'middleware/missing_avatars'
   config.middleware.insert 0, Middleware::TurboDev
+  require 'middleware/missing_avatars'
   config.middleware.insert 1, Middleware::MissingAvatars
 
   config.enable_anon_caching = false
