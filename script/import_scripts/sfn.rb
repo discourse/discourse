@@ -1,49 +1,77 @@
 # custom importer for www.sfn.org, feel free to borrow ideas
 
-require 'mysql2'
+require "csv"
+require "mysql2"
+
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Sfn < ImportScripts::Base
 
-  BATCH_SIZE = 1000
+  BATCH_SIZE = 100_000
+  MIN_CREATED_AT = "2003-11-01"
 
   def initialize
     super
   end
 
   def execute
+    load_external_users
     import_users
     import_categories
     import_topics
     import_posts
   end
 
+  def load_external_users
+    puts "", "loading external users..."
+
+    @personify_id_to_contact_key = {}
+
+    contacts = mysql_query <<-SQL
+      SELECT ContactKey  AS "contact_key",
+             PersonifyID AS "personify_id"
+        FROM Contact
+    SQL
+
+    contacts.each do |contact|
+      personify_id = contact["personify_id"].split(",").first
+      @personify_id_to_contact_key[personify_id] = contact["contact_key"]
+    end
+
+    @external_users = {}
+
+    CSV.foreach("/Users/zogstrip/Downloads/sfn.csv", col_sep: ";") do |row|
+      next unless @personify_id_to_contact_key.include?(row[0])
+
+      id = @personify_id_to_contact_key[row[0]]
+      full_name = [row[1].strip, row[2].strip, row[3].strip].join(" ").strip
+
+      @external_users[id] = { email: row[4], full_name: full_name }
+    end
+  end
+
   def import_users
     puts "", "importing users..."
 
     user_count = mysql_query <<-SQL
-         SELECT COUNT(DISTINCT cm.ContactKey) AS "count"
-           FROM CommunityMember cm
-      LEFT JOIN EgroupSubscription es ON es.ContactKey = cm.ContactKey
-          WHERE LENGTH(COALESCE(es.EmailAddr_, "")) > 5
+      SELECT COUNT(ContactKey) AS "count" FROM Contact
     SQL
 
     user_count = user_count.first["count"]
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
-           SELECT cm.ContactKey  AS "id",
-                  cm.InvitedOn   AS "created_at",
-                  es.EmailAddr_  AS "email",
-                  es.FullName_   AS "name",
+           SELECT c.ContactKey   AS "id",
                   c.Bio          AS "bio",
-                  c.ProfileImage AS "avatar"
-             FROM CommunityMember cm
-        LEFT JOIN EgroupSubscription es ON es.ContactKey = cm.ContactKey
-        LEFT JOIN Contact c ON c.ContactKey = cm.ContactKey
-            WHERE LENGTH(COALESCE(es.EmailAddr_, "")) > 5
-         GROUP BY cm.ContactKey
-         ORDER BY "created_at"
+                  c.ProfileImage AS "avatar",
+                  es.EmailAddr_  AS "email",
+                  es.FullName_   AS "full_name",
+                  GREATEST('#{MIN_CREATED_AT}', COALESCE(cm.InvitedOn, '#{MIN_CREATED_AT}')) AS "created_at"
+             FROM Contact c
+        LEFT JOIN EgroupSubscription es ON es.ContactKey = c.ContactKey
+        LEFT JOIN CommunityMember cm    ON cm.ContactKey = c.ContactKey
+         GROUP BY c.ContactKey
+         ORDER BY cm.InvitedOn
             LIMIT #{BATCH_SIZE}
            OFFSET #{offset}
       SQL
@@ -51,11 +79,18 @@ class ImportScripts::Sfn < ImportScripts::Base
       break if users.size < 1
 
       create_users(users, total: user_count, offset: offset) do |user|
+        external_user = @external_users[user["id"]]
+        email = user["email"].presence || external_user.try(:[], :email)
+        full_name = user["full_name"].presence || external_user.try(:[], :full_name)
+        bio = (user["bio"] || "")[0..250]
+
+        next if email.blank?
+
         {
           id: user["id"],
-          name: user["name"],
-          email: user["email"],
-          bio_raw: user["bio"],
+          email: email,
+          name: full_name,
+          bio_raw: bio,
           created_at: user["created_at"],
           post_create_action: proc do |newuser|
             next if user["avatar"].blank?
@@ -90,6 +125,7 @@ class ImportScripts::Sfn < ImportScripts::Base
     "LATP Fellows",
     "Mid and Advanced Career",
     "Neurobiology of Disease Workshop",
+    "Neuronline Champions",
     "Neuroscience 2015",
     "Neuroscience Scholars Program",
     "NSP Associates",
@@ -118,6 +154,7 @@ class ImportScripts::Sfn < ImportScripts::Base
     "{CDF80A92-925A-46DD-A867-8558FA72D016}" => "LATP Fellows",
     "{E71E237B-7C23-4596-AECA-655BD8ED50DB}" => "Mid and Advanced Career",
     "{1D674C38-17CB-4C48-826A-D465AC3F8948}" => "Neurobiology of Disease Workshop",
+    "{80C5835E-974E-4D44-BA01-C2C4F8BA91D7}" => "Neuronline Champions",
     "{3D4F885B-0037-403B-83DD-62FAA8E81DF1}" => "Neuroscience 2015",
     "{9ACC3B40-E4A3-4FFD-AADC-C8403EB6231D}" => "Neuroscience 2015",
     "{9FC30FFB-E450-4361-8844-0266C3D96868}" => "Neuroscience Scholars Program",
@@ -170,6 +207,7 @@ class ImportScripts::Sfn < ImportScripts::Base
         FROM EgroupMessages
        WHERE ParentId_ = 0
          AND ApprovedRejectedPendingInd = "Approved"
+         AND (CrosspostFromMessageKey IS NULL OR CrosspostFromMessageKey = '{00000000-0000-0000-0000-000000000000}')
     SQL
 
     topic_count = topic_count.first["count"]
@@ -185,7 +223,8 @@ class ImportScripts::Sfn < ImportScripts::Base
              FROM EgroupMessages
             WHERE ParentId_ = 0
               AND ApprovedRejectedPendingInd = "Approved"
-         ORDER BY "created_at"
+              AND (CrosspostFromMessageKey IS NULL OR CrosspostFromMessageKey = '{00000000-0000-0000-0000-000000000000}')
+         ORDER BY CreatStamp_
             LIMIT #{BATCH_SIZE}
            OFFSET #{offset}
       SQL
@@ -194,12 +233,17 @@ class ImportScripts::Sfn < ImportScripts::Base
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         next unless category_id = CATEGORY_MAPPING[topic["category_id"]]
+
+        title = topic["title"][0..250]
+        raw = cleanup_raw(topic["raw"])
+        next if raw.blank?
+
         {
           id: topic["id"],
           category: category_id_from_imported_category_id(category_id),
           user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
-          title: topic["title"][0..250],
-          raw: cleanup_raw(topic["raw"]),
+          title: title,
+          raw: raw,
           created_at: topic["created_at"],
         }
       end
@@ -214,6 +258,7 @@ class ImportScripts::Sfn < ImportScripts::Base
         FROM EgroupMessages
        WHERE ParentId_ > 0
          AND ApprovedRejectedPendingInd = "Approved"
+         AND (CrosspostFromMessageKey IS NULL OR CrosspostFromMessageKey = '{00000000-0000-0000-0000-000000000000}')
     SQL
 
     posts_count = posts_count.first["count"]
@@ -228,7 +273,8 @@ class ImportScripts::Sfn < ImportScripts::Base
              FROM EgroupMessages
             WHERE ParentId_ > 0
               AND ApprovedRejectedPendingInd = "Approved"
-         ORDER BY "created_at"
+              AND (CrosspostFromMessageKey IS NULL OR CrosspostFromMessageKey = '{00000000-0000-0000-0000-000000000000}')
+         ORDER BY CreatStamp_
             LIMIT #{BATCH_SIZE}
            OFFSET #{offset}
       SQL
@@ -237,6 +283,10 @@ class ImportScripts::Sfn < ImportScripts::Base
 
       create_posts(posts, total: posts_count, offset: offset) do |post|
         next unless parent = topic_lookup_from_imported_post_id(post["topic_id"])
+
+        raw = cleanup_raw(post["raw"])
+        next if raw.blank?
+
         {
           id: post["id"],
           topic_id: parent[:topic_id],
