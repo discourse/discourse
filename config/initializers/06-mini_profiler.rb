@@ -18,21 +18,28 @@ if defined?(Rack::MiniProfiler)
   # namespacing gets complex, cause mini profiler is in the rack chain way before multisite
   Rack::MiniProfiler.config.storage_instance = Rack::MiniProfiler::RedisStore.new(connection:  DiscourseRedis.raw_connection)
 
+  skip = [
+    /^\/message-bus/,
+    /topics\/timings/,
+    /assets/,
+    /\/user_avatar\//,
+    /\/letter_avatar\//,
+    /\/highlight-js\//,
+    /qunit/,
+    /srv\/status/,
+    /commits-widget/,
+    /^\/cdn_asset/,
+    /^\/logs/,
+    /^\/site_customizations/,
+    /^\/uploads/
+  ]
+
   # For our app, let's just show mini profiler always, polling is chatty so nuke that
   Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
     path = env['PATH_INFO']
+
     (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7|Android/) &&
-    (path !~ /^\/message-bus/) &&
-    (path !~ /topics\/timings/) &&
-    (path !~ /assets/) &&
-    (path !~ /\/user_avatar\//) &&
-    (path !~ /\/letter_avatar\//) &&
-    (path !~ /\/highlight-js\//) &&
-    (path !~ /qunit/) &&
-    (path !~ /srv\/status/) &&
-    (path !~ /commits-widget/) &&
-    (path !~ /^\/cdn_asset/) &&
-    (path !~ /^\/logs/)
+    (env['REQUEST_METHOD'] != "GET" || !skip.any?{|re| re =~ path})
   end
 
   # without a user provider our results will use the ip address for namespacing
