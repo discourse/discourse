@@ -620,7 +620,11 @@ class ImportScripts::Base
     progress_count = 0
 
     User.find_each do |user|
-      user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      begin
+        user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      rescue Discourse::InvalidAccess
+        nil
+      end
       progress_count += 1
       print_status(progress_count, total_count)
     end
