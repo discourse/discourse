@@ -83,6 +83,13 @@ export default DiscourseController.extend({
     },
 
     hitEsc() {
+
+      const messages = this.get('controllers.composer-messages.model');
+      if (messages.length) {
+        messages.popObject();
+        return;
+      }
+
       if (this.get('model.viewOpen')) {
         this.shrink();
       }

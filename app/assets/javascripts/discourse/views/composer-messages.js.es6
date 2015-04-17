@@ -1,11 +1,3 @@
-/**
-  Renders a popup messages on the composer
-
-  @class ComposerMessagesView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.CollectionView.extend({
   classNameBindings: [':composer-popup-container', 'hidden'],
   content: Em.computed.alias('controller.content'),
@@ -16,19 +8,18 @@ export default Ember.CollectionView.extend({
     classNames: ['composer-popup', 'hidden'],
     templateName: Em.computed.alias('content.templateName'),
 
-    init: function() {
+    _setup: function() {
       this._super();
       this.set('context', this.get('content'));
 
       if (this.get('content.extraClass')) {
         this.get('classNames').pushObject(this.get('content.extraClass'));
       }
-    },
+    }.on('init'),
 
-    didInsertElement: function() {
+    _initCss: function() {
       var composerHeight = $('#reply-control').height() || 0;
       this.$().css('bottom', composerHeight + "px").show();
-    }
+    }.on('didInsertElement')
   })
 });
-
