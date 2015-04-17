@@ -457,7 +457,7 @@ fi:
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Viestisi on liputettu muiden käyttäjien toimesta. <a href="/my/private-messages">Käy lukemassa saapuneet viestisi</a>.</p>'
+    you_must_edit: '<p>Viestisi on liputettu muiden käyttäjien toimesta. <a href="/my/messages">Käy lukemassa saapuneet viestisi</a>.</p>'
     user_must_edit: '<p>Tämä viesti on liputettu ja siksi piilotettu väliaikaisesti.</p>'
   archetypes:
     regular:

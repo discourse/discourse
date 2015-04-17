@@ -66,7 +66,7 @@ export default function() {
     this.route('flaggedPosts', { path: '/flagged-posts' });
     this.route('deletedPosts', { path: '/deleted-posts' });
 
-    this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
+    this.resource('userPrivateMessages', { path: '/messages' }, function() {
       this.route('mine');
       this.route('unread');
     });

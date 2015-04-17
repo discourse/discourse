@@ -423,7 +423,7 @@ zh_CN:
       email_title: '"%{title}" 主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/private-messages">查看你的消息</a>。</p>'
+    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
     user_must_edit: '<p>你的帖子已经被社群标记并被临时隐藏。</p>'
   archetypes:
     regular:
