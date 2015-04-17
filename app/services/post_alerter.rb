@@ -16,7 +16,7 @@ class PostAlerter
         user.id == post.user_id
       end.each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number || post.reply_to_post.user_id == user.id
+          next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
         end
         create_notification(user, Notification.types[:private_message], post)
       end
