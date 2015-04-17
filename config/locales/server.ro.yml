@@ -459,7 +459,7 @@ ro:
       email_body: "%{link}\n\n%{message}"
 
   flagging:
-    you_must_edit: '<p>Postarea ta a fost marcată de către comunitate, te rugăm verifică <a href="/my/private-messages"> mesajele private</a>.</p>'
+    you_must_edit: '<p>Postarea ta a fost marcată de către comunitate, te rugăm verifică <a href="/my/messages"> mesajele private</a>.</p>'
     user_must_edit: '<p>Conţinutul marcat ascuns temporar.</p>'
 
   archetypes:

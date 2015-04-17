@@ -440,7 +440,7 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/private-messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
+    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
     user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:

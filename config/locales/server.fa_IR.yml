@@ -410,7 +410,7 @@ fa_IR:
       email_title: 'این موضوع "%{title}" نیاز به توجه مدیر دارد. '
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>نوشته شما توسط انجمن پرچم گزاری شده. لطفا <a href="/my/private-messages"> پیامت را نگاه کن</a>.</p>'
+    you_must_edit: '<p>نوشته شما توسط انجمن پرچم گزاری شده. لطفا <a href="/my/messages"> پیامت را نگاه کن</a>.</p>'
     user_must_edit: '<p> این نوشته توسط انجمن پرچم گزاری شده و بطور موقت مخفی شده است.</p>'
   archetypes:
     regular:

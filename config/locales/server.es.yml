@@ -457,7 +457,7 @@ es:
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes</a>.</p>'
+    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/messages">mira tus mensajes</a>.</p>'
     user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
   archetypes:
     regular:

@@ -447,7 +447,7 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/private-messages">veja suas mensagens</a>.</p>'
+    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/messages">veja suas mensagens</a>.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
