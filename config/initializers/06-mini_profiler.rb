@@ -39,7 +39,7 @@ if defined?(Rack::MiniProfiler)
     path = env['PATH_INFO']
 
     (env['HTTP_USER_AGENT'] !~ /iPad|iPhone|Nexus 7|Android/) &&
-    (env['REQUEST_METHOD'] != "GET" || !skip.any?{|re| re =~ path})
+    !skip.any?{|re| re =~ path}
   end
 
   # without a user provider our results will use the ip address for namespacing
