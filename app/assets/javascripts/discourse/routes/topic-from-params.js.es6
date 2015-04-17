@@ -18,6 +18,7 @@ export default Discourse.Route.extend({
     if (params.nearPost === "last") { params.nearPost = 999999999; }
 
     var self = this;
+    params.forceLoad = true;
     postStream.refresh(params).then(function () {
 
       // TODO we are seeing errors where closest post is null and this is exploding
