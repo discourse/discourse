@@ -324,9 +324,9 @@
     // event.
     util.addEvent = function (elem, event, listener) {
       var wrapped = function() {
-        var wrappedArgs = Array.prototype.slice(arguments);
+        var wrappedArgs = Array.prototype.slice.call(arguments);
         Ember.run(function() {
-          listener.call(this, wrappedArgs);
+          listener.apply(this, wrappedArgs);
         });
       };
       elem.addEventListener(event, wrapped, false);
