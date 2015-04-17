@@ -4,6 +4,8 @@
   {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled hide=errorLoading}}
 </div>
 
+{{plugin-outlet "topic-above-post-stream"}}
+
 {{#if postStream.loaded}}
   {{#if postStream.firstPostPresent}}
     <div id='topic-title'>
@@ -86,6 +88,8 @@
 
             {{view 'topic-closing' topic=model}}
             {{view 'topic-footer-buttons' topic=model}}
+
+            {{plugin-outlet "topic-above-suggested"}}
 
             {{#if details.suggested_topics.length}}
               <div id='suggested-topics'>
