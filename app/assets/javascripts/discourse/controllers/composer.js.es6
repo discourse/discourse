@@ -258,7 +258,7 @@ export default DiscourseController.extend({
       }
     }).catch(function(error) {
       composer.set('disableDrafts', false);
-      bootbox.alert(error);
+      self.appEvents.one('composer:opened', () => bootbox.alert(error));
     });
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
