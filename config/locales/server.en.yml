@@ -949,7 +949,7 @@ en:
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
-    default_trust_level: "Default trust level (0-4) for all new users."
+    default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
     tl1_requires_read_posts: "How many posts a new user must read before promotion to trust level 1."
