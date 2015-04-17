@@ -565,7 +565,7 @@ const Composer = RestModel.extend({
       if (postStream) {
         postStream.undoPost(createdPost);
       }
-      composer.set('composeState', OPEN);
+      Ember.run.next(() => composer.set('composeState', OPEN));
     }));
   },
 
