@@ -249,12 +249,14 @@ class ImportScripts::Base
         elsif u[:email].present?
           new_user = create_user(u, import_id)
 
-          if new_user.valid?
+          if new_user.valid? && new_user.user_profile.valid?
             @existing_users[import_id.to_s] = new_user.id
             users_created += 1
           else
             @failed_users << u
-            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
+            puts "user errors: #{new_user.errors.full_messages}"
+            puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
           end
         else
           @failed_users << u
