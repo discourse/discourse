@@ -150,12 +150,16 @@ const PostStream = RestModel.extend({
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
-    const topic = this.get('topic'),
-        self = this;
+    const topic = this.get('topic');
+    const self = this;
 
     // Do we already have the post in our list of posts? Jump there.
-    const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
-    if (postWeWant) { return Ember.RSVP.resolve(); }
+    if (opts.forceLoad) {
+      this.set('loaded', false);
+    } else {
+      const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
+      if (postWeWant) { return Ember.RSVP.resolve(); }
+    }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
     self.set('loadingFilter', true);
