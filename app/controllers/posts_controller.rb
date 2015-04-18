@@ -436,7 +436,7 @@ class PostsController < ApplicationController
       result[:is_warning] = false
     end
 
-    PostRevisor.tracked_topic_fields.keys.each do |f|
+    PostRevisor.tracked_topic_fields.each_key do |f|
       params.permit(f => [])
       result[f] = params[f] if params.has_key?(f)
     end
