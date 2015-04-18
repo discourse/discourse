@@ -178,7 +178,7 @@ class PostRevisionSerializer < ApplicationSerializer
       }
 
       # Retrieve any `tracked_topic_fields`
-      PostRevisor.tracked_topic_fields.keys.each do |field|
+      PostRevisor.tracked_topic_fields.each_key do |field|
         if topic.respond_to?(field)
           latest_modifications[field.to_s] = [topic.send(field)]
         end
@@ -198,7 +198,7 @@ class PostRevisionSerializer < ApplicationSerializer
         revision[:revision] = pr.number
         revision[:hidden] = pr.hidden
 
-        pr.modifications.keys.each do |field|
+        pr.modifications.each_key do |field|
           revision[field] = pr.modifications[field][0]
         end
 
@@ -210,7 +210,7 @@ class PostRevisionSerializer < ApplicationSerializer
         cur = @all_revisions[r]
         prev = @all_revisions[r - 1]
 
-        cur.keys.each do |field|
+        cur.each_key do |field|
           prev[field] = prev.has_key?(field) ? prev[field] : cur[field]
         end
       end

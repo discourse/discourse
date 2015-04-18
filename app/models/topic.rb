@@ -613,7 +613,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    PostActionType.types.keys.each do |type|
+    PostActionType.types.each_key do |type|
       count_field = "#{type}_count"
       update_column(count_field, Post.where(topic_id: id).sum(count_field))
     end

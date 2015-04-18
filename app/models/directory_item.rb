@@ -19,7 +19,7 @@ class DirectoryItem < ActiveRecord::Base
   def self.refresh!
     ActiveRecord::Base.transaction do
       exec_sql "TRUNCATE TABLE directory_items"
-      period_types.keys.each {|p| refresh_period!(p)}
+      period_types.each_key {|p| refresh_period!(p)}
     end
   end
 

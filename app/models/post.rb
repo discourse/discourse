@@ -221,7 +221,7 @@ class Post < ActiveRecord::Base
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
-             .count.keys.each do |tuple|
+             .count.each_key do |tuple|
       domain = tuple[0]
       hosts[domain] = (hosts[domain] || 0) + 1
     end
