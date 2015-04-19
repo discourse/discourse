@@ -151,7 +151,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.ensure_automatic_groups!
-    AUTO_GROUPS.keys.each do |name|
+    AUTO_GROUPS.each_key do |name|
       refresh_automatic_group!(name) unless lookup_group(name)
     end
   end
