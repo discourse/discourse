@@ -423,7 +423,7 @@ it:
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/y/messages">Controlla i tuoi messaggi</a>.</p>'
+    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/messages">Controlla i tuoi messaggi</a>.</p>'
     user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
   archetypes:
     regular:

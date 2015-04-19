@@ -450,7 +450,7 @@ fr:
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my//my/messages">regarder vos messages</a>.</p>'
+    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/messages">regarder vos messages</a>.</p>'
     user_must_edit: '<p>Ce message a été signalé par la communauté et temporairement masqué.</p>'
   archetypes:
     regular:
