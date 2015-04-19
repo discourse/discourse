@@ -8,7 +8,7 @@ export default Ember.ArrayController.extend({
     return Discourse.SiteSettings.faq_url ? Discourse.SiteSettings.faq_url : Discourse.getURL('/faq');
   }.property(),
 
-  badgesUrl: Discourse.getURL('/badges'),
+  badgesUrl: Discourse.computed.url('/badges'),
 
   showKeyboardShortcuts: function(){
     return !Discourse.Mobile.mobileView && !this.capabilities.touch;
