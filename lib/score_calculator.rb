@@ -33,7 +33,7 @@ class ScoreCalculator
 
   def update_posts_score(min_topic_age)
     components = []
-    @weightings.keys.each { |k| components << "COALESCE(#{k}, 0) * :#{k}" }
+    @weightings.each_key { |k| components << "COALESCE(#{k}, 0) * :#{k}" }
     components = components.join(" + ")
 
     builder = SqlBuilder.new(

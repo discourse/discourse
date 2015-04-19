@@ -16,7 +16,7 @@ class SiteSettings::YamlLoader
 
   def load
     yaml = YAML.load_file(@file)
-    yaml.keys.each do |category|
+    yaml.each_key do |category|
       yaml[category].each do |setting_name, hash|
         if hash.is_a?(Hash)
           # Get default value for the site setting:
