@@ -24,7 +24,7 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    return render_dot if params[:version] != LetterAvatar.version
+    return render_dot if params[:version].to_i != LetterAvatar::VERSION
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
