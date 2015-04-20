@@ -5,7 +5,7 @@ class PermalinksController < ApplicationController
     url = request.fullpath[1..-1]
     permalink = Permalink.find_by_url(url)
     if permalink && permalink.target_url
-      redirect_to permalink.target_url, status: :moved_permanently
+      redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
     else
       raise Discourse::NotFound
     end
