@@ -22,7 +22,9 @@ export default Ember.Controller.extend(BufferedContent, {
     reject: updateState('rejected'),
 
     edit() {
-      this.set('currentlyEditing', this.get('model'));
+      // This is stupid but pagedown cannot be on the screen twice or it will break
+      this.set('currentlyEditing', null);
+      Ember.run.scheduleOnce('afterRender', () => this.set('currentlyEditing', this.get('model')));
     },
 
     confirmEdit() {
