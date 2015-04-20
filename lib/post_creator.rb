@@ -129,7 +129,6 @@ class PostCreator
 
     if @post && errors.blank?
       publish
-      PostAlerter.post_created(@post) unless @opts[:import_mode]
 
       track_latest_on_category
       enqueue_jobs

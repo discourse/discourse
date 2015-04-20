@@ -190,6 +190,7 @@ class PostAlerter
 
     exclude_user_ids << reply_to_user.id if reply_to_user.present?
     exclude_user_ids.flatten!
+
     TopicUser
       .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
       .includes(:user).each do |tu|
