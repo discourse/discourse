@@ -1,6 +1,7 @@
+import RestModel from 'discourse/models/rest';
 import avatarTemplate from 'discourse/lib/avatar-template';
 
-const User = Discourse.Model.extend({
+const User = RestModel.extend({
 
   hasPMs: Em.computed.gt("private_messages_stats.all", 0),
   hasStartedPMs: Em.computed.gt("private_messages_stats.mine", 0),
