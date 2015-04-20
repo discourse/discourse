@@ -17,10 +17,7 @@ class DirectoryItem < ActiveRecord::Base
   end
 
   def self.refresh!
-    ActiveRecord::Base.transaction do
-      exec_sql "TRUNCATE TABLE directory_items"
-      period_types.each_key {|p| refresh_period!(p)}
-    end
+    period_types.each_key {|p| refresh_period!(p)}
   end
 
   def self.refresh_period!(period_type)
@@ -36,41 +33,44 @@ class DirectoryItem < ActiveRecord::Base
             else 1000.years.ago
             end
 
-    exec_sql "INSERT INTO directory_items
-                (period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
-                SELECT
-                  :period_type,
-                  u.id,
-                  SUM(CASE WHEN ua.action_type = :was_liked_type THEN 1 ELSE 0 END),
-                  SUM(CASE WHEN ua.action_type = :like_type THEN 1 ELSE 0 END),
-                  COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at >= :since), 0),
-                  COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at >= :since), 0),
-                  COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since), 0),
-                  SUM(CASE WHEN ua.action_type = :new_topic_type THEN 1 ELSE 0 END),
-                  SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
-                FROM users AS u
-                LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id
-                LEFT OUTER JOIN topics AS t ON ua.target_topic_id = t.id
-                LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id
-                LEFT OUTER JOIN categories AS c ON t.category_id = c.id
-                WHERE u.active
-                  AND NOT u.blocked
-                  AND COALESCE(ua.created_at, :since) >= :since
-                  AND t.deleted_at IS NULL
-                  AND COALESCE(t.visible, true)
-                  AND COALESCE(t.archetype, 'regular') = 'regular'
-                  AND p.deleted_at IS NULL
-                  AND (NOT (COALESCE(p.hidden, false)))
-                  AND COALESCE(p.post_type, :regular_post_type) != :moderator_action
-                  AND u.id > 0
-                GROUP BY u.id",
-                period_type: period_types[period_type],
-                since: since,
-                like_type: UserAction::LIKE,
-                was_liked_type: UserAction::WAS_LIKED,
-                new_topic_type: UserAction::NEW_TOPIC,
-                reply_type: UserAction::REPLY,
-                regular_post_type: Post.types[:regular],
-                moderator_action: Post.types[:moderator_action]
+    ActiveRecord::Base.transaction do
+      exec_sql "DELETE FROM directory_items WHERE period_type = :period_type", period_type: period_types[period_type]
+      exec_sql "INSERT INTO directory_items
+                  (period_type, user_id, likes_received, likes_given, topics_entered, days_visited, posts_read, topic_count, post_count)
+                  SELECT
+                    :period_type,
+                    u.id,
+                    SUM(CASE WHEN ua.action_type = :was_liked_type THEN 1 ELSE 0 END),
+                    SUM(CASE WHEN ua.action_type = :like_type THEN 1 ELSE 0 END),
+                    COALESCE((SELECT COUNT(topic_id) FROM topic_views AS v WHERE v.user_id = u.id AND v.viewed_at >= :since), 0),
+                    COALESCE((SELECT COUNT(id) FROM user_visits AS uv WHERE uv.user_id = u.id AND uv.visited_at >= :since), 0),
+                    COALESCE((SELECT SUM(posts_read) FROM user_visits AS uv2 WHERE uv2.user_id = u.id AND uv2.visited_at >= :since), 0),
+                    SUM(CASE WHEN ua.action_type = :new_topic_type THEN 1 ELSE 0 END),
+                    SUM(CASE WHEN ua.action_type = :reply_type THEN 1 ELSE 0 END)
+                  FROM users AS u
+                  LEFT OUTER JOIN user_actions AS ua ON ua.user_id = u.id
+                  LEFT OUTER JOIN topics AS t ON ua.target_topic_id = t.id
+                  LEFT OUTER JOIN posts AS p ON ua.target_post_id = p.id
+                  LEFT OUTER JOIN categories AS c ON t.category_id = c.id
+                  WHERE u.active
+                    AND NOT u.blocked
+                    AND COALESCE(ua.created_at, :since) >= :since
+                    AND t.deleted_at IS NULL
+                    AND COALESCE(t.visible, true)
+                    AND COALESCE(t.archetype, 'regular') = 'regular'
+                    AND p.deleted_at IS NULL
+                    AND (NOT (COALESCE(p.hidden, false)))
+                    AND COALESCE(p.post_type, :regular_post_type) != :moderator_action
+                    AND u.id > 0
+                  GROUP BY u.id",
+                  period_type: period_types[period_type],
+                  since: since,
+                  like_type: UserAction::LIKE,
+                  was_liked_type: UserAction::WAS_LIKED,
+                  new_topic_type: UserAction::NEW_TOPIC,
+                  reply_type: UserAction::REPLY,
+                  regular_post_type: Post.types[:regular],
+                  moderator_action: Post.types[:moderator_action]
+    end
   end
 end
