@@ -3,11 +3,18 @@
     {{#each ctrl in model itemController='queued-post'}}
       <div class='queued-post'>
         <div class='poster'>
-          {{avatar ctrl.post.user imageSize="large"}}
+          {{#user-link user=ctrl.post.user}}
+            {{avatar ctrl.post.user imageSize="large"}}
+          {{/user-link}}
+
         </div>
         <div class='cooked'>
           <div class='names'>
-            <span class='username'>{{ctrl.post.user.username}}</span>
+            <span class="username">
+              {{#user-link user=ctrl.post.user}}
+                {{ctrl.post.user.username}}
+              {{/user-link}}
+            </span>
           </div>
           <div class='clearfix'></div>
 
