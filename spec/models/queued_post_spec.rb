@@ -109,4 +109,21 @@ describe QueuedPost do
     end
   end
 
+  context "visibility" do
+
+    it "works as expected in the invisible queue" do
+      qp = Fabricate(:queued_post, queue: 'invisible')
+      expect(qp).to_not be_visible
+      expect(QueuedPost.visible).to_not include(qp)
+      expect(QueuedPost.new_count).to eq(0)
+    end
+
+    it "works as expected in the visible queue" do
+      qp = Fabricate(:queued_post, queue: 'default')
+      expect(qp).to be_visible
+      expect(QueuedPost.visible).to include(qp)
+      expect(QueuedPost.new_count).to eq(1)
+    end
+  end
+
 end
