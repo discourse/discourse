@@ -12,7 +12,7 @@ class QueuedPostSerializer < ApplicationSerializer
              :created_at,
              :category_id
 
-  has_one :user, serializer: BasicUserSerializer, embed: :object
+  has_one :user, serializer: BasicUserSerializer
   has_one :topic, serializer: BasicTopicSerializer
 
   def category_id
