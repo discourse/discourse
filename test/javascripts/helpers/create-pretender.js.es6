@@ -101,6 +101,8 @@ export default function() {
 
     this.delete('/draft.json', success);
 
+    this.get('/users/:username/staff-info.json', () => response({}));
+
     this.get('/draft.json', function() {
       return response({});
     });

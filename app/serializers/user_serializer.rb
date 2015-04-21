@@ -64,7 +64,8 @@ class UserSerializer < BasicUserSerializer
              :edit_history_public,
              :custom_fields,
              :user_fields,
-             :topic_post_count
+             :topic_post_count,
+             :pending_count
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :custom_groups, embed: :object, serializer: BasicGroupSerializer
@@ -311,5 +312,9 @@ class UserSerializer < BasicUserSerializer
     else
       {}
     end
+  end
+
+  def pending_count
+    0
   end
 end

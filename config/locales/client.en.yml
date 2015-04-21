@@ -308,6 +308,7 @@ en:
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
+      "14": "Pending"
 
     categories:
       all: "all categories"
