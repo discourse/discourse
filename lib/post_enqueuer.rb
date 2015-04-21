@@ -23,7 +23,16 @@ class PostEnqueuer
       return unless send(validate_method, queued_post.create_options)
     end
 
-    add_errors_from(queued_post) unless queued_post.save
+    if queued_post.save
+      UserAction.log_action!(action_type: UserAction::PENDING,
+                             user_id: @user.id,
+                             acting_user_id: @user.id,
+                             target_topic_id: args[:topic_id],
+                             queued_post_id: queued_post.id)
+    else
+      add_errors_from(queued_post)
+    end
+
     queued_post
   end
 
