@@ -30,12 +30,12 @@
       <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
     {{/if}}
 
-    {{#if currentUser.staff}}
+    {{#if currentUser.show_queued_posts}}
       <li>
         {{#link-to 'queued-posts'}}
           {{i18n "queue.title"}}
           {{#if currentUser.post_queue_new_count}}
-          <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
+            <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
           {{/if}}
         {{/link-to}}
       </li>

@@ -26,6 +26,12 @@ class NewPostManager
     end
   end
 
+  def self.queue_enabled?
+    SiteSetting.approve_post_count > 0 ||
+    SiteSetting.approve_unless_trust_level.to_i > 0 ||
+    handlers.size > 1
+  end
+
   add_handler {|manager| default_handler(manager) }
 
   def initialize(user, args)

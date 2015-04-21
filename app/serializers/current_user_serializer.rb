@@ -1,3 +1,5 @@
+require_dependency 'new_post_manager'
+
 class CurrentUserSerializer < BasicUserSerializer
 
   attributes :name,
@@ -27,7 +29,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :muted_category_ids,
              :dismissed_banner_key,
              :is_anonymous,
-             :post_queue_new_count
+             :post_queue_new_count,
+             :show_queued_posts
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -114,6 +117,14 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_post_queue_new_count?
     object.staff?
+  end
+
+  def show_queued_posts
+    true
+  end
+
+  def include_show_queued_posts?
+    object.staff? && NewPostManager.queue_enabled?
   end
 
 end
