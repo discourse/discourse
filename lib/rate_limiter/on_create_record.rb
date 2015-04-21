@@ -23,16 +23,11 @@ class RateLimiter
 
     def self.included(base)
       base.extend(ClassMethods)
-      base.include(InstanceMethods)
     end
 
-    module InstanceMethods
-
-      # For the lifetime of this instance, don't enforce rate limits.
-      def disable_rate_limits!
-        @rate_limits_disabled = true
-      end
-
+    # For the lifetime of this instance, don't enforce rate limits.
+    def disable_rate_limits!
+      @rate_limits_disabled = true
     end
 
     module ClassMethods
