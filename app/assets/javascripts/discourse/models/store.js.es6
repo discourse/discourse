@@ -8,6 +8,32 @@ function flushMap() {
   _identityMap = {};
 }
 
+function storeMap(type, id, obj) {
+  if (!id) { return; }
+
+  _identityMap[type] = _identityMap[type] || {};
+  _identityMap[type][id] = obj;
+}
+
+function fromMap(type, id) {
+  const byType = _identityMap[type];
+  if (byType) { return byType[id]; }
+}
+
+function removeMap(type, id) {
+  const byType = _identityMap[type];
+  if (byType) { delete byType[id]; }
+}
+
+function findAndRemoveMap(type, id) {
+  const byType = _identityMap[type];
+  if (byType) {
+    const result = byType[id];
+    delete byType[id];
+    return result;
+  }
+}
+
 flushMap();
 
 export default Ember.Object.extend({
@@ -63,9 +89,8 @@ export default Ember.Object.extend({
   update(type, id, attrs) {
     return this.adapterFor(type).update(this, type, id, attrs, function(result) {
       if (result && result[type] && result[type].id) {
-        const oldRecord = _identityMap[type][id];
-        delete _identityMap[type][id];
-        _identityMap[type][result[type].id] = oldRecord;
+        const oldRecord = findAndRemoveMap(type, id);
+        storeMap(type, result[type].id, oldRecord);
       }
       return result;
     });
@@ -78,8 +103,7 @@ export default Ember.Object.extend({
 
   destroyRecord(type, record) {
     return this.adapterFor(type).destroyRecord(this, type, record).then(function(result) {
-      const forType = _identityMap[type];
-      if (forType) { delete forType[record.get('id')]; }
+      removeMap(type, record.get('id'));
       return result;
     });
   },
@@ -101,9 +125,7 @@ export default Ember.Object.extend({
     const klass = this.container.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);
 
-    if (obj.id) {
-      _identityMap[type][obj.id] = model;
-    }
+    storeMap(type, obj.id, model);
     return model;
   },
 
@@ -118,11 +140,24 @@ export default Ember.Object.extend({
       return Discourse.Category.findById(id);
     }
 
+    const pluralType = this.pluralize(subType);
     const collection = root[this.pluralize(subType)];
     if (collection) {
-      const found = collection.findProperty('id', id);
+      const hashedProp = "__hashed_" + pluralType;
+      let hashedCollection = root[hashedProp];
+      if (!hashedCollection) {
+        hashedCollection = {};
+        collection.forEach(function(it) {
+          hashedCollection[it.id] = it;
+        });
+        root[hashedProp] = hashedCollection;
+      }
+
+      const found = hashedCollection[id];
       if (found) {
-        return this._hydrate(subType, found, root);
+        const hydrated = this._hydrate(subType, found, root);
+        hashedCollection[id] = hydrated;
+        return hydrated;
       }
     }
   },
@@ -154,9 +189,7 @@ export default Ember.Object.extend({
       this._hydrateEmbedded(obj, root);
     }
 
-    _identityMap[type] = _identityMap[type] || {};
-
-    const existing = _identityMap[type][obj.id];
+    const existing = fromMap(type, obj.id);
     if (existing === obj) { return existing; }
 
     if (existing) {

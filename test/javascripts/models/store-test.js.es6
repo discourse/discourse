@@ -93,6 +93,15 @@ test('find embedded', function() {
   const store = createStore();
   store.find('fruit', 1).then(function(f) {
     ok(f.get('farmer'), 'it has the embedded object');
+    ok(f.get('category'), 'categories are found automatically');
   });
 });
 
+test('findAll embedded', function() {
+  const store = createStore();
+  store.findAll('fruit').then(function(fruits) {
+    equal(fruits.objectAt(0).get('farmer.name'), 'Old MacDonald');
+    equal(fruits.objectAt(0).get('farmer'), fruits.objectAt(1).get('farmer'), 'points at the same object');
+    equal(fruits.objectAt(2).get('farmer.name'), 'Luke Skywalker');
+  });
+});
