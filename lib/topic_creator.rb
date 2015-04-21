@@ -124,6 +124,8 @@ class TopicCreator
   end
 
   def save_topic(topic)
+    topic.disable_rate_limits! if @opts[:skip_validations]
+
     unless topic.save(validate: !@opts[:skip_validations])
       rollback_from_errors!(topic)
     end
