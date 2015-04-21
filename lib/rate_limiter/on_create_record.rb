@@ -23,6 +23,16 @@ class RateLimiter
 
     def self.included(base)
       base.extend(ClassMethods)
+      base.include(InstanceMethods)
+    end
+
+    module InstanceMethods
+
+      # For the lifetime of this instance, don't enforce rate limits.
+      def disable_rate_limits!
+        @rate_limits_disabled = true
+      end
+
     end
 
     module ClassMethods
@@ -30,7 +40,9 @@ class RateLimiter
 
         limiter_method = limiter_method || :default_rate_limiter
 
-        self.after_create do
+        self.after_create do |*args|
+          next if @rate_limits_disabled
+
           if rate_limiter = send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}
@@ -39,12 +51,14 @@ class RateLimiter
         end
 
         self.after_destroy do
+          next if @rate_limits_disabled
           if rate_limiter = send(limiter_method)
             rate_limiter.rollback!
           end
         end
 
         self.after_rollback do
+          next if @rate_limits_disabled
           if rate_limiter = send(limiter_method)
             if @performed.present? && @performed[limiter_method]
               rate_limiter.rollback!
