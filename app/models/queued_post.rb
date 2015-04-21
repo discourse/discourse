@@ -51,7 +51,7 @@ class QueuedPost < ActiveRecord::Base
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
-      creator = PostCreator.new(user, create_options)
+      creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
     end
     created_post
