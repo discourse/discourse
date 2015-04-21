@@ -41,7 +41,12 @@ describe QueuedPost do
 
       # We can't approve twice
       expect(-> { qp.approve!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
+    end
 
+    it "skips validations" do
+      qp.post_options[:title] = 'too short'
+      post = qp.approve!(admin)
+      expect(post).to be_present
     end
 
     it "follows the correct workflow for rejection" do
