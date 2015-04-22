@@ -491,7 +491,6 @@ sq:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
     google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
@@ -622,8 +621,6 @@ sq:
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
     enable_badges: "Aktivizo sistemin e targetave"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
-    email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
-    email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
     new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."

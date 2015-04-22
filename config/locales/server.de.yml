@@ -121,6 +121,7 @@ de:
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
   page_num: "Seite %{num}"
+  home_title: "Startseite"
   topics_in_category: "Themen in der Kategorie '%{category}'"
   rss_posts_in_topic: "RSS-Feed von '%{topic}'"
   rss_topics_in_category: "RSS-Feed von Themen in der Kategorie '%{category}'"
@@ -128,6 +129,7 @@ de:
   num_posts: "Beiträge:"
   num_participants: "Teilnehmer:"
   read_full_topic: "Lese das vollständige Thema"
+  private_message_abbrev: "Nachricht"
   rss_description:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
@@ -136,6 +138,7 @@ de:
   groups:
     errors:
       can_not_modify_automatic: "Du kannst eine automatisch verwaltete Gruppe nicht verändern."
+      member_already_exist: "'%{username}' ist bereits Mitglied dieser Gruppe."
     default_names:
       everyone: "jeder"
       admins: "admins"
@@ -435,6 +438,7 @@ de:
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
   flagging:
+    you_must_edit: '<p>Dein Beitrag wurde von der Community gemeldet. Bitte <a href="/my/private-messages">lese deine Nachrichten</a>.</p>'
     user_must_edit: '<p>Dieser Beitrag wurde von der Community gemeldet und ist vorübergehend ausgeblendet.</p>'
   archetypes:
     regular:
@@ -577,7 +581,6 @@ de:
     host_names_warning: "Deine config/database.yml-Datei verwendet localhost als Hostname. Trage hier den Hostnamen deiner Webseite ein."
     gc_warning: 'Dein Server verwendet die Standardparameter für Rubys Garbage-Collector, die nicht optimal sind. Lese dieses Thema über Performanzeinstellungen (en): <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq läuft nicht. Viele Aufgaben, wie zum Beispiel das Versenden von Mails, werden asynchron durch Sidekiq ausgeführt. Stelle sicher, dass mindestens eine Sidekiq-Prozess läuft. <a href="https://github.com/mperham/sidekiq">Mehr über Sidekiq erfährst du hier (en)</a>.'
-    queue_size_warning: 'Es befinden sich sehr viele (%{queue_size}) Jobs in der Warteschlange. Dies könnte auf ein Problem mit Sidekiq hinweisen oder du musst zusätzliche Sidekiq Worker starten.'
     memory_warning: 'Dein Server läuft mit weniger als 1 GB Hauptspeicher. Mindestens 1 GB Hauptspeicher werden empfohlen.'
     enable_google_logins_warning: "ACHTUNG! Die derzeit von dir genutzte Methode für die Authentifizierung mit Google wird ab dem 20. April 2015 nicht mehr unterstützt! Bitte <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>steige möglichst bald auf die neue Methode um!</a>"
     both_googles_warning: "Sowohl enable_google_logins als auch enable_google_oauth2_logins sind in den Einstellungen aktiviert. Bitte deaktiviere enable_google_logins."
@@ -595,6 +598,7 @@ de:
     title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
+    site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
     notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
   content_types:
     education_new_reply:
@@ -611,6 +615,7 @@ de:
       description: "Eine Nachricht, welche automatisch an alle Benutzer gesendet wird welche sich anmelden."
     welcome_invite:
       title: "Willkommen: Eingeladener Benutzer"
+      description: "Eine Nachricht welche automatisch an alle eingeladenen Benutzer gesendet wird, wenn diese die Einladung eines anderen Benutzers annehmen."
     login_required_welcome_message:
       title: "Anmeldung erforderlich: Willkommensnachricht"
       description: "Willkommensnachricht welche angezeigt wird wenn der Benutzer nicht angemeldet ist und die Einstellung 'login required' aktiviert ist."
@@ -633,9 +638,11 @@ de:
     allow_user_locale: "Erlaube Benutzern ihre eigene Interfacesprache zu wählen"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
     min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
+    min_private_message_post_length: "Minimale zulässige Beitragslänge in Zeichen für Nachrichten"
     max_post_length: "Maximale zulässige Beitragslänge in Zeichen."
     min_topic_title_length: "Minimale zulässige Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
+    min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie"
     uncategorized_description: "Beschreibung der Kategorie für unkategorisierte Themen. Leer lassen, wenn keine Beschreibung erwünscht ist."
@@ -669,6 +676,7 @@ de:
     digest_logo_url: "Alternatives Logo, das oben in E-Mail-Zusammenfassungen verwendet wird. Wenn leer wird `logo_url` verwendet. Zum Beispiel: http://example.com/logo.png "
     logo_small_url: "Kleine Logo-Grafik oben links auf der Seite, die beim Herunterscrollen angezeigt wird. Falls leer wird ein \"Home\" Zeichen angezeigt."
     favicon_url: "Das Favicon deiner Website, siehe http://de.wikipedia.org/wiki/Favicon"
+    mobile_logo_url: "Die statische Logo-Grafik oben links auf deiner Seite für mobile Geräte. Falls leer wird `logo_url` verwendet."
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-Emails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit Emails sicher zugestellt werden können."
     email_custom_headers: "Eine Pipe-getrennte (|) Liste von eigenen Mail Headern"
@@ -724,8 +732,6 @@ de:
     email_token_grace_period_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind auch nach ihrer Verwendung noch für eine Frist von (n) Stunden gültig."
     enable_badges: "Abzeichen aktivieren"
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Seite zu indizieren."
-    email_domains_blacklist: "Eine Liste von E-Mail-Domains, die bei der Registrierung neuer Konten nicht erlaubt sind. Beispiel: mailinator.com trashmail.net"
-    email_domains_whitelist: "Eine Liste von E-Mail-Domains, mit denen neue Konten registriert werden dürfen. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains können sich dann nicht mehr registrieren!"
     forgot_password_strict: "Benutzer nicht über das Vorhandensein von Konten informieren, wenn sie den \"„Passwort vergessen“-Dialog verwenden."
     log_out_strict: "Beim Abmelden ALLE Sitzungen des Benutzers auf allen Geräten beenden"
     version_checks: "Kontaktiere den Discourse Hub zur Überprüfung auf neue Versionen und zeige Benachrichtigungen über neue Versionen auf der Administratorkonsole an."

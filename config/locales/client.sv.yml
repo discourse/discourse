@@ -106,7 +106,6 @@ sv:
     show_more: "visa mer"
     show_help: "hjälp"
     links: "Länkar"
-    links_lowercase: "länkar"
     faq: "FAQ"
     guidelines: "Riktlinjer"
     privacy_policy: "Integritetspolicy"
@@ -423,7 +422,6 @@ sv:
       auto_track_topics: "Följ automatiskt nya trådar jag går in i"
       auto_track_options:
         never: "aldrig"
-        always: "alltid"
         after_n_seconds:
           one: "efter 1 sekund"
           other: "efter {{count}} sekunder"
@@ -514,7 +512,6 @@ sv:
     mute: Dämpa
     unmute: Avdämpa
     last_post: Senaste inlägg
-    last_post_lowercase: senaste inlägg
     summary:
       enabled_description: "Sammanfattning över de inlägg som användarna tycker är mest intressanta."
       description: "Det finns <b>{{count}}</b> svar."
@@ -1205,15 +1202,12 @@ sv:
     posts_long: "{{number}} inlägg i den här tråden"
     original_post: "Originalinlägg"
     views: "Visningar"
-    views_lowercase: "visningar"
     replies: "Svar"
     views_long: "denna tråd har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
-    likes_lowercase: "gillningar"
     likes_long: "det finns {{number}} gillningar i den här tråden"
     users: "Användare"
-    users_lowercase: "användare"
     category_title: "Kategori"
     history: "Historik"
     changed_by: "av {{author}}"

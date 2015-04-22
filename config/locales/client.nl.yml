@@ -107,7 +107,6 @@ nl:
     show_more: "meer..."
     show_help: "help"
     links: "Links"
-    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Richtlijnen"
     privacy_policy: "Privacy Policy"
@@ -445,7 +444,6 @@ nl:
       auto_track_topics: "Automatisch topics volgen die ik bezocht heb"
       auto_track_options:
         never: "nooit"
-        always: "altijd"
         after_n_seconds:
           one: "na één seconde"
           other: "na {{count}} seconden"
@@ -540,7 +538,6 @@ nl:
     mute: Negeer
     unmute: Tonen
     last_post: Laatste bericht
-    last_post_lowercase: laatste bericht
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{count}}</b> reacties."
@@ -1228,15 +1225,12 @@ nl:
     posts_long: "er zijn {{number}} berichten in deze topic"
     original_post: "Originele bericht"
     views: "Bekeken"
-    views_lowercase: "weergaves"
     replies: "Reacties"
     views_long: "deze topic is {{number}} keer bekeken"
     activity: "Activiteit"
     likes: "Leuk"
-    likes_lowercase: "likes"
     likes_long: "er zijn {{count}} likes in deze topic"
     users: "Gebruikers"
-    users_lowercase: "leden"
     category_title: "Categorie"
     history: "Geschiedenis"
     changed_by: "door {{author}}"

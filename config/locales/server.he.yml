@@ -440,7 +440,7 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
+    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/private-messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
     user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
@@ -583,7 +583,6 @@ he:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     enable_google_logins_warning: "זהירות! התמיכה במתודת הזיהוי הנוכחית של גוגל מסתיימת ב-20 לאפריל 2015!\nאנא  <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'> החליפו למתודה החדשה עכשיו!</a>"
     both_googles_warning: "שתי האפשרויות, enable_google_logins וגם enable_google_oauth2_logins מסומנים הגדרות האתר. בטלו את enable_google_logins."
@@ -739,8 +738,6 @@ he:
     email_token_grace_period_hours: "סיסמאות שכחת סיסמא / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
     enable_badges: "הפעלת מערכת התגים (badges)"
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
-    email_domains_blacklist: "רשימה של מתחמי דוא\"ל (email domains) בהם למשתמשים אסור לרשום חשבונות. לדוגמא: mailinator.com trashmail.net"
-    email_domains_whitelist: "רשימת של מתחמי דוא\"ל (email domains) שמשתמשים חייבים(!) כדי להירשם ולפתוח חשבון. אזהרה: משתמשים עם כתובות דוא\"ל אחרות מאלו המפורטות כאן לא יאושרו באתר!"
     forgot_password_strict: "אל תעדכנו משתמשים על קיום חשבון כאשר הם משתמשים ב\"שכחתי סיסמא\"."
     log_out_strict: "בהתנתקות, נתקו את כל ההפעלות של המשתמ/ת בכל המכשירים"
     version_checks: "שלחו פינג להאב של Discourse לעדכוני גרסה וכדי להציג מסרים אודות גרסאות בלוח התצוגה של האדמין"

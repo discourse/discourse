@@ -90,7 +90,6 @@ id:
     show_more: "show more"
     show_help: "Bantuan"
     links: "Links"
-    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -285,7 +284,6 @@ id:
         weekly: "mingguan"
       auto_track_options:
         never: "tidak pernah"
-        always: "selalu"
       password:
         title: "Password"
         too_short: "Password kamu terlalu pendek."
