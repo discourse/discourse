@@ -5,6 +5,7 @@
 Vagrant.configure("2") do |config|
   config.vm.box= "discourse/discourse-0.9.9.15.box"
   config.vm.box_url = "https://vagrantcloud.com/discourse/discourse-0.9.9.15.box"
+  # Please add info about the architecture here, if it is 32 bit or 64bit
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.
