@@ -92,7 +92,8 @@ fa_IR:
     show_more: "بیش‌تر نشان بده"
     show_help: "کمک"
     links: "پیوندها"
-    links_lowercase: "پیوندها"
+    links_lowercase:
+      other: "پیوندها"
     faq: "پرسش‌های متداول"
     guidelines: "راهنماها"
     privacy_policy: "سیاست حریم خصوصی"
@@ -175,6 +176,19 @@ fa_IR:
       title:
         search: "جستجو برای یک موضوع از روی نام، نشانی (url) یا شناسه (id)"
         placeholder: "سرنویس موضوع را اینجا بنویسید"
+    queue:
+      topic: "جستار"
+      approve: 'تصویب'
+      reject: 'رد کردن'
+      title: "به تایید نیاز است"
+      none: "نوشته ای برای بازبینی وجود ندارد."
+      edit: "ویرایش"
+      cancel: "لغو کردن"
+      confirm: "ذخیره سازی تغییرها"
+      approval:
+        title: "نوشته نیاز به تایید دارد"
+        description: "ما نوشته شما را دریافت کرده ایم ولی نیاز به تایید آن توسط یکی از مدیران است قبل از اینکه نمایش داده شود. لطفا صبر داشته باشید."
+        ok: "باشه"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>نوشته شد<a href='{{topicUrl}}'>موضوع</a>"
       you_posted_topic: "<a href='{{userUrl}}'>شما</a> در <a href='{{topicUrl}}'>این موضوع</a> نوشته گذاشتید"
@@ -426,7 +440,7 @@ fa_IR:
       auto_track_topics: "دنبال کردن خودکار موضوعاتی که وارد می‌شوم"
       auto_track_options:
         never: "هرگز"
-        always: "همیشه"
+        immediately: "فورا"
         after_n_seconds:
           other: "پس از {{count}} ثانیه"
         after_n_minutes:
@@ -519,7 +533,9 @@ fa_IR:
     mute: بی صدا
     unmute: صدادار
     last_post: آخرین نوشته
-    last_post_lowercase: آخرین نوشته
+    last_reply_lowercase: آخرین پاسخ
+    replies_lowercase:
+      other: 'پاسخ ها '
     summary:
       enabled_description: "شما خلاصه ای از این موضوع را می بینید:  بالاترین‌ نوشته های  انتخاب شده توسط انجمن."
       description: "<b>{{count}}</b> پاسخ"
@@ -1269,15 +1285,18 @@ fa_IR:
         other {}}
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
-    views_lowercase: "نمایش‌ها"
+    views_lowercase:
+      other: "بازدیدها"
     replies: "پاسخ‌ها"
     views_long: "از این موضوع {{number}} بار بازدید شده"
     activity: "فعالیت"
     likes: "پسندها"
-    likes_lowercase: "پسند ها"
+    likes_lowercase:
+      other: "پسند ها"
     likes_long: "{{number}} پسند در این موضوع وجود دارد"
     users: "کاربران"
-    users_lowercase: "کاربران"
+    users_lowercase:
+      other: "کاربران"
     category_title: "دسته"
     history: "تاریخچه"
     changed_by: "توسط {{author}}"
@@ -1491,6 +1510,8 @@ fa_IR:
         automatic: "خودکار"
         automatic_membership_email_domains: " کاربرانی که با ایمیل  دامنه ثبت نام کرده اند،دقیقا شبیه دامنه های لیست، بصورت خودکار به این گروه اضافه می شوند :"
         automatic_membership_retroactive: "درخواست همان قاعده دامنه ایمیل برای اضافه کردن برای کاربران ثبت نام کرده"
+        default_title: "عنوان را پیش فرض کن برای تمام اعضا در این گروه"
+        primary_group: "بطور خودکار به گروه اصلی تبدیل شد"
       api:
         generate_master: "ایجاد کلید اصلی API"
         none: "هم اکنون هیچ کلید API فعالی وجود ندارد"

@@ -26,7 +26,7 @@ pt_BR:
     messages:
       too_long_validation: "está limitado para %{max} caracteres; você entrou com %{length}."
       invalid_boolean: "Boleano inválido."
-      taken: "já foi escolhido"
+      taken: "já está sendo usado"
       accepted: tem que ser aceito
       blank: não pode estar em branco
       present: deve estar em branco
@@ -138,6 +138,7 @@ pt_BR:
   groups:
     errors:
       can_not_modify_automatic: "Você não pode modificar um grupo automático"
+      member_already_exist: "'%{username}' já é um membro deste grupo."
     default_names:
       everyone: "todos"
       admins: "admins"
@@ -447,7 +448,7 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/messages">veja suas mensagens</a>.</p>'
+    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/private-messages">veja suas mensagens</a>.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -590,7 +591,6 @@ pt_BR:
     host_names_warning: "O arquivo config/database.yml está usando hostname padrão localhost. Modifique para usar o hostname do seu site."
     gc_warning: 'Seu servidor está rodando a coleta de lixo do ruby com os parâmetros padrão (default ruby garbage collection parameters), os quais não irão propiciar a melhor performance. Leia este tópico sobre ajuste de performance: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq não está em execução. Muitas tarefas, como envio de emails, são executadas de forma assíncrona pelo sidekiq. Por favor certifique-se de que ao menos um processo sidekiq esteja execução. <a href="https://github.com/mperham/sidekiq" target="_blank">Aprenda sobre Sidekiq aqui</a>.'
-    queue_size_warning: 'O número de tarefas agendadas é %{queue_size}, o que é alto. Isto pode indicar um problema com o(s) processo(s) Sidekiq, ou você pode estar precisando de mais Sidekiq workers.'
     memory_warning: 'Seu servidor está rodando com menos de 1 GB de memória total. Pelo menos 1 GB é quantidade de memória recomendada.'
     enable_google_logins_warning: "AVISO! Termino do suporte ao método atual de autenticação do Google em 20 de Abril, 2015! Por favor <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>mudar para novo método agora!</a>"
     both_googles_warning: "Você tem enable_google_logins e enable_google_oauth2_logins ativados nas configurações do site. Desative o enable_google_logins."
@@ -746,8 +746,6 @@ pt_BR:
     email_token_grace_period_hours: "Tokens de esqueceu senha / ativar conta ainda serão válidas por um período extra de (n) horas depois de serem resgatados."
     enable_badges: "Habilita o sistema de emblemas (experimental)"
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
-    email_domains_blacklist: "Uma lista de domínios de email com os quais os usuários não são permitidos de registrar contas. Exemplo: mailinator.com trashmail.net"
-    email_domains_whitelist: "Uma lista de domínios de email com os quais os usuários DEVEM registrar contas. AVISO: Usuários com domínios de email outros que aqueles listados não serão permitidos!"
     forgot_password_strict: "Não informar usuários da existência de uma conta quando eles usam o diálogo de esquecimento de senha."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
@@ -1415,6 +1413,12 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
       text_body_template: |
         Desculpe-nos, mas seu e-mail para %{destination} (entitulado %{former_title}) não funcionou. Não conseguimos encontrar onde sua resposta estava no e-mail. **Tenha certeza de escrever a resposta no topo do e-mail** -- tudo após o início da mensagem respondida é descartado.
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Email -- Acesso Inválido"
+      text_body_template: |
+        Desculpe, mas a mensagem do email %{destination} (titled %{former_title}) não funcionou.
+
+        Sua conta não possui privilégios para postar novos topicos nessa categoria. Se acredita que isso esteja errado, entre em contato com um dos membros responsáveis..
     email_reject_post_error:
       subject_template: "[%{site_name}] Problema com email -- Erro de postagem"
       text_body_template: |

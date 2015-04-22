@@ -108,7 +108,6 @@ he:
     show_more: "הראה עוד"
     show_help: "עזרה"
     links: "קישורים"
-    links_lowercase: "קישורים"
     faq: "שאלות נפוצות"
     guidelines: "כללי התנהלות"
     privacy_policy: "מדיניות פרטיות"
@@ -452,7 +451,6 @@ he:
       auto_track_topics: "מעקב אוטומטי נושאים אליהם נכנסתי"
       auto_track_options:
         never: "אף פעם"
-        always: "תמיד"
         after_n_seconds:
           one: "אחרי שנייה אחת"
           other: "אחרי {{count}} שניות"
@@ -547,7 +545,6 @@ he:
     mute: השתק
     unmute: בטל השתקה
     last_post: הודעה אחרונה
-    last_post_lowercase: פרסום אחרון
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפרסומים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description: "ישנן <b> {{count}}</b> תגובות"
@@ -1304,15 +1301,12 @@ he:
       אחר {}}
     original_post: "הודעה מקורית"
     views: "צפיות"
-    views_lowercase: "תצוגות"
     replies: "תגובות"
     views_long: "הנושא הזה נצפה {{number}} פעמים"
     activity: "פעילות"
     likes: "לייקים"
-    likes_lowercase: "לייקים"
     likes_long: "יש {{number}} לייקים לנושא הזה"
     users: "משתמשים"
-    users_lowercase: "משתמשים"
     category_title: "קטגוריה"
     history: "היסטוריה"
     changed_by: "מאת {{author}}"

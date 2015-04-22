@@ -108,7 +108,6 @@ es:
     show_more: "ver más"
     show_help: "ayuda"
     links: "Enlaces"
-    links_lowercase: "Enlaces"
     faq: "FAQ"
     guidelines: "Directrices"
     privacy_policy: "Política de Privacidad"
@@ -452,7 +451,6 @@ es:
       auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
-        always: "siempre"
         after_n_seconds:
           one: "después de 1 segundo"
           other: "después de {{count}} segundos"
@@ -547,7 +545,6 @@ es:
     mute: Silenciar
     unmute: No silenciar
     last_post: Último post
-    last_post_lowercase: Última publicación
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -1332,15 +1329,12 @@ es:
         other {}}
     original_post: "Post Original"
     views: "Visitas"
-    views_lowercase: "Vistas"
     replies: "Respuestas"
     views_long: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
-    likes_lowercase: "Likes"
     likes_long: "este tema tiene {{number}} me gusta"
     users: "Usuarios"
-    users_lowercase: "usuarios"
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"

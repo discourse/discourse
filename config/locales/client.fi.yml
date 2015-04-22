@@ -108,7 +108,9 @@ fi:
     show_more: "näytä lisää"
     show_help: "ohje"
     links: "Linkit"
-    links_lowercase: "linkit"
+    links_lowercase:
+      one: "linkki"
+      other: "linkit"
     faq: "UKK"
     guidelines: "Ohjeet"
     privacy_policy: "Rekisteriseloste"
@@ -195,6 +197,19 @@ fi:
       title:
         search: "Etsi ketjua nimen, url:n tai id:n perusteella"
         placeholder: "kirjoita ketjun otsikko tähän"
+    queue:
+      topic: "Ketju:"
+      approve: 'Hyväksy'
+      reject: 'Hylkää'
+      title: "Odottaa hyväksyntää"
+      none: "Tarkastettavia viestejä ei ole"
+      edit: "Muokkaa"
+      cancel: "Peruuta"
+      confirm: "Tallenna muutokset"
+      approval:
+        title: "Viesti odottaa hyväksyntää"
+        description: "Olemme vastaanottaneet viestisi, mutta se täytyy vielä hyväksyä ennen, kuin se näytetään sivustolla. Ole kärsivällinen."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> kirjoitti <a href='{{topicUrl}}'>ketjuun</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Sinä</a> kirjoitit <a href='{{topicUrl}}'>ketjuun</a>"
@@ -452,7 +467,7 @@ fi:
       auto_track_topics: "Seuraa automaattisesti ketjuja, jotka avaan"
       auto_track_options:
         never: "ei koskaan"
-        always: "aina"
+        immediately: "heti"
         after_n_seconds:
           one: "yhden sekunnin jälkeen"
           other: "{{count}} sekunnin jälkeen"
@@ -530,7 +545,7 @@ fi:
     close: "Sulje"
     assets_changed_confirm: "Sivustolla on tehty päivityksiä. Ladataanko uudelleen?"
     logout: "Sinut kirjattiin ulos."
-    refresh: "Lataa uudelleen"
+    refresh: "Lataa sivu uudelleen"
     read_only_mode:
       enabled: "Ylläpitäjä on käynnistänyt vain luku -tilan. Voit jatkaa sivuston selaamista, mutta osa toiminallisuudesta on poistettu käytöstä."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
@@ -547,7 +562,10 @@ fi:
     mute: Vaienna
     unmute: Poista vaimennus
     last_post: Viimeisin viesti
-    last_post_lowercase: viimeisin viesti
+    last_reply_lowercase: edellinen vastaus
+    replies_lowercase:
+      one: vastaus
+      other: vastaukset
     summary:
       enabled_description: "Tarkastelet tiivistelmää tästä ketjusta, sen mielenkiintoisimpia viestejä käyttäjien toiminnan perusteella."
       description: "Tässä kejussa on <b>{{count}}</b> viestiä."
@@ -1332,15 +1350,21 @@ fi:
       other {}}
     original_post: "Aloitusviesti"
     views: "Katselut"
-    views_lowercase: "katselut"
+    views_lowercase:
+      one: "katselu"
+      other: "katselut"
     replies: "Vastaukset"
     views_long: "tätä ketjua on katseltu {{number}} kertaa"
     activity: "Toiminta"
     likes: "Tykkäykset"
-    likes_lowercase: "tykkäykset"
+    likes_lowercase:
+      one: "tykkäys"
+      other: "tykkäykset"
     likes_long: "tässä ketjussa on {{number}} tykkäystä"
     users: "Käyttäjät"
-    users_lowercase: "käyttäjät"
+    users_lowercase:
+      one: "käyttäjä"
+      other: "käyttäjät"
     category_title: "Alue"
     history: "Historia"
     changed_by: "käyttäjältä {{author}}"
@@ -1559,6 +1583,8 @@ fi:
         automatic: "Automaattiset"
         automatic_membership_email_domains: "Käyttäjät, jotka luovat tunnuksen sähköpostiosoitteella, jonka verkkotunnus on tällä listalla, lisätään tähän ryhmään:"
         automatic_membership_retroactive: "Lisää jo olemassa olevat käyttäjät käyttäen samaa sääntöä verkkotunnuksista"
+        default_title: "Tämä ryhmän jäsenten oletustitteli"
+        primary_group: "Aseta automaattisesti ensisijaiseksi ryhmäksi"
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."

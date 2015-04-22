@@ -124,7 +124,10 @@ ru:
     show_more: "показать дальше"
     show_help: "справка"
     links: "Ссылки"
-    links_lowercase: "ссылки"
+    links_lowercase:
+      one: "ссылка"
+      few: "ссылки"
+      other: "ссылок"
     faq: "Вопрос-ответ"
     guidelines: "Руководство"
     privacy_policy: "Политика конфиденциальности"
@@ -215,6 +218,19 @@ ru:
       title:
         search: "Искать тему по названию, ссылке или уникальному номеру:"
         placeholder: "введите название темы здесь"
+    queue:
+      topic: "Тема:"
+      approve: 'Одобрить'
+      reject: 'Отклонить'
+      title: "Требуют одобрения"
+      none: "Нет сообщений для проверки"
+      edit: "Изменить"
+      cancel: "Отменить"
+      confirm: "Сохранить"
+      approval:
+        title: "Сообщения для проверки"
+        description: "Ваше сообщение отправлено, но требует проверки и утверждения модератором. Пожалуйста, будьте терпеливы."
+        ok: "ОК"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> создал <a href='{{topicUrl}}'>тему</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Вы</a> создали <a href='{{topicUrl}}'>тему</a>"
@@ -478,7 +494,7 @@ ru:
       auto_track_topics: "Автоматически отслеживать темы, которые я просматриваю"
       auto_track_options:
         never: "никогда"
-        always: "всегда"
+        immediately: "немедленно"
         after_n_seconds:
           one: "через 1 секунду"
           few: "через несколько секунд"
@@ -575,7 +591,11 @@ ru:
     mute: Отключить
     unmute: Включить
     last_post: Последнее сообщение
-    last_post_lowercase: последнее сообщение
+    last_reply_lowercase: последний ответ
+    replies_lowercase:
+      one: ответ
+      few: ответа
+      other: ответов
     summary:
       enabled_description: "Вы просматриваете выдержку из темы - только самые интересные сообщения по мнению сообщества."
       description: "Есть <b>{{count}}</b> ответ(ов)."
@@ -1395,15 +1415,24 @@ ru:
       other {}}
     original_post: "Начальное сообщение"
     views: "Просм."
-    views_lowercase: "просм."
+    views_lowercase:
+      one: "просмотр"
+      few: "просмотра"
+      other: "просмотров"
     replies: "Ответов"
     views_long: "тема просмотрена {{number}} раз"
     activity: "Активность"
     likes: "Нрав."
-    likes_lowercase: "нрав."
+    likes_lowercase:
+      one: "лайк"
+      few: "лайка"
+      other: "лайков"
     likes_long: "{{number}} лайков в теме"
     users: "Пользователи"
-    users_lowercase: "пользователи"
+    users_lowercase:
+      one: "пользователь"
+      few: "пользователя"
+      other: "пользователей"
     category_title: "Раздел"
     history: "История"
     changed_by: "автором {{author}}"
