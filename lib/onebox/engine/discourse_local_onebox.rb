@@ -10,6 +10,25 @@ module Onebox
         1
       end
 
+      def self.===(other)
+        if other.kind_of?(URI)
+          uri = other
+          begin
+            route = Rails.application.routes.recognize_path(uri.path)
+            case route[:controller]
+            when 'topics'
+              true
+            else
+              false
+            end
+          rescue ActionController::RoutingError
+            false
+          end
+        else
+          super
+        end
+      end
+
       def to_html
         uri = URI::parse(@url)
         route = Rails.application.routes.recognize_path(uri.path)
