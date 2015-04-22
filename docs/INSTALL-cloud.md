@@ -36,7 +36,7 @@ You will be asked for permission to connect, type `yes`, then enter the root pas
 
 # Install Docker / Git
 
-    wget -qO- https://get.docker.io/ | sh
+    wget -qO- https://get.docker.com/ | sh
 
 <img src="http://www.discourse.org/images/install/install-git-1-3-beta.png?v=1">
 
