@@ -1,5 +1,5 @@
 // Subscribes to user events on the message bus
-import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications'
+import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications';
 
 export default {
   name: 'subscribe-user-notifications',
@@ -16,7 +16,7 @@ export default {
 
     if (bus.baseUrl !== '/') {
       // zepto compatible, 1 param only
-      bus.ajax = function(opts){
+      bus.ajax = function(opts) {
         opts.headers = opts.headers || {};
         opts.headers['X-Shared-Session-Key'] = $('meta[name=shared_session_key]').attr('content');
         return $.ajax(opts);
@@ -50,8 +50,8 @@ export default {
         }
       }, user.notification_channel_position);
 
-      bus.subscribe("/categories", function(data){
-        _.each(data.categories,function(c){
+      bus.subscribe("/categories", function(data) {
+        _.each(data.categories,function(c) {
           site.updateCategory(c);
         });
       });
