@@ -40,7 +40,9 @@ class TopicsController < ApplicationController
   end
 
   def show
-    flash["referer"] ||= request.referer
+    if request.referer
+      flash["referer"] ||= request.referer[0..255]
+    end
 
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
