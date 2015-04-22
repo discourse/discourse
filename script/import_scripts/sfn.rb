@@ -17,7 +17,7 @@ class ImportScripts::Sfn < ImportScripts::Base
   def execute
     load_external_users
     import_users
-    import_categories
+    # import_categories
     import_topics
     import_posts
   end
@@ -113,91 +113,91 @@ class ImportScripts::Sfn < ImportScripts::Base
     end
   end
 
-  NEW_CATEGORIES = [
-    "Abstract Topic Matching Forum",
-    "Animals in Research",
-    "Brain Awareness and Teaching",
-    "Career Advice",
-    "Career Paths",
-    "Diversity",
-    "Early Career Policy Advocates",
-    "LATP Associates",
-    "LATP Fellows",
-    "Mid and Advanced Career",
-    "Neurobiology of Disease Workshop",
-    "Neuronline Champions",
-    "Neuroscience 2015",
-    "Neuroscience Scholars Program",
-    "NSP Associates",
-    "NSP Fellows",
-    "Outreach",
-    "Postdocs and Early Career",
-    "Program Committee",
-    "Program Development",
-    "Roommate Matching Forum",
-    "Scientific Research",
-    "Students",
-  ]
+  # NEW_CATEGORIES = [
+  #   "Abstract Topic Matching Forum",
+  #   "Animals in Research",
+  #   "Brain Awareness & Teaching",
+  #   "Career Advice",
+  #   "Career Paths",
+  #   "Diversity",
+  #   "Early Career Policy Advocates",
+  #   "LATP Associates",
+  #   "LATP Fellows",
+  #   "Mid & Advanced Career",
+  #   "Neurobiology of Disease Workshop",
+  #   "Neuronline Champions",
+  #   "Neuroscience 2015",
+  #   "Neuroscience Scholars Program",
+  #   "NSP Associates",
+  #   "NSP Fellows",
+  #   "Outreach",
+  #   "Postdocs & Early Career",
+  #   "Program Committee",
+  #   "Program Development",
+  #   "Roommate Matching Forum",
+  #   "Scientific Research",
+  #   "Students",
+  # ]
 
   # EgroupKey => New Category Name
   CATEGORY_MAPPING = {
-    "{DE10E4F4-621A-48BF-9B45-05D9F774A590}" => "Abstract Topic Matching Forum",
-    "{3FFC1217-1576-4D38-BB81-D6CADC7FB793}" => "Animals in Research",
-    "{9362BB21-BF6C-4E55-A3E0-18CD5D9F3323}" => "Brain Awareness and Teaching",
-    "{3AC01B09-A21F-4166-95DA-0E585E271075}" => "Brain Awareness and Teaching",
-    "{C249728D-8C9E-4138-AA49-D02467C28EAD}" => "Career Advice",
-    "{01570B85-0124-478F-A8B9-B028BD1B1F2F}" => "Career Paths",
-    "{2A430528-278A-46CD-BE1A-07CFA1122919}" => "Diversity",
-    "{2F211345-3C19-43C9-90B5-27BA9FCD4DB0}" => "Diversity",
-    "{8092297D-8DF4-404A-8BEB-4D5D0DC6A191}" => "Early Career Policy Advocates",
-    "{8CB58762-D562-448C-9AF1-8DAE6C482C9B}" => "LATP Associates",
-    "{CDF80A92-925A-46DD-A867-8558FA72D016}" => "LATP Fellows",
-    "{E71E237B-7C23-4596-AECA-655BD8ED50DB}" => "Mid and Advanced Career",
-    "{1D674C38-17CB-4C48-826A-D465AC3F8948}" => "Neurobiology of Disease Workshop",
-    "{80C5835E-974E-4D44-BA01-C2C4F8BA91D7}" => "Neuronline Champions",
-    "{3D4F885B-0037-403B-83DD-62FAA8E81DF1}" => "Neuroscience 2015",
-    "{9ACC3B40-E4A3-4FFD-AADC-C8403EB6231D}" => "Neuroscience 2015",
-    "{9FC30FFB-E450-4361-8844-0266C3D96868}" => "Neuroscience Scholars Program",
-    "{3E78123E-87CE-435E-B4B7-7DAB1A21C541}" => "NSP Associates",
-    "{12D889D3-5CFD-49D5-93E4-32AAB2CFFCDA}" => "NSP Fellows",
-    "{FA86D79E-170E-4F53-8F1C-942CB3FFB19E}" => "Outreach",
-    "{D7041C64-3D32-4010-B3D8-71858323CB4A}" => "Outreach",
-    "{69B76913-4E23-4C80-A11E-9CDB4130722E}" => "Outreach",
-    "{774878EA-96AD-49F5-9D29-105AEA488007}" => "Outreach",
-    "{E6349704-FD01-41B1-9C59-68E928DD4318}" => "Postdocs and Early Career",
-    "{31CF5944-2567-4E79-9730-18EEC23E5B52}" => "Postdocs and Early Career",
-    "{5625C403-AFAE-4323-A470-33FC32B12B53}" => "Program Committee",
-    "{8415D871-54F5-4128-B099-E5A376A6B41B}" => "Program Development",
-    "{B4DF2044-47AB-4329-8BF7-0D832CAB402C}" => "Roommate Matching Forum",
-    "{6A3A12B9-5C72-472F-97AC-F34983674960}" => "Scientific Research",
-    "{2CF635E9-4866-451C-A4F2-E2A8A80FED54}" => "Scientific Research",
-    "{CF2DDCCE-737F-499D-AFE4-E5C36F195C8B}" => "Scientific Research",
-    "{282B48D7-AC1D-453E-9806-3C6CE6830EF9}" => "Scientific Research",
-    "{6D750CAF-E96F-4AD1-A45B-7B74FDFF0B40}" => "Scientific Research",
-    "{10AF5D45-BEB3-4F07-BE77-0BAB6910DE10}" => "Scientific Research",
-    "{18D7F624-26D1-44B9-BF33-AB5C5A2AB2BF}" => "Scientific Research",
-    "{6016FF4F-D834-4888-BA03-F9FE8CB1D4CC}" => "Scientific Research",
-    "{B0290A37-EA39-4CB8-B6CB-3E0B7EF6D036}" => "Scientific Research",
-    "{97CC60D0-B93A-43FF-BB48-366FAAEE2BAC}" => "Scientific Research",
-    "{8FC9B57B-2755-4FC5-90E8-CCDB56CF2F66}" => "Scientific Research",
-    "{57C8BF37-357E-4FE6-952D-906248642792}" => "Scientific Research",
-    "{7B2A3B63-BC2C-4219-830C-BA1DECB33337}" => "Scientific Research",
-    "{0ED1D205-0E48-48D2-B82B-3CE80C6C553F}" => "Scientific Research",
-    "{10355962-D172-4294-AA8E-1BC381B67971}" => "Scientific Research",
-    "{C84B0222-5232-4B94-9FB8-DDF802241171}" => "Scientific Research",
-    "{9143F984-0D67-46CB-AAAF-7FE3B6335E07}" => "Scientific Research",
-    "{1392DC10-37A0-46A6-9979-4568D0224C5F}" => "Scientific Research",
-    "{E4891409-0F4F-4151-B550-ECE53655E231}" => "Scientific Research",
-    "{9613BAC2-229B-4563-9E1C-35C31CDDCE2F}" => "Students",
+    "{DE10E4F4-621A-48BF-9B45-05D9F774A590}" => 52, # "Abstract Topic Matching Forum",
+    "{3FFC1217-1576-4D38-BB81-D6CADC7FB793}" => 66, # "Animals in Research",
+    "{9362BB21-BF6C-4E55-A3E0-18CD5D9F3323}" => 67, # "Brain Awareness & Teaching",
+    "{3AC01B09-A21F-4166-95DA-0E585E271075}" => 67, # "Brain Awareness & Teaching",
+    "{C249728D-8C9E-4138-AA49-D02467C28EAD}" => 42, # "Career Advice",
+    "{01570B85-0124-478F-A8B9-B028BD1B1F2F}" => 43, # "Career Paths",
+    "{2A430528-278A-46CD-BE1A-07CFA1122919}" => 44, # "Diversity",
+    "{2F211345-3C19-43C9-90B5-27BA9FCD4DB0}" => 44, # "Diversity",
+    "{8092297D-8DF4-404A-8BEB-4D5D0DC6A191}" => 56, # "Early Career Policy Advocates",
+    "{8CB58762-D562-448C-9AF1-8DAE6C482C9B}" => 61, # "LATP Associates",
+    "{CDF80A92-925A-46DD-A867-8558FA72D016}" => 60, # "LATP Fellows",
+    "{E71E237B-7C23-4596-AECA-655BD8ED50DB}" => 51, # "Mid & Advanced Career",
+    "{1D674C38-17CB-4C48-826A-D465AC3F8948}" => 55, # "Neurobiology of Disease Workshop",
+    "{80C5835E-974E-4D44-BA01-C2C4F8BA91D7}" => 65, # "Neuronline Champions",
+    "{3D4F885B-0037-403B-83DD-62FAA8E81DF1}" => 54, # "Neuroscience 2015",
+    "{9ACC3B40-E4A3-4FFD-AADC-C8403EB6231D}" => 54, # "Neuroscience 2015",
+    "{9FC30FFB-E450-4361-8844-0266C3D96868}" => 57, # "Neuroscience Scholars Program",
+    "{3E78123E-87CE-435E-B4B7-7DAB1A21C541}" => 59, # "NSP Associates",
+    "{12D889D3-5CFD-49D5-93E4-32AAB2CFFCDA}" => 58, # "NSP Fellows",
+    "{FA86D79E-170E-4F53-8F1C-942CB3FFB19E}" => 45, # "Outreach",
+    "{D7041C64-3D32-4010-B3D8-71858323CB4A}" => 45, # "Outreach",
+    "{69B76913-4E23-4C80-A11E-9CDB4130722E}" => 45, # "Outreach",
+    "{774878EA-96AD-49F5-9D29-105AEA488007}" => 45, # "Outreach",
+    "{E6349704-FD01-41B1-9C59-68E928DD4318}" => 50, # "Postdocs & Early Career",
+    "{31CF5944-2567-4E79-9730-18EEC23E5B52}" => 50, # "Postdocs & Early Career",
+    "{5625C403-AFAE-4323-A470-33FC32B12B53}" => 62, # "Program Committee",
+    "{8415D871-54F5-4128-B099-E5A376A6B41B}" => 47, # "Program Development",
+    "{B4DF2044-47AB-4329-8BF7-0D832CAB402C}" => 53, # "Roommate Matching Forum",
+    "{6A3A12B9-5C72-472F-97AC-F34983674960}" => 48, # "Scientific Research",
+    "{2CF635E9-4866-451C-A4F2-E2A8A80FED54}" => 48, # "Scientific Research",
+    "{CF2DDCCE-737F-499D-AFE4-E5C36F195C8B}" => 48, # "Scientific Research",
+    "{282B48D7-AC1D-453E-9806-3C6CE6830EF9}" => 48, # "Scientific Research",
+    "{6D750CAF-E96F-4AD1-A45B-7B74FDFF0B40}" => 48, # "Scientific Research",
+    "{10AF5D45-BEB3-4F07-BE77-0BAB6910DE10}" => 48, # "Scientific Research",
+    "{18D7F624-26D1-44B9-BF33-AB5C5A2AB2BF}" => 48, # "Scientific Research",
+    "{6016FF4F-D834-4888-BA03-F9FE8CB1D4CC}" => 48, # "Scientific Research",
+    "{B0290A37-EA39-4CB8-B6CB-3E0B7EF6D036}" => 48, # "Scientific Research",
+    "{97CC60D0-B93A-43FF-BB48-366FAAEE2BAC}" => 48, # "Scientific Research",
+    "{8FC9B57B-2755-4FC5-90E8-CCDB56CF2F66}" => 48, # "Scientific Research",
+    "{57C8BF37-357E-4FE6-952D-906248642792}" => 48, # "Scientific Research",
+    "{7B2A3B63-BC2C-4219-830C-BA1DECB33337}" => 48, # "Scientific Research",
+    "{0ED1D205-0E48-48D2-B82B-3CE80C6C553F}" => 48, # "Scientific Research",
+    "{10355962-D172-4294-AA8E-1BC381B67971}" => 48, # "Scientific Research",
+    "{C84B0222-5232-4B94-9FB8-DDF802241171}" => 48, # "Scientific Research",
+    "{9143F984-0D67-46CB-AAAF-7FE3B6335E07}" => 48, # "Scientific Research",
+    "{1392DC10-37A0-46A6-9979-4568D0224C5F}" => 48, # "Scientific Research",
+    "{E4891409-0F4F-4151-B550-ECE53655E231}" => 48, # "Scientific Research",
+    "{9613BAC2-229B-4563-9E1C-35C31CDDCE2F}" => 49, # "Students",
   }
 
-  def import_categories
-    puts "", "importing categories..."
+  # def import_categories
+  #   puts "", "importing categories..."
 
-    create_categories(NEW_CATEGORIES) do |category|
-      { id: category, name: category }
-    end
-  end
+  #   create_categories(NEW_CATEGORIES) do |category|
+  #     { id: category, name: category }
+  #   end
+  # end
 
   def import_topics
     puts "", "importing topics..."
@@ -240,7 +240,7 @@ class ImportScripts::Sfn < ImportScripts::Base
 
         {
           id: topic["id"],
-          category: category_id_from_imported_category_id(category_id),
+          category: category_id,
           user_id: user_id_from_imported_user_id(topic["user_id"]) || Discourse::SYSTEM_USER_ID,
           title: title,
           raw: raw,
