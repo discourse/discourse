@@ -31,9 +31,9 @@ function init(container) {
         Em.Logger.error(e);
       }
     }
-  }).catch(function(e) {
+  }).catch(function() {
     liveEnabled = false;
-    Em.Logger.info('Discourse desktop notifications are disabled - permission denied.');
+    //Em.Logger.debug('Discourse desktop notifications are disabled - permission denied.');
   });
 }
 
