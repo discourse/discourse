@@ -54,6 +54,13 @@ module UserNotificationsHelper
     raw format_for_email(html)
   end
 
+  def show_name_on_post(post)
+    SiteSetting.enable_names? &&
+      SiteSetting.display_name_on_posts? &&
+      post.user.name.present? &&
+      post.user.name != post.user.username
+  end
+
   def format_for_email(html)
     PrettyText.format_for_email(html).html_safe
   end
