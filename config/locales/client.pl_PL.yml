@@ -124,7 +124,10 @@ pl_PL:
     show_more: "pokaż więcej"
     show_help: "pomoc"
     links: "Odnośniki"
-    links_lowercase: "linki"
+    links_lowercase:
+      one: "link"
+      few: "linki"
+      other: "linków"
     faq: "FAQ"
     guidelines: "Przewodnik"
     privacy_policy: "Polityka prywatności"
@@ -215,6 +218,19 @@ pl_PL:
       title:
         search: "Szukaj tematu po nazwie, URL-u albo ID:"
         placeholder: "tutaj wpisz tytuł tematu"
+    queue:
+      topic: "Temat:"
+      approve: 'Zatwierdź'
+      reject: 'Odrzuć'
+      title: "Wymaga zatwierdzenia"
+      none: "Brak wpisów wymagających uwagi."
+      edit: "Edytuj"
+      cancel: "Anuluj"
+      confirm: "Zapisz zmiany"
+      approval:
+        title: "Wpis wymaga zatwierdzenia"
+        description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> tworzy <a href='{{topicUrl}}'>temat</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Dodajesz</a> <a href='{{topicUrl}}'>temat</a>"
@@ -478,7 +494,7 @@ pl_PL:
       auto_track_topics: "Automatycznie śledź tematy które odwiedzę"
       auto_track_options:
         never: "nigdy"
-        always: "zawsze"
+        immediately: "natychmiast"
         after_n_seconds:
           one: "po 1 sekundzie"
           few: "po {{count}} sekundach"
@@ -575,7 +591,11 @@ pl_PL:
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Ostatni wpis
-    last_post_lowercase: ostatni wpis
+    last_reply_lowercase: ostatnia odpowiedź
+    replies_lowercase:
+      one: odpowiedź
+      few: odpowiedzi
+      other: odpowiedzi
     summary:
       enabled_description: "Przeglądasz podsumowanie tego tematu: widoczne są jedynie najbardziej wartościowe wpisy zdaniem uczestników. "
       description: "Istnieją <b>{{count}}</b> odpowiedzi."
@@ -1391,15 +1411,24 @@ pl_PL:
     posts_long: "jest {{number}} wpisów w tym temacie"
     original_post: "Oryginalny wpis"
     views: "Wyświetlenia"
-    views_lowercase: "wyświetlenia"
+    views_lowercase:
+      one: "wyświetlenie"
+      few: "wyświetlenia"
+      other: "wyświetleń"
     replies: "Odpowiedzi"
     views_long: "ten temat był oglądany {number}} razy"
     activity: "Aktywność"
     likes: "Polubienia"
-    likes_lowercase: "polubienia"
+    likes_lowercase:
+      one: "polubienie"
+      few: "polubienia"
+      other: "polubień"
     likes_long: "jest {{number}} polubień w tym temacie"
     users: "Użytkownicy"
-    users_lowercase: "użytkownicy"
+    users_lowercase:
+      one: "użytkownik"
+      few: "użytkownicy"
+      other: "użytkowników"
     category_title: "Kategoria"
     history: "Historia"
     changed_by: "przez {{author}}"
@@ -1623,6 +1652,8 @@ pl_PL:
         automatic: "Automatyczne"
         automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
         automatic_membership_retroactive: "Zastosuj tę regułę domenową do już istniejących użytkowników."
+        default_title: "Domyślny tytuł użytkowników należących do tej grupy"
+        primary_group: "Automatycznie ustawiaj jako główną grupę"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."

@@ -106,7 +106,6 @@ sq:
     show_more: "trego më shumë"
     show_help: "ndihmë"
     links: "Lidhjet"
-    links_lowercase: "lidhjet"
     faq: "Pyetje"
     guidelines: "Udhëzimet"
     privacy_policy: "Politika e Privatësis"
@@ -174,6 +173,7 @@ sq:
     undo: "Zhbëj"
     revert: "Rikthe"
     failed: "Dështojë"
+    switch_to_anon: "Mënyrë Anonime"
     banner:
       close: "Hiq këtë reklamë."
     choose_topic:
@@ -198,6 +198,8 @@ sq:
     directory:
       time_read: "Koha e Leximit"
       post_count: "Përgjigje"
+      days_visited: "Vizita"
+      days_visited_long: "Vizita Ditore"
     groups:
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
       title:
@@ -217,6 +219,7 @@ sq:
       '2': "Pëlqime të marra"
       '3': "Të Preferuarat"
       '4': "Tema"
+      '5': "Përgjigje"
       '7': "Përmendje"
       '9': "Citim"
       '10': "Shënuar"
@@ -249,6 +252,7 @@ sq:
       location_not_found: (i panjohur)
       organisation: Organizata
       phone: Telefoni
+      username: "pseudonimi"
       trust_level: "TL"
       read_time: "koha e leximit"
       post_count: "# postimeve"
@@ -257,6 +261,8 @@ sq:
       profile: "Profili"
       mute: "Mute"
       edit: "Ndrysho Preferencat"
+      new_private_message: "Mesazh i Ri"
+      private_message: "Mesazh"
       private_messages: "Mesazhet"
       activity_stream: "Aktiviteti"
       preferences: "Preferencat"
@@ -321,6 +327,7 @@ sq:
         error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga dikush tjetër?"
         success: "Ju dërguam një email tek adresa që shkruajtët. Ju ftojmë të ndiqni udhëzimet e konfirmimit."
       change_avatar:
+        title: "Ndrysho fotografinë e profilit"
         gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, bazur në"
         refresh_gravatar_title: "Rifresko Gravatar tuaj"
         uploaded_avatar: "Foto personalizuar"
@@ -337,6 +344,8 @@ sq:
         title: "Email"
       name:
         title: "Emri"
+        instructions_required: "Emri i plotë"
+        too_short: "Emri juaj është shumë i shkurtër"
       username:
         title: "Pseudonimi"
         global_mismatch: "Jeni vallë regjistruar më parë. Provo {{suggestion}}?"
@@ -374,7 +383,6 @@ sq:
           other: "created in the last {{count}} weeks"
       auto_track_options:
         never: "asnjëherë"
-        always: "gjithmon"
         after_n_seconds:
           one: "pas 1 sekonde"
           other: "pas {{count}} sekonda"
@@ -460,7 +468,6 @@ sq:
     mute: Mute
     unmute: Unmute
     last_post: Postimi fundit
-    last_post_lowercase: last post
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
       description: "Janë <b>{{count}}</b> përgjigje."
@@ -1146,15 +1153,12 @@ sq:
     posts_long: "there are {{number}} posts in this topic"
     original_post: "Postimi Origjinal"
     views: "Shikimet"
-    views_lowercase: "shikime"
     replies: "Përgjigjet"
     views_long: "this topic has been viewed {{number}} times"
     activity: "Aktiviteti"
     likes: "Pëlqimet"
-    likes_lowercase: "pëlqime"
     likes_long: "there are {{number}} likes in this topic"
     users: "Anëtarët"
-    users_lowercase: "users"
     category_title: "Kategori"
     history: "Historia"
     changed_by: "nga {{author}}"
@@ -1777,7 +1781,7 @@ sq:
           email: 'Email'
           files: 'Skedarë'
           trust: 'Niveli Besimit'
-          security: 'Sigura'
+          security: 'Siguria'
           onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
@@ -1851,6 +1855,8 @@ sq:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+      emoji:
+        image: "Imazh"
     lightbox:
       download: "shkarko"
     search_help:
@@ -1943,6 +1949,8 @@ sq:
         autobiographer:
           name: Autobiographer
           description: Filled user <a href="/my/preferences">profile</a> information
+        anniversary:
+          name: Përvjetori
         nice_post:
           name: Nice Post
           description: Received 10 likes on a post. This badge can be granted multiple times

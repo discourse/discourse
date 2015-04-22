@@ -58,7 +58,6 @@ uk:
     show_more: "показати більше"
     show_help: "Допомога"
     links: "Посилання"
-    links_lowercase: "посилання"
     faq: "Часті запитання"
     guidelines: "Інструкції"
     privacy_policy: "Політика конфіденційності"
@@ -327,7 +326,6 @@ uk:
         label: "Вважати теми новими, якщо"
       auto_track_options:
         never: "ніколи"
-        always: "завжди"
       invited:
         search: "шукати запрошення..."
         title: "Запрошення"
@@ -393,7 +391,6 @@ uk:
     mute: Mute
     unmute: Unmute
     last_post: Останній допис
-    last_post_lowercase: останній допис
     summary:
       description: "Тут <b>{{count}}</b> відповідей."
       enable: 'Підсумувати цю тему'

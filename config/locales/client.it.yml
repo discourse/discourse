@@ -108,7 +108,6 @@ it:
     show_more: "Altro"
     show_help: "aiuto"
     links: "Link"
-    links_lowercase: "collegamenti"
     faq: "FAQ"
     guidelines: "Linee Guida"
     privacy_policy: "Tutela Privacy"
@@ -452,7 +451,6 @@ it:
       auto_track_topics: "Segui automaticamente gli argomenti che leggo"
       auto_track_options:
         never: "mai"
-        always: "sempre"
         after_n_seconds:
           one: "per un minuto"
           other: "dopo {{count}} secondi"
@@ -547,7 +545,6 @@ it:
     mute: Ignora
     unmute: Attiva
     last_post: Ultimo messaggio
-    last_post_lowercase: ultimo messaggio
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -1284,15 +1281,12 @@ it:
       Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
-    views_lowercase: "visualizzazioni"
     replies: "Risposte"
     views_long: "questo argomento è stato visualizzato {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
-    likes_lowercase: "mi piace"
     likes_long: "ci sono {{number}} \"Mi piace\" in questo argomento"
     users: "Utenti"
-    users_lowercase: "utenti"
     category_title: "Categoria"
     history: "Storia"
     changed_by: "da {{author}}"

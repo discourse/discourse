@@ -108,7 +108,9 @@ fr:
     show_more: "afficher plus"
     show_help: "aide"
     links: "Liens"
-    links_lowercase: "liens"
+    links_lowercase:
+      one: "lien"
+      other: "liens"
     faq: "FAQ"
     guidelines: "Règlement"
     privacy_policy: "Politique de confidentialité"
@@ -186,6 +188,8 @@ fr:
     undo: "Annuler"
     revert: "Rétablir"
     failed: "Echec"
+    switch_to_anon: "Mode anonyme"
+    switch_from_anon: "Sortir du mode anonyme"
     banner:
       close: "Ignorer cette bannière."
     choose_topic:
@@ -193,6 +197,19 @@ fr:
       title:
         search: "Rechercher un sujet par son nom, url ou id :"
         placeholder: "renseignez ici le titre du sujet"
+    queue:
+      topic: "Sujet :"
+      approve: 'Approuver'
+      reject: 'Rejeter'
+      title: "Nécessite l'approbation"
+      none: "Il n'y a pas de messages à vérifier."
+      edit: "Éditer"
+      cancel: "Annuler"
+      confirm: "Sauvegarder les changements"
+      approval:
+        title: "Ce message doit être approuvé."
+        description: "Votre nouveau message a bien été envoyé, mais il doit être approuvé par un modérateur avant d'apparaître publiquement. Merci de votre patience."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> a démarré <a href='{{topicUrl}}'>le sujet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Vous</a> avez démarré <a href='{{topicUrl}}'>le sujet</a>"
@@ -374,6 +391,7 @@ fr:
         upload_title: "Envoyer votre avatar"
         upload_picture: "Envoyer une image"
         image_is_not_a_square: "Attention : nous avons découpé votre image; la largeur et la hauteur n'étaient pas égales."
+        cache_notice: "Votre avatar a été mis à jour, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
       change_profile_background:
         title: "Arrière plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
@@ -431,6 +449,7 @@ fr:
         every_three_days: "tous les trois jours"
         weekly: "hebdomadaire"
         every_two_weeks: "toutes les deux semaines"
+      email_direct: "M'envoyer un courriel quand quelqu'un me cite, répond à mon message ou mentionne mon @pseudo ou m'invite à rejoindre un sujet"
       email_private_messages: "M'envoyer un courriel quand quelqu'un m'envoie un message privé"
       email_always: "Ne pas recevoir de courriel de notifications lorsque je suis actif sur le site"
       other_settings: "Autre"
@@ -448,7 +467,7 @@ fr:
       auto_track_topics: "Suivre automatiquement les sujets que je consulte"
       auto_track_options:
         never: "jamais"
-        always: "toujours"
+        immediately: "immédiatement"
         after_n_seconds:
           one: "après une seconde"
           other: "après {{count}} secondes"
@@ -543,7 +562,10 @@ fr:
     mute: Désactiver
     unmute: Activer
     last_post: Dernier message
-    last_post_lowercase: dernier message
+    last_reply_lowercase: dernière réponse
+    replies_lowercase:
+      one: réponse
+      other: réponses
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages importants choisis par la communauté."
       description: "Il y a <b>{{count}}</b> réponses."
@@ -874,7 +896,7 @@ fr:
           description: "Vous serez notifier de chaque nouveau message de ce sujet. Les nombres de messages non lus et de nouveaux messages apparaîtront également à côté du sujet."
         tracking_pm:
           title: "Suivi simple"
-          description: "Le nombre de publications non lues et nouvelles apparaîtra à côté du message. Vous serez averti si quelqu'un mentionne votre @pseudo ou réponds à votre publication."
+          description: "Le nombre de publications non lues et nouvelles apparaîtra à côté du message. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre publication."
         tracking:
           title: "Suivi"
           description: "Le nombre de messages non lus et de nouveaux messages apparaîtra à côté du sujet. Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
@@ -883,7 +905,7 @@ fr:
           description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre message."
         regular_pm:
           title: "Normal"
-          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou réponds à votre publication dans le message."
+          description: "Vous serez averti si quelqu'un mentionne votre @pseudo ou répond à votre publication dans le message."
         muted_pm:
           title: "Silencieux"
           description: "Vous ne serez jamais averti de quoi que ce soit à propos de ce message."
@@ -895,11 +917,21 @@ fr:
         delete: "Supprimer Sujet"
         open: "Ouvrir Sujet"
         close: "Fermer le sujet"
+        multi_select: "Sélectionner les messages..."
+        auto_close: "Fermeture automatique..."
+        pin: "Épingler la discussion..."
+        unpin: "Désépingler la discussion..."
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
         invisible: "Retirer de la liste des sujets"
         visible: "Afficher dans la liste des sujets"
         reset_read: "Réinitialiser les lectures"
+      feature:
+        pin: "Épingler la discussion"
+        unpin: "Désépingler la discussion"
+        pin_globally: "Épingler le sujet globalement"
+        make_banner: "Bannière de sujet"
+        remove_banner: "Retirer la bannière de sujet"
       reply:
         title: 'Répondre'
         help: 'commencez à répondre à ce sujet'
@@ -945,18 +977,22 @@ fr:
         email_or_username: "Adresse de courriel ou @pseudo de l'invité"
         email_or_username_placeholder: "adresse de courriel ou @pseudo"
         action: "Inviter"
-        success: "Nous avons invité cet utilisateur à participer à ce message."
+        success: "Nous avons invité cet utilisateur à participer à cette discussion."
         error: "Désolé, il y a eu une erreur lors de l'invitation de cet utilisateur."
         group_name: "nom du groupe"
       invite_reply:
         title: 'Inviter'
+        username_placeholder: "pseudo"
         action: 'Envoyer une invitation'
         help: 'inviter d''autres personnes sur ce sujet par email ou notifications'
         to_forum: "Nous allons envoyer un courriel à votre ami pour lui permettre de participer au forum juste en cliquant sur un lien, sans qu'il ait à se connecter."
-        to_topic_blank: "Entrez le nom d'utilisateur ou l'adresse email de la personne que vous souhaitez inviter sur ce sujet."
+        sso_enabled: "Entrez le nom d'utilisateur de la personne que vous souhaitez inviter sur ce sujet."
+        to_topic_blank: "Entrez le pseudo ou l'adresse email de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse email. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
-        to_topic_username: "Vous avez entré un nom d'utilisateur. Nous allons envoyer une notification à cet utilisateur avec un lien l'invitant sur ce sujet."
+        to_topic_username: "Vous avez entré un pseudo. Nous allons envoyer une notification à cet utilisateur avec un lien l'invitant sur ce sujet."
         email_placeholder: 'nom@exemple.com'
+        success_email: "Nous avons envoyé un email à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il aura répondu à votre invitation. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
+        success_username: "Nous avons invité cet utilisateur à participer à ce sujet."
         error: "Désolé, nous n'avons pas pu inviter cette personne. Elle a peut-être déjà été invitée ? (Le nombre d'invitations est limité)"
       login_reply: 'Se connecter pour répondre'
       filters:
@@ -1318,15 +1354,21 @@ fr:
       other {}}
     original_post: "Message original"
     views: "Vues"
-    views_lowercase: "vues"
+    views_lowercase:
+      one: "vue"
+      other: "vues"
     replies: "Réponses"
     views_long: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
-    likes_lowercase: "j'aimes"
+    likes_lowercase:
+      one: "J'aime"
+      other: "J'aime"
     likes_long: "il y a {{number}} j'aime dans ce sujet"
     users: "Utilisateurs"
-    users_lowercase: "utilisateurs"
+    users_lowercase:
+      one: "utilisateur"
+      other: "utilisateurs"
     category_title: "Catégorie"
     history: "Historique"
     changed_by: "par {{author}}"
@@ -1387,6 +1429,17 @@ fr:
       top:
         title: "Top"
         help: "les meilleurs sujets de l'année, du mois, de la semaine ou du jour"
+        all:
+          title: "depuis toujours"
+        yearly:
+          title: "Annuel"
+        monthly:
+          title: "Mensuel"
+        weekly:
+          title: "Hebdomadaire"
+        daily:
+          title: "Quotidien"
+        all_time: "Depuis toujours"
         this_year: "Cette année"
         this_month: "Ce mois-ci"
         this_week: "Cette semaine"
@@ -1534,6 +1587,8 @@ fr:
         automatic: "Automatique"
         automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
         automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
+        default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
+        primary_group: "Définir comme groupe primaire automatiquement"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."

@@ -131,6 +131,7 @@ zh_CN:
   groups:
     errors:
       can_not_modify_automatic: "你不能修改一个自动组"
+      member_already_exist: "“%{username}”已经是群组成员了。"
     default_names:
       everyone: "任何人"
       admins: "管理面板"
@@ -423,7 +424,7 @@ zh_CN:
       email_title: '"%{title}" 主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
+    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/private-messages">查看你的消息</a>。</p>'
     user_must_edit: '<p>你的帖子已经被社群标记并被临时隐藏。</p>'
   archetypes:
     regular:
@@ -566,7 +567,6 @@ zh_CN:
     host_names_warning: "你的 config/database.yml 文件使用的是缺省的 localhost 主机名。请更改成你的站点主机名。"
     gc_warning: '你的服务器使用的是缺省的 ruby 垃圾回收参数，这个配置无法提供最高性能。请阅读此性能调优文档：<a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 不在运行。很多任务，例如发送电子邮件，是异步的被 sidekiq 调度执行的。请确保至少运行一个 sidekiq 进程。<a href="https://github.com/mperham/sidekiq" target="_blank">了解 Sidekiq</a>。'
-    queue_size_warning: '队列中的任务数为 %{queue_size}，任务较多。这可能因为 Sidekiq 进程出问题导致，或者需要更多的 Sidekiq 进程。'
     memory_warning: '你的服务器环境内存少于 1GB，我们建议至少要有 1GB 内存。'
     enable_google_logins_warning: "警告。Google 将在2015年4月20日停止支持 OpenID 登录。请<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>使用新方法！</a>"
     both_googles_warning: "你在站点设置中同时启用了 enable_google_logins 和 enable_google_oauth2_logins。禁用 enable_google_logins。"
@@ -687,6 +687,9 @@ zh_CN:
     cooldown_minutes_after_hiding_posts: "当一个帖子因为标记而隐藏之后，用户需要等待多少分钟才能编辑帖子"
     max_topics_in_first_day: "新用户在第一天内最多可以创建的主题数"
     max_replies_in_first_day: "新用户在第一天内最大可以创建的回复数"
+    tl2_additional_likes_per_day_multiplier: "增加信任等级 2（成员）的赞限制，可提供一个乘数与原始值相乘"
+    tl3_additional_likes_per_day_multiplier: "增加信任等级 3（常规）的赞限制，可提供一个乘数与原始值相乘"
+    tl4_additional_likes_per_day_multiplier: "增加信任等级 4（领导）的赞限制，可提供一个乘数与原始值相乘"
     num_flags_to_block_new_user: "如果一个新用户的帖子被其他 num_users_to_block_new_user 个用户标记为垃圾，隐藏他们的所有帖子并阻止其之后的发帖。0 表示禁用这个特性。"
     num_users_to_block_new_user: "如果一个新用户的帖子被许多其他用户 num_flags_to_block_new_user 标记为垃圾，隐藏他们的所有帖子并阻止其之后发帖。0 表示禁用这个特性。"
     notify_mods_when_user_blocked: "如果一个用户被自动封禁了，发送一个消息给所有管理员。"
@@ -722,8 +725,8 @@ zh_CN:
     email_token_grace_period_hours: "“忘记密码”/“激活账户” token 在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
-    email_domains_blacklist: "一个邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com trashmail.net"
-    email_domains_whitelist: "一个电子邮箱域名的列表，用户只能使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
+    email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
+    email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
     forgot_password_strict: "在找回密码对话框中不告知用户账户的存在。"
     log_out_strict: "登出时，登出用户所有设备的会话"
     version_checks: "访问 Discourse Hub 来检查版本更新，并在管理面板 /admin 显示新版本信息"
@@ -945,6 +948,8 @@ zh_CN:
     enable_emoji: "启用绘文字（emoji）"
     emoji_set: "你喜欢哪一种 emoji？"
     enforce_square_emoji: "强制为所有 emojis 设置正方形比例。"
+    approve_post_count: "新用户需要被审核的帖子数量"
+    approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1373,6 +1378,12 @@ zh_CN:
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
         我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
+      text_body_template: |
+        我们很抱歉，但是您发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
+
+        您的账户没有足够的权限在该分类发布一个新主题。如果您坚信这是一个错误，联系一个职员。
     email_reject_post_error:
       subject_template: "[%{site_name}] 邮件问题 -- 发表错误"
       text_body_template: |

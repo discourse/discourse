@@ -107,7 +107,6 @@ nb_NO:
     show_more: "vis mer"
     show_help: "hjelp"
     links: "Lenker"
-    links_lowercase: "lenker"
     faq: "FAQ"
     guidelines: "Retningslinjer"
     privacy_policy: "Personvern"
@@ -432,7 +431,6 @@ nb_NO:
       auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
-        always: "alltid"
         after_n_seconds:
           one: "etter 1 sekund"
           other: "etter {{count}} sekunder"
@@ -525,7 +523,6 @@ nb_NO:
     mute: Demp
     unmute: Fjern demping
     last_post: Siste innlegg
-    last_post_lowercase: siste innlegg
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
       description: "Det er <b>{{count}}</b> svar."
@@ -864,6 +861,12 @@ nb_NO:
         invisible: "Skjul Emnet"
         visible: "Vist Emnet"
         reset_read: "Tilbakestill Lesedata"
+      feature:
+        pin: "Lås Emne"
+        unpin: "Lås Opp Emne"
+        pin_globally: "Lås Emne Globalt"
+        make_banner: "Banneremne"
+        remove_banner: "Fjern Banneremne"
       reply:
         title: 'Svar'
         help: 'begynn å skrive et svar til dette emnet'
@@ -878,12 +881,29 @@ nb_NO:
         help: 'rapporter dette innlegget privat eller send et privat varsel om det'
         success_message: 'Du har rapportert dette emnet'
       feature_topic:
+        title: "Fremhev dette emnet"
         pin: "Plasser dette emnet på toppen av {{categoryLink}} kategorien."
         confirm_pin: "Du har allerede {{count}} låste emner. For mange låste emner kan være et problem for nye og anonyme brukere. Er du sikker på at du ønsker å låse et til emne i denne kategorien?"
         unpin: "Fjern dette emnet fra toppen av {{categoryLink}} kategorien."
         pin_note: "Brukere kan låse opp emnet selv."
         already_pinned:
           zero: "Det er ingen låste emner i {{categoryLink}}."
+          one: "Emner for øyeblikket låst i {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Emner for øyeblikket låst i {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "Gjør at dette emnet dukker opp på toppen av alle emnelister frem til en i staben låser det opp. "
+        confirm_pin_globally: "Du har allerede {{count}} globalt låste emner. For mange låste emner kan bli en byrde for nye og anonyme brukere. Er du sikker på at du vil låse et til emne globalt? "
+        unpin_globally: "Fjern dette emnet fra toppen av alle emnelister. "
+        global_pin_note: "Brukere kan låse opp emner for dem selv. "
+        already_pinned_globally:
+          zero: "Det er ingen låste emner globalt."
+          one: "Emner for øyeblikket låst globalt: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Dette enmnet er låst globalt: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        make_banner: "Gjør dette emnet til et banner som dukker opp på toppen av alle sider."
+        remove_banner: "Fjern banneret som dukker opp på toppen av alle sider. "
+        banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun et emne kan være banner på en og samme tid. "
+        already_banner:
+          zero: "Det er ingen banneremner. "
+          one: "Det <strong class='badge badge-notification unread'>er</strong> for øyeblikket et banneremne. "
       inviting: "Inviterer..."
       automatically_add_to_groups_optional: "Denne invitasjonen inkluderer også tilgang på disse gruppene: (valgfritt, kun for admin)"
       automatically_add_to_groups_required: "Denne invitasjonen inkluderer også tilgang til disse gruppene: (<b>påkrevet</a>, kun for admin)"
@@ -1238,15 +1258,12 @@ nb_NO:
     posts_long: "{{number}} innlegg i dette emnet"
     original_post: "Originalt Innlegg"
     views: "Visninger"
-    views_lowercase: "visninger"
     replies: "Svar"
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
     likes: "Liker"
-    likes_lowercase: "liker"
     likes_long: "det er {{number}} liker i dette emnet"
     users: "Deltakere"
-    users_lowercase: "brukere"
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"

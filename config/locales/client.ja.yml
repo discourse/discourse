@@ -76,6 +76,7 @@ ja:
       email: 'メールでこのリンクを送る'
     topic_admin_menu: "トピック管理"
     emails_are_disabled: "全てのメールアドレスの送信が管理者によって無効化されています。全ての種類のメール通知は行われません"
+    s3_deprecation_warning: "ご注意下さい。Amazon S3への対応ですが間もなく廃止されます。この <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>リンク先</a>に説明されているようにローラル・ストレージに切り替えて下さい。"
     edit: 'このトピックのタイトルとカテゴリを編集'
     not_implemented: "申し訳ありませんが、この機能はまだ実装されていません"
     no_value: "いいえ"
@@ -91,7 +92,8 @@ ja:
     show_more: "もっと見る"
     show_help: "ヘルプ"
     links: "リンク"
-    links_lowercase: "リンク"
+    links_lowercase:
+      other: "リンク集"
     faq: "よくある質問"
     guidelines: "ガイドライン"
     privacy_policy: "プライバシーポリシー"
@@ -100,7 +102,7 @@ ja:
     mobile_view: "モバイル表示"
     desktop_view: "デスクトップ表示"
     you: "あなた"
-    or: "or"
+    or: "あるいは"
     now: "たった今"
     read_more: 'もっと読む'
     more: "More"
@@ -118,11 +120,11 @@ ja:
     about:
       simple_title: "このサイトについて"
       title: "%{title}について"
-      stats: "Site Statistics"
+      stats: " サイト統計"
       our_admins: "管理者"
       our_moderators: "モデレーター"
       stat:
-        all_time: "All Time"
+        all_time: "今まで"
         last_7_days: "過去7日間"
         last_30_days: "過去30日間"
       like_count: "いいね！"
@@ -165,6 +167,8 @@ ja:
     undo: "取り消す"
     revert: "戻す"
     failed: "失敗"
+    switch_to_anon: "匿名モード"
+    switch_from_anon: "匿名モード停止"
     banner:
       close: "バナーを閉じる"
     choose_topic:
@@ -172,6 +176,19 @@ ja:
       title:
         search: "トピック名、URL、または ID でトピックを検索:"
         placeholder: "ここにトピックのタイトルを入力"
+    queue:
+      topic: "トピック："
+      approve: '承認'
+      reject: 'リジェクト'
+      title: "承認待ち"
+      none: "レビュー待ちの投稿はございません。"
+      edit: "編集"
+      cancel: "取り消し"
+      confirm: "変更を保存"
+      approval:
+        title: "この投稿は承認が必要"
+        description: "投稿された新規のポストは受付されましたがモデレイターによる承認が必要です。もう少々お待ち下さい。"
+        ok: "実行"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
       you_posted_topic: "<a href='{{userUrl}}'>あなた</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
@@ -191,10 +208,18 @@ ja:
       title: "ユーザ"
       likes_given: "与えた"
       likes_received: "もらった"
+      topics_entered: "入力された"
+      topics_entered_long: "入力されたトピック数"
       time_read: "読んだ時間"
       topic_count: "トピック"
+      topic_count_long: "作成されたトピック数"
       post_count: "返信"
+      post_count_long: "投稿された回答数"
       no_results: "結果はありませんでした"
+      days_visited: "訪問数"
+      days_visited_long: "訪問された日数"
+      posts_read: "閲覧済み"
+      posts_read_long: "閲覧された投稿数"
       total_rows:
         other: "%{count} 人のユーザ"
     groups:
@@ -215,6 +240,8 @@ ja:
       '2': "「いいね！」 された"
       '3': "ブックマーク"
       '4': "トピック"
+      '5': "回答数"
+      '6': "レスポンス数"
       '7': "タグ付け"
       '9': "引用"
       '10': "お気に入り"
@@ -259,6 +286,8 @@ ja:
       mute: "ミュート"
       edit: "プロフィールを編集"
       download_archive: "自分の投稿をダウンロード"
+      new_private_message: "新規メッセージ"
+      private_message: "メッセージ"
       private_messages: "メッセージ"
       activity_stream: "アクティビティ"
       preferences: "設定"
@@ -336,6 +365,8 @@ ja:
         uploaded_avatar_empty: "カスタム画像を追加"
         upload_title: "画像をアップロード"
         upload_picture: "画像アップロード"
+        image_is_not_a_square: " ご注意ください。アップロードされた画像はクロップされました。高さと幅が同じ長さではありませんでした。"
+        cache_notice: "プロフィール画像の変更は無事に完了されましたがブラウザのキャッシングによって反映されるまで少々時間が掛かる場合もあります。"
       change_profile_background:
         title: "プロフィール背景"
         instructions: "プロフィール背景は、幅850pxでセンタリングされます"
@@ -355,6 +386,7 @@ ja:
       name:
         title: "名前"
         instructions: "フルネーム(任意)"
+        instructions_required: "氏名"
         too_short: "名前が短すぎます"
         ok: "よい名前です"
       username:
@@ -392,6 +424,8 @@ ja:
         every_three_days: "３日毎"
         weekly: "毎週"
         every_two_weeks: "２週間に１回"
+      email_direct: "投稿されたポストに対する回答があった場合または自分のユーザーネームのメンションがあった場合または他ユーザーより自分の名前がタグされた場合またはトピックへの招待があった場合、Eメールを送信して下さい。"
+      email_private_messages: "メッセージを受け取ったときにメールで通知を受け取る。"
       email_always: "ログインしている際にメール通知を受け取る。"
       other_settings: "その他"
       categories_settings: "カテゴリ設定"
@@ -406,7 +440,7 @@ ja:
       auto_track_topics: "自動でトピックをトラックする"
       auto_track_options:
         never: "トラックしない"
-        always: "常にトラックする"
+        immediately: "今すぐ"
         after_n_seconds:
           other: "{{count}} 秒後"
         after_n_minutes:
@@ -435,6 +469,7 @@ ja:
           none: "あなたはまだ誰も招待していません。"
           text: "ファイルからまとめて招待をする"
           uploading: "アップロード中..."
+          success: "ファイルは無事にアップロードされました。完了されましたらメッセージでお知らせをさせていただきます。"
           error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
         title: "パスワード"
@@ -458,6 +493,7 @@ ja:
       stream:
         posted_by: "投稿者"
         sent_by: "送信者"
+        private_message: "メッセージ"
         the_topic: "トピック"
     loading: "読み込み中..."
     errors:
@@ -497,7 +533,9 @@ ja:
     mute: ミュート
     unmute: ミュート解除
     last_post: 最終投稿時刻
-    last_post_lowercase: 最後の投稿
+    last_reply_lowercase: 最新の回答
+    replies_lowercase:
+      other: 回答
     summary:
       enabled_description: "トピックのまとめを表示されています。"
       description: "<b>{{count}}</b> 返信があります。"
@@ -510,7 +548,9 @@ ja:
       enable: "削除されたポストを非表示する"
       disable: "削除されたポストを表示"
     private_message_info:
+      title: "メッセージ"
       invite: "友人を招待..."
+      remove_allowed_user: "このメッセージから{{ユーザーネーム}}を本当に取り除きたいでしょうか？"
     email: 'メール'
     username: 'ユーザ名'
     last_seen: '最終アクティビティ'
@@ -596,6 +636,7 @@ ja:
       reply: "回答"
       cancel: "キャンセル"
       create_topic: "トピック作成"
+      create_pm: "メッセージ"
       title: "またはCtrl+Enter"
       users_placeholder: "ユーザの追加"
       title_placeholder: "このディスカッションを簡潔に説明してください。"
@@ -645,9 +686,11 @@ ja:
           units: "(# of hours)"
           examples: '時間(24)を入力してください'
     notifications:
+      title: "ユーザーネームのメンションやご自身が投稿された記事やトピックやメッセージなどに対する回答に関する通知"
       none: "通知はありません"
       more: "古い通知を確認する"
       total_flagged: "フラグがたったポストの総数"
+      mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{ユーザーネーム}}</span> {{説明}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -655,6 +698,7 @@ ja:
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{ユーザーネーム}}</span> {{説明}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -681,6 +725,7 @@ ja:
         user: "@{{username}}のポストを検索"
         category: "\"{{category}}\" カテゴリで検索する"
         topic: "このトピックを探す"
+        private_messages: "メッセージ検索"
     site_map: "別のトピックリストやカテゴリに移動"
     go_back: '戻る'
     not_logged_in_user: 'ユーザアクチビティと設定ページ'
@@ -713,6 +758,7 @@ ja:
         bookmarks: "ブックマークしたトピックがありません"
         category: "{{category}} トピックはありません。"
         top: "トップトピック無し"
+        search: "検索結果はありません。"
         educate:
           new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
           unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
@@ -726,10 +772,12 @@ ja:
         category: "{{category}} トピックは以上です。"
         top: "トップトピックはありません。"
         bookmarks: "これ以上ブックマーク済みのトピックはありません"
+        search: "それ以上の検索結果はありません。"
     topic:
       filter_to: "トピック内の{{post_count}}個のポストを表示"
       create: 'トピック'
       create_long: '新しいトピックの作成'
+      private_message: 'メッセージを書く'
       list: 'トピック'
       new: '新規トピック'
       unread: '未読'
@@ -824,11 +872,17 @@ ja:
         delete: "トピック削除"
         open: "トピックを開く"
         close: "トピックを終了する"
+        multi_select: "投稿の選択。。。"
+        pin: "トピックをピンで留める。。。"
+        unpin: "トピックのピンを取り除く。。。"
         unarchive: "トピックのアーカイブ解除"
         archive: "トピックのアーカイブ"
         invisible: "リストされないようにする"
         visible: "リストする"
         reset_read: "読み込みデータをリセット"
+      feature:
+        pin: "トピックをピンで留める。。。"
+        unpin: "トピックをピンで留める。。。"
       reply:
         title: '回答'
         help: 'このトピックに回答する'
@@ -1120,7 +1174,7 @@ ja:
       position: "ポジション"
       default_position: "デフォルトポジション"
       position_disabled: "カテゴリはアクティビティで並び替えられます。カテゴリ一覧の順番を制御するには"
-      position_disabled_click: '"fixed category positions"設定を有効にしてください'
+      position_disabled_click: '「固定されたケテゴリーの位置付け」の設定を有効にしてください。'
       parent: "親カテゴリ"
       notifications:
         watching:
@@ -1197,15 +1251,12 @@ ja:
       other {}}
     original_post: "大元のポスト"
     views: "閲覧"
-    views_lowercase: "閲覧"
     replies: "回答"
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
-    likes_lowercase: "「いいね！」"
     likes_long: "このトピックには{{number}}つ「いいね！」がついています"
     users: "ユーザ"
-    users_lowercase: "ユーザ"
     category_title: "カテゴリ"
     history: "History"
     changed_by: "by {{author}}"
@@ -1263,6 +1314,9 @@ ja:
       top:
         title: "トップ"
         help: "過去年間、月間、週間及び日間のアクティブトピック"
+        all:
+          title: "今まで"
+        all_time: "今まで"
         this_year: "今年"
         this_month: "今月"
         this_week: "今週"
