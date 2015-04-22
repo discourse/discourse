@@ -9,6 +9,7 @@ const focusTrackerKey = "focus-tracker";
 const seenDataKey = "seen-notifications";
 const recentUpdateThreshold = 1000 * 60 * 2; // 2 minutes
 const idleThresholdTime = 1000 * 10; // 10 seconds
+const INVITED_TYPE = 8;
 
 function init(container) {
   liveEnabled = false;
@@ -27,7 +28,7 @@ function init(container) {
       try {
         init2(container);
       } catch (e) {
-        console.error(e);
+        Em.Logger.error(e);
       }
     }
   }).catch(function(e) {
@@ -71,6 +72,7 @@ function init2(container) {
       primaryTab = false;
     }
   });
+
   window.addEventListener("focus", function() {
     if (!primaryTab) {
       primaryTab = true;
@@ -78,14 +80,16 @@ function init2(container) {
     }
   });
 
-  if (document.hidden) {
+  if (document && (typeof document.hidden !== "undefined") && document["hidden"]) {
     primaryTab = false;
   } else {
     primaryTab = true;
     localStorage.setItem(focusTrackerKey, mbClientId);
   }
 
-  document.addEventListener("scroll", resetIdle);
+  if (document) {
+    document.addEventListener("scroll", resetIdle);
+  }
   window.addEventListener("mouseover", resetIdle);
   Discourse.PageTracker.on("change", resetIdle);
 }
