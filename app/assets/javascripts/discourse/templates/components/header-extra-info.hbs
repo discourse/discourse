@@ -15,7 +15,9 @@
           {{/if}}
         {{/if}}
       </h1>
-      {{topic-category topic=topic}}
+      {{#if topic.details.loaded}}
+        {{topic-category topic=topic}}
+      {{/if}}
     </div>
   </div>
 </div>
