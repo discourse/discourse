@@ -92,7 +92,8 @@ zh_CN:
     show_more: "显示更多"
     show_help: "帮助"
     links: "链接"
-    links_lowercase: "链接"
+    links_lowercase:
+      other: "链接"
     faq: "常见问题（FAQ）"
     guidelines: "指引"
     privacy_policy: "隐私政策"
@@ -175,6 +176,19 @@ zh_CN:
       title:
         search: "通过名称、URL 或者 ID，搜索主题："
         placeholder: "在此输入主题标题"
+    queue:
+      topic: "主题："
+      approve: '许可'
+      reject: '拒绝'
+      title: "需要许可"
+      none: "没有帖子可以审核。"
+      edit: "编辑"
+      cancel: "取消"
+      confirm: "保存修改"
+      approval:
+        title: "帖子需要审核"
+        description: "我们已经保存了你的帖子，不过帖子需要由管理员先审核才能显示。请耐心。"
+        ok: "确认"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 发起了 <a href='{{topicUrl}}'>本主题</a>"
       you_posted_topic: "<a href='{{userUrl}}'>你</a> 发起了 <a href='{{topicUrl}}'>本主题</a>"
@@ -426,7 +440,7 @@ zh_CN:
       auto_track_topics: "自动追踪我进入的主题"
       auto_track_options:
         never: "从不"
-        always: "始终"
+        immediately: "立刻"
         after_n_seconds:
           other: "{{count}} 秒之后"
         after_n_minutes:
@@ -519,7 +533,9 @@ zh_CN:
     mute: 防打扰
     unmute: 解除防打扰
     last_post: 最后一帖
-    last_post_lowercase: 最后一帖
+    last_reply_lowercase: 最后回复
+    replies_lowercase:
+      other: 回复
     summary:
       enabled_description: "你正在查看这个主题的概括版本：由社群认定的最有意思的帖子。"
       description: "有 <b>{{count}}</b> 个回复。"
@@ -1269,15 +1285,18 @@ zh_CN:
       other {}}
     original_post: "原始帖"
     views: "浏览"
-    views_lowercase: "浏览"
+    views_lowercase:
+      other: "浏览"
     replies: "回复"
     views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
-    likes_lowercase: "赞"
+    likes_lowercase:
+      other: "赞"
     likes_long: "本主题已有 {{number}} 次赞"
     users: "参与者"
-    users_lowercase: "参与者"
+    users_lowercase:
+      other: "用户"
     category_title: "分类"
     history: "历史"
     changed_by: "由 {{author}}"
@@ -1491,6 +1510,8 @@ zh_CN:
         automatic: "自动"
         automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
         automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
+        default_title: "群组内所有用户的默认头衔"
+        primary_group: "自动设置为主要群组"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有活动的 API 密钥。"

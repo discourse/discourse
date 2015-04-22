@@ -514,7 +514,6 @@ ja:
     host_names_warning: "現在 config/database.yml ファイルは、デフォルトの localhost をホスト名として使用しています。あなたのサイトのホスト名に更新してください。"
     gc_warning: '現在サーバはデフォルトの ruby ガベージコレクションパラメータを使用しており、パフォーマンスが最適化されていません。パフォーマンス・チューニングの方法についてはこちらのトピックを参考にしてください: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq が起動していません。メール送信等、多くのタスクが sidekiq により非同期に実行されます。少なくとも sidekiq のプロセスを1つは起動してください。<a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq についてはこちらを参考にしてください</a>。'
-    queue_size_warning: 'キューに入っているジョブの数が多すぎます (%{queue_size})。Sidekiq プロセスに問題があるか、Sidekiq ワーカを追加する必要がある可能性があります。'
     memory_warning: '現在サーバが 1GB 未満の総メモリで起動しています。推奨メモリサイズは 1GB 以上です。'
     enable_google_logins_warning: "WARNING! Support is ending for your current method of Google authentication on April 20, 2015! Please <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>switch to the new method now!</a>"
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
@@ -657,8 +656,6 @@ ja:
     email_token_grace_period_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを無効するときに、何時間猶予を与えるか"
     enable_badges: "バッジシステムを有効にする"
     allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
-    email_domains_blacklist: "ユーザ登録を拒否するメールドメインのリスト 例: mailinator.com|trashmail.net"
-    email_domains_whitelist: "ユーザー登録に必要なメールドメインのリスト。警告: 指定したメールドメイン以外のユーザは許可されません！"
     forgot_password_strict: "パスワードリマインダダイアログで、アカウントの存在を通知しない"
     log_out_strict: "ログアウトした際に、そのユーザーの全デバイスのセッションをログアウトさせる"
     version_checks: "Discourse Hub にアップデート、新バージョンの有無を問い合わせ /admin ダッシュボードにバージョンメッセージを表示する"

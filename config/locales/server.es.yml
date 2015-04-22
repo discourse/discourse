@@ -457,7 +457,7 @@ es:
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/messages">mira tus mensajes</a>.</p>'
+    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes</a>.</p>'
     user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
   archetypes:
     regular:
@@ -600,7 +600,6 @@ es:
     host_names_warning: "Tu archivo 'config/database.yml' está utilizando un hostname predeterminado de 'localhost'. Actualízalo para usar el hostname de tu sitio."
     gc_warning: 'Tu servidor está usando recolección de residuos predeterminada por Ruby, que no te proveerá el mejor rendimiento. Lee este tema acerca de optimización del rendimiento: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq no está funcionando. Muchas tareas, por ejemplo el envío de correos, están realizadas desincronizadamente por sidekiq. Por favor asegúrate de que por lo menos un proceso de sidekiq está funcionando. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'El número de tareas en espera es %{queue_size}, que es elevado. Esto podría indicar un problema con el proceso(s) de Sidekiq, o tal vez necesitas añadir más trabajadores de Sidekiq.'
     memory_warning: 'Tu servidor está funcionando con menos de 1 GB de memoria total. Por lo menos 1 GB de memoria es recomendado.'
     enable_google_logins_warning: "¡ADVERTENCIA! El soporte técnico de su actual método de autenticación de Google finalizará el 20 de abril 2015! <a href='https://meta.discourse.org/t/configuring-google-login-para-discourse/15858' target='_blank'>¡Cámbiate al nuevo método ahora!</a>"
     both_googles_warning: "Has habilitado tanto enable_google_logins como enable_google_oauth2_logins en las opciones del sitio. Deshabilita enable_google_logins."
@@ -756,8 +755,6 @@ es:
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
-    email_domains_blacklist: "Una lista de dominios de email con los cuales los usuarios no podrán registrarse. Ejemplo: mailinator.com trashmail.net"
-    email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
     forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"

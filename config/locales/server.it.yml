@@ -423,7 +423,7 @@ it:
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/messages">Controlla i tuoi messaggi</a>.</p>'
+    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/private-messages">Controlla i tuoi messaggi</a>.</p>'
     user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
   archetypes:
     regular:
@@ -566,7 +566,6 @@ it:
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
-    queue_size_warning: 'Il numero di job in coda è %{queue_size}, troppo alto. Potrebbe esserci un problema con i processi Sidekiq, oppure potresti dover aggiungere altri Sidekiq worker.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
     enable_google_logins_warning: "ATTENZIONE! Il metodo di autenticazione che stai usando non verrà più supportato a partire dal  20 Aprile 2015. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Cambia metodo di autenticazione ora!</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
@@ -721,8 +720,6 @@ it:
     email_token_grace_period_hours: "I messaggi di password dimenticata / attivazione account sono ancora validi per un periodo di grazia di (n) ore dopo essere stati convalidati."
     enable_badges: "Attiva il sistema a targhette"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
-    email_domains_blacklist: "Una lista di domini email con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com trashmail.net"
-    email_domains_whitelist: "Una lista di domini email che gli utenti DEVONO usare per registrare un account. ATTENZIONE: gli utenti con un dominio email diverso da quelli elencati non saranno permessi!"
     forgot_password_strict: "Non informare gli utenti dell'esistenza dell'account quando richiamano la finestra per la password dimenticata."
     log_out_strict: "Quando si fa logout, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"

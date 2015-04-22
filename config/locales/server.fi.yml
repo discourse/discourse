@@ -79,11 +79,11 @@ fi:
     one: "Pahoittelut, uudet käyttäjät voivat kirjoittaa yhden vastauksen samaan ketjuun."
     other: "Pahoittelut, uudet käyttäjät voivat kirjoittaa %{count} vastausta samaan ketjuun."
   embed:
-    start_discussion: "Aloita keskustelu"
-    continue: "Jatka keskustelua"
+    start_discussion: "Lisää kommentti"
+    continue: "Siirry keskusteluun"
     more_replies:
-      one: "1 kommentti lisää"
-      other: "%{count} kommenttia lisää"
+      one: "1 muu kommentti"
+      other: "%{count} muuta kommenttia"
     loading: "Haetaan kommentteja..."
     permalink: "Ikilinkki"
     imported_from: "Tämä on kommenttiketju artikkelille %{link}"
@@ -138,6 +138,7 @@ fi:
   groups:
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
+      member_already_exist: "'%{username}' on jo ryhmän jäsen."
     default_names:
       everyone: "kaikki"
       admins: "ylläpitäjät"
@@ -457,7 +458,7 @@ fi:
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Viestisi on liputettu muiden käyttäjien toimesta. <a href="/my/messages">Käy lukemassa saapuneet viestisi</a>.</p>'
+    you_must_edit: '<p>Viestisi on liputettu muiden käyttäjien toimesta. <a href="/my/private-messages">Käy lukemassa saapuneet viestisi</a>.</p>'
     user_must_edit: '<p>Tämä viesti on liputettu ja siksi piilotettu väliaikaisesti.</p>'
   archetypes:
     regular:
@@ -600,7 +601,6 @@ fi:
     host_names_warning: "Sivuston config/database.yml tiedosto käyttää oletusisäntänimeä. Päivitä se käyttämään sivuston isäntänimeä."
     gc_warning: 'Palvelimesi käyttää rubyn oletuksia roskienkeräyksessä, joka ei anna parasta mahdollista suorituskykyä. Lue tämä ketju: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
-    queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on suuri. Tämä voi viitata ongelmaan Sidekiq prosess(e)issa, tai sinun voi olla järkevää lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
     both_googles_warning: "Olet ottanut käyttöön sekä enable_google_logins että enable_google_oauth2_logins sivun asetuksissa. Ota  enable_google_logins pois käytöstä."
     google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
@@ -720,6 +720,9 @@ fi:
     cooldown_minutes_after_hiding_posts: "Kuinka monta minuuttia käyttäjän tulee odottaa, ennen kuin hän voi muokata liputuksen seurauksena piilotettua viestiä"
     max_topics_in_first_day: "Kuinka monta ketjua uusi käyttäjä saa luoda ensimmäisenä päivänään sivustolla."
     max_replies_in_first_day: "Kuinka monta vastausta uusi käyttäjä saa kirjoittaa ensimmäisenä päivänään sivustolla."
+    tl2_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt2 (konkari) kertomalla tällä luvulla"
+    tl3_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt3 (mestari) kertomalla tällä luvulla"
+    tl4_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt4 (johtaja) kertomalla tällä luvulla"
     num_flags_to_block_new_user: "Jos uuden käyttäjän viesti saa näin monta roskaposti-liputusta num_users_to_block_new_user eri käyttäjältä, piilota kaikki hänen viestinsä ja estä viestien luominen. 0 poistaa tämän toiminnon käytöstä."
     num_users_to_block_new_user: "Jos uuden käyttäjän viesti saa näin monelta käyttäjältä num_flags_to_block_new_user roskaposti-liputusta, piilota kaikki hänen viestinsä ja estä viestien luominen. 0 poistaa tämän toiminnon käytöstä."
     notify_mods_when_user_blocked: "Jos käyttäjä estetään automaattisesti, lähetä viesti kaikille valvojille."
@@ -755,8 +758,8 @@ fi:
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
     enable_badges: "Ota käyttöön arvomerkkijärjestelmä"
     allow_index_in_robots_txt: "Määrittele robots.txt-tiedostossa, että hakukoneet saavat luetteloida sivuston."
-    email_domains_blacklist: "Lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com trashmail.net"
-    email_domains_whitelist: "Lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
+    email_domains_blacklist: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
+    email_domains_whitelist: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjien pitää luoda tilinsä. VAROITUS: Käyttäjiä, joiden sähköpostiosoite on muusta verkkotunnuksesta ei sallita!"
     forgot_password_strict: "Älä paljasta tilin olemassaoloa unohtuneen salasanan kyselyssä."
     log_out_strict: "Kun kirjaudutaan ulos, kirjaa käyttäjä ulos kaikilta laitteilta"
     version_checks: "Pingaa Discourse Hubia päivityksistä ja näytä viesti /admin hallintapaneelissa kun uusi versio on saatavilla"
@@ -978,6 +981,8 @@ fi:
     enable_emoji: "Ota emoji käyttöön"
     emoji_set: "Minkälaisa emojia haluaisit käyttää?"
     enforce_square_emoji: "Pakota neliö kuvasuhteeksi kaikille emojille."
+    approve_post_count: "Viestien lukumäärä, joka tarkastetaan uusilta käyttäjiltä"
+    approve_unless_trust_level: "Tätä luottamustasoa alhaisempien käyttäjien viestit tarkastetaan"
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -1435,6 +1440,12 @@ fi:
         Pahoittelemme, että sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Emme löytäneet viestisi sisältöä sähköpostista. **Varmista, että kirjoitit viestisi sähköpostin alkuun** -- emme pysty käsittelemään lainausten sekaan kirjoitettuja vastauksia
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Sähköpostiongelma -- Pääsy estetty"
+      text_body_template: |
+        Pahoittelut, sähköpostiviestiäsi tänne: %{destination} (otsikolla %{former_title}) ei voitu toimittaa.
+
+        Tililläsi ei ole riittäviä oikeuksia, jotta saisit lähettää uusia ketjuja tälle alueelle. Jos uskot, että tämä johtuu virheestä, ota yhteyttä henkilökuntaan.
     email_reject_post_error:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Lähetysvirhe"
       text_body_template: |

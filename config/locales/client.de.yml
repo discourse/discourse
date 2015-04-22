@@ -108,7 +108,9 @@ de:
     show_more: "mehr anzeigen"
     show_help: "Hilfe"
     links: "Links"
-    links_lowercase: "Links"
+    links_lowercase:
+      one: "Link"
+      other: "Links"
     faq: "FAQ"
     guidelines: "Richtlinien"
     privacy_policy: "Datenschutzrichtlinie"
@@ -195,6 +197,19 @@ de:
       title:
         search: "Suche nach Thema anhand von Name, URL oder ID:"
         placeholder: "Gib hier den Titel des Themas ein"
+    queue:
+      topic: "Thema:"
+      approve: 'Genehmigen'
+      reject: 'Ablehnen'
+      title: "Benötigt Genehmigung"
+      none: "Es sind keine Beiträge zur Überprüfung vorhanden."
+      edit: "Bearbeiten"
+      cancel: "Abbrechen"
+      confirm: "Änderungen speichern"
+      approval:
+        title: "Beitrag muss genehmigt werden"
+        description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat <a href='{{topicUrl}}'>das Thema</a> verfasst"
       you_posted_topic: "<a href=\"{{userUrl}}\">Du</a> hast <a href=\"{{topicUrl}}\">das Thema</a> verfasst"
@@ -376,6 +391,7 @@ de:
         upload_title: "Lade dein Bild hoch"
         upload_picture: "Bild hochladen"
         image_is_not_a_square: "Achtung: Wir haben dein Bild zugeschnitten, weil Höhe und Breite nicht übereingestimmt haben."
+        cache_notice: "Dein Profilbild wurde erfolgreich geändert. Aufgrund von Caching im Browser kann es allerdings eine Weile dauern, bis dieses angezeigt wird."
       change_profile_background:
         title: "Profilhintergrund"
         instructions: "Hintergrundbilder werden zentriert und haben eine Standardbreite von 850px."
@@ -433,6 +449,7 @@ de:
         every_three_days: "alle drei Tage"
         weekly: "wöchentlich"
         every_two_weeks: "alle drei Tage"
+      email_direct: "Sende mir eine E-Mail, wenn mich jemand zitiert, auf meine Beiträge antwortet, meinen @Namen erwähnt oder mich zu einem Thema einlädt."
       email_private_messages: "Sende mir eine E-Mail, wenn mir jemand eine Nachricht sendet."
       email_always: "E-Mail-Benachrichtigungen nicht unterdrücken, während ich im Forum aktiv bin"
       other_settings: "Andere"
@@ -450,7 +467,7 @@ de:
       auto_track_topics: "Betrachteten Themen automatisch folgen"
       auto_track_options:
         never: "niemals"
-        always: "immer"
+        immediately: "sofort"
         after_n_seconds:
           one: "nach einer Sekunde"
           other: "nach {{count}} Sekunden"
@@ -545,7 +562,10 @@ de:
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Letzter Beitrag
-    last_post_lowercase: letzter Beitrag
+    last_reply_lowercase: letzte Antwort
+    replies_lowercase:
+      one: Antwort
+      other: Antworten
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description: "Es gibt <b>{{count}}</b> Antworten."
@@ -955,7 +975,7 @@ de:
         email_or_username: "E-Mail-Adresse oder Benutzername des Eingeladenen"
         email_or_username_placeholder: "E-Mail-Adresse oder Benutzername"
         action: "Einladen"
-        success: "Wir haben den Benutzer eingeladen, an dieser Unterhaltung teilzunehmen."
+        success: "Wir haben den Benutzer gebeten, sich an dieser Unterhaltung zu beteiligen."
         error: "Entschuldige, es gab einen Fehler beim Einladen des Benutzers."
         group_name: "Gruppenname"
       invite_reply:
@@ -964,8 +984,13 @@ de:
         action: 'Einladung versenden'
         help: 'per E-Mail oder Benachrichtigung weitere Personen zu diesem Thema einladen'
         to_forum: "Wir senden deinem Freund eine kurze E-Mail, die es ihm ermöglicht, dem Forum sofort beizutreten. Es ist keine Anmeldung erforderlich."
+        sso_enabled: "Gib den Benutzername der Person ein, die du zu diesem Thema einladen willst."
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
+        to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
+        to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
         email_placeholder: 'name@example.com'
+        success_email: "Wir haben an <b>{{email}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
+        success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
         error: "Es tut uns leid, wir konnten diese Person nicht einladen. Wurde diese Person vielleicht schon eingeladen? (Einladungen sind in ihrer Zahl beschränkt)"
       login_reply: 'Anmelden, um zu antworten'
       filters:
@@ -1323,15 +1348,21 @@ de:
       Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
     original_post: "Original-Beitrag"
     views: "Aufrufe"
-    views_lowercase: "Aufrufe"
+    views_lowercase:
+      one: "Aufruf"
+      other: "Aufrufe"
     replies: "Antworten"
     views_long: "dieses Thema wurde {{number}} mal betrachtet"
     activity: "Aktivität"
     likes: "Likes"
-    likes_lowercase: "Likes"
+    likes_lowercase:
+      one: "Like"
+      other: "Likes"
     likes_long: "es gibt {{number}} Likes in diesem Thema"
     users: "Benutzer"
-    users_lowercase: "Benutzer"
+    users_lowercase:
+      one: "Benutzer"
+      other: "Benutzer"
     category_title: "Kategorie"
     history: "Verlauf"
     changed_by: "von {{author}}"
@@ -1550,6 +1581,8 @@ de:
         automatic: "Automatisch"
         automatic_membership_email_domains: "Benutzer, deren E-Mail-Domain mit einem der folgenden Listeneinträge genau übereinstimmt, werden automatisch zu dieser Gruppe hinzugefügt:"
         automatic_membership_retroactive: "Diese Regel auch auf existierende Benutzer anwenden, um diese zur Gruppe hinzuzufügen."
+        default_title: "Standardtitel für alle Benutzer in dieser Gruppe"
+        primary_group: "Automatisch als primäre Gruppe festlegen"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"

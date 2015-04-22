@@ -91,7 +91,8 @@ zh_TW:
     show_more: "顯示更多"
     show_help: "幫助"
     links: "連結"
-    links_lowercase: "Links"
+    links_lowercase:
+      other: "鏈結"
     faq: "常見問答集"
     guidelines: "守則"
     privacy_policy: "隱私政策"
@@ -165,6 +166,8 @@ zh_TW:
     undo: "復原"
     revert: "回復"
     failed: "失敗"
+    switch_to_anon: "匿名模式"
+    switch_from_anon: "退出匿名模式"
     banner:
       close: "關閉此橫幅"
     choose_topic:
@@ -406,7 +409,6 @@ zh_TW:
       auto_track_topics: "自動追蹤我參與的討論"
       auto_track_options:
         never: "永不"
-        always: "總是"
         after_n_seconds:
           other: "{{count}} 秒後"
         after_n_minutes:
@@ -497,7 +499,6 @@ zh_TW:
     mute: 靜音
     unmute: 取消靜音
     last_post: 最後一篇文章
-    last_post_lowercase: 最近發表
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
@@ -1174,15 +1175,12 @@ zh_TW:
     posts_long: "此討論話題有 {{number}} 篇文章"
     original_post: "原始文章"
     views: "觀看"
-    views_lowercase: "觀看"
     replies: "回覆"
     views_long: "此討論話題已被看過 {{number}} 次"
     activity: "活動"
     likes: "讚"
-    likes_lowercase: "讚"
     likes_long: "此討論話題收到了  {{number}}  個讚"
     users: "用戶"
-    users_lowercase: "用戶"
     category_title: "分類"
     history: "歷史"
     changed_by: "作者 {{author}}"

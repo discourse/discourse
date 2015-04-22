@@ -171,7 +171,6 @@ ar:
     show_more: "أعرض المزيد"
     show_help: "مساعدة"
     links: "روابط"
-    links_lowercase: "روابط"
     faq: "التعليمات"
     guidelines: "توجيهات "
     privacy_policy: "سياسة الخصوصية "
@@ -536,7 +535,6 @@ ar:
       auto_track_topics: "متابعة المواضيع التي أدخلها بشكل تلقائي"
       auto_track_options:
         never: "ابداً"
-        always: "دائما"
         after_n_seconds:
           zero: "بعد 0 ثانية"
           one: "بعد ثانية"
@@ -637,7 +635,6 @@ ar:
     mute: كتم
     unmute: إلغاء الكتم
     last_post: أخر مشاركة
-    last_post_lowercase: أخر مشاركة
     summary:
       enabled_description: "أنت تنظر الى ملخص لهذا الموضوع , مشاركات مثيرة للإهتمام بحسب رأي المجتمع"
       description: "هناك  <b>{{count}}</b> ردود"
@@ -1289,15 +1286,12 @@ ar:
     posts_long: "هناك {{number}} مشاركات في هذا الموضوع"
     original_post: "المشاركة الاصلية"
     views: "مشاهدات"
-    views_lowercase: "مشاهدات"
     replies: "ردود "
     views_long: "هذا الموضوع قد تمت مشاهدته  {{number}} مرات"
     activity: "النشاط"
     likes: "اعجابات"
-    likes_lowercase: "اعجابات"
     likes_long: "هناك {{number}} اعجابات في هذا الموضوع"
     users: "مستخدمين"
-    users_lowercase: "مستخدمين"
     category_title: "قسم"
     history: "تاريخ"
     changed_by: "الكاتب {{author}}"
