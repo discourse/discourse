@@ -1,8 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 import { notificationUrl } from 'discourse/lib/desktop-notifications';
 
-var INVITED_TYPE= 8;
-
 export default ObjectController.extend({
 
   scope: function() {
