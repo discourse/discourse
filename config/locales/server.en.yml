@@ -200,11 +200,11 @@ en:
     'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      - Does the title sound interesting if you read it out loud? Is it a good summary?
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - Who would be interested in this? Why does it matter? What kind of responses do you want?
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
