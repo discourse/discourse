@@ -107,7 +107,6 @@ te:
     show_more: "మరింత చూపు"
     show_help: "సహాయం"
     links: "లంకెలు"
-    links_lowercase: "లంకెలు"
     faq: "తవసం"
     guidelines: "మార్గదర్శకాలు"
     privacy_policy: "ప్రైవసీ పోలసీ"
@@ -416,7 +415,6 @@ te:
       auto_track_topics: "నేను రాసే విషయాలు ఆటోమేటిగ్గా గమనించు"
       auto_track_options:
         never: "ఎప్పటికీ వద్దు"
-        always: "ఎప్పుడూ"
         after_n_seconds:
           one: "ఒక సెకన్ తర్వాత"
           other: "{{count}}  సెకన్ల తర్వాత"
@@ -509,7 +507,6 @@ te:
     mute: నిశ్శబ్దం
     unmute: వినిశ్శబ్దం
     last_post: చివరి టపా
-    last_post_lowercase: చివరి టపా
     summary:
       enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
       description: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి"
@@ -1211,15 +1208,12 @@ te:
     posts_long: "ఈ విషయానికి {{number}}  టపాలు ఉన్నాయి. "
     original_post: "మూల టపా"
     views: "చూపులు"
-    views_lowercase: "చూపులు"
     replies: "జవాబులు"
     views_long: "ఈ విషయం  {{number}}  సార్లు చూడబడింది."
     activity: "కలాపం"
     likes: "ఇష్టాలు"
-    likes_lowercase: "ఇష్టాలు"
     likes_long: "ఈ విషయానికి  {{number}}  ఇష్టాలు ఉన్నాయి"
     users: "సభ్యులు"
-    users_lowercase: "సభ్యులు"
     category_title: "వర్గం"
     history: "చరిత్ర"
     changed_by: " {{author}} రాసిన"

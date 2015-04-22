@@ -6,6 +6,13 @@
     .btn-small {
       margin: 0 6px 0 0;
     }
+
+    .badge-wrapper {
+      float: left;
+      &.bullet {
+        margin-top: 5px;
+      }
+    }
   }
 
   a.badge-category {
@@ -23,4 +30,14 @@
   sup sup {
     top: 0;
   }
+}
+
+.extra-info-wrapper {
+  .badge-wrapper {
+    float: left;
+    &.bullet {
+      margin-top: 5px;
+    }
+  }
+
 }

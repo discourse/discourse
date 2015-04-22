@@ -20,6 +20,7 @@ zh_TW:
   is_reserved: "保留權利"
   purge_reason: "自動刪除被遺棄、未啟用賬戶"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
+  anonymous: "匿名"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -113,6 +114,7 @@ zh_TW:
   next_page: "下一頁 &rarr;"
   prev_page: "← 上一頁"
   page_num: "%{num} 頁"
+  home_title: "主頁"
   topics_in_category: "分類 '%{category}' 中的討論話題"
   rss_posts_in_topic: "'%{topic}' 的 RSS feed"
   rss_topics_in_category: "分類 '%{category}' 中討論話題的 RSS feed"
@@ -120,6 +122,7 @@ zh_TW:
   num_posts: "文章："
   num_participants: "參與者："
   read_full_topic: "閱讀整個話題"
+  private_message_abbrev: "消息"
   rss_description:
     latest: "最新討論話題"
     hot: "熱門討論話題"
@@ -128,6 +131,7 @@ zh_TW:
   groups:
     errors:
       can_not_modify_automatic: "你無法修改自動群組"
+      member_already_exist: "'%{username}' 已經是群組成員了。"
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -498,7 +502,6 @@ zh_TW:
     host_names_warning: "伺服器上 config/database.yml 的主機名稱為 localhost 。請更改成你的網站主機名稱。"
     gc_warning: '伺服器正在使用的 ruby 可能僅啟用了預設的 垃圾回收設定 (garbage collection), 這個設定無法提供最佳效能。請瀏覽此效能設定的資訊: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>。'
     sidekiq_warning: 'Sidekiq 未有執行。很多程序, 如發送電子郵件, 需要 sidekiq 非同步 (asynchronous) 執行的。請確保至少運行一個 sidekiq 程序。<a href="https://github.com/mperham/sidekiq">瞭解 Sidekiq</a>。'
-    queue_size_warning: '排定中的任務數量為%{queue_size}，任務較多。這可能是因為 Sidekiq 程序出現問題, 或者需要更多的 Sidekiq 程序。'
     memory_warning: '伺服器記憶體少於 1GB，建議配置至少 1GB 記憶體'
     enable_google_logins_warning: "警告！當前的 Google 認證方法將於2015年4月20日結束！請<a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>現在切換到新方法！</a>"
     both_googles_warning: "你已將網站設定中 enable_google_logins 和 enable_google_oauth2_logins 兩者皆勾選。請停用 enable_google_logins。"
@@ -644,8 +647,6 @@ zh_TW:
     email_token_grace_period_hours: "\"忘記密碼\" / \"重啟帳號\" 的 token 在使用後仍舊有效的小時數 (n)"
     enable_badges: "啟用勳章系統"
     allow_index_in_robots_txt: "在 robots.txt 中記錄這個網站允許被搜尋引擎索引的部分"
-    email_domains_blacklist: "Email域名的黑名單，在此名單內的域名將無法註冊，例如：mailinator.com trashmail.net"
-    email_domains_whitelist: "Email域名的白名單，使用者 \"必須\" 使用此帳號來註冊，注意：使用者如果使用其他Email的域名將無法註冊"
     forgot_password_strict: "在找回密碼對話框中不告知用戶帳戶的存在。"
     log_out_strict: "登出時，登出用戶所有設備上的所有時段"
     version_checks: "訪問 Discourse Hub 來檢查版本更新，並在管理面板 /admin 顯示新版本訊息"

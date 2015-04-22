@@ -91,7 +91,6 @@ ko:
     show_more: "더 보기"
     show_help: "도움말"
     links: "링크"
-    links_lowercase: "링크"
     faq: "FAQ"
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
@@ -401,7 +400,6 @@ ko:
       auto_track_topics: "마지막 방문이후 작성된 토픽"
       auto_track_options:
         never: "하지않음"
-        always: "항상"
         after_n_seconds:
           other: "{{count}}초 후"
         after_n_minutes:
@@ -492,7 +490,6 @@ ko:
     mute: 음소거
     unmute: 음소거 해제
     last_post: 최근 게시물
-    last_post_lowercase: 마지막 글
     summary:
       enabled_description: "현재 토픽에서 가장 인기 있는 몇 개의 글들을 보고 있습니다."
       description: "<b>{{count}}</b>개의 답글이 있습니다."
@@ -1162,15 +1159,12 @@ ko:
     posts_long: "이 토픽의 게시물 수는 {{number}}개 입니다."
     original_post: "원본 게시물"
     views: "조회수"
-    views_lowercase: "조회"
     replies: "답변"
     views_long: "이 토픽은 {{number}}번 조회 되었습니다."
     activity: "활동"
     likes: "좋아요"
-    likes_lowercase: "좋아요"
     likes_long: "이 주제에 {{number}}개의 '좋아요'가 있습니다."
     users: "사용자"
-    users_lowercase: "참여자"
     category_title: "카테고리"
     history: "기록"
     changed_by: "{{author}}에 의해"

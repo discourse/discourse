@@ -29,7 +29,8 @@ class UserActionSerializer < ApplicationSerializer
              :acting_uploaded_avatar_id
 
   def excerpt
-    PrettyText.excerpt(object.cooked, 300) if object.cooked
+    cooked = object.cooked || PrettyText.cook(object.raw)
+    PrettyText.excerpt(cooked, 300) if cooked
   end
 
   def avatar_template
@@ -38,6 +39,10 @@ class UserActionSerializer < ApplicationSerializer
 
   def acting_avatar_template
     User.avatar_template(object.acting_username, object.acting_uploaded_avatar_id)
+  end
+
+  def include_acting_avatar_template?
+    object.acting_username.present?
   end
 
   def include_name?
@@ -54,6 +59,10 @@ class UserActionSerializer < ApplicationSerializer
 
   def slug
     Slug.for(object.title)
+  end
+
+  def include_slug?
+    object.title.present?
   end
 
   def moderator_action

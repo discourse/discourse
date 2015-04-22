@@ -2,13 +2,19 @@ function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
-    result[item[0]] = decodeURIComponent(item[1]);
+    const firstSeg = decodeURIComponent(item[0]);
+    const m = /^([^\[]+)\[([^\]]+)\]/.exec(firstSeg);
+
+    const val = decodeURIComponent(item[1]).replace(/\+/g, ' ');
+    if (m) {
+      result[m[1]] = result[m[1]] || {};
+      result[m[1]][m[2]] = val;
+    } else {
+      result[firstSeg] = val;
+    }
+
   });
   return result;
-}
-
-function clone(obj) {
-  return JSON.parse(JSON.stringify(obj));
 }
 
 function response(code, obj) {
@@ -33,8 +39,22 @@ const _moreWidgets = [
   {id: 224, name: 'Good Repellant'}
 ];
 
+const fruits = [{id: 1, name: 'apple', farmer_id: 1, category_id: 4},
+                {id: 2, name: 'banana', farmer_id: 1, category_id: 3},
+                {id: 3, name: 'grape', farmer_id: 2, category_id: 5}];
+
+const farmers = [{id: 1, name: 'Old MacDonald'},
+                 {id: 2, name: 'Luke Skywalker'}];
+
+function loggedIn() {
+  return !!Discourse.User.current();
+}
+
 export default function() {
+
   const server = new Pretender(function() {
+
+    const fixturesByUrl = {};
 
     // Load any fixtures automatically
     const self = this;
@@ -44,12 +64,31 @@ export default function() {
         if (fixture && fixture.default) {
           const obj = fixture.default;
           Ember.keys(obj).forEach(function(url) {
+            fixturesByUrl[url] = obj[url];
             self.get(url, function() {
               return response(obj[url]);
             });
           });
         }
       }
+    });
+
+    this.get('/composer-messages', () => { return response([]); });
+
+    this.get("/latest.json", () => {
+      const json = fixturesByUrl['/latest.json'];
+
+      if (loggedIn()) {
+        // Stuff to let us post
+        json.topic_list.can_create_topic = true;
+        json.topic_list.draft_key = "new_topic";
+        json.topic_list.draft_sequence = 1;
+      }
+      return response(json);
+    });
+
+    this.get("/t/280.json", function() {
+      return response(fixturesByUrl['/t/280/1.json']);
     });
 
     this.get("/t/id_for/:slug", function() {
@@ -60,8 +99,22 @@ export default function() {
       return [200, {"Content-Type": "text/html"}, "<div class='page-not-found'>not found</div>"];
     });
 
+    this.delete('/draft.json', success);
+
+    this.get('/users/:username/staff-info.json', () => response({}));
+
     this.get('/draft.json', function() {
       return response({});
+    });
+
+    this.put('/queued_posts/:queued_post_id', function(request) {
+      return response({ queued_post: {id: request.params.queued_post_id } });
+    });
+
+    this.get('/queued_posts', function() {
+      return response({
+        queued_posts: [{id: 1, raw: 'queued post text'}]
+      });
     });
 
     this.post('/session', function(request) {
@@ -99,6 +152,50 @@ export default function() {
     this.delete('/posts/:post_id', success);
     this.put('/posts/:post_id/recover', success);
 
+    this.put('/posts/:post_id', (request) => {
+      const data = parsePostData(request.requestBody);
+      data.post.id = request.params.post_id;
+      data.post.version = 2;
+      return response(200, data.post);
+    });
+
+    this.put('/t/:slug/:id', (request) => {
+      const data = parsePostData(request.requestBody);
+
+      return response(200, { basic_topic: {id: request.params.id,
+                                           title: data.title,
+                                           fancy_title: data.title,
+                                           slug: request.params.slug } });
+    });
+
+    this.post('/posts', function(request) {
+      const data = parsePostData(request.requestBody);
+
+      if (data.title === "this title triggers an error") {
+        return response(422, {errors: ['That title has already been taken']});
+      }
+
+      if (data.raw === "enqueue this content please") {
+        return response(200, { success: true, action: 'enqueued' });
+      }
+
+      return response(200, {
+        success: true,
+        action: 'create_post',
+        post: {id: 12345, topic_id: 280, topic_slug: 'internationalization-localization'}
+      });
+    });
+
+    this.get('/fruits/:id', function() {
+      const fruit = fruits[0];
+
+      return response({ __rest_serializer: "1", fruit, farmers: [farmers[0]] });
+    });
+
+    this.get('/fruits', function() {
+      return response({ __rest_serializer: "1", fruits, farmers });
+    });
+
     this.get('/widgets/:widget_id', function(request) {
       const w = _widgets.findBy('id', parseInt(request.params.widget_id));
       if (w) {
@@ -108,9 +205,15 @@ export default function() {
       }
     });
 
+    this.post('/widgets', function(request) {
+      const widget = parsePostData(request.requestBody).widget;
+      widget.id = 100;
+      return response(200, {widget});
+    });
+
     this.put('/widgets/:widget_id', function(request) {
-      const w = _widgets.findBy('id', parseInt(request.params.widget_id));
-      return response({ widget: clone(w) });
+      const widget = parsePostData(request.requestBody).widget;
+      return response({ widget });
     });
 
     this.get('/widgets', function(request) {
@@ -130,8 +233,11 @@ export default function() {
     });
 
     this.delete('/widgets/:widget_id', success);
-  });
 
+    this.post('/topics/timings', function() {
+      return response(200, {});
+    });
+  });
 
   server.prepareBody = function(body){
     if (body && typeof body === "object") {

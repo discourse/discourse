@@ -59,7 +59,11 @@ sinon.config = {
   useFakeServer: false
 };
 
-window.assetPath = function() { return null; };
+window.assetPath = function(url) {
+  if (url.indexOf('defer') === 0) {
+    return "/assets/" + url;
+  }
+};
 
 // Stop the message bus so we don't get ajax calls
 window.MessageBus.stop();
@@ -86,6 +90,7 @@ if (window.Logster) {
 var origDebounce = Ember.run.debounce,
     createPretendServer = require('helpers/create-pretender', null, null, false).default,
     fixtures = require('fixtures/site_fixtures', null, null, false).default,
+    flushMap = require('discourse/models/store', null, null, false).flushMap,
     server;
 
 QUnit.testStart(function(ctx) {
@@ -94,7 +99,7 @@ QUnit.testStart(function(ctx) {
   // Allow our tests to change site settings and have them reset before the next test
   Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);
   Discourse.BaseUri = "/";
-  Discourse.BaseUrl = "";
+  Discourse.BaseUrl = "localhost";
   Discourse.User.resetCurrent();
   Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
   PreloadStore.reset();
@@ -110,12 +115,16 @@ QUnit.testStart(function(ctx) {
   }
 });
 
+// Don't cloak in testing
+Ember.CloakedCollectionView = Ember.CollectionView;
+
 QUnit.testDone(function() {
   Ember.run.debounce = origDebounce;
   window.sandbox.restore();
 
   // Destroy any modals
   $('.modal-backdrop').remove();
+  flushMap();
 
   server.shutdown();
 });

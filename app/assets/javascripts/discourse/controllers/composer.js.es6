@@ -61,7 +61,8 @@ export default DiscourseController.extend({
       if (postId) {
         this.set('model.loading', true);
         const composer = this;
-        return Discourse.Post.load(postId).then(function(post) {
+
+        return this.store.find('post', postId).then(function(post) {
           const quote = Discourse.Quote.build(post, post.get("raw"));
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
@@ -82,6 +83,13 @@ export default DiscourseController.extend({
     },
 
     hitEsc() {
+
+      const messages = this.get('controllers.composer-messages.model');
+      if (messages.length) {
+        messages.popObject();
+        return;
+      }
+
       if (this.get('model.viewOpen')) {
         this.shrink();
       }
@@ -217,13 +225,20 @@ export default DiscourseController.extend({
     const promise = composer.save({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
-    }).then(function(opts) {
+    }).then(function(result) {
+
+      if (result.responseJson.action === "enqueued") {
+        self.send('postWasEnqueued');
+        self.destroyDraft();
+        self.close();
+        return result;
+      }
+
       // If we replied as a new topic successfully, remove the draft.
       if (self.get('replyAsNewTopicDraft')) {
         self.destroyDraft();
       }
 
-      opts = opts || {};
       self.close();
 
       const currentUser = Discourse.User.current();
@@ -236,15 +251,15 @@ export default DiscourseController.extend({
       // TODO disableJumpReply is super crude, it needs to provide some sort
       // of notification to the end user
       if (!composer.get('replyingToTopic') || !disableJumpReply) {
-        if (opts.post && !staged) {
-          Discourse.URL.routeTo(opts.post.get('url'));
+        const post = result.target;
+        if (post && !staged) {
+          Discourse.URL.routeTo(post.get('url'));
         }
       }
     }).catch(function(error) {
       composer.set('disableDrafts', false);
-      bootbox.alert(error);
+      self.appEvents.one('composer:opened', () => bootbox.alert(error));
     });
-
 
     if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
         composer.get('topic.id') === this.get('controllers.topic.model.id')) {
@@ -412,7 +427,7 @@ export default DiscourseController.extend({
         composerModel.set('topic', opts.topic);
       }
     } else {
-      composerModel = composerModel || Discourse.Composer.create();
+      composerModel = composerModel || this.store.createRecord('composer');
       composerModel.open(opts);
     }
 

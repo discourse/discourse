@@ -249,12 +249,14 @@ class ImportScripts::Base
         elsif u[:email].present?
           new_user = create_user(u, import_id)
 
-          if new_user.valid?
+          if new_user.valid? && new_user.user_profile.valid?
             @existing_users[import_id.to_s] = new_user.id
             users_created += 1
           else
             @failed_users << u
-            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
+            puts "user errors: #{new_user.errors.full_messages}"
+            puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
           end
         else
           @failed_users << u
@@ -618,7 +620,11 @@ class ImportScripts::Base
     progress_count = 0
 
     User.find_each do |user|
-      user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      begin
+        user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      rescue Discourse::InvalidAccess
+        nil
+      end
       progress_count += 1
       print_status(progress_count, total_count)
     end

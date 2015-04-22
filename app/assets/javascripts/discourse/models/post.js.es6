@@ -1,20 +1,15 @@
-/**
-  A data model representing a post in a topic
+import RestModel from 'discourse/models/rest';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-  @class Post
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.Post = Discourse.Model.extend({
+const Post = RestModel.extend({
 
-  init: function() {
+  init() {
     this.set('replyHistory', []);
   },
 
   shareUrl: function() {
-    var user = Discourse.User.current();
-    var userSuffix = user ? '?u=' + user.get('username_lower') : '';
+    const user = Discourse.User.current();
+    const userSuffix = user ? '?u=' + user.get('username_lower') : '';
 
     if (this.get('firstPost')) {
       return this.get('topic.url') + userSuffix;
@@ -33,7 +28,7 @@ Discourse.Post = Discourse.Model.extend({
   userDeleted: Em.computed.empty('user_id'),
 
   showName: function() {
-    var name = this.get('name');
+    const name = this.get('name');
     return name && (name !== this.get('username'))  && Discourse.SiteSettings.display_name_on_posts;
   }.property('name', 'username'),
 
@@ -69,29 +64,23 @@ Discourse.Post = Discourse.Model.extend({
   }.property("user_id"),
 
   wikiChanged: function() {
-    var data = { wiki: this.get("wiki") };
+    const data = { wiki: this.get("wiki") };
     this._updatePost("wiki", data);
   }.observes('wiki'),
 
   postTypeChanged: function () {
-    var data = { post_type: this.get("post_type") };
+    const data = { post_type: this.get("post_type") };
     this._updatePost("post_type", data);
   }.observes("post_type"),
 
-  _updatePost: function (field, data) {
-    var self = this;
+  _updatePost(field, data) {
+    const self = this;
     Discourse.ajax("/posts/" + this.get("id") + "/" + field, {
       type: "PUT",
       data: data
     }).then(function () {
       self.incrementProperty("version");
-    }, function (error) {
-      if (error && error.responseText) {
-        bootbox.alert($.parseJSON(error.responseText).errors[0]);
-      } else {
-        bootbox.alert(I18n.t("generic_error"));
-      }
-    });
+    }).catch(popupAjaxError);
   },
 
   internalLinks: function() {
@@ -103,7 +92,7 @@ Discourse.Post = Discourse.Model.extend({
   editCount: function() { return this.get('version') - 1; }.property('version'),
 
   flagsAvailable: function() {
-    var post = this;
+    const post = this;
     return Discourse.Site.currentProp('flagTypes').filter(function(item) {
       return post.get("actionByName." + item.get('name_key') + ".can_act");
     });
@@ -119,73 +108,46 @@ Discourse.Post = Discourse.Model.extend({
     });
   }.property('actions_summary.@each.users', 'actions_summary.@each.count'),
 
-  // Save a post and call the callback when done.
-  save: function(complete, error) {
-    var self = this;
-    if (!this.get('newPost')) {
-      // We're updating a post
-      return Discourse.ajax("/posts/" + (this.get('id')), {
-        type: 'PUT',
-        dataType: 'json',
-        data: {
-          post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
-          image_sizes: this.get('imageSizes')
-        }
-      }).then(function(result) {
-        // If we received a category update, update it
-        self.set('version', result.post.version);
-        if (result.category) Discourse.Site.current().updateCategory(result.category);
-        if (complete) complete(Discourse.Post.create(result.post));
-      }).catch(function(result) {
-        // Post failed to update
-        if (error) error(result);
-      });
-
-    } else {
-      // We're saving a post
-      var data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
-      data.reply_to_post_number = this.get('reply_to_post_number');
-      data.image_sizes = this.get('imageSizes');
-
-      var metaData = this.get('metaData');
-      // Put the metaData into the request
-      if (metaData) {
-        data.meta_data = {};
-        Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
-      }
-
-      return Discourse.ajax("/posts", {
-        type: 'POST',
-        data: data
-      }).then(function(result) {
-        // Post created
-        if (complete) complete(Discourse.Post.create(result));
-      }).catch(function(result) {
-        // Failed to create a post
-        if (error) error(result);
-      });
+  afterUpdate(res) {
+    if (res.category) {
+      Discourse.Site.current().updateCategory(res.category);
     }
   },
 
-  /**
-    Expands the first post's content, if embedded and shortened.
+  updateProperties() {
+    return {
+      post: { raw: this.get('raw'), edit_reason: this.get('editReason') },
+      image_sizes: this.get('imageSizes')
+    };
+  },
 
-    @method expandFirstPost
-  **/
-  expand: function() {
-    var self = this;
+  createProperties() {
+    const data = this.getProperties(Discourse.Composer.serializedFieldsForCreate());
+    data.reply_to_post_number = this.get('reply_to_post_number');
+    data.image_sizes = this.get('imageSizes');
+
+    const metaData = this.get('metaData');
+
+    // Put the metaData into the request
+    if (metaData) {
+      data.meta_data = {};
+      Ember.keys(metaData).forEach(function(key) { data.meta_data[key] = metaData.get(key); });
+    }
+
+    return data;
+  },
+
+  // Expands the first post's content, if embedded and shortened.
+  expand() {
+    const self = this;
     return Discourse.ajax("/posts/" + this.get('id') + "/expand-embed").then(function(post) {
       self.set('cooked', "<section class='expanded-embed'>" + post.cooked + "</section>" );
     });
   },
 
-  /**
-    Recover a deleted post
-
-    @method recover
-  **/
-  recover: function() {
-    var post = this;
+  // Recover a deleted post
+  recover() {
+    const post = this;
     post.setProperties({
       deleted_at: null,
       deleted_by: null,
@@ -207,11 +169,8 @@ Discourse.Post = Discourse.Model.extend({
   /**
     Changes the state of the post to be deleted. Does not call the server, that should be
     done elsewhere.
-
-    @method setDeletedState
-    @param {Discourse.User} deletedBy The user deleting the post
   **/
-  setDeletedState: function(deletedBy) {
+  setDeletedState(deletedBy) {
     this.set('oldCooked', this.get('cooked'));
 
     // Moderators can delete posts. Users can only trigger a deleted at message, unless delete_removed_posts_after is 0.
@@ -237,10 +196,8 @@ Discourse.Post = Discourse.Model.extend({
     Changes the state of the post to NOT be deleted. Does not call the server.
     This can only be called after setDeletedState was called, but the delete
     failed on the server.
-
-    @method undoDeletedState
   **/
-  undoDeleteState: function() {
+  undoDeleteState() {
     if (this.get('oldCooked')) {
       this.setProperties({
         deleted_at: null,
@@ -253,13 +210,7 @@ Discourse.Post = Discourse.Model.extend({
     }
   },
 
-  /**
-    Deletes a post
-
-    @method destroy
-    @param {Discourse.User} deletedBy The user deleting the post
-  **/
-  destroy: function(deletedBy) {
+  destroy(deletedBy) {
     this.setDeletedState(deletedBy);
     return Discourse.ajax("/posts/" + this.get('id'), {
       data: { context: window.location.pathname },
@@ -270,14 +221,11 @@ Discourse.Post = Discourse.Model.extend({
   /**
     Updates a post from another's attributes. This will normally happen when a post is loading but
     is already found in an identity map.
-
-    @method updateFromPost
-    @param {Discourse.Post} otherPost The post we're updating from
   **/
-  updateFromPost: function(otherPost) {
-    var self = this;
+  updateFromPost(otherPost) {
+    const self = this;
     Object.keys(otherPost).forEach(function (key) {
-      var value = otherPost[key],
+      let value = otherPost[key],
           oldValue = self[key];
 
       if (key === "replyHistory") {
@@ -287,7 +235,7 @@ Discourse.Post = Discourse.Model.extend({
       if (!value) { value = null; }
       if (!oldValue) { oldValue = null; }
 
-      var skip = false;
+      let skip = false;
       if (typeof value !== "function" && oldValue !== value) {
         // wishing for an identity map
         if (key === "reply_to_user" && value && oldValue) {
@@ -301,56 +249,8 @@ Discourse.Post = Discourse.Model.extend({
     });
   },
 
-  /**
-    Updates a post from a JSON packet. This is normally done after the post is saved to refresh any
-    attributes.
-
-    @method updateFromJson
-    @param {Object} obj The Json data to update with
-  **/
-  updateFromJson: function(obj) {
-    if (!obj) return;
-
-    var skip, oldVal;
-
-    // Update all the properties
-    var post = this;
-    _.each(obj, function(val,key) {
-      if (key !== 'actions_summary'){
-        oldVal = post[key];
-        skip = false;
-
-        if (val && val !== oldVal) {
-
-          if (key === "reply_to_user" && val && oldVal) {
-            skip = val.username === oldVal.username || Em.get(val, "username") === Em.get(oldVal, "username");
-          }
-
-          if(!skip) {
-            post.set(key, val);
-          }
-        }
-      }
-    });
-
-    // Rebuild actions summary
-    this.set('actions_summary', Em.A());
-    if (obj.actions_summary) {
-      var lookup = Em.Object.create();
-      _.each(obj.actions_summary,function(a) {
-        var actionSummary;
-        a.post = post;
-        a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        actionSummary = Discourse.ActionSummary.create(a);
-        post.get('actions_summary').pushObject(actionSummary);
-        lookup.set(a.actionType.get('name_key'), actionSummary);
-      });
-      this.set('actionByName', lookup);
-    }
-  },
-
   // Load replies to this post
-  loadReplies: function() {
+  loadReplies() {
     if(this.get('loadingReplies')){
       return;
     }
@@ -358,12 +258,12 @@ Discourse.Post = Discourse.Model.extend({
     this.set('loadingReplies', true);
     this.set('replies', []);
 
-    var self = this;
+    const self = this;
     return Discourse.ajax("/posts/" + (this.get('id')) + "/replies")
       .then(function(loaded) {
-        var replies = self.get('replies');
+        const replies = self.get('replies');
         _.each(loaded,function(reply) {
-          var post = Discourse.Post.create(reply);
+          const post = Discourse.Post.create(reply);
           post.set('topic', self.get('topic'));
           replies.pushObject(post);
         });
@@ -375,7 +275,7 @@ Discourse.Post = Discourse.Model.extend({
 
   // Whether to show replies directly below
   showRepliesBelow: function() {
-    var replyCount = this.get('reply_count');
+    const replyCount = this.get('reply_count');
 
     // We don't show replies if there aren't any
     if (replyCount === 0) return false;
@@ -387,13 +287,13 @@ Discourse.Post = Discourse.Model.extend({
     if (replyCount > 1) return true;
 
     // If we have *exactly* one reply, we have to consider if it's directly below us
-    var topic = this.get('topic');
+    const topic = this.get('topic');
     return !topic.isReplyDirectlyBelow(this);
 
   }.property('reply_count'),
 
-  expandHidden: function() {
-    var self = this;
+  expandHidden() {
+    const self = this;
     return Discourse.ajax("/posts/" + this.get('id') + "/cooked.json").then(function (result) {
       self.setProperties({
         cooked: result.cooked,
@@ -402,17 +302,17 @@ Discourse.Post = Discourse.Model.extend({
     });
   },
 
-  rebake: function () {
+  rebake() {
     return Discourse.ajax("/posts/" + this.get("id") + "/rebake", { type: "PUT" });
   },
 
-  unhide: function () {
+  unhide() {
     return Discourse.ajax("/posts/" + this.get("id") + "/unhide", { type: "PUT" });
   },
 
-  toggleBookmark: function() {
-    var self = this,
-        bookmarkedTopic;
+  toggleBookmark() {
+    const self = this;
+    let bookmarkedTopic;
 
     this.toggleProperty("bookmarked");
 
@@ -432,43 +332,46 @@ Discourse.Post = Discourse.Model.extend({
         if (bookmarkedTopic) {self.set("topic.bookmarked", false); }
         throw e;
       });
+  },
+
+  updateActionsSummary(json) {
+    if (json && json.id === this.get('id')) {
+      json = Post.munge(json);
+      this.set('actions_summary', json.actions_summary);
+    }
   }
+
 });
 
-Discourse.Post.reopenClass({
+Post.reopenClass({
 
-  createActionSummary: function(result) {
-    if (result.actions_summary) {
-      var lookup = Em.Object.create();
+  munge(json) {
+    if (json.actions_summary) {
+      const lookup = Em.Object.create();
       // this area should be optimized, it is creating way too many objects per post
-      result.actions_summary = result.actions_summary.map(function(a) {
-        a.post = result;
+      json.actions_summary = json.actions_summary.map(function(a) {
         a.actionType = Discourse.Site.current().postActionTypeById(a.id);
-        var actionSummary = Discourse.ActionSummary.create(a);
+        const actionSummary = Discourse.ActionSummary.create(a);
         lookup[a.actionType.name_key] = actionSummary;
         return actionSummary;
       });
-      result.set('actionByName', lookup);
+      json.actionByName = lookup;
     }
+
+    if (json && json.reply_to_user) {
+      json.reply_to_user = Discourse.User.create(json.reply_to_user);
+    }
+    return json;
   },
 
-  create: function(obj) {
-    var result = this._super.apply(this, arguments);
-    this.createActionSummary(result);
-    if (obj && obj.reply_to_user) {
-      result.set('reply_to_user', Discourse.User.create(obj.reply_to_user));
-    }
-    return result;
-  },
-
-  updateBookmark: function(postId, bookmarked) {
+  updateBookmark(postId, bookmarked) {
     return Discourse.ajax("/posts/" + postId + "/bookmark", {
       type: 'PUT',
       data: { bookmarked: bookmarked }
     });
   },
 
-  deleteMany: function(selectedPosts, selectedReplies) {
+  deleteMany(selectedPosts, selectedReplies) {
     return Discourse.ajax("/posts/destroy_many", {
       type: 'DELETE',
       data: {
@@ -478,37 +381,33 @@ Discourse.Post.reopenClass({
     });
   },
 
-  loadRevision: function(postId, version) {
+  loadRevision(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + ".json").then(function (result) {
       return Ember.Object.create(result);
     });
   },
 
-  hideRevision: function(postId, version) {
+  hideRevision(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/hide", { type: 'PUT' });
   },
 
-  showRevision: function(postId, version) {
+  showRevision(postId, version) {
     return Discourse.ajax("/posts/" + postId + "/revisions/" + version + "/show", { type: 'PUT' });
   },
 
-  loadQuote: function(postId) {
+  loadQuote(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
-      var post = Discourse.Post.create(result);
+      const post = Discourse.Post.create(result);
       return Discourse.Quote.build(post, post.get('raw'));
     });
   },
 
-  loadRawEmail: function(postId) {
+  loadRawEmail(postId) {
     return Discourse.ajax("/posts/" + postId + "/raw-email").then(function (result) {
       return result.raw_email;
-    });
-  },
-
-  load: function(postId) {
-    return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
-      return Discourse.Post.create(result);
     });
   }
 
 });
+
+export default Post;

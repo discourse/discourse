@@ -123,7 +123,9 @@ en:
     show_more: "show more"
     show_help: "help"
     links: "Links"
-    links_lowercase: "links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -225,6 +227,21 @@ en:
         search: "Search for a Topic by name, url or id:"
         placeholder: "type the topic title here"
 
+    queue:
+      topic: "Topic:"
+      approve: 'Approve'
+      reject: 'Reject'
+      title: "Needs Approval"
+      none: "There are no posts to review."
+      edit: "Edit"
+      cancel: "Cancel"
+      confirm: "Save Changes"
+
+      approval:
+        title: "Post Needs Approval"
+        description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
+        ok: "OK"
+
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
       you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
@@ -291,6 +308,7 @@ en:
       "11": "Edits"
       "12": "Sent Items"
       "13": "Inbox"
+      "14": "Pending"
 
     categories:
       all: "all categories"
@@ -509,7 +527,7 @@ en:
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "never"
-        always: "always"
+        immediately: "immediately"
         after_n_seconds:
           one: "after 1 second"
           other: "after {{count}} seconds"
@@ -613,7 +631,10 @@ en:
     mute: Mute
     unmute: Unmute
     last_post: Last post
-    last_post_lowercase: last post
+    last_reply_lowercase: last reply
+    replies_lowercase:
+      one: reply
+      other: replies
 
     summary:
       enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
@@ -718,6 +739,7 @@ en:
         title_too_long: "Title can't be more than {{max}} characters"
         post_missing: "Post can't be empty"
         post_length: "Post must be at least {{min}} characters"
+        try_like: 'Have you tried the <i class="fa fa-heart"></i> button?'
         category_missing: "You must choose a category"
 
       save_edit: "Save Edit"
@@ -1089,6 +1111,7 @@ en:
         to_topic_blank: "Enter the username or email address of the person you'd like to invite to this topic."
         to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
         to_topic_username: "You've entered a username. We'll send a notification to that user with a link inviting them to this topic."
+        to_username: "Enter the username of the person you'd like to invite. We'll send a notification to that user with a link inviting them to this topic."
 
         email_placeholder: 'name@example.com'
         success_email: "We mailed out an invitation to <b>{{emailOrUsername}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
@@ -1482,15 +1505,21 @@ en:
         other {}}
     original_post: "Original Post"
     views: "Views"
-    views_lowercase: "views"
+    views_lowercase:
+      one: "view"
+      other: "views"
     replies: "Replies"
     views_long: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
-    likes_lowercase: "likes"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "there are {{number}} likes in this topic"
     users: "Users"
-    users_lowercase: "users"
+    users_lowercase:
+      one: "user"
+      other: "users"
     category_title: "Category"
     history: "History"
     changed_by: "by {{author}}"

@@ -4,6 +4,8 @@ require_dependency 'rate_limiter/on_create_record'
 # A redis backed rate limiter.
 class RateLimiter
 
+  attr_reader :max, :secs, :user, :key
+
   def self.key_prefix
     "l-rate-limit:"
   end

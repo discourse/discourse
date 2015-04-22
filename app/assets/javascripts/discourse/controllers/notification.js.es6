@@ -20,7 +20,7 @@ export default ObjectController.extend({
     var badgeId = this.safe("data.badge_id");
     if (badgeId) {
       var badgeName = this.safe("data.badge_name");
-      return '/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase();
+      return Discourse.getURL('/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase());
     }
 
     var topicId = this.safe('topic_id');
@@ -29,7 +29,7 @@ export default ObjectController.extend({
     }
 
     if (this.get('notification_type') === INVITED_TYPE) {
-      return '/my/invited';
+      return Discourse.getURL('/my/invited');
     }
   }.property("data.{badge_id,badge_name}", "slug", "topic_id", "post_number"),
 

@@ -538,7 +538,6 @@ tr_TR:
     host_names_warning: "config/database.yml dosyasınızda, bilgisayar adı olarak varsayılan değer olan \"localhost\" ayarlı. Değeri, sitenizin bilgisayar adını kullanacak biçimde güncelleyiniz."
     gc_warning: 'Sunucunuz, Ruby''nin varsayılan çöp toplama ayarlarını kullanıyor ki bu size en iyi performansı vermeyecektir. Performansı ayarı için şu konuyu okuyun: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Discourse için Ruby on Rails Ayarları</a>.'
     sidekiq_warning: 'Sidekiq çalışmıyor. E-posta yollamak gibi gibi birçok asenkron görev sidekiq''in işidir. En az bir tane sidekiq süreci çalıştırdığınızdan emin olun. <a href="https://github.com/mperham/sidekiq" target="_blank">Sidekiq ile ilgili bilgi burada</a>.'
-    queue_size_warning: 'Kuyrukta çok fazla, %{queue_size} tane iş var. Bu Sidekiq süreçleriyle ilgili bir sorunu gösteriyor olabilir, daha fazla Sidekiq işçisi eklemeniz gerekebilir.'
     memory_warning: 'Sunucunuz toplam 1GB''tan az bellek ile çalışıyor. En az 1GB bellek tavsiye edilmektedir.'
     both_googles_warning: "Site ayarlarında enable_google_logins ve enable_google_oauth2_logins ayarlarından her ikisi de etkin. enable_google_logins ayarını devre dışı bırakın."
     google_oauth2_config_warning: 'Sunucu Google OAuth2 (enable_google_oauth2_logins) ile üyelik oluşturulması ve giriş yapılmasına elveriyor, fakat the kullanıcı IDsi and gizli kullanıcı değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
@@ -681,8 +680,6 @@ tr_TR:
     email_token_grace_period_hours: "Parolamı unuttum / hesabı etkinleştir jetonları kullanıldıktan sonra (n) saat boyunca hala geçerlidir."
     enable_badges: "Rozet sistemini etkinleştir"
     allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından indekslenmesine izin verildiğini belirt."
-    email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının listesi. Örneğin: mailinator.com trashmail.net"
-    email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının listesi. UYARI: Bu listede yer almayan e-posta uzantıları kabul edilmeyecektir!"
     forgot_password_strict: "Parolamı unuttum alanını kullanırlarken, kullanıcıları hesabın varlığından haberdar etme. "
     log_out_strict: "Çıkış yapılırken, kullanıcının tüm cihazlardaki TÜM seanslarını sonlandır"
     version_checks: "Discourse Hub'a versiyon güncellemeleri için ping yolla ve yeni versiyon mesajlarına /admin gösterge panelinde yer ver"

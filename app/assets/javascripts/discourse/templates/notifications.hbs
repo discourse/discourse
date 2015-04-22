@@ -6,7 +6,7 @@
           {{notification-item notification=n scope=n.scope}}
         {{/each}}
         <li class="read last">
-          <a href="/my/notifications">{{i18n 'notifications.more'}}&hellip;</a>
+          <a href="{{unbound myNotificationsUrl}}">{{i18n 'notifications.more'}}&hellip;</a>
         </li>
       </ul>
     {{else}}

@@ -99,6 +99,7 @@ HeaderController.reopenClass({
 });
 
 addFlagProperty('currentUser.site_flagged_posts_count');
+addFlagProperty('currentUser.post_queue_new_count');
 
 export { addFlagProperty };
 export default HeaderController;

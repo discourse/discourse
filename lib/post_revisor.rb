@@ -300,7 +300,7 @@ class PostRevisor
     return unless revision = PostRevision.find_by(post_id: @post.id, number: @post.version)
     revision.user_id = @post.last_editor_id
     modifications = post_changes.merge(@topic_changes.diff)
-    modifications.keys.each do |field|
+    modifications.each_key do |field|
       if revision.modifications.has_key?(field)
         old_value = revision.modifications[field][0]
         new_value = modifications[field][1]

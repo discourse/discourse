@@ -1,7 +1,6 @@
-import TopicDetails from 'discourse/models/topic-details';
-import PostStream from 'discourse/models/post-stream';
+import RestModel from 'discourse/models/rest';
 
-const Topic = Discourse.Model.extend({
+const Topic = RestModel.extend({
 
   // returns createdAt if there's no bumped date
   bumpedAt: function() {
@@ -23,7 +22,7 @@ const Topic = Discourse.Model.extend({
   }.property('created_at'),
 
   postStream: function() {
-    return PostStream.create({topic: this});
+    return this.store.createRecord('postStream', {id: this.get('id'), topic: this});
   }.property(),
 
   replyCount: function() {
@@ -31,7 +30,7 @@ const Topic = Discourse.Model.extend({
   }.property('posts_count'),
 
   details: function() {
-    return TopicDetails.create({topic: this});
+    return this.store.createRecord('topicDetails', {id: this.get('id'), topic: this});
   }.property(),
 
   invisible: Em.computed.not('visible'),
@@ -41,18 +40,18 @@ const Topic = Discourse.Model.extend({
     return ({ type: 'topic', id: this.get('id') });
   }.property('id'),
 
-  category: function() {
-    const categoryId = this.get('category_id');
-    if (categoryId) {
-      return Discourse.Category.list().findProperty('id', categoryId);
-    }
+  _categoryIdChanged: function() {
+    this.set('category', Discourse.Category.findById(this.get('category_id')));
+  }.observes('category_id').on('init'),
 
+  _categoryNameChanged: function() {
     const categoryName = this.get('categoryName');
+    let category;
     if (categoryName) {
-      return Discourse.Category.list().findProperty('name', categoryName);
+      category = Discourse.Category.list().findProperty('name', categoryName);
     }
-    return null;
-  }.property('category_id', 'categoryName'),
+    this.set('category', category);
+  }.observes('categoryName'),
 
   categoryClass: function() {
     return 'category-' + this.get('category.fullSlug');
@@ -408,7 +407,6 @@ Topic.reopenClass({
       // The title can be cleaned up server side
       props.title = result.basic_topic.title;
       props.fancy_title = result.basic_topic.fancy_title;
-
       topic.setProperties(props);
     });
   },

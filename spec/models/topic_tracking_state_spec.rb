@@ -15,11 +15,34 @@ describe TopicTrackingState do
     TopicTrackingState.publish_unread(post)
   end
 
+  it "correctly handles muted categories" do
+
+    user = Fabricate(:user)
+    post
+
+    report = TopicTrackingState.report([user.id])
+    expect(report.length).to eq(1)
+
+    CategoryUser.create!(user_id: user.id,
+                         notification_level: CategoryUser.notification_levels[:muted],
+                         category_id: post.topic.category_id
+                         )
+
+    create_post(topic_id: post.topic_id)
+
+    report = TopicTrackingState.report([user.id])
+    expect(report.length).to eq(0)
+
+    TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
+
+    report = TopicTrackingState.report([user.id])
+    expect(report.length).to eq(1)
+  end
+
   it "correctly gets the tracking state" do
     report = TopicTrackingState.report([user.id])
     expect(report.length).to eq(0)
 
-    new_post = post
     post.topic.notifier.watch_topic!(post.topic.user_id)
 
     report = TopicTrackingState.report([user.id])

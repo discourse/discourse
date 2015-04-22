@@ -1,4 +1,6 @@
-const PostStream = Ember.Object.extend({
+import RestModel from 'discourse/models/rest';
+
+const PostStream = RestModel.extend({
   loading: Em.computed.or('loadingAbove', 'loadingBelow', 'loadingFilter', 'stagingPost'),
   notLoading: Em.computed.not('loading'),
   filteredPostsCount: Em.computed.alias("stream.length"),
@@ -148,12 +150,16 @@ const PostStream = Ember.Object.extend({
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
-    const topic = this.get('topic'),
-        self = this;
+    const topic = this.get('topic');
+    const self = this;
 
     // Do we already have the post in our list of posts? Jump there.
-    const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
-    if (postWeWant) { return Ember.RSVP.resolve(); }
+    if (opts.forceLoad) {
+      this.set('loaded', false);
+    } else {
+      const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
+      if (postWeWant) { return Ember.RSVP.resolve(); }
+    }
 
     // TODO: if we have all the posts in the filter, don't go to the server for them.
     self.set('loadingFilter', true);
@@ -420,8 +426,9 @@ const PostStream = Ember.Object.extend({
     } else {
       // need to insert into stream
       const url = "/posts/" + postId;
+      const store = this.store;
       Discourse.ajax(url).then(function(p){
-        const post = Discourse.Post.create(p);
+        const post = store.createRecord('post', p);
         const stream = self.get("stream");
         const posts = self.get("posts");
         self.storePost(post);
@@ -461,9 +468,10 @@ const PostStream = Ember.Object.extend({
 
     if(existing){
       const url = "/posts/" + postId;
+      const store = this.store;
       Discourse.ajax(url).then(
         function(p){
-          self.storePost(Discourse.Post.create(p));
+          self.storePost(store.createRecord('post', p));
         },
         function(){
           self.removePosts([existing]);
@@ -480,8 +488,9 @@ const PostStream = Ember.Object.extend({
 
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
+      const store = this.store;
       Discourse.ajax(url).then(function(p){
-        self.storePost(Discourse.Post.create(p));
+        self.storePost(store.createRecord('post', p));
       });
     }
   },
@@ -491,9 +500,10 @@ const PostStream = Ember.Object.extend({
     const postStream = this,
         url = "/posts/" + post.get('id') + "/reply-history.json?max_replies=" + Discourse.SiteSettings.max_reply_history;
 
+    const store = this.store;
     return Discourse.ajax(url).then(function(result) {
       return result.map(function (p) {
-        return postStream.storePost(Discourse.Post.create(p));
+        return postStream.storePost(store.createRecord('post', p));
       });
     }).then(function (replyHistory) {
       post.set('replyHistory', replyHistory);
@@ -594,8 +604,9 @@ const PostStream = Ember.Object.extend({
     this.set('gaps', null);
     if (postStreamData) {
       // Load posts if present
+      const store = this.store;
       postStreamData.posts.forEach(function(p) {
-        postStream.appendPost(Discourse.Post.create(p));
+        postStream.appendPost(store.createRecord('post', p));
       });
       delete postStreamData.posts;
 
@@ -671,11 +682,12 @@ const PostStream = Ember.Object.extend({
         data = { post_ids: postIds },
         postStream = this;
 
+    const store = this.store;
     return Discourse.ajax(url, {data: data}).then(function(result) {
       const posts = Em.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(function (p) {
-          postStream.storePost(Discourse.Post.create(p));
+          postStream.storePost(store.createRecord('post', p));
         });
       }
     });
@@ -751,6 +763,8 @@ PostStream.reopenClass({
       url += "/" + opts.nearPost;
     }
     delete opts.nearPost;
+    delete opts.__type;
+    delete opts.store;
 
     return PreloadStore.getAndRemove("topic_" + topicId, function() {
       return Discourse.ajax(url + ".json", {data: opts});

@@ -1,11 +1,3 @@
-/**
-  A data model for summarizing actions a user has taken, for example liking a post.
-
-  @class ActionSummary
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.ActionSummary = Discourse.Model.extend({
 
   // Description for the action
@@ -44,16 +36,16 @@ Discourse.ActionSummary = Discourse.Model.extend({
     }
   },
 
-  toggle: function() {
+  toggle: function(post) {
     if (!this.get('acted')) {
-      this.act();
+      this.act(post);
     } else {
-      this.undo();
+      this.undo(post);
     }
   },
 
   // Perform this action
-  act: function(opts) {
+  act: function(post, opts) {
     if (!opts) opts = {};
 
     var action = this.get('actionType.name_key');
@@ -82,18 +74,14 @@ Discourse.ActionSummary = Discourse.Model.extend({
     return Discourse.ajax("/post_actions", {
       type: 'POST',
       data: {
-        id: this.get('flagTopic') ? this.get('flagTopic.id') : this.get('post.id'),
+        id: this.get('flagTopic') ? this.get('flagTopic.id') : post.get('id'),
         post_action_type_id: this.get('id'),
         message: opts.message,
         take_action: opts.takeAction,
         flag_topic: this.get('flagTopic') ? true : false
       }
     }).then(function(result) {
-      var post = self.get('post');
-      if (post && result && result.id === post.get('id')) {
-        post.updateFromJson(result);
-      }
-      return post;
+      return post.updateActionsSummary(result);
     }).catch(function (error) {
       self.removeAction();
       var message = $.parseJSON(error.responseText).errors;
@@ -102,43 +90,38 @@ Discourse.ActionSummary = Discourse.Model.extend({
   },
 
   // Undo this action
-  undo: function() {
+  undo: function(post) {
     this.removeAction();
 
     // Remove our post action
-    var self = this;
-    return Discourse.ajax("/post_actions/" + (this.get('post.id')), {
+    return Discourse.ajax("/post_actions/" + post.get('id'), {
       type: 'DELETE',
       data: {
         post_action_type_id: this.get('id')
       }
     }).then(function(result) {
-      var post = self.get('post');
-      if (post && result && result.id === post.get('id')) {
-        post.updateFromJson(result);
-      }
-      return post;
+      return post.updateActionsSummary(result);
     });
   },
 
-  deferFlags: function() {
+  deferFlags: function(post) {
     var self = this;
     return Discourse.ajax("/post_actions/defer_flags", {
       type: "POST",
       data: {
         post_action_type_id: this.get("id"),
-        id: this.get("post.id")
+        id: post.get('id')
       }
     }).then(function () {
       self.set("count", 0);
     });
   },
 
-  loadUsers: function() {
+  loadUsers: function(post) {
     var self = this;
     Discourse.ajax("/post_actions/users", {
       data: {
-        id: this.get('post.id'),
+        id: post.get('id'),
         post_action_type_id: this.get('id')
       }
     }).then(function (result) {

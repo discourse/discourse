@@ -65,9 +65,11 @@ class PostTiming < ActiveRecord::Base
   def self.process_timings(current_user, topic_id, topic_time, timings)
     current_user.user_stat.update_time_read!
 
+    account_age_msecs = ((Time.now - current_user.created_at) * 1000.0)
+
     highest_seen = 1
     timings.each do |post_number, time|
-      if post_number >= 0
+      if post_number >= 0 && time < account_age_msecs
         PostTiming.record_timing(topic_id: topic_id,
                                  post_number: post_number,
                                  user_id: current_user.id,

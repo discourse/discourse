@@ -860,7 +860,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar::VERSION}.png")
+      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
     end
 
   end
@@ -1037,7 +1037,7 @@ describe User do
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
       expect(u.uploaded_avatar_id).to eq(nil)
-      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar::VERSION}.png")
+      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar.version}.png")
     end
   end
 

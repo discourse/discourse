@@ -19,10 +19,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   linkWebsite: Em.computed.not('isBasic'),
 
-  canSeePrivateMessages: function() {
-    return this.get('viewingSelf') || Discourse.User.currentProp('admin');
-  }.property('viewingSelf'),
-
+  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.admin'),
   canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
 
   showBadges: function() {

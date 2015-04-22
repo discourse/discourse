@@ -1,5 +1,6 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
+
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})

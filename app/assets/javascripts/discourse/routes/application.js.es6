@@ -37,6 +37,10 @@ const ApplicationRoute = Discourse.Route.extend({
       this.controllerFor('topic-entrance').send('show', data);
     },
 
+    postWasEnqueued() {
+      showModal('post-enqueued', {title: 'queue.approval.title' });
+    },
+
     composePrivateMessage(user, post) {
       const self = this;
       this.transitionTo('userActivity', user).then(function () {
@@ -76,12 +80,12 @@ const ApplicationRoute = Discourse.Route.extend({
     showCreateAccount: unlessReadOnly('handleShowCreateAccount'),
 
     showForgotPassword() {
-      showModal('forgotPassword');
+      showModal('forgotPassword', { title: 'forgot_password.title' });
     },
 
     showNotActivated(props) {
-      showModal('notActivated');
-      this.controllerFor('notActivated').setProperties(props);
+      const controller = showModal('not-activated', {title: 'log_in' });
+      controller.setProperties(props);
     },
 
     showUploadSelector(composerView) {
@@ -90,13 +94,13 @@ const ApplicationRoute = Discourse.Route.extend({
     },
 
     showKeyboardShortcutsHelp() {
-      showModal('keyboardShortcutsHelp');
+      showModal('keyboard-shortcuts-help', { title: 'keyboard_shortcuts_help.title'});
     },
 
     showSearchHelp() {
       // TODO: @EvitTrout how do we get a loading indicator here?
-      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(html){
-        showModal('searchHelp', html);
+      Discourse.ajax("/static/search_help.html", { dataType: 'html' }).then(function(model){
+        showModal('searchHelp', { model });
       });
     },
 
@@ -120,9 +124,9 @@ const ApplicationRoute = Discourse.Route.extend({
 
     editCategory(category) {
       const self = this;
-      Discourse.Category.reloadById(category.get('id')).then(function (c) {
-        self.site.updateCategory(c);
-        showModal('editCategory', c);
+      Discourse.Category.reloadById(category.get('id')).then(function (model) {
+        self.site.updateCategory(model);
+        showModal('editCategory', { model });
         self.controllerFor('editCategory').set('selectedTab', 'general');
       });
     },
@@ -140,7 +144,7 @@ const ApplicationRoute = Discourse.Route.extend({
       const controllerName = w.replace('modal/', ''),
             factory = this.container.lookupFactory('controller:' + controllerName);
 
-      this.render(w, {into: 'topicBulkActions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+      this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     }
   },
 

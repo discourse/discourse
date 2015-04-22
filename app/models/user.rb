@@ -235,23 +235,51 @@ class User < ActiveRecord::Base
     User.email_hash(email)
   end
 
-  def unread_notifications_by_type
-    @unread_notifications_by_type ||= notifications.visible.where("id > ? and read = false", seen_notification_id).group(:notification_type).count
-  end
-
   def reload
-    @unread_notifications_by_type = nil
+    @unread_notifications = nil
     @unread_total_notifications = nil
     @unread_pms = nil
     super
   end
 
   def unread_private_messages
-    @unread_pms ||= notifications.visible.where("read = false AND notification_type = ?", Notification.types[:private_message]).count
+    @unread_pms ||=
+      begin
+        # perf critical, much more efficient than AR
+        sql = "
+           SELECT COUNT(*) FROM notifications n
+           LEFT JOIN topics t ON n.topic_id = t.id
+           WHERE
+            t.deleted_at IS NULL AND
+            n.notification_type = :type AND
+            n.user_id = :user_id AND
+            NOT read"
+
+        User.exec_sql(sql, user_id: id,
+                           type:  Notification.types[:private_message])
+            .getvalue(0,0).to_i
+      end
   end
 
   def unread_notifications
-    unread_notifications_by_type.except(Notification.types[:private_message]).values.sum
+    @unread_notifications ||=
+      begin
+        # perf critical, much more efficient than AR
+        sql = "
+           SELECT COUNT(*) FROM notifications n
+           LEFT JOIN topics t ON n.topic_id = t.id
+           WHERE
+            t.deleted_at IS NULL AND
+            n.notification_type <> :pm AND
+            n.user_id = :user_id AND
+            NOT read AND
+            n.id > :seen_notification_id"
+
+        User.exec_sql(sql, user_id: id,
+                           seen_notification_id: seen_notification_id,
+                           pm:  Notification.types[:private_message])
+            .getvalue(0,0).to_i
+      end
   end
 
   def total_unread_notifications
@@ -389,7 +417,7 @@ class User < ActiveRecord::Base
   end
 
   def self.letter_avatar_template(username)
-    "/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar::VERSION}.png"
+    "/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
   end
 
   def avatar_template

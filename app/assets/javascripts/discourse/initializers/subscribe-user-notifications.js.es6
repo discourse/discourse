@@ -27,9 +27,12 @@ export default {
       bus.callbackInterval = siteSettings.polling_interval;
       bus.enableLongPolling = true;
 
-      if (user.admin || user.moderator) {
-        bus.subscribe('/flagged_counts', function(data) {
+      if (user.get('staff')) {
+        bus.subscribe('/flagged_counts', (data) => {
           user.set('site_flagged_posts_count', data.total);
+        });
+        bus.subscribe('/queue_counts', (data) => {
+          user.set('post_queue_new_count', data.post_queue_new_count);
         });
       }
       bus.subscribe("/notification/" + user.get('id'), (function(data) {

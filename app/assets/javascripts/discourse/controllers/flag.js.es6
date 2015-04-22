@@ -81,7 +81,8 @@ export default ObjectController.extend(ModalFunctionality, {
       if (opts) params = $.extend(params, opts);
 
       this.send('hideModal');
-      postAction.act(params).then(function() {
+
+      postAction.act(this.get('model'), params).then(function() {
         self.send('closeModal');
       }, function(errors) {
         self.send('closeModal');
