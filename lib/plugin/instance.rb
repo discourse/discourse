@@ -69,9 +69,7 @@ class Plugin::Instance
     klass = klass.to_s.classify.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
-    klass.send(:define_method, hidden_method_name) do |*args|
-      block.call(*args)
-    end
+    klass.send(:define_method, hidden_method_name, &block)
 
     plugin = self
     klass.send(:define_method, attr) do |*args|
