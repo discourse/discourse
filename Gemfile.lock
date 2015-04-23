@@ -22,7 +22,7 @@ GEM
       activesupport (= 4.1.10)
       builder (~> 3.1)
       erubis (~> 2.7.0)
-    active_model_serializers (0.8.2)
+    active_model_serializers (0.8.3)
       activemodel (>= 3.0)
     activemodel (4.1.10)
       activesupport (= 4.1.10)
@@ -460,7 +460,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionpack-action_caching
-  active_model_serializers (~> 0.8.0)
+  active_model_serializers (~> 0.8.3)
   annotate
   babel-transpiler
   barber
