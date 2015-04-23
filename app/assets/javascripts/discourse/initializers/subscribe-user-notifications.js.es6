@@ -56,7 +56,7 @@ export default {
         });
       });
 
-      initDesktopNotifications(container);
+      initDesktopNotifications(bus);
     }
   }
 };
