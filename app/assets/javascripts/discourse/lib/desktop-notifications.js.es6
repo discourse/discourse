@@ -1,35 +1,34 @@
 
-let primaryTab;
-let liveEnabled;
-let notificationTagName;
-let mbClientId;
-let lastAction;
+let primaryTab = false;
+let liveEnabled = false;
+let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
+let lastAction = -1;
 
 const focusTrackerKey = "focus-tracker";
 const seenDataKey = "seen-notifications";
 const recentUpdateThreshold = 1000 * 60 * 2; // 2 minutes
 const idleThresholdTime = 1000 * 10; // 10 seconds
 const INVITED_TYPE = 8;
+let notificationTagName; // "discourse-notification-popup-" + Discourse.SiteSettings.title;
 
-function init(container) {
+// Called from an initializer
+function init(messageBus) {
   liveEnabled = false;
+  mbClientId = messageBus.clientId;
   requestPermission().then(function() {
     try {
       localStorage.getItem(focusTrackerKey);
     } catch (e) {
       Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
-      return false;
+      return;
     }
     liveEnabled = true;
     Em.Logger.info('Discourse desktop notifications are enabled.');
-    return true;
-  }).then(function(c) {
-    if (c) {
-      try {
-        init2(container);
-      } catch (e) {
-        Em.Logger.error(e);
-      }
+    try {
+      // Permission is granted, continue with setup
+      setupNotifications();
+    } catch (e) {
+      Em.Logger.error(e);
     }
   }).catch(function() {
     liveEnabled = false;
@@ -37,7 +36,8 @@ function init(container) {
   });
 }
 
-function init2(container) {
+// This function is only called if permission was granted
+function setupNotifications() {
   // Load up the current state of the notifications
   const seenData = JSON.parse(localStorage.getItem(seenDataKey));
   let markAllSeen = true;
@@ -59,8 +59,6 @@ function init2(container) {
 
   notificationTagName = "discourse-notification-popup-" + Discourse.SiteSettings.title;
 
-  const messageBus = container.lookup('message-bus:main');
-  mbClientId = messageBus.clientId;
 
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
@@ -68,9 +66,7 @@ function init2(container) {
     if (key !== focusTrackerKey) {
       return true;
     }
-    if (primaryTab) {
-      primaryTab = false;
-    }
+    primaryTab = false;
   });
 
   window.addEventListener("focus", function() {
@@ -149,10 +145,6 @@ function onNotification(currentUser) {
         icon: notificationIcon,
         tag: notificationTagName
       });
-
-      // if (enableSound) {
-      //   soundElement.play();
-      // }
 
       const firstUnseen = unseen[0];
 
