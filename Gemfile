@@ -34,40 +34,6 @@ if rails_master?
 
 end
 
-# Monkey patch bundler to support mri_21
-unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
-   STDERR.puts
-   STDERR.puts "WARNING: --------------------------------------------------------------------------"
-   STDERR.puts "You are running an old version of bundler, please update by running: gem install bundler"
-   STDERR.puts
-   map = Bundler::Dependency::PLATFORM_MAP.dup
-   map[:mri_21] = Gem::Platform::RUBY
-   map.freeze
-   Bundler::Dependency.send(:remove_const, "PLATFORM_MAP")
-   Bundler::Dependency.const_set("PLATFORM_MAP", map)
-
-   Bundler::Dsl.send(:remove_const, "VALID_PLATFORMS")
-   Bundler::Dsl.const_set("VALID_PLATFORMS", map.keys.freeze)
-   class ::Bundler::CurrentRuby
-      def on_21?
-         RUBY_VERSION =~ /^2\.1/
-      end
-      def mri_21?
-        mri? && on_21?
-      end
-   end
-   class ::Bundler::Dependency
-      private
-      def on_21?
-         RUBY_VERSION =~ /^2\.1/
-      end
-      def mri_21?
-        mri? && on_21?
-      end
-   end
-end
-
-
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
@@ -241,8 +207,6 @@ gem 'ruby-readability', require: false
 
 gem 'simple-rss', require: false
 
-# TODO mri_22 should be here, but bundler was real slow to pick it up
-# not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
 
 begin
