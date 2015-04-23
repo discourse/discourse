@@ -305,6 +305,18 @@ module SiteSettingExtension
     refresh_settings.include?(name.to_sym)
   end
 
+  def is_valid_data?(name, value)
+    valid = true
+    type = get_data_type(name, defaults[name.to_sym])
+
+    if type == types[:fixnum]
+      # validate fixnum
+      valid = false unless value.to_i.is_a?(Fixnum)
+    end
+
+    return valid
+  end
+
   def filter_value(name, value)
     # filter domain name
     if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
@@ -318,12 +330,12 @@ module SiteSettingExtension
   end
 
   def set(name, value)
-    if has_setting?(name)
+    if has_setting?(name) && is_valid_data?(name, value)
       value = filter_value(name, value)
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
-      raise ArgumentError.new("No setting named #{name} exists")
+      raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
   end
 
