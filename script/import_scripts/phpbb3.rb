@@ -274,7 +274,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     s = raw.dup
 
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
-    s.gsub!(/<!-- s(\S+) -->(?:.*)<!-- s(?:\S+) -->/, '\1')
+    s.gsub!(/<!-- s(\S+) --><img (?:[^>]+) \/><!-- s(?:\S+) -->/, '\1')
 
     # Internal forum links of this form: <!-- l --><a class="postlink-local" href="https://example.com/forums/viewtopic.php?f=26&amp;t=3412">viewtopic.php?f=26&amp;t=3412</a><!-- l -->
     s.gsub!(/<!-- l --><a(?:.+)href="(?:\S+)"(?:.*)>viewtopic(?:.*)t=(\d+)<\/a><!-- l -->/) do |phpbb_link|
