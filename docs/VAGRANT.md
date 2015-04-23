@@ -1,5 +1,7 @@
 # Discourse Developer Install Guide (Vagrant)
 
+### WARNING: The Vagrant image is currently out of date (as of 4/22/15), so the below install instructions will not work properly (see [discussion](https://meta.discourse.org/t/localhost-createqueuedposts-error/27715/6)).
+
 ### If you are on a Mac or PC, please try our [Discourse as Your First Rails App](http://blog.discourse.org/2013/04/discourse-as-your-first-rails-app/) blog post first!
 
 (If you have experience setting up Rails projects, you might want to take a look at our **[Discourse Advanced Developer Guide](DEVELOPER-ADVANCED.md)**. It also contains instructions on building your own Vagrant VM.)
