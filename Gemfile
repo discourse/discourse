@@ -127,14 +127,7 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-
-  if rails_master?
-    gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
-  else
-    # later is breaking our asset compliation extensions
-    gem 'sass-rails', '4.0.2'
-  end
-
+  gem 'sass-rails', '~> 4.0.5'
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
