@@ -1,3 +1,5 @@
+/*global md5 */
+
 (function() {
 
   const DATA_PREFIX = "data-poll-";
@@ -12,23 +14,26 @@
     start: /\[poll([^\]]*)\]([\s\S]*)/igm,
     stop: /\[\/poll\]/igm,
 
-    emitter: function(blockContents, matches, options) {
-      // post-process inside block contents
-      var contents = [];
+    emitter: function(blockContents, matches) {
+      var o, contents = [];
 
+      // post-process inside block contents
       if (blockContents.length) {
         var self = this, b;
-        while ((b = blockContents.shift()) !== undefined) {
-          this.processBlock(b, blockContents).forEach(function (bc) {
-            if (typeof bc === "string" || bc instanceof String) {
-              var processed = self.processInline(String(bc));
-              if (processed.length) {
-                contents.push(["p"].concat(processed));
-              }
-            } else {
-              contents.push(bc);
+
+        var postProcess = function(bc) {
+          if (typeof bc === "string" || bc instanceof String) {
+            var processed = self.processInline(String(bc));
+            if (processed.length) {
+              contents.push(["p"].concat(processed));
             }
-          });
+          } else {
+            contents.push(bc);
+          }
+        };
+
+        while ((b = blockContents.shift()) !== undefined) {
+          this.processBlock(b, blockContents).forEach(postProcess);
         }
       }
 
@@ -56,7 +61,7 @@
         if (isNaN(step)) { step = 1; }
         // dynamically generate options
         contents.push(["bulletlist"]);
-        for (var o = min; o <= max; o += step) {
+        for (o = min; o <= max; o += step) {
           contents[0].push(["listitem", String(o)]);
         }
       }
@@ -79,7 +84,7 @@
       var style = styles.join(";");
 
       // add option id (hash) + style
-      for (var o = 1; o < contents[0].length; o++) {
+      for (o = 1; o < contents[0].length; o++) {
         // break as soon as the list is done
         if (contents[0][o][0] !== "listitem") { break; }
 
