@@ -3,8 +3,8 @@
 # See https://github.com/discourse/discourse/blob/master/docs/VAGRANT.md
 #
 Vagrant.configure("2") do |config|
-  config.vm.box= "discourse/discourse-0.9.9.15.box"
-  config.vm.box_url = "https://vagrantcloud.com/discourse/discourse-0.9.9.15.box"
+  config.vm.box     = 'discourse/discourse-1.3.0'
+  config.vm.box_url = "http://discourse-vms.s3.amazonaws.com/discourse-1.3.0.box"
 
   # Make this VM reachable on the host network as well, so that other
   # VM's running other browsers can access our dev server.
@@ -45,21 +45,4 @@ Vagrant.configure("2") do |config|
   nfs_setting = RUBY_PLATFORM =~ /darwin/ || RUBY_PLATFORM =~ /linux/
   config.vm.synced_folder ".", "/vagrant", id: "vagrant-root", :nfs => nfs_setting
 
-  config.vm.provision :shell, :inline => "apt-get -qq update && apt-get -qq -y install ruby1.9.3 build-essential && gem install chef --no-rdoc --no-ri --conservative"
-
-  chef_cookbooks_path = ["chef/cookbooks"]
-
-  # This run uses the updated chef-solo and does normal configuration
-  config.vm.provision :chef_solo do |chef|
-    chef.binary_env = "GEM_HOME=/opt/chef/embedded/lib/ruby/gems/1.9.1/ GEM_PATH= "
-    chef.binary_path = "/opt/chef/bin/"
-    chef.cookbooks_path = chef_cookbooks_path
-
-    chef.add_recipe "recipe[apt]"
-    chef.add_recipe "recipe[build-essential]"
-    chef.add_recipe "recipe[vim]"
-    chef.add_recipe "recipe[java]"
-    chef.add_recipe "recipe[imagemagick]"
-    chef.add_recipe "discourse"
-  end
 end

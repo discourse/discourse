@@ -11,7 +11,7 @@ on Discourse with:
 
 1. Install Git: http://git-scm.com/downloads (or [GitHub for Windows](http://windows.github.com/) if you want a GUI)
 2. Install VirtualBox: https://www.virtualbox.org/wiki/Downloads
-3. Install Vagrant: http://www.vagrantup.com/ (We require Vagrant 1.1.2+ or later)
+3. Install Vagrant: http://www.vagrantup.com/ (We require Vagrant 1.7.2 or later)
 4. Open a terminal
 5. Clone the project: `git clone https://github.com/discourse/discourse.git`
 6. Enter the project directory: `cd discourse`
@@ -92,6 +92,10 @@ bundle exec rails s
 
 In a few seconds, rails will start serving pages. To access them, open a web browser to [http://localhost:4000](http://localhost:4000) - if it all worked you should see discourse! Congratulations, you are ready to start working!
 
+If you want to log in as a user, a shortcut you can use in development mode is to follow this link to log in as `eviltrout`:
+
+http://localhost:4000/session/eviltrout/become
+
 You can now edit files on your local file system, using your favorite text editor or IDE. When you reload your web browser, it should have the latest changes.
 
 ### Tests
@@ -103,7 +107,7 @@ To use it, follow all the above steps. Once rails is running, open a new termina
 ```
 vagrant ssh
 cd /vagrant
-RAILS_ENV=test bundle exec rake db:drop db:create db:migrate
+RAILS_ENV=test bundle exec rake db:migrate
 bundle exec rake autospec p l=5
 ```
 
@@ -127,13 +131,6 @@ mc
 
 Then in a browser, go to [http://localhost:4080](http://localhost:4080). Sent emails will be received by mailcatcher and shown in its web ui.
 
-If for some reason mailcatcher is not installed, install and launch it with these commands:
-
-```
-sudo gem install mailcatcher
-mailcatcher --http-ip 0.0.0.0
-```
-
 ### Shutting down the VM
 
 When you're done working on Discourse, you can shut down Vagrant with:
@@ -141,4 +138,4 @@ When you're done working on Discourse, you can shut down Vagrant with:
 ```
 vagrant halt
 ```
-
+k
