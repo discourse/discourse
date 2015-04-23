@@ -6,7 +6,7 @@ require_dependency 'gaps'
 class TopicView
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
-  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields
+  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
 
   def self.slow_chunk_size
     10
@@ -14,6 +14,18 @@ class TopicView
 
   def self.chunk_size
     20
+  end
+
+  def self.post_custom_fields_whitelisters
+    @post_custom_fields_whitelisters ||= Set.new
+  end
+
+  def self.add_post_custom_fields_whitelister(&block)
+    post_custom_fields_whitelisters << block
+  end
+
+  def self.whitelisted_post_custom_fields(user)
+    post_custom_fields_whitelisters.map { |w| w.call(user) }.flatten.uniq
   end
 
   def initialize(topic_id, user=nil, options={})
@@ -45,6 +57,11 @@ class TopicView
     if @guardian.is_staff? && SiteSetting.staff_user_custom_fields.present? && @posts
       @user_custom_fields ||= {}
       @user_custom_fields.deep_merge!(User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.staff_user_custom_fields.split('|')))
+    end
+
+    whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)
+    if whitelisted_fields.present? && @posts
+      @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
     end
 
     @draft_key = @topic.draft_key

@@ -45,34 +45,47 @@ class Plugin::Instance
   end
 
   def enabled?
-    return @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
+    @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
   end
 
   delegate :name, to: :metadata
 
-  def add_to_serializer(serializer, attr, &block)
+  def add_to_serializer(serializer, attr, define_include_method=true, &block)
     klass = "#{serializer.to_s.classify}Serializer".constantize
-    klass.attributes(attr)
+
+    klass.attributes(attr) unless attr.to_s.start_with?("include_")
+
     klass.send(:define_method, attr, &block)
+
+    return unless define_include_method
 
     # Don't include serialized methods if the plugin is disabled
     plugin = self
-    klass.send(:define_method, "include_#{attr}?") do
-      plugin.enabled?
-    end
+    klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
   end
 
   # Extend a class but check that the plugin is enabled
   def add_to_class(klass, attr, &block)
     klass = klass.to_s.classify.constantize
 
-    hidden_method_name = "#{attr}_without_enable_check".to_sym
-    klass.send(:define_method, hidden_method_name, &block)
+    hidden_method_name = :"#{attr}_without_enable_check"
+    klass.send(:define_method, hidden_method_name) do |*args|
+      block.call(*args)
+    end
 
     plugin = self
     klass.send(:define_method, attr) do |*args|
       send(hidden_method_name, *args) if plugin.enabled?
     end
+  end
+
+  # Add validation method but check that the plugin is enabled
+  def validate(klass, attr, &block)
+    klass = klass.to_s.classify.constantize
+    klass.send(:define_method, attr, &block)
+
+    plugin = self
+    klass.validate(attr, if: -> { plugin.enabled? })
   end
 
   # will make sure all the assets this plugin needs are registered

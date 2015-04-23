@@ -263,13 +263,12 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
   }.on('willDestroyElement'),
 
   _postViewInserted: function() {
-    var $post = this.$(),
-        post = this.get('post'),
-        postNumber = post.get('post_number');
+    const $post = this.$(),
+          postNumber = this.get('post').get('post_number');
 
     this._showLinkCounts();
 
-    Discourse.ScreenTrack.current().track(this.$().prop('id'), postNumber);
+    Discourse.ScreenTrack.current().track($post.prop('id'), postNumber);
 
     this.trigger('postViewInserted', $post);
 

@@ -55,7 +55,7 @@ class PostDestroyer
       user_recovered
     end
     topic = Topic.with_deleted.find @post.topic_id
-    topic.recover! if @post.post_number == 1
+    topic.recover! if @post.is_first_post?
     topic.update_statistics
   end
 
@@ -80,7 +80,7 @@ class PostDestroyer
       @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
-      if @post.topic && @post.post_number == 1
+      if @post.topic && @post.is_first_post?
         StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context)) if @user.id != @post.user_id
         @post.topic.trash!(@user)
       elsif @user.id != @post.user_id
@@ -179,7 +179,7 @@ class PostDestroyer
 
   def update_associated_category_latest_topic
     return unless @post.topic && @post.topic.category
-    return unless @post.id == @post.topic.category.latest_post_id || (@post.post_number == 1 && @post.topic_id == @post.topic.category.latest_topic_id)
+    return unless @post.id == @post.topic.category.latest_post_id || (@post.is_first_post? && @post.topic_id == @post.topic.category.latest_topic_id)
 
     @post.topic.category.update_latest
   end
@@ -196,7 +196,7 @@ class PostDestroyer
     end
 
     author.user_stat.post_count -= 1
-    author.user_stat.topic_count -= 1 if @post.post_number == 1
+    author.user_stat.topic_count -= 1 if @post.is_first_post?
 
     # We don't count replies to your own topics
     if @topic && author.id != @topic.user_id
