@@ -344,6 +344,16 @@ describe SiteSettingExtension do
     end
   end
 
+  describe "set for an invalid fixnum value" do
+    it "raises an error" do
+      settings.setting(:test_setting, 80)
+      settings.refresh!
+      expect {
+        settings.set("test_setting", 9999999999999999999)
+      }.to raise_error(ArgumentError)
+    end
+  end
+
   describe "filter domain name" do
     before do
       settings.setting(:white_listed_spam_host_domains, "www.example.com")
