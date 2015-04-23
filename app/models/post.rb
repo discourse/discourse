@@ -315,7 +315,9 @@ class Post < ActiveRecord::Base
   end
 
   def is_first_post?
-    post_number == 1
+    post_number.blank? ?
+      topic.try(:highest_post_number) == 0 :
+      post_number == 1
   end
 
   def is_flagged?
@@ -324,7 +326,7 @@ class Post < ActiveRecord::Base
 
   def unhide!
     self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
-    self.topic.update_attributes(visible: true) if post_number == 1
+    self.topic.update_attributes(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
   end
@@ -372,11 +374,7 @@ class Post < ActiveRecord::Base
   def rebake!(opts=nil)
     opts ||= {}
 
-    new_cooked = cook(
-      raw,
-      topic_id: topic_id,
-      invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
-    )
+    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)

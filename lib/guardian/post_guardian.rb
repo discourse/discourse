@@ -116,7 +116,7 @@ module PostGuardian
   # Deleting Methods
   def can_delete_post?(post)
     # Can't delete the first post
-    return false if post.post_number == 1
+    return false if post.is_first_post?
 
     # Can't delete after post_edit_time_limit minutes have passed
     return false if !is_staff? && post.edit_time_limit_expired?

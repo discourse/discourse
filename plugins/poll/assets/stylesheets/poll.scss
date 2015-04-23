@@ -1,0 +1,105 @@
+div.poll {
+
+  ul, ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: inline-block;
+    max-width: 90%;
+  }
+
+  li, .option {
+    cursor: pointer;
+    font-size: 1.125em;
+    line-height: 2;
+  }
+
+  li[data-poll-option-id] {
+    color: $secondary;
+    background: $primary;
+    padding: 0 .8em;
+    margin-bottom: .7em;
+    border-radius: .25rem;
+    box-shadow: inset 0 -.2em 0 0 rgba(0,0,0,.2),
+                inset 0 0 0 100px rgba(0,0,0,0),
+                0 .2em 0 0 rgba(0,0,0,.2);
+
+    &:hover {
+      box-shadow: inset 0 -.2em 0 0 rgba(0,0,0,.25),
+                  inset 0 0 0 100px rgba(0,0,0,.1),
+                  0 .2em 0 0 rgba(0,0,0,.2);
+    }
+
+    &:active {
+      -webkit-transform: translate(0,2px);
+              transform: translate(0,2px);
+      box-shadow: inset 0 -.1em 0 0 rgba(0,0,0,.25),
+                  inset 0 0 0 100px rgba(0,0,0,.1),
+                  0 .1em 0 0 rgba(0,0,0,.2);
+    }
+
+    &[data-poll-selected="selected"] {
+      background: green !important;
+    }
+  }
+
+  .button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 5px;
+    text-align: center;
+    cursor: pointer;
+    color: $primary;
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+
+    &:hover {
+      background: dark-light-diff($primary, $secondary, 65%, -75%);
+      color: #fff;
+    }
+  }
+
+  .poll-container {
+    margin: 0;
+    span {
+      font-size: 1.125em;
+      line-height: 2
+    }
+  }
+
+  .results {
+
+    .option {
+      max-width: 90%;
+      padding-right: 1.6em;
+    }
+
+    .percentage {
+      width: 10%;
+      font-size: 1.7em;
+      text-align: right;
+      vertical-align: middle;
+      color: #9E9E9E;
+    }
+
+    .bar-back {
+      background: rgb(219,219,219);
+    }
+
+    .bar {
+      height: 10px;
+      background: $primary;
+      transition: all 0.25s;
+    }
+
+  }
+
+  &[data-poll-type="number"] {
+
+    li {
+      display: inline-block;
+      margin-right: .7em;
+    }
+
+  }
+
+}

@@ -111,6 +111,8 @@ class User < ActiveRecord::Base
   # excluding fake users like the system user
   scope :real, -> { where('id > 0') }
 
+  scope :staff, -> { where("admin OR moderator") }
+
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
   # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?

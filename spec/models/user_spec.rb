@@ -111,7 +111,7 @@ describe User do
       @user.delete_all_posts!(@guardian)
       expect(Post.where(id: @posts.map(&:id))).to be_empty
       @posts.each do |p|
-        if p.post_number == 1
+        if p.is_first_post?
           expect(Topic.find_by(id: p.topic_id)).to be_nil
         end
       end
