@@ -23,3 +23,9 @@
 %{unsubscribe_link}
 </div>
 </div>
+<div itemscope itemtype="http://schema.org/EmailMessage" style="display:none">
+    <div itemprop="action" itemscope itemtype="http://schema.org/ViewAction">
+        <link itemprop="url" href="<%= Discourse.base_url %><%= post.url  %>" />
+        <meta itemprop="name" content="<%= t 'read_full_topic' %>"/>
+    </div>
+</div>
