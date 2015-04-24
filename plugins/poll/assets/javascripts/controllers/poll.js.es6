@@ -77,9 +77,7 @@ export default Em.Controller.extend({
   }.property("min", "max", "poll.options.length"),
 
   canCastVotes: function() {
-    if (this.get("isClosed") ||
-        this.get("showingResults") ||
-        this.get("loading")) {
+    if (this.get("isClosed") || this.get("showingResults") || this.get("loading")) {
       return false;
     }
 
@@ -137,7 +135,7 @@ export default Em.Controller.extend({
           options: this.get("selectedOptions"),
         }
       }).then(function(results) {
-        self.setProperties({ vote: results.vote, showingResults: true });
+        self.setProperties({ vote: results.vote, showResults: true });
         self.set("model", Em.Object.create(results.poll));
       }).catch(function() {
         bootbox.alert(I18n.t("poll.error_while_casting_votes"));
