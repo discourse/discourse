@@ -6,6 +6,7 @@ class NewPostResult
   attr_reader :action
   attr_accessor :post
   attr_accessor :queued_post
+  attr_accessor :pending_count
 
   def initialize(action, success=false)
     @action = action

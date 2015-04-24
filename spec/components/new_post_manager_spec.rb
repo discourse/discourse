@@ -109,8 +109,9 @@ describe NewPostManager do
       expect(enqueued.post_options['title']).to eq('this is the title of the queued post')
       expect(result.action).to eq(:enqueued)
       expect(result).to be_success
+      expect(result.pending_count).to eq(1)
       expect(result.post).to be_blank
-      expect(QueuedPost.new_count).to be(1)
+      expect(QueuedPost.new_count).to eq(1)
       expect(@counter).to be(0)
     end
 
