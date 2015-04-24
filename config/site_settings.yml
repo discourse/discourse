@@ -514,7 +514,7 @@ files:
     default:
       test: false
       default: true
-  download_remote_images_threshold: 20
+  download_remote_images_threshold: 10
   disabled_image_download_domains:
     type: list
     default: ''
