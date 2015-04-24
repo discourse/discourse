@@ -22,7 +22,7 @@ so I'm going to stop rendering it until we figure out what's up
           {{plugin-outlet "composer-open"}}
 
           <div class='reply-to'>
-            {{{model.actionTitle}}}:
+            {{{model.actionTitle}}}
             {{#if canEdit}}
               {{#if showEditReason}}
                 <div class="edit-reason-input">
@@ -48,7 +48,7 @@ so I'm going to stop rendering it until we figure out what's up
                 {{#if showWarning}}
                   <div class='add-warning'>
                     <label>
-                      {{input type="checkbox" checked=model.isWarning}}
+                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
                       {{i18n "composer.add_warning"}}
                     </label>
                   </div>
@@ -95,7 +95,9 @@ so I'm going to stop rendering it until we figure out what's up
               <a {{bind-attr class=":mobile-file-upload view.isUploading:hidden"}}>{{i18n 'upload'}}</a>
               <input type="file" id="mobile-uploader" />
             {{/if}}
-            <div id='draft-status'>{{model.draftStatus}}</div>
+            <div id='draft-status' {{bind-attr class="view.isUploading:hidden"}}>
+              {{model.draftStatus}}
+            </div>
           </div>
         </div>
 

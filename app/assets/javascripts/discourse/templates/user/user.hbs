@@ -55,13 +55,13 @@
                 <li>{{#link-to 'preferences' class="btn right"}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
               {{/if}}
               {{#if canInviteToForum}}
-                <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "envelope-o"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
+                <li>{{#link-to 'user.invited' class="btn right"}}{{fa-icon "user-plus"}}{{i18n 'user.invited.title'}}{{/link-to}}</li>
               {{/if}}
             </ul>
           </section>
 
           <div class="primary-textual">
-            <h1>{{username}} {{user-status model}}</h1>
+            <h1>{{username}} {{user-status model currentUser=currentUser}}</h1>
             <h2>{{name}}</h2>
             {{#if title}}
               <h3>{{title}}</h3>
@@ -88,6 +88,19 @@
               {{/if}}
               {{{bio_cooked}}}
             </div>
+
+            {{#if publicUserFields}}
+              <div class="public-user-fields">
+                {{#each uf in publicUserFields}}
+                  {{#if uf.value}}
+                    <div class="public-user-field">
+                      <span class="user-field-name">{{uf.field.name}}</span>:
+                      <span class="user-field-value">{{uf.value}}</span>
+                    </div>
+                  {{/if}}
+                {{/each}}
+              </div>
+            {{/if}}
 
             {{plugin-outlet "user-profile-primary"}}
 
@@ -155,7 +168,7 @@
         {{#if canSeeNotificationHistory}}
           {{#link-to 'user.notifications' tagName="li"}}
             {{#link-to 'user.notifications'}}
-              <i class='glyph fa fa-comment'></i>
+              {{fa-icon "comment" class="glyph"}}
               {{i18n 'user.notifications'}}
               <span class='count'>({{notification_count}})</span>
             {{/link-to}}

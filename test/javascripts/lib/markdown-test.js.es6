@@ -216,15 +216,33 @@ test("Mentions", function() {
          "<p><a href=\"https://twitter.com/codinghorror\">@codinghorror</a></p>",
          "it doesn't do link mentions within links");
 
-  cooked("Hello @EvilTrout", "<p>Hello <span class=\"mention\">@EvilTrout</span></p>", "adds a mention class");
-  cooked("robin@email.host", "<p>robin@email.host</p>", "won't add mention class to an email address");
-  cooked("hanzo55@yahoo.com", "<p>hanzo55@yahoo.com</p>", "won't be affected by email addresses that have a number before the @ symbol");
-  cooked("@EvilTrout yo", "<p><span class=\"mention\">@EvilTrout</span> yo</p>", "it handles mentions at the beginning of a string");
-  cooked("yo\n@EvilTrout", "<p>yo<br/><span class=\"mention\">@EvilTrout</span></p>", "it handles mentions at the beginning of a new line");
+  cooked("Hello @EvilTrout",
+         "<p>Hello <span class=\"mention\">@EvilTrout</span></p>",
+         "adds a mention class");
+
+  cooked("robin@email.host",
+         "<p>robin@email.host</p>",
+         "won't add mention class to an email address");
+
+  cooked("hanzo55@yahoo.com",
+         "<p>hanzo55@yahoo.com</p>",
+         "won't be affected by email addresses that have a number before the @ symbol");
+
+  cooked("@EvilTrout yo",
+         "<p><span class=\"mention\">@EvilTrout</span> yo</p>",
+         "it handles mentions at the beginning of a string");
+
+  cooked("yo\n@EvilTrout",
+         "<p>yo<br/><span class=\"mention\">@EvilTrout</span></p>",
+         "it handles mentions at the beginning of a new line");
+
   cooked("`evil` @EvilTrout `trout`",
          "<p><code>evil</code> <span class=\"mention\">@EvilTrout</span> <code>trout</code></p>",
          "deals correctly with multiple <code> blocks");
-  cooked("```\na @test\n```", "<p><pre><code class=\"lang-auto\">a @test</code></pre></p>", "should not do mentions within a code block.");
+
+  cooked("```\na @test\n```",
+         "<p><pre><code class=\"lang-auto\">a @test</code></pre></p>",
+         "should not do mentions within a code block.");
 
   cooked("> foo bar baz @eviltrout",
          "<blockquote><p>foo bar baz <span class=\"mention\">@eviltrout</span></p></blockquote>",
@@ -357,7 +375,9 @@ test("Code Blocks", function() {
          "<p><pre><code class=\"lang-ruby\">&lt;header&gt;hello&lt;/header&gt;</code></pre></p>",
          "it escapes code in the code block");
 
-  cooked("```text\ntext\n```", "<p><pre><code class=\"lang-nohighlight\">text</code></pre></p>", "handles text by adding nohighlight");
+  cooked("```text\ntext\n```",
+         "<p><pre><code class=\"lang-nohighlight\">text</code></pre></p>",
+         "handles text by adding nohighlight");
 
   cooked("```ruby\n# cool\n```",
          "<p><pre><code class=\"lang-ruby\"># cool</code></pre></p>",
@@ -403,7 +423,9 @@ test("Code Blocks", function() {
          "<pre><code>[quote]test[/quote]</code></pre>",
          "it does not parse other block types in markdown code blocks");
 
-  cooked("## a\nb\n```\nc\n```", "<h2>a</h2>\n\n<p><pre><code class=\"lang-auto\">c</code></pre></p>", "it handles headings with code blocks after them.");
+  cooked("## a\nb\n```\nc\n```",
+         "<h2>a</h2>\n\n<p><pre><code class=\"lang-auto\">c</code></pre></p>",
+         "it handles headings with code blocks after them.");
 });
 
 test("sanitize", function() {
@@ -503,4 +525,14 @@ test("censoring", function() {
   cooked("you are a whizzer! I love cheesewhiz. Whiz.",
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words even if previous partial matches exist.");
+});
+
+test("code blocks/spans hoisting", function() {
+  cooked("```\n\n    some code\n```",
+         "<p><pre><code class=\"lang-auto\">    some code</code></pre></p>",
+         "it works when nesting standard markdown code blocks within a fenced code block");
+
+  cooked("`$&`",
+         "<p><code>$&amp;</code></p>",
+         "it works even when hoisting special replacement patterns");
 });

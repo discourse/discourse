@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'mysql2'
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
 
 class ImportScripts::VBulletin < ImportScripts::Base
@@ -11,6 +11,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   def initialize
     super
+
+    @old_username_to_new_usernames = {}
 
     @tz = TZInfo::Timezone.get(TIMEZONE)
 
@@ -54,15 +56,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_users
     puts "", "importing users"
 
-    @old_username_to_new_usernames = {}
-
     user_count = mysql_query("SELECT COUNT(userid) count FROM user").first["count"]
-
-    # TODO: add email back in when using real data
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate
+          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
             FROM user
         ORDER BY userid
            LIMIT #{BATCH_SIZE}
@@ -183,7 +181,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         name: @htmlentities.decode(category["title"]).strip,
         position: category["displayorder"],
         description: @htmlentities.decode(category["description"]).strip,
-        parent_category_id: category_from_imported_category_id(category["parentid"]).try(:[], "id")
+        parent_category_id: category_id_from_imported_category_id(category["parentid"])
       }
     end
   end
@@ -210,14 +208,16 @@ class ImportScripts::VBulletin < ImportScripts::Base
       break if topics.size < 1
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
+        raw = preprocess_post_raw(topic["raw"]) rescue nil
+        next if raw.blank?
         topic_id = "thread-#{topic["threadid"]}"
         @closed_topic_ids << topic_id if topic["open"] == "0"
         t = {
           id: topic_id,
           user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
           title: @htmlentities.decode(topic["title"]).strip[0...255],
-          category: category_from_imported_category_id(topic["forumid"]).try(:name),
-          raw: preprocess_post_raw(topic["raw"]),
+          category: category_id_from_imported_category_id(topic["forumid"]),
+          raw: raw,
           created_at: parse_timestamp(topic["dateline"]),
           visible: topic["visible"].to_i == 1,
           views: topic["views"],
@@ -230,6 +230,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   def import_posts
     puts "", "importing posts..."
+
+    # make sure `firstpostid` is indexed
+    mysql_query("CREATE INDEX firstpostid_index ON thread (firstpostid)")
 
     post_count = mysql_query("SELECT COUNT(postid) count FROM post WHERE postid NOT IN (SELECT firstpostid FROM thread)").first["count"]
 
@@ -246,12 +249,14 @@ class ImportScripts::VBulletin < ImportScripts::Base
       break if posts.size < 1
 
       create_posts(posts, total: post_count, offset: offset) do |post|
+        raw = preprocess_post_raw(post["raw"]) rescue nil
+        next if raw.blank?
         next unless topic = topic_lookup_from_imported_post_id("thread-#{post["threadid"]}")
         p = {
           id: post["postid"],
           user_id: user_id_from_imported_user_id(post["userid"]) || Discourse::SYSTEM_USER_ID,
           topic_id: topic[:topic_id],
-          raw: preprocess_post_raw(post["raw"]),
+          raw: raw,
           created_at: parse_timestamp(post["dateline"]),
           hidden: post["visible"].to_i == 0,
         }
@@ -296,6 +301,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
           post.raw = new_raw
           post.save
         end
+      rescue PrettyText::JavaScriptError
+        nil
       ensure
         print_status(current += 1, max)
       end

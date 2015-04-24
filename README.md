@@ -10,13 +10,14 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 
 ## Screenshots
 
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/boing-boing-latest-small2.png)](http://bbs.boingboing.net)
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/how-to-geek-profile-small2.png)](http://discuss.howtogeek.com)
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/new-relic-categories-small2.png)](http://discuss.newrelic.com)
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/turtle-rock-topic-small2.jpg)](https://talk.turtlerockstudios.com/)
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/nexus-7-mobile-discourse-small3.png)](http://discuss.atom.io)
-[![](https://raw.githubusercontent.com/discourse/discourse-docimages/master/readme/iphone-5s-mobile-discourse-small4.png)](http://discourse.soylent.me)
+[![](http://www.discourse.org/images/readme/boingboing-1-3-beta.png)](http://bbs.boingboing.net)
+[![](http://www.discourse.org/images/readme/howtogeek-1-3-beta.png)](http://discuss.howtogeek.com)
+[![](http://www.discourse.org/images/readme/newrelic-1-3-beta.png)](http://discuss.newrelic.com)
+[![](http://www.discourse.org/images/readme/turtlerock-1-3-beta.png)](https://talk.turtlerockstudios.com/)
+[![](http://www.discourse.org/images/readme/android-tablet-discourse-1-3-beta.png?v=3)](http://discuss.atom.io)
+[![](http://www.discourse.org/images/readme/iphone-6-discourse-1-3-beta.png?v=3)](http://discourse.soylent.me)
 
+Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
 ## Development
 
@@ -82,7 +83,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2015 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

@@ -4,7 +4,7 @@ class StaticController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:enter]
 
   def show
-    return redirect_to('/') if current_user && params[:id] == 'login'
+    return redirect_to(path '/') if current_user && params[:id] == 'login'
 
     map = {
       "faq" => {redirect: "faq_url", topic_id: "guidelines_topic_id"},
@@ -60,15 +60,17 @@ class StaticController < ApplicationController
     params.delete(:username)
     params.delete(:password)
 
-    destination = "/"
+    destination = path("/")
 
     if params[:redirect].present? && !params[:redirect].match(login_path)
       begin
         forum_uri = URI(Discourse.base_url)
         uri = URI(params[:redirect])
+
         if uri.path.present? &&
            (uri.host.blank? || uri.host == forum_uri.host) &&
            uri.path !~ /\./
+
           destination = uri.path
         end
       rescue URI::InvalidURIError
@@ -90,7 +92,7 @@ class StaticController < ApplicationController
     expires_in 1.year, public: true
 
     response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Access-Control-Allow-Origin"] = params[:origin]
+    response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
 
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate

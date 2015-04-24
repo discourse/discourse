@@ -1,13 +1,12 @@
-/**
-  Renders a drop down for selecting a category
+var get = Ember.get;
 
-  @class CategoryDropComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
 export default Ember.Component.extend({
-  classNameBindings: ['category::no-category', 'categories:has-drop'],
+  classNameBindings: ['category::no-category', 'categories:has-drop','categoryStyle'],
+
+  categoryStyle: function(){
+    return Discourse.SiteSettings.category_style;
+  }.property(),
+
   tagName: 'li',
 
   iconClass: function() {
@@ -42,13 +41,38 @@ export default Ember.Component.extend({
     return result;
   }.property('category'),
 
+  categoryColor: function() {
+    var category = this.get('category');
+
+    if (category) {
+      var color = get(category, 'color');
+
+      if (color) {
+        var style = "";
+        if (color) { style += "background-color: #" + color + ";" }
+        return style;
+      }
+    }
+
+    return "background-color: #eee;";
+  }.property('category'),
+
   badgeStyle: function() {
     var category = this.get('category');
+
     if (category) {
-      return Discourse.HTML.categoryStyle(category);
-    } else {
-      return "background-color: #eee; color: #333";
+      var color = get(category, 'color'),
+          textColor = get(category, 'text_color');
+
+      if (color || textColor) {
+        var style = "";
+        if (color) { style += "background-color: #" + color + "; border-color: #" + color + ";"; }
+        if (textColor) { style += "color: #" + textColor + "; "; }
+        return style;
+      }
     }
+
+    return "background-color: #eee; color: #333";
   }.property('category'),
 
   clickEventName: function() {
@@ -81,24 +105,33 @@ export default Ember.Component.extend({
         self.close();
       });
 
-      $('html').on(this.get('clickEventName'), function(e) {
-        var $target = $(e.target),
-            closest = $target.closest($dropdown);
+      Em.run.next(function(){
+        self.$('.cat a').add('html').on(self.get('clickEventName'), function(e) {
+          var $target = $(e.target),
+              closest = $target.closest($dropdown);
 
-        return ($(e.currentTarget).hasClass('badge-category') || (closest.length && closest[0] === $dropdown)) ? true : self.close();
+          if ($(e.currentTarget).hasClass('badge-wrapper')){
+            self.close();
+          }
+
+          return ($(e.currentTarget).hasClass('badge-category') || (closest.length && closest[0] === $dropdown)) ? true : self.close();
+        });
       });
     }
   },
 
-  close: function() {
+  removeEvents: function(){
     $('html').off(this.get('clickEventName'));
     this.$('a[data-drop-close]').off('click.category-drop');
+  },
+
+  close: function() {
+    this.removeEvents();
     this.set('expanded', false);
   },
 
   willDestroyElement: function() {
-    $('html').off(this.get('clickEventName'));
-    this.$('a[data-drop-close]').off('click.category-drop');
+    this.removeEvents();
   }
 
 });

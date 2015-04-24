@@ -1,16 +1,27 @@
-export function iconHTML(icon, label) {
-  var html = "<i class='fa fa-" + icon + "'";
-  if (label) { html += " aria-hidden='true'"; }
+import registerUnbound from 'discourse/helpers/register-unbound';
+
+function iconClasses(icon, params) {
+  var classes = "fa fa-" + icon;
+  if (params.modifier) { classes += " fa-" + params.modifier; }
+  if (params['class']) { classes += ' ' + params['class']; }
+  return classes;
+}
+
+function iconHTML(icon, params) {
+  params = params || {};
+
+  var html = "<i class='" + iconClasses(icon, params) + "'";
+  if (params.label) { html += " aria-hidden='true'"; }
   html += "></i>";
-  if (label) {
-    html += "<span class='sr-only'>" + I18n.t(label) + "</span>";
+  if (params.label) {
+    html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
   }
   return html;
 }
 
-Handlebars.registerHelper('fa-icon', function(icon, options) {
-  var label;
-  if (options.hash) { label = options.hash.label; }
 
-  return new Handlebars.SafeString(iconHTML(icon, label));
+registerUnbound('fa-icon', function(icon, params) {
+  return new Handlebars.SafeString(iconHTML(icon, params));
 });
+
+export { iconHTML };

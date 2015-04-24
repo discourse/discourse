@@ -19,6 +19,7 @@ function Pretender(maps){
 
   this.handlers = [];
   this.handledRequests = [];
+  this.passthroughRequests = [];
   this.unhandledRequests = [];
 
   // reference the native XMLHttpRequest object so
@@ -28,6 +29,9 @@ function Pretender(maps){
   // capture xhr requests, channeling them into
   // the route map.
   window.XMLHttpRequest = interceptor(this);
+
+  // "start" the server
+  this.running = true;
 
   // trigger the route map DSL.
   maps.call(this);
@@ -41,9 +45,64 @@ function interceptor(pretender) {
   // extend
   var proto = new FakeXMLHttpRequest();
   proto.send = function send(){
-    FakeXMLHttpRequest.prototype.send.apply(this, arguments);
-    pretender.handleRequest(this);
+    if (!pretender.running) {
+      throw new Error('You shut down a Pretender instance while there was a pending request. '+
+            'That request just tried to complete. Check to see if you accidentally shut down '+
+            'a pretender earlier than you intended to');
+    }
+
+    if (!pretender.checkPassthrough(this)) {
+      FakeXMLHttpRequest.prototype.send.apply(this, arguments);
+      pretender.handleRequest(this);
+    }
+    else {
+      var xhr = createPassthrough(this);
+      xhr.send.apply(xhr, arguments);
+    }
   };
+
+  // passthrough handling
+  var evts = ['load', 'error', 'timeout', 'progress', 'abort', 'readystatechange'];
+  var lifecycleProps = ['readyState', 'responseText', 'responseXML', 'status', 'statusText'];
+  function createPassthrough(fakeXHR) {
+    var xhr = fakeXHR._passthroughRequest = new pretender._nativeXMLHttpRequest();
+    // listen to all events to update lifecycle properties
+    for (var i = 0; i < evts.length; i++) (function(evt) {
+      xhr['on' + evt] = function(e) {
+        // update lifecycle props on each event
+        for (var i = 0; i < lifecycleProps.length; i++) {
+          var prop = lifecycleProps[i];
+          if (xhr[prop]) {
+            fakeXHR[prop] = xhr[prop];
+          }
+        }
+        // fire fake events where applicable
+        fakeXHR.dispatchEvent(evt, e);
+        if (fakeXHR['on' + evt]) {
+          fakeXHR['on' + evt](e);
+        }
+      };
+    })(evts[i]);
+    xhr.open(fakeXHR.method, fakeXHR.url, fakeXHR.async, fakeXHR.username, fakeXHR.password);
+    xhr.timeout = fakeXHR.timeout;
+    xhr.withCredentials = fakeXHR.withCredentials;
+    return xhr;
+  }
+  proto._passthroughCheck = function(method, arguments) {
+    if (this._passthroughRequest) {
+      return this._passthroughRequest[method].apply(this._passthroughRequest, arguments);
+    }
+    return FakeXMLHttpRequest.prototype[method].apply(this, arguments);
+  }
+  proto.abort = function abort(){
+    return this._passthroughCheck('abort', arguments);
+  }
+  proto.getResponseHeader = function getResponseHeader(){
+    return this._passthroughCheck('getResponseHeader', arguments);
+  }
+  proto.getAllResponseHeaders = function getAllResponseHeaders(){
+    return this._passthroughCheck('getAllResponseHeaders', arguments);
+  }
 
   FakeRequest.prototype = proto;
   return FakeRequest;
@@ -54,6 +113,22 @@ function verbify(verb){
     this.register(verb, path, handler);
   };
 }
+
+function throwIfURLDetected(url){
+  var HTTP_REGEXP = /^https?/;
+  var message;
+
+  if(HTTP_REGEXP.test(url)) {
+    var parser = window.document.createElement('a');
+    parser.href = url;
+
+    message = "Pretender will not respond to requests for URLs. It is not possible to accurately simluate the browser's CSP. "+
+              "Remove the " + parser.protocol +"//"+ parser.hostname +" from " + url + " and try again";
+    throw new Error(message)
+  }
+}
+
+var PASSTHROUGH = {};
 
 Pretender.prototype = {
   get: verbify('GET'),
@@ -69,9 +144,29 @@ Pretender.prototype = {
     var registry = this.registry[verb];
     registry.add([{path: path, handler: handler}]);
   },
+  passthrough: PASSTHROUGH,
+  checkPassthrough: function(request) {
+    var verb = request.method.toUpperCase();
+    var path = request.url;
+
+    throwIfURLDetected(path);
+
+    verb = verb.toUpperCase();
+
+    var recognized = this.registry[verb].recognize(path);
+    var match = recognized && recognized[0];
+    if (match && match.handler == PASSTHROUGH) {
+      this.passthroughRequests.push(request);
+      this.passthroughRequest(verb, path, request);
+      return true;
+    }
+
+    return false;
+  },
   handleRequest: function handleRequest(request){
     var verb = request.method.toUpperCase();
     var path = request.url;
+
     var handler = this._handlerFor(verb, path, request);
 
     if (handler) {
@@ -81,9 +176,10 @@ Pretender.prototype = {
       try {
         var statusHeadersAndBody = handler.handler(request),
             status = statusHeadersAndBody[0],
-            headers = statusHeadersAndBody[1],
+            headers = this.prepareHeaders(statusHeadersAndBody[1]),
             body = this.prepareBody(statusHeadersAndBody[2]);
         request.respond(status, headers, body);
+
         this.handledRequest(verb, path, request);
       } catch (error) {
         this.erroredRequest(verb, path, request, error);
@@ -93,8 +189,10 @@ Pretender.prototype = {
       this.unhandledRequest(verb, path, request);
     }
   },
-  prepareBody: function(body){ return body; },
-  handledRequest: function(verb, path, request){/* no-op */},
+  prepareBody: function(body) { return body; },
+  prepareHeaders: function(headers) { return headers; },
+  handledRequest: function(verb, path, request) { /* no-op */},
+  passthroughRequest: function(verb, path, request) { /* no-op */},
   unhandledRequest: function(verb, path, request) {
     throw new Error("Pretender intercepted "+verb+" "+path+" but no handler was defined for this type of request");
   },
@@ -116,6 +214,9 @@ Pretender.prototype = {
   },
   shutdown: function shutdown(){
     window.XMLHttpRequest = this._nativeXMLHttpRequest;
+
+    // "stop" the server
+    this.running = false;
   }
 };
 

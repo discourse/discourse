@@ -8,17 +8,22 @@ env:
     - "RAILS_MASTER=1"
     - "RAILS_MASTER=0"
 
+addons:
+  postgresql: 9.3
+
 matrix:
   allow_failures:
     - rvm: 2.0.0
       env: "RAILS_MASTER=1"
     - rvm: 2.1
       env: "RAILS_MASTER=1"
+    - rvm: rbx-2
   fast_finish: true
 
 rvm:
   - 2.0.0
   - 2.1
+  - rbx-2
 
 services:
   - redis-server

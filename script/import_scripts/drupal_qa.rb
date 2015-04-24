@@ -1,7 +1,6 @@
+require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require File.expand_path(File.dirname(__FILE__) + "/drupal.rb")
-
-require "mysql2"
 
 class ImportScripts::DrupalQA < ImportScripts::Drupal
 
@@ -61,7 +60,7 @@ class ImportScripts::DrupalQA < ImportScripts::Drupal
         {
           id: "nid:#{row['nid']}",
           user_id: user_id_from_imported_user_id(row['uid']) || -1,
-          category: category_from_imported_category_id((row['tid'] || '').split(',')[0]).try(:name),
+          category: category_id_from_imported_category_id((row['tid'] || '').split(',')[0]),
           raw: row['body'],
           created_at: Time.zone.at(row['created']),
           pinned_at: nil,

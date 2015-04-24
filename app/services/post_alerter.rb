@@ -10,14 +10,14 @@ class PostAlerter
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
-        next if user.blank?
-
+      post.topic.all_allowed_users.reject do |user|
+        user.blank? ||
+        user.id == Discourse::SYSTEM_USER_ID ||
+        user.id == post.user_id
+      end.each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number
-          next unless post.reply_to_post.user_id == user.id
+          next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
         end
-
         create_notification(user, Notification.types[:private_message], post)
       end
     elsif post.post_type != Post.types[:moderator_action]
@@ -82,9 +82,18 @@ class PostAlerter
 
   def create_notification(user, type, post, opts={})
     return if user.blank?
+    return if user.id == Discourse::SYSTEM_USER_ID
 
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
+
+    notifier_id = opts[:user_id] || post.user_id
+
+    # apply muting here
+    return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
+                                      .joins(:muted_user)
+                                      .where('NOT admin AND NOT moderator')
+                                      .exists?
 
     # skip if muted on the topic
     return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
@@ -118,7 +127,9 @@ class PostAlerter
     if collapsed
       post = first_unread_post(user,post.topic) || post
       count = unread_count(user, post.topic)
-      opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      I18n.with_locale(user.effective_locale) do
+        opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
+      end
     end
 
     UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
@@ -179,6 +190,7 @@ class PostAlerter
 
     exclude_user_ids << reply_to_user.id if reply_to_user.present?
     exclude_user_ids.flatten!
+
     TopicUser
       .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
       .includes(:user).each do |tu|

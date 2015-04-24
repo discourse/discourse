@@ -15,6 +15,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :private_topics_count,
              :can_delete_all_posts,
              :can_be_deleted,
+             :can_be_anonymized,
              :suspend_reason,
              :primary_group_id,
              :badge_count,
@@ -49,6 +50,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def can_be_deleted
     scope.can_delete_user?(object)
+  end
+
+  def can_be_anonymized
+    scope.can_anonymize_user?(object)
   end
 
   def moderator

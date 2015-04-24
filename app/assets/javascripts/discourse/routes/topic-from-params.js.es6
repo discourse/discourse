@@ -1,6 +1,9 @@
 // This route is used for retrieving a topic based on params
 export default Discourse.Route.extend({
 
+  // Avoid default model hook
+  model: function(p) { return p; },
+
   setupController: function(controller, params) {
     params = params || {};
     params.track_visit = true;
@@ -15,6 +18,7 @@ export default Discourse.Route.extend({
     if (params.nearPost === "last") { params.nearPost = 999999999; }
 
     var self = this;
+    params.forceLoad = true;
     postStream.refresh(params).then(function () {
 
       // TODO we are seeing errors where closest post is null and this is exploding
@@ -34,7 +38,11 @@ export default Discourse.Route.extend({
         progressPosition: progress,
         expanded: false
       });
-      self.appEvents.trigger('post:highlight', closest);
+
+      // Highlight our post after the next render
+      Ember.run.scheduleOnce('afterRender', function() {
+        self.appEvents.trigger('post:highlight', closest);
+      });
       Discourse.URL.jumpToPost(closest);
 
       if (topic.present('draft')) {

@@ -11,6 +11,7 @@ class Topic < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include HasCustomFields
   include Trashable
+  include LimitedEdit
   extend Forwardable
 
   def_delegator :featured_users, :user_ids, :featured_user_ids
@@ -124,7 +125,7 @@ class Topic < ActiveRecord::Base
 
   scope :visible, -> { where(visible: true) }
 
-  scope :created_since, lambda { |time_ago| where('created_at > ?', time_ago) }
+  scope :created_since, lambda { |time_ago| where('topics.created_at > ?', time_ago) }
 
   scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
@@ -231,16 +232,25 @@ class Topic < ActiveRecord::Base
     posts.order('score desc').limit(1).first
   end
 
+  def has_flags?
+    FlagQuery.flagged_post_actions("active")
+             .where("topics.id" => id)
+             .exists?
+  end
+
   # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    # TODO we should probably change this from 3 queries to 1
-    User.where('id in (?)', allowed_users.select('users.id').to_a + allowed_group_users.select('users.id').to_a)
+    # TODO we should probably change this to 1 query
+    allowed_user_ids = allowed_users.select('users.id').to_a
+    allowed_group_user_ids = allowed_group_users.select('users.id').to_a
+    allowed_staff_ids = private_message? && has_flags? ? User.where(moderator: true).pluck(:id).to_a : []
+    User.where('id IN (?)', allowed_user_ids + allowed_group_user_ids + allowed_staff_ids)
   end
 
   # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
     apply_per_day_rate_limit_for("topics", :max_topics_per_day)
-    limit_first_day_topics_per_day if user.added_a_day_ago?
+    limit_first_day_topics_per_day if user.first_day_user?
   end
 
   def limit_private_messages_per_day
@@ -249,13 +259,7 @@ class Topic < ActiveRecord::Base
   end
 
   def fancy_title
-    sanitized_title = title.gsub(/['&\"<>]/, {
-        "'" => '&#39;',
-        '&' => '&amp;',
-        '"' => '&quot;',
-        '<' => '&lt;',
-        '>' => '&gt;',
-      })
+    sanitized_title = ERB::Util.html_escape(title)
 
     return unless sanitized_title
     return sanitized_title unless SiteSetting.title_fancy_entities?
@@ -276,8 +280,10 @@ class Topic < ActiveRecord::Base
               .visible
               .secured(Guardian.new(user))
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
+              .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
+              .where("COALESCE(users.trust_level, 0) > 0")
               .created_since(since)
               .listable_topics
               .includes(:category)
@@ -468,6 +474,8 @@ class Topic < ActiveRecord::Base
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
+      CategoryUser.auto_watch_new_topic(self)
+      CategoryUser.auto_track_new_topic(self)
     end
 
     true
@@ -480,6 +488,7 @@ class Topic < ActiveRecord::Base
                                 raw: text,
                                 post_type: Post.types[:moderator_action],
                                 no_bump: opts[:bump].blank?,
+                                skip_notifications: opts[:skip_notifications],
                                 topic_id: self.id)
       new_post = creator.create
       increment!(:moderator_posts_count)
@@ -528,7 +537,7 @@ class Topic < ActiveRecord::Base
   # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil)
     if private_message?
-      # If the user exists, add them to the topic.
+      # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
 
@@ -542,11 +551,24 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    if username_or_email =~ /^.+@.+$/
+    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso
       # NOTE callers expect an invite object if an invite was sent via email
       invite_by_email(invited_by, username_or_email, group_ids)
     else
-      false
+      # invite existing member to a topic
+      user = User.find_by_username(username_or_email)
+      if user && topic_allowed_users.create!(user_id: user.id)
+
+        # Notify the user they've been invited
+        user.notifications.create(notification_type: Notification.types[:invited_to_topic],
+                                  topic_id: id,
+                                  post_number: 1,
+                                  data: { topic_title: title,
+                                          display_username: invited_by.username }.to_json)
+        return true
+      else
+        false
+      end
     end
   end
 
@@ -591,7 +613,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    PostActionType.types.keys.each do |type|
+    PostActionType.types.each_key do |type|
       count_field = "#{type}_count"
       update_column(count_field, Post.where(topic_id: id).sum(count_field))
     end
@@ -816,10 +838,11 @@ class Topic < ActiveRecord::Base
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    RateLimiter.new(user, "#{key}-per-day:#{Date.today}", SiteSetting.send(method_name), 1.day.to_i)
+    RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 
 end
+
 
 # == Schema Information
 #

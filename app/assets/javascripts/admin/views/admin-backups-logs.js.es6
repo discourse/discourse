@@ -9,7 +9,7 @@ export default Discourse.View.extend({
     this.setProperties({ formattedLogs: "", index: 0 });
   },
 
-  _updateFormattedLogs: function() {
+  _updateFormattedLogs: Discourse.debounce(function() {
     var logs = this.get("controller.model");
     if (logs.length === 0) {
       this._reset(); // reset the cached logs whenever the model is reset
@@ -17,7 +17,7 @@ export default Discourse.View.extend({
       // do the log formatting only once for HELLish performance
       var formattedLogs = this.get("formattedLogs");
       for (var i = this.get("index"), length = logs.length; i < length; i++) {
-        var date = moment(logs[i].get("timestamp")).format("YYYY-MM-DD HH:mm:ss"),
+        var date = logs[i].get("timestamp"),
             message = Handlebars.Utils.escapeExpression(logs[i].get("message"));
         formattedLogs += "[" + date + "] " + message + "\n";
       }
@@ -26,7 +26,7 @@ export default Discourse.View.extend({
       // force rerender
       this.rerender();
     }
-  }.observes("controller.model.@each"),
+  }, 150).observes("controller.model.@each"),
 
   render: function(buffer) {
     var formattedLogs = this.get("formattedLogs");

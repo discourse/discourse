@@ -2,15 +2,24 @@
   Support for various code blocks
 **/
 
-var acceptableCodeClasses =
-  ["auto", "1c", "actionscript", "apache", "applescript", "avrasm", "axapta", "bash", "brainfuck",
-   "clojure", "cmake", "coffeescript", "cpp", "cs", "css", "d", "delphi", "diff", "xml", "django", "dos",
-   "erlang-repl", "erlang", "glsl", "go", "handlebars", "haskell", "http", "ini", "java", "javascript",
-   "json", "lisp", "lua", "markdown", "matlab", "mel", "nginx", "nohighlight", "objectivec", "parser3",
-   "perl", "php", "profile", "python", "r", "rib", "rsl", "ruby", "rust", "scala", "smalltalk", "sql",
-   "tex", "text", "vala", "vbscript", "vhdl"];
+var acceptableCodeClasses;
 
-var textCodeClasses = ["text", "pre"];
+function init() {
+  acceptableCodeClasses = Discourse.SiteSettings.highlighted_languages.split("|");
+  if (Discourse.SiteSettings.highlighted_languages.length > 0) {
+    var regexpSource = "^lang-(" + "nohighlight|auto|" + Discourse.SiteSettings.highlighted_languages + ")$";
+    Discourse.Markdown.whiteListTag('code', 'class', new RegExp(regexpSource, "i"));
+  }
+}
+
+if (Discourse.SiteSettings && Discourse.SiteSettings.highlighted_languages) {
+  init();
+} else {
+  Discourse.initializer({initialize: init, name: 'load-acceptable-code-classes'});
+}
+
+
+var textCodeClasses = ["text", "pre", "plain"];
 
 function flattenBlocks(blocks) {
   var result = "";
@@ -27,6 +36,7 @@ Discourse.Dialect.replaceBlock({
   emitter: function(blockContents, matches) {
 
     var klass = Discourse.SiteSettings.default_code_lang;
+
     if (matches[1] && acceptableCodeClasses.indexOf(matches[1]) !== -1) {
       klass = matches[1];
     }
@@ -36,6 +46,17 @@ Discourse.Dialect.replaceBlock({
     } else  {
       return ['p', ['pre', ['code', {'class': 'lang-' + klass}, flattenBlocks(blockContents) ]]];
     }
+  }
+});
+
+Discourse.Dialect.replaceBlock({
+  start: /(<pre[^\>]*\>)([\s\S]*)/igm,
+  stop: /<\/pre>/igm,
+  rawContents: true,
+  skipIfTradtionalLinebreaks: true,
+
+  emitter: function(blockContents) {
+    return ['p', ['pre', flattenBlocks(blockContents)]];
   }
 });
 
@@ -51,7 +72,6 @@ Discourse.Dialect.on('parseNode', function (event) {
 
     if (path && path[path.length-1] && path[path.length-1][0] && path[path.length-1][0] === "pre") {
       regexp = / +$/g;
-
     } else {
       regexp = /^ +| +$/g;
     }
@@ -59,17 +79,3 @@ Discourse.Dialect.on('parseNode', function (event) {
   }
 });
 
-Discourse.Dialect.replaceBlock({
-  start: /(<pre[^\>]*\>)([\s\S]*)/igm,
-  stop: /<\/pre>/igm,
-  rawContents: true,
-  skipIfTradtionalLinebreaks: true,
-
-  emitter: function(blockContents) {
-    return ['p', ['pre', flattenBlocks(blockContents)]];
-  }
-});
-
-// Whitelist the language classes
-var regexpSource = "^lang-(" + acceptableCodeClasses.join('|') + ")$";
-Discourse.Markdown.whiteListTag('code', 'class', new RegExp(regexpSource, "i"));

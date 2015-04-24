@@ -1,18 +1,11 @@
-/**
-  A breadcrumb including category drop downs
-
-  @class BreadCrumbsComponent
-  @extends Ember.Component
-  @namespace Discourse
-  @module Discourse
-**/
+//  A breadcrumb including category drop downs
 export default Ember.Component.extend({
   classNames: ['category-breadcrumb'],
   tagName: 'ol',
   parentCategory: Em.computed.alias('category.parentCategory'),
 
   parentCategories: Em.computed.filter('categories', function(c) {
-    if (c.id === Discourse.Site.currentProp("uncategorized_category_id") && !Discourse.SiteSettings.allow_uncategorized_topics) {
+    if (c.id === this.site.get("uncategorized_category_id") && !this.siteSettings.allow_uncategorized_topics) {
       // Don't show "uncategorized" if allow_uncategorized_topics setting is false.
       return false;
     }

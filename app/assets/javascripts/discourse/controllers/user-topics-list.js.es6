@@ -1,7 +1,7 @@
 import ObjectController from 'discourse/controllers/object';
 
 // Lists of topics on a user's page.
-export default ObjectController.extend(Discourse.HasCurrentUser, {
+export default ObjectController.extend({
   needs: ["application", "user"],
   hideCategory: false,
   showParticipants: false,

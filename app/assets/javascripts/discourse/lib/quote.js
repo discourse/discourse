@@ -1,21 +1,8 @@
-/**
-  Build the BBCode for a Quote
-
-  @class BBCode
-  @namespace Discourse
-  @module Discourse
-**/
 Discourse.Quote = {
 
   REGEXP: /\[quote=([^\]]*)\]((?:[\s\S](?!\[quote=[^\]]*\]))*?)\[\/quote\]/im,
 
-  /**
-    Build the BBCode quote around the selected text
-
-    @method buildQuote
-    @param {Discourse.Post} post The post we are quoting
-    @param {String} contents The text selected
-  **/
+  // Build the BBCode quote around the selected text
   build: function(post, contents) {
     var contents_hashed, result, sansQuotes, stripped, stripped_hashed, tmp;
     if (!contents) contents = "";

@@ -49,6 +49,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     approve_account_if_needed
     notify_invitee
     send_password_instructions
+    delete_duplicate_invites
   end
 
   def invite_was_redeemed?
@@ -88,8 +89,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def add_user_to_groups
-    invite.groups.each do |g|
-      invited_user.group_users.create(group_id: g.id)
+    new_group_ids = invite.groups.pluck(:id) - invited_user.group_users.pluck(:group_id)
+    new_group_ids.each do |id|
+      invited_user.group_users.create(group_id: id)
     end
   end
 
@@ -112,5 +114,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   def notify_invitee
     invite.invited_by.notifications.create(notification_type: Notification.types[:invitee_accepted],
                                            data: {display_username: invited_user.username}.to_json)
+  end
+
+  def delete_duplicate_invites
+    Invite.where('invites.email = ? AND redeemed_at IS NULL AND invites.id != ?', invite.email, invite.id).delete_all
   end
 end

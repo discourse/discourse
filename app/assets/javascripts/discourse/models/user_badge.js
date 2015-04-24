@@ -7,6 +7,11 @@
   @module Discourse
 **/
 Discourse.UserBadge = Discourse.Model.extend({
+  postUrl: function() {
+    if(this.get('topic_title')) {
+      return "/t/-/" + this.get('topic_id') + "/" + this.get('post_number');
+    }
+  }.property(), // avoid the extra bindings for now
   /**
     Revoke this badge.
 
@@ -93,7 +98,7 @@ Discourse.UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an array of `Discourse.UserBadge`.
   **/
   findByUsername: function(username, options) {
-    var url = "/users/" + username + "/badges_json.json";
+    var url = "/user-badges/" + username + ".json";
     if (options && options.grouped) {
       url += "?grouped=true";
     }
@@ -128,12 +133,13 @@ Discourse.UserBadge.reopenClass({
     @param {String} username username of the user to be granted the badge.
     @returns {Promise} a promise that resolves to an instance of `Discourse.UserBadge`.
   **/
-  grant: function(badgeId, username) {
+  grant: function(badgeId, username, reason) {
     return Discourse.ajax("/user_badges", {
       type: "POST",
       data: {
         username: username,
-        badge_id: badgeId
+        badge_id: badgeId,
+        reason: reason
       }
     }).then(function(json) {
       return Discourse.UserBadge.createFromJson(json);

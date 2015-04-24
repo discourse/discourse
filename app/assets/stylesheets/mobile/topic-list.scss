@@ -48,7 +48,6 @@
   }
 
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
 
   .badge-notification {
     position: relative;
@@ -63,8 +62,6 @@
     }
     .category a {
       max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -144,8 +141,7 @@ tr.category-topic-link:nth-of-type(odd) {
   margin-bottom: 10px;
 
   th .badge-category {
-    float: left;
-    margin: 1px 4px 0 0;
+    margin: 0;
     font-size: 110%;
   }
 
@@ -266,7 +262,6 @@ ol.category-breadcrumb {
 
 .category-dropdown-menu {
   height: 200px;
-  margin-top: 31px;
 
   a.badge-category {
     line-height: 26px !important;

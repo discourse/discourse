@@ -5,6 +5,7 @@ class UserSearch
     @term = term
     @term_like = "#{term.downcase}%"
     @topic_id = opts[:topic_id]
+    @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @limit = opts[:limit] || 20
   end
@@ -34,6 +35,18 @@ class UserSearch
 
     unless @searching_user && @searching_user.staff?
       users = users.not_suspended
+    end
+
+    # Only show users who have access to private topic
+    if @topic_id && @topic_allowed_users == "true"
+      allowed_user_ids = []
+      topic = Topic.find_by(id: @topic_id)
+
+      if topic.category && topic.category.read_restricted
+        users = users.includes(:secure_categories)
+                     .where("users.admin = TRUE OR categories.id = ?", topic.category.id)
+                     .references(:categories)
+      end
     end
 
     users.order("CASE WHEN last_seen_at IS NULL THEN 0 ELSE 1 END DESC, last_seen_at DESC, username ASC")

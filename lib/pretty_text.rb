@@ -1,35 +1,52 @@
 require 'v8'
 require 'nokogiri'
+require_dependency 'url_helper'
 require_dependency 'excerpt_parser'
 require_dependency 'post'
 
 module PrettyText
 
   class Helpers
+    include UrlHelper
 
     def t(key, opts)
       key = "js." + key
       unless opts
-        return I18n.t(key)
+        I18n.t(key)
       else
         str = I18n.t(key, Hash[opts.entries].symbolize_keys).dup
-        opts.each {|k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
-        return str
+        opts.each { |k,v| str.gsub!("{{#{k.to_s}}}", v.to_s) }
+        str
       end
     end
 
-    # function here are available to v8
+    # functions here are available to v8
     def avatar_template(username)
       return "" unless username
-
       user = User.find_by(username_lower: username.downcase)
-      user.avatar_template if user.present?
+      return "" unless user.present?
+
+      # TODO: Add support for ES6 and call `avatar-template` directly
+      if !user.uploaded_avatar_id && SiteSetting.default_avatars.present?
+        split_avatars = SiteSetting.default_avatars.split("\n")
+        if split_avatars.present?
+          hash = username.each_char.reduce(0) do |result, char|
+            [((result << 5) - result) + char.ord].pack('L').unpack('l').first
+          end
+
+          avatar_template = split_avatars[hash.abs % split_avatars.size]
+        end
+      else
+        avatar_template = user.avatar_template
+      end
+
+      schemaless absolute avatar_template
     end
 
     def is_username_valid(username)
       return false unless username
       username = username.downcase
-      return User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
+      User.exec_sql('SELECT 1 FROM users WHERE username_lower = ?', username).values.length == 1
     end
   end
 
@@ -63,31 +80,26 @@ module PrettyText
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
+    ctx.eval("var modules = {};")
+
     decorate_context(ctx)
 
     ctx_load(ctx,
-      "public/javascripts/highlight.pack.js",
       "vendor/assets/javascripts/better_markdown.js",
       "app/assets/javascripts/defer/html-sanitizer-bundle.js",
       "app/assets/javascripts/discourse/dialects/dialect.js",
       "app/assets/javascripts/discourse/lib/utilities.js",
       "app/assets/javascripts/discourse/lib/html.js",
-      "app/assets/javascripts/discourse/lib/markdown.js"
+      "app/assets/javascripts/discourse/lib/markdown.js",
     )
 
-    Dir["#{Rails.root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
-      unless dialect =~ /\/dialect\.js$/
-        ctx.load(dialect)
-      end
+    Dir["#{app_root}/app/assets/javascripts/discourse/dialects/**.js"].sort.each do |dialect|
+      ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
     end
 
-    # custom emojis
-    emoji = ERB.new(File.read("app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
+    # emojis
+    emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
     ctx.eval(emoji.result)
-
-    Emoji.custom.each do |emoji|
-      ctx.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
-    end
 
     # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
@@ -102,8 +114,8 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.open(app_root + 'app/assets/javascripts/discourse/templates/quote.hbs') {|f| f.read}
-    ctx['quoteEmailTemplate'] = File.open(app_root + 'lib/assets/quote_email.hbs') {|f| f.read}
+    ctx['quoteTemplate'] = File.read("#{app_root}/app/assets/javascripts/discourse/templates/quote.hbs")
+    ctx['quoteEmailTemplate'] = File.read("#{app_root}/lib/assets/quote_email.hbs")
     ctx.eval("HANDLEBARS_TEMPLATES = {
       'quote': Handlebars.compile(quoteTemplate),
       'quote_email': Handlebars.compile(quoteEmailTemplate),
@@ -134,7 +146,8 @@ module PrettyText
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
     context.eval("Discourse.BaseUrl = 'http://#{RailsMultisite::ConnectionManagement.current_hostname}';")
-    context.eval("Discourse.getURL = function(url) {return '#{Discourse::base_uri}' + url};")
+    context.eval("Discourse.getURL = function(url) { return '#{Discourse::base_uri}' + url };")
+    context.eval("Discourse.getURLWithCDN = function(url) { url = Discourse.getURL(url); if (Discourse.CDN) { url = Discourse.CDN + url; } return url; };")
   end
 
   def self.markdown(text, opts=nil)
@@ -151,13 +164,17 @@ module PrettyText
       context_opts = opts || {}
       context_opts[:sanitize] ||= true
       context['opts'] = context_opts
-
       context['raw'] = text
 
       if Post.white_listed_image_classes.present?
         Post.white_listed_image_classes.each do |klass|
           context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
         end
+      end
+
+      # custom emojis
+      Emoji.custom.each do |emoji|
+        context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
 
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
@@ -192,11 +209,13 @@ module PrettyText
   end
 
   def self.cook(text, opts={})
-    cloned = opts.dup
+    options = opts.dup
+
     # we have a minor inconsistency
-    cloned[:topicId] = opts[:topic_id]
-    sanitized = markdown(text.dup, cloned)
-    sanitized = add_rel_nofollow_to_user_content(sanitized) if !cloned[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
+    options[:topicId] = opts[:topic_id]
+
+    sanitized = markdown(text.dup, options)
+    sanitized = add_rel_nofollow_to_user_content(sanitized) if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
     sanitized
   end
 

@@ -50,6 +50,7 @@ module BackupRestore
       migrate_database
       reconnect_database
       reload_site_settings
+      clear_emoji_cache
 
       disable_readonly_mode
       ### READ-ONLY / END ###
@@ -236,7 +237,7 @@ module BackupRestore
     end
 
     def switch_schema!
-      log "Switching schemas..."
+      log "Switching schemas... try reloading the site in 5 minutes, if successful, then reboot and restore is complete."
 
       sql = [
         "BEGIN;",
@@ -265,6 +266,11 @@ module BackupRestore
     def reload_site_settings
       log "Reloading site settings..."
       SiteSetting.refresh!
+    end
+
+    def clear_emoji_cache
+      log "Clearing emoji cache..."
+      Emoji.clear_cache
     end
 
     def extract_uploads
@@ -339,19 +345,20 @@ module BackupRestore
     end
 
     def log(message)
+      timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       puts(message) rescue nil
-      publish_log(message) rescue nil
-      save_log(message)
+      publish_log(message, timestamp) rescue nil
+      save_log(message, timestamp)
     end
 
-    def publish_log(message)
+    def publish_log(message, timestamp)
       return unless @publish_to_message_bus
-      data = { timestamp: Time.now, operation: "restore", message: message }
+      data = { timestamp: timestamp, operation: "restore", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
     end
 
-    def save_log(message)
-      @logs << "[#{Time.now}] #{message}"
+    def save_log(message, timestamp)
+      @logs << "[#{timestamp}] #{message}"
     end
 
   end

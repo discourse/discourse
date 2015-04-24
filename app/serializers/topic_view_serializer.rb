@@ -3,28 +3,34 @@ require_dependency 'pinned_check'
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
 
-  # These attributes will be delegated to the topic
-  def self.topic_attributes
-    [:id,
-     :title,
-     :fancy_title,
-     :posts_count,
-     :created_at,
-     :views,
-     :reply_count,
-     :participant_count,
-     :like_count,
-     :last_posted_at,
-     :visible,
-     :closed,
-     :archived,
-     :has_summary,
-     :archetype,
-     :slug,
-     :category_id,
-     :word_count,
-     :deleted_at]
+  def self.attributes_from_topic(*list)
+    [list].flatten.each do |attribute|
+      attributes(attribute)
+      class_eval %{def #{attribute}
+        object.topic.#{attribute}
+      end}
+    end
   end
+
+  attributes_from_topic :id,
+                        :title,
+                        :fancy_title,
+                        :posts_count,
+                        :created_at,
+                        :views,
+                        :reply_count,
+                        :participant_count,
+                        :like_count,
+                        :last_posted_at,
+                        :visible,
+                        :closed,
+                        :archived,
+                        :has_summary,
+                        :archetype,
+                        :slug,
+                        :category_id,
+                        :word_count,
+                        :deleted_at
 
   attributes :draft,
              :draft_key,
@@ -44,14 +50,6 @@ class TopicViewSerializer < ApplicationSerializer
              :is_warning,
              :chunk_size,
              :bookmarked
-
-  # Define a delegator for each attribute of the topic we want
-  attributes(*topic_attributes)
-  topic_attributes.each do |ta|
-    class_eval %{def #{ta}
-      object.topic.#{ta}
-    end}
-  end
 
   # TODO: Split off into proper object / serializer
   def details

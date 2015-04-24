@@ -1,8 +1,10 @@
+import ClickTrack from "discourse/lib/click-track";
+
 var windowOpen,
     win,
     redirectTo;
 
-module("Discourse.ClickTrack", {
+module("ClickTrack", {
   setup: function() {
 
     // Prevent any of these tests from navigating away
@@ -30,7 +32,7 @@ module("Discourse.ClickTrack", {
   }
 });
 
-var track = Discourse.ClickTrack.trackClick;
+var track = ClickTrack.trackClick;
 
 // test
 var generateClickEventOn = function(selector) {
@@ -71,6 +73,16 @@ test("removes the href and put it as a data attribute", function() {
   ok(Discourse.URL.redirectTo.calledOnce);
 });
 
+asyncTest("restores the href after a while", function() {
+  expect(1);
+
+  track(generateClickEventOn('a'));
+
+  setTimeout(function() {
+    start();
+    equal(fixture('a').attr('href'), "http://www.google.com");
+  }, 75);
+});
 
 var badgeClickCount = function(id, expected) {
   track(generateClickEventOn('#' + id));

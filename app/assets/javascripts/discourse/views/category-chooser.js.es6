@@ -1,6 +1,5 @@
 import ComboboxView from 'discourse/views/combo-box';
-
-var badgeHtml = Discourse.HTML.categoryBadge;
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
@@ -10,11 +9,11 @@ export default ComboboxView.extend({
   castInteger: true,
 
   content: function() {
-    var scopedCategoryId = this.get('scopedCategoryId');
+    let scopedCategoryId = this.get('scopedCategoryId');
 
     // Always scope to the parent of a category, if present
     if (scopedCategoryId) {
-      var scopedCat = Discourse.Category.findById(scopedCategoryId);
+      const scopedCat = Discourse.Category.findById(scopedCategoryId);
       scopedCategoryId = scopedCat.get('parent_category_id') || scopedCat.get('id');
     }
 
@@ -42,13 +41,13 @@ export default ComboboxView.extend({
     }
   }.property(),
 
-  template: function(item) {
+  template(item) {
 
-    var category;
+    let category;
 
     // If we have no id, but text with the uncategorized name, we can use that badge.
     if (Ember.isEmpty(item.id)) {
-      var uncat = Discourse.Category.findUncategorized();
+      const uncat = Discourse.Category.findUncategorized();
       if (uncat && uncat.get('name') === item.text) {
         category = uncat;
       }
@@ -57,15 +56,16 @@ export default ComboboxView.extend({
     }
 
     if (!category) return item.text;
-    var result = badgeHtml(category, {showParent: false, link: false, allowUncategorized: true}),
-        parentCategoryId = category.get('parent_category_id');
+    let result = categoryBadgeHTML(category, {link: false, allowUncategorized: true, hideParent: true});
+    const parentCategoryId = category.get('parent_category_id');
+
     if (parentCategoryId) {
-      result = badgeHtml(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
+      result = categoryBadgeHTML(Discourse.Category.findById(parentCategoryId), {link: false}) + "&nbsp;" + result;
     }
 
     result += " <span class='topic-count'>&times; " + category.get('topic_count') + "</span>";
 
-    var description = category.get('description');
+    const description = category.get('description');
     // TODO wtf how can this be null?;
     if (description && description !== 'null') {
       result += '<div class="category-desc">' +

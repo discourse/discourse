@@ -27,26 +27,15 @@
   </li>
 
   {{#unless isPrivateMessage}}
-    <li>
-      {{#if isBanner}}
-        {{d-button action="removeBanner" icon="bullhorn" label="topic.actions.remove_banner" class="btn-admin"}}
-      {{else}}
-        {{#if visible}}
-          {{d-button action="makeBanner" icon="bullhorn" label="topic.actions.make_banner" class="btn-admin"}}
+    {{#if visible}}
+      <li>
+        {{#if isFeatured}}
+          {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin" class="btn-admin"}}
+        {{else}}
+          {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.pin" class="btn-admin"}}
         {{/if}}
-      {{/if}}
-    </li>
-
-    <li>
-      {{#if pinned_at}}
-        {{d-button action="togglePinned" icon="thumb-tack" label="topic.actions.unpin" class="btn-admin"}}
-      {{else}}
-        {{#if visible}}
-          {{d-button action="togglePinned" icon="thumb-tack" label="topic.actions.pin" class="btn-admin"}}
-          {{d-button action="togglePinnedGlobally" icon="thumb-tack" label="topic.actions.pin_globally" class="btn-admin"}}
-        {{/if}}
-      {{/if}}
-    </li>
+      </li>
+    {{/if}}
   {{/unless}}
 
   <li>

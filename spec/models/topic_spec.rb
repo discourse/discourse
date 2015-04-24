@@ -1,4 +1,4 @@
-# encoding: UTF-8
+# encoding: utf-8
 
 require 'spec_helper'
 require_dependency 'post_destroyer'
@@ -1151,6 +1151,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "doesn't return topics from TL0 users" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
   end
 
   describe 'secured' do
@@ -1245,6 +1252,7 @@ describe Topic do
     SiteSetting.stubs(:client_settings_json).returns(SiteSetting.client_settings_json_uncached)
     RateLimiter.stubs(:rate_limit_create_topic).returns(100)
     RateLimiter.stubs(:disabled?).returns(false)
+    RateLimiter.clear_all!
 
     start = Time.now.tomorrow.beginning_of_day
 
@@ -1343,5 +1351,38 @@ describe Topic do
     SiteSetting.stubs(:min_topic_title_length).returns(15)
     topic.last_posted_at = 1.minute.ago
     expect(topic.save).to eq(true)
+  end
+
+  context 'invite by group manager' do
+    let(:group_manager) { Fabricate(:user) }
+    let(:group) { Fabricate(:group).tap { |g| g.add(group_manager); g.appoint_manager(group_manager) } }
+    let(:private_category)  { Fabricate(:private_category, group: group) }
+    let(:group_private_topic) { Fabricate(:topic, category: private_category, user: group_manager) }
+
+    context 'to an email' do
+      let(:randolph) { 'randolph@duke.ooo' }
+
+      it "should attach group to the invite" do
+        invite = group_private_topic.invite(group_manager, randolph)
+        expect(invite.groups).to eq([group])
+      end
+    end
+
+    # should work for an existing user - give access, send notification
+    context 'to an existing user' do
+      let(:walter) { Fabricate(:walter_white) }
+
+      it "should add user to the group" do
+        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_falsey
+        invite = group_private_topic.invite(group_manager, walter.email)
+        expect(invite).to be_nil
+        expect(walter.groups).to include(group)
+        expect(Guardian.new(walter).can_see?(group_private_topic)).to be_truthy
+      end
+    end
+
+    context 'to a previously-invited user' do
+
+    end
   end
 end

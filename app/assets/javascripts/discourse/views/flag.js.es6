@@ -1,4 +1,6 @@
-export default Discourse.ModalBodyView.extend({
+import ModalBodyView from "discourse/views/modal-body";
+
+export default ModalBodyView.extend({
   templateName: 'modal/flag',
 
   title: function() {
@@ -6,14 +8,13 @@ export default Discourse.ModalBodyView.extend({
   }.property('controller.flagTopic'),
 
   selectedChanged: function() {
-    var self = this;
-    Em.run.next(function() {
-      self.$("input[type='radio']").prop('checked', false);
+    Em.run.next(() => {
+      this.$("input[type='radio']").prop('checked', false);
 
-      var nameKey = self.get('controller.selected.name_key');
-      if (!nameKey) return;
+      const nameKey = this.get('controller.selected.name_key');
+      if (!nameKey) { return; }
 
-      self.$('#radio_' + nameKey).prop('checked', 'true');
+      this.$('#radio_' + nameKey).prop('checked', 'true');
     });
   }.observes('controller.selected.name_key')
 });

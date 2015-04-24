@@ -7,7 +7,8 @@ export default TextField.extend({
     var self = this,
         selected = [],
         currentUser = this.currentUser,
-        includeGroups = this.get('includeGroups') === 'true';
+        includeGroups = this.get('includeGroups') === 'true',
+        allowedUsers = this.get('allowedUsers') === 'true';
 
     function excludedUsernames() {
       if (currentUser && self.get('excludeCurrentUser')) {
@@ -16,21 +17,19 @@ export default TextField.extend({
       return selected;
     }
 
-    var template = this.container.lookup('template:user-selector-autocomplete.raw');
-    $(this.get('element')).val(this.get('usernames')).autocomplete({
-      template: template,
-
+    this.$().val(this.get('usernames')).autocomplete({
+      template: this.container.lookup('template:user-selector-autocomplete.raw'),
       disabled: this.get('disabled'),
       single: this.get('single'),
       allowAny: this.get('allowAny'),
 
       dataSource: function(term) {
-        term = term.replace(/[^a-zA-Z0-9_]/, '');
         return userSearch({
-          term: term,
+          term: term.replace(/[^a-zA-Z0-9_]/, ''),
           topicId: self.get('topicId'),
           exclude: excludedUsernames(),
-          includeGroups: includeGroups
+          includeGroups,
+          allowedUsers
         });
       },
 
@@ -58,6 +57,19 @@ export default TextField.extend({
       }
 
     });
-  }.on('didInsertElement')
+  }.on('didInsertElement'),
+
+  _removeAutocomplete: function() {
+    this.$().autocomplete('destroy');
+  }.on('willDestroyElement'),
+
+  // THIS IS A HUGE HACK TO SUPPORT CLEARING THE INPUT
+  _clearInput: function() {
+    if (arguments.length > 1) {
+      if (Em.isEmpty(this.get("usernames"))) {
+        this.$().parent().find("a").click();
+      }
+    }
+  }.observes("usernames")
 
 });

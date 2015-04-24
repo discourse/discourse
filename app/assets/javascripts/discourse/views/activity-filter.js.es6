@@ -7,12 +7,17 @@ export default Ember.Component.extend(StringBuffer, {
   rerenderTriggers: ['content.count', 'count'],
   noGlyph: Em.computed.empty('icon'),
 
+  isIndexStream: function() {
+    return !this.get('content');
+  }.property('content.count'),
+
   active: function() {
+    if (this.get('isIndexStream')) {
+      return !this.get('userActionType');
+    }
     var content = this.get('content');
     if (content) {
       return parseInt(this.get('userActionType'), 10) === parseInt(Em.get(content, 'action_type'), 10);
-    } else {
-      return this.get('indexStream');
     }
   }.property('userActionType', 'indexStream'),
 
@@ -54,6 +59,7 @@ export default Ember.Component.extend(StringBuffer, {
       case Discourse.UserAction.TYPES.bookmarks: return "bookmark";
       case Discourse.UserAction.TYPES.edits: return "pencil";
       case Discourse.UserAction.TYPES.replies: return "reply";
+      case Discourse.UserAction.TYPES.mentions: return "at";
     }
   }.property("content.action_type")
 });

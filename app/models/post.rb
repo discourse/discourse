@@ -14,6 +14,7 @@ class Post < ActiveRecord::Base
   include RateLimiter::OnCreateRecord
   include Trashable
   include HasCustomFields
+  include LimitedEdit
 
   # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
@@ -87,8 +88,8 @@ class Post < ActiveRecord::Base
   end
 
   def limit_posts_per_day
-    if user.created_at > 1.day.ago && post_number > 1
-      RateLimiter.new(user, "first-day-replies-per-day:#{Date.today}", SiteSetting.max_replies_in_first_day, 1.day.to_i)
+    if user.first_day_user? && post_number > 1
+      RateLimiter.new(user, "first-day-replies-per-day", SiteSetting.max_replies_in_first_day, 1.day.to_i)
     end
   end
 
@@ -121,7 +122,7 @@ class Post < ActiveRecord::Base
 
   # The key we use in redis to ensure unique posts
   def unique_post_key
-    "post-#{user_id}:#{raw_hash}"
+    "unique-post-#{user_id}:#{raw_hash}"
   end
 
   def store_unique_post_key
@@ -132,7 +133,7 @@ class Post < ActiveRecord::Base
 
   def matches_recent_post?
     post_id = $redis.get(unique_post_key)
-    post_id != nil and post_id != id
+    post_id != nil and post_id.to_i != id
   end
 
   def raw_hash
@@ -220,7 +221,7 @@ class Post < ActiveRecord::Base
 
     TopicLink.where(domain: hosts.keys, user_id: acting_user.id)
              .group(:domain, :post_id)
-             .count.keys.each do |tuple|
+             .count.each_key do |tuple|
       domain = tuple[0]
       hosts[domain] = (hosts[domain] || 0) + 1
     end
@@ -251,8 +252,23 @@ class Post < ActiveRecord::Base
     order('sort_order desc, post_number desc')
   end
 
-  def self.summary
-    where(["(post_number = 1) or (percent_rank <= ?)", SiteSetting.summary_percent_filter.to_f / 100.0]).limit(SiteSetting.summary_max_results)
+  def self.summary(topic_id=nil)
+    # PERF: if you pass in nil it is WAY slower
+    #  pg chokes getting a reasonable plan
+    topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
+
+    # percent rank has tons of ties
+    where(["post_number = 1 or id in (
+            SELECT p1.id
+            FROM posts p1
+            WHERE p1.percent_rank <= ? AND
+               p1.topic_id = #{topic_id}
+            ORDER BY p1.percent_rank
+            LIMIT ?
+          )",
+           SiteSetting.summary_percent_filter.to_f / 100.0,
+           SiteSetting.summary_max_results
+    ])
   end
 
   def update_flagged_posts_count
@@ -299,7 +315,9 @@ class Post < ActiveRecord::Base
   end
 
   def is_first_post?
-    post_number == 1
+    post_number.blank? ?
+      topic.try(:highest_post_number) == 0 :
+      post_number == 1
   end
 
   def is_flagged?
@@ -308,7 +326,7 @@ class Post < ActiveRecord::Base
 
   def unhide!
     self.update_attributes(hidden: false, hidden_at: nil, hidden_reason_id: nil)
-    self.topic.update_attributes(visible: true) if post_number == 1
+    self.topic.update_attributes(visible: true) if is_first_post?
     save(validate: false)
     publish_change_to_clients!(:acted)
   end
@@ -353,12 +371,10 @@ class Post < ActiveRecord::Base
     problems
   end
 
-  def rebake!(opts={})
-    new_cooked = cook(
-      raw,
-      topic_id: topic_id,
-      invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false)
-    )
+  def rebake!(opts=nil)
+    opts ||= {}
+
+    new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
     old_cooked = cooked
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
@@ -509,12 +525,20 @@ class Post < ActiveRecord::Base
     end
   end
 
-  def edit_time_limit_expired?
-    if created_at && SiteSetting.post_edit_time_limit.to_i > 0
-      created_at < SiteSetting.post_edit_time_limit.to_i.minutes.ago
-    else
-      false
-    end
+  def self.rebake_all_quoted_posts(user_id)
+    return if user_id.blank?
+
+    Post.exec_sql <<-SQL
+      WITH user_quoted_posts AS (
+        SELECT post_id
+          FROM quoted_posts
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = #{user_id})
+      )
+      UPDATE posts
+         SET baked_version = NULL
+       WHERE baked_version IS NOT NULL
+         AND id IN (SELECT post_id FROM user_quoted_posts)
+    SQL
   end
 
   private
@@ -604,4 +628,5 @@ end
 #  idx_posts_user_id_deleted_at             (user_id)
 #  index_posts_on_reply_to_post_number      (reply_to_post_number)
 #  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
+#  index_posts_on_user_id_and_created_at    (user_id,created_at)
 #

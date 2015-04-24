@@ -1,38 +1,17 @@
 module("JSHint");
 
-var qHint = function(name, sourceFile, options, globals) {
-    if (sourceFile === undefined || typeof(sourceFile) == "object") {
-        // jsHintTest('file.js', [options])
-        globals = options;
-        options = sourceFile;
-        sourceFile = name;
-    }
+<%= "const JSHINT_OPTS = #{File.read(File.join(Rails.root, '.jshintrc'))};" %>
 
+var qHint = function(name, sourceFile) {
     return asyncTestDiscourse(name, function() {
       if (typeof window.__jshintSrc !== "undefined") {
         var src = window.__jshintSrc[sourceFile];
         if (src) {
           start();
-          qHint.validateFile(src, options, globals);
+          qHint.validateFile(src, JSHINT_OPTS);
           return;
         }
       }
-
-
-      console.warn("Using AJAX for JSHint " + sourceFile);
-
-        qHint.sendRequest(sourceFile, function(req) {
-            start();
-
-            if (req.status == 200) {
-
-                var text = req.responseText;
-                qHint.validateFile(text, options, globals);
-            } else {
-                ok(false, "HTTP error " + req.status +
-                          " while fetching " + sourceFile);
-            }
-        });
     });
 };
 
@@ -100,6 +79,7 @@ qHint.sendRequest = function (url, callback) {
   req.send();
 };
 
+
 <%
   TO_IGNORE = File.read("#{Rails.root}/.jshintignore").split("\n")
 
@@ -115,7 +95,7 @@ qHint.sendRequest = function (url, callback) {
       end
 
       depend_on filename
-      result << "qHint('#{filename}', '/assets/#{filename}', #{File.read(File.join(Rails.root, '.jshintrc'))});\n" if ok
+      result << "qHint('#{filename}', '/assets/#{filename}', JSHINT_OPTS);\n" if ok
 
     end
     result
@@ -124,5 +104,5 @@ qHint.sendRequest = function (url, callback) {
 
 <%= jshint("#{Rails.root}/test/**/*.js", "test/javascripts/") %>
 <%= jshint("#{Rails.root}/app/assets/javascripts/**/*.js", "app/assets/javascripts/") %>
-
+<%= jshint("#{Rails.root}/app/assets/javascripts/**/*.es6", "app/assets/javascripts/") %>
 

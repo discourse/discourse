@@ -28,7 +28,8 @@ class TopicUser < ActiveRecord::Base
         :auto_watch,
         :auto_watch_category,
         :auto_mute_category,
-        :auto_track_category
+        :auto_track_category,
+        :plugin_changed
       )
     end
 
@@ -280,7 +281,7 @@ SQL
   end
 
   def self.ensure_consistency!(topic_id=nil)
-    update_post_action_cache
+    update_post_action_cache(topic_id: topic_id)
 
     # TODO this needs some reworking, when we mark stuff skipped
     # we up these numbers so they are not in-sync
@@ -340,6 +341,8 @@ end
 #  cleared_pinned_at        :datetime
 #  id                       :integer          not null, primary key
 #  last_emailed_post_number :integer
+#  liked                    :boolean          default(FALSE)
+#  bookmarked               :boolean          default(FALSE)
 #
 # Indexes
 #

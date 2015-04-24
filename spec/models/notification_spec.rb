@@ -187,16 +187,18 @@ describe Notification do
     it 'correctly updates the read state' do
       user = Fabricate(:user)
 
+      t = Fabricate(:topic)
+
       Notification.create!(read: false,
                            user_id: user.id,
-                           topic_id: 2,
+                           topic_id: t.id,
                            post_number: 1,
                            data: '{}',
                            notification_type: Notification.types[:private_message])
 
       other = Notification.create!(read: false,
                            user_id: user.id,
-                           topic_id: 2,
+                           topic_id: t.id,
                            post_number: 1,
                            data: '{}',
                            notification_type: Notification.types[:mentioned])

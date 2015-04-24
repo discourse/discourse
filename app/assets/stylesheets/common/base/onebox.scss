@@ -105,6 +105,10 @@ aside.onebox {
   @include onebox-favicon('twitterstatus', 'twitter');
   @include onebox-favicon('wikipedia', 'wikipedia');
   @include onebox-favicon('githubblob', 'github');
+  @include onebox-favicon('githubcommit', 'github');
+  @include onebox-favicon('githubpullrequest', 'github');
+  @include onebox-favicon('githubissue', 'github');
+  @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
 
 
@@ -127,7 +131,7 @@ aside.onebox {
 
     img {
       max-height: 80%;
-      max-width: 25%;
+      max-width: 20%;
       height: auto;
       float: left;
       margin-right: 10px;
@@ -135,9 +139,11 @@ aside.onebox {
   }
 }
 
-.onebox-avatar {
-  height: 90px !important;
-  width: 90px !important;
+aside.onebox .onebox-body .onebox-avatar {
+  max-height: none;
+  max-width: none;
+  height: 90px;
+  width: 90px;
 }
 
 blockquote {

@@ -110,7 +110,7 @@ class Admin::BackupsController < Admin::AdminController
     filename   = params.fetch(:resumableFilename)
     total_size = params.fetch(:resumableTotalSize).to_i
 
-    return render status: 415, text: I18n.t("backup.backup_file_should_be_tar_gz") unless filename.to_s.end_with?(".tar.gz")
+    return render status: 415, text: I18n.t("backup.backup_file_should_be_tar_gz") unless /\.(tar\.gz|t?gz)$/i =~ filename
     return render status: 415, text: I18n.t("backup.not_enough_space_on_disk")     unless has_enough_space_on_disk?(total_size)
 
     file               = params.fetch(:file)
@@ -137,7 +137,7 @@ class Admin::BackupsController < Admin::AdminController
   private
 
   def has_enough_space_on_disk?(size)
-    `df -Pk . | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
+    `df -Pk #{Rails.root}/public/backups | awk 'NR==2 {print $4 * 1024;}'`.to_i > size
   end
 
 end

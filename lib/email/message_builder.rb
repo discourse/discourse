@@ -146,10 +146,7 @@ module Email
     end
 
     def private_reply?
-      SiteSetting.reply_by_email_enabled? &&
-      reply_by_email_address.present? &&
-      @opts[:allow_reply_by_email] &&
-      @opts[:private_reply]
+      allow_reply_by_email? && @opts[:private_reply]
     end
 
     def from_value

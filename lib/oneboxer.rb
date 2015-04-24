@@ -128,7 +128,7 @@ module Oneboxer
       }
     }
   rescue => e
-    Discourse.handle_exception(e, message: "While trying to onebox a URL", url: url)
+    Discourse.handle_job_exception(e, message: "While trying to onebox a URL", url: url)
     # return a blank hash, so rest of the code works
     {preview: "", onebox: ""}
   end

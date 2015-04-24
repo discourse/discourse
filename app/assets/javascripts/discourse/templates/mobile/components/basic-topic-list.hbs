@@ -15,7 +15,7 @@
 
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
-                  {{t.excerpt}}
+                  {{{t.excerpt}}}
                   {{#if t.excerptTruncated}}
                     {{#unless t.canClearPin}}<a href="{{unbound t.url}}">{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
@@ -32,7 +32,7 @@
               </div>
               {{#unless controller.hideCategory}}
                 <div class='category'>
-                  {{category-link t.category showParent="true"}}
+                  {{category-link t.category}}
                 </div>
               {{/unless}}
               {{#if controller.showParticipants}}

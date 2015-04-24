@@ -50,75 +50,76 @@ class Upload < ActiveRecord::Base
   #   - content_type
   #   - origin
   def self.create_for(user_id, file, filename, filesize, options = {})
-    # compute the sha
     sha1 = Digest::SHA1.file(file).hexdigest
-    # check if the file has already been uploaded
-    upload = Upload.find_by(sha1: sha1)
-    # delete the previously uploaded file if there's been an error
+
+    # do we already have that upload?
+    upload = find_by(sha1: sha1)
+
+    # make sure the previous upload has not failed
     if upload && upload.url.blank?
       upload.destroy
       upload = nil
     end
-    # create the upload
-    unless upload
-      # initialize a new upload
-      upload = Upload.new(
-        user_id: user_id,
-        original_filename: filename,
-        filesize: filesize,
-        sha1: sha1,
-        url: ""
-      )
-      # trim the origin if any
-      upload.origin = options[:origin][0...1000] if options[:origin]
 
-      # deal with width & height for images
-      if FileHelper.is_image?(filename)
-        begin
-          if filename =~ /\.svg$/i
-            svg = Nokogiri::XML(file).at_css("svg")
-            width, height = svg["width"].to_i, svg["height"].to_i
-            if width == 0 || height == 0
-              upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-            else
-              upload.width, upload.height = ImageSizer.resize(width, height)
-            end
-          else
-            # fix orientation first
-            Upload.fix_image_orientation(file.path)
-            # retrieve image info
-            image_info = FastImage.new(file, raise_on_failure: true)
-              # compute image aspect ratio
-            upload.width, upload.height = ImageSizer.resize(*image_info.size)
-          end
-          # make sure we're at the beginning of the file
-          # (FastImage and Nokogiri move the pointer)
-          file.rewind
-        rescue FastImage::ImageFetchFailure
-          upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
-        rescue FastImage::UnknownImageType
-          upload.errors.add(:base, I18n.t("upload.images.unknown_image_type"))
-        rescue FastImage::SizeNotFound
-          upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
-        end
+    # return the previous upload if any
+    return upload unless upload.nil?
 
-        return upload unless upload.errors.empty?
-      end
+    # create the upload otherwise
+    upload = Upload.new
+    upload.user_id           = user_id
+    upload.original_filename = filename
+    upload.filesize          = filesize
+    upload.sha1              = sha1
+    upload.url               = ""
+    upload.origin            = options[:origin][0...1000] if options[:origin]
 
-      # create a db record (so we can use the id)
-      return upload unless upload.save
+    # deal with width & height for images
+    upload = resize_image(filename, file, upload) if FileHelper.is_image?(filename)
 
-      # store the file and update its url
-      url = Discourse.store.store_upload(file, upload, options[:content_type])
-      if url.present?
-        upload.url = url
-        upload.save
-      else
-        upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
-      end
+    return upload unless upload.save
+
+    # store the file and update its url
+    url = Discourse.store.store_upload(file, upload, options[:content_type])
+    if url.present?
+      upload.url = url
+      upload.save
+    else
+      upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
     end
 
     # return the uploaded file
+    upload
+  end
+
+  def self.resize_image(filename, file, upload)
+    begin
+      if filename =~ /\.svg$/i
+        svg = Nokogiri::XML(file).at_css("svg")
+        width, height = svg["width"].to_i, svg["height"].to_i
+        if width == 0 || height == 0
+          upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+        else
+          upload.width, upload.height = ImageSizer.resize(width, height)
+        end
+      else
+        # fix orientation first
+        Upload.fix_image_orientation(file.path)
+        # retrieve image info
+        image_info = FastImage.new(file, raise_on_failure: true)
+          # compute image aspect ratio
+        upload.width, upload.height = ImageSizer.resize(*image_info.size)
+      end
+      # make sure we're at the beginning of the file
+      # (FastImage and Nokogiri move the pointer)
+      file.rewind
+    rescue FastImage::ImageFetchFailure
+      upload.errors.add(:base, I18n.t("upload.images.fetch_failure"))
+    rescue FastImage::UnknownImageType
+      upload.errors.add(:base, I18n.t("upload.images.unknown_image_type"))
+    rescue FastImage::SizeNotFound
+      upload.errors.add(:base, I18n.t("upload.images.size_not_found"))
+    end
+
     upload
   end
 

@@ -1,5 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require "csv"
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Vanilla < ImportScripts::Base
 
@@ -144,8 +144,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
         description: clean_up(category[:description]),
       }
       if category[:parent_category_id] != "-1"
-        parent_category = category_from_imported_category_id(category[:parent_category_id])
-        c[:parent_category_id] = parent_category.id if parent_category
+        c[:parent_category_id] = category_id_from_imported_category_id(category[:parent_category_id])
       end
       c
     end
@@ -162,7 +161,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
           id: "discussion#" + discussion[:discussion_id],
           user_id: user_id_from_imported_user_id(discussion[:insert_user_id]) || Discourse::SYSTEM_USER_ID,
           title: discussion[:name],
-          category: category_from_imported_category_id(discussion[:category_id]).try(:name),
+          category: category_id_from_imported_category_id(discussion[:category_id]),
           raw: clean_up(discussion[:body]),
           created_at: parse_date(discussion[:date_inserted]),
         }

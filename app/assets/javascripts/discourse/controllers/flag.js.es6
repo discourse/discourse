@@ -17,13 +17,13 @@ export default ObjectController.extend(ModalFunctionality, {
       _.each(this.get("actions_summary"),function(a) {
         var actionSummary;
         a.flagTopic = self.get('model');
-        a.actionType = Discourse.Site.current().topicFlagTypeById(a.id);
+        a.actionType = self.site.topicFlagTypeById(a.id);
         actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
       });
       this.set('topicActionByName', lookup);
 
-      return Discourse.Site.currentProp('topic_flag_types').filter(function(item) {
+      return this.site.get('topic_flag_types').filter(function(item) {
         return _.any(self.get("actions_summary"), function(a) {
           return (a.id === item.get('id') && a.can_act);
         });
@@ -81,7 +81,8 @@ export default ObjectController.extend(ModalFunctionality, {
       if (opts) params = $.extend(params, opts);
 
       this.send('hideModal');
-      postAction.act(params).then(function(result) {
+
+      postAction.act(this.get('model'), params).then(function() {
         self.send('closeModal');
       }, function(errors) {
         self.send('closeModal');

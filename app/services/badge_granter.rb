@@ -120,7 +120,9 @@ class BadgeGranter
       user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
 
       next unless post_ids.present? || user_ids.present?
-      find_by_type(type).each{|badge| backfill(badge, post_ids: post_ids, user_ids: user_ids)}
+      find_by_type(type).each{ |badge|
+        backfill(badge, post_ids: post_ids, user_ids: user_ids)
+      }
     end
   end
 

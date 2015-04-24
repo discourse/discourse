@@ -1,5 +1,7 @@
-export default function() {
-  this.resource('admin', function() {
+export default {
+  resource: 'admin',
+
+  map() {
     this.route('dashboard', { path: '/' });
     this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
       this.resource('adminSiteSettingsCategory', { path: 'category/:category_id'} );
@@ -40,8 +42,10 @@ export default function() {
       this.route('screenedUrls', { path: '/screened_urls' });
     });
 
-    this.resource('adminGroups', { path: '/groups'}, function() {
-      this.resource('adminGroup', { path: '/:name' });
+    this.resource('adminGroups', { path: '/groups' }, function() {
+      this.resource('adminGroupsType', { path: '/:type' }, function() {
+        this.resource('adminGroup', { path: '/:name' });
+      });
     });
 
     this.resource('adminUsers', { path: '/users' }, function() {
@@ -51,13 +55,12 @@ export default function() {
       });
 
       this.resource('adminUsersList', { path: '/list' }, function() {
-        this.route('show', {path: '/:filter'});
+        this.route('show', { path: '/:filter' });
       });
     });
 
     this.resource('adminBadges', { path: '/badges' }, function() {
       this.route('show', { path: '/:badge_id' });
     });
-
-  });
-}
+  }
+};

@@ -1,26 +1,13 @@
-export default Ember.ContainerView.extend(Discourse.Presence, {
+import Presence from 'discourse/mixins/presence';
 
-  /**
-    Attaches a view and wires up the container properly
+export default Ember.ContainerView.extend(Presence, {
 
-    @method attachViewWithArgs
-    @param {Object} viewArgs The arguments to pass when creating the view
-    @param {Class} viewClass The view class we want to create
-  **/
-  attachViewWithArgs: function(viewArgs, viewClass) {
+  attachViewWithArgs(viewArgs, viewClass) {
     if (!viewClass) { viewClass = Ember.View.extend(); }
-    var view = this.createChildView(viewClass, viewArgs);
-    this.pushObject(view);
+    this.pushObject(this.createChildView(viewClass, viewArgs));
   },
 
-  /**
-    Attaches a view with no arguments and wires up the container properly
-
-    @method attachViewClass
-    @param {Class} viewClass The view class we want to add
-  **/
-  attachViewClass: function(viewClass) {
+  attachViewClass(viewClass) {
     this.attachViewWithArgs(null, viewClass);
   }
-
 });

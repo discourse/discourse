@@ -30,11 +30,6 @@ describe Jobs::FeatureTopicUsers do
       expect(topic.reload.featured_user_ids.include?(coding_horror.id)).to eq(true)
     end
 
-    it "will not feature the second poster if we supply their post to be ignored" do
-      Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id, except_post_id: second_post.id)
-      expect(topic.reload.featured_user_ids.include?(coding_horror.id)).to eq(false)
-    end
-
     it "won't feature the last poster" do
       Jobs::FeatureTopicUsers.new.execute(topic_id: topic.id)
       expect(topic.reload.featured_user_ids.include?(evil_trout.id)).to eq(false)

@@ -1,5 +1,3 @@
-require "s3_helper"
-
 class Backup
   include UrlHelper
   include ActiveModel::SerializerSupport
@@ -12,7 +10,7 @@ class Backup
   end
 
   def self.all
-    Dir.glob(File.join(Backup.base_directory, "*.tar.gz"))
+    Dir.glob(File.join(Backup.base_directory, "*.{gz,tgz}"))
        .sort_by { |file| File.mtime(file) }
        .reverse
        .map { |backup| Backup.create_from_filename(File.basename(backup)) }
@@ -47,8 +45,8 @@ class Backup
   end
 
   def s3
-    return @s3_helper if @s3_helper
-    @s3_helper = S3Helper.new(s3_bucket)
+    require "s3_helper" unless defined? S3Helper
+    @s3_helper ||= S3Helper.new(s3_bucket)
   end
 
   def upload_to_s3

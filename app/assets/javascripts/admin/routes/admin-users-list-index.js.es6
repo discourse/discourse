@@ -1,5 +1,5 @@
 export default Discourse.Route.extend({
-  redirect: function() {
+  beforeModel: function() {
     this.replaceWith('adminUsersList.show', 'active');
   }
 });

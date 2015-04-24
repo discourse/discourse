@@ -2,6 +2,7 @@ var safe = Handlebars.SafeString;
 
 // TODO: Remove me when ES6ified
 var registerUnbound = require('discourse/helpers/register-unbound', null, null, true).default;
+var avatarTemplate = require('discourse/lib/avatar-template', null, null, true).default;
 
 /**
   Bound avatar helper.
@@ -19,11 +20,9 @@ Em.Handlebars.helper('bound-avatar', function(user, size, uploadId) {
     uploadId = Em.get(user, 'uploaded_avatar_id');
   }
 
-  var avatarTemplate = Discourse.User.avatarTemplate(username, uploadId);
-
   return new safe(Discourse.Utilities.avatarImg({
     size: size,
-    avatarTemplate: avatarTemplate
+    avatarTemplate: avatarTemplate(username, uploadId)
   }));
 }, 'username', 'uploaded_avatar_id');
 

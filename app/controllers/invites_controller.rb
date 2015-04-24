@@ -19,13 +19,13 @@ class InvitesController < ApplicationController
 
         topic = invite.topics.first
         if topic.present?
-          redirect_to "#{Discourse.base_uri}#{topic.relative_url}"
+          redirect_to path("#{topic.relative_url}")
           return
         end
       end
     end
 
-    redirect_to "/"
+    redirect_to path("/")
   end
 
   def create
@@ -40,7 +40,7 @@ class InvitesController < ApplicationController
       guardian.ensure_can_send_multiple_invites!(current_user)
     end
 
-    if Invite.invite_by_email(params[:email], current_user, topic=nil,  group_ids)
+    if Invite.invite_by_email(params[:email], current_user, _topic=nil,  group_ids)
       render json: success_json
     else
       render json: failed_json, status: 422
@@ -77,13 +77,13 @@ class InvitesController < ApplicationController
 
         topic = invite.topics.first
         if topic.present?
-          redirect_to "#{Discourse.base_uri}#{topic.relative_url}"
+          redirect_to path("#{topic.relative_url}")
           return
         end
       end
     end
 
-    redirect_to "/"
+    redirect_to path("/")
   end
 
   def destroy

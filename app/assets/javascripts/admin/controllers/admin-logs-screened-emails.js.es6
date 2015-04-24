@@ -1,22 +1,23 @@
+import Presence from 'discourse/mixins/presence';
 import { outputExportResult } from 'discourse/lib/export-result';
 
-export default Ember.ArrayController.extend(Discourse.Presence, {
+export default Ember.ArrayController.extend(Presence, {
   loading: false,
 
   actions: {
-    clearBlock: function(row){
+    clearBlock(row){
       row.clearBlock().then(function(){
         // feeling lazy
         window.location.reload();
       });
     },
 
-    exportScreenedEmailList: function(subject) {
+    exportScreenedEmailList() {
       Discourse.ExportCsv.exportScreenedEmailList().then(outputExportResult);
     }
   },
 
-  show: function() {
+  show() {
     var self = this;
     self.set('loading', true);
     Discourse.ScreenedEmail.findAll().then(function(result) {

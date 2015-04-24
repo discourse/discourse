@@ -11,6 +11,18 @@ describe ListController do
     SiteSetting.stubs(:top_menu).returns('latest,-video|new|unread|categories|category/beer')
   end
 
+  describe 'titles for crawler layout' do
+    it 'has no title for the default URL' do
+      xhr :get, Discourse.anonymous_filters[0], _escaped_fragment_: 'true'
+      expect(assigns(:title)).to be_blank
+    end
+
+    it 'has a title for non-default URLs' do
+      xhr :get, Discourse.anonymous_filters[1], _escaped_fragment_: 'true'
+      expect(assigns(:title)).to be_present
+    end
+  end
+
   describe 'indexes' do
 
     (Discourse.anonymous_filters - [:categories]).each do |filter|

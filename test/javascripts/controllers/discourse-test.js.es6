@@ -1,8 +1,8 @@
 import DiscourseController from 'discourse/controllers/controller';
+import Presence from 'discourse/mixins/presence';
 
 module("DiscourseController");
 
 test("includes mixins", function() {
-  ok(Discourse.Presence.detect(DiscourseController.create()), "Discourse.Presence");
-  ok(Discourse.HasCurrentUser.detect(DiscourseController.create()), "Discourse.HasCurrentUser");
+  ok(Presence.detect(DiscourseController.create()), "has Presence");
 });

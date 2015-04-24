@@ -97,92 +97,6 @@ describe User do
     end
   end
 
-  describe 'change_username' do
-
-    let(:user) { Fabricate(:user) }
-
-    context 'success' do
-      let(:new_username) { "#{user.username}1234" }
-
-      before do
-        @result = user.change_username(new_username)
-      end
-
-      it 'returns true' do
-        expect(@result).to eq(true)
-      end
-
-      it 'should change the username' do
-        user.reload
-        expect(user.username).to eq(new_username)
-      end
-
-      it 'should change the username_lower' do
-        user.reload
-        expect(user.username_lower).to eq(new_username.downcase)
-      end
-    end
-
-    context 'failure' do
-      let(:wrong_username) { "" }
-      let(:username_before_change) { user.username }
-      let(:username_lower_before_change) { user.username_lower }
-
-      before do
-        @result = user.change_username(wrong_username)
-      end
-
-      it 'returns false' do
-        expect(@result).to eq(false)
-      end
-
-      it 'should not change the username' do
-        user.reload
-        expect(user.username).to eq(username_before_change)
-      end
-
-      it 'should not change the username_lower' do
-        user.reload
-        expect(user.username_lower).to eq(username_lower_before_change)
-      end
-    end
-
-    describe 'change the case of my username' do
-      let!(:myself) { Fabricate(:user, username: 'hansolo') }
-
-      it 'should return true' do
-        expect(myself.change_username('HanSolo')).to eq(true)
-      end
-
-      it 'should change the username' do
-        myself.change_username('HanSolo')
-        expect(myself.reload.username).to eq('HanSolo')
-      end
-    end
-
-    describe 'allow custom minimum username length from site settings' do
-      before do
-        @custom_min = 2
-        SiteSetting.min_username_length = @custom_min
-      end
-
-      it 'should allow a shorter username than default' do
-        result = user.change_username('a' * @custom_min)
-        expect(result).not_to eq(false)
-      end
-
-      it 'should not allow a shorter username than limit' do
-        result = user.change_username('a' * (@custom_min - 1))
-        expect(result).to eq(false)
-      end
-
-      it 'should not allow a longer username than limit' do
-        result = user.change_username('a' * (User.username_length.end + 1))
-        expect(result).to eq(false)
-      end
-    end
-  end
-
   describe 'delete posts' do
     before do
       @post1 = Fabricate(:post)
@@ -197,7 +111,7 @@ describe User do
       @user.delete_all_posts!(@guardian)
       expect(Post.where(id: @posts.map(&:id))).to be_empty
       @posts.each do |p|
-        if p.post_number == 1
+        if p.is_first_post?
           expect(Topic.find_by(id: p.topic_id)).to be_nil
         end
       end
@@ -261,8 +175,14 @@ describe User do
 
     it "downcases email addresses" do
       user = Fabricate.build(:user, email: 'Fancy.Caps.4.U@gmail.com')
-      user.save
-      expect(user.reload.email).to eq('fancy.caps.4.u@gmail.com')
+      user.valid?
+      expect(user.email).to eq('fancy.caps.4.u@gmail.com')
+    end
+
+    it "strips whitespace from email addresses" do
+      user = Fabricate.build(:user, email: ' example@gmail.com ')
+      user.valid?
+      expect(user.email).to eq('example@gmail.com')
     end
   end
 
@@ -376,29 +296,6 @@ describe User do
         it { is_expected.to eq(false) }
       end
     end
-  end
-
-  describe 'temporary_key' do
-
-    let(:user) { Fabricate(:user) }
-    let!(:temporary_key) { user.temporary_key}
-
-    it 'has a temporary key' do
-      expect(temporary_key).to be_present
-    end
-
-    describe 'User#find_by_temporary_key' do
-
-      it 'can be used to find the user' do
-        expect(User.find_by_temporary_key(temporary_key)).to eq(user)
-      end
-
-      it 'returns nil with an invalid key' do
-        expect(User.find_by_temporary_key('asdfasdf')).to be_blank
-      end
-
-    end
-
   end
 
   describe 'email_hash' do
@@ -534,6 +431,12 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@TRASHMAIL.NET')).not_to be_valid
     end
 
+    it 'blacklist should not reject developer emails' do
+      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
+      SiteSetting.stubs(:email_domains_blacklist).returns('discourse.org')
+      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
+    end
+
     it 'should not interpret a period as a wildcard' do
       SiteSetting.stubs(:email_domains_blacklist).returns('trashmail.net')
       expect(Fabricate.build(:user, email: 'good@trashmailinet.com')).to be_valid
@@ -569,6 +472,12 @@ describe User do
     it 'should accept some emails based on the email_domains_whitelist site setting ignoring case' do
       SiteSetting.stubs(:email_domains_whitelist).returns('vaynermedia.com')
       expect(Fabricate.build(:user, email: 'good@VAYNERMEDIA.COM')).to be_valid
+    end
+
+    it 'whitelist should accept developer emails' do
+      Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
+      SiteSetting.stubs(:email_domains_whitelist).returns('awesome.org')
+      expect(Fabricate.build(:user, email: 'developer@discourse.org')).to be_valid
     end
 
     it 'email whitelist should not be used to validate existing records' do
@@ -813,21 +722,17 @@ describe User do
 
   end
 
-  describe "#added_a_day_ago?" do
-    context "when user is more than a day old" do
-      subject(:user) { Fabricate(:user, created_at: Date.today - 2.days) }
+  describe "#first_day_user?" do
 
-      it "returns false" do
-        expect(user).to_not be_added_a_day_ago
-      end
+    def test_user?(opts={})
+      Fabricate.build(:user, {created_at: Time.now}.merge(opts)).first_day_user?
     end
 
-    context "is less than a day old" do
-      subject(:user) { Fabricate(:user) }
-
-      it "returns true" do
-        expect(user).to be_added_a_day_ago
-      end
+    it "works" do
+      expect(test_user?).to eq(true)
+      expect(test_user?(moderator: true)).to eq(false)
+      expect(test_user?(trust_level: TrustLevel[2])).to eq(false)
+      expect(test_user?(created_at: 2.days.ago)).to eq(false)
     end
   end
 
@@ -955,7 +860,7 @@ describe User do
     let(:user) { build(:user, username: 'Sam') }
 
     it "returns a 45-pixel-wide avatar" do
-      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar::VERSION}.png")
+      expect(user.small_avatar_url).to eq("//test.localhost/letter_avatar/sam/45/#{LetterAvatar.version}.png")
     end
 
   end
@@ -1132,7 +1037,7 @@ describe User do
       u = User.create!(username: "bob", email: "bob@bob.com")
       u.reload
       expect(u.uploaded_avatar_id).to eq(nil)
-      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar::VERSION}.png")
+      expect(u.avatar_template).to eq("/letter_avatar/bob/{size}/#{LetterAvatar.version}.png")
     end
   end
 
@@ -1211,6 +1116,85 @@ describe User do
       expect { hash(too_long, 'gravy') }.to raise_error
     end
 
+  end
+
+  describe "automatic group membership" do
+
+    it "is automatically added to a group when the email matches" do
+      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
+      user = Fabricate(:user, email: "foo@bar.com")
+      group.reload
+      expect(group.users.include?(user)).to eq(true)
+    end
+
+  end
+
+  describe "number_of_flags_given" do
+
+    let(:user) { Fabricate(:user) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "doesn't count disagreed flags" do
+      post_agreed = Fabricate(:post)
+      PostAction.act(user, post_agreed, PostActionType.types[:off_topic])
+      PostAction.agree_flags!(post_agreed, moderator)
+
+      post_deferred = Fabricate(:post)
+      PostAction.act(user, post_deferred, PostActionType.types[:inappropriate])
+      PostAction.defer_flags!(post_deferred, moderator)
+
+      post_disagreed = Fabricate(:post)
+      PostAction.act(user, post_disagreed, PostActionType.types[:spam])
+      PostAction.clear_flags!(post_disagreed, moderator)
+
+      expect(user.number_of_flags_given).to eq(2)
+    end
+
+  end
+
+  describe "number_of_deleted_posts" do
+
+    let(:user) { Fabricate(:user, id: 2) }
+    let(:moderator) { Fabricate(:moderator) }
+
+    it "counts all the posts" do
+      # at least 1 "unchanged" post
+      Fabricate(:post, user: user)
+
+      post_deleted_by_moderator = Fabricate(:post, user: user)
+      PostDestroyer.new(moderator, post_deleted_by_moderator).destroy
+
+      post_deleted_by_user = Fabricate(:post, user: user, post_number: 2)
+      PostDestroyer.new(user, post_deleted_by_user).destroy
+
+      # fake stub deletion
+      post_deleted_by_user.update_columns(updated_at: 2.days.ago)
+      PostDestroyer.destroy_stubs
+
+      expect(user.number_of_deleted_posts).to eq(2)
+    end
+
+  end
+
+  describe "new_user?" do
+    it "correctly detects new user" do
+      user = User.new(created_at: Time.now, trust_level: TrustLevel[0])
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[1]
+
+      expect(user.new_user?).to eq(true)
+
+      user.trust_level = TrustLevel[2]
+
+      expect(user.new_user?).to eq(false)
+
+      user.trust_level = TrustLevel[0]
+      user.moderator = true
+
+      expect(user.new_user?).to eq(false)
+    end
   end
 
 end

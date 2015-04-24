@@ -32,16 +32,7 @@ class TopicList
   def topics
     return @topics if @topics.present?
 
-    # copy side-loaded data (allowed users) before dumping it with the .to_a
-    @topics_input.each do |t|
-      t.allowed_user_ids = if @filter == :private_messages
-        t.allowed_users.map { |u| u.id }.to_a
-      else
-        []
-      end
-    end
-
-    @topics = @topics_input.to_a
+    @topics = @topics_input
 
     # Attach some data for serialization to each topic
     @topic_lookup = TopicUser.lookup_for(@current_user, @topics) if @current_user
@@ -86,11 +77,6 @@ class TopicList
     end
 
     @topics
-  end
-
-  def topic_ids
-    return [] unless @topics_input
-    @topics_input.pluck(:id)
   end
 
   def attributes

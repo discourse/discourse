@@ -22,10 +22,25 @@ class PostRevisionSerializer < ApplicationSerializer
              :edit_reason,
              :body_changes,
              :title_changes,
-             :category_changes,
-             :user_changes,
-             :wiki_changes,
-             :post_type_changes
+             :user_changes
+
+
+  # Creates a field called field_name_changes with previous and
+  # current members if a field has changed in this revision
+  def self.add_compared_field(field)
+    changes_name = "#{field}_changes".to_sym
+
+    self.attributes changes_name
+    define_method(changes_name) do
+      { previous: previous[field], current: current[field] }
+    end
+
+    define_method("include_#{changes_name}?") do
+      previous[field] != current[field]
+    end
+  end
+
+  add_compared_field :wiki
 
   def previous_hidden
     previous["hidden"]
@@ -97,26 +112,17 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def title_changes
-    prev = "<div>#{CGI::escapeHTML(previous["title"])}</div>"
-    cur = "<div>#{CGI::escapeHTML(current["title"])}</div>"
-    return if prev == cur
+    prev = "<div>#{previous["title"] && CGI::escapeHTML(previous["title"])}</div>"
+    cur = "<div>#{current["title"] && CGI::escapeHTML(current["title"])}</div>"
+
+    # always show the title for post_number == 1
+    return if object.post.post_number > 1 && prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
 
     {
       inline: diff.inline_html,
       side_by_side: diff.side_by_side_html
-    }
-  end
-
-  def category_changes
-    prev = previous["category_id"]
-    cur = current["category_id"]
-    return if prev == cur
-
-    {
-      previous: prev,
-      current: cur,
     }
   end
 
@@ -143,28 +149,6 @@ class PostRevisionSerializer < ApplicationSerializer
     }
   end
 
-  def wiki_changes
-    prev = previous["wiki"]
-    cur = current["wiki"]
-    return if prev == cur
-
-    {
-        previous: prev,
-        current: cur,
-    }
-  end
-
-  def post_type_changes
-    prev = previous["post_type"]
-    cur = current["post_type"]
-    return if prev == cur
-
-    {
-        previous: prev,
-        current: cur,
-    }
-  end
-
   protected
 
     def post
@@ -183,19 +167,27 @@ class PostRevisionSerializer < ApplicationSerializer
       return @all_revisions if @all_revisions
 
       post_revisions = PostRevision.where(post_id: object.post_id).order(:number).to_a
+
+      latest_modifications = {
+        "raw" => [post.raw],
+        "cooked" => [post.cooked],
+        "edit_reason" => [post.edit_reason],
+        "wiki" => [post.wiki],
+        "post_type" => [post.post_type],
+        "user_id" => [post.user_id]
+      }
+
+      # Retrieve any `tracked_topic_fields`
+      PostRevisor.tracked_topic_fields.each_key do |field|
+        if topic.respond_to?(field)
+          latest_modifications[field.to_s] = [topic.send(field)]
+        end
+      end
+
       post_revisions << PostRevision.new(
         number: post_revisions.last.number + 1,
         hidden: post.hidden,
-        modifications: {
-          "raw" => [post.raw],
-          "cooked" => [post.cooked],
-          "edit_reason" => [post.edit_reason],
-          "wiki" => [post.wiki],
-          "post_type" => [post.post_type],
-          "user_id" => [post.user_id],
-          "title" => [topic.title],
-          "category_id" => [topic.category_id],
-        }
+        modifications: latest_modifications
       )
 
       @all_revisions = []
@@ -206,7 +198,7 @@ class PostRevisionSerializer < ApplicationSerializer
         revision[:revision] = pr.number
         revision[:hidden] = pr.hidden
 
-        pr.modifications.keys.each do |field|
+        pr.modifications.each_key do |field|
           revision[field] = pr.modifications[field][0]
         end
 
@@ -218,7 +210,7 @@ class PostRevisionSerializer < ApplicationSerializer
         cur = @all_revisions[r]
         prev = @all_revisions[r - 1]
 
-        cur.keys.each do |field|
+        cur.each_key do |field|
           prev[field] = prev.has_key?(field) ? prev[field] : cur[field]
         end
       end

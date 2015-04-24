@@ -1,0 +1,3 @@
+plugins:
+  poll_enabled:
+    default: true

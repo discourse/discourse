@@ -40,12 +40,12 @@
         &rarr; {{bound-avatar-template user_changes.current.avatar_template "small"}} {{user_changes.current.username}}
       {{/if}}
       {{#if wiki_changes}}
-        &mdash; {{{wiki_diff}}}
+        &mdash; {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
       {{/if}}
       {{#if post_type_changes}}
-        &mdash; {{{post_type_diff}}}
+        &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
       {{/if}}
-      {{#if category_changes}}
+      {{#if category_id_changes}}
         &mdash; {{{previousCategory}}} &rarr; {{{currentCategory}}}
       {{/if}}
     {{/unless}}
@@ -53,7 +53,7 @@
   <div id="revisions" {{bind-attr class="hiddenClasses"}}>
     {{#if title_changes}}
       <div class="row">
-        <h2>{{{title_diff}}}</h2>
+        <h2>{{{titleDiff}}}</h2>
       </div>
     {{/if}}
     {{#if site.mobileView}}
@@ -65,22 +65,25 @@
       {{/if}}
       {{#if wiki_changes}}
         <div class="row">
-          {{{wiki_diff}}}
+          {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
         </div>
       {{/if}}
       {{#if post_type_changes}}
         <div class="row">
-          {{{post_type_diff}}}
+          {{disabled-icon icon="shield" disabled=postTypeDisabled}}
         </div>
       {{/if}}
-      {{#if category_changes}}
+      {{#if category_id_changes}}
         <div class="row">
           {{{previousCategory}}} &rarr; {{{currentCategory}}}
         </div>
       {{/if}}
     {{/if}}
+
+    {{plugin-outlet "post-revisions"}}
+
     <div class="row">
-      {{{body_diff}}}
+      {{{bodyDiff}}}
     </div>
   </div>
 </div>

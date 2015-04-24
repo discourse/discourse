@@ -70,6 +70,10 @@ module Email
       post_id = header_value('X-Discourse-Post-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
 
+      # always set a default Message ID from the host
+      uuid = SecureRandom.uuid
+      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
+
       if topic_id.present?
         email_log.topic_id = topic_id
 
@@ -113,9 +117,9 @@ module Email
       email_log.reply_key = reply_key if reply_key.present?
 
       # Remove headers we don't need anymore
-      @message.header['X-Discourse-Topic-Id'] = nil
-      @message.header['X-Discourse-Post-Id'] = nil
-      @message.header['X-Discourse-Reply-Key'] = nil
+      @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
+      @message.header['X-Discourse-Post-Id'] = nil if post_id.present?
+      @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails && @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length && @message.html_part.body =~ /<img[^>]+>/

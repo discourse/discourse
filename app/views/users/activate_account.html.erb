@@ -17,7 +17,7 @@
   (function() {
     function activateAccount() {
       $('#activate-account-button').prop('disabled', true);
-      $.ajax("/users/hp").then(function(hp) {
+      $.ajax("<%= path "/users/hp" %>").then(function(hp) {
         $('#password_confirmation').val(hp.value);
         $('#challenge').val(hp.challenge.split("").reverse().join(""));
         $('#activate-account-form').submit();

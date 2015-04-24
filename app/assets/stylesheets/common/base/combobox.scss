@@ -1,4 +1,5 @@
 .category-combobox, .select2-drop {
+
   .badge-category {
     display: inline-block;
   }
@@ -11,10 +12,56 @@
     color: $primary;
   }
   .category-desc {
-    /* leave this color as non-variable -- it is displayed on a white background in a dropdown */
-    color: #333;
-    margin: 6px 0 0 3px;
+    color: $primary;
     font-size: 0.857em;
     line-height: 16px;
   }
+}
+
+.select2-drop {
+  background: $secondary;
+}
+
+.select2-search input {
+  background: url(/assets/select2.png) no-repeat 100% -22px, $secondary 0 0
+}
+
+.select2-container {
+  border-radius: 3px;
+  border: 1px solid scale-color-diff();
+  &.select2-dropdown-open {
+    border: 0;
+  }
+  &.select2-container-active {
+    border-color: $tertiary;
+  }
+}
+
+
+
+.select2-container a.select2-choice {
+  background: $secondary;
+  border-radius: 3px;
+  border-color: $secondary;
+  color: $primary;
+}
+
+.select2-dropdown-open a.select2-choice {
+  box-shadow: none;
+  border-radius: 3px 3px 0 0;
+  border-color: $tertiary;
+}
+
+.select2-drop-active {
+  border: 1px solid $tertiary;
+  border-top: 0;
+}
+
+.select2-container-active {
+  box-shadow:  $tertiary 0px 0px 6px 0px;
+}
+
+.select2-results .select2-no-results, .select2-results .select2-searching, .select2-results .select2-selection-limit {
+  background: $secondary;
+  color: $primary;
 }

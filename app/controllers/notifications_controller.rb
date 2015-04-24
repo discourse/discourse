@@ -28,6 +28,7 @@ class NotificationsController < ApplicationController
     end
 
     notifications = Notification.where(user_id: user.id)
+        .visible
         .includes(:topic)
         .limit(60)
         .where('created_at < ?', params[:before])

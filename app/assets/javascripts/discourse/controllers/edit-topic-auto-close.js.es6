@@ -43,10 +43,10 @@ export default ObjectController.extend(ModalFunctionality, {
         self.set('details.auto_close_at', result.auto_close_at);
         self.set('details.auto_close_hours', result.auto_close_hours);
       } else {
-        bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('showModal'); } );
+        bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
       }
     }, function () {
-      bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('showModal'); } );
+      bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
     });
   }
 

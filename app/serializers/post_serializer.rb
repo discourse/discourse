@@ -1,16 +1,24 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  attr_accessor :topic_view,
-                :parent_post,
-                :add_raw,
-                :single_post_link_counts,
-                :draft_sequence,
-                :post_actions
+  INSTANCE_VARS = [
+    :topic_view,
+    :parent_post,
+    :add_raw,
+    :single_post_link_counts,
+    :draft_sequence,
+    :post_actions,
+    :all_post_actions
+  ]
+
+  INSTANCE_VARS.each do |v|
+    self.send(:attr_accessor, v)
+  end
 
   attributes :post_number,
              :post_type,
              :updated_at,
+             :like_count,
              :reply_count,
              :reply_to_post_number,
              :quote_count,
@@ -21,7 +29,6 @@ class PostSerializer < BasicPostSerializer
              :yours,
              :topic_id,
              :topic_slug,
-             :topic_auto_close_at,
              :display_username,
              :primary_group_name,
              :version,
@@ -53,12 +60,17 @@ class PostSerializer < BasicPostSerializer
              :static_doc,
              :via_email
 
-  def topic_slug
-    object.try(:topic).try(:slug)
+  def initialize(object, opts)
+    super(object, opts)
+    PostSerializer::INSTANCE_VARS.each do |name|
+      if opts.include? name
+        self.send("#{name}=", opts[name])
+      end
+    end
   end
 
-  def topic_auto_close_at
-    object.try(:topic).try(:auto_close_at)
+  def topic_slug
+    object.try(:topic).try(:slug)
   end
 
   def moderator?
@@ -154,6 +166,13 @@ class PostSerializer < BasicPostSerializer
     scope.is_staff? && object.deleted_by.present?
   end
 
+  # Helper function to decide between #post_actions and @all_post_actions
+  def actions
+    return post_actions if post_actions.present?
+    return all_post_actions[object.id] if all_post_actions.present?
+    nil
+  end
+
   # Summary of the actions taken on this post
   def actions_summary
     result = []
@@ -167,7 +186,7 @@ class PostSerializer < BasicPostSerializer
         id: id,
         count: count,
         hidden: (sym == :vote),
-        can_act: scope.post_can_act?(object, sym, taken_actions: post_actions)
+        can_act: scope.post_can_act?(object, sym, taken_actions: actions)
       }
 
       if sym == :notify_user && scope.current_user.present? && scope.current_user == object.user
@@ -182,9 +201,9 @@ class PostSerializer < BasicPostSerializer
                                            active_flags[id].count > 0
       end
 
-      if post_actions.present? && post_actions.has_key?(id)
+      if actions.present? && actions.has_key?(id)
         action_summary[:acted] = true
-        action_summary[:can_undo] = scope.can_delete?(post_actions[id])
+        action_summary[:can_undo] = scope.can_delete?(actions[id])
       end
 
       # only show public data
@@ -225,7 +244,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_bookmarked?
-    post_actions.present? && post_actions.keys.include?(PostActionType.types[:bookmark])
+    actions.present? && actions.keys.include?(PostActionType.types[:bookmark])
   end
 
   def include_display_username?
@@ -251,7 +270,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_static_doc?
-    object.post_number == 1 && Discourse.static_doc_topic_ids.include?(object.topic_id)
+    object.is_first_post? && Discourse.static_doc_topic_ids.include?(object.topic_id)
   end
 
   def include_via_email?
@@ -270,6 +289,11 @@ class PostSerializer < BasicPostSerializer
 
     def active_flags
       @active_flags ||= (@topic_view.present? && @topic_view.all_active_flags.present?) ? @topic_view.all_active_flags[object.id] : nil
+    end
+
+    def post_custom_fields
+      @post_custom_fields ||= (@topic_view.present? && @topic_view.post_custom_fields.present?) ? @topic_view.post_custom_fields[object.id] : nil
+      @post_custom_fields ||= object.custom_fields
     end
 
 end

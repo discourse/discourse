@@ -55,7 +55,7 @@ class PostDestroyer
       user_recovered
     end
     topic = Topic.with_deleted.find @post.topic_id
-    topic.recover! if @post.post_number == 1
+    topic.recover! if @post.is_first_post?
     topic.update_statistics
   end
 
@@ -72,7 +72,6 @@ class PostDestroyer
       if @post.topic
         make_previous_post_the_last_one
         clear_user_posted_flag
-        feature_users_in_the_topic
         Topic.reset_highest(@post.topic_id)
       end
       trash_public_post_actions
@@ -81,7 +80,7 @@ class PostDestroyer
       @post.update_flagged_posts_count
       remove_associated_replies
       remove_associated_notifications
-      if @post.topic && @post.post_number == 1
+      if @post.topic && @post.is_first_post?
         StaffActionLogger.new(@user).log_topic_deletion(@post.topic, @opts.slice(:context)) if @user.id != @post.user_id
         @post.topic.trash!(@user)
       elsif @user.id != @post.user_id
@@ -92,16 +91,19 @@ class PostDestroyer
       TopicUser.update_post_action_cache(topic_id: @post.topic_id)
     end
 
+    feature_users_in_the_topic if @post.topic
     @post.publish_change_to_clients! :deleted if @post.topic
   end
 
   # When a user 'deletes' their own post. We just change the text.
   def mark_for_deletion
-    Post.transaction do
-      @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
-      @post.update_column(:user_deleted, true)
-      @post.update_flagged_posts_count
-      @post.topic_links.each(&:destroy)
+    I18n.with_locale(SiteSetting.default_locale) do
+      Post.transaction do
+        @post.revise(@user, { raw: I18n.t('js.post.deleted_by_author', count: SiteSetting.delete_removed_posts_after) }, force_new_version: true)
+        @post.update_column(:user_deleted, true)
+        @post.update_flagged_posts_count
+        @post.topic_links.each(&:destroy)
+      end
     end
   end
 
@@ -114,16 +116,15 @@ class PostDestroyer
     end
   end
 
-
   private
 
   def make_previous_post_the_last_one
     last_post = Post.where("topic_id = ? and id <> ?", @post.topic_id, @post.id).order('created_at desc').limit(1).first
     if last_post.present?
       @post.topic.update_attributes(
-          last_posted_at: last_post.created_at,
-          last_post_user_id: last_post.user_id,
-          highest_post_number: last_post.post_number
+        last_posted_at: last_post.created_at,
+        last_post_user_id: last_post.user_id,
+        highest_post_number: last_post.post_number
       )
     end
   end
@@ -135,7 +136,7 @@ class PostDestroyer
   end
 
   def feature_users_in_the_topic
-    Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id, except_post_id: @post.id)
+    Jobs.enqueue(:feature_topic_users, topic_id: @post.topic_id)
   end
 
   def trash_public_post_actions
@@ -178,7 +179,7 @@ class PostDestroyer
 
   def update_associated_category_latest_topic
     return unless @post.topic && @post.topic.category
-    return unless @post.id == @post.topic.category.latest_post_id || (@post.post_number == 1 && @post.topic_id == @post.topic.category.latest_topic_id)
+    return unless @post.id == @post.topic.category.latest_post_id || (@post.is_first_post? && @post.topic_id == @post.topic.category.latest_topic_id)
 
     @post.topic.category.update_latest
   end
@@ -195,7 +196,7 @@ class PostDestroyer
     end
 
     author.user_stat.post_count -= 1
-    author.user_stat.topic_count -= 1 if @post.post_number == 1
+    author.user_stat.topic_count -= 1 if @post.is_first_post?
 
     # We don't count replies to your own topics
     if @topic && author.id != @topic.user_id

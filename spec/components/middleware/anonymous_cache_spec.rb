@@ -3,13 +3,19 @@ require_dependency "middleware/anonymous_cache"
 
 describe Middleware::AnonymousCache::Helper do
 
-  def new_helper(env={})
-    Middleware::AnonymousCache::Helper.new({
+  def env(opts={})
+    {
       "HTTP_HOST" => "http://test.com",
       "REQUEST_URI" => "/path?bla=1",
-      "REQUEST_METHOD" => "GET"
-    }.merge(env))
+      "REQUEST_METHOD" => "GET",
+      "rack.input" => ""
+    }.merge(opts)
   end
+
+  def new_helper(opts={})
+    Middleware::AnonymousCache::Helper.new(env(opts))
+  end
+
 
   context "cachable?" do
     it "true by default" do

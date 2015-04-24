@@ -83,6 +83,7 @@ class Promotion
     return false if stat.topics_entered < SiteSetting.tl2_requires_topics_entered
     return false if stat.posts_read_count < SiteSetting.tl2_requires_read_posts
     return false if (stat.time_read / 60) < SiteSetting.tl2_requires_time_spent_mins
+    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl2_requires_time_spent_mins
     return false if stat.days_visited < SiteSetting.tl2_requires_days_visited
     return false if stat.likes_received < SiteSetting.tl2_requires_likes_received
     return false if stat.likes_given < SiteSetting.tl2_requires_likes_given
@@ -96,6 +97,8 @@ class Promotion
     return false if stat.topics_entered < SiteSetting.tl1_requires_topics_entered
     return false if stat.posts_read_count < SiteSetting.tl1_requires_read_posts
     return false if (stat.time_read / 60) < SiteSetting.tl1_requires_time_spent_mins
+    return false if ((Time.now - user.created_at) / 60) < SiteSetting.tl1_requires_time_spent_mins
+
     return true
   end
 

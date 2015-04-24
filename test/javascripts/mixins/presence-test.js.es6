@@ -1,6 +1,8 @@
-module("Discourse.Presence");
+import Presence from 'discourse/mixins/presence';
 
-var testObj = Em.Object.createWithMixins(Discourse.Presence, {
+module("mixin:presence");
+
+var testObj = Em.Object.createWithMixins(Presence, {
   emptyString: "",
   nonEmptyString: "Evil Trout",
   emptyArray: [],

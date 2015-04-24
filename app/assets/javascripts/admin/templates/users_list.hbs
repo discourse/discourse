@@ -1,19 +1,22 @@
 <div class='admin-controls'>
   <div class='span15'>
     <ul class="nav nav-pills">
-      <li>{{#link-to 'adminUsersList.show' 'active'}}{{i18n 'admin.users.nav.active'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'new'}}{{i18n 'admin.users.nav.new'}}{{/link-to}}</li>
+      {{admin-nav-item route='adminUsersList.show' routeParam='active' label='admin.users.nav.active'}}
+      {{admin-nav-item route='adminUsersList.show' routeParam='new' label='admin.users.nav.new'}}
       {{#if siteSettings.must_approve_users}}
-        <li>{{#link-to 'adminUsersList.show' 'pending'}}{{i18n 'admin.users.nav.pending'}}{{/link-to}}</li>
+        {{admin-nav-item route='adminUsersList.show' routeParam='pending' label='admin.users.nav.pending'}}
       {{/if}}
-      <li>{{#link-to 'adminUsersList.show' 'staff'}}{{i18n 'admin.users.nav.staff'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'suspended'}}{{i18n 'admin.users.nav.suspended'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'blocked'}}{{i18n 'admin.users.nav.blocked'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminUsersList.show' 'suspect'}}{{i18n 'admin.users.nav.suspect'}}{{/link-to}}</li>
+      {{admin-nav-item route='adminUsersList.show' routeParam='staff' label='admin.users.nav.staff'}}
+      {{admin-nav-item route='adminUsersList.show' routeParam='suspended' label='admin.users.nav.suspended'}}
+      {{admin-nav-item route='adminUsersList.show' routeParam='blocked' label='admin.users.nav.blocked'}}
+      {{admin-nav-item route='adminUsersList.show' routeParam='suspect' label='admin.users.nav.suspect'}}
     </ul>
   </div>
   <div class="pull-right">
-    <button {{action "exportUsers"}} class="btn" title="{{i18n 'admin.export_csv.button_title.user'}}"><i class="fa fa-download"></i>{{i18n 'admin.export_csv.button_text'}}</button>
+    {{#unless siteSettings.enable_sso}}
+      {{d-button action="sendInvites" title="admin.invite.button_title" icon="user-plus" label="admin.invite.button_text"}}
+    {{/unless}}
+    {{d-button action="exportUsers" title="admin.export_csv.button_title.user" icon="download" label="admin.export_csv.button_text"}}
   </div>
 </div>
 

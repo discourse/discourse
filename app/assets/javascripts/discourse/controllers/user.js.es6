@@ -19,10 +19,7 @@ export default ObjectController.extend(CanCheckEmails, {
 
   linkWebsite: Em.computed.not('isBasic'),
 
-  canSeePrivateMessages: function() {
-    return this.get('viewingSelf') || Discourse.User.currentProp('admin');
-  }.property('viewingSelf'),
-
+  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.admin'),
   canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
 
   showBadges: function() {
@@ -42,6 +39,21 @@ export default ObjectController.extend(CanCheckEmails, {
     return this.get('can_be_deleted') && this.get('can_delete_all_posts');
   }.property('can_be_deleted', 'can_delete_all_posts'),
 
+  publicUserFields: function() {
+    var siteUserFields = this.site.get('user_fields');
+    if (!Ember.isEmpty(siteUserFields)) {
+      var userFields = this.get('user_fields');
+      return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
+        var val = userFields ? userFields[uf.get('id').toString()] : null;
+        if (Ember.isEmpty(val)) {
+          return null;
+        } else {
+          return Ember.Object.create({value: val, field: uf});
+        }
+      }).compact();
+    }
+  }.property('user_fields.@each.value'),
+
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
   privateMessagesUnreadActive: Em.computed.equal('pmView', 'unread'),
@@ -54,7 +66,16 @@ export default ObjectController.extend(CanCheckEmails, {
     },
 
     exportUserArchive: function() {
-      Discourse.ExportCsv.exportUserArchive();
+      bootbox.confirm(
+        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            Discourse.ExportCsv.exportUserArchive();
+          }
+        }
+      );
     }
   }
 });

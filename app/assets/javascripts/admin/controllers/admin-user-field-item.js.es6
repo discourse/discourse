@@ -17,15 +17,18 @@ export default Ember.ObjectController.extend(BufferedContent, {
     if (this.get('required')) {
       ret.push(I18n.t('admin.user_fields.required.enabled'));
     }
+    if (this.get('show_on_profile')) {
+      ret.push(I18n.t('admin.user_fields.show_on_profile.enabled'));
+    }
 
     return ret.join(', ');
-  }.property('editable', 'required'),
+  }.property('editable', 'required', 'show_on_profile'),
 
   actions: {
     save: function() {
       var self = this;
 
-      var attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required');
+      var attrs = this.get('buffered').getProperties('name', 'description', 'field_type', 'editable', 'required', 'show_on_profile');
 
       this.get('model').save(attrs).then(function(res) {
         self.set('model.id', res.user_field.id);

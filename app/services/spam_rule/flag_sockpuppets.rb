@@ -5,7 +5,7 @@ class SpamRule::FlagSockpuppets
   end
 
   def perform
-    if SiteSetting.flag_sockpuppets and reply_is_from_sockpuppet?
+    if SiteSetting.flag_sockpuppets && reply_is_from_sockpuppet?
       flag_sockpuppet_users
       true
     else
@@ -14,16 +14,17 @@ class SpamRule::FlagSockpuppets
   end
 
   def reply_is_from_sockpuppet?
-    return false if @post.post_number and @post.post_number == 1
+    return false if @post.try(:post_number) == 1
 
     first_post = @post.topic.posts.by_post_number.first
     return false if first_post.user.nil?
 
-    !first_post.user.staff? and !@post.user.staff? and
-      @post.user != first_post.user and
-      @post.user.ip_address == first_post.user.ip_address and
-      @post.user.new_user? and
-      !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
+    !first_post.user.staff? &&
+    !@post.user.staff? &&
+    @post.user != first_post.user &&
+    @post.user.ip_address == first_post.user.ip_address &&
+    @post.user.new_user? &&
+    !ScreenedIpAddress.is_whitelisted?(@post.user.ip_address)
   end
 
   def flag_sockpuppet_users

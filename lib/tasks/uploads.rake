@@ -26,6 +26,11 @@ task "uploads:migrate_from_s3" => :environment do
   local_store = FileStore::LocalStore.new
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
+  puts "Deleting all optimized images..."
+  puts
+
+  OptimizedImage.destroy_all
+
   puts "Migrating uploads from S3 to local storage"
   puts
 
@@ -57,8 +62,8 @@ task "uploads:migrate_from_s3" => :environment do
       if upload.save
         # update & rebake the posts (if any)
         Post.where("raw ILIKE ?", "%#{previous_url}%").find_each do |post|
-          post.raw.gsub!(previous_url, upload.url)
-          post.rebake!
+          post.raw = post.raw.gsub(previous_url, upload.url)
+          post.save
         end
 
         putc '#'

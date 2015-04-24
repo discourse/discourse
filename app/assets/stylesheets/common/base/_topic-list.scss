@@ -2,6 +2,7 @@
   position: absolute;
   top: 4px;
   width: 100%;
+  z-index: 1;
 }
 
 .list-controls {
@@ -99,13 +100,6 @@
     }
   }
 
-  td.category a {
-    // suppress extra long category names in tables
-    max-width:150px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-  }
-
 }
 
 
@@ -154,27 +148,12 @@
 }
 
 .list-controls {
-  .home {
-    background-color: scale-color-diff();
+  .category-dropdown-menu .home {
     color: $primary;
+    margin-left: 8px;
   }
-  .badge-category {
-    padding: 4px 10px;
-    display: inline-block;
-    line-height: 24px;
-    float: left;
-  }
-  .category-dropdown-button {
-    border-left: 1px solid rgba(0,0,0,0.15);
-    font-size: 1.143em;
-    width: 10px;
-    text-align: center;
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-clear: both;
+  clear: both;
 }
 
 #list-area {
@@ -223,18 +202,17 @@ ol.category-breadcrumb {
   background-color: $secondary;
   z-index: 100;
 
+  a.badge-category, a.badge-category-parent {
+    line-height: 19px;
+    overflow:hidden;
+    margin-bottom: 0;
+  }
   a.badge-category {
     font-size: 0.929em;
     font-weight: bold;
     float: none;
-    line-height: 19px;
     text-transform: none;
-    width: 100%;
-    min-width: 102px;
-    margin-right: 20px;
-    margin-bottom: 0;
     max-width:200px;
-    overflow:hidden;
     text-overflow:ellipsis;
   }
 }
@@ -249,11 +227,12 @@ ol.category-breadcrumb {
 }
 
 .period-chooser {
-
+  display: inline-block;
   @include unselectable;
 
   h2 {
     float: left;
+    margin: 5px 0 10px;
   }
 
   button {
@@ -297,6 +276,10 @@ ol.category-breadcrumb {
 
 .top-title-buttons {
   display: inline;
+
+  button {
+    margin-right: 0.5em;
+  }
 }
 
 div.education {

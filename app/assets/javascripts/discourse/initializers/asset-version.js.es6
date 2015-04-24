@@ -1,15 +1,14 @@
-/**
-  Subscribe to "asset-version" change events via the Message Bus
-**/
+//  Subscribe to "asset-version" change events via the Message Bus
 export default {
   name: "asset-version",
   after: "message-bus",
 
-  initialize: function () {
-    var timeoutIsSet = false;
-    if (!Discourse.MessageBus) { return; }
+  initialize(container) {
+    let timeoutIsSet = false;
+    const messageBus = container.lookup('message-bus:main');
+    if (!messageBus) { return; }
 
-    Discourse.MessageBus.subscribe("/global/asset-version", function (version) {
+    messageBus.subscribe("/global/asset-version", function (version) {
       Discourse.set("assetVersion", version);
 
       if (!timeoutIsSet && Discourse.get("requiresRefresh")) {

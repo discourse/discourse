@@ -204,6 +204,10 @@ Ember.DiscourseLocation = Ember.Object.extend({
 
     if (url !== '') {
       rootURL = rootURL.replace(/\/$/, '');
+
+      if (rootURL.length > 0 && url.indexOf(rootURL + "/") === 0){
+        rootURL = "";
+      }
     }
 
     return rootURL + url;

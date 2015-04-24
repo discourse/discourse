@@ -126,6 +126,13 @@ describe Search do
 
        results.posts.length.should == 1
 
+
+       results = Search.execute('mars',
+                                search_context: topic,
+                                guardian: Guardian.new(reply.user))
+
+       results.posts.length.should == 1
+
        # does not leak out
        results = Search.execute('mars',
                                 type_filter: 'private_messages',
@@ -183,7 +190,6 @@ describe Search do
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
         results.posts.length.should == 4
-
       end
     end
 
@@ -354,6 +360,8 @@ describe Search do
     end
 
     it 'finds chinese topic based on title' do
+      skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
+
       SiteSetting.default_locale = 'zh_TW'
       topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)

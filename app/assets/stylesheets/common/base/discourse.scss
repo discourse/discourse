@@ -1,3 +1,7 @@
+img.avatar {
+  border-radius: 50%;
+}
+
 .container {
   @extend .clearfix;
   margin-right: auto;
@@ -40,6 +44,8 @@ body {
   background-attachment: fixed;
   background-size: cover;
   min-height: 100%;
+
+  @include clearfix;
 
   button.ok {
     background: $success;
@@ -157,6 +163,7 @@ body {
 .avatar-wrapper {
   background-color: $secondary;
   display: inline-block;
+  border-radius: 50%;
 }
 
 .profiler-results.profiler-left {

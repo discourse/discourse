@@ -187,7 +187,7 @@ describe Admin::UsersController do
 
     context '.trust_level' do
       before do
-        @another_user = Fabricate(:coding_horror)
+        @another_user = Fabricate(:coding_horror, created_at: 1.month.ago)
       end
 
       it "raises an error when the user doesn't have permission" do
@@ -513,6 +513,20 @@ describe Admin::UsersController do
     expect(user.email).to eq("bob2@bob.com")
     expect(user.name).to eq("Bill")
     expect(user.username).to eq("Hokli")
+
+    # It can also create new users
+    sso = SingleSignOn.new
+    sso.sso_secret = "sso secret"
+    sso.name = "Dr. Claw"
+    sso.username = "dr_claw"
+    sso.email = "dr@claw.com"
+    sso.external_id = "2"
+    xhr :post, :sync_sso, Rack::Utils.parse_query(sso.payload)
+    expect(response).to be_success
+
+    user = User.where(email: 'dr@claw.com').first
+    expect(user).to be_present
+    expect(user.ip_address).to be_blank
 
   end
 

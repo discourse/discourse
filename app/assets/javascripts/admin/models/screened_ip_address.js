@@ -45,8 +45,8 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
 });
 
 Discourse.ScreenedIpAddress.reopenClass({
-  findAll: function() {
-    return Discourse.ajax("/admin/logs/screened_ip_addresses.json").then(function(screened_ips) {
+  findAll: function(filter) {
+    return Discourse.ajax("/admin/logs/screened_ip_addresses.json", { data: { filter: filter } }).then(function(screened_ips) {
       return screened_ips.map(function(b) {
         return Discourse.ScreenedIpAddress.create(b);
       });

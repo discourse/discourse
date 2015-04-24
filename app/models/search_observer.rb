@@ -60,7 +60,7 @@ class SearchObserver < ActiveRecord::Observer
       if obj.topic
         category_name = obj.topic.category.name if obj.topic.category
         SearchObserver.update_posts_index(obj.id, obj.cooked, obj.topic.title, category_name)
-        SearchObserver.update_topics_index(obj.topic_id, obj.topic.title, obj.cooked) if obj.post_number == 1
+        SearchObserver.update_topics_index(obj.topic_id, obj.topic.title, obj.cooked) if obj.is_first_post?
       else
         Rails.logger.warn("Orphan post skipped in search_observer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
       end

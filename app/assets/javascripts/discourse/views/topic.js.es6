@@ -1,7 +1,10 @@
 import AddCategoryClass from 'discourse/mixins/add-category-class';
+import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
+import ClickTrack from 'discourse/lib/click-track';
 import { listenForViewEvent } from 'discourse/lib/app-events';
+import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
-var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
+var TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
   userFiltersBinding: 'controller.userFilters',
@@ -14,9 +17,11 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
   menuVisible: true,
   SHORT_POST: 1200,
 
-  categoryId: Em.computed.alias('topic.category.id'),
+  categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
 
   postStream: Em.computed.alias('controller.postStream'),
+
+  archetype: Em.computed.alias('topic.archetype'),
 
   _composeChanged: function() {
     var composerController = Discourse.get('router.composerController');
@@ -39,7 +44,7 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     this.bindScrolling({name: 'topic-view'});
 
     var self = this;
-    $(window).resize('resize.discourse-on-scroll', function() {
+    $(window).on('resize.discourse-on-scroll', function() {
       self.scrolled();
     });
 
@@ -50,8 +55,8 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
 
       var $target = $(e.target);
       if ($target.hasClass('mention') || $target.parents('.expanded-embed').length) { return false; }
-      return Discourse.ClickTrack.trackClick(e);
 
+      return ClickTrack.trackClick(e);
     });
 
   }.on('didInsertElement'),
@@ -125,12 +130,12 @@ var TopicView = Discourse.View.extend(AddCategoryClass, Discourse.Scrolling, {
     var opts = { latestLink: "<a href=\"" + Discourse.getURL("/latest") + "\">" + I18n.t("topic.view_latest_topics") + "</a>" },
         category = this.get('controller.content.category');
 
-    if(Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
+    if(category && Em.get(category, 'id') === Discourse.Site.currentProp("uncategorized_category_id")) {
       category = null;
     }
 
     if (category) {
-      opts.catLink = Discourse.HTML.categoryBadge(category, {showParent: true});
+      opts.catLink = categoryBadgeHTML(category);
     } else {
       opts.catLink = "<a href=\"" + Discourse.getURL("/categories") + "\">" + I18n.t("topic.browse_all_categories") + "</a>";
     }

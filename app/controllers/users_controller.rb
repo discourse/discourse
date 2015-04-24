@@ -6,7 +6,7 @@ require_dependency 'rate_limiter'
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
-  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect]
+  skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :authorize_email, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon]
 
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
@@ -25,9 +25,20 @@ class UsersController < ApplicationController
                                                             :authorize_email,
                                                             :password_reset]
 
+  def index
+  end
+
   def show
     @user = fetch_user_from_params
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
+    if params[:stats].to_s == "false"
+      user_serializer.omit_stats = true
+    end
+    topic_id = params[:include_post_count_for].to_i
+    if topic_id != 0
+      user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
+    end
+
     respond_to do |format|
       format.html do
         @restrict_fields = guardian.restrict_user_fields?(@user)
@@ -66,10 +77,14 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     if params[:user_fields].present?
-      params[:custom_fields] ||= {}
-      UserField.where(editable: true).each do |f|
+      params[:custom_fields] = {} unless params[:custom_fields].present?
+
+      fields = UserField.all
+      fields = fields.where(editable: true) unless current_user.staff?
+      fields.each do |f|
         val = params[:user_fields][f.id.to_s]
         val = nil if val === "false"
+        val = val[0...UserField.max_length] if val
 
         return render_json_error(I18n.t("login.missing_user_field")) if val.blank? && f.required?
         params[:custom_fields]["user_field_#{f.id}"] = val
@@ -89,7 +104,7 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit_username!(user)
 
     # TODO proper error surfacing (result is a Model#save call)
-    result = user.change_username(params[:new_username], current_user)
+    result = UsernameChanger.change(user, params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
     render json: {
@@ -138,7 +153,7 @@ class UsersController < ApplicationController
 
   def my_redirect
     if current_user.present? && params[:path] =~ /^[a-z\-\/]+$/
-      redirect_to "/users/#{current_user.username}/#{params[:path]}"
+      redirect_to path("/users/#{current_user.username}/#{params[:path]}")
       return
     end
     raise Discourse::NotFound.new
@@ -213,20 +228,19 @@ class UsersController < ApplicationController
     # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
-      if params[:user_fields].blank? && UserField.where(required: true).exists?
-        return fail_with("login.missing_user_field")
-      else
-        fields = user.custom_fields
-        user_fields.each do |f|
-          field_val = params[:user_fields][f.id.to_s]
-          if field_val.blank?
-            return fail_with("login.missing_user_field") if f.required?
-          else
-            fields["user_field_#{f.id}"] = field_val
-          end
+      field_params = params[:user_fields] || {}
+      fields = user.custom_fields
+
+      user_fields.each do |f|
+        field_val = field_params[f.id.to_s]
+        if field_val.blank?
+          return fail_with("login.missing_user_field") if f.required?
+        else
+          fields["user_field_#{f.id}"] = field_val[0...UserField.max_length]
         end
-        user.custom_fields = fields
       end
+
+      user.custom_fields = fields
     end
 
     authentication = UserAuthenticator.new(user, session)
@@ -282,7 +296,7 @@ class UsersController < ApplicationController
   end
 
   def password_reset
-    expires_now()
+    expires_now
 
     if EmailToken.valid_token_format?(params[:token])
       @user = EmailToken.confirm(params[:token])
@@ -298,7 +312,7 @@ class UsersController < ApplicationController
     end
 
     if !@user
-      flash[:error] = I18n.t('password_reset.no_token')
+      @error = I18n.t('password_reset.no_token')
     elsif request.put?
       @invalid_password = params[:password].blank? || params[:password].length > User.max_password_length
 
@@ -307,6 +321,7 @@ class UsersController < ApplicationController
       else
         @user.password = params[:password]
         @user.password_required!
+        @user.auth_token = nil
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           logon_after_password_reset
@@ -326,7 +341,19 @@ class UsersController < ApplicationController
                 'password_reset.success_unapproved'
               end
 
-    flash[:success] = I18n.t(message)
+    @success = I18n.t(message)
+  end
+
+  def toggle_anon
+    user = AnonymousShadowCreator.get_master(current_user) ||
+           AnonymousShadowCreator.get(current_user)
+
+    if user
+      log_on_user(user)
+      render json: success_json
+    else
+      render json: failed_json, status: 403
+    end
   end
 
   def change_email
@@ -419,8 +446,9 @@ class UsersController < ApplicationController
     term = params[:term].to_s.strip
     topic_id = params[:topic_id]
     topic_id = topic_id.to_i if topic_id
+    topic_allowed_users = params[:topic_allowed_users] || false
 
-    results = UserSearch.new(term, topic_id: topic_id, searching_user: current_user).search
+    results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
 
     user_fields = [:username, :upload_avatar_template, :uploaded_avatar_id]
     user_fields << :name if SiteSetting.enable_names?
@@ -440,6 +468,9 @@ class UsersController < ApplicationController
     guardian.ensure_can_edit!(user)
 
     file = params[:file] || params[:files].first
+
+    # HACK FOR IE9 to prevent the "download dialog"
+    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
     begin
       image = build_user_image_from(file)
@@ -588,17 +619,12 @@ class UsersController < ApplicationController
       return false if is_api?
 
       params[:password_confirmation] != honeypot_value ||
-        params[:challenge] != challenge_value.try(:reverse)
+      params[:challenge] != challenge_value.try(:reverse)
     end
 
     def user_params
-      params.permit(
-        :name,
-        :email,
-        :password,
-        :username,
-        :active
-      ).merge(ip_address: request.ip, registration_ip_address: request.ip)
+      params.permit(:name, :email, :password, :username, :active)
+            .merge(ip_address: request.remote_ip, registration_ip_address: request.remote_ip)
     end
 
     def fail_with(key)
