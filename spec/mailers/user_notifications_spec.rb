@@ -114,7 +114,7 @@ describe UserNotifications do
       response.user.mailing_list_mode = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
-      if rails_master?
+      if Rails.version >= "4.2.0"
         expect(mail.message.class).to eq(ActionMailer::Base::NullMail)
       else
         expect(mail.class).to eq(ActionMailer::Base::NullMail)
@@ -123,7 +123,7 @@ describe UserNotifications do
       response.user.mailing_list_mode = nil
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
-      if rails_master?
+      if Rails.version >= "4.2.0"
         expect(mail.message.class).not_to eq(ActionMailer::Base::NullMail)
       else
         expect(mail.class).not_to eq(ActionMailer::Base::NullMail)
@@ -196,7 +196,7 @@ describe UserNotifications do
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
     mailer = UserNotifications.send(mail_type, user, notification: notification, post: notification.post)
 
-    if rails_master?
+    if Rails.version >= "4.2.0"
       # Starting from Rails 4.2, calling MyMailer.some_method no longer result
       # in an immediate call to MyMailer#some_method. Instead, a "lazy proxy" is
       # returned (this is changed to support #deliver_later). As a quick hack to

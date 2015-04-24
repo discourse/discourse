@@ -117,7 +117,7 @@ module Discourse
     # see: http://stackoverflow.com/questions/11894180/how-does-one-correctly-add-custom-sql-dml-in-migrations/11894420#11894420
     config.active_record.schema_format = :sql
 
-    if rails_master?
+    if Rails.version >= "4.2.0"
       # Opt-into the default behavior in Rails 5
       # config.active_record.raise_in_transactional_callbacks = true
     end
