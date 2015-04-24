@@ -677,9 +677,8 @@ class User < ActiveRecord::Base
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
 
-    if self.uploaded_avatar_id_changed?
-      Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
-    end
+    # mark all the user's quoted posts as "needing a rebake"
+    Post.rebake_all_quoted_posts(self.id) if self.uploaded_avatar_id_changed?
   end
 
   def first_post_created_at
