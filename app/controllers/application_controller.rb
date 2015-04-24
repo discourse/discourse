@@ -42,6 +42,7 @@ class ApplicationController < ActionController::Base
   before_filter :preload_json
   before_filter :check_xhr
   before_filter :redirect_to_login_if_required
+  after_filter  :add_readonly_header
 
   layout :set_layout
 
@@ -51,6 +52,10 @@ class ApplicationController < ActionController::Base
 
   def use_crawler_layout?
     @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent))
+  end
+
+  def add_readonly_header
+    response.headers['Discourse-Readonly'] = 'true' if Discourse.readonly_mode?
   end
 
   def slow_platform?
@@ -394,7 +399,7 @@ class ApplicationController < ActionController::Base
 
     def block_if_readonly_mode
       return if request.fullpath.start_with?(path "/admin/backups")
-      raise Discourse::ReadOnly.new if !request.get? && Discourse.readonly_mode?
+      raise Discourse::ReadOnly.new if !(request.get? || request.head?) && Discourse.readonly_mode?
     end
 
     def build_not_found_page(status=404, layout=false)

@@ -4,6 +4,19 @@
 require_dependency 'cache'
 class DiscourseRedis
 
+  def self.recently_readonly?
+    return false unless @last_read_only
+    @last_read_only > 15.seconds.ago
+  end
+
+  def self.received_readonly!
+    @last_read_only = Time.now
+  end
+
+  def self.clear_readonly!
+    @last_read_only = nil
+  end
+
   def self.raw_connection(config = nil)
     config ||= self.config
     redis_opts = {host: config['host'], port: config['port'], db: config['db']}
@@ -38,7 +51,10 @@ class DiscourseRedis
     yield
   rescue Redis::CommandError => ex
     if ex.message =~ /READONLY/
-      STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
+      unless DiscourseRedis.recently_readonly?
+        STDERR.puts "WARN: Redis is in a readonly state. Performed a noop"
+      end
+      DiscourseRedis.received_readonly!
     else
       raise ex
     end
