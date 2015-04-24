@@ -68,6 +68,8 @@ div.poll {
 
   .results {
 
+    width: 100%;
+
     .option {
       max-width: 90%;
       padding-right: 1.6em;
@@ -88,7 +90,6 @@ div.poll {
     .bar {
       height: 10px;
       background: $primary;
-      transition: all 0.25s;
     }
 
   }
