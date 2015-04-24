@@ -16,7 +16,7 @@
         {{#if versionCheck.noCheckPerformed}}
           <td class="version-number">&mdash;</td>
           <td class="face">
-            <span class="icon critical-updates-available">☹</span>
+            <span class="icon critical-updates-available">{{fa-icon "frown-o"}}</span>
           </td>
           <td class="version-notes">
             <span class="normal-note">{{i18n 'admin.dashboard.no_check_performed'}}</span>
@@ -44,7 +44,7 @@
             <td class="version-number">{{dash-if-empty versionCheck.latest_version}}</td>
             <td class="face">
               {{#if versionCheck.upToDate }}
-              <span class='icon up-to-date'>{{fa-icon "frown-o"}}</span>
+              <span class='icon up-to-date'>{{fa-icon "smile-o"}}</span>
               {{else}}
                 <span {{bind-attr class=":icon versionCheck.critical_updates:critical-updates-available:updates-available"}}>
                   {{#if versionCheck.behindByOneVersion}}
