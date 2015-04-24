@@ -13,16 +13,14 @@ addons:
 
 matrix:
   allow_failures:
-    - rvm: 2.0.0
-      env: "RAILS_MASTER=1"
-    - rvm: 2.1
-      env: "RAILS_MASTER=1"
+    - env: "RAILS_MASTER=1"
     - rvm: rbx-2
   fast_finish: true
 
 rvm:
   - 2.0.0
   - 2.1
+  - 2.2
   - rbx-2
 
 services:
@@ -37,8 +35,7 @@ before_install:
   - jshint .
 
 before_script:
-  - psql -c 'create database discourse_test;' -U postgres
-  - bundle exec rake db:migrate
+  - bundle exec rake db:create db:migrate
 
 bundler_args: --without development --deployment --retry=3 --jobs=3
 
