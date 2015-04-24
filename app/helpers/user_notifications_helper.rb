@@ -54,7 +54,7 @@ module UserNotificationsHelper
     raw format_for_email(html)
   end
 
-  def sanitized_name(name)
+  def normalize_name(name)
     name.downcase.gsub(/[\s_-]/, '')
   end
 
@@ -62,7 +62,7 @@ module UserNotificationsHelper
     SiteSetting.enable_names? &&
       SiteSetting.display_name_on_posts? &&
       post.user.name.present? &&
-      sanitized_name(post.user.name) != sanitized_name(post.user.username)
+      normalize_name(post.user.name) != normalize_name(post.user.username)
   end
 
   def format_for_email(html)
