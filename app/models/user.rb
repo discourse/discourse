@@ -474,6 +474,8 @@ class User < ActiveRecord::Base
   def delete_all_posts!(guardian)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
 
+    QueuedPost.where(user_id: id).delete_all
+
     posts.order("post_number desc").each do |p|
       PostDestroyer.new(guardian.user, p).destroy
     end

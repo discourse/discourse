@@ -73,6 +73,18 @@ describe UserDestroyer do
       include_examples "successfully destroy a user"
     end
 
+    context "with a queued post" do
+      let(:user) { Fabricate(:user) }
+      let(:admin) { Fabricate(:admin) }
+      let!(:qp) { Fabricate(:queued_post, user: user) }
+
+      it "removes the queued post" do
+        UserDestroyer.new(admin).destroy(user)
+        expect(QueuedPost.where(user_id: user.id).count).to eq(0)
+      end
+
+    end
+
     context 'user has posts' do
       let!(:topic_starter) { Fabricate(:user) }
       let!(:topic) { Fabricate(:topic, user: topic_starter) }
