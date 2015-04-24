@@ -2,36 +2,12 @@ source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
-module ::Kernel
-  def rails_master?
-    ENV["RAILS_MASTER"] == '1'
-  end
+def rails_master?
+  ENV["RAILS_MASTER"] == '1'
 end
 
-if rails_master?
-  # monkey patching to support dual booting
-  module Bundler::SharedHelpers
-    def default_lockfile=(path)
-      @default_lockfile = path
-    end
-    def default_lockfile
-      @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
-    end
-  end
-
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
-
-  # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
-  class Bundler::Dsl
-    # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
-    unless self.method_defined? :to_definition_unpatched
-      alias_method :to_definition_unpatched, :to_definition
-    end
-    def to_definition(bad_lockfile, unlock)
-      to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
-    end
-  end
-
+def rails_42?
+  ENV["RAILS42"] == '1'
 end
 
 if rails_master?
@@ -39,6 +15,10 @@ if rails_master?
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
+elsif rails_42?
+  gem 'rails', '~> 4.2.1'
+  gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
+  gem 'seed-fu', '~> 2.3.5'
 else
   gem 'rails', '~> 4.1.10'
   gem 'rails-observers'
