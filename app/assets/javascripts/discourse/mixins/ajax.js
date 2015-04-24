@@ -1,13 +1,7 @@
 /**
   This mixin provides an 'ajax' method that can be used to perform ajax requests that
   respect Discourse paths and the run loop.
-
-  @class Discourse.Ajax
-  @extends Ember.Mixin
-  @namespace Discourse
-  @module Discourse
 **/
-
 var _trackView = false;
 
 Discourse.Ajax = Em.Mixin.create({
@@ -56,8 +50,14 @@ Discourse.Ajax = Em.Mixin.create({
         args.headers['Discourse-Track-View'] = true;
       }
 
-      args.success = function(xhr) {
-        Ember.run(null, resolve, xhr);
+      args.success = function(data, textStatus, xhr) {
+        if (xhr.getResponseHeader('Discourse-Readonly')) {
+          Ember.run(function() {
+            Discourse.Site.currentProp('isReadOnly', true);
+          });
+        }
+
+        Ember.run(null, resolve, data);
       };
 
       args.error = function(xhr, textStatus) {

@@ -107,16 +107,23 @@ describe Discourse do
 
   context "#readonly_mode?" do
 
+    after do
+      DiscourseRedis.clear_readonly!
+    end
+
+    it "is false by default" do
+      expect(Discourse.readonly_mode?).to eq(false)
+    end
+
     it "returns true when the key is present in redis" do
       $redis.expects(:get).with(Discourse.readonly_mode_key).returns("1")
       expect(Discourse.readonly_mode?).to eq(true)
     end
 
-    it "returns false when the key is not present in redis" do
-      $redis.expects(:get).with(Discourse.readonly_mode_key).returns(nil)
-      expect(Discourse.readonly_mode?).to eq(false)
+    it "returns true when DiscourseRedis is recently read only" do
+      DiscourseRedis.received_readonly!
+      expect(Discourse.readonly_mode?).to eq(true)
     end
-
   end
 
   context "#handle_exception" do
