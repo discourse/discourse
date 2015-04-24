@@ -17,7 +17,8 @@ module Onebox
             route = Rails.application.routes.recognize_path(uri.path)
             case route[:controller]
             when 'topics'
-              true
+              # super will use matches_regexp to match the domain name
+              super
             else
               false
             end
