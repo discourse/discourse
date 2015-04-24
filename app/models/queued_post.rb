@@ -30,7 +30,7 @@ class QueuedPost < ActiveRecord::Base
 
   def self.broadcast_new!
     msg = { post_queue_new_count: QueuedPost.new_count }
-    MessageBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
+    DiscourseBus.publish('/queue_counts', msg, user_ids: User.staff.pluck(:id))
   end
 
   def reject!(rejected_by)

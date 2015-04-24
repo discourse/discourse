@@ -573,7 +573,7 @@ describe Topic do
     describe "make_banner!" do
 
       it "changes the topic archetype to 'banner'" do
-        messages = MessageBus.track_publish do
+        messages = DiscourseBus.track_publish do
           topic.make_banner!(user)
           expect(topic.archetype).to eq(Archetype.banner)
         end
@@ -597,7 +597,7 @@ describe Topic do
 
       it "resets the topic archetype" do
         topic.expects(:add_moderator_post)
-        MessageBus.expects(:publish).with("/site/banner", nil)
+        DiscourseBus.expects(:publish).with("/site/banner", nil)
         topic.remove_banner!(user)
         expect(topic.archetype).to eq(Archetype.default)
       end

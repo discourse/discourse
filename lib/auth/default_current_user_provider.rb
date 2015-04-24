@@ -85,7 +85,7 @@ class Auth::DefaultCurrentUserProvider
     if SiteSetting.log_out_strict && (user = current_user)
       user.auth_token = nil
       user.save!
-      MessageBus.publish "/logout", user.id, user_ids: [user.id]
+      DiscourseBus.publish "/logout", user.id, user_ids: [user.id]
     end
     cookies[TOKEN_COOKIE] = nil
   end

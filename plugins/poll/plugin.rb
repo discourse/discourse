@@ -66,7 +66,7 @@ after_initialize do
         post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] = votes
         post.save_custom_fields
 
-        MessageBus.publish("/polls/#{post_id}", { poll: poll })
+        DiscourseBus.publish("/polls/#{post_id}", { poll: poll })
 
         render json: { poll: poll, vote: options }
       end
@@ -100,7 +100,7 @@ after_initialize do
         post.custom_fields[POLLS_CUSTOM_FIELD] = polls
         post.save_custom_fields
 
-        MessageBus.publish("/polls/#{post_id}", { poll: polls[poll_name] })
+        DiscourseBus.publish("/polls/#{post_id}", { poll: polls[poll_name] })
 
         render json: { poll: polls[poll_name] }
       end
