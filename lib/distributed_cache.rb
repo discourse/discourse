@@ -51,7 +51,7 @@ class DistributedCache
     return if @subscribed
     @lock.synchronize do
       return if @subscribed
-      MessageBus.subscribe(channel_name) do |message|
+      DiscourseBus.subscribe(channel_name) do |message|
         @lock.synchronize do
           process_message(message)
         end
@@ -63,7 +63,7 @@ class DistributedCache
   def self.publish(hash, message)
     message[:origin] = hash.object_id
     message[:hash_key] = hash.key
-    MessageBus.publish(channel_name, message, { user_ids: [-1] })
+    DiscourseBus.publish(channel_name, message, { user_ids: [-1] })
   end
 
   def self.set(hash, key, value)

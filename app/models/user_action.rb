@@ -224,7 +224,7 @@ SQL
         end
 
         if action.user
-          MessageBus.publish("/users/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
+          DiscourseBus.publish("/users/#{action.user.username.downcase}", action.id, user_ids: [user_id], group_ids: group_ids)
         end
 
         action
@@ -240,7 +240,7 @@ SQL
     require_parameters(hash, :action_type, :user_id, :acting_user_id, :target_topic_id, :target_post_id)
     if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
-      MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
+      DiscourseBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
     update_like_count(hash[:user_id], hash[:action_type], -1)

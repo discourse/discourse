@@ -10,7 +10,7 @@ describe ::DiscoursePoll::PollsController do
   describe "#vote" do
 
     it "works" do
-      MessageBus.expects(:publish)
+      DiscourseBus.expects(:publish)
 
       xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
 
@@ -76,7 +76,7 @@ describe ::DiscoursePoll::PollsController do
   describe "#toggle_status" do
 
     it "works for OP" do
-      MessageBus.expects(:publish)
+      DiscourseBus.expects(:publish)
 
       xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
       expect(response).to be_success
@@ -86,7 +86,7 @@ describe ::DiscoursePoll::PollsController do
 
     it "works for staff" do
       log_in(:moderator)
-      MessageBus.expects(:publish)
+      DiscourseBus.expects(:publish)
 
       xhr :put, :toggle_status, { post_id: poll.id, poll_name: "poll", status: "closed" }
       expect(response).to be_success

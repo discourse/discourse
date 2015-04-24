@@ -89,7 +89,7 @@ describe Discourse do
 
     it "adds a key in redis and publish a message through the message bus" do
       $redis.expects(:set).with(Discourse.readonly_mode_key, 1)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, true)
+      DiscourseBus.expects(:publish).with(Discourse.readonly_channel, true)
       Discourse.enable_readonly_mode
     end
 
@@ -99,7 +99,7 @@ describe Discourse do
 
     it "removes a key from redis and publish a message through the message bus" do
       $redis.expects(:del).with(Discourse.readonly_mode_key)
-      MessageBus.expects(:publish).with(Discourse.readonly_channel, false)
+      DiscourseBus.expects(:publish).with(Discourse.readonly_channel, false)
       Discourse.disable_readonly_mode
     end
 

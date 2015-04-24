@@ -34,11 +34,11 @@ class SiteCustomization < ActiveRecord::Base
   after_save do
     remove_from_cache!
     if stylesheet_changed? || mobile_stylesheet_changed?
-      MessageBus.publish "/file-change/#{key}", SecureRandom.hex
-      MessageBus.publish "/file-change/#{SiteCustomization::ENABLED_KEY}", SecureRandom.hex
+      DiscourseBus.publish "/file-change/#{key}", SecureRandom.hex
+      DiscourseBus.publish "/file-change/#{SiteCustomization::ENABLED_KEY}", SecureRandom.hex
     end
-    MessageBus.publish "/header-change/#{key}", header if header_changed?
-    MessageBus.publish "/footer-change/#{key}", footer if footer_changed?
+    DiscourseBus.publish "/header-change/#{key}", header if header_changed?
+    DiscourseBus.publish "/footer-change/#{key}", footer if footer_changed?
     DiscourseStylesheets.cache.clear
   end
 
@@ -109,7 +109,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def self.remove_from_cache!(key, broadcast = true)
-    MessageBus.publish('/site_customization', key: key) if broadcast
+    DiscourseBus.publish('/site_customization', key: key) if broadcast
     clear_cache!
   end
 

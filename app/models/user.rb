@@ -206,7 +206,7 @@ class User < ActiveRecord::Base
   # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
     @unread_notifications_by_type = nil
-    self.notification_channel_position = MessageBus.last_id("/notification/#{id}")
+    self.notification_channel_position = DiscourseBus.last_id("/notification/#{id}")
   end
 
   def invited_by
@@ -298,7 +298,7 @@ class User < ActiveRecord::Base
   end
 
   def publish_notifications_state
-    MessageBus.publish("/notification/#{id}",
+    DiscourseBus.publish("/notification/#{id}",
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
                         total_unread_notifications: total_unread_notifications},

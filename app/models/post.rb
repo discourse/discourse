@@ -97,7 +97,7 @@ class Post < ActiveRecord::Base
     # special failsafe for posts missing topics
     # consistency checks should fix, but message
     # is safe to skip
-    MessageBus.publish("/topic/#{topic_id}", {
+    DiscourseBus.publish("/topic/#{topic_id}", {
         id: id,
         post_number: post_number,
         updated_at: Time.now,

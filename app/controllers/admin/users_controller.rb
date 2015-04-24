@@ -54,7 +54,7 @@ class Admin::UsersController < Admin::AdminController
     @user.suspended_at = DateTime.now
     @user.save!
     StaffActionLogger.new(current_user).log_user_suspend(@user, params[:reason])
-    MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
+    DiscourseBus.publish "/logout", @user.id, user_ids: [@user.id]
     render nothing: true
   end
 
@@ -71,7 +71,7 @@ class Admin::UsersController < Admin::AdminController
     if @user
       @user.auth_token = nil
       @user.save!
-      MessageBus.publish "/logout", @user.id, user_ids: [@user.id]
+      DiscourseBus.publish "/logout", @user.id, user_ids: [@user.id]
       render json: success_json
     else
       render json: {error: I18n.t('admin_js.admin.users.id_not_found')}, status: 404
@@ -350,7 +350,7 @@ class Admin::UsersController < Admin::AdminController
     end
 
     def refresh_browser(user)
-      MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+      DiscourseBus.publish "/file-change", ["refresh"], user_ids: [user.id]
     end
 
 end
