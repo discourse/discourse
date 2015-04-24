@@ -138,4 +138,3 @@ When you're done working on Discourse, you can shut down Vagrant with:
 ```
 vagrant halt
 ```
-k
