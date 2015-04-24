@@ -67,6 +67,7 @@ class NewPostManager
 
     result.queued_post = post
     result.check_errors_from(enqueuer)
+    result.pending_count = QueuedPost.new_posts.where(user_id: @user.id).count
     result
   end
 

@@ -28,8 +28,12 @@ class QueuedPost < ActiveRecord::Base
     where(queue: visible_queues.to_a)
   end
 
+  def self.new_posts
+    visible.where(state: states[:new])
+  end
+
   def self.new_count
-    visible.where(state: states[:new]).count
+    new_posts.count
   end
 
   def visible?
