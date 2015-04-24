@@ -525,6 +525,22 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def self.rebake_all_quoted_posts(user_id)
+    return if user_id.blank?
+
+    Post.exec_sql <<-SQL
+      WITH user_quoted_posts AS (
+        SELECT post_id
+          FROM quoted_posts
+         WHERE quoted_post_id IN (SELECT id FROM posts WHERE user_id = #{user_id})
+      )
+      UPDATE posts
+         SET baked_version = NULL
+       WHERE baked_version IS NOT NULL
+         AND id IN (SELECT post_id FROM user_quoted_posts)
+    SQL
+  end
+
   private
 
   def parse_quote_into_arguments(quote)
