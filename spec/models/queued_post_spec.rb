@@ -26,6 +26,7 @@ describe QueuedPost do
     end
 
     it "follows the correct workflow for approval" do
+      qp.create_pending_action
       post = qp.approve!(admin)
 
       # Creates the post with the attributes
@@ -39,6 +40,9 @@ describe QueuedPost do
       expect(qp.state).to eq(QueuedPost.states[:approved])
       expect(qp.approved_at).to be_present
 
+      # It removes the pending action
+      expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
+
       # We can't approve twice
       expect(-> { qp.approve!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
     end
@@ -50,12 +54,16 @@ describe QueuedPost do
     end
 
     it "follows the correct workflow for rejection" do
+      qp.create_pending_action
       qp.reject!(admin)
 
       # Updates the QP record
       expect(qp.rejected_by).to eq(admin)
       expect(qp.state).to eq(QueuedPost.states[:rejected])
       expect(qp.rejected_at).to be_present
+
+      # It removes the pending action
+      expect(UserAction.where(queued_post_id: qp.id).count).to eq(0)
 
       # We can't reject twice
       expect(-> { qp.reject!(admin) }).to raise_error(QueuedPost::InvalidStateTransition)
@@ -115,7 +123,6 @@ describe QueuedPost do
   end
 
   context "visibility" do
-
     it "works as expected in the invisible queue" do
       qp = Fabricate(:queued_post, queue: 'invisible')
       expect(qp).to_not be_visible

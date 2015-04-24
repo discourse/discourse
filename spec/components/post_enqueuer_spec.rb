@@ -10,9 +10,6 @@ describe PostEnqueuer do
     let(:enqueuer) { PostEnqueuer.new(user, 'new_post') }
 
     it 'enqueues the post' do
-
-      old_count = user.user_actions.count
-
       qp = enqueuer.enqueue(raw: 'This should be enqueued',
                             topic_id: topic.id,
                             post_options: { reply_to_post_number: 1 })
@@ -21,7 +18,7 @@ describe PostEnqueuer do
       expect(qp).to be_present
       expect(qp.topic).to eq(topic)
       expect(qp.user).to eq(user)
-      expect(UserAction.where(user_id: user.id).count).to eq(old_count + 1)
+      expect(UserAction.where(user_id: user.id, action_type: UserAction::PENDING).count).to eq(1)
     end
   end
 

@@ -7,6 +7,14 @@ class QueuedPost < ActiveRecord::Base
   belongs_to :approved_by, class_name: "User"
   belongs_to :rejected_by, class_name: "User"
 
+  def create_pending_action
+    UserAction.log_action!(action_type: UserAction::PENDING,
+                           user_id: user_id,
+                           acting_user_id: user_id,
+                           target_topic_id: topic_id,
+                           queued_post_id: id)
+  end
+
   def self.states
     @states ||= Enum.new(:new, :approved, :rejected)
   end
@@ -71,6 +79,10 @@ class QueuedPost < ActiveRecord::Base
       # we can use the DB to enforce this
       row_count = QueuedPost.where('id = ? AND state <> ?', id, state_val).update_all(updates)
       raise InvalidStateTransition.new if row_count == 0
+
+      if [:rejected, :approved].include?(state)
+        UserAction.where(queued_post_id: id).destroy_all
+      end
 
       # Update the record in memory too, and clear the dirty flag
       updates.each {|k, v| send("#{k}=", v) }

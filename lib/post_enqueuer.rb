@@ -24,11 +24,7 @@ class PostEnqueuer
     end
 
     if queued_post.save
-      UserAction.log_action!(action_type: UserAction::PENDING,
-                             user_id: @user.id,
-                             acting_user_id: @user.id,
-                             target_topic_id: args[:topic_id],
-                             queued_post_id: queued_post.id)
+      queued_post.create_pending_action
     else
       add_errors_from(queued_post)
     end
