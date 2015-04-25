@@ -82,11 +82,11 @@ Vagrant version 1.1.2. With this Vagrantfile:
     echo "gem: --no-document" >> /etc/gemrc
     su - vagrant -c "echo 'gem: --no-document' >> ~/.gemrc"
 
-## Postgres 9.1
+## Postgres 9.2
 
 Configure so that the vagrant user doesn't need to provide username and password.
 
-    apt-get -yqq install postgresql postgresql-contrib-9.1 libpq-dev postgresql-server-dev-9.1
+    apt-get -yqq install postgresql postgresql-contrib-9.3 libpq-dev postgresql-server-dev-9.3
     su - postgres
     createuser --createdb --superuser -Upostgres vagrant
     psql -c "ALTER USER vagrant WITH PASSWORD 'password';"
