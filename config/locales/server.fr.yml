@@ -240,17 +240,17 @@ fr:
   vip_category_name: "Salon"
   vip_category_description: "Une catégorie réservée aux membres avec un niveau de confiance 3 et plus."
   meta_category_name: "Meta"
-  meta_category_description: "Discussion à propos du site, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
+  meta_category_description: "Discussion à propos du site, son organisation, son fonctionnement, et comment nous pouvons l''améliorer."
   staff_category_name: "Staff"
-  staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les admins et les modérateurs."
-  assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
+  staff_category_description: "Catégorie privée pour les discussions de l''équipe du forum. Les sujets ne sont visibles que pour les admins et les modérateurs."
+  assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l''équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utiliser comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l''icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d''obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l''image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l''option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
     body: |2
 
       Félicitation ! :confetti_ball:
 
-      Si vous voyez ce sujet, c'est que vous avez récemment été promu au niveau de confiance **habitué** (niveau de confiance 3).
+      Si vous voyez ce sujet, c''est que vous avez récemment été promu au niveau de confiance **habitué** (niveau de confiance 3).
 
       Vous pouvez désormais &hellip;
 
@@ -260,11 +260,11 @@ fr:
       * Accès à un salon privé visible uniquement pour les membres de niveau de confiance 3 ou plus.
       * Masquer un message indésirable avec seulement un drapeau.
 
-      Voici la [liste courante des membres habitués](/badges/3/regular). N'hésitez pas à venir dire bonjour !
+      Voici la [liste courante des membres habitués](/badges/3/regular). N''hésitez pas à venir dire bonjour !
 
-      Merci d'être une part importante de cette communauté !
+      Merci d''être une part importante de cette communauté !
 
-      (Pour plus d'information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seuls les membres qui continuerons de respecter les critères garderons ce niveau de confiance.)
+      (Pour plus d''information sur les niveaux de confiance [voir ce sujet][trust]. Veuillez noter que seuls les membres qui continuerons de respecter les critères garderons ce niveau de confiance.)
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
