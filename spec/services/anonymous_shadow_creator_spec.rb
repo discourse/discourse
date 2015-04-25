@@ -3,12 +3,12 @@ require 'spec_helper'
 describe AnonymousShadowCreator do
 
   it "returns no shadow by default" do
-    AnonymousShadowCreator.get(Fabricate.build(:user)).should == nil
+    expect(AnonymousShadowCreator.get(Fabricate.build(:user))).to eq(nil)
   end
 
   it "returns no shadow if trust level is not met" do
     SiteSetting.allow_anonymous_posting = true
-    AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0)).should == nil
+    expect(AnonymousShadowCreator.get(Fabricate.build(:user, trust_level: 0))).to eq(nil)
   end
 
   it "returns a new shadow once time expires" do
@@ -21,13 +21,13 @@ describe AnonymousShadowCreator do
     freeze_time 2.minutes.from_now
     shadow2 = AnonymousShadowCreator.get(user)
 
-    shadow.id.should == shadow2.id
+    expect(shadow.id).to eq(shadow2.id)
     create_post(user: shadow)
 
     freeze_time 4.minutes.from_now
     shadow3 = AnonymousShadowCreator.get(user)
 
-    shadow2.id.should_not == shadow3.id
+    expect(shadow2.id).not_to eq(shadow3.id)
 
   end
 
@@ -38,20 +38,20 @@ describe AnonymousShadowCreator do
     shadow = AnonymousShadowCreator.get(user)
     shadow2 = AnonymousShadowCreator.get(user)
 
-    shadow.id.should == shadow2.id
+    expect(shadow.id).to eq(shadow2.id)
 
-    shadow.trust_level.should == 1
-    shadow.username.should == "anonymous"
+    expect(shadow.trust_level).to eq(1)
+    expect(shadow.username).to eq("anonymous")
 
-    shadow.created_at.should_not == user.created_at
+    expect(shadow.created_at).not_to eq(user.created_at)
 
 
     p = create_post
-    Guardian.new(shadow).post_can_act?(p, :like).should == false
-    Guardian.new(user).post_can_act?(p, :like).should == true
+    expect(Guardian.new(shadow).post_can_act?(p, :like)).to eq(false)
+    expect(Guardian.new(user).post_can_act?(p, :like)).to eq(true)
 
-    user.anonymous?.should == false
-    shadow.anonymous?.should == true
+    expect(user.anonymous?).to eq(false)
+    expect(shadow.anonymous?).to eq(true)
   end
 
 end

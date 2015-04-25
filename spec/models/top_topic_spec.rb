@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TopTopic do
 
-  it { should belong_to :topic }
+  it { is_expected.to belong_to :topic }
 
   context "refresh!" do
 
@@ -10,7 +10,7 @@ describe TopTopic do
     let!(:t2) { Fabricate(:topic) }
 
     it "begins blank" do
-      TopTopic.all.should be_blank
+      expect(TopTopic.all).to be_blank
     end
 
     context "after calculating" do
@@ -20,7 +20,7 @@ describe TopTopic do
       end
 
       it "should have top topics" do
-        TopTopic.pluck(:topic_id).should =~ [t1.id, t2.id]
+        expect(TopTopic.pluck(:topic_id)).to match_array([t1.id, t2.id])
       end
 
     end

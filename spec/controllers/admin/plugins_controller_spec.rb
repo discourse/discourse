@@ -11,8 +11,8 @@ describe Admin::PluginsController do
 
     it 'should return JSON' do
       xhr :get, :index
-      response.should be_success
-      ::JSON.parse(response.body).has_key?('plugins').should == true
+      expect(response).to be_success
+      expect(::JSON.parse(response.body).has_key?('plugins')).to eq(true)
     end
   end
 

@@ -22,9 +22,9 @@ describe Search do
     end
 
     it "should index correctly" do
-      @indexed.should =~ /fun/
-      @indexed.should =~ /sam/
-      @indexed.should =~ /america/
+      expect(@indexed).to match(/fun/)
+      expect(@indexed).to match(/sam/)
+      expect(@indexed).to match(/america/)
 
       @topic.title = "harpi is the new title"
       @topic.save!
@@ -32,7 +32,7 @@ describe Search do
 
       @indexed = @post.post_search_data.search_data
 
-      @indexed.should =~ /harpi/
+      expect(@indexed).to match(/harpi/)
     end
   end
 
@@ -43,8 +43,8 @@ describe Search do
     end
 
     it "should pick up on data" do
-      @indexed.should =~ /fred/
-      @indexed.should =~ /jone/
+      expect(@indexed).to match(/fred/)
+      expect(@indexed).to match(/jone/)
     end
   end
 
@@ -55,7 +55,7 @@ describe Search do
     end
 
     it "should pick up on name" do
-      @indexed.should =~ /america/
+      expect(@indexed).to match(/america/)
     end
 
   end
@@ -66,15 +66,15 @@ describe Search do
   end
 
   it 'escapes non alphanumeric characters' do
-    Search.execute('foo :!$);}]>@\#\"\'').posts.length.should == 0 # There are at least three levels of sanitation for Search.query!
+    expect(Search.execute('foo :!$);}]>@\#\"\'').posts.length).to eq(0) # There are at least three levels of sanitation for Search.query!
   end
 
   it "doesn't raise an error when single quotes are present" do
-    Search.execute("'hello' world").posts.length.should == 0 # There are at least three levels of sanitation for Search.query!
+    expect(Search.execute("'hello' world").posts.length).to eq(0) # There are at least three levels of sanitation for Search.query!
   end
 
   it 'works when given two terms with spaces' do
-    lambda { Search.execute('evil trout') }.should_not raise_error
+    expect { Search.execute('evil trout') }.not_to raise_error
   end
 
   context 'users' do
@@ -82,8 +82,8 @@ describe Search do
     let(:result) { Search.execute('bruce', type_filter: 'user') }
 
     it 'returns a result' do
-      result.users.length.should == 1
-      result.users[0].id.should == user.id
+      expect(result.users.length).to eq(1)
+      expect(result.users[0].id).to eq(user.id)
     end
   end
 
@@ -92,7 +92,7 @@ describe Search do
     let(:result) { Search.execute('bruce') }
 
     it 'does not return a result' do
-      result.users.length.should == 0
+      expect(result.users.length).to eq(0)
     end
   end
 
@@ -124,21 +124,21 @@ describe Search do
                                 type_filter: 'private_messages',
                                 guardian: Guardian.new(reply.user))
 
-       results.posts.length.should == 1
+       expect(results.posts.length).to eq(1)
 
 
        results = Search.execute('mars',
                                 search_context: topic,
                                 guardian: Guardian.new(reply.user))
 
-       results.posts.length.should == 1
+       expect(results.posts.length).to eq(1)
 
        # does not leak out
        results = Search.execute('mars',
                                 type_filter: 'private_messages',
                                 guardian: Guardian.new(Fabricate(:user)))
 
-       results.posts.length.should == 0
+       expect(results.posts.length).to eq(0)
 
        Fabricate(:topic, category_id: nil, archetype: 'private_message')
        Fabricate(:post, topic: topic, raw: 'another secret pm from mars, testing')
@@ -150,7 +150,7 @@ describe Search do
                                 search_context: post.user,
                                 guardian: Guardian.new(Fabricate(:admin)))
 
-       results.posts.length.should == 1
+       expect(results.posts.length).to eq(1)
 
     end
 
@@ -185,11 +185,11 @@ describe Search do
         topic.reload
 
         results = Search.execute('posting', search_context: post1.topic)
-        results.posts.map(&:id).should == [post1.id, post2.id, post3.id, post4.id]
+        expect(results.posts.map(&:id)).to eq([post1.id, post2.id, post3.id, post4.id])
 
         # stop words should work
         results = Search.execute('this', search_context: post1.topic)
-        results.posts.length.should == 4
+        expect(results.posts.length).to eq(4)
       end
     end
 
@@ -198,8 +198,8 @@ describe Search do
       let(:result) { Search.execute('hundred', type_filter: 'topic', include_blurbs: true) }
 
       it 'returns a result correctly' do
-        result.posts.length.should == 1
-        result.posts[0].id.should == post.id
+        expect(result.posts.length).to eq(1)
+        expect(result.posts[0].id).to eq(post.id)
       end
     end
 
@@ -208,12 +208,12 @@ describe Search do
       let(:result) { Search.execute('quotes', type_filter: 'topic', include_blurbs: true) }
 
       it 'returns the post' do
-        result.should be_present
-        result.posts.length.should == 1
+        expect(result).to be_present
+        expect(result.posts.length).to eq(1)
         p = result.posts[0]
-        p.topic.id.should == topic.id
-        p.id.should == reply.id
-        result.blurb(p).should == "this reply has no quotes"
+        expect(p.topic.id).to eq(topic.id)
+        expect(p.id).to eq(reply.id)
+        expect(result.blurb(p)).to eq("this reply has no quotes")
       end
     end
 
@@ -221,8 +221,8 @@ describe Search do
       let(:result) { Search.execute(topic.id, type_filter: 'topic', search_for_id: true, min_search_term_length: 1) }
 
       it 'returns the topic' do
-        result.posts.length.should == 1
-        result.posts.first.id.should == post.id
+        expect(result.posts.length).to eq(1)
+        expect(result.posts.first.id).to eq(post.id)
       end
     end
 
@@ -230,8 +230,8 @@ describe Search do
       let(:result) { Search.execute(topic.relative_url, search_for_id: true, type_filter: 'topic')}
 
       it 'returns the topic' do
-        result.posts.length.should == 1
-        result.posts.first.id.should == post.id
+        expect(result.posts.length).to eq(1)
+        expect(result.posts.first.id).to eq(post.id)
       end
     end
 
@@ -250,9 +250,9 @@ describe Search do
         category.set_permissions(:staff => :full)
         category.save
 
-        result(nil).posts.should_not be_present
-        result(Fabricate(:user)).posts.should_not be_present
-        result(Fabricate(:admin)).posts.should be_present
+        expect(result(nil).posts).not_to be_present
+        expect(result(Fabricate(:user)).posts).not_to be_present
+        expect(result(Fabricate(:admin)).posts).to be_present
 
       end
     end
@@ -269,7 +269,7 @@ describe Search do
     let(:result) { Search.execute('запись') }
 
     it 'finds something when given cyrillic query' do
-      result.posts.should be_present
+      expect(result.posts).to be_present
     end
   end
 
@@ -281,12 +281,12 @@ describe Search do
     end
 
     it 'returns the correct result' do
-      search.categories.should be_present
+      expect(search.categories).to be_present
 
       category.set_permissions({})
       category.save
 
-      search.categories.should_not be_present
+      expect(search.categories).not_to be_present
     end
 
   end
@@ -302,9 +302,9 @@ describe Search do
       let(:results) { Search.execute('amazing', type_filter: 'user') }
 
       it "returns a user result" do
-        results.categories.length.should == 0
-        results.posts.length.should == 0
-        results.users.length.should == 1
+        expect(results.categories.length).to eq(0)
+        expect(results.posts.length).to eq(0)
+        expect(results.users.length).to eq(1)
       end
 
     end
@@ -313,9 +313,9 @@ describe Search do
       let(:results) { Search.execute('amazing', type_filter: 'category') }
 
       it "returns a category result" do
-        results.categories.length.should == 1
-        results.posts.length.should == 0
-        results.users.length.should == 0
+        expect(results.categories.length).to eq(1)
+        expect(results.posts.length).to eq(0)
+        expect(results.users.length).to eq(0)
       end
 
     end
@@ -334,7 +334,7 @@ describe Search do
       result = Search.execute('hello', search_context: post.user)
 
       result.posts.first.topic_id = post.topic_id
-      result.posts.length.should == 1
+      expect(result.posts.length).to eq(1)
     end
 
     it 'can use category as a search context' do
@@ -346,8 +346,8 @@ describe Search do
       _another_post = Fabricate(:post, topic: topic_no_cat, user: topic.user )
 
       search = Search.execute('hello', search_context: category)
-      search.posts.length.should == 1
-      search.posts.first.id.should == post.id
+      expect(search.posts.length).to eq(1)
+      expect(search.posts.first.id).to eq(post.id)
     end
 
   end
@@ -356,7 +356,7 @@ describe Search do
     it 'splits English / Chinese' do
       SiteSetting.default_locale = 'zh_CN'
       data = Search.prepare_data('Discourse社区指南').split(' ')
-      data.should == ['Discourse', '社区','指南']
+      expect(data).to eq(['Discourse', '社区','指南'])
     end
 
     it 'finds chinese topic based on title' do
@@ -366,8 +366,8 @@ describe Search do
       topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)
 
-      Search.execute('社區指南').posts.first.id.should == post.id
-      Search.execute('指南').posts.first.id.should == post.id
+      expect(Search.execute('社區指南').posts.first.id).to eq(post.id)
+      expect(Search.execute('指南').posts.first.id).to eq(post.id)
     end
   end
 
@@ -376,31 +376,31 @@ describe Search do
       post = Fabricate(:post, raw: 'hi this is a test 123 123')
       topic = post.topic
 
-      Search.execute('test status:closed').posts.length.should == 0
-      Search.execute('test status:open').posts.length.should == 1
+      expect(Search.execute('test status:closed').posts.length).to eq(0)
+      expect(Search.execute('test status:open').posts.length).to eq(1)
 
       topic.closed = true
       topic.save
 
-      Search.execute('test status:closed').posts.length.should == 1
-      Search.execute('test status:open').posts.length.should == 0
+      expect(Search.execute('test status:closed').posts.length).to eq(1)
+      expect(Search.execute('test status:open').posts.length).to eq(0)
 
       topic.archived = true
       topic.closed = false
       topic.save
 
-      Search.execute('test status:archived').posts.length.should == 1
-      Search.execute('test status:open').posts.length.should == 0
+      expect(Search.execute('test status:archived').posts.length).to eq(1)
+      expect(Search.execute('test status:open').posts.length).to eq(0)
 
-      Search.execute('test status:noreplies').posts.length.should == 1
+      expect(Search.execute('test status:noreplies').posts.length).to eq(1)
 
-      Search.execute('test in:likes', guardian: Guardian.new(topic.user)).posts.length.should == 0
+      expect(Search.execute('test in:likes', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
 
-      Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length.should == 1
+      expect(Search.execute('test in:posted', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
 
       TopicUser.change(topic.user.id, topic.id, notification_level: TopicUser.notification_levels[:tracking])
-      Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length.should == 0
-      Search.execute('test in:tracking', guardian: Guardian.new(topic.user)).posts.length.should == 1
+      expect(Search.execute('test in:watching', guardian: Guardian.new(topic.user)).posts.length).to eq(0)
+      expect(Search.execute('test in:tracking', guardian: Guardian.new(topic.user)).posts.length).to eq(1)
 
     end
 
@@ -410,8 +410,8 @@ describe Search do
 
       post2 = Fabricate(:post, raw: 'that Sam I am, that Sam I am')
 
-      Search.execute('sam').posts.map(&:id).should == [post1.id, post2.id]
-      Search.execute('sam order:latest').posts.map(&:id).should == [post2.id, post1.id]
+      expect(Search.execute('sam').posts.map(&:id)).to eq([post1.id, post2.id])
+      expect(Search.execute('sam order:latest').posts.map(&:id)).to eq([post2.id, post1.id])
 
     end
   end
