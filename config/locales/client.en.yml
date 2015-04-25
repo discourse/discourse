@@ -960,7 +960,7 @@ en:
             =0 {}
             one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
       browse_all_categories: Browse all categories
 
