@@ -32,6 +32,9 @@ export default {
         // don't even bother when there's no poll
         if (!polls) { return; }
 
+        // clean-up if needed
+        this._cleanUpPollViews();
+
         const pollViews = {};
 
         // iterate over all polls
@@ -47,14 +50,20 @@ export default {
         });
 
         this.messageBus.subscribe("/polls/" + this.get("post.id"), results => {
-          pollViews[results.poll.name].get("controller").set("model", Em.Object.create(results.poll));
+          if (results && results.polls) {
+            _.forEach(results.polls, poll => {
+              if (pollViews[poll.name]) {
+                pollViews[poll.name].get("controller").set("model", Em.Object.create(poll));
+              }
+            });
+          }
         });
 
         this.set("pollViews", pollViews);
-      }.on("postViewInserted"),
+      }.on("postViewInserted", "postViewUpdated"),
 
       _cleanUpPollViews: function() {
-        this.messageBus.unsubscribe("/polls/*");
+        this.messageBus.unsubscribe("/polls/" + this.get("post.id"));
 
         if (this.get("pollViews")) {
           _.forEach(this.get("pollViews"), v => v.destroy());

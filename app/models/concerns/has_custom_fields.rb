@@ -94,8 +94,8 @@ module HasCustomFields
     !@custom_fields || @custom_fields_orig == @custom_fields
   end
 
-  def save_custom_fields
-    if !custom_fields_clean?
+  def save_custom_fields(force=false)
+    if force || !custom_fields_clean?
       dup = @custom_fields.dup
 
       array_fields = {}
@@ -107,6 +107,12 @@ module HasCustomFields
             array_fields[f.name] = [f]
           else
             array_fields[f.name] << f
+          end
+        elsif dup[f.name].is_a? Hash
+          if dup[f.name].to_json != f.value
+            f.destroy
+          else
+            dup.delete(f.name)
           end
         else
           if dup[f.name] != f.value
