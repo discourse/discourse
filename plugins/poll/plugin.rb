@@ -248,8 +248,8 @@ after_initialize do
           post.custom_fields[POLLS_CUSTOM_FIELD] = polls
           post.save_custom_fields(true)
 
-          # push the changes
-          DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
+          # publish the changes
+          DiscourseBus.publish("/polls/#{post.id}", { polls: polls })
         end
       end
     else
