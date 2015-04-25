@@ -851,8 +851,8 @@ describe PostsController do
       it "can be viewed by anonymous" do
         post = Fabricate(:post, raw: "123456789")
         xhr :get, :markdown_id, id: post.id
-        response.should be_success
-        response.body.should == "123456789"
+        expect(response).to be_success
+        expect(response.body).to eq("123456789")
       end
     end
 
@@ -862,8 +862,8 @@ describe PostsController do
         post = Fabricate(:post, topic: topic, post_number: 1, raw: "123456789")
         post.save
         xhr :get, :markdown_num, topic_id: topic.id, post_number: 1
-        response.should be_success
-        response.body.should == "123456789"
+        expect(response).to be_success
+        expect(response.body).to eq("123456789")
       end
     end
   end
@@ -874,13 +874,13 @@ describe PostsController do
 
     it "redirects to the topic" do
       xhr :get, :short_link, post_id: post.id
-      response.should be_redirect
+      expect(response).to be_redirect
     end
 
     it "returns a 403 when access is denied" do
       Guardian.any_instance.stubs(:can_see?).returns(false)
       xhr :get, :short_link, post_id: post.id
-      response.should be_forbidden
+      expect(response).to be_forbidden
     end
   end
 end

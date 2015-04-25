@@ -42,8 +42,8 @@ describe UserDestroyer do
 
       it 'should return the deleted user record' do
         return_value = destroy
-        return_value.should == @user
-        return_value.should be_destroyed
+        expect(return_value).to eq(@user)
+        expect(return_value).to be_destroyed
       end
 
       it 'should log the action' do
@@ -123,22 +123,22 @@ describe UserDestroyer do
 
           it "deletes the posts" do
             destroy
-            post.reload.deleted_at.should_not == nil
-            post.user_id.should == nil
+            expect(post.reload.deleted_at).not_to eq(nil)
+            expect(post.user_id).to eq(nil)
           end
 
           it "does not delete topics started by others in which the user has replies" do
             destroy
-            topic.reload.deleted_at.should == nil
-            topic.user_id.should_not == nil
+            expect(topic.reload.deleted_at).to eq(nil)
+            expect(topic.user_id).not_to eq(nil)
           end
 
           it "deletes topics started by the deleted user" do
             spammer_topic = Fabricate(:topic, user: @user)
             spammer_post = Fabricate(:post, user: @user, topic: spammer_topic)
             destroy
-            spammer_topic.reload.deleted_at.should_not == nil
-            spammer_topic.user_id.should == nil
+            expect(spammer_topic.reload.deleted_at).not_to eq(nil)
+            expect(spammer_topic.user_id).to eq(nil)
           end
 
           context "delete_as_spammer is true" do
@@ -148,12 +148,12 @@ describe UserDestroyer do
             it "agrees with flags on user's posts" do
               spammer_post = Fabricate(:post, user: @user)
               flag = PostAction.act(@admin, spammer_post, PostActionType.types[:inappropriate])
-              flag.agreed_at.should == nil
+              expect(flag.agreed_at).to eq(nil)
 
               destroy
 
               flag.reload
-              flag.agreed_at.should_not == nil
+              expect(flag.agreed_at).not_to eq(nil)
             end
 
           end
@@ -167,8 +167,8 @@ describe UserDestroyer do
 
           it "deletes the posts" do
             destroy
-            post.reload.deleted_at.should_not == nil
-            post.user_id.should == nil
+            expect(post.reload.deleted_at).not_to eq(nil)
+            expect(post.user_id).to eq(nil)
           end
         end
       end
@@ -188,7 +188,7 @@ describe UserDestroyer do
       let!(:deleted_post) { Fabricate(:post, user: @user, deleted_at: 1.hour.ago) }
       it "should mark the user's deleted posts as belonging to a nuked user" do
         expect { UserDestroyer.new(@admin).destroy(@user) }.to change { User.count }.by(-1)
-        deleted_post.reload.user_id.should == nil
+        expect(deleted_post.reload.user_id).to eq(nil)
       end
     end
 
@@ -209,7 +209,7 @@ describe UserDestroyer do
         end
 
         it 'should return false' do
-          destroy.should == false
+          expect(destroy).to eq(false)
         end
 
         it 'should not log the action' do
@@ -289,9 +289,9 @@ describe UserDestroyer do
 
       it "assigns the system user to the categories" do
         UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
-        category.reload.user_id.should == Discourse.system_user.id
-        category.topic.should be_present
-        category.topic.user_id.should == Discourse.system_user.id
+        expect(category.reload.user_id).to eq(Discourse.system_user.id)
+        expect(category.topic).to be_present
+        expect(category.topic.user_id).to eq(Discourse.system_user.id)
       end
     end
 
@@ -317,7 +317,7 @@ describe UserDestroyer do
         expect {
           UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
         }.to change { PostAction.count }.by(-1)
-        @post.reload.like_count.should == 0
+        expect(@post.reload.like_count).to eq(0)
       end
     end
   end

@@ -61,7 +61,7 @@ module Helpers
       sleep 0.001
     end
 
-    result.should == true
+    expect(result).to eq(true)
   end
 
 end

@@ -15,26 +15,26 @@ describe PostRevisor do
     }
 
     it 'provides a guardian' do
-      tc.guardian.should be_an_instance_of Guardian
+      expect(tc.guardian).to be_an_instance_of Guardian
     end
 
     it 'tracks changes properly' do
-      tc.diff.should == {}
+      expect(tc.diff).to eq({})
 
       # it remembers changes we tell it to
       tc.record_change('height', '180cm', '170cm')
-      tc.diff['height'].should == ['180cm', '170cm']
+      expect(tc.diff['height']).to eq(['180cm', '170cm'])
 
       # it works with arrays of values
       tc.record_change('colors', nil, ['red', 'blue'])
-      tc.diff['colors'].should == [nil, ['red', 'blue']]
+      expect(tc.diff['colors']).to eq([nil, ['red', 'blue']])
 
       # it does not record changes to the same val
       tc.record_change('wat', 'js', 'js')
-      tc.diff['wat'].should be_nil
+      expect(tc.diff['wat']).to be_nil
 
       tc.record_change('tags', ['a', 'b'], ['a', 'b'])
-      tc.diff['tags'].should be_nil
+      expect(tc.diff['tags']).to be_nil
 
     end
   end
@@ -51,9 +51,9 @@ describe PostRevisor do
     it 'allows the user to change it to a wiki' do
       pc = PostCreator.new(newuser, topic_id: topic.id, raw: 'this is a post that will become a wiki')
       post = pc.create
-      post.revise(post.user, wiki: true).should be_truthy
+      expect(post.revise(post.user, wiki: true)).to be_truthy
       post.reload
-      post.wiki.should be_truthy
+      expect(post.wiki).to be_truthy
     end
   end
 

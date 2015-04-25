@@ -967,10 +967,10 @@ describe TopicsController do
       PostAction.act(user, post2, bookmark)
 
       xhr :put, :bookmark, topic_id: post.topic_id
-      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 2
+      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(2)
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
-      PostAction.where(user_id: user.id, post_action_type: bookmark).count.should == 0
+      expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
 
     end
   end

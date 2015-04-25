@@ -200,7 +200,7 @@ describe Category do
 
     it 'and be sanitized' do
       c = Fabricate(:category, name: 'Cats', slug: '  invalid slug')
-      c.slug.should == 'invalid-slug'
+      expect(c.slug).to eq('invalid-slug')
     end
 
     it 'fails if custom slug is duplicate with existing' do

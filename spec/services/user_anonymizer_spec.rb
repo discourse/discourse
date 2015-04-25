@@ -10,22 +10,22 @@ describe UserAnonymizer do
 
     it "changes username" do
       make_anonymous
-      user.reload.username.should =~ /^anon\d{3,}$/
+      expect(user.reload.username).to match(/^anon\d{3,}$/)
     end
 
     it "changes email address" do
       make_anonymous
-      user.reload.email.should == "#{user.username}@example.com"
+      expect(user.reload.email).to eq("#{user.username}@example.com")
     end
 
     it "turns off all notifications" do
       make_anonymous
       user.reload
-      user.email_digests.should == false
-      user.email_private_messages.should == false
-      user.email_direct.should == false
-      user.email_always.should == false
-      user.mailing_list_mode.should == false
+      expect(user.email_digests).to eq(false)
+      expect(user.email_private_messages).to eq(false)
+      expect(user.email_direct).to eq(false)
+      expect(user.email_always).to eq(false)
+      expect(user.mailing_list_mode).to eq(false)
     end
 
     it "resets profile to default values" do
@@ -42,17 +42,17 @@ describe UserAnonymizer do
       make_anonymous
       user.reload
 
-      user.name.should_not be_present
-      user.date_of_birth.should == nil
-      user.title.should_not be_present
+      expect(user.name).not_to be_present
+      expect(user.date_of_birth).to eq(nil)
+      expect(user.title).not_to be_present
 
       profile = user.user_profile(true)
-      profile.location.should == nil
-      profile.website.should == nil
-      profile.bio_cooked.should == nil
-      profile.profile_background.should == nil
-      profile.bio_cooked_version.should == nil
-      profile.card_background.should == nil
+      expect(profile.location).to eq(nil)
+      expect(profile.website).to eq(nil)
+      expect(profile.bio_cooked).to eq(nil)
+      expect(profile.profile_background).to eq(nil)
+      expect(profile.bio_cooked_version).to eq(nil)
+      expect(profile.card_background).to eq(nil)
     end
 
     it "removes the avatar" do
@@ -61,7 +61,7 @@ describe UserAnonymizer do
       user.save!
       expect { make_anonymous }.to change { Upload.count }.by(-1)
       user.reload
-      user.user_avatar.should == nil
+      expect(user.user_avatar).to eq(nil)
     end
 
     it "logs the action" do
@@ -78,20 +78,20 @@ describe UserAnonymizer do
       UserOpenId.create(user_id: user.id, email: user.email, url: "http://example.com/openid", active: true)
       make_anonymous
       user.reload
-      user.twitter_user_info.should == nil
-      user.google_user_info.should == nil
-      user.github_user_info.should == nil
-      user.facebook_user_info.should == nil
-      user.single_sign_on_record.should == nil
-      user.oauth2_user_info.should == nil
-      user.user_open_ids.count.should == 0
+      expect(user.twitter_user_info).to eq(nil)
+      expect(user.google_user_info).to eq(nil)
+      expect(user.github_user_info).to eq(nil)
+      expect(user.facebook_user_info).to eq(nil)
+      expect(user.single_sign_on_record).to eq(nil)
+      expect(user.oauth2_user_info).to eq(nil)
+      expect(user.user_open_ids.count).to eq(0)
     end
 
     it "removes api key" do
       ApiKey.create(user_id: user.id, key: "123123123")
       expect { make_anonymous }.to change { ApiKey.count }.by(-1)
       user.reload
-      user.api_key.should == nil
+      expect(user.api_key).to eq(nil)
     end
 
   end
