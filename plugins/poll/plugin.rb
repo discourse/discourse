@@ -14,6 +14,11 @@ VOTES_CUSTOM_FIELD ||= "polls-votes".freeze
 
 after_initialize do
 
+  # remove "Vote Now!" & "Show Results" links in emails
+  Email::Styles.register_plugin_style do |fragment|
+    fragment.css(".poll a.cast-votes, .poll a.toggle-results").each(&:remove)
+  end
+
   module ::DiscoursePoll
     class Engine < ::Rails::Engine
       engine_name PLUGIN_NAME
