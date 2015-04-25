@@ -132,7 +132,7 @@ module Onebox
       # include the entire page HTML. However for some providers like Imgur it allows us
       # to return gifv and galleries.
       def self.default_html_providers
-        ['Imgur', 'Meetup']
+        ['Flickr', 'Imgur', 'Meetup']
       end
 
       def self.html_providers

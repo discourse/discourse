@@ -19,8 +19,9 @@ module Onebox
       end
 
       # Some oembed providers (like meetup.com) don't provide links to themselves
-      add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
+      add_oembed_provider /www\.flickr\.com\//, 'http://www.flickr.com/services/oembed.json'
       add_oembed_provider /www\.kickstarter\.com\//, 'https://www.kickstarter.com/services/oembed'
+      add_oembed_provider /www\.meetup\.com\//, 'http://api.meetup.com/oembed'
       add_oembed_provider /www\.ted\.com\//, 'http://www.ted.com/services/v1/oembed.json'
       add_oembed_provider /(.*\.)?vimeo\.com\//, 'http://vimeo.com/api/oembed.json'
 
