@@ -386,4 +386,307 @@
     float: right;
   }
 
+
+/* New RTL Update */
+#user-card img.avatar {
+float : right;
+margin-right : 10px;
+margin-top : -53px;
+}
+#user-card.show-badges .names {
+float : right;
+height : 60px;
+position : relative;
+width : 45%;
+margin-top : 11px;
+}
+#user-card.show-badges .badge-section {
+float : right;
+width : 500px;
+padding-bottom : 10px;
+margin-top : 5px;
+}
+#user-card .usercard-controls {
+list-style-type : none;
+float : left;
+margin : 0;
+}
+.user-main .about .controls {
+padding : 0 0 12px 0;
+float : left;
+text-align : right;
+width : 180px;
+}
+.user-main .about .details img.avatar {
+margin : 0 20px 10px 0;
+float : right;
+transition : all 0.1s linear;
+}
+.user-main .user-stream .time, .user-main .user-stream .delete-info {
+display : block;
+float : left;
+color : #888;
+margin-right : 8px;
+font-size : 11px;
+}
+.user-main .user-stream .avatar-link {
+float : right;
+margin-right : 4px;
+}
+.user-main .user-stream .title {
+display : block;
+font-size : 1em;
+max-width : 80%;
+white-space : nowrap;
+overflow : hidden;
+text-overflow : ellipsis;
+}
+#topic-progress-expanded .jump-form input[type="text"] {
+float : right;
+width : 45px;
+height : 20px;
+text-align : center;
+margin-bottom : 0;
+font-size : 1.143em;
+}
+#topic-progress-expanded .jump-form button.btn {
+float : left;
+width : 55px;
+}
+.upload-selector .radios .inputs {
+float : left;
+width : 75%;
+}
+.dropdown-toggle {
+float : right;
+position : relative;
+}
+#reply-control .contents #reply-title {
+color : #222;
+margin-right : 10px;
+float : right;
+}
+.control-row.reply-area {
+padding-left : 20px;
+padding-right : 10px;
+}
+.wmd-button-row {
+float : right;
+margin-left : 5px;
+margin-right : 5px;
+margin-bottom : 5px;
+margin-top : 5px;
+padding : 0;
+height : 20px;
+}
+
+.topic-post article.boxed .select-posts {
+position : absolute;
+right : 100%;
+z-index : 490;
+top : 8px;
+width : 800px;
+height : 100px;
+background-color : #fff;
+}
+#topic-progress-expanded {
+border : #e9e9e9 solid 1px;
+padding : 5px;
+background : #fff;
+box-shadow : 0 0 2px rgba(0, 0, 0, 0.2);
+position : relative;
+right : 345px;
+width : 133px;
+padding : 5px;
+}
+.search-context .show-help {
+position : absolute;
+left : 10px;
+top : 0;
+text-align : left;
+}
+.user-preferences .instructions {
+color : #919191;
+margin-right : 160px;
+margin-top : 5px;
+margin-bottom : 10px;
+font-size : 80%;
+line-height : 1.4em;
+}
+body .form-horizontal input, body .form-horizontal textarea, body .form-horizontal select, body .form-horizontal .input-prepend, body .form-horizontal .input-append {
+display : inline-block;
+margin-bottom : 0;
+text-align : left;
+}
+.period-chooser #period-popup {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+border : #e9e9e9 solid 1px;
+padding : 5px;
+background : #fff;
+position : absolute;
+z-index : 1110;
+box-shadow : 0 2px 2px rgba(0, 0, 0, 0.4);
+width : 100px;
+height : 160px;
+}
+.topic-list.categories td.category {
+vertical-align : top;
+padding-top : 15px;
+padding-bottom : 15px;
+border-right : 6px solid;
+}
+.dropdown-toggle {
+float : right;
+position : relative;
+}
+.dropdown-menu {
+position : absolute;
+bottom : 115%;
+right: 0;
+z-index : 1000;
+display : none;
+width : 550px;
+margin : 1px 0 0;
+list-style : none;
+background-color : #fff;
+border : #e9e9e9 solid 1px;
+box-shadow : 0 1px 5px rgba(0, 0, 0, 0.4);
+background-clip : padding-box;
+}
+.show-topic-admin {
+position : fixed;
+top : 120px;
+left : 10px;
+z-index : 1000;
+outline : 0;
+}
+element.style {
+position : fixed;
+top : 120px;
+right : -178px;
+}
+.fa-caret-right:before {
+content : "\f0d9";
+}
+.alert {
+padding : 8px 8px 8px 14px;
+background-color : #f8d5cd;
+color : #c09853;
+}
+.gap {
+background-color : #e9e9e9;
+padding : 5px 0;
+color : #6f6f6f;
+cursor : pointer;
+text-align : center;
+}
+.topic-avatar {
+border-top : 1px solid #e9e9e9;
+padding-top : 15px;
+width : 45px;
+float : right;
+position : relative;
+z-index : 2;
+}
+.alert {
+padding : 8px 14px 8px 35px;
+background-color : #f8d5cd;
+color : #c09853;
+}
+.user-main .staff-counters > div:first-of-type {
+float : right;
+padding-left : 10px;
+}
+.user-main .about .details h2 {
+font-size : 1.214em;
+font-weight : normal;
+margin-top : 10px;
+max-width : 100%;
+white-space : nowrap;
+overflow : hidden;
+text-overflow : ellipsis;
+}
+.user-navigation {
+width : 21.62%;
+float : right;
+margin-top : 20px;
+margin-left: 30px;
+}
+.nav-stacked .active > a::after {
+right : 90%;
+top : 33%;
+border : transparent solid;
+content : " ";
+position : absolute;
+border-width : 8px;
+border-right-color : #fff;
+}
+.nav-stacked > li > a {
+margin : 0;
+padding : 13px 30px 13px 13px;
+font-size : 1.143em;
+line-height : 20px;
+cursor : pointer;
+color : #222;
+}
+.user-main .user-stream .delete-info {
+display : block;
+float : left;
+color : #888;
+margin-right : 8px;
+font-size : 11px;
+}
+.avatar-link {
+float : right;
+margin-left : 4px;
+}
+.user-main .staff-counters {
+text-align : right;
+background : #222;
+}
+
+.private-message-glyph {
+float : right;
+margin : 0 0 0 5px;
+}
+.show-topic-admin {
+top : 120px;
+left : 10px;
+}
+#selected-posts {
+padding-right : 20px;
+margin-right : 330px;
+} 
+#topic-title {
+  z-index: 1000;
+  padding-top: 14px;
+  margin-bottom: 10px;
+  margin-left: 250px;
+}
+button.create {
+  float: right;
+}
+.topic-admin-menu {
+  top: 120px;
+  right: 0 !important;
+}
+.user-main .about .details .primary .primary-textual {
+  padding: 10px;
+  float: right;
+}
+.nav-stacked .glyph {
+  font-size: 0.857em;
+  width: 30px;
+  text-align: center;
+  position: absolute;
+  right: 2px;
+  line-height: 20px;
+}
+.d-dropdown#notifications-dropdown li i {
+  float: right;
+  margin-left: 5px;
+  padding-top: 2px;
+}
 }
