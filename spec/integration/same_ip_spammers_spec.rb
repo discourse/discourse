@@ -14,8 +14,8 @@ describe SpamRulesEnforcer do
     Given!(:first_post)   { create_post(user: spammer1) }
     Given!(:second_post)  { create_post(user: spammer2, topic: first_post.topic) }
 
-    Then { first_post.reload.spam_count.should  == 0 }
-    And  { second_post.reload.spam_count.should == 0 }
+    Then { expect(first_post.reload.spam_count).to  eq(0) }
+    And  { expect(second_post.reload.spam_count).to eq(0) }
   end
 
   context 'flag_sockpuppets is enabled' do
@@ -27,15 +27,15 @@ describe SpamRulesEnforcer do
       context 'second spammer replies' do
         Given!(:second_post)  { create_post(user: spammer2, topic: first_post.topic) }
 
-        Then { first_post.reload.spam_count.should  == 1 }
-        And  { second_post.reload.spam_count.should == 1 }
+        Then { expect(first_post.reload.spam_count).to  eq(1) }
+        And  { expect(second_post.reload.spam_count).to eq(1) }
 
         context 'third spam post' do
           Given!(:third_post) { create_post(user: spammer3, topic: first_post.topic) }
 
-          Then { first_post.reload.spam_count.should  == 1 }
-          And  { second_post.reload.spam_count.should == 1 }
-          And  { third_post.reload.spam_count.should  == 1 }
+          Then { expect(first_post.reload.spam_count).to  eq(1) }
+          And  { expect(second_post.reload.spam_count).to eq(1) }
+          And  { expect(third_post.reload.spam_count).to  eq(1) }
         end
       end
     end
@@ -49,8 +49,8 @@ describe SpamRulesEnforcer do
         context 'a reply by a new user at the same IP address' do
           Given!(:second_post)  { create_post(user: spammer2, topic: first_post.topic) }
 
-          Then { first_post.reload.spam_count.should  == 0 }
-          And  { second_post.reload.spam_count.should == 1 }
+          Then { expect(first_post.reload.spam_count).to  eq(0) }
+          And  { expect(second_post.reload.spam_count).to eq(1) }
         end
       end
     end

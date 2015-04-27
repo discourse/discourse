@@ -292,7 +292,7 @@ describe Group do
     let(:group) {Fabricate(:group)}
 
     it "by default has no managers" do
-      group.managers.should be_empty
+      expect(group.managers).to be_empty
     end
 
     it "multiple managers can be appointed" do

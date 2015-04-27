@@ -58,7 +58,7 @@ describe UserBlocker do
       user.stubs(:blocked?).returns(true)
       SystemMessage.unstub(:create)
       SystemMessage.expects(:create).never
-      block_user.should == false
+      expect(block_user).to eq(false)
     end
   end
 
