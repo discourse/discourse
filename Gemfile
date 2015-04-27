@@ -74,9 +74,9 @@ if rails_master?
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
-  gem 'seed-fu', '~> 2.3.3'
-  gem 'rails'
+  gem 'rails', '~> 4.1.10'
   gem 'rails-observers'
+  gem 'seed-fu', '~> 2.3.3'
 end
 
 gem 'actionpack-action_caching'
