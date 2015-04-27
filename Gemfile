@@ -147,6 +147,7 @@ gem 'omniauth-google-oauth2'
 gem 'oj'
 gem 'pg'
 gem 'pry-rails', require: false
+gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
 
