@@ -41,3 +41,11 @@
   }
 
 }
+
+.has-pending-posts {
+  padding: 0.5em;
+  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  a[href] {
+    float: right;
+  }
+}
