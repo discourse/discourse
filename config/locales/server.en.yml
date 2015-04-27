@@ -177,6 +177,9 @@ en:
 
   excerpt_image: "image"
 
+  queue:
+    delete_reason: "Deleted via post moderation queue"
+
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"

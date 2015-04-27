@@ -231,11 +231,13 @@ en:
       topic: "Topic:"
       approve: 'Approve'
       reject: 'Reject'
+      delete_user: 'Delete User'
       title: "Needs Approval"
       none: "There are no posts to review."
       edit: "Edit"
       cancel: "Cancel"
       confirm: "Save Changes"
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
 
       approval:
         title: "Post Needs Approval"

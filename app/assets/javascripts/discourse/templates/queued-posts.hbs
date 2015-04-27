@@ -50,7 +50,6 @@
                          icon="times"
                          disabled=ctrl.post.isSaving
                          class="btn-danger cancel"}}
-
             {{else}}
               {{d-button action="approve"
                          disabled=ctrl.post.isSaving
@@ -62,6 +61,11 @@
                          label="queue.reject"
                          icon="times"
                          class="btn-danger reject"}}
+              {{d-button action="deleteUser"
+                         disabled=ctrl.post.isSaving
+                         label="queue.delete_user"
+                         icon="trash"
+                         class="btn-danger delete-user"}}
               {{d-button action="edit"
                          disabled=ctrl.post.isSaving
                          label="queue.edit"

@@ -20,6 +20,28 @@ test("reject a post", () => {
   });
 });
 
+test("delete user", () => {
+  visit("/queued-posts");
+
+  click('.queued-post:eq(0) button.delete-user');
+  andThen(() => {
+    ok(exists('.bootbox.modal'), 'it pops up a confirmation dialog');
+  });
+
+  click('.modal-footer a:eq(1)');
+  andThen(() => {
+    ok(!exists('.bootbox.modal'), 'it dismisses the modal');
+    ok(exists('.queued-post'), "it doesn't remove the post");
+  });
+
+  click('.queued-post:eq(0) button.delete-user');
+  click('.modal-footer a:eq(0)');
+  andThen(() => {
+    ok(!exists('.bootbox.modal'), 'it dismisses the modal');
+    ok(!exists('.queued-post'), "it removes the post");
+  });
+});
+
 test("edit a post - cancel", () => {
   visit("/queued-posts");
 
