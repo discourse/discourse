@@ -6,7 +6,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 ## First Steps
 
-1. Install and configure PostgreSQL 9.1+.
+1. Install and configure PostgreSQL 9.2+.
   1. Run `postgres -V` to see if you already have it.
   1. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
 2. Install and configure Redis 2+.
@@ -82,7 +82,7 @@ Vagrant version 1.1.2. With this Vagrantfile:
     echo "gem: --no-document" >> /etc/gemrc
     su - vagrant -c "echo 'gem: --no-document' >> ~/.gemrc"
 
-## Postgres 9.2
+## Postgres
 
 Configure so that the vagrant user doesn't need to provide username and password.
 
