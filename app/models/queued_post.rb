@@ -29,11 +29,11 @@ class QueuedPost < ActiveRecord::Base
   end
 
   def self.new_posts
-    visible.where(state: states[:new])
+    where(state: states[:new])
   end
 
   def self.new_count
-    new_posts.count
+    new_posts.visible.count
   end
 
   def visible?
@@ -47,6 +47,7 @@ class QueuedPost < ActiveRecord::Base
 
   def reject!(rejected_by)
     change_to!(:rejected, rejected_by)
+    DiscourseEvent.trigger(:rejected_post, self)
   end
 
   def create_options
@@ -66,6 +67,8 @@ class QueuedPost < ActiveRecord::Base
       creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
     end
+
+    DiscourseEvent.trigger(:approved_post, self)
     created_post
   end
 
