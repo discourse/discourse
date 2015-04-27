@@ -21,6 +21,15 @@ export default {
 
   initialize(container) {
 
+    const messageBus = container.lookup("message-bus:main");
+
+    // listen for back-end to tell us when a post has a poll
+    messageBus.subscribe("/polls", data => {
+      const post = container.lookup("controller:topic").get("postStream").findLoadedPost(data.post_id);
+      // HACK to trigger the "postViewUpdated" event
+      post.set("cooked", post.get("cooked") + " ");
+    });
+
     // overwrite polls
     PostView.reopen({
       _createPollViews: function($post) {
