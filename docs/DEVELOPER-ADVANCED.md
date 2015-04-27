@@ -96,7 +96,7 @@ Configure so that the vagrant user doesn't need to provide username and password
     psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
 
 
-Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
+Edit /etc/postgresql/9.3/main/pg_hba.conf to have this:
 
     local all all trust
     host all all 127.0.0.1/32 trust
