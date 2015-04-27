@@ -81,7 +81,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url absolute_without_cdn(@topic_view.canonical_path)
+    canonical_url absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user
