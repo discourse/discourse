@@ -13,7 +13,7 @@ export default Ember.ArrayProxy.extend({
       this.set('loadingMore', true);
 
       const self = this;
-      return this.store.appendResults(this, this.get('__type'), loadMoreUrl).then(function() {
+      return this.store.appendResults(this, this.get('__type'), loadMoreUrl).finally(function() {
         self.set('loadingMore', false);
       });
     }
@@ -29,7 +29,7 @@ export default Ember.ArrayProxy.extend({
 
     const self = this;
     this.set('refreshing', true);
-    return this.store.refreshResults(this, this.get('__type'), refreshUrl).then(function() {
+    return this.store.refreshResults(this, this.get('__type'), refreshUrl).finally(function() {
       self.set('refreshing', false);
     });
 
