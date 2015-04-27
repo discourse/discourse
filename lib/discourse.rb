@@ -1,6 +1,7 @@
 require 'cache'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
+require_dependency 'version'
 
 module Discourse
 
@@ -78,8 +79,18 @@ module Discourse
   end
 
   def self.activate_plugins!
-    @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-    @plugins.each { |plugin| plugin.activate! }
+    all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
+
+    @plugins = []
+    all_plugins.each do |p|
+      v = p.metadata.required_version || Discourse::VERSION::STRING
+      if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
+        p.activate!
+        @plugins << p
+      else
+        STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
+      end
+    end
   end
 
   def self.disabled_plugin_names
