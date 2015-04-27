@@ -225,7 +225,10 @@ export default function() {
         if (qp.id) { result = result.filterBy('id', parseInt(qp.id)); }
       }
 
-      return response({ widgets: result, total_rows_widgets: 4, load_more_widgets: '/load-more-widgets' });
+      return response({ widgets: result,
+                        total_rows_widgets: 4,
+                        load_more_widgets: '/load-more-widgets',
+                        refresh_widgets: '/widgets?refresh=true' });
     });
 
     this.get('/load-more-widgets', function() {

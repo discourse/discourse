@@ -9,7 +9,12 @@ class QueuedPostsController < ApplicationController
     state ||= QueuedPost.states[:new]
 
     @queued_posts = QueuedPost.visible.where(state: state).includes(:topic, :user)
-    render_serialized(@queued_posts, QueuedPostSerializer, root: :queued_posts, rest_serializer: true)
+    render_serialized(@queued_posts,
+                      QueuedPostSerializer,
+                      root: :queued_posts,
+                      rest_serializer: true,
+                      refresh_queued_posts: "/queued_posts?status=new")
+
   end
 
   def update
