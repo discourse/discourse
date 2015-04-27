@@ -85,6 +85,7 @@ class Topic < ActiveRecord::Base
   has_many :allowed_group_users, through: :allowed_groups, source: :users
   has_many :allowed_groups, through: :topic_allowed_groups, source: :group
   has_many :allowed_users, through: :topic_allowed_users, source: :user
+  has_many :queued_posts
 
   has_one :top_topic
   belongs_to :user
@@ -269,6 +270,10 @@ class Topic < ActiveRecord::Base
     require 'redcarpet' unless defined? Redcarpet
 
     Redcarpet::Render::SmartyPants.render(sanitized_title)
+  end
+
+  def pending_posts_count
+    queued_posts.new_count
   end
 
   # Returns hot topics since a date for display in email digest.
