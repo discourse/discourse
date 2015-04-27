@@ -73,6 +73,14 @@ export default {
       $link.data('auto-route', true);
     }
 
+    // restore href
+    setTimeout(() => {
+      $link.removeClass('no-href');
+      $link.attr('href', $link.data('href'));
+      $link.data('href', null);
+      return;
+    }, 50);
+
     // warn the user if they can't download the file
     if (Discourse.SiteSettings.prevent_anons_from_downloading_files && $link.hasClass("attachment") && !Discourse.User.current()) {
       bootbox.alert(I18n.t("post.errors.attachment_download_requires_login"));
@@ -93,13 +101,6 @@ export default {
       Discourse.URL.routeTo(href);
       return false;
     }
-
-    // restore href
-    setTimeout(function() {
-      $link.removeClass('no-href');
-      $link.attr('href', $link.data('href'));
-      $link.data('href', null);
-    }, 50);
 
     // Otherwise, use a custom URL with a redirect
     if (Discourse.User.currentProp('external_links_in_new_tab')) {
