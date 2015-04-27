@@ -125,7 +125,7 @@ describe UserUpdater do
         updater = described_class.new(acting_user, user)
 
         updater.update(website: 'example.com', custom_fields: '')
-        user.reload.custom_fields.should == {'import_username' => 'my_old_username'}
+        expect(user.reload.custom_fields).to eq({'import_username' => 'my_old_username'})
       end
     end
   end

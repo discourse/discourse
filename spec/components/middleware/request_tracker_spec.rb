@@ -33,7 +33,7 @@ describe Middleware::RequestTracker do
       log_tracked_view("0")
       ApplicationRequest.write_cache!
 
-      ApplicationRequest.page_view_anon.first.count.should == 2
+      expect(ApplicationRequest.page_view_anon.first.count).to eq(2)
     end
 
     it "can log requests correctly" do
@@ -52,11 +52,11 @@ describe Middleware::RequestTracker do
 
       ApplicationRequest.write_cache!
 
-      ApplicationRequest.http_total.first.count.should == 2
-      ApplicationRequest.http_2xx.first.count.should == 2
+      expect(ApplicationRequest.http_total.first.count).to eq(2)
+      expect(ApplicationRequest.http_2xx.first.count).to eq(2)
 
-      ApplicationRequest.page_view_anon.first.count.should == 1
-      ApplicationRequest.page_view_crawler.first.count.should == 1
+      expect(ApplicationRequest.page_view_anon.first.count).to eq(1)
+      expect(ApplicationRequest.page_view_crawler.first.count).to eq(1)
     end
   end
 end

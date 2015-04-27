@@ -12,7 +12,7 @@ describe ApplicationRequest do
 
   it 'logs nothing for an unflushed increment' do
     ApplicationRequest.increment!(:anon)
-    ApplicationRequest.count.should == 0
+    expect(ApplicationRequest.count).to eq(0)
   end
 
   it 'can automatically flush' do
@@ -22,7 +22,7 @@ describe ApplicationRequest do
     inc(:http_total)
     inc(:http_total, autoflush: 3)
 
-    ApplicationRequest.http_total.first.count.should == 3
+    expect(ApplicationRequest.http_total.first.count).to eq(3)
   end
 
   it 'can flush based on time' do
@@ -30,12 +30,12 @@ describe ApplicationRequest do
     freeze_time(t1)
     ApplicationRequest.write_cache!
     inc(:http_total)
-    ApplicationRequest.count.should == 0
+    expect(ApplicationRequest.count).to eq(0)
 
     freeze_time(t1 + ApplicationRequest.autoflush_seconds + 1)
     inc(:http_total)
 
-    ApplicationRequest.count.should == 1
+    expect(ApplicationRequest.count).to eq(1)
   end
 
   it 'flushes yesterdays results' do
@@ -46,7 +46,7 @@ describe ApplicationRequest do
     inc(:http_total)
 
     ApplicationRequest.write_cache!
-    ApplicationRequest.count.should == 2
+    expect(ApplicationRequest.count).to eq(2)
   end
 
   it 'clears cache correctly' do
@@ -55,7 +55,7 @@ describe ApplicationRequest do
     ApplicationRequest.clear_cache!
     ApplicationRequest.write_cache!
 
-    ApplicationRequest.count.should == 0
+    expect(ApplicationRequest.count).to eq(0)
   end
 
   it 'logs a few counts once flushed' do
@@ -68,9 +68,9 @@ describe ApplicationRequest do
 
     ApplicationRequest.write_cache!
 
-    ApplicationRequest.http_total.first.count.should == 3
-    ApplicationRequest.http_2xx.first.count.should == 2
-    ApplicationRequest.http_3xx.first.count.should == 4
+    expect(ApplicationRequest.http_total.first.count).to eq(3)
+    expect(ApplicationRequest.http_2xx.first.count).to eq(2)
+    expect(ApplicationRequest.http_3xx.first.count).to eq(4)
 
   end
 end

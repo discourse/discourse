@@ -186,8 +186,7 @@ group :test do
 end
 
 group :test, :development do
-  # while upgrading to 3
-  gem 'rspec', '2.99.0'
+  gem 'rspec', '~> 3.2.0'
   gem 'mock_redis'
   gem 'listen', '0.7.3', require: false
   gem 'certified', require: false

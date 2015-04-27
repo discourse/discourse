@@ -1609,11 +1609,11 @@ describe Guardian do
     end
 
     it "is true for admin anonymizing a regular user" do
-      Guardian.new(admin).can_anonymize_user?(user).should == true
+      expect(Guardian.new(admin).can_anonymize_user?(user)).to eq(true)
     end
 
     it "is true for moderator anonymizing a regular user" do
-      Guardian.new(moderator).can_anonymize_user?(user).should == true
+      expect(Guardian.new(moderator).can_anonymize_user?(user)).to eq(true)
     end
 
     it "is false for admin anonymizing an admin" do
