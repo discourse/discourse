@@ -1909,6 +1909,16 @@ en:
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
+    admin_login:
+      subject_template: "[%{site_name}] Login"
+      text_body_template: |
+        Somebody asked to login to your account on [%{site_name}](%{base_url}).
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/users/admin-login/%{email_token}
+
     account_created:
       subject_template: "[%{site_name}] Your New Account"
       text_body_template: |
@@ -2445,3 +2455,9 @@ en:
       leader: |
         Blah blah blah
         Blah blah blah
+
+  admin_login:
+    success: "Email Sent"
+    error: "Error!"
+    email_input: "Admin Email"
+    submit_button: "Send Email"
