@@ -67,6 +67,15 @@ export default Ember.Object.extend({
     });
   },
 
+  refreshResults(resultSet, type, url) {
+    const self = this;
+    return Discourse.ajax(url).then(function(result) {
+      const typeName = Ember.String.underscore(self.pluralize(type)),
+            content = result[typeName].map(obj => self._hydrate(type, obj, result));
+      resultSet.set('content', content);
+    });
+  },
+
   appendResults(resultSet, type, url) {
     const self = this;
 
@@ -112,9 +121,10 @@ export default Ember.Object.extend({
     const typeName = Ember.String.underscore(this.pluralize(type)),
           content = result[typeName].map(obj => this._hydrate(type, obj, result)),
           totalRows = result["total_rows_" + typeName] || content.length,
-          loadMoreUrl = result["load_more_" + typeName];
+          loadMoreUrl = result["load_more_" + typeName],
+          refreshUrl = result['refresh_' + typeName];
 
-    return ResultSet.create({ content, totalRows, loadMoreUrl, store: this, __type: type });
+    return ResultSet.create({ content, totalRows, loadMoreUrl, refreshUrl, store: this, __type: type });
   },
 
   _build(type, obj) {

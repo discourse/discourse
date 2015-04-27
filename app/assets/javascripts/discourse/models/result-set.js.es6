@@ -2,6 +2,7 @@ export default Ember.ArrayProxy.extend({
   loading: false,
   loadingMore: false,
   totalRows: 0,
+  refreshing: false,
 
   loadMore() {
     const loadMoreUrl = this.get('loadMoreUrl');
@@ -18,5 +19,19 @@ export default Ember.ArrayProxy.extend({
     }
 
     return Ember.RSVP.resolve();
+  },
+
+  refresh() {
+    if (this.get('refreshing')) { return; }
+
+    const refreshUrl = this.get('refreshUrl');
+    if (!refreshUrl) { return; }
+
+    const self = this;
+    this.set('refreshing', true);
+    return this.store.refreshResults(this, this.get('__type'), refreshUrl).then(function() {
+      self.set('refreshing', false);
+    });
+
   }
 });

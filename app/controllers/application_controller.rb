@@ -224,7 +224,14 @@ class ApplicationController < ActionController::Base
 
   def render_json_dump(obj, opts=nil)
     opts ||= {}
-    obj['__rest_serializer'] = "1" if opts[:rest_serializer]
+    if opts[:rest_serializer]
+      obj['__rest_serializer'] = "1"
+      opts.each do |k, v|
+        obj[k] = v if k.to_s.start_with?("refresh_")
+      end
+    end
+
+
     render json: MultiJson.dump(obj), status: opts[:status] || 200
   end
 
