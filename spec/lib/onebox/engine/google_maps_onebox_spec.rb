@@ -5,62 +5,66 @@ describe Onebox::Engine::GoogleMapsOnebox do
   URLS = {
     short: {
       test: "https://goo.gl/maps/rEG3D",
-      embed: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
-      streetview: false
+      redirect: ["302 Found", :long],
+      expect: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
     },
     long: {
       test: "https://www.google.de/maps/place/Statue+of+Liberty+National+Monument/@40.689249,-74.0445,17z/data=!3m1!4b1!4m2!3m1!1s0x89c25090129c363d:0x40c6a5770d25022b",
-      embed: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
-      streetview: false
+      redirect: ["301 Moved Permanently", :canonical],
+      expect: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
     },
     canonical: {
       test: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=classic&dg=ntvb",
-      embed: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
-      streetview: false
+      expect: "https://maps.google.de/maps?sll=40.689249,-74.0445&sspn=0.0062479,0.0109864&cid=4667599994556318251&q=Statue+of+Liberty+National+Monument&output=embed&dg=ntvb&ll=40.689249,-74.0445&spn=0.0062479,0.0109864",
     },
     custom: {
       test: "https://www.google.com/maps/d/edit?mid=zPYyZFrHi1MU.kX85W_Y2y2_E",
-      embed: "https://www.google.com/maps/d/embed?mid=zPYyZFrHi1MU.kX85W_Y2y2_E",
-      streetview: false
+      expect: "https://www.google.com/maps/d/embed?mid=zPYyZFrHi1MU.kX85W_Y2y2_E",
     },
     streetview: {
       test: "https://www.google.com/maps/@46.414384,10.013947,3a,75y,232.83h,99.08t/data=!3m5!1e1!3m3!1s9WgYUb5quXDjqqFd3DWI6A!2e0!3e5?hl=de",
-      embed: "https://www.google.com/maps/embed?pb=!3m2!2sen!4v0!6m8!1m7!1s9WgYUb5quXDjqqFd3DWI6A!2m2!1d46.414384!2d10.013947!3f232.83!4f9.908!5f0.75",
+      expect: "https://www.google.com/maps/embed?pb=!3m2!2sen!4v0!6m8!1m7!1s9WgYUb5quXDjqqFd3DWI6A!2m2!1d46.414384!2d10.013947!3f232.83!4f9.908!5f0.75",
       streetview: true
+    },
+    unresolveable: {
+      test: "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a",
+      redirect: ["302 Found", "https://www.google.com/maps/place/Den+Abattoir/@51.2285173,4.4336702,17z/data=!4m7!1m4!3m3!1s0x47c3f7a5ac48e237:0x63d716018f584a33!2zUGnDqXRyYWlu!3b1!3m1!1s0x0000000000000000:0xfbfac0c41c32471a?dg=dbrw&newdg=1"],
+      expect: "https://maps.google.com/maps?ll=51.2285173,4.4336702&z=17&output=embed&dg=ntvb&q=Den+Abattoir&cid=18157036796216755994"
+    },
+    satellite: {
+      test: "https://www.google.de/maps/@40.6894264,-74.0449146,758m/data=!3m1!1e3",
+      redirect: ["302 Found", "https://www.google.de/maps/@40.6894264,-74.0449146,758m/data=!3m1!1e3?dg=dbrw&newdg=1"],
+      expect: "https://maps.google.com/maps?ll=40.6894264,-74.0449146&z=16&output=embed&dg=ntvb"
     }
   }
 
+  # Register URL redirects
   before(:all) do
-    FakeWeb.register_uri(:head, URLS[:short][:test], response: "HTTP/1.1 302 Found\nLocation: #{URLS[:long][:test]}\n\n")
-    FakeWeb.register_uri(:head, URLS[:long][:test], response: "HTTP/1.1 301 Moved Permanently\nLocation: #{URLS[:canonical][:test]}\n\n")
-  end
-
-  subject { described_class.new(link) }
-
-  URLS.each do |kind, urls|
-
-    context "given a #{kind.to_s} url" do
-      let(:link) { urls[:test] }
-      let(:data) { Onebox::Helpers.symbolize_keys(subject.send(:data)) }
-
-      it_behaves_like "an engine"
-
-      it "detects streetview urls" do
-        expect(subject.streetview?).to urls[:streetview] ? be_truthy : be_falsey
-      end
-
-      it "resolves url correctly" do
-        expect(subject.url).to eq urls[:embed]
-      end
-
-      it "produces an iframe" do
-        expect(subject.to_html).to include("<iframe")
-      end
-
-      it "produces a placeholder image" do
-        expect(subject.placeholder_html).to include("<img")
-      end
+    URLS.values.each do |t|
+      status, location = *t[:redirect]
+      location = URLS[location][:test] if location.is_a? Symbol
+      FakeWeb.register_uri(:head, t[:test], response: "HTTP/1.1 #{status}\nLocation: #{location}\n\n")
     end
-
   end
+
+  # Prevent sleep from wasting our time when we test with strange redirects
+  subject { described_class.send(:allocate).tap {|obj|
+    obj.stub(:sleep)
+    obj.send(:initialize, link)
+  }}
+
+  let(:data) { Onebox::Helpers.symbolize_keys(subject.send(:data)) }
+  let(:link) {|example| URLS[example.metadata[:urltype] || :short][:test] }
+
+  include_context "an engine", urltype: :short
+
+  URLS.each do |kind, t|
+    it "processes #{kind.to_s} url correctly", urltype: kind do
+      expect(subject.url).to eq t[:expect]
+      expect(subject.streetview?).to t[:streetview] ? be_truthy : be_falsey
+      expect(subject.to_html).to include("<iframe")
+      expect(subject.placeholder_html).to include("<img")
+    end
+  end
+
 end
