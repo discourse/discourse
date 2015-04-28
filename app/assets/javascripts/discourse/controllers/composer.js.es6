@@ -228,7 +228,7 @@ export default DiscourseController.extend({
     }).then(function(result) {
 
       if (result.responseJson.action === "enqueued") {
-        self.send('postWasEnqueued', {pending_count: result.responseJson.pending_count });
+        self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
         self.close();
         return result;
