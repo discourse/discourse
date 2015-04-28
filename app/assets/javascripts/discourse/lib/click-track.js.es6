@@ -78,7 +78,6 @@ export default {
       $link.removeClass('no-href');
       $link.attr('href', $link.data('href'));
       $link.data('href', null);
-      return;
     }, 50);
 
     // warn the user if they can't download the file
