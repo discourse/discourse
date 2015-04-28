@@ -831,6 +831,25 @@ en:
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
 
+      popup_title:
+        one: "New notification on {{site_title}}"
+        other: "{{count}} new notifications on {{site_title}}"
+      popup:
+        mentioned: '{{username}} mentioned you in "{{topic}}"'
+        quoted: '{{username}} quoted you in "{{topic}}"'
+        replied: '{{username}} replied to you in "{{topic}}"'
+        replied_mul: '{{username}} in "{{topic}}"'
+        posted: '{{username}} posted in "{{topic}}"'
+        posted_mul: '{{username}} posted in "{{topic}}"'
+        edited: '{{username}} edited your post in "{{topic}}"'
+        liked: '{{username}} liked your post in "{{topic}}"'
+        private_message: '{{username}} sent you a private message in "{{topic}}"'
+        invited_to_private_message: '{{username}} invited you to a private message: "{{topic}}"'
+        invitee_accepted: '{{username}} joined the forum!'
+        moved_post: '{{username}} moved your post in "{{topic}}"'
+        linked: '{{username}} linked to your post from "{{topic}}"'
+        granted_badge: 'You earned the "{{badge}}" badge!'
+
     upload_selector:
       title: "Add an image"
       title_with_attachments: "Add an image or a file"
