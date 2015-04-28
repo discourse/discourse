@@ -11,12 +11,21 @@ class NewPostManager
 
   attr_reader :user, :args
 
-  def self.handlers
-    @handlers ||= Set.new
+  def self.sorted_handlers
+    @sorted_handlers ||= clear_handlers!
   end
 
-  def self.add_handler(&block)
-    handlers << block
+  def self.handlers
+    sorted_handlers.map {|h| h[:proc]}
+  end
+
+  def self.clear_handlers!
+    @sorted_handlers = [{ priority: 0, proc: method(:default_handler) }]
+  end
+
+  def self.add_handler(priority=0, &block)
+    sorted_handlers << { priority: priority, proc: block }
+    @sorted_handlers.sort_by! {|h| -h[:priority]}
   end
 
   def self.default_handler(manager)
@@ -31,8 +40,6 @@ class NewPostManager
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
     handlers.size > 1
   end
-
-  add_handler {|manager| default_handler(manager) }
 
   def initialize(user, args)
     @user = user

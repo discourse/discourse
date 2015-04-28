@@ -56,6 +56,34 @@ describe NewPostManager do
     end
   end
 
+  context "extensibility priority" do
+
+    after do
+      NewPostManager.clear_handlers!
+    end
+
+    let(:default_handler) { NewPostManager.method(:default_handler) }
+
+    it "adds in order by default" do
+      handler = ->{ nil }
+
+      NewPostManager.add_handler(&handler)
+      expect(NewPostManager.handlers).to eq([default_handler, handler])
+    end
+
+    it "can be added in high priority" do
+      a = ->{ nil }
+      b = ->{ nil }
+      c = ->{ nil }
+
+      NewPostManager.add_handler(100, &a)
+      NewPostManager.add_handler(50, &b)
+      NewPostManager.add_handler(101, &c)
+      expect(NewPostManager.handlers).to eq([c, a, b, default_handler])
+    end
+
+  end
+
   context "extensibility" do
 
     before do
@@ -78,8 +106,7 @@ describe NewPostManager do
     end
 
     after do
-      NewPostManager.handlers.delete(@counter_handler)
-      NewPostManager.handlers.delete(@queue_handler)
+      NewPostManager.clear_handlers!
     end
 
     it "has a queue enabled" do
