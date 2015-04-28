@@ -5,7 +5,8 @@ class NewPostResultSerializer < ApplicationSerializer
              :post,
              :errors,
              :success,
-             :pending_count
+             :pending_count,
+             :reason
 
   def post
     post_serializer = PostSerializer.new(object.post, scope: scope, root: false)
@@ -31,6 +32,14 @@ class NewPostResultSerializer < ApplicationSerializer
 
   def include_errors?
     !object.errors.empty?
+  end
+
+  def reason
+    object.reason
+  end
+
+  def include_reason?
+    reason.present?
   end
 
   def action

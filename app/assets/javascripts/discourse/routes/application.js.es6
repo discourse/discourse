@@ -38,7 +38,8 @@ const ApplicationRoute = Discourse.Route.extend({
     },
 
     postWasEnqueued(details) {
-      showModal('post-enqueued', {model: details, title: 'queue.approval.title' });
+      const title = details.reason ? 'queue_reason.' + details.reason + '.title' : 'queue.approval.title';
+      showModal('post-enqueued', {model: details, title });
     },
 
     composePrivateMessage(user, post) {

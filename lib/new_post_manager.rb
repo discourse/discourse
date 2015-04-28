@@ -60,7 +60,7 @@ class NewPostManager
   end
 
   # Enqueue this post in a queue
-  def enqueue(queue)
+  def enqueue(queue, reason=nil)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)
 
@@ -73,6 +73,7 @@ class NewPostManager
     QueuedPost.broadcast_new! if post && post.errors.empty?
 
     result.queued_post = post
+    result.reason = reason if reason
     result.check_errors_from(enqueuer)
     result.pending_count = QueuedPost.new_posts.where(user_id: @user.id).count
     result
