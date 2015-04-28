@@ -1,4 +1,6 @@
 // Subscribes to user events on the message bus
+import { init as initDesktopNotifications, onNotification } from 'discourse/lib/desktop-notifications';
+
 export default {
   name: 'subscribe-user-notifications',
   after: 'message-bus',
@@ -14,7 +16,7 @@ export default {
 
     if (bus.baseUrl !== '/') {
       // zepto compatible, 1 param only
-      bus.ajax = function(opts){
+      bus.ajax = function(opts) {
         opts.headers = opts.headers || {};
         opts.headers['X-Shared-Session-Key'] = $('meta[name=shared_session_key]').attr('content');
         return $.ajax(opts);
@@ -35,23 +37,26 @@ export default {
           user.set('post_queue_new_count', data.post_queue_new_count);
         });
       }
-      bus.subscribe("/notification/" + user.get('id'), (function(data) {
+      bus.subscribe("/notification/" + user.get('id'), function(data) {
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
 
-        if(oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
+        if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           user.set('lastNotificationChange', new Date());
+          onNotification(user);
         }
-      }), user.notification_channel_position);
+      }, user.notification_channel_position);
 
-      bus.subscribe("/categories", function(data){
-        _.each(data.categories,function(c){
+      bus.subscribe("/categories", function(data) {
+        _.each(data.categories,function(c) {
           site.updateCategory(c);
         });
       });
+
+      initDesktopNotifications(bus);
     }
   }
 };
