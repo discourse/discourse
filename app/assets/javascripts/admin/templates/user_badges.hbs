@@ -6,7 +6,7 @@
   </div>
 </div>
 
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   <div class='admin-container user-badges'>
     <h2>{{i18n 'admin.badges.grant_badge'}}</h2>
     <br>
@@ -67,4 +67,4 @@
       {{/each}}
     </table>
   </div>
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

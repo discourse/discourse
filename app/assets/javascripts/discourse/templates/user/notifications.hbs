@@ -23,7 +23,7 @@
   </div>
 {{/each}}
 
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   {{#unless canLoadMore}}
     {{#if showDismissButton}}
       <div class='notification-buttons'>
@@ -31,4 +31,4 @@
       </div>
     {{/if}}
   {{/unless}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

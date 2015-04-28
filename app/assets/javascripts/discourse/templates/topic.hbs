@@ -64,7 +64,7 @@
 
           {{render 'topic-progress'}}
 
-          {{loading-spinner condition=postStream.loadingAbove}}
+          {{conditional-loading-spinner condition=postStream.loadingAbove}}
 
           {{#unless postStream.loadingFilter}}
             {{cloaked-collection itemViewClass="post"
@@ -79,11 +79,11 @@
                                  offsetFixedBottom="#reply-control"}}
           {{/unless}}
 
-          {{loading-spinner condition=postStream.loadingBelow}}
+          {{conditional-loading-spinner condition=postStream.loadingBelow}}
         </div>
         <div id='topic-bottom'></div>
 
-        {{#loading-spinner condition=postStream.loadingFilter}}
+        {{#conditional-loading-spinner condition=postStream.loadingFilter}}
           {{#if loadedAllPosts}}
 
             {{view 'topic-closing' topic=model}}
@@ -113,7 +113,7 @@
             {{/if}}
 
           {{/if}}
-        {{/loading-spinner}}
+        {{/conditional-loading-spinner}}
 
       </section>
     </div>
@@ -121,7 +121,7 @@
   </div>
 {{else}}
   <div class='container'>
-    {{#loading-spinner condition=noErrorYet}}
+    {{#conditional-loading-spinner condition=noErrorYet}}
       {{#if notFoundHtml}}
         {{{notFoundHtml}}}
       {{else}}
@@ -135,9 +135,9 @@
             {{d-button action="retryLoading" class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
           {{/if}}
         </div>
-        {{loading-spinner condition=retrying}}
+        {{conditional-loading-spinner condition=retrying}}
       {{/if}}
-    {{/loading-spinner}}
+    {{/conditional-loading-spinner}}
   </div>
 {{/if}}
 

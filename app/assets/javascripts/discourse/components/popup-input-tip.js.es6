@@ -1,23 +1,12 @@
-/**
-  This view extends the functionality of InputTipView with these extra features:
-    * it can be dismissed
-    * it bounces when it's shown
-    * it's absolutely positioned beside the input element, with the help of
-      extra css you'll need to write to line it up correctly.
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
-  @class PopupInputTipView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.PopupInputTipView = Discourse.View.extend({
-  templateName: 'popup_input_tip',
+export default Ember.Component.extend({
   classNameBindings: [':popup-tip', 'good', 'bad', 'shownAt::hide'],
   animateAttribute: null,
   bouncePixels: 6,
   bounceDelay: 100,
 
-  click: function() {
+  click() {
     this.set('shownAt', false);
   },
 
@@ -43,17 +32,23 @@ Discourse.PopupInputTipView = Discourse.View.extend({
     }
   }.observes('shownAt'),
 
-  bounceLeft: function($elem) {
+  render(buffer) {
+    const reason = this.get('validation.reason');
+    if (!reason) { return; }
+
+    buffer.push("<span class='close'>" + iconHTML('times-circle') + "</span>");
+    buffer.push(reason);
+  },
+
+  bounceLeft($elem) {
     for( var i = 0; i < 5; i++ ) {
       $elem.animate({ left: '+=' + this.bouncePixels }, this.bounceDelay).animate({ left: '-=' + this.bouncePixels }, this.bounceDelay);
     }
   },
 
-  bounceRight: function($elem) {
+  bounceRight($elem) {
     for( var i = 0; i < 5; i++ ) {
       $elem.animate({ right: '-=' + this.bouncePixels }, this.bounceDelay).animate({ right: '+=' + this.bouncePixels }, this.bounceDelay);
     }
   }
 });
-
-Discourse.View.registerHelper('popupInputTip', Discourse.PopupInputTipView);

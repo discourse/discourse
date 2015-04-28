@@ -102,6 +102,9 @@ function buildConnectorCache() {
 export default function(connectionName, options) {
   if (!_connectorCache) { buildConnectorCache(); }
 
+  console.warn('plugin outlets are disabled');
+  return;
+
   if (_connectorCache[connectionName]) {
     const childViews = _connectorCache[connectionName];
 

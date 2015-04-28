@@ -4,7 +4,7 @@
 </p>
 <br>
 
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   {{#if model.length}}
     <div class='table screened-urls'>
       <div class="heading-container">
@@ -21,4 +21,4 @@
   {{else}}
     {{i18n 'search.no_results'}}
   {{/if}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}
