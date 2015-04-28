@@ -34,7 +34,7 @@ class NewPostManager
   end
 
   def self.default_handler(manager)
-    manager.enqueue('default') if user_needs_approval(manager.user)
+    manager.enqueue('default') if user_needs_approval?(manager.user)
   end
 
   def self.queue_enabled?
