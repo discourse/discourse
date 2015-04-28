@@ -16,7 +16,7 @@
       {{#each buttonData in enabledButtons}}
         <button class="btn {{unbound buttonData.classes}}" {{action buttonData.action}}>{{boundI18n buttonData.key}}</button>
       {{/each}}
-      {{loading-spinner condition=loading}}
+      {{conditional-loading-spinner condition=loading}}
     </div>
   </div>
 </div>

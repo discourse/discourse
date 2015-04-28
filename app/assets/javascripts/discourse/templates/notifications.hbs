@@ -1,5 +1,5 @@
 <section class="d-dropdown" id="notifications-dropdown">
-  {{#loading-spinner condition=loadingNotifications}}
+  {{#conditional-loading-spinner condition=loadingNotifications}}
     {{#if content}}
       <ul>
         {{#each n in model itemController="notification"}}
@@ -12,5 +12,5 @@
     {{else}}
       <div class="none">{{i18n 'notifications.none'}}</div>
     {{/if}}
-  {{/loading-spinner}}
+  {{/conditional-loading-spinner}}
 </section>

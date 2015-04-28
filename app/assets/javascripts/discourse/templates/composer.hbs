@@ -57,13 +57,13 @@ so I'm going to stop rendering it until we figure out what's up
 
               <div class="title-input">
                 {{text-field value=model.title tabindex="2" id="reply-title" maxLength=maxTitleLength placeholderKey="composer.title_placeholder"}}
-                {{popupInputTip validation=view.titleValidation shownAt=view.showTitleTip}}
+                {{popup-input-tip validation=view.titleValidation shownAt=view.showTitleTip}}
               </div>
 
               {{#unless model.privateMessage}}
                 <div class="category-input">
                   {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
-                  {{popupInputTip validation=view.categoryValidation shownAt=view.showCategoryTip}}
+                  {{popup-input-tip validation=view.categoryValidation shownAt=view.showCategoryTip}}
                 </div>
                 {{#if model.archetype.hasOptions}}
                   <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
@@ -80,7 +80,7 @@ so I'm going to stop rendering it until we figure out what's up
             <div class='wmd-button-bar' id='wmd-button-bar'></div>
             <div id='wmd-preview-scroller'></div>
             {{composer-text-area tabindex="4" value=model.reply}}
-            {{popupInputTip validation=view.replyValidation shownAt=view.showReplyTip}}
+            {{popup-input-tip validation=view.replyValidation shownAt=view.showReplyTip}}
           </div>
           <!-- keep the classes here in sync with post.hbs -->
           <div class='preview-wrapper regular'>

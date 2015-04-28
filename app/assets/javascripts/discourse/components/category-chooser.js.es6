@@ -1,4 +1,4 @@
-import ComboboxView from 'discourse/views/combo-box';
+import ComboboxView from 'discourse/components/combo-box';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 
 export default ComboboxView.extend({
@@ -41,7 +41,7 @@ export default ComboboxView.extend({
     }
   }.property(),
 
-  template(item) {
+  comboTemplate(item) {
 
     let category;
 

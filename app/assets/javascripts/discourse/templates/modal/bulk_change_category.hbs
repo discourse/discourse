@@ -2,6 +2,6 @@
 
 <p>{{category-chooser value=newCategoryId}}</p>
 
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   {{d-button action="changeCategory" label="topics.bulk.change_category"}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

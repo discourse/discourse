@@ -6,7 +6,7 @@
       {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
     </div>
 
-    {{#loading-spinner condition=model.loading}}
+    {{#conditional-loading-spinner condition=model.loading}}
       {{#if model.length}}
         <div class='total-rows'>{{i18n "directory.total_rows" count=model.totalRows}}</div>
 
@@ -43,12 +43,12 @@
           </tbody>
         </table>
 
-        {{loading-spinner condition=model.loadingMore}}
+        {{conditional-loading-spinner condition=model.loadingMore}}
       {{else}}
         <div class='clearfix'></div>
         <p>{{i18n "directory.no_results"}}</p>
       {{/if}}
-    {{/loading-spinner}}
+    {{/conditional-loading-spinner}}
 
   </div>
 </div>
