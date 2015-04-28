@@ -28,11 +28,13 @@ class NewPostManager
     @sorted_handlers.sort_by! {|h| -h[:priority]}
   end
 
+  def self.user_needs_approval?(user)
+    (user.post_count < SiteSetting.approve_post_count) ||
+      (user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
+  end
+
   def self.default_handler(manager)
-    if (manager.user.post_count < SiteSetting.approve_post_count) ||
-       (manager.user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
-      return manager.enqueue('default')
-    end
+    manager.enqueue('default') if user_needs_approval(manager.user)
   end
 
   def self.queue_enabled?
