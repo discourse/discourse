@@ -9,16 +9,16 @@
         {{#if pinned_globally}}
           <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
           <p>
-            {{#loading-spinner size="small" condition=loading}}
+            {{#conditional-loading-spinner size="small" condition=loading}}
               {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
-            {{/loading-spinner}}
+            {{/conditional-loading-spinner}}
           </p>
         {{else}}
           <p>{{i18n "topic.feature_topic.pin_note"}}</p>
           <p>
-            {{#loading-spinner size="small" condition=loading}}
+            {{#conditional-loading-spinner size="small" condition=loading}}
               {{{alreadyPinnedMessage}}}
-            {{/loading-spinner}}
+            {{/conditional-loading-spinner}}
           </p>
         {{/if}}
       </div>
@@ -32,9 +32,9 @@
         <p>{{{pinMessage}}}</p>
         <p>{{i18n "topic.feature_topic.pin_note"}}</p>
         <p>
-          {{#loading-spinner size="small" condition=loading}}
+          {{#conditional-loading-spinner size="small" condition=loading}}
             {{{alreadyPinnedMessage}}}
-          {{/loading-spinner}}
+          {{/conditional-loading-spinner}}
         </p>
       </div>
     </div>
@@ -47,9 +47,9 @@
         <p>{{i18n "topic.feature_topic.pin_globally"}}</p>
         <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
         <p>
-          {{#loading-spinner size="small" condition=loading}}
+          {{#conditional-loading-spinner size="small" condition=loading}}
             {{{i18n "topic.feature_topic.already_pinned_globally" count=pinnedGloballyCount}}}
-          {{/loading-spinner}}
+          {{/conditional-loading-spinner}}
         </p>
       </div>
     </div>
@@ -71,9 +71,9 @@
       {{/if}}
       <p>{{i18n "topic.feature_topic.banner_note"}}</p>
       <p>
-        {{#loading-spinner size="small" condition=loading}}
+        {{#conditional-loading-spinner size="small" condition=loading}}
           {{{i18n "topic.feature_topic.already_banner" count=bannerCount}}}
-        {{/loading-spinner}}
+        {{/conditional-loading-spinner}}
       </p>
     </div>
   </div>

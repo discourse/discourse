@@ -42,7 +42,7 @@
 //= require ./discourse/views/container
 //= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
-//= require ./discourse/views/combo-box
+//= require ./discourse/components/combo-box
 //= require ./discourse/views/button
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button

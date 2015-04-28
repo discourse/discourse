@@ -1,4 +1,4 @@
-Handlebars.registerHelper('custom-html', function(name, contextString, options) {
+Ember.Handlebars.registerHelper('custom-html', function(name, contextString, options) {
   var html = Discourse.HTML.getCustomHTML(name);
   if (html) { return html; }
 

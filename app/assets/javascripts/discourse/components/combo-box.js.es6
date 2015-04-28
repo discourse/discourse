@@ -1,5 +1,4 @@
-// This view handles rendering of a combobox
-export default Discourse.View.extend({
+export default Ember.Component.extend({
   tagName: 'select',
   attributeBindings: ['tabindex'],
   classNames: ['combobox'],
@@ -65,7 +64,7 @@ export default Discourse.View.extend({
       o.selected = !!$(o).attr('selected');
     });
 
-    $elem.select2({formatResult: this.template, minimumResultsForSearch: 5, width: 'resolve'});
+    $elem.select2({formatResult: this.comboTemplate, minimumResultsForSearch: 5, width: 'resolve'});
 
     const castInteger = this.get('castInteger');
     $elem.on("change", function (e) {
