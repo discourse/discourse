@@ -56,7 +56,9 @@ export default {
         });
       });
 
-      initDesktopNotifications(bus);
+      if (!Ember.testing) {
+        initDesktopNotifications(bus);
+      }
     }
   }
 };
