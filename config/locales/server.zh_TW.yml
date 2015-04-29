@@ -145,16 +145,6 @@ zh_TW:
   education:
     until_posts:
       other: "%{count} 篇文章"
-    new-topic: |
-      歡迎來到 %{site_name} &mdash; **祝你能在這裡開始一段嶄新的討論區體驗！**
-
-      - 張貼標題是否清晰易明？主題內容能否吸讀者？
-
-      - 張貼內容是甚麼？，能吸引哪些人？，主題的重要性？，期待從討論中得到怎樣的回應？
-
-      - 使用適合的字詞，能更容易使其他人 *找到* 你的主題，若你撰寫的內容屬於某個分類的話，應選擇張貼在該分類。
-
-      其他的說明，[請查看我們的社群守則](/guidelines)。此資訊只在你的最早的 %{education_posts_text} 顯示。
     new-reply: |
       歡迎來到%{site_name} &mdash; **感謝你的貢獻！**
 
@@ -716,7 +706,6 @@ zh_TW:
     s3_region: "上傳至 Amazon S3 的 region name，將用於上傳圖片"
     enable_flash_video_onebox: "在 Onebox 啟用嵌入 swf 和 flv (Adobe Flash) 的鏈接。警告：可能增加安全風險。"
     default_invitee_trust_level: "預設的受邀用戶等級 (0-4)"
-    default_trust_level: "所有新用戶的預設等級 (0-4)"
     tl1_requires_topics_entered: "新用戶升級到信任等級1所需要進入的主題數量。"
     tl1_requires_read_posts: "新用戶升級到信任等級1所需要閱讀的帖子數量。"
     tl1_requires_time_spent_mins: "新用戶升級到信任等級1所需要閱讀帖子消耗的時間（分鐘）。"

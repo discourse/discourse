@@ -108,6 +108,9 @@ it:
     show_more: "Altro"
     show_help: "aiuto"
     links: "Link"
+    links_lowercase:
+      one: "collegamento"
+      other: "collegamenti"
     faq: "FAQ"
     guidelines: "Linee Guida"
     privacy_policy: "Tutela Privacy"
@@ -194,6 +197,19 @@ it:
       title:
         search: "Cerca conversazioni per nome, indirizzo o numero:"
         placeholder: "digita il titolo della conversazione"
+    queue:
+      topic: "Argomento:"
+      approve: 'Approva'
+      reject: 'Scarta'
+      title: "Richiede Approvazione"
+      none: "Non ci sono messaggi da revisionare."
+      edit: "Modifica"
+      cancel: "Annulla"
+      confirm: "Salva Modifiche"
+      approval:
+        title: "Il Messaggio Richiede Approvazione"
+        description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tu</a> hai pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
@@ -255,6 +271,7 @@ it:
       '11': "Modifiche"
       '12': "Inviati"
       '13': "Posta in arrivo"
+      '14': "In Attesa"
     categories:
       all: "tutte le categorie"
       all_subcategories: "tutte"
@@ -325,7 +342,7 @@ it:
       watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti. Inoltre, accanto all'elenco degli argomenti apparirà il conteggio dei messaggi non letti e di quelli nuovi."
       tracked_categories: "Seguito"
       tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei messaggi nuovi e non letti."
-      muted_categories: "Ignorato"
+      muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nel tab dei non letti."
       delete_account: "Cancella il mio account"
       delete_account_confirm: "Sei sicuro di voler cancellare il tuo account in modo permanente? Questa azione non può essere annullata!"
@@ -334,7 +351,7 @@ it:
       unread_message_count: "Messaggi"
       admin_delete: "Cancella"
       users: "Utenti"
-      muted_users: "Azzittiti"
+      muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       staff_counters:
         flags_given: "segnalazioni utili"
@@ -374,7 +391,7 @@ it:
         uploaded_avatar_empty: "Aggiungi un'immagine personalizzata"
         upload_title: "Carica la tua foto"
         upload_picture: "Carica Immagine"
-        image_is_not_a_square: "Attenzione: abbiamo ritagliato la tua immagine; l'altezza e la larghezza non erano uguali."
+        image_is_not_a_square: "Attenzione: abbiamo ritagliato l'immagine; la larghezza e l'altezza non erano uguali."
         cache_notice: "Il tuo avatar è stato cambiato ma ci potrebbe volere un po' prima che appaia a causa della cache del browser."
       change_profile_background:
         title: "Sfondo Profilo"
@@ -451,6 +468,7 @@ it:
       auto_track_topics: "Segui automaticamente gli argomenti che leggo"
       auto_track_options:
         never: "mai"
+        immediately: "Immediatamente"
         after_n_seconds:
           one: "per un minuto"
           other: "dopo {{count}} secondi"
@@ -545,6 +563,10 @@ it:
     mute: Ignora
     unmute: Attiva
     last_post: Ultimo messaggio
+    last_reply_lowercase: ultima risposta
+    replies_lowercase:
+      one: risposta
+      other: risposte
     summary:
       enabled_description: "Stai visualizzando un riepilogo dell'argomento: è la comunità a determinare quali sono i messaggi più interessanti."
       description: "Ci sono <b>{{count}}</b> risposte."
@@ -638,6 +660,7 @@ it:
         title_too_long: "Il titolo non può essere più lungo di {{max}} caratteri"
         post_missing: "Il messaggio non può essere vuoto"
         post_length: "Il messaggio deve essere lungo almeno {{min}} caratteri"
+        try_like: 'Hai provato il pulsante <i class="fa fa-heart"></i>?'
         category_missing: "Devi scegliere una categoria"
       save_edit: "Salva Modifiche"
       reply_original: "Rispondi all'Argomento Originale"
@@ -879,15 +902,17 @@ it:
         regular_pm:
           title: "Normale"
         muted_pm:
-          title: "Ignorato"
+          title: "Silenziato"
         muted:
-          title: "Ignorato"
+          title: "Silenziato"
           description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
       actions:
         recover: "Ripristina Argomento"
         delete: "Cancella Argomento"
         open: "Apri Argomento"
         close: "Chiudi Argomento"
+        multi_select: "Seleziona Messaggi..."
+        auto_close: "Chiudi Automaticamente..."
         unarchive: "De-archivia Argomento"
         archive: "Archivia Argomento"
         invisible: "Rendi Invisibile"
@@ -1218,7 +1243,7 @@ it:
           title: "Normale"
           description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al messaggio."
         muted:
-          title: "Ignorato"
+          title: "Silenziato"
           description: "Non ti verrà notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nella tua  tab dei non letti."
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'

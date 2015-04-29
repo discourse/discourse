@@ -271,6 +271,7 @@ de:
       '11': "Änderungen"
       '12': "Gesendete Objekte"
       '13': "Posteingang"
+      '14': "Ausstehend"
     categories:
       all: "Alle Kategorien"
       all_subcategories: "alle"
@@ -659,6 +660,7 @@ de:
         title_too_long: "Titel darf maximal {{max}} Zeichen lang sein"
         post_missing: "Beitrag darf nicht leer sein"
         post_length: "Beitrag muss mindestens {{min}} Zeichen lang sein"
+        try_like: 'Hast du schon die <i class="fa fa-heart"></i> Schaltfläche ausprobiert?'
         category_missing: "Du musst eine Kategorie auswählen"
       save_edit: "Änderungen speichern"
       reply_original: "Auf das ursprünglichen Thema antworten"
@@ -988,6 +990,7 @@ de:
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
         to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
         to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
+        to_username: "Gib den Benutzername der Person ein, die du einladen willst. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
         email_placeholder: 'name@example.com'
         success_email: "Wir haben an <b>{{email}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."

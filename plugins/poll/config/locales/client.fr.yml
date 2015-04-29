@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fr:
+  js:
+    poll:
+      total_votes:
+        zero: "Pas encore de votes. Soyez le premier !"
+        one: "Il n'y a qu'un vote."
+        other: "Il y a au total %{count} votes."
+      average_rating: "Notation moyenne : <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Vous devez choisir au moins %{count} options."
+          up_to_max_options: "Vous pouvez choisir jusqu'à %{count} options."
+          x_options: "Vous devez choisir %{count} options."
+          between_min_and_max_options: "Vous devez choisir entre %{min} et %{max} options."
+      cast-votes:
+        title: "Distribuez vos votes"
+        label: "Votez maintenant !"
+      show-results:
+        title: "Afficher les résultats du sondage"
+        label: "Afficher les résultats"
+      hide-results:
+        title: "Retourner au vote"
+        label: "Masquer les résultats"
+      open:
+        title: "Ouvrir le sondage"
+        label: "Ouvrir"
+        confirm: "Êtes-vous sûr de vouloir ouvrir ce sondage ?"
+      close:
+        title: "Fermer le sondage"
+        label: "Fermer"
+        confirm: "Êtes-vous sûr de vouloir fermer ce sondage ?"
+      error_while_toggling_status: "Une erreur s'est produite lors du changement de statut de ce sondage."
+      error_while_casting_votes: "Une erreur s'est produite lors de la distribution de vos votes."

@@ -138,6 +138,7 @@ it:
   groups:
     errors:
       can_not_modify_automatic: "Non puoi modificare un gruppo automatico"
+      member_already_exist: "'%{username}' è già membro di questo gruppo."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -152,16 +153,7 @@ it:
     until_posts:
       one: "1 messaggio"
       other: "%{count} messaggi"
-    new-topic: |
-      Benvenuto in %{site_name} &mdash; **grazie per iniziare una nuova conversazione!**
-
-      - Il titolo descrive accuratamente l'argomento?  Sembra interessante?
-
-      - Di cosa parla? Chi potrebbe essere interessato? Perché è importante? Che risposte speri di ricevere dalla comunità?
-
-      - Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare il tuo argomento con altri argomenti correlati, seleziona una categoria.
-
-      Per maggiori informazioni, [guarda le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i primi %{education_posts_text}.
+    new-topic: "Benvenuto in %{site_name} &mdash; **grazie per iniziare una nuova conversazione!**\n\n- Il titolo sembra interessante? E' un buon riassunto?\n\n- Chi potrebbe essere interessato a questo argomento? Perché è importante? Che risposte speri di ricevere? \n\n- Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria. \n\nPer maggiori informazioni, [leggi le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i primi %{education_posts_text}.\n"
     new-reply: |
       Benvenuto in %{site_name} &mdash; **grazie per il tuo contributo !**
 
@@ -423,7 +415,7 @@ it:
       email_title: 'L''argomento "%{title}" richiede l''attenzione di un moderatore'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/private-messages">Controlla i tuoi messaggi</a>.</p>'
+    you_must_edit: '<p>Il tuo messaggio è stato segnalato dalla comunità. <a href="/my/messages">vedi i tuoi messaggi</a>.</p>'
     user_must_edit: '<p>Questo messaggio è stato segnalato dalla comunità ed è stato temporaneamente nascosto.</p>'
   archetypes:
     regular:
@@ -790,7 +782,6 @@ it:
     s3_region: "La region name Amazon S3 che verrà usata per caricare le immagini."
     enable_flash_video_onebox: "Attiva l'inserimento di collegamenti swf e flv (Adobe Flash) in onebox. ATTENZIONE: comporta rischi per la sicurezza."
     default_invitee_trust_level: "Livello di esperienza (0-4) assegnato di default agli utenti invitati."
-    default_trust_level: "Livello di esperienza (0-4) assegnato di default ai nuovi utenti."
     tl1_requires_topics_entered: "Quanti argomenti deve inserire un utente per essere promosso a livello di esperienza 1."
     tl1_requires_read_posts: "Quanti messaggi deve leggere un utente per essere promosso al livello di esperienza 1."
     tl1_requires_time_spent_mins: "Per quanti minuti un utente deve leggere i messaggi per essere promosso al livello di esperienza 1."
@@ -832,8 +823,8 @@ it:
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
     category_style: "Stile grafico per le etichette di categoria."
-    max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anchein nginx (client_max_body_size) o in apache."
-    max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o proxy."
+    max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anche in nginx (client_max_body_size) / apache o nel proxy."
+    max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
     max_similar_results: "Quanti argomenti simili mostrare sopra l'editor quando si scrive un nuovo argomento. Il paragone viene fatto sul titolo e sul corpo."
     title_prettify: "Evita refusi ed errori comuni nei titoli, incluso il testo tutto maiuscolo, il primo carattere minuscolo, troppi caratteri ! e ?, puntini aggiuntivi alla fine della parola ecc."

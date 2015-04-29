@@ -205,7 +205,7 @@ fr:
       none: "Il n'y a pas de messages à vérifier."
       edit: "Éditer"
       cancel: "Annuler"
-      confirm: "Sauvegarder les changements"
+      confirm: "Sauvegarder les modifications"
       approval:
         title: "Ce message doit être approuvé."
         description: "Votre nouveau message a bien été envoyé, mais il doit être approuvé par un modérateur avant d'apparaître publiquement. Merci de votre patience."
@@ -271,6 +271,7 @@ fr:
       '11': "Editions"
       '12': "Eléments envoyés"
       '13': "Boîte de réception"
+      '14': "En attente"
     categories:
       all: "toutes les catégories"
       all_subcategories: "toutes"
@@ -659,6 +660,7 @@ fr:
         title_too_long: "Le titre ne doit pas dépasser les {{max}} caractères"
         post_missing: "Le message ne peut être vide"
         post_length: "Le message doit avoir au moins {{min}} caractères"
+        try_like: 'Avez-vous essayé le bouton <i class="fa fa-heart"></i> ?'
         category_missing: "Vous devez choisir une catégorie"
       save_edit: "Sauvegarder la modification"
       reply_original: "Répondre sur le sujet d'origine"
@@ -990,6 +992,7 @@ fr:
         to_topic_blank: "Entrez le pseudo ou l'adresse email de la personne que vous souhaitez inviter sur ce sujet."
         to_topic_email: "Vous avez entré une adresse email. Nous allons envoyer une invitation à votre ami lui permettant de répondre immédiatement à ce sujet."
         to_topic_username: "Vous avez entré un pseudo. Nous allons envoyer une notification à cet utilisateur avec un lien l'invitant sur ce sujet."
+        to_username: "Entrez le pseudo de la personne que vous souhaitez inviter. Nous lui enverrons une notification avec un lien vers ce sujet."
         email_placeholder: 'nom@exemple.com'
         success_email: "Nous avons envoyé un email à <b>{{emailOrUsername}}</b>. Nous vous avertirons lorsqu'il aura répondu à votre invitation. Suivez l'état de vos invitations dans l'onglet prévu à cet effet sur votre page utilisateur."
         success_username: "Nous avons invité cet utilisateur à participer à ce sujet."

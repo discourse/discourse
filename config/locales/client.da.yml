@@ -108,6 +108,9 @@ da:
     show_more: "vis mere"
     show_help: "hjælp"
     links: "Links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Retningslinier"
     privacy_policy: "Privatlivspolitik"
@@ -536,6 +539,10 @@ da:
     mute: Mute
     unmute: Unmute
     last_post: Sidste indlæg
+    last_reply_lowercase: seneste svar
+    replies_lowercase:
+      one: svar
+      other: svar
     summary:
       enabled_description: "Du ser et sammendrag af dette emne: kun de mest interessante indlæg som andre finder interresante."
       description: "Der er <b>{{count}}</b> svar."
@@ -963,6 +970,7 @@ da:
           one: Du har valgt <b>1</b> indlæg.
           other: Du har valgt <b>{{count}}</b> indlæg.
     post:
+      reply: "Svarer til {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "Svar til {{link}}"
       quote_reply: "citér svar"
       edit_reason: "Reason: "
@@ -1267,12 +1275,21 @@ da:
         other {}}
     original_post: "Oprindeligt indlæg"
     views: "Visninger"
+    views_lowercase:
+      one: "visning"
+      other: "visninger"
     replies: "Svar"
     views_long: "dette emne er blevet vist {{number}} gange"
     activity: "Aktivitet"
     likes: "Likes"
+    likes_lowercase:
+      one: "lies"
+      other: "likes"
     likes_long: "der er {{number}} likes i dette emne"
     users: "Deltagere"
+    users_lowercase:
+      one: "bruger"
+      other: "brugere"
     category_title: "Kategori"
     history: "Historik"
     changed_by: "af {{author}}"

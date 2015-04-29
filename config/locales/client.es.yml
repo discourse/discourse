@@ -108,6 +108,9 @@ es:
     show_more: "ver más"
     show_help: "ayuda"
     links: "Enlaces"
+    links_lowercase:
+      one: "enlace"
+      other: "enlaces"
     faq: "FAQ"
     guidelines: "Directrices"
     privacy_policy: "Política de Privacidad"
@@ -194,6 +197,19 @@ es:
       title:
         search: "Buscar un Tema por nombre, url o id:"
         placeholder: "escribe el título de tema aquí"
+    queue:
+      topic: "Tema:"
+      approve: 'Aprobar'
+      reject: 'Rechazar'
+      title: "Necesita Aprobación"
+      none: "No hay posts para revisar"
+      edit: "Editar"
+      cancel: "Cancelar"
+      confirm: "Guardar Cambios"
+      approval:
+        title: "El Post Necesita Aprobación"
+        description: "Hemos recibido tu nuevo post pero necesita ser aprobado por un moderador antes de aparecer. Por favor, ten paciencia."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicó <a href='{{topicUrl}}'>el tema</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tú</a> publicaste <a href='{{topicUrl}}'>el tema</a>"
@@ -255,6 +271,7 @@ es:
       '11': "Ediciones"
       '12': "Elementos Enviados"
       '13': "Bandeja de entrada"
+      '14': "Pendiente"
     categories:
       all: "Todas las categorías"
       all_subcategories: "todas"
@@ -451,6 +468,7 @@ es:
       auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
+        immediately: "inmediatamente"
         after_n_seconds:
           one: "después de 1 segundo"
           other: "después de {{count}} segundos"
@@ -545,6 +563,10 @@ es:
     mute: Silenciar
     unmute: No silenciar
     last_post: Último post
+    last_reply_lowercase: última respuesta
+    replies_lowercase:
+      one: respuesta
+      other: respuestas
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -638,6 +660,7 @@ es:
         title_too_long: "El título no puede tener más de {{max}} caracteres."
         post_missing: "El post no puede estar vacío."
         post_length: "El post debe tener por lo menos {{min}} caracteres."
+        try_like: '¿Has probado el botón de <i class="fa fa-heart"></i>?'
         category_missing: "Debes escoger una categoría."
       save_edit: "Guardar edición"
       reply_original: "Responder en el Tema Original"
@@ -965,6 +988,7 @@ es:
         to_topic_blank: "Introduzca el nombre de usuario o dirección de correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ha introducido una dirección de correo electrónico. Nosotros te enviaremos una invitación que le permita a su amigo responder inmediatamente a este tema."
         to_topic_username: "Ha introducido un nombre de usuario. Le enviaremos una notificación a ese usuario con un enlace invitándolo a este tema."
+        to_username: "Introduce el nombre de usuario de la persona a la que te gustaría invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
         email_placeholder: 'nombre@ejemplo.com'
         success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
         success_username: "Hemos invitado a ese usuario a participar en este tema."
@@ -1329,12 +1353,21 @@ es:
         other {}}
     original_post: "Post Original"
     views: "Visitas"
+    views_lowercase:
+      one: "visita"
+      other: "visitas"
     replies: "Respuestas"
     views_long: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
+    likes_lowercase:
+      one: "me gusta"
+      other: "me gusta"
     likes_long: "este tema tiene {{number}} me gusta"
     users: "Usuarios"
+    users_lowercase:
+      one: "usuario"
+      other: "usuarios"
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"
@@ -1553,6 +1586,8 @@ es:
         automatic: "Automático"
         automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
+        default_title: "Título por defecto para todos los miembros en este grupo"
+        primary_group: "Establecer como grupo primario automáticamente"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."

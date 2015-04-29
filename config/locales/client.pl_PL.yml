@@ -294,6 +294,7 @@ pl_PL:
       '11': "Edycje"
       '12': "Wysłane"
       '13': "Skrzynka odbiorcza"
+      '14': "Oczekujące"
     categories:
       all: "wszystkie kategorie"
       all_subcategories: "wszystkie"
@@ -689,6 +690,7 @@ pl_PL:
         title_too_long: "Tytuł nie może zawierać więcej niż {{max}} znaków"
         post_missing: "wpis nie może być pusty"
         post_length: "Wpis musi zawierać przynajmniej {{min}} znaków"
+        try_like: 'Może warto użyć przycisku <i class="fa fa-heart"></i>?'
         category_missing: "Musisz wybrać kategorię"
       save_edit: "Zapisz zmiany"
       reply_original: "Odpowiedz na Oryginalny Temat"
@@ -1025,6 +1027,7 @@ pl_PL:
         to_topic_blank: "Podaj nazwę użytkownika lub e-mail osoby którą chcesz zaprosić do tego tematu."
         to_topic_email: "Wprowadzony został adres e-mail. Wyślemy tam zaproszenie umożliwiające wskazanej osobie odpowiedź w tym temacie."
         to_topic_username: "Wprowadzono nazwę użytkownika. Wskazane konto otrzyma powiadomienie z linkiem do tematu."
+        to_username: "Podaj nazwę użytkownika osoby którą chcesz zaprosić. Otrzyma powiadomienie z linkiem do tego tematu."
         email_placeholder: 'nazwa@example.com'
         success_email: "Wysłaliśmy zaproszenie do <b>{{emailOrUsername}}</b>. Otrzymasz powiadomienie, gdy zaproszenie zostanie przyjęte. Sprawdź zakładkę zaproszenia w swoim profilu, aby śledzić status tego i innych zaproszeń."
         success_username: "Wskazany użytkownik został zaproszony do udziału w tym temacie."

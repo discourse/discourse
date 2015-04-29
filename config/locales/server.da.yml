@@ -134,18 +134,6 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
-    new-topic: |
-      Velkommen til %{site_name} &mdash; **tak for at starte en ny samtale!**
-
-      Husk venligst mens du formulerer dit emne:
-
-      - Beskriver titlen nogenlunde præcist hvad man kunne forvente at finde, når man læser dit emne?
-
-      - Det første indlæg definerer dit emne: Hvad handler det om? Hvem kunne være interesserede i det? Hvorfor betyder det noget? Hvilke svar håber du at få fra dine læsere?
-
-      - Prøv at vælge de rigtige ord, så andre kan *finde* dit emne. Hvis det skal være i en kategori, så vælg den rigtige.
-
-      For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
     new-reply: |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
