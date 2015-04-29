@@ -1,13 +1,11 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['navigation/category', 'discovery/topics', 'application'],
   loading: false,
 
   category: Em.computed.alias('controllers.navigation/category.category'),
   noSubcategories: Em.computed.alias('controllers.navigation/category.noSubcategories'),
 
-  loadedAllItems: Em.computed.not("controllers.discovery/topics.canLoadMore"),
+  loadedAllItems: Em.computed.not("controllers.discovery/topics.model.canLoadMore"),
 
   _showFooter: function() {
     this.set("controllers.application.showFooter", this.get("loadedAllItems"));

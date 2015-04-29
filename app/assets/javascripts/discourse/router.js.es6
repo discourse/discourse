@@ -2,7 +2,7 @@ const rootURL = Discourse.BaseUri && Discourse.BaseUri !== "/" ? Discourse.BaseU
 
 const Router = Ember.Router.extend({
   rootURL,
-  location: Ember.Test ? 'none': 'discourse-location'
+  location: Ember.testing ? 'none': 'discourse-location'
 });
 
 export function mapRoutes() {
