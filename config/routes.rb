@@ -415,6 +415,8 @@ Discourse::Application.routes.draw do
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'
 
+  get "new-topic" => "list#latest"
+
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}

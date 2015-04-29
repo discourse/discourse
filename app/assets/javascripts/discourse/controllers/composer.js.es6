@@ -435,6 +435,21 @@ export default DiscourseController.extend({
     composerModel.set('composeState', Discourse.Composer.OPEN);
     composerModel.set('isWarning', false);
 
+    if (opts.topicTitle && opts.topicTitle.length <= this.get('maxTitleLength')) {
+      this.set('model.title', opts.topicTitle);
+    }
+
+    if (opts.topicCategory) {
+      var category = Discourse.Category.list().findProperty('name', opts.topicCategory);
+      if (category && category.id) {
+        this.set('model.categoryId', category.id);
+      }
+    }
+
+    if (opts.topicBody) {
+      this.set('model.reply', opts.topicBody);
+    }
+
     this.get('controllers.composer-messages').queryFor(composerModel);
   },
 
