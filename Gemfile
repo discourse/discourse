@@ -91,15 +91,7 @@ gem 'mail', '~> 2.5.4'
 gem 'hiredis'
 gem 'redis', require:  ["redis", "redis/connection/hiredis"]
 
-# We use some ams 0.8.0 features, need to amend code
-# to support 0.9 etc, bench needs to run and ensure no
-# perf regressions
-if rails_master?
-  gem 'active_model_serializers', github: 'rails-api/active_model_serializers', branch: '0-8-stable'
-else
-  gem 'active_model_serializers', '~> 0.8.0'
-end
-
+gem 'active_model_serializers', '~> 0.8.3'
 
 gem 'onebox'
 
