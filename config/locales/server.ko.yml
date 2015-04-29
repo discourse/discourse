@@ -104,18 +104,6 @@ ko:
   education:
     until_posts:
       other: "%{count} 글"
-    new-topic: |
-      %{site_name}에서 새로운 대화를 시작하여 주셔서 감사합니다. 토픽을 생성하시기 전에 이것들을 주의하여 주세요.
-
-      - 제목이 토픽을 잘 설명하고 있나요? 다른 사용자들의 관심을 끌기에 충분한가요?
-
-      - 무엇에 대한 토픽인가요? 어떤 사용자들에게 관심을 끌까요? 이 토픽이 왜 중요한가요? 어떤 반응들을 기대하고 계신가요?
-
-      - 다른 사용자들이 찾을 수 있도록 찾기 쉬운 단어들을 토픽에 포함하여 주세요. 알맞은 카테고리를 선택하는 것은 큰 도움이 됩니다.
-
-      - 더 자세한 사항은 [커뮤니티 가이드라인](/guidelines)을 찾아주세요.
-
-      이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다.
     new-reply: |
       %{site_name}에 오신것을 환영합니다!
 
@@ -634,7 +622,6 @@ ko:
     s3_region: "이미지를 업로드 할 때 사용할 Amazon S3 region"
     enable_flash_video_onebox: "swf, flv(어도비 플래쉬)링크를 embed 할 수 있도록 함. 주의: 보안에 대한 위험성을 알려주는 것이 좋다."
     default_invitee_trust_level: "사용자를 초대하기 위한 기본 신뢰도(0-4)"
-    default_trust_level: "새로운 사용자의 기본 신뢰도(0-4)"
     tl1_requires_topics_entered: "새로운 사용자가 신뢰받는 사용자-1 이 되기 위해 들어가봐야되는 토픽의 개수"
     tl1_requires_read_posts: "새로운 사용자가 신뢰받는 사용자-1 가 되기 위해 읽어야 하는 포스트 개수"
     tl1_requires_time_spent_mins: "새로운 사용자가 신뢰받는 사용자-1 이 되기 위해 몇 분 동안 포스트를 읽어야 하는지."

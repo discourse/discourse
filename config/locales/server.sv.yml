@@ -127,16 +127,6 @@ sv:
     until_posts:
       one: "1 inlägg"
       other: "%{count} inlägg"
-    new-topic: |
-      Välkommen till %{site_name} &mdash; **tack för att du startar en ny konversation!**
-
-      - Beskriver titeln ditt ämne? Är titeln intressant?
-
-      - Vad handlar det om? Vem är intresserad av det? Varför spelar det roll? vilken slags respons hoppas du på att få av communityn?
-
-      - Inkludera bra ord att söka på i ditt ämne så andra kan *hitta* det. För att  kategorisera ditt ämne med relaterade ämne, välj en kategori.
-
-      Vill du veta mer, [läs våra community riktlinjer](/guidelines). Det här fältet dyker bara upp för din första %{education_posts_text}.
   activerecord:
     attributes:
       category:

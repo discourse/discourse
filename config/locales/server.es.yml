@@ -138,6 +138,7 @@ es:
   groups:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
+      member_already_exist: "'%{username}' ya es miembro de este grupo."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -152,16 +153,7 @@ es:
     until_posts:
       one: "1 post"
       other: "%{count} posts"
-    new-topic: |
-      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
-
-      - ¿El título describe de forma precisa tu tema? ¿Suena interesante?
-
-      - ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad?
-
-      - Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría.
-
-      Para más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
+    new-topic: "Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!** \n\n- ¿El título describe de forma precisa tu tema? ¿Suena interesante? \n\n- ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad? \n\n- Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría. \n\nPara más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.\n"
     new-reply: |
       Bienvenido a %{site_name} &mdash; **¡gracias por contribuir a la conversación!**
 
@@ -279,6 +271,7 @@ es:
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
       self_parent: "La categoría primaria de una subcategoría no puede ser ella misma."
       depth: "No se puede anidar una subcategoría debajo de otra"
+      email_in_already_exist: "La dirección de email entrante '%{email_in}' ya está en uso para la categoría '%{category_name}'."
     cannot_delete:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
@@ -457,7 +450,7 @@ es:
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes</a>.</p>'
+    you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="/my/messages">mira tus mensajes</a>.</p>'
     user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
   archetypes:
     regular:
@@ -720,6 +713,9 @@ es:
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
     max_topics_in_first_day: "El número máximo de temas que un usuario puede crear en su primer día en el sitio"
     max_replies_in_first_day: "El máximo número de respuestas que un usuario puede publicar en su primer día en el sitio"
+    tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
+    tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
+    tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
     num_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     num_users_to_block_new_user: "Si los posts de un nuevo usuario obtienen tanto reportes como se establece en num_flags_to_block_new_user, por este número de diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
@@ -755,6 +751,8 @@ es:
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
+    email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
     forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
@@ -826,7 +824,7 @@ es:
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
-    default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios."
+    default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
     tl1_requires_topics_entered: "¿Cuántos temas un nuevo usuario debe de entrar antes de que sea promovido a nivel de confianza 1?"
     tl1_requires_read_posts: "Cuántos posts debe leer un nuevo usuario antes de ser promocionado al nivel de confianza 1."
     tl1_requires_time_spent_mins: "Cuántos minutos debe permanecer leyendo posts un nuevo usuario antes de ser promocionado al nivel de confianza 1."
@@ -939,6 +937,9 @@ es:
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
     staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     enable_user_directory: "Proporcionar un directorio de usuarios"
+    allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
+    anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para activar el modo anónimo"
+    anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de posts consecutivos que un usuario publicará en un mismo tema hasta mostrarle un recordatorio sobre demasiadas repuestas seguidas."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
@@ -973,6 +974,8 @@ es:
     enable_emoji: "Habilitar emoji"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
+    approve_post_count: "La cantidad de posts de un nuevo usuario que deben ser aprobados"
+    approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1342,6 +1345,12 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - no podemos analizar respuestas entre líneas.
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Error de email -- Acceso no válido"
+      text_body_template: |
+        Lo sentimos, pero tu mensaje por email a %{destination} (titled %{former_title}) no funcionó.
+
+        Tu cuenta no tiene los privilegios para publicar nuevos temas en esa categoría. Si crees que esto es un error, contacta a un moderador o administrador.
     email_reject_post_error:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de publicación"
       text_body_template: |
@@ -1457,8 +1466,34 @@ es:
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} te invitó al hilo de mensajes
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        en
+
+        > %{site_title} -- %{site_description}
+
+        Por favor visita este enlace para verlo: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} te ha invitado a un tema '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} te invitó al hilo
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        en
+
+        > %{site_title} -- %{site_description}
+
+        Por favor, visita este enlace para verlo: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

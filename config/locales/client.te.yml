@@ -85,7 +85,7 @@ te:
     share:
       topic: 'ఈ విషయానికి ఒక లంకెను పంచండి'
       post: '#%{postNumber} టపా'
-      close: 'మూయు'
+      close: 'మూసివేయి'
       twitter: 'ట్విట్టరుపై లంకెను పంచు'
       facebook: 'ఫేస్ బుక్ పై లంకెను పంచు'
       google+: 'గూగుల్ ప్లస్ పై లంకెను పంచు'
@@ -107,10 +107,13 @@ te:
     show_more: "మరింత చూపు"
     show_help: "సహాయం"
     links: "లంకెలు"
+    links_lowercase:
+      one: "లంకె"
+      other: "లంకెలు"
     faq: "తవసం"
     guidelines: "మార్గదర్శకాలు"
-    privacy_policy: "ప్రైవసీ పోలసీ"
-    privacy: "ప్రైవసీ"
+    privacy_policy: "అంతరంగికతా విధానం"
+    privacy: "అంతరంగికత"
     terms_of_service: "సేవా నిబంధనలు "
     mobile_view: "చర సందర్శనం"
     desktop_view: "డెస్క్ టాప్ సందర్శనం"
@@ -190,6 +193,10 @@ te:
       title:
         search: "పేరు, యూఆర్ యల్, ఐడీ లను బట్టి విషయాన్ని వెతుకు."
         placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
+    queue:
+      cancel: "రద్దుచేయి"
+      approval:
+        ok: "సరే"
     user_action:
       user_posted_topic: "<a href='{{topicUrl}}'>విషయాన్ని</a> <a href='{{userUrl}}'>{{user}}</a> రాసారు "
       you_posted_topic: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
@@ -204,12 +211,14 @@ te:
       posted_by_you: "<a href='{{userUrl}}'>మీరు</a> రాసారు"
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> పంపారు"
       sent_by_you: "<a href='{{userUrl}}'>మీరు</a> పంపారు"
+    directory:
+      title: "వాడుకరులు"
     groups:
       visible: "గుంపు అందరు సభ్యులకు కనిపిస్తుంది"
       title:
         one: "గుంపు"
         other: "గుంపులు"
-      members: "మెంబర్లు"
+      members: "సభ్యులు"
       posts: "టపాలు"
       alias_levels:
         title: "ఈ గుంపును మారుపేరుతో ఎవరు వాడవచ్చు?"
@@ -305,6 +314,7 @@ te:
       delete_yourself_not_allowed: "మీ ఖాతాను ఇప్పుడు తొలగించలేరు. మీ ఖాతాను తొలగించడానికి అధికారిని సంప్రదించండి. "
       unread_message_count: "సందేశాలు"
       admin_delete: "తొలగించు"
+      users: "వాడుకరులు"
       staff_counters:
         flags_given: "సహాయకారి కేతనాలు"
         flagged_posts: "కేతనించిన టపాలు"
@@ -365,7 +375,7 @@ te:
         too_short: "మీ పేరు మరీ చిన్నది"
         ok: "మీ పేరు బాగుంది"
       username:
-        title: "సభ్యనామం"
+        title: "వాడుకరి పేరు"
         instructions: "ఏకైకం, జాగాలేని, పొట్టి"
         short_instructions: "జనాలు మిమ్మల్ని @{{username}} అని ప్రస్తావించవచ్చు"
         available: "మీ సభ్యనామం అందుబాటులో ఉంది."
@@ -485,9 +495,9 @@ te:
         unknown: "ఏదో తేడా జరిగింది."
       buttons:
         back: "వెనక్కు వెళ్లండి"
-        again: "మరలా ప్రయత్నించండి"
+        again: "మళ్ళీ ప్రయత్నించండి"
         fixed: "పుట ఎక్కించండి"
-    close: "మూయు"
+    close: "మూసివేయి"
     assets_changed_confirm: "ఈ సైటు ఇప్పుడే ఉన్నతీకరించబడింది. కొత్త రూపాంతరం చూడటానికి తాజాపరచండి?"
     logout: "మీరు లాగవుట్ అయ్యారు."
     refresh: "తాజాపరుచు"
@@ -521,7 +531,7 @@ te:
     private_message_info:
       invite: "ఇతరులను ఆహ్వానించు"
     email: 'ఈమెయిల్'
-    username: 'సభ్యనామం'
+    username: 'వాడుకరి పేరు'
     last_seen: 'చూసిన'
     created: 'సృష్టించిన'
     created_lowercase: 'సృష్టించిన'
@@ -542,7 +552,7 @@ te:
       complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
     login:
       title: "లాగిన్"
-      username: "సభ్యుడు"
+      username: "వాడుకరి"
       password: "సంకేతపదం"
       email_placeholder: "ఈమెయిల్ లేదా సభ్యనామం"
       caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
@@ -601,7 +611,7 @@ te:
       reply_original: "మూల విషయంకు జవాబివ్వు"
       reply_here: "ఇక్కడ జవాబివ్వు"
       reply: "జవాబు"
-      cancel: "రద్దు"
+      cancel: "రద్దుచేయి"
       title: "లేదా కంట్రోల్ + ఎంటర్ నొక్కు"
       users_placeholder: "ఒక సభ్యుడిని కలుపు"
       title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
@@ -865,6 +875,7 @@ te:
         group_name: "గుంపు పేరు"
       invite_reply:
         title: 'ఆహ్వానించు'
+        username_placeholder: "వాడుకరి పేరు"
         to_forum: "మేము మీ స్నేహితునికి ఒక ఈమెయిల్ పంపుతాము. అందులోని లంకె ద్వారా వారు లాగిన్ అవసరం లేకుండానే నేరుగా ఈ చర్చలో పాల్గొనవచ్చు, జవాబివ్వవచ్చు."
         email_placeholder: 'name@example.com'
       login_reply: 'జవాబివ్వడానికి లాగిన్ అవ్వండి'
@@ -1852,10 +1863,10 @@ te:
         name: "క్షేత్రం పేరు"
         type: "క్షేత్రం టైపు"
         description: "క్షేత్రం వివరణ"
-        save: "దాచు"
+        save: "భద్రపరచు"
         edit: "సవరణ"
         delete: "తొలగించు"
-        cancel: "రద్దు"
+        cancel: "రద్దుచేయి"
         delete_confirm: "మీరు నిజంగా ఈ సభ్య క్షేత్రం తొలగించాలనుకుంటున్నారా?"
         required:
           title: "సైన్అప్ అవసరమా?"
@@ -1887,7 +1898,7 @@ te:
           all_results: 'అన్నీ'
           required: 'కావాలి'
           basic: 'ప్రాథమిక సెటప్'
-          users: 'సభ్యులు'
+          users: 'వాడుకరులు'
           posting: 'రాస్తున్నారు'
           email: 'మెయిల్'
           files: 'దస్త్రాలు'
@@ -1908,7 +1919,7 @@ te:
         title: బ్యాడ్జీలు
         new_badge: కొత్త బ్యాడ్జీ
         new: 'కొత్త '
-        name: ేరు
+        name: పేరు
         badge: బ్యాడ్జీ
         display_name: ప్రదర్శించు పేరు
         description: వివరణ
@@ -1919,7 +1930,7 @@ te:
         granted_by: ఇచ్చిన వారు
         granted_at: ఇచ్చిన సమయం
         reason_help: (టపాకి లేదా విషయానికి లంకె )
-        save: దాచు
+        save: భద్రపరచు
         delete: తొలగించు
         delete_confirm: మీరు నిజంగా ఈ బ్యాడ్జి తొలగించాలనుకుంటున్నారా?
         revoke: రివోక్
@@ -1956,7 +1967,7 @@ te:
             zero: "ఏ చిహ్నాలు కేటాయించలేదు."
             one: "<b>1</b> కేటాయించిన చిహ్నం."
             other: "<b>%{లెక్క}</b> కేటాయించిన చిహ్నాలు."
-          sample: "శాంపిలు:"
+          sample: "నమూనా:"
           grant:
             with: <span class="username">%{వినియోగదారు పేరు}</span>
             with_post: <span class="username">%{వినియోగదారు పేరు}</span> టపా కొరకు%{లంకె}

@@ -133,16 +133,6 @@ cs:
       one: "příspěvek"
       few: "%{count} příspěvky"
       other: "%{count} příspěvků"
-    new-topic: |
-      Vítejte na %{site_name} &mdash; **díky za vytvoření nové konverzace!**
-
-      - Popisuje vybraný název nové téma přesně? Zní dostatečně zajímavě?
-
-      - O čem to je? Proč by mělo lidi zajímat? V jaké odpovědi od komunity doufáte?
-
-      - Používejte běžná slova podle kterých ostatní budou toto téma najít při **vyhledávání**. Pro lepší zařazení vyberte i kategorii.
-
-      Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
     new-reply: |
       Vítejte na %{site_name} &mdash; **díky za přispívání!**
 

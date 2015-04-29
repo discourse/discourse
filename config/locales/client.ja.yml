@@ -248,6 +248,7 @@ ja:
       '11': "編集"
       '12': "アイテム送信"
       '13': "インボックス"
+      '14': "保留"
     categories:
       all: "全てのカテゴリ"
       all_subcategories: "全てのサブカテゴリ"
@@ -590,7 +591,7 @@ ja:
       not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
       not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
-      resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックシてください。"
+      resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
       sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送しました。メール到着まで数分かかることがあります (いつまで立ってもメールが届かない場合は、念のためスパムフォルダの中も確認してみてください)。"
       google:
         title: "Googleで"
@@ -760,7 +761,7 @@ ja:
         top: "トップトピック無し"
         search: "検索結果はありません。"
         educate:
-          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
+          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面</a>で日数変更が可能です。'
           unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
       bottom:
         latest: "最新のトピックは以上です。"
@@ -1078,6 +1079,8 @@ ja:
             other: "あなたと他{{count}}人が不適切であるとフラグを立てました"
           notify_moderators:
             other: "あなたと他{{count}}人がモデレータ確認を要するとフラグを立てました"
+          notify_user:
+            other: "あなたと他{{count}}人がこのユーザにメッセージを送信しました"
           bookmark:
             other: "あなたと他{{count}}人がこのポストをブックマークしました"
           like:
@@ -1194,6 +1197,7 @@ ja:
       private_reminder: 'フラッグはプライベートです。スタッフ<b>のみ</b>が参照できます'
       action: 'フラグをつける'
       take_action: "アクションをする"
+      notify_action: 'メッセージ'
       delete_spammer: "スパマーの削除"
       delete_confirm: "このユーザによる<b>%{posts}</b>個のポストと<b>%{topics}</b>個のトピックを削除し、アカウントを削除し、このユーザのメールアドレス <b>%{email}</b> をブロックリストに追加しようとしています。本当にこのユーザをスマパー認定してもよいですか?"
       yes_delete_spammer: "はい、スパマーを削除する"
@@ -1215,6 +1219,7 @@ ja:
     flagging_topic:
       title: "私達のコミュニティの維持を助けてくれてありがとうごうざいます"
       action: "トピックにフラグを立てる"
+      notify_action: "メッセージ"
     topic_map:
       title: "トピックのサマリー"
       links_shown: "全{{totalLinks}}リンクを表示..."
@@ -1226,7 +1231,7 @@ ja:
       bookmarked:
         help: "このトピックをブックマークしました"
       locked:
-        help: "このトピックは終了しています。新たに回答を投稿することはできません\""
+        help: "このトピックは終了しています。新たに回答を投稿することはできません。"
       unpinned:
         title: "ピン留め解除しました"
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
@@ -1255,8 +1260,12 @@ ja:
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
+    likes_lowercase:
+      other: "いいね！"
     likes_long: "このトピックには{{number}}つ「いいね！」がついています"
     users: "ユーザ"
+    users_lowercase:
+      other: "ユーザ"
     category_title: "カテゴリ"
     history: "History"
     changed_by: "by {{author}}"
@@ -1276,6 +1285,8 @@ ja:
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
+      search:
+        title: "検索"
       categories:
         title: "カテゴリ"
         title_in: "カテゴリ - {{categoryName}}"
@@ -1316,6 +1327,10 @@ ja:
         help: "過去年間、月間、週間及び日間のアクティブトピック"
         all:
           title: "今まで"
+        weekly:
+          title: "毎週"
+        daily:
+          title: "毎日"
         all_time: "今まで"
         this_year: "今年"
         this_month: "今月"
@@ -1353,6 +1368,7 @@ ja:
         admins: '管理者:'
         blocked: 'ブロック中:'
         suspended: '停止中:'
+        private_messages_title: "メッセージ"
         space_free: "{{size}} free"
         uploads: "アップロード"
         backups: "バックアップ"
@@ -1452,6 +1468,7 @@ ja:
         name: "名前"
         add: "追加"
         add_members: "メンバー追加"
+        custom: "カスタム"
         automatic_membership_email_domains: "リスト内のメールアドレスのドメインに正確に一致したユーザーは自動的にグループに追加される"
         automatic_membership_retroactive: "同じメールアドレスドメインのルールを既に登録済みのユーザにも適用"
       api:
@@ -1485,15 +1502,18 @@ ja:
         read_only:
           enable:
             title: "読み取り専用モードに有効する"
+            label: "読み取り専用モードを有効"
             confirm: "本当に読み取り専用モードを有効しますか？"
           disable:
             title: "読み取り専用モードを無効にする"
+            label: "読み取り専用モードを無効"
         logs:
           none: "ログがありません"
         columns:
           filename: "ファイル名"
           size: "サイズ"
         upload:
+          label: "アップロード"
           uploading: "アップロード中"
           success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
@@ -1501,22 +1521,27 @@ ja:
           is_running: "バックアップ作業を実行中..."
           failed: "{{operation}}失敗しました。ログをチェックください。"
           cancel:
+            label: "キャンセル"
             title: "バックアップ作業をキャンセルする"
             confirm: "本当に実行中バックアップ作業をキャンセルしますか？"
           backup:
+            label: "バックアップ"
             title: "バックアップを作成します"
             confirm: "新しいバックアップを作成したいですか？"
             without_uploads: "はい(ファイルは含まない)"
           download:
+            label: "ダウンロード"
             title: "バックアップをダウンロード"
           destroy:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"
           restore:
             is_disabled: "バックアップ復元を無効にされています。"
+            label: "復元"
             title: "バックアップを復元"
             confirm: "本当にバックアップを復元しますか？"
           rollback:
+            label: "ロールバック"
             title: "データベースを元の作業状態にロールバックする"
             confirm: "本当にデータベースを元の作業状態にロールバックしますか？"
       export_csv:

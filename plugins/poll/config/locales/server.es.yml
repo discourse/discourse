@@ -1,0 +1,25 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+es:
+  site_settings:
+    poll_enabled: "¿Permitir la creación de encuestas?"
+  poll:
+    multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
+    multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
+    default_poll_must_have_at_least_2_options: "La encuesta debe tener al menos 2 opciones."
+    named_poll_must_have_at_least_2_options: "La encuesta llamada <strong>%{name}</strong> debe tener al menos 2 opciones."
+    default_poll_must_have_different_options: "La encuesta debe tener opciones diferentes."
+    named_poll_must_have_different_options: "La encuesta llamada <strong>%{name}</strong> debe tener opciones diferentes."
+    cannot_change_polls_after_5_minutes: "Las encuestas no puede cambiarse después de 5 minutos después de su creación. Contacta a un moderador si necesitas cambiarlas."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Las opciones de la encuesta solo pueden ser editadas en los primeros 5 minutos después de ser creadas. Si necesitas añadir o eliminar alguna opción, puedes cerrar el tema y crear uno nuevo."
+    no_polls_associated_with_this_post: "No hay encuestas asociadas a este post."
+    no_poll_with_this_name: "No hay ninguna encuesta llamada <strong>%{name}</strong> asociada con este post."
+    topic_must_be_open_to_vote: "Este tema debe estar abierto para votar."
+    poll_must_be_open_to_vote: "La encuesta debe estar abierta para votar."
+    topic_must_be_open_to_toggle_status: "Este tema debe estar abierto para cambiar entre estados."
+    only_staff_or_op_can_toggle_status: "Solo un moderador, administrador o el autor original del post puede cambiar el estado de una encuesta."

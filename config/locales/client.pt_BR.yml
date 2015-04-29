@@ -108,6 +108,9 @@ pt_BR:
     show_more: "mostrar mais"
     show_help: "Ajuda"
     links: "Links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
@@ -194,6 +197,19 @@ pt_BR:
       title:
         search: "Procurar por um Tópico pelo nome, url ou id:"
         placeholder: "digite o título do tópico aqui"
+    queue:
+      topic: "Tópico:"
+      approve: 'Aprovar'
+      reject: 'Rejeitar'
+      title: "Aprovação Necessária"
+      none: "Não existem mensagens para revisar."
+      edit: "Editar"
+      cancel: "Cancelar"
+      confirm: "Salvar Mudanças"
+      approval:
+        title: "Aprovação Necessária da Mensagem"
+        description: "Nós recebemos sua nova postagem mas é necessário que seja aprovada por um moderador antes de ser exibida. Por favor tenha paciência."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postou <a href='{{topicUrl}}'>o tópico</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Você</a> postou <a href='{{topicUrl}}'>o tópico</a>"
@@ -255,6 +271,7 @@ pt_BR:
       '11': "Edições"
       '12': "Itens enviados"
       '13': "Caixa de Entrada"
+      '14': "Pendente"
     categories:
       all: "todas as categorias"
       all_subcategories: "todos"
@@ -451,6 +468,7 @@ pt_BR:
       auto_track_topics: "Seguir automaticamente tópicos que eu entro"
       auto_track_options:
         never: "nunca"
+        immediately: "imediatamente"
         after_n_seconds:
           one: "passado 1 segundo"
           other: "passado {{count}} segundos"
@@ -545,6 +563,10 @@ pt_BR:
     mute: Silenciar
     unmute: Reativar
     last_post: Última resposta
+    last_reply_lowercase: última resposta
+    replies_lowercase:
+      one: resposta
+      other: respostas
     summary:
       enabled_description: "Você está vendo um sumário deste tópico: os posts mais interessantes conforme determinados pela comunidade."
       description: "Há <b>{{count}}</b> respostas."
@@ -638,6 +660,7 @@ pt_BR:
         title_too_long: "O título não pode ter mais de {{max}} caracteres"
         post_missing: "A resposta não pode estar vazia"
         post_length: "A resposta tem que ter no mínimo {{min}} caracteres"
+        try_like: 'Já tentou o botão <i class="fa fa-heart"></i>?'
         category_missing: "Você precisa escolher uma categoria"
       save_edit: "Salvar alterações"
       reply_original: "Responder em um Tópico Novo"
@@ -965,6 +988,7 @@ pt_BR:
         to_topic_blank: "Entrar o nome de usuário ou endereço de email da pessoa que você gostaria de convidar para este tópico."
         to_topic_email: "Você digitou um endereço de email. Nós enviaremos um convite por email que permite seu amigo responder imediatamente a este tópico."
         to_topic_username: "Você entrou um nome de usuário. Nós enviaremos uma notificação para esse usuário com um link convidando-o a esse tópico."
+        to_username: "Entrar com nome do usuário da pessoa a ser convidada. Enviaremos uma notificação para o usuário com um link convidando para este tópico."
         email_placeholder: 'nome@exemplo.com'
         success_email: "Enviamos um convite para <b>{{emailOrUsername}}</b>. Nós notificaremos você quando este convite for resgatado. Verifique a aba de convites na página de seu usuário para acompanhar seus convites."
         success_username: "Nós convidamos o usuário para participar neste tópico."
@@ -1329,12 +1353,21 @@ pt_BR:
         outro {}}
     original_post: "Resposta original"
     views: "Visualizações"
+    views_lowercase:
+      one: "visualizar"
+      other: "visualizações"
     replies: "Respostas"
     views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Curtidas"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "há {{number}} curtidas neste tópico"
     users: "Usuários"
+    users_lowercase:
+      one: "usuário"
+      other: "usuários"
     category_title: "Categoria"
     history: "Histórico"
     changed_by: "por {{author}}"
@@ -1553,6 +1586,8 @@ pt_BR:
         automatic: "Automático"
         automatic_membership_email_domains: "Usuários que se registram com um domínio de email que confere precisamente com algum desta lista serão automaticamente adicionados a este grupo:"
         automatic_membership_retroactive: "Aplicar a mesma regra de domínio de email para adicionar usuários registrados"
+        default_title: "Título padrão para todos usuários nesse grupo"
+        primary_group: "Configurar automaticamente como grupo primário"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."

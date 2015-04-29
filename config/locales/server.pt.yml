@@ -153,7 +153,16 @@ pt:
     until_posts:
       one: "1 mensagem"
       other: "%{count} mensagens"
-    new-topic: "Bem-vindo a %{site_name}&mdash; **obrigado por começar uma nova conversação!** \n\n- O título descreve o seu tópico com precisão? Parece interessante?\n \n- Qual é o tema do tópico? Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas está à espera por parte da comunidade? \n\n- Inclua boas palavras de pesquisa no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, seleccione a categoria.  \n\nPara mais, [verifique as diretrizes da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.\n"
+    new-topic: |
+      Bem-vindo a %{site_name} &mdash; **obrigado por começar uma nova conversação!**
+
+      - O título parece-lhe interessante se o ler em voz alto? É um bom resumo?
+
+      - Quem estaria interessado no mesmo? Porque é importante? Que tipo de respostas pretende?
+
+      - Inclua palavras usadas com frequência no seu tópico para que outros possam *encontrá-lo*. Para agrupar o seu tópico com tópicos relacionados, selecione a categoria.
+
+      Para mais, [verifique as diretrizes da comunidade](/diretrizes). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
     new-reply: |
       Bem-vindo a %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -267,6 +276,7 @@ pt:
       uncategorized_parent: "Sem categoria não podem ter categorias de nível superior"
       self_parent: "Uma subcategoria não pode ser superior a ela própria"
       depth: "Não pode juntar uma subcategoria dentro de outra"
+      email_in_already_exist: "Endereço de email de recepção %{email_in}' já está a ser utilizado pela categoria %{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível eliminar Sem Categoria"
       has_subcategories: "Não é possível eliminar esta categoria porque contém sub-categorias."
@@ -445,7 +455,7 @@ pt:
       email_title: 'O tópico "%{title}" requer a atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>A sua mensagem foi sinalizada pela comunidade.Por favor <a href="/my/private-messages">consulte as suas mensagens</a>.</p>'
+    you_must_edit: '<p>A sua mensagem foi sinalizada pela comunidade.Por favor <a href="/my/messages"> consulte as suas mensagens</a>.</p>'
     user_must_edit: '<p>Esta mensagem foi sinalizada pela comunidade e está temporariamente oculta.</p>'
   archetypes:
     regular:
@@ -819,7 +829,7 @@ pt:
     s3_region: "Nome da região Amazon S3 que será usada para carregar imagens."
     enable_flash_video_onebox: "Ativar a incorporação de hiperligações swf e flv (Adobe Flash) em caixas únicas. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de Confiança padrão (0-4) para utilizadores convidados."
-    default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores."
+    default_trust_level: "Nível de Confiança padrão (0-4) para todos os novos utilizadores. AVISO! Alterar isto irá colocá-lo em sério risco de spam."
     tl1_requires_topics_entered: "Quantos tópicos um novo utilizador deve introduzir antes de ser promovido para o Nível de Confiança 1."
     tl1_requires_read_posts: "Quantas mensagens um novo utilizador deve ler antes de ser promovido para o Nível de Confiança 1."
     tl1_requires_time_spent_mins: "Quantos minutos um novo utilizador deve ler antes de ser promovido para o Nível de Confiança 1."
@@ -1788,76 +1798,75 @@ pt:
   badges:
     long_descriptions:
       autobiographer: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       first_like: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       first_link: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       first_quote: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       first_share: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       read_guidelines: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       reader: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       editor: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       first_flag: |
         Sinalizar é crítico para a saúde da nossa comunidade. Se notar qualquer mensagem que requer a atenção do moderador por favor
-        não hesite em sinalizá-la. Pode também usar o diálogo de sinalização para enviar <b>mensagens</b> aos utilizadores
-        assim que chegar
+        não hesite em sinalizá-la. Pode também usar o diálogo de sinalização para enviar <b>mensagens</b> aos utilizadores assim que chegar
         ao nível de confiança 1.
       nice_share: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       welcome: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       anniversary: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       good_share: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       great_share: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       nice_post: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       nice_topic: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       good_post: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       good_topic: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       great_post: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       great_topic: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       basic: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       member: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       regular: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá
       leader: |
-        Blá Blá Blá
-        Blá Blá Blá
+        Blá blá blá
+        Blá blá blá

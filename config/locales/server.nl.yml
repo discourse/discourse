@@ -149,16 +149,6 @@ nl:
     until_posts:
       one: "één bericht"
       other: "%{count} berichten"
-    new-topic: |
-      Welkom op %{site_name} &mdash; **bedankt voor het starten van een nieuwe conversatie!**
-
-      - Geeft de titel een duidelijke beschrijving van het onderwerp, klinkt het interessant?
-
-      - Waar gaat het over? Wie zou er in geïnteresseerd zijn? Waarom is je topic van belang? Wat voor reacties verwacht je te krijgen?
-
-      - Probeer de juiste steekwoorden te gebruiken zodat anderen je topic kunnen **vinden*. Als het in een categorie moet zijn, kies dan een toepasselijke categorie.
-
-      Voor meer informatie, [bekijk onze regels](/guidelines). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
     new-reply: |
       Welkom op %{site_name} &mdash; **bedankt voor het deelnemen aan de conversatie!**
 
@@ -664,7 +654,6 @@ nl:
     clean_orphan_uploads_grace_period_hours: "Na hoeveel uur een weesbestand voor verwijderding gemarkeerd wordt."
     purge_deleted_uploads_grace_period_days: "Na hoeveel uur een weesbestand definitief verwijderd wordt."
     default_invitee_trust_level: "Het standaard trustlevel (0-4) voor uitgenodigde leden."
-    default_trust_level: "Het standaard trustlevel (0-4) voor alle nieuwe leden."
     min_trust_to_create_topic: "Het minimale trust level dat nodig is om een topic te mogen maken."
     min_trust_to_edit_wiki_post: "Het minimale trust level dat nodig is om een bericht te wijzigen dat als wiki gemarkeerd is."
     newuser_max_links: "Hoeveel links een nieuw lid in een bericht kan plaatsen."
