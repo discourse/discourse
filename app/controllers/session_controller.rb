@@ -4,7 +4,8 @@ require_dependency 'single_sign_on'
 class SessionController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required
-  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider']
+  skip_before_filter :check_xhr, only: ['sso', 'sso_login', 'sso_logout', 'become', 'sso_provider']
+  skip_before_filter :verify_authenticity_token, only: ['sso_logout']
 
   def csrf
     render json: {csrf: form_authenticity_token }
@@ -99,6 +100,14 @@ class SessionController < ApplicationController
 
       render text: I18n.t("sso.unknown_error"), status: 500
     end
+  end
+
+  def sso_logout
+    unless SiteSetting.enable_sso
+      return render(nothing: true, status: 404)
+    end
+
+    destroy
   end
 
   def create
