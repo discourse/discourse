@@ -156,11 +156,11 @@ fi:
     new-topic: |
       Tervetuloa, tämä on %{site_name} &mdash; **kiitos uuden viestiketjun aloittamisesta!**
 
-      - Kuvaako otsikko hyvin ketjun aihetta? Kuulostaako se mielenkiintoiselta?
+      - Kuulostaako otsikko mielenkiintoiselta, jos luet sen ääneen? Onko se hyvä kiteytys?
 
-      - Mistä se kertoo? Ketä se voisi kiinnostaa? Miksi se on merkityksellistä? Minkälaisia vastauksia odotat?
+      - Ketä tämä ketju voisi kiinnostaa? Mikä on sen merkitys? Minkälaisia vastauksia odotat?
 
-      - Sisällytä tekstiin hyviä hakusanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
+      - Sisällytä tekstiin usein käytettyjä sanoja, jotta muut voivat *löytää* sen. Yhdistääksesi ketjun muihin siihen liittyviin ketjuihin, valitse sille sopiva alue.
 
       Saadaksesi lisätietoa, [käy tutkimassa ohjeet](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     new-reply: |
@@ -280,6 +280,7 @@ fi:
       uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
       self_parent: "Alue ei voi olla itsensä ylempi alue."
       depth: "Et voi laittaa alempia alueita sisäkkäin"
+      email_in_already_exist: "Sisääntulevan sähköpostin osoite '%{email_in}' on jo käytössä alueella '%{category_name}'."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
       has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita."
@@ -458,7 +459,7 @@ fi:
       email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Viestisi on liputettu muiden käyttäjien toimesta. <a href="/my/private-messages">Käy lukemassa saapuneet viestisi</a>.</p>'
+    you_must_edit: '<p>Viestisi on liputettu yhteisön toimesta. Käy lukemassa <a href="/my/messages">saapuneet viestisi</a>.</p>'
     user_must_edit: '<p>Tämä viesti on liputettu ja siksi piilotettu väliaikaisesti.</p>'
   archetypes:
     regular:
@@ -831,7 +832,7 @@ fi:
     s3_region: "Amazon S3 region, jota käytetään kuvien sijoittamisessa."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
-    default_trust_level: "Oletus luottamustaso (0-4) kaikile käyttäjille."
+    default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
     tl1_requires_topics_entered: "Kuinka monta ketjua uuden käyttäjän täytyy avata ennen ylentämistä luottamustasolle 1."
     tl1_requires_read_posts: "Kuinka monta viestiä uuden käyttäjän täytyy lukea ennen ylentämistä luottamustasolle 1."
     tl1_requires_time_spent_mins: "Kuinka monta minuuttia uuden käyttäjän täytyy lukea keskusteluita ennen ylentämistä luottamustasolle 1."

@@ -271,6 +271,7 @@ fi:
       '11': "Muokkaukset"
       '12': "Lähetetyt"
       '13': "Postilaatikko"
+      '14': "Odottaa"
     categories:
       all: "kaikki alueet"
       all_subcategories: "kaikki"
@@ -659,6 +660,7 @@ fi:
         title_too_long: "Otsikko voi olla korkeintaan {{max}} merkkiä pitkä"
         post_missing: "Viesti ei voi olla tyhjä"
         post_length: "Viestissä täytyy olla vähintään {{min}} merkkiä"
+        try_like: 'Oletko jo kokeillut <i class="fa fa-heart"></i>-nappia?'
         category_missing: "Sinun täytyy valita viestille alue"
       save_edit: "Tallenna muokkaus"
       reply_original: "Vastaa alkuperäiseen ketjuun"
@@ -986,6 +988,7 @@ fi:
         to_topic_blank: "Syötä henkilön käyttäjätunnus tai sähköpostiosoite, jonka haluaisit kutsua tähän ketjuun."
         to_topic_email: "Syötit sähköpostiosoitteen. Lähetämme ystävällesi sähköpostin, jonka avulla hän voi heti vastata tähän ketjuun."
         to_topic_username: "Syötit käyttäjätunnuksen. Lähetämme tälle käyttäjälle ilmoituksen, joka sisältää kutsun ja linkin tähän ketjuun."
+        to_username: "Kirjoita henkilön nimi, jonka haluat kutsua. Lähetämme tälle käyttäjälle ilmoituksen, joka sisältää kutsun ja linkin tähän ketjuun."
         email_placeholder: 'nimi@esimerkki.fi'
         success_email: "Olemme lähettäneet kutsun osoitteeseen <b>{{emailOrUsername}}</b>. Ilmoitamme, kun kutsuun on vastattu. Voit seurata käyttäjäsivusi kutsut-välilehdeltä kutsujesi tilannetta."
         success_username: "Olemme kutsuneet käyttäjän osallistumaan tähän ketjuun."

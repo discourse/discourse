@@ -146,11 +146,11 @@ zh_CN:
     until_posts:
       other: "%{count} 个帖子"
     new-topic: |
-      欢迎来到%{site_name} &mdash; **衷心感谢你开启一段新的讨论！**
+      欢迎来到%{site_name} &mdash; **衷心感谢你参与讨论！**
 
       - 标题是否清晰明了地描述了主题？看起来有意思么？
 
-      - 主题是关于什么的？谁会感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
+      - 谁会感兴趣？它为什么重要？你期望从社区中获得什么样的回应？
 
       - 选择恰当的词句以便别人能找到你的主题。若想要给主题分组，选择一个分类。
 
@@ -272,6 +272,7 @@ zh_CN:
       uncategorized_parent: "未分类不能有一个父分类"
       self_parent: "一个子分类不能属于它自己。"
       depth: "你不能在一个子分类下再包含一个子分类。"
+      email_in_already_exist: "入站邮件地址 “%{email_in}” 已经被用于 “%{category_name}” 分类了。"
     cannot_delete:
       uncategorized: "不能删除未分类。"
       has_subcategories: "不能删除该分类，因为它有子分类"
@@ -424,7 +425,7 @@ zh_CN:
       email_title: '"%{title}" 主题需要你的关注'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/private-messages">查看你的消息</a>。</p>'
+    you_must_edit: '<p>你的帖子被社群成员标记了。请<a href="/my/messages">查看你的消息</a>。</p>'
     user_must_edit: '<p>你的帖子已经被社群标记并被临时隐藏。</p>'
   archetypes:
     regular:
@@ -798,7 +799,7 @@ zh_CN:
     s3_region: "将用于上传图片的 Amazon S3 区域名。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
-    default_trust_level: "所有新用户的缺省信任等级（0-4）。"
+    default_trust_level: "所有新用户的缺省信任等级（0-4）。警告！改变此项将提高广告泛滥的风险。"
     tl1_requires_topics_entered: "新用户升级到信任等级1所需要进入的主题数量。"
     tl1_requires_read_posts: "新用户升级到信任等级1所需要阅读的帖子数量。"
     tl1_requires_time_spent_mins: "新用户升级到信任等级1所需要阅读帖子耗费的分钟数。"

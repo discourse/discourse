@@ -141,7 +141,6 @@ ja:
   education:
     until_posts:
       other: "%{count} 投稿"
-    new-topic: "%{site_name} へようこそ &mdash; **\n新たなトピックの作成ありがとうございます!** \n- タイトルはトピックの内容を正しく説明していますか? 他の人にとって興味深いタイトルになっていますか? \n- このトピックは何をカバーするものですか? このトピックに興味を示しそうなのは誰でしょう? なぜこのトピックは重要なのでしょうか? コミュニティよりどのような回答を期待していますか?\n - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。適切なカテゴリを選択すると、他の関連トピックとのグルーピングができます。\n詳細は[コミュニティガイドライン](/guidelines)を参照してください。 このパネルは最初の %{education_posts_text} のみに表示されます。\n"
     new-reply: "%{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!** \n- あなたの回答は議論に何らかの形で貢献していますか?\n - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。\n - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。 \n詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。\n"
     avatar: |
       ### アカウント用の画像を用意してみては?
@@ -722,7 +721,6 @@ ja:
     s3_region: "画像をアップロードする Amazon S3 のリージョン名"
     enable_flash_video_onebox: "onebox で、swf の埋め込みと flv(Adobe Flash) リンクを許可する。注意: セキュリティリスクになる可能性があります"
     default_invitee_trust_level: "招待したユーザのデフォルトトラストレベル(0-4)"
-    default_trust_level: "新規ユーザのデフォルトトラストレベル(0-4)"
     tl1_requires_topics_entered: "新規ユーザがトラストレベル1に昇格するために作成しなければならないトピックの数"
     tl1_requires_read_posts: "新規ユーザがトラストレベル1に昇格するために閲覧しなければらないポストの数"
     tl1_requires_time_spent_mins: "新規ユーザがトラストレベル1に昇格するためにポストを読まなければならない時間 (分)"
@@ -1327,7 +1325,7 @@ ja:
   terms_of_service:
     title: "利用規約"
     signup_form_message: '<a href="/tos" target="_blank">Terms of Service</a>を読んで同意しました'
-  deleted: 'deleted'
+  deleted: '削除'
   upload:
     edit_reason: "ダウンロードされた画像のコピー"
     unauthorized: "申し訳ありません、ファイルのアップロードが拒否されました (サポートするファイルの拡張子: %{authorized_extensions})."
