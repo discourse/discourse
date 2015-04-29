@@ -154,15 +154,15 @@ fr:
       one: "1 message"
       other: "%{count} messages"
     new-topic: |
-      Bienvenue sur %{site_name} &mdash; **merci de lancer une nouvelle conversation !**
+      Bienvenue sur %{site_name} &mdash; **merci de débuter une nouvelle conversation !**
 
-      - Le titre est-il en adéquation avec ce qu'une personne peut raisonnablement s'attendre à trouver dans ce sujet ? Est-il attrayant ?
+      - Le titre vous semble-t-il intéressant lorsque vous le lisez à haute voix ? Est-ce un bonne synthèse de ce que contient votre message ?
 
-      - De quoi ça parle ? Qui pourrait être intéressé ? En quoi est-ce important ? Quel genre de réponses espérez-vous de la part de la communauté ?
+      - Qui pourrait être intéressé par cette conversation ? Pourquoi est-elle importante ? Quel genre de réponses attendez-vous ?
 
-      - Choisissez les bons mots pour permettre aux autres de *trouver* votre sujet. Choisissez la catégorie appropriée si besoin est.
+      - Incluez des mots fréquents dans votre sujet pour que les utilisateurs puissent le *retrouver*. Pour le regrouper avec des sujets liés, sélectionnez une catégorie.
 
-      Pour plus d'aide, [lisez le règlement de la communauté](/guidelines). Ce panneau n’apparaîtra que pour les %{education_posts_text} premiers messages.
+      Pour plus d'info, [jettez un œil au règlement de la communauté](/guidelines). Ce message apparaîtra uniquement pour vos premiers messages.
     new-reply: |
       Bienvenue sur %{site_name} &mdash; **Merci de contribuer !**
 
@@ -275,6 +275,7 @@ fr:
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
+      email_in_already_exist: "L'adresse courriel entrante '%{email_in}' est déjà utilisée pour la catégorie '%{category_name}'."
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -453,7 +454,7 @@ fr:
       email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/private-messages">regarder vos messages</a>.</p>'
+    you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/messages">regarder vos messages directs</a>.</p>'
     user_must_edit: '<p>Ce message a été signalé par la communauté et temporairement masqué.</p>'
   archetypes:
     regular:
@@ -754,6 +755,8 @@ fr:
     email_token_grace_period_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont encore valides pour une période de grâce de (n) heures après leur expiration."
     enable_badges: "Activer le système de badges"
     allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
+    email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
     forgot_password_strict: "Ne pas tenir informé de l'existance d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
     log_out_strict: "Lors de la déconnexion, déconnecter TOUTES les sessions pour l'utilisateur sur tous les appareils"
     version_checks: "Ping les serveurs de Discourse afin d'obtenir les mises à jours et affiche les nouveaux messages d'information dans le tableau de bord /admin"
@@ -825,7 +828,7 @@ fr:
     s3_region: "Le nom de la région Amazon S3 qui va être utilisée pour uploader des images."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
-    default_trust_level: "Niveau de confiance par défaut (0-4) pour les nouveaux utilisateurs."
+    default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
     tl1_requires_topics_entered: "A combien de sujet un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
     tl1_requires_read_posts: "Combien de message un nouvel utilisateur doit avoir lu pour être promu au niveau de confiance 1."
     tl1_requires_time_spent_mins: "Combien de minutes un nouvel utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 1."

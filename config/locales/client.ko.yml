@@ -91,6 +91,8 @@ ko:
     show_more: "더 보기"
     show_help: "도움말"
     links: "링크"
+    links_lowercase:
+      other: "링크"
     faq: "FAQ"
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
@@ -134,12 +136,16 @@ ko:
     bookmarked:
       title: "북마크"
       clear_bookmarks: "북마크 제거"
+      help:
+        bookmark: "북마크하려면 이 토픽의 첫번째 게시글을 클릭하세요"
+        unbookmark: "북마크를 제거하려면 이 토픽의 첫 번째 게시글을 클릭하세요"
     bookmarks:
       not_logged_in: "죄송합니다. 게시물을 즐겨찾기에 추가하려면 로그인을 해야 합니다."
       created: "이 게시글을 북마크 하였습니다."
       not_bookmarked: "이 게시물을 읽으셨습니다. 즐겨찾기에 추가하려면 클릭하세요."
       last_read: "마지막으로 읽으신 게시물입니다. 즐겨찾기에 추가하려면 클릭하세요."
       remove: "북마크 삭제"
+      confirm_clear: "정말 이 토픽의 모든 북마크를 제거하시겠습니까?"
     topic_count_latest:
       other: "{{count}} 새 토픽 혹은 업데이트된 토픽"
     topic_count_unread:
@@ -160,6 +166,8 @@ ko:
     undo: "실행 취소"
     revert: "되돌리기"
     failed: "실패"
+    switch_to_anon: "익명 모드"
+    switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
     choose_topic:
@@ -167,6 +175,15 @@ ko:
       title:
         search: "이름, url, ID로 토픽 검색"
         placeholder: "여기에 토픽 제목을 입력하세요"
+    queue:
+      topic: "토픽:"
+      approve: '승인'
+      reject: '거절'
+      edit: "편집"
+      cancel: "취소"
+      confirm: "변경사항 저장"
+      approval:
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>가 게시한 <a href='{{topicUrl}}'>토픽</a>"
       you_posted_topic: "<a href='{{userUrl}}'>당신</a>이 게시한 <a href='{{topicUrl}}'>토픽</a>"
@@ -186,10 +203,16 @@ ko:
       title: "사용자"
       likes_given: "제공한"
       likes_received: "받은"
+      topics_entered: "입력된 토픽"
+      topics_entered_long: "입력된 제목"
       time_read: "읽은 시간"
       topic_count: "토픽"
+      topic_count_long: "생성된 토픽"
       post_count: "답글"
+      post_count_long: "답글"
       no_results: "결과가 없습니다."
+      days_visited: "방문"
+      days_visited_long: "일일 방문"
       total_rows:
         other: "%{count} 사용자"
     groups:
@@ -814,11 +837,19 @@ ko:
         delete: "토픽 삭제"
         open: "토픽 열기"
         close: "토픽 닫기"
+        multi_select: "게시글 선택"
+        auto_close: "자동으로 닫기..."
+        pin: "토픽 고정..."
+        unpin: "토픽 고정 취소..."
         unarchive: "보관 안된 토픽"
         archive: "보관된 토픽"
         invisible: "목록에서 제외하기"
         visible: "목록에 넣기"
         reset_read: "값 재설정"
+      feature:
+        pin: "토픽 고정"
+        unpin: "토픽 고정 취소"
+        pin_globally: "전역적으로 토픽 고정"
       reply:
         title: '답글'
         help: '이 토픽에 대한 답글 구성 시작'
@@ -832,6 +863,23 @@ ko:
         title: '신고'
         help: '운영자에게 이 글을 신고합니다.'
         success_message: '성공적으로 토픽을 신고 하였습니다.'
+      feature_topic:
+        pin: "이 토픽을 {{categoryLink}} 카테고리 상단에 노출하도록 합니다."
+        confirm_pin: "이미 {{count}}개의 고정된 토픽이 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 토픽을 고정하시겠습니까?"
+        unpin: "이 토픽을 {{categoryLink}} 카테고리 상단에서 제거 합니다."
+        pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
+        already_pinned:
+          zero: " {{categoryLink}} 카테고리에 고정된 토픽이 없습니다."
+          one: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
+          other: "{{categoryLink}} 카테고리에 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "이 토픽을 스태프가 고정 취소하기 전까지 모든 토픽 목록 상단에 고정합니다."
+        confirm_pin_globally: "이미 {{count}}개의 토픽이 전역적으로 고정되어 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 토픽을 전역적으로 고정하시겠습니까?"
+        unpin_globally: "모든 토픽 목록 상단에서 이 토픽을 제거"
+        global_pin_note: "개별적으로 사용자가 토픽 고정을 취소할 수 있습니다."
+        already_pinned_globally:
+          zero: "전역적으로 고정된 토픽이 없습니다."
+          one: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>1</strong>."
+          other: "전역적으로 고정된 토픽: <strong class='badge badge-notification unread'>{{count}}</strong>."
       inviting: "초대 중..."
       automatically_add_to_groups_optional: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (선택, 관리자만 가능)"
       automatically_add_to_groups_required: "이 초대는 다음 그룹에 대한 접근 권한을 포함합니다: (필수, 관리자만 가능)"
@@ -1817,6 +1865,7 @@ ko:
         none: '없음'
         no_results: "No results found."
         clear_filter: "Clear"
+        add_url: "URL 추가"
         categories:
           all_results: 'All'
           required: '필수'

@@ -271,6 +271,7 @@ pt:
       '11': "Edições"
       '12': "Itens Enviados"
       '13': "Caixa de Entrada"
+      '14': "Pendente"
     categories:
       all: "todas as categorias"
       all_subcategories: "todas"
@@ -659,6 +660,7 @@ pt:
         title_too_long: "O tíítulo não pode conter mais do que {{max}} caracteres."
         post_missing: "A mensagem não pode estar vazia"
         post_length: "A mensagem tem que ter pelo menos {{min}} caracteres."
+        try_like: 'Já tentou o botão <i class="fa fa-heart"></i>?'
         category_missing: "Tem que escolher uma categoria"
       save_edit: "Guardar alterações"
       reply_original: "Responder no Tópico Original"
@@ -986,6 +988,7 @@ pt:
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
         to_topic_username: "Introduziu um nome de utilizador. Iremos enviar uma notificação a esse utilizador com uma hiperligação convidando-o para este tópico."
+        to_username: "Introduza o nome de utilizador da pessoa que gostava de convidar. Iremos enviar uma notificação para esse utilizador com uma hiperligação convidando-o para este tópico."
         email_placeholder: 'nome@exemplo.com'
         success_email: "Enviámos por email um convite para <b>{{emailOrUsername}}</b>. Iremos notificá-lo quando o convite for utilizado. Verifique o separador de convites na sua página de utilizador para acompanhar os seus convites."
         success_username: "Convidámos esse utilizador para participar neste tópico."
@@ -1040,7 +1043,7 @@ pt:
       edit_reason: "Motivo:"
       post_number: "mensagem {{number}}"
       last_edited_on: "mensagem editada pela última vez em"
-      reply_as_new_topic: "Responder como tópico hiperligado"
+      reply_as_new_topic: "Responder com novo Tópico"
       continue_discussion: "Continuar a discussão desde {{postLink}}:"
       follow_quote: "avançar para a mensagem citada"
       show_full: "Mostrar Mensagem Completa"
@@ -1415,7 +1418,7 @@ pt:
         help: "tópicos nos quais publicou uma mensagem"
       bookmarks:
         title: "Marcadores"
-        help: "tópicos marcados"
+        help: "tópicos que marcou"
       category:
         title:
           zero: "{{categoryName}}"
@@ -1426,7 +1429,7 @@ pt:
         title: "Os Melhores"
         help: "os tópicos mais ativos no último ano, mês, semana ou dia"
         all:
-          title: "Todo o Tempo"
+          title: "Em Qualquer Altura"
         yearly:
           title: "Anual"
         monthly:
@@ -1435,7 +1438,7 @@ pt:
           title: "Semanal"
         daily:
           title: "Diário"
-        all_time: "Todo o Tempo"
+        all_time: "Em Qualquer Altura"
         this_year: "Este ano"
         this_month: "Este mês"
         this_week: "Esta semana"

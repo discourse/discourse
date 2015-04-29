@@ -154,15 +154,15 @@ pt_BR:
       one: "1 mensagem"
       other: "%{count} mensagens"
     new-topic: |
-      Bem-vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversação!**
+      Bem vindo ao %{site_name} &mdash; **obrigado por iniciar uma nova conversa!**
 
-      - O título descreve seu tópico precisamente? Soa interessante?
+      - O título parece interessante se você ler em voz alta? É um bom resumo?
 
-      - Sobre o que é isso? Quem estaria interessado? Por que isto importa? Que tipo de respostas você está esperando da comunidade?
+      - Quem estaria interessado nisto? Por que é relevante? Que tipo de resposta você quer?
 
-      - Inclua boas palavras chave no seu tópico para que outros possam *encontrá-lo*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
+      - Incluir palavras geralmente usadas no seu tópico para que outros possam *encontrar*. Para agrupar seu tópico com outros relacionados, selecione uma categoria.
 
-      Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para as suas primeiras %{education_posts_text}.
+      Para mais, [veja os guias da comunidade](/guidelines). Este painel só irá aparecer para seu primeiro %{education_posts_text}.
     new-reply: |
       Bem-vindo ao %{site_name} &mdash; **obrigado por contribuir!**
 
@@ -270,6 +270,7 @@ pt_BR:
       uncategorized_parent: "Sem categoria não pode ter uma categoria pai"
       self_parent: "A subcategoria mãe não pode ser ela mesma"
       depth: "Você não pode aninhar uma subcategoria sob outra"
+      email_in_already_exist: "Endereço de email de entrada '%{email_in}' já está em uso para categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Não é possível excluir Sem categoria"
       has_subcategories: "Não é possível excluir essa categoria porque tem subcategorias."
@@ -448,7 +449,7 @@ pt_BR:
       email_title: 'O tópico "%{title}" requer atenção do moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/private-messages">veja suas mensagens</a>.</p>'
+    you_must_edit: '<p>Sua mensagem foi marcada pela comunidade. Por favor <a href="/my/messages">veja suas mensagens</a>.</p>'
     user_must_edit: '<p>Conteúdo sinalizado escondido.</p>'
   archetypes:
     regular:
@@ -711,6 +712,9 @@ pt_BR:
     cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
     max_topics_in_first_day: "O número máximo de tópicos que um usuário tem permissão para criar em seu primeiro dia no site"
     max_replies_in_first_day: "O número máximo de respostas que um usuário tem permissão para criar em seu primeiro dia no site"
+    tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
+    tl3_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl3 (regular) multiplicando por esse número"
+    tl4_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl4 (lideres) multiplicando por esse número"
     num_flags_to_block_new_user: "Se os posts de um novo usuário receber várias sinalizações de spam de num_users_to_block_new_user diferentes usuários, esconder todos os posts deste usuário e prevenir postagem futura. 0 para desabilitar."
     num_users_to_block_new_user: "Se os posts de um novo usuário receber num_flags_to_block_new_user sinalizações de spam deste tanto de usuários diferentes, esconder todos os seus posts e prevenir posts futuros. 0 oara desabilitar."
     notify_mods_when_user_blocked: "Se um usuário for bloqueado de forma automática, enviar uma mensagem para todos os moderadores."
@@ -746,6 +750,8 @@ pt_BR:
     email_token_grace_period_hours: "Tokens de esqueceu senha / ativar conta ainda serão válidas por um período extra de (n) horas depois de serem resgatados."
     enable_badges: "Habilita o sistema de emblemas (experimental)"
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
+    email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
     forgot_password_strict: "Não informar usuários da existência de uma conta quando eles usam o diálogo de esquecimento de senha."
     log_out_strict: "Quando deslogando, deslogar TODAS as sessões do usuário em todos os dispositivos"
     version_checks: "Pingar Discourse Hub para atualizações de versão e exibir mensagens de versão no Painel em /admin"
@@ -817,7 +823,7 @@ pt_BR:
     s3_region: "O nome da região da Amazon S3 que será usada para fazer upload de imagens."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
-    default_trust_level: "Nível de confiança (0-4) padrão para todos os novos usuários."
+    default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
     tl1_requires_topics_entered: "Quantos tópicos um usuário novo deve entrar antes de ser promovido a nível de confiança 1."
     tl1_requires_read_posts: "Quantas postagens um usuário novo deve ler antes de ser promovido a nível de confiança 1."
     tl1_requires_time_spent_mins: "Quantos minutos um usuário novo deve ler postagens antes de ser promovido a nível de confiança 1."
@@ -967,6 +973,8 @@ pt_BR:
     enable_emoji: "Habilitar emoji"
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
+    approve_post_count: "Quantidade de mensagens de novos usuários que devem ser aprovadas"
+    approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."

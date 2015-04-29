@@ -248,6 +248,7 @@ zh_CN:
       '11': "编辑"
       '12': "发送条目"
       '13': "收件箱"
+      '14': "待定"
     categories:
       all: "所有分类"
       all_subcategories: "全部"
@@ -629,6 +630,7 @@ zh_CN:
         title_too_long: "标题太长，至多 {{max}} 个字符。"
         post_missing: "帖子不能为空"
         post_length: "帖子至少应有 {{min}} 个字符"
+        try_like: '你试过了 <i class="fa fa-heart"></i> 按钮吗？'
         category_missing: "你必须选择一个分类"
       save_edit: "保存编辑"
       reply_original: "回复原始话题"
@@ -949,6 +951,7 @@ zh_CN:
         to_topic_blank: "输入你想邀请的用户的用户名或邮箱地址至该主题"
         to_topic_email: "你已经输入了邮箱地址。我们将发送一封邮件邀请让你的朋友可直接回复该主题。"
         to_topic_username: "你已经输入了用户名。我们将发送提醒至该用户，其中将包含一个邀请他们至该主题的链接。"
+        to_username: "输入你想邀请的用户的用户名。我们将发送一个包含了到这个主题的链接的通知给用户。"
         email_placeholder: '电子邮箱地址'
         success_email: "我们发了一封邀请邮件给 <b>{{emailOrUsername}}</b>。我们将在邀请被接受后通知你。检查你的用户中的邀请标签页来追踪你的邀请。"
         success_username: "我们已经邀请了该用户参与该主题。"

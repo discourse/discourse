@@ -106,16 +106,6 @@ sq:
     until_posts:
       one: "1 postim"
       other: "%{count} postime"
-    new-topic: |
-      Mirë se vini tek %{site_name} &mdash; **faleminderit që po hapni një temë të re!**
-
-      - Does the title accurately describe your topic? Does it sound interesting?
-
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
-
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
-
-      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
     new-reply: |
       Mirë se vini tek %{site_name} &mdash; **faleminderit për kontributin!**
 
@@ -684,7 +674,6 @@ sq:
     s3_region: "The Amazon S3 region name that will be used to upload images."
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
-    default_trust_level: "Default trust level (0-4) for all new users."
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
     tl1_requires_read_posts: "How many posts a new user must read before promotion to trust level 1."
     tl1_requires_time_spent_mins: "How many minutes a new user must read posts before promotion to trust level 1."
