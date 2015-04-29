@@ -72,7 +72,7 @@ class SqlBuilder
   #AS reloads this on tests
   remove_const :FTYPE_MAP if defined? FTYPE_MAP
 
-  if rails_master?
+  if Rails.version >= "4.2.0"
     FTYPE_MAP = {
       23 => ActiveRecord::Type::Integer.new,
       1114 => ActiveRecord::Type::DateTime.new,
@@ -102,7 +102,7 @@ class SqlBuilder
       setters.each_with_index do |mapper, index|
         translated = row[index]
         if mapper[1] && !translated.nil?
-          if rails_master?
+          if Rails.version >= "4.2.0"
             translated = mapper[1].type_cast_from_database(translated)
           else
             translated = ActiveRecord::ConnectionAdapters::Column.send mapper[1], translated
