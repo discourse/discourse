@@ -1,6 +1,4 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   faqOverriden: Ember.computed.gt('siteSettings.faq_url.length', 0),
 
   contactInfo: function() {
