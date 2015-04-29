@@ -9,10 +9,10 @@
 //= require ../../app/assets/javascripts/discourse/lib/probes
 
 // Externals we need to load first
-//= require development/jquery-2.1.1
+//= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
-//= require development/ember
+//= require ember.debug
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
@@ -76,9 +76,7 @@ d.write('<style>#ember-testing-container { position: absolute; background: white
 Discourse.rootElement = '#ember-testing';
 Discourse.setupForTesting();
 Discourse.injectTestHelpers();
-Discourse.runInitializers();
 Discourse.start();
-Discourse.Route.mapRoutes();
 
 // disable logster error reporting
 if (window.Logster) {

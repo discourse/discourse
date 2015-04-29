@@ -1,7 +1,7 @@
 <%
 if Rails.env.development? || Rails.env.test?
-  require_asset ("development/jquery-2.1.1.js")
+  require_asset ("jquery.debug.js")
 else
-  require_asset ("production/jquery-2.1.1.min.js")
+  require_asset ("jquery.prod.js")
 end
 %>
