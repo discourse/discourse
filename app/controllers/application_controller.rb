@@ -89,6 +89,11 @@ class ApplicationController < ActionController::Base
     render_json_error I18n.t("rate_limiter.too_many_requests", time_left: time_left), type: :rate_limit, status: 429
   end
 
+  rescue_from PG::ReadOnlySqlTransaction do |e|
+    Discourse.received_readonly!
+    raise Discourse::ReadOnly
+  end
+
   rescue_from Discourse::NotLoggedIn do |e|
     raise e if Rails.env.test?
 

@@ -112,7 +112,7 @@ Spork.prefork do
       # very expensive IO operations
       SiteSetting.automatically_download_gravatars = false
 
-      DiscourseRedis.clear_readonly!
+      Discourse.clear_readonly!
 
       I18n.locale = :en
     end

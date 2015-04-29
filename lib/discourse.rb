@@ -93,6 +93,19 @@ module Discourse
     end
   end
 
+  def self.recently_readonly?
+    return false unless @last_read_only
+    @last_read_only > 15.seconds.ago
+  end
+
+  def self.received_readonly!
+    @last_read_only = Time.now
+  end
+
+  def self.clear_readonly!
+    @last_read_only = nil
+  end
+
   def self.disabled_plugin_names
     plugins.select {|p| !p.enabled?}.map(&:name)
   end
@@ -202,7 +215,7 @@ module Discourse
   end
 
   def self.readonly_mode?
-    DiscourseRedis.recently_readonly? || !!$redis.get(readonly_mode_key)
+    recently_readonly? || !!$redis.get(readonly_mode_key)
   end
 
   def self.request_refresh!

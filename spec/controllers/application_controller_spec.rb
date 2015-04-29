@@ -114,7 +114,7 @@ describe TopicsController do
     end
 
     it "returns a readonly header if the site is read only" do
-      DiscourseRedis.received_readonly!
+      Discourse.received_readonly!
       get :show, {topic_id: topic.id}
       expect(response.headers['Discourse-Readonly']).to eq('true')
     end
