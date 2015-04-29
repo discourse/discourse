@@ -378,14 +378,14 @@ GEM
       nokogiri (>= 1.4.4)
       nokogumbo (= 1.2.0)
     sass (3.2.19)
-    sass-rails (4.0.2)
+    sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0.0)
-    seed-fu (2.3.3)
-      activerecord (>= 3.1, < 4.2)
-      activesupport (>= 3.1, < 4.2)
+    seed-fu (2.3.5)
+      activerecord (>= 3.1, < 4.3)
+      activesupport (>= 3.1, < 4.3)
     shoulda (3.5.0)
       shoulda-context (~> 1.0, >= 1.0.1)
       shoulda-matchers (>= 1.4.1, < 3.0)
@@ -536,7 +536,7 @@ DEPENDENCIES
   ruby-readability
   sanitize
   sass
-  sass-rails (= 4.0.2)
+  sass-rails (~> 4.0.5)
   seed-fu (~> 2.3.3)
   shoulda
   sidekiq

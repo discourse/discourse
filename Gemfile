@@ -2,77 +2,23 @@ source 'https://rubygems.org'
 # if there is a super emergency and rubygems is playing up, try
 #source 'http://production.cf.rubygems.org'
 
-module ::Kernel
-  def rails_master?
-    ENV["RAILS_MASTER"] == '1'
-  end
+def rails_master?
+  ENV["RAILS_MASTER"] == '1'
 end
 
-if rails_master?
-  # monkey patching to support dual booting
-  module Bundler::SharedHelpers
-    def default_lockfile=(path)
-      @default_lockfile = path
-    end
-    def default_lockfile
-      @default_lockfile ||= Pathname.new("#{default_gemfile}.lock")
-    end
-  end
-
-  Bundler::SharedHelpers.default_lockfile = Pathname.new("#{Bundler::SharedHelpers.default_gemfile}_master.lock")
-
-  # Bundler::Dsl.evaluate already called with an incorrect lockfile ... fix it
-  class Bundler::Dsl
-    # A bit messy, this can be called multiple times by bundler, avoid blowing the stack
-    unless self.method_defined? :to_definition_unpatched
-      alias_method :to_definition_unpatched, :to_definition
-    end
-    def to_definition(bad_lockfile, unlock)
-      to_definition_unpatched(Bundler::SharedHelpers.default_lockfile, unlock)
-    end
-  end
-
+def rails_42?
+  ENV["RAILS42"] == '1'
 end
-
-# Monkey patch bundler to support mri_21
-unless Bundler::Dependency::PLATFORM_MAP.include? :mri_21
-   STDERR.puts
-   STDERR.puts "WARNING: --------------------------------------------------------------------------"
-   STDERR.puts "You are running an old version of bundler, please update by running: gem install bundler"
-   STDERR.puts
-   map = Bundler::Dependency::PLATFORM_MAP.dup
-   map[:mri_21] = Gem::Platform::RUBY
-   map.freeze
-   Bundler::Dependency.send(:remove_const, "PLATFORM_MAP")
-   Bundler::Dependency.const_set("PLATFORM_MAP", map)
-
-   Bundler::Dsl.send(:remove_const, "VALID_PLATFORMS")
-   Bundler::Dsl.const_set("VALID_PLATFORMS", map.keys.freeze)
-   class ::Bundler::CurrentRuby
-      def on_21?
-         RUBY_VERSION =~ /^2\.1/
-      end
-      def mri_21?
-        mri? && on_21?
-      end
-   end
-   class ::Bundler::Dependency
-      private
-      def on_21?
-         RUBY_VERSION =~ /^2\.1/
-      end
-      def mri_21?
-        mri? && on_21?
-      end
-   end
-end
-
 
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
   gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
+elsif rails_42?
+  gem 'rails', '~> 4.2.1'
+  gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
+  gem 'seed-fu', '~> 2.3.5'
 else
   gem 'rails', '~> 4.1.10'
   gem 'rails-observers'
@@ -161,14 +107,7 @@ gem 'rack-protection' # security
 # in production environments by default.
 # allow everywhere for now cause we are allowing asset debugging in prd
 group :assets do
-
-  if rails_master?
-    gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git'
-  else
-    # later is breaking our asset compliation extensions
-    gem 'sass-rails', '4.0.2'
-  end
-
+  gem 'sass-rails', '~> 4.0.5'
   gem 'uglifier'
   gem 'rtlit', require: false # for css rtling
 end
@@ -233,8 +172,6 @@ gem 'ruby-readability', require: false
 
 gem 'simple-rss', require: false
 
-# TODO mri_22 should be here, but bundler was real slow to pick it up
-# not even in production bundler yet, monkey patching it in feels bad
 gem 'gctools', require: false, platform: :mri_21
 
 begin
