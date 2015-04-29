@@ -37,8 +37,6 @@ var oldAvatar = Discourse.Utilities.avatarImg;
 function acceptance(name, options) {
   module("Acceptance: " + name, {
     setup: function() {
-      Ember.run(Discourse, Discourse.advanceReadiness);
-
       // Don't render avatars in acceptance tests, it's faster and no 404s
       Discourse.Utilities.avatarImg = () => "";
 
