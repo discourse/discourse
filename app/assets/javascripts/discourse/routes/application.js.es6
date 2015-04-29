@@ -10,7 +10,7 @@ function unlessReadOnly(method) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend({
+const ApplicationRoute = Discourse.Route.extend(Discourse.OpenComposer, {
 
   siteTitle: Discourse.computed.setting('title'),
 
@@ -146,6 +146,10 @@ const ApplicationRoute = Discourse.Route.extend({
             factory = this.container.lookupFactory('controller:' + controllerName);
 
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+    },
+
+    createNewTopicViaParams: function(title, body, category) {
+      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category);
     }
   },
 
