@@ -26,6 +26,81 @@ after_initialize do
     end
   end
 
+  class DiscoursePoll::Poll
+    class << self
+
+      def vote(post_id, poll_name, options, user_id)
+        DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
+          post = Post.find_by(id: post_id)
+
+          # topic must be open
+          if post.topic.try(:closed) || post.topic.try(:archived)
+            raise StandardError.new I18n.t("poll.topic_must_be_open_to_vote")
+          end
+
+          polls = post.custom_fields[POLLS_CUSTOM_FIELD]
+
+          raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
+
+          poll = polls[poll_name]
+
+          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
+          raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
+
+          votes = post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] || {}
+          vote = votes[poll_name] || []
+
+          poll["total_votes"] += 1 if vote.size == 0
+
+          poll["options"].each do |option|
+            option["votes"] -= 1 if vote.include?(option["id"])
+            option["votes"] += 1 if options.include?(option["id"])
+          end
+
+          votes[poll_name] = options
+
+          post.custom_fields[POLLS_CUSTOM_FIELD] = polls
+          post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] = votes
+          post.save_custom_fields(true)
+
+          DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
+
+          return [poll, options]
+        end
+      end
+
+      def toggle_status(post_id, poll_name, status, user_id)
+        DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
+          post = Post.find_by(id: post_id)
+          user = User.find_by(id: user_id)
+
+          # either staff member or OP
+          unless user_id == post.user_id || user.try(:staff?)
+            raise StandardError.new I18n.t("poll.only_staff_or_op_can_toggle_status")
+          end
+
+          # topic must be open
+          if post.topic.try(:closed) || post.topic.try(:archived)
+            raise StandardError.new I18n.t("poll.topic_must_be_open_to_toggle_status")
+          end
+
+          polls = post.custom_fields[POLLS_CUSTOM_FIELD]
+
+          raise StandardError.new I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
+          raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if polls[poll_name].blank?
+
+          polls[poll_name]["status"] = status
+
+          post.save_custom_fields(true)
+
+          DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
+
+          polls[poll_name]
+        end
+      end
+    end
+  end
+
   require_dependency "application_controller"
   class DiscoursePoll::PollsController < ::ApplicationController
     requires_plugin PLUGIN_NAME
@@ -38,42 +113,11 @@ after_initialize do
       options   = params.require(:options)
       user_id   = current_user.id
 
-      DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
-        post = Post.find(post_id)
-
-        # topic must be open
-        if post.topic.try(:closed) || post.topic.try(:archived)
-          return render_json_error I18n.t("poll.topic_must_be_open_to_vote")
-        end
-
-        polls = post.custom_fields[POLLS_CUSTOM_FIELD]
-
-        return render_json_error I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
-
-        poll = polls[poll_name]
-
-        return render_json_error I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
-        return render_json_error I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
-
-        votes = post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] || {}
-        vote = votes[poll_name] || []
-
-        poll["total_votes"] += 1 if vote.size == 0
-
-        poll["options"].each do |option|
-          option["votes"] -= 1 if vote.include?(option["id"])
-          option["votes"] += 1 if options.include?(option["id"])
-        end
-
-        votes[poll_name] = options
-
-        post.custom_fields[POLLS_CUSTOM_FIELD] = polls
-        post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] = votes
-        post.save_custom_fields(true)
-
-        DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
-
+      begin
+        poll, options = DiscoursePoll::Poll.vote(post_id, poll_name, options, user_id)
         render json: { poll: poll, vote: options }
+      rescue StandardError => e
+        render_json_error e.message
       end
     end
 
@@ -81,32 +125,13 @@ after_initialize do
       post_id   = params.require(:post_id)
       poll_name = params.require(:poll_name)
       status    = params.require(:status)
+      user_id   = current_user.id
 
-      DistributedMutex.synchronize("#{PLUGIN_NAME}-#{post_id}") do
-        post = Post.find(post_id)
-
-        # either staff member or OP
-        unless current_user.try(:staff?) || current_user.try(:id) == post.user_id
-          return render_json_error I18n.t("poll.only_staff_or_op_can_toggle_status")
-        end
-
-        # topic must be open
-        if post.topic.try(:closed) || post.topic.try(:archived)
-          return render_json_error I18n.t("poll.topic_must_be_open_to_toggle_status")
-        end
-
-        polls = post.custom_fields[POLLS_CUSTOM_FIELD]
-
-        return render_json_error I18n.t("poll.no_polls_associated_with_this_post") if polls.blank?
-        return render_json_error I18n.t("poll.no_poll_with_this_name", name: poll_name) if polls[poll_name].blank?
-
-        polls[poll_name]["status"] = status
-
-        post.save_custom_fields(true)
-
-        DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
-
-        render json: { poll: polls[poll_name] }
+      begin
+        poll = DiscoursePoll::Poll.toggle_status(post_id, poll_name, status, user_id)
+        render json: { poll: poll }
+      rescue StandardError => e
+        render_json_error e.message
       end
     end
 
