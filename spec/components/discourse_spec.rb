@@ -106,11 +106,6 @@ describe Discourse do
   end
 
   context "#readonly_mode?" do
-
-    after do
-      DiscourseRedis.clear_readonly!
-    end
-
     it "is false by default" do
       expect(Discourse.readonly_mode?).to eq(false)
     end
@@ -120,8 +115,8 @@ describe Discourse do
       expect(Discourse.readonly_mode?).to eq(true)
     end
 
-    it "returns true when DiscourseRedis is recently read only" do
-      DiscourseRedis.received_readonly!
+    it "returns true when Discourse is recently read only" do
+      Discourse.received_readonly!
       expect(Discourse.readonly_mode?).to eq(true)
     end
   end
