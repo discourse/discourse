@@ -13,6 +13,7 @@ var controllerOpts = {
 
   order: 'default',
   ascending: false,
+  expandGloballyPinned: false,
 
   actions: {
 
@@ -80,6 +81,7 @@ var controllerOpts = {
   }.property(),
 
   isFilterPage: function(filter, filterType) {
+    if (!filter) { return false; }
     return filter.match(new RegExp(filterType + '$', 'gi')) ? true : false;
   },
 
@@ -92,15 +94,15 @@ var controllerOpts = {
   }.property('filter', 'topics.length'),
 
   showDismissAtTop: function() {
-    return (this.isFilterPage(this.get('filter'), 'new') ||
-           this.isFilterPage(this.get('filter'), 'unread')) &&
-           this.get('topics.length') >= 30;
-  }.property('filter', 'topics.length'),
+    return (this.isFilterPage(this.get('model.filter'), 'new') ||
+           this.isFilterPage(this.get('model.filter'), 'unread')) &&
+           this.get('model.topics.length') >= 30;
+  }.property('model.filter', 'model.topics.length'),
 
-  hasTopics: Em.computed.gt('topics.length', 0),
-  allLoaded: Em.computed.empty('more_topics_url'),
-  latest: Discourse.computed.endWith('filter', 'latest'),
-  new: Discourse.computed.endWith('filter', 'new'),
+  hasTopics: Em.computed.gt('model.topics.length', 0),
+  allLoaded: Em.computed.empty('model.more_topics_url'),
+  latest: Discourse.computed.endWith('model.filter', 'latest'),
+  new: Discourse.computed.endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
   monthly: Em.computed.equal('period', 'monthly'),
@@ -114,7 +116,7 @@ var controllerOpts = {
     if( category ) {
       return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
-      var split = this.get('filter').split('/');
+      var split = (this.get('filter') || '').split('/');
       if (this.get('topics.length') === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
@@ -130,7 +132,7 @@ var controllerOpts = {
   footerEducation: function() {
     if (!this.get('allLoaded') || this.get('topics.length') > 0 || !Discourse.User.current()) { return; }
 
-    var split = this.get('filter').split('/');
+    var split = (this.get('filter') || '').split('/');
 
     if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 

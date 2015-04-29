@@ -14,15 +14,15 @@
     </ul>
 
     <section class='about'>
-      <h2>{{i18n 'about.title' title=title}}</h2>
-      <p>{{description}}</p>
+      <h2>{{i18n 'about.title' title=model.title}}</h2>
+      <p>{{model.description}}</p>
     </section>
 
-    {{#if admins}}
+    {{#if model.admins}}
       <section class='about admins'>
         <h3>{{i18n 'about.our_admins'}}</h3>
 
-        {{#each a in admins}}
+        {{#each a in model.admins}}
           {{user-small user=a}}
         {{/each}}
         <div class='clearfix'></div>
@@ -30,12 +30,12 @@
       </section>
     {{/if}}
 
-    {{#if moderators}}
+    {{#if model.moderators}}
       <section class='about moderators'>
         <h3>{{i18n 'about.our_moderators'}}</h3>
 
         <div class='users'>
-          {{#each m in moderators}}
+          {{#each m in model.moderators}}
             {{user-small user=m}}
           {{/each}}
         </div>
@@ -55,33 +55,33 @@
         </tr>
         <tr>
           <td class='title'>{{i18n 'about.topic_count'}}</td>
-          <td>{{number stats.topic_count}}</td>
-          <td>{{number stats.topics_7_days}}</td>
-          <td>{{number stats.topics_30_days}}</td>
+          <td>{{number model.stats.topic_count}}</td>
+          <td>{{number model.stats.topics_7_days}}</td>
+          <td>{{number model.stats.topics_30_days}}</td>
         </tr>
         <tr>
           <td>{{i18n 'about.post_count'}}</td>
-          <td>{{number stats.post_count}}</td>
-          <td>{{number stats.posts_7_days}}</td>
-          <td>{{number stats.posts_30_days}}</td>
+          <td>{{number model.stats.post_count}}</td>
+          <td>{{number model.stats.posts_7_days}}</td>
+          <td>{{number model.stats.posts_30_days}}</td>
         </tr>
         <tr>
           <td>{{i18n 'about.user_count'}}</td>
-          <td>{{number stats.user_count}}</td>
-          <td>{{number stats.users_7_days}}</td>
-          <td>{{number stats.users_30_days}}</td>
+          <td>{{number model.stats.user_count}}</td>
+          <td>{{number model.stats.users_7_days}}</td>
+          <td>{{number model.stats.users_30_days}}</td>
         </tr>
         <tr>
           <td>{{i18n 'about.active_user_count'}}</td>
           <td>&mdash;</td>
-          <td>{{number stats.active_users_7_days}}</td>
-          <td>{{number stats.active_users_30_days}}</td>
+          <td>{{number model.stats.active_users_7_days}}</td>
+          <td>{{number model.stats.active_users_30_days}}</td>
         </tr>
         <tr>
           <td>{{i18n 'about.like_count'}}</td>
-          <td>{{number stats.like_count}}</td>
-          <td>{{number stats.likes_7_days}}</td>
-          <td>{{number stats.likes_30_days}}</td>
+          <td>{{number model.stats.like_count}}</td>
+          <td>{{number model.stats.likes_7_days}}</td>
+          <td>{{number model.stats.likes_30_days}}</td>
         </tr>
       </table>
     </section>

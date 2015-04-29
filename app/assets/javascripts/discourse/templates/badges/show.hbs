@@ -1,16 +1,16 @@
 <div class='container show-badge'>
   <h1>
     {{#link-to 'badges.index'}}{{i18n 'badges.title'}}{{/link-to}}
-    <i class='fa fa-angle-right'></i>
-    {{displayName}}
+    {{fa-icon "angle-right"}}
+    {{model.displayName}}
   </h1>
 
   <table class='badges-listing'>
     <tbody>
       <tr>
-        <td class='badge'>{{user-badge badge=this}}</td>
-        <td class='description'>{{{displayDescriptionHtml}}}</td>
-        <td class='grant-count'>{{i18n 'badges.granted' count=grant_count}}</td>
+        <td class='badge'>{{user-badge badge=model}}</td>
+        <td class='description'>{{{model.displayDescriptionHtml}}}</td>
+        <td class='grant-count'>{{i18n 'badges.granted' count=model.grant_count}}</td>
         <td class='info'>{{i18n 'badges.allow_title'}} {{{view.allowTitle}}}<br>{{i18n 'badges.multiple_grant'}} {{{view.multipleGrant}}}
         </td>
       </tr>

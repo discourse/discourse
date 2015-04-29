@@ -1,6 +1,4 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'application'],
   visible: false,
   user: null,

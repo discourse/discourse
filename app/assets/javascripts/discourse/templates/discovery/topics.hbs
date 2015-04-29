@@ -39,19 +39,19 @@
         canBulkSelect=canBulkSelect
         changeSort="changeSort"
         toggleBulkSelect="toggleBulkSelect"
-        hideCategory=hideCategory
+        hideCategory=model.hideCategory
         order=order
         ascending=ascending
         bulkSelectEnabled=bulkSelectEnabled
         selected=selected
         expandGloballyPinned=expandGloballyPinned
-        expandAllPinned=expandAllPinned
-        topics=topics}}
+        expandAllPinned=model.expandAllPinned
+        topics=model.topics}}
   {{/if}}
 </div>
 
 <footer class='topic-list-bottom'>
-  {{conditional-loading-spinner condition=loadingMore}}
+  {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
       <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
