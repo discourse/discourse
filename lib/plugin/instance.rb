@@ -217,6 +217,9 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
 
+    # Automatically include all rake tasks
+    Rake.add_rakelib "#{File.dirname(path)}/lib/tasks"
+
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
