@@ -25,7 +25,7 @@ export default {
 
     // listen for back-end to tell us when a post has a poll
     messageBus.subscribe("/polls", data => {
-      const post = container.lookup("controller:topic").get("postStream").findLoadedPost(data.post_id);
+      const post = container.lookup("controller:topic").get('modee.postStream').findLoadedPost(data.post_id);
       // HACK to trigger the "postViewUpdated" event
       Em.run.next(_ => post.set("cooked", post.get("cooked") + " "));
     });
@@ -33,8 +33,7 @@ export default {
     // overwrite polls
     PostView.reopen({
       _createPollViews: function($post) {
-        const self = this,
-              post = this.get("post"),
+        const post = this.get("post"),
               polls = post.get("polls"),
               votes = post.get("polls_votes") || {};
 
@@ -80,4 +79,4 @@ export default {
       }.on("willClearRender")
     });
   }
-}
+};

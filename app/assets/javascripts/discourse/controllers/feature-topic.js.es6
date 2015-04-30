@@ -11,14 +11,14 @@ export default ObjectController.extend(ModalFunctionality, {
   bannerCount: 0,
 
   categoryLink: function() {
-    return categoryLinkHTML(this.get("category"), { allowUncategorized: true });
-  }.property("category"),
+    return categoryLinkHTML(this.get("model.category"), { allowUncategorized: true });
+  }.property("model.category"),
 
   unPinMessage: function() {
-    return this.get("pinned_globally") ?
+    return this.get("model.pinned_globally") ?
            I18n.t("topic.feature_topic.unpin_globally") :
            I18n.t("topic.feature_topic.unpin", { categoryLink: this.get("categoryLink") });
-  }.property("categoryLink", "pinned_globally"),
+  }.property("categoryLink", "model.pinned_globally"),
 
   pinMessage: function() {
     return I18n.t("topic.feature_topic.pin", { categoryLink: this.get("categoryLink") });
@@ -32,7 +32,7 @@ export default ObjectController.extend(ModalFunctionality, {
     this.set("loading", true);
 
     return Discourse.ajax("/topics/feature_stats.json", {
-      data: { category_id: this.get("category.id") }
+      data: { category_id: this.get("model.category.id") }
     }).then(result => {
       if (result) {
         this.setProperties({

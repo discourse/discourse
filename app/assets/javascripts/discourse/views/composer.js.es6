@@ -160,7 +160,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
-    if (post && post.blank('refreshedPost')) {
+    if (post && !post.get('refreshedPost')) {
       refresh = true;
       post.set('refreshedPost', true);
     }

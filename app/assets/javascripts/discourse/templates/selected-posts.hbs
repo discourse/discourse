@@ -1,11 +1,11 @@
-<p>{{count-i18n key=topic.multi_select.description countBinding="selectedPostsCount"}}</p>
+<p>{{count-i18n key=topic.multi_select.description count=selectedPostsCount}}</p>
 
 {{#if canSelectAll}}
-  <p><a href='#' {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
+  <p><a href {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
 {{/if}}
 
 {{#if canDeselectAll}}
-  <p><a href='#' {{action "deselectAll"}}>{{i18n 'topic.multi_select.deselect_all'}}</a></p>
+  <p><a href {{action "deselectAll"}}>{{i18n 'topic.multi_select.deselect_all'}}</a></p>
 {{/if}}
 
 {{#if canDeleteSelected}}
@@ -22,4 +22,4 @@
   <button class='btn' {{action "changeOwner"}}><i class='fa fa-user'></i> {{i18n 'topic.change_owner.action'}}</button>
 {{/if}}
 
-<p class='cancel'><a href='#' {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>
+<p class='cancel'><a href {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>
