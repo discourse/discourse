@@ -1,4 +1,6 @@
 export default Em.Mixin.create({
+  flashMessage: null,
+
   needs: ['modal'],
 
   flash: function(message, messageClass) {

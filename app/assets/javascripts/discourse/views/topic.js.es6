@@ -7,7 +7,8 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 const TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Discourse.Scrolling, {
   templateName: 'topic',
   topicBinding: 'controller.model',
-  userFiltersBinding: 'controller.userFilters',
+
+  userFilters: Ember.computed.alias('controller.model.userFilters'),
   classNameBindings: ['controller.multiSelect:multi-select',
                       'topic.archetype',
                       'topic.is_warning',
@@ -19,7 +20,7 @@ const TopicView = Discourse.View.extend(AddCategoryClass, AddArchetypeClass, Dis
 
   categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
 
-  postStream: Em.computed.alias('controller.postStream'),
+  postStream: Em.computed.alias('controller.model.postStream'),
 
   archetype: Em.computed.alias('topic.archetype'),
 

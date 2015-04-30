@@ -221,7 +221,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         var container = Discourse.__container__,
             topicController = container.lookup('controller:topic'),
             opts = {},
-            postStream = topicController.get('postStream');
+            postStream = topicController.get('model.postStream');
 
         if (newMatches[3]) opts.nearPost = newMatches[3];
         if (path.match(/last$/)) { opts.nearPost = topicController.get('highest_post_number'); }

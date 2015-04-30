@@ -11,7 +11,7 @@ export default Ember.Controller.extend({
   // If inside a topic
   topicPostCount: null,
 
-  postStream: Em.computed.alias('controllers.topic.postStream'),
+  postStream: Em.computed.alias('controllers.topic.model.postStream'),
   enoughPostsForFiltering: Em.computed.gte('topicPostCount', 2),
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
   viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
@@ -45,7 +45,7 @@ export default Ember.Controller.extend({
 
     const currentUsername = this.get('username'),
         wasVisible = this.get('visible'),
-        post = this.get('viewingTopic') && postId ? this.get('controllers.topic.postStream').findLoadedPost(postId) : null;
+        post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
 
     this.setProperties({ avatar: null, post: post, username: username });
 

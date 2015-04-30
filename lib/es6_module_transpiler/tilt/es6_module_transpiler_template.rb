@@ -136,7 +136,7 @@ module Tilt
 
     def generate_source(scope)
       js_source = ::JSON.generate(data, quirks_mode: true)
-      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping']})['code']"
+      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring']})['code']"
       "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
 

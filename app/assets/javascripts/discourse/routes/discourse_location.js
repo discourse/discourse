@@ -241,7 +241,7 @@ Ember.CloakedCollectionView.reopen({
                // topic_route deactivate
                $('.posts,#topic-title').hide();
                self.cleanUp();
-               self.set('controller.postStream.loaded', false);
+               self.set('controller.model.postStream.loaded', false);
              };
     this.set('_callback', cb);
     popstateCallbacks.addObject(cb);

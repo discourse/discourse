@@ -1,12 +1,12 @@
 <div class="modal-body feature-topic">
-  {{#if pinned_at}}
+  {{#if model.pinned_at}}
     <div class="feature-section">
       <div class="button">
         {{d-button action="unpin" icon="thumb-tack" label="topic.feature.unpin" class="btn-primary"}}
       </div>
       <div class="desc">
         <p>{{{unPinMessage}}}</p>
-        {{#if pinned_globally}}
+        {{#if model.pinned_globally}}
           <p>{{i18n "topic.feature_topic.global_pin_note"}}</p>
           <p>
             {{#conditional-loading-spinner size="small" condition=loading}}
@@ -57,14 +57,14 @@
   <hr>
   <div class="feature-section">
     <div class="button">
-      {{#if isBanner}}
+      {{#if model.isBanner}}
         {{d-button action="removeBanner" icon="thumb-tack" label="topic.feature.remove_banner" class="btn-primary"}}
       {{else}}
         {{d-button action="makeBanner" icon="thumb-tack" label="topic.feature.make_banner" class="btn-primary"}}
       {{/if}}
     </div>
     <div class="desc">
-      {{#if isBanner}}
+      {{#if model.isBanner}}
         <p>{{i18n "topic.feature_topic.remove_banner"}}</p>
       {{else}}
         <p>{{i18n "topic.feature_topic.make_banner"}}</p>
