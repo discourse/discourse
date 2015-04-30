@@ -1408,8 +1408,12 @@ zh_TW:
         name: "名稱"
         add: "加入"
         add_members: "新增成員"
+        custom: "客製"
+        automatic: "自動建立"
         automatic_membership_email_domains: "註冊的用戶的電子郵件地址網域，完全符合列表裡某項時，會自動加進這個群組裡："
         automatic_membership_retroactive: "套用相同的電子郵件網域規則到已經註冊的用戶上："
+        default_title: "群組內所有成員的預設頭銜"
+        primary_group: "自動設定為主要群組"
       api:
         generate_master: "產生主 API 金鑰"
         none: "目前沒有啟用中的 API 金鑰。"
@@ -1441,25 +1445,31 @@ zh_TW:
         read_only:
           enable:
             title: "啟動唯讀模式"
+            label: "啟動唯讀模式"
             confirm: "你確定要啟動唯讀模式?"
           disable:
-            title: "關閉啟動唯讀模式"
+            title: "關閉唯讀模式"
+            label: "關閉唯讀模式"
         logs:
           none: "尚無紀錄..."
         columns:
           filename: "文件名稱"
           size: "大小"
         upload:
+          label: "上傳"
+          title: "上傳備份"
           uploading: "上傳中..."
-          success: "'{{filename}}' 已成功被上載"
-          error: "上載時發生問題： '{{filename}}': {{message}}"
+          success: "'{{filename}}' 已成功被上傳"
+          error: "上傳時發生問題： '{{filename}}': {{message}}"
         operations:
           is_running: "指令執行中..."
           failed: "{{operation}} 執行失敗。請觀看紀錄。"
           cancel:
+            label: "取消"
             title: "取消現行指令"
             confirm: "你確定要消取現行指令嗎?"
           backup:
+            label: "備份"
             title: "新增備份"
             confirm: "你確定要新增備份嗎?"
             without_uploads: "是 ( 不包含檔案 )"
