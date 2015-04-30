@@ -685,7 +685,7 @@ class Topic < ActiveRecord::Base
   # NOTE: These are probably better off somewhere else.
   #       Having a model know about URLs seems a bit strange.
   def last_post_url
-    "/t/#{slug}/#{id}/#{posts_count}"
+    "#{Discourse.base_uri}/t/#{slug}/#{id}/#{posts_count}"
   end
 
   def self.url(id, slug, post_number=nil)
@@ -699,7 +699,7 @@ class Topic < ActiveRecord::Base
   end
 
   def relative_url(post_number=nil)
-    url = "/t/#{slug}/#{id}"
+    url = "#{Discourse.base_uri}/t/#{slug}/#{id}"
     url << "/#{post_number}" if post_number.to_i > 1
     url
   end
