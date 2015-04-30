@@ -81,7 +81,9 @@ Discourse.ActionSummary = Discourse.Model.extend({
         flag_topic: this.get('flagTopic') ? true : false
       }
     }).then(function(result) {
-      return post.updateActionsSummary(result);
+      if (!self.get('flagTopic')) {
+        return post.updateActionsSummary(result);
+      }
     }).catch(function (error) {
       self.removeAction();
       var message = $.parseJSON(error.responseText).errors;
