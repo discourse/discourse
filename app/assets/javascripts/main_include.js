@@ -42,6 +42,7 @@
 //= require ./discourse/views/container
 //= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
+//= require ./discourse/views/cloaked
 //= require ./discourse/components/combo-box
 //= require ./discourse/views/button
 //= require ./discourse/components/dropdown-button

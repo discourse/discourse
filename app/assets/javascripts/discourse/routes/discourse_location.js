@@ -226,7 +226,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
   eject itself when the popState occurs. This results in better back button
   behavior.
 **/
-Ember.CloakedCollectionView.reopen({
+Discourse.CloakedCollectionView.reopen({
   _watchForPopState: function() {
     var self = this,
         cb = function() {
