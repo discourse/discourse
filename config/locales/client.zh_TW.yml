@@ -194,10 +194,16 @@ zh_TW:
       title: "用戶"
       likes_given: "送出的"
       likes_received: "收到的"
+      topics_entered: "已讀"
+      topics_entered_long: "已閱讀的討論話題"
       time_read: "閱讀多少次"
       topic_count: "話題"
       post_count: "回覆"
       no_results: "未找到任何結果。"
+      days_visited: "訪問"
+      days_visited_long: "到訪天數"
+      posts_read: "已讀"
+      posts_read: "讀過的文章"
       total_rows:
         other: "%{count} 用戶"
     groups:
@@ -218,12 +224,15 @@ zh_TW:
       '2': "已收到的讚"
       '3': "書籤"
       '4': "討論話題"
+      '5': "回覆"
+      '6': "回應"
       '7': "提到"
       '9': "引用"
       '10': "收藏"
       '11': "編輯"
       '12': "送出的項目"
       '13': "收件匣"
+      '14': "待確認"
     categories:
       all: "所有分類"
       all_subcategories: "所有"
@@ -262,6 +271,8 @@ zh_TW:
       mute: "靜音"
       edit: "編輯喜好設定"
       download_archive: "下載我的文章"
+      new_private_message: "新訊息"
+      private_message: "訊息"
       private_messages: "訊息"
       activity_stream: "活動"
       preferences: "偏好設定"
@@ -356,10 +367,11 @@ zh_TW:
           one: "我們只會在您 1 分鐘內沒有活動時，才會寄送電郵通知給您。"
           other: "我們只會在您 {{count}} 分鐘內沒有活動時，才會寄送電郵通知給您。"
       name:
-        title: "名稱"
-        instructions: "您的全名 (選填)。"
-        too_short: "你的名稱太短。"
-        ok: "你的名稱符合要求。"
+        title: "匿稱"
+        instructions: "您的匿稱 (選填)。"
+        instructions_required: "您的匿稱 (必填)。"
+        too_short: "你的匿稱太短。"
+        ok: "你的匿稱符合要求。"
       username:
         title: "用戶名稱"
         instructions: "獨一無二，沒有空白，夠短。"
@@ -499,6 +511,9 @@ zh_TW:
     mute: 靜音
     unmute: 取消靜音
     last_post: 最後一篇文章
+    last_reply_lowercase: 最新回覆
+    replies_lowercase:
+      other: 回覆
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
       description: "共有 <b>{{count}}</b> 個回覆。"
@@ -511,6 +526,7 @@ zh_TW:
       enable: "隱藏已刪除的文章"
       disable: "顯示已刪除的文章"
     private_message_info:
+      title: "訊息"
       invite: "邀請其他人..."
     email: '電子郵件'
     username: '用戶名稱'
@@ -597,6 +613,7 @@ zh_TW:
       reply: "回覆"
       cancel: "取消"
       create_topic: "建立討論話題"
+      create_pm: "發送訊息"
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
@@ -649,6 +666,7 @@ zh_TW:
       none: "目前無法載入通知訊息。"
       more: "檢視較舊的通知"
       total_flagged: "所有被投訴的文章"
+      mentioned: "<i title='被提到' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -825,6 +843,10 @@ zh_TW:
         delete: "刪除討論話題"
         open: "開放討論話題"
         close: "關閉討論話題"
+        multi_select: "選擇文章"
+        auto_close: "自動關閉"
+        pin: "置頂主題"
+        unpin: "取消置頂主題"
         unarchive: "復原已封存的討論話題"
         archive: "封存討論話題"
         invisible: "不出現在列表上"
@@ -851,15 +873,19 @@ zh_TW:
       automatically_add_to_groups_optional: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
       automatically_add_to_groups_required: "邀請時同時加入以下群組: (<b>必填</b>, 此為管理員設定)"
       invite_private:
+        title: '邀請訊息交流'
         email_or_username: "受邀請者的電子郵件地址或用戶名稱"
         email_or_username_placeholder: "電子郵件地址或用戶名稱"
         action: "邀請"
         error: "抱歉，向此用戶發出邀請時發生錯誤。"
         group_name: "群組名稱"
       invite_reply:
-        title: '邀請'
+        title: "邀請"
+        username_placeholder: "用戶名稱"
+        action: "送出邀請"
         to_forum: "我們將向你的朋友發出一封電子郵件，他不必登入，他只要按電子郵件裡的連結就可以加入此論壇。"
-        email_placeholder: '電子郵件地址'
+        to_topic_blank: "輸入你想邀請的用戶的用戶名稱或電子郵件地址到該討論主題"
+        email_placeholder: "電子郵件地址"
       login_reply: '登入以發表回應'
       filters:
         n_posts:
@@ -896,10 +922,12 @@ zh_TW:
         select_all: 選擇全部
         deselect_all: 取消選取
         description:
-          other: 你已選擇了 <b>{{count}}</b> 篇文章。
+          other: "你已選擇了 <b>{{count}}</b> 篇文章。"
     post:
+      reply: "回覆 {{replyAvatar}} {{username}} 發表的 {{link}}"
       reply_topic: "回覆至 {{link}}"
       quote_reply: "引用回覆"
+      edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
       last_edited_on: "文章最近編輯的時間"
@@ -1145,6 +1173,7 @@ zh_TW:
     flagging_topic:
       title: "感謝幫助社群遠離邪惡！"
       action: "投訴討論話題"
+      notify_action: "消息"
     topic_map:
       title: "討論話題摘要"
       links_shown: "顯示所有 {{totalLinks}} 個連結..."
@@ -1175,12 +1204,16 @@ zh_TW:
     posts_long: "此討論話題有 {{number}} 篇文章"
     original_post: "原始文章"
     views: "觀看"
+    views_lowercase:
+      other: "觀看"
     replies: "回覆"
     views_long: "此討論話題已被看過 {{number}} 次"
     activity: "活動"
     likes: "讚"
     likes_long: "此討論話題收到了  {{number}}  個讚"
     users: "用戶"
+    users_lowercase:
+      other: "用戶"
     category_title: "分類"
     history: "歷史"
     changed_by: "作者 {{author}}"
@@ -1274,6 +1307,8 @@ zh_TW:
         admins: '管理員：'
         blocked: '已封鎖：'
         suspended: '已停權:'
+        private_messages_short: "訊息"
+        private_messages_title: "訊息"
         space_free: "{{size}} 可用空間"
         uploads: "上傳"
         backups: "備份檔"
