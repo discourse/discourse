@@ -20,10 +20,11 @@ export default Ember.Mixin.create({
 
   _rerenderString() {
     const $sel = this.$();
-    if ($sel) { return; }
+    if (!$sel) { return; }
 
     const buffer = [];
     this.renderString(buffer);
+
     $sel.html(buffer.join(''));
   },
 

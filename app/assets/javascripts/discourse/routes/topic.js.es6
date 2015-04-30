@@ -182,7 +182,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     this.controllerFor('user-card').set('visible', false);
 
     const topicController = this.controllerFor('topic'),
-        postStream = topicController.get('postStream');
+        postStream = topicController.get('model.postStream');
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
