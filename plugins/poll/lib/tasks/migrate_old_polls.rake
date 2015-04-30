@@ -1,5 +1,6 @@
 desc "Migrate old polls to new syntax"
 task "poll:migrate_old_polls" => :environment do
+  require "timecop"
   # iterate over all polls
   PluginStoreRow.where(plugin_name: "poll")
                 .where("key LIKE 'poll_options_%'")
@@ -14,8 +15,10 @@ task "poll:migrate_old_polls" => :environment do
       Timecop.freeze(post.created_at + 1.minute) do
         # fix the RAW when needed
         if post.raw !~ /\[poll\]/
-          first_list = /(^- .+?$\n)\n/m.match(post.raw)[0]
-          post.raw = post.raw.sub(first_list, "[poll]\n#{first_list}\n[/poll]")
+          lists = /(^[ ]*- .+?$\n)\n/m.match(post.raw)
+          next if lists.blank? || lists.length == 0
+          first_list = lists[0]
+          post.raw = post.raw.sub(first_list, "\n[poll]\n#{first_list}\n[/poll]\n")
         else
           post.raw = post.raw + " "
         end
