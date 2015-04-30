@@ -530,7 +530,6 @@ describe Guardian do
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
-
       end
 
       it "is false when not logged in" do
@@ -888,6 +887,13 @@ describe Guardian do
 
         it 'returns true at trust level 3' do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
+        end
+
+        it "returns false when the category is read only" do
+          topic.category.set_permissions(everyone: :readonly)
+          topic.category.save
+
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
         end
       end
 
