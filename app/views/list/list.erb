@@ -1,3 +1,12 @@
+<% if @category %>
+  <h1>
+    <%= link_to @category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.name %></span>
+    <% end %>
+  </h1>
+  <br/>
+<% end %>
+
 <div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
   <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
   <% @list.topics.each_with_index do |t,i| %>

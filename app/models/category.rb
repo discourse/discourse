@@ -373,7 +373,7 @@ SQL
   def url
     url = @@url_cache[self.id]
     unless url
-      url = "/c"
+      url = "#{Discourse.base_uri}/c"
       url << "/#{parent_category.slug}" if parent_category_id
       url << "/#{slug}"
       url.freeze
