@@ -38,6 +38,9 @@
   video {
     max-width: 100%;
   }
+  sup sup {
+    top: 0;
+  }
 }
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
