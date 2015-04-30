@@ -36,7 +36,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('controller.createdPost') ? 'created-post' : null;
+    return this.present('model.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
   refreshPreview: Discourse.debounce(function() {

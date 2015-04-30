@@ -60,7 +60,7 @@ Discourse.Ajax = Em.Mixin.create({
         Ember.run(null, resolve, data);
       };
 
-      args.error = function(xhr, textStatus) {
+      args.error = function(xhr, textStatus, errorThrown) {
         // note: for bad CSRF we don't loop an extra request right away.
         //  this allows us to eliminate the possibility of having a loop.
         if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
@@ -74,7 +74,11 @@ Discourse.Ajax = Em.Mixin.create({
         xhr.jqTextStatus = textStatus;
         xhr.requestedUrl = url;
 
-        Ember.run(null, reject, xhr);
+        Ember.run(null, reject, {
+          jqXHR: xhr,
+          textStatus: textStatus,
+          errorThrown: errorThrown
+        });
       };
 
       // We default to JSON on GET. If we don't, sometimes if the server doesn't return the proper header

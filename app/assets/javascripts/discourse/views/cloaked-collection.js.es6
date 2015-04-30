@@ -282,5 +282,5 @@ const CloakedCollectionView = Ember.CollectionView.extend({
   }.on('willDestroyElement')
 });
 
-Ember.Handlebars.helper('cloaked-collection', CloakedCollectionView);
+Ember.Handlebars.helper('cloaked-collection', Ember.testing ? Ember.CollectionView : CloakedCollectionView);
 export default CloakedCollectionView;

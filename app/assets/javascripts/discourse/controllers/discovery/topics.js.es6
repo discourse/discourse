@@ -116,7 +116,7 @@ var controllerOpts = {
     if( category ) {
       return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
-      var split = (this.get('filter') || '').split('/');
+      var split = (this.get('model.filter') || '').split('/');
       if (this.get('topics.length') === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
