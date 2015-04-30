@@ -26,6 +26,18 @@ export default Discourse.View.extend({
     const controller = this.get('controller'),
           view = this;
 
+    var onSelectionChanged = function() {
+      view.selectText(window.getSelection().anchorNode, controller);
+    };
+
+    // Windows Phone hack, it is not firing the touch events
+    // best we can do is debounce this so we dont keep locking up
+    // the selection when we add the caret to measure where we place
+    // the quote reply widget
+    if (navigator.userAgent.match(/Windows Phone/)) {
+      onSelectionChanged = _.debounce(onSelectionChanged, 500);
+    }
+
     $(document)
       .on("mousedown.quote-button", function(e) {
         view.set('isMouseDown', true);
@@ -55,7 +67,7 @@ export default Discourse.View.extend({
         // or if there a touch in progress
         if (view.get('isMouseDown') || view.get('isTouchInProgress')) return;
         // `selection.anchorNode` is used as a target
-        view.selectText(window.getSelection().anchorNode, controller);
+        onSelectionChanged();
       });
   },
 
