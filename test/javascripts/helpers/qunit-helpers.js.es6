@@ -70,6 +70,8 @@ function acceptance(name, options) {
       if (options && options.teardown) {
         options.teardown.call(this);
       }
+      Discourse.User.resetCurrent();
+      Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
 
       Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();

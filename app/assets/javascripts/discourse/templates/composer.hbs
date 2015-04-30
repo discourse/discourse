@@ -84,7 +84,7 @@ so I'm going to stop rendering it until we figure out what's up
           </div>
           <!-- keep the classes here in sync with post.hbs -->
           <div class='preview-wrapper regular'>
-            <div id='wmd-preview' {{bind-attr class="hidePreview:hidden :cooked"}}></div>
+            <div id='wmd-preview' {{bind-attr class="model.hidePreview:hidden :cooked"}}></div>
           </div>
           <div class="composer-bottom-right">
             <a href="#" {{action "togglePreview"}} class='toggle-preview'>{{{model.toggleText}}}</a>

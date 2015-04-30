@@ -1,4 +1,4 @@
-export default Ember.Controller.extend({
+export default Ember.ObjectController.extend({
   needs: ['navigation/category', 'discovery/topics', 'application'],
   loading: false,
 
