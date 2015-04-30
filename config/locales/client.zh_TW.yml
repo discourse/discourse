@@ -1271,6 +1271,17 @@ zh_TW:
       top:
         title: "精選"
         help: "在本年、月、週或日最熱門的討論話題"
+        all:
+          title: "不限時間"
+        yearly:
+          title: "每年"
+        monthly:
+          title: "每月"
+        weekly:
+          title: "每週"
+        daily:
+          title: "每天"
+        all_time: "不限時間"
         this_year: "本年"
         this_month: "本月"
         this_week: "本週"
