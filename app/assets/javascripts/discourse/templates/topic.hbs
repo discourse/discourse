@@ -67,6 +67,16 @@
           {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
           {{#unless model.postStream.loadingFilter}}
+            {{cloaked-collection itemViewClass="post"
+                                 idProperty="post_number"
+                                 defaultHeight="200"
+                                 content=model.postStream.posts
+                                 slackRatio="15"
+                                 loadingHTML=""
+                                 preservesContext="true"
+                                 uncloakDefault="true"
+                                 offsetFixedTop="header"
+                                 offsetFixedBottom="#reply-control"}}
           {{/unless}}
 
           {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
