@@ -12,13 +12,21 @@ describe ::DiscoursePoll::PollsController do
     it "works" do
       DiscourseBus.expects(:publish)
 
-      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A"] }
+      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["5c24fc1df56d764b550ceae1b9319125"] }
 
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["name"]).to eq("poll")
       expect(json["poll"]["total_votes"]).to eq(1)
-      expect(json["vote"]).to eq(["A"])
+      expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
+    end
+
+    it "requires at least 1 valid option" do
+      xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["A", "B"] }
+
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.requires_at_least_1_valid_option"))
     end
 
     it "supports vote changes" do

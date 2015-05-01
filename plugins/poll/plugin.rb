@@ -47,9 +47,16 @@ after_initialize do
           raise StandardError.new I18n.t("poll.no_poll_with_this_name", name: poll_name) if poll.blank?
           raise StandardError.new I18n.t("poll.poll_must_be_open_to_vote") if poll["status"] != "open"
 
+          # remove options that aren't available in the poll
+          available_options = poll["options"].map { |o| o["id"] }.to_set
+          options.select! { |o| available_options.include?(o) }
+
+          raise StandardError.new I18n.t("poll.requires_at_least_1_valid_option") if options.empty?
+
           votes = post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] || {}
           vote = votes[poll_name] || []
 
+          # increment counters only when the user hasn't casted a vote yet
           poll["total_votes"] += 1 if vote.size == 0
 
           poll["options"].each do |option|

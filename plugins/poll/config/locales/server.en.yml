@@ -19,6 +19,7 @@ en:
     default_poll_must_have_different_options: "Poll must have different options."
     named_poll_must_have_different_options: "Poll name <strong>%{name}</strong> must have different options."
 
+    requires_at_least_1_valid_option: "You must select at least 1 valid option."
     cannot_change_polls_after_5_minutes: "Polls cannot be changed after the first 5 minutes. Contact a moderator if you need to change them."
     staff_cannot_add_or_remove_options_after_5_minutes: "After the first 5 minutes, poll options can only be edited, not added or removed. If you need to add or remove options, you should close this topic and create a new one."
 
