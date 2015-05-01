@@ -295,7 +295,7 @@ Discourse.URL = Ember.Object.createWithMixins({
   **/
   router: function() {
     return Discourse.__container__.lookup('router:main');
-  }.property(),
+  }.property().volatile(),
 
   /**
     @private

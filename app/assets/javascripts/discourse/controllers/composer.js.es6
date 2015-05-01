@@ -1,5 +1,3 @@
-import DiscourseController from 'discourse/controllers/controller';
-
 export default Ember.ObjectController.extend({
   needs: ['modal', 'topic', 'composer-messages', 'application'],
 
