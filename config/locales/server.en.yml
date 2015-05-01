@@ -1324,8 +1324,10 @@ en:
     text_body_template: |
       Thanks for accepting your invitation to %{site_name} -- welcome!
 
-      To log in again, click the following link to choose a password:
+      Click this link to choose a password now:
       %{base_url}/users/password-reset/%{email_token}
+
+      If you don't remember your password, or don't have one yet, choose "reset password" when logging in with your email address.
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
