@@ -453,7 +453,6 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
