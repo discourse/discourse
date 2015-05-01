@@ -15,15 +15,17 @@ task "poll:migrate_old_polls" => :environment do
       Timecop.freeze(post.created_at + 1.minute) do
         # fix the RAW when needed
         if post.raw !~ /\[poll\]/
-          lists = /(^[ ]*- .+?$\n)\n/m.match(post.raw)
+          lists = /^[ ]*- .+?$\n\n/m.match(post.raw)
           next if lists.blank? || lists.length == 0
           first_list = lists[0]
-          post.raw = post.raw.sub(first_list, "\n[poll]\n#{first_list}\n[/poll]\n")
+          post.raw = post.raw.sub(first_list, "\n[poll]\n#{first_list.strip}\n[/poll]\n")
         else
           post.raw = post.raw + " "
         end
         # save the poll
         post.save
+        # retrieve the new options
+        options = post.custom_fields["polls"]["poll"]["options"]
         # iterate over all votes
         PluginStoreRow.where(plugin_name: "poll")
                       .where("key LIKE 'poll_vote_#{post_id}_%'")
@@ -31,10 +33,13 @@ task "poll:migrate_old_polls" => :environment do
                       .each do |poll_vote_key, vote|
           # extract the user_id
           user_id = poll_vote_key["poll_vote_#{post_id}_%".length..-1].to_i
-          # conver to MD5 (use the same algorithm as the client-side poll dialect)
-          options = [Digest::MD5.hexdigest([vote].to_json)]
+          # find the selected option
+          vote = vote.strip
+          selected_option = options.detect { |o| o["html"].strip === vote }
+          # make sure we have a match
+          next if selected_option.blank?
           # submit vote
-          DiscoursePoll::Poll.vote(post_id, "poll", options, user_id) rescue nil
+          DiscoursePoll::Poll.vote(post_id, "poll", [selected_option["id"]], user_id) rescue nil
         end
       end
     end
