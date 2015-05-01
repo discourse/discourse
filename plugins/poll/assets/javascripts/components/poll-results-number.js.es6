@@ -12,7 +12,8 @@ export default Em.Component.extend({
   }.property("poll.options.@each.{html,votes}"),
 
   average: function() {
-    return round(this.get("totalScore") / this.get("poll.total_votes"), -2);
+    const total_votes = this.get("poll.total_votes");
+    return total_votes == 0 ? 0 : round(this.get("totalScore") / total_votes, -2);
   }.property("totalScore", "poll.total_votes"),
 
   averageRating: function() {
