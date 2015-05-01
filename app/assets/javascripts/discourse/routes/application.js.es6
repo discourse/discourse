@@ -148,8 +148,8 @@ const ApplicationRoute = Discourse.Route.extend(Discourse.OpenComposer, {
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     },
 
-    createNewTopicViaParams: function(title, body, category) {
-      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category);
+    createNewTopicViaParams: function(title, body, category_id) {
+      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category_id);
     }
   },
 
