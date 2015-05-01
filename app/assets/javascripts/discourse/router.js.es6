@@ -1,11 +1,13 @@
 const rootURL = Discourse.BaseUri && Discourse.BaseUri !== "/" ? Discourse.BaseUri : undefined;
 
-const Router = Ember.Router.extend({
+const BareRouter = Ember.Router.extend({
   rootURL,
   location: Ember.testing ? 'none': 'discourse-location'
 });
 
 export function mapRoutes() {
+
+  var Router = BareRouter.extend();
   const resources = {};
   const paths = {};
 
@@ -29,7 +31,7 @@ export function mapRoutes() {
     }
   });
 
-  Router.map(function() {
+  return Router.map(function() {
     var router = this;
 
     // Do the root resources first
@@ -76,8 +78,6 @@ export function mapRoutes() {
 
     this.route('unknown', {path: '*path'});
   });
-
-  return Router;
 }
 
-export default Router;
+export default BareRouter;
