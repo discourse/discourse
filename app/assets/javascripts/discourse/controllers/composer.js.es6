@@ -439,11 +439,8 @@ export default DiscourseController.extend({
       this.set('model.title', opts.topicTitle);
     }
 
-    if (opts.topicCategory) {
-      var category = Discourse.Category.list().findProperty('name', opts.topicCategory);
-      if (category && category.id) {
-        this.set('model.categoryId', category.id);
-      }
+    if (opts.topicCategoryId) {
+      this.set('model.categoryId', opts.topicCategoryId);
     }
 
     if (opts.topicBody) {
