@@ -15,7 +15,7 @@ export default {
     if (categoryFullSlug) {
       $('body').addClass('category-' + categoryFullSlug);
     }
-  }.observes('categoryFullSlug'),
+  }.observes('categoryFullSlug').on('init'),
 
   _leaveView: function() { this._removeClasses(); }.on('willDestroyElement')
 };

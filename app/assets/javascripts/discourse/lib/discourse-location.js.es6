@@ -1,12 +1,14 @@
+import CloakedCollectionView from 'discourse/views/cloaked-collection';
+
 /**
 @module Discourse
 */
 
-var get = Ember.get, set = Ember.set;
-var popstateFired = false;
-var supportsHistoryState = window.history && 'state' in window.history;
+const get = Ember.get, set = Ember.set;
+let popstateFired = false;
+const supportsHistoryState = window.history && 'state' in window.history;
 
-var popstateCallbacks = [];
+const popstateCallbacks = [];
 
 /**
   `Ember.DiscourseLocation` implements the location API using the browser's
@@ -16,7 +18,7 @@ var popstateCallbacks = [];
   @namespace Discourse
   @extends Ember.Object
 */
-Ember.DiscourseLocation = Ember.Object.extend({
+const DiscourseLocation = Ember.Object.extend({
 
   init: function() {
     set(this, 'location', get(this, 'location') || window.location);
@@ -226,7 +228,7 @@ Ember.DiscourseLocation = Ember.Object.extend({
   eject itself when the popState occurs. This results in better back button
   behavior.
 **/
-Discourse.CloakedCollectionView.reopen({
+CloakedCollectionView.reopen({
   _watchForPopState: function() {
     var self = this,
         cb = function() {
@@ -252,3 +254,5 @@ Discourse.CloakedCollectionView.reopen({
     this.set('_callback', null);
   }.on('willDestroyElement')
 });
+
+export default DiscourseLocation;
