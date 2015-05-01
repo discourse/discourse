@@ -8,6 +8,7 @@
 en:
   site_settings:
     poll_enabled: "Allow users to create polls?"
+    poll_maximum_options: "Maximum number of options allowed in a poll."
 
   poll:
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
@@ -16,8 +17,11 @@ en:
     default_poll_must_have_at_least_2_options: "Poll must have at least 2 options."
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
 
+    default_poll_must_have_less_options: "Poll must have less than %{max} options."
+    named_poll_must_have_less_options: "Poll named <strong>%{name}</strong> must have less than %{max} options."
+
     default_poll_must_have_different_options: "Poll must have different options."
-    named_poll_must_have_different_options: "Poll name <strong>%{name}</strong> must have different options."
+    named_poll_must_have_different_options: "Poll named <strong>%{name}</strong> must have different options."
 
     requires_at_least_1_valid_option: "You must select at least 1 valid option."
     cannot_change_polls_after_5_minutes: "Polls cannot be changed after the first 5 minutes. Contact a moderator if you need to change them."

@@ -37,6 +37,18 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_at_least_2_options"))
     end
 
+    it "should have at most 'SiteSetting.poll_maximum_options' options" do
+      raw = "[poll]"
+      (SiteSetting.poll_maximum_options + 1).times { |n| raw << "\n- #{n}" }
+      raw << "[/poll]"
+
+      xhr :post, :create, { title: title, raw: raw }
+
+      expect(response).not_to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options))
+    end
+
     describe "edit window" do
 
       describe "within the first 5 minutes" do
