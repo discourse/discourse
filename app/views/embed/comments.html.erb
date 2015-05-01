@@ -25,7 +25,7 @@
             <span class='title'><%= post.user.title %></span>
           <%- end %>
         </h3>
-        <%= raw post.cooked %>
+        <%= get_html(post.cooked) %>
 
         <%- if post.reply_count > 0 %>
           <%- if post.reply_count == 1 %>
@@ -51,4 +51,3 @@
   <% end %>
 
 <% end %>
-
