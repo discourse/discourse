@@ -105,6 +105,38 @@ after_initialize do
           polls[poll_name]
         end
       end
+
+      def extract(raw, topic_id)
+        # TODO: we should fix the callback mess so that the cooked version is available
+        # in the validators instead of cooking twice
+        cooked = PrettyText.cook(raw, topic_id: topic_id)
+        parsed = Nokogiri::HTML(cooked)
+
+        extracted_polls = []
+
+        # extract polls
+        parsed.css("div.poll").each do |p|
+          poll = { "options" => [], "total_votes" => 0 }
+
+          # extract attributes
+          p.attributes.values.each do |attribute|
+            if attribute.name.start_with?(DATA_PREFIX)
+              poll[attribute.name[DATA_PREFIX.length..-1]] = attribute.value
+            end
+          end
+
+          # extract options
+          p.css("li[#{DATA_PREFIX}option-id]").each do |o|
+            option_id = o.attributes[DATA_PREFIX + "option-id"].value
+            poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
+          end
+
+          # add the poll
+          extracted_polls << poll
+        end
+
+        extracted_polls
+      end
     end
   end
 
@@ -176,36 +208,9 @@ after_initialize do
     # only care when raw has changed!
     return unless self.raw_changed?
 
-    # TODO: we should fix the callback mess so that the cooked version is available
-    # in the validators instead of cooking twice
-    cooked = PrettyText.cook(self.raw, topic_id: self.topic_id)
-    parsed = Nokogiri::HTML(cooked)
-
+    extracted_polls = DiscoursePoll::Poll::extract(self.raw, self.topic_id)
     polls = {}
-    extracted_polls = []
 
-    # extract polls
-    parsed.css("div.poll").each do |p|
-      poll = { "options" => [], "total_votes" => 0 }
-
-      # extract attributes
-      p.attributes.values.each do |attribute|
-        if attribute.name.start_with?(DATA_PREFIX)
-          poll[attribute.name[DATA_PREFIX.length..-1]] = attribute.value
-        end
-      end
-
-      # extract options
-      p.css("li[#{DATA_PREFIX}option-id]").each do |o|
-        option_id = o.attributes[DATA_PREFIX + "option-id"].value
-        poll["options"] << { "id" => option_id, "html" => o.inner_html, "votes" => 0 }
-      end
-
-      # add the poll
-      extracted_polls << poll
-    end
-
-    # validate polls
     extracted_polls.each do |poll|
       # polls should have a unique name
       if polls.has_key?(poll["name"])
