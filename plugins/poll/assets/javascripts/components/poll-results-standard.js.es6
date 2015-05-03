@@ -7,7 +7,7 @@ export default Em.Component.extend({
           backgroundColor = this.get("poll.background");
 
     this.get("poll.options").forEach(option => {
-      const percentage = Math.floor(100 * option.get("votes") / totalVotes),
+      const percentage = totalVotes == 0 ? 0 : Math.floor(100 * option.get("votes") / totalVotes),
             styles = ["width: " + percentage + "%"];
 
       if (backgroundColor) { styles.push("background: " + backgroundColor); }
