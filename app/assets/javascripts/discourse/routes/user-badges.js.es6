@@ -1,14 +1,13 @@
 import ShowFooter from "discourse/mixins/show-footer";
+import ViewingActionType from "discourse/mixins/viewing-action-type";
 
-export default Discourse.Route.extend(ShowFooter, {
+export default Discourse.Route.extend(ShowFooter, ViewingActionType, {
   model: function() {
     return Discourse.UserBadge.findByUsername(this.modelFor('user').get('username_lower'), {grouped: true});
   },
 
   setupController: function(controller, model) {
-    if (this.controllerFor('user_activity').get('content')) {
-      this.controllerFor('user_activity').set('userActionType', -1);
-    }
+    this.viewingActionType(-1);
     controller.set('model', model);
   },
 
