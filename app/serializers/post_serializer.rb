@@ -292,8 +292,12 @@ class PostSerializer < BasicPostSerializer
     end
 
     def post_custom_fields
-      @post_custom_fields ||= (@topic_view.present? && @topic_view.post_custom_fields.present?) ? @topic_view.post_custom_fields[object.id] : nil
-      @post_custom_fields ||= object.custom_fields
+      @post_custom_fields ||=
+        if @topic_view
+          @topic_view.post_custom_fields && @topic_view.post_custom_fields[object.id]
+        else
+          object.custom_fields
+        end
     end
 
 end
