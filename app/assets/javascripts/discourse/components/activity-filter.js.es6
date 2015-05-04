@@ -15,21 +15,21 @@ export default Ember.Component.extend(StringBuffer, {
     if (this.get('isIndexStream')) {
       return !this.get('userActionType');
     }
-    var content = this.get('content');
+    const content = this.get('content');
     if (content) {
       return parseInt(this.get('userActionType'), 10) === parseInt(Em.get(content, 'action_type'), 10);
     }
-  }.property('userActionType', 'indexStream'),
+  }.property('userActionType', 'isIndexStream'),
 
   activityCount: function() {
     return this.get('content.count') || this.get('count') || 0;
   }.property('content.count', 'count'),
 
   typeKey: function() {
-    var actionType = this.get('content.action_type');
+    const actionType = this.get('content.action_type');
     if (actionType === Discourse.UserAction.TYPES.messages_received) { return ""; }
 
-    var result = Discourse.UserAction.TYPES_INVERTED[actionType];
+    const result = Discourse.UserAction.TYPES_INVERTED[actionType];
     if (!result) { return ""; }
 
     // We like our URLS to have hyphens, not underscores
@@ -44,9 +44,9 @@ export default Ember.Component.extend(StringBuffer, {
     return this.get('content.description') || I18n.t("user.filters.all");
   }.property('content.description'),
 
-  renderString: function(buffer) {
+  renderString(buffer) {
     buffer.push("<a href='" + this.get('url') + "'>");
-    var icon = this.get('icon');
+    const icon = this.get('icon');
     if (icon) {
       buffer.push("<i class='glyph fa fa-" + icon + "'></i> ");
     }

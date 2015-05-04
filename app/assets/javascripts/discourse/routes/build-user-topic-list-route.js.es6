@@ -20,7 +20,7 @@ export default function (viewName, path) {
     setupController: function() {
       this._super.apply(this, arguments);
 
-      this.controllerFor('user_topics_list').setProperties({
+      this.controllerFor('user-topics-list').setProperties({
         hideCategory: true,
         showParticipants: true
       });

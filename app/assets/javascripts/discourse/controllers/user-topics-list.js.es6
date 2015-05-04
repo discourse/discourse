@@ -7,8 +7,8 @@ export default ObjectController.extend({
   showParticipants: false,
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  }.observes("canLoadMore"),
+    this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
+  }.observes("model.canLoadMore"),
 
   actions: {
     loadMore: function() {
