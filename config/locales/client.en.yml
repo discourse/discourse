@@ -838,6 +838,7 @@ en:
         posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
         private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
         linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
+        liked: '{{username}} liked your post in "{{topic}}" - {{site_title}}'
 
     upload_selector:
       title: "Add an image"

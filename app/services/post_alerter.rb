@@ -80,7 +80,7 @@ class PostAlerter
     user.reload
   end
 
-  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message].map{ |t|
+  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message, :liked].map{ |t|
     Notification.types[t]
   }
 
