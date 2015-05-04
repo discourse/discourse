@@ -72,7 +72,7 @@ describe PostCreator do
 
       it "does not notify on system messages" do
         admin = Fabricate(:admin)
-        messages = DiscourseBus.track_publish do
+        messages = MessageBus.track_publish do
           p = PostCreator.create(admin, basic_topic_params.merge(post_type: Post.types[:moderator_action]))
           PostCreator.create(admin, basic_topic_params.merge(topic_id: p.topic_id, post_type: Post.types[:moderator_action]))
         end
@@ -93,7 +93,7 @@ describe PostCreator do
         created_post = nil
         reply = nil
 
-        messages = DiscourseBus.track_publish do
+        messages = MessageBus.track_publish do
           created_post = PostCreator.new(admin, basic_topic_params.merge(category: cat.id)).create
           reply = PostCreator.new(admin, raw: "this is my test reply 123 testing", topic_id: created_post.topic_id).create
         end
@@ -118,7 +118,7 @@ describe PostCreator do
       it 'generates the correct messages for a normal topic' do
 
         p = nil
-        messages = DiscourseBus.track_publish do
+        messages = MessageBus.track_publish do
           p = creator.create
         end
 

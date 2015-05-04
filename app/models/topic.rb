@@ -641,7 +641,7 @@ class Topic < ActiveRecord::Base
     self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
     self.save
 
-    DiscourseBus.publish('/site/banner', banner)
+    MessageBus.publish('/site/banner', banner)
   end
 
   def remove_banner!(user)
@@ -649,7 +649,7 @@ class Topic < ActiveRecord::Base
     self.add_moderator_post(user, I18n.t("archetypes.banner.message.remove"))
     self.save
 
-    DiscourseBus.publish('/site/banner', nil)
+    MessageBus.publish('/site/banner', nil)
   end
 
   def banner

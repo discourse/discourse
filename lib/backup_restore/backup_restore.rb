@@ -62,7 +62,7 @@ module BackupRestore
 
   def self.logs
     id = start_logs_message_id
-    DiscourseBus.backlog(LOGS_CHANNEL, id).map { |m| m.data }
+    MessageBus.backlog(LOGS_CHANNEL, id).map { |m| m.data }
   end
 
   def self.current_version
@@ -142,7 +142,7 @@ module BackupRestore
   end
 
   def self.save_start_logs_message_id
-    id = DiscourseBus.last_id(LOGS_CHANNEL)
+    id = MessageBus.last_id(LOGS_CHANNEL)
     $redis.set(start_logs_message_id_key, id)
   end
 

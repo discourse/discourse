@@ -222,7 +222,7 @@ SQL
   end
 
   def publish_categories_list
-    DiscourseBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
+    MessageBus.publish('/categories', {categories: ActiveModel::ArraySerializer.new(Category.latest).as_json})
   end
 
   def parent_category_validator

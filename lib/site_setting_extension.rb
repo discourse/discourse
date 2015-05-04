@@ -221,7 +221,7 @@ module SiteSettingExtension
 
   def ensure_listen_for_changes
     unless @subscribed
-      DiscourseBus.subscribe("/site_settings") do |message|
+      MessageBus.subscribe("/site_settings") do |message|
         process_message(message)
       end
       @subscribed = true
@@ -233,10 +233,10 @@ module SiteSettingExtension
     if data["process"] != process_id
       begin
         @last_message_processed = message.global_id
-        DiscourseBus.on_connect.call(message.site_id)
+        MessageBus.on_connect.call(message.site_id)
         refresh!
       ensure
-        DiscourseBus.on_disconnect.call(message.site_id)
+        MessageBus.on_disconnect.call(message.site_id)
       end
     end
   end
@@ -294,7 +294,7 @@ module SiteSettingExtension
   end
 
   def notify_changed!
-    DiscourseBus.publish('/site_settings', {process: process_id})
+    MessageBus.publish('/site_settings', {process: process_id})
   end
 
   def has_setting?(name)

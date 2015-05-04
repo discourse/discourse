@@ -119,10 +119,10 @@ module Discourse
       digest = Digest::MD5.hexdigest(ActionView::Base.assets_manifest.assets.values.sort.join)
 
       channel = "/global/asset-version"
-      message = DiscourseBus.last_message(channel)
+      message = MessageBus.last_message(channel)
 
       unless message && message.data == digest
-        DiscourseBus.publish channel, digest
+        MessageBus.publish channel, digest
       end
       digest
     end
@@ -193,7 +193,7 @@ module Discourse
 
   def self.enable_readonly_mode
     $redis.set(readonly_mode_key, 1)
-    DiscourseBus.publish(readonly_channel, true)
+    MessageBus.publish(readonly_channel, true)
     keep_readonly_mode
     true
   end
@@ -210,7 +210,7 @@ module Discourse
 
   def self.disable_readonly_mode
     $redis.del(readonly_mode_key)
-    DiscourseBus.publish(readonly_channel, false)
+    MessageBus.publish(readonly_channel, false)
     true
   end
 
@@ -221,9 +221,9 @@ module Discourse
   def self.request_refresh!
     # Causes refresh on next click for all clients
     #
-    # This is better than `DiscourseBus.publish "/file-change", ["refresh"]` because
+    # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
     # it spreads the refreshes out over a time period
-    DiscourseBus.publish '/global/asset-version', 'clobber'
+    MessageBus.publish '/global/asset-version', 'clobber'
   end
 
   def self.git_version
@@ -298,7 +298,7 @@ module Discourse
   def self.after_fork
     current_db = RailsMultisite::ConnectionManagement.current_db
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
-    DiscourseBus.after_fork
+    MessageBus.after_fork
     SiteSetting.after_fork
     $redis.client.reconnect
     Rails.cache.reconnect

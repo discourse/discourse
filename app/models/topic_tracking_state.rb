@@ -33,7 +33,7 @@ class TopicTrackingState
 
     group_ids = topic.category && topic.category.secure_group_ids
 
-    DiscourseBus.publish("/new", message.as_json, group_ids: group_ids)
+    MessageBus.publish("/new", message.as_json, group_ids: group_ids)
     publish_read(topic.id, 1, topic.user_id)
   end
 
@@ -51,7 +51,7 @@ class TopicTrackingState
     }
 
     group_ids = topic.category && topic.category.secure_group_ids
-    DiscourseBus.publish("/latest", message.as_json, group_ids: group_ids)
+    MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_unread(post)
@@ -77,7 +77,7 @@ class TopicTrackingState
         }
       }
 
-      DiscourseBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
+      MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
     end
 
   end
@@ -97,7 +97,7 @@ class TopicTrackingState
       }
     }
 
-    DiscourseBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
+    MessageBus.publish("/unread/#{user_id}", message.as_json, user_ids: [user_id])
 
   end
 

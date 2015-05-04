@@ -70,7 +70,7 @@ after_initialize do
           post.custom_fields["#{VOTES_CUSTOM_FIELD}-#{user_id}"] = votes
           post.save_custom_fields(true)
 
-          DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
+          MessageBus.publish("/polls/#{post_id}", { polls: polls })
 
           return [poll, options]
         end
@@ -100,7 +100,7 @@ after_initialize do
 
           post.save_custom_fields(true)
 
-          DiscourseBus.publish("/polls/#{post_id}", { polls: polls })
+          MessageBus.publish("/polls/#{post_id}", { polls: polls })
 
           polls[poll_name]
         end
@@ -299,7 +299,7 @@ after_initialize do
           post.save_custom_fields(true)
 
           # publish the changes
-          DiscourseBus.publish("/polls/#{post.id}", { polls: polls })
+          MessageBus.publish("/polls/#{post.id}", { polls: polls })
         end
       end
     else
@@ -321,7 +321,7 @@ after_initialize do
   # tells the front-end we have a poll for that post
   on(:post_created) do |post|
     next if post.is_first_post? || post.custom_fields[POLLS_CUSTOM_FIELD].blank?
-    DiscourseBus.publish("/polls", { post_id: post.id })
+    MessageBus.publish("/polls", { post_id: post.id })
   end
 
   add_to_serializer(:post, :polls, false) { post_custom_fields[POLLS_CUSTOM_FIELD] }
