@@ -37,6 +37,11 @@ export default {
           user.set('post_queue_new_count', data.post_queue_new_count);
         });
       }
+
+      bus.subscribe("/notification-alert/" + user.get('id'), function(data){
+        onNotification(data, user);
+      });
+
       bus.subscribe("/notification/" + user.get('id'), function(data) {
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
@@ -46,7 +51,6 @@ export default {
 
         if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           user.set('lastNotificationChange', new Date());
-          onNotification(user);
         }
       }, user.notification_channel_position);
 
