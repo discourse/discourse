@@ -20,8 +20,7 @@ test("unreadTotal default", function() {
 test("unreadTotal with values", function() {
   var controller = this.subject({
     currentUser: Discourse.User.create(),
-    unreadTopics: 1,
-    newTopics: 3
+    model: { unreadTopics: 1, newTopics: 3 }
   });
   equal(controller.get('unreadTotal'), 4);
 });

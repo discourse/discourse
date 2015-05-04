@@ -50,9 +50,9 @@
     {{#if canCheckEmails}}
       <div class="control-group pref-email">
         <label class="control-label">{{i18n 'user.email.title'}}</label>
-        {{#if email}}
+        {{#if model.email}}
           <div class="controls">
-            <span class='static'>{{email}}</span>
+            <span class='static'>{{model.email}}</span>
             {{#if can_edit_email}}
               {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
             {{/if}}
