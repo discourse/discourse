@@ -1,7 +1,9 @@
 <div class='container'>
   {{custom-html "top"}}
   {{global-notice}}
-  {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled hide=model.errorLoading}}
+  {{#if model}}
+    {{discourse-banner user=currentUser banner=site.banner overlay=view.hasScrolled hide=model.errorLoading}}
+  {{/if}}
 </div>
 
 {{plugin-outlet "topic-above-post-stream"}}
