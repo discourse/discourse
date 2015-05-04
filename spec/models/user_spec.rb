@@ -45,10 +45,17 @@ describe User do
     let(:user) { Fabricate(:user) }
     let(:admin) { Fabricate(:admin) }
 
-    it "enqueues a 'signup after approval' email" do
+    it "enqueues a 'signup after approval' email if must_approve_users is true" do
+      SiteSetting.stubs(:must_approve_users).returns(true)
       Jobs.expects(:enqueue).with(
         :user_email, has_entries(type: :signup_after_approval)
       )
+      user.approve(admin)
+    end
+
+    it "doesn't enqueue a 'signup after approval' email if must_approve_users is false" do
+      SiteSetting.stubs(:must_approve_users).returns(false)
+      Jobs.expects(:enqueue).never
       user.approve(admin)
     end
 
