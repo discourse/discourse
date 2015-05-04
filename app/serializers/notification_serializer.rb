@@ -10,7 +10,7 @@ class NotificationSerializer < ApplicationSerializer
              :is_warning
 
   def slug
-    Slug.for(object.topic.title, 'topic') if object.topic.present?
+    Slug.for(object.topic.title) if object.topic.present?
   end
 
   def is_warning

@@ -209,8 +209,8 @@ describe Category do
       end
 
       it "creates a slug" do
-        expect(@category.slug).to eq("%E6%B5%8B%E8%AF%95")
-        expect(@category.slug_for_url).to eq("%E6%B5%8B%E8%AF%95")
+        expect(@category.slug).to eq("测试")
+        expect(@category.slug_for_url).to eq("测试")
       end
     end
   end

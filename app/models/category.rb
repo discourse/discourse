@@ -207,7 +207,7 @@ SQL
 
     if slug.present?
       # santized custom slug
-      self.slug = Slug.for(Rack::Utils.unescape(slug), '')
+      self.slug = Slug.for(slug, '')
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
       # auto slug
@@ -342,13 +342,11 @@ SQL
 
   def self.query_parent_category(parent_slug)
     self.where(slug: parent_slug, parent_category_id: nil).pluck(:id).first ||
-    self.where(slug: Rack::Utils.escape_path(parent_slug), parent_category_id: nil).pluck(:id).first ||
     self.where(id: parent_slug.to_i).pluck(:id).first
   end
 
   def self.query_category(slug_or_id, parent_category_id)
     self.where(slug: slug_or_id, parent_category_id: parent_category_id).includes(:featured_users).first ||
-    self.where(slug: Rack::Utils.escape_path(slug_or_id), parent_category_id: parent_category_id).includes(:featured_users).first ||
     self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).includes(:featured_users).first
   end
 
