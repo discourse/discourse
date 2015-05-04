@@ -78,8 +78,9 @@ class DiscourseStylesheets
 
   def compile
     scss = File.read("#{Rails.root}/app/assets/stylesheets/#{@target}.scss")
+    rtl = @target == :desktop_rtl || @target == :mobile_rtl
     css = begin
-      DiscourseSassCompiler.compile(scss, @target)
+      DiscourseSassCompiler.compile(scss, @target, rtl: rtl)
     rescue Sass::SyntaxError => e
       Rails.logger.error "Stylesheet failed to compile for '#{@target}'! Recompiling without plugins and theming."
       Rails.logger.error e.sass_backtrace_str("#{@target} stylesheet")
