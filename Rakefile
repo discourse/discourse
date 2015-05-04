@@ -1,6 +1,7 @@
 #!/usr/bin/env rake
 require "rspec/core/rake_task"
 require "yard"
+require 'bundler'
 
 begin
   Bundler.setup :default, :development
