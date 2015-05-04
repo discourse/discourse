@@ -28,8 +28,15 @@ function init(messageBus) {
     return;
   }
 
-  if (!Notification) {
-    Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
+
+
+  try {
+    if (!Notification) {
+      Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
+      return;
+    }
+  } catch (e) {
+    Em.Logger.info('Discourse desktop notifications are disabled - not defined');
     return;
   }
 
