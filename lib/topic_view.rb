@@ -433,7 +433,14 @@ class TopicView
   end
 
   def closest_post_to(post_number)
-    closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+    # happy path
+    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
+
+    if closest_post.empty?
+      # less happy path, missing post
+      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+    end
+
     return nil if closest_post.empty?
 
     filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
