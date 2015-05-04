@@ -1,6 +1,7 @@
 
 let primaryTab = false;
 let liveEnabled = false;
+let havePermission = null;
 let mbClientId = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx";
 let lastAction = -1;
 
@@ -15,25 +16,37 @@ let notificationTagName; // "discourse-notification-popup-" + Discourse.SiteSett
 function init(messageBus) {
   liveEnabled = false;
   mbClientId = messageBus.clientId;
-  requestPermission().then(function() {
-    try {
-      localStorage.getItem(focusTrackerKey);
-    } catch (e) {
-      Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
-      return;
-    }
-    liveEnabled = true;
-    Em.Logger.info('Discourse desktop notifications are enabled.');
-    try {
-      // Permission is granted, continue with setup
-      setupNotifications();
-    } catch (e) {
-      Em.Logger.error(e);
-    }
-  }).catch(function() {
-    liveEnabled = false;
-    //Em.Logger.debug('Discourse desktop notifications are disabled - permission denied.');
-  });
+
+  if (!Discourse.User.current()) {
+    return;
+  }
+
+  try {
+    localStorage.getItem(focusTrackerKey);
+  } catch (e) {
+    Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
+    return;
+  }
+
+  if (!Notification) {
+    Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
+    return;
+  }
+
+  if (Notification.permission === "granted") {
+    havePermission = true;
+  } else if (Notification.permission === "denied") {
+    havePermission = false;
+    return;
+  }
+
+  liveEnabled = true;
+  try {
+    // Preliminary checks passed, continue with setup
+    setupNotifications();
+  } catch (e) {
+    Em.Logger.error(e);
+  }
 }
 
 // This function is only called if permission was granted
@@ -139,27 +152,29 @@ function onNotification(currentUser) {
       const notificationBody = bodyParts.join("\n");
       const notificationIcon = Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url;
 
-      // This shows the notification!
-      const notification = new Notification(notificationTitle, {
-        body: notificationBody,
-        icon: notificationIcon,
-        tag: notificationTagName
+      requestPermission().then(function() {
+        // This shows the notification!
+        const notification = new Notification(notificationTitle, {
+          body: notificationBody,
+          icon: notificationIcon,
+          tag: notificationTagName
+        });
+
+        const firstUnseen = unseen[0];
+
+        function clickEventHandler() {
+          Discourse.URL.routeTo(_notificationUrl(firstUnseen));
+          // Cannot delay this until the page renders
+          // due to trigger-based permissions
+          window.focus();
+        }
+
+        notification.addEventListener('click', clickEventHandler);
+        setTimeout(function() {
+          notification.close();
+          notification.removeEventListener('click', clickEventHandler);
+        }, 10 * 1000);
       });
-
-      const firstUnseen = unseen[0];
-
-      function clickEventHandler() {
-        Discourse.URL.routeTo(_notificationUrl(firstUnseen));
-        // Cannot delay this until the page renders :(
-        // due to trigger-based permissions
-        window.focus();
-      }
-
-      notification.addEventListener('click', clickEventHandler);
-      setTimeout(function() {
-        notification.close();
-        notification.removeEventListener('click', clickEventHandler);
-      }, 10 * 1000);
     });
   }
 }
@@ -191,15 +206,21 @@ function updateSeenNotificationDatesFrom(notifications) {
 // Utility function
 // Wraps Notification.requestPermission in a Promise
 function requestPermission() {
-  return new Ember.RSVP.Promise(function(resolve, reject) {
-    Notification.requestPermission(function(status) {
-      if (status === "granted") {
-        resolve();
-      } else {
-        reject();
-      }
+  if (havePermission === true) {
+    return Ember.RSVP.resolve();
+  } else if (havePermission === false) {
+    return Ember.RSVP.reject();
+  } else {
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      Notification.requestPermission(function(status) {
+        if (status === "granted") {
+          resolve();
+        } else {
+          reject();
+        }
+      });
     });
-  });
+  }
 }
 
 function i18nKey(notification) {
