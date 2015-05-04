@@ -97,11 +97,25 @@
         contents[0][o].splice(1, 0, attr);
       }
 
-      // that's our poll!
-      var pollContainer = ["div", { "class": "poll-container" }].concat(contents);
-      var result = ["div", attributes, pollContainer];
+      // // add some information when type is "multiple"
+      // if (attributes[DATA_PREFIX + "type"] === "multiple") {
 
-      // add some information when type is "multiple"
+
+      // }
+
+      var result = ["div", attributes],
+          poll = ["div"];
+
+      // 1 - POLL INFO
+      var info = ["div", { "class": "poll-info" }];
+
+      // # of voters
+      info.push(["p",
+                  ["span", { "class": "info-number" }, "0"],
+                  ["span", { "class": "info-text"}, I18n.t("poll.voters", { count: 0 })]
+                ]);
+
+      // multiple help text
       if (attributes[DATA_PREFIX + "type"] === "multiple") {
         var optionCount = contents[0].length - 1;
 
@@ -128,22 +142,39 @@
           }
         }
 
-        if (help) { result.push(["p", help]); }
+        if (help) { info.push(["p", help]); }
+      }
 
-        // add "cast-votes" button
-        result.push(["a", { "class": "button cast-votes", "title": I18n.t("poll.cast-votes.title") }, I18n.t("poll.cast-votes.label")]);
+      poll.push(info);
+
+      // 2 - POLL CONTAINER
+      var container = ["div", { "class": "poll-container" }].concat(contents);
+      poll.push(container);
+
+      // 3 - BUTTONS
+      var buttons = ["div", { "class": "poll-buttons" }];
+
+      // add "cast-votes" button
+      if (attributes[DATA_PREFIX + "type"] === "multiple") {
+        buttons.push(["a", { "class": "button cast-votes", "title": I18n.t("poll.cast-votes.title") }, I18n.t("poll.cast-votes.label")]);
       }
 
       // add "toggle-results" button
-      result.push(["a", { "class": "button toggle-results", "title": I18n.t("poll.show-results.title") }, I18n.t("poll.show-results.label")]);
+      buttons.push(["a", { "class": "button toggle-results", "title": I18n.t("poll.show-results.title") }, I18n.t("poll.show-results.label")]);
+
+      // 4 - MIX IT ALL UP
+      result.push(poll);
+      result.push(buttons)
 
       return result;
     }
   });
 
   Discourse.Markdown.whiteListTag("div", "class", "poll");
-  Discourse.Markdown.whiteListTag("div", "class", "poll-container");
+  Discourse.Markdown.whiteListTag("div", "class", /^poll-(info|container|buttons)/);
   Discourse.Markdown.whiteListTag("div", "data-*");
+
+  Discourse.Markdown.whiteListTag("span", "class", /^info-(number|text)/);
 
   Discourse.Markdown.whiteListTag("a", "class", /^button (cast-votes|toggle-results)/);
 
