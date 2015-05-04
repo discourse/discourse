@@ -1,7 +1,11 @@
-<%- if SiteSetting.default_locale.in?(%w(ar fa_IR he)) ||
-        SiteSetting.allow_user_locale && current_user.try(:locale).in?(%w(ar fa_IR he)) %>
-    <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
-<%-	 else %>
+<%- if SiteSetting.default_locale.in?(%w(ar fa_IR he)) || SiteSetting.allow_user_locale %>
+    <%- if SiteSetting.allow_user_locale && current_user.try(:locale).in?(%w(ar fa_IR he)) ||
+            !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(%w(ar fa_IR he)) %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+    <%- else %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+    <%- end %>
+<%- else %>
     <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
 <%- end %>
 
