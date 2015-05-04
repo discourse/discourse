@@ -40,7 +40,7 @@ class TopicUser < ActiveRecord::Base
           notifications_reason_id: reason
         )
 
-        DiscourseBus.publish("/topic/#{topic_id}", {
+        MessageBus.publish("/topic/#{topic_id}", {
           notification_level_change: notification_levels[:tracking],
           notifications_reason_id: reason
         }, user_ids: [user_id])
@@ -113,7 +113,7 @@ class TopicUser < ActiveRecord::Base
       end
 
       if attrs[:notification_level]
-        DiscourseBus.publish("/topic/#{topic_id}",
+        MessageBus.publish("/topic/#{topic_id}",
                          {notification_level_change: attrs[:notification_level]}, user_ids: [user_id])
       end
 
@@ -196,7 +196,7 @@ class TopicUser < ActiveRecord::Base
         end
 
         if before != after
-          DiscourseBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
+          MessageBus.publish("/topic/#{topic_id}", {notification_level_change: after}, user_ids: [user.id])
         end
       end
 
@@ -219,7 +219,7 @@ class TopicUser < ActiveRecord::Base
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)",
                   args)
 
-        DiscourseBus.publish("/topic/#{topic_id}", {notification_level_change: args[:new_status]}, user_ids: [user.id])
+        MessageBus.publish("/topic/#{topic_id}", {notification_level_change: args[:new_status]}, user_ids: [user.id])
       end
     end
 

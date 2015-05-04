@@ -80,7 +80,7 @@ class UserDestroyer
           end
 
           StaffActionLogger.new(@actor == user ? Discourse.system_user : @actor).log_user_deletion(user, opts.slice(:context))
-          DiscourseBus.publish "/file-change", ["refresh"], user_ids: [user.id]
+          MessageBus.publish "/file-change", ["refresh"], user_ids: [user.id]
         end
       end
     end

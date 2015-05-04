@@ -56,7 +56,7 @@ class PostAction < ActiveRecord::Base
 
     $redis.set('posts_flagged_count', posts_flagged_count)
     user_ids = User.staff.pluck(:id)
-    DiscourseBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: user_ids })
+    MessageBus.publish('/flagged_counts', { total: posts_flagged_count }, { user_ids: user_ids })
   end
 
   def self.flagged_posts_count
