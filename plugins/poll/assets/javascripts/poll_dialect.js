@@ -98,10 +98,8 @@
       }
 
       // that's our poll!
-      var result = ["div", attributes].concat(contents);
-
-      // add a small paragraph displaying the total number of votes
-      result.push(["p", I18n.t("poll.total_votes", { count: 0 })]);
+      var pollContainer = ["div", { "class": "poll-container" }].concat(contents);
+      var result = ["div", attributes, pollContainer];
 
       // add some information when type is "multiple"
       if (attributes[DATA_PREFIX + "type"] === "multiple") {
@@ -144,6 +142,7 @@
   });
 
   Discourse.Markdown.whiteListTag("div", "class", "poll");
+  Discourse.Markdown.whiteListTag("div", "class", "poll-container");
   Discourse.Markdown.whiteListTag("div", "data-*");
 
   Discourse.Markdown.whiteListTag("a", "class", /^button (cast-votes|toggle-results)/);

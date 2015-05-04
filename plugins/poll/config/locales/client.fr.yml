@@ -8,7 +8,7 @@
 fr:
   js:
     poll:
-      total_votes:
+      voters:
         zero: "Pas encore de votes. Soyez le premier !"
         one: "Il n'y a qu'un vote."
         other: "Il y a au total %{count} votes."

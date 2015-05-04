@@ -17,7 +17,7 @@ describe ::DiscoursePoll::PollsController do
       expect(response).to be_success
       json = ::JSON.parse(response.body)
       expect(json["poll"]["name"]).to eq("poll")
-      expect(json["poll"]["total_votes"]).to eq(1)
+      expect(json["poll"]["voters"]).to eq(1)
       expect(json["vote"]).to eq(["5c24fc1df56d764b550ceae1b9319125"])
     end
 
@@ -36,7 +36,7 @@ describe ::DiscoursePoll::PollsController do
       xhr :put, :vote, { post_id: poll.id, poll_name: "poll", options: ["e89dec30bbd9bf50fabf6a05b4324edf"] }
       expect(response).to be_success
       json = ::JSON.parse(response.body)
-      expect(json["poll"]["total_votes"]).to eq(1)
+      expect(json["poll"]["voters"]).to eq(1)
       expect(json["poll"]["options"][0]["votes"]).to eq(0)
       expect(json["poll"]["options"][1]["votes"]).to eq(1)
     end
