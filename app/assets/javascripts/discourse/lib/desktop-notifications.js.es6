@@ -30,21 +30,20 @@ function init(messageBus) {
 
 
 
-  try {
-    if (!Notification) {
-      Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
-      return;
-    }
-  } catch (e) {
-    Em.Logger.info('Discourse desktop notifications are disabled - not defined');
+  if (!("Notification" in window)) {
+    Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
     return;
   }
 
-  if (Notification.permission === "granted") {
-    havePermission = true;
-  } else if (Notification.permission === "denied") {
-    havePermission = false;
-    return;
+  try {
+    if (Notification.permission === "granted") {
+      havePermission = true;
+    } else if (Notification.permission === "denied") {
+      havePermission = false;
+      return;
+    }
+  } catch (e) {
+    Em.Logger.warn('Unexpected error, Notification is defined on window but not a responding correctly ' + e);
   }
 
   liveEnabled = true;
