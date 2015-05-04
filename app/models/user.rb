@@ -887,7 +887,7 @@ class User < ActiveRecord::Base
     to_destroy.each do |u|
       begin
         destroyer.destroy(u, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess
+      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end
