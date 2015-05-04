@@ -665,7 +665,7 @@ class Topic < ActiveRecord::Base
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?
-      slug = Slug.for(title, 'topic')
+      slug = Slug.for(title)
       if new_record?
         write_attribute(:slug, slug)
       else
@@ -677,7 +677,7 @@ class Topic < ActiveRecord::Base
   end
 
   def title=(t)
-    slug = Slug.for(t.to_s, 'topic')
+    slug = Slug.for(t.to_s)
     write_attribute(:slug, slug)
     write_attribute(:title,t)
   end

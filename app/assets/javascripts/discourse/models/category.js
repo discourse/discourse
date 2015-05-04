@@ -224,7 +224,7 @@ Discourse.Category.reopenClass({
 
   findSingleBySlug: function(slug) {
     return Discourse.Category.list().find(function(c) {
-      return Discourse.Category.slugFor(c) === slug || Discourse.Category.slugFor(c) === encodeURI(slug);
+      return Discourse.Category.slugFor(c) === slug;
     });
   },
 
@@ -254,9 +254,7 @@ Discourse.Category.reopenClass({
         if (slug === 'none') { return parentCategory; }
 
         category = categories.find(function(item) {
-          return item && item.get('parentCategory') === parentCategory &&
-            (Discourse.Category.slugFor(item) === (parentSlug + "/" + slug) ||
-            Discourse.Category.slugFor(item) === encodeURIComponent(parentSlug) + "/" + encodeURIComponent(slug));
+          return item && item.get('parentCategory') === parentCategory && Discourse.Category.slugFor(item) === (parentSlug + "/" + slug);
         });
       }
     } else {

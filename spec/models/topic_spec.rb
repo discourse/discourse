@@ -19,15 +19,15 @@ describe Topic do
       after { SiteSetting.slug_generation_method = 'ascii' }
 
       it "returns a Slug for a title" do
-        Slug.expects(:for).with(title, 'topic').returns(slug)
+        Slug.expects(:for).with(title).returns(slug)
         expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
       end
 
       context 'for cjk characters' do
         let(:title) { "熱帶風暴畫眉" }
-        let(:slug) { "%E7%86%B1%E5%B8%B6%E9%A2%A8%E6%9A%B4%E7%95%AB%E7%9C%89" }
+        let(:slug) { "熱帶風暴畫眉" }
         it "returns encoded Slug for a title" do
-          Slug.expects(:for).with(title, 'topic').returns(slug)
+          Slug.expects(:for).with(title).returns(slug)
           expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
         end
       end
@@ -36,7 +36,7 @@ describe Topic do
         let(:title) { "123456789" }
         let(:slug) { "topic" }
         it 'generates default slug' do
-          Slug.expects(:for).with(title, 'topic').returns("topic")
+          Slug.expects(:for).with(title).returns("topic")
           expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
         end
       end
@@ -49,7 +49,7 @@ describe Topic do
       let(:slug) { "topic" }
 
       it "returns a Slug for a title" do
-        Slug.expects(:for).with(title, 'topic').returns('topic')
+        Slug.expects(:for).with(title).returns('topic')
         expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
       end
     end
@@ -57,7 +57,7 @@ describe Topic do
     context '#ascii_generator' do
       before { SiteSetting.slug_generation_method = 'ascii' }
       it "returns a Slug for a title" do
-        Slug.expects(:for).with(title, 'topic').returns(slug)
+        Slug.expects(:for).with(title).returns(slug)
         expect(Fabricate.build(:topic, title: title).slug).to eq(slug)
       end
 
@@ -65,7 +65,7 @@ describe Topic do
         let(:title) { "熱帶風暴畫眉" }
         let(:slug) { 'topic' }
         it "returns 'topic' when the slug is empty (say, non-latin characters)" do
-          Slug.expects(:for).with(title, 'topic').returns("topic")
+          Slug.expects(:for).with(title).returns("topic")
           expect(Fabricate.build(:topic, title: title).slug).to eq("topic")
         end
       end

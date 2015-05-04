@@ -58,7 +58,7 @@ class UserActionSerializer < ApplicationSerializer
   end
 
   def slug
-    Slug.for(object.title, 'topic')
+    Slug.for(object.title)
   end
 
   def include_slug?
