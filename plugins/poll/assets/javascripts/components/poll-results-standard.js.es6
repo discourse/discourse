@@ -3,7 +3,7 @@ export default Em.Component.extend({
   classNames: ["results"],
 
   options: function() {
-    const totalVotes = this.get("poll.total_votes"),
+    const totalVotes = this.get("poll.voters"),
           backgroundColor = this.get("poll.background");
 
     this.get("poll.options").forEach(option => {
@@ -20,6 +20,6 @@ export default Em.Component.extend({
     });
 
     return this.get("poll.options");
-  }.property("poll.total_votes", "poll.options.[]")
+  }.property("poll.voters", "poll.options.[]")
 
 });

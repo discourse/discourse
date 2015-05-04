@@ -217,9 +217,6 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
     end
 
-    # Automatically include all rake tasks
-    Rake.add_rakelib "#{File.dirname(path)}/lib/tasks"
-
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
@@ -227,9 +224,17 @@ class Plugin::Instance
 
     register_assets! unless assets.blank?
 
-    # TODO possibly amend this to a rails engine
+    # TODO: possibly amend this to a rails engine
+
+    # Automatically include assets
     Rails.configuration.assets.paths << auto_generated_path
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
+
+    # Automatically include rake tasks
+    Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
+
+    # Automatically include migrations
+    Rails.configuration.paths["db/migrate"] << File.dirname(path) + "/db/migrate"
 
     public_data = File.dirname(path) + "/public"
     if Dir.exists?(public_data)

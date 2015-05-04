@@ -13,7 +13,7 @@ export default Em.Controller.extend({
   //   - user wants to see the results
   showingResults: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived", "showResults"),
 
-  showResultsDisabled: Em.computed.equal("poll.total_votes", 0),
+  showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.alias("isClosed"),
 
   poll: function() {
@@ -36,10 +36,6 @@ export default Em.Controller.extend({
   selectedOptions: function() {
     return _.map(this.get("poll.options").filterBy("selected"), o => o.get("id"));
   }.property("poll.options.@each.selected"),
-
-  totalVotesText: function() {
-    return I18n.t("poll.total_votes", { count: this.get("poll.total_votes") });
-  }.property("poll.total_votes"),
 
   min: function() {
     let min = parseInt(this.get("poll.min"), 10);
