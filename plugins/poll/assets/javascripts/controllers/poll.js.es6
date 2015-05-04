@@ -4,16 +4,13 @@ export default Em.Controller.extend({
   isRandom : Em.computed.equal("poll.order", "random"),
   isClosed: Em.computed.equal("poll.status", "closed"),
 
-  // immediately shows the results when the user has already voted
-  showResults: Em.computed.gt("vote.length", 0),
-
   // shows the results when
   //   - poll is closed
   //   - topic is archived/closed
   //   - user wants to see the results
   showingResults: Em.computed.or("isClosed", "post.topic.closed", "post.topic.archived", "showResults"),
 
-  showResultsDisabled: Em.computed.equal("poll.total_votes", 0),
+  showResultsDisabled: Em.computed.equal("poll.voters", 0),
   hideResultsDisabled: Em.computed.alias("isClosed"),
 
   poll: function() {
@@ -37,10 +34,6 @@ export default Em.Controller.extend({
     return _.map(this.get("poll.options").filterBy("selected"), o => o.get("id"));
   }.property("poll.options.@each.selected"),
 
-  totalVotesText: function() {
-    return I18n.t("poll.total_votes", { count: this.get("poll.total_votes") });
-  }.property("poll.total_votes"),
-
   min: function() {
     let min = parseInt(this.get("poll.min"), 10);
     if (isNaN(min) || min < 1) { min = 1; }
@@ -53,6 +46,20 @@ export default Em.Controller.extend({
     if (isNaN(max) || max > options) { max = options; }
     return max;
   }.property("poll.max", "poll.options.length"),
+
+  votersText: function() {
+    return I18n.t("poll.voters", { count: this.get("poll.voters") });
+  }.property("poll.voters"),
+
+  totalVotes: function() {
+    return _.reduce(this.get("poll.options"), function(total, o) {
+      return total + parseInt(o.get("votes"), 10);
+    }, 0);
+  }.property("poll.options.@each.votes"),
+
+  totalVotesText: function() {
+    return I18n.t("poll.total_votes", { count: this.get("totalVotes") });
+  }.property("totalVotes"),
 
   multipleHelpText: function() {
     const options = this.get("poll.options.length"),

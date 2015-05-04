@@ -3,11 +3,11 @@ export default Em.Component.extend({
   classNames: ["results"],
 
   options: function() {
-    const totalVotes = this.get("poll.total_votes"),
+    const voters = this.get("poll.voters"),
           backgroundColor = this.get("poll.background");
 
     this.get("poll.options").forEach(option => {
-      const percentage = totalVotes == 0 ? 0 : Math.floor(100 * option.get("votes") / totalVotes),
+      const percentage = voters === 0 ? 0 : Math.floor(100 * option.get("votes") / voters),
             styles = ["width: " + percentage + "%"];
 
       if (backgroundColor) { styles.push("background: " + backgroundColor); }
@@ -20,6 +20,6 @@ export default Em.Component.extend({
     });
 
     return this.get("poll.options");
-  }.property("poll.total_votes", "poll.options.[]")
+  }.property("poll.voters", "poll.options.[]")
 
 });
