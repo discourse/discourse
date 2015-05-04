@@ -1,4 +1,9 @@
-<%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<%- if SiteSetting.default_locale.in?(%w(ar fa_IR he)) ||
+        SiteSetting.allow_user_locale && current_user.try(:locale).in?(%w(ar fa_IR he)) %>
+    <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+<%-	 else %>
+    <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<%- end %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
