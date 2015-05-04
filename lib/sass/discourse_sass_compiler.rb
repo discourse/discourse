@@ -66,11 +66,12 @@ class DiscourseSassCompiler
     # Check if CSS needs to be RTLed after compilation
     # and run R2 gem on compiled CSS if true and R2 gem is available
     css_output = css
-    if !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(%w(he ar fa_IR))
+    if opts[:rtl]
       begin
         require 'r2'
         css_output = R2.r2(css) if defined?(R2)
-      rescue; end
+      rescue
+      end
     end
     css_output
   end
