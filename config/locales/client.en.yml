@@ -375,7 +375,7 @@ en:
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
-      dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
+      dynamic_favicon: "Show new / updated topic count on browser icon"
       edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"

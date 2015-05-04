@@ -50,6 +50,9 @@ class NewPostManager
 
   def perform
 
+    # We never queue private messages
+    return perform_create_post if @args[:archetype] == Archetype.private_message
+
     # Perform handlers until one returns a result
     handled = NewPostManager.handlers.any? do |handler|
       result = handler.call(self)

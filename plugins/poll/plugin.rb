@@ -57,7 +57,7 @@ after_initialize do
           vote = votes[poll_name] || []
 
           # increment counters only when the user hasn't casted a vote yet
-          poll["total_votes"] += 1 if vote.size == 0
+          poll["voters"] += 1 if vote.size == 0
 
           poll["options"].each do |option|
             option["votes"] -= 1 if vote.include?(option["id"])
@@ -116,7 +116,7 @@ after_initialize do
 
         # extract polls
         parsed.css("div.poll").each do |p|
-          poll = { "options" => [], "total_votes" => 0 }
+          poll = { "options" => [], "voters" => 0 }
 
           # extract attributes
           p.attributes.values.each do |attribute|
@@ -208,8 +208,9 @@ after_initialize do
     # only care when raw has changed!
     return unless self.raw_changed?
 
-    extracted_polls = DiscoursePoll::Poll::extract(self.raw, self.topic_id)
     polls = {}
+
+    extracted_polls = DiscoursePoll::Poll::extract(self.raw, self.topic_id)
 
     extracted_polls.each do |poll|
       # polls should have a unique name
@@ -288,7 +289,7 @@ after_initialize do
             next unless previous_polls.has_key?(poll_name)
             next unless polls[poll_name]["options"].size == previous_polls[poll_name]["options"].size
 
-            polls[poll_name]["total_votes"] = previous_polls[poll_name]["total_votes"]
+            polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
             for o in 0...polls[poll_name]["options"].size
               polls[poll_name]["options"][o]["votes"] = previous_polls[poll_name]["options"][o]["votes"]
             end

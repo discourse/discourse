@@ -850,11 +850,13 @@ class User < ActiveRecord::Base
   end
 
   def send_approval_email
-    Jobs.enqueue(:user_email,
-      type: :signup_after_approval,
-      user_id: id,
-      email_token: email_tokens.first.token
-    )
+    if SiteSetting.must_approve_users
+      Jobs.enqueue(:user_email,
+        type: :signup_after_approval,
+        user_id: id,
+        email_token: email_tokens.first.token
+      )
+    end
   end
 
   def set_default_email_digest
@@ -887,7 +889,7 @@ class User < ActiveRecord::Base
     to_destroy.each do |u|
       begin
         destroyer.destroy(u, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess
+      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end
