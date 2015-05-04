@@ -17,6 +17,27 @@ describe NewPostManager do
     end
   end
 
+  context "default action" do
+    let(:other_user) { Fabricate(:user) }
+
+    it "doesn't enqueue private messages" do
+      manager = NewPostManager.new(topic.user,
+                                   raw: 'this is a new post',
+                                   title: 'this is a new title',
+                                   archetype: Archetype.private_message,
+                                   target_usernames: other_user.username)
+
+      SiteSetting.approve_unless_trust_level = 4
+      result = manager.perform
+
+      expect(result.action).to eq(:create_post)
+      expect(result).to be_success
+      expect(result.post).to be_present
+      expect(result.post.topic.private_message?).to eq(true)
+      expect(result.post).to be_a(Post)
+    end
+  end
+
   context "default handler" do
     let(:manager) { NewPostManager.new(topic.user, raw: 'this is new post content', topic_id: topic.id) }
 
@@ -54,6 +75,7 @@ describe NewPostManager do
         expect(result.action).to eq(:enqueued)
       end
     end
+
   end
 
   context "extensibility priority" do
