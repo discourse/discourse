@@ -1,9 +1,9 @@
 {{#each c in categories}}
-  <div class='category-list-item'>
+  <div class='category-list-item category' style="border-color: #{{unbound c.color}}">
     <table class='topic-list'>
       <tr>
         <th class="main-link">
-          {{category-link c allowUncategorized=true}}
+          {{category-title-link category=c}}
         </th>
       </tr>
 

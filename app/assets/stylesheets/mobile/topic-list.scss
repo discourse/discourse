@@ -85,7 +85,7 @@
 
 tr.category-topic-link:nth-of-type(odd) {
     background-color: darken($secondary, 3%) !important;
-    }
+}
 
 .topic-list.categories {
   td.latest {
@@ -96,9 +96,6 @@ tr.category-topic-link:nth-of-type(odd) {
   .badge-category {
     display: inline-block;
     margin-top: 1px;
-  }
-  .category-description {
-    margin-top: 8px;
   }
   .featured-users {
     @include mobile-portrait  {
@@ -129,16 +126,38 @@ tr.category-topic-link:nth-of-type(odd) {
 
 .category-list-item {
 
+  border-left: 6px solid;
+
+  h3 {
+    display: inline-block;
+    font-size: 1.286em;
+    margin: 10px 0 0 5px;
+    i {
+      margin-right: 5px;
+    }
+    a[href] {
+      color: $primary;
+    }
+  }
+
+  .category-description {
+    td {
+      padding: 0 5px 15px 10px;
+    }
+  }
+
   .topic-list > tbody > tr {
     &:nth-child(odd) {
       background-color: $secondary;
-      }
-      &:nth-child(even) {
-        background-color: $secondary;
-      }
     }
+    &:nth-child(even) {
+      background-color: $secondary;
+    }
+  }
 
-  margin-bottom: 10px;
+  .category-topic-link .main-link {
+    padding-left: 10px;
+  }
 
   th .badge-category {
     margin: 0;
