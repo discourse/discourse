@@ -1,4 +1,4 @@
-{{#if categories}}
+{{#if model.categories}}
   <div class='contents'>
     <table class='topic-list categories'>
       <thead>
@@ -9,9 +9,9 @@
         </tr>
       </thead>
       <tbody>
-        {{#each c in categories}}
+        {{#each c in model.categories}}
           <tr data-category_id='{{unbound c.id}}' {{bind-attr class="c.description_excerpt:has-description:no-description c.logo_url:has-logo:no-logo"}}>
-            <td class='category' style="border-color: #{{unbound c.color}}">
+            <td class='category' style={{border-color c.color}}>
               <div>
                 <div class="pull-left">
                   {{category-title-link category=c}}
