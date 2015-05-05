@@ -4,6 +4,9 @@ class StylesheetCache < ActiveRecord::Base
   MAX_TO_KEEP = 10
 
   def self.add(target,digest,content)
+
+    return false if where(target: target, digest: digest).exists?
+
     success = create(target: target, digest: digest, content: content)
 
     count = StylesheetCache.count
@@ -19,8 +22,6 @@ class StylesheetCache < ActiveRecord::Base
 
     success
   rescue ActiveRecord::RecordNotUnique
-    false
-  rescue PG::UniqueViolation
     false
   end
 
