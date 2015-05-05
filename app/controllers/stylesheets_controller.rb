@@ -5,6 +5,7 @@ class StylesheetsController < ApplicationController
 
     target,digest = params[:name].split("_")
 
+    digest_orig = digest
     digest = "_" + digest if digest
 
     # Security note, safe due to route constraint
@@ -13,7 +14,7 @@ class StylesheetsController < ApplicationController
     unless File.exist?(location)
       query = StylesheetCache.where(target: target)
       if digest
-        query = query.where(digest: digest)
+        query = query.where(digest: digest_orig)
       else
         query = query.order('id desc')
       end

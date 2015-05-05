@@ -5,7 +5,7 @@ describe StylesheetCache do
   describe "add" do
     it "correctly cycles once MAX_TO_KEEP is hit" do
       (StylesheetCache::MAX_TO_KEEP + 1).times do |i|
-        StylesheetCache.add(i.to_s, "d" + i.to_s, "c" + i.to_s)
+        StylesheetCache.add("a", "d" + i.to_s, "c" + i.to_s)
       end
 
       expect(StylesheetCache.count).to eq StylesheetCache::MAX_TO_KEEP
