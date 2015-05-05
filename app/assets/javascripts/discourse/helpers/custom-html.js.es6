@@ -1,9 +1,11 @@
-Ember.Handlebars.registerHelper('custom-html', function(name, contextString, options) {
-  var html = Discourse.HTML.getCustomHTML(name);
+Ember.HTMLBars._registerHelper('custom-html', function(params, hash, options, env) {
+  const name = params[0];
+  const html = Discourse.HTML.getCustomHTML(name);
   if (html) { return html; }
 
-  var container = (options || contextString).data.view.container;
+  const contextString = params[1];
+  const container = (env || contextString).data.view.container;
   if (container.lookup('template:' + name)) {
-    return Ember.Handlebars.helpers.partial.apply(this, arguments);
+    return env.helpers.partial.helperFunction.apply(this, arguments);
   }
 });
