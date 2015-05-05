@@ -12,7 +12,9 @@ class StylesheetCache < ActiveRecord::Base
     count = StylesheetCache.count
     if count > MAX_TO_KEEP
 
-      remove_lower = StylesheetCache.limit(MAX_TO_KEEP)
+      remove_lower = StylesheetCache
+                     .where(target: target)
+                     .limit(MAX_TO_KEEP)
                      .order('id desc')
                      .pluck(:id)
                      .last
