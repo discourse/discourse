@@ -63,7 +63,7 @@ export default DiscourseController.extend({
         const composer = this;
 
         return this.store.find('post', postId).then(function(post) {
-          const quote = Discourse.Quote.build(post, post.get("raw"));
+          const quote = Discourse.Quote.build(post, post.get("raw"), {raw: true, full: true});
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
         });
