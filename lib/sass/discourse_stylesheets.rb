@@ -155,9 +155,14 @@ class DiscourseStylesheets
   # digest encodes the things that trigger a recompile
   def digest
     @digest ||= begin
-      theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : 0
-      category_updated = Category.last_updated_at
-      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}")
+      theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : false
+      category_updated = Category.where("background_url IS NOT NULL and background_url != ''").last_updated_at
+
+      if theme || category_updated > 0
+        Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}"
+      else
+        Digest::SHA1.hexdigest "defaults-#{DiscourseStylesheets.last_file_updated}"
+      end
     end
   end
 end
