@@ -33,9 +33,9 @@ class DiscourseStylesheets
 
   def self.compile(target = :desktop, opts={})
     @lock.synchronize do
-      FileUtils.rm(MANIFEST_FULL_PATH, force: true) if opts[:force] # Force a recompile, even in production env
+      FileUtils.rm(MANIFEST_FULL_PATH, force: true) if opts[:force]
       builder = self.new(target)
-      builder.compile
+      builder.compile(opts)
       builder.stylesheet_filename
     end
   end
@@ -76,7 +76,20 @@ class DiscourseStylesheets
     @target = target
   end
 
-  def compile
+  def compile(opts={})
+    unless opts[:force]
+      if File.exists?(stylesheet_fullpath)
+        unless StylesheetCache.where(target: @target, digest: digest).exists?
+          begin
+            StylesheetCache.add(@target, digest, File.read(stylesheet_fullpath))
+          rescue => e
+            Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
+          end
+        end
+        return true
+      end
+    end
+
     scss = File.read("#{Rails.root}/app/assets/stylesheets/#{@target}.scss")
     css = begin
       DiscourseSassCompiler.compile(scss, @target)
