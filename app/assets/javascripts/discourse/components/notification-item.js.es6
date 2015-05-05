@@ -1,22 +1,55 @@
+const INVITED_TYPE = 8;
+
 export default Ember.Component.extend({
   tagName: 'li',
   classNameBindings: ['notification.read', 'notification.is_warning'],
 
+  scope: function() {
+    return "notifications." + this.site.get("notificationLookup")[this.get("notification.notification_type")];
+  }.property("notification.notification_type"),
+
+  url: function() {
+    const it = this.get('notification');
+    const badgeId = it.get("data.badge_id");
+    if (badgeId) {
+      const badgeName = it.get("data.badge_name");
+      return Discourse.getURL('/badges/' + badgeId + '/' + badgeName.replace(/[^A-Za-z0-9_]+/g, '-').toLowerCase());
+    }
+
+    const topicId = it.get('topic_id');
+    if (topicId) {
+      return Discourse.Utilities.postUrl(it.get("slug"), topicId, it.get("post_number"));
+    }
+
+    if (it.get('notification_type') === INVITED_TYPE) {
+      return Discourse.getURL('/my/invited');
+    }
+  }.property("notification.data.{badge_id,badge_name}", "model.slug", "model.topic_id", "model.post_number"),
+
+  description: function() {
+    const badgeName = this.get("notification.data.badge_name");
+    if (badgeName) { return Handlebars.Utils.escapeExpression(badgeName); }
+
+    const title = this.get('notification.data.topic_title');
+    return Ember.isEmpty(title) ? "" : Handlebars.Utils.escapeExpression(title);
+  }.property("notification.data.{badge_name,topic_title}"),
+
   _markRead: function(){
-    var self = this;
-    this.$('a').click(function(){
-      self.set('notification.read', true);
+    this.$('a').click(() => {
+      this.set('notification.read', true);
       return true;
     });
   }.on('didInsertElement'),
 
-  render: function(buffer) {
-    var notification = this.get('notification'),
-        text = I18n.t(this.get('scope'), Em.getProperties(notification, 'description', 'username'));
+  render(buffer) {
+    const notification = this.get('notification');
+    const description = this.get('description');
+    const username = notification.get('data.display_username');
+    const text = I18n.t(this.get('scope'), {description, username});
 
-    var url = notification.get('url');
+    const url = this.get('url');
     if (url) {
-      buffer.push('<a href="' + notification.get('url') + '">' + text + '</a>');
+      buffer.push('<a href="' + url + '">' + text + '</a>');
     } else {
       buffer.push(text);
     }

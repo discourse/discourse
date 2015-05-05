@@ -434,16 +434,13 @@ User.reopenClass(Discourse.Singleton, {
     return user.findDetails(options);
   },
 
-  /**
-    The current singleton will retrieve its attributes from the `PreloadStore`
-    if it exists. Otherwise, no instance is created.
-
-    @method createCurrent
-    @returns {Discourse.User} the user, if logged in.
-  **/
+  // TODO: Use app.register and junk Discourse.Singleton
   createCurrent: function() {
     var userJson = PreloadStore.get('currentUser');
-    if (userJson) { return Discourse.User.create(userJson); }
+    if (userJson) {
+      const store = Discourse.__container__.lookup('store:main');
+      return store.createRecord('user', userJson);
+    }
     return null;
   },
 

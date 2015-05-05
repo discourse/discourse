@@ -36,7 +36,7 @@ test('updating simultaneously', function() {
   expect(2);
 
   const store = createStore();
-  store.find('widget', 123).then(function(widget) {
+  return store.find('widget', 123).then(function(widget) {
 
     const firstPromise = widget.update({ name: 'new name' });
     const secondPromise = widget.update({ name: 'new name' });
@@ -90,7 +90,7 @@ test('creating simultaneously', function() {
 
 test('destroyRecord', function() {
   const store = createStore();
-  store.find('widget', 123).then(function(widget) {
+  return store.find('widget', 123).then(function(widget) {
     widget.destroyRecord().then(function(result) {
       ok(result);
     });
