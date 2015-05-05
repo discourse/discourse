@@ -423,7 +423,6 @@ GEM
       activesupport (>= 3.0)
       sprockets (~> 2.8)
     stackprof (0.2.7)
-    stringex (2.5.2)
     therubyracer (0.12.2)
       libv8 (~> 3.16.14.0)
       ref
@@ -544,7 +543,6 @@ DEPENDENCIES
   sinatra
   spork-rails
   stackprof
-  stringex
   therubyracer
   thin
   timecop

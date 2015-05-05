@@ -779,6 +779,10 @@ uncategorized:
     client: true
     default: true
 
+  slug_generation_method:
+    default: 'ascii'
+    enum: 'SlugSetting'
+
   # Search
   min_search_term_length:
     client: true

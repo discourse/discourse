@@ -207,13 +207,17 @@ SQL
 
     if slug.present?
       # santized custom slug
-      self.slug = Slug.for(slug)
+      self.slug = Slug.for(slug, '')
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
       # auto slug
-      self.slug = Slug.for(name)
-      return if self.slug.blank?
+      self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
+    end
+    # only allow to use category itself id. new_record doesn't have a id.
+    unless new_record?
+      match_id = /(\d+)-category/.match(self.slug)
+      errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
     end
   end
 
