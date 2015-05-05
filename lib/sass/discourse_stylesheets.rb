@@ -89,7 +89,11 @@ class DiscourseStylesheets
     File.open(stylesheet_fullpath, "w") do |f|
       f.puts css
     end
-    StylesheetCache.add(@target, digest, css)
+    begin
+      StylesheetCache.add(@target, digest, css)
+    rescue => e
+      Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
+    end
     css
   end
 

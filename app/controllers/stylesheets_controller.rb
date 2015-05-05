@@ -8,7 +8,7 @@ class StylesheetsController < ApplicationController
     digest = "_" + digest if digest
 
     # Security note, safe due to route constraint
-    location = "#{DiscourseStylesheets::CACHE_PATH}/#{target}#{digest}.css"
+    location = "#{Rails.root}/#{DiscourseStylesheets::CACHE_PATH}/#{target}#{digest}.css"
 
     unless File.exist?(location)
       query = StylesheetCache.where(target: target)
