@@ -296,6 +296,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     current_db = RailsMultisite::ConnectionManagement.current_db
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
