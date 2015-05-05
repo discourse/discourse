@@ -20,6 +20,8 @@ class StylesheetCache < ActiveRecord::Base
     success
   rescue ActiveRecord::RecordNotUnique
     false
+  rescue PG::UniqueViolation
+    false
   end
 
 end
