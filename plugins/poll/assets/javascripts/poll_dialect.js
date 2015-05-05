@@ -164,7 +164,7 @@
 
       // 4 - MIX IT ALL UP
       result.push(poll);
-      result.push(buttons)
+      result.push(buttons);
 
       return result;
     }
