@@ -3,7 +3,7 @@
 module Slug
 
   def self.for(string, default = 'topic')
-    slug = case SiteSetting.slug_generation_method.to_sym
+    slug = case (SiteSetting.slug_generation_method || :ascii).to_sym
            when :ascii then self.ascii_generator(string)
            when :encoded then self.encoded_generator(string)
            when :none then self.none_generator(string)
