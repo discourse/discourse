@@ -66,22 +66,22 @@ class DiscourseRedis
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
    :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore].each do |m|
     define_method m do |*args|
-      args[0] = "#{DiscourseRedis.namespace}:#{args[0]}"
+      args[0] = "#{namespace}:#{args[0]}"
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
     end
   end
 
   def del(k)
     DiscourseRedis.ignore_readonly do
-      k = "#{DiscourseRedis.namespace}:#{k}"
+      k = "#{namespace}:#{k}"
       @redis.del k
     end
   end
 
   def keys(pattern=nil)
     DiscourseRedis.ignore_readonly do
-      len = DiscourseRedis.namespace.length + 1
-      @redis.keys("#{DiscourseRedis.namespace}:#{pattern || '*'}").map{
+      len = namespace.length + 1
+      @redis.keys("#{namespace}:#{pattern || '*'}").map{
         |k| k[len..-1]
       }
     end
@@ -103,7 +103,12 @@ class DiscourseRedis
     @redis.client.reconnect
   end
 
+  def namespace
+    RailsMultisite::ConnectionManagement.current_db
+  end
+
   def self.namespace
+    Rails.logger.warn("DiscourseRedis.namespace is going to be deprecated, do not use it!")
     RailsMultisite::ConnectionManagement.current_db
   end
 
