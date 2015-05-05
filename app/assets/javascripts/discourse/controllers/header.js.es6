@@ -41,10 +41,11 @@ const HeaderController = DiscourseController.extend({
     if (self.get("loadingNotifications")) { return; }
 
     self.set("loadingNotifications", true);
-    Discourse.NotificationContainer.loadRecent().then(function(result) {
+
+    this.store.find('notification', {recent: true}).then(function(notifications) {
       self.setProperties({
         'currentUser.unread_notifications': 0,
-        notifications: result
+        notifications
       });
     }).catch(function() {
       self.setProperties({
