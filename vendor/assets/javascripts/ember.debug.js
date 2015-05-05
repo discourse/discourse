@@ -26892,17 +26892,7 @@ enifed('ember-runtime/controllers/object_controller', ['exports', 'ember-metal/c
     @uses Ember.ControllerMixin
     @deprecated
   **/
-  exports['default'] = ObjectProxy['default'].extend(ControllerMixin['default'], {
-    init: function() {
-      this._super();
-
-      Ember['default'].deprecate(objectControllerDeprecation, this.isGenerated, {
-        url: 'http://emberjs.com/guides/deprecations/#toc_objectcontroller'
-      });
-    }
-  });
-
-  exports.objectControllerDeprecation = objectControllerDeprecation;
+  exports['default'] = ObjectProxy['default'].extend(ControllerMixin['default']);
 
 });
 enifed('ember-runtime/copy', ['exports', 'ember-metal/enumerable_utils', 'ember-metal/utils', 'ember-runtime/system/object', 'ember-runtime/mixins/copyable'], function (exports, enumerable_utils, utils, EmberObject, Copyable) {

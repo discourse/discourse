@@ -14,6 +14,7 @@ var controllerOpts = {
   order: 'default',
   ascending: false,
   expandGloballyPinned: false,
+  expandAllPinned: false,
 
   actions: {
 
@@ -86,12 +87,12 @@ var controllerOpts = {
   },
 
   showDismissRead: function() {
-    return this.isFilterPage(this.get('filter'), 'unread') && this.get('topics.length') > 0;
-  }.property('filter', 'topics.length'),
+    return this.isFilterPage(this.get('model.filter'), 'unread') && this.get('model.topics.length') > 0;
+  }.property('model.filter', 'model.topics.length'),
 
   showResetNew: function() {
-    return this.get('filter') === 'new' && this.get('topics.length') > 0;
-  }.property('filter', 'topics.length'),
+    return this.get('model.filter') === 'new' && this.get('model.topics.length') > 0;
+  }.property('model.filter', 'model.topics.length'),
 
   showDismissAtTop: function() {
     return (this.isFilterPage(this.get('model.filter'), 'new') ||
@@ -117,7 +118,7 @@ var controllerOpts = {
       return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
       var split = (this.get('model.filter') || '').split('/');
-      if (this.get('topics.length') === 0) {
+      if (this.get('model.topics.length') === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
         });
@@ -127,19 +128,19 @@ var controllerOpts = {
         });
       }
     }
-  }.property('allLoaded', 'topics.length'),
+  }.property('allLoaded', 'model.topics.length'),
 
   footerEducation: function() {
-    if (!this.get('allLoaded') || this.get('topics.length') > 0 || !Discourse.User.current()) { return; }
+    if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !Discourse.User.current()) { return; }
 
-    var split = (this.get('filter') || '').split('/');
+    var split = (this.get('model.filter') || '').split('/');
 
     if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 
     return I18n.t("topics.none.educate." + split[0], {
       userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"
     });
-  }.property('allLoaded', 'topics.length'),
+  }.property('allLoaded', 'model.topics.length'),
 
   loadMoreTopics() {
     return this.get('model').loadMore();
