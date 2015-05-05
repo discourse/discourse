@@ -101,6 +101,10 @@ div.poll {
     border-top: 1px solid $border-color;
     padding: 10px;
 
+    button {
+      float: none;
+    }
+
     .toggle-status {
       float: right;
     }
