@@ -26,29 +26,26 @@ div.poll {
   }
 
   li[data-poll-option-id] {
-    position: relative;
     color: $option-foreground;
     background: $option-background;
-    box-shadow: 0 6px $option-shadow;
-    padding: 0 .8em;
-    margin-bottom: .7em;
+    box-shadow: inset 0 -6px rgba(0,0,0,.25), inset 0 0 0 100px rgba(0,0,0,0);
+    padding: 0 12px;
+    margin-bottom: 10px;
     border-radius: 4px;
+    height: 2.3em;
 
     &:hover {
-      top: 2px;
-      box-shadow: 0 4px $option-shadow;
+      box-shadow: inset 0 -6px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
     }
 
     &:active {
-      top: 6px;
-      box-shadow: 0 0 $option-shadow;
+      -webkit-transform: translate(0,2px);
+              transform: translate(0,2px);
+      box-shadow: inset 0 -4px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
     }
 
     &[data-poll-selected="selected"] {
       background: $success !important;
-      box-shadow: 0 6px darken($success, 10%);
-      &:hover { box-shadow: 0 4px darken($success, 10%); }
-      &:active { box-shadow: 0 0 darken($success, 10%); }
     }
   }
 
