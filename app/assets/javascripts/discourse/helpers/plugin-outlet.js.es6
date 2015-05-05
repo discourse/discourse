@@ -123,16 +123,5 @@ Ember.HTMLBars._registerHelper('plugin-outlet', function(params, hash, options, 
         });
       }
     }
-  } else if (options.fn) {
-    // If a block is passed, render its content.
-    return Ember.Handlebars.helpers.view.call(this,
-              [Ember.View.extend({
-                isVirtual: true,
-                tagName: '',
-                template: function() {
-                  return options.hash.template;
-                }.property()
-              })],
-            hash, options, env);
   }
 });
