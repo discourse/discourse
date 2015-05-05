@@ -38,12 +38,12 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
 
     it "doesn't return the HTML when not in the `html_providers`" do
       Onebox::Engine::WhitelistedGenericOnebox.html_providers = []
-      HTMLOnebox.new("http://coolsite.com").to_html.should be_nil
+      expect(HTMLOnebox.new("http://coolsite.com").to_html).to be_nil
     end
 
     it "returns the HMTL when in the `html_providers`" do
       Onebox::Engine::WhitelistedGenericOnebox.html_providers = ['CoolSite']
-      HTMLOnebox.new("http://coolsite.com").to_html.should == "cool html"
+      expect(HTMLOnebox.new("http://coolsite.com").to_html).to eq "cool html"
     end
   end
 
@@ -56,12 +56,12 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
 
     it "doesn't rewrite URLs that arent in the list" do
       Onebox::Engine::WhitelistedGenericOnebox.rewrites = []
-      DummyOnebox.new("http://youtube.com").to_html.should == "<iframe src='https://youtube.com/asdf'></iframe>"
+      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='https://youtube.com/asdf'></iframe>"
     end
 
     it "rewrites URLs when whitelisted" do
       Onebox::Engine::WhitelistedGenericOnebox.rewrites = %w(youtube.com)
-      DummyOnebox.new("http://youtube.com").to_html.should == "<iframe src='//youtube.com/asdf'></iframe>"
+      expect(DummyOnebox.new("http://youtube.com").to_html).to eq "<iframe src='//youtube.com/asdf'></iframe>"
     end
   end
 
@@ -73,8 +73,8 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
 
     it 'uses the endpoint for the url' do
       onebox = described_class.new("http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537")
-      onebox.raw.should_not be_nil
-      onebox.raw[:title].should == "February EmberTO Meet-up"
+      expect(onebox.raw).not_to be_nil
+      expect(onebox.raw[:title]).to eq "February EmberTO Meet-up"
     end
   end
 

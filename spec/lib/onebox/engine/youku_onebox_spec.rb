@@ -7,7 +7,7 @@ describe Onebox::Engine::YoukuOnebox do
   end
 
   it 'returns an image as the placeholder' do
-    Onebox.preview('http://v.youku.com/v_show/id_XNjM3MzAxNzc2.html')
-        .placeholder_html.should match(/<img/)
+    expect(Onebox.preview('http://v.youku.com/v_show/id_XNjM3MzAxNzc2.html')
+        .placeholder_html).to match(/<img/)
   end
 end
