@@ -3,7 +3,7 @@ import DiscoveryController from 'discourse/controllers/discovery';
 export default DiscoveryController.extend({
   needs: ['modal', 'discovery'],
 
-  withLogo: Em.computed.filterBy('categories', 'logo_url'),
+  withLogo: Em.computed.filterBy('model.categories', 'logo_url'),
   showPostsColumn: Em.computed.empty('withLogo'),
 
   actions: {
@@ -35,7 +35,7 @@ export default DiscoveryController.extend({
   }.property(),
 
   latestTopicOnly: function() {
-    return this.get('categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
-  }.property('categories.@each.featuredTopics.length')
+    return this.get('model.categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
+  }.property('model.categories.@each.featuredTopics.length')
 
 });
