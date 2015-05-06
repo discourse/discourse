@@ -201,14 +201,23 @@ fr:
       topic: "Sujet :"
       approve: 'Approuver'
       reject: 'Rejeter'
+      delete_user: 'Supprimer l''utilisateur'
       title: "Nécessite l'approbation"
       none: "Il n'y a pas de messages à vérifier."
       edit: "Éditer"
       cancel: "Annuler"
+      view_pending: "voir les messages en attente"
+      has_pending_posts:
+        one: "Ce sujet a <b>un</b> message en attente de validation"
+        many: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
       confirm: "Sauvegarder les modifications"
+      delete_prompt: "Êtes-vous sûr de vouloir supprimer <b>%{username}</b> ? Cela supprimera tous ses messages et bloquera son courriel et son adresse IP."
       approval:
         title: "Ce message doit être approuvé."
         description: "Votre nouveau message a bien été envoyé, mais il doit être approuvé par un modérateur avant d'apparaître publiquement. Merci de votre patience."
+        pending_posts:
+          one: "Vous avez <strong>un</strong> message en attente."
+          other: "Vous avez <strong>{{count}}</strong> messages en attente."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> a démarré <a href='{{topicUrl}}'>le sujet</a>"
@@ -325,7 +334,6 @@ fr:
       dismiss_notifications: "Marquer tout comme lu"
       dismiss_notifications_tooltip: "Marquer comme lues toutes les notifications non lues"
       disable_jump_reply: "Ne pas se déplacer à mon nouveau message après avoir répondu"
-      dynamic_favicon: "Afficher les notifications de nouveaux messages sur le favicon (expérimental)"
       edit_history_public: "Autoriser les autres utilisateurs à consulter les modifications de mes messages."
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
       enable_quoting: "Proposer la citation du texte surligné"
@@ -548,9 +556,8 @@ fr:
     logout: "Vous avez été déconnecté"
     refresh: "Rafraîchir"
     read_only_mode:
-      enabled: "Un administrateur a activé le mode lecture seule. Vous pouvez continuer à naviguer sur le site mais les interactions ne fonctionneront pas correctement."
+      enabled: "Le mode lecture seule est activé. Vous pouvez continuer à naviguer sur le site, mais ne pouvez pas prendre part aux discussions."
       login_disabled: "Impossible de se connecté quand le site est en mode lecture seule."
-    too_few_topics_notice: "Créez au moins 5 sujets et %{posts} messages publics pour démarrer les discussions. Les nouveaux utilisateurs ne pourrons pas gagner des niveaux de confiance sans contenu à lire. Ce message n’apparaît que pour les membres de l'équipe."
     learn_more: "en savoir plus…"
     year: 'an'
     year_desc: 'sujets créés durant les 365 derniers jours'
@@ -674,7 +681,7 @@ fr:
       title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
       edit_reason_placeholder: "pourquoi éditez-vous ?"
       show_edit_reason: "(ajouter la raison de l'édition)"
-      reply_placeholder: "Saisissez votre réponse ici. Utilisez le Markdown ou le BBCode pour le formatage. Vous pouvez déposer ou coller une image ici."
+      reply_placeholder: "Écrivez ici. Pour mettre en forme le texte, vous pouvez utiliser Markdown, BBCode ou HTML. Glissez ou collez une image pour l'importer."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde…"
       saved: "Sauvegardé !"
@@ -853,7 +860,6 @@ fr:
       toggle_information: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus? {{catLink}} or {{latestLink}}."
-      read_more_MF: "Il y { UNREAD, plural, =0 {} one { <a href='/unread'>a 1 sujet non lu</a> } other { <a href='/unread'>a # sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau</a> sujet} other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux</a> sujets} } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
       suggest_create_topic: Pourquoi ne pas créer votre sujet ?
@@ -1228,8 +1234,6 @@ fr:
           side_by_side_markdown:
             title: "Afficher les différences de la source côte-à-côte"
             button: '<i class="fa fa-columns"></i> Brut'
-        details:
-          edited_by: "Édité par"
     category:
       can: 'peut&hellip; '
       none: '(pas de catégorie)'

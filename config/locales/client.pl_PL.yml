@@ -222,14 +222,24 @@ pl_PL:
       topic: "Temat:"
       approve: 'Zatwierdź'
       reject: 'Odrzuć'
+      delete_user: 'Usuń użytkownika'
       title: "Wymaga zatwierdzenia"
       none: "Brak wpisów wymagających uwagi."
       edit: "Edytuj"
       cancel: "Anuluj"
+      view_pending: "wyświetl oczekujące wpisy"
+      has_pending_posts:
+        one: "Ten temat posiada <b>1</b> wpis oczekujący na akceptację"
+        many: "Ten temat posiada <b>{{count}}</b> wpisów oczekujących na akceptację"
       confirm: "Zapisz zmiany"
+      delete_prompt: "Czy na pewno chcesz usunąć <b>%{username}</b>? Zostaną usunięte wszystkie wpisy utworzone z tego konta oraz zostanie zablokowany powiązany e-mail oraz adres IP."
       approval:
         title: "Wpis wymaga zatwierdzenia"
         description: "Twój nowy wpis został umieszczony w kolejce i pojawi się po zatwierdzeniu przez moderatora. Prosimy o cierpliwość."
+        pending_posts:
+          one: "Posiadasz <strong>1</strong> oczekujący wpis."
+          few: "Posiadasz <strong>{{count}}</strong> oczekujące wpisy."
+          other: "Posiadasz <strong>{{count}}</strong> oczekujących wpisów."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> tworzy <a href='{{topicUrl}}'>temat</a>"
@@ -350,7 +360,7 @@ pl_PL:
       dismiss_notifications: "Oznacz jako przeczytane"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
-      dynamic_favicon: "Pokazuj powiadomienia o nowych wiadomościach na ikonie w karcie przeglądarki (eksperymentalne)"
+      dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       edit_history_public: "Pozwól innym oglądać historię edycji moich wpisów"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
@@ -577,9 +587,9 @@ pl_PL:
     logout: "Nastąpiło wylogowanie."
     refresh: "Odśwież"
     read_only_mode:
-      enabled: "Administrator włączył tryb tylko do odczytu. Możesz przeglądać serwis, jednak zmiany nie będą możliwe."
+      enabled: "Aktywowani tryb tylko-do-odczytu. Możesz nadal przeglądać serwis, ale operacje zmieniające stan i treść mogą nie działać."
       login_disabled: "Logowanie jest zablokowane, gdy strona jest w trybie tylko do odczytu."
-    too_few_topics_notice: "Utwórz co najmniej 5 publicznych tematów i %{posts} publicznych wpisów by rozpocząć dyskusję. Nowi użytkownicy nie będą mogli podnieść poziomu zaufania jeśli nie będą mieć do czytania wystarczającej ilości treści.\n Ten komunikat widzą tylko członkowie zespołu."
+    too_few_topics_notice: "Utwórz co najmniej 5 publicznych tematów i %{posts} publicznych wpisów by rozpocząć dyskurs. Nowi użytkownicy nie będą mogli podnieść poziomu zaufania jeśli nie będą mieć do czytania wystarczającej ilości treści. Ten komunikat widzą tylko członkowie zespołu."
     learn_more: "dowiedz się więcej…"
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
@@ -704,7 +714,7 @@ pl_PL:
       title_placeholder: "O czym jest ta dyskusja w jednym zwartym zdaniu. "
       edit_reason_placeholder: "z jakiego powodu edytujesz?"
       show_edit_reason: "(dodaj powód edycji)"
-      reply_placeholder: "Tu wprowadź treść. Użyj składni Markdown lub BBCode do formatowania tekstu. Przeciągnij lub wklej obraz, aby go wgrać."
+      reply_placeholder: "Pisz w tym miejscu. Wspierane formatowanie to Markdown, BBCode lub HTML. Przeciągnij i upuść grafikę, aby dołączyć do treści."
       view_new_post: "Zobacz Twój nowy wpis."
       saving: "Zapisuję…"
       saved: "Zapisano!"
@@ -765,6 +775,13 @@ pl_PL:
       moved_post: "<i title='przeniesienie wpisu' class='fa fa-sign-out'></i><p><span>{{username}}</span> przenosi {{description}}</p>"
       linked: "<i title='powiązany wpis' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='otrzymano odznakę' class='fa fa-certificate'></i><p>Otrzymujesz '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} wspomina o tobie w "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} cytuje cie w "{{topic}}" - {{site_title}}'
+        replied: '{{username}} odpowiada na twój wpis w "{{topic}}" - {{site_title}}'
+        posted: '{{username}} pisze w "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} wysyła ci prywatną wiadomość w "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkuje do twojego wpisu z "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Dodaj obraz"
       title_with_attachments: "Dodaj obraz lub plik"
@@ -888,7 +905,6 @@ pl_PL:
       toggle_information: "przełącz szczegóły tematu"
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w {{catLink}} lub {{latestLink}}."
       read_more: "Chcesz przeczytać więcej? {{catLink}} lub {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} one { Isnieje <a href='/unread'>1 nierzeczytany</a> } other { Isnieją <a href='/unread'># nieprzeczytane</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{oraz } false {jeden } other{}} <a href='/new'>1 nowy</a> temat} other { {BOTH, select, true{oraz } false {Istnieją } other{}} <a href='/new'># nowe</a> tematy} }, or {CATEGORY, select, true {przeglądaj pozostałe tematy w {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż aktualne tematy
       suggest_create_topic: Może rozpoczniesz temat?
@@ -1290,8 +1306,6 @@ pl_PL:
           side_by_side_markdown:
             title: "Pokaż porównanie źródeł w formie tekstowej obok siebie"
             button: '<i class="fa fa-columns"></i> Tekst'
-        details:
-          edited_by: "Edytowane przez"
     category:
       can: 'może&hellip; '
       none: '(brak kategorii)'

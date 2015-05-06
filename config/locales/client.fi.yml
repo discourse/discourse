@@ -201,14 +201,23 @@ fi:
       topic: "Ketju:"
       approve: 'Hyväksy'
       reject: 'Hylkää'
+      delete_user: 'Poista käyttäjä'
       title: "Odottaa hyväksyntää"
       none: "Tarkastettavia viestejä ei ole"
       edit: "Muokkaa"
       cancel: "Peruuta"
+      view_pending: "Tarkastele odottavia viestejä"
+      has_pending_posts:
+        one: "<b>1</b> viesti ketjussa odottaa hyväksyntää"
+        many: "<b>{{count}}</b> viestiä ketjussa odottaa hyväksyntää"
       confirm: "Tallenna muutokset"
+      delete_prompt: "Haluatko varmasti poistaa käyttäjän <b>%{username}</b>? Kaikki käyttäjän kirjoittamat viestit poistetaan ja tämän sähköposti- sekä IP-osoitteille asetetaan esto."
       approval:
         title: "Viesti odottaa hyväksyntää"
         description: "Olemme vastaanottaneet viestisi, mutta se täytyy vielä hyväksyä ennen, kuin se näytetään sivustolla. Ole kärsivällinen."
+        pending_posts:
+          one: "Sinulla on <strong>1</strong> odottava viesti."
+          other: "Sinulla on <strong>{{count}}</strong> odottavaa viestiä."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> kirjoitti <a href='{{topicUrl}}'>ketjuun</a>"
@@ -263,7 +272,7 @@ fi:
       '2': "Saadut tykkäykset"
       '3': "Kirjanmerkit"
       '4': "Ketjut"
-      '5': "Viestit"
+      '5': "Vastauksia"
       '6': "Vastaukset"
       '7': "Viittaukset"
       '9': "Lainaukset"
@@ -325,7 +334,6 @@ fi:
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
-      dynamic_favicon: "Näytä ilmoitukset viesteistä faviconissa (kokeellinen)"
       edit_history_public: "Anna muiden nähdä viestieni revisiot"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
@@ -548,9 +556,8 @@ fi:
     logout: "Sinut kirjattiin ulos."
     refresh: "Lataa sivu uudelleen"
     read_only_mode:
-      enabled: "Ylläpitäjä on käynnistänyt vain luku -tilan. Voit jatkaa sivuston selaamista, mutta osa toiminallisuudesta on poistettu käytöstä."
+      enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
-    too_few_topics_notice: "Luo vähintään 5 julkista ketjua ja %{posts} julkista viestiä käynnistääksesi keskustelun. Uudet käyttäjät eivät voi saavuttaa korkeampia luottamustasoja, jos luettavaa sisältöä ei ole tarpeeksi. Tämä viesti näkyy vain henkilökunnalle."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -674,7 +681,7 @@ fi:
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
-      reply_placeholder: "Kirjoita viestisi tähän. Voit muotoilla tekstiä Markdown tai BBCode -komennoilla. Voit lisätä kuvia joko raahaamalla hiirellä tai Liitä-komennolla."
+      reply_placeholder: "Kirjoita tähän. Voit käyttää Markdown-, BBCode- tai HTML-tyylimääreitä. Vedä ja pudota kuva hiirellä tai liitä se leikepöydältä jos haluat ladata sen foorumille."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan..."
       saved: "Tallennettu!"
@@ -849,7 +856,7 @@ fi:
       toggle_information: "näytä/kätke ketjun tiedot"
       read_more_in_category: "Haluatko lukea lisää? Selaa muita ketjuja alueella {{catLink}} tai {{latestLink}}."
       read_more: "Haluatko lukea lisää? {{catLink}} tai {{latestLink}}."
-      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 lukematon</a> } other { <a href='/unread'># lukematonta</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{and } false { } other{}} <a href='/new'># uutta</a> kejua} } jäljellä, voit myös {CATEGORY, select, true {selata muita ketjuja alueella {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 lukematon</a> } other { <a href='/unread'># lukematonta</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='/new'># uutta</a> kejua} } jäljellä, voit myös {CATEGORY, select, true {selata muita ketjuja alueella {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Selaa keskustelualueita
       view_latest_topics: katsele tuoreimpia ketjuja
       suggest_create_topic: Jospa aloittaisit uuden ketjun?
@@ -1224,8 +1231,6 @@ fi:
           side_by_side_markdown:
             title: "Näytä viestien lähdekoodit vierekkäin"
             button: '<i class="fa fa-columns"></i> Teksti'
-        details:
-          edited_by: "Muokannut"
     category:
       can: 'voivat&hellip; '
       none: '(ei aluetta)'

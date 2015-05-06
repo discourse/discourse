@@ -374,7 +374,6 @@ pt_BR:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, o seu token expirou. Por favor tenta redefinir a sua password novamente."
     choose_new: "Por favor escolhe uma password nova"
     choose: "Por favor, escolha uma senha"
     update: 'Atualizar Senha'
@@ -721,7 +720,6 @@ pt_BR:
     flag_sockpuppets: "Se um novo usuário responder um tópico usando o mesmo endereço de IP do novo usário que começou o tópico, sinalize as duas publicações como um potencial spam."
     traditional_markdown_linebreaks: "Use quebras de linhas tradicionais em Markdown, as quais requerem dois espaços à direita para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos permitidos aos usuários para desfazerem uma ação recente em uma publicação (curtir, sinalizar, etc)"
-    must_approve_users: "Gerenciadores deverão aprovar novas contas de usuários antes das mesmas serem permitidas o acesso ao site."
     ga_tracking_code: "Código de monitoramento do Google analytics (ga.js), ex: UA-12345678-9; veja http://google.com/analytics"
     ga_domain_name: "Nome do domínio para o Google analytics (ga.js), ex: mysite.com; veja http://google.com/analytics"
     ga_universal_tracking_code: "Código de monitoramento Google Universal Analytics (analytics.js), ex: UA-12345678-9; veja http://google.com/analytics"
@@ -1133,11 +1131,6 @@ pt_BR:
       Este convite vem de um usuário confiável, então você não precisa se logar.
   invite_password_instructions:
     subject_template: "Defina uma senha para a sua %{site_name}  conta"
-    text_body_template: |
-      Obrigado por aceitar seu convite para %{site_name} -- bem-vindo!
-
-      Para se logar novamente, clique no link para escolher uma senha:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: |
@@ -1236,20 +1229,6 @@ pt_BR:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} Aviso: Postagem escondida devido a Sinalização pela Comunidade"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática do % {site_name} para informá-lo que o seu post foi ocultado.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Vários membros da comunidade assinalaram este post antes de ser escondido, então por favor, pense em como você pode rever seu post para refletir seu feedback. ** Você pode editar seu post depois de %{edit_delay} minutos, e será automaticamente desocultado. ** Isto irá aumentar o seu nível de confiança.
-
-        No entanto, se o post é escondido pela comunidade uma segunda vez, ele permanecerá escondido até ser manipuladas pela staff - e pode haver outras medidas, incluindo a possibilidade de suspensão da sua conta.
-
-        Para informações adicionais, por favor consulte a nossas [diretrizes da comunidade] (%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Dicas rápidas para iniciar:

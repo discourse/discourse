@@ -225,7 +225,6 @@ uk:
       dismiss_notifications: "Позначити все як прочитане"
       dismiss_notifications_tooltip: "Позначити всі сповіщення як прочитані"
       disable_jump_reply: "Не перескакувати до мого допису коли я відповім"
-      dynamic_favicon: "Відображати сповіщення про вхідні повідомлення на піктограмі сайта (експериментальне)"
       edit_history_public: "Дати іншим дивитися версії мого повідомлення"
       external_links_in_new_tab: "Відкривати всі зовнішні посилання у новій вкладці"
       enable_quoting: "Увімкнути відповіді на цитати для виділеного тексту"
@@ -471,7 +470,6 @@ uk:
       title_placeholder: "Про що це обговорення, у одному короткому реченні?"
       edit_reason_placeholder: "чому Ви редагуєте допис?"
       show_edit_reason: "(додати причину редагування)"
-      reply_placeholder: "Вводьте текст тут. Для форматування використовуйте Markdown або BBCode. Для завантаження зображення перетягніть його або вставте з буферу обміну."
       view_new_post: "Перегляньте свій новий допис."
       saving: "Збереження..."
       saved: "Збережено!"
@@ -575,7 +573,6 @@ uk:
       toggle_information: "показати/сховати деталі теми"
       read_more_in_category: "Хочете почитати ще? Перегляньте інші теми в {{catLink}} або {{latestLink}}."
       read_more: "Хочете почитати ще? {{catLink}} або {{latestLink}}."
-      read_more_MF: "Є ще { UNREAD, plural, =0 {} one { <a href='/unread'># непрочитана тема</a> } few { <a href='/unread'># непрочитані теми</a> } many { <a href='/unread'># непрочитаних тем</a> } other { <a href='/unread'># непрочитаних тем</a> } }{ NEW, plural, =0 {} one { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нова</a> тема} few { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нові</a> теми} many { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нових</a> тем} other { {BOTH, select, true{ і } false {} other{}} <a href='/new'># нових</a> тем} }, або {CATEGORY, select, true {перегляньте інші теми у {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Переглянути всі категорії
       view_latest_topics: перегляньте останні теми
       suggest_create_topic: Чому б не створити тему?
@@ -786,8 +783,6 @@ uk:
           side_by_side:
             title: "Показати бік-о-бік результати виведення"
             button: '<i class="fa fa-columns"></i> HTML'
-        details:
-          edited_by: "Редаговано"
     category:
       can: 'може&hellip; '
       none: '(без категорії)'

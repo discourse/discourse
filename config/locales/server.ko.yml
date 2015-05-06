@@ -271,7 +271,6 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    no_token: "토큰이 만료되었습니다. 비밀번호를 초기화하여 주세요."
     choose_new: "새로운 비밀번호를 적어주세요."
     choose: "비밀번호를 선택해 주세요"
     update: '비밀번호 변경'
@@ -543,7 +542,6 @@ ko:
     flag_sockpuppets: "어떤 신규 사용자(예:24이내 가입자)가 토픽을 생성하고 같은 IP주소의 또 다른 신규 사용자가 댓글을 쓰면 자동 스팸 신고"
     traditional_markdown_linebreaks: "Markdown에서 전통적인 linebreak를 사용, linebreak시 두개의 trailing space를 사용하는 것."
     post_undo_action_window_mins: "사용자가 어떤 게시글에 대해서 수행한 작업(신고 등)을 취소하는 것이 허용되는 시간(초)"
-    must_approve_users: "관리자가 모든 사용자에 대해 사이트 접근 전에 허용을 해야 함"
     ga_tracking_code: "Google analytics (ga.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js)의 도메인 이름, 예: mysite.com; 참고 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js)의 트래킹 코드, 예: UA-12345678-9; 참고 http://google.com/analytics"

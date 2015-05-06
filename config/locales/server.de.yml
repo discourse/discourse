@@ -364,7 +364,6 @@ de:
         one: "vor fast einem Jahr"
         other: "vor fast %{count} Jahren"
   password_reset:
-    no_token: "Entschuldigung, dieses Token ist zu alt. Bitte setze Dein Passwort nochmals zurück."
     choose_new: "Bitte wähle ein neues Passwort"
     choose: "Bitte wähle ein Passwort"
     update: 'Passwort aktualisieren'
@@ -711,7 +710,6 @@ de:
     flag_sockpuppets: "Wenn ein neuer Nutzer auf ein Thema antwortet, das von einem anderen neuen Nutzer aber mit der gleichen IP-Adresse begonnen wurde, markiere beide Beiträge als Werbung."
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, welche zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     post_undo_action_window_mins: "Sekunden, die ein Nutzer hat, um Aktionen auf Beiträgen rückgängig zu machen (Like, Meldung, usw.)."
-    must_approve_users: "Alle neuen Benutzerkonten müssen von Mitarbeitern freigeschaltet werden, bevor sie Zugriff auf die Seite erhalten."
     ga_tracking_code: "Google Analytics Trackingcode, zum Beispiel: UA-12345678-9; siehe http://google.com/analytics"
     ga_domain_name: "Google Analytics Domänenname, zum Beispiel: mysite.com; siehe http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
@@ -1121,11 +1119,6 @@ de:
       Die Einladung ist von einem vertrautem Benutzer, du musst dich daher nicht einloggen.
   invite_password_instructions:
     subject_template: "Legen Sie ein Passwort für Ihr %{site_name}-Konto fest"
-    text_body_template: |
-      Danke, dass du der Einladung zu %{site_name} gefolgt bist - herzlich willkommen!
-
-      Klicke auf den folgenden Link und wähle ein Passwort um dich wieder anzumelden:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test der Mailzustellbarkeit"
   new_version_mailer:
@@ -1187,20 +1180,6 @@ de:
   system_messages:
     post_hidden:
       subject_template: "Beitrag wegen Meldungen aus der Community versteckt"
-      text_body_template: |
-        Hallo,
-
-        dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass einer deiner Beiträge ausgeblendet wurde.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Der Beitrag wurde ausgeblendet, da er von mehreren Mitgliedern der Community gemeldet wurde. Überlege dir daher, wie du deinen Beitrag unter Berücksichtigung dieses Feedbacks überarbeiten könntest. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten, wodurch er automatisch wieder sichtbar wird.** Dadurch erhöht sich auch deine Vertrauensstufe.
-
-        Wird der Beitrag jedoch ein zweites Mal auf Grund von Meldungen aus der Community ausgeblendet, dann muss ein Mitarbeiter sich um diesen Fall kümmern. Dies kann weitere Konsequenzen haben, unter anderem auch eine Sperrung deines Kontos.
-
-        Weitere Hilfestellung findest du in unseren [Community Richtlinien](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -1544,6 +1523,8 @@ de:
 
         Klicke auf den folgenden Link, um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Anmeldung"
     account_created:
       subject_template: "[%{site_name}] Dein neues Konto"
       text_body_template: |
@@ -1720,3 +1701,8 @@ de:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "E-Mail gesendet"
+    error: "Fehler!"
+    email_input: "Administrator-E-Mail"
+    submit_button: "E-Mail senden"

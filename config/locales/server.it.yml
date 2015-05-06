@@ -340,7 +340,6 @@ it:
         one: "quasi 1 anno fa"
         other: "quasi %{count} anni fa"
   password_reset:
-    no_token: "Spiacenti, il tuo token è scaduto. Prova a reimpostare la password di nuovo."
     choose_new: "Per favore scegli una nuova password."
     choose: "Per favore scegli una password"
     update: 'Aggiorna Password'
@@ -559,7 +558,7 @@ it:
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
     memory_warning: 'Il tuo server gira con meno di 1 GB di memoria. Si raccomanda almeno 1 GB di memoria.'
-    enable_google_logins_warning: "ATTENZIONE! Il metodo di autenticazione che stai usando non verrà più supportato a partire dal  20 Aprile 2015. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Cambia metodo di autenticazione ora!</a>"
+    enable_google_logins_warning: "ATTENZIONE! Il metodo di autenticazione Google che stai usando non verrà più supportato a partire dal  20 Aprile 2015. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>Cambia metodo di autenticazione ora!</a>"
     both_googles_warning: "Hai entrambe le impostazioni enable_google_logins e enable_google_oauth2_logins attivate. Disabilita enable_google_logins."
     google_oauth2_config_warning: 'Il server è configurato per permettere registrazioni e login con Google Oauth2 (enable_google_oauth2_logins), ma il client id e il client secret non sono impostati. Vai nelle <a href="/admin/site_settings">Impostazioni del sito</a> e aggiorna le impostazioni. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Leggi questa guida per saperne di più</a>.'
     facebook_config_warning: 'Il server è configurato per accettare registrazioni e login con Facebook (enable_facebook_logins), tuttavia i parametri app id e secret non sono stati impostati. Vai alle <a href="/admin/site_settings">Impostazioni</a> e aggiorna i campi interessati. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Leggi questa guida per saperne di più</a>.'
@@ -683,7 +682,6 @@ it:
     flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
-    must_approve_users: "Lo staff deve approvare tutti i nuovi account utente prima che essi possano accedere al sito."
     ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; vedi http://google.com/analytics"
     ga_domain_name: "Nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
@@ -844,7 +842,7 @@ it:
     tos_url: "Se vuoi usare un documento dei Termini di Servizio ospitato da qualche altra parte, fornisci qui la sua URL completa."
     privacy_policy_url: "Se vuoi usare un documento sulle Politiche di Privacy ospitato da qualche altra parte, fornisci qui la sua URL completa."
     newuser_spam_host_threshold: "Quante volte un nuovo utente può inviare un collegamento verso lo stesso host compreso nei messaggi `newuser_spam_host_posts` prima che venga considerato spam."
-    white_listed_spam_host_domains: "Una lista di domini esclusi dall'host spam testing. Ai nuovi utenti non verrà mai impedito di creare messaggi con link a questi domini."
+    white_listed_spam_host_domains: "Una lista di domini esclusi dal controllo antispam. Ai nuovi utenti non verrà mai impedito di creare messaggi con collegamenti a tali domini."
     staff_like_weight: "Peso extra attribuito ai \"mi piace\" dati dallo staff."
     topic_view_duration_hours: "Conta una nuova visita all'argomento una volta sola per IP/Utente ogni N ore"
     levenshtein_distance_spammer_emails: "Quanti caratteri di differenza faranno comunque scattare una corrispondenza approssimativa nell'analisi delle email di spam. "
@@ -865,7 +863,7 @@ it:
     email_in: "Permetti agli utenti di pubblicare nuovi argomenti per email (richiede il pop3 polling). Configura gli indirizzi nella scheda \"Impostazioni\" di ciascuna categoria."
     email_in_min_trust: "Livello di esperienza minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_prefix: "La [etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
-    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi anziché assoluti. Per esempio, 7g anzichè 20 feb."
+    relative_date_duration: "Dopo quanti giorni dalla pubblicazione le date verranno mostrate in termini relativi (7g) anziché assoluti (20 feb)."
     delete_user_max_post_age: "Non permettere di cancellare utenti il cui primo messaggio è più vecchio di (x) giorni."
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
@@ -1010,11 +1008,6 @@ it:
     text_body_template: "%{invitee_name} ti invita a partecipare a \n\n> **%{site_title}**\n>\n> %{site_description}\n\nSe sei interessato, clicca il collegamento in basso:\n\n%{invite_link}\n\nQuesto invito è da parte di un utente affidabile, perciò non dovrai effettuare un login.\n"
   invite_password_instructions:
     subject_template: "Imposta la password per il tuo account su %{site_name}"
-    text_body_template: |
-      Grazie per aver accettato l'invito su %{site_name} -- benvenuto!
-
-      Per collegarti ancora, clicca sul collegamento seguente e scegli una password:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test Invio Email"
   new_version_mailer:
@@ -1045,20 +1038,6 @@ it:
   system_messages:
     post_hidden:
       subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: |
-        Salve,
-
-        questo è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Vari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.** Ciò accrescerà il tuo livello di esperienza.
-
-        Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.
-
-         Per ulteriori informazioni, puoi far riferimento alle nostre [community guidelines](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Ecco alcuni veloci consigli per cominciare.
@@ -1199,14 +1178,15 @@ it:
         La soglia può essere modificata tramite l'impostazione del sito `block_new_user`.
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
-      text_body_template: |
+      text_body_template: |+
         Questo è un messaggio automatico.
 
-        Il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con link a %{domains}, ma questi messaggi sono stati bloccati per evitare spam. L'utente è ancora in grado di creare post ma senza link verso %{domains}.
+        Il nuovo utente [%{username}](%{base_url}%{user_url}) ha creato diversi messaggi con collegamenti a %{domains}, ma tali messaggi sono stati bloccati per evitare spam. L'utente è ancora abilitato alla creazione di messaggi ma senza collegamenti verso %{domains}.
 
         Per favore [controlla questo utente](%{base_url}%{user_url}).
 
         Questa soglia può essere modificata tramite l'impostazione `newuser_spam_host_threshold` e `white_listed_spam_host_domains` del sito.
+
     unblocked:
       subject_template: "Account sbloccato"
       text_body_template: |
@@ -1237,7 +1217,7 @@ it:
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
     user_invited_to_topic:
-      subject_template: "[%{site_name}] %{username} ti invita al partecipare allla discussione '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} ti invita a partecipare all'argomento '%{topic_title}'"
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |

@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+cs:
+  site_settings:
+    poll_enabled: "Povolit uživatelům vytvářet hlasování?"
+  poll:
+    staff_cannot_add_or_remove_options_after_5_minutes: "Po 5 minutách jdou možnosti hlasováni pouze editovat a nejdou už přidávat ani odebírat. Pokud potřebujete přidat nebo odebrat možnosti, zavřete toto téma a založte nové."

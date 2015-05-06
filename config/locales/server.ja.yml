@@ -303,7 +303,6 @@ ja:
       almost_x_years:
         other: "だいたい %{count} 年前"
   password_reset:
-    no_token: "申し訳ありませんがトークンの有効期限が切れました。パスワードをリセットを再度試みてください。"
     choose_new: "新しいパスワードを選択してください"
     choose: "パスワードを入力ください"
     update: 'パスワード更新'
@@ -629,7 +628,6 @@ ja:
     flag_sockpuppets: "トピックを作成したユーザーと同じIPアドレスで、新規ユーザーがトピックに回答した場合、両者を潜在的なスパムとしてフラグを立てるか"
     traditional_markdown_linebreaks: "Markdown の従来形式のラインブレーク (行の終わりにダブルスペース) を使う"
     post_undo_action_window_mins: "ポストに対するアクション (「いいね!」、フラグ等) 取り消しを許可する時間 (秒)"
-    must_approve_users: "ユーザがサイトにアクセスするには、スタッフの承認が必要"
     ga_tracking_code: "Google analytics のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
     ga_domain_name: "Google analytics のドメイン名。例: mysite.com; 参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics(analytics.js)  のトラッキングコード。例: UA-12345678-9; 参考 http://google.com/analytics"
@@ -1002,11 +1000,6 @@ ja:
       これは信頼されたユーザからの招待のため、あなたはログインする必要がありません
   invite_password_instructions:
     subject_template: "%{site_name} アカウントのパスワードを設定"
-    text_body_template: |
-      %{site_name}の招待を受けてくれてありがとうございます -- ようこそ!
-
-      再度ログインする場合は、以下のリンクをクリックし、パスワードを設定してください:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] メール送信テスト"
   new_version_mailer:
