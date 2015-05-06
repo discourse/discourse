@@ -234,12 +234,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       },
       key: "@",
       transformComplete(v) {
-          if (v.username) {
-            return v.username;
-          } else {
-            return v.usernames.join(", @");
-          }
-        }
+        return v.username ? v.username : v.usernames.join(", @");
+      }
     });
 
     this.editor = editor = Discourse.Markdown.createEditor({

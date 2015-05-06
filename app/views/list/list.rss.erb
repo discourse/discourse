@@ -11,7 +11,7 @@
       <lastBuildDate><%= @topic_list.topics.first.created_at.rfc2822 %></lastBuildDate>
       <atom:link href="<%= @atom_link %>" rel="self" type="application/rss+xml" />
       <% @topic_list.topics.each do |topic| %>
-        <% topic_url = Discourse.base_url + topic.relative_url -%>
+        <% topic_url = topic.relative_url -%>
         <item>
           <title><%= topic.title %></title>
           <author><%= "no-reply@example.com (@#{topic.user.username}#{" #{topic.user.name}" if (topic.user.name.present? && SiteSetting.enable_names?)})" -%></author>

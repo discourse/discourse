@@ -59,7 +59,7 @@ const TopicList = RestModel.extend({
 
       topics.clear();
       topics.pushObjects(newTopics);
-      self.setProperties({ loaded: true, more_topics_url: newTopics.get('more_topics_url') });
+      self.setProperties({ loaded: true, more_topics_url: tl.get('topic_list.more_topics_url') });
     });
   },
 

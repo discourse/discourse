@@ -26,12 +26,6 @@
   clear: both;
 }
 
-.topic-body {
-  sup sup {
-    top: 0;
-  }
-}
-
 .extra-info-wrapper {
   .badge-wrapper {
     float: left;
@@ -40,4 +34,12 @@
     }
   }
 
+}
+
+.has-pending-posts {
+  padding: 0.5em;
+  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  a[href] {
+    float: right;
+  }
 }

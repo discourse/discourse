@@ -3,7 +3,7 @@
   <% @list.categories.each do |c| %>
     <div class='category' itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <meta itemprop='url' content='<%= c.url %>'>
-      <h2><a href='/c/<%= c.slug.blank? ? c.id : c.slug %>' itemprop='item'>
+      <h2><a href='<%= c.url %>' itemprop='item'>
         <span itemprop='name'><%= c.name %></span>
       </a></h2>
       <span itemprop='description'><%= c.description %></span>

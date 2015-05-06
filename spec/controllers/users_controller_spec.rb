@@ -315,6 +315,57 @@ describe UsersController do
     end
   end
 
+  describe '.admin_login' do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+
+    context 'enqueues mail' do
+      it 'enqueues mail with admin email and sso enabled' do
+        SiteSetting.enable_sso = true
+        Jobs.expects(:enqueue).with(:user_email, has_entries(type: :admin_login, user_id: admin.id))
+        put :admin_login, email: admin.email
+      end
+
+      it 'does not enqueue mail with admin email and sso disabled' do
+        SiteSetting.enable_sso = false
+        Jobs.expects(:enqueue).never
+        put :admin_login, email: admin.email
+      end
+
+      it 'does not enqueue mail with normal user email and sso enabled' do
+        SiteSetting.enable_sso = true
+        Jobs.expects(:enqueue).never
+        put :admin_login, email: user.email
+      end
+    end
+
+    context 'logs in admin' do
+      it 'does not log in admin with invalid token' do
+        SiteSetting.enable_sso = true
+        get :admin_login, token: "invalid"
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it 'does not log in admin with valid token and SSO disabled' do
+        SiteSetting.enable_sso = false
+        token = admin.email_tokens.create(email: admin.email).token
+
+        get :admin_login, token: token
+        expect(response).to redirect_to('/')
+        expect(session[:current_user_id]).to be_blank
+      end
+
+      it 'logs in admin with valid token and SSO enabled' do
+        SiteSetting.enable_sso = true
+        token = admin.email_tokens.create(email: admin.email).token
+
+        get :admin_login, token: token
+        expect(response).to redirect_to('/')
+        expect(session[:current_user_id]).to eq(admin.id)
+      end
+    end
+  end
+
   describe '#toggle_anon' do
     it 'allows you to toggle anon if enabled' do
       SiteSetting.allow_anonymous_posting = true
@@ -674,48 +725,48 @@ describe UsersController do
 
       it 'raises an error without a new_username param' do
         expect { xhr :put, :username, username: user.username }.to raise_error(ActionController::ParameterMissing)
-        user.reload.username.should == old_username
+        expect(user.reload.username).to eq(old_username)
       end
 
       it 'raises an error when you don\'t have permission to change the username' do
         Guardian.any_instance.expects(:can_edit_username?).with(user).returns(false)
         xhr :put, :username, username: user.username, new_username: new_username
         expect(response).to be_forbidden
-        user.reload.username.should == old_username
+        expect(user.reload.username).to eq(old_username)
       end
 
       # Bad behavior, this should give a real JSON error, not an InvalidParameters
       it 'raises an error when change_username fails' do
         User.any_instance.expects(:save).returns(false)
         expect { xhr :put, :username, username: user.username, new_username: new_username }.to raise_error(Discourse::InvalidParameters)
-        user.reload.username.should == old_username
+        expect(user.reload.username).to eq(old_username)
       end
 
       it 'should succeed in normal circumstances' do
         xhr :put, :username, username: user.username, new_username: new_username
-        response.should be_success
-        user.reload.username.should == new_username
+        expect(response).to be_success
+        expect(user.reload.username).to eq(new_username)
       end
 
       skip 'should fail if the user is old', 'ensure_can_edit_username! is not throwing' do
         # Older than the change period and >1 post
         user.created_at = Time.now - (SiteSetting.username_change_period + 1).days
         user.stubs(:post_count).returns(200)
-        Guardian.new(user).can_edit_username?(user).should == false
+        expect(Guardian.new(user).can_edit_username?(user)).to eq(false)
 
         xhr :put, :username, username: user.username, new_username: new_username
 
-        response.should be_forbidden
-        user.reload.username.should == old_username
+        expect(response).to be_forbidden
+        expect(user.reload.username).to eq(old_username)
       end
 
       it 'should create a staff action log when a staff member changes the username' do
         acting_user = Fabricate(:admin)
         log_in_user(acting_user)
         xhr :put, :username, username: user.username, new_username: new_username
-        response.should be_success
-        UserHistory.where(action: UserHistory.actions[:change_username], target_user_id: user.id, acting_user_id: acting_user.id).should be_present
-        user.reload.username.should == new_username
+        expect(response).to be_success
+        expect(UserHistory.where(action: UserHistory.actions[:change_username], target_user_id: user.id, acting_user_id: acting_user.id)).to be_present
+        expect(user.reload.username).to eq(new_username)
       end
 
       it 'should return a JSON response with the updated username' do

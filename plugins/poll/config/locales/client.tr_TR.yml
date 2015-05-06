@@ -8,10 +8,23 @@
 tr_TR:
   js:
     poll:
-      voteCount:
-        other: "%{count} oy"
-      results:
-        show: Sonuçları göster
-        hide: Sonuçları gizle
-      close_poll: "Anketi Bitir"
-      open_poll: "Anket Başlat"
+      average_rating: "Ortalama oran: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Oyunuzu verin"
+        label: "Şimdi oylayın!"
+      show-results:
+        title: "Anket sonuçlarını göster"
+        label: "Sonuçları göster"
+      hide-results:
+        title: "Oylarınıza dönün"
+        label: "Sonuçları sakla"
+      open:
+        title: "Anketi başlat"
+        label: "Başlat"
+        confirm: "Bu anketi başlatmak istediğinize emin misiniz?"
+      close:
+        title: "Anketi bitir"
+        label: "Bitir"
+        confirm: "Bu anketi bitirmek istediğinize emin misiniz?"
+      error_while_toggling_status: "Bu anketin statüsü değiştirilirken bir hata oluştu."
+      error_while_casting_votes: "Oylama esnasında hata oluştu."

@@ -63,7 +63,7 @@ export default DiscourseController.extend({
         const composer = this;
 
         return this.store.find('post', postId).then(function(post) {
-          const quote = Discourse.Quote.build(post, post.get("raw"));
+          const quote = Discourse.Quote.build(post, post.get("raw"), {raw: true, full: true});
           composer.appendBlockAtCursor(quote);
           composer.set('model.loading', false);
         });
@@ -228,7 +228,7 @@ export default DiscourseController.extend({
     }).then(function(result) {
 
       if (result.responseJson.action === "enqueued") {
-        self.send('postWasEnqueued');
+        self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
         self.close();
         return result;
@@ -434,6 +434,18 @@ export default DiscourseController.extend({
     this.set('model', composerModel);
     composerModel.set('composeState', Discourse.Composer.OPEN);
     composerModel.set('isWarning', false);
+
+    if (opts.topicTitle && opts.topicTitle.length <= this.get('maxTitleLength')) {
+      this.set('model.title', opts.topicTitle);
+    }
+
+    if (opts.topicCategoryId) {
+      this.set('model.categoryId', opts.topicCategoryId);
+    }
+
+    if (opts.topicBody) {
+      this.set('model.reply', opts.topicBody);
+    }
 
     this.get('controllers.composer-messages').queryFor(composerModel);
   },

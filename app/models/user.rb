@@ -111,6 +111,8 @@ class User < ActiveRecord::Base
   # excluding fake users like the system user
   scope :real, -> { where('id > 0') }
 
+  scope :staff, -> { where("admin OR moderator") }
+
   # TODO-PERF: There is no indexes on any of these
   # and NotifyMailingListSubscribers does a select-all-and-loop
   # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?
@@ -413,11 +415,11 @@ class User < ActiveRecord::Base
     return letter_avatar_template(username) if !uploaded_avatar_id
     id = uploaded_avatar_id
     username ||= ""
-    "/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
+    "#{Discourse.base_uri}/user_avatar/#{RailsMultisite::ConnectionManagement.current_hostname}/#{username.downcase}/{size}/#{id}.png"
   end
 
   def self.letter_avatar_template(username)
-    "/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
+    "#{Discourse.base_uri}/letter_avatar/#{username.downcase}/{size}/#{LetterAvatar.version}.png"
   end
 
   def avatar_template
@@ -471,6 +473,8 @@ class User < ActiveRecord::Base
 
   def delete_all_posts!(guardian)
     raise Discourse::InvalidAccess unless guardian.can_delete_all_posts? self
+
+    QueuedPost.where(user_id: id).delete_all
 
     posts.order("post_number desc").each do |p|
       PostDestroyer.new(guardian.user, p).destroy
@@ -675,9 +679,8 @@ class User < ActiveRecord::Base
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
 
-    if self.uploaded_avatar_id_changed?
-      Jobs.enqueue(:fix_avatar_in_quotes, user_id: self.id)
-    end
+    # mark all the user's quoted posts as "needing a rebake"
+    Post.rebake_all_quoted_posts(self.id) if self.uploaded_avatar_id_changed?
   end
 
   def first_post_created_at
@@ -847,11 +850,13 @@ class User < ActiveRecord::Base
   end
 
   def send_approval_email
-    Jobs.enqueue(:user_email,
-      type: :signup_after_approval,
-      user_id: id,
-      email_token: email_tokens.first.token
-    )
+    if SiteSetting.must_approve_users
+      Jobs.enqueue(:user_email,
+        type: :signup_after_approval,
+        user_id: id,
+        email_token: email_tokens.first.token
+      )
+    end
   end
 
   def set_default_email_digest
@@ -884,7 +889,7 @@ class User < ActiveRecord::Base
     to_destroy.each do |u|
       begin
         destroyer.destroy(u, context: I18n.t(:purge_reason))
-      rescue Discourse::InvalidAccess
+      rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end

@@ -135,9 +135,12 @@ es:
     hot: "Temas calientes"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
   excerpt_image: "imagen"
+  queue:
+    delete_reason: "Eliminado vía moderación"
   groups:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
+      member_already_exist: "'%{username}' ya es miembro de este grupo."
     default_names:
       everyone: "todos"
       admins: "administradores"
@@ -152,16 +155,7 @@ es:
     until_posts:
       one: "1 post"
       other: "%{count} posts"
-    new-topic: |
-      Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!**
-
-      - ¿El título describe de forma precisa tu tema? ¿Suena interesante?
-
-      - ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad?
-
-      - Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría.
-
-      Para más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.
+    new-topic: "Bienvenido a %{site_name} &mdash; **¡gracias por comenzar una nueva conversación!** \n\n- ¿El título describe de forma precisa tu tema? ¿Suena interesante? \n\n- ¿De qué trata? ¿Quién estaría interesado en él? ¿Por qué es importante? ¿Qué tipo de respuestas esperas de la comunidad? \n\n- Incluye buenos términos de búsqueda en tu tema para que otros puedan *encontrarlo*. Para agrupar tu tema con otros relacionados, selecciona una categoría. \n\nPara más consejos, [visita nuestras directrices de uso en comunidad](/guidelines). Este panel solo aparecerá para tus primeros %{education_posts_text}.\n"
     new-reply: |
       Bienvenido a %{site_name} &mdash; **¡gracias por contribuir a la conversación!**
 
@@ -279,6 +273,7 @@ es:
       uncategorized_parent: "Sin categoría no puede tener categoría primaria"
       self_parent: "La categoría primaria de una subcategoría no puede ser ella misma."
       depth: "No se puede anidar una subcategoría debajo de otra"
+      email_in_already_exist: "La dirección de email entrante '%{email_in}' ya está en uso para la categoría '%{category_name}'."
     cannot_delete:
       uncategorized: "Sin categoría no se puede eliminar"
       has_subcategories: "No se puede eliminar esta categoría porque tiene sub-categorías."
@@ -382,7 +377,6 @@ es:
         one: "hace casi 1 año"
         other: "hace casi %{count} años"
   password_reset:
-    no_token: "Lo sentimos, tu token ha expirado. Por favor prueba restableciendo tu contraseña de nuevo."
     choose_new: "Por favor elige un nuevo password"
     choose: "Por favor, elige una contraseña"
     update: 'Actualizar contraseña'
@@ -457,15 +451,15 @@ es:
       email_title: 'El tema "%{title}" requiere la atención de un moderador'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Tu post ha sido reportado por la comunidad. Por favor <a href="/my/private-messages">mira tus mensajes</a>.</p>'
+    you_must_edit: '<p>Tu post fue reportado por la comunidad. Por favor, <a href="/my/messages">mira tus mensajes</a>.</p>'
     user_must_edit: '<p>Este post fue reportado por la comunidad y está oculto temporalmente.</p>'
   archetypes:
     regular:
       title: "Tema normal"
     banner:
       message:
-        make: "Este tema es ahora un banner. Aparecerá en la parte superior de cada pagina hasta que sea descartada por el usuario."
-        remove: "Este tema ya no es un banner. Ya no aparecerá en la parte superior de cada pagina."
+        make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
+        remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: 'Dado de bajada'
     description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
@@ -720,13 +714,15 @@ es:
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar un post oculto por los reportes de la comunidad"
     max_topics_in_first_day: "El número máximo de temas que un usuario puede crear en su primer día en el sitio"
     max_replies_in_first_day: "El máximo número de respuestas que un usuario puede publicar en su primer día en el sitio"
+    tl2_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 2 (miembro) multiplicando por este número"
+    tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
+    tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
     num_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     num_users_to_block_new_user: "Si los posts de un nuevo usuario obtienen tanto reportes como se establece en num_flags_to_block_new_user, por este número de diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
-    must_approve_users: "Los miembros del Staff deben aprobar todas las nuevas cuentas antes de que se les permita acceder al sitio."
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
     ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
@@ -755,6 +751,8 @@ es:
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
     allow_index_in_robots_txt: "Especificar en robots.txt que este sitio puede ser indexado por los motores de búsqueda web."
+    email_domains_blacklist: "Una lista de dominios de correo electrónico con los que los usuarios no se podrán registrar. Ejemplo: mailinator.com|trashmail.net"
+    email_domains_whitelist: "Una lista de dominios de email con los que los usuarios DEBERÁN registrar sus cuentas. AVISO: ¡los usuarios con un email con diferente dominio a los listados no estarán permitidos!"
     forgot_password_strict: "No informar de la existencia de la cuenta de un usuario cuando ellos use la opción de olvidar contraseña."
     log_out_strict: "Al cerrar sesión, cierra TODAS las sesiones del usuario en todos los dispositivos"
     version_checks: "Ping el 'Discourse Hub' para actualizaciones de versión y mostrar mensajes del número de versión en el dashboard /admin"
@@ -826,7 +824,7 @@ es:
     s3_region: "El nombre de región de Amazon S3 que se utilizará para subir imágenes."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
-    default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios."
+    default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
     tl1_requires_topics_entered: "¿Cuántos temas un nuevo usuario debe de entrar antes de que sea promovido a nivel de confianza 1?"
     tl1_requires_read_posts: "Cuántos posts debe leer un nuevo usuario antes de ser promocionado al nivel de confianza 1."
     tl1_requires_time_spent_mins: "Cuántos minutos debe permanecer leyendo posts un nuevo usuario antes de ser promocionado al nivel de confianza 1."
@@ -939,6 +937,9 @@ es:
     public_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados públicamente."
     staff_user_custom_fields: "Una lista con campos personalizados para el usuario que pueden ser mostrados a los moderadores o admin."
     enable_user_directory: "Proporcionar un directorio de usuarios"
+    allow_anonymous_posting: "Permitir a los usuarios cambiar a modo anónimo"
+    anonymous_posting_min_trust_level: "Nivel de confianza mínimo requerido para activar el modo anónimo"
+    anonymous_account_duration_minutes: "Para proteger el anonimato, crear una nueva cuenta anónima cada N minutos para cada usuario. Ejemplo: si se establece en 600, tan pronto como pasen 600 minutos desde el último post Y el usuario cambie a anónimo, se creará una nueva cuenta anónima."
     allow_profile_backgrounds: "Permitir a los usuarios subir sus propios fondos de perfil personalizados."
     sequential_replies_threshold: "Número de posts consecutivos que un usuario publicará en un mismo tema hasta mostrarle un recordatorio sobre demasiadas repuestas seguidas."
     enable_mobile_theme: "Los dispositivos móviles utilizan un tema adaptado, con la habilidad de cambiar al estilo de sitio completo. Deshabilita esta opción si quieres utilizar una plantilla personalizada que sea completamente adaptable."
@@ -973,6 +974,8 @@ es:
     enable_emoji: "Habilitar emoji"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
+    approve_post_count: "La cantidad de posts de un nuevo usuario que deben ser aprobados"
+    approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
       invalid_username: "No existe ningún usuario con ese nombre de usuario. "
@@ -1120,11 +1123,6 @@ es:
     text_body_template: "%{invitee_name} te ha invitado a unirte a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si te interesa, haz clic en el siguiente enlace: \n\n %{invite_link}\n\nEsta invitación procede de un usuario de confianza, por lo que no necesitarás autenticarte.\n"
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
-    text_body_template: |
-      Gracias por aceptar tu invitación a %{site_name} -- ¡bienvenido!
-
-      Para iniciar sesión otra vez, da clic en el siguiente enlace para escoger una contraseña:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
@@ -1223,20 +1221,9 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
+    usage_tips:
       text_body_template: |
-        Hola,
-
-        Este se un mensaje automatizado de %{site_name} para informarte de que tu post fue ocultado.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad reportaron este post antes de ocultarlo, por favor considera revisar tu post para reflejar la retroalimentación de los demás miembros. **Puedes editar tu post después de %{edit_delay} minutos, y será automáticamente  mostrado de vuelta.** Esto incrementara tu nivel de confianza.
-
-        Sin embargo, si el post es ocultado por la comunidad una segunda vez, este se mantendrá oculto hasta que sea atendido por el staff – y tal vez vez se tomen medidas, incluyendo la posible suspensión de tu cuenta.
-
-        Para más información, por favor consulta nuestras [reglas de comunidad](%{base_url}/guidelines).
+        Este mensaje privado tiene algunos trucos rápidos para que puedas comenzar. ## Sigue deslizando No hay botones de página siguiente o números de página – para leer más, **¡simplemente sigue deslizando hacia abajo!** Mientras llegan nuevos temas, estos aparecerán automáticamente. ## ¿Dónde estoy? - Para buscar, tu página de usuario o el menú, usa los botones **icon <kbd>☰</kbd> en la parte superior derecha**. - Cualquier título de tema te llevará al siguiente mensaje no leído. Usa la hora de última actividad y la cuenta de mensaje para ir al principio o al final. - Mientras estás leyendo un tema, salta al inicio &uarr; seleccionando el título del tema. Selecciona la barra de progreso verde en la parte inferior derecha para los controles completos de navegación o usa las teclas <kbd>home</kbd> "Inicio" y <kbd>end</kbd>; "Fin";. <img src="/images/welcome/progress-bar.png" width="143" height="39"> ## ¿Cómo respondo? - Para responder al mensaje general, usa el botón de Respuesta <img src="/images/welcome/reply-topic.png" width="29" height="25"> al final de la página. - Para responder a un mensaje en particular, usa el botón Respuesta <img src="/images/welcome/reply-post.png" width="29" height="25"> en ese mensaje. - Para llevar la conversación en una dirección distinta, pero manteniendo un enlace, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responde como Tema enlazado a la derecha del mensaje. - Para citar a alguien en tu respuesta, selecciona el texto que quieras citar y presiona cualquier de los botones de Respuesta. <img src="/images/welcome/quote-reply.png" width="350" height="129"> Para dar un toque a alguien en tu respuesta, menciona su nombre. Escribe `@` y un cuadro de autocompletado aparecerá. <img src="/images/welcome/username-completion.png" width="230" height="131"> Para [Emoji comunes](http://www.emoji.codes/), simplemente comienza escribiendo `:` o los tradicionales smileys `:)` :smile: ## ¿Qué más puedo hacer? Hay botones de acción al final de cada mensaje. <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46"> Para hacer saber a cualquiera que te agradó su mensaje, usa el botón **me gusta**. Si tienes algún problema con un mensaje, házselo saber privadamente al autor o bien a nuestro equipo usando el botón **reportar**. También puedes **compartir** el enlace a un mensaje o añadirlo a **favoritos** para referencia futura en tu página de usuario. ## ¿Quién me está hablando? Cuando alguien responde a tu mensaje, cita tu mensaje o menciona tu `@nombre_de_usuario`, un número aparecerá de forma inmediata en la parte superior derecha de la página. Úsalo para acceder a tus **notificaciones**. <img src="/images/welcome/notification-panel.png" width="178" height="59"> No te preocupes si te pierdes una respuesta – se te enviará un correo electrónico con las respuestas directas (y mensajes privados) si no estas conectado cuando te lleguen. ## ¿Cuándo son nuevas las conversaciones? Por defecto todas las conversaciones con menos de dos días de antigüedad son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por un periodo extenso de tiempo) serán automáticamente monitorizadas. Verás indicadores azules y de números al lado de estos temas: <img src="/images/welcome/topics-new-unread.png" width="368" height="89"> Puedes cambiar el estado individual de notificación de cada tema a través del control al final del tema (también puede ajustarse por categoría). Para cambiar la forma en que monitorizas los temas, o definir una nueva, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences). ## ¿Por qué no puedo hacer ciertas cosas? Los nuevos usuarios están de alguna forma limitados por razones de seguridad. Conforme vayas participando, irá ganando la confianza de la comunidad, te convertirás en un ciudadano de pleno derecho y estas limitaciones se te quitarán automáticamente. Con un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficientemente alto, incluso ganarás acceso a más habilidades para ayudarnos a administrar nuestra comunidad juntos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1342,6 +1329,12 @@ es:
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - no podemos analizar respuestas entre líneas.
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Error de email -- Acceso no válido"
+      text_body_template: |
+        Lo sentimos, pero tu mensaje por email a %{destination} (titled %{former_title}) no funcionó.
+
+        Tu cuenta no tiene los privilegios para publicar nuevos temas en esa categoría. Si crees que esto es un error, contacta a un moderador o administrador.
     email_reject_post_error:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de publicación"
       text_body_template: |
@@ -1457,8 +1450,34 @@ es:
     posted_by: "Publicado por %{username} el %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} te invitó al hilo de mensajes
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        en
+
+        > %{site_title} -- %{site_description}
+
+        Por favor visita este enlace para verlo: %{base_url}%{url}
     user_invited_to_topic:
       subject_template: "[%{site_name}] %{username} te ha invitado a un tema '%{topic_title}'"
+      text_body_template: |2
+
+        %{username} te invitó al hilo
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        en
+
+        > %{site_title} -- %{site_description}
+
+        Por favor, visita este enlace para verlo: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -1538,6 +1557,15 @@ es:
 
         Haz clic en el siguiente enlace para escoger una contraseña:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] inicio sesión"
+      text_body_template: |
+        Alguien pidió iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
+
+        Si tú no realizaste esta petición, puedes ignorar este email.
+
+        Haz clic en el siguiente enlace para iniciar sesión:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Tu nueva cuenta"
       text_body_template: |
@@ -1734,3 +1762,8 @@ es:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "Email enviado"
+    error: "¡Error!"
+    email_input: "Email de admin"
+    submit_button: "Enviar email"

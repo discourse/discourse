@@ -30,7 +30,7 @@ fa_IR:
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
       tiny:
-        half_a_minute: "< ۱ دقیقه"
+        half_a_minute: "< 1 دقیقه"
         less_than_x_seconds:
           other: "< %{count} ثانیه"
         x_seconds:
@@ -180,14 +180,22 @@ fa_IR:
       topic: "جستار"
       approve: 'تصویب'
       reject: 'رد کردن'
+      delete_user: 'پاک کردن کاربر'
       title: "به تایید نیاز است"
       none: "نوشته ای برای بازبینی وجود ندارد."
       edit: "ویرایش"
       cancel: "لغو کردن"
+      view_pending: "مشاهده پست های در انتظار "
+      has_pending_posts:
+        one: "این جستار دارای <b>1</b> نوشته ی در انتظار تایید است. "
+        many: "این جستار دارای  <b>{{count}}</b> نوشته ی در انتظار تایید است"
       confirm: "ذخیره سازی تغییرها"
+      delete_prompt: "آیا مطمئن هستی از پاک کردن این <b>%{username}</b>? این باعث پاک شدن تمام پست ها و منجر به بلاک شدن ایمیل و IP می شود."
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی نیاز به تایید آن توسط یکی از مدیران است قبل از اینکه نمایش داده شود. لطفا صبر داشته باشید."
+        pending_posts:
+          other: "شما دارای  <strong>{{count}}</strong>  پست های در انتظار هستید "
         ok: "باشه"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>نوشته شد<a href='{{topicUrl}}'>موضوع</a>"
@@ -248,6 +256,7 @@ fa_IR:
       '11': "ویرایش‌ها"
       '12': "ارسال موارد"
       '13': "صندوق دریافت"
+      '14': "در انتظار"
     categories:
       all: "همهٔ دسته‌بندی ها"
       all_subcategories: "همه"
@@ -299,7 +308,6 @@ fa_IR:
       dismiss_notifications: "علامت گذاری همه به عنوان خوانده شده"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
-      dynamic_favicon: "آگاه‌سازی پیام‌های آمده را در favicon نمایش بده (آزمایشی)"
       edit_history_public: "اجازه بده کاربران دیگر اصلاحات نوشته مرا ببینند"
       external_links_in_new_tab: "همهٔ پیوندهای برون‌رو را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
@@ -518,9 +526,8 @@ fa_IR:
     logout: "شما از سایت خارج شده اید"
     refresh: "تازه کردن"
     read_only_mode:
-      enabled: "مدیر حالت فقط برای خواندن را فعال کرده.  می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
+      enabled: "حالت فقط خواندن را فعال است. می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
-    too_few_topics_notice: " 5 جستار عمومی و  %{posts} دیدگاه عمومی بوجود بیاور تا گفتگو آغاز بشود. کاربران جدید میزان اعتماد  را بدست بیاورند  مگر محتوایی برای خواندن موجود باشد. این پیغام فقط به کارکنان نشان داده می شود"
     learn_more: "بیشتر بدانید..."
     year: 'سال'
     year_desc: 'موضوعاتی که در 365 روز گذشته باز شده‌اند'
@@ -629,6 +636,7 @@ fa_IR:
         title_too_long: "سرنویس نمی‌تواند بیش‌تر از {{max}} نویسه باشد"
         post_missing: "نوشته نمی‌تواند تهی باشد"
         post_length: "نوشته باید دست‌کم {{min}} نویسه داشته باشد"
+        try_like: 'این کلید را امتحان کرده اید <i class="fa fa-heart"></i> ؟ '
         category_missing: "باید یک دسته برگزینید"
       save_edit: "ذخیره سازی ویرایش"
       reply_original: "پاسخ دادن در موضوع اصلی"
@@ -642,7 +650,7 @@ fa_IR:
       title_placeholder: "در یک جملهٔ‌ کوتاه، این موضوع در چه موردی است؟"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       show_edit_reason: "(افزودن دلیل ویرایش)"
-      reply_placeholder: "اینجا بنویسید. برای آرایش از Markdown یا BBCode استفاده کنید. برای باگذاری تصویر، آن را به اینجا بکشید یا بچسبانید."
+      reply_placeholder: "اینجا تایپ کنید. استفاده کنید از Markdown, BBCode, or HTML برای فرمت. عکس  را بکشید یا برگردانید برای بارگزاری آن. "
       view_new_post: "نوشته تازه‌تان را ببینید."
       saving: "در حال ذخیره سازی..."
       saved: "اندوخته شد!"
@@ -810,7 +818,7 @@ fa_IR:
       toggle_information: " ضامن جزئیات موضوع"
       read_more_in_category: "می خواهید بیشتر بخوانید? به موضوعات دیگر را مرور کنید {{catLink}} یا {{latestLink}}."
       read_more: "می خواهید بیشتر بخوانید? {{catLink}} یا {{latestLink}}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همهٔ دسته‌ها
       view_latest_topics: مشاهده آخرین موضوع
       suggest_create_topic: چرا یک موضوع نسازید؟
@@ -949,6 +957,7 @@ fa_IR:
         to_topic_blank: "نام کاربری یا ایمیل کسی را که می خواهید برای این موضوع دعوت کنید را وارد نمایید"
         to_topic_email: "شما یک ایمیل آدرس وارد کردید. ما یک ایمیل خواهیم فرستاد که به دوستان شما اجازه می دهد سریعا به این جستار پاسخ دهند."
         to_topic_username: "شما یک نام کاربری وارد کردید. ما یک آگاه سازی برای آن کاربر به همراه یک پیوند می فرستیم برای دعوت آنها به این جستار.  "
+        to_username: "نام کاربری شخصی را که علاقه مند به دعوت کردن آن هستید وارد کنید. ما برای آن یک آگاه سازی به کاربر به همراه دعوتنامه به این جستار می فرستیم. "
         email_placeholder: 'name@example.com'
         success_email: "lما از طریق ایمیل دعوت نامه ارسال کردیم <B> {{emailOrUsername}} </ B>. هنگامی که به دعوت شما پاسخ داده شد ما به شما اطلاع خواهیم داد.برای پی گیری به تب دعوت ها در پنل کاربری مراجعه نمایید"
         success_username: "ما آن کاربر را برای شرکت در این جستار دعوت کردیم."
@@ -1157,8 +1166,6 @@ fa_IR:
           side_by_side_markdown:
             title: "نمایش تفاوت های خروجی منبع اولیه سو به سو"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "ویرایش‌گر:"
     category:
       can: 'can&hellip; '
       none: '(بدون دسته)'

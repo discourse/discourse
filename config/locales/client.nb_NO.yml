@@ -107,6 +107,9 @@ nb_NO:
     show_more: "vis mer"
     show_help: "hjelp"
     links: "Lenker"
+    links_lowercase:
+      one: "link"
+      other: "linker"
     faq: "FAQ"
     guidelines: "Retningslinjer"
     privacy_policy: "Personvern"
@@ -191,6 +194,10 @@ nb_NO:
       title:
         search: "Søk etter et emne ved navn, url eller id:"
         placeholder: "skriv emnetittelen her"
+    queue:
+      confirm: "Lagre endringer"
+      approval:
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postet <a href='{{topicUrl}}'>emnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> postet <a href='{{topicUrl}}'>emnet</a>"
@@ -210,10 +217,18 @@ nb_NO:
       title: "Brukere"
       likes_given: "Gitt"
       likes_received: "Mottatt"
+      topics_entered: "Lest"
+      topics_entered_long: "Emner lest"
       time_read: "Tid lest"
       topic_count: "Emner"
+      topic_count_long: "Emner startet"
       post_count: "Svar"
+      post_count_long: "Svar"
       no_results: "Ingen treff"
+      days_visited: "Besøk"
+      days_visited_long: "Dager besøkt"
+      posts_read: "Lest"
+      posts_read_long: "Lest"
       total_rows:
         one: "1 bruker"
         other: "%{count} brukere"
@@ -236,12 +251,15 @@ nb_NO:
       '2': "Liker mottatt"
       '3': "Bokmerker"
       '4': "Emner"
+      '5': "Svar"
+      '6': "Svar"
       '7': "Omtalelser"
       '9': "Sitater"
       '10': "Favoritter"
       '11': "Redigeringer"
       '12': "Sendte elementer"
       '13': "Innboks"
+      '14': "Venter"
     categories:
       all: "Alle kategorier"
       all_subcategories: "alle"
@@ -282,6 +300,8 @@ nb_NO:
       mute: "Demp"
       edit: "Rediger innstillinger"
       download_archive: "Last ned mine innlegg"
+      new_private_message: "Ny Melding"
+      private_message: "Melding"
       private_messages: "Meldinger"
       activity_stream: "Aktivitet"
       preferences: "Innstillinger"
@@ -293,7 +313,6 @@ nb_NO:
       dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
-      dynamic_favicon: "Vis innkommende meldingsvarsler på favicon (eksperimentel)"
       edit_history_public: "La andre brukere se mine innleggsrevisjoner"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
@@ -359,6 +378,8 @@ nb_NO:
         uploaded_avatar_empty: "Legg til egendefinert bilde"
         upload_title: "Last opp bilde"
         upload_picture: "Last opp bilde"
+        image_is_not_a_square: "Vi har beskjært bildet ditt, høyde og bredde er ikke lik"
+        cache_notice: "Du har byttet avatar, men det kan ta litt tid før endringen trer i kraft."
       change_profile_background:
         title: "Profilbakgrunn"
         instructions: "Profil bakgrunner vil bli sentrert med en standard bredde på 850px"
@@ -378,6 +399,7 @@ nb_NO:
       name:
         title: "Navn"
         instructions: "Ditt fulle navn (valgfritt)"
+        instructions_required: "Ditt fulle navn"
         too_short: "Navnet ditt er for kort."
         ok: "Navnet ditt ser bra ut."
       username:
@@ -415,6 +437,8 @@ nb_NO:
         every_three_days: "hver tredje dag"
         weekly: "ukentlig"
         every_two_weeks: "annenhver uke"
+      email_direct: "Motta en email når noen siterer deg, svarer på dine innlegg, nevner mitt brukernavn eller inviterer meg til et emne"
+      email_private_messages: "Motta en email når noen sender deg en melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
       other_settings: "Annet"
       categories_settings: "Kategorier"
@@ -431,6 +455,7 @@ nb_NO:
       auto_track_topics: "Følg automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
+        immediately: "øyeblikkelig"
         after_n_seconds:
           one: "etter 1 sekund"
           other: "etter {{count}} sekunder"
@@ -461,6 +486,7 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
           uploading: "Laster opp..."
+          success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
           error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
@@ -484,6 +510,7 @@ nb_NO:
       stream:
         posted_by: "Skrevet av"
         sent_by: "Sendt av"
+        private_message: "melding"
         the_topic: "emnet"
     loading: "Laster..."
     errors:
@@ -508,9 +535,7 @@ nb_NO:
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
-    too_few_topics_notice: "Opprett minst 5 offentlige tråder og %{posts} offentlige innlegg for å få i gang diskusjonen. Nye brukere kan ikke tilegne seg tillitsnivåer ved mindre det eksisterer innhold for dem å lese. Denne meldingen vises kun til forumpersonalet."
     learn_more: "lær mer..."
     year: 'år'
     year_desc: 'emner opprettet de siste 365 dagene'
@@ -523,6 +548,10 @@ nb_NO:
     mute: Demp
     unmute: Fjern demping
     last_post: Siste innlegg
+    last_reply_lowercase: siste svar
+    replies_lowercase:
+      one: svar
+      other: svar
     summary:
       enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
       description: "Det er <b>{{count}}</b> svar."
@@ -535,6 +564,7 @@ nb_NO:
       enable: "Skjul slettede innlegg"
       disable: "Vis slettede innlegg"
     private_message_info:
+      title: "Send"
       invite: "Inviter andre..."
     email: 'E-post'
     username: 'Brukernavn'
@@ -614,6 +644,7 @@ nb_NO:
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
         post_missing: "Innlegget kan ikke være tomt"
         post_length: "Innlegget må være minst {{min}} tegn"
+        try_like: 'Har du prøvd <i class="fa fa-heart"></i> knappen?'
         category_missing: "Du må velge en kategori"
       save_edit: "Lagre endring"
       reply_original: "Besvar det originale emnet"
@@ -621,12 +652,12 @@ nb_NO:
       reply: "Svar"
       cancel: "Avbryt"
       create_topic: "Nytt Emne"
+      create_pm: "Melding"
       title: "Eller trykk Ctrl+Enter"
       users_placeholder: "Legg til en bruker"
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
-      reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
@@ -706,6 +737,7 @@ nb_NO:
         user: "Søk innleggene av @{{username}}"
         category: "Søk i kategorien \"{{category}}\""
         topic: "Søk i dette emnet"
+        private_messages: "Søk i meldinger"
     site_map: "gå til en annen emneliste eller kategori"
     go_back: 'gå tilbake'
     not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
@@ -756,6 +788,7 @@ nb_NO:
       filter_to: "{{post_count}} innlegg i dette emnet."
       create: 'Nytt Emne'
       create_long: 'Opprett et nytt emne'
+      private_message: 'Begynn en melding'
       list: 'Emner'
       new: 'nytt emne'
       unread: 'ulest'
@@ -794,7 +827,6 @@ nb_NO:
       toggle_information: "vis/skjul emnedetaljer"
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke opprette et emne?
@@ -908,6 +940,7 @@ nb_NO:
       automatically_add_to_groups_optional: "Denne invitasjonen inkluderer også tilgang på disse gruppene: (valgfritt, kun for admin)"
       automatically_add_to_groups_required: "Denne invitasjonen inkluderer også tilgang til disse gruppene: (<b>påkrevet</a>, kun for admin)"
       invite_private:
+        title: 'Inviter til samtale'
         email_or_username: "Invitertes e-post eller brukernavn."
         email_or_username_placeholder: "e-postadresse eller brukernavn"
         action: "Inviter"
@@ -960,6 +993,7 @@ nb_NO:
           one: Du har valgt <b>1</b> innlegg.
           other: Du har valgt <b>{{count}}</b> innlegg.
     post:
+      reply: "Svarer på {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "Svar til {{link}}"
       quote_reply: "siter svar"
       edit_reason: "Begrunnelse:"
@@ -1137,8 +1171,6 @@ nb_NO:
           side_by_side_markdown:
             title: "Vis diff for kilderåtekst side ved side"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Endret av"
     category:
       can: 'kan&hellip;'
       none: '(no category)'
@@ -1258,12 +1290,21 @@ nb_NO:
     posts_long: "{{number}} innlegg i dette emnet"
     original_post: "Originalt Innlegg"
     views: "Visninger"
+    views_lowercase:
+      one: "visninger"
+      other: "visninger"
     replies: "Svar"
     views_long: "dette emnet har blit sett {{number}} ganger"
     activity: "Aktivitet"
     likes: "Liker"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "det er {{number}} liker i dette emnet"
     users: "Deltakere"
+    users_lowercase:
+      one: "bruker"
+      other: "brukere"
     category_title: "Kategori"
     history: "Historie"
     changed_by: "av {{author}}"
@@ -1357,6 +1398,7 @@ nb_NO:
         admins: 'Adminer:'
         blocked: 'sperret:'
         suspended: 'Bannlyst:'
+        private_messages_title: "Meldinger"
         space_free: "{{size}} ledig"
         uploads: "opplastinger"
         backups: "sikkerhetskopier"

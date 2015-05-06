@@ -1,0 +1,44 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+da:
+  js:
+    poll:
+      voters:
+        zero: "vælgere"
+        one: "vælger"
+        other: "vælgere"
+      total_votes:
+        zero: "afgivne stemmer"
+        one: "afgiven stemme"
+        other: "afgivne stemmer"
+      average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Du kan mindst vælge <strong>%{count}</strong> muligheder."
+          up_to_max_options: "Du kan vælge op til <strong>%{count}</strong> muligheder."
+          x_options: "Du kan vælge <strong>%{count}</strong> muligheder."
+          between_min_and_max_options: "Du kan vælge mellem <strong>%{min}</strong> og <strong>%{max}</strong> muligheder."
+      cast-votes:
+        title: "Afgiv dine stemmer"
+        label: "Stem nu!"
+      show-results:
+        title: "Vis afstemningsresultat"
+        label: "Vis resultat"
+      hide-results:
+        title: "Tilbage til dine stemmer"
+        label: "Skjul resultat"
+      open:
+        title: "Åbn afstemning"
+        label: "Åbn"
+        confirm: "Er du sikker på, at du vil åbne denne afstemning?"
+      close:
+        title: "Luk afstemningen"
+        label: "Luk"
+        confirm: "Er du sikker på, at du vil lukke denne afstemning?"
+      error_while_toggling_status: "Der opstod en fejl ved skift af status for afstemningen."
+      error_while_casting_votes: "Der opstod en fejl ved afgivelse af dine stemmer."

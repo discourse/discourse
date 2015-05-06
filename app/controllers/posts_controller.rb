@@ -116,7 +116,7 @@ class PostsController < ApplicationController
     }
 
     # to stay consistent with the create api, we allow for title & category changes here
-    if post.post_number == 1
+    if post.is_first_post?
       changes[:title] = params[:title] if params[:title]
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
     end
@@ -135,7 +135,7 @@ class PostsController < ApplicationController
     link_counts = TopicLink.counts_for(guardian,post.topic, [post])
     post_serializer.single_post_link_counts = link_counts[post.id] if link_counts.present?
 
-    result = {post: post_serializer.as_json}
+    result = { post: post_serializer.as_json }
     if revisor.category_changed.present?
       result[:category] = BasicCategorySerializer.new(revisor.category_changed, scope: guardian, root: false).as_json
     end

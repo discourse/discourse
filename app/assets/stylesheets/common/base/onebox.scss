@@ -139,9 +139,11 @@ aside.onebox {
   }
 }
 
-.onebox-avatar {
-  height: 90px !important;
-  width: 90px !important;
+aside.onebox .onebox-body .onebox-avatar {
+  max-height: none;
+  max-width: none;
+  height: 90px;
+  width: 90px;
 }
 
 blockquote {

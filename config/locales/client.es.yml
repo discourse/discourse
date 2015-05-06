@@ -108,6 +108,9 @@ es:
     show_more: "ver más"
     show_help: "ayuda"
     links: "Enlaces"
+    links_lowercase:
+      one: "enlace"
+      other: "enlaces"
     faq: "FAQ"
     guidelines: "Directrices"
     privacy_policy: "Política de Privacidad"
@@ -194,6 +197,28 @@ es:
       title:
         search: "Buscar un Tema por nombre, url o id:"
         placeholder: "escribe el título de tema aquí"
+    queue:
+      topic: "Tema:"
+      approve: 'Aprobar'
+      reject: 'Rechazar'
+      delete_user: 'Eliminar usuario'
+      title: "Necesita Aprobación"
+      none: "No hay posts para revisar"
+      edit: "Editar"
+      cancel: "Cancelar"
+      view_pending: "ver posts pendientes"
+      has_pending_posts:
+        one: "Este tema tiene <b>1</b> post pendiente de aprobación"
+        many: "Este tema tiene <b>{{count}}</b> posts pendientes de aprobación"
+      confirm: "Guardar Cambios"
+      delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Esto eliminará todos sus posts y bloqueará su email y dirección IP."
+      approval:
+        title: "El Post Necesita Aprobación"
+        description: "Hemos recibido tu nuevo post pero necesita ser aprobado por un moderador antes de aparecer. Por favor, ten paciencia."
+        pending_posts:
+          one: "Tienes <strong>1</strong> post pendiente."
+          other: "Tienes <strong>{{count}}</strong> posts pendientes."
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> publicó <a href='{{topicUrl}}'>el tema</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Tú</a> publicaste <a href='{{topicUrl}}'>el tema</a>"
@@ -255,6 +280,7 @@ es:
       '11': "Ediciones"
       '12': "Elementos Enviados"
       '13': "Bandeja de entrada"
+      '14': "Pendiente"
     categories:
       all: "Todas las categorías"
       all_subcategories: "todas"
@@ -308,7 +334,6 @@ es:
       dismiss_notifications: "Marcador todos como leídos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No dirigirme a mi post cuando responda"
-      dynamic_favicon: "Mostrar notificaciones de mensajes de entrada en favicon (experimental)"
       edit_history_public: "Dejar que otros usuarios puedan ver las revisiones de mis posts"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
       enable_quoting: "Activar respuesta citando el texto resaltado"
@@ -451,6 +476,7 @@ es:
       auto_track_topics: "Seguir automáticamente temas en los que entre"
       auto_track_options:
         never: "nunca"
+        immediately: "inmediatamente"
         after_n_seconds:
           one: "después de 1 segundo"
           other: "después de {{count}} segundos"
@@ -530,9 +556,8 @@ es:
     logout: "Has cerrado sesión."
     refresh: "Actualizar"
     read_only_mode:
-      enabled: "Un administrador ha activado el modo sólo-lectura. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
+      enabled: "Modo solo-lectura activado. Puedes continuar navegando por el sitio pero las interacciones podrían no funcionar."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
-    too_few_topics_notice: "Crea al menos 5 temas y %{posts} posts públicos para considerar iniciada la discusión. Los nuevos usuarios no podrán ganar niveles de confianza a menos que haya contenido para que lean. Este mensaje sólo les aparecerá a los miembros del staff."
     learn_more: "saber más..."
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
@@ -545,6 +570,10 @@ es:
     mute: Silenciar
     unmute: No silenciar
     last_post: Último post
+    last_reply_lowercase: última respuesta
+    replies_lowercase:
+      one: respuesta
+      other: respuestas
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{count}}</b> respuestas."
@@ -638,6 +667,7 @@ es:
         title_too_long: "El título no puede tener más de {{max}} caracteres."
         post_missing: "El post no puede estar vacío."
         post_length: "El post debe tener por lo menos {{min}} caracteres."
+        try_like: '¿Has probado el botón de <i class="fa fa-heart"></i>?'
         category_missing: "Debes escoger una categoría."
       save_edit: "Guardar edición"
       reply_original: "Responder en el Tema Original"
@@ -651,7 +681,7 @@ es:
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
       show_edit_reason: "(añadir motivo de edición)"
-      reply_placeholder: "Escribe aquí. Puedes usar Markdown o BBCode para dar formato. Arrastra o pega una imagen aquí para subirla."
+      reply_placeholder: "Escribe aquí. Puedes usar Markdown, BBCode o HTML para dar formato. Arrastra o pega una imagen aquí para subirla."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando..."
       saved: "¡Guardado!"
@@ -826,7 +856,7 @@ es:
       toggle_information: "detalles del tema"
       read_more_in_category: "¿Quieres leer más? Consulta otros temas en {{catLink}} o {{latestLink}}."
       read_more: "¿Quieres leer más? {{catLink}} o {{latestLink}}."
-      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> topic} other { {BOTH, select, true{and } false { } other{}} <a href='/new'># nuevos</a> topics} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "Hay { UNREAD, plural, =0 {} one { <a href='/unread'>1 no leído</a> } other { are <a href='/unread'># no leídos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{y } false { } other{}} <a href='/new'>1 nuevo</a> tema} other { {BOTH, select, true{y } false { } other{}} <a href='/new'># nuevos</a> temas} } restantes, o {CATEGORY, select, true {explora otros temas en {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Ver todas las categorías
       view_latest_topics: ver los temas recientes
       suggest_create_topic: ¿Por qué no creas un tema?
@@ -965,6 +995,7 @@ es:
         to_topic_blank: "Introduzca el nombre de usuario o dirección de correo electrónico de la persona que desea invitar a este tema."
         to_topic_email: "Ha introducido una dirección de correo electrónico. Nosotros te enviaremos una invitación que le permita a su amigo responder inmediatamente a este tema."
         to_topic_username: "Ha introducido un nombre de usuario. Le enviaremos una notificación a ese usuario con un enlace invitándolo a este tema."
+        to_username: "Introduce el nombre de usuario de la persona a la que te gustaría invitar. Le enviaremos una notificación con un enlace invitándole a este tema."
         email_placeholder: 'nombre@ejemplo.com'
         success_email: "Hemos enviado un email con tu invitación a <b>{{emailOrUsername}}</b>. Te notificaremos cuando se acepte. Puedes revisar la pestaña invitaciones en tu perfil de usuario para consultar el estado de tus invitaciones."
         success_username: "Hemos invitado a ese usuario a participar en este tema."
@@ -1200,8 +1231,6 @@ es:
           side_by_side_markdown:
             title: "Mostrar las diferencias crudas a la par"
             button: '<i class="fa fa-columns"></i> Crudo'
-        details:
-          edited_by: "Editado por"
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
@@ -1329,12 +1358,21 @@ es:
         other {}}
     original_post: "Post Original"
     views: "Visitas"
+    views_lowercase:
+      one: "visita"
+      other: "visitas"
     replies: "Respuestas"
     views_long: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
+    likes_lowercase:
+      one: "me gusta"
+      other: "me gusta"
     likes_long: "este tema tiene {{number}} me gusta"
     users: "Usuarios"
+    users_lowercase:
+      one: "usuario"
+      other: "usuarios"
     category_title: "Categoría"
     history: "Historia"
     changed_by: "por {{author}}"
@@ -1553,6 +1591,8 @@ es:
         automatic: "Automático"
         automatic_membership_email_domains: "Los usuarios que se registren con un dominio de e-mail que esté en esta lista serán automáticamente añadidos a este grupo:"
         automatic_membership_retroactive: "Aplicar la misma regla de dominio de email para usuarios registrados existentes "
+        default_title: "Título por defecto para todos los miembros en este grupo"
+        primary_group: "Establecer como grupo primario automáticamente"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."

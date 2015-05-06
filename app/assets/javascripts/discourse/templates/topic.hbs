@@ -89,6 +89,17 @@
             {{view 'topic-closing' topic=model}}
             {{view 'topic-footer-buttons' topic=model}}
 
+            {{#if pending_posts_count}}
+              <div class='has-pending-posts'>
+                {{{i18n "queue.has_pending_posts" count=pending_posts_count}}}
+
+                {{#link-to 'queued-posts'}}
+                  {{fa-icon 'check'}}
+                  {{i18n 'queue.view_pending'}}
+                {{/link-to}}
+              </div>
+            {{/if}}
+
             {{plugin-outlet "topic-above-suggested"}}
 
             {{#if details.suggested_topics.length}}

@@ -28,7 +28,7 @@ class LetterAvatar
     end
 
     def cache_path
-      "public/uploads/letter_avatars/#{version}"
+      "tmp/letter_avatars/#{version}"
     end
 
     def generate(username, size, opts = nil)

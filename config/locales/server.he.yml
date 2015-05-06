@@ -152,7 +152,6 @@ he:
     until_posts:
       one: "הודעה אחת"
       other: "%{count} הודעות"
-    new-topic: "ברוכים הבאים ל%{site_name} &mdash; ** תודה על שפתחתם בשיחה חדשה! **\n\nהאם הכותרת מתארת במדוייק את הנושא שלכם? האם הוא נשמע כמו נושא מעניין?\n\n- על מה השיחה? מי עשוי להתעניין בה? מדוע נושא השיחה משנה? איזה סוג של תגובות את/ה מקווה לקבל מהקהילה?\n\n- הכלילו מילות חיפוש טובות בנושא, כדי שאחרים יוכלו *למצוא* אותה. כדי לחבר בין הנושא שלך לנושאים קשורים, הכלילו אותה באחת הקטגוריות. \n\n- לפרטים נוספים ראו את [כללי ההתנהלות הקהילתיים שלנו](/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} הודעות הראשונות שלך.\n"
     new-reply: |
       ברוכים באים ל %{site_name} &mdash; ** תודה על תרומתך! **
 
@@ -365,7 +364,6 @@ he:
         one: "לפני כמעט שנה"
         other: "לפני כמעט %{count} שנים"
   password_reset:
-    no_token: "סליחה, פג תוקף אסימון איפוס הסיסמה. אנא נסה לאפס אותה שנית."
     choose_new: "אנא בחר סיסמה חדשה"
     choose: "אנא בחר סיסמה"
     update: 'עדכן סיסמה'
@@ -440,7 +438,6 @@ he:
       email_title: 'הנושא "%{title}" דורש תשומת לב של מנהל'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p> הפרסום שלך סומן על ידי הקהילה. אנא  <a href="/my/private-messages"> בדוק/בדקי את ההודעות שלך</a>.</p>'
     user_must_edit: '<p>פרסום זה סומן על ידי הקהילה וכרגע מוסתר באופן זמני.</p>'
   archetypes:
     regular:
@@ -709,7 +706,6 @@ he:
     flag_sockpuppets: "אם משתמש/ת חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפרסומים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפרסום (לייק, סימון, וכו')."
-    must_approve_users: "הצוות חייב לאשר כל חשבון משתמש/ת חדשים לפני שיוכלו לגשת לאתר זה."
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -808,7 +804,6 @@ he:
     s3_region: "שם האזור (region name) של Amazon S3 שישמש להעלאת תמונות."
     enable_flash_video_onebox: "אפשרו הטמעת קישורי swf ו-flv (פלאש של אדובי) בפרסומים. אזהרה: עלול להביא לבעיות בטיחות באתר."
     default_invitee_trust_level: "ברירת מחדל של דרגת אמון (0-4) של משתמשים מוזמנים."
-    default_trust_level: "ברירת המחדל של דרגות אמון (0-4) של משתמשים חדשים."
     tl1_requires_topics_entered: "כמה נושאים משתמש חדש צריך להתחיל למערכת עד שישודרג לרמת אמון 1."
     tl1_requires_read_posts: "כמה פרסומים משתמש צריך לקרוא לפני שישודרג לרמת אמון 1."
     tl1_requires_time_spent_mins: "כמה דקות משתמש חדש צריך לקרוא פרסומים לפני שישודרג לרמת אמון 1."
@@ -1108,11 +1103,6 @@ he:
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   invite_password_instructions:
     subject_template: "צרו סיסמא עבור חשבון ה-%{site_name} שלכם."
-    text_body_template: |
-      תודה על שאישרת את ההזמנה שלך אל %{site_name} - ברוכים הבאים!
-
-      כדי להתחבר פעם נוספת, הקישו על הקישור המצורף כדי לבחור סיסמא:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
@@ -1168,22 +1158,6 @@ he:
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ%{site_name} שנועדה לידע אותך שפרסום שלך הוסתר.
-
-        {base_url}%{url}
-
-        %{flag_reason}
-
-        כמה חברים בקהילה סימנו את הפרסום הזה לפני שהוא הוסתר, לכן אנא שקלו כיצד תוכלו לשנות את הפרסום בצורה שתתמודד עם המשוב שלהם.
-        ** תוכלו לערוך את הפרסום המדובר לאחר %{edit_delay} דקות, והוא יוצג מחדש באופן אוטומטי.**
-        פעולה זו תעלה את רמות האמון שלך במערכת.
-
-        בכל אופן, אם פרסום זה יוסתר על ידי הקהילה בפעם השניה, הוא ישאר במצב זה עד שיגיע לטיפול חבר/ת צוות - ופעולות נוספות עשויות להינקט, כולל אפשרות תיאורטית להשהיית חשבון המשתמש שלך בפורום.
-
-        להדרכה נוספת אנא פנו למסמך ה[קווים המנחים של הקהילה שלנו](%{base_url}/guidelines).
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
     welcome_invite:

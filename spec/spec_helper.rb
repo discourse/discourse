@@ -24,7 +24,6 @@ Spork.prefork do
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
-  require 'rspec/autorun'
   require 'shoulda'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
@@ -112,6 +111,8 @@ Spork.prefork do
 
       # very expensive IO operations
       SiteSetting.automatically_download_gravatars = false
+
+      Discourse.clear_readonly!
 
       I18n.locale = :en
     end

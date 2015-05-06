@@ -177,6 +177,9 @@ en:
 
   excerpt_image: "image"
 
+  queue:
+    delete_reason: "Deleted via post moderation queue"
+
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
@@ -450,7 +453,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
+    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
@@ -820,7 +823,7 @@ en:
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -1139,6 +1142,8 @@ en:
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
+    slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
+
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
@@ -1321,8 +1326,10 @@ en:
     text_body_template: |
       Thanks for accepting your invitation to %{site_name} -- welcome!
 
-      To log in again, click the following link to choose a password:
+      Click this link to choose a password now:
       %{base_url}/users/password-reset/%{email_token}
+
+      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
@@ -1438,7 +1445,7 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.** This will increase your trust level.
+        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
 
@@ -1905,6 +1912,16 @@ en:
 
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
+
+    admin_login:
+      subject_template: "[%{site_name}] Login"
+      text_body_template: |
+        Somebody asked to login to your account on [%{site_name}](%{base_url}).
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/users/admin-login/%{email_token}
 
     account_created:
       subject_template: "[%{site_name}] Your New Account"
@@ -2442,3 +2459,9 @@ en:
       leader: |
         Blah blah blah
         Blah blah blah
+
+  admin_login:
+    success: "Email Sent"
+    error: "Error!"
+    email_input: "Admin Email"
+    submit_button: "Send Email"

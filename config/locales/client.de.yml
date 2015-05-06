@@ -201,14 +201,23 @@ de:
       topic: "Thema:"
       approve: 'Genehmigen'
       reject: 'Ablehnen'
+      delete_user: 'Benutzer löschen'
       title: "Benötigt Genehmigung"
       none: "Es sind keine Beiträge zur Überprüfung vorhanden."
       edit: "Bearbeiten"
       cancel: "Abbrechen"
+      view_pending: "ausstehende Beiträge anzeigen"
+      has_pending_posts:
+        one: "Dieses Thema hat <b>1</b> Beitrag, der genehmigt werden muss"
+        many: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
+      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Damit werden alle ihre/seine Beiträge entfernt und ihre/seine E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
+        pending_posts:
+          one: "Du hast <strong>1</strong> ausstehenden Beitrag."
+          other: "Du hast <strong>{{count}}</strong> ausstehende Beiträge."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> hat <a href='{{topicUrl}}'>das Thema</a> verfasst"
@@ -271,6 +280,7 @@ de:
       '11': "Änderungen"
       '12': "Gesendete Objekte"
       '13': "Posteingang"
+      '14': "Ausstehend"
     categories:
       all: "Alle Kategorien"
       all_subcategories: "alle"
@@ -324,7 +334,6 @@ de:
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
-      dynamic_favicon: "Zeige Benachrichtigungen über eingehende Nachrichten im Favicon (experimentell)"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -547,9 +556,8 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Ein Administrator hat den Nur-Lesen-Modus aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
+      enabled: "Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter nutzen, wobei jedoch einige Funktionen nicht funktionieren werden."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
-    too_few_topics_notice: "Erstelle mindestens 5 öffentlich sichtbare Themen und %{posts} öffentlich sichtbare Beiträge, um die Unterhaltung ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung wird nur Mitarbeitern angezeigt."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -659,6 +667,7 @@ de:
         title_too_long: "Titel darf maximal {{max}} Zeichen lang sein"
         post_missing: "Beitrag darf nicht leer sein"
         post_length: "Beitrag muss mindestens {{min}} Zeichen lang sein"
+        try_like: 'Hast du schon die <i class="fa fa-heart"></i> Schaltfläche ausprobiert?'
         category_missing: "Du musst eine Kategorie auswählen"
       save_edit: "Änderungen speichern"
       reply_original: "Auf das ursprünglichen Thema antworten"
@@ -672,7 +681,7 @@ de:
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
-      reply_placeholder: "Schreib hier. Verwende Markdown oder BBCode zur Formatierung. Füge ein Bild ein oder ziehe es herein, um es hochzuladen."
+      reply_placeholder: "Schreibe hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge ein Bild ein oder ziehe es herein, um es hochzuladen."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Speichere..."
       saved: "Gespeichert!"
@@ -988,6 +997,7 @@ de:
         to_topic_blank: "Gib den Benutzername oder die E-Mail-Adresse der Person ein, die du zu diesem Thema einladen willst."
         to_topic_email: "Du hast eine E-Mail-Adresse eingegeben. Wir werden eine Einladung versenden, die ein direktes Antworten auf dieses Thema ermöglicht."
         to_topic_username: "Du hast einen Benutzernamen eingegeben. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
+        to_username: "Gib den Benutzername der Person ein, die du einladen willst. Wir werden diesen Benutzer benachrichtigen und zur Teilnahme an diesem Thema einladen."
         email_placeholder: 'name@example.com'
         success_email: "Wir haben an <b>{{email}}</b> eine Einladung verschickt und werden dich benachrichtigen, sobald die Einladung angenommen wurde. In deinem Benutzerprofil kannst du alle deine Einladungen überwachen."
         success_username: "Wir haben den Benutzer gebeten, sich an diesem Thema zu beteiligen."
@@ -1223,8 +1233,6 @@ de:
           side_by_side_markdown:
             title: "Zeige die Originaltexte zum Vergleich nebeneinander an"
             button: '<i class="fa fa-columns"></i> Original'
-        details:
-          edited_by: "Bearbeitet von"
     category:
       can: 'kann&hellip; '
       none: '(keine Kategorie)'

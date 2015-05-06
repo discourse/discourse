@@ -6,7 +6,7 @@ Note: If you are developing on a Mac, you will probably want to look at [these i
 
 ## First Steps
 
-1. Install and configure PostgreSQL 9.1+.
+1. Install and configure PostgreSQL 9.2+.
   1. Run `postgres -V` to see if you already have it.
   1. Make sure that the server's messages language is English; this is [required](https://github.com/rails/rails/blob/3006c59bc7a50c925f6b744447f1d94533a64241/activerecord/lib/active_record/connection_adapters/postgresql_adapter.rb#L1140) by the ActiveRecord Postgres adapter.
 2. Install and configure Redis 2+.
@@ -82,11 +82,11 @@ Vagrant version 1.1.2. With this Vagrantfile:
     echo "gem: --no-document" >> /etc/gemrc
     su - vagrant -c "echo 'gem: --no-document' >> ~/.gemrc"
 
-## Postgres 9.1
+## Postgres
 
 Configure so that the vagrant user doesn't need to provide username and password.
 
-    apt-get -yqq install postgresql postgresql-contrib-9.1 libpq-dev postgresql-server-dev-9.1
+    apt-get -yqq install postgresql postgresql-contrib-9.3 libpq-dev postgresql-server-dev-9.3
     su - postgres
     createuser --createdb --superuser -Upostgres vagrant
     psql -c "ALTER USER vagrant WITH PASSWORD 'password';"
@@ -96,7 +96,7 @@ Configure so that the vagrant user doesn't need to provide username and password
     psql -d discourse_development -c "CREATE EXTENSION pg_trgm;"
 
 
-Edit /etc/postgresql/9.1/main/pg_hba.conf to have this:
+Edit /etc/postgresql/9.3/main/pg_hba.conf to have this:
 
     local all all trust
     host all all 127.0.0.1/32 trust

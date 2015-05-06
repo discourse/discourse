@@ -10,7 +10,7 @@ function unlessReadOnly(method) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend({
+const ApplicationRoute = Discourse.Route.extend(Discourse.OpenComposer, {
 
   siteTitle: Discourse.computed.setting('title'),
 
@@ -37,8 +37,9 @@ const ApplicationRoute = Discourse.Route.extend({
       this.controllerFor('topic-entrance').send('show', data);
     },
 
-    postWasEnqueued() {
-      showModal('post-enqueued', {title: 'queue.approval.title' });
+    postWasEnqueued(details) {
+      const title = details.reason ? 'queue_reason.' + details.reason + '.title' : 'queue.approval.title';
+      showModal('post-enqueued', {model: details, title });
     },
 
     composePrivateMessage(user, post) {
@@ -145,6 +146,10 @@ const ApplicationRoute = Discourse.Route.extend({
             factory = this.container.lookupFactory('controller:' + controllerName);
 
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+    },
+
+    createNewTopicViaParams: function(title, body, category_id) {
+      this.openComposerWithParams(this.controllerFor('discovery/topics'), title, body, category_id);
     }
   },
 

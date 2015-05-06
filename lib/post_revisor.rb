@@ -332,7 +332,7 @@ class PostRevisor
   end
 
   def bypass_bump?
-    @opts[:bypass_bump] == true
+    !@post_successfully_saved || @opts[:bypass_bump] == true
   end
 
   def is_last_post?
@@ -347,7 +347,7 @@ class PostRevisor
   end
 
   def revise_topic
-    return unless @post.post_number == 1
+    return unless @post.is_first_post?
 
     update_topic_excerpt
     update_category_description

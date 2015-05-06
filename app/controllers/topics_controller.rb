@@ -40,7 +40,9 @@ class TopicsController < ApplicationController
   end
 
   def show
-    flash["referer"] ||= request.referer
+    if request.referer
+      flash["referer"] ||= request.referer[0..255]
+    end
 
     # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
     # existing installs.
@@ -79,7 +81,7 @@ class TopicsController < ApplicationController
 
     perform_show_response
 
-    canonical_url absolute_without_cdn(@topic_view.canonical_path)
+    canonical_url absolute_without_cdn("#{Discourse.base_uri}#{@topic_view.canonical_path}")
   rescue Discourse::InvalidAccess => ex
 
     if current_user

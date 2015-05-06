@@ -1,10 +1,16 @@
 import BufferedContent from 'discourse/mixins/buffered-content';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-function updateState(state) {
+function updateState(state, opts) {
+  opts = opts || {};
+
   return function() {
     const post = this.get('post');
-    post.update({ state }).then(() => {
+    const args = { state };
+
+    if (opts.deleteUser) { args.delete_user = true; }
+
+    post.update(args).then(() => {
       this.get('controllers.queued-posts.model').removeObject(post);
     }).catch(popupAjaxError);
   };
@@ -17,9 +23,17 @@ export default Ember.Controller.extend(BufferedContent, {
 
   editing: Discourse.computed.propertyEqual('model', 'currentlyEditing'),
 
+  _confirmDelete: updateState('rejected', {deleteUser: true}),
+
   actions: {
     approve: updateState('approved'),
     reject: updateState('rejected'),
+
+    deleteUser() {
+      bootbox.confirm(I18n.t('queue.delete_prompt', {username: this.get('model.user.username')}), (confirmed) => {
+        if (confirmed) { this._confirmDelete(); }
+      });
+    },
 
     edit() {
       // This is stupid but pagedown cannot be on the screen twice or it will break

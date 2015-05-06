@@ -12,7 +12,7 @@ something like:
     `ruby 2.0.0p195 (2013-05-14 revision 40734) [x86_64-linux]`
 
 
-1. Are you on Postgres 9.1 or later with HSTORE enabled?
+1. Are you on Postgres 9.2 or later with HSTORE enabled?
 
    You can check your postgres version by typing `psql --version`. To see if
 hstore is installed, open a session to postgres and type `\dx` and see if
@@ -50,7 +50,7 @@ should *always* pass every test.
    If links in emails have localhost in them, then you are still using the
 default `host_names` value in database.yml.  Update it to use your site's host
 name(s).
-   
+
 1. Are you having problems bundling:
 
 ```

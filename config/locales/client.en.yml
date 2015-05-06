@@ -231,15 +231,25 @@ en:
       topic: "Topic:"
       approve: 'Approve'
       reject: 'Reject'
+      delete_user: 'Delete User'
       title: "Needs Approval"
       none: "There are no posts to review."
       edit: "Edit"
       cancel: "Cancel"
+      view_pending: "view pending posts"
+      has_pending_posts:
+        one: "This topic has <b>1</b> post awaiting approval"
+        many: "This topic has <b>{{count}}</b> posts awaiting approval"
+
       confirm: "Save Changes"
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
 
       approval:
         title: "Post Needs Approval"
         description: "We've received your new post but it needs to be approved by a moderator before it will appear. Please be patient."
+        pending_posts:
+          one: "You have <strong>1</strong> post pending."
+          other: "You have <strong>{{count}}</strong> posts pending."
         ok: "OK"
 
     user_action:
@@ -365,7 +375,7 @@ en:
       dismiss_notifications: "Mark all as Read"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
-      dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
+      dynamic_favicon: "Show new / updated topic count on browser icon"
       edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
@@ -613,9 +623,9 @@ en:
     logout: "You were logged out."
     refresh: "Refresh"
     read_only_mode:
-      enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
+      enabled: "Read-only mode is enabled. You can continue to browse the site but interactions may not work."
       login_disabled: "Login is disabled while the site is in read only mode."
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
 
     learn_more: "learn more..."
 
@@ -755,7 +765,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
-      reply_placeholder: "Type here. Use Markdown or BBCode to format. Drag or paste an image to upload it."
+      reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste an image to upload it."
       view_new_post: "View your new post."
       saving: "Saving..."
       saved: "Saved!"
@@ -820,6 +830,14 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+
+      popup:
+        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
+        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
+        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
 
     upload_selector:
       title: "Add an image"
@@ -957,7 +975,7 @@ en:
             =0 {}
             one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
             other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
-        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
 
       browse_all_categories: Browse all categories
 
@@ -1366,8 +1384,6 @@ en:
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Edited by"
 
     category:
       can: 'can&hellip; '

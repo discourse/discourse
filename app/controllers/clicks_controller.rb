@@ -3,6 +3,8 @@ class ClicksController < ApplicationController
   skip_before_filter :check_xhr
 
   def track
+    raise Discourse::NotFound unless params[:url]
+
     params = track_params.merge(ip: request.remote_ip)
 
     if params[:topic_id].present? || params[:post_id].present?

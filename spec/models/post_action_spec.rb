@@ -202,7 +202,7 @@ describe PostAction do
     it 'should generate notifications correctly' do
       ActiveRecord::Base.observers.enable :all
       PostAction.act(codinghorror, post, PostActionType.types[:like])
-      Notification.count.should == 1
+      expect(Notification.count).to eq(1)
 
       mutee = Fabricate(:user)
 
@@ -210,13 +210,13 @@ describe PostAction do
       MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
       PostAction.act(mutee, post, PostActionType.types[:like])
 
-      Notification.count.should == 1
+      expect(Notification.count).to eq(1)
 
       # you can not mute admin, sorry
       MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
       PostAction.act(admin, post, PostActionType.types[:like])
 
-      Notification.count.should == 2
+      expect(Notification.count).to eq(2)
 
     end
 

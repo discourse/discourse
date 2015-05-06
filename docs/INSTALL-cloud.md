@@ -8,7 +8,9 @@
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We do recommend 2 GB RAM for medium communities.
 
-- The default of **Ubuntu 14.04 LTS x64** works fine. The latest 64-bit [LTS distribution][lts] is recommended.
+- The default of **Ubuntu 14.04 LTS x64** works fine. The latest [LTS distribution][lts] is recommended.
+
+- Docker requires a 64-bit installation regardless of your Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version are also acceptable.
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 

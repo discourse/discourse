@@ -180,10 +180,14 @@ ja:
       topic: "トピック："
       approve: '承認'
       reject: 'リジェクト'
+      delete_user: '削除されたユーザー'
       title: "承認待ち"
       none: "レビュー待ちの投稿はございません。"
       edit: "編集"
       cancel: "取り消し"
+      view_pending: "保留とされている投稿を閲覧する"
+      has_pending_posts:
+        one: "このトピックは<b>1</b>個の投稿が承認待ちです。"
       confirm: "変更を保存"
       approval:
         title: "この投稿は承認が必要"
@@ -248,6 +252,7 @@ ja:
       '11': "編集"
       '12': "アイテム送信"
       '13': "インボックス"
+      '14': "保留"
     categories:
       all: "全てのカテゴリ"
       all_subcategories: "全てのサブカテゴリ"
@@ -299,7 +304,6 @@ ja:
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信したあとに投稿に移動しない"
-      dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
@@ -518,9 +522,7 @@ ja:
     logout: "ログアウトしました"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "読み取り専用モードにされています。サイトインターアクションを無効されています。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "より詳しく..."
     year: '年'
     year_desc: '過去365日間に投稿されたトピック'
@@ -590,7 +592,7 @@ ja:
       not_activated: "まだログインできません。<b>{{sentTo}}</b> にアクティベーションメールを送信しております。メールの指示に従ってアカウントのアクティベーションを行ってください。"
       not_allowed_from_ip_address: "このIPアドレスでログインできません"
       admin_not_allowed_from_ip_address: "そのIPアドレスからは管理者としてログインできません"
-      resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックシてください。"
+      resend_activation_email: "再度アクティベーションメールを送信するにはここをクリックしてください。"
       sent_activation_email_again: "<b>{{currentEmail}}</b> にアクティベーションメールを再送しました。メール到着まで数分かかることがあります (いつまで立ってもメールが届かない場合は、念のためスパムフォルダの中も確認してみてください)。"
       google:
         title: "Googleで"
@@ -642,7 +644,6 @@ ja:
       title_placeholder: "このディスカッションを簡潔に説明してください。"
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
-      reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
@@ -760,7 +761,7 @@ ja:
         top: "トップトピック無し"
         search: "検索結果はありません。"
         educate:
-          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面s</a>で日数変更が可能です。'
+          new: '２日以内に投稿されたトピックは「最新」トピックとして表示されます。<a href="%{userPrefsUrl}">設定画面</a>で日数変更が可能です。'
           unread: '参加中のトピックに対して新しい投稿がある場合、未読記事として表示されます。'
       bottom:
         latest: "最新のトピックは以上です。"
@@ -810,7 +811,6 @@ ja:
       toggle_information: "トピック詳細をトグル"
       read_more_in_category: "{{catLink}} の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>未読ポスト1つ</a> } other { <a href='/unread'>未読ポスト#つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック1つ</a>c} other { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック#つ</a>} }を読む or {CATEGORY, select, true {{catLink} の他のトピックを読む} false {{latestLink}} other {}} "
       browse_all_categories: 全てのカテゴリをブラウズする
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: 新しいトピックを作成しますか？
@@ -921,6 +921,7 @@ ja:
       automatically_add_to_groups_optional: "この招待によって、リストされたグループに参加することができます。"
       automatically_add_to_groups_required: "この招待によって、リストされたグループに参加することができます。"
       invite_private:
+        title: 'メッサージ参加へ招待する'
         email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
         email_or_username_placeholder: "メールアドレスまたはユーザ名"
         action: "招待"
@@ -928,6 +929,8 @@ ja:
         group_name: "グループ名"
       invite_reply:
         title: '友人を招待して回答してもらう'
+        username_placeholder: "ユーザー名"
+        action: '招待状を送る'
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         email_placeholder: 'メールアドレス'
       login_reply: 'ログインして返信'
@@ -1078,6 +1081,8 @@ ja:
             other: "あなたと他{{count}}人が不適切であるとフラグを立てました"
           notify_moderators:
             other: "あなたと他{{count}}人がモデレータ確認を要するとフラグを立てました"
+          notify_user:
+            other: "あなたと他{{count}}人がこのユーザにメッセージを送信しました"
           bookmark:
             other: "あなたと他{{count}}人がこのポストをブックマークしました"
           like:
@@ -1125,8 +1130,6 @@ ja:
           side_by_side_markdown:
             title: "ソース文書で表示する"
             button: 'ソース文書'
-        details:
-          edited_by: "編集者"
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
@@ -1194,6 +1197,7 @@ ja:
       private_reminder: 'フラッグはプライベートです。スタッフ<b>のみ</b>が参照できます'
       action: 'フラグをつける'
       take_action: "アクションをする"
+      notify_action: 'メッセージ'
       delete_spammer: "スパマーの削除"
       delete_confirm: "このユーザによる<b>%{posts}</b>個のポストと<b>%{topics}</b>個のトピックを削除し、アカウントを削除し、このユーザのメールアドレス <b>%{email}</b> をブロックリストに追加しようとしています。本当にこのユーザをスマパー認定してもよいですか?"
       yes_delete_spammer: "はい、スパマーを削除する"
@@ -1215,6 +1219,7 @@ ja:
     flagging_topic:
       title: "私達のコミュニティの維持を助けてくれてありがとうごうざいます"
       action: "トピックにフラグを立てる"
+      notify_action: "メッセージ"
     topic_map:
       title: "トピックのサマリー"
       links_shown: "全{{totalLinks}}リンクを表示..."
@@ -1226,7 +1231,7 @@ ja:
       bookmarked:
         help: "このトピックをブックマークしました"
       locked:
-        help: "このトピックは終了しています。新たに回答を投稿することはできません\""
+        help: "このトピックは終了しています。新たに回答を投稿することはできません。"
       unpinned:
         title: "ピン留め解除しました"
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
@@ -1251,12 +1256,18 @@ ja:
       other {}}
     original_post: "大元のポスト"
     views: "閲覧"
+    views_lowercase:
+      other: " 閲覧"
     replies: "回答"
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
+    likes_lowercase:
+      other: "いいね！"
     likes_long: "このトピックには{{number}}つ「いいね！」がついています"
     users: "ユーザ"
+    users_lowercase:
+      other: "ユーザ"
     category_title: "カテゴリ"
     history: "History"
     changed_by: "by {{author}}"
@@ -1276,6 +1287,8 @@ ja:
       read:
         title: "既読"
         help: "既読のトピックを、最後に読んだ順に表示"
+      search:
+        title: "検索"
       categories:
         title: "カテゴリ"
         title_in: "カテゴリ - {{categoryName}}"
@@ -1316,6 +1329,14 @@ ja:
         help: "過去年間、月間、週間及び日間のアクティブトピック"
         all:
           title: "今まで"
+        yearly:
+          title: "今年"
+        monthly:
+          title: "今月"
+        weekly:
+          title: "毎週"
+        daily:
+          title: "毎日"
         all_time: "今まで"
         this_year: "今年"
         this_month: "今月"
@@ -1353,6 +1374,7 @@ ja:
         admins: '管理者:'
         blocked: 'ブロック中:'
         suspended: '停止中:'
+        private_messages_title: "メッセージ"
         space_free: "{{size}} free"
         uploads: "アップロード"
         backups: "バックアップ"
@@ -1452,6 +1474,8 @@ ja:
         name: "名前"
         add: "追加"
         add_members: "メンバー追加"
+        custom: "カスタム"
+        automatic: "自動的"
         automatic_membership_email_domains: "リスト内のメールアドレスのドメインに正確に一致したユーザーは自動的にグループに追加される"
         automatic_membership_retroactive: "同じメールアドレスドメインのルールを既に登録済みのユーザにも適用"
       api:
@@ -1485,15 +1509,18 @@ ja:
         read_only:
           enable:
             title: "読み取り専用モードに有効する"
+            label: "読み取り専用モードを有効"
             confirm: "本当に読み取り専用モードを有効しますか？"
           disable:
             title: "読み取り専用モードを無効にする"
+            label: "読み取り専用モードを無効"
         logs:
           none: "ログがありません"
         columns:
           filename: "ファイル名"
           size: "サイズ"
         upload:
+          label: "アップロード"
           uploading: "アップロード中"
           success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
@@ -1501,22 +1528,27 @@ ja:
           is_running: "バックアップ作業を実行中..."
           failed: "{{operation}}失敗しました。ログをチェックください。"
           cancel:
+            label: "キャンセル"
             title: "バックアップ作業をキャンセルする"
             confirm: "本当に実行中バックアップ作業をキャンセルしますか？"
           backup:
+            label: "バックアップ"
             title: "バックアップを作成します"
             confirm: "新しいバックアップを作成したいですか？"
             without_uploads: "はい(ファイルは含まない)"
           download:
+            label: "ダウンロード"
             title: "バックアップをダウンロード"
           destroy:
             title: "バックアップを削除"
             confirm: "このバックアップを削除しますか？"
           restore:
             is_disabled: "バックアップ復元を無効にされています。"
+            label: "復元"
             title: "バックアップを復元"
             confirm: "本当にバックアップを復元しますか？"
           rollback:
+            label: "ロールバック"
             title: "データベースを元の作業状態にロールバックする"
             confirm: "本当にデータベースを元の作業状態にロールバックしますか？"
       export_csv:

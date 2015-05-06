@@ -11,7 +11,7 @@ export default Ember.View.extend({
   keyDown: function(e) {
     if (e.keyCode === 13) {
       if (!this.get('controller').get('saveDisabled')) {
-        return this.get('controller').changeUsername();
+        return this.get('controller').send('changeUsername');
       } else {
         e.preventDefault();
         return false;

@@ -90,6 +90,8 @@ export default function() {
   this.route('privacy', {path: '/privacy'});
   this.route('guidelines', {path: '/guidelines'});
 
+  this.route('new-topic', {path: '/new-topic'});
+
   this.resource('badges', function() {
     this.route('show', {path: '/:id/:slug'});
   });

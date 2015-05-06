@@ -514,7 +514,7 @@ files:
     default:
       test: false
       default: true
-  download_remote_images_threshold: 20
+  download_remote_images_threshold: 10
   disabled_image_download_domains:
     type: list
     default: ''
@@ -778,6 +778,10 @@ uncategorized:
   suppress_uncategorized_badge:
     client: true
     default: true
+
+  slug_generation_method:
+    default: 'ascii'
+    enum: 'SlugSetting'
 
   # Search
   min_search_term_length:

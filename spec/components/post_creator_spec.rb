@@ -62,6 +62,14 @@ describe PostCreator do
         expect(creator.spam?).to eq(false)
       end
 
+      it "triggers extensibility events" do
+        DiscourseEvent.expects(:trigger).with(:before_create_post, anything).once
+        DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
+        DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
+        DiscourseEvent.expects(:trigger).with(:post_created, anything, anything, user).once
+        creator.create
+      end
+
       it "does not notify on system messages" do
         admin = Fabricate(:admin)
         messages = MessageBus.track_publish do

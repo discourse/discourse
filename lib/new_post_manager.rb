@@ -11,19 +11,30 @@ class NewPostManager
 
   attr_reader :user, :args
 
-  def self.handlers
-    @handlers ||= Set.new
+  def self.sorted_handlers
+    @sorted_handlers ||= clear_handlers!
   end
 
-  def self.add_handler(&block)
-    handlers << block
+  def self.handlers
+    sorted_handlers.map {|h| h[:proc]}
+  end
+
+  def self.clear_handlers!
+    @sorted_handlers = [{ priority: 0, proc: method(:default_handler) }]
+  end
+
+  def self.add_handler(priority=0, &block)
+    sorted_handlers << { priority: priority, proc: block }
+    @sorted_handlers.sort_by! {|h| -h[:priority]}
+  end
+
+  def self.user_needs_approval?(user)
+    (user.post_count < SiteSetting.approve_post_count) ||
+      (user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
   end
 
   def self.default_handler(manager)
-    if (manager.user.post_count < SiteSetting.approve_post_count) ||
-       (manager.user.trust_level < SiteSetting.approve_unless_trust_level.to_i)
-      return manager.enqueue('default')
-    end
+    manager.enqueue('default') if user_needs_approval?(manager.user)
   end
 
   def self.queue_enabled?
@@ -32,14 +43,15 @@ class NewPostManager
     handlers.size > 1
   end
 
-  add_handler {|manager| default_handler(manager) }
-
   def initialize(user, args)
     @user = user
     @args = args.delete_if {|_, v| v.nil?}
   end
 
   def perform
+
+    # We never queue private messages
+    return perform_create_post if @args[:archetype] == Archetype.private_message
 
     # Perform handlers until one returns a result
     handled = NewPostManager.handlers.any? do |handler|
@@ -53,7 +65,7 @@ class NewPostManager
   end
 
   # Enqueue this post in a queue
-  def enqueue(queue)
+  def enqueue(queue, reason=nil)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)
 
@@ -66,7 +78,9 @@ class NewPostManager
     QueuedPost.broadcast_new! if post && post.errors.empty?
 
     result.queued_post = post
+    result.reason = reason if reason
     result.check_errors_from(enqueuer)
+    result.pending_count = QueuedPost.new_posts.where(user_id: @user.id).count
     result
   end
 
