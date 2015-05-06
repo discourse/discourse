@@ -114,13 +114,6 @@ module PrettyText
       end
     end
 
-    ctx['quoteTemplate'] = File.read("#{app_root}/app/assets/javascripts/discourse/templates/quote.hbs")
-    ctx['quoteEmailTemplate'] = File.read("#{app_root}/lib/assets/quote_email.hbs")
-    ctx.eval("HANDLEBARS_TEMPLATES = {
-      'quote': Handlebars.compile(quoteTemplate),
-      'quote_email': Handlebars.compile(quoteEmailTemplate),
-     };")
-
     ctx
   end
 
