@@ -441,6 +441,7 @@ Discourse::Application.routes.draw do
 
   get 'embed/comments' => 'embed#comments'
   get 'embed/count' => 'embed#count'
+  get 'embed/info' => 'embed#info'
 
   get "new-topic" => "list#latest"
 

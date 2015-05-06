@@ -29,6 +29,40 @@ describe EmbedController do
     end
   end
 
+  context ".info" do
+    context "without api key" do
+      it "fails" do
+        get :info, format: :json
+        expect(response).not_to be_success
+      end
+    end
+
+    context "with api key" do
+
+      let(:api_key) { ApiKey.create_master_key }
+
+      context "with valid embed url" do
+        let(:topic_embed) { Fabricate(:topic_embed, embed_url: embed_url) }
+
+        it "returns information about the topic" do
+          get :info, format: :json, embed_url: topic_embed.embed_url, api_key: api_key.key, api_username: "system"
+          json = JSON.parse(response.body)
+          expect(json['topic_id']).to eq(topic_embed.topic.id)
+          expect(json['post_id']).to eq(topic_embed.post.id)
+          expect(json['topic_slug']).to eq(topic_embed.topic.slug)
+        end
+      end
+
+      context "without invalid embed url" do
+        it "returns error response" do
+          get :info, format: :json, embed_url: "http://nope.com", api_key: api_key.key, api_username: "system"
+          json = JSON.parse(response.body)
+          expect(json["error_type"]).to eq("not_found")
+        end
+      end
+    end
+  end
+
   context "with a host" do
     let!(:embeddable_host) { Fabricate(:embeddable_host) }
 
