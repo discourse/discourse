@@ -21,7 +21,10 @@ if Rails.env.production?
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { params: { url: /./, title: /./, excerpt: /./, blog_name: /./} }),
 
     # API calls, TODO fix this in rails
-    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ })
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ }),
+
+    # no route, can happen in multisite for some reason, ignore
+    Logster::IgnorePattern.new(/^ActionController::RoutingError \(No route matches/)
   ]
 end
 
