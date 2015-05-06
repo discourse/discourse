@@ -1,0 +1,30 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+de:
+  js:
+    poll:
+      average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      cast-votes:
+        title: "Gib deine Stimmen ab"
+        label: "Jetzt abstimmen!"
+      show-results:
+        title: "Das Ergebnis der Umfrage anzeigen"
+        label: "Ergebnisse anzeigen"
+      hide-results:
+        title: "Zurück zur Umfrage"
+        label: "Ergebnisse ausblenden"
+      open:
+        title: "Umfrage starten"
+        label: "Starten"
+        confirm: "Möchtest du wirklich diese Umfrage starten?"
+      close:
+        title: "Umfrage beenden"
+        label: "Beenden"
+        confirm: "Möchtest du wirklich diese Umfrage beenden?"
+      error_while_toggling_status: "Beim Ändern des Status der Umfrage ist ein Fehler aufgetreten."
+      error_while_casting_votes: "Beim Abstimmen ist ein Fehler aufgetreten."

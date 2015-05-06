@@ -107,6 +107,9 @@ nl:
     show_more: "meer..."
     show_help: "help"
     links: "Links"
+    links_lowercase:
+      one: "link"
+      other: "links"
     faq: "FAQ"
     guidelines: "Richtlijnen"
     privacy_policy: "Privacy Policy"
@@ -191,6 +194,18 @@ nl:
       title:
         search: "Zoek naar een topic op naam, url of id:"
         placeholder: "typ hier de titel van de topic"
+    queue:
+      topic: "Topic:"
+      approve: 'Accepteer'
+      reject: 'Weiger'
+      delete_user: 'Verwijder gebruiker'
+      title: "Heeft goedkeuring nodig"
+      none: "Er zijn geen berichten om te beoordelen"
+      edit: "Wijzig"
+      cancel: "Annuleer"
+      confirm: "Sla wijzigingen op"
+      approval:
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> plaatste <a href='{{topicUrl}}'>deze topic</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Jij</a> plaatste <a href='{{topicUrl}}'>deze topic</a>"
@@ -252,6 +267,7 @@ nl:
       '11': "Wijzigingen"
       '12': "Verzonden items"
       '13': "Inbox"
+      '14': "In behandeling"
     categories:
       all: "alle categorieën"
       all_subcategories: "alle"
@@ -305,7 +321,6 @@ nl:
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
       disable_jump_reply: "Niet naar je nieuwe bericht gaan na reageren"
-      dynamic_favicon: "Laat notificatie voor nieuw bericht zien in favicon (experiment)"
       edit_history_public: "Laat andere gebruikers mijn aanpassingen aan dit bericht zien."
       external_links_in_new_tab: "Open alle externe links in een nieuw tabblad"
       enable_quoting: "Activeer antwoord-met-citaat voor geselecteerde tekst"
@@ -390,6 +405,7 @@ nl:
       name:
         title: "Naam"
         instructions: "Je volledige naam (optioneel)"
+        instructions_required: "Je volledige naam"
         too_short: "Je naam is te kort"
         ok: "Je naam ziet er goed uit"
       username:
@@ -444,6 +460,7 @@ nl:
       auto_track_topics: "Automatisch topics volgen die ik bezocht heb"
       auto_track_options:
         never: "nooit"
+        immediately: "direct"
         after_n_seconds:
           one: "na één seconde"
           other: "na {{count}} seconden"
@@ -523,9 +540,7 @@ nl:
     logout: "Je bent uitgelogd."
     refresh: "Ververs"
     read_only_mode:
-      enabled: "Een administrator heeft dit forum op alleen-lezen gezet. Je kan rondkijken, maar sommige elementen zullen mogelijk niet werken."
       login_disabled: "Zolang de site in read-only modus is, kan er niet ingelogd worden."
-    too_few_topics_notice: "Maak ten minste 5 openbare discussies en %{posts} openbare berichten om de discussie te starten. Nieuwe gebruikers zullen geen vertrouwensniveau's kunnen verdienen tenzij er berichten zijn die zij kunnen lezen. Dit bericht wordt alleen getoond aan de beheerders."
     learn_more: "leer meer..."
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
@@ -538,6 +553,10 @@ nl:
     mute: Negeer
     unmute: Tonen
     last_post: Laatste bericht
+    last_reply_lowercase: laatste reactie
+    replies_lowercase:
+      one: reactie
+      other: reacties
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{count}}</b> reacties."
@@ -631,6 +650,7 @@ nl:
         title_too_long: "Titel kan niet langer dan {{max}} tekens zijn"
         post_missing: "Bericht kan niet leeg zijn"
         post_length: "Bericht moet ten minste {{min}} tekens bevatten"
+        try_like: 'Heb je de <i class="fa fa-heart"></i>-knop geprobeerd?'
         category_missing: "Je moet nog een categorie kiezen"
       save_edit: "Bewaar wijzigingen"
       reply_original: "Reageer op oorspronkelijke topic"
@@ -644,7 +664,6 @@ nl:
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
-      reply_placeholder: "Schrijf hier je bericht. Gebruik Markdown of BBCode voor de tekstopmaak. Sleep of plak een afbeelding hierin om deze te uploaden.\""
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan..."
       saved: "Opgeslagen!"
@@ -813,7 +832,6 @@ nl:
       toggle_information: "Zet topic details aan/uit"
       read_more_in_category: "Wil je meer lezen? Kijk dan voor andere topics in {{catLink}} of {{latestLink}}."
       read_more: "Wil je meer lezen? {{catLink}} of {{latestLink}}."
-      read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuwe</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {bekijk andere topics in {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Bekijk alle categorieën
       view_latest_topics: bekijk nieuwste topics
       suggest_create_topic: Wil je een nieuwe topic schrijven?
@@ -879,9 +897,14 @@ nl:
         delete: "Verwijder topic"
         open: "Open topic"
         close: "Sluit topic"
+        multi_select: "Selecteer berichten..."
+        auto_close: "Automatisch sluiten..."
+        pin: "Pin topic..."
         unarchive: "De-archiveer topic"
         archive: "Archiveer topic"
         reset_read: "Reset leesdata"
+      feature:
+        pin: "Pin topic"
       reply:
         title: 'Reageer'
         help: 'Schrijf een reactie op deze topic'
@@ -1122,8 +1145,6 @@ nl:
           side_by_side_markdown:
             title: "Bekijk de bron verschillen naast elkaar"
             button: '<i class="fa fa-columns"></i> Bron'
-        details:
-          edited_by: "Gewijzigd door"
     category:
       can: 'kan...'
       none: '(geen categorie)'
@@ -1191,6 +1212,8 @@ nl:
       submit_tooltip: "Verstuur de privé markering"
       cant: "Sorry, je kan dit bericht momenteel niet melden."
       formatted_name:
+        off_topic: "Het is off topic"
+        inappropriate: "Het is ongepast"
         spam: "Dit is spam"
       custom_message:
         at_least: "Gebruik ten minste {{n}} tekens"
@@ -1198,6 +1221,7 @@ nl:
         left: "Nog {{n}}"
     flagging_topic:
       action: "Markeer topic"
+      notify_action: "Bericht"
     topic_map:
       title: "Topicsamenvatting"
       links_shown: "laat alle {{totalLinks}} links zien..."
@@ -1229,8 +1253,14 @@ nl:
     views_long: "deze topic is {{number}} keer bekeken"
     activity: "Activiteit"
     likes: "Leuk"
+    likes_lowercase:
+      one: "like"
+      other: "likes"
     likes_long: "er zijn {{count}} likes in deze topic"
     users: "Gebruikers"
+    users_lowercase:
+      one: "gebruiker"
+      other: "gebruikers"
     category_title: "Categorie"
     history: "Geschiedenis"
     changed_by: "door {{author}}"
@@ -1250,6 +1280,8 @@ nl:
       read:
         title: "Gelezen"
         help: "topics die je hebt gelezen, in de volgorde wanneer je ze voor het laatst gelezen hebt"
+      search:
+        title: "Zoek"
       categories:
         title: "Categorieën"
         title_in: "Categorie - {{categoryName}}"
@@ -1288,6 +1320,14 @@ nl:
       top:
         title: "Top"
         help: "de meest actieve topics van het afgelopen jaar, maand of dag"
+        yearly:
+          title: "Jaarlijks"
+        monthly:
+          title: "Maandelijks"
+        weekly:
+          title: "Wekelijks"
+        daily:
+          title: "Dagelijks"
         this_year: "Dit jaar"
         this_month: "Deze maand"
         this_week: "Deze week"
@@ -1323,6 +1363,7 @@ nl:
         admins: 'Admins:'
         blocked: 'Geblokkeerd:'
         suspended: 'Geschorst:'
+        private_messages_title: "Berichten"
         space_free: "{{size}} beschikbaar"
         uploads: "uploads"
         backups: "backups"
@@ -1475,6 +1516,7 @@ nl:
           is_running: "Er wordt al een actie uitgevoerd..."
           failed: "De actie {{operation}} is mislukt. Kijk in de logs."
           cancel:
+            label: "Annuleer"
             title: "Annuleer de huidige actie"
             confirm: "Weet je zeker dat je de huidige actie wil annuleren?"
           backup:
@@ -1488,9 +1530,11 @@ nl:
             confirm: "Weet je zeker dat je deze backup wil verwijderen?"
           restore:
             is_disabled: "Herstellen is uitgeschakeld in de instellingen."
+            label: "Herstel"
             title: "Herstel van deze backup"
             confirm: "Weet je zeker dat je van deze backup wil herstellen?"
           rollback:
+            label: "Herstel"
             title: "Herstel de database naar de laatst werkende versie"
             confirm: "Weet je zeker dat je de database wil herstellen naar de laatste versie?"
       export_csv:
@@ -1498,6 +1542,9 @@ nl:
         button_text: "Exporteren"
         button_title:
           user: "Exporteer volledige gebruikerslijst in *.CSV-formaat"
+      invite:
+        button_text: "Verstuur uitnodigingen"
+        button_title: "Verstuur uitnodigingen"
       customize:
         title: "Aanpassingen"
         long_title: "Aanpassingen aan de site"
@@ -1652,6 +1699,8 @@ nl:
             check_email: "check e-mail"
             delete_topic: "verwijder topic"
             delete_post: "verwijder bericht"
+            impersonate: "Log in als gebruiker"
+            anonymize_user: "maak gebruiker anoniem"
         screened_emails:
           title: "Gescreende e-mails"
           description: "Nieuwe accounts met een van deze mailadressen worden geblokkeerd of een andere actie wordt ondernomen."
@@ -1869,6 +1918,7 @@ nl:
         none: 'geen'
         no_results: "Geen resultaten."
         clear_filter: "Wis"
+        add_url: "voeg URL toe"
         categories:
           all_results: 'Alle'
           required: 'Vereist'
@@ -1902,10 +1952,13 @@ nl:
         badge_grouping: Groep
         granted_by: Toegekend door
         granted_at: Toegekend op
+        reason_help: (een link naar een bericht op topic)
         save: Bewaar
         delete: Verwijder
         delete_confirm: Weet je zeker dat je deze badge wil verwijderen?
         revoke: Intrekken
+        reason: Reden
+        expand: Uitklappen...
         revoke_confirm: Weet je zeker dat je deze badge in wil trekken?
         edit_badges: Wijzig badges
         grant_badge: Ken badge toe
@@ -1929,6 +1982,7 @@ nl:
             zero: "Geen badges om toe te wijzen."
           sample: "Voorbeeld:"
       emoji:
+        title: "Emoji"
         name: "Naam"
         image: "Afbeelding"
     lightbox:
@@ -1958,7 +2012,10 @@ nl:
         search: '<b>/</b> Zoek'
       actions:
         title: 'Acties'
+        share_topic: '<b>shift</b>+<b>s</b> Deel topic'
         share_post: '<b>s</b> Deel bericht'
+        reply_as_new_topic: '<b>t</b> Reageer als verwezen topic'
+        reply_topic: '<b>shift</b>+<b>r</b> Reageer op topic'
         reply_post: '<b>shift r</b> Reageer op topic'
         quote_post: '<b>q</b> Citeer bericht'
         like: '<b>l</b> Vind bericht leuk'
@@ -1966,6 +2023,7 @@ nl:
         bookmark: '<b>b</b> Bookmark bericht'
         edit: '<b>e</b> Wijzig bericht'
         delete: '<b>d</b> Verwijder bericht'
+        mark_muted: '<b>m</b>, <b>m</b> Negeer topic'
     badges:
       title: Badges
       allow_title: "kan als titel gebruikt worden"

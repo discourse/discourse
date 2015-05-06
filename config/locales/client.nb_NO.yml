@@ -107,6 +107,9 @@ nb_NO:
     show_more: "vis mer"
     show_help: "hjelp"
     links: "Lenker"
+    links_lowercase:
+      one: "link"
+      other: "linker"
     faq: "FAQ"
     guidelines: "Retningslinjer"
     privacy_policy: "Personvern"
@@ -191,6 +194,10 @@ nb_NO:
       title:
         search: "Søk etter et emne ved navn, url eller id:"
         placeholder: "skriv emnetittelen her"
+    queue:
+      confirm: "Lagre endringer"
+      approval:
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postet <a href='{{topicUrl}}'>emnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> postet <a href='{{topicUrl}}'>emnet</a>"
@@ -210,10 +217,18 @@ nb_NO:
       title: "Brukere"
       likes_given: "Gitt"
       likes_received: "Mottatt"
+      topics_entered: "Lest"
+      topics_entered_long: "Emner lest"
       time_read: "Tid lest"
       topic_count: "Emner"
+      topic_count_long: "Emner startet"
       post_count: "Svar"
+      post_count_long: "Svar"
       no_results: "Ingen treff"
+      days_visited: "Besøk"
+      days_visited_long: "Dager besøkt"
+      posts_read: "Lest"
+      posts_read_long: "Lest"
       total_rows:
         one: "1 bruker"
         other: "%{count} brukere"
@@ -236,12 +251,15 @@ nb_NO:
       '2': "Liker mottatt"
       '3': "Bokmerker"
       '4': "Emner"
+      '5': "Svar"
+      '6': "Svar"
       '7': "Omtalelser"
       '9': "Sitater"
       '10': "Favoritter"
       '11': "Redigeringer"
       '12': "Sendte elementer"
       '13': "Innboks"
+      '14': "Venter"
     categories:
       all: "Alle kategorier"
       all_subcategories: "alle"
@@ -295,7 +313,6 @@ nb_NO:
       dismiss_notifications: "Merk alle som lest"
       dismiss_notifications_tooltip: "Merk alle uleste varslinger som lest"
       disable_jump_reply: "Ikke hopp til ditt nye innlegg etter svar"
-      dynamic_favicon: "Vis innkommende meldingsvarsler på favicon (eksperimentel)"
       edit_history_public: "La andre brukere se mine innleggsrevisjoner"
       external_links_in_new_tab: "Åpne alle eksterne lenker i ny fane"
       enable_quoting: "Aktiver svar med sitat for uthevet tekst"
@@ -518,9 +535,7 @@ nb_NO:
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
-    too_few_topics_notice: "Opprett minst 5 offentlige tråder og %{posts} offentlige innlegg for å få i gang diskusjonen. Nye brukere kan ikke tilegne seg tillitsnivåer ved mindre det eksisterer innhold for dem å lese. Denne meldingen vises kun til forumpersonalet."
     learn_more: "lær mer..."
     year: 'år'
     year_desc: 'emner opprettet de siste 365 dagene'
@@ -643,7 +658,6 @@ nb_NO:
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
-      reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
@@ -813,7 +827,6 @@ nb_NO:
       toggle_information: "vis/skjul emnedetaljer"
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke opprette et emne?
@@ -1158,8 +1171,6 @@ nb_NO:
           side_by_side_markdown:
             title: "Vis diff for kilderåtekst side ved side"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Endret av"
     category:
       can: 'kan&hellip;'
       none: '(no category)'

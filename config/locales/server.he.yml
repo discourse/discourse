@@ -364,7 +364,6 @@ he:
         one: "לפני כמעט שנה"
         other: "לפני כמעט %{count} שנים"
   password_reset:
-    no_token: "סליחה, פג תוקף אסימון איפוס הסיסמה. אנא נסה לאפס אותה שנית."
     choose_new: "אנא בחר סיסמה חדשה"
     choose: "אנא בחר סיסמה"
     update: 'עדכן סיסמה'
@@ -707,7 +706,6 @@ he:
     flag_sockpuppets: "אם משתמש/ת חדשים מגיבים לנושא מכתובת IP זהה לזו של מי שהחל את הנושא, סמנו את הפרסומים של שניהם כספאם פוטנציאלי."
     traditional_markdown_linebreaks: "שימוש בשבירת שורות מסורתית בסימון, מה שדורש שני רווחים עוקבים למעבר שורה."
     post_undo_action_window_mins: "מספר הדקות בהן מתאפשר למשתמשים לבטל פעולות אחרות בפרסום (לייק, סימון, וכו')."
-    must_approve_users: "הצוות חייב לאשר כל חשבון משתמש/ת חדשים לפני שיוכלו לגשת לאתר זה."
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -1105,11 +1103,6 @@ he:
       הודעה זו נשלחה על ידי משתמש/ת מוכרים כך שאינך חייב/ת להתחבר.
   invite_password_instructions:
     subject_template: "צרו סיסמא עבור חשבון ה-%{site_name} שלכם."
-    text_body_template: |
-      תודה על שאישרת את ההזמנה שלך אל %{site_name} - ברוכים הבאים!
-
-      כדי להתחבר פעם נוספת, הקישו על הקישור המצורף כדי לבחור סיסמא:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
@@ -1165,22 +1158,6 @@ he:
   system_messages:
     post_hidden:
       subject_template: "הודעה הוסתרה בעקבות סימון"
-      text_body_template: |
-        שלום,
-
-        זוהי הודעה אוטומטית מ%{site_name} שנועדה לידע אותך שפרסום שלך הוסתר.
-
-        {base_url}%{url}
-
-        %{flag_reason}
-
-        כמה חברים בקהילה סימנו את הפרסום הזה לפני שהוא הוסתר, לכן אנא שקלו כיצד תוכלו לשנות את הפרסום בצורה שתתמודד עם המשוב שלהם.
-        ** תוכלו לערוך את הפרסום המדובר לאחר %{edit_delay} דקות, והוא יוצג מחדש באופן אוטומטי.**
-        פעולה זו תעלה את רמות האמון שלך במערכת.
-
-        בכל אופן, אם פרסום זה יוסתר על ידי הקהילה בפעם השניה, הוא ישאר במצב זה עד שיגיע לטיפול חבר/ת צוות - ופעולות נוספות עשויות להינקט, כולל אפשרות תיאורטית להשהיית חשבון המשתמש שלך בפורום.
-
-        להדרכה נוספת אנא פנו למסמך ה[קווים המנחים של הקהילה שלנו](%{base_url}/guidelines).
     welcome_user:
       subject_template: "ברוכים הבאים ל %{site_name}!"
     welcome_invite:
