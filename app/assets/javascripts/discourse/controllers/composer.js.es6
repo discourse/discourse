@@ -441,6 +441,23 @@ export default DiscourseController.extend({
 
     if (opts.topicCategoryId) {
       this.set('model.categoryId', opts.topicCategoryId);
+    } else if (opts.topicCategory) {
+      const splitCategory = opts.topicCategory.split("/");
+      let category;
+
+      if (!splitCategory[1]) {
+        category = this.site.get('categories').findProperty('nameLower', splitCategory[0].toLowerCase());
+      } else {
+        const categories = Discourse.Category.list();
+        const mainCategory = categories.findProperty('nameLower', splitCategory[0].toLowerCase());
+        category = categories.find(function(item) {
+          return item && item.get('nameLower') === splitCategory[1].toLowerCase() && item.get('parent_category_id') === mainCategory.id;
+        });
+      }
+
+      if (category) {
+        this.set('model.categoryId', category.get('id'));
+      }
     }
 
     if (opts.topicBody) {

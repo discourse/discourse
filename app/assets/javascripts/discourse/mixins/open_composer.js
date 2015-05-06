@@ -17,12 +17,13 @@ Discourse.OpenComposer = Em.Mixin.create({
     });
   },
 
-  openComposerWithParams: function(controller, title, body, category_id) {
+  openComposerWithParams: function(controller, title, body, category_id, category) {
     this.controllerFor('composer').open({
       action: Discourse.Composer.CREATE_TOPIC,
       topicTitle: title,
       topicBody: body,
       topicCategoryId: category_id,
+      topicCategory: category,
       draftKey: controller.get('draft_key'),
       draftSequence: controller.get('draft_sequence')
     });
