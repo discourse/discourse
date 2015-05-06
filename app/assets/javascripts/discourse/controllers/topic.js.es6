@@ -536,7 +536,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     return canDelete;
   }.property('selectedPostsCount'),
 
-  hasError: Ember.computed.or('notFoundHtml', 'message'),
+  hasError: Ember.computed.or('model.notFoundHtml', 'model.message'),
   noErrorYet: Ember.computed.not('hasError'),
 
   multiSelectChanged: function() {
@@ -567,8 +567,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
   },
 
   showStarButton: function() {
-    return Discourse.User.current() && !this.get('isPrivateMessage');
-  }.property('isPrivateMessage'),
+    return Discourse.User.current() && !this.get('model.isPrivateMessage');
+  }.property('model.isPrivateMessage'),
 
   loadingHTML: function() {
     return spinnerHTML;
@@ -666,7 +666,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
   readPosts(topicId, postNumbers) {
     const postStream = this.get('model.postStream');
 
-    if(this.get('model.postStream.topic.id') === topicId){
+    if (postStream.get('topic.id') === topicId){
       _.each(postStream.get('posts'), function(post){
         // optimise heavy loop
         // TODO identity map for postNumber
@@ -687,7 +687,7 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
     if (!post) { return; }
 
     const postStream = this.get('model.postStream'),
-        firstLoadedPost = postStream.get('firstLoadedPost');
+          firstLoadedPost = postStream.get('firstLoadedPost');
 
     this.set('model.currentPost', post.get('post_number'));
 
