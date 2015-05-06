@@ -426,7 +426,7 @@ class Search
 
     def self.ts_query(term, locale = nil, joiner = "&")
       locale = Post.sanitize(locale) if locale
-      all_terms = term.gsub(/[*:()&!'"]/,'').squish.split
+      all_terms = term.gsub(/[\p{P}\p{S}]+/, ' ').squish.split
       query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end
