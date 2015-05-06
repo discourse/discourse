@@ -5,7 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr:
+fr_FR:
   site_settings:
     poll_enabled: "Autoriser les utilisateurs à créer des sondages ?"
   poll:
@@ -16,7 +16,7 @@ fr:
     default_poll_must_have_different_options: "Les sondages doivent contenir des options différentes les unes des autres."
     named_poll_must_have_different_options: "Le sondage <strong>%{name}</strong> doit contenir des options différentes les unes des autres."
     cannot_change_polls_after_5_minutes: "Les sondages ne peuvent être modifiés après cinq minutes. Contactez un modérateur si vous avez besoin de le faire."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Les sondages ne peuvent être modifiés après cinq minutes. Si vous avez besoin d'ajouter ou de supprimer des options, vous devez fermer ce sujet et en créer un nouveau."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Après cinq minutes, les options du sondage peuvent uniquement être modifiées. Vous ne pouvez pas en ajouter ou en supprimer. Si vous avez besoin de le faire, vous devez fermer ce sujet et en créer en nouveau."
     no_polls_associated_with_this_post: "Aucun sondage n'est associé à ce message."
     no_poll_with_this_name: "Aucun sondage nommé <strong>%{name}</strong> n'est associé avec ce message."
     topic_must_be_open_to_vote: "Le sujet doit être ouvert pour pouvoir voter."

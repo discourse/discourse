@@ -5,7 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pt:
+pt_PT:
   site_settings:
     enable_imgur: "Ativar a API do imgur para carregamento, não armazenar ficheiros localmente"
     imgur_client_id: "O seu ID de cliente do imgur.com, necessário para ativar o carregamento de imagens"

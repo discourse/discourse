@@ -135,6 +135,8 @@ fi:
     hot: "Kuumat ketjut"
   too_late_to_edit: "Tämä viesti luotiin liian kauan sitten. Sitä ei voi enää muokata tai poistaa."
   excerpt_image: "kuva"
+  queue:
+    delete_reason: "Poistettu moderointijonon kautta"
   groups:
     errors:
       can_not_modify_automatic: "Et voi muokata automaattista ryhmää"
@@ -1676,6 +1678,15 @@ fi:
 
         Klikkaa tätä linkkiä valitaksesi salasanan:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Kirjautuminen"
+      text_body_template: |
+        Joku pyysi sinua kirjautumaan tilillesi sivustolla [%{site_name}](%{base_url}).
+
+        Jos et ole pyynnön takana, voit huoletta jättää tämän viestin huomiotta.
+
+        Klikkaa tätä linkkiä kirjautuaksesi:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Uusi käyttäjätilisi"
       text_body_template: |
@@ -1876,3 +1887,8 @@ fi:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "Sähköposti lähetetty"
+    error: "Virhe!"
+    email_input: "Ylläpitäjän sähköpostiosoite"
+    submit_button: "Lähetä sähköposti"

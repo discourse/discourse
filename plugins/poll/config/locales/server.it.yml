@@ -1,0 +1,15 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+it:
+  site_settings:
+    poll_enabled: "Permettere agli utenti di creare sondaggi?"
+  poll:
+    multiple_polls_without_name: "Ci sono più sondaggi privi di nome. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
+    multiple_polls_with_same_name: "Ci sono più sondaggi con lo stesso nome: <strong>%{name}</strong>. Usa l'attributo '<code>name</code>' per identificare univocamente i tuoi sondaggi."
+    default_poll_must_have_at_least_2_options: "Il sondaggio deve avere almeno due opzioni."
+    named_poll_must_have_at_least_2_options: "Il sondaggio con nome <strong>%{name}</strong> deve avere almeno due opzioni."

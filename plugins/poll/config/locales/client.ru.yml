@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ru:
+  js:
+    poll:
+      total_votes:
+        zero: "Еще никто не голосовал. Хотите быть первым?"
+        one: "Всего 1 голос."
+        other: "%{count} голосов."
+      average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Вы можете выбрать как минимум %{count} ответа."
+          up_to_max_options: "Вы можете выбрать до %{count} ответов."
+          x_options: "Вы можете выбрать %{count} ответов."
+          between_min_and_max_options: "Вы можете выбрать от %{min} до %{max} ответов."
+      cast-votes:
+        title: "Проголосуйте"
+        label: "Голосовать!"
+      show-results:
+        title: "Показать результаты"
+        label: "Показать результаты"
+      hide-results:
+        title: "Вернуться к голосованию"
+        label: "Скрыть результаты"
+      open:
+        title: "Открыть голосование"
+        label: "Открыть"
+        confirm: "Вы уверены, что хотите открыть это голосование?"
+      close:
+        title: "Закрыть голосование"
+        label: "Закрыть"
+        confirm: "Вы уверены, что хотите закрыть это голосование?"
+      error_while_toggling_status: "Произошла ошибка смены статуса голосования."
+      error_while_casting_votes: "Произошла ошибка в голосовании."
