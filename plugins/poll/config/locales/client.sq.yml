@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+sq:
+  js:
+    poll:
+      total_votes:
+        zero: "No votes yet. Want to be the first?"
+        one: "There's only 1 vote."
+        other: "There are %{count} total votes."
+      average_rating: "Average rating: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "You may choose at least %{count} options."
+          up_to_max_options: "You may choose up to %{count} options."
+          x_options: "You may choose %{count} options."
+          between_min_and_max_options: "You may choose between %{min} and %{max} options."
+      cast-votes:
+        title: "Cast your votes"
+        label: "Voto Tani"
+      show-results:
+        title: "Display the poll results"
+        label: "Shfaq rezultatet"
+      hide-results:
+        title: "Back to your votes"
+        label: "Hide results"
+      open:
+        title: "Open the poll"
+        label: "Hap"
+        confirm: "Are you sure you want to open this poll?"
+      close:
+        title: "Mbyll sondazhin"
+        label: "Mbyll"
+        confirm: "Are you sure you want to close this poll?"
+      error_while_toggling_status: "There was an error while toggling the status of this poll."
+      error_while_casting_votes: "There was an error while casting your votes."

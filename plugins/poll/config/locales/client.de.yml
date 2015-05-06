@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+de:
+  js:
+    poll:
+      total_votes:
+        zero: "Es hat noch niemand abgestimmt. Willst du beginnen?"
+        one: "Es wurde erst 1 Stimme abgegeben."
+        other: "Es wurden insgesamt %{count} Stimmen abgegeben."
+      average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      multiple:
+        help:
+          at_least_min_options: "Du kannst mindestens %{count} Optionen auswählen."
+          up_to_max_options: "Du kannst bis zu %{count} Optionen auswählen."
+          x_options: "Du kannst %{count} Optionen auswählen."
+          between_min_and_max_options: "Du kannst zwischen %{min} und %{max} Optionen auswählen."
+      cast-votes:
+        title: "Gib deine Stimmen ab"
+        label: "Jetzt abstimmen!"
+      show-results:
+        title: "Das Ergebnis der Umfrage anzeigen"
+        label: "Ergebnisse anzeigen"
+      hide-results:
+        title: "Zurück zur Umfrage"
+        label: "Ergebnisse ausblenden"
+      open:
+        title: "Umfrage starten"
+        label: "Starten"
+        confirm: "Möchtest du wirklich diese Umfrage starten?"
+      close:
+        title: "Umfrage beenden"
+        label: "Beenden"
+        confirm: "Möchtest du wirklich diese Umfrage beenden?"
+      error_while_toggling_status: "Beim Ändern des Status der Umfrage ist ein Fehler aufgetreten."
+      error_while_casting_votes: "Beim Abstimmen ist ein Fehler aufgetreten."

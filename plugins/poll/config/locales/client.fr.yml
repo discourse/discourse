@@ -5,10 +5,10 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr:
+fr_FR:
   js:
     poll:
-      voters:
+      total_votes:
         zero: "Pas encore de votes. Soyez le premier !"
         one: "Il n'y a qu'un vote."
         other: "Il y a au total %{count} votes."

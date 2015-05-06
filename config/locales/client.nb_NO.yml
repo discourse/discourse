@@ -107,6 +107,9 @@ nb_NO:
     show_more: "vis mer"
     show_help: "hjelp"
     links: "Lenker"
+    links_lowercase:
+      one: "link"
+      other: "linker"
     faq: "FAQ"
     guidelines: "Retningslinjer"
     privacy_policy: "Personvern"
@@ -191,6 +194,10 @@ nb_NO:
       title:
         search: "Søk etter et emne ved navn, url eller id:"
         placeholder: "skriv emnetittelen her"
+    queue:
+      confirm: "Lagre endringer"
+      approval:
+        ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> postet <a href='{{topicUrl}}'>emnet</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Du</a> postet <a href='{{topicUrl}}'>emnet</a>"
@@ -210,10 +217,18 @@ nb_NO:
       title: "Brukere"
       likes_given: "Gitt"
       likes_received: "Mottatt"
+      topics_entered: "Lest"
+      topics_entered_long: "Emner lest"
       time_read: "Tid lest"
       topic_count: "Emner"
+      topic_count_long: "Emner startet"
       post_count: "Svar"
+      post_count_long: "Svar"
       no_results: "Ingen treff"
+      days_visited: "Besøk"
+      days_visited_long: "Dager besøkt"
+      posts_read: "Lest"
+      posts_read_long: "Lest"
       total_rows:
         one: "1 bruker"
         other: "%{count} brukere"
@@ -236,12 +251,15 @@ nb_NO:
       '2': "Liker mottatt"
       '3': "Bokmerker"
       '4': "Emner"
+      '5': "Svar"
+      '6': "Svar"
       '7': "Omtalelser"
       '9': "Sitater"
       '10': "Favoritter"
       '11': "Redigeringer"
       '12': "Sendte elementer"
       '13': "Innboks"
+      '14': "Venter"
     categories:
       all: "Alle kategorier"
       all_subcategories: "alle"
@@ -518,7 +536,6 @@ nb_NO:
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "En administrator har aktivert skrivebeskyttet modus. Du kan fortsette å benytte siden, men enkelte operasjoner vil kanskje ikke fungere."
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
     too_few_topics_notice: "Opprett minst 5 offentlige tråder og %{posts} offentlige innlegg for å få i gang diskusjonen. Nye brukere kan ikke tilegne seg tillitsnivåer ved mindre det eksisterer innhold for dem å lese. Denne meldingen vises kun til forumpersonalet."
     learn_more: "lær mer..."
@@ -643,7 +660,6 @@ nb_NO:
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
-      reply_placeholder: "Skriv her. Bruk Markdown eller BBCode for formatering. Dra eller lim inn et bilde for å laste det opp."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
@@ -701,6 +717,24 @@ nb_NO:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
+      popup_title:
+        one: "Nytt varsel fra {{site_title}}"
+        other: "{{count}} nye varsler fra {{site_title}}"
+      popup:
+        mentioned: '{{username}} nevnte deg i "{{topic}}"'
+        quoted: '{{username}} siterte deg i "{{topic}}"'
+        replied: '{{username}} svarte deg i "{{topic}}"'
+        replied_mul: '{{username}} i "{{topic}}"'
+        posted: '{{username}} skrev i "{{topic}}"'
+        posted_mul: '{{username}} skrev i "{{topic}}"'
+        edited: '{{username}} redigerte innlegget ditt i "{{topic}}"'
+        liked: '{{username}} likte innlegget ditt i "{{topic}}"'
+        private_message: '{{username}} sendte deg en privat melding i "{{topic}}"'
+        invited_to_private_message: '{{username}} inviterte deg til en privat melding: "{{topic}}"'
+        invitee_accepted: '{{username}} ble medlem!'
+        moved_post: '{{username}} flyttet innlegget ditt i "{{topic}}"'
+        linked: '{{username}} lenket til innlegget ditt fra "{{topic}}"'
+        granted_badge: 'Du har fått "{{badge}}"-merket!'
     upload_selector:
       title: "Legg til Bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
@@ -813,7 +847,6 @@ nb_NO:
       toggle_information: "vis/skjul emnedetaljer"
       read_more_in_category: "Vil du lese mer? Bla gjennom andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "Det {UNREAD, plural, one {er <a href='/unread'>1 ulest</a>} other {er <a href='/unread'># uleste</a>}} og {NEW, plural, one {<a href='/new'>1 nytt</a> emne} other {<a href='/new'># nye</a> emner}} gjenstående, eller {latestLink}"
       browse_all_categories: Se alle kategorier
       view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke opprette et emne?

@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+tr_TR:
+  js:
+    poll:
+      total_votes:
+        zero: "Henüz oy yok. İlk olmak ister misiniz?"
+        one: "Sadece 1 oy var."
+        other: "Toplam %{count} oy var."
+      average_rating: "Ortalama oran: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "En az %{count} seçim yapabilirsiniz."
+          up_to_max_options: "En fazla %{count} seçim yapabilirsiniz."
+          x_options: " %{count} seçim yapabilirsiniz."
+          between_min_and_max_options: "En az %{min} en fazla %{max} seçim yapabilirsiniz."
+      cast-votes:
+        title: "Oyunuzu verin"
+        label: "Şimdi oylayın!"
+      show-results:
+        title: "Anket sonuçlarını göster"
+        label: "Sonuçları göster"
+      hide-results:
+        title: "Oylarınıza dönün"
+        label: "Sonuçları sakla"
+      open:
+        title: "Anketi başlat"
+        label: "Başlat"
+        confirm: "Bu anketi başlatmak istediğinize emin misiniz?"
+      close:
+        title: "Anketi bitir"
+        label: "Bitir"
+        confirm: "Bu anketi bitirmek istediğinize emin misiniz?"
+      error_while_toggling_status: "Bu anketin statüsü değiştirilirken bir hata oluştu."
+      error_while_casting_votes: "Oylama esnasında hata oluştu."

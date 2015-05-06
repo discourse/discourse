@@ -1544,6 +1544,8 @@ de:
 
         Klicke auf den folgenden Link, um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] Anmeldung"
     account_created:
       subject_template: "[%{site_name}] Dein neues Konto"
       text_body_template: |
@@ -1720,3 +1722,8 @@ de:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "E-Mail gesendet"
+    error: "Fehler!"
+    email_input: "Administrator-E-Mail"
+    submit_button: "E-Mail senden"

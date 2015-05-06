@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+nb_NO:
+  site_settings:
+    enable_imgur: "Aktiver imgurs API for opplasting, ikke lagre filene lokalt"
+    imgur_client_id: "Din klient-ID for imgur.com, påkrevet for at bildeopplasting skal fungere"
+    imgur_client_secret: "Din client secret for imgur.com. Denne er for øyeblikket ikke påkrevet for opplasting av bilder, men kan bli det i fremtiden."

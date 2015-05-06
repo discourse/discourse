@@ -128,6 +128,8 @@ zh_CN:
     hot: "最热主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   excerpt_image: "图片"
+  queue:
+    delete_reason: "通过帖子审核队列删除"
   groups:
     errors:
       can_not_modify_automatic: "你不能修改一个自动组"
@@ -1612,6 +1614,15 @@ zh_CN:
 
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}]登录"
+      text_body_template: |
+        有人尝试登录你在[%{site_name}](%{base_url})的账户。
+
+        如果不是你在操作，你可以安全地忽略这封邮件。
+
+        点击下面的链接登录：
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
@@ -1902,3 +1913,8 @@ zh_CN:
       leader: |
         啦啦啦
         啦啦啦
+  admin_login:
+    success: "邮件已发送"
+    error: "错误！"
+    email_input: "管理员邮件"
+    submit_button: "发送邮件"

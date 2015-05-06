@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+pl_PL:
+  site_settings:
+    enable_imgur: "Włącz Imgur API, aby przesyłać pliki - nie przechowuj plików lokalnie."
+    imgur_client_id: "Twój \"client_id\" z imgur.com, wymagany przez funkcję przesyłania plików."
+    imgur_client_secret: "Twój parametr \"client_secret\" z Imgur.com. Aktualnie nie wymagany dla funkcji przesyłania obrazów, jednak może stać się wymagany w przyszłości."

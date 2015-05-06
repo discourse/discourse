@@ -128,6 +128,8 @@ fa_IR:
     hot: "جستارهای داغ"
   too_late_to_edit: "ارسالی مورد نظر مربوط به زمان بسیار گذشته می باشد. امکان ویرایش و حذف آن وجود ندارد."
   excerpt_image: "تصویر"
+  queue:
+    delete_reason: "پاک شد از طریق پست صف میانه "
   groups:
     errors:
       can_not_modify_automatic: "شما امکان تغییر یک گروه خودکار را ندارید."
@@ -1356,6 +1358,9 @@ fa_IR:
     set_password:
       subject_template: "تنظیم رمز عبور [%{site_name}] "
       text_body_template: "شخصی برای اضافه کردن رمز عبور به حساب کاربری شما پرسیده در [%{site_name}](%{base_url}).  در روش دیگر٬‌ شما می توانید با وارد شوید از طریق سرویس دیگر مثل (گوگل٬‌ فیس بوک٬‌غیره) که ایمیل برابر استفاده می کنند. \n\n\nاگر شما نبود٬ می توانید با خیال راحت این ایمیل را نادیده بگیرید.\n\nبر روی پیوند پیش رو برای انتخاب رمز عبور جدید کلیک کنید.\n\n%{base_url}/users/password-reset/%{email_token}\n"
+    admin_login:
+      subject_template: "[%{site_name}] ورود به سیستم"
+      text_body_template: "شخصی برای ورود به سیستم با حساب کاربری شما سوال کرد  [%{site_name}](%{base_url}).\n\nاگر شما این درخواست را نداده اید می توانید این ایمیل را نادیده بگیرید. \n\nبرای ورود به سیستم لینک پیش رو را کلیک کنید. :\n%{base_url}/users/admin-login/%{email_token}\n"
     account_created:
       subject_template: "[%{site_name}] حساب کاربری جدید شما"
       text_body_template: "حساب کاربری جدید برای شما ساخته شد در  %{site_name}\n\nبر روری پیوند پیش رو کلیک کنید برای انتخاب رمز برای حساب کاربری جدیدتان: \n\n%{base_url}/users/password-reset/%{email_token}\n"
@@ -1796,3 +1801,8 @@ fa_IR:
       member: "بلا بلا بلا \nبلا بلا بلا \n"
       regular: "بلا بلا بلا \nبلا بلا بلا \n"
       leader: "بلا بلا بلا \nبلا بلا بلا \n"
+  admin_login:
+    success: "ایمیل ارسال شد "
+    error: "خطا!"
+    email_input: "ایمیل مدیر "
+    submit_button: "ارسال ایمیل "

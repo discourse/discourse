@@ -1,0 +1,40 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+zh_CN:
+  js:
+    poll:
+      total_votes:
+        zero: "还没有投票。想成为第一人么？"
+        one: "只有一次投票。"
+        other: "总共有 %{count} 次投票。"
+      average_rating: "平均排名：<strong>%{average}</strong>。"
+      multiple:
+        help:
+          at_least_min_options: "你至少要选择 %{count} 个选项。"
+          up_to_max_options: "你最多可以选择 %{count} 个选项。"
+          x_options: "你可以选择 %{count} 个选项。"
+          between_min_and_max_options: "你可以选择 %{min} 至 %{max} 个选项。"
+      cast-votes:
+        title: "投你的票"
+        label: "现在投票！"
+      show-results:
+        title: "显示投票结果"
+        label: "显示结果"
+      hide-results:
+        title: "返回到你的投票"
+        label: "隐藏结果"
+      open:
+        title: "开启投票"
+        label: "开启"
+        confirm: "你确定要开启这个投票么？"
+      close:
+        title: "关闭投票"
+        label: "关闭"
+        confirm: "你确定要关闭这个投票？"
+      error_while_toggling_status: "改变投票状态时出错。"
+      error_while_casting_votes: "执行投票时发生了错误。"

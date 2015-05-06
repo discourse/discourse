@@ -1,0 +1,19 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+it:
+  js:
+    poll:
+      total_votes:
+        zero: "Nessun voto per ora. Vorresti essere il primo?"
+        one: "C'è soltanto 1 voto."
+        other: "Ci sono %{count} voti in totale."
+      average_rating: "Voto medio: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Puoi scegliere massimo %{count} opzioni."
+          up_to_max_options: "Puoi scegliere fino a %{count} opzioni."

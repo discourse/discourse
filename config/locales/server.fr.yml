@@ -5,7 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr:
+fr_FR:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -135,6 +135,8 @@ fr:
     hot: "Sujets populaires"
   too_late_to_edit: "Ce message a été créé il y a trop longtemps. Il ne peut plus être modifié ou supprimé."
   excerpt_image: "image"
+  queue:
+    delete_reason: "Supprimé depuis la liste des messages en attente de validation"
   groups:
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
@@ -1546,6 +1548,15 @@ fr:
     set_password:
       subject_template: "[%{site_name}] Définir le mot de passe"
       text_body_template: "Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse de courriel validée. \n\nSi vous n'avez pas fait cette demande, vous pouvez ignorer ce courriel. \n\nCliquez sur le lien suivant pour choisir un mot de passe: \n%{base_url}/users/password-reset/%{email_token}\n"
+    admin_login:
+      subject_template: "[%{site_name}] Identification"
+      text_body_template: |
+        On a cherché à se connecter à votre compte sur [%{site_name}](%{base_url}).
+
+        Si ce n'est pas vous, ignorez sans crainte ce courriel.
+
+        Sinon, cliquez sur ce lien pour vous connecter :
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Votre Nouveau Compte"
       text_body_template: |
@@ -2022,3 +2033,8 @@ fr:
       leader: |
         Bla bla bla
         Bla bla bla
+  admin_login:
+    success: "Courriel envoyé"
+    error: "Erreur !"
+    email_input: "Courriel de l'administrateur"
+    submit_button: "Envoyer un courriel"
