@@ -40,13 +40,19 @@ class PostTiming < ActiveRecord::Base
 
     if rows == 0
 
-      exec_sql("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
+      begin
+        exec_sql("INSERT INTO post_timings (topic_id, user_id, post_number, msecs)
                   SELECT :topic_id, :user_id, :post_number, :msecs
                   WHERE NOT EXISTS(SELECT 1 FROM post_timings
                                    WHERE topic_id = :topic_id
                                     AND user_id = :user_id
                                     AND post_number = :post_number)",
                args)
+      rescue PG::UniqueViolation
+         # concurrency is hard, we are not running serialized so this can possibly
+         # still happen, if it happens we just don't care, its an invalid record anyway
+         return
+      end
 
       Post.where(['topic_id = :topic_id and post_number = :post_number', args]).update_all 'reads = reads + 1'
       UserStat.where(user_id: args[:user_id]).update_all 'posts_read_count = posts_read_count + 1'
