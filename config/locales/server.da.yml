@@ -20,6 +20,7 @@ da:
   is_reserved: "er reservet"
   purge_reason: "Automatisk slettet som forladt, ikke aktiveret, konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
+  anonymous: "Anonym"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -50,6 +51,14 @@ da:
       too_long:
         one: er for lang (maximum er 1 tegn)
         other: er for lang (maximum er %{count} tegn)
+      too_short:
+        one: er for kort (minimum er 1 tegn)
+        other: er for kort (minimum er %{count} tegn)
+      wrong_length:
+        one: har forkert længde (burde være 1 tegn)
+        other: har forkert længde (burde være  %{count} tegn)
+    template:
+      body: 'Der var problemer med følgende felter:'
     embed:
       load_from_remote: "Der opstod en fejl ved indlæsningen af dette indlæg."
   bulk_invite:
@@ -59,6 +68,8 @@ da:
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
     not_enough_space_on_disk: "Der er ikke nok diskplads til at uploade denne backup."
   not_logged_in: "Du skal logge på for at kunne dette."
+  not_found: "Den anmodede URL eller ressource kunne ikke findes."
+  invalid_access: "Du har ikke tilladelse til at se den anmodede ressource."
   read_only_mode_enabled: "Forummet er i \"kun læsning\" tilstand. Interaktioner er deaktiverede."
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
@@ -98,6 +109,7 @@ da:
     other: "Beklager, nye brugere kan kun indsætte %{count} links i et indlæg."
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
+  topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   has_already_been_used: "er allerede i brug"
   invalid_characters: "indeholder ugyldige tegn"
@@ -105,6 +117,7 @@ da:
   next_page: "næste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"
+  home_title: "Hjem"
   topics_in_category: "Emner i kategorien '%{category}'"
   rss_posts_in_topic: "RSS-feed for emnet '%{topic}'"
   rss_topics_in_category: "RSS-feed for emner i kategorien '%{category}'"
@@ -120,6 +133,7 @@ da:
   groups:
     errors:
       can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
+      member_already_exist: "'%{username}' er allerede medlem af denne gruppe."
     default_names:
       everyone: "Alle"
       admins: "admins"
@@ -190,10 +204,13 @@ da:
             base:
               warning_requires_pm: "Du kan kun vedhæfte advarsler til private beskeder."
               too_many_users: "Du kan kun sende advarsler til en bruger ad gangen."
+              no_user_selected: "Du skal vælge en gyldig bruger."
         user:
           attributes:
             password:
               common: "er én af de 10000 mest almindelige adgangskoder. Brug venligst en mere sikker adgangskode."
+              same_as_username: "er det samme som dit brugernavn. Brug venligst en mere sikker adgangskode."
+              same_as_email: "er det samme som din email. Brug venligst en mere sikker adgangskode."
             ip_address:
               signup_not_allowed: "Tilmelding er ikke tilladt fra den aktuelle adresse."
         color_scheme_color:
@@ -318,7 +335,6 @@ da:
         one: "næsten 1 år siden"
         other: "næsten %{count} år siden"
   password_reset:
-    no_token: "Beklager, dit token er udløbet. Prøv at nulstille dit kodeord igen."
     choose_new: "Vælg et nyt kodeord"
     choose: "Vælg et kodeord"
     update: 'opdatér kodeord'
@@ -347,6 +363,8 @@ da:
       title: 'Spam'
       description: 'Dette indlæg minder mere om en reklame end et debatindlæg. Det er ikke nyttigt eller relevant for diskussionen.'
       long_form: 'markerede dette som spam'
+      email_title: '"%{title}" blev markeret som spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Upassende'
       description: 'Dette indlæg har indhold som en rimelig person ville opfatte som stødende, udtryk for misbrug eller som et brud på <a href="/guidelines">vores sammenholds retningslinjer</a>.'

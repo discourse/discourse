@@ -380,7 +380,6 @@ pl_PL:
         few: "prawie %{count} lata temu"
         other: "prawie %{count} lat temu"
   password_reset:
-    no_token: "Przepraszamy, Twój token wygasł. Spróbuj ustawić ponownie nowe hasło."
     choose_new: "Wybierz nowe hasło"
     choose: "Wprowadź hasło"
     update: 'Zmień hasło'
@@ -679,7 +678,6 @@ pl_PL:
     new_topic_duration_minutes: "Global default number of minutes a topic is considered new, users can override (-1 for always, -2 for last visit)"
     flags_required_to_hide_post: "Number of flags that cause a post to be automatically hidden and PM sent to the user (0 for never)"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
-    must_approve_users: "Zespół musi zaakceptować wszystkie nowe konta zanim uzyskają dostęp do serwisu."
     ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
@@ -827,11 +825,6 @@ pl_PL:
       To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |
-      Dziękujemy za zaakceptowanie zaproszenia na  %{site_name} -- witaj!
-
-      Aby wybrać swoje hasło i zalogować się do serwisu kliknij link:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   flags_reminder:

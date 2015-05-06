@@ -128,6 +128,8 @@ zh_CN:
     hot: "最热主题"
   too_late_to_edit: "这个主题在很早之前创建。不能被编辑或者被删除。"
   excerpt_image: "图片"
+  queue:
+    delete_reason: "通过帖子审核队列删除"
   groups:
     errors:
       can_not_modify_automatic: "你不能修改一个自动组"
@@ -350,7 +352,7 @@ zh_CN:
       almost_x_years:
         other: "将近 %{count} 年前"
   password_reset:
-    no_token: "抱歉，你的令牌已过期，请尝试再次重置你的密码。"
+    no_token: "抱歉，密码修改链接已过期。再登录一次并选择“我忘记了密码”获得一个新的链接。"
     choose_new: "请选择一个新密码"
     choose: "请选择一个密码"
     update: '更新密码'
@@ -697,7 +699,6 @@ zh_CN:
     flag_sockpuppets: "如果一个新用户开始了一个主题，并且同时另一个新用户以同一个 IP 在该主题回复，他们所有的帖子都将被自动标记为垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用传统换行符，即用两个尾随空格来换行"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
-    must_approve_users: "新注册用户必须获得职员批准方能访问"
     ga_tracking_code: "Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
@@ -1101,11 +1102,6 @@ zh_CN:
       你是被一个受信任的用户邀请的，所以你可以不用登录。
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
-    text_body_template: |
-      感谢你接受来自 %{site_name} 的邀请——欢迎！
-
-      要再次登录，点击下面的链接设置密码：
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] 电子邮件发送测试"
     text_body_template: |
@@ -1203,20 +1199,6 @@ zh_CN:
   system_messages:
     post_hidden:
       subject_template: "%{site_name} 提示：由于论坛用户标记，系统隐藏了你的帖子"
-      text_body_template: |
-        你好，
-
-        这是一封从 %{site_name} 自动发出的邮件，通知你的帖子已被隐藏。
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        你的帖子是因为被多个社群成员标记才被隐藏的，所以请根据他们的反馈修改你的帖子。**你可以在 %{edit_delay} 分钟后开始编辑你的帖子，之后它会被自动显示。**这将提高你在论坛的信任等级。
-
-        但是，如果帖子再次被社群标记并隐藏，它将被隐藏直至版主处理——并且可能导致进一步的措施，包括禁止你的用户帐号的可能。
-
-        需要了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
     usage_tips:
       text_body_template: |
         这条消息包含了一些可以让你快速开始的技巧提示。
@@ -1612,6 +1594,15 @@ zh_CN:
 
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}]登录"
+      text_body_template: |
+        有人尝试登录你在[%{site_name}](%{base_url})的账户。
+
+        如果不是你在操作，你可以安全地忽略这封邮件。
+
+        点击下面的链接登录：
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
@@ -1902,3 +1893,8 @@ zh_CN:
       leader: |
         啦啦啦
         啦啦啦
+  admin_login:
+    success: "邮件已发送"
+    error: "错误！"
+    email_input: "管理员邮件"
+    submit_button: "发送邮件"

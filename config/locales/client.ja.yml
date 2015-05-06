@@ -180,10 +180,14 @@ ja:
       topic: "トピック："
       approve: '承認'
       reject: 'リジェクト'
+      delete_user: '削除されたユーザー'
       title: "承認待ち"
       none: "レビュー待ちの投稿はございません。"
       edit: "編集"
       cancel: "取り消し"
+      view_pending: "保留とされている投稿を閲覧する"
+      has_pending_posts:
+        one: "このトピックは<b>1</b>個の投稿が承認待ちです。"
       confirm: "変更を保存"
       approval:
         title: "この投稿は承認が必要"
@@ -300,7 +304,6 @@ ja:
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信したあとに投稿に移動しない"
-      dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
@@ -519,9 +522,7 @@ ja:
     logout: "ログアウトしました"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "読み取り専用モードにされています。サイトインターアクションを無効されています。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "より詳しく..."
     year: '年'
     year_desc: '過去365日間に投稿されたトピック'
@@ -643,7 +644,6 @@ ja:
       title_placeholder: "このディスカッションを簡潔に説明してください。"
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
-      reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
@@ -811,7 +811,6 @@ ja:
       toggle_information: "トピック詳細をトグル"
       read_more_in_category: "{{catLink}} の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>未読ポスト1つ</a> } other { <a href='/unread'>未読ポスト#つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック1つ</a>c} other { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック#つ</a>} }を読む or {CATEGORY, select, true {{catLink} の他のトピックを読む} false {{latestLink}} other {}} "
       browse_all_categories: 全てのカテゴリをブラウズする
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: 新しいトピックを作成しますか？
@@ -922,6 +921,7 @@ ja:
       automatically_add_to_groups_optional: "この招待によって、リストされたグループに参加することができます。"
       automatically_add_to_groups_required: "この招待によって、リストされたグループに参加することができます。"
       invite_private:
+        title: 'メッサージ参加へ招待する'
         email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
         email_or_username_placeholder: "メールアドレスまたはユーザ名"
         action: "招待"
@@ -929,6 +929,8 @@ ja:
         group_name: "グループ名"
       invite_reply:
         title: '友人を招待して回答してもらう'
+        username_placeholder: "ユーザー名"
+        action: '招待状を送る'
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         email_placeholder: 'メールアドレス'
       login_reply: 'ログインして返信'
@@ -1128,8 +1130,6 @@ ja:
           side_by_side_markdown:
             title: "ソース文書で表示する"
             button: 'ソース文書'
-        details:
-          edited_by: "編集者"
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
@@ -1256,6 +1256,8 @@ ja:
       other {}}
     original_post: "大元のポスト"
     views: "閲覧"
+    views_lowercase:
+      other: " 閲覧"
     replies: "回答"
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
@@ -1327,6 +1329,10 @@ ja:
         help: "過去年間、月間、週間及び日間のアクティブトピック"
         all:
           title: "今まで"
+        yearly:
+          title: "今年"
+        monthly:
+          title: "今月"
         weekly:
           title: "毎週"
         daily:
@@ -1469,6 +1475,7 @@ ja:
         add: "追加"
         add_members: "メンバー追加"
         custom: "カスタム"
+        automatic: "自動的"
         automatic_membership_email_domains: "リスト内のメールアドレスのドメインに正確に一致したユーザーは自動的にグループに追加される"
         automatic_membership_retroactive: "同じメールアドレスドメインのルールを既に登録済みのユーザにも適用"
       api:
