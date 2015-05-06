@@ -9,16 +9,14 @@ fr:
   js:
     poll:
       voters:
-        zero: "Pas encore de votes. Soyez le premier !"
-        one: "Il n'y a qu'un vote."
-        other: "Il y a au total %{count} votes."
+        zero: "votants"
+        one: "votant"
+        other: "votants"
+      total_votes:
+        zero: "Votes totaux"
+        one: "Vote total"
+        other: "Votes totaux"
       average_rating: "Notation moyenne : <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options: "Vous devez choisir au moins %{count} options."
-          up_to_max_options: "Vous pouvez choisir jusqu'à %{count} options."
-          x_options: "Vous devez choisir %{count} options."
-          between_min_and_max_options: "Vous devez choisir entre %{min} et %{max} options."
       cast-votes:
         title: "Distribuez vos votes"
         label: "Votez maintenant !"

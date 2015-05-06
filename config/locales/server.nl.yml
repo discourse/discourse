@@ -347,7 +347,6 @@ nl:
         one: "bijna 1 jaar geleden"
         other: "bijna %{count} jaren geleden"
   password_reset:
-    no_token: "Sorry, je token is verlopen. Probeer je wachtwoord opnieuw te herstellen."
     choose_new: "Kies een nieuw wachtwoord"
     choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'

@@ -140,7 +140,6 @@ uk:
     distance_in_words_verbose:
       half_a_minute: "щойно"
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Будь ласка, оберіть новий пароль"
     choose: "Будь ласка, оберіть пароль"
     update: 'Оновити пароль'

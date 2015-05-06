@@ -1,0 +1,30 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ru:
+  js:
+    poll:
+      average_rating: "Примерный рейтинг: <strong>%{average}</strong>."
+      cast-votes:
+        title: "Проголосуйте"
+        label: "Голосовать!"
+      show-results:
+        title: "Показать результаты"
+        label: "Показать результаты"
+      hide-results:
+        title: "Вернуться к голосованию"
+        label: "Скрыть результаты"
+      open:
+        title: "Открыть голосование"
+        label: "Открыть"
+        confirm: "Вы уверены, что хотите открыть это голосование?"
+      close:
+        title: "Закрыть голосование"
+        label: "Закрыть"
+        confirm: "Вы уверены, что хотите закрыть это голосование?"
+      error_while_toggling_status: "Произошла ошибка смены статуса голосования."
+      error_while_casting_votes: "Произошла ошибка в голосовании."

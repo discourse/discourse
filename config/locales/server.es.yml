@@ -135,6 +135,8 @@ es:
     hot: "Temas calientes"
   too_late_to_edit: "Ese post fue publicado hace demasiado tiempo. No puede ser editado ni eliminado."
   excerpt_image: "imagen"
+  queue:
+    delete_reason: "Eliminado vía moderación"
   groups:
     errors:
       can_not_modify_automatic: "No puedes modificar un grupo automático"
@@ -375,7 +377,6 @@ es:
         one: "hace casi 1 año"
         other: "hace casi %{count} años"
   password_reset:
-    no_token: "Lo sentimos, tu token ha expirado. Por favor prueba restableciendo tu contraseña de nuevo."
     choose_new: "Por favor elige un nuevo password"
     choose: "Por favor, elige una contraseña"
     update: 'Actualizar contraseña'
@@ -457,8 +458,8 @@ es:
       title: "Tema normal"
     banner:
       message:
-        make: "Este tema es ahora un banner. Aparecerá en la parte superior de cada pagina hasta que sea descartada por el usuario."
-        remove: "Este tema ya no es un banner. Ya no aparecerá en la parte superior de cada pagina."
+        make: "Este tema se utiliza ahora como banner. Aparecerá en la parte superior de cada página hasta que sea descartada por el usuario."
+        remove: "Este tema ya no se utiliza como banner. Ya no aparecerá en la parte superior de cada página."
   unsubscribed:
     title: 'Dado de bajada'
     description: "Has sido dado de baja. ¡No te contactaremos de nuevo!"
@@ -722,7 +723,6 @@ es:
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
-    must_approve_users: "Los miembros del Staff deben aprobar todas las nuevas cuentas antes de que se les permita acceder al sitio."
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
     ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
@@ -1123,11 +1123,6 @@ es:
     text_body_template: "%{invitee_name} te ha invitado a unirte a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si te interesa, haz clic en el siguiente enlace: \n\n %{invite_link}\n\nEsta invitación procede de un usuario de confianza, por lo que no necesitarás autenticarte.\n"
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
-    text_body_template: |
-      Gracias por aceptar tu invitación a %{site_name} -- ¡bienvenido!
-
-      Para iniciar sesión otra vez, da clic en el siguiente enlace para escoger una contraseña:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
@@ -1226,20 +1221,9 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
+    usage_tips:
       text_body_template: |
-        Hola,
-
-        Este se un mensaje automatizado de %{site_name} para informarte de que tu post fue ocultado.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Varios miembros de la comunidad reportaron este post antes de ocultarlo, por favor considera revisar tu post para reflejar la retroalimentación de los demás miembros. **Puedes editar tu post después de %{edit_delay} minutos, y será automáticamente  mostrado de vuelta.** Esto incrementara tu nivel de confianza.
-
-        Sin embargo, si el post es ocultado por la comunidad una segunda vez, este se mantendrá oculto hasta que sea atendido por el staff – y tal vez vez se tomen medidas, incluyendo la posible suspensión de tu cuenta.
-
-        Para más información, por favor consulta nuestras [reglas de comunidad](%{base_url}/guidelines).
+        Este mensaje privado tiene algunos trucos rápidos para que puedas comenzar. ## Sigue deslizando No hay botones de página siguiente o números de página – para leer más, **¡simplemente sigue deslizando hacia abajo!** Mientras llegan nuevos temas, estos aparecerán automáticamente. ## ¿Dónde estoy? - Para buscar, tu página de usuario o el menú, usa los botones **icon <kbd>☰</kbd> en la parte superior derecha**. - Cualquier título de tema te llevará al siguiente mensaje no leído. Usa la hora de última actividad y la cuenta de mensaje para ir al principio o al final. - Mientras estás leyendo un tema, salta al inicio &uarr; seleccionando el título del tema. Selecciona la barra de progreso verde en la parte inferior derecha para los controles completos de navegación o usa las teclas <kbd>home</kbd> "Inicio" y <kbd>end</kbd>; "Fin";. <img src="/images/welcome/progress-bar.png" width="143" height="39"> ## ¿Cómo respondo? - Para responder al mensaje general, usa el botón de Respuesta <img src="/images/welcome/reply-topic.png" width="29" height="25"> al final de la página. - Para responder a un mensaje en particular, usa el botón Respuesta <img src="/images/welcome/reply-post.png" width="29" height="25"> en ese mensaje. - Para llevar la conversación en una dirección distinta, pero manteniendo un enlace, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responde como Tema enlazado a la derecha del mensaje. - Para citar a alguien en tu respuesta, selecciona el texto que quieras citar y presiona cualquier de los botones de Respuesta. <img src="/images/welcome/quote-reply.png" width="350" height="129"> Para dar un toque a alguien en tu respuesta, menciona su nombre. Escribe `@` y un cuadro de autocompletado aparecerá. <img src="/images/welcome/username-completion.png" width="230" height="131"> Para [Emoji comunes](http://www.emoji.codes/), simplemente comienza escribiendo `:` o los tradicionales smileys `:)` :smile: ## ¿Qué más puedo hacer? Hay botones de acción al final de cada mensaje. <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46"> Para hacer saber a cualquiera que te agradó su mensaje, usa el botón **me gusta**. Si tienes algún problema con un mensaje, házselo saber privadamente al autor o bien a nuestro equipo usando el botón **reportar**. También puedes **compartir** el enlace a un mensaje o añadirlo a **favoritos** para referencia futura en tu página de usuario. ## ¿Quién me está hablando? Cuando alguien responde a tu mensaje, cita tu mensaje o menciona tu `@nombre_de_usuario`, un número aparecerá de forma inmediata en la parte superior derecha de la página. Úsalo para acceder a tus **notificaciones**. <img src="/images/welcome/notification-panel.png" width="178" height="59"> No te preocupes si te pierdes una respuesta – se te enviará un correo electrónico con las respuestas directas (y mensajes privados) si no estas conectado cuando te lleguen. ## ¿Cuándo son nuevas las conversaciones? Por defecto todas las conversaciones con menos de dos días de antigüedad son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por un periodo extenso de tiempo) serán automáticamente monitorizadas. Verás indicadores azules y de números al lado de estos temas: <img src="/images/welcome/topics-new-unread.png" width="368" height="89"> Puedes cambiar el estado individual de notificación de cada tema a través del control al final del tema (también puede ajustarse por categoría). Para cambiar la forma en que monitorizas los temas, o definir una nueva, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences). ## ¿Por qué no puedo hacer ciertas cosas? Los nuevos usuarios están de alguna forma limitados por razones de seguridad. Conforme vayas participando, irá ganando la confianza de la comunidad, te convertirás en un ciudadano de pleno derecho y estas limitaciones se te quitarán automáticamente. Con un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficientemente alto, incluso ganarás acceso a más habilidades para ayudarnos a administrar nuestra comunidad juntos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1573,6 +1557,15 @@ es:
 
         Haz clic en el siguiente enlace para escoger una contraseña:
         %{base_url}/users/password-reset/%{email_token}
+    admin_login:
+      subject_template: "[%{site_name}] inicio sesión"
+      text_body_template: |
+        Alguien pidió iniciar sesión con tu cuenta en [%{site_name}](%{base_url}).
+
+        Si tú no realizaste esta petición, puedes ignorar este email.
+
+        Haz clic en el siguiente enlace para iniciar sesión:
+        %{base_url}/users/admin-login/%{email_token}
     account_created:
       subject_template: "[%{site_name}] Tu nueva cuenta"
       text_body_template: |
@@ -1769,3 +1762,8 @@ es:
       leader: |
         Blah blah blah
         Blah blah blah
+  admin_login:
+    success: "Email enviado"
+    error: "¡Error!"
+    email_input: "Email de admin"
+    submit_button: "Enviar email"

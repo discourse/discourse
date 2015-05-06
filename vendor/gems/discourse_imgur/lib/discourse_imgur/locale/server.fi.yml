@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+fi:
+  site_settings:
+    enable_imgur: "Lataa kuvat imgurliin käyttäen apia, älä tallenna kuvia paikallisesti palvelimelle"
+    imgur_client_id: "Imgurl.com client ID, vaaditaan kuvien lataamiseksi"
+    imgur_client_secret: "Imgurl.com client secret. Ei tällä hetkellä pakollinen kuvien lataamiseksi, mutta saattaa tulla pakolliseksi tulevaisuudessa."
