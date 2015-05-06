@@ -51,10 +51,14 @@ YML_DIRS = ['config/locales',
 ['client', 'server'].each do |base|
   YML_DIRS.each do |dir|
     Dir.glob(File.expand_path("../../#{dir}/#{base}.*.yml", __FILE__)).each do |file_name|
-      contents = File.readlines(file_name)
+      language = File.basename(file_name).match(Regexp.new("#{base}\\.([^\\.]*)\\.yml"))[1]
+
+      lines = File.readlines(file_name)
+      lines.collect! {|line| line =~ /^[a-z_]+:$/i ? "#{language}:" : line}
+
       File.open(file_name, 'w+') do |f|
-        f.puts(YML_FILE_COMMENTS, '') unless contents[0][0] == '#'
-        f.puts contents
+        f.puts(YML_FILE_COMMENTS, '') unless lines[0][0] == '#'
+        f.puts(lines)
       end
     end
   end
