@@ -12,7 +12,8 @@ export default Em.Component.extend({
     var styles = [];
     if (this.get("color")) { styles.push("color:" + this.get("color")); }
     if (this.get("background")) { styles.push("background:" + this.get("background")); }
-    return styles.length > 0 ? styles.join(";") : false;
+
+    return (styles.length > 0 ? styles.join(";") : '').htmlSafe();
   }.property("color", "background"),
 
   render(buffer) {
