@@ -27,7 +27,7 @@ export default {
     messageBus.subscribe("/polls", data => {
       const post = container.lookup("controller:topic").get("postStream").findLoadedPost(data.post_id);
       // HACK to trigger the "postViewUpdated" event
-      post.set("cooked", post.get("cooked") + " ");
+      Em.run.next(_ => post.set("cooked", post.get("cooked") + " "));
     });
 
     // overwrite polls
@@ -58,7 +58,7 @@ export default {
           pollViews[pollName] = pollView;
         });
 
-        this.messageBus.subscribe("/polls/" + this.get("post.id"), results => {
+        messageBus.subscribe("/polls/" + this.get("post.id"), results => {
           if (results && results.polls) {
             _.forEach(results.polls, poll => {
               if (pollViews[poll.name]) {
@@ -72,7 +72,7 @@ export default {
       }.on("postViewInserted", "postViewUpdated"),
 
       _cleanUpPollViews: function() {
-        this.messageBus.unsubscribe("/polls/" + this.get("post.id"));
+        messageBus.unsubscribe("/polls/" + this.get("post.id"));
 
         if (this.get("pollViews")) {
           _.forEach(this.get("pollViews"), v => v.destroy());

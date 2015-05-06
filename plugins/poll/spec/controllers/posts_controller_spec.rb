@@ -67,6 +67,14 @@ describe PostsController do
           expect(json["post"]["polls"]["poll"]["options"][2]["html"]).to eq("C")
         end
 
+        it "resets the votes" do
+          DiscoursePoll::Poll.vote(post_id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+          xhr :put, :update, { id: post_id, post: { raw: "[poll]\n- A\n- B\n- C\n[/poll]" } }
+          expect(response).to be_success
+          json = ::JSON.parse(response.body)
+          expect(json["post"]["polls_votes"]).to_not be
+        end
+
       end
 
       describe "after the first 5 minutes" do
