@@ -142,7 +142,7 @@ class UserNotifications < ActionMailer::Base
       title: post.topic.title,
       post: post,
       username: post.user.username,
-      from_alias: (SiteSetting.enable_names && SiteSetting.display_name_on_posts && !post.user.name.empty?) ? post.user.name : post.user.username,
+      from_alias: (SiteSetting.enable_names && SiteSetting.display_name_on_posts && post.user.name.present?) ? post.user.name : post.user.username,
       allow_reply_by_email: true,
       use_site_subject: true,
       add_re_to_subject: true,
