@@ -284,10 +284,18 @@ after_initialize do
             end
           end
 
-          # merge votes when same number of options
+          # try to merge votes
           polls.each_key do |poll_name|
             next unless previous_polls.has_key?(poll_name)
-            next unless polls[poll_name]["options"].size == previous_polls[poll_name]["options"].size
+
+            # when the # of options has changed, reset all the votes
+            if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size
+              PostCustomField.where(post_id: post.id)
+                             .where("name LIKE '#{VOTES_CUSTOM_FIELD}-%'")
+                             .destroy_all
+              post.clear_custom_fields
+              next
+            end
 
             polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
             for o in 0...polls[poll_name]["options"].size
