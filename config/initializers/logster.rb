@@ -7,6 +7,8 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
 
+    /^AbstractController::ActionNotFound/,
+
     # ignore any empty JS errors that contain blanks or zeros for line and column fields
     #
     # Line:
@@ -21,10 +23,7 @@ if Rails.env.production?
     Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { params: { url: /./, title: /./, excerpt: /./, blog_name: /./} }),
 
     # API calls, TODO fix this in rails
-    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ }),
-
-    # no route, can happen in multisite for some reason, ignore
-    Logster::IgnorePattern.new(/^ActionController::RoutingError \(No route matches/)
+    Logster::IgnorePattern.new("Can't verify CSRF token authenticity", { REQUEST_URI: /api_key/ })
   ]
 end
 
