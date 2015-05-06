@@ -90,7 +90,7 @@ export default Ember.Controller.extend({
 
   actions: {
     togglePosts(user) {
-      const postStream = this.get('controllers.topic.postStream');
+      const postStream = this.get('postStream');
       postStream.toggleParticipant(user.get('username'));
       this.close();
     },

@@ -707,7 +707,7 @@ const PostStream = RestModel.extend({
     const status = result.status;
 
     const topic = this.get('topic');
-    topic.set('loadingFilter', false);
+    this.set('loadingFilter', false);
     topic.set('errorLoading', true);
 
     // If the result was 404 the post is not found
