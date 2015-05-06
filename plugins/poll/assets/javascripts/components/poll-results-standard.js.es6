@@ -13,9 +13,9 @@ export default Em.Component.extend({
       if (backgroundColor) { styles.push("background: " + backgroundColor); }
 
       option.setProperties({
-        percentage: percentage,
+        percentage,
         title: I18n.t("poll.option_title", { count: option.get("votes") }),
-        style: styles.join(";")
+        style: styles.join(";").htmlSafe()
       });
     });
 

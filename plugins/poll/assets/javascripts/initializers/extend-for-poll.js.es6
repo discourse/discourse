@@ -5,12 +5,7 @@ function createPollView(container, post, poll, vote) {
         view = container.lookup("view:poll");
 
   controller.set("vote", vote);
-
-  controller.setProperties({
-    model: Em.Object.create(poll),
-    post: post,
-  });
-
+  controller.setProperties({ model: Em.Object.create(poll), post });
   view.set("controller", controller);
 
   return view;
@@ -53,7 +48,7 @@ export default {
                 pollView = createPollView(container, post, polls[pollName], votes[pollName]);
 
           $poll.replaceWith($div);
-          pollView.constructor.renderer.replaceIn(pollView, $div[0]);
+          pollView.renderer.replaceIn(pollView, $div[0]);
           pollViews[pollName] = pollView;
         });
 
