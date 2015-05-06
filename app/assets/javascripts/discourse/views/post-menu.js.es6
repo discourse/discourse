@@ -28,7 +28,9 @@ function animateHeart($elem, start, end, complete) {
 Button.prototype.render = function(buffer) {
   var opts = this.opts;
 
-  buffer.push("<button title=\"" + I18n.t(this.label) + "\"");
+  var label = I18n.t(this.label);
+
+  buffer.push("<button aria-label=\"" + label +"\" " + "title=\"" + label + "\"");
   if (opts.disabled) { buffer.push(" disabled"); }
   if (opts.className) { buffer.push(" class=\"" + opts.className + "\""); }
   if (opts.shareUrl) { buffer.push(" data-share-url=\"" + opts.shareUrl + "\""); }
