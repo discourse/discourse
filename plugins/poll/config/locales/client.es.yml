@@ -8,17 +8,7 @@
 es:
   js:
     poll:
-      voters:
-        zero: "Sin votos todavía. ¿Quieres ser el primero?"
-        one: "Sólo hay 1 voto."
-        other: "Hay %{count} votos en total."
       average_rating: "Puntuación media: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options: "Puedes escoger como mínimo %{count} opciones."
-          up_to_max_options: "Puedes escoger hasta %{count} opciones."
-          x_options: "Debes escoger %{count} opciones."
-          between_min_and_max_options: "Debes escoger entre %{min} y %{max} opciones."
       cast-votes:
         title: "Votar"
         label: "Votar ahora"

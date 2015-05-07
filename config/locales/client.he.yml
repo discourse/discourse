@@ -308,7 +308,6 @@ he:
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
-      dynamic_favicon: "הראה התראה על הודעות חדשות באייקון העמוד (נסיוני)"
       edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
@@ -530,9 +529,7 @@ he:
     logout: "נותקת מהמערכת"
     refresh: "רענן"
     read_only_mode:
-      enabled: "מצב קריאה בלבד למנהל ראשי. ניתן להמשיך לקרוא באתר אבל פעולות לא יעבדו כראוי."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
-    too_few_topics_notice: "צרו לפחות 5 נושאים ציבוריים ו-%{posts} פרסומים פומביים כדי להתחיל את הדיון. משתמשים חדשים לא יכולים להרוויח דרגת אמון אלא אם יש להם תוכן לקרוא. הודעה זו מופיעה רק לצוות."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
@@ -651,7 +648,6 @@ he:
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
-      reply_placeholder: "יש להקליד כאן. ניתן להשתמש ב Markdown או BBCode כדי להתאים את הטקסט. גרירת או הדבקת תמונה תעלה אותה."
       view_new_post: "הצגת את ההודעה החדשה שלך."
       saving: "שומר..."
       saved: "נשמר!"
@@ -826,7 +822,6 @@ he:
       toggle_information: "הצגת פרטי נושא"
       read_more_in_category: "רוצה לקרוא עוד? עיין נושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
-      read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='/unread'>1 שלא נקרא</a> } other { <a href='/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='/new'>#</a> נושאים חדשים} } remaining, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: עיין בכל הקטגוריות
       view_latest_topics: הצגת נושאים מדוברים
       suggest_create_topic: מדוע לא ליצור נושא?
@@ -1100,6 +1095,7 @@ he:
           spam: "סמנת את זה כספאם"
           inappropriate: "סמנת את זה כלא ראוי"
           notify_moderators: "סמנת את זה עבור המנהלים"
+          notify_user: "שלחת הודעה למשתמש זה"
           bookmark: "סימנת הודעה זו כמועדפת"
           like: "נתת לזה לייק"
           vote: "הצבעת להודעה זו"
@@ -1174,8 +1170,6 @@ he:
           side_by_side_markdown:
             title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
             button: '<i class="fa fa-columns"></i> גלם'
-        details:
-          edited_by: "נערך על ידי"
     category:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'

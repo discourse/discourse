@@ -140,10 +140,17 @@ tr.category-topic-link:nth-of-type(odd) {
     }
   }
 
-  .category-description {
-    td {
-      padding: 0 5px 15px 10px;
-    }
+  .category-topic-link .main-link, .subcategories-list td, .category-description td {
+    padding-left: 10px;
+  }
+
+  .category-description td {
+    padding-top: 0;
+    padding-bottom: 15px;
+  }
+
+  .subcategories-list td {
+    padding-top: 15px;
   }
 
   .topic-list > tbody > tr {
@@ -153,10 +160,6 @@ tr.category-topic-link:nth-of-type(odd) {
     &:nth-child(even) {
       background-color: $secondary;
     }
-  }
-
-  .category-topic-link .main-link {
-    padding-left: 10px;
   }
 
   th .badge-category {

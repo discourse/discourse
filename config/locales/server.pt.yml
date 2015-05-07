@@ -380,7 +380,6 @@ pt:
         one: "há quase 1 ano atrás"
         other: "há quase %{count} anos atrás"
   password_reset:
-    no_token: "Desculpe, o seu símbolo expirou. Por favor tente redefinir a sua palavra-passe novamente."
     choose_new: "Por favor escolha uma nova palavra-passe"
     choose: "Por favor escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
@@ -727,7 +726,6 @@ pt:
     flag_sockpuppets: "Se um novo utilizador responde a um tópico a partir do mesmo endereço IP do novo utilizador que iniciou o tópico, sinalizar ambas as mensagens como potencial spam."
     traditional_markdown_linebreaks: "Utilize tradicionais quebras de linha no Markdown, que requer dois espaços no final para uma quebra de linha."
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
-    must_approve_users: "O pessoal deverá aprovar todas as contas dos novos utilizadores antes destes terem permissão para aceder ao sítio."
     ga_tracking_code: "Código de acompanhamento do Google Analytics (ga.js), ex: UA-12345678-9; ver http://google.com/analytics"
     ga_domain_name: "Nome de domínio da Google Analytics (ga.js), ex: omeusitio.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de acompanhamento do Google Universal Analytics (analytics.js), ex: UA-12345678-9; ver http://google.com/analytics"
@@ -1139,11 +1137,6 @@ pt:
       Este convite é de um utilizador confiável, por isso não precisa de se autenticar.
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
-    text_body_template: |
-      Obrigado por ter aceite o seu convite para %{site_name} -- bem-vindo!
-
-      Para entrar novamente, clique na seguinte hiperligação para escolher uma palavra-passe:
-      %{base_url}/users/password-reset/%{email_token}
   test_mailer:
     subject_template: "[%{site_name}] Teste de entrega de email"
     text_body_template: "Este é um email de teste de\n\n[**%{base_url}**][0]\n\nA entrega do email é complicada. Aqui estão alguns pontos importantes a verificar primeiro:\n\n - *Certifique-se* que configurou o `email de notificação` de: endereço correto nas configurações do seu sítio. **O domínio especificado no endereço “de” nos emails que envia é o domínio que será validado**. \n\n- Conhecer como observar o código fonte dos emails no seu email cliente, de modo a que possa examinar cabeçalhos de email à procura de pistas importantes. No Gmail, é a opção “mostrar original” no menu drop down no canto superior direito de cada email.\n\n- **IMPORTANTE:** O seu ISP tem um registo de DNS inverso inserido para associar os nomes de domínio aos endereços IP de onde envia o seu email? [Teste o seu registo de PTR Inverso][2] aqui. Se o seu ISP não inserir o DNS inverso apropriado, é muito improvável que qualquer um dos seus emails seja entregue.\n\n- Estará o seu domínio [registo SPF][8] correto? [Teste o seu registo SPF][1] aqui. Note que TXT é o tipo de registo oficial para SPF. \n\n- Estará o seu domínio [registo DKIM][3] correto? Isto irá melhorar significativamente a entrega de emails. [Teste o seu registo DKIM][7] aqui.\n\n- Se correr o seu próprio servidor de email, certifique-se que os IPs do seu servidor de email não [estão em nenhuma lista negra de email] [4]. Verifique também que é enviado um nome de servidor qualificado que resolve\
@@ -1207,20 +1200,6 @@ pt:
   system_messages:
     post_hidden:
       subject_template: "Mensagem oculta devido a sinalizações da comunidade"
-      text_body_template: |
-        Olá,
-
-        Esta é uma mensagem automática de %{site_name} para informá-lo que a sua mensagem foi oculta.
-
-        %{base_url}%{url}
-
-        %{flag_reason}
-
-        Múltiplos membros da comunidade sinalizaram esta mensagem antes de ser escondida, por isso considere como poderá rever a sua mensagem para refletir o seu feedback. **Pode editar a sua mensagem após %{edit_delay} minutos, e esta será automaticamente mostrada.** Isto irá aumentar o seu nível de confiança.
-
-        Contudo, se a mensagem for escondida pela comunidade uma segunda vez, irá manter-se escondida até ser tratada pelo pessoal – e poderão ainda ocorrer ações, incluindo uma possível suspensão da sua conta.
-
-        Para orientação adicional, por favor consulte as [diretrizes da comunidade](%{base_url}/guidelines).
     usage_tips:
       text_body_template: "Algumas dicas para que possa começar: \n\n## Continue a arrastar para baixo \n\nNão há botões para páginas seguintes nem números de páginas – para ler mais, **simplesmente continue a arrastar para baixo!**\n\nÀ medida que novas mensagens vão surgindo, estas irão aparecer automaticamente. \n\n## Onde estou?\n\n - Para pesquisar, para a sua página de utilizador ou para o menu, use o botão com o **icone <kbd>☰</kbd> no canto superior direito**.\n\n- Qualquer título de tópico irá levá-lo à próxima mensagem não lida. Utilize o tempo da última atividade e o contador de mensagens para ir para o início ou para o final. \n\n- Ao ler um tópico, salte para o topo &uarr; ao selecionar o título do tópico. Selecione a barra de progresso verde no canto inferior direito para controlos de navegação completos, ou utilize <kbd>página principal</kbd> e <kbd>chaves</kbd>finais.\n\n<img src=\"/images/welcome/progress-bar.png\" width=\"143\" height=\"39\">\n\n## Como posso responder?\n\n- Para responder ao tópico geral, utilize o botão de Resposta <img src=\"/images/welcome/reply-topic.png\" width=\"29\" height=\"25\"> no final de cada página.\n\n- Para responder a uma mensagem específica, utilize o botão de Resposta <img src=\"/images/welcome/reply-post.png\" width=\"29\" height=\"25\"> nessa mensagem.\n\n-Para levar a conversa para um rumo diferente, mas mantê-las hiperligadas utilize <img src=\"/images/welcome/reply-as-linked-topic.png\"\
         \ width=\"15\" height=\"25\"> Responder como Tópico hiperligado à direita desta mensagem.\n\n. Para citar alguém na sua resposta, selecione o texto que pretende citar, e de seguida pressione qualquer um dos botões de Resposta.\n\n<img src=\"/images/welcome/quote-reply.png\" width=\"350\" height=\"129\">\nPara mencionar alguém na sua resposta, mencione os seus nomes. Digite `@` e o preenchimento automático irá aparecer.\n\n<img src=\"/images/welcome/username-completion.png\" width=\"230\" height=\"131\">\n\nPara [Emoji padrão](http://www.emoji.codes/), simplesmente comece a digitar `:` ou os tradicionais risonhos `:)` :smile:\n\n## O que posso fazer mais?\n\nHá botões de ação no final de cada publicação.\n\n<img src=\"/images/welcome/like-link-flag-bookmark.png\" width=\"169\" height=\"46\">\n\nPara deixar alguém saber que gostou das suas mensagens, utilize o botão **gosto**. Se vir um problema com uma mensagem, avise-os ou avise o nosso pessoal em privado utilizando o botão de **sinalização**.\n\nPode também **partilhar** uma hiperligação de uma publicação, ou **marcá-la** para mais tarde ter a referência na sua página de utilizador.\n\nQuem está a falar comigo?\n\nQuando alguém responde à sua mensagem, cita a sua mensagem ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Utilize-o ao aceder às suas **notificações**.\n\t\n<img src=\"/images/welcome/notification-panel.png\"\
