@@ -48,10 +48,12 @@ describe Onebox::Engine::GoogleMapsOnebox do
   end
 
   # Prevent sleep from wasting our time when we test with strange redirects
-  subject { described_class.send(:allocate).tap {|obj|
-    obj.stub(:sleep)
-    obj.send(:initialize, link)
-  }}
+  subject do
+    described_class.send(:allocate).tap do |obj|
+      allow(obj).to receive(:sleep)
+      obj.send(:initialize, link)
+    end
+  end
 
   let(:data) { Onebox::Helpers.symbolize_keys(subject.send(:data)) }
   let(:link) {|example| URLS[example.metadata[:urltype] || :short][:test] }

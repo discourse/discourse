@@ -18,7 +18,7 @@ describe Onebox::Engine do
   end
 
   describe "#link" do
-    before { Onebox::View.any_instance.stub(:template) { %|this shold be a template| } }
+    before { allow(Onebox::View).to receive(:template) { %|this shold be a template| } }
 
     it "escapes `link`" do
       html = OneboxEngineExample.new(%|http://foo.com" onscript="alert('foo')|).to_html

@@ -14,10 +14,10 @@ describe Onebox::Engine::TwitterStatusOnebox do
       expect(html).to include("http://www.peers.org/action/peers-pledgea")
     end
 
-    it "includes timestamp" do
-      pending
-      expect(html).to include("6:59 PM - 1 Aug 13")
-    end
+    # TODO: weird spec..
+    # it "includes timestamp" do
+    #   expect(html).to include("6:59 PM - 1 Aug 13")
+    # end
 
     it "includes username" do
       expect(html).to include("vyki_e")
@@ -28,12 +28,10 @@ describe Onebox::Engine::TwitterStatusOnebox do
     end
 
     it "includes tweet favorite count" do
-      pending
       expect(html).to include("")
     end
 
     it "includes retweet count" do
-      pending
       expect(html).to include("")
     end
   end
@@ -47,7 +45,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
   context "with twitter client" do
     before(:each) do
       @twitter_client = double("TwitterClient")
-      @twitter_client.stub("status") do
+      allow(@twitter_client).to receive("status") do
         {
           created_at: "Fri Aug 02 01:59:30 +0000 2013",
           id: 363_116_819_147_538_433,
@@ -93,7 +91,7 @@ describe Onebox::Engine::TwitterStatusOnebox do
           lang: "en"
         }
       end
-      @twitter_client.stub("prettify_tweet") do
+      allow(@twitter_client).to receive("prettify_tweet") do
         "I'm a sucker for pledges.  <a href='https://twitter.com/Peers' target='_blank'>@Peers</a> Pledge <a href='https://twitter.com/search?q=%23sharingeconomy' target='_blank'>#sharingeconomy</a> <a target='_blank' href='http://www.peers.org/action/peers-pledgea/'>peers.org/action/peers-p…</a>"
       end
       Onebox.options = { twitter_client: @twitter_client }
