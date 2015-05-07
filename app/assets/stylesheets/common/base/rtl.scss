@@ -28,6 +28,11 @@
   @include rotate(180);
 }
 
+// Make code blocks always display LTR.
+.rtl code {
+  direction: ltr !important;
+}
+
 // Admin RTL styles
 
 // Changes the triangle arrow direction in .nav-stacked .active
