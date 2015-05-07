@@ -201,14 +201,23 @@ it:
       topic: "Argomento:"
       approve: 'Approva'
       reject: 'Scarta'
+      delete_user: 'Elimina Utente'
       title: "Richiede Approvazione"
       none: "Non ci sono messaggi da revisionare."
       edit: "Modifica"
       cancel: "Annulla"
+      view_pending: "vedi messaggi in attesa"
+      has_pending_posts:
+        one: "Questo argomento ha <b>1</b> messaggio in attesa di approvazione"
+        many: "Questo argomento ha <b>{{count}}</b> messaggi in attesa di approvazione"
       confirm: "Salva Modifiche"
+      delete_prompt: "Sei sicuro di voler eliminare <b>%{username}</b>? Ciò cancellerà tutti i suoi messaggi e bloccherà il suo indirizzo email e l'IP."
       approval:
         title: "Il Messaggio Richiede Approvazione"
         description: "Abbiamo ricevuto il tuo messaggio ma prima che appaia è necessario che venga approvato da un moderatore. Per favore sii paziente."
+        pending_posts:
+          one: "Hai <strong>1</strong> messaggio in attesa."
+          other: "Hai <strong>{{count}}</strong> messaggi in attesa."
         ok: "OK"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> ha pubblicato <a href='{{topicUrl}}'>l'argomento</a>"
@@ -325,7 +334,6 @@ it:
       dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
-      dynamic_favicon: "Mostra la notifica dei messaggi in arrivo nella favicon (funzione sperimentale)"
       edit_history_public: "Consenti agli altri utenti di visualizzare le mie revisioni ai messaggi"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
       enable_quoting: "Abilita \"rispondi quotando\" per il testo evidenziato"
@@ -548,9 +556,8 @@ it:
     logout: "Ti sei disconnesso."
     refresh: "Ricarica"
     read_only_mode:
-      enabled: "Un amministratore ha attivato la modalità di sola lettura. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
+      enabled: "La modalità di sola lettura è attiva. Puoi continuare a navigare nel sito ma le interazioni potrebbero non funzionare."
       login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
-    too_few_topics_notice: "Crea almeno 5 argomenti pubblici e %{posts} messaggi pubblici per iniziare la discussione. I nuovi utenti non possono guadagnare livelli di esperienza a meno che non abbiano contenuti da leggere. Questo messaggio appare solo per lo staff."
     learn_more: "per saperne di più..."
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
@@ -674,7 +681,7 @@ it:
       title_placeholder: "In breve, di cosa tratta questo argomento?"
       edit_reason_placeholder: "perché stai scrivendo?"
       show_edit_reason: "(aggiungi motivo della modifica)"
-      reply_placeholder: "Scrivi qui. Per formattare il testo, usa Markdown o BBCode. Trascina o incolla un'immagine per caricarla."
+      reply_placeholder: "Scrivi qui. Per formattare il testo usa Markdown, BBCode o HTML. Trascina o incolla una immagine per caricarla."
       view_new_post: "Visualizza il tuo nuovo messaggio."
       saving: "Salvataggio..."
       saved: "Salvato!"
@@ -849,7 +856,6 @@ it:
       toggle_information: "commuta i dettagli dell'argomento"
       read_more_in_category: "Vuoi saperne di più? Leggi altri argomenti in {{catLink}} o {{latestLink}}."
       read_more: "Vuoi saperne di più? {{catLink}} o {{latestLink}}."
-      read_more_MF: "{ UNREAD, plural, =0 {} \n\tone { C'è <a href='/unread'>1 argomento non letto</a> } \n\tother { Ci sono <a href='/unread'># argomenti non letti</a> } \n} \n{ NEW, plural, =0 {} \n\tone { \n\t\t{BOTH, select, true{e } false {è } other{}} <a href='/new'>1 nuovo</a> argomento} \n\tother { \n\t\t{BOTH, select, true{e } false {sono } other{}} <a href='/new'># nuovi</a> argomenti} } \nrestanti, o {CATEGORY, select, true {visualizza altri argomenti in {catLink}} false {{latestLink}} other {}}."
       browse_all_categories: Scorri tutte le categorie
       view_latest_topics: visualizza gli argomenti più recenti
       suggest_create_topic: Perché non crei un argomento?
@@ -888,11 +894,13 @@ it:
           '0': 'Stai ignorando tutte le notifiche di questo argomento.'
         watching_pm:
           title: "In osservazione"
+          description: "Riceverai una notifica per ogni nuova pubblicazione in questo messaggio. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         watching:
           title: "In osservazione"
           description: "Riceverai una notifica per ogni nuovo messaggio in questo argomento. Accanto all'argomento comparirà anche un conteggio dei messaggi non letti e di quelli nuovi."
         tracking_pm:
           title: "Seguito"
+          description: "Vicino al messaggio apparirà il totale dei messaggi non letti e nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         tracking:
           title: "Seguito"
           description: "Accanto all'argomento comparirà il totale dei messaggi non letti e di quelli nuovi. Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
@@ -901,8 +909,10 @@ it:
           description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         regular_pm:
           title: "Normale"
+          description: "Riceverai notifiche se qualcuno menziona il tuo @nome o risponde all'interno del messaggio."
         muted_pm:
           title: "Silenziato"
+          description: "Non ti verrà notificato nulla per questo messaggio."
         muted:
           title: "Silenziato"
           description: "Non ti verrà notificato nulla di questo argomento e non comparirà nella tab dei non letti."
@@ -913,11 +923,19 @@ it:
         close: "Chiudi Argomento"
         multi_select: "Seleziona Messaggi..."
         auto_close: "Chiudi Automaticamente..."
+        pin: "Appunta Argomento..."
+        unpin: "Spunta Argomento..."
         unarchive: "De-archivia Argomento"
         archive: "Archivia Argomento"
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
+      feature:
+        pin: "Appunta Argomento"
+        unpin: "Spunta Argomento"
+        pin_globally: "Appunta Argomento Globalmente"
+        make_banner: "Argomento Annuncio"
+        remove_banner: "Rimuovi Argomento Annuncio"
       reply:
         title: 'Rispondi'
         help: 'inizia a scrivere una risposta a questo argomento'
@@ -935,6 +953,16 @@ it:
         title: "Poni argomento in primo piano"
         pin: "Fai apparire questo argomento in cima alla categoria {{categoryLink}}."
         unpin: "Rimuovi questo argomento dalla cima della categoria {{categoryLink}}."
+        pin_note: "Gli utenti possono spuntare gli argomenti individualmente per loro stessi."
+        already_pinned:
+          zero: "Non ci sono argomenti puntati in {{categoryLink}}."
+          one: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>."
+          other: "Argomenti attualmente puntati in {{categoryLink}}: <strong class='badge badge-notification unread'>{{count}}</strong>."
+        pin_globally: "Poni questo argomento in cima a tutti gli altri finché un membro dello staff non lo spunterà."
+        unpin_globally: "Togli questo argomento dalla cima degli altri argomenti."
+        global_pin_note: "Gli utenti possono spuntare gli argomenti autonomamente per loro stessi."
+        already_pinned_globally:
+          zero: "Non ci sono argomenti puntati globalmente."
         make_banner: "Rendi questo argomento uno striscione che apparirà in cima a tutte le pagine."
         remove_banner: "Rimuovi lo striscione che appare in cima a tutte le pagine."
         banner_note: "Gli utenti possono rimuovere lo striscione chiudendolo. Solo un argomento alla volta può diventare uno striscione."
@@ -945,13 +973,16 @@ it:
       automatically_add_to_groups_optional: "Questo invito include anche l'accesso ai seguenti gruppi: (opzionale, solo amministratori)"
       automatically_add_to_groups_required: "Questo invito include anche l'accesso ai seguenti gruppi: (<b>Richiesto</b>, solo amministratori)"
       invite_private:
+        title: 'Invita al Messaggio'
         email_or_username: "Email o Utente di chi invita"
         email_or_username_placeholder: "indirizzo email o nome utente"
         action: "Invita"
+        success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
         group_name: "nome gruppo"
       invite_reply:
         title: 'Invita'
+        action: 'Invia Invito'
         to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il collegamento."
         email_placeholder: 'nome@esempio.com'
       login_reply: 'Collegati per Rispondere'
@@ -1181,8 +1212,6 @@ it:
           side_by_side_markdown:
             title: "Mostra le differenze nei sorgenti fianco-a-fianco"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Modificato da"
     category:
       can: 'può&hellip;'
       none: '(nessuna categoria)'

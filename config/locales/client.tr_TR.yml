@@ -300,7 +300,6 @@ tr_TR:
       dismiss_notifications: "Hepsini okunmuş olarak işaretle"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
-      dynamic_favicon: "Favicon üzerinde gelen mesaj bildirimlerini göster (deneysel)"
       edit_history_public: "Gönderimde yaptığım revizyonları diğer kullanıcıların görmesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
@@ -519,9 +518,7 @@ tr_TR:
     logout: "Oturumunuz kapatılmış."
     refresh: "Yenile"
     read_only_mode:
-      enabled: "Bir admin salt-okunur modunu etkinleştirdi. Siteyi gezmeye devam edebilirsiniz fakat etkileşimler çalışmayabilir."
       login_disabled: "Site salt-okunur modda iken giriş yapma devre dışı bırakılır ."
-    too_few_topics_notice: "Tartışmayı başlatmak için herkese açık en az 5 konu ve %{posts} gönderi oluşturun. Yeni kullanıcıların güven seviyelerini artırabilmeleri için okuyabilecekleri içerik olması gerekli. Bu mesaj sadece görevlilere görünür."
     learn_more: "daha fazlasını öğren..."
     year: 'yıl'
     year_desc: 'son 365 günde oluşturulan konular'
@@ -644,7 +641,6 @@ tr_TR:
       title_placeholder: "Kısa bir cümlede açılamak gerekirse bu tartışmanın konusu nedir?"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
-      reply_placeholder: "Buraya yazın. Markdown veya BBCode kullanarak biçimlendirin. Resim yüklemek için sürükleyip bırakın ya da yapıştırın."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor..."
       saved: "Kaydedildi!"
@@ -812,7 +808,6 @@ tr_TR:
       toggle_information: "konu ayrıntılarını aç/kapa"
       read_more_in_category: "Daha fazlası için {{catLink}} kategorisine göz atabilir ya da  {{latestLink}}bilirsiniz."
       read_more: "Daha fazla okumak mı istiyorsunuz? {{catLink}} ya da {{latestLink}}."
-      read_more_MF: "Kalan { UNREAD, plural, =0 {} one { <a href='/unread'>1 okunmamış</a> } other { <a href='/unread'># okunmamış</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ve} false {} other{}} <a href='/new'>1 yeni</a> konu} other { {BOTH, select, true{and } false {} other{}} <a href='/new'># yeni</a> konu} } var, veya {CATEGORY, select, true { {catLink}} false {{latestLink}} kategorilerindeki diğer {} konulara göz atabilirsiniz }."
       browse_all_categories: Bütün kategorilere göz at
       view_latest_topics: en son konuları görüntüle
       suggest_create_topic: Konu oluşturmaya ne dersiniz?
@@ -1160,8 +1155,6 @@ tr_TR:
           side_by_side_markdown:
             title: "İşlenmemiş diff kaynaklarını yan yana göster"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "Düzenleyen"
     category:
       can: 'yapabilir&hellip;'
       none: '(kategori yok)'

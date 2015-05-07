@@ -282,7 +282,6 @@ zh_TW:
       almost_x_years:
         other: "約 %{count} 年前"
   password_reset:
-    no_token: "抱歉，你的令牌(Token)已過期，請再嘗試重設你的密碼。"
     choose_new: "請選擇一個新密碼"
     choose: "請選擇一個密碼"
     update: '更新密碼'
@@ -610,7 +609,6 @@ zh_TW:
     flag_sockpuppets: "如果一個新用戶開始了一個主題，並且同時另一個新用戶以同一個 IP 在該主題回復，他們所有的帖子都將被自動標記為垃圾。"
     traditional_markdown_linebreaks: "在 Markdown 中使用傳統的換行符號，即用兩個行末空格來換行"
     post_undo_action_window_mins: "允許用戶在帖子上進行撤銷操作（讚、標記等）所需等待的時間分隔（分鐘）"
-    must_approve_users: "新註冊用戶必須由管理員進行審核，才能進行相關操作"
     ga_tracking_code: "穀歌分析追蹤代碼，例如：UA-12345678-9。參考 http://google.com/analytics"
     ga_domain_name: "穀歌分析功能變數名稱，例如：mysite.com；參考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用 Analytics (分析) 追蹤代碼（analytics.js）追蹤代碼，例如：UA-12345678-9；參考 http://google.com/analytics"

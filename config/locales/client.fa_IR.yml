@@ -180,14 +180,22 @@ fa_IR:
       topic: "جستار"
       approve: 'تصویب'
       reject: 'رد کردن'
+      delete_user: 'پاک کردن کاربر'
       title: "به تایید نیاز است"
       none: "نوشته ای برای بازبینی وجود ندارد."
       edit: "ویرایش"
       cancel: "لغو کردن"
+      view_pending: "مشاهده پست های در انتظار "
+      has_pending_posts:
+        one: "این جستار دارای <b>1</b> نوشته ی در انتظار تایید است. "
+        many: "این جستار دارای  <b>{{count}}</b> نوشته ی در انتظار تایید است"
       confirm: "ذخیره سازی تغییرها"
+      delete_prompt: "آیا مطمئن هستی از پاک کردن این <b>%{username}</b>? این باعث پاک شدن تمام پست ها و منجر به بلاک شدن ایمیل و IP می شود."
       approval:
         title: "نوشته نیاز به تایید دارد"
         description: "ما نوشته شما را دریافت کرده ایم ولی نیاز به تایید آن توسط یکی از مدیران است قبل از اینکه نمایش داده شود. لطفا صبر داشته باشید."
+        pending_posts:
+          other: "شما دارای  <strong>{{count}}</strong>  پست های در انتظار هستید "
         ok: "باشه"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a>نوشته شد<a href='{{topicUrl}}'>موضوع</a>"
@@ -300,7 +308,6 @@ fa_IR:
       dismiss_notifications: "علامت گذاری همه به عنوان خوانده شده"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
-      dynamic_favicon: "آگاه‌سازی پیام‌های آمده را در favicon نمایش بده (آزمایشی)"
       edit_history_public: "اجازه بده کاربران دیگر اصلاحات نوشته مرا ببینند"
       external_links_in_new_tab: "همهٔ پیوندهای برون‌رو را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
@@ -519,9 +526,8 @@ fa_IR:
     logout: "شما از سایت خارج شده اید"
     refresh: "تازه کردن"
     read_only_mode:
-      enabled: "مدیر حالت فقط برای خواندن را فعال کرده.  می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
+      enabled: "حالت فقط خواندن را فعال است. می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
-    too_few_topics_notice: " 5 جستار عمومی و  %{posts} دیدگاه عمومی بوجود بیاور تا گفتگو آغاز بشود. کاربران جدید میزان اعتماد  را بدست بیاورند  مگر محتوایی برای خواندن موجود باشد. این پیغام فقط به کارکنان نشان داده می شود"
     learn_more: "بیشتر بدانید..."
     year: 'سال'
     year_desc: 'موضوعاتی که در 365 روز گذشته باز شده‌اند'
@@ -644,7 +650,7 @@ fa_IR:
       title_placeholder: "در یک جملهٔ‌ کوتاه، این موضوع در چه موردی است؟"
       edit_reason_placeholder: "چرا ویرایش می‌کنید؟"
       show_edit_reason: "(افزودن دلیل ویرایش)"
-      reply_placeholder: "اینجا بنویسید. برای آرایش از Markdown یا BBCode استفاده کنید. برای باگذاری تصویر، آن را به اینجا بکشید یا بچسبانید."
+      reply_placeholder: "اینجا تایپ کنید. استفاده کنید از Markdown, BBCode, or HTML برای فرمت. عکس  را بکشید یا برگردانید برای بارگزاری آن. "
       view_new_post: "نوشته تازه‌تان را ببینید."
       saving: "در حال ذخیره سازی..."
       saved: "اندوخته شد!"
@@ -812,7 +818,7 @@ fa_IR:
       toggle_information: " ضامن جزئیات موضوع"
       read_more_in_category: "می خواهید بیشتر بخوانید? به موضوعات دیگر را مرور کنید {{catLink}} یا {{latestLink}}."
       read_more: "می خواهید بیشتر بخوانید? {{catLink}} یا {{latestLink}}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: جستوجوی همهٔ دسته‌ها
       view_latest_topics: مشاهده آخرین موضوع
       suggest_create_topic: چرا یک موضوع نسازید؟
@@ -1160,8 +1166,6 @@ fa_IR:
           side_by_side_markdown:
             title: "نمایش تفاوت های خروجی منبع اولیه سو به سو"
             button: '<i class="fa fa-columns"></i> Raw'
-        details:
-          edited_by: "ویرایش‌گر:"
     category:
       can: 'can&hellip; '
       none: '(بدون دسته)'

@@ -412,7 +412,6 @@ ar:
       dismiss_notifications: "جعل الجميع مقروء"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
       disable_jump_reply: "لاتذهب الى مشاركة جديدة بعد الرد"
-      dynamic_favicon: " (أظهر تنبيهات الرسائل الواردة على فافيكون  (تجريبية "
       edit_history_public: "جعل المستخدمين الاخرين يطلعون على تعديلاتي"
       external_links_in_new_tab: "إفتح كل الروابط الخارجية في صفحة جديدة"
       enable_quoting: "إسمح بإقتباس التعليقات لنصوص البارزة الملقى عليها ضوء"
@@ -651,9 +650,7 @@ ar:
     logout: "تم تسجيل خروجك"
     refresh: "تحديث"
     read_only_mode:
-      enabled: "المدير قام بتفعيل خاصية القراءة فقط , لن تستطيع التفاعل مع الموقع "
       login_disabled: "تسجيل الدخول معطل لأن الموقع في خالة القراءة  فقط"
-    too_few_topics_notice: "قم بإنشاء على الاقل 5 مواضيع و %{posts} مشاركات لتتمكن من المشاركة , المستخدمين الجدد لايمكن أن يحصلوا على مستوى الثقة حتى يكون هناك محتوى لهم , هذه الرسالة تظهر فقط للمدير"
     learn_more: "تعلم المزيد..."
     year: 'سنة'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
@@ -772,7 +769,6 @@ ar:
       title_placeholder: "ما هو الموضوع المراد مناقشته في جملة واحدة ؟"
       edit_reason_placeholder: "لمذا تريد التعديل ؟"
       show_edit_reason: "(اضف سبب التعديل)"
-      reply_placeholder: "اكتب هنا . استعمل Markdown او BBCode لتنسيق . قم بسحب الصورة وافلاتها لرفع الصورة"
       view_new_post: "الاطلاع على أحدث مشاركاتك"
       saving: "يتم الحفظ..."
       saved: "تم الحفظ"
@@ -972,8 +968,6 @@ ar:
       toggle_information: "إظهار/إخفاء تفاصيل الموضوع"
       read_more_in_category: "ترغب في قراءة المزيد؟ استعرض مواضيع أخرى في {{catLink}} أو {{latestLink}}."
       read_more: "ترغب في قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
-      read_more_MF: "هناك { UNREAD, plural,\n\tzero {}\n\tone {<a href='/unread'>موضوع واحد</a> غير مقروء }\n\ttwo {<a href='/unread'>موضوعان</a> غير مقروءان }\n\tfew {<a href='/unread'># مواضيع</a> غير مقروءة }\n\tmany {<a href='/unread'># موضوعًا</a> غير مقروء }\n\tother {<a href='/unread'># موضوع</a> غير مقروء }\n}{BOTH, select,\n\ttrue {{ NEW, plural,\n\t\tzero {}\n\t\tone {و<a href='/new'>واحد</a> جديد}\n\t\ttwo {و<a href='/new'>اثنان</a> جديدان}\n\t\tfew {و<a href='/new'># جدد </a>}\n\t\tmany {و<a href='/new'>#</a> جددًا}\n\t\tother {و<a href='/new'>#</a> جدد}\n\t}} false {{ NEW, plural,\n\t\tzero {}\n\t\tone {<a href='/new'>موضوع واحد</a> جديد}\n\t\ttwo {<a href='/new'>موضوعان</a> جديدان}\n\t\tfew {<a href='/new'># مواضيع</a> جديدة}\n\t\tmany {<a href='/new'># موضوعًا</a> جديدًا}\n\t\tother {<a href='/new'># موضوع</a> جديد}\n\t}} other {}\n}، أو {CATEGORY, select,\n\ttrue {تصفح مواضيع أخرى\
-        \ في {catLink}}\n\tfalse {{latestLink}} other {}\n}."
       browse_all_categories: استعرض جميع التصنيفات
       view_latest_topics: شاهد آخر المواضيع
       suggest_create_topic: ما رأيك لو تكتب موضوع جديد؟
@@ -1223,8 +1217,6 @@ ar:
           side_by_side_markdown:
             title: "اظهار الفروقات في الصف المصدري جنبا الى جنب"
             button: '<i class="fa fa-columns"></i> صف'
-        details:
-          edited_by: "عدل عن طريق"
     category:
       can: 'can&hellip;'
       none: '(غير مصنف)'

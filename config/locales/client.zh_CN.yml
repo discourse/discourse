@@ -180,14 +180,22 @@ zh_CN:
       topic: "主题："
       approve: '许可'
       reject: '拒绝'
+      delete_user: '删除用户'
       title: "需要许可"
       none: "没有帖子可以审核。"
       edit: "编辑"
       cancel: "取消"
+      view_pending: "查看待审核帖子"
+      has_pending_posts:
+        one: "这个主题有 <b>1</b> 个帖子等待审核"
+        many: "这个主题有 <b>{{count}}</b> 个帖子等待审核"
       confirm: "保存修改"
+      delete_prompt: "你确定要删除<b>%{username}</b>？这将删除他们的所有帖子并封禁这个邮箱和 IP 地址。"
       approval:
         title: "帖子需要审核"
         description: "我们已经保存了你的帖子，不过帖子需要由管理员先审核才能显示。请耐心。"
+        pending_posts:
+          other: "你有 <strong>{{count}}</strong> 个帖子待审核。"
         ok: "确认"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> 发起了 <a href='{{topicUrl}}'>本主题</a>"
@@ -262,10 +270,10 @@ zh_CN:
       subcategories: "子分类"
       topic_stats: "近期主题的数量。"
       topic_stat_sentence:
-        other: "在过去的 %{unit} 中有 %{count} 个主题"
+        other: "在过去一%{unit}中有 %{count} 个新主题。"
       post_stats: "新帖子的数量。"
       post_stat_sentence:
-        other: "在过去的 %{unit} 中有 %{count} 个新帖子"
+        other: "在过去一%{unit}中有 %{count} 个新帖子。"
     ip_lookup:
       title: IP 地址查询
       hostname: 主机名
@@ -300,7 +308,6 @@ zh_CN:
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到我的新帖子"
-      dynamic_favicon: "在标签页图标上动态显示未读消息提醒（测试）"
       edit_history_public: "让其他用户查看我的帖子的以前版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
@@ -519,9 +526,8 @@ zh_CN:
     logout: "你已登出。"
     refresh: "刷新"
     read_only_mode:
-      enabled: "一个管理员启用了只读模式。你可以继续浏览这个站点但是无法进行交互。"
+      enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
-    too_few_topics_notice: "创建至少 5 个公开主题和 %{posts} 个公开帖子以开始讨论。如果没有内容让新用户阅读，他们就无法得到信任等级。这个消息仅显示给职员。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -644,7 +650,7 @@ zh_CN:
       title_placeholder: "简述此讨论内容是关于什么？"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "（添加编辑理由）"
-      reply_placeholder: "在此输入你的内容。你可以使用 Markdown 或 BBCode 来格式化内容。拖拽或粘贴一幅图片到这儿即可将它上传。"
+      reply_placeholder: "在这输入。可使用 Markdown、BBCode 或 HTML 格式化内容。拖拽或粘贴图片即可上传。"
       view_new_post: "浏览你的新帖子。"
       saving: "保存中..."
       saved: "已保存！"
@@ -812,7 +818,7 @@ zh_CN:
       toggle_information: "切换主题详细"
       read_more_in_category: "想阅读更多内容？浏览 {{catLink}} 或 {{latestLink}} 里的其它主题。"
       read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
-      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个新</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}。"
+      read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个新</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 浏览最新主题
       suggest_create_topic: 马上创建一个主题吧！
@@ -1160,8 +1166,6 @@ zh_CN:
           side_by_side_markdown:
             title: "并列显示源代码差异信息"
             button: '<i class="fa fa-columns"></i> 原始'
-        details:
-          edited_by: "编辑："
     category:
       can: '能够&hellip; '
       none: '（未分类）'

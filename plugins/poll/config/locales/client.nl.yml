@@ -1,0 +1,29 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+nl:
+  js:
+    poll:
+      cast-votes:
+        title: "Geef je stem"
+        label: "Stem nu!"
+      show-results:
+        title: "Bekijk de resultaten van de poll"
+        label: "Bekijk resultaten"
+      hide-results:
+        title: "Terug naar je stemmen"
+        label: "Verberg resultaten"
+      open:
+        title: "Open de poll"
+        label: "Open"
+        confirm: "Weet je zeker dat je deze poll wil openen?"
+      close:
+        title: "Sluit de poll"
+        label: "Sluit"
+        confirm: "Weet je zeker dat je deze poll wil sluiten?"
+      error_while_toggling_status: "Er ging iets mis bij het in-/uitschakelen van deze poll."
+      error_while_casting_votes: "Er ging iets mis bij het registreren van je stem."
