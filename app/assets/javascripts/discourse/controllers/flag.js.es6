@@ -84,6 +84,9 @@ export default ObjectController.extend(ModalFunctionality, {
 
       postAction.act(this.get('model'), params).then(function() {
         self.send('closeModal');
+        if (params.message) {
+          self.set('message', '');
+        }
       }, function(errors) {
         self.send('closeModal');
         if (errors && errors.responseText) {
