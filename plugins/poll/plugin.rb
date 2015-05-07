@@ -4,7 +4,10 @@
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
-register_asset "stylesheets/poll.scss"
+register_asset "stylesheets/common/poll.scss"
+register_asset "stylesheets/desktop/poll.scss", :desktop
+register_asset "stylesheets/mobile/poll.scss", :mobile
+
 register_asset "javascripts/poll_dialect.js", :server_side
 
 PLUGIN_NAME ||= "discourse_poll".freeze
