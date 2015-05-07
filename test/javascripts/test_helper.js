@@ -12,7 +12,7 @@
 //= require jquery.debug
 //= require jquery.ui.widget
 //= require handlebars
-//= require ember.debug
+//= require ember.custom.debug
 //= require message-bus
 //= require ember-qunit
 //= require fake_xml_http_request
