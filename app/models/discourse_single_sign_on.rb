@@ -120,7 +120,7 @@ class DiscourseSingleSignOn < SingleSignOn
     end
 
     if SiteSetting.sso_overrides_name && user.name != name
-      user.name = name || User.suggest_name(username || email)
+      user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
     if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
