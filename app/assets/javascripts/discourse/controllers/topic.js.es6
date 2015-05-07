@@ -593,8 +593,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       const topic = self.get('model');
 
       if (data.notification_level_change) {
-        topic.set('model.details.notification_level', data.notification_level_change);
-        topic.set('model.details.notifications_reason_id', data.notifications_reason_id);
+        topic.set('details.notification_level', data.notification_level_change);
+        topic.set('details.notifications_reason_id', data.notifications_reason_id);
         return;
       }
 
