@@ -225,11 +225,11 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      raise Discourse::NotFound.new if parent_category_id.blank?
+      raise Discourse::NotFound if parent_category_id.blank?
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
-    raise Discourse::NotFound.new if !@category
+    raise Discourse::NotFound if !@category
 
     @description_meta = @category.description
     guardian.ensure_can_see!(@category)
