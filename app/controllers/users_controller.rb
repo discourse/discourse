@@ -157,7 +157,7 @@ class UsersController < ApplicationController
       redirect_to path("/users/#{current_user.username}/#{params[:path]}")
       return
     end
-    raise Discourse::NotFound.new
+    raise Discourse::NotFound
   end
 
   def invited

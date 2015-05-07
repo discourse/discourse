@@ -261,7 +261,7 @@ class ApplicationController < ActionController::Base
     elsif params[:external_id]
       SingleSignOnRecord.find_by(external_id: params[:external_id]).try(:user)
     end
-    raise Discourse::NotFound.new if user.blank?
+    raise Discourse::NotFound if user.blank?
 
     guardian.ensure_can_see!(user)
     user
