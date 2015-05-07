@@ -25,19 +25,21 @@
             {{/if}}
           </thead>
           <tbody>
-            {{#each item in model itemController="directory-item"}}
-              <tr {{bind-attr class="item.me"}}>
-                <td>{{user-small user=item.model.user}}</td>
-                <td>{{number item.model.likes_received}}</td>
-                <td>{{number item.model.likes_given}}</td>
-                <td>{{number item.model.topic_count}}</td>
-                <td>{{number item.model.post_count}}</td>
-                <td>{{number item.model.topics_entered}}</td>
-                <td>{{number item.model.posts_read}}</td>
-                <td>{{number item.model.days_visited}}</td>
-                {{#if showTimeRead}}
-                <td><span class='time-read'>{{unbound item.model.time_read}}</span></td>
-                {{/if}}
+            {{#each ic in model itemController="directory-item"}}
+              <tr class="{{if ic.me 'me'}}">
+                {{#with ic.model as |it|}}
+                  <td>{{user-small user=it.user}}</td>
+                  <td>{{number it.likes_received}}</td>
+                  <td>{{number it.likes_given}}</td>
+                  <td>{{number it.topic_count}}</td>
+                  <td>{{number it.post_count}}</td>
+                  <td>{{number it.topics_entered}}</td>
+                  <td>{{number it.posts_read}}</td>
+                  <td>{{number it.days_visited}}</td>
+                  {{#if showTimeRead}}
+                    <td><span class='time-read'>{{unbound it.time_read}}</span></td>
+                  {{/if}}
+                {{/with}}
               </tr>
             {{/each}}
           </tbody>
