@@ -7,10 +7,6 @@ $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
 
-  display: table;
-  border: 1px solid $border-color;
-  width: 500px;
-
   ul, ol {
     margin: 0;
     padding: 0;
@@ -65,31 +61,21 @@ div.poll {
 
   .poll-info {
     color: $text-color;
-    width: 150px;
-    display: table-cell;
     text-align: center;
     vertical-align: middle;
-    border-right: 1px solid $border-color;
-
-    p {
-      margin: 40px 20px;
-    }
 
     .info-number {
       font-size: 3.5em;
     }
 
     .info-text {
-      display: block;
       font-size: 1.7em;
     }
   }
 
   .poll-container {
-    display: table-cell;
     vertical-align: middle;
     padding: 10px;
-    width: 330px;
 
     span {
       font-size: 2em;
@@ -97,15 +83,10 @@ div.poll {
   }
 
   .poll-buttons {
-    border-top: 1px solid $border-color;
     padding: 10px;
 
     button {
       float: none;
-    }
-
-    .toggle-status {
-      float: right;
     }
   }
 

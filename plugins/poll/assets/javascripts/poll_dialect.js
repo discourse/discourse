@@ -107,7 +107,11 @@
       var result = ["div", attributes],
           poll = ["div"];
 
-      // 1 - POLL INFO
+      // 1 - POLL CONTAINER
+      var container = ["div", { "class": "poll-container" }].concat(contents);
+      poll.push(container);
+
+      // 2 - POLL INFO
       var info = ["div", { "class": "poll-info" }];
 
       // # of voters
@@ -147,10 +151,6 @@
       }
 
       poll.push(info);
-
-      // 2 - POLL CONTAINER
-      var container = ["div", { "class": "poll-container" }].concat(contents);
-      poll.push(container);
 
       // 3 - BUTTONS
       var buttons = ["div", { "class": "poll-buttons" }];

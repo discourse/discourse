@@ -1,4 +1,19 @@
 <div>
+  <div class="poll-container">
+    {{#if showingResults}}
+      {{#if isNumber}}
+        {{poll-results-number poll=poll}}
+      {{else}}
+        {{poll-results-standard poll=poll}}
+      {{/if}}
+    {{else}}
+      <ul>
+        {{#each option in poll.options}}
+          {{poll-option option=option color=poll.color background=poll.background toggle="toggleOption"}}
+        {{/each}}
+      </ul>
+    {{/if}}
+  </div>
   <div class="poll-info">
     <p>
       <span class="info-number">{{poll.voters}}</span>
@@ -13,21 +28,6 @@
       {{else}}
         <p>{{{multipleHelpText}}}</p>
       {{/if}}
-    {{/if}}
-  </div>
-  <div class="poll-container">
-    {{#if showingResults}}
-      {{#if isNumber}}
-        {{poll-results-number poll=poll}}
-      {{else}}
-        {{poll-results-standard poll=poll}}
-      {{/if}}
-    {{else}}
-      <ul>
-        {{#each option in poll.options}}
-          {{poll-option option=option color=poll.color background=poll.background toggle="toggleOption"}}
-        {{/each}}
-      </ul>
     {{/if}}
   </div>
 </div>
