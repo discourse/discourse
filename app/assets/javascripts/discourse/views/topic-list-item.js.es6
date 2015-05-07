@@ -4,7 +4,7 @@ export default Discourse.View.extend(StringBuffer, {
   topic: Em.computed.alias("content"),
   rerenderTriggers: ['controller.bulkSelectEnabled', 'topic.pinned'],
   tagName: 'tr',
-  rawTemplate: 'list/topic_list_item.raw',
+  rawTemplate: 'list/topic-list-item.raw',
   classNameBindings: ['controller.checked',
                       ':topic-list-item',
                       'unboundClassNames',
