@@ -436,7 +436,7 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    @message = session['user_created_message']
+    @message = session['user_created_message'] || I18n.t('activation.missing_session')
     expires_now
     render layout: 'no_ember'
   end
