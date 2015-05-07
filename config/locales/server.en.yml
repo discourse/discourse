@@ -475,7 +475,7 @@ en:
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
-
+    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
