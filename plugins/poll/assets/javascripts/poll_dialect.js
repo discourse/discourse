@@ -8,7 +8,7 @@
   const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "color", "background", "status"];
   const WHITELISTED_STYLES = ["color", "background"];
 
-  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=[^\\s\\]]+", "g");
+  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
   Discourse.Dialect.replaceBlock({
     start: /\[poll([^\]]*)\]([\s\S]*)/igm,
@@ -44,8 +44,9 @@
 
       // extract poll attributes
       (matches[1].match(ATTRIBUTES_REGEX) || []).forEach(function(m) {
-        var attr = m.split("=");
-        attributes[DATA_PREFIX + attr[0]] = attr[1];
+        var attr = m.split("="), name = attr[0], value = attr[1];
+        value = value.replace(/["']/g, "");
+        attributes[DATA_PREFIX + name] = value;
       });
 
       // we might need these values later...

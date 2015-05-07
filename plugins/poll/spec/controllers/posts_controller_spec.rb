@@ -112,14 +112,14 @@ describe PostsController do
   describe "named polls" do
 
     it "should have different options" do
-      xhr :post, :create, { title: title, raw: "[poll name=foo]\n- A\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll name=""foo""]\n- A\n- A[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_different_options", name: "foo"))
     end
 
     it "should have at least 2 options" do
-      xhr :post, :create, { title: title, raw: "[poll name=foo]\n- A[/poll]" }
+      xhr :post, :create, { title: title, raw: "[poll name='foo']\n- A[/poll]" }
       expect(response).not_to be_success
       json = ::JSON.parse(response.body)
       expect(json["errors"][0]).to eq(I18n.t("poll.named_poll_must_have_at_least_2_options", name: "foo"))
