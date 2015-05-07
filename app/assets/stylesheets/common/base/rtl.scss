@@ -28,6 +28,8 @@
   @include rotate(180);
 }
 
+// Admin RTL styles
+
 // Changes the triangle arrow direction in .nav-stacked .active
 // The 'left' and 'right' in these selectors is not being flipped by r2.
 .rtl .nav-stacked .active > a::after {
