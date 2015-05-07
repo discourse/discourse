@@ -92,7 +92,7 @@ describe PostsController do
           xhr :put, :update, { id: post_id, post: { raw: new_raw } }
           expect(response).not_to be_success
           json = ::JSON.parse(response.body)
-          expect(json["errors"][0]).to eq(I18n.t("poll.cannot_change_polls_after_5_minutes"))
+          expect(json["errors"][0]).to eq(I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
         end
 
         it "can be edited by staff" do
