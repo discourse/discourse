@@ -564,10 +564,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   replyValidation: function() {
     const replyLength = this.get('model.replyLength'),
         missingChars = this.get('model.missingReplyCharacters');
+
     let reason;
-    if( replyLength < 1 ){
+    if (replyLength < 1) {
       reason = I18n.t('composer.error.post_missing');
-    } else if( missingChars > 0 ) {
+    } else if (missingChars > 0) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
       let tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
@@ -575,8 +576,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     }
 
-    if( reason ) {
-      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    if (reason) {
+      return Discourse.InputValidation.create({ failed: true, reason });
     }
   }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength'),
 

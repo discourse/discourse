@@ -1,10 +1,12 @@
+import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse/helpers/fa-icon';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(StringBuffer, {
   classNameBindings: [':popup-tip', 'good', 'bad', 'shownAt::hide'],
   animateAttribute: null,
   bouncePixels: 6,
   bounceDelay: 100,
+  rerenderTriggers: ['validation.reason'],
 
   click() {
     this.set('shownAt', false);
@@ -32,7 +34,7 @@ export default Ember.Component.extend({
     }
   }.observes('shownAt'),
 
-  render(buffer) {
+  renderString(buffer) {
     const reason = this.get('validation.reason');
     if (!reason) { return; }
 
