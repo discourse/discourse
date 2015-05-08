@@ -7,6 +7,8 @@ $option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
 
+  border: 1px solid $border-color;
+
   ul, ol {
     margin: 0;
     padding: 0;
@@ -83,8 +85,6 @@ div.poll {
   }
 
   .poll-buttons {
-    padding: 10px;
-
     button {
       float: none;
     }
