@@ -957,7 +957,8 @@ en:
       back_to_list: "Back to Topic List"
       options: "Topic Options"
       show_links: "show links within this topic"
-      toggle_information: "toggle topic details"
+      expand_info: "show topic details"
+      collapse_info: "hide topic details"
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 

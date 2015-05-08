@@ -24,6 +24,10 @@ export default Ember.Component.extend({
 
   showPosterAvatar: Em.computed.gt('topic.posts_count', 2),
 
+  buttonLabel: function() {
+    return I18n.t(this.get('mapCollapsed') ? 'topic.expand_info' : 'topic.collapse_info');
+  }.property('mapCollapsed'),
+
   toggleMapClass: function() {
     return this.get('mapCollapsed') ? 'fa fa-chevron-down' : 'fa fa-chevron-up';
   }.property('mapCollapsed'),
