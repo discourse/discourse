@@ -27,14 +27,15 @@ const PosterNameComponent = Em.Component.extend({
         linkClass += ' ' + primaryGroupName;
       }
       // Main link
-      buffer.push("<span class='" + linkClass + "'><a href='" + url + "' data-auto-route='true' data-user-card='" + username + "'>" + username + "</a>");
+      const tag = this.get('tagForName') || "span";
+      buffer.push("<" + tag + " class='" + linkClass + "'><a href='" + url + "' data-auto-route='true' data-user-card='" + username + "'>" + username + "</a>");
 
       // Add a glyph if we have one
       const glyph = this.posterGlyph(post);
       if (!Em.isEmpty(glyph)) {
         buffer.push(glyph);
       }
-      buffer.push("</span>");
+      buffer.push("</" + tag + ">");
 
       // Are we showing full names?
       if (name && this.get('displayNameOnPosts') && (this.sanitizeName(name) !== this.sanitizeName(username))) {

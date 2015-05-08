@@ -3,7 +3,7 @@
  .username {
    font-weight: bold;
  }
- span {
+ span, h2 {
    font-size: 0.929em;
    padding-right: 8px;
    display: inline-block;
@@ -11,6 +11,7 @@
    white-space: nowrap;
    overflow: hidden;
    text-overflow: ellipsis;
+   margin: 0;
    a {
      color: scale-color($primary, $lightness: 30%);
    }
