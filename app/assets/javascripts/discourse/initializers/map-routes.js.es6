@@ -2,6 +2,8 @@ import { mapRoutes } from 'discourse/router';
 
 export default {
   name: "map-routes",
+  after: 'inject-objects',
+
   initialize(container, app) {
     app.register('router:main', mapRoutes());
 
