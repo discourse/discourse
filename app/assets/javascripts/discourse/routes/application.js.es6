@@ -1,4 +1,5 @@
 import showModal from 'discourse/lib/show-modal';
+import OpenComposer from "discourse/mixins/open-composer";
 
 function unlessReadOnly(method) {
   return function() {
@@ -10,7 +11,7 @@ function unlessReadOnly(method) {
   };
 }
 
-const ApplicationRoute = Discourse.Route.extend(Discourse.OpenComposer, {
+const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   siteTitle: Discourse.computed.setting('title'),
 
