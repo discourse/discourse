@@ -66,7 +66,7 @@
     innerHtml.push('<div class="html5-title-text-wrapper">');
     innerHtml.push('<a class="html5-title-text" target="_blank" tabindex="3100" href="https://www.youtube.com/watch?v=', id, '">');
     if (title === undefined || title === null || title === '') {
-      innerHtml.push('https://www.youtube.com/watch?v=' + id);
+      innerHtml.push('youtube.com/watch?v=' + id);
     } else {
       innerHtml.push(title);
     }
