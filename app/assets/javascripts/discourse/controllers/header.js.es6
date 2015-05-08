@@ -80,27 +80,18 @@ function addFlagProperty(prop) {
   _flagProperties.pushObject(prop);
 }
 
-let _appliedFlagProps = false;
-HeaderController.reopenClass({
-  create() {
-    // We only want to change the class the first time it's created
-    if (!_appliedFlagProps && _flagProperties.length) {
-      _appliedFlagProps = true;
-
-      const args = _flagProperties.slice();
-      args.push(function() {
-        let sum = 0;
-        _flagProperties.forEach((fp) => sum += (this.get(fp) || 0));
-        return sum;
-      });
-      HeaderController.reopen({ flaggedPostsCount: Ember.computed.apply(this, args) });
-    }
-    return this._super.apply(this, Array.prototype.slice.call(arguments));
-  }
-});
+function applyFlaggedProperties() {
+  const args = _flagProperties.slice();
+  args.push(function() {
+    let sum = 0;
+    _flagProperties.forEach((fp) => sum += (this.get(fp) || 0));
+    return sum;
+  });
+  HeaderController.reopen({ flaggedPostsCount: Ember.computed.apply(this, args) });
+}
 
 addFlagProperty('currentUser.site_flagged_posts_count');
 addFlagProperty('currentUser.post_queue_new_count');
 
-export { addFlagProperty };
+export { addFlagProperty, applyFlaggedProperties };
 export default HeaderController;
