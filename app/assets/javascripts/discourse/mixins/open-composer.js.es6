@@ -1,14 +1,8 @@
-/**
-  This mixin allows a route to open the composer
+// This mixin allows a route to open the composer
 
-  @class Discourse.OpenComposer
-  @extends Ember.Mixin
-  @namespace Discourse
-  @module Discourse
-**/
-Discourse.OpenComposer = Em.Mixin.create({
+export default Ember.Mixin.create({
 
-  openComposer: function(controller) {
+  openComposer(controller) {
     this.controllerFor('composer').open({
       categoryId: controller.get('category.id'),
       action: Discourse.Composer.CREATE_TOPIC,
@@ -17,13 +11,13 @@ Discourse.OpenComposer = Em.Mixin.create({
     });
   },
 
-  openComposerWithParams: function(controller, title, body, category_id, category) {
+  openComposerWithParams(controller, topicTitle, topicBody, topicCategoryId, topicCategory) {
     this.controllerFor('composer').open({
       action: Discourse.Composer.CREATE_TOPIC,
-      topicTitle: title,
-      topicBody: body,
-      topicCategoryId: category_id,
-      topicCategory: category,
+      topicTitle,
+      topicBody,
+      topicCategoryId,
+      topicCategory,
       draftKey: controller.get('draft_key'),
       draftSequence: controller.get('draft_sequence')
     });
