@@ -4,8 +4,9 @@
 **/
 
 import ShowFooter from "discourse/mixins/show-footer";
+import OpenComposer from "discourse/mixins/open-composer";
 
-const DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, Discourse.OpenComposer, ShowFooter, {
+const DiscoveryRoute = Discourse.Route.extend(Discourse.ScrollTop, OpenComposer, ShowFooter, {
   redirect: function() { return this.redirectIfLoginRequired(); },
 
   beforeModel: function(transition) {
