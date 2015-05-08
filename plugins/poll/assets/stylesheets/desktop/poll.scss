@@ -1,6 +1,5 @@
 div.poll {
   display: table;
-  border: 1px solid $border-color;
   width: 500px;
   max-width: 500px;
 
@@ -26,6 +25,7 @@ div.poll {
 
   .poll-buttons {
     border-top: 1px solid $border-color;
+    padding: 10px;
 
     .toggle-status {
       float: right;
