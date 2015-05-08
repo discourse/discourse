@@ -50,8 +50,16 @@ Discourse.Utilities = {
     if (!url || url.length === 0) { return ""; }
 
     var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
-    var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
-    return "<img alt='' width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
+    var escTitle = Handlebars.Utils.escapeExpression(options.title || "");
+    var title = "";
+    var alt = "";
+    if (options.title) {
+      title = " title='" + escTitle + "'";
+      if (options.alt) {
+        alt = escTitle;
+      }
+    }
+    return "<img alt='" + alt + "' width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
   tinyAvatar: function(avatarTemplate, options) {

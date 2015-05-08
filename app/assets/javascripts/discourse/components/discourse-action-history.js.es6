@@ -32,7 +32,8 @@ export default Em.Component.extend(StringBuffer, {
             iconsHtml += Discourse.Utilities.avatarImg({
               size: 'small',
               avatarTemplate: u.get('avatarTemplate'),
-              title: u.get('username')
+              title: u.get('username'),
+              alt: true
             });
             iconsHtml += "</a>";
           });
