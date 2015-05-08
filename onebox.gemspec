@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_runtime_dependency 'multi_json', '~> 1.11'
-  spec.add_runtime_dependency 'mustache', '~> 1.0'
+  spec.add_runtime_dependency 'mustache'
   spec.add_runtime_dependency 'nokogiri', '~> 1.6.6'
   spec.add_runtime_dependency 'moneta', '~> 0.8'
 
