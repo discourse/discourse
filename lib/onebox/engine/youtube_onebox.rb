@@ -57,6 +57,14 @@ module Onebox
         html
       end
 
+      def video_title
+        yt_oembed_url = "http://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=#{video_id.split('?')[0]}"
+        yt_oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(yt_oembed_url).body))
+        yt_oembed_data[:title]
+      rescue
+        return nil
+      end
+
       # Regex to parse strings like "1h3m2s". Also accepts bare numbers (which are seconds).
       TIMESTR_REGEX = /(\d+h)?(\d+m)?(\d+s?)?/
 
