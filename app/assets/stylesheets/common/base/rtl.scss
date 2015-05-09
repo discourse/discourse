@@ -31,3 +31,10 @@
   border-left-color: transparent !important;
   border-right-color: $secondary !important;
 }
+code {
+    direction: ltr !important;
+    text-aligh: left !important;
+}
+.pull-left {
+  float:right !important;
+}
