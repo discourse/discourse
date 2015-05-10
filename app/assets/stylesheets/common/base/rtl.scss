@@ -1,6 +1,9 @@
 // Right to left styles.
-// *** These styles are all going to be flipped by the r2 gem ***
-// There may be a 'do not flip' flag that can be used, but I haven't found it.
+// *** These styles are all going to be processed by the r2 method ***
+// Adding the '!important' flag after a value will keep that value from being flipped.
+// For example 'float: right !important;' is not changed to 'float: left !important;'
+// Adding the '!important' flag to a value does not keep it's key from being flipped.
+// For example 'left: 0 !important;' will become 'right: 0!important';
 
 // Keep the topic admin menu on the page
 .rtl .topic-admin-menu {
@@ -25,9 +28,63 @@
   @include rotate(180);
 }
 
+// Make code blocks always display LTR.
+.rtl code {
+  direction: ltr !important;
+}
+
+// Admin RTL styles
+
 // Changes the triangle arrow direction in .nav-stacked .active
 // The 'left' and 'right' in these selectors is not being flipped by r2.
 .rtl .nav-stacked .active > a::after {
   border-left-color: transparent !important;
   border-right-color: $secondary !important;
+}
+
+// Fixes the admin controls for the custom editor.
+.rtl .customize .current-style .admin-controls .nav-pills li {
+  float: left !important;
+}
+
+// pull-left is redefined in admin.css. This keeps it from being over ridden.
+.rtl .pull-left {
+  float: right !important;
+}
+
+.rtl .admin-detail {
+  padding: 30px 30px 30px 0 !important;
+}
+
+// Give the row 'position: relative' so we can reverse the positions of .setting-label and .setting-controls.
+.rtl .admin-detail .row {
+  position: relative;
+
+  .setting-label {
+    position: absolute;
+    left: 0 !important; /* 'left' will be flipped to 'right' */
+  }
+
+  .setting-controls {
+    position: absolute;
+    right: 12% !important; /* 'right' will be flipped to 'left' */
+  }
+  
+  .setting-value {
+    float: right !important;
+    margin-left: 25% !important; /* is flipped to 'margin-right' */
+  }
+
+  // Reposition background image for closing select2-search-choice items.
+  .select2-search-choice-close {
+    background: url(/assets/select2.png) left top no-repeat; /* 'left' is flipped to 'right' */
+  }
+
+  .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close:hover {
+    background-position: left -11px; /* 'left' is flipped to 'right' */
+  }
+  .select2-container-multi .select2-choices .select2-search-choice-focus .select2-search-choice-close {
+    background-position: left -11px; /* 'left' is flipped to 'right' */
+  }
+
 }
