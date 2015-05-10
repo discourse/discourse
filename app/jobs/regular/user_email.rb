@@ -16,6 +16,7 @@ module Jobs
       # Find the user
       @user = User.find_by(id: args[:user_id])
       return skip(I18n.t("email_log.no_user", user_id: args[:user_id])) unless @user
+      return skip(I18n.t("email_log.anonymous_user")) if @user.anonymous?
       return skip(I18n.t("email_log.suspended_not_pm")) if @user.suspended? && args[:type] != :user_private_message
 
       seen_recently = (@user.last_seen_at.present? && @user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)

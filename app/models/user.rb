@@ -108,8 +108,15 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  # excluding fake users like the system user
-  scope :real, -> { where('id > 0') }
+  # excluding fake users like the system user or anonymous users
+  scope :real, -> { where('id > 0').where('NOT EXISTS(
+                     SELECT 1
+                     FROM user_custom_fields ucf
+                     WHERE
+                       ucf.user_id = users.id AND
+                       ucf.name = ? AND
+                       ucf.value::int > 0
+                  )', 'master_id') }
 
   scope :staff, -> { where("admin OR moderator") }
 
