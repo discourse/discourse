@@ -40,7 +40,7 @@ class ImportScripts::Sfn < ImportScripts::Base
 
     @external_users = {}
 
-    CSV.foreach("/Users/zogstrip/Downloads/sfn.csv", col_sep: ";") do |row|
+    CSV.foreach("/Users/zogstrip/Desktop/sfn.csv", col_sep: ";") do |row|
       next unless @personify_id_to_contact_key.include?(row[0])
 
       id = @personify_id_to_contact_key[row[0]]
@@ -90,6 +90,7 @@ class ImportScripts::Sfn < ImportScripts::Base
           id: user["id"],
           email: email,
           name: full_name,
+          username: email.split("@")[0],
           bio_raw: bio,
           created_at: user["created_at"],
           post_create_action: proc do |newuser|
@@ -191,13 +192,13 @@ class ImportScripts::Sfn < ImportScripts::Base
     "{9613BAC2-229B-4563-9E1C-35C31CDDCE2F}" => 49, # "Students",
   }
 
-  # def import_categories
-  #   puts "", "importing categories..."
+  def import_categories
+    puts "", "importing categories..."
 
-  #   create_categories(NEW_CATEGORIES) do |category|
-  #     { id: category, name: category }
-  #   end
-  # end
+    create_categories(NEW_CATEGORIES) do |category|
+      { id: category, name: category }
+    end
+  end
 
   def import_topics
     puts "", "importing topics..."
