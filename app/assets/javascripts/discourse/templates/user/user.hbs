@@ -71,7 +71,11 @@
             {{#if websiteName}}
               {{fa-icon "globe"}}
               {{#if linkWebsite}}
-                <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                {{#if removeNoFollow}}
+                  <a {{bind-attr href="website"}} target="_blank">{{websiteName}}</a>
+                {{else}}
+                  <a {{bind-attr href="website"}} rel="nofollow" target="_blank">{{websiteName}}</a>
+                {{/if}}
               {{else}}
                 <span {{bind-attr title="website"}}>{{websiteName}}</span>
               {{/if}}
