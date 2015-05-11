@@ -34,7 +34,7 @@ class AnonymousShadowCreator
       shadow = User.create!(
         password: SecureRandom.hex,
         email: "#{SecureRandom.hex}@anon.#{Discourse.current_hostname}",
-        name: "Anonymous",
+        name: I18n.t(:anonymous),
         username: UserNameSuggester.suggest(I18n.t(:anonymous).downcase),
         active: true,
         trust_level: 1,
