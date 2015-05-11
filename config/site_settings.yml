@@ -611,7 +611,9 @@ trust:
   tl3_requires_likes_received:
     default: 20
     min: 0
-  tl3_links_no_follow: false
+  tl3_links_no_follow:
+    default: false
+    client: true
 
 security:
   use_https: false
