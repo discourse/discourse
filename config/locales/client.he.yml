@@ -92,7 +92,6 @@ he:
       email: 'שלח קישור בדוא"ל'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
-    s3_deprecation_warning: "אזהרה! Amazon S3 יהיה בקרוב לא מומלץ לשימוש לאכסון צרופות/image. אנא עקבו אחר <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'> ההנחיות </a> להעברה לאכסון מקומי."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"

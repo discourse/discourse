@@ -92,7 +92,6 @@ pt:
       email: 'enviar esta hiperligação por email'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
-    s3_deprecation_warning: "CUIDADO! O Amazon S3 irá tornar-se obsoleto para armazenamento de imagens/anexos. Por favor, siga  <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>as instruções</a> para migrar para armazenamento local."
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
