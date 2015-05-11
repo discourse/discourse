@@ -19,7 +19,7 @@ test('munging', function() {
 
 test('update', function() {
   const store = createStore();
-  store.find('widget', 123).then(function(widget) {
+  return store.find('widget', 123).then(function(widget) {
     equal(widget.get('name'), 'Trout Lure');
 
     ok(!widget.get('isSaving'));
@@ -47,7 +47,6 @@ test('updating simultaneously', function() {
     secondPromise.catch(function() {
       ok(true, 'the second promise fails');
     });
-
   });
 });
 
@@ -62,7 +61,7 @@ test('save new', function() {
   const promise = widget.save({ name: 'Evil Widget' });
   ok(widget.get('isSaving'));
 
-  promise.then(function() {
+  return promise.then(function() {
     ok(!widget.get('isSaving'));
     ok(widget.get('id'), 'it has an id');
     ok(widget.get('name'), 'Evil Widget');
