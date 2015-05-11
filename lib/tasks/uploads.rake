@@ -209,6 +209,14 @@ end
 
 # regenerate missing optimized images
 task "uploads:regenerate_missing_optimized" => :environment do
+  ENV["RAILS_DB"] ? regenerate_missing_optimized : regenerate_missing_optimized_all_sites
+end
+
+def regenerate_missing_optimized_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+end
+
+def regenerate_missing_optimized
   puts "Regenerating missing optimized images for '#{RailsMultisite::ConnectionManagement.current_db}'..."
 
   if Discourse.store.external?
@@ -251,5 +259,4 @@ task "uploads:regenerate_missing_optimized" => :environment do
     puts "Missing uploads:"
     missing_uploads.sort.each { |u| puts u }
   end
-
 end
