@@ -217,7 +217,9 @@ def regenerate_missing_optimized_all_sites
 end
 
 def regenerate_missing_optimized
-  puts "Regenerating missing optimized images for '#{RailsMultisite::ConnectionManagement.current_db}'..."
+  db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Regenerating missing optimized images for '#{db}'..."
 
   if Discourse.store.external?
     puts "This task only works for internal storages."
@@ -233,30 +235,35 @@ def regenerate_missing_optimized
                 .order(:id)
                 .find_each do |optimized_image|
 
+    upload = optimized_image.upload
+
     next unless optimized_image.url =~ /^\/uploads\//
-    next unless optimized_image.upload.url =~ /^\/uploads\//
+    next unless upload.url =~ /^\/uploads\//
 
     thumbnail = "#{public_directory}#{optimized_image.url}"
-    upload = "#{public_directory}#{optimized_image.upload.url}"
+    original = "#{public_directory}#{upload.url}"
 
     if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
       # make sure the original image exists locally
-      if (!File.exists?(upload) || File.size(upload) <= 0) && optimized_image.upload.origin.present?
+      if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
         # try to fix it by redownloading it
         begin
-          downloaded = FileHelper.download(optimized_image.upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
-          Discourse.store.store_upload(downloaded, optimized_image.upload)
+          downloaded = FileHelper.download(upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
+          if downloaded && downloaded.size > 0
+            FileUtils.mkdir_p(File.dirname(original))
+            File.open(original, "wb") { |f| f.write(downloaded.read) }
+          end
         ensure
           downloaded.try(:close!) if downloaded.respond_to?(:close!)
         end
       end
 
-      if File.exists?(upload) && File.size(upload) > 0
+      if File.exists?(original) && File.size(original) > 0
         FileUtils.mkdir_p(File.dirname(thumbnail))
-        OptimizedImage.resize(upload, thumbnail, optimized_image.width, optimized_image.height)
+        OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
         putc "#"
       else
-        missing_uploads << upload
+        missing_uploads << original
         putc "X"
       end
     else
