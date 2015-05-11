@@ -33,7 +33,7 @@ class AnonymousShadowCreator
     User.transaction do
       shadow = User.create!(
         password: SecureRandom.hex,
-        email: "#{SecureRandom.hex}@#{SecureRandom.hex}.com",
+        email: "#{SecureRandom.hex}@anon.#{Discourse.current_hostname}.com",
         name: "",
         username: UserNameSuggester.suggest(I18n.t(:anonymous).downcase),
         active: true,
