@@ -16,20 +16,16 @@
 
 .topic-list {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   background: rgba($secondary, .8);
 
   > tbody > tr {
-
-    &.archived a {
-      opacity: 0.6;
-    }
     &.has-excerpt .star {
       vertical-align: top;
       margin-top: 2px;
     }
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   }
 
   th,
