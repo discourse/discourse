@@ -206,3 +206,47 @@ task "uploads:missing" => :environment do
   end
 
 end
+
+# regenerate missing optimized images
+task "uploads:regenerate_missing_optimized" => :environment do
+  puts "Regenerating missing optimized images for '#{RailsMultisite::ConnectionManagement.current_db}'..."
+
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  public_directory = "#{Rails.root}/public"
+  missing_uploads = Set.new
+
+  OptimizedImage.includes(:upload)
+                .where("LENGTH(COALESCE(url, '')) > 0")
+                .where("width > 0 AND height > 0")
+                .order(:id)
+                .find_each do |optimized_image|
+
+    thumbnail = "#{public_directory}#{optimized_image.url}"
+    upload = "#{public_directory}#{optimized_image.upload.url}"
+
+    if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      if File.exists?(upload) && File.size(upload) > 0
+        FileUtils.mkdir_p(File.dirname(thumbnail))
+        OptimizedImage.resize(upload, thumbnail, optimized_image.width, optimized_image.height)
+        putc "#"
+      else
+        missing_uploads << upload
+        putc "X"
+      end
+    else
+      putc "."
+    end
+  end
+
+  puts "", "Done"
+
+  if missing_uploads.size > 0
+    puts "Missing uploads:"
+    missing_uploads.sort.each { |u| puts u }
+  end
+
+end
