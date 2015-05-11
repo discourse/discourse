@@ -225,6 +225,9 @@ task "uploads:regenerate_missing_optimized" => :environment do
                 .order(:id)
                 .find_each do |optimized_image|
 
+    next unless optimized_image.url =~ /^\/uploads\//
+    next unless optimized_image.upload.url =~ /^\/uploads\//
+
     thumbnail = "#{public_directory}#{optimized_image.url}"
     upload = "#{public_directory}#{optimized_image.upload.url}"
 
