@@ -650,7 +650,7 @@ fr:
       title: "Pied des pages"
       description: "HTML qui sera ajouté avant la balise </body>."
   site_settings:
-    censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Mots qui seront automatiquement remplacés par ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
     default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leur préférences."

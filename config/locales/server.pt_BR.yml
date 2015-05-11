@@ -643,7 +643,7 @@ pt_BR:
       title: "Rodapé das páginas"
       description: "HTML que será adicionado antes da tag </body>"
   site_settings:
-    censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Palavras que serão substituídos automaticamente por ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"

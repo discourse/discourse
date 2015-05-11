@@ -634,7 +634,7 @@ pl_PL:
       title: "Stopka każdej strony"
       description: "Kod HTML, który zostanie załączony przed tagiem </body>."
   site_settings:
-    censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Wskazane słowa będą automatycznie zamieniane na  ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"

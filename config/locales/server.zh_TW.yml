@@ -539,7 +539,7 @@ zh_TW:
       title: "頁面底部"
       description: "將在 </body> 標簽前被插入的 HTML。"
   site_settings:
-    censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "將被自動替換為 ■■■■ (&#9632;)"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
     default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
     allow_user_locale: "允許用戶選擇自己的語言介面"

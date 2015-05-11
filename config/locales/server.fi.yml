@@ -654,7 +654,7 @@ fi:
       title: "Sivun alaosa"
       description: "HTML, joka lisätään ennen </body> elementtiä."
   site_settings:
-    censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Sanat, jotka korvataan automaattisesti merkeillä ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"

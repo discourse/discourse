@@ -608,7 +608,7 @@ it:
       title: "Fondo delle pagine"
       description: "HTML che verrà aggiunto prima del tag  </body>."
   site_settings:
-    censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Parole che saranno automaticamente sostituite con ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     default_locale: "Il linguaggio di default di questa istanza Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"

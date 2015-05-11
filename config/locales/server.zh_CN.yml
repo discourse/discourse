@@ -622,7 +622,7 @@ zh_CN:
       title: "页面底部"
       description: "将在 </body> 标签前被插入的 HTML。"
   site_settings:
-    censored_words: "将被自动替换为 &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "将被自动替换为 ■■■■ (&#9632;)"
     delete_old_hidden_posts: "自动删除被隐藏超过 30 天的帖子。"
     default_locale: "此论坛的缺省语言（ISO 639-1 代码）"
     allow_user_locale: "允许用户选择他们自己的语言界面"

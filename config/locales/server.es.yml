@@ -646,7 +646,7 @@ es:
       title: "Pie de página"
       description: "HTML que será añadido antes de la etiqueta </body>"
   site_settings:
-    censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Las palabras serán reemplazadas con ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"
