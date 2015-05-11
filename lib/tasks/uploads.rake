@@ -240,6 +240,17 @@ def regenerate_missing_optimized
     upload = "#{public_directory}#{optimized_image.upload.url}"
 
     if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      # make sure the original image exists locally
+      if (!File.exists?(upload) || File.size(upload) <= 0) && optimized_image.upload.origin.present?
+        # try to fix it by redownloading it
+        begin
+          downloaded = FileHelper.download(optimized_image.upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
+          Discourse.store.store_upload(downloaded, optimized_image.upload)
+        ensure
+          downloaded.try(:close!) if downloaded.respond_to?(:close!)
+        end
+      end
+
       if File.exists?(upload) && File.size(upload) > 0
         FileUtils.mkdir_p(File.dirname(thumbnail))
         OptimizedImage.resize(upload, thumbnail, optimized_image.width, optimized_image.height)
