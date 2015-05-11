@@ -49,6 +49,14 @@ describe PostsController do
       expect(json["errors"][0]).to eq(I18n.t("poll.default_poll_must_have_less_options", max: SiteSetting.poll_maximum_options))
     end
 
+    it "prevents self-xss" do
+      xhr :post, :create, { title: title, raw: "[poll name=<script>alert('xss')</script>]\n- A\n- B\n[/poll]" }
+      expect(response).to be_success
+      json = ::JSON.parse(response.body)
+      expect(json["cooked"]).to match("data-poll-")
+      expect(json["polls"]["&lt;script&gt;alert(xss)&lt;/script&gt;"]).to be
+    end
+
     describe "edit window" do
 
       describe "within the first 5 minutes" do
