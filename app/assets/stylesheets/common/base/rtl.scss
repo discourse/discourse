@@ -31,10 +31,10 @@
   border-left-color: transparent !important;
   border-right-color: $secondary !important;
 }
-code {
+.rtl code {
     direction: ltr !important;
     text-aligh: left !important;
 }
-.pull-left {
+.rtl .pull-left {
   float:right !important;
 }
