@@ -76,7 +76,6 @@ fa_IR:
       email: 'این پیوند را با ایمیل بفرستید'
     topic_admin_menu: "اقدامات مدیریت موضوع"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت جهانی توسط مدیر قطع شده. هیچ ایمیل اخطاریه های ارسال نخواهد شد."
-    s3_deprecation_warning: "اخطار! آمازون S3 برای ذخیره سازی تصویر / فایل ضمیمه توصیه نمی شود. لطفا، به دنبال <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>دستورالعمل ها</a> و مهاجرت به ذخیره سازی محلی."
     edit: 'سرنویس و دستهٔ این موضوع را ویرایش کنید'
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "نه"

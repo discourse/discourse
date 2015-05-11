@@ -92,7 +92,6 @@ sv:
       email: 'skicka denna länk i ett email'
     topic_admin_menu: "ämne admin åtgärder"
     emails_are_disabled: "Alla utgående email har blivit deaktiverad av en administratör. Inga kungörelser av någon sort kommer att bli skickad."
-    s3_deprecation_warning: "VARNING! Stödet för Amazon S3-lagring av bilder/bilagor kommer snart överges. Följ <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instruktionerna</a> för migrering till lokal lagring."
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
