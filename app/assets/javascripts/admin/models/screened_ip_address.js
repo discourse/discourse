@@ -1,11 +1,6 @@
 /**
   Represents an IP address that is watched for during account registration
   (and possibly other times), and an action is taken.
-
-  @class ScreenedIpAddress
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
 **/
 Discourse.ScreenedIpAddress = Discourse.Model.extend({
   actionName: function() {
@@ -17,20 +12,8 @@ Discourse.ScreenedIpAddress = Discourse.Model.extend({
   }.property('action_name'),
 
   actionIcon: function() {
-    if (this.get('action_name') === 'block') {
-      return this.get('blockIcon');
-    } else {
-      return this.get('doNothingIcon');
-    }
+    return (this.get('action_name') === 'block') ? 'ban' : 'check';
   }.property('action_name'),
-
-  blockIcon: function() {
-    return 'fa-ban';
-  }.property(),
-
-  doNothingIcon: function() {
-    return 'fa-check';
-  }.property(),
 
   save: function() {
     return Discourse.ajax("/admin/logs/screened_ip_addresses" + (this.id ? '/' + this.id : '') + ".json", {
