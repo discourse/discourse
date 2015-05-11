@@ -21,7 +21,7 @@ class EmbedController < ApplicationController
       @second_post_url = "#{@topic_view.topic.url}/2" if @topic_view
       @posts_left = 0
       if @topic_view && @topic_view.posts.size == SiteSetting.embed_post_limit
-        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit
+        @posts_left = @topic_view.topic.posts_count - SiteSetting.embed_post_limit - 1
       end
     else
       Jobs.enqueue(:retrieve_topic, user_id: current_user.try(:id), embed_url: embed_url)
