@@ -157,3 +157,52 @@ task "uploads:clean_up" => :environment do
   end
 
 end
+
+
+# list all missing uploads and optimized images
+task "uploads:missing" => :environment do
+
+  public_directory = "#{Rails.root}/public"
+
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+
+    if Discourse.store.external?
+      puts "This task only works for internal storages."
+      next
+    end
+
+
+    Upload.order(:id).find_each do |upload|
+
+      # could be a remote image
+      next unless upload.url =~ /^\/uploads\//
+
+      path = "#{public_directory}#{upload.url}"
+      bad = true
+      begin
+        bad = false if File.size(path) != 0
+      rescue
+        # something is messed up
+      end
+      puts path if bad
+    end
+
+    OptimizedImage.order(:id).find_each do |optimized_image|
+
+      # remote?
+      next unless optimized_image.url =~ /^\/uploads\//
+
+      path = "#{public_directory}#{optimized_image.url}"
+
+      bad = true
+      begin
+        bad = false if File.size(path) != 0
+      rescue
+        # something is messed up
+      end
+      puts path if bad
+    end
+
+  end
+
+end
