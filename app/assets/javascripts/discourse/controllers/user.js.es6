@@ -46,7 +46,7 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property('model.can_be_deleted', 'model.can_delete_all_posts'),
 
   publicUserFields: function() {
-    var siteUserFields = this.site.get('model.user_fields');
+    var siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       var userFields = this.get('model.user_fields');
       return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
