@@ -4,7 +4,10 @@
 # authors: Vikhyat Korrapati (vikhyat), Régis Hanol (zogstrip)
 # url: https://github.com/discourse/discourse/tree/master/plugins/poll
 
-register_asset "stylesheets/poll.scss"
+register_asset "stylesheets/common/poll.scss"
+register_asset "stylesheets/desktop/poll.scss", :desktop
+register_asset "stylesheets/mobile/poll.scss", :mobile
+
 register_asset "javascripts/poll_dialect.js", :server_side
 
 PLUGIN_NAME ||= "discourse_poll".freeze
@@ -260,10 +263,10 @@ after_initialize do
         if polls.keys != previous_polls.keys ||
            polls.values.map { |p| p["options"] } != previous_polls.values.map { |p| p["options"] }
 
-          # outside the 5-minute edit window?
+          # outside of the 5-minute edit window?
           if post.created_at < 5.minutes.ago
-            # cannot add/remove/change/re-order polls
-            if polls.keys != previous_polls.keys
+            # cannot add/remove/rename polls
+            if polls.keys.sort != previous_polls.keys.sort
               post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
               return
             end
@@ -278,8 +281,8 @@ after_initialize do
                 end
               end
             else
-              # OP cannot change polls
-              post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
+              # OP cannot edit poll options
+              post.errors.add(:base, I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
               return
             end
           end

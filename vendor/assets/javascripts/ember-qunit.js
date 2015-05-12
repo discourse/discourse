@@ -261,7 +261,6 @@ exports["default"] = function test(testName, callback) {
 
   function wrapper() {
     var context = testContext.get();
-    
     resetViews();
     var result = callback.call(context);
 

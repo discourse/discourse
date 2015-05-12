@@ -1,6 +1,11 @@
 /*global Favcount:true*/
 var DiscourseResolver = require('discourse/ember/resolver').default;
 
+// Allow us to import Ember
+define('ember', ['exports'], function(__exports__) {
+  __exports__["default"] = Ember;
+});
+
 window.Discourse = Ember.Application.createWithMixins(Discourse.Ajax, {
   rootElement: '#main',
   _docTitle: document.title,

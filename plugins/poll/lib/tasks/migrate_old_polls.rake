@@ -14,13 +14,12 @@ task "poll:migrate_old_polls" => :environment do
       # go back in time
       Timecop.freeze(post.created_at + 1.minute) do
         # fix the RAW when needed
+        post.raw << "\n\n"
         if post.raw !~ /\[poll\]/
           lists = /^[ ]*- .+?$\n\n/m.match(post.raw)
           next if lists.blank? || lists.length == 0
           first_list = lists[0]
           post.raw = post.raw.sub(first_list, "\n[poll]\n#{first_list.strip}\n[/poll]\n")
-        else
-          post.raw = post.raw + " "
         end
         # save the poll
         post.save

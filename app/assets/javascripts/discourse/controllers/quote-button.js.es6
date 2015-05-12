@@ -43,7 +43,7 @@ export default DiscourseController.extend({
     if (this.get('buffer') === selectedText) return;
 
     // we need to retrieve the post data from the posts collection in the topic controller
-    const postStream = this.get('controllers.topic.postStream');
+    const postStream = this.get('controllers.topic.model.postStream');
     this.set('post', postStream.findLoadedPost(postId));
     this.set('buffer', selectedText);
 

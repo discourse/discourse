@@ -1,6 +1,7 @@
 class NotificationSerializer < ApplicationSerializer
 
-  attributes :notification_type,
+  attributes :id,
+             :notification_type,
              :read,
              :created_at,
              :post_number,

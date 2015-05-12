@@ -22,11 +22,14 @@ function resolveParams(ctx, options) {
 }
 
 export default function registerUnbound(name, fn) {
-  Handlebars.registerHelper(name, function(property, options) {
+  const func = function(property, options) {
     if (options.types && options.types[0] === "ID") {
       property = get(this, property, options);
     }
 
     return fn.call(this, property, resolveParams(this, options));
-  });
+  };
+
+  Handlebars.registerHelper(name, func);
+  Ember.Handlebars.registerHelper(name, func);
 }

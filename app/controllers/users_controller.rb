@@ -157,7 +157,7 @@ class UsersController < ApplicationController
       redirect_to path("/users/#{current_user.username}/#{params[:path]}")
       return
     end
-    raise Discourse::NotFound.new
+    raise Discourse::NotFound
   end
 
   def invited
@@ -436,7 +436,7 @@ class UsersController < ApplicationController
   end
 
   def account_created
-    @message = session['user_created_message']
+    @message = session['user_created_message'] || I18n.t('activation.missing_session')
     expires_now
     render layout: 'no_ember'
   end

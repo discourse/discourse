@@ -6,72 +6,74 @@ class OptimizedImage < ActiveRecord::Base
   def self.create_for(upload, width, height, opts={})
     return unless width > 0 && height > 0
 
-    # do we already have that thumbnail?
-    thumbnail = find_by(upload_id: upload.id, width: width, height: height)
+    DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
+      # do we already have that thumbnail?
+      thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
-    # make sure the previous thumbnail has not failed
-    if thumbnail && thumbnail.url.blank?
-      thumbnail.destroy
-      thumbnail = nil
-    end
-
-    # return the previous thumbnail if any
-    return thumbnail unless thumbnail.nil?
-
-    # create the thumbnail otherwise
-    external_copy = Discourse.store.download(upload) if Discourse.store.external?
-    original_path = if Discourse.store.external?
-      external_copy.try(:path)
-    else
-      Discourse.store.path_for(upload)
-    end
-
-    if original_path.blank?
-      Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
-    else
-      # create a temp file with the same extension as the original
-      extension = File.extname(original_path)
-      temp_file = Tempfile.new(["discourse-thumbnail", extension])
-      temp_path = temp_file.path
-
-      if extension =~ /\.svg$/i
-        FileUtils.cp(original_path, temp_path)
-        resized = true
-      else
-        resized = resize(original_path, temp_path, width, height, opts)
+      # make sure the previous thumbnail has not failed
+      if thumbnail && thumbnail.url.blank?
+        thumbnail.destroy
+        thumbnail = nil
       end
 
-      if resized
-        thumbnail = OptimizedImage.create!(
-          upload_id: upload.id,
-          sha1: Digest::SHA1.file(temp_path).hexdigest,
-          extension: extension,
-          width: width,
-          height: height,
-          url: "",
-        )
-        # store the optimized image and update its url
-        url = Discourse.store.store_optimized_image(temp_file, thumbnail)
-        if url.present?
-          thumbnail.url = url
-          thumbnail.save
+      # return the previous thumbnail if any
+      return thumbnail unless thumbnail.nil?
+
+      # create the thumbnail otherwise
+      external_copy = Discourse.store.download(upload) if Discourse.store.external?
+      original_path = if Discourse.store.external?
+        external_copy.try(:path)
+      else
+        Discourse.store.path_for(upload)
+      end
+
+      if original_path.blank?
+        Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
+      else
+        # create a temp file with the same extension as the original
+        extension = File.extname(original_path)
+        temp_file = Tempfile.new(["discourse-thumbnail", extension])
+        temp_path = temp_file.path
+
+        if extension =~ /\.svg$/i
+          FileUtils.cp(original_path, temp_path)
+          resized = true
         else
-          Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+          resized = resize(original_path, temp_path, width, height, opts)
         end
-      else
-        Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
+
+        if resized
+          thumbnail = OptimizedImage.create!(
+            upload_id: upload.id,
+            sha1: Digest::SHA1.file(temp_path).hexdigest,
+            extension: extension,
+            width: width,
+            height: height,
+            url: "",
+          )
+          # store the optimized image and update its url
+          url = Discourse.store.store_optimized_image(temp_file, thumbnail)
+          if url.present?
+            thumbnail.url = url
+            thumbnail.save
+          else
+            Rails.logger.error("Failed to store avatar #{size} for #{upload.url} from #{source}")
+          end
+        else
+          Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
+        end
+
+        # close && remove temp file
+        temp_file.close!
       end
 
-      # close && remove temp file
-      temp_file.close!
-    end
+      # make sure we remove the cached copy from external stores
+      if Discourse.store.external?
+        external_copy.try(:close!) rescue nil
+      end
 
-    # make sure we remove the cached copy from external stores
-    if Discourse.store.external?
-      external_copy.try(:close!) rescue nil
+      thumbnail
     end
-
-    thumbnail
   end
 
   def destroy

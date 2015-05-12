@@ -5,12 +5,7 @@ function createPollView(container, post, poll, vote) {
         view = container.lookup("view:poll");
 
   controller.set("vote", vote);
-
-  controller.setProperties({
-    model: Em.Object.create(poll),
-    post: post,
-  });
-
+  controller.setProperties({ model: Em.Object.create(poll), post });
   view.set("controller", controller);
 
   return view;
@@ -25,7 +20,7 @@ export default {
 
     // listen for back-end to tell us when a post has a poll
     messageBus.subscribe("/polls", data => {
-      const post = container.lookup("controller:topic").get("postStream").findLoadedPost(data.post_id);
+      const post = container.lookup("controller:topic").get('modee.postStream').findLoadedPost(data.post_id);
       // HACK to trigger the "postViewUpdated" event
       Em.run.next(_ => post.set("cooked", post.get("cooked") + " "));
     });
@@ -33,8 +28,7 @@ export default {
     // overwrite polls
     PostView.reopen({
       _createPollViews: function($post) {
-        const self = this,
-              post = this.get("post"),
+        const post = this.get("post"),
               polls = post.get("polls"),
               votes = post.get("polls_votes") || {};
 
@@ -54,7 +48,7 @@ export default {
                 pollView = createPollView(container, post, polls[pollName], votes[pollName]);
 
           $poll.replaceWith($div);
-          pollView.constructor.renderer.replaceIn(pollView, $div[0]);
+          pollView.renderer.replaceIn(pollView, $div[0]);
           pollViews[pollName] = pollView;
         });
 
@@ -80,4 +74,4 @@ export default {
       }.on("willClearRender")
     });
   }
-}
+};

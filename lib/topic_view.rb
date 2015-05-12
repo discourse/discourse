@@ -38,7 +38,9 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    @page = @page.to_i
+    # work around people somehow sending in arrays,
+    # arrays are not supported
+    @page = @page.to_i rescue 1
     @page = 1 if @page.zero?
     @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
     @limit ||= @chunk_size

@@ -38,13 +38,13 @@ export default {
     app.register('session:main', Session.current(), { instantiate: false });
     injectAll(app, 'session');
 
+    app.register('store:main', Store);
+    inject(app, 'store', 'route', 'controller');
+
     app.register('current-user:main', Discourse.User.current(), { instantiate: false });
     inject(app, 'currentUser', 'component', 'route', 'controller');
 
     app.register('message-bus:main', window.MessageBus, { instantiate: false });
     inject(app, 'messageBus', 'route', 'controller', 'view');
-
-    app.register('store:main', Store);
-    inject(app, 'store', 'route', 'controller');
   }
 };

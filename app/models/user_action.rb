@@ -142,6 +142,7 @@ SQL
       SELECT
         a.id,
         t.title, a.action_type, a.created_at, t.id topic_id,
+        t.closed AS topic_closed, t.archived AS topic_archived,
         a.user_id AS target_user_id, au.name AS target_name, au.username AS target_username,
         coalesce(p.post_number, 1) post_number, p.id as post_id,
         p.reply_to_post_number,

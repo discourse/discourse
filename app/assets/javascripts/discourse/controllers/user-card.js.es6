@@ -1,6 +1,4 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'application'],
   visible: false,
   user: null,
@@ -13,7 +11,7 @@ export default ObjectController.extend({
   // If inside a topic
   topicPostCount: null,
 
-  postStream: Em.computed.alias('controllers.topic.postStream'),
+  postStream: Em.computed.alias('controllers.topic.model.postStream'),
   enoughPostsForFiltering: Em.computed.gte('topicPostCount', 2),
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
   viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
@@ -47,7 +45,7 @@ export default ObjectController.extend({
 
     const currentUsername = this.get('username'),
         wasVisible = this.get('visible'),
-        post = this.get('viewingTopic') && postId ? this.get('controllers.topic.postStream').findLoadedPost(postId) : null;
+        post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
 
     this.setProperties({ avatar: null, post: post, username: username });
 
@@ -92,7 +90,7 @@ export default ObjectController.extend({
 
   actions: {
     togglePosts(user) {
-      const postStream = this.get('controllers.topic.postStream');
+      const postStream = this.get('postStream');
       postStream.toggleParticipant(user.get('username'));
       this.close();
     },

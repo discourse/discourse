@@ -55,12 +55,6 @@
   }
 
   > tbody > tr {
-    &:nth-child(odd) {
-        background-color: darken($secondary, 3%);
-    }
-    &:nth-child(even) {
-        background-color: $secondary;
-    }
     &.highlighted {
         background-color: dark-light-diff($tertiary, $secondary, 90%, -41%);
     }
@@ -184,6 +178,7 @@
     position: relative;
   }
   > tbody > tr {
+    border-bottom: none;
     &:nth-child(odd) {
         background-color: darken($secondary, 3%);
       }

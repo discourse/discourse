@@ -742,6 +742,8 @@ it:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Aggiungi un'immagine"
       title_with_attachments: "Aggiungi un'immagine o un file"
@@ -1335,12 +1337,21 @@ it:
       Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
     original_post: "Messaggio Originale"
     views: "Visualizzazioni"
+    views_lowercase:
+      one: "vista"
+      other: "viste"
     replies: "Risposte"
     views_long: "questo argomento è stato visualizzato {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
+    likes_lowercase:
+      one: "mi piace"
+      other: "mi piace"
     likes_long: "ci sono {{number}} \"Mi piace\" in questo argomento"
     users: "Utenti"
+    users_lowercase:
+      one: "utente"
+      other: "utenti"
     category_title: "Categoria"
     history: "Storia"
     changed_by: "da {{author}}"
@@ -1401,6 +1412,17 @@ it:
       top:
         title: "Di Punta"
         help: "gli argomenti più attivi nell'ultimo anno, mese, settimana o giorno"
+        all:
+          title: "Tutti"
+        yearly:
+          title: "Annuale"
+        monthly:
+          title: "Mensile"
+        weekly:
+          title: "Settimanale"
+        daily:
+          title: "Giornaliero"
+        all_time: "Tutti"
         this_year: "Quest'anno"
         this_month: "Questo mese"
         this_week: "Questa settimana"
@@ -1624,6 +1646,7 @@ it:
             confirm: "Sicuro di voler ripristinare una precedente versione funzionante del database?"
       export_csv:
         user_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
+        success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, prova ancora domani."
         button_text: "Esporta"

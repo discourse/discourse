@@ -1,6 +1,6 @@
-import DiscourseController from 'discourse/controllers/controller';
+import Presence from 'discourse/mixins/presence';
 
-export default DiscourseController.extend({
+export default Ember.ObjectController.extend(Presence, {
   needs: ['modal', 'topic', 'composer-messages', 'application'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
@@ -10,6 +10,14 @@ export default DiscourseController.extend({
   editReason: null,
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
   scopedCategoryId: null,
+  similarTopics: null,
+  similarTopicsMessage: null,
+  lastSimilaritySearch: null,
+
+  topic: null,
+
+  // TODO: Remove this, very bad
+  view: null,
 
   _initializeSimilar: function() {
     this.set('similarTopics', []);
@@ -183,7 +191,7 @@ export default DiscourseController.extend({
     // for now handle a very narrow use case
     // if we are replying to a topic AND not on the topic pop the window up
     if (!force && composer.get('replyingToTopic')) {
-      const topic = this.get('topic');
+      const topic = this.get('model.topic');
       if (!topic || topic.get('id') !== composer.get('topic.id'))
       {
         const message = I18n.t("composer.posting_not_on_topic");
@@ -226,7 +234,6 @@ export default DiscourseController.extend({
       imageSizes: this.get('view').imageSizes(),
       editReason: this.get("editReason")
     }).then(function(result) {
-
       if (result.responseJson.action === "enqueued") {
         self.send('postWasEnqueued', result.responseJson);
         self.destroyDraft();
@@ -285,7 +292,7 @@ export default DiscourseController.extend({
   // Checks to see if a reply has been typed.
   // This is signaled by a keyUp event in a view.
   checkReplyLength() {
-    if (this.present('model.reply')) {
+    if (!Ember.isEmpty('model.reply')) {
       // Notify the composer messages controller that a reply has been typed. Some
       // messages only appear after typing.
       this.get('controllers.composer-messages').typedReply();
@@ -441,6 +448,23 @@ export default DiscourseController.extend({
 
     if (opts.topicCategoryId) {
       this.set('model.categoryId', opts.topicCategoryId);
+    } else if (opts.topicCategory) {
+      const splitCategory = opts.topicCategory.split("/");
+      let category;
+
+      if (!splitCategory[1]) {
+        category = this.site.get('categories').findProperty('nameLower', splitCategory[0].toLowerCase());
+      } else {
+        const categories = Discourse.Category.list();
+        const mainCategory = categories.findProperty('nameLower', splitCategory[0].toLowerCase());
+        category = categories.find(function(item) {
+          return item && item.get('nameLower') === splitCategory[1].toLowerCase() && item.get('parent_category_id') === mainCategory.id;
+        });
+      }
+
+      if (category) {
+        this.set('model.categoryId', category.get('id'));
+      }
     }
 
     if (opts.topicBody) {
@@ -452,7 +476,7 @@ export default DiscourseController.extend({
 
   // View a new reply we've made
   viewNewReply() {
-    Discourse.URL.routeTo(this.get('createdPost.url'));
+    Discourse.URL.routeTo(this.get('model.createdPost.url'));
     this.close();
     return false;
   },

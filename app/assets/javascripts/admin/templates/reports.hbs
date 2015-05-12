@@ -20,7 +20,7 @@
   {{/if}}
 </div>
 
-{{#loading-spinner condition=refreshing}}
+{{#conditional-loading-spinner condition=refreshing}}
   <table class='table report'>
     <tr>
       <th>{{xaxis}}</th>
@@ -43,4 +43,4 @@
       </tr>
     {{/each}}
   </table>
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

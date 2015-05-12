@@ -36,7 +36,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   }.observes('loading'),
 
   postMade: function() {
-    return this.present('controller.createdPost') ? 'created-post' : null;
+    return this.present('model.createdPost') ? 'created-post' : null;
   }.property('model.createdPost'),
 
   refreshPreview: Discourse.debounce(function() {
@@ -160,7 +160,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     // If we are editing a post, we'll refresh its contents once. This is a feature that
     // allows a user to refresh its contents once.
-    if (post && post.blank('refreshedPost')) {
+    if (post && !post.get('refreshedPost')) {
       refresh = true;
       post.set('refreshedPost', true);
     }
@@ -240,7 +240,7 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
 
     this.editor = editor = Discourse.Markdown.createEditor({
       lookupAvatarByPostNumber(postNumber) {
-        const posts = self.get('controller.controllers.topic.postStream.posts');
+        const posts = self.get('controller.controllers.topic.model.postStream.posts');
         if (posts) {
           const quotedPost = posts.findProperty("post_number", postNumber);
           if (quotedPost) {
@@ -564,10 +564,11 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
   replyValidation: function() {
     const replyLength = this.get('model.replyLength'),
         missingChars = this.get('model.missingReplyCharacters');
+
     let reason;
-    if( replyLength < 1 ){
+    if (replyLength < 1) {
       reason = I18n.t('composer.error.post_missing');
-    } else if( missingChars > 0 ) {
+    } else if (missingChars > 0) {
       reason = I18n.t('composer.error.post_length', {min: this.get('model.minimumPostLength')});
       let tl = Discourse.User.currentProp("trust_level");
       if (tl === 0 || tl === 1) {
@@ -575,8 +576,8 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       }
     }
 
-    if( reason ) {
-      return Discourse.InputValidation.create({ failed: true, reason: reason });
+    if (reason) {
+      return Discourse.InputValidation.create({ failed: true, reason });
     }
   }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength'),
 

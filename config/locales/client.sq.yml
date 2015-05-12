@@ -418,13 +418,13 @@ sq:
           other: "We'll only email you if we haven't seen you in the last {{count}} minutes."
       name:
         title: "Emri"
-        instructions: "Your full name (optional)"
+        instructions: "Emri i Plotë (fakultativ)"
         instructions_required: "Emri i plotë"
         too_short: "Emri juaj është shumë i shkurtër"
-        ok: "Your name looks good"
+        ok: "Emri duket në rregull"
       username:
         title: "Pseudonimi"
-        instructions: "Unique, no spaces, short"
+        instructions: "Unik, pa hapësira, i shkurtër"
         short_instructions: "People can mention you as @{{username}}"
         available: "Emri është i disponueshëm"
         global_match: "Email matches the registered username"
@@ -475,13 +475,13 @@ sq:
       auto_track_topics: "Automatically track topics I enter"
       auto_track_options:
         never: "asnjëherë"
-        immediately: "immediately"
+        immediately: "menjëherë"
         after_n_seconds:
           one: "pas 1 sekonde"
           other: "pas {{count}} sekonda"
         after_n_minutes:
-          one: "after 1 minute"
-          other: "after {{count}} minutes"
+          one: "pas 1 minute"
+          other: "pas {{count}} minutash"
       invited:
         search: "shkruaj për të kërkuar ftesat..."
         title: "Ftesa"
@@ -512,7 +512,7 @@ sq:
         title: "Fjalëkalimi"
         too_short: "Fjalëkalimi është shumë i shkurër."
         common: "Ky fjalëkalim është shumë i përdorur."
-        same_as_username: "Your password is the same as your username."
+        same_as_username: "Fjalëkalimi është i njëjtë me pseudonimin."
         same_as_email: "Your password is the same as your email."
         ok: "Fjalëkalimi është i pranueshëm."
         instructions: "Të paktën %{count} karaktere."
@@ -582,7 +582,7 @@ sq:
     deleted_filter:
       enabled_description: "This topic contains deleted posts, which have been hidden. "
       disabled_description: "Deleted posts in the topic are shown."
-      enable: "Hide Deleted Posts"
+      enable: "Fsheh Postimet e Eliminuara"
       disable: "Show Deleted Posts"
     private_message_info:
       title: "Mesazh"

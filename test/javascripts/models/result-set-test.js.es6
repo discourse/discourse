@@ -20,6 +20,7 @@ test('pagination support', function() {
     equal(rs.get('totalRows'), 4);
     ok(rs.get('loadMoreUrl'), 'has a url to load more');
     ok(!rs.get('loadingMore'), 'it is not loading more');
+    ok(rs.get('canLoadMore'));
 
     const promise = rs.loadMore();
 
@@ -28,6 +29,7 @@ test('pagination support', function() {
       ok(!rs.get('loadingMore'), 'it finished loading more');
       equal(rs.get('length'), 4);
       ok(!rs.get('loadMoreUrl'));
+      ok(!rs.get('canLoadMore'));
     });
   });
 });

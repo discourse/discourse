@@ -14,8 +14,6 @@ sq:
     default_poll_must_have_at_least_2_options: "Poll must have at least 2 options."
     named_poll_must_have_at_least_2_options: "Poll named <strong>%{name}</strong> must have at least 2 options."
     default_poll_must_have_different_options: "Poll must have different options."
-    cannot_change_polls_after_5_minutes: "Polls cannot be changed after the first 5 minutes. Contact a moderator if you need to change them."
-    staff_cannot_add_or_remove_options_after_5_minutes: "After the first 5 minutes, poll options can only be edited, not added or removed. If you need to add or remove options, you should close this topic and create a new one."
     no_polls_associated_with_this_post: "No polls are associated with this post."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
     topic_must_be_open_to_vote: "The topic must be open to vote."

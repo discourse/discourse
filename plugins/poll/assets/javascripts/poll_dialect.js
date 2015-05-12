@@ -8,7 +8,7 @@
   const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "color", "background", "status"];
   const WHITELISTED_STYLES = ["color", "background"];
 
-  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=[^\\s\\]]+", "g");
+  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]=]+['\"]?", "g");
 
   Discourse.Dialect.replaceBlock({
     start: /\[poll([^\]]*)\]([\s\S]*)/igm,
@@ -44,8 +44,9 @@
 
       // extract poll attributes
       (matches[1].match(ATTRIBUTES_REGEX) || []).forEach(function(m) {
-        var attr = m.split("=");
-        attributes[DATA_PREFIX + attr[0]] = attr[1];
+        var attr = m.split("="), name = attr[0], value = attr[1];
+        value = Handlebars.Utils.escapeExpression(value.replace(/["']/g, ""));
+        attributes[DATA_PREFIX + name] = value;
       });
 
       // we might need these values later...
@@ -97,16 +98,14 @@
         contents[0][o].splice(1, 0, attr);
       }
 
-      // // add some information when type is "multiple"
-      // if (attributes[DATA_PREFIX + "type"] === "multiple") {
-
-
-      // }
-
       var result = ["div", attributes],
           poll = ["div"];
 
-      // 1 - POLL INFO
+      // 1 - POLL CONTAINER
+      var container = ["div", { "class": "poll-container" }].concat(contents);
+      poll.push(container);
+
+      // 2 - POLL INFO
       var info = ["div", { "class": "poll-info" }];
 
       // # of voters
@@ -146,10 +145,6 @@
       }
 
       poll.push(info);
-
-      // 2 - POLL CONTAINER
-      var container = ["div", { "class": "poll-container" }].concat(contents);
-      poll.push(container);
 
       // 3 - BUTTONS
       var buttons = ["div", { "class": "poll-buttons" }];

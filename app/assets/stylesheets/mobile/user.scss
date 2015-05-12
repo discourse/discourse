@@ -579,18 +579,10 @@
 .paginated-topics-list {
   margin-top: 20px;
 
-    .topic-list > tbody > tr:nth-child(odd)  {
-      background-color: darken($secondary, 3%);
-      }
-
-    .topic-list > tbody > tr:nth-child(even) {
-      background-color: $secondary;
-      }
-
-    .user-content {
-        width: 100%;
-        margin-top: 0;
-      }
+  .user-content {
+      width: 100%;
+      margin-top: 0;
+    }
 }
 
 .user-archive {

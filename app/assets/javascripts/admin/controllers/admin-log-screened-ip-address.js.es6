@@ -3,8 +3,8 @@ export default Ember.ObjectController.extend({
   savedIpAddress: null,
 
   isRange: function() {
-    return this.get("ip_address").indexOf("/") > 0;
-  }.property("ip_address"),
+    return this.get("model.ip_address").indexOf("/") > 0;
+  }.property("model.ip_address"),
 
   actions: {
     allow: function(record) {
@@ -19,14 +19,14 @@ export default Ember.ObjectController.extend({
 
     edit: function() {
       if (!this.get('editing')) {
-        this.savedIpAddress = this.get('ip_address');
+        this.savedIpAddress = this.get('model.ip_address');
       }
       this.set('editing', true);
     },
 
     cancel: function() {
       if (this.get('savedIpAddress') && this.get('editing')) {
-        this.set('ip_address', this.get('savedIpAddress'));
+        this.set('model.ip_address', this.get('savedIpAddress'));
       }
       this.set('editing', false);
     },

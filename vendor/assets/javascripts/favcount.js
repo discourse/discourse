@@ -19,6 +19,8 @@
     var self = this,
         img  = document.createElement('img');
 
+    if (Ember.testing) { return; }
+
     if (self.canvas.getContext) {
       img.crossOrigin = "anonymous";
 
@@ -94,9 +96,7 @@
     head.appendChild(favicon);
   }
 
+  Favcount.VERSION = '1.5.0';
   this.Favcount = Favcount;
 }).call(this);
 
-(function(){
-  Favcount.VERSION = '1.5.0';
-}).call(this);

@@ -1,7 +1,8 @@
+import Presence from 'discourse/mixins/presence';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
-export default ObjectController.extend(ModalFunctionality, {
+export default ObjectController.extend(Presence, ModalFunctionality, {
   needs: ['user-invited'],
 
   // If this isn't defined, it will proxy to the user model on the preferences

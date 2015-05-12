@@ -8,14 +8,20 @@
 es:
   site_settings:
     poll_enabled: "¿Permitir la creación de encuestas?"
+    poll_maximum_options: "Número máximo de opciones permitidas en una encuesta."
   poll:
     multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     default_poll_must_have_at_least_2_options: "La encuesta debe tener al menos 2 opciones."
     named_poll_must_have_at_least_2_options: "La encuesta llamada <strong>%{name}</strong> debe tener al menos 2 opciones."
-    default_poll_must_have_different_options: "La encuesta debe tener opciones diferentes."
-    cannot_change_polls_after_5_minutes: "Las encuestas no puede cambiarse después de 5 minutos después de su creación. Contacta a un moderador si necesitas cambiarlas."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Después de los primeros 5 minutos, las opciones de la encuesta solo pueden ser editadas, no se pueden añadir ni eliminar. Si necesitas añadir o eliminar opciones, puedes cerrar este tema y crear uno nuevo."
+    default_poll_must_have_less_options: "La encuesta debe tener menos de %{max} opciones."
+    named_poll_must_have_less_options: "La encuesta llamada <strong>%{name}</strong> debe tener menos de %{max} opciones."
+    default_poll_must_have_different_options: "La encuesta debe tener diferentes opciones."
+    named_poll_must_have_different_options: "La encuesta llamada <strong>%{name}</strong> debe tener diferentes opciones."
+    requires_at_least_1_valid_option: "Debes escoger al menos 1 opción válida."
+    cannot_change_polls_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. "
+    op_cannot_edit_options_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. Por favor, contacta un moderador si necesitas editar las opciones de la encuesta."
+    staff_cannot_add_or_remove_options_after_5_minutes: "No se pueden añadir o eliminar opciones de una encuesta después de los primeros 5 minutos. Podrías cerrar este tema y crear uno nuevo."
     no_polls_associated_with_this_post: "No hay encuestas asociadas a este post."
     no_poll_with_this_name: "No hay ninguna encuesta llamada <strong>%{name}</strong> asociada con este post."
     topic_must_be_open_to_vote: "Este tema debe estar abierto para votar."

@@ -29,7 +29,7 @@ export default Ember.View.extend({
 
   _updateBar: function() {
     Em.run.scheduleOnce('afterRender', this, '_updateProgressBar');
-  }.observes('controller.streamPercentage', 'postStream.stream.@each'),
+  }.observes('controller.streamPercentage', 'controller.model.postStream.stream.@each'),
 
   _updateProgressBar: function() {
     // speeds up stuff, bypass jquery slowness and extra checks

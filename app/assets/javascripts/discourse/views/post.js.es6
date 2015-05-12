@@ -6,11 +6,12 @@ var PostView = Discourse.GroupedView.extend(Ember.Evented, {
   classNameBindings: ['postTypeClass',
                       'selected',
                       'post.hidden:post-hidden',
-                      'post.deleted',
+                      'post.deleted:deleted',
                       'post.topicOwner:topic-owner',
                       'groupNameClass',
                       'post.wiki:wiki'],
-  postBinding: 'content',
+
+  post: Ember.computed.alias('content'),
 
   historyHeat: function() {
     var updatedAt = this.get('post.updated_at');

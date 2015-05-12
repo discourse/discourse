@@ -8,14 +8,17 @@
 fi:
   site_settings:
     poll_enabled: "Annetaanko käyttäjien luoda äänestyskyselyitä?"
+    poll_maximum_options: "Äänestysvaihtoehtojen suurin sallittu määrä."
   poll:
     multiple_polls_without_name: "Viesti sisältää useamman nimettömän äänestyskyselyn. Nimeä ne '<code>name</code>'-määreellä."
     multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
     default_poll_must_have_at_least_2_options: "Äänestyksessä pitää olla vähintään 2 vaihtoehtoa."
-    named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltä <strong>%{name}</strong> täytyy olla vähintään 2 vaihtoehtoa."
+    named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltä <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
+    default_poll_must_have_less_options: "Äänestyksessä pitää olla vähemmän, kuin %{max} vaihtoehtoa."
+    named_poll_must_have_less_options: "Äänestyksen nimeltä <strong>%{name}</strong> pitää sisältää vähemmän, kuin %{max} vaihtoehtoa."
     default_poll_must_have_different_options: "Äänestysvaihtoehtojen on erottava toisistaan."
-    cannot_change_polls_after_5_minutes: "Äänestyskyselyitä ei voi muuttaa enää 5 minuutin jälkeen. Ota yhteyttä ylläpitoon, jos sinulla on tarve muuttaa kyselyä."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Ensimmäisen 5 minuutin jälkeen voit enää vain muotaka olemassa olevia äänestysvaihtoehtoja. Jos sinulla on tarve lisätä tai poistaa vaihtoehtoja, sulje tämä ketju ja luo uusi."
+    named_poll_must_have_different_options: "Äänestyksen nimeltä <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
+    requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
     no_polls_associated_with_this_post: "Tämä viesti ei sisällä äänestyskyselyä."
     no_poll_with_this_name: "Tämä viesti ei sisällä äänestyskyselyä nimeltä <strong>%{name}</strong>."
     topic_must_be_open_to_vote: "Vain avoimessa ketjussa voi äänestää."

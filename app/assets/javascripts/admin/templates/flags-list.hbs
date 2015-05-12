@@ -147,7 +147,7 @@
     </tbody>
   </table>
 
-  {{loading-spinner condition=view.loading}}
+  {{conditional-loading-spinner condition=view.loading}}
 {{else}}
   <p>{{i18n 'admin.flags.no_results'}}</p>
 {{/if}}

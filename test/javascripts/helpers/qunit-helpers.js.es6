@@ -37,8 +37,6 @@ var oldAvatar = Discourse.Utilities.avatarImg;
 function acceptance(name, options) {
   module("Acceptance: " + name, {
     setup: function() {
-      Ember.run(Discourse, Discourse.advanceReadiness);
-
       // Don't render avatars in acceptance tests, it's faster and no 404s
       Discourse.Utilities.avatarImg = () => "";
 
@@ -72,6 +70,8 @@ function acceptance(name, options) {
       if (options && options.teardown) {
         options.teardown.call(this);
       }
+      Discourse.User.resetCurrent();
+      Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
 
       Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();
