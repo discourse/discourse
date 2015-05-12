@@ -92,6 +92,7 @@ fi:
       email: 'lähetä tämä linkki sähköpostissa'
     topic_admin_menu: "ketjun ylläpitotoimet"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
+    s3_deprecation_warning: "VAROITUS! Kuvien ja liitetiedostojen tallentamisen Amazon S3-tuki lakkautetaan kohta. Ole hyvä ja seuraa <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ohjeita</a> siirtyäksesi paikalliseen tallennukseen."
     edit: 'muokkaa tämän ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -333,6 +334,7 @@ fi:
       dismiss_notifications: "Merkitse kaikki luetuiksi"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
+      dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       edit_history_public: "Anna muiden nähdä viestieni revisiot"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
       enable_quoting: "Ota käyttöön viestin lainaaminen tekstiä valitsemalla"
@@ -557,6 +559,7 @@ fi:
     read_only_mode:
       enabled: "Olet Vain luku -tilassa. Voit jatkaa selaamista, muttet välttämättä pysty vaikuttamaan sisältöön."
       login_disabled: "Kirjautuminen ei ole käytössä sivuston ollessa vain luku -tilassa."
+    too_few_topics_notice: "Luo vähintään 5 julkista ketjua ja %{posts} julkista vastausta saadaksesi keskustelun käyntiin. Uudet käyttäjät eivät voi saavuttaa korkeampia luottamustasoja, jos heillä ei ole tarpeeksi luettavaa sisältöä. Tämä viesti näytetään vain henkilökunnalle."
     learn_more: "opi lisää..."
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
@@ -741,6 +744,13 @@ fi:
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkattu viesti' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} lainasi sinua ketjussa "{{topic}}" - {{site_title}}'
+        replied: '{{username}} vastasi sinulle ketjussa "{{topic}}" - {{site_title}}'
+        posted: '{{username}} vastasi ketjuun "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} lähetti sinulle yksityisviestin ketjussa "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkitti viestiisi aiheesta "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Lisää kuva"
       title_with_attachments: "Lisää kuva tai tidosto"
@@ -1949,7 +1959,7 @@ fi:
         show_public_profile: "Näytä julkinen profiili"
         impersonate: 'Esiinny käyttäjänä'
         ip_lookup: "IP haku"
-        log_out: "Kirjaudu ulos"
+        log_out: "Kirjaa ulos"
         logged_out: "Käyttäjä on kirjautunut ulos kaikilla laitteilla"
         revoke_admin: 'Peru ylläpitäjän oikeudet'
         grant_admin: 'Myönnä ylläpitäjän oikeudet'
@@ -1981,7 +1991,7 @@ fi:
         anonymize_failed: "Käyttäjätilin anonymisointi ei onnistunut."
         delete: "Poista käyttäjä"
         delete_forbidden_because_staff: "Ylläpitäjiä ja valvojia ei voi poistaa."
-        delete_posts_forbidden_because_staff: "Ylläpitäjien ja moderaattoreiden kaikkia viestejä ei voi poistaa."
+        delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
           one: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivä ei voi poistaa)"
           other: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivää ei voi poistaa)"
@@ -2010,7 +2020,7 @@ fi:
         block_explanation: "Estetty käyttäjä ei voi luoda viestejä tai ketjuja."
         trust_level_change_failed: "Käyttäjän luottamustason vaihtamisessa tapahtui virhe."
         grant_admin_failed: "Ylläpitäjän oikeuksian antaminen ei onnistunut."
-        grant_moderation_failed: "Moderaattorin oikeuksien antaminen ei onnistunut."
+        grant_moderation_failed: "Valvojan oikeuksien myöntäminen ei onnistunut."
         suspend_modal_title: "Hyllytä käyttäjä"
         trust_level_2_users: "Käyttäjät luottamustasolla 2"
         trust_level_3_requirements: "Luottamustaso 3 vaatimukset"

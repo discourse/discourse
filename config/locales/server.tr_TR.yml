@@ -560,6 +560,7 @@ tr_TR:
     consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, e-postalarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
     site_contact_username_warning: "Önemli otomatik mesajları gönderen kişi olarak gözükecek adminin kullanıcı adını girin. <a href='/admin/site_settings'>Site Ayarları&amp;lt;/a> sayfasından site_contact_username parametresini güncelleyin."
     notification_email_warning: "Bildiri e-postaları alan adınıza bağlı geçerli bir e-posta adresinden yollanmıyor; e-postalar düzenli ve güvenilir bir şekilde ulaşmayabilir. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasından notification_email değeri için geçerli bir yerel e-posta adresi girin."
+    s3_deprecation_warning: "DİKKAT! Resim/eklenti depolama için Amazon S3 kullanımı yakında ıskartaya kaldırılacaktır. Lütfen, <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>talimatlara</a> uyarak yerel depolamaya geçiş yapınız."
   content_types:
     education_new_reply:
       title: "Yeni Kullanıcı Eğitimi: İlk Cevaplar"

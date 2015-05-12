@@ -8,10 +8,24 @@
 es:
   js:
     poll:
+      voters:
+        zero: "votantes"
+        one: "votante"
+        other: "votantes"
+      total_votes:
+        zero: "total votos"
+        one: "total voto"
+        other: "total votos"
       average_rating: "Puntuación media: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Puedes escoger como mínimo <strong>%{count}</strong> opciones."
+          up_to_max_options: "Puedes escoger hasta <strong>%{count}</strong> opciones."
+          x_options: "Puedes escoger <strong>%{count}</strong> opciones."
+          between_min_and_max_options: "Puedes escoger entre <strong>%{min}</strong> y <strong>%{max}</strong> opciones."
       cast-votes:
         title: "Votar"
-        label: "Votar ahora"
+        label: "¡Vota!"
       show-results:
         title: "Mostrar los resultados de la encuesta"
         label: "Mostrar resultados"
@@ -21,10 +35,10 @@ es:
       open:
         title: "Abrir encuesta"
         label: "Abrir"
-        confirm: "¿Estás seguro de querer abrir esta encuesta?"
+        confirm: "¿Seguro que quieres abrir esta encuesta?"
       close:
         title: "Cerrar la encuesta"
         label: "Cerrar"
-        confirm: "¿Estás seguro de querer cerrar esta encuesta?"
+        confirm: "¿Seguro que quieres cerrar esta encuesta?"
       error_while_toggling_status: "Ha ocurrido un error mientras se cambiaba el estado de esta encuesta."
-      error_while_casting_votes: "Ha ocurrido un error a la hora de mandar los votos."
+      error_while_casting_votes: "Ha ocurrido un error a la hora de enviar los votos."

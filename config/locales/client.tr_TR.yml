@@ -533,7 +533,7 @@ tr_TR:
     last_post: Son gönderi
     last_reply_lowercase: son cevap
     replies_lowercase:
-      other: cevaplar
+      other: cevap
     summary:
       enabled_description: "Bu konunun özetini görüntülemektesiniz: topluluğun en çok ilgisini çeken gönderiler"
       description: "<b>{{count}}</b> sayıdacevap var."
@@ -1283,7 +1283,7 @@ tr_TR:
     views: "Görüntüleme"
     views_lowercase:
       other: "görüntüleme"
-    replies: "Cevaplar"
+    replies: "Cevap"
     views_long: "bu konu {{number}} defa görüntülendi"
     activity: "Aktivite"
     likes: "Beğeni"
@@ -1292,7 +1292,7 @@ tr_TR:
     likes_long: "bu konuda {{number}} beğeni var"
     users: "Kullanıcı"
     users_lowercase:
-      other: "kullanıcılar"
+      other: "kullanıcı"
     category_title: "Kategori"
     history: "Geçmiş"
     changed_by: "Yazan {{author}}"
@@ -1368,7 +1368,7 @@ tr_TR:
         this_month: "Bu ay"
         this_week: "Bu hafta"
         today: "Bugün"
-        other_periods: "daha fazla popüler konuya bakın"
+        other_periods: "daha fazla konuya bak"
     browser_update: 'Malesef,  <a href="http://www.discourse.org/faq/#browser">tarayıcınız bu site için çok eski</a>. Lütfen <a href="http://browsehappy.com">tarayıcınızı güncelleyin</a>.'
     permission_types:
       full: "Oluştur / Cevapla / Bak"

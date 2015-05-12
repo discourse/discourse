@@ -20,11 +20,13 @@ pl_PL:
   is_reserved: "jest zarezerwowana"
   purge_reason: "Automatycznie usunięto jako porzucone, nieaktywne konto"
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
+  anonymous: "Anonim"
   errors:
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "ograniczono do %{max} znaków, podano %{length}."
       invalid_boolean: "Nieprawidłowy boolean."
+      taken: "jest już w użyciu"
       accepted: musi zostać zaakceptowane
       blank: nie może być puste
       present: musi być puste
@@ -61,6 +63,10 @@ pl_PL:
       other_than: "musi być różna od %{count}"
     template:
       body: 'Wystąpiły problemy z następującymi polami:'
+      header:
+        one: 1 błąd uniemożliwił zapisanie %{model}
+        few: '%{count} błędy uniemożliwiły zapisanie %{model}'
+        other: '%{count} błędów uniemożliwiło zapisanie %{model}'
     embed:
       load_from_remote: "Wystąpił błąd podczas wczytywania tego wpisu."
   bulk_invite:
@@ -133,6 +139,8 @@ pl_PL:
     hot: "Popularne wątki"
   too_late_to_edit: "Ten wpis został utworzony zbyt dawno. Nie może być edytowany ani usunięty."
   excerpt_image: "zdjęcie"
+  queue:
+    delete_reason: "Skasowany z poziomu kolejki moderacji."
   groups:
     errors:
       can_not_modify_automatic: "Nie możesz modyfikować automatycznej grupy"
@@ -516,18 +524,23 @@ pl_PL:
     user_to_user_private_messages:
       title: "Użytkownik-do-użytkownika"
       xaxis: "Dzień"
+      yaxis: "Liczba wiadomości"
     system_private_messages:
       title: "System"
       xaxis: "Dzień"
+      yaxis: "Liczba wiadomości"
     moderator_warning_private_messages:
       title: "Ostrzeżenia moderatorów"
       xaxis: "Dzień"
+      yaxis: "Liczba wiadomości"
     notify_moderators_private_messages:
       title: "Powiadomienia moderatorów"
       xaxis: "Dzień"
+      yaxis: "Liczba wiadomości"
     notify_user_private_messages:
       title: "Powiadom użytkownika"
       xaxis: "Dzień"
+      yaxis: "Liczba wiadomości"
     top_referrers:
       title: "Najczęstszy referrerzy"
       xaxis: "Użytkownik"
@@ -616,8 +629,10 @@ pl_PL:
       description: "Przewodnik i inne informacje dla nowych użytkowników."
     welcome_user:
       title: "Przywitanie: Nowy użytkownik"
+      description: "Wiadomość wysyłana automatycznie do wszystkich nowych użytkowników zaraz po ich rejestracji."
     welcome_invite:
       title: "Przywitanie: Zaproszony użytkownik"
+      description: "Wiadomość wysyłana automatycznie do nowych użytkowników po zaakceptowaniu zaproszenia od innego użytkownika."
     login_required_welcome_message:
       title: "Wymagane logowanie: wiadomość powitalna"
       description: "Wiadomość powitalna wyświetlana niezalogowanym użytkownikom, gdy ustawienie 'login required' jest włączone."
@@ -639,9 +654,12 @@ pl_PL:
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"
     min_post_length: "Minimalna długość wpisu w znakach"
+    min_first_post_length: "Minimalna długość treści (liczba znaków) pierwszego wpisu w temacie "
+    min_private_message_post_length: "Minimalna długość treści wiadomości "
     max_post_length: "Maksymalna długość wpisu, w znakach"
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
+    min_private_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
     allow_uncategorized_topics: "Pozwól na tworzenie tematów bez kategorii."
     uncategorized_description: "Znajdują się tu wątki którym jeszcze nie przypisano odpowiedniej kategorii."
@@ -650,6 +668,7 @@ pl_PL:
     educate_until_posts: "Wyświetlaj okno edukacyjne po rozpoczęciu pisania  dopóki nowy użytkownik nie napisze tylu wpisów."
     title: "Nazwa tej strony używana w tagu title."
     site_description: "Opis strony w jednym zdaniu, wykorzystywany w meta tagu description."
+    contact_url: "URL kontaktowy dla tego serwisu. Używany na podstronie /about."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
@@ -665,6 +684,8 @@ pl_PL:
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     exclude_rel_nofollow_domains: "A pipe-delimited list of domains where nofollow is not added (tld.com will automatically allow sub.tld.com as well)"
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
+    post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
+    onebox_domains_whitelist: "Lista domen dla których włączony jest oneboxing; te domeny powinny wspierać OpenGraph lub oEmbed. Można to sprawdzić na  http://iframely.com/debug"
     logo_url: "Logo w lewym górnym rogu strony; jeśli zostawisz to pole puste zamiast logo pojawi się nazwa strony w formie tekstowej"
     digest_logo_url: "Alternatywne logo używane w biuletynie email. Jeśli puste, zostanie użyta wartość z pola `logo_url`, np: http://example.com/logo.png"
     logo_small_url: "Małe logo w lewym górnym rogu strony widoczne przy przewijaniu. Jeśli zostawisz to pole puste zamiast logo pojawi się symbol strony domowej."
@@ -672,6 +693,12 @@ pl_PL:
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
     email_custom_headers: "A pipe-delimited list of custom email headers"
+    summary_score_threshold: "Minimalny wynik wpisu wymagany do umieszczenia go w 'Podsumowaniu tematu'"
+    summary_posts_required: "Minimalna liczba wpisów w temacie zanim 'Podsumowanie tematu' jest dostępne"
+    summary_likes_required: "Minimalna liczba polubień w temacie zanim 'Podsumowanie tematu' jest dostępne"
+    summary_percent_filter: "Gdy użytkownik kliknie na 'Podsumowaniu tematu', pokaż % najlepszych wpisów"
+    summary_max_results: "Maksymalna liczba wpisów w 'Podsumowaniu tematu'"
+    enable_private_messages: "Zezwalaj użytkownikom o 1 poziomie zaufania na tworzenie wiadomości i odpowiadanie na nie."
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     auto_track_topics_after: "Liczba milisekund zanim temat jest automatycznie dodany do śledzonych. użytkownik może nadpisać tę wartość w swoich ustawieniach (0 zawsze, -1 nigdy)"
@@ -698,6 +725,8 @@ pl_PL:
     min_password_length: "Minimalna długość hasła."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_yahoo_logins: "Enable Yahoo authentication"
+    google_oauth2_client_id: "Client ID twojej aplikacji w Google"
+    google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
     enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
@@ -710,7 +739,15 @@ pl_PL:
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     backup_daily: "Automatycznie utwórz raz dziennie kopie zapasową strony."
     active_user_rate_limit_secs: "How frequently we update the 'last_seen_at' field, in seconds"
+    verbose_localization: "Wyświetlaj dodatkowe identyfikatory tłumaczeń w treści etykiet"
     previous_visit_timeout_hours: "How long a visit lasts before we consider it the 'previous' visit, in hours"
+    max_likes_per_day: "Maksymalna liczba polubień per użytkownik per dzień"
+    max_flags_per_day: "Maksymalna liczba oflagowań per użytkownik per dzień."
+    max_bookmarks_per_day: "Maksymalna liczba zakładek per użytkownik per dzień."
+    max_edits_per_day: "Maksymalna liczba edycji per użytkownik per dzień."
+    max_topics_per_day: "Maksymalna liczba tematów jakie użytkownik może stworzyć jednego dnia."
+    max_private_messages_per_day: "Maksymalna liczba wiadomości jakie użytkownik może wysłać jednego dnia."
+    max_invites_per_day: "Maksymalna liczba zaproszeń jakie użytkownik może wysłać jednego dnia."
     suggested_topics: "Liczba sugerowanych tematów widocznych na końcu aktualnego tematu."
     limit_suggested_to_category: "Sugeruj tematy jedynie z tej samej kategorii."
     default_invitee_trust_level: "Domyślny poziom zaufania (0-4) dla zaproszonych użytkowników."
@@ -732,7 +769,11 @@ pl_PL:
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Zezwól użytkownikom przesyłanie własnych avatarów."
+    digest_topics: "Maksymalna liczba tematów w podsumowaniu e-mail."
+    digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
     default_digest_email_frequency: "How often users receive digest emails by default. They can change this setting in their preferences."
+    suppress_digest_email_after_days: "Nie wysyłaj podsumowań e-mail użytkownikom, którzy nie odwiedzili serwisu dłużej niż (n) dni."
+    disable_digest_emails: "Wyłącz wysyłanie podsumowania e-mail wszystkim uzytkownikom. "
     default_external_links_in_new_tab: "Otwieraj zewnętrzne odnośniki w nowej karcie. Użytkownicy mogą zmienić to ustawienie w swoich preferencjach."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
@@ -775,6 +816,30 @@ pl_PL:
     archived_disabled: "Temat został przywrócony z archiwum. Został odblokowany i może ponownie być zmieniany."
     closed_enabled: "Temat został zamknięty. Dodawanie nowych odpowiedzi nie jest możliwe."
     closed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
+    autoclosed_enabled_days:
+      one: "Ten temat został automatycznie zamknięty po 1 dniu. Tworzenie nowych odpowiedzi nie jest możliwe."
+      few: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest możliwe."
+      other: "Ten temat został automatycznie zamknięty po %{count} dniach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+    autoclosed_enabled_hours:
+      one: "Ten temat został automatycznie zamknięty po 1 godzinie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      other: "Ten temat został automatycznie zamknięty po %{count} godzinach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+    autoclosed_enabled_minutes:
+      one: "Ten temat został automatycznie zamknięty po 1 minucie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      other: "Ten temat został automatycznie zamknięty po %{count} minutach. Tworzenie nowych odpowiedzi nie jest już możliwe."
+    autoclosed_enabled_lastpost_days:
+      one: "Ten temat został automatycznie zamknięty 1 dzień po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      other: "Ten temat został automatycznie zamknięty %{count} dni po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+    autoclosed_enabled_lastpost_hours:
+      one: "Ten temat został automatycznie zamknięty 1 godzinę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: "Ten temat został automatycznie zamknięty %{count} godziny po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      other: "Ten temat został automatycznie zamknięty %{count} godzin po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+    autoclosed_enabled_lastpost_minutes:
+      one: "Ten temat został automatycznie zamknięty 1 minutę po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      few: "Ten temat został automatycznie zamknięty %{count} minuty po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
+      other: "Ten temat został automatycznie zamknięty %{count} minut po ostatnim wpisie. Tworzenie nowych odpowiedzi nie jest już możliwe."
     autoclosed_disabled: "Temat został otwarty. Dodawanie odpowiedzi jest ponownie możliwe."
     pinned_enabled: "Temat został przypięty. Będzie pojawiać się na początku swojej kategorii dopóki nie zostanie odpięty przez obsługę lub prywatnie przez użytkownika."
     pinned_disabled: "Temat został odpięty. Już nie będzie pojawiać się na początku swojej kategorii."
@@ -946,6 +1011,7 @@ pl_PL:
         ---
         %{respond_instructions}
     digest:
+      subject_template: "[%{site_name}] Podsumowanie"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
       top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"

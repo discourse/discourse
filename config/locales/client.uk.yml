@@ -21,6 +21,7 @@ uk:
             mb: МБ
             tb: ТБ
     dates:
+      time: "HH:mm"
       tiny:
         half_a_minute: "< 1 хв"
         date_year: "MMM 'YY"
@@ -141,6 +142,9 @@ uk:
       title:
         search: "Шукати тему за назвою, url або id:"
         placeholder: "введіть назву теми"
+    queue:
+      topic: "Тема:"
+      delete_user: 'Видалити користувача'
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> написав(ла) <a href='{{topicUrl}}'>тему</a>"
       you_posted_topic: "<a href='{{userUrl}}'>Ви</a> написали <a href='{{topicUrl}}'>тему</a>"
@@ -1321,6 +1325,8 @@ uk:
           post_revision: "Коли користувач редагує або створює допис"
           trust_level_change: "Коли користувач змінює рівень довіри"
           user_change: "Коли користувач змінений або створений"
+        preview:
+          sample: "Зразок:"
     lightbox:
       download: "звантажити"
     keyboard_shortcuts_help:

@@ -14,7 +14,6 @@ tr_TR:
     default_poll_must_have_at_least_2_options: "Ankette en az 2 seçenek olmalı."
     named_poll_must_have_at_least_2_options: "<strong>%{name}</strong> isimli ankette en az 2 seçenek olmalı."
     default_poll_must_have_different_options: "Anketin farklı seçenekleri olmalı."
-    cannot_change_polls_after_5_minutes: "Anketler ilk 5 dakikadan sonra değiştirilemez. Değiştirmeniz gerekiyorsa bir moderatör ile iletişime geçin."
     no_polls_associated_with_this_post: "Bu gönderiyle alakalı bir anket yok."
     no_poll_with_this_name: "Bu gönderiyle alakalı <strong>%{name}</strong> isimli bir anket yok."
     topic_must_be_open_to_vote: "Konu oylanabilmesi için açık olmalı."

@@ -308,6 +308,7 @@ zh_CN:
       dismiss_notifications: "标记所有为已读"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
       disable_jump_reply: "不要在回复后跳转到我的新帖子"
+      dynamic_favicon: "在浏览器图标上显示新/更新的主题数量"
       edit_history_public: "让其他用户查看我的帖子的以前版本"
       external_links_in_new_tab: "始终在新的标签页打开外部链接"
       enable_quoting: "在高亮选择文字时启用引用回复"
@@ -528,6 +529,7 @@ zh_CN:
     read_only_mode:
       enabled: "只读模式已启用。你可以继续浏览这个站点但是无法进行交互操作。"
       login_disabled: "只读模式下不允许登录。"
+    too_few_topics_notice: "创建至少 5 个公共主题和 %{posts} 公开的回复活跃论坛。新用户无法在无内容可读的情况下提高用户等级。这个消息只显示给职员。"
     learn_more: "了解更多..."
     year: '年'
     year_desc: '365 天以前创建的主题'
@@ -711,6 +713,13 @@ zh_CN:
       moved_post: "<i title='移动了帖子' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移动了 {{description}}</p>"
       linked: "<i title='被外链的帖子' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
+      popup:
+        mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
+        quoted: '{{username}}在“{{topic}}”引用了你的帖子 - {{site_title}}'
+        replied: '{{username}}在“{{topic}}”回复了你 - {{site_title}}'
+        posted: '{{username}}在“{{topic}}”中发布了帖子 - {{site_title}}'
+        private_message: '{{username}}在“{{topic}}”中给你发送了一个消息 - {{site_title}}'
+        linked: '{{username}}在“{{topic}}”中链接了你的帖子 - {{site_title}}'
     upload_selector:
       title: "插入图片"
       title_with_attachments: "上传图片或文件"
@@ -768,7 +777,7 @@ zh_CN:
         top: "没有最佳主题。"
         search: "没有搜索结果。"
         educate:
-          new: '<p>你讲发表新的主题。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
+          new: '<p>近期的主题将在这里显示。</p><p>默认情况下，近两天创建的主题是近期主题，并会显示一个 <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">新</span> 的标识。</p><p>你可以在你的 <a href="%{userPrefsUrl}">设置</a>中改变这一行为。</p>'
           unread: '<p>这里是你的未读主题。</p><p>默认情况下，下述主题将被认为是未读的，并会显示未读数目： <span class="badge new-posts badge-notification">1</span> 如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了追踪或监视。</p><p>你可以改变你的<a href="%{userPrefsUrl}">用户设置</a>.</p>'
       bottom:
         latest: "没有更多主题可看了。"

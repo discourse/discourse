@@ -600,6 +600,7 @@ de:
     consumer_email_warning: "Deine Seite verwendet Gmail (oder einen anderen für Endkunden gedachten Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat eine Schranke bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Diensts in Erwägung ziehen."
     site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
     notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
+    s3_deprecation_warning: "ACHTUNG! Nutzung von Amazon S3 für die Speicherung von Bildern/Anhängen wird bald nicht mehr empfohlen. Bitte folge dieser <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>Anleitung</a> um auf lokale Speicherung umzusteigen."
   content_types:
     education_new_reply:
       title: "Hilfe: Erste Beiträge"

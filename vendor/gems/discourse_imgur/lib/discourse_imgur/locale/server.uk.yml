@@ -5,4 +5,7 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  site_settings:
+    enable_imgur: "Завантажувати зображення на imgur замість того, щоб зберігати їх локально"
+    imgur_client_id: "Потрібен ваш imgur.com client ID, щоб завантажування могло працювати"
