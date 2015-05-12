@@ -28,6 +28,10 @@
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   }
 
+  > tbody > tr:first-of-type {
+    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  }
+
   th,
   td {
     line-height: 1.25;
