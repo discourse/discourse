@@ -1,4 +1,4 @@
-<p>{{count-i18n key=topic.multi_select.description count=selectedPostsCount}}</p>
+<p>{{count-i18n key="topic.multi_select.description" count=selectedPostsCount}}</p>
 
 {{#if canSelectAll}}
   <p><a href {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
@@ -9,17 +9,19 @@
 {{/if}}
 
 {{#if canDeleteSelected}}
-  <button class='btn' {{action "deleteSelected"}}><i class='fa fa-trash-o'></i> {{i18n 'topic.multi_select.delete'}}</button>
+  {{d-button action="deleteSelected" icon="trash-o" label="topic.multi_select.delete"}}
 {{/if}}
 
 {{#if canSplitTopic}}
-  <button class='btn' {{action "splitTopic"}}><i class='fa fa-sign-out'></i> {{i18n 'topic.split_topic.action'}}</button>
+  {{d-button action="splitTopic" icon="sign-out" label="topic.split_topic.action"}}
 {{/if}}
+
 {{#if canMergeTopic}}
-  <button class='btn' {{action "mergeTopic"}}><i class='fa fa-sign-out'></i> {{i18n 'topic.merge_topic.action'}}</button>
+  {{d-button action="mergeTopic" icon="sign-out" label="topic.merge_topic.action"}}
 {{/if}}
+
 {{#if canChangeOwner}}
-  <button class='btn' {{action "changeOwner"}}><i class='fa fa-user'></i> {{i18n 'topic.change_owner.action'}}</button>
+  {{d-button action="changeOwner" icon="user" label="topic.change_owner.action"}}
 {{/if}}
 
 <p class='cancel'><a href {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>
