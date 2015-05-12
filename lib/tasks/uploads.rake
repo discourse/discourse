@@ -175,7 +175,7 @@ task "uploads:missing" => :environment do
     Upload.order(:id).find_each do |upload|
 
       # could be a remote image
-      next unless upload.url =~ /^\/uploads\//
+      next unless upload.url =~ /^\/[^\/]/
 
       path = "#{public_directory}#{upload.url}"
       bad = true
@@ -190,7 +190,7 @@ task "uploads:missing" => :environment do
     OptimizedImage.order(:id).find_each do |optimized_image|
 
       # remote?
-      next unless optimized_image.url =~ /^\/uploads\//
+      next unless optimized_image.url =~ /^\/[^\/]/
 
       path = "#{public_directory}#{optimized_image.url}"
 
@@ -237,8 +237,8 @@ def regenerate_missing_optimized
 
     upload = optimized_image.upload
 
-    next unless optimized_image.url =~ /^\/uploads\//
-    next unless upload.url =~ /^\/uploads\//
+    next unless optimized_image.url =~ /^\/[^\/]/
+    next unless upload.url =~ /^\/[^\/]/
 
     thumbnail = "#{public_directory}#{optimized_image.url}"
     original = "#{public_directory}#{upload.url}"
