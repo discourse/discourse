@@ -34,7 +34,7 @@ task "uploads:migrate_from_s3" => :environment do
   puts "Migrating uploads from S3 to local storage"
   puts
 
-  Upload.order(:id).find_each do |upload|
+  Upload.find_each do |upload|
 
     # remove invalid uploads
     if upload.url.blank?
@@ -100,7 +100,7 @@ task "uploads:clean_up" => :environment do
     ##
 
     # uploads & avatars
-    Upload.order(:id).find_each do |upload|
+    Upload.find_each do |upload|
       path = "#{public_directory}#{upload.url}"
       if !File.exists?(path)
         upload.destroy rescue nil
@@ -111,7 +111,7 @@ task "uploads:clean_up" => :environment do
     end
 
     # optimized images
-    OptimizedImage.order(:id).find_each do |optimized_image|
+    OptimizedImage.find_each do |optimized_image|
       path = "#{public_directory}#{optimized_image.url}"
       if !File.exists?(path)
         optimized_image.destroy rescue nil
@@ -172,7 +172,7 @@ task "uploads:missing" => :environment do
     end
 
 
-    Upload.order(:id).find_each do |upload|
+    Upload.find_each do |upload|
 
       # could be a remote image
       next unless upload.url =~ /^\/[^\/]/
@@ -187,7 +187,7 @@ task "uploads:missing" => :environment do
       puts path if bad
     end
 
-    OptimizedImage.order(:id).find_each do |optimized_image|
+    OptimizedImage.find_each do |optimized_image|
 
       # remote?
       next unless optimized_image.url =~ /^\/[^\/]/
