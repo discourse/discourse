@@ -1,8 +1,9 @@
+import Presence from 'discourse/mixins/presence';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 // Modal related to auto closing of topics
-export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, {
+export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, Presence, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),

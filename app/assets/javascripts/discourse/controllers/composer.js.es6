@@ -1,4 +1,6 @@
-export default Ember.ObjectController.extend({
+import Presence from 'discourse/mixins/presence';
+
+export default Ember.ObjectController.extend(Presence, {
   needs: ['modal', 'topic', 'composer-messages', 'application'],
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Discourse.Composer.REPLY_AS_NEW_TOPIC_KEY),
