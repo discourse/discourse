@@ -211,7 +211,7 @@ de:
         one: "Dieses Thema hat <b>1</b> Beitrag, der genehmigt werden muss"
         many: "Dieses Thema hat <b>{{count}}</b> Beiträge, die genehmigt werden müssen"
       confirm: "Änderungen speichern"
-      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Damit werden alle ihre/seine Beiträge entfernt und ihre/seine E-Mail- und IP-Adresse geblockt."
+      delete_prompt: "Bist du sicher, dass du <b>%{username}</b> löschen möchtest? Es werden alle Beiträge des Benutzers gelöscht und dessen E-Mail- und IP-Adresse geblockt."
       approval:
         title: "Beitrag muss genehmigt werden"
         description: "Wir haben deinen neuen Beitrag erhalten. Dieser muss allerdings zunächst durch einen Moderator freigeschaltet werden. Bitte habe etwas Geduld. "
@@ -334,6 +334,7 @@ de:
       dismiss_notifications: "Alle als gelesen markieren"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
+      dynamic_favicon: "Zeige die Anzahl der neuen und geänderte Themen im Browser-Symbol"
       edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
@@ -556,8 +557,9 @@ de:
     logout: "Du wurdest abgemeldet."
     refresh: "Aktualisieren"
     read_only_mode:
-      enabled: "Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter nutzen, wobei jedoch einige Funktionen nicht funktionieren werden."
+      enabled: "Der Nur-Lesen-Modus ist aktiviert. Du kannst die Website weiter durchsuchen und lesen. Einige Funktionen werden jedoch wahrscheinlich nicht funktionieren."
       login_disabled: "Die Anmeldung ist deaktiviert während sich die Website im Nur-Lesen-Modus befindet."
+    too_few_topics_notice: "Erstelle mindestens 5 öffentliche Themen und %{posts} öffentliche Antworten, um die Diskussion ins Rollen zu bringen. Neue Benutzer können ihre Vertrauensstufe nur erhöhen, wenn es für sie etwas zu Lesen gibt. Diese Meldung erscheint nur für Mitarbeiter."
     learn_more: "mehr erfahren..."
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
@@ -742,6 +744,13 @@ de:
       moved_post: "<i title='Beitrag verschoben' class='fa fa-sign-out'></i><p><span>{{username}}</span> hat {{description}} verschoben</p>"
       linked: "<i title='Beitrag verlinkt' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='Abzeichen verliehen' class='fa fa-certificate'></i><p>Abzeichen '{{description}}' erhalten</p>"
+      popup:
+        mentioned: '{{username}} hat dich in "{{topic}}" - {{site_title}} erwähnt'
+        quoted: '{{username}} hat dich in "{{topic}}" - {{site_title}} zitiert'
+        replied: '{{username}} hat dir in "{{topic}}" - {{site_title}} geantwortet'
+        posted: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag verfasst'
+        private_message: '{{username}} hat dir in "{{topic}}" - {{site_title}} eine Nachricht geschickt'
+        linked: '{{username}} hat in "{{topic}}" - {{site_title}} einen Beitrag von dir verlinkt'
     upload_selector:
       title: "Ein Bild hinzufügen"
       title_with_attachments: "Ein Bild oder eine Datei hinzufügen"
@@ -2181,7 +2190,7 @@ de:
         add: "Neues Emoji hinzufügen"
         name: "Name"
         image: "Bild"
-        delete_confirm: "Möchtest du wirklich das %{name}: Emoji löschen?"
+        delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
     lightbox:
       download: "herunterladen"
     search_help:

@@ -526,7 +526,7 @@ ja:
     contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
     site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーのり用を検討してください。"
+    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
     notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   content_types:
     education_new_reply:

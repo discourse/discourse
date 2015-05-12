@@ -92,6 +92,7 @@ he:
       email: 'שלח קישור בדוא"ל'
     topic_admin_menu: "פעולות ניהול לנושא"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, תשלח."
+    s3_deprecation_warning: "אזהרה! Amazon S3 יהיה בקרוב לא מומלץ לשימוש לאכסון צרופות/image. אנא עקבו אחר <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'> ההנחיות </a> להעברה לאכסון מקומי."
     edit: 'ערוך את הכותרת והקטגוריה של הנושא'
     not_implemented: "סליחה, תכונה זו עדיין לא מומשה!"
     no_value: "לא"
@@ -107,6 +108,9 @@ he:
     show_more: "הראה עוד"
     show_help: "עזרה"
     links: "קישורים"
+    links_lowercase:
+      one: "קישור"
+      other: "קישורים"
     faq: "שאלות נפוצות"
     guidelines: "כללי התנהלות"
     privacy_policy: "מדיניות פרטיות"
@@ -193,6 +197,28 @@ he:
       title:
         search: "חפש נושא לפי שם, כתובת או מזהה:"
         placeholder: "הקלד את כותרת הנושא כאן"
+    queue:
+      topic: "נושא:"
+      approve: 'לאשר'
+      reject: 'לדחות'
+      delete_user: 'מחק משתמש'
+      title: "זקוק לאישור"
+      none: "לא נותרו הודעות לבדיקה"
+      edit: "ערוך"
+      cancel: "ביטול"
+      view_pending: "הצג הודעות ממתינות"
+      has_pending_posts:
+        one: " בנושא זה ישנה הודעה אחת הממתינה לאישור"
+        many: "בנושא זה ישנם <b>{{count}}</b>  הודעות הממתינות לאישור"
+      confirm: "שמור שינויים"
+      delete_prompt: "אתה בטוח שאתה רוצה למחוק את המשתמש <b>%{username}</b>? פעולה זו תמחק את כל ההודעות , תחסום את הדואר האלקטרוני וכתובת ה-IP של המשתמש."
+      approval:
+        title: "ההודעה זקוקה לאישור"
+        description: "קיבלנו את הודעתך אך נדרש אישור של מנחה לפני שההודעה תוצג, אנא המתן בסבלנות."
+        pending_posts:
+          one: "יש לך הודעה <strong>אחת</strong> ממתינה לאישור"
+          other: "יש לך  <strong>{{count}}</strong>  הודעות ממתינות."
+        ok: "אשר"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> פרסם <a href='{{topicUrl}}'>את הנושא</a>"
       you_posted_topic: "<a href='{{userUrl}}'>את/ה</a> פרסמת <a href='{{topicUrl}}'>את הנושא</a>"
@@ -254,6 +280,7 @@ he:
       '11': "עריכות"
       '12': "פריטים שנשלחו"
       '13': "דואר נכנס"
+      '14': "ממתין"
     categories:
       all: "כל הקטגוריות"
       all_subcategories: "הכל"
@@ -307,6 +334,7 @@ he:
       dismiss_notifications: "סימון הכל כנקרא"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
+      dynamic_favicon: "הצג את מספר נושאים חדשים/מעודכנים על האייקון של הדפדפן"
       edit_history_public: "אפשרו למשתמשים אחרים לראות את תיקוני הפרסומים שלי"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
@@ -449,6 +477,7 @@ he:
       auto_track_topics: "מעקב אוטומטי נושאים אליהם נכנסתי"
       auto_track_options:
         never: "אף פעם"
+        immediately: "מיידי"
         after_n_seconds:
           one: "אחרי שנייה אחת"
           other: "אחרי {{count}} שניות"
@@ -528,7 +557,9 @@ he:
     logout: "נותקת מהמערכת"
     refresh: "רענן"
     read_only_mode:
+      enabled: "מופעל מצב קריאה בלבד. אפשר להמשיך לגלוש באתר, אך חלק מהפעולות עלולות לא לעבוד."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
+    too_few_topics_notice: "צור לפחות 5 נושאים ציבוריים ו-%{posts} תגובות ציבוריות להתחיל את הדיון. משתמשים חדשים לא יכולים להשיג דרגות אמון אלא אם יש להם תוכן לקרוא. הודעה זו מופיעה רק לצוות."
     learn_more: "למד עוד..."
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
@@ -541,6 +572,10 @@ he:
     mute: השתק
     unmute: בטל השתקה
     last_post: הודעה אחרונה
+    last_reply_lowercase: תגובה אחרונה
+    replies_lowercase:
+      one: תגובה
+      other: תגובות
     summary:
       enabled_description: "אתם צופים בסיכום נושא זה: הפרסומים המעניינים ביותר כפי שסומנו על ידי הקהילה."
       description: "ישנן <b> {{count}}</b> תגובות"
@@ -634,6 +669,7 @@ he:
         title_too_long: "על הכותרת להיות באורך {{max}} לכל היותר."
         post_missing: "ההודעה אינה יכולה להיות ריקה."
         post_length: "על ההודעה להיות באורך {{min}} תווים לפחות."
+        try_like: 'האם ניסית את כפתור ה-<i class="fa fa-heart"></i>'
         category_missing: "עליך לבחור קטגוריה."
       save_edit: "שמירת עריכה"
       reply_original: "תגובה לנושא המקורי"
@@ -707,6 +743,13 @@ he:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> הזיז/ה {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>הרוויח/ה '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} הזכיר אוך ב"{{topic}}" - {{site_title}}'
+        quoted: '{{username}} ציטט אותך ב"{{topic}}" - {{site_title}}'
+        replied: '{{username}} הגיב לך ב"{{topic}}" - {{site_title}}'
+        posted: '{{username}} הגיב ב"{{topic}}" - {{site_title}}'
+        private_message: '{{username}} שלח לך הודעה פרטית ב"{{topic}}" - {{site_title}}'
+        linked: '{{username}} קישר להודעה שלך מ"{{topic}}" - {{site_title}}'
     upload_selector:
       title: "הוספת תמונה"
       title_with_attachments: "הוספת תמונה או קובץ"
@@ -942,12 +985,21 @@ he:
         email_or_username: "כתובת דואר אלקטרוני או שם משתמש של המוזמן"
         email_or_username_placeholder: "כתובת דואר אלקטרוני או שם משתמש"
         action: "הזמנה"
+        success: "הזמנו את המשתמש להשתתף בשיחה."
         error: "סליחה, הייתה שגיאה בהזמנת משתמש זה."
         group_name: "שם הקבוצה"
       invite_reply:
         title: 'הזמנה'
+        username_placeholder: "שם משתמש"
+        action: 'שלח הזמנה'
+        help: 'הזמן אנשים אחרים לנושא זה דרך דואר אלקטרוני או התראות'
         to_forum: "נשלח מייל קצר המאפשר לחברך להצטרף באופן מיידי באמצעות לחיצה על קישור, ללא צורך בהתחברות למערכת הפורומים."
+        sso_enabled: "הכנס את שם המשתמש של האדם שברצונך להזמין לנושא זה."
+        to_topic_blank: "הכנס את שם המשתמש או כתובת דואר האלקטרוני של האדם שברצונך להזמין לנושא זה."
+        to_topic_username: "הכנסת את שם המשתמש של האדם שברצונך להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לנושא זה."
+        to_username: "הכנס את שם המשתמש של האדם שברצונך להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לנושא זה."
         email_placeholder: 'name@example.com'
+        success_username: "הזמנו את המשתמש להשתתף בנושא."
       login_reply: 'התחברו כדי להשיב'
       filters:
         n_posts:
@@ -991,8 +1043,10 @@ he:
           one: בחרת הודעה אחת.
           other: בחרת <b>{{count}}</b> הודעות.
     post:
+      reply: "השב ל {{link}} {{replyAvatar}} {{username}}"
       reply_topic: "תגובה ל {{link}}"
       quote_reply: "תגובה עם ציטוט"
+      edit: "עורך את {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "
       post_number: "הודעה {{number}}"
       last_edited_on: "הודעה נערכה לאחרונה ב"
@@ -1086,6 +1140,7 @@ he:
           inappropriate: "{{icons}} סומן בלתי ראוי"
           notify_moderators: "{{icons}} הודיעו למנהלים"
           notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>הודיעו למנהלים</a>"
+          notify_user: "{{icons}} שלח הודעה"
           bookmark: "{{icons}} סימנו כמועדף"
           like: "{{icons}} נתנו לייק"
           vote: "{{icons}} הצביעו עבור זה"
@@ -1133,6 +1188,9 @@ he:
           notify_moderators:
             one: "אדם אחד דגלל את זה לניהול"
             other: "{{count}} אנשים סמנו את זה לניהול"
+          notify_user:
+            one: "אדם אחד שלח הודעה למשתמש זה"
+            other: "{{count}} שלחו הודעה למשתמש זה"
           bookmark:
             one: "אדם אחד סימן הודעה זו כמועדפת"
             other: "{{count}} אנשים סימנו הודעה זו כמועדפת"
@@ -1357,6 +1415,16 @@ he:
       top:
         title: "מובילים"
         help: "הנושאים הפעילים ביותר בשנה, חודש, שבוע או יום האחרונים"
+        all:
+          title: "תמיד"
+        yearly:
+          title: "שנתי"
+        monthly:
+          title: "חודשי"
+        weekly:
+          title: "שבועי"
+        daily:
+          title: "יומי"
         this_year: "השנה"
         this_month: "החודש"
         this_week: "השבוע"
@@ -1530,15 +1598,18 @@ he:
         read_only:
           enable:
             title: "אפשר מצב קריאה בלבד"
+            label: "אפשר מצב \"קריאה בלבד\""
             confirm: "אתה בטוח שברצונך לאפשר את מצב קריאה בלבד??"
           disable:
             title: "בטל מצב קריאה בלבד"
+            label: "בטל מצב \"קריאה בלבד\""
         logs:
           none: "עדיין אין לוגים..."
         columns:
           filename: "שם קובץ"
           size: "גודל"
         upload:
+          label: "העלה"
           uploading: "מעלה..."
           success: "'{{filename}}' הועלה בהצלחה."
           error: "הייתה שגיאה במהלך העלאת '{{filename}}': {{message}}"
@@ -1546,19 +1617,23 @@ he:
           is_running: "פעולה רצה כרגע..."
           failed: "ה{{operation}} נכשלה. אנא בדוק את הלוגים."
           cancel:
+            label: "ביטול"
             title: "בטל את הפעולה הנוכחית"
             confirm: "אתה בטוח שברצונך לבטל את הפעולה הנוכחית?"
           backup:
+            label: "גבה"
             title: "צור גיבוי"
             confirm: "האם תרצו להתחיל גיבוי חדש?"
             without_uploads: "כן (ללא הכללת קבצים)"
           download:
+            label: "הורד"
             title: "הורד את הגיבוי"
           destroy:
             title: "הסר את הגיבוי"
             confirm: "אתה בטוח שברצונך להשמיד את הגיבוי הזה?"
           restore:
             is_disabled: "שחזור אינו מאופשר לפי הגדרות האתר."
+            label: "שחזר"
             title: "שחזר את הגיבוי"
             confirm: "אתה בטוח שברצונך לשחזר את הגיבוי הזה?"
           rollback:

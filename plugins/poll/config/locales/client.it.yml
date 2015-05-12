@@ -8,4 +8,37 @@
 it:
   js:
     poll:
+      voters:
+        zero: "votanti"
+        one: "votante"
+        other: "votanti"
+      total_votes:
+        zero: "voti totali"
+        one: "voto totale"
+        other: "voti totali"
       average_rating: "Voto medio: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Puoi scegliere al massimo <strong>%{count}</strong> opzioni."
+          up_to_max_options: "Puoi scegliere fino a <strong>%{count}</strong> opzioni."
+          x_options: "Puoi scegliere <strong>%{count}</strong> opzioni."
+          between_min_and_max_options: "Puoi scegliere tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
+      cast-votes:
+        title: "Vota"
+        label: "Vota!"
+      show-results:
+        title: "Visualizza i risultati del sondaggio"
+        label: "Mostra i risultati"
+      hide-results:
+        title: "Torna ai tuoi voti"
+        label: "Nascondi i risultati"
+      open:
+        title: "Apri il sondaggio"
+        label: "Apri"
+        confirm: "Sicuro di voler aprire questo sondaggio?"
+      close:
+        title: "Chiudi il sondaggio"
+        label: "Chiudi"
+        confirm: "Sicuro di voler chiudere questo sondaggio?"
+      error_while_toggling_status: "Si è verificato un errore nel commutare lo stato di questo sondaggio."
+      error_while_casting_votes: "Si è verificato un errore nella votazione."

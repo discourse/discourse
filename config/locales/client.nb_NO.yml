@@ -91,7 +91,7 @@ nb_NO:
       google+: 'del denne lenken på Google+'
       email: 'del denne lenken i en e-post'
     topic_admin_menu: "admin-handlinger for emne"
-    emails_are_disabled: "All outgunned email har blitt deaktivert globalt av en administrator. Ingen email varslinger vil bli sent. "
+    emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     edit: 'rediger tittelen og kategorien til dette emnet'
     not_implemented: "Den funksjonen har ikke blitt implementert ennå, beklager!"
     no_value: "Nei"
@@ -389,11 +389,11 @@ nb_NO:
       email:
         title: "E-post"
         instructions: "Blir aldri vist offentlig"
-        ok: "Vi sender deg en email for å bekrefte"
-        invalid: "Vennligst gi en gyldig email-addresse"
-        authenticated: "Din email har blitt autentisert av {{provider}}"
+        ok: "Vi sender deg en e-post for å bekrefte"
+        invalid: "Vennligst oppgi en gyldig e-postadresse"
+        authenticated: "Din e-post har blitt autentisert av {{provider}}"
         frequency:
-          zero: "Vi sender deg straks en email hvis du ikke har lest tingen vi sendte deg en email om."
+          zero: "Vi sender deg straks en e-post hvis du ikke har lest saken vi sendte deg en e-post om."
           one: "Du får bare e-post hvis du ikke er blitt sett det siste minuttet."
           other: "Du får bare e-post hvis du ikke har blitt sett de siste {{count}} minuttene."
       name:
@@ -407,14 +407,14 @@ nb_NO:
         instructions: "Unikt, kort og uten mellomrom."
         short_instructions: "Folk kan nevne deg som @{{username}}."
         available: "Ditt brukernavn er tilgjengelig."
-        global_match: "Email stemmer med det registrerte brukernavnet"
+        global_match: "E-post stemmer med det registrerte brukernavnet"
         global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
         too_short: "Ditt brukernavn er for kort."
         too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet..."
-        enter_email: 'Brukernavn funnet; oppgi samsvarende email'
-        prefilled: "Email stemmer med dette registrerte brukernavnet"
+        enter_email: 'Brukernavn funnet; oppgi samsvarende e-post'
+        prefilled: "E-post stemmer med dette registrerte brukernavnet"
       locale:
         title: "Språk for grensesnitt"
         instructions: "Språk for grensesnitt. Endringen vil tre i kraft når du oppdaterer siden."
@@ -437,8 +437,8 @@ nb_NO:
         every_three_days: "hver tredje dag"
         weekly: "ukentlig"
         every_two_weeks: "annenhver uke"
-      email_direct: "Motta en email når noen siterer deg, svarer på dine innlegg, nevner mitt brukernavn eller inviterer meg til et emne"
-      email_private_messages: "Motta en email når noen sender deg en melding"
+      email_direct: "Motta en e-post når noen siterer deg, svarer på dine innlegg, nevner ditt brukernavn eller inviterer deg til et emne"
+      email_private_messages: "Motta en e-post når noen sender deg en melding"
       email_always: "Ikke stans e-postvarsler mens jeg er aktiv på nettstedet."
       other_settings: "Annet"
       categories_settings: "Kategorier"
@@ -572,7 +572,7 @@ nb_NO:
     created: 'Opprettet'
     created_lowercase: 'opprettet'
     trust_level: 'Tillitsnivå'
-    search_hint: 'brukernavn, email eller IP adresse'
+    search_hint: 'brukernavn, e-post eller IP-adresse'
     create_account:
       title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
@@ -582,7 +582,7 @@ nb_NO:
       invite: "Skriv inn ditt brukernavn eller din e-postadresse, så sender vi deg en e-post for å nullstille ditt passord."
       reset: "Nullstill passord"
       complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes vil du motta en e-post om kort tid med instruksjoner om hvordan du kan nullstille passordet."
-      complete_email: "Hvis en konto med e-postadressen <b>%{email}</b> eksisterer i systemet vil du om kort tid motta en epost med instruksjoner om hvordan du kan nullstille passordet."
+      complete_email: "Hvis en konto med e-postadressen <b>%{email}</b> eksisterer i systemet vil du om kort tid motta en e-post med instruksjoner om hvordan du kan nullstille passordet."
       complete_username_found: "Vi fant en konto med brukernavn <b>%{username}</b>. Du mottar om litt en e-post med instruksjoner for hovrdan du nullstiller passordet."
       complete_email_found: "Vi fant en konto med e-postadressen <b>%{email}</b>. Du mottar om litt en e-post med instruksjoner for hvordan du nullstiller passordet."
       complete_username_not_found: "Ingen konto har med brukernavnet <b>%{username}</b> er registrert"
@@ -715,6 +715,13 @@ nb_NO:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ble tildelt '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} nevnte deg i "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} siterte deg i "{{topic}}" - {{site_title}}'
+        replied: '{{username}} svarte deg i "{{topic}}" - {{site_title}}'
+        posted: '{{username}} skrev i "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sendte deg en privat melding: "{{topic}}" - {{site_title}}'
+        linked: '{{username}} lenket til ditt innlegg i "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Legg til Bilde"
       title_with_attachments: "Legg til et bilde eller en fil"
@@ -949,7 +956,7 @@ nb_NO:
       invite_reply:
         title: 'Inviter'
         to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
-        email_placeholder: 'email'
+        email_placeholder: 'navn@example.com'
       login_reply: 'Logg Inn for å svare'
       filters:
         n_posts:
@@ -1309,7 +1316,7 @@ nb_NO:
     history: "Historie"
     changed_by: "av {{author}}"
     raw_email:
-      title: "Rå Email"
+      title: "Rå e-post"
       not_available: "Ikke tilgjengelig!"
     categories_list: "Kategoriliste"
     filters:
@@ -1675,7 +1682,7 @@ nb_NO:
         sent_test: "sendt!"
         delivery_method: "Leveringsmetode"
         preview_digest: "Forhåndsvis Oppsummering"
-        preview_digest_desc: "Forhåndsvis innholdet i den ukentlige sammendrags emailen sendt til innaktive melemer."
+        preview_digest_desc: "Forhåndsvis innholdet i det ukentlige e-postsammendraget sendt til inaktive medlemmer."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -1741,7 +1748,7 @@ nb_NO:
             impersonate: "overta brukerkonto"
             anonymize_user: "anonymiser bruker"
         screened_emails:
-          title: "Kontrollerte Emails"
+          title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
           email: "E-postadresse"
           actions:
@@ -1781,7 +1788,7 @@ nb_NO:
         not_found: "Beklager, det brukernavner eksisterer ikke i systemet vårt."
         id_not_found: "Beklager, denne brukerID eksisterer ikke i vårt system."
         active: "Aktiv"
-        show_emails: "Vis email"
+        show_emails: "Vis e-poster"
         nav:
           new: "Ny"
           active: "Aktiv"

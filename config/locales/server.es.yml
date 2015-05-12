@@ -377,6 +377,7 @@ es:
         one: "hace casi 1 año"
         other: "hace casi %{count} años"
   password_reset:
+    no_token: "Lo sentimos, el enlace de cambio de contraseña es demasiado antiguo. Inicia sesión de nuevo y selecciona 'Olvidé mi contraseña' para obtener un nuevo enlace."
     choose_new: "Por favor elige un nuevo password"
     choose: "Por favor, elige una contraseña"
     update: 'Actualizar contraseña'
@@ -396,6 +397,7 @@ es:
     continue_button: "Continuar a %{site_name}"
     welcome_to: "Bienvenido a %{site_name}!"
     approval_required: "Un moderador debe aprobar manualmente tu nueva cuenta antes de que puedas acceder a este foro. ¡Recibirás un email cuando tu cuenta sea aprobada!"
+    missing_session: "No hemos podido detectar si tu cuenta fue creada. Por favor, asegúrate de tener activadas las cookies en tu navegador."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -613,6 +615,7 @@ es:
     consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
     site_contact_username_warning: "Introduce el nombre de un administrador o moderador simpático desde el cual se enviarán mensajes automáticos importantes. Actualiza site_contact_username en <a href='/admin/site_settings'>Ajustes del sitio</a>."
     notification_email_warning: "Las notificaciones por email no están siendo enviadas desde una dirección de correo electrónico válida en tu dominio; la entrega de emails será errática y poco fiable. Por favor, establece para notification_email una dirección de correo electrónico local válida en <a href='/admin/site_settings'>Ajustes del sitio</a>."
+    s3_deprecation_warning: "¡AVISO! El almacenamiento para archivos adjuntos e imágenes en Amazon S3 quedará obsoleto. Por favor, sigue las <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instrucciones</a> para trasladarlo a almacenamiento local."
   content_types:
     education_new_reply:
       title: "Educación de nuevo usuario: primeras respuestas"
@@ -722,6 +725,7 @@ es:
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
     traditional_markdown_linebreaks: "Utiliza saltos de línea tradicionales en Markdown, que requieren dos espacios al final para un salto de línea."
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
+    must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     ga_tracking_code: "Código de Google Analytics, ej: UA-12345678-9; visita http://google.com/analytics"
     ga_domain_name: "El nombre de dominio especificado en Google Analytics (ga.js). Ejemplo: misitio.com; ver en http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
@@ -970,6 +974,7 @@ es:
     show_create_topics_notice: "Si el sitio tiene menos de 5 temas abiertos al público, mostrar un aviso pidiendo a los administradores crear más temas."
     vacuum_db_days: "Correr VACUUM FULL ANALYZE para reclamar espacio en la base de datos después de las migraciones. (Poner en 0 para inhabilitar)"
     prevent_anons_from_downloading_files: "Impedir que los usuarios anónimos descarguen archivos. ADVERTENCIA: Esto impedirá que funcione cualquier recurso del sitio publicado como adjunto."
+    slug_generation_method: "Elegir un método de generación de slug. 'encoded' generará cadenas con código porciento. 'none' hara que no se genere slug."
     enable_emoji: "Habilitar emoji"
     emoji_set: "¿De qué tipo os gustan los emoji?"
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
@@ -1122,6 +1127,13 @@ es:
     text_body_template: "%{invitee_name} te ha invitado a unirte a\n\n > **%{site_title}**\n\n > %{site_description}\n\n Si te interesa, haz clic en el siguiente enlace: \n\n %{invite_link}\n\nEsta invitación procede de un usuario de confianza, por lo que no necesitarás autenticarte.\n"
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
+    text_body_template: |
+      Gracias por aceptar tu invitación a %{site_name} -- ¡te damos la bienvenida!
+
+      Haz clic en el siguiente enlace para elegir una contraseña:
+      %{base_url}/users/password-reset/%{email_token}
+
+      Si no recuerdas tu contraseña, o no tienes todavía, elige "Olvidé mi contraseña" cuando inicies sesión con tu dirección de email.
   test_mailer:
     subject_template: "[%{site_name}] Prueba de envío de email"
     text_body_template: |
@@ -1220,6 +1232,20 @@ es:
   system_messages:
     post_hidden:
       subject_template: "Post oculto al haber sido reportado por la comunidad"
+      text_body_template: |
+        Hola,
+
+        Este es un mensaje automático de %{site_name} para informarte que tu post se ha ocultado.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Varios miembros de la comunidad reportaron este post antes de que fuera ocultado, por lo que por favor, considera cómo podrías revisarlo y reflejar su feedback. **Puedes editar tu post antes de %{edit_delay} minutos, y se mostrará de nuevo automáticamente.**
+
+        Sin embargo, si el post fuera ocultado por la comunidad una segunda vez, permanecerá oculto hasta que sea revisado por un moderador – y en ese caso puede que se tomen medidas, incluyendo la posible suspesión de tu cuenta.
+
+        Para más información, por favor consulta nuestras [directrices](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
         Este mensaje privado tiene algunos trucos rápidos para que puedas comenzar. ## Sigue deslizando No hay botones de página siguiente o números de página – para leer más, **¡simplemente sigue deslizando hacia abajo!** Mientras llegan nuevos temas, estos aparecerán automáticamente. ## ¿Dónde estoy? - Para buscar, tu página de usuario o el menú, usa los botones **icon <kbd>☰</kbd> en la parte superior derecha**. - Cualquier título de tema te llevará al siguiente mensaje no leído. Usa la hora de última actividad y la cuenta de mensaje para ir al principio o al final. - Mientras estás leyendo un tema, salta al inicio &uarr; seleccionando el título del tema. Selecciona la barra de progreso verde en la parte inferior derecha para los controles completos de navegación o usa las teclas <kbd>home</kbd> "Inicio" y <kbd>end</kbd>; "Fin";. <img src="/images/welcome/progress-bar.png" width="143" height="39"> ## ¿Cómo respondo? - Para responder al mensaje general, usa el botón de Respuesta <img src="/images/welcome/reply-topic.png" width="29" height="25"> al final de la página. - Para responder a un mensaje en particular, usa el botón Respuesta <img src="/images/welcome/reply-post.png" width="29" height="25"> en ese mensaje. - Para llevar la conversación en una dirección distinta, pero manteniendo un enlace, usa <img src="/images/welcome/reply-as-linked-topic.png" width="15" height="25"> Responde como Tema enlazado a la derecha del mensaje. - Para citar a alguien en tu respuesta, selecciona el texto que quieras citar y presiona cualquier de los botones de Respuesta. <img src="/images/welcome/quote-reply.png" width="350" height="129"> Para dar un toque a alguien en tu respuesta, menciona su nombre. Escribe `@` y un cuadro de autocompletado aparecerá. <img src="/images/welcome/username-completion.png" width="230" height="131"> Para [Emoji comunes](http://www.emoji.codes/), simplemente comienza escribiendo `:` o los tradicionales smileys `:)` :smile: ## ¿Qué más puedo hacer? Hay botones de acción al final de cada mensaje. <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46"> Para hacer saber a cualquiera que te agradó su mensaje, usa el botón **me gusta**. Si tienes algún problema con un mensaje, házselo saber privadamente al autor o bien a nuestro equipo usando el botón **reportar**. También puedes **compartir** el enlace a un mensaje o añadirlo a **favoritos** para referencia futura en tu página de usuario. ## ¿Quién me está hablando? Cuando alguien responde a tu mensaje, cita tu mensaje o menciona tu `@nombre_de_usuario`, un número aparecerá de forma inmediata en la parte superior derecha de la página. Úsalo para acceder a tus **notificaciones**. <img src="/images/welcome/notification-panel.png" width="178" height="59"> No te preocupes si te pierdes una respuesta – se te enviará un correo electrónico con las respuestas directas (y mensajes privados) si no estas conectado cuando te lleguen. ## ¿Cuándo son nuevas las conversaciones? Por defecto todas las conversaciones con menos de dos días de antigüedad son consideradas nuevas, y cualquier conversación en la que hayas participado (respondido, creado o leído por un periodo extenso de tiempo) serán automáticamente monitorizadas. Verás indicadores azules y de números al lado de estos temas: <img src="/images/welcome/topics-new-unread.png" width="368" height="89"> Puedes cambiar el estado individual de notificación de cada tema a través del control al final del tema (también puede ajustarse por categoría). Para cambiar la forma en que monitorizas los temas, o definir una nueva, echa un vistazo a tus [preferencias de usuario](%{base_url}/my/preferences). ## ¿Por qué no puedo hacer ciertas cosas? Los nuevos usuarios están de alguna forma limitados por razones de seguridad. Conforme vayas participando, irá ganando la confianza de la comunidad, te convertirás en un ciudadano de pleno derecho y estas limitaciones se te quitarán automáticamente. Con un [nivel de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) suficientemente alto, incluso ganarás acceso a más habilidades para ayudarnos a administrar nuestra comunidad juntos.

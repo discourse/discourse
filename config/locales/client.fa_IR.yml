@@ -76,6 +76,7 @@ fa_IR:
       email: 'این پیوند را با ایمیل بفرستید'
     topic_admin_menu: "اقدامات مدیریت موضوع"
     emails_are_disabled: "تمام ایمیل های خروجی بصورت جهانی توسط مدیر قطع شده. هیچ ایمیل اخطاریه های ارسال نخواهد شد."
+    s3_deprecation_warning: "اخطار! آمازون S3 برای ذخیره سازی تصویر / فایل ضمیمه توصیه نمی شود. لطفا، به دنبال <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>دستورالعمل ها</a> و مهاجرت به ذخیره سازی محلی."
     edit: 'سرنویس و دستهٔ این موضوع را ویرایش کنید'
     not_implemented: "آن ویژگی هنوز به کار گرفته نشده، متأسفیم!"
     no_value: "نه"
@@ -307,6 +308,7 @@ fa_IR:
       dismiss_notifications: "علامت گذاری همه به عنوان خوانده شده"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
+      dynamic_favicon: "Show new / updated topic count on browser icon"
       edit_history_public: "اجازه بده کاربران دیگر اصلاحات نوشته مرا ببینند"
       external_links_in_new_tab: "همهٔ پیوندهای برون‌رو را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
@@ -527,6 +529,7 @@ fa_IR:
     read_only_mode:
       enabled: "حالت فقط خواندن را فعال است. می توانید به جستجو در وب سایت ادامه دهید ولی ممکن است تعاملات کار نکند."
       login_disabled: "ورود به سیستم غیر فعال شده همزمان با اینکه سایت در حال فقط خواندنی است."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public replies to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "بیشتر بدانید..."
     year: 'سال'
     year_desc: 'موضوعاتی که در 365 روز گذشته باز شده‌اند'
@@ -710,6 +713,13 @@ fa_IR:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} mentioned you in "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} quoted you in "{{topic}}" - {{site_title}}'
+        replied: '{{username}} replied to you in "{{topic}}" - {{site_title}}'
+        posted: '{{username}} posted in "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} sent you a private message in "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linked to your post from "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "افزودن یک عکس"
       title_with_attachments: "افزودن یک تصویر یا پرونده"
