@@ -106,7 +106,7 @@ before_fork do |server, worker|
             restart = false
 
             if out_of_memory?
-              Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%1', restarting" % [(max_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
+              Rails.logger.warn("Sidekiq is consuming too much memory (using: %0.2fM) for '%s', restarting" % [(max_rss.to_f / 1.megabyte), ENV["DISCOURSE_HOSTNAME"]])
               restart = true
             end
 
