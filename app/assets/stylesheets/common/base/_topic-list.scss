@@ -17,7 +17,6 @@
 .topic-list {
   width: 100%;
   border-collapse: collapse;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   background: rgba($secondary, .8);
 
   > tbody > tr {
@@ -29,7 +28,7 @@
   }
 
   > tbody > tr:first-of-type {
-    border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
   }
 
   th,
