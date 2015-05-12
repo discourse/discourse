@@ -232,7 +232,6 @@ def regenerate_missing_optimized
   OptimizedImage.includes(:upload)
                 .where("LENGTH(COALESCE(url, '')) > 0")
                 .where("width > 0 AND height > 0")
-                .order(:id)
                 .find_each do |optimized_image|
 
     upload = optimized_image.upload
