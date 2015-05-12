@@ -1,8 +1,9 @@
+import Presence from 'discourse/mixins/presence';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 // Modal related to changing the ownership of posts
-export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, {
+export default ObjectController.extend(Presence, Discourse.SelectedPostsCount, ModalFunctionality, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),
