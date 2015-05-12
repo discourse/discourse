@@ -15,10 +15,9 @@ class LetterAvatar
       def self.from_username(username)
         identity = new
         identity.color = LetterAvatar::COLORS[
-            Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
+          Digest::MD5.hexdigest(username)[0...15].to_i(16) % LetterAvatar::COLORS.length
         ]
         identity.letter = username[0].upcase
-
         identity
       end
     end
@@ -32,21 +31,23 @@ class LetterAvatar
     end
 
     def generate(username, size, opts = nil)
-      identity = Identity.from_username(username)
+      DistributedMutex.synchronize("letter_avatar_#{version}_#{username}_#{size}") do
+        identity = Identity.from_username(username)
 
-      cache = true
-      cache = false if opts && opts[:cache] == false
+        cache = true
+        cache = false if opts && opts[:cache] == false
 
-      size = FULLSIZE if size > FULLSIZE
-      filename = cached_path(identity, size)
+        size = FULLSIZE if size > FULLSIZE
+        filename = cached_path(identity, size)
 
-      return filename if cache && File.exists?(filename)
+        return filename if cache && File.exists?(filename)
 
-      fullsize = fullsize_path(identity)
-      generate_fullsize(identity) if !cache || !File.exists?(fullsize)
+        fullsize = fullsize_path(identity)
+        generate_fullsize(identity) if !cache || !File.exists?(fullsize)
 
-      OptimizedImage.resize(fullsize, filename, size, size)
-      filename
+        OptimizedImage.resize(fullsize, filename, size, size)
+        filename
+      end
     end
 
     def cached_path(identity, size)
