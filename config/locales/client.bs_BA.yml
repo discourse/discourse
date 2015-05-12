@@ -1,0 +1,2273 @@
+# encoding: utf-8
+# This file contains content for the client portion of Discourse, sent out
+# to the Javascript app.
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+bs_BA:
+  js:
+    number:
+      human:
+        storage_units:
+          format: '%n %u'
+          units:
+            byte:
+              one: Byte
+              other: Bytes
+            gb: GB
+            kb: KB
+            mb: MB
+            tb: TB
+    dates:
+      time: "h:mm a"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      tiny:
+        half_a_minute: "< 1m"
+        less_than_x_seconds:
+          one:   "< 1sek"
+          other: "< %{count}sek"
+        x_seconds:
+          one:   "1sek"
+          other: "%{count}sek"
+        less_than_x_minutes:
+          one:   "< 1m"
+          other: "< %{count}m"
+        x_minutes:
+          one:   "1m"
+          other: "%{count}m"
+        about_x_hours:
+          one:   "1s"
+          other: "%{count}s"
+        x_days:
+          one:   "1d"
+          other: "%{count}d"
+        about_x_years:
+          one:   "1g"
+          other: "%{count}g"
+        over_x_years:
+          one:   "> 1g"
+          other: "> %{count}g"
+        almost_x_years:
+          one:   "1g"
+          other: "%{count}g"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
+      medium:
+        x_minutes:
+          one: "1 min"
+          other: "%{count} min"
+        x_hours:
+          one: "1 sat"
+          other: "%{count} sati"
+        x_days:
+          one: "1 dan"
+          other: "%{count} dana"
+        date_year: "MMM D, 'YY"
+      medium_with_ago:
+        x_minutes:
+          one: "prije 1 min"
+          other: "prije %{count} minuta"
+        x_hours:
+          one: "prije 1 sat"
+          other: "prije %{count} sati"
+        x_days:
+          one: "juče"
+          other: "prije %{count} dana"
+    share:
+      topic: 'podjeli link ka ovoj temi'
+      post: 'podjeli link ka ovom postu #%{postNumber}'
+      close: 'zatvori'
+      twitter: 'podjeli link na Twitteru'
+      facebook: 'podjeli link na Facebooku'
+      google+: 'podjeli link na Google+'
+      email: 'pošalji ovaj link na email'
+
+    topic_admin_menu: "topic admin actions"
+
+    edit: 'izmjeni naslov i kategoriju ove teme'
+    not_implemented: "That feature hasn't been implemented yet, sorry!"
+    no_value: "Ne"
+    yes_value: "Da"
+    generic_error: "Uff, došlo je do greške."
+    generic_error_with_reason: "Došlo je do greške: %{error}"
+    sign_up: "Kreiraj Nalog"
+    log_in: "Uloguj se"
+    age: "Godište"
+    last_post: "Zadnji Odgovor"
+    joined: "Registrovan"
+    admin_title: "Admin"
+    flags_title: "Opomene"
+    show_more: "pokaži još"
+    links: "Linkovi"
+    links_lowercase: "linkovi"
+    faq: "Upoznavanje Foruma"
+    guidelines: "Guidelines"
+    privacy_policy: "Privacy Policy"
+    privacy: "Privacy"
+    terms_of_service: "Terms of Service"
+    mobile_view: "Mobilni Ekran"
+    desktop_view: "Desktop Ekran"
+    you: "Ti"
+    or: "ili"
+    now: "upravo sada"
+    read_more: 'pročitaj'
+    more: "Više"
+    less: "Manje"
+    never: "nikada"
+    daily: "dnevno"
+    weekly: "nedeljno"
+    every_two_weeks: "svake dvije nedelje"
+    max_of_count: "maksimalno {{count}}"
+    character_count:
+      one: "{{count}} karakter"
+      other: "{{count}} karaktera"
+
+    suggested_topics:
+      title: "Savetujemo Teme"
+
+    about:
+      simple_title: "O Nama"
+      title: "O Nama %{title}"
+      stats: "Statistika Sajta"
+      our_admins: "Naši Admini"
+      our_moderators: "Naši Moderatori"
+      stat:
+        all_time: "Svih Vremena"
+        last_7_days: "Zadnjih 7 Dana"
+      like_count: "Broj Lajkova"
+      topic_count: "Broj Tema"
+      post_count: "Broj Postova"
+      user_count: "Broj Članova"
+
+    bookmarks:
+      not_logged_in: "sorry, you must be logged in to bookmark posts"
+      created: "you've bookmarked this post"
+      not_bookmarked: "you've read this post; click to bookmark it"
+      last_read: "this is the last post you've read; click to bookmark it"
+      remove: "Remove Bookmark"
+
+    topic_count_latest:
+      one: "{{count}} nova ili izmjenjena tema."
+      other: "{{count}} nove ili izmjenjene teme."
+
+    topic_count_unread:
+      one: "{{count}} nepročitana tema."
+      other: "{{count}} nepročitane teme."
+
+    topic_count_new:
+      one: "{{count}} nova tema."
+      other: "{{count}} nove teme."
+
+    click_to_show: "Klikni da pokažeš."
+    preview: "pregledaj"
+    cancel: "otkaži"
+
+    save: "Sačuvaj Promjene"
+    saving: "Čuvam..."
+    saved: "Sačuvano!"
+
+    upload: "Uploaduj"
+    uploading: "Uploduje se..."
+    uploaded: "Uplodovano!"
+
+    enable: "Enable"
+    disable: "Disable"
+    undo: "Undo"
+    revert: "Revert"
+    failed: "Failed"
+
+    banner:
+      close: "Dismiss this banner."
+
+    choose_topic:
+      none_found: "Nema pronađenih tema."
+      title:
+        search: "Search for a Topic by name, url or id:"
+        placeholder: "type the topic title here"
+
+    user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> posted <a href='{{topicUrl}}'>the topic</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>You</a> posted <a href='{{topicUrl}}'>the topic</a>"
+      user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
+      you_replied_to_post: "<a href='{{userUrl}}'>You</a> replied to <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>You</a> replied to <a href='{{topicUrl}}'>the topic</a>"
+
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> mentioned <a href='{{user2Url}}'>you</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>You</a> mentioned <a href='{{user2Url}}'>{{another_user}}</a>"
+
+      posted_by_user: "Posted by <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Posted by <a href='{{userUrl}}'>you</a>"
+      sent_by_user: "Sent by <a href='{{userUrl}}'>{{user}}</a>"
+      sent_by_you: "Sent by <a href='{{userUrl}}'>you</a>"
+
+    groups:
+      visible: "Group is visible to all users"
+      title:
+        one: "grupa"
+        other: "grupe"
+      members: "Članovi"
+      posts: "Postovi"
+      alias_levels:
+        title: "Who can use this group as an alias?"
+        nobody: "Niko"
+        only_admins: "Samo admini"
+        mods_and_admins: "Only moderators and Admins"
+        members_mods_and_admins: "Only group members, moderators and admins"
+        everyone: "Everyone"
+
+    user_action_groups:
+      "1": "Dati Lajkovi"
+      "2": "Dobijeni Lajkovi"
+      "3": "Sačuvano"
+      "4": "Teme"
+      "5": "Postovi"
+      "6": "Odgovori"
+      "7": "Spemenute"
+      "9": "Citirane"
+      "10": "Označene"
+      "11": "Izmjenjene"
+      "12": "Poslato"
+      "13": "Inbox"
+
+    categories:
+      all: "Sve kategorije"
+      all_subcategories: "sve"
+      no_subcategory: "nijedna"
+      category: "Kategorija"
+      posts: "Odgovori"
+      topics: "Teme"
+      latest: "Najnovije"
+      latest_by: "zadnje od"
+      toggle_ordering: "toggle ordering control"
+      subcategories: "Podkategorije"
+      topic_stats: "Broj novih tema."
+      topic_stat_sentence:
+        one: "%{count} nova tema u zadnjih %{unit}."
+        other: "%{count} novih tema u zadnih %{unit}."
+      post_stats: "Broj novih postova."
+      post_stat_sentence:
+        one: "%{count} novi post u zadnjih %{unit}."
+        other: "%{count} novih postova u zadnjih %{unit}."
+
+    ip_lookup:
+      title: IP Address Lookup
+      hostname: Hostname
+      location: Location
+      location_not_found: (unknown)
+      organisation: Organization
+      phone: Phone
+      other_accounts: Other accounts with this IP address
+      no_other_accounts: (none)
+
+    user:
+      said: "{{username}}:"
+      profile: "Profil"
+      mute: "Mutiraj"
+      edit: "Uredi Postavke"
+      download_archive: "skini arhivu mojih odgovora"
+      private_message: "Privatne Poruke"
+      private_messages: "Poruke"
+      activity_stream: "Aktivnost"
+      preferences: "Postavke"
+      bookmarks: "Sačuvano"
+      bio: "O Meni"
+      invited_by: "Pozvan Od"
+      trust_level: "Nivo Povjerenja"
+      notifications: "Obaviještenja"
+      disable_jump_reply: "Don't jump to your new post after replying"
+      dynamic_favicon: "Show incoming message notifications on favicon (experimental)"
+      edit_history_public: "Let other users view my post revisions"
+      external_links_in_new_tab: "Open all external links in a new tab"
+      enable_quoting: "Enable quote reply for highlighted text"
+      change: "promjeni"
+      moderator: "{{user}} je moderator"
+      admin: "{{user}} je admin"
+      moderator_tooltip: "This user is a moderator"
+      admin_tooltip: "This user is an admin"
+      suspended_notice: "This user is suspended until {{date}}."
+      suspended_reason: "Reason: "
+      mailing_list_mode: "Receive an email for every new post (unless you mute the topic or category)"
+      watched_categories: "Watched"
+      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic's listing."
+      tracked_categories: "Tracked"
+      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
+      muted_categories: "Muted"
+      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
+      delete_account: "Delete My Account"
+      delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
+      deleted_yourself: "Your account has been deleted successfully."
+      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
+      unread_message_count: "Poruke"
+
+      staff_counters:
+        flags_given: "helpful flags"
+        flagged_posts: "flagged posts"
+        deleted_posts: "deleted posts"
+        suspensions: "suspensions"
+        warnings_received: "warnings"
+
+      messages:
+        all: "Sve"
+        mine: "Moje"
+        unread: "Nepročitane"
+
+      change_password:
+        success: "(email poslat)"
+        in_progress: "(šaljem email)"
+        error: "(greška)"
+        action: "Pošalji Email za Resetovanje Šifre"
+        set_password: "Namjesti Šifru"
+
+      change_about:
+        title: "Promjeni o Meni"
+
+      change_username:
+        title: "Change Username"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
+        taken: "Sorry, that username is taken."
+        error: "There was an error changing your username."
+        invalid: "That username is invalid. It must only include numbers and letters"
+
+      change_email:
+        title: "Change Email"
+        taken: "Sorry, that email is not available."
+        error: "There was an error changing your email. Perhaps that address is already in use?"
+        success: "We've sent an email to that address. Please follow the confirmation instructions."
+
+      change_avatar:
+        title: "Promjeni sliku"
+        gravatar: "<a href='//gravatar.com/emails' target='_blank'>Gravatar</a>, baziran na"
+        refresh_gravatar_title: "Osvježi Gravatar"
+        letter_based: "Avatar dodjeljen od sistema"
+        uploaded_avatar: "Vaša slika"
+        uploaded_avatar_empty: "Dodajte vašu sliku"
+        upload_title: "Uploduj sliku"
+        upload_picture: "Upload slike"
+        image_is_not_a_square: "Upozorenje: morali smo izrezat vašu sliku; nije bila kvadrat."
+
+      change_profile_background:
+        title: "Pozadina profila"
+
+      email:
+        title: "Email"
+        instructions: "Nikada se ne pokazuje javno."
+        ok: "Izgleda dobro. Poslat ćemo email sa konfirmacijom."
+        invalid: "Molimo vas unesite validnu email adresu."
+        authenticated: "Your email has been authenticated by {{provider}}."
+        frequency: "Mi šaljemo emaile samo na stvari koje niste vidjeli na forumu. Brz način da ostanete upućeni."
+
+      name:
+        title: "Ime"
+        instructions: "Vaše puno ime."
+        too_short: "Vaše ime je prekratko."
+        ok: "Vaše ime izgleda ok."
+      username:
+        title: "Nadimak"
+        instructions: "Originalno, bez razmaka, kratko."
+        short_instructions: "Ljudi vas mogu spomenuti preko @{{username}}."
+        available: "Vaš nadimak je dostupan."
+        global_match: "Email već postoji kao član foruma."
+        global_mismatch: "Već ste registrovani. Probajte {{suggestion}}?"
+        not_available: "Nije dostupan. Pokušaj {{suggestion}}?"
+        too_short: "Vaš nadimak je prekratak."
+        too_long: "Vaš nadima je predugačak."
+        checking: "Provjeravamo dostupnost..."
+        enter_email: 'Nadimak nađen. Unesite vaš email.'
+        prefilled: "Email je registrovan na ovaj nadimak."
+
+      locale:
+        title: "Interface language"
+        instructions: "User interface language. It will change when you refresh the page."
+        default: "(default)"
+
+      password_confirmation:
+        title: "Šifra Opet"
+
+      last_posted: "Posljednji Odgovor"
+      last_emailed: "Poslat Email"
+      last_seen: "Viđen"
+      created: "Registrovan"
+      log_out: "Izloguj se"
+      location: "Lokacija"
+      website: "Sajt"
+      email_settings: "Email"
+      email_digests:
+        title: "Kada ne dolazite na sajt, šaljevo vam email sa novim temama:"
+        daily: "dnevno"
+        weekly: "nedeljno"
+        bi_weekly: "svake dvije nedelje"
+
+      email_direct: "Receive an email when someone quotes you, replies to your post, or mentions your @username"
+      email_private_messages: "Receive an email when someone sends you a private message"
+      email_always: "Do not suppress email notifications when I am active on the site"
+
+      other_settings: "Other"
+      categories_settings: "Categories"
+
+      new_topic_duration:
+        label: "Consider topics new when"
+        not_viewed: "you haven't viewed them yet"
+        last_here: "created since you were here last"
+        after_n_days:
+          one: "created in the last day"
+          other: "created in the last {{count}} days"
+        after_n_weeks:
+          one: "created in the last week"
+          other: "created in the last {{count}} weeks"
+
+      auto_track_topics: "Automatically track topics you enter"
+      auto_track_options:
+        never: "never"
+        always: "always"
+        after_n_seconds:
+          one: "after 1 second"
+          other: "after {{count}} seconds"
+        after_n_minutes:
+          one: "after 1 minute"
+          other: "after {{count}} minutes"
+
+      invited:
+        search: "kucaj da potražiš pozivnice..."
+        title: "Pozivnice"
+        user: "Pozvan Korisnik"
+        none: "You haven't invited anyone here yet."
+        truncated: "Showing the first {{count}} invites."
+        redeemed: "Redeemed Invites"
+        redeemed_at: "Redeemed"
+        pending: "Pending Invites"
+        topics_entered: "Topics Viewed"
+        posts_read_count: "Posts Read"
+        expired: "This invite has expired."
+        rescind: "Remove"
+        rescinded: "Invite removed"
+        reinvite: "Resend Invite"
+        reinvited: "Invite re-sent"
+        time_read: "Read Time"
+        days_visited: "Days Visited"
+        account_age_days: "Account age in days"
+        create: "Pošalji Pozivnicu"
+        bulk_invite:
+          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://revolucionar.com/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          text: "Bulk Invite from File"
+          uploading: "Uploading..."
+          success: "File uploaded successfully, you will be notified shortly with progress."
+          error: "There was an error uploading '{{filename}}': {{message}}"
+
+      password:
+        title: "Šifra"
+        too_short: "Vaša šifra je prekratka."
+        common: "Vaša šifra je previše obična."
+        ok: "Vaša šifra izgleda ok."
+        instructions: "Barem %{count} karaktera."
+
+      associated_accounts: "Associated accounts"
+      ip_address:
+        title: "Zadnja IP Adresa"
+      registration_ip_address:
+        title: "IP Adresa prilikom registracije"
+      avatar:
+        title: "Slika"
+      title:
+        title: "Title"
+
+      filters:
+        all: "Sve"
+
+      stream:
+        posted_by: "Stavljeno od"
+        sent_by: "Poslato od"
+        private_message: "private message"
+        the_topic: "tema"
+
+    loading: "Učitava se..."
+    errors:
+      prev_page: "dok pokušava da uloduje"
+      reasons:
+        network: "Network Greška"
+        server: "Server Greška"
+        forbidden: "Pristup Nedostupan"
+        unknown: "Greška"
+      desc:
+        network: "Please check your connection."
+        network_fixed: "Looks like it's back."
+        server: "Error code: {{status}}"
+        forbidden: "You're not allowed to view that."
+        unknown: "Something went wrong."
+      buttons:
+        back: "Idi Nazad"
+        again: "Pokušaj Opet"
+        fixed: "Uloduj Stranicu"
+    close: "Zatvori"
+    assets_changed_confirm: "Ovaj sajt je upravo unaprijeđen. Osvježi stranicu za novu verziju?"
+    read_only_mode:
+      enabled: "An administrator enabled read-only mode. You can continue to browse the site but interactions may not work."
+      login_disabled: "Login is disabled while the site is in read only mode."
+    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
+
+    learn_more: "learn more..."
+
+    year: 'godina'
+    year_desc: 'teme kreirane u zadnjih 365 dana'
+    month: 'mjesec'
+    month_desc: 'teme kreirane u zadnjih 30 dana'
+    week: 'nedelja'
+    week_desc: 'teme kreirane u zadnjih 7 dana'
+    day: 'dan'
+
+    first_post: Prvi post
+    mute: Mutiraj
+    unmute: Odmutiraj
+    last_post: Zadnji post
+    last_post_lowercase: zadnji post
+
+    summary:
+      enabled_description: "You're viewing a summary of this topic: the most interesting posts as determined by the community."
+      description: "There are <b>{{count}}</b> replies."
+      description_time: "There are <b>{{count}}</b> replies with an estimated read time of <b>{{readingTime}} minutes</b>."
+      enable: 'Summarize This Topic'
+      disable: 'Show All Posts'
+
+    deleted_filter:
+      enabled_description: "This topic contains deleted posts, which have been hidden. "
+      disabled_description: "Deleted posts in the topic are shown."
+      enable: "Hide Deleted Posts"
+      disable: "Show Deleted Posts"
+
+    private_message_info:
+      title: "Privatna Poruka"
+      invite: "Pozovi Druge..."
+      remove_allowed_user: "Do you really want to remove {{name}} from this private message?"
+
+    email: 'Email'
+    username: 'Ime'
+    last_seen: 'Viđen'
+    created: 'Kreiran'
+    created_lowercase: 'kreiran'
+    trust_level: 'Nivo Povjerenja'
+    search_hint: 'ime'
+    search_hint_admin: 'ime ili email'
+
+    create_account:
+      title: "Kreiraj Nalog"
+      failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
+
+    forgot_password:
+      title: "Zaboravili ste Šifru"
+      action: "Zaboravio šifru"
+      invite: "Upišite vaš email ili korisničko ime i mi ćemo vam poslati link za resetovanje šifre."
+      reset: "Resetuj Šifru"
+      complete_username: "Ako se vaš nalog podudara sa korisnikom <b>%{username}</b>, uskoro ćete primiti email koji će vam objasniti kako da resetujete vašu šifru."
+      complete_email: "Ako se vaš nalog podudara sa <b>%{email}</b>, uskoro ćete primiti email koji će vam objasniti kako da resetujete vašu šifru."
+      complete_username_found: "Našli smo nalog koji odgovara korisniku <b>%{username}</b>, uskoro ćete primiti email koji će vam objasniti kako da resetujete vašu šifru."
+      complete_email_found: "Našli smo nalog koji odgovara email-u <b>%{email}</b>, uskoro ćete primiti email koji će vam objasniti kako da resetujete vašu šifru."
+
+      complete_username_not_found: "Nema naloga sa korisničkim imenom <b>%{username}</b>"
+      complete_email_not_found: "Nema naloga sa email-om <b>%{email}</b>"
+    login:
+      title: "Uloguj se"
+      username: "Korisnik"
+      password: "Šifra"
+      email_placeholder: "email ili korisnik"
+      caps_lock_warning: "Uključena su vam velika slova"
+      error: "Nepoznata greška"
+      blank_username_or_password: "Please enter your email or username, and password."
+      reset_password: 'Resetuj Šifru'
+      logging_in: "Ulogujem se..."
+      or: "Or"
+      authenticating: "Autorizacija..."
+      awaiting_confirmation: "Vaš nalog čeka aktivaciju, koristite opciju za ponovno slanje aktivacije."
+      awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
+      requires_invite: "Sorry, access to this forum is by invite only."
+      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
+      not_allowed_from_ip_address: "You can't login from that IP address."
+      resend_activation_email: "Click here to send the activation email again."
+      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
+      google:
+        title: "sa Google"
+        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
+      google_oauth2:
+        title: "sa Google"
+        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
+      twitter:
+        title: "sa Twitterom"
+        message: "Identifikujemo se sa Twitterom (nadamo se da su vam isključeni popup blokeri)"
+      facebook:
+        title: "sa Facebukom"
+        message: "Identifikujemo sa Facebukom (nadamo se da su vam isključeni popup blokeri)"
+      yahoo:
+        title: "sa Yahoo"
+        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
+      github:
+        title: "sa GitHub"
+        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+
+    composer:
+      add_warning: "Ovo je zvanično upozorenje."
+      posting_not_on_topic: "Na koju temu želite da odgovorite?"
+      saving_draft_tip: "čuvam"
+      saved_draft_tip: "sačuvano"
+      saved_local_draft_tip: "sačuvano lokalno"
+      similar_topics: "Tvoja tema je slična..."
+      drafts_offline: "offline sačuvano"
+
+      min_length:
+        need_more_for_title: "{{n}} do naslova teme"
+        need_more_for_reply: "{{n}} do odgovora na post"
+
+      error:
+        title_missing: "Naslov je obavezan"
+        title_too_short: "Naslov mora biti najmanje {{min}} karaktera"
+        title_too_long: "Naslov ne može biti više od {{max}} karaktera"
+        post_missing: "Odgovor ne može biti prazan"
+        post_length: "Odgovor mora biti najmanje {{min}} karaktera"
+        category_missing: "Morate odabrati kategoriju"
+
+      save_edit: "Sačuvaj Izmene"
+      reply_original: "Odgovori na Originalnu Temu"
+      reply_here: "Odgovori Ovde"
+      reply: "Odgovori"
+      cancel: "Otkaži"
+      create_topic: "Započni Temu"
+      create_pm: "Kreiraj Privatnu Poruku"
+      title: "Ili pritisni Ctrl+Enter"
+
+      users_placeholder: "Dodaj člana"
+      title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
+      edit_reason_placeholder: "zašto pravite izmjenu?"
+      show_edit_reason: "(dodaj razlog izmjene)"
+      reply_placeholder: "Kucaj ovde. Koristi Markdown ili BBCode za formatiranje. Povuci ili paste sliku za upload."
+      view_new_post: "Pogledaj svoj novi post."
+      saving: "Čuvam..."
+      saved: "Sačuvano!"
+      saved_draft: "Imate sačuvan post. Kliknite ovdje da nastavite sa izmjenama"
+      uploading: "Uplodujem..."
+      show_preview: 'pokaži pregled &raquo;'
+      hide_preview: '&laquo; sakri pregled'
+
+      quote_post_title: "Citiraj cjeli post"
+      bold_title: "Bold"
+      bold_text: "bold tekst"
+      italic_title: "Ukošen"
+      italic_text: "ukošen tekst"
+      link_title: "Link"
+      link_description: "ubaci opis linka"
+      link_dialog_title: "Unesi Link"
+      link_optional_text: "naslov neobavezan"
+      quote_title: "Blok Citat"
+      quote_text: "citat u bloku"
+      code_title: "Formatiran Tekst"
+      code_text: "indent preformatted text by 4 spaces"
+      upload_title: "Upload"
+      upload_description: "unesi opis uploada"
+      olist_title: "Numbered List"
+      ulist_title: "Bulleted List"
+      list_item: "List item"
+      heading_title: "Naslov"
+      heading_text: "Naslov"
+      hr_title: "Horizontalna Crta"
+      undo_title: "Poništi"
+      redo_title: "Povrati"
+      help: "Markdown Editing Help"
+      toggler: "sakrij ili pokaži komposer"
+
+      admin_options_title: "Optional staff settings for this topic"
+      auto_close:
+        label: "Auto-close topic time:"
+        error: "Please enter a valid value."
+        based_on_last_post: "Don't close until the last post in the topic is at least this old."
+        all:
+          units: ""
+          examples: 'Enter number of hours (24), absolute time (17:30) or timestamp (2013-11-22 14:00).'
+        limited:
+          units: "(# of hours)"
+          examples: 'Enter number of hours (24).'
+
+    notifications:
+      title: "obaviještenja na spomenuti @nadimak, odgovori na vaše teme i postove, privatne poruke, itd"
+      none: "Nemate obavijesti trenutno."
+      more: "pogledaj starija obaviještenja"
+      total_flagged: "ukupno opomenutih postova"
+      mentioned: "<i title='spomenut' class='icon'>@</i><p><span>{{username}}</span> {{description}}</p>"
+      quoted: "<i title='citiran' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='odgovoren' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='odgovoren' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title='izmjenjen' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='lajkovan' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='privatna poruka' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='privatna poruka' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='prihvatio pozivnicu' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
+      moved_post: "<i title='pomjerio post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
+      linked: "<i title='linkovo post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='bedž dobijen' class='fa fa-certificate'></i><p>Zaslužen '{{description}}'</p>"
+
+    upload_selector:
+      title: "Dodaj sliku"
+      title_with_attachments: "Dodaj sliku ili fajl"
+      from_my_computer: "Sa mog uređaja"
+      from_the_web: "Sa neta"
+      remote_tip: "link do slike http://primjer.com/slika.jpg"
+      remote_tip_with_attachments: "link to image or file http://primjer.com/file.ext (allowed extensions: {{authorized_extensions}})."
+      local_tip: "klikni da odabereš sliku sa svog uređaja"
+      local_tip_with_attachments: "klikni da odabereš sliku ili fajl sa svog uređaja (dozvoljene ekstenzije: {{authorized_extensions}})"
+      hint: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje)"
+      hint_for_supported_browsers: "(možete i mišom prenijeti vaše slike direktno iz vašeg foldera ovdje a možete i copy/paste sliku)"
+      uploading: "Uplodujem"
+      image_link: "link do vaše slike će pokazivati"
+
+    search:
+      title: "traži teme, postove, članove ili kategorije"
+      no_results: "Nema rezultata."
+      searching: "Potražujem..."
+      post_format: "#{{post_number}} od {{username}}"
+
+      context:
+        user: "Traži postove od @{{username}}"
+        category: "Traži \"{{category}}\" kategoriju"
+        topic: "Pretraži ovu temu"
+
+    site_map: "go to another topic list or category"
+    go_back: 'go back'
+    not_logged_in_user: 'user page with summary of current activity and preferences'
+    current_user: 'go to your user page'
+
+    starred:
+      title: 'Označi'
+      help:
+        star: 'dodaj ovu temu na listu označenih'
+        unstar: 'izbaci ovu temu sa liste označenih'
+
+    topics:
+      bulk:
+        reset_read: "Reset Read"
+        delete: "Delete Topics"
+        dismiss_posts: "Dismiss Posts"
+        dismiss_posts_tooltip: "Clear unread counts on these topics but continue to show them on my unread list when new posts are made"
+        dismiss_topics: "Dismiss Topics"
+        dismiss_topics_tooltip: "Stop showing these topics in my unread list when new posts are made"
+        dismiss_new: "Dismiss New"
+        toggle: "toggle bulk selection of topics"
+        actions: "Bulk Actions"
+        change_category: "Change Category"
+        close_topics: "Close Topics"
+        archive_topics: "Archive Topics"
+        notification_level: "Change Notification Level"
+        selected:
+          one: "You have selected <b>1</b> topic."
+          other: "You have selected <b>{{count}}</b> topics."
+
+      none:
+        starred: "Nemate više označenih tema."
+        unread: "Nemate više nepročitanih tema."
+        new: "Nemate više novih tema."
+        read: "Niste pročitali nijednu temu."
+        posted: "Niste odgovorili ni na jednu temu."
+        latest: "Nema više novih tema. To je tužno."
+        hot: "Nema popularnih tema."
+        category: "Nema više tema u {{category}}."
+        top: "Nema više popularnih tema."
+        educate:
+          new: '<p>Tvoje nepročitane teme se pojavljuju ovdje.</p><p>Nove teme imaju <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nova</span> indikaciju.</p><p>Možete promjeniti notifikacije preko vaših <a href="%{userPrefsUrl}">postavki</a>.</p>'
+          unread: '<p>Tvoje nepročitane teme se pojavljuju ovdje.</p><p>Ako imate nepročitanih postova vidjet ćete njihov broj <span class="badge new-posts badge-notification">1</span> ako ste:</p><ul><li>Kreirali tu temu</li><li>Odgovorili na tu temu</li><li>Proveli čitajući temu više od 4 minuta</li></ul><p>Ili ako ste na dnu teme označili da motrite i pratite temu.</p><p>Možete promjeniti notifikacije preko vaših <a href="%{userPrefsUrl}">postavki</a>.</p>'
+          starred: '<p>Vaše označene teme se pojavljuju ovdje.</p><p>Da označite temu, koristite:</p><ul><li> <i class="fa fa-star"></i> pored imena bilo koje teme</li><li>i zvijezdu na dnu teme</li></ul>'
+      bottom:
+        latest: "Nema više novih tema."
+        hot: "Nema više popularnih tema."
+        posted: "There are no more posted topics."
+        read: "Nema više pročitanih tema."
+        new: "Nema više novih tema."
+        unread: "Nema više nepročitanih tema."
+        starred: "Nema više označenih tema."
+        category: "Nema više tema na kategoriji {{category}}."
+        top: "Nema više popularnih tema."
+
+    topic:
+      filter_to: "{{post_count}} odgovora u temi"
+      create: 'Započni Temu'
+      create_long: 'Započni novu Temu'
+      private_message: 'Započni privatnu konverzaciju'
+      list: 'Teme'
+      new: 'nova tema'
+      unread: 'nepročitana'
+      new_topics:
+        one: '1 nova tema'
+        other: '{{count}} novih tema'
+      unread_topics:
+        one: '1 nepročitana tema'
+        other: '{{count}} nepročitanih tema'
+      title: 'Tema'
+      loading: 'Učitavam temu...'
+      invalid_access:
+        title: "Topic is private"
+        description: "Sorry, you don't have access to that topic!"
+        login_required: "You need to log in to see that topic."
+      server_error:
+        title: "Topic failed to load"
+        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
+      not_found:
+        title: "Topic not found"
+        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
+      total_unread_posts:
+        one: "you have 1 unread post in this topic"
+        other: "you have {{count}} unread posts in this topic"
+      unread_posts:
+        one: "you have 1 unread old post in this topic"
+        other: "you have {{count}} unread old posts in this topic"
+      new_posts:
+        one: "ima jedan novi post od kako ste zadnji put pročitali temu"
+        other: "postoji {{count}} odgovora od kako ste zadnji put pročitali temu"
+
+      likes:
+        one: "postoji jedan lajk u ovoj temi"
+        other: "postoji {{count}} lajkova u ovoj temi"
+      back_to_list: "Vrati se na Listu Tema"
+      options: "Opcije Teme"
+      show_links: "pokaži linkove unutar ove teme"
+      toggle_information: "uključi detalje teme"
+      read_more_in_category: "Želite da pročitate još? Pogledajte druge teme u kategoriji {{catLink}} ili {{latestLink}}."
+      read_more: "Želite da pročitate još? {{catLink}} ili {{latestLink}}."
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      read_more_MF: "There {
+        UNREAD, plural,
+        =0 {}
+        one {
+          is <a href='/unread'>1 unread</a>
+        } other {
+          are <a href='/unread'># unread</a>
+        }
+        } {
+          NEW, plural,
+            =0 {}
+            one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic}
+            other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics}
+        } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}."
+
+      browse_all_categories: Pogledajte sve Kategorije
+
+      view_latest_topics: pogledaj posljednje teme
+      suggest_create_topic: Zašto ne kreirati novu temu?
+      jump_reply_up: jump to earlier reply
+      jump_reply_down: jump to later reply
+      deleted: "Ova tema je obrisana"
+
+      auto_close_notice: "This topic will automatically close %{timeLeft}."
+      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
+      auto_close_title: 'Auto-Close Settings'
+      auto_close_save: "Sačuvaj"
+      auto_close_remove: "Don't Auto-Close This Topic"
+
+      progress:
+        title: progres teme
+        go_top: "vrh"
+        go_bottom: "dno"
+        go: "idi"
+        jump_bottom_with_number: "skoči na post %{post_number}"
+        total: ukupan broj
+        current: trenutni post
+        position: "post %{current} od %{total}"
+
+      notifications:
+        reasons:
+          "3_6": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          "3_5": 'Dobijat ćete notifikacije zato što motrite temu automatski.'
+          "3_2": 'Dobijat ćete notifikacije zato što pratite ovu temu.'
+          "3_1": 'Dobijat ćete notifikacije zato što ste kreirali ovu temu.'
+          "3": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          "2_8": 'Dobijat ćete notifikacije zato što motrite ovu temu.'
+          "2_4": 'Dobijat ćete notifikacije zato što ste ostavili odgovor na ovoj temi.'
+          "2_2": 'Dobijat ćete notifikacije zato što pratite ovu temu.'
+          "2": 'Dobijat ćete notifikacije zato što <a href="/users/{{username}}/preferences">pročitao ovu temu</a>.'
+          "1_2": 'Dobijat ćete notifikacije kada neko spomene @name ili odgovori na vaš post.'
+          "1": 'Dobijat ćete notifikacije samo kada neko spomene @name ili odgovori na vaš post.'
+          "0_7": 'Ignorišete sve notifikacije u ovoj kategoriji.'
+          "0_2": 'Ignorišete sve notifikacije u ovoj temi.'
+          "0": 'Ignorišete sve notifikacije u ovoj temi.'
+        watching_pm:
+          title: "Motrenje"
+          description: "You will be notified of every new post in this private message. A count of unread and new posts will also appear next to the topic."
+        watching:
+          title: "Motrenje"
+          description: "Stizat će vam obavještenja za svaki novi post u ovoj temi. Takođe broj novih i nepročitanih postova će stajati pored teme."
+        tracking_pm:
+          title: "Praćenje"
+          description: "Broj novih i nepročitanih postova će stajati pored teme. Dobijat ćete obaviješteni ako neko spomene vaš @nadimak or ili ako odgovori na vaš post."
+        tracking:
+          title: "Praćenje"
+          description: "Broj novih i nepročitanih postova će stajati pored teme. Dobijat ćete obaviješteni samo ako neko spomene vaš @nadimak ili ako odgovori na vaš post."
+        regular:
+          title: "Regularno"
+          description: "Bit ćete obaviješteni ako neko spomene vaš @nadimak ili ako odgovori na vaš post."
+        regular_pm:
+          title: "Regularno"
+          description: "You will be notified only if someone mentions your @name or replies to your post in the private message."
+        muted_pm:
+          title: "Mutirano"
+          description: "You will never be notified of anything about this private message."
+        muted:
+          title: "Mutirano"
+          description: "Obaviještenja za ovu temu su isključena i sistem vam neće prikazivati nove postove za ovu temu."
+
+      actions:
+        recover: "Un-Delete Topic"
+        delete: "Delete Topic"
+        open: "Open Topic"
+        close: "Close Topic"
+        auto_close: "Auto Close"
+        make_banner: "Banner Topic"
+        remove_banner: "Remove Banner Topic"
+        unpin: "Un-Pin Topic"
+        pin: "Pin Topic"
+        pin_globally: "Pin Topic Globally"
+        unarchive: "Unarchive Topic"
+        archive: "Archive Topic"
+        invisible: "Make Unlisted"
+        visible: "Make Listed"
+        reset_read: "Reset Read Data"
+        multi_select: "Select Posts"
+
+      reply:
+        title: 'Odgovori'
+        help: 'počni sa pisanjem odgovora na ovu temu'
+
+      clear_pin:
+        title: "Clear pin"
+        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
+
+      share:
+        title: 'Sheruj'
+        help: 'podjeli link do ove teme'
+
+      flag_topic:
+        title: 'Opomena'
+        help: 'anonimno prijavi ovu temu ili pošalji privatnu notifikaciju'
+        success_message: 'Uspješno ste opomenuli ovu temu.'
+
+      inviting: "Inviting..."
+      automatically_add_to_groups_optional: "This invite also includes access to these groups: (optional, admin only)"
+      automatically_add_to_groups_required: "This invite also includes access to these groups: (<b>Required</b>, admin only)"
+
+      invite_private:
+        title: 'Invite to Private Message'
+        email_or_username: "Invitee's Email or Username"
+        email_or_username_placeholder: "email address or username"
+        action: "Invite"
+        success: "We've invited that user to participate in this private message."
+        error: "Sorry, there was an error inviting that user."
+        group_name: "group name"
+
+      invite_reply:
+        title: 'Pozivnica'
+        action: 'Email pozivnica'
+        help: 'pošalji pozivnicu svojim prijateljima tako da i oni mogu odgovoriti na ovu temu. Bey registracije.'
+        to_topic: "We'll send a brief email allowing your friend to immediately join and reply to this topic by clicking a link, no login required."
+        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
+
+        email_placeholder: 'name@example.com'
+        success: "We mailed out an invitation to <b>{{email}}</b>. We'll notify you when the invitation is redeemed. Check the invitations tab on your user page to keep track of your invites."
+        error: "Sorry, we couldn't invite that person. Perhaps they are already a user?"
+
+      login_reply: 'Uloguj se da odgovoriš'
+
+      filters:
+        n_posts:
+          one: "1 post"
+          other: "{{count}} postova"
+        cancel: "Show all posts in this topic again."
+
+      split_topic:
+        title: "Move to New Topic"
+        action: "move to new topic"
+        topic_name: "Ime Nove Teme"
+        error: "There was an error moving posts to the new topic."
+        instructions:
+          one: "You are about to create a new topic and populate it with the post you've selected."
+          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
+
+      merge_topic:
+        title: "Move to Existing Topic"
+        action: "move to existing topic"
+        error: "There was an error moving posts into that topic."
+        instructions:
+          one: "Please choose the topic you'd like to move that post to."
+          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
+
+      change_owner:
+        title: "Change Owner of Posts"
+        action: "change ownership"
+        error: "There was an error changing the ownership of the posts."
+        label: "New Owner of Posts"
+        placeholder: "username of new owner"
+        instructions:
+          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
+          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
+        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
+
+      multi_select:
+        select: 'select'
+        selected: 'selected ({{count}})'
+        select_replies: 'select +replies'
+        delete: delete selected
+        cancel: cancel selecting
+        select_all: select all
+        deselect_all: deselect all
+        description:
+          one: You have selected <b>1</b> post.
+          other: "You have selected <b>{{count}}</b> posts."
+
+    post:
+      reply: "Odgovori na {{link}} od {{replyAvatar}} {{username}}"
+      reply_topic: "Odgovori na {{link}}"
+      quote_reply: "citiraj odgovor"
+      edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
+      edit_reason: "Razlog: "
+      post_number: "post {{number}}"
+      in_reply_to: "odgovor na"
+      last_edited_on: "post last edited on"
+      reply_as_new_topic: "Odgovori kroz novu povezanu Temu"
+      continue_discussion: "Nastavak diskusije od teme {{postLink}}:"
+      follow_quote: "idi na citiran post"
+      show_full: "Pogledaj Cijeli Post"
+      show_hidden: 'Pogledaj sakriven sadržaj.'
+      deleted_by_author:
+        one: "(post je obrisan od autora i bit će obrisan za %{count} sati ako nije opomena)"
+        other: "(post je obrisan od autora i bit će obrisan za %{count} sati ako nije opomena)"
+      expand_collapse: "digni/spusti"
+      gap:
+        one: "1 post sakriven"
+        other: "{{count}} sakrivenih postova"
+      more_links: "{{count}} više..."
+
+      unread: "Post je nepročitan"
+      has_replies:
+        one: "Odgovor"
+        other: "Odgovori"
+
+      errors:
+        create: "Sorry, there was an error creating your post. Please try again."
+        edit: "Sorry, there was an error editing your post. Please try again."
+        upload: "Sorry, there was an error uploading that file. Please try again."
+        attachment_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)."
+        file_too_large: "Sorry, the file you are trying to upload is too big (maximum size is {{max_size_kb}}kb)"
+        too_many_uploads: "Sorry, you can only upload one file at a time."
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
+        attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
+        attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
+
+      abandon:
+        confirm: "Da li ste sigurni da želite otkazati vaš post?"
+        no_value: "Ne, sačuvaj"
+        yes_value: "Da, otkaži"
+
+      via_email: "this post arrived via email"
+
+      wiki:
+        about: "this post is a wiki; basic users can edit it"
+
+      archetypes:
+        save: 'Save Options'
+
+      controls:
+        reply: "počni da sastavljaš odgovor na ovaj post"
+        like: "lajkuj ovaj post"
+        has_liked: "lajkovali ste ovaj post"
+        undo_like: "otkaži lajk"
+        edit: "izmjeni ovaj post"
+        edit_anonymous: "Sorry, but you need to be logged in to edit this post."
+        flag: "anonimno prijavi ovaj post ili pošalji privatnu notifikaciju"
+        delete: "obriši ovaj post"
+        undelete: "povrati obrisan post"
+        share: "podijeli link do ovog posta"
+        more: "Još"
+        delete_replies:
+          confirm:
+            one: "Do you also want to delete the direct reply to this post?"
+            other: "Do you also want to delete the {{count}} direct replies to this post?"
+          yes_value: "Yes, delete the replies too"
+          no_value: "No, just this post"
+        admin: "post admin actions"
+        wiki: "Make Wiki"
+        unwiki: "Remove Wiki"
+        convert_to_moderator: "Add Staff Color"
+        revert_to_regular: "Remove Staff Color"
+        rebake: "Rebuild HTML"
+        unhide: "Unhide"
+
+      actions:
+        flag: 'Opomena'
+        defer_flags:
+          one: "Defer flag"
+          other: "Defer flags"
+        it_too:
+          off_topic: "Opomeni i ti"
+          spam: "Opomeni i ti"
+          inappropriate: "Opomeni i ti"
+          custom_flag: "Opomeni i ti"
+          bookmark: "Bookmark it too"
+          like: "Lajkuj i ti"
+          vote: "Glasaj i ti"
+        undo:
+          off_topic: "Otkaži opomenu"
+          spam: "Otkaži opomenu"
+          inappropriate: "Otkaži opomenu"
+          bookmark: "Otkaži bookmark"
+          like: "Otkaži lajk"
+          vote: "Otkaži glas"
+        people:
+          off_topic: "{{icons}} označio ka ne-relevatno"
+          spam: "{{icons}} označio kao spam"
+          inappropriate: "{{icons}} flagged this as inappropriate"
+          notify_moderators: "{{icons}} notified moderators"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>notified moderators</a>"
+          notify_user: "{{icons}} sent a private message"
+          notify_user_with_url: "{{icons}} sent a <a href='{{postUrl}}'>private message</a>"
+          bookmark: "{{icons}} bookmarked this"
+          like: "{{icons}} lajkovali ovo"
+          vote: "{{icons}} glasali za ovo"
+        by_you:
+          off_topic: "You flagged this as off-topic"
+          spam: "Opomenuo si ovo kao spam"
+          inappropriate: "You flagged this as inappropriate"
+          notify_moderators: "You flagged this for moderation"
+          notify_user: "You sent a private message to this user"
+          bookmark: "You bookmarked this post"
+          like: "Lajkovao si ovo"
+          vote: "Glasao si za ovaj post"
+        by_you_and_others:
+          off_topic:
+            one: "Ti i još jedan ste opomenuli ovo kao ne-relevatno"
+            other: "Vi i {{count}} drugih ste opomenuli ovo kao ne-relevatno"
+          spam:
+            one: "Ti i još jedan ste opomenuli ovo kao spam"
+            other: "You and {{count}} other people flagged this as spam"
+          inappropriate:
+            one: "Ti i još jedan ste opomenuli ovo kao neprikladno"
+            other: "Ti i još {{count}} drugih ste opomenuli ovo kao neprikladno"
+          notify_moderators:
+            one: "Ti i još jedan ste opomenuli ovo za moderaciju"
+            other: "You and {{count}} other people flagged this for moderation"
+          notify_user:
+            one: "You and 1 other sent a private message to this user"
+            other: "You and {{count}} other people sent a private message to this user"
+          bookmark:
+            one: "You and 1 other bookmarked this post"
+            other: "You and {{count}} other people bookmarked this post"
+          like:
+            one: "Tebi i još jednoj osobi se ovo sviđa"
+            other: "Tebi i {{count}} drugih se ovo sviđa"
+          vote:
+            one: "You and 1 other voted for this post"
+            other: "You and {{count}} other people voted for this post"
+        by_others:
+          off_topic:
+            one: "1 person flagged this as off-topic"
+            other: "{{count}} people flagged this as off-topic"
+          spam:
+            one: "1 person flagged this as spam"
+            other: "{{count}} people flagged this as spam"
+          inappropriate:
+            one: "1 person flagged this as inappropriate"
+            other: "{{count}} people flagged this as inappropriate"
+          notify_moderators:
+            one: "1 person flagged this for moderation"
+            other: "{{count}} people flagged this for moderation"
+          notify_user:
+            one: "1 person sent a private message to this user"
+            other: "{{count}} sent a private message to this user"
+          bookmark:
+            one: "1 person bookmarked this post"
+            other: "{{count}} people bookmarked this post"
+          like:
+            one: "1 osoba je lajkovala"
+            other: "{{count}} je lajkovalo"
+          vote:
+            one: "1 person voted for this post"
+            other: "{{count}} people voted for this post"
+
+      edits:
+        one: 1 edit
+        other: "{{count}} edits"
+        zero: no edits
+
+      delete:
+        confirm:
+          one: "Are you sure you want to delete that post?"
+          other: "Are you sure you want to delete all those posts?"
+
+      revisions:
+        controls:
+          first: "First revision"
+          previous: "Previous revision"
+          next: "Next revision"
+          last: "Last revision"
+          hide: "Hide revision"
+          show: "Show revision"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+        displays:
+          inline:
+            title: "Show the rendered output with additions and removals inline"
+            button: '<i class="fa fa-square-o"></i> HTML'
+          side_by_side:
+            title: "Show the rendered output diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> HTML'
+          side_by_side_markdown:
+            title: "Show the raw source diffs side-by-side"
+            button: '<i class="fa fa-columns"></i> Raw'
+        details:
+          edited_by: "Edited by"
+
+    category:
+      can: 'can&hellip; '
+      none: '(no category)'
+      choose: 'Select a category&hellip;'
+      edit: 'edit'
+      edit_long: "Edit"
+      view: 'View Topics in Category'
+      general: 'General'
+      settings: 'Settings'
+      delete: 'Delete Category'
+      create: 'Create Category'
+      save: 'Save Category'
+      creation_error: There has been an error during the creation of the category.
+      save_error: There was an error saving the category.
+      name: "Category Name"
+      description: "Description"
+      topic: "category topic"
+      logo: "Category Logo Image"
+      background_image: "Category Background Image"
+      badge_colors: "Badge colors"
+      background_color: "Background color"
+      foreground_color: "Foreground color"
+      name_placeholder: "One or two words maximum"
+      color_placeholder: "Any web color"
+      delete_confirm: "Are you sure you want to delete this category?"
+      delete_error: "There was an error deleting the category."
+      list: "List Categories"
+      no_description: "Please add a description for this category."
+      change_in_category_topic: "Edit Description"
+      already_used: 'This color has been used by another category'
+      security: "Security"
+      images: "Images"
+      auto_close_label: "Auto-close topics after:"
+      auto_close_units: "hours"
+      email_in: "Custom incoming email address:"
+      email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
+      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
+      email_in_disabled_click: 'enable the "email in" setting.'
+      allow_badges_label: "Allow badges to be awarded in this category"
+      edit_permissions: "Edit Permissions"
+      add_permission: "Add Permission"
+      this_year: "this year"
+      position: "position"
+      default_position: "Default Position"
+      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
+      position_disabled_click: 'enable the "fixed category positions" setting.'
+      parent: "Parent Category"
+      notifications:
+        title: ''
+        reasons:
+        watching:
+          title: "Motrenje"
+          description: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        tracking:
+          title: "Praćenje"
+          description: "You will automatically track all new topics in these categories. A count of unread and new posts will appear next to the topic."
+        regular:
+          title: "Regularno"
+          description: "You will be notified only if someone mentions your @name or replies to your post."
+        muted:
+          title: "Mutirano"
+          description: "You will not be notified of anything about new topics in these categories, and they will not appear on your unread tab."
+
+    flagging:
+      title: 'Zašto prijavljujete ovaj post?'
+      action: 'Opomeni Post'
+      take_action: "Poduzmi Akciju"
+      notify_action: 'Privatna Poruka'
+      delete_spammer: "Obriši Spamera"
+      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      yes_delete_spammer: "Da, Obriši Spamera"
+      ip_address_missing: "(N/A)"
+      hidden_email_address: "(hidden)"
+      submit_tooltip: "Predaj privatnu opomenu"
+      take_action_tooltip: "Reach the flag threshold immediately, rather than waiting for more community flags"
+      cant: "Nažalost, ne možete opomenuti ovaj post trenutno."
+      custom_placeholder_notify_user: "Zašto ovaj post nalaže da kontaktirate korisnika privatno. Budite detaljni, pristojni i korektni."
+      custom_placeholder_notify_moderators: "Zašto ovaj post zaslužuje pažnju moderatora. Navedite vaš razlog po mogućnosti ostavite link ako je nužno."
+      custom_message:
+        at_least: "enter at least {{n}} characters"
+        more: "{{n}} to go..."
+        left: "{{n}} remaining"
+
+    flagging_topic:
+      title: "Zašto privatno opominjete ovu temu?"
+      action: "Opomeni Temu"
+      notify_action: "Privatna poruka"
+
+    topic_map:
+      title: "Pregled Teme"
+      links_shown: "pogledaj {{totalLinks}} linkova..."
+      clicks:
+        one: "1 klik"
+        other: "%{count} kliks"
+
+    topic_statuses:
+      warning:
+        help: "Ovo je zvanično upozorenje."
+      locked:
+        help: "Ova tema je zatvorena; zvanično ne prima nove postove"
+      archived:
+        help: "Ova tema je arhivirana; zvanično ne prima nove postove"
+      unpinned:
+        title: "Unpinned"
+        help: "This topic is unpinned; it will display in default order"
+      pinned_globally:
+        title: "Zakačena Globalno"
+        help: "Ova tema je zakačena globalno; biće na vrhu svih listi"
+      pinned:
+        title: "Zakačena"
+        help: "Ova tema je zakačena; biće na vrhu svoje kategorije"
+      archived:
+        help: "Ova tema je arhivirana; zaleđena je i ne može biti promjenjena"
+      invisible:
+        help: "Ovu temu sajt ne lista među najnovijim temama. Neće biti prisutna ni među listama tema unutar kategorija. Jedini način da se dođe do ove teme je direktan link"
+
+    posts: "Odgovori"
+    posts_lowercase: "odgovori"
+    posts_long: "postoji {{number}} odgovora u ovoj temi"
+    posts_likes_MF: |
+      This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
+        low {with a high like to post ratio}
+        med {with a very high like to post ratio}
+        high {with an extremely high like to post ratio}
+        other {}}
+    original_post: "Originalni Odgovor"
+    views: "Pregleda"
+    views_lowercase: "pregleda"
+    replies: "Odgovora"
+    views_long: "ova tema je pregledana {{number}} puta"
+    activity: "Aktivnost"
+    likes: "Lajkovi"
+    likes_lowercase: "lajkovi"
+    likes_long: "postoji {{number}} lajkova u ovoj temi"
+    users: "Korisnici"
+    users_lowercase: "korisnici"
+    category_title: "Kategorija"
+    history: "Istorija"
+    changed_by: "od {{author}}"
+
+    categories_list: "Lista Kategorija"
+
+    filters:
+      with_topics: "%{filter} teme"
+      with_category: "%{filter} %{category} teme"
+      latest:
+        title: "Najnovije"
+        help: "teme sa nedavnim postovima"
+      hot:
+        title: "Popularne"
+        help: "selekcija popularnih tema"
+      starred:
+        title: "Označene"
+        help: "teme koje ste označili"
+      read:
+        title: "Pročitane"
+        help: "teme koje ste pročitali, zadnje pročitane na vrhu."
+      categories:
+        title: "Kategorije"
+        title_in: "Kategorija - {{categoryName}}"
+        help: "sve teme grupisane po kategoriji"
+      unread:
+        title:
+          zero: "Nepročitane"
+          one: "Nepročitane (1)"
+          other: "Nepročitane ({{count}})"
+        help: "teme koje trenutno pratite i motrite sa nepročitanim postovima"
+        lower_title_with_count:
+          zero: ""
+          one: "1 nepročitana"
+          other: "{{count}} nepročitanih"
+      new:
+        lower_title_with_count:
+          zero: ""
+          one: "1 nova"
+          other: "{{count}} novih"
+        lower_title: "nova"
+        title:
+          zero: "Nove Teme"
+          one: "Nova Tema (1)"
+          other: "Nove Teme ({{count}})"
+        help: "teme kreirane u zadnjih nekoliko dana"
+      posted:
+        title: "Moji Odgovori"
+        help: "teme u kojima imate postove"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "zadnje teme u {{categoryName}} kategoriji"
+      top:
+        title: "Popularne"
+        help: "najaktivnije teme u zadnjih godinu, mjesec, sedmicu i dan"
+        yearly:
+          title: "Popularne Godišnje"
+        monthly:
+          title: "Popularne Mjesečno"
+        weekly:
+          title: "Popularne Sedmično"
+        daily:
+          title: "Popularne Dnevno"
+        this_year: "Ove godine"
+        this_month: "Ovog mjeseca"
+        this_week: "Ove nedelje"
+        today: "Danas"
+        other_periods: "pogledaj još tema"
+
+    browser_update: 'Nažalost, vaš internet browser je prestar za ovaj korišćenje ovog foruma</a>. Idite na i <a href="http://browsehappy.com">obnovite vaš browser</a>.'
+
+    permission_types:
+      full: "Kreiraj / Odgovori / Vidi"
+      create_post: "Odgovori / Vidi"
+      readonly: "Vidi"
+
+  # This section is exported to the javascript for i18n in the admin section
+  admin_js:
+    type_to_filter: "kucaj da sortiraš..."
+
+    admin:
+      title: 'Revolucionar Admin'
+      moderator: 'Moderator'
+
+      dashboard:
+        title: "Dashboard"
+        last_updated: "Dashboard last updated:"
+        version: "Version"
+        up_to_date: "You're up to date!"
+        critical_available: "A critical update is available."
+        updates_available: "Updates are available."
+        please_upgrade: "Please upgrade!"
+        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
+        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
+        version_check_pending: "Looks like you upgraded recently. Fantastic!"
+        installed_version: "Installed"
+        latest_version: "Najnovije"
+        problems_found: "Problemi su nađeni sa instalacijom Revolucionara:"
+        last_checked: "Zadnje pogledani"
+        refresh_problems: "Osvježi"
+        no_problems: "No problems were found."
+        moderators: 'Moderators:'
+        admins: 'Admins:'
+        blocked: 'Blocked:'
+        suspended: 'Suspended:'
+        private_messages_short: "PP"
+        private_messages_title: "Privatne Poruke"
+
+        reports:
+          today: "Today"
+          yesterday: "Yesterday"
+          last_7_days: "Last 7 Days"
+          last_30_days: "Last 30 Days"
+          all_time: "All Time"
+          7_days_ago: "7 Days Ago"
+          30_days_ago: "30 Days Ago"
+          all: "All"
+          view_table: "View as Table"
+          view_chart: "View as Bar Chart"
+
+      commits:
+        latest_changes: "Latest changes: please update often!"
+        by: "by"
+
+      flags:
+        title: "Opomene"
+        old: "Stare"
+        active: "Aktivne"
+
+        agree: "Slažem se"
+        agree_title: "Confirm this flag as valid and correct"
+        agree_flag_modal_title: "Agree and..."
+        agree_flag_hide_post: "Agree (hide post + send PM)"
+        agree_flag_hide_post_title: "Hide this post and automatically send the user a private message urging them to edit it"
+        agree_flag_restore_post: "Agree (restore post)"
+        agree_flag_restore_post_title: "Restore this post"
+        agree_flag: "Agree with flag"
+        agree_flag_title: "Agree with flag and keep the post unchanged"
+        defer_flag: "Defer"
+        defer_flag_title: "Remove this flag; it requires no action at this time."
+        delete: "Delete"
+        delete_title: "Delete the post this flag refers to."
+        delete_post_defer_flag: "Delete post and Defer flag"
+        delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
+        delete_post_agree_flag: "Delete post and Agree with flag"
+        delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
+        delete_flag_modal_title: "Delete and..."
+        delete_spammer: "Delete Spammer"
+        delete_spammer_title: "Remove the user and all posts and topics by this user."
+        disagree_flag_unhide_post: "Disagree (unhide post)"
+        disagree_flag_unhide_post_title: "Remove any flags from this post and make the post visible again"
+        disagree_flag: "Disagree"
+        disagree_flag_title: "Deny this flag as invalid or incorrect"
+        clear_topic_flags: "Done"
+        clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
+        more: "(more replies...)"
+
+        dispositions:
+          agreed: "agreed"
+          disagreed: "disagreed"
+          deferred: "deferred"
+
+        flagged_by: "Flagged by"
+        resolved_by: "Resolved by"
+        took_action: "Took action"
+        system: "System"
+        error: "Something went wrong"
+        reply_message: "Odgovori"
+        no_results: "There are no flags."
+        topic_flagged: "This <strong>topic</strong> has been flagged."
+        visit_topic: "Visit the topic to take action"
+        was_edited: "Post was edited after the first flag"
+        previous_flags_count: "This post has already been flagged {{count}} times."
+
+        summary:
+          action_type_3:
+            one: "off-topic"
+            other: "off-topic x{{count}}"
+          action_type_4:
+            one: "inappropriate"
+            other: "inappropriate x{{count}}"
+          action_type_6:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_7:
+            one: "custom"
+            other: "custom x{{count}}"
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
+
+      groups:
+        primary: "Primary Group"
+        no_primary: "(no primary group)"
+        title: "Groups"
+        edit: "Edit Groups"
+        refresh: "Refresh"
+        new: "New"
+        selector_placeholder: "add users"
+        name_placeholder: "Group name, no spaces, same as username rule"
+        about: "Edit your group membership and names here"
+        group_members: "Group members"
+        delete: "Delete"
+        delete_confirm: "Delete this group?"
+        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
+
+      api:
+        generate_master: "Generate Master API Key"
+        none: "There are no active API keys right now."
+        user: "User"
+        title: "API"
+        key: "API Key"
+        generate: "Generate"
+        regenerate: "Regenerate"
+        revoke: "Revoke"
+        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
+        confirm_revoke: "Are you sure you want to revoke that key?"
+        info_html: "Your API key will allow you to create and update topics using JSON calls."
+        all_users: "All Users"
+        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+
+      backups:
+        title: "Backups"
+        menu:
+          backups: "Backups"
+          logs: "Logs"
+        none: "No backup available."
+        read_only:
+          enable:
+            title: "Enable the read-only mode"
+            text: "Enable read-only mode"
+            confirm: "Are you sure you want to enable the read-only mode?"
+          disable:
+            title: "Disable the read-only mode"
+            text: "Disable read-only mode"
+        logs:
+          none: "No logs yet..."
+        columns:
+          filename: "Filename"
+          size: "Size"
+        upload:
+          text: "Upload"
+          uploading: "Uploading..."
+          success: "'{{filename}}' has successfully been uploaded."
+          error: "There has been an error while uploading '{{filename}}': {{message}}"
+        operations:
+          is_running: "An operation is currently running..."
+          failed: "The {{operation}} failed. Please check the logs."
+          cancel:
+            text: "Otkaži"
+            title: "Cancel the current operation"
+            confirm: "Are you sure you want to cancel the current operation?"
+          backup:
+            text: "Backup"
+            title: "Create a backup"
+            confirm: "Do you want to start a new backup?"
+            without_uploads: "Yes (do not include files)"
+          download:
+            text: "Download"
+            title: "Download the backup"
+          destroy:
+            text: "Delete"
+            title: "Remove the backup"
+            confirm: "Are you sure you want to destroy this backup?"
+          restore:
+            is_disabled: "Restore is disabled in the site settings."
+            text: "Restore"
+            title: "Restore the backup"
+            confirm: "Are your sure you want to restore this backup?"
+          rollback:
+            text: "Rollback"
+            title: "Rollback the database to previous working state"
+            confirm: "Are your sure you want to rollback the database to the previous working state?"
+
+      export_csv:
+        users:
+          text: "Export Users"
+          title: "Export user list in a CSV file."
+        success: "Export has been initiated, you will be notified shortly with progress."
+        failed: "Export failed. Please check the logs."
+
+      customize:
+        title: "Customize"
+        long_title: "Site Customizations"
+        header: "Header"
+        css: "Stylesheet"
+        mobile_header: "Mobile Header"
+        mobile_css: "Mobile Stylesheet"
+        override_default: "Do not include standard style sheet"
+        enabled: "Enabled?"
+        preview: "preview"
+        undo_preview: "remove preview"
+        rescue_preview: "default style"
+        explain_preview: "See the site with this custom stylesheet"
+        explain_undo_preview: "Go back to the currently enabled custom stylesheet"
+        explain_rescue_preview: "See the site with the default stylesheet"
+        save: "Save"
+        new: "New"
+        new_style: "New Style"
+        delete: "Delete"
+        delete_confirm: "Delete this customization?"
+        about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
+        color: "Color"
+        opacity: "Opacity"
+        copy: "Copy"
+        css_html:
+          title: "CSS/HTML"
+          long_title: "CSS and HTML Customizations"
+        colors:
+          title: "Colors"
+          long_title: "Color Schemes"
+          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
+          new_name: "New Color Scheme"
+          copy_name_prefix: "Copy of"
+          delete_confirm: "Delete this color scheme?"
+          undo: "undo"
+          undo_title: "Undo your changes to this color since the last time it was saved."
+          revert: "revert"
+          revert_title: "Reset this color to Discourse's default color scheme."
+          primary:
+            name: 'primary'
+            description: 'Most text, icons, and borders.'
+          secondary:
+            name: 'secondary'
+            description: 'The main background color, and text color of some buttons.'
+          tertiary:
+            name: 'tertiary'
+            description: 'Links, some buttons, notifications, and accent color.'
+          quaternary:
+            name: "quaternary"
+            description: "Navigation links."
+          header_background:
+            name: "header background"
+            description: "Background color of the site's header."
+          header_primary:
+            name: "header primary"
+            description: "Text and icons in the site's header."
+          highlight:
+            name: 'highlight'
+            description: 'The background color of highlighted elements on the page, such as posts and topics.'
+          danger:
+            name: 'danger'
+            description: 'Highlight color for actions like deleting posts and topics.'
+          success:
+            name: 'success'
+            description: 'Used to indicate an action was successful.'
+          love:
+            name: 'love'
+            description: "The like button's color."
+          wiki:
+            name: 'wiki'
+            description: "Base color used for the background of wiki posts."
+
+
+      email:
+        title: "Email"
+        settings: "Settings"
+        all: "All"
+        sending_test: "Sending test Email..."
+        test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
+        sent: "Sent"
+        skipped: "Skipped"
+        sent_at: "Sent At"
+        time: "Time"
+        user: "User"
+        email_type: "Email Type"
+        to_address: "To Address"
+        test_email_address: "email address to test"
+        send_test: "Send Test Email"
+        sent_test: "sent!"
+        delivery_method: "Delivery Method"
+        preview_digest: "Pregled Sajta"
+        preview_digest_desc: "This is a tool for previewing the content of the digest emails sent from your forum."
+        refresh: "Refresh"
+        format: "Format"
+        html: "html"
+        text: "text"
+        last_seen_user: "Last Seen User:"
+        reply_key: "Reply Key"
+        skipped_reason: "Skip Reason"
+        logs:
+          none: "No logs found."
+          filters:
+            title: "Filter"
+            user_placeholder: "username"
+            address_placeholder: "name@example.com"
+            type_placeholder: "digest, signup..."
+            reply_key_placeholder: "reply key"
+            skipped_reason_placeholder: "reason"
+
+      logs:
+        title: "Logs"
+        action: "Action"
+        created_at: "Created"
+        last_match_at: "Last Matched"
+        match_count: "Matches"
+        ip_address: "IP"
+        topic_id: "Topic ID"
+        post_id: "Post ID"
+        delete: 'Delete'
+        edit: 'Edit'
+        save: 'Save'
+        screened_actions:
+          block: "block"
+          do_nothing: "do nothing"
+        staff_actions:
+          title: "Staff Actions"
+          instructions: "Click usernames and actions to filter the list. Click avatars to go to user pages."
+          clear_filters: "Show Everything"
+          staff_user: "Staff User"
+          target_user: "Target User"
+          subject: "Subject"
+          when: "When"
+          context: "Context"
+          details: "Details"
+          previous_value: "Previous"
+          new_value: "New"
+          diff: "Diff"
+          show: "Show"
+          modal_title: "Details"
+          no_previous: "There is no previous value."
+          deleted: "No new value. The record was deleted."
+          actions:
+            delete_user: "delete user"
+            change_trust_level: "change trust level"
+            change_site_setting: "change site setting"
+            change_site_customization: "change site customization"
+            delete_site_customization: "delete site customization"
+            suspend_user: "suspend user"
+            unsuspend_user: "unsuspend user"
+            grant_badge: "grant badge"
+            revoke_badge: "revoke badge"
+            check_email: "check email"
+            delete_topic: "delete topic"
+            delete_post: "delete post"
+        screened_emails:
+          title: "Screened Emails"
+          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
+          email: "Email Address"
+          actions:
+            allow: "Allow"
+        screened_urls:
+          title: "Screened URLs"
+          description: "The URLs listed here were used in posts by users who have been identified as spammers."
+          url: "URL"
+          domain: "Domain"
+        screened_ips:
+          title: "Screened IPs"
+          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
+          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
+          actions:
+            block: "Block"
+            do_nothing: "Allow"
+            allow_admin: "Allow Admin"
+          form:
+            label: "New:"
+            ip_address: "IP address"
+            add: "Add"
+        logster:
+          title: "Error Logs"
+
+      impersonate:
+        title: "Impersonate"
+        help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
+
+      users:
+        title: 'Users'
+        create: 'Add Admin User'
+        last_emailed: "Last Emailed"
+        not_found: "Sorry, that username doesn't exist in our system."
+        active: "Active"
+        nav:
+          new: "Novi"
+          active: "Active"
+          pending: "Pending"
+          admins: 'Admins'
+          moderators: 'Mods'
+          suspended: 'Suspended'
+          blocked: 'Blocked'
+        approved: "Approved?"
+        approved_selected:
+          one: "approve user"
+          other: "approve users ({{count}})"
+        reject_selected:
+          one: "reject user"
+          other: "reject users ({{count}})"
+        titles:
+          active: 'Active Users'
+          new: 'New Users'
+          pending: 'Users Pending Review'
+          newuser: 'Users at Trust Level 0 (New User)'
+          basic: 'Users at Trust Level 1 (Basic User)'
+          regular: 'Users at Trust Level 2 (Member)'
+          leader: 'Users at Trust Level 3 (Regular)'
+          elder: 'Users at Trust Level 4 (Leader)'
+          admins: 'Admin Users'
+          moderators: 'Moderators'
+          blocked: 'Blocked Users'
+          suspended: 'Suspended Users'
+        reject_successful:
+          one: "Successfully rejected 1 user."
+          other: "Successfully rejected %{count} users."
+        reject_failures:
+          one: "Failed to reject 1 user."
+          other: "Failed to reject %{count} users."
+        not_verified: "Not verified"
+        check_email:
+          title: "Reveal this user's email address"
+          text: "Show"
+
+      user:
+        suspend_failed: "Something went wrong suspending this user {{error}}"
+        unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
+        suspend_duration: "How long will the user be suspended for?"
+        suspend_duration_units: "(days)"
+        suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
+        suspend_reason: "Reason"
+        suspended_by: "Suspended by"
+        delete_all_posts: "Delete all posts"
+        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+        suspend: "Suspend"
+        unsuspend: "Unsuspend"
+        suspended: "Suspended?"
+        moderator: "Moderator?"
+        admin: "Admin?"
+        blocked: "Blocked?"
+        show_admin_profile: "Admin"
+        edit_title: "Edit Title"
+        save_title: "Save Title"
+        refresh_browsers: "Force browser refresh"
+        refresh_browsers_message: "Message sent to all clients!"
+        show_public_profile: "Show Public Profile"
+        impersonate: 'Impersonate'
+        ip_lookup: "IP Lookup"
+        log_out: "Log Out"
+        logged_out: "User was logged out on all devices"
+        revoke_admin: 'Revoke Admin'
+        grant_admin: 'Grant Admin'
+        revoke_moderation: 'Revoke Moderation'
+        grant_moderation: 'Grant Moderation'
+        unblock: 'Unblock'
+        block: 'Block'
+        reputation: Reputation
+        permissions: Permissions
+        activity: Activity
+        like_count: Likes Given / Received
+        last_100_days: 'in the last 100 days'
+        private_topics_count: Private Topics
+        posts_read_count: Posts Read
+        post_count: Posts Created
+        topics_entered: Topics Viewed
+        flags_given_count: Flags Given
+        flags_received_count: Flags Received
+        warnings_received_count: Warnings Received
+        flags_given_received_count: 'Flags Given / Received'
+        approve: 'Approve'
+        approved_by: "approved by"
+        approve_success: "User approved and email sent with activation instructions."
+        approve_bulk_success: "Success! All selected users have been approved and notified."
+        time_read: "Read Time"
+        delete: "Delete User"
+        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
+        delete_forbidden:
+          one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
+          other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
+        cant_delete_all_posts:
+          one: "Can't delete all posts. Some posts are older than %{count} day old. (The delete_user_max_post_age setting.)"
+          other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
+        cant_delete_all_too_many_posts:
+          one: "Can't delete all posts because the user has more than 1 post. (delete_all_posts_max)"
+          other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
+        delete_confirm: "Are you SURE you want to delete this user? This is permanent!"
+        delete_and_block: "Delete and <b>block</b> this email and IP address"
+        delete_dont_block: "Delete only"
+        deleted: "The user was deleted."
+        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
+        send_activation_email: "Send Activation Email"
+        activation_email_sent: "An activation email has been sent."
+        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
+        activate: "Activate Account"
+        activate_failed: "There was a problem activating the user."
+        deactivate_account: "Deactivate Account"
+        deactivate_failed: "There was a problem deactivating the user."
+        unblock_failed: 'There was a problem unblocking the user.'
+        block_failed: 'There was a problem blocking the user.'
+        deactivate_explanation: "A deactivated user must re-validate their email."
+        suspended_explanation: "A suspended user can't log in."
+        block_explanation: "A blocked user can't post or start topics."
+        trust_level_change_failed: "There was a problem changing the user's trust level."
+        suspend_modal_title: "Suspend User"
+        trust_level_2_users: "Trust Level 2 Users"
+        trust_level_3_requirements: "Trust Level 3 Requirements"
+        trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
+        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
+        lock_trust_level: "Lock Trust Level"
+        unlock_trust_level: "Unlock Trust Level"
+        tl3_requirements:
+          title: "Requirements for Trust Level 3"
+          table_title: "In the last 100 days:"
+          value_heading: "Value"
+          requirement_heading: "Requirement"
+          visits: "Visits"
+          days: "days"
+          topics_replied_to: "Topics Replied To"
+          topics_viewed: "Topics Viewed"
+          topics_viewed_all_time: "Topics Viewed (all time)"
+          posts_read: "Posts Read"
+          posts_read_all_time: "Posts Read (all time)"
+          flagged_posts: "Flagged Posts"
+          flagged_by_users: "Users Who Flagged"
+          likes_given: "Likes Given"
+          likes_received: "Likes Received"
+          likes_received_days: "Likes Received: unique days"
+          likes_received_users: "Likes Received: unique users"
+          qualifies: "Qualifies for trust level 3."
+          does_not_qualify: "Doesn't qualify for trust level 3."
+          will_be_promoted: "Will be promoted soon."
+          will_be_demoted: "Will be demoted soon."
+          on_grace_period: "Currently in promotion grace period, will not be demoted."
+          locked_will_not_be_promoted: "Trust level locked. Will never be promoted."
+          locked_will_not_be_demoted: "Trust level locked. Will never be demoted."
+        sso:
+          title: "Single Sign On"
+          external_id: "External ID"
+          external_username: "Nadimak"
+          external_name: "Ime"
+          external_email: "Email"
+          external_avatar_url: "Avatar URL"
+
+      user_fields:
+        title: "User Fields"
+        help: "Add fields that your users can fill out."
+        create: "Create User Field"
+        untitled: "Untitled"
+        name: "Field Name"
+        type: "Field Type"
+        description: "Field Description"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        cancel: "Cancel"
+        delete_confirm: "Are you sure you want to delete that user field?"
+        required:
+          title: "Required at signup?"
+          enabled: "required"
+          disabled: "not required"
+        editable:
+          title: "Editable after signup?"
+          enabled: "editable"
+          disabled: "not editable"
+
+        field_types:
+          text: 'Text Field'
+          confirm: 'Confirmation'
+
+      site_text:
+        none: "Choose a type of content to begin editing."
+        title: 'Text Content'
+
+      site_settings:
+        show_overriden: 'Only show overridden'
+        title: 'Settings'
+        reset: 'reset'
+        none: 'none'
+        no_results: "No results found."
+        clear_filter: "Clear"
+        categories:
+          all_results: 'All'
+          required: 'Required'
+          basic: 'Basic Setup'
+          users: 'Users'
+          posting: 'Posting'
+          email: 'Email'
+          files: 'Files'
+          trust: 'Trust Levels'
+          security: 'Security'
+          onebox: "Onebox"
+          seo: 'SEO'
+          spam: 'Spam'
+          rate_limits: 'Rate Limits'
+          developer: 'Developer'
+          embedding: "Embedding"
+          legal: "Legal"
+          uncategorized: 'Other'
+          backups: "Backups"
+          login: "Login"
+
+      badges:
+        title: Bedž
+        new_badge: Novi Bedž
+        new: Novo
+        name: Ime
+        badge: Bedž
+        display_name: Prikazano Ime
+        description: Opis
+        badge_type: Bedž Tip
+        badge_grouping: Grupa
+        badge_groupings:
+          modal_title: Grupiranje bedževa
+        granted_by: Dat od 
+        granted_at: Dato na
+        save: Sačuvaj
+        delete: Obriši
+        delete_confirm: Are you sure you want to delete this badge?
+        revoke: Revoke
+        revoke_confirm: Are you sure you want to revoke this badge?
+        edit_badges: Edit Badges
+        grant_badge: Grant Badge
+        granted_badges: Granted Badges
+        grant: Grant
+        no_user_badges: "%{name} has not been granted any badges."
+        no_badges: There are no badges that can be granted.
+        allow_title: Allow badge to be used as a title
+        multiple_grant: Can be granted multiple times
+        listable: Show badge on the public badges page
+        enabled: Enable badge
+        icon: Icon
+        query: Badge Query (SQL)
+        target_posts: Query targets posts
+        auto_revoke: Run revocation query daily
+        show_posts: Show post granting badge on badge page
+        trigger: Trigger
+        trigger_type:
+          none: "Update daily"
+          post_action: "When a user acts on post"
+          post_revision: "When a user edits or creates a post"
+          trust_level_change: "When a user changes trust level"
+          user_change: "When a user is edited or created"
+        preview:
+          link_text: "Preview granted badges"
+          plan_text: "Preview with query plan"
+          modal_title: "Badge Query Preview"
+          sql_error_header: "There was an error with the query."
+          error_help: "See the following links for help with badge queries."
+          bad_count_warning:
+            header: "WARNING!"
+            text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
+          grant_count:
+            zero: "No badges to be assigned."
+            one: "<b>1</b> badge to be assigned."
+            other: "<b>%{count}</b> badges to be assigned."
+          sample: "Sample:"
+          grant:
+            with: <span class="username">%{username}</span>
+            with_post: <span class="username">%{username}</span> for post in %{link}
+            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
+            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+
+    lightbox:
+      download: "skini"
+
+    keyboard_shortcuts_help:
+      title: 'Prečice na Tastaturi'
+      jump_to:
+        title: 'Skoči na'
+        home: '<b>g</b>, <b>h</b> Home (Najnovije)'
+        latest: '<b>g</b>, <b>l</b> Najnovije'
+        new: '<b>g</b>, <b>n</b> Nove Teme'
+        unread: '<b>g</b>, <b>u</b> Nepročitane'
+        starred: '<b>g</b>, <b>f</b> Označene'
+        categories: '<b>g</b>, <b>c</b> Kategorije'
+        top: '<b>g</b>, <b>t</b> Popularne'
+      navigation:
+        title: 'Navigacija'
+        jump: '<b>#</b> Idi na post #'
+        back: '<b>u</b> Nazad'
+        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
+        open: '<b>o</b> or <b>Enter</b> Open selected topic'
+        next_prev: '<b>shift j</b>/<b>shift k</b> Next/previous section'
+      application:
+        title: 'Aplikacija'
+        create: '<b>c</b> Započni novu temu'
+        notifications: '<b>n</b> Otvori notifikacije'
+        site_map_menu: '<b>=</b> Otvori meni sajta'
+        user_profile_menu: '<b>p</b> Otvori meni korisnika'
+        show_incoming_updated_topics: '<b>.</b> Pročitaj promjenje teme'
+        search: '<b>/</b> Tragaj'
+        help: '<b>?</b> Otvori pomoć za tastaturu'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
+        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
+      actions:
+        title: 'Akcije'
+        star: '<b>f</b> Označi temu'
+        share_topic: '<b>shift s</b> Sheruj temu'
+        share_post: '<b>s</b> Sheruj post'
+        reply_as_new_topic: '<b>t</b> Odgovori kroz novu temu'
+        reply_topic: '<b>shift r</b> Odgovori na Temu'
+        reply_post: '<b>r</b> Odgovori na post'
+        quote_post: '<b>q</b> Citiraj odgovor'
+        like: '<b>l</b> Lajkuj post'
+        flag: '<b>!</b> Opomeni post'
+        bookmark: '<b>b</b> Bookmark post'
+        edit: '<b>e</b> Izmjeni post'
+        delete: '<b>d</b> Obriši post'
+        mark_muted: '<b>m</b>, <b>m</b> Mutiraj temu'
+        mark_regular: '<b>m</b>, <b>r</b> Regularna tema'
+        mark_tracking: '<b>m</b>, <b>t</b> Prati temu'
+        mark_watching: '<b>m</b>, <b>w</b> Motri temu'
+
+    badges:
+      title: Bedževi
+      allow_title: "allow badge as title?"
+      multiple_grant: "awarded multiple times?"
+      badge_count:
+        one:   "1 Bedž"
+        other: "%{count} Bedževa"
+      more_badges:
+        one:   "+1 Više"
+        other: "+%{count} Više"
+      granted:
+        one:   "1 dobijen"
+        other: "%{count} dobijenih"
+      select_badge_for_title: Izaveri bedž za svoj naslov
+      no_title: "<nema naslova>"
+      badge_grouping:
+        getting_started:
+          name: Da započnete
+        community:
+          name: Zajednica
+        trust_level:
+          name: Nivo Povjerenja
+        other:
+          name: Drugi
+        posting:
+          name: Postiranje
+      badge:
+        editor:
+          name: Urednik
+          description: Prvi post izmjenjen
+        basic_user:
+          name: Osnovni
+          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/4">Odobrene</a> sve osnovne funkcije foruma
+        member:
+          name: Član
+          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/5">Odobrene</a> pozivnice
+        regular:
+          name: Regularan
+          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/6">Granted</a> recategorize, rename, followed links and lounge
+        leader:
+          name: Vođa
+          description: <a href="https://revolucionar.com/t/what-do-user-trust-levels-do/4924/7">Granted</a> global edit, pin, close, archive, split and merge
+        welcome:
+          name: Dobrodošao
+          description: Dobio Lajk
+        autobiographer:
+          name: Autobiografičar
+          description: Popunio biografiju na svom <a href="/my/preferences">profilu</a>
+        nice_post:
+          name: Dobar Post
+          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
+        good_post:
+          name: Odličan Post
+          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
+        great_post:
+          name: Super Post
+          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
+        nice_topic:
+          name: Dobra Tema
+          description: Dobio 10 lajkova na postu. Ovaj se bedž može dobiti više puta
+        good_topic:
+          name: Odlična Tema
+          description: Dobio 25 lajkova na postu. Ovaj se bedž može dobiti više puta
+        great_topic:
+          name: Super Tema
+          description: Dobio 50 lajkova na postu. Ovaj se bedž može dobiti više puta
+        nice_share:
+          name: Dobar Share
+          description: Podijelio je post sa više od 25 posjetilaca
+        good_share:
+          name: Good Share
+          description: Shared a post with 300 unique visitors
+        great_share:
+          name: Great Share
+          description: Shared a post with 1000 unique visitors
+        first_like:
+          name: Prvi Lajk
+          description: Lajkovao post
+        first_flag:
+          name: Prva Opomena
+          description: Opomenuo post
+        first_share:
+          name: Prvi Share
+          description: Podijelio post
+        first_link:
+          name: Prvi Link
+          description: Dodao interni link na drugu temu
+        first_quote:
+          name: Prvo Citiranje
+          description: Citirao korisnika
+        read_guidelines:
+          name: Pročitao Pravila
+          description: Pročitao <a href="/guidelines">naša pravila</a>
+        reader:
+          name: Čitač
+          description: Pročitao post na temi sa više od 100 postova
