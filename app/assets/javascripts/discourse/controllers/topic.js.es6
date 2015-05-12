@@ -1,9 +1,10 @@
 import ObjectController from 'discourse/controllers/object';
 import BufferedContent from 'discourse/mixins/buffered-content';
+import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import { spinnerHTML } from 'discourse/helpers/loading-spinner';
 import Topic from 'discourse/models/topic';
 
-export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedContent, {
+export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   multiSelect: false,
   needs: ['header', 'modal', 'composer', 'quote-button', 'search', 'topic-progress', 'application'],
   allPostsSelected: false,
@@ -646,11 +647,8 @@ export default ObjectController.extend(Discourse.SelectedPostsCount, BufferedCon
       return false;
     } else {
       selectedPosts.addObject(post);
-
       // If the user manually selects all posts, all posts are selected
-      if (selectedPosts.length === this.get('posts_count')) {
-        this.set('allPostsSelected', true);
-      }
+      this.set('allPostsSelected', selectedPosts.length === this.get('model.posts_count'));
       return true;
     }
   },
