@@ -52,6 +52,9 @@ class NewPostManager
 
     # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
+    if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
+      return perform_create_post
+    end
 
     # Perform handlers until one returns a result
     handled = NewPostManager.handlers.any? do |handler|
