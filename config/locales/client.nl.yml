@@ -1993,7 +1993,7 @@ nl:
       title: 'Sneltoetsen'
       jump_to:
         title: 'Spring naar'
-        home: '<b>g</b>, <b>h</b> Home (Laatste)'
+        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Laatste'
         new: '<b>g</b>, <b>n</b> Nieuw'
         unread: '<b>g</b>, <b>u</b> Ongelezen'

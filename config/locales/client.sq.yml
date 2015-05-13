@@ -2192,7 +2192,7 @@ sq:
       title: 'Shkurtimet e Tastierës '
       jump_to:
         title: 'Kalo tek'
-        home: '<b>g</b>, <b>h</b> Home (Latest)'
+        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
