@@ -204,6 +204,8 @@ const User = RestModel.extend({
       data['edit_history_public'] = this.get('edit_history_public');
     }
 
+    // TODO: We can remove this when migrated fully to rest model.
+    this.set('isSaving', true);
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
@@ -212,6 +214,8 @@ const User = RestModel.extend({
 
       var userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
+    }).finally(() => {
+      this.set('isSaving', false);
     });
   },
 
