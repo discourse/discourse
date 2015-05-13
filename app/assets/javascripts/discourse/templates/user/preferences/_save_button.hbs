@@ -1,2 +1,4 @@
-<button {{action "save"}} {{bind-attr disabled="saving"}} class="btn btn-primary">{{saveButtonText}}</button>
-{{#if saved}}{{i18n 'saved'}}{{/if}}
+<button {{action "save"}} {{bind-attr disabled="saving"}} class="btn btn-primary save-user">{{saveButtonText}}</button>
+{{#if saved}}
+  <span class='saved-user'>{{i18n 'saved'}}</span>
+{{/if}}
