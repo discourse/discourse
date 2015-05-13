@@ -7,12 +7,16 @@ function loadWithTag(path, cb) {
 
   let s = document.createElement('script');
   s.src = path;
+  if (Ember.Test) { Ember.Test.pendingAjaxRequests++; }
   head.appendChild(s);
 
   s.onload = s.onreadystatechange = function(_, abort) {
+    if (Ember.Test) { Ember.Test.pendingAjaxRequests--; }
     if (abort || !s.readyState || s.readyState === "loaded" || s.readyState === "complete") {
       s = s.onload = s.onreadystatechange = null;
-      if (!abort) { cb(); }
+      if (!abort) {
+        Ember.run(null, cb);
+      }
     }
   };
 }

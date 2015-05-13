@@ -1,5 +1,4 @@
-/*global ace:true */
-
+/* global ace:true */
 import loadScript from 'discourse/lib/load-script';
 
 export default Ember.Component.extend({
@@ -33,19 +32,21 @@ export default Ember.Component.extend({
     const self = this;
 
     loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
-      const editor = ace.edit(self.$('.ace')[0]);
+      ace.require(['ace/ace'], function(loadedAce) {
+        const editor = loadedAce.edit(self.$('.ace')[0]);
 
-      editor.setTheme("ace/theme/chrome");
-      editor.setShowPrintMargin(false);
-      editor.getSession().setMode("ace/mode/" + (self.get('mode')));
-      editor.on('change', function() {
-        self._skipContentChangeEvent = true;
-        self.set('content', editor.getSession().getValue());
-        self._skipContentChangeEvent = false;
+        editor.setTheme("ace/theme/chrome");
+        editor.setShowPrintMargin(false);
+        editor.getSession().setMode("ace/mode/" + (self.get('mode')));
+        editor.on('change', function() {
+          self._skipContentChangeEvent = true;
+          self.set('content', editor.getSession().getValue());
+          self._skipContentChangeEvent = false;
+        });
+
+        self.$().data('editor', editor);
+        self._editor = editor;
       });
-
-      self.$().data('editor', editor);
-      self._editor = editor;
     });
 
   }.on('didInsertElement')
