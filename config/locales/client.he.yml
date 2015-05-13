@@ -2163,7 +2163,7 @@ he:
       title: 'קיצורי מקלדת'
       jump_to:
         title: 'קפוץ ל'
-        home: '<b>g</b>, <b>h</b> Home (Latest)'
+        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
