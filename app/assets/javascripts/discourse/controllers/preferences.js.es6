@@ -1,5 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default ObjectController.extend(CanCheckEmails, {
 
@@ -10,8 +11,10 @@ export default ObjectController.extend(CanCheckEmails, {
   editHistoryVisible: Discourse.computed.setting('edit_history_visible_to_public'),
 
   selectedCategories: function(){
-    return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));
-  }.property("watchedCategories", "trackedCategories", "mutedCategories"),
+    return [].concat(this.get("model.watchedCategories"),
+                     this.get("model.trackedCategories"),
+                     this.get("model.mutedCategories"));
+  }.property("model.watchedCategories", "model.trackedCategories", "model.mutedCategories"),
 
   // By default we haven't saved anything
   saved: false,
@@ -21,7 +24,7 @@ export default ObjectController.extend(CanCheckEmails, {
   userFields: function() {
     let siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      const userFields = this.get('user_fields');
+      const userFields = this.get('model.user_fields');
 
       // Staff can edit fields that are not `editable`
       if (!this.get('currentUser.staff')) {
@@ -32,7 +35,7 @@ export default ObjectController.extend(CanCheckEmails, {
         return Ember.Object.create({ value, field });
       });
     }
-  }.property('user_fields.@each.value'),
+  }.property('model.user_fields.@each.value'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
@@ -84,19 +87,20 @@ export default ObjectController.extend(CanCheckEmails, {
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
   saveButtonText: function() {
-    return this.get('saving') ? I18n.t('saving') : I18n.t('save');
-  }.property('saving'),
+    return this.get('model.isSaving') ? I18n.t('saving') : I18n.t('save');
+  }.property('model.isSaving'),
 
-  imageUploadUrl: Discourse.computed.url('username', '/users/%@/preferences/user_image'),
+  passwordProgress: null,
+  imageUploadUrl: Discourse.computed.url('model.username', '/users/%@/preferences/user_image'),
 
   actions: {
 
     save() {
       const self = this;
-      this.setProperties({ saving: true, saved: false });
+      this.set('saved', false);
 
-      const model = this.get('model'),
-          userFields = this.get('userFields');
+      const model = this.get('model');
+      const userFields = this.get('userFields');
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
@@ -111,22 +115,12 @@ export default ObjectController.extend(CanCheckEmails, {
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
       return model.save().then(function() {
-        // model was saved
-        self.set('saving', false);
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
-        self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
+        model.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(model.get('bio_raw'))));
         self.set('saved', true);
-      }, function(error) {
-        // model failed to save
-        self.set('saving', false);
-        if (error && error.responseText) {
-          alert($.parseJSON(error.responseText).errors[0]);
-        } else {
-          alert(I18n.t('generic_error'));
-        }
-      });
+      }).catch(popupAjaxError);
     },
 
     changePassword() {
