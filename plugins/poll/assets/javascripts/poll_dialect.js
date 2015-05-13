@@ -8,10 +8,10 @@
   const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "color", "background", "status"];
   const WHITELISTED_STYLES = ["color", "background"];
 
-  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]=]+['\"]?", "g");
+  const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
   Discourse.Dialect.replaceBlock({
-    start: /\[poll([^\]]*)\]([\s\S]*)/igm,
+    start: /\[poll((?:\s+\w+=[^\s\]]+)*)\]([\s\S]*)/igm,
     stop: /\[\/poll\]/igm,
 
     emitter: function(blockContents, matches) {
