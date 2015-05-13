@@ -232,15 +232,21 @@ describe CategoriesController do
       it 'accepts valid custom slug' do
         xhr :put, :update_slug, category_id: @category.id, slug: 'valid-slug'
         expect(response).to be_success
-        category = Category.find(@category.id)
-        expect(category.slug).to eq('valid-slug')
+        expect(@category.reload.slug).to eq('valid-slug')
       end
 
       it 'accepts not well formed custom slug' do
         xhr :put, :update_slug, category_id: @category.id, slug: ' valid slug'
         expect(response).to be_success
-        category = Category.find(@category.id)
-        expect(category.slug).to eq('valid-slug')
+        expect(@category.reload.slug).to eq('valid-slug')
+      end
+
+      it 'accepts and sanitize custom slug when the slug generation method is not english' do
+        SiteSetting.slug_generation_method = 'none'
+        xhr :put, :update_slug, category_id: @category.id, slug: ' another !_ slug @'
+        expect(response).to be_success
+        expect(@category.reload.slug).to eq('another-slug')
+        SiteSetting.slug_generation_method = 'ascii'
       end
 
       it 'rejects invalid custom slug' do
