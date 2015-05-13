@@ -94,6 +94,9 @@ describe Onebox::Engine::TwitterStatusOnebox do
       allow(@twitter_client).to receive("prettify_tweet") do
         "I'm a sucker for pledges.  <a href='https://twitter.com/Peers' target='_blank'>@Peers</a> Pledge <a href='https://twitter.com/search?q=%23sharingeconomy' target='_blank'>#sharingeconomy</a> <a target='_blank' href='http://www.peers.org/action/peers-pledgea/'>peers.org/action/peers-p…</a>"
       end
+      allow(@twitter_client).to receive("twitter_credentials_missing?") do
+        false
+      end
       Onebox.options = { twitter_client: @twitter_client }
     end
 
