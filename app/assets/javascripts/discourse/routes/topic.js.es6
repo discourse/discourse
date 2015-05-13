@@ -155,10 +155,7 @@ const TopicRoute = Discourse.Route.extend(ShowFooter, {
     let topic = this.modelFor('topic');
     if (topic && (topic.get('id') === parseInt(params.id, 10))) {
       this.setupParams(topic, queryParams);
-      // If we have the existing model, refresh it
-      return topic.get('postStream').refresh().then(function() {
-        return topic;
-      });
+      return topic;
     } else {
       topic = this.store.createRecord('topic', _.omit(params, 'username_filters', 'filter'));
       return this.setupParams(topic, queryParams);
