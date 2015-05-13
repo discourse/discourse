@@ -13,6 +13,10 @@ module Slug
     slug.blank? ? default : slug
   end
 
+  def self.sanitize(string)
+    self.encoded_generator(string)
+  end
+
   private
 
   def self.ascii_generator(string)
