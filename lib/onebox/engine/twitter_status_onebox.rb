@@ -18,7 +18,7 @@ module Onebox
       end
 
       def raw
-        if client
+        if client && !client.twitter_credentials_missing?
           @raw ||= OpenStruct.new(client.status(match[:id]).to_hash)
         else
           super
