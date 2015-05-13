@@ -67,9 +67,16 @@
         }
       }
 
-      // make sure the first child is a list with at least 1 option
-      if (contents.length === 0 || contents[0].length <= 1 || (contents[0][0] !== "numberlist" && contents[0][0] !== "bulletlist")) {
+      // make sure there's only 1 child and it's a list with at least 1 option
+      if (contents.length !== 1 || contents[0].length <= 1 || (contents[0][0] !== "numberlist" && contents[0][0] !== "bulletlist")) {
         return ["div"].concat(contents);
+      }
+
+      // make sure there's only options in the list
+      for (o = 1; o < contents[0].length; o++) {
+        if (contents[0][o][0] !== "listitem") {
+          return ["div"].concat(contents);
+        }
       }
 
       // TODO: remove non whitelisted content
@@ -86,9 +93,6 @@
 
       // add option id (hash) + style
       for (o = 1; o < contents[0].length; o++) {
-        // break as soon as the list is done
-        if (contents[0][o][0] !== "listitem") { break; }
-
         var attr = {};
         // apply styles if any
         if (style.length > 0) { attr["style"] = style; }
