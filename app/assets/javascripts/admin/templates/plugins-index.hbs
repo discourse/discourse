@@ -10,13 +10,13 @@
   <br/>
 
   <table>
+    <thead>
+      <tr>
+        <th>{{i18n "admin.plugins.name"}}</th>
+        <th>{{i18n "admin.plugins.version"}}</th>
+      </tr>
+    </thead>
     <tbody>
-      <thead>
-        <tr>
-          <th>{{i18n "admin.plugins.name"}}</th>
-          <th>{{i18n "admin.plugins.version"}}</th>
-        </tr>
-      </thead>
       {{#each plugin in controller}}
         <tr>
           <td>
