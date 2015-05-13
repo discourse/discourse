@@ -64,6 +64,8 @@ GEM
     daemons (1.2.2)
     debug_inspector (0.0.2)
     diff-lcs (1.2.5)
+    discourse-qunit-rails (0.0.8)
+      railties
     docile (1.1.5)
     dotenv (1.0.2)
     email_reply_parser (0.5.8)
@@ -291,8 +293,6 @@ GEM
       pry (>= 0.9.10)
     puma (2.11.1)
       rack (>= 1.1, < 2.0)
-    qunit-rails (0.0.7)
-      railties
     r2 (0.2.5)
     rack (1.5.3)
     rack-mini-profiler (0.9.3)
@@ -464,6 +464,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   certified
+  discourse-qunit-rails
   email_reply_parser
   ember-rails
   ember-source (= 1.11.3.1)
@@ -510,7 +511,6 @@ DEPENDENCIES
   pry-nav
   pry-rails
   puma
-  qunit-rails
   r2 (~> 0.2.5)
   rack-mini-profiler
   rack-protection

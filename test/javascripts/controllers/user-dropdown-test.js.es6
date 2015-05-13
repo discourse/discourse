@@ -1,14 +1,5 @@
 moduleFor("controller:user-dropdown");
 
-test("logout action logs out the current user", function () {
-  const logoutMock = sinon.mock(Discourse, "logout");
-  logoutMock.expects("logout").once();
-
-  this.subject().send('logout');
-
-  logoutMock.verify();
-});
-
 test("showAdminLinks", function() {
   const currentUser = Ember.Object.create({ staff: true });
   const controller = this.subject({ currentUser });
