@@ -44,7 +44,7 @@ Button.prototype.render = function(buffer) {
 
 var hiddenButtons;
 
-export default Discourse.View.extend(StringBuffer, {
+var PostMenuView = Discourse.View.extend(StringBuffer, {
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
@@ -139,6 +139,13 @@ export default Discourse.View.extend(StringBuffer, {
       visibleButtons = allButtons;
     } else {
       visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
+    }
+
+    var callbacks = PostMenuView._registerButtonCallbacks;
+    if (callbacks) {
+      _.each(callbacks, function(callback) {
+        callback.apply(self, [visibleButtons]);
+      });
     }
 
     buffer.push('<div class="actions">');
@@ -374,3 +381,12 @@ export default Discourse.View.extend(StringBuffer, {
   }
 
 });
+
+PostMenuView.reopenClass({
+  registerButton: function(callback){
+    this._registerButtonCallbacks = this._registerButtonCallbacks || [];
+    this._registerButtonCallbacks.push(callback);
+  }
+});
+
+export default PostMenuView;
