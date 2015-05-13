@@ -933,6 +933,7 @@ en:
     max_topics_per_day: "Maximum number of topics a user can create per day."
     max_private_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
+    max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."

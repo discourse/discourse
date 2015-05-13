@@ -557,12 +557,17 @@ class Topic < ActiveRecord::Base
     end
 
     if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso
+      # rate limit topic invite
+      RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
+
       # NOTE callers expect an invite object if an invite was sent via email
       invite_by_email(invited_by, username_or_email, group_ids)
     else
       # invite existing member to a topic
       user = User.find_by_username(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
+        # rate limit topic invite
+        RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
         # Notify the user they've been invited
         user.notifications.create(notification_type: Notification.types[:invited_to_topic],

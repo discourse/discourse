@@ -371,6 +371,29 @@ describe Topic do
 
   end
 
+  it "rate limits topic invitations" do
+    SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
+    RateLimiter.stubs(:disabled?).returns(false)
+    RateLimiter.clear_all!
+
+    start = Time.now.tomorrow.beginning_of_day
+    freeze_time(start)
+
+    user = Fabricate(:user)
+    topic = Fabricate(:topic)
+
+    freeze_time(start + 10.minutes)
+    topic.invite(topic.user, user.username)
+
+    freeze_time(start + 20.minutes)
+    topic.invite(topic.user, "walter@white.com")
+
+    freeze_time(start + 30.minutes)
+
+    expect {
+      topic.invite(topic.user, "user@example.com")
+    }.to raise_exception
+  end
 
   context 'bumping topics' do
 
