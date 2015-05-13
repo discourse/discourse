@@ -1,6 +1,19 @@
-moduleForComponent('ace-editor', {needs: []});
+moduleForComponent('ace-editor', {integration: true});
 
-test('changing colors', function(assert) {
-  assert.expect(0);
-  var component = this.subject();
+test('css editor', function(assert) {
+  andThen(() => {
+    this.render('{{ace-editor mode="css"}}');
+  });
+  andThen(() => {
+    assert.ok(this.$('.ace_editor').length, 'it renders the ace editor');
+  });
+});
+
+test('html editor', function(assert) {
+  andThen(() => {
+    this.render('{{ace-editor mode="html"}}');
+  });
+  andThen(() => {
+    assert.ok(this.$('.ace_editor').length, 'it renders the ace editor');
+  });
 });
