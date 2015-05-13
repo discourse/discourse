@@ -139,7 +139,7 @@ body {
   }
 
   .not-found-topic {
-    a[href] { margin-right: 10px; line-height: 2;}
+    > a { margin-right: 10px; line-height: 2;}
   }
 
   .page-not-found-topics .span8 {
