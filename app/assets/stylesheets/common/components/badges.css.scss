@@ -25,7 +25,7 @@
   &.bar { //bar category style
     line-height: 1.25;
     margin-right: 5px;
-    
+
     span.badge-category {
       color: $primary !important;
       padding: 3px;
@@ -88,8 +88,10 @@
    span {
      &.badge-category-parent-bg { //subcategory style
        width: 5px;
+       line-height: 1;
        & + .badge-category-bg {
          width: 5px;
+         line-height: 1;
        }
      }
    }
