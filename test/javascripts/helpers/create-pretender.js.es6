@@ -103,6 +103,10 @@ export default function() {
       return response(fixturesByUrl['/t/280/1.json']);
     });
 
+    this.get("/t/28830.json", function() {
+      return response(fixturesByUrl['/t/28830/1.json']);
+    });
+
     this.get("/t/id_for/:slug", function() {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
     });

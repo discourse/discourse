@@ -16,6 +16,7 @@ export default ObjectController.extend(SelectedPostsCount, BufferedContent, {
   loadedAllPosts: false,
   enteredAt: null,
   firstPostExpanded: false,
+  retrying: false,
 
   maxTitleLength: Discourse.computed.setting('max_topic_title_length'),
 
