@@ -134,7 +134,7 @@ module Jobs
           # deleted topic
           topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id'])
         end
-        category = topic_data.category
+        category = topic_data.category if topic_data
         sub_category = "-"
         if category
           category_name = category.name
