@@ -31,7 +31,6 @@ export default Ember.Component.extend({
   _initEditor: function() {
     const self = this;
 
-    // loadScript("https://meta-discourse.global.ssl.fastly.net/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
     loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
       ace.require(['ace/ace'], function(loadedAce) {
         const editor = loadedAce.edit(self.$('.ace')[0]);
