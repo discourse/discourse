@@ -33,7 +33,7 @@ class TopicViewItem < ActiveRecord::Base
         builder = SqlBuilder.new(sql)
 
         if !user_id
-          builder.where("ip_address = :ip_address AND topic_id = :topic_id")
+          builder.where("ip_address = :ip_address AND topic_id = :topic_id AND user_id IS NULL")
         else
           builder.where("user_id = :user_id AND topic_id = :topic_id")
         end
