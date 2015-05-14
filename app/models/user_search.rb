@@ -10,10 +10,29 @@ class UserSearch
     @limit = opts[:limit] || 20
   end
 
-  def search
-    users = User.order(User.sql_fragment("CASE WHEN username_lower = ? THEN 0 ELSE 1 END ASC", @term.downcase))
+  def scoped_users
+    users = User.where("active")
 
-    users = users.where(active: true)
+    unless @searching_user && @searching_user.staff?
+      users = users.not_suspended
+    end
+
+    # Only show users who have access to private topic
+    if @topic_id && @topic_allowed_users == "true"
+      topic = Topic.find_by(id: @topic_id)
+
+      if topic.category && topic.category.read_restricted
+        users = users.includes(:secure_categories)
+                     .where("users.admin = TRUE OR categories.id = ?", topic.category.id)
+                     .references(:categories)
+      end
+    end
+
+    users.limit(@limit)
+  end
+
+  def filtered_by_term_users
+    users = scoped_users
 
     if @term.present?
       if SiteSetting.enable_names?
@@ -28,29 +47,53 @@ class UserSearch
       end
     end
 
+    users
+  end
+
+  def search_ids
+    users = Set.new
+
+    # 1. exact username matches
+    if @term.present?
+      scoped_users.where(username_lower: @term.downcase)
+                  .pluck(:id)
+                  .each{|id| users << id}
+
+    end
+
+    return users.to_a if users.length == @limit
+
+    # 2. in topic
     if @topic_id
-      users = users.joins(User.sql_fragment("LEFT JOIN (SELECT DISTINCT p.user_id FROM POSTS p WHERE topic_id = ?) s ON s.user_id = users.id", @topic_id))
-                   .order("CASE WHEN s.user_id IS NULL THEN 0 ELSE 1 END DESC")
+      filtered_by_term_users.where('users.id in (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
+                            .order('last_seen_at DESC')
+                            .limit(@limit - users.length)
+                            .pluck(:id)
+                            .each{|id| users << id}
     end
 
-    unless @searching_user && @searching_user.staff?
-      users = users.not_suspended
-    end
+    return users.to_a if users.length == @limit
 
-    # Only show users who have access to private topic
-    if @topic_id && @topic_allowed_users == "true"
-      allowed_user_ids = []
-      topic = Topic.find_by(id: @topic_id)
+    # 3. global matches
+    filtered_by_term_users.order('last_seen_at DESC')
+                            .limit(@limit - users.length)
+                            .pluck(:id)
+                            .each{|id| users << id}
 
-      if topic.category && topic.category.read_restricted
-        users = users.includes(:secure_categories)
-                     .where("users.admin = TRUE OR categories.id = ?", topic.category.id)
-                     .references(:categories)
-      end
-    end
+    users.to_a
 
-    users.order("CASE WHEN last_seen_at IS NULL THEN 0 ELSE 1 END DESC, last_seen_at DESC, username ASC")
-         .limit(@limit)
+  end
+
+  def search
+
+    ids = search_ids
+    return User.where("0=1") if ids.empty?
+
+    User.joins("JOIN (SELECT unnest uid, row_number() OVER () AS rn
+      FROM unnest('{#{ids.join(",")}}'::int[])
+    ) x on uid = users.id")
+        .order("rn")
+
   end
 
 end
