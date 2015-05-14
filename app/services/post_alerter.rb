@@ -157,6 +157,7 @@ class PostAlerter
           notification_type: type,
           post_number: original_post.post_number,
           topic_title: original_post.topic.title,
+          topic_id: original_post.topic.id,
           excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
           username: original_username,
           post_url: post_url
