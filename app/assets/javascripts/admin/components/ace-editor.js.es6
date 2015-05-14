@@ -31,13 +31,14 @@ export default Ember.Component.extend({
   _initEditor: function() {
     const self = this;
 
+    // loadScript("https://meta-discourse.global.ssl.fastly.net/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
     loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
       ace.require(['ace/ace'], function(loadedAce) {
         const editor = loadedAce.edit(self.$('.ace')[0]);
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
-        editor.getSession().setMode("ace/mode/" + (self.get('mode')));
+        editor.getSession().setMode("ace/mode/" + self.get('mode'));
         editor.on('change', function() {
           self._skipContentChangeEvent = true;
           self.set('content', editor.getSession().getValue());
