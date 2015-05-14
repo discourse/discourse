@@ -86,27 +86,35 @@ class Category < ActiveRecord::Base
   def self.scoped_to_permissions(guardian, permission_types)
     if guardian && guardian.is_staff?
       all
+    elsif !guardian || guardian.anonymous?
+      if permission_types.include?(:readonly)
+        where("NOT categories.read_restricted")
+      else
+        where("1 = 0")
+      end
     else
       permission_types = permission_types.map{ |permission_type|
         CategoryGroup.permission_types[permission_type]
       }
       where("categories.id in (
-            SELECT c.id FROM categories c
-              WHERE (
-                  NOT c.read_restricted AND
-                  (
-                    NOT EXISTS(
-                      SELECT 1 FROM category_groups cg WHERE cg.category_id = categories.id )
-                    ) OR EXISTS(
-                      SELECT 1 FROM category_groups cg
-                        WHERE permission_type in (?) AND
-                        cg.category_id = categories.id AND
-                        group_id IN (
-                          SELECT g.group_id FROM group_users g where g.user_id = ? UNION SELECT ?
-                        )
+                  SELECT cg.category_id FROM category_groups cg
+                    WHERE permission_type in (:permissions) AND
+                    (
+                      group_id IN (
+                        SELECT g.group_id FROM group_users g where g.user_id = :user_id
+                      )
                     )
+                )
+                OR
+                categories.id in (
+                  SELECT cg.category_id FROM category_groups cg
+                    WHERE permission_type in (:permissions) AND group_id = :everyone
                   )
-            )", permission_types,(!guardian || guardian.user.blank?) ? -1 : guardian.user.id, Group[:everyone].id)
+                OR
+                categories.id NOT in (SELECT cg.category_id FROM category_groups cg)
+            ", permissions: permission_types,
+               user_id: guardian.user.id,
+               everyone: Group[:everyone].id)
     end
   end
 
