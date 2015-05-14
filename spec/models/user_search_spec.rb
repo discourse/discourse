@@ -38,7 +38,7 @@ describe UserSearch do
     # normal search
     results = search_for(user1.name.split(" ").first)
     expect(results.size).to eq(1)
-    expect(results.first).to eq(user1)
+    expect(results.first.username).to eq(user1.username)
 
     # lower case
     results = search_for(user1.name.split(" ").first.downcase)
@@ -106,7 +106,7 @@ describe UserSearch do
 
     # find an exact match first
     results = search_for("mrB")
-    expect(results.first).to eq(user1)
+    expect(results.first.username).to eq(user1.username)
 
     # don't return inactive users
     results = search_for("Ghost")
