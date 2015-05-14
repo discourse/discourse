@@ -48,7 +48,7 @@ export default {
                 pollView = createPollView(container, post, polls[pollName], votes[pollName]);
 
           $poll.replaceWith($div);
-          pollView.renderer.replaceIn(pollView, $div[0]);
+          Em.run.next(_ => pollView.renderer.replaceIn(pollView, $div[0]));
           pollViews[pollName] = pollView;
         });
 
