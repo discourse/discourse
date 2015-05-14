@@ -65,7 +65,7 @@ export default Ember.Controller.extend({
     this.setProperties({ user: null, userLoading: username, cardTarget: target });
 
     const args = { stats: false };
-    args.include_post_count_for = this.get('controllers.topic.id');
+    args.include_post_count_for = this.get('controllers.topic.model.id');
 
     const self = this;
     return Discourse.User.findByUsername(username, args).then(function(user) {
