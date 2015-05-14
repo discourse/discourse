@@ -69,7 +69,7 @@ const User = RestModel.extend({
   profileBackground: function() {
     var url = this.get('profile_background');
     if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-    return 'background-image: url(' + Discourse.getURLWithCDN(url) + ')';
+    return ('background-image: url(' + Discourse.getURLWithCDN(url) + ')').htmlSafe();
   }.property('profile_background'),
 
   /**
