@@ -178,6 +178,6 @@
   Discourse.Markdown.whiteListTag("a", "class", /^button (cast-votes|toggle-results)/);
 
   Discourse.Markdown.whiteListTag("li", "data-*");
-  Discourse.Markdown.whiteListTag("li", "style");
+  Discourse.Markdown.whiteListTag("li", "style", /^(color=#?\w+;)?(background=#?\w+;)?$/);
 
 })();
