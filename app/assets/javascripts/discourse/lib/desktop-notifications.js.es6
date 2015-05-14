@@ -7,7 +7,6 @@ let lastAction = -1;
 
 const focusTrackerKey = "focus-tracker";
 const idleThresholdTime = 1000 * 10; // 10 seconds
-let notificationTagName; // "discourse-notification-popup-" + Discourse.SiteSettings.title;
 
 // Called from an initializer
 function init(messageBus) {
@@ -24,8 +23,6 @@ function init(messageBus) {
     Em.Logger.info('Discourse desktop notifications are disabled - localStorage denied.');
     return;
   }
-
-
 
   if (!("Notification" in window)) {
     Em.Logger.info('Discourse desktop notifications are disabled - not supported by browser');
@@ -54,8 +51,6 @@ function init(messageBus) {
 
 // This function is only called if permission was granted
 function setupNotifications() {
-
-  notificationTagName = "discourse-notification-popup-" + Discourse.SiteSettings.title;
 
   window.addEventListener("storage", function(e) {
     // note: This event only fires when other tabs setItem()
@@ -108,13 +103,14 @@ function onNotification(data) {
 
   const notificationBody = data.excerpt;
   const notificationIcon = Discourse.SiteSettings.logo_small_url || Discourse.SiteSettings.logo_url;
+  const notificationTag = "discourse-notification-" + Discourse.SiteSettings.title + "-" + data.topic_id;
 
   requestPermission().then(function() {
     // This shows the notification!
     const notification = new Notification(notificationTitle, {
       body: notificationBody,
       icon: notificationIcon,
-      tag: notificationTagName
+      tag: notificationTag
     });
 
     function clickEventHandler() {
