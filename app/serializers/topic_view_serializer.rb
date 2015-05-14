@@ -124,6 +124,7 @@ class TopicViewSerializer < ApplicationSerializer
   def include_is_warning?
     is_warning
   end
+
   def draft
     object.draft
   end
