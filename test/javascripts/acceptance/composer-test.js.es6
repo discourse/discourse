@@ -119,6 +119,27 @@ test("Create a Reply", () => {
   });
 });
 
+test("Posting on a different topic", (assert) => {
+  visit("/t/internationalization-localization/280");
+  click('#topic-footer-buttons .btn.create');
+  fillIn('#wmd-input', 'this is the content for a different topic');
+
+  visit("/t/1-3-0beta9-no-rate-limit-popups/28830");
+  andThen(function() {
+    assert.equal(currentURL(), "/t/1-3-0beta9-no-rate-limit-popups/28830");
+  });
+  click('#reply-control button.create');
+  andThen(function() {
+    assert.ok(visible('.reply-where-modal'), 'it pops up a modal');
+  });
+
+  click('.btn-reply-here');
+  andThen(() => {
+    assert.equal(find('.cooked:last p').text(), 'this is the content for a different topic');
+  });
+});
+
+
 test("Create an enqueued Reply", () => {
   visit("/t/internationalization-localization/280");
 

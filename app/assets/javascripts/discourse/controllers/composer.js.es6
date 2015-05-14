@@ -191,8 +191,9 @@ export default Ember.ObjectController.extend(Presence, {
     // for now handle a very narrow use case
     // if we are replying to a topic AND not on the topic pop the window up
     if (!force && composer.get('replyingToTopic')) {
-      const topic = this.get('model.topic');
-      if (!topic || topic.get('id') !== composer.get('topic.id'))
+
+      const currentTopic = this.get('controllers.topic.model');
+      if (!currentTopic || currentTopic.get('id') !== composer.get('topic.id'))
       {
         const message = I18n.t("composer.posting_not_on_topic");
 
@@ -202,12 +203,12 @@ export default Ember.ObjectController.extend(Presence, {
           "link": true
         }];
 
-        if (topic) {
+        if (currentTopic) {
           buttons.push({
-            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + Handlebars.Utils.escapeExpression(topic.get('title')) + "</div>",
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + Handlebars.Utils.escapeExpression(currentTopic.get('title')) + "</div>",
             "class": "btn btn-reply-here",
             "callback": function() {
-              composer.set('topic', topic);
+              composer.set('topic', currentTopic);
               composer.set('post', null);
               self.save(true);
             }
