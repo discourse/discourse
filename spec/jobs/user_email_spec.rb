@@ -9,6 +9,7 @@ describe Jobs::UserEmail do
 
   let(:user) { Fabricate(:user, last_seen_at: 11.minutes.ago ) }
   let(:suspended) { Fabricate(:user, last_seen_at: 10.minutes.ago, suspended_at: 5.minutes.ago, suspended_till: 7.days.from_now ) }
+  let(:anonymous) { Fabricate(:anonymous, last_seen_at: 11.minutes.ago ) }
   let(:mailer) { Mail::Message.new(to: user.email) }
 
   it "raises an error when there is no user" do
@@ -96,6 +97,22 @@ describe Jobs::UserEmail do
           Jobs::UserEmail.new.execute(type: :private_message, user_id: suspended.id, post_id: pm_from_staff.id)
         end
       end
+
+      context 'user is anonymous' do
+        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+
+        it "doesn't send email for a pm from a regular user" do
+          Email::Sender.any_instance.expects(:send).never
+          Jobs::UserEmail.new.execute(type: :private_message, user_id: anonymous.id, post_id: post.id)
+        end
+
+        it "doesn't send email for a pm from a staff user" do
+          pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
+          pm_from_staff.topic.topic_allowed_users.create!(user_id: anonymous.id)
+          Email::Sender.any_instance.expects(:send).never
+          Jobs::UserEmail.new.execute(type: :private_message, user_id: anonymous.id, post_id: pm_from_staff.id)
+        end
+      end
     end
 
 
@@ -167,6 +184,28 @@ describe Jobs::UserEmail do
             suspended.update_column(:last_seen_at, 1.minute.ago)
             execute_user_email_job
           end
+        end
+      end
+
+      context 'user is anonymous' do
+        before { SiteSetting.stubs(:allow_anonymous_posting).returns(true) }
+
+        it "doesn't send email for a pm from a regular user" do
+          Email::Sender.any_instance.expects(:send).never
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, notification_id: notification.id)
+        end
+
+        it "doesn't send email for a pm from staff" do
+          pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
+          pm_from_staff.topic.topic_allowed_users.create!(user_id: anonymous.id)
+          pm_notification = Fabricate(:notification,
+                                          user: anonymous,
+                                          topic: pm_from_staff.topic,
+                                          post_number: pm_from_staff.post_number,
+                                          data: { original_post_id: pm_from_staff.id }.to_json
+                                      )
+          Email::Sender.any_instance.expects(:send).never
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, notification_id: pm_notification.id)
         end
       end
     end

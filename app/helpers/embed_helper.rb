@@ -14,5 +14,14 @@ module EmbedHelper
     end
   end
 
+  def get_html(cooked)
+    fragment = Nokogiri::HTML.fragment(cooked)
+    # convert lazyYT div to link
+    fragment.css('div.lazyYT').each do |yt_div|
+      youtube_id = yt_div["data-youtube-id"]
+      youtube_link = "https://www.youtube.com/watch?v=#{youtube_id}"
+      yt_div.replace "<p><a href='#{youtube_link}'>#{youtube_link}</a></p>"
+    end
+    raw fragment
+  end
 end
-

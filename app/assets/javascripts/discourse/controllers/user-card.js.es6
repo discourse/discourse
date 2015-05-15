@@ -1,17 +1,18 @@
-import ObjectController from 'discourse/controllers/object';
-
-export default ObjectController.extend({
+export default Ember.Controller.extend({
   needs: ['topic', 'application'],
   visible: false,
   user: null,
   username: null,
-  participant: null,
   avatar: null,
   userLoading: null,
   cardTarget: null,
+  post: null,
 
-  postStream: Em.computed.alias('controllers.topic.postStream'),
-  enoughPostsForFiltering: Em.computed.gte('participant.post_count', 2),
+  // If inside a topic
+  topicPostCount: null,
+
+  postStream: Em.computed.alias('controllers.topic.model.postStream'),
+  enoughPostsForFiltering: Em.computed.gte('topicPostCount', 2),
   viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
   viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
   showFilter: Em.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
@@ -27,14 +28,14 @@ export default ObjectController.extend({
   }.property('user.badge_count', 'user.featured_user_badges.@each'),
 
   hasCardBadgeImage: function() {
-    var img = this.get('user.card_badge.image');
+    const img = this.get('user.card_badge.image');
     return img && img.indexOf('fa-') !== 0;
   }.property('user.card_badge.image'),
 
-  show: function(username, target) {
+  show(username, postId, target) {
     // XSS protection (should be encapsulated)
     username = username.toString().replace(/[^A-Za-z0-9_]/g, "");
-    var url = "/users/" + username;
+    const url = "/users/" + username;
 
     // Don't show on mobile
     if (Discourse.Mobile.mobileView) {
@@ -42,15 +43,15 @@ export default ObjectController.extend({
       return;
     }
 
-    var currentUsername = this.get('username'),
-        wasVisible = this.get('visible');
+    const currentUsername = this.get('username'),
+        wasVisible = this.get('visible'),
+        post = this.get('viewingTopic') && postId ? this.get('postStream').findLoadedPost(postId) : null;
 
-    this.set('avatar', null);
-    this.set('username', username);
+    this.setProperties({ avatar: null, post: post, username: username });
 
     // If we click the avatar again, close it (unless its diff element on the screen).
     if (target === this.get('cardTarget') && wasVisible) {
-      this.setProperties({ visible: false, username: null, avatar: null, cardTarget: null });
+      this.setProperties({ visible: false, username: null, cardTarget: null });
       return;
     }
 
@@ -59,42 +60,43 @@ export default ObjectController.extend({
       return;
     }
 
-    this.set('participant', null);
+    this.set('topicPostCount', null);
 
-    // Retrieve their participants info
-    var participants = this.get('controllers.topic.details.participants');
-    if (participants) {
-      this.set('participant', participants.findBy('username', username));
-    }
+    this.setProperties({ user: null, userLoading: username, cardTarget: target });
 
-    var self = this;
-    self.set('user', null);
-    self.set('userLoading', username);
-    self.set('cardTarget', target);
+    const args = { stats: false };
+    args.include_post_count_for = this.get('controllers.topic.model.id');
 
-    Discourse.User.findByUsername(username).then(function (user) {
+    const self = this;
+    return Discourse.User.findByUsername(username, args).then(function(user) {
+
+      if (user.topic_post_count) {
+        self.set('topicPostCount', user.topic_post_count[args.include_post_count_for]);
+      }
       user = Discourse.User.create(user);
-      self.setProperties({ user: user, avatar: user, visible: true});
+      self.setProperties({ user, avatar: user, visible: true});
       self.appEvents.trigger('usercard:shown');
-    }).finally(function(){
+    }).catch(function(error) {
+      self.close();
+      throw error;
+    }).finally(function() {
       self.set('userLoading', null);
     });
   },
 
-  close: function() {
-    this.set('visible', false);
-    this.set('cardTarget', null);
+  close() {
+    this.setProperties({ visible: false, cardTarget: null });
   },
 
   actions: {
-    togglePosts: function(user) {
-      var postStream = this.get('controllers.topic.postStream');
+    togglePosts(user) {
+      const postStream = this.get('postStream');
       postStream.toggleParticipant(user.get('username'));
       this.close();
     },
 
-    cancelFilter: function() {
-      var postStream = this.get('postStream');
+    cancelFilter() {
+      const postStream = this.get('postStream');
       postStream.cancelFilter();
       postStream.refresh();
       this.close();

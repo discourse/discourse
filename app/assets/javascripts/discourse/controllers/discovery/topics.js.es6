@@ -1,10 +1,9 @@
 import DiscoveryController from 'discourse/controllers/discovery';
 import { queryParams } from 'discourse/controllers/discovery-sortable';
+import BulkTopicSelection from 'discourse/mixins/bulk-topic-selection';
 
 var controllerOpts = {
   needs: ['discovery'],
-  bulkSelectEnabled: false,
-  selected: [],
   period: null,
 
   canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
@@ -14,6 +13,8 @@ var controllerOpts = {
 
   order: 'default',
   ascending: false,
+  expandGloballyPinned: false,
+  expandAllPinned: false,
 
   actions: {
 
@@ -49,10 +50,12 @@ var controllerOpts = {
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
-      Discourse.TopicList.find(filter).then(function(list) {
+
+      this.store.findFiltered('topicList', {filter}).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, self.get('category'));
 
-        self.setProperties({ model: list, selected: [] });
+        self.setProperties({ model: list });
+        self.resetSelected();
 
         var tracking = Discourse.TopicTrackingState.current();
         if (tracking) {
@@ -63,10 +66,6 @@ var controllerOpts = {
       });
     },
 
-    toggleBulkSelect: function() {
-      this.toggleProperty('bulkSelectEnabled');
-      this.get('selected').clear();
-    },
 
     resetNew: function() {
       var self = this;
@@ -75,67 +74,36 @@ var controllerOpts = {
       Discourse.Topic.resetNew().then(function() {
         self.send('refresh');
       });
-    },
-
-    dismissRead: function(operationType) {
-      var self = this,
-          selected = this.get('selected'),
-          operation;
-
-      if(operationType === "posts"){
-        operation = { type: 'dismiss_posts' };
-      } else {
-        operation = { type: 'change_notification_level',
-                        notification_level_id: Discourse.Topic.NotificationLevel.REGULAR };
-      }
-
-      var promise;
-      if (selected.length > 0) {
-        promise = Discourse.Topic.bulkOperation(selected, operation);
-      } else {
-        promise = Discourse.Topic.bulkOperationByFilter('unread', operation, this.get('category.id'));
-      }
-      promise.then(function(result) {
-        if (result && result.topic_ids) {
-          var tracker = Discourse.TopicTrackingState.current();
-          result.topic_ids.forEach(function(t) {
-            tracker.removeTopic(t);
-          });
-          tracker.incrementMessageCount();
-        }
-        self.send('refresh');
-      });
     }
   },
-
 
   topicTrackingState: function() {
     return Discourse.TopicTrackingState.current();
   }.property(),
 
   isFilterPage: function(filter, filterType) {
+    if (!filter) { return false; }
     return filter.match(new RegExp(filterType + '$', 'gi')) ? true : false;
   },
 
   showDismissRead: function() {
-    return this.isFilterPage(this.get('filter'), 'unread') && this.get('topics.length') > 0;
-  }.property('filter', 'topics.length'),
+    return this.isFilterPage(this.get('model.filter'), 'unread') && this.get('model.topics.length') > 0;
+  }.property('model.filter', 'model.topics.length'),
 
   showResetNew: function() {
-    return this.get('filter') === 'new' && this.get('topics.length') > 0;
-  }.property('filter', 'topics.length'),
+    return this.get('model.filter') === 'new' && this.get('model.topics.length') > 0;
+  }.property('model.filter', 'model.topics.length'),
 
   showDismissAtTop: function() {
-    return (this.isFilterPage(this.get('filter'), 'new') ||
-           this.isFilterPage(this.get('filter'), 'unread')) &&
-           this.get('topics.length') >= 30;
-  }.property('filter', 'topics.length'),
+    return (this.isFilterPage(this.get('model.filter'), 'new') ||
+           this.isFilterPage(this.get('model.filter'), 'unread')) &&
+           this.get('model.topics.length') >= 30;
+  }.property('model.filter', 'model.topics.length'),
 
-  canBulkSelect: Em.computed.alias('currentUser.staff'),
-  hasTopics: Em.computed.gt('topics.length', 0),
-  allLoaded: Em.computed.empty('more_topics_url'),
-  latest: Discourse.computed.endWith('filter', 'latest'),
-  new: Discourse.computed.endWith('filter', 'new'),
+  hasTopics: Em.computed.gt('model.topics.length', 0),
+  allLoaded: Em.computed.empty('model.more_topics_url'),
+  latest: Discourse.computed.endWith('model.filter', 'latest'),
+  new: Discourse.computed.endWith('model.filter', 'new'),
   top: Em.computed.notEmpty('period'),
   yearly: Em.computed.equal('period', 'yearly'),
   monthly: Em.computed.equal('period', 'monthly'),
@@ -149,8 +117,8 @@ var controllerOpts = {
     if( category ) {
       return I18n.t('topics.bottom.category', {category: category.get('name')});
     } else {
-      var split = this.get('filter').split('/');
-      if (this.get('topics.length') === 0) {
+      var split = (this.get('model.filter') || '').split('/');
+      if (this.get('model.topics.length') === 0) {
         return I18n.t("topics.none." + split[0], {
           category: split[1]
         });
@@ -160,21 +128,21 @@ var controllerOpts = {
         });
       }
     }
-  }.property('allLoaded', 'topics.length'),
+  }.property('allLoaded', 'model.topics.length'),
 
   footerEducation: function() {
-    if (!this.get('allLoaded') || this.get('topics.length') > 0 || !Discourse.User.current()) { return; }
+    if (!this.get('allLoaded') || this.get('model.topics.length') > 0 || !Discourse.User.current()) { return; }
 
-    var split = this.get('filter').split('/');
+    var split = (this.get('model.filter') || '').split('/');
 
     if (split[0] !== 'new' && split[0] !== 'unread') { return; }
 
     return I18n.t("topics.none.educate." + split[0], {
       userPrefsUrl: Discourse.getURL("/users/") + (Discourse.User.currentProp("username_lower")) + "/preferences"
     });
-  }.property('allLoaded', 'topics.length'),
+  }.property('allLoaded', 'model.topics.length'),
 
-  loadMoreTopics: function() {
+  loadMoreTopics() {
     return this.get('model').loadMore();
   }
 };
@@ -186,4 +154,4 @@ Ember.keys(queryParams).forEach(function(p) {
   }
 });
 
-export default DiscoveryController.extend(controllerOpts);
+export default DiscoveryController.extend(controllerOpts, BulkTopicSelection);

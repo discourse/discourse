@@ -5,7 +5,6 @@ describe HasCustomFields do
 
   context "custom_fields" do
     before do
-
       Topic.exec_sql("create temporary table custom_fields_test_items(id SERIAL primary key)")
       Topic.exec_sql("create temporary table custom_fields_test_item_custom_fields(id SERIAL primary key, custom_fields_test_item_id int, name varchar(256) not null, value text)")
 
@@ -85,10 +84,9 @@ describe HasCustomFields do
       # refresh loads from database
       expect(test_item.reload.custom_fields["a"]).to eq("1")
       expect(test_item.custom_fields["a"]).to eq("1")
-
     end
-    it "double save actually saves" do
 
+    it "double save actually saves" do
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => "b"}
       test_item.save
@@ -98,12 +96,9 @@ describe HasCustomFields do
 
       db_item = CustomFieldsTestItem.find(test_item.id)
       expect(db_item.custom_fields).to eq({"a" => "b", "c" => "d"})
-
     end
 
-
     it "handles arrays properly" do
-
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => ["b", "c", "d"]}
       test_item.save
@@ -125,11 +120,9 @@ describe HasCustomFields do
 
       db_item.custom_fields.delete('a')
       expect(db_item.custom_fields).to eq({})
-
     end
 
     it "casts integers in arrays properly without error" do
-
       test_item = CustomFieldsTestItem.new
       test_item.custom_fields = {"a" => ["b", 10, "d"]}
       test_item.save
@@ -137,19 +130,19 @@ describe HasCustomFields do
 
       db_item = CustomFieldsTestItem.find(test_item.id)
       expect(db_item.custom_fields).to eq({"a" => ["b", "10", "d"]})
-
     end
 
     it "supportes type coersion" do
       test_item = CustomFieldsTestItem.new
       CustomFieldsTestItem.register_custom_field_type("bool", :boolean)
       CustomFieldsTestItem.register_custom_field_type("int", :integer)
+      CustomFieldsTestItem.register_custom_field_type("json", :json)
 
-      test_item.custom_fields = {"bool" => true, "int" => 1}
+      test_item.custom_fields = {"bool" => true, "int" => 1, "json" => { "foo" => "bar" }}
       test_item.save
       test_item.reload
 
-      expect(test_item.custom_fields).to eq({"bool" => true, "int" => 1})
+      expect(test_item.custom_fields).to eq({"bool" => true, "int" => 1, "json" => { "foo" => "bar" }})
     end
 
     it "simple modifications don't interfere" do

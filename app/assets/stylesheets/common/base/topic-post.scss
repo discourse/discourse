@@ -38,6 +38,9 @@
   video {
     max-width: 100%;
   }
+  sup sup {
+    top: 0;
+  }
 }
 // we use aside to hold expandable quotes (versus, say, static blockquotes)
 aside.quote {
@@ -179,7 +182,11 @@ kbd
   margin: 0 .1em;
   padding: .1em .6em;
 
-  * * { display: none; }
+  // don't allow more than 3 nested elements to prevent FF from crashing
+  // cf. http://what.thedailywtf.com/t/nested-elements/7927
+  // 3 levels are needed to prevent highlighted words being hidden
+  // cf. https://meta.discourse.org/t/word-disappears-when-searched-and-in-details-summary-kbd-b/25741
+  * * * { display: none; }
 }
 
 // we assume blockquotes have their own margins, so all blockquotes

@@ -350,12 +350,13 @@ a.star {
     }
     .post-count {
       position: absolute;
-      top: 2px;
-      right: 6px;
-      padding: 0 4px;
+      right: 3px;
+      border-radius: 100px;
+      padding: 4px 5px 2px 5px;
+      text-align: center;
       font-weight: normal;
       font-size: 11px;
-      line-height: 14px;
+      line-height: 1;
     }
   }
 
@@ -461,16 +462,6 @@ a.star {
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
-  .topic-list {
-    > tbody > tr {
-      &:nth-child(odd) {
-          background-color: darken($secondary, 3%);
-      }
-      &:nth-child(even) {
-          background-color: $secondary;
-      }
-    }
-  }
   table {
     table-layout: fixed;
     margin-top: 10px;
@@ -558,30 +549,13 @@ video {
   .topic-statuses {
     margin-top: -2px;
   }
-
-  .badge-wrapper {
-    margin: 0 0 0 2px;
-    padding: 0;
-
-    .badge-category {
-      color: $header_primary;
-      padding: 0 0 0 3px;
-      margin-right: 5px;
-    }
-
-    .badge-category-parent {
-      margin: 0;
-      padding: 0px 1px;
-    }
-  }
-
 }
 
 /* override docked header CSS for topics with categories */
-.extra-info.has-category {
+.extra-info.two-rows {
   h1 {
     line-height: 1.1em;
-    margin: 0 0 2px 0;
+    margin: 0;
   }
 }
 

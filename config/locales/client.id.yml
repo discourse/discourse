@@ -68,11 +68,13 @@ id:
           other: "%{count} hari yang lalu"
     share:
       topic: 'share link ke topik ini'
+      post: 'post #%{postNumber}'
       close: 'tutup'
       twitter: 'share link ini di Twitter'
       facebook: 'share link ini di Facebook'
       google+: 'share link ini di Google+'
       email: 'kirim link ini melalui email'
+    emails_are_disabled: "Semua surel yang keluar telah dinonaktifkan oleh administrator. Tidak ada pemberitahuan email yang akan dikirimkan."
     edit: 'Ubah judul dan kategori topik ini'
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
@@ -88,7 +90,6 @@ id:
     show_more: "show more"
     show_help: "Bantuan"
     links: "Links"
-    links_lowercase: "links"
     faq: "FAQ"
     guidelines: "Guidelines"
     privacy_policy: "Privacy Policy"
@@ -120,15 +121,26 @@ id:
       stat:
         all_time: "Setiap Waktu"
         last_7_days: "Selama 7 Hari"
+        last_30_days: "30 hari terakhir"
       topic_count: "Topik"
       post_count: "Post"
-      user_count: "Pengguna"
+      user_count: "Pengguna Baru"
+      active_user_count: "Pengguna Aktif"
+      contact: "Kontak kami"
+    bookmarked:
+      title: "Markah"
     bookmarks:
       not_logged_in: "Maaf, anda harus masuk untuk menandai post"
       created: "Anda telah menandai post ini"
       not_bookmarked: "Anda telah membaca post ini; klik untuk menandainya"
       last_read: "Ini adalah post terakhir yang anda baca; klik untuk menandainya"
       remove: "Hilangkan penandaan"
+    topic_count_latest:
+      other: "{{count}} topik baru atau diperbarui."
+    topic_count_unread:
+      other: "{{count}} topik belum dibaca."
+    topic_count_new:
+      other: "{{count}} topik baru."
     click_to_show: "Klik untuk menampilkan"
     preview: "preview"
     cancel: "cancel"
@@ -138,16 +150,30 @@ id:
     upload: "Unggah"
     uploading: "Mengunggah..."
     uploaded: "Sudah Diunggah!"
+    enable: "Aktifkan"
+    disable: "Nonaktifkan"
+    undo: "Batalkan perintah"
     revert: "Kembali ke awal"
     failed: "Gagal"
+    banner:
+      close: "Abaikan Banner ini."
     choose_topic:
       none_found: "Tidak ada topik."
       title:
         search: "Cari Topik berdasarkan nama, url atau id:"
         placeholder: "tulis judul topik disini"
     user_action:
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> memposting <a href='{{topicUrl}}'>topik</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>Anda</a> memposting <a href='{{topicUrl}}'>the topic</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>You</a> membalas <a href='{{postUrl}}'>{{post_number}}</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> membalas <a href='{{topicUrl}}'>topik</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>Anda</a> membalas <a href='{{topicUrl}}'>topik</a>"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> menandai <a href='{{user2Url}}'>{{another_user}}</a>"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> menandai <a href='{{user2Url}}'>Anda</a>"
+      you_mentioned_user: "<a href='{{user1Url}}'>Anda</a> menandai <a href='{{user2Url}}'>{{another_user}}</a>"
+      posted_by_user: "Dikirim oleh <a href='{{userUrl}}'>{{user}}</a>"
+      posted_by_you: "Dikirim oleh <a href='{{userUrl}}'>Anda</a>"
       sent_by_user: "Dikirim oleh <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Dikirim oleh <a href='{{userUrl}}'>kamu</a>"
     groups:
@@ -168,9 +194,8 @@ id:
       '2': "Likes Diterima"
       '3': "Markah"
       '4': "Topik"
-      '5': "Post"
-      '6': "Balasan"
       '7': "Disebutkan"
+      '9': "Kutipan"
       '10': "Bertanda Bintang"
       '11': "Edit"
       '12': "Item Terkirim"
@@ -184,13 +209,71 @@ id:
       topics: "Topik"
       latest: "Terbaru"
       latest_by: "Terbaru oleh"
+      subcategories: "Subkategori"
+      topic_stats: "Banyaknya topik baru."
+      topic_stat_sentence:
+        other: "%{count} topik baru dalam %{unit} terakhir."
+      post_stats: "Banyaknya pos baru."
+      post_stat_sentence:
+        other: "%{count} pos baru dalam %{unit} terakhir."
+    ip_lookup:
+      location: Lokasi
+      location_not_found: (tidak diketahui)
+      organisation: Organisasi
+      phone: Telepon
+      username: "username"
+      read_time: "waktu baca"
+      confirm_delete_other_accounts: "Apakah Anda yakin  untuk menghapus akun ini?"
     user:
+      said: "{{username}}:"
       profile: "Profil"
+      mute: "Redam"
       edit: "Ubah Preferensi"
-      private_message: "Private Message"
+      download_archive: "Unduh Pos Saya"
       private_messages: "Messages"
       activity_stream: "Activity"
+      bookmarks: "Markah"
       bio: "About me"
+      invited_by: "Diundang oleh"
+      notifications: "Pemberitahuan"
+      dismiss_notifications: "Tandai semua telah dibaca"
+      dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
+      disable_jump_reply: "Jangan pindah ke kiriman saya setelah saya balas"
+      edit_history_public: "Biarkan pengguna lain melihat revisi pos saya"
+      external_links_in_new_tab: "Buka semua link eksternal ke dalam tab baru"
+      change: "ubah"
+      moderator: "{{user}} adalah moderator"
+      admin: "{{user}} adalah admin"
+      moderator_tooltip: "Pengguna ini adalah moderator"
+      admin_tooltip: "Pengguna ini adalah admin"
+      suspended_reason: "Alasan:"
+      github_profile: "Github"
+      mailing_list_mode: "Kirimkan saya surel setiap kiriman baru (kecuali saya meredam topik atau kategori)"
+      watched_categories: "Dilihat"
+      muted_categories: "Diredam"
+      delete_account: "Hapus Akun Saya"
+      delete_account_confirm: "Apakah Anda yakin untuk menghapus akun ini secara permanen? Perintah ini tidak dapat dibatalkan!"
+      deleted_yourself: "Akun Anda telah sukses dihapus."
+      delete_yourself_not_allowed: "Anda tidak dapat menghapus akun. Hubungi admin untuk menghapus akun Anda."
+      unread_message_count: "Pesan"
+      admin_delete: "Hapus"
+      staff_counters:
+        warnings_received: "peringatan"
+      messages:
+        all: "Semua"
+        unread: "Belum dibaca"
+      change_password:
+        success: "(surel terkirim)"
+        in_progress: "(mengirimkan surel)"
+        error: "(galat)"
+        set_password: "Atur Kata Sandi"
+      change_about:
+        title: "Ganti Tentang Saya"
+      change_username:
+        title: "Ganti Username"
+      change_email:
+        title: "Ganti Alamat Surel"
+        taken: "Maaf, alamat surel tersebut tidak tersedia."
       name:
         title: "Name"
       last_seen: "Seen"
@@ -199,10 +282,8 @@ id:
       email_digests:
         daily: "harian"
         weekly: "mingguan"
-        bi_weekly: "setiap dua minggu"
       auto_track_options:
         never: "tidak pernah"
-        always: "selalu"
       password:
         title: "Password"
         too_short: "Password kamu terlalu pendek."
@@ -215,7 +296,6 @@ id:
     last_seen: 'Terlihat'
     created: 'Dibuat'
     forgot_password:
-      title: "Lupa Password"
       action: "Saya lupa password"
     login:
       email_placeholder: "email atau username"
@@ -232,7 +312,6 @@ id:
       italic_title: "Emphasis"
       link_title: "Hyperlink"
     notifications:
-      none: "Tidak ada notifikasi saat ini"
       more: "lihat notifikasi sebelumnya"
     topic:
       invalid_access:

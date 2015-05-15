@@ -33,6 +33,6 @@
 
 <%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
-     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_url(key: @user.temporary_key, only_path: true))))  %>
+     unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_url(key: @unsubscribe_key, only_path: true))))  %>
 
 <%= raw(@markdown_linker.references) %>

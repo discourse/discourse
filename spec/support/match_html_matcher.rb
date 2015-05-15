@@ -6,11 +6,11 @@ RSpec::Matchers.define :match_html do |expected|
     a.eql? b
   end
 
-  failure_message_for_should do |actual|
+  failure_message do |actual|
     "after sanitizing for extra white space and compactness, expected:\n#{actual}\n to match:\n#{expected}"
   end
 
-  failure_message_for_should_not do |actual|
+  failure_message_when_negated do |actual|
     "after sanitizing for extra white space and compactness, expected:\n#{actual}\n not to match:\n#{expected}"
   end
 

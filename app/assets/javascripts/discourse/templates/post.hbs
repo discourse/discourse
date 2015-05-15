@@ -1,4 +1,4 @@
-{{post-gap post=this postStream=controller.postStream before="true"}}
+{{post-gap post=this postStream=controller.model.postStream before="true"}}
 
 <div class='row'>
   {{view 'reply-history' content=replyHistory}}
@@ -9,11 +9,11 @@
 
     <div class='topic-avatar'>
       <div class="contents">
-        {{#unboundIf userDeleted}}
+        {{#if userDeleted}}
           <i class="fa fa-trash-o deleted-user-avatar"></i>
         {{else}}
           {{raw "post/poster-avatar" post=this classNames="main-avatar"}}
-        {{/unboundIf}}
+        {{/if}}
         {{plugin-outlet "poster-avatar-bottom"}}
       </div>
     </div>
@@ -42,14 +42,14 @@
         {{#if wiki}}
           <div class="post-info wiki" title="{{i18n 'post.wiki.about'}}" {{action "editPost" this}}>{{fa-icon "pencil-square-o"}}</div>
         {{/if}}
-        {{#unboundIf via_email}}
+        {{#if via_email}}
           {{#if canViewRawEmail}}
             <div class="post-info via-email raw-email" title="{{i18n 'post.via_email'}}" {{action "showRawEmail" this}}>{{fa-icon "envelope-o"}}</div>
           {{else}}
             <div class="post-info via-email" title="{{i18n 'post.via_email'}}">{{fa-icon "envelope-o"}}</div>
           {{/if}}
-        {{/unboundIf}}
-        {{#unboundIf showUserReplyTab}}
+        {{/if}}
+        {{#if showUserReplyTab}}
           <a href {{action "toggleReplyHistory" this target="view"}} class='reply-to-tab'>
             {{#if loadingReplyHistory}}
               {{i18n 'loading'}}
@@ -59,7 +59,7 @@
               <span>{{reply_to_user.username}}</span>
             {{/if}}
           </a>
-        {{/unboundIf}}
+        {{/if}}
         <div {{bind-attr class=":read-state read"}} title="{{i18n 'post.unread'}}">{{fa-icon "circle"}}</div>
       </div>
 
@@ -106,4 +106,4 @@
 
 </article>
 
-{{post-gap post=this postStream=controller.postStream before="false"}}
+{{post-gap post=this postStream=controller.model.postStream before="false"}}

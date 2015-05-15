@@ -1,0 +1,2125 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+te:
+  js:
+    number:
+      human:
+        storage_units:
+          format: '%n %u'
+          units:
+            byte:
+              one: బైటు
+              other: బైట్లు
+            gb: జీబీ
+            kb: కేబీ
+            mb: యంబీ
+            tb: టీబీ
+    dates:
+      time: "h:mm a"
+      long_no_year: "MMM D h:mm a"
+      long_no_year_no_time: "MMM D"
+      long_with_year: "MMM D, YYYY h:mm a"
+      long_with_year_no_time: "MMM D, YYYY"
+      long_date_with_year: "MMM D, 'YY LT"
+      long_date_without_year: "MMM D, LT"
+      long_date_with_year_without_time: "MMM D, 'YY"
+      long_date_without_year_with_linebreak: "MMM D <br/>LT"
+      long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      tiny:
+        half_a_minute: "< 1ని"
+        less_than_x_seconds:
+          one: "< 1సె"
+          other: "< %{count}సె"
+        x_seconds:
+          one: "1సె"
+          other: "%{count}సె"
+        less_than_x_minutes:
+          one: "< 1ని"
+          other: "< %{count}ని"
+        x_minutes:
+          one: "1ని"
+          other: "%{count}ని"
+        about_x_hours:
+          one: "1గ"
+          other: "%{count}గం"
+        x_days:
+          one: "1రో"
+          other: "%{count}రో"
+        about_x_years:
+          one: "1సం"
+          other: "%{count}సం"
+        over_x_years:
+          one: "> 1సం"
+          other: "> %{count}సం"
+        almost_x_years:
+          one: "1సం"
+          other: "%{count}సం"
+        date_month: "MMM D"
+        date_year: "MMM 'YY"
+      medium:
+        x_minutes:
+          one: "1 నిమిషం"
+          other: "%{count} నిమిషాలు"
+        x_hours:
+          one: "1 గంట"
+          other: "%{count} గంటలు"
+        x_days:
+          one: "1 రోజు"
+          other: "%{count} రోజులు"
+        date_year: "MMM D, 'YY"
+      medium_with_ago:
+        x_minutes:
+          one: "1 నిమిషం ముందు"
+          other: "%{count} నిమిషాలు ముందు"
+        x_hours:
+          one: "1 గంట క్రితం"
+          other: "%{count} గంటల ముందు"
+        x_days:
+          one: "1 రోజు ముందు"
+          other: "%{count} రోజుల ముందు"
+    share:
+      topic: 'ఈ విషయానికి ఒక లంకెను పంచండి'
+      post: '#%{postNumber} టపా'
+      close: 'మూసివేయి'
+      twitter: 'ట్విట్టరుపై లంకెను పంచు'
+      facebook: 'ఫేస్ బుక్ పై లంకెను పంచు'
+      google+: 'గూగుల్ ప్లస్ పై లంకెను పంచు'
+      email: 'ఈ లంకెను ఈమెయిల్ ద్వారా పంచు'
+    topic_admin_menu: "విషయపు అధికార చర్యలు"
+    emails_are_disabled: "బయటకు వెళ్లే అన్ని ఈమెయిల్లూ అధికారి నిశేధించాడు. ఇప్పుడు ఎటువంటి ఈమెయిల్ ప్రకటనలూ పంపవీలవదు."
+    edit: 'ఈ విషయపు శీర్షిక మరియు వర్గం సవరించు'
+    not_implemented: "ఈ ఫీచరు ఇంకా ఇంప్లిమెటు చేయలేదు. క్షమాపణలు!"
+    no_value: "లేదు"
+    yes_value: "అవును"
+    generic_error: "క్షమించాలి, ఒక దోషం తలెత్తింది"
+    generic_error_with_reason: "ఒక దోషం జరిగింది: %{error}"
+    sign_up: "సైన్ అప్"
+    log_in: "లాగిన్"
+    age: "వయసు"
+    joined: "చేరినారు"
+    admin_title: "అధికారి"
+    flags_title: "కేతనాలు"
+    show_more: "మరింత చూపు"
+    show_help: "సహాయం"
+    links: "లంకెలు"
+    links_lowercase:
+      one: "లంకె"
+      other: "లంకెలు"
+    faq: "తవసం"
+    guidelines: "మార్గదర్శకాలు"
+    privacy_policy: "అంతరంగికతా విధానం"
+    privacy: "అంతరంగికత"
+    terms_of_service: "సేవా నిబంధనలు "
+    mobile_view: "చర సందర్శనం"
+    desktop_view: "డెస్క్ టాప్ సందర్శనం"
+    you: "మీరు"
+    or: "లేదా"
+    now: "ఇప్పుడే"
+    read_more: 'మరింత చదువు'
+    more: "మరింత"
+    less: "తక్కువ"
+    never: "ఎప్పటికీ వద్దు"
+    daily: "ప్రతిరోజూ"
+    weekly: "ప్రతీవారం"
+    every_two_weeks: "రెండువారాలకోసారి"
+    every_three_days: "ప్రతి మూడు రోజులకీ"
+    max_of_count: "{{count}} గరిష్టం"
+    character_count:
+      one: "{{count}} అక్షరం"
+      other: "{{count}} అక్షరాలు"
+    suggested_topics:
+      title: "సూచించే విషయాలు"
+    about:
+      simple_title: "గురించి"
+      title: "%{title} గురించి"
+      stats: "సైటు గణాంకాలు"
+      our_admins: "మా అధికారులు"
+      our_moderators: "మా నిర్వాహకులు"
+      stat:
+        all_time: "ఆల్ టైమ్"
+        last_7_days: "గత ఏడు రోజులు"
+        last_30_days: "గత 30 రోజులు"
+      like_count: "ఇష్టాలు"
+      topic_count: "విషయాలు"
+      post_count: "టపాలు"
+      user_count: "కొత్త సభ్యులు"
+      active_user_count: "క్రియాశీల సభ్యులు"
+      contact: "మమ్ము సంప్రదించండి"
+      contact_info: "ఈ సంధర్భంలో క్లిష్టమైన సమస్య లేదా అత్యవసర విషయం సైట్ ను ప్రభావితం చేస్తుంది, దయచేసి మమ్మల్ని సంప్రదించండి %{contact_info}."
+    bookmarked:
+      title: "పేజీక"
+      clear_bookmarks: "పేజీక లను తుడిచివేయి"
+      help:
+        bookmark: "ఈ అంశంపై మొదటి టపాకి పేజీకలను పెట్టండి"
+        unbookmark: "ఈ అంశంపై అన్ని పేజీకలను తొలగించడానికి నొక్కండి"
+    bookmarks:
+      not_logged_in: "క్షమించాలి. విషయాలకు పేజీక ఉంచడానికి లాగిన్ అయి ఉండాలి"
+      created: "ఈ టపాకు పేజీక ఉంచారు"
+      not_bookmarked: "ఈ టపాను చదివారు; పేజీక ఉంచుటకు నొక్కండి"
+      last_read: "మీరు చివరాఖరుగా చదివిన టపా ఇది; పేజీక ఉంచుటకు నొక్కండి"
+      remove: "పేజీక తొలగించండి"
+    topic_count_latest:
+      one: "{{count}} కొత్త లేదా ఉన్నతీకరించిన విషయం"
+      other: "{{count}} కొత్త లేదా ఉన్నతీకరించిన విషయాలు"
+    topic_count_unread:
+      one: "{{count}} చదవని విషయం."
+      other: "{{count}} చదవని విషయాలు."
+    topic_count_new:
+      one: "{{count}} కొత్త విషయం."
+      other: "{{count}} కొత్త విషయాలు."
+    click_to_show: "చూపుటకు ఇక్కడ నొక్కండి"
+    preview: "మునుజూపు"
+    cancel: "రద్దు"
+    save: "మార్పులు భద్రపరచండి"
+    saving: "భద్రపరుస్తున్నాం..."
+    saved: "భద్రం!"
+    upload: "ఎగుమతించు"
+    uploading: "ఎగుమతవుతోంది..."
+    uploaded: "ఎగుమతైంది!"
+    enable: "చేతనం"
+    disable: "అచేతనం"
+    undo: "రద్దు"
+    revert: "తిద్దు"
+    failed: "విఫలం"
+    banner:
+      close: "బ్యానరు తుడువు"
+    choose_topic:
+      none_found: "ఎటువంటి విషయాలూ కనపడలేదు."
+      title:
+        search: "పేరు, యూఆర్ యల్, ఐడీ లను బట్టి విషయాన్ని వెతుకు."
+        placeholder: "ఇక్కడ విషయపు శీర్షిక రాయండి"
+    queue:
+      cancel: "రద్దుచేయి"
+      approval:
+        ok: "సరే"
+    user_action:
+      user_posted_topic: "<a href='{{topicUrl}}'>విషయాన్ని</a> <a href='{{userUrl}}'>{{user}}</a> రాసారు "
+      you_posted_topic: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{topicUrl}}'>విషయాన్ని</a> రాసారు"
+      user_replied_to_post: "<a href='{{postUrl}}'>{{post_number}}</a> కు <a href='{{userUrl}}'>{{user}}</a>  జవాబిచ్చారు"
+      you_replied_to_post: "<a href='{{userUrl}}'>మీరు</a>  <a href='{{postUrl}}'>{{post_number}}</a> కు జవాబిచ్చారు"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a>కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
+      you_replied_to_topic: "<a href='{{userUrl}}'>మీరు</a> కు <a href='{{topicUrl}}'>విషయానికి</a> జవాబిచ్చారు"
+      user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a>,  <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
+      user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a>, <a href='{{user2Url}}'>మిమ్ము</a> ప్రస్తావించారు"
+      you_mentioned_user: "<a href='{{user1Url}}'>మీరు</a>, <a href='{{user2Url}}'>{{another_user}}</a> ను ప్రస్తావించారు"
+      posted_by_user: "<a href='{{userUrl}}'>{{user}}</a> రాసారు"
+      posted_by_you: "<a href='{{userUrl}}'>మీరు</a> రాసారు"
+      sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> పంపారు"
+      sent_by_you: "<a href='{{userUrl}}'>మీరు</a> పంపారు"
+    directory:
+      title: "వాడుకరులు"
+    groups:
+      visible: "గుంపు అందరు సభ్యులకు కనిపిస్తుంది"
+      title:
+        one: "గుంపు"
+        other: "గుంపులు"
+      members: "సభ్యులు"
+      posts: "టపాలు"
+      alias_levels:
+        title: "ఈ గుంపును మారుపేరుతో ఎవరు వాడవచ్చు?"
+        nobody: "ఎవరూకాదు"
+        only_admins: "కేవలం అధికారులే"
+        mods_and_admins: "కేవలం అధికారులు మరియు నిర్వాహకులు మాత్రమే"
+        members_mods_and_admins: "కేవలం గుంపు సభ్యులు, నిర్వాహకులు మరియు అధికారులు"
+        everyone: "అందరూ"
+    user_action_groups:
+      '1': "ఇచ్చిన ఇష్టాలు "
+      '2': "వచ్చిన ఇష్టాలు"
+      '3': "పేజీకలు"
+      '4': "విషయాలు"
+      '7': "ప్రస్తావనలు"
+      '9': "కోట్ లు"
+      '10': "నక్షత్రపు"
+      '11': "సవరణలు"
+      '12': "పంపిన అంశాలు"
+      '13': "ఇన్ బాక్స్"
+    categories:
+      all: "అన్ని వర్గాలు"
+      all_subcategories: "అన్నీ"
+      no_subcategory: "ఏదీకాదు"
+      category: "వర్గం"
+      posts: "టపాలు"
+      topics: "విషయాలు"
+      latest: "తాజా"
+      latest_by: "నుండి తాజా"
+      toggle_ordering: "వరుస నియంత్రణను అటుఇటుచేయి"
+      subcategories: "ఉప వర్గాలు"
+      topic_stats: "కొత్త విషయాల సంఖ్య"
+      topic_stat_sentence:
+        one: "%{unit} కాలంలో %{count} ఒక కొత్త టపా."
+        other: " %{unit} గతంలో %{count} కొత్త విషయాలు."
+      post_stats: "కొత్త టపాల సంఖ్య"
+      post_stat_sentence:
+        one: " %{unit} గతంలో %{count} కొత్త విషయం"
+        other: " %{unit} గతంలో %{count} కొత్త విషయాలు."
+    ip_lookup:
+      title: ఐపీ చిరునామా లుకప్
+      hostname: అతిథిపేరు
+      location: ప్రాంతం
+      location_not_found: (తెలీని)
+      organisation: సంస్థ
+      phone: ఫోన్
+      other_accounts: "ఈ ఐపీ చిరునామాతో ఇతర ఖాతాలు:"
+      delete_other_accounts: "%{count} తొలగించు"
+      username: "సభ్యనామం"
+      trust_level: "టీయల్"
+      read_time: "చదువు సమయం"
+      topics_entered: "రాసిన విషయాలు "
+      post_count: "# టపాలు"
+      confirm_delete_other_accounts: "మీరు నిజ్జంగా ఈ ఖాతాలు తొలగించాలనుకుంటున్నారా?"
+    user:
+      said: "{{username}}:"
+      profile: "ప్రవర"
+      mute: "నిశ్శబ్దం"
+      edit: "అభిరుచులు సవరించు"
+      download_archive: "నా టపాలు దిగుమతించు"
+      private_messages: "సందేశాలు"
+      activity_stream: "కలాపం"
+      preferences: "అభిరుచులు"
+      bookmarks: "పేజీకలు"
+      bio: "నా గురించి"
+      invited_by: "ఆహ్వానిచినవారు"
+      trust_level: "నమ్మకపు స్థాయి"
+      notifications: "ప్రకటనలు"
+      dismiss_notifications: "అన్నీ చదివినట్టు గుర్తించు"
+      dismiss_notifications_tooltip: "అన్ని చదవని ప్రకటనలూ చదివినట్టు గుర్తించు"
+      disable_jump_reply: "నేను జవాబిచ్చాక నా టపాకు వెళ్లవద్దు"
+      edit_history_public: "ఇతర సభ్యలను నా టపా దిద్దుబాట్లను చూడనివ్వు"
+      external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
+      enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
+      change: "మార్చు"
+      moderator: "{{user}} ఒక నిర్వాహకుడు"
+      admin: "{{user}} ఒక అధికారి"
+      moderator_tooltip: "ఈ సభ్యుడు ఒక నిర్వాహకుడు"
+      admin_tooltip: "ఈ సభ్యుడు ఒక అధికారి"
+      suspended_notice: "ఈ సభ్యుడు {{date}} వరకూ సస్పెండయ్యాడు"
+      suspended_reason: "కారణం:"
+      github_profile: "గిట్ హబ్"
+      mailing_list_mode: "ప్రతి కొత్త టపాకూ నాకో ఈమెయిల్ పంపు (నేనా విషయాన్ని లేదా వర్గాన్ని నిశ్శబ్దించేంతవరకూ)"
+      watched_categories: "ఒకకన్నేసారు"
+      watched_categories_instructions: "ఈ వర్గాలలోని అన్ని విషయాలపై మీరు ఒకకన్నేసారు. మీకు అన్ని కొత్త టపాలు మరియు విషయాలు గురించి ప్రకటన వస్తుంది. ఇంకా కొత్త టపాలు మరియు చదవని టపాల సంఖ్య విషయపు జాబితా పక్కన వస్తుంది"
+      tracked_categories: "గమనించారు"
+      tracked_categories_instructions: "ఈ వర్గాలలోని అన్ని విషయాలూ మీరు గమనిస్తారు. చదవని మరియు కొత్త టపాల సంఖ్య విషయం పక్కన వస్తుంది."
+      muted_categories: "నిశ్శబ్దం"
+      muted_categories_instructions: "ఈ వర్గాలలోని ఏ కొత్త విషయాల గురించీ మీకు ప్రకటనలు రావు. ఇంకా అవి చదవని ట్యాబులో కనిపించవు."
+      delete_account: "నా ఖాతా తొలగించు"
+      delete_account_confirm: "నిజ్జంగా మీరు మీ ఖాతాను శాస్వతంగా తొలగించాలనుకుంటున్నారా? ఈ చర్య రద్దుచేయలేరు సుమా! "
+      deleted_yourself: "మీ ఖాతా విజయవంతంగా తొలగించబడింది. "
+      delete_yourself_not_allowed: "మీ ఖాతాను ఇప్పుడు తొలగించలేరు. మీ ఖాతాను తొలగించడానికి అధికారిని సంప్రదించండి. "
+      unread_message_count: "సందేశాలు"
+      admin_delete: "తొలగించు"
+      users: "వాడుకరులు"
+      staff_counters:
+        flags_given: "సహాయకారి కేతనాలు"
+        flagged_posts: "కేతనించిన టపాలు"
+        deleted_posts: "తొగలించిన టపాలు"
+        suspensions: "సస్పెన్షన్లు"
+        warnings_received: "హెచ్చరికలు"
+      messages:
+        all: "అన్నీ"
+        mine: "నావి"
+        unread: "చదవని"
+      change_password:
+        success: "(ఈమెయిల్ పంపిన)"
+        in_progress: "(ఈమెయిల్ పంపుతోన్నాం)"
+        error: "(దోషం)"
+        action: "సంకేతపద రీసెట్ ఈమెయిల్ పంపు"
+        set_password: "సంకేతపదం అమర్చు"
+      change_about:
+        title: "నా గురించి మార్చు"
+      change_username:
+        title: "సభ్యనామం మార్చు"
+        confirm: "మీరు సభ్యనామం మారిస్తే, మీ టపాల అన్ని గత కోట్లు మరియు @పేరు ప్రస్తావనలు సరిగ్గా పనిచెయ్యవు. మీరు నిజ్జంగానే సభ్యనామం మార్చాలనుకుంటున్నారా? "
+        taken: "క్షమించాలి, ఆ సభ్యనామం వేరొకరు తీసుకున్నారు."
+        error: "మీ సభ్యనామం మార్చడంలో దోషం."
+        invalid: "ఆ సభ్యనామం చెల్లనిది. కేవలం సంఖ్యలు, అక్షరాలు మాత్రమే కలిగి ఉండాలి. "
+      change_email:
+        title: "ఈమెయిల్ మార్చు"
+        taken: "క్షమించాలి. ఆ ఈమెయిల్ అందుబాటులో లేదు."
+        error: "మీ ఈమెయిల్ మార్చడంలో దోషం. బహుశా ఆ చిరునామా ఇప్పటికే ఈ సైటులో వాడుకలో ఉందేమో? "
+        success: "ఆ చిరునామాకు మేము వేగు పంపాము. అందులోని సూచనలు అనుసరించండి. "
+      change_avatar:
+        title: "మీ ప్రవర బొమ్మ మార్చండి."
+        gravatar: "ఆధారపడిన <a href='//gravatar.com/emails' target='_blank'>గ్రావతారం</a>"
+        refresh_gravatar_title: "మీ గ్రావతారం తాజాపరుచు"
+        letter_based: "వ్యవస్థ కేటాయించిన ప్రవర బొమ్మ"
+        uploaded_avatar: "అనురూప బొమ్మ"
+        uploaded_avatar_empty: "అనురూప బొమ్మను కలపండి"
+        upload_title: "మీ బొమ్మను కలపండి"
+        upload_picture: "బొమ్మను ఎగుమతించండి"
+      change_profile_background:
+        title: "ప్రవర వెనుతలం"
+        instructions: "ప్రవర వెనుతలాలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 850 పిక్సెలు ఉంటాయి."
+      change_card_background:
+        title: "సభ్య కార్డు వెనుతలం"
+        instructions: "వెనుతలం బొమ్మలు కేంద్రీకరించబడతాయి మరియు అప్రమేయ వెడల్పు 590 పిక్సెలు ఉంటాయి."
+      email:
+        title: "ఈమెయిల్"
+        instructions: "జనాలకు ఎప్పుడూ చూపవద్దు"
+        ok: "ద్రువపరుచుటకు మీకు ఈమెయిల్ పంపాము"
+        invalid: "దయచేసి చెల్లుబాటులోని ఈమెయిల్ చిరునామా రాయండి"
+        authenticated: "మీ ఈమెయిల్  {{provider}} చేత ద్రువీకరించబడింది"
+        frequency:
+          zero: "మీకు వెంటనే ఈమెయిల్ చేసాము, మీరు ఈమెయిల్ విషయం చదవకపోతే. "
+          one: "గత నిమిషంలో మీరు కనిపించకపోతే మేము ఈమెయిల్ చేస్తాము"
+          other: "గత {{count}} నిమిషాల్లో మీరు ఇక్కడ కనిపించకపోతేనే మేము ఈమెయిల్ చేస్తాము."
+      name:
+        title: "పేరు"
+        instructions: "మీ పూర్తి పేరు (ఐచ్చికం)"
+        too_short: "మీ పేరు మరీ చిన్నది"
+        ok: "మీ పేరు బాగుంది"
+      username:
+        title: "వాడుకరి పేరు"
+        instructions: "ఏకైకం, జాగాలేని, పొట్టి"
+        short_instructions: "జనాలు మిమ్మల్ని @{{username}} అని ప్రస్తావించవచ్చు"
+        available: "మీ సభ్యనామం అందుబాటులో ఉంది."
+        global_match: "ఈమెయిల్ రిజిస్టరు అయిన సభ్యనామంతో సరిపోతోంది."
+        global_mismatch: "ఇప్పటికే రిజిస్టరు అయింది. {{suggestion}} ప్రయత్నించండి? "
+        not_available: "అందుబాటులో లేదు. {{suggestion}} ప్రయత్నించండి?"
+        too_short: "మీ సభ్యనామం మరీ చిన్నది"
+        too_long: "మీ సభ్యనామం మరీ పొడుగు"
+        checking: "సభ్యనామం అందుబాటు పరిశీలిస్తున్నాం..."
+        enter_email: 'సభ్యనామం కనిపించింది; సరిపోలు ఈమెయిల్ రాయండి'
+        prefilled: "ఈమెయిల్ రిజిస్టరు అయిన సభ్యనామంతో సరిపోతోంది"
+      locale:
+        title: "ఇంటర్ఫేస్ భాష"
+        instructions: "యూజర్ ఇంటర్ఫేస్ భాష. పుట తాజాపరిస్తే ఇది మారుతుంది. "
+        default: "(అప్రమేయ)"
+      password_confirmation:
+        title: "సంకేతపదం మరలా"
+      last_posted: "చివరి టపా"
+      last_emailed: "చివరగా ఈమెయిల్ చేసింది"
+      last_seen: "చూసినది"
+      created: "చేరినది"
+      log_out: "లాగవుట్"
+      location: "ప్రాంతం"
+      card_badge:
+        title: "సభ్యు బ్యాడ్జి కార్డు"
+      website: "వెబ్ సైటు"
+      email_settings: "ఈమెయిల్"
+      email_digests:
+        title: "నేను ఇక్కడికి రాకపోతే, కొత్త విషయాలు నాకు ఈమెయిల్ గా పంపండి:"
+        daily: "ప్రతీరోజు"
+        every_three_days: "ప్రతి మూడు రోజులకీ"
+        weekly: "ప్రతీవారం"
+        every_two_weeks: "ప్రతి రెండు వారాలకీ"
+      email_always: "నేను ఈసైటుపై క్రియాశీలంగా ఉన్నా నాకు ఈమెయిల్ పంపుట ఆపవద్దు"
+      other_settings: "ఇతర"
+      categories_settings: "వర్గాలు"
+      new_topic_duration:
+        label: "విషయాలు కొత్తగా భావించు, ఎప్పుడంటే"
+        not_viewed: "నేను వాటిని ఇంకా చూడనప్పుడు"
+        last_here: "నేను చివరిసారి ఇక్కడికి వచ్చిన తర్వాత సృష్టించినవి"
+        after_n_days:
+          one: "గత ఒక రోజులో సృష్టించినవి"
+          other: "గత {{count}} రోజులలో సృష్టించినవి"
+        after_n_weeks:
+          one: "గత వారంలో సృష్టించినవి"
+          other: "గత {{count}}  వారాలలో సృష్టించినవి "
+      auto_track_topics: "నేను రాసే విషయాలు ఆటోమేటిగ్గా గమనించు"
+      auto_track_options:
+        never: "ఎప్పటికీ వద్దు"
+        after_n_seconds:
+          one: "ఒక సెకన్ తర్వాత"
+          other: "{{count}}  సెకన్ల తర్వాత"
+        after_n_minutes:
+          one: "ఒక నిమిషం తర్వాత"
+          other: "{{count}}  నిమిషాల తర్వాత "
+      invited:
+        search: "ఆహ్వానాలను వెతకడానికి రాయండి ... "
+        title: "ఆహ్వానాలు"
+        user: "ఆహ్వానించిన సభ్యుడు"
+        none: "మీరు ఇక్కడ ఇంకా ఎవరినీ ఆహ్వానించలేదు."
+        truncated: "తొలి {{count}}  ఆహ్వానాలను చూపుతున్నాము."
+        redeemed: "మన్నించిన ఆహ్వానాలు"
+        redeemed_at: "మన్నించిన"
+        pending: "పెండింగులోని ఆహ్వానాలు"
+        topics_entered: "చూసిన విషయాలు"
+        posts_read_count: "చదివిన టపాలు"
+        expired: "ఈ ఆహ్వానం కాలాతీతమైంది."
+        rescind: "తొలగించు"
+        rescinded: "ఆహ్వానం తొలగించారు"
+        reinvite: "ఆహ్వానం మరలా పంపు"
+        reinvited: "ఆహ్వానం మరలా పంపారు"
+        time_read: "చదువు సమయం"
+        days_visited: "దర్శించిన రోజులు"
+        account_age_days: "రోజుల్లో ఖాతా వయసు"
+        create: "ఒక ఆహ్వానం పంపు"
+        bulk_invite:
+          none: "మీరు ఇంకా ఎవరినీ ఆహ్వానించలేదు. మీరు వ్యక్తిగత ఆహ్వానాలు పంపవచ్చు, లేదా కొంతమందికి ఒకేసారి <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ఆహ్వాన దస్త్రం ఎగుమతించుట ద్వారా</a> పంపవచ్చు."
+          text: "దస్త్రం నుండి బహుళ ఆహ్వానాలు"
+          uploading: "ఎగుమతవుతోంది..."
+          error: "'{{filename}}' ఎగుమతించుటలో దోషం: {{message}}"
+      password:
+        title: "సంకేతపదం"
+        too_short: "మీ సంకేతపదం మరీ చిన్నది."
+        common: "ఆ సంకేతపదం మరీ సాధారణం."
+        same_as_username: "మీ సంకేతపదం మీ వినియోగదారుపేరు ని పోలి ఉంది."
+        same_as_email: "మీ సంకేతపదం మీ ఈమెయిల్ ను పోలి ఉంది."
+        ok: "మీ సంకేతపదం బాగుంది."
+        instructions: "కనీసం %{count}  అక్షరాలు ఉండాలి."
+      associated_accounts: "లాగిన్లు"
+      ip_address:
+        title: "చివరి ఐపీ చిరునామా"
+      registration_ip_address:
+        title: "రిజిస్ట్రేషన్ ఐపీ చిరునామా"
+      avatar:
+        title: "ప్రవర బొమ్మ"
+      title:
+        title: "శీర్షిక"
+      filters:
+        all: "అన్నీ"
+      stream:
+        posted_by: "టపా రాసినవారు"
+        sent_by: "పంపినవారు"
+        the_topic: "విషయం"
+    loading: "లోడవుతోంది..."
+    errors:
+      prev_page: "ఎక్కించుట ప్రయత్నిస్తున్నప్పుడు"
+      reasons:
+        network: "నెట్వర్క్ దోషం"
+        server: "సేవిక దోషం"
+        forbidden: "అనుమతి నిరాకరించబడింది"
+        unknown: "దోషం"
+      desc:
+        network: "దయచేసి మీ కనక్షన్ సరిచూడండి. "
+        network_fixed: "ఇప్పుడు మరలా పనిచేస్తుంది."
+        server: "దోష కోడు:  {{status}}"
+        forbidden: "దాన్ని చూడటానికి మీకు అనుమతి లేదు"
+        unknown: "ఏదో తేడా జరిగింది."
+      buttons:
+        back: "వెనక్కు వెళ్లండి"
+        again: "మళ్ళీ ప్రయత్నించండి"
+        fixed: "పుట ఎక్కించండి"
+    close: "మూసివేయి"
+    assets_changed_confirm: "ఈ సైటు ఇప్పుడే ఉన్నతీకరించబడింది. కొత్త రూపాంతరం చూడటానికి తాజాపరచండి?"
+    logout: "మీరు లాగవుట్ అయ్యారు."
+    refresh: "తాజాపరుచు"
+    read_only_mode:
+      login_disabled: "సేటు కేవలం చదివే రీతిలో ఉన్నప్పుడు లాగిన్ వీలవదు."
+    learn_more: "మరింత తెలుసుకోండి..."
+    year: 'సంవత్సరం'
+    year_desc: 'గత 365 రోజులలో సృష్టించిన విషయాలు'
+    month: 'నెల'
+    month_desc: 'గత 30 రోజులలో సృష్టించిన విషయాలు'
+    week: 'వారం'
+    week_desc: 'గత 7 రోజులలో సృష్టించిన విషయాలు'
+    day: 'రోజు'
+    first_post: తొలి టపా
+    mute: నిశ్శబ్దం
+    unmute: వినిశ్శబ్దం
+    last_post: చివరి టపా
+    summary:
+      enabled_description: "మీరు ఈ విషయపు సారాంశము చదువుతున్నారు. ఆసక్తికర టపాలు కమ్యునిటీ ఎంచుకుంటుంది. "
+      description: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి"
+      description_time: "అక్కడ మొత్తం <b>{{count}}</b> జవాబులు ఉన్నాయి. వీటిని చదవడానికి సుమారుగా <b>{{readingTime}} నిమిషాలు</b> పడ్తాయి."
+      enable: 'ఈ విషయాన్ని సంగ్రహించు'
+      disable: 'అన్ని టపాలూ చూపు'
+    deleted_filter:
+      enabled_description: "ఈ విషయం తొలగించిన టపాలు కలిగి ఉంది. అవి దాయబడ్డాయి."
+      disabled_description: "ఈ విషయంలోని తొలగించిన టపాలు చూపుతున్నాము."
+      enable: "తొలగించిన టపాలు దాయు"
+      disable: "తొలగించిన టపాలు చూపు"
+    private_message_info:
+      invite: "ఇతరులను ఆహ్వానించు"
+    email: 'ఈమెయిల్'
+    username: 'వాడుకరి పేరు'
+    last_seen: 'చూసిన'
+    created: 'సృష్టించిన'
+    created_lowercase: 'సృష్టించిన'
+    trust_level: 'నమ్మకపు స్థాయి'
+    search_hint: 'సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా'
+    create_account:
+      title: "కొత్త ఖాతా సృష్టించు"
+      failed: "ఏదో తేడా జరిగింది. బహుశా ఈమెయిల్ ఇప్పటికే ఈసైటులో రిజిస్టరు అయి ఉందేమో, సంకేతపదం మర్చిపోయా లంకె ప్రయత్నించు."
+    forgot_password:
+      action: "నేను నా సంకేతపదాన్ని మర్చిపోయాను"
+      invite: "మీ సభ్యనామం లేదా ఈమెయిల్ చిరునామా రాయండి, మేము మీ సంకేతపదం మార్చే విధం మీకు ఈమెయిల్ చేస్తాము."
+      reset: "రీసెట్ సంకేతపదం"
+      complete_username: "సభ్యనామం  <b>%{username}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
+      complete_email: "ఈమెయిల్  <b>%{email}</b> తో ఈ ఖాతా సరిపోతే మీకు సంకేతపదం రీసెట్ చేసే సూచనలు ఈమెయిల్ ద్వారా వస్తాయి. "
+      complete_username_found: "మేము ఈ సభ్యనామం <b>%{username}</b> తో సరిపోయే ఒక ఖాతా కనుగొన్నాము, మీకు అతి త్వరలో సంకేతపదం రీసెట్ చేసే సూచనలతో కూడిన ఈమెయిల్ వస్తుంది."
+      complete_email_found: "మేము ఈ ఈమెయిల్ <b>%{email}</b> తో సరిపోయే ఒక ఖాతా కనుగొన్నాము, మీకు అతి త్వరలో సంకేతపదం రీసెట్ చేసే సూచనలతో కూడిన ఈమెయిల్ వస్తుంది."
+      complete_username_not_found: "మీ సభ్యనామం <b>%{username}</b> తో ఏ ఖాతా సరిపోవడంలేదు."
+      complete_email_not_found: "<b>%{email}</b> తో ఏ ఖాతా సరిపోవడంలేదు"
+    login:
+      title: "లాగిన్"
+      username: "వాడుకరి"
+      password: "సంకేతపదం"
+      email_placeholder: "ఈమెయిల్ లేదా సభ్యనామం"
+      caps_lock_warning: "క్యాప్స్ లాక్ ఆన్ అయి ఉంది"
+      error: "తెలీని దోషం"
+      blank_username_or_password: "దయచేసి మీ ఈమెయిల్ లేదా సభ్యనామం మరియు సంకేతపదం రాయండి"
+      reset_password: 'రీసెట్ సంకేతపదం'
+      logging_in: "ప్రవేశపెడ్తోన్నాం"
+      or: "లేదా"
+      authenticating: "ద్రువీకరిస్తున్నాము..."
+      awaiting_confirmation: "మీ ఖాతా చేతనం కోసం ఎదురుచూస్తుంది. సంకేతపదం మర్చిపోయా లంకెను వాడు మరో చేతన ఈమెయిల్ పొందండి."
+      awaiting_approval: "మీ ఖాతా ఇంకా సిబ్బంది ఒప్పుకొనలేదు. సిబ్బంది ఒప్పుకోగానే మీకు ఒక ఈమెయిల్ వస్తుంది."
+      requires_invite: "క్షమించాలి. ఈ పోరమ్ ప్రవేశం కేవలం ఆహ్వానితులకు మాత్రమే."
+      not_activated: "మీరప్పుడే లాగిన్ అవ్వలేరు. గతంలో మేము మీకు చేతన ఈమెయల్ <b>{{sentTo}}</b> కు పంపాము. దయచేసి ఆ వేగులోని సూచనలు పాటించి మీ ఖాతాను చేతనం చేసుకోండి."
+      not_allowed_from_ip_address: "ఆ ఐపీ చిరునామా నుండి మీరు లాగిన్ అవ్వలేరు."
+      admin_not_allowed_from_ip_address: "మీరు ఆ IP చిరునామా నుండి నిర్వాహకుని వలె లాగిన్ కాలేరు."
+      resend_activation_email: "చేతన ఈమెయిల్ మరలా పంపడానికి ఇక్కడ నొక్కండి."
+      sent_activation_email_again: "మీకు <b>{{currentEmail}}</b> మరో చేతన ఈమెయిల్ పంపాము. అది చేరుకోడానికి కొద్ది నిమిషాలు పట్టవచ్చు. ఇంకా స్పామ్ ఫోల్డరు చూడటం మర్చిపోకండి సుమా. "
+      google:
+        title: "గూగుల్ తో"
+        message: "గూగుల్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+      google_oauth2:
+        title: "గూగుల్ తో"
+        message: "గూగుల్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+      twitter:
+        title: "ట్విట్టరు తో"
+        message: "ట్విట్టరు ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+      facebook:
+        title: "ఫేస్ బుక్ తో"
+        message: "ఫేస్ బుక్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+      yahoo:
+        title: "యాహూ తో"
+        message: "యాహూ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+      github:
+        title: "గిట్ హబ్ తో"
+        message: "గిట్ హబ్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
+    apple_international: "యాపిల్ , అంతర్జాతీయ"
+    google: "గూగుల్"
+    twitter: "ట్విట్టరు"
+    emoji_one: "ఇమెజి వన్"
+    composer:
+      emoji: "Emoji :smile:"
+      add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
+      posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
+      saved_draft_tip: "భద్రం"
+      saved_local_draft_tip: "స్థానికంగా భద్రం"
+      similar_topics: "మీ విషయం దీని వలె ఉంది..."
+      drafts_offline: "చిత్తుప్రతులు ఆఫ్లైను."
+      error:
+        title_missing: "శీర్షిక తప్పనిసరి"
+        title_too_short: "శీర్షిక కనీసం  {{min}} అక్షరాలు ఉండాలి"
+        title_too_long: "శీర్షిక {{max}} అక్షరాలకు మించి ఉండకూడదు"
+        post_missing: "టపా ఖాళీగా ఉండకూడదు"
+        post_length: "టపా కనీసం {{min}} అక్షరాలు కలిగి ఉండాలి"
+        category_missing: "మీరు ఒక వర్గాన్ని ఎంచుకోవాలి"
+      save_edit: "దాచి సవరించు"
+      reply_original: "మూల విషయంకు జవాబివ్వు"
+      reply_here: "ఇక్కడ జవాబివ్వు"
+      reply: "జవాబు"
+      cancel: "రద్దుచేయి"
+      title: "లేదా కంట్రోల్ + ఎంటర్ నొక్కు"
+      users_placeholder: "ఒక సభ్యుడిని కలుపు"
+      title_placeholder: "ఈ చర్చ దేనిగురించో ఒక లైనులో చెప్పండి?"
+      edit_reason_placeholder: "మీరెందుకు సవరిస్తున్నారు?"
+      show_edit_reason: "(సవరణ కారణం రాయండి)"
+      view_new_post: "మీ కొత్త టపా చూడండి"
+      saving: "భద్రమవుతోంది..."
+      saved: "భద్రం!"
+      saved_draft: "టపా చిత్తుప్రతి నడుస్తోంది. కొనసాగించుటకు ఎంచుకోండి."
+      uploading: "ఎగుమతవుతోంది..."
+      show_preview: 'మునుజూపు చూపు &raquo;'
+      hide_preview: '&laquo; మునుజూపు దాచు'
+      quote_post_title: "మొత్తం టపాను కోట్ చేయి"
+      bold_title: "బొద్దు"
+      bold_text: "బొద్దు పాఠ్యం"
+      italic_title: "వాలు"
+      italic_text: "వాలు పాఠ్యం"
+      link_title: "హైపర్ లంకె"
+      link_description: "లంకె వివరణ ఇక్కడ రాయండి"
+      link_dialog_title: "హైపర్ లంకె చొప్పించండి"
+      link_optional_text: "ఐచ్చిక శీర్షిక"
+      quote_title: "బ్లాక్ కోట్"
+      quote_text: "బ్లాక్ కోట్"
+      code_title: "ముందే అలంకరించిన పాఠ్యం"
+      code_text: "ముందే అలంకరించిన పాఠ్యాన్ని 4 జాగాలు జరుపు"
+      upload_title: "ఎగుమతించు"
+      upload_description: "ఎగుమతి వివరణ ఇక్కడ రాయండి"
+      olist_title: "సంఖ్యా జాబితా"
+      ulist_title: "చుక్కల జాబితా"
+      list_item: "జాబితా అంశం"
+      heading_title: "తలకట్టు"
+      heading_text: "తలకట్టు"
+      hr_title: "అడ్డు గీత"
+      undo_title: "రద్దు"
+      redo_title: "తిద్దు"
+      help: "మార్క్ డైన్ సవరణ సహాయం"
+      toggler: "దాచు లేదా చూపు కంపోజరు ఫలకం"
+      admin_options_title: "ఈ విషయానికి ఐచ్చిక సిబ్బంది అమరికలు"
+      auto_close:
+        label: "విషయపు స్వీయ ముగింపు కాలం:"
+        error: "దయచేసి చెల్లే విలువ రాయండి"
+        based_on_last_post: "ఈ విషయంలో చివరి టపా కనీసం ఇంత వయసు వచ్చేంతవరకూ విషయాన్ని మూయకు."
+        all:
+          examples: 'గంటలు (24), సమయం(17:30) లేదా కాలముద్రణ (2013-11-22 14:00) రాయండి.'
+        limited:
+          units: "(# గంటలు)"
+          examples: 'గంటల సంఖ్య(24)ను రాయండి.'
+    notifications:
+      none: "ఈ సమయంలో ప్రకటనలు చూపలేకున్నాము."
+      more: "పాత ప్రకటనలు చూడు"
+      total_flagged: "మొత్తం కేతనించిన టపాలు"
+      quoted: "<i title='కోట్ చేసారు' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
+      replied: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='జవాబిచ్చారు' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      edited: "<i title=' సవరించారు' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked: "<i title='ఇష్టపడ్డారు' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invited_to_private_message: "<i title='ప్రైవేటు సందేశం' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
+      invitee_accepted: "<i title='మీ ఆహ్వానాన్ని మన్నించారు' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
+      moved_post: "<i title='టపా జరిపారు' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
+      linked: "<i title='టపాకు లంకె ఉంచారు' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
+      granted_badge: "<i title='బ్యాడ్జ్ ప్రసాదించారు' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+    upload_selector:
+      title: "ఒక బొమ్మ కలుపు"
+      title_with_attachments: "ఒక బొమ్మ లేదా దస్త్రం కలుపు"
+      from_my_computer: "నా పరికరం నుండి"
+      from_the_web: "జాలం నుండి"
+      remote_tip: "బొమ్మకు లంకె"
+      remote_tip_with_attachments: "బొమ్మకు లేదా దస్త్రానికి లంకె ({{authorized_extensions}})"
+      local_tip: "మీ పరికరం నుండి బొమ్మను ఎంచుకోటానికి ఇక్కడన నొక్కండి"
+      local_tip_with_attachments: "మీ పరికరం నుండి బొమ్మను లేదా దస్త్రాన్ని ఎంచుకోవటానికి ఇక్కడ నొక్కండి ({{authorized_extensions}})"
+      hint: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
+      hint_for_supported_browsers: "(మీరు వాటిని ఎడిటరులోకి లాగి వదిలెయ్యటు ద్వారా కూడా ఎగుమతించవచ్చు)"
+      uploading: "ఎగుమతవుతోంది"
+      image_link: "మీ బొమ్మ చూపే లంకె"
+    search:
+      title: "విషయాలు, టపాలు, సభ్యులు లేదా వర్గాలు వెతుకు"
+      no_results: "ఎటువంటి ఫలితాలు దొరకలేదు."
+      searching: "వెతుకుతున్నామ్..."
+      post_format: "{{username}} నుండి #{{post_number}}"
+      context:
+        user: "@{{username}} యొక్క విషయాలు వెతుకు"
+        category: "\"{{category}}\" వర్గంలో వెతుకు"
+        topic: "ఈ విషయంలో వెతుకు"
+    site_map: "మరో విషయాల జాబితాకు లేదా వర్గానికి వెళ్లు"
+    go_back: 'వెనక్కు మరలు'
+    not_logged_in_user: 'సభ్యుని ప్రస్తుత కలాపాల మరియు అభిరూపాల సారాంశ పుట'
+    current_user: 'మీ సభ్యపుటకు వెళ్లు'
+    topics:
+      bulk:
+        reset_read: "రీలోడ్ రీసెట్"
+        delete: "విషయాలు తొలగించు"
+        dismiss_posts: "టపాలు తుడువు"
+        dismiss_posts_tooltip: "ఈ విషయాలపే చదవని సంఖ్యను తుడువు, కానీ కొత్తగా వచ్చే టపాలను నా చదవని సంఖ్యలో చూపుటు కొనసాగించు"
+        dismiss_topics: "విషయాలు తుడువు"
+        dismiss_topics_tooltip: "కొత్త టపాలు వచ్చినా, నా చదవని జాబితాలో ఈ విషయాలు నుండి చూపుటు ఆపు. "
+        dismiss_new: "కొత్తవి తుడువు"
+        toggle: "విషయాల బహుళ ఎంపికలు అటుఇటుచేయి"
+        actions: "బహుళ చర్యలు"
+        change_category: "వర్గం మార్చు"
+        close_topics: "విషయాలు మూయు"
+        archive_topics: "విషయాలు కట్టకట్టు"
+        notification_level: "ప్రకటన స్థాయి మార్చు"
+        choose_new_category: "విషయం కొరకు కొత్త వర్గం ఎంచుకొండి:"
+        selected:
+          one: "మీరు <b>1</b>  విషయం ఎంచుకున్నారు."
+          other: " మీరు <b>{{count}}</b> విషయాలు ఎంచుకున్నారు."
+      none:
+        unread: "మీరు చదవని విషయాలు లేవు"
+        new: "మీకు కొత్త విషయాలు లేవు"
+        read: "మీరింకా ఏ విషయాలూ చదవలేదు."
+        posted: "మీరింకా ఏ విషయాలూ రాయలేదు."
+        latest: "కొత్త విషయాలు లేవు. అహో ఎంతటి విపరిణామం."
+        hot: "వేడివేడి విషయాలు లేవు."
+        bookmarks: "మీకింకా ఎట్టి పేజీక విషయాలూ లేవు."
+        category: "ఎట్టి {{category}}  విషయాలూ లేవు"
+        top: "ఎట్టి అగ్ర విషయాలూ లేవు."
+        educate:
+          new: '<p>మీ కొత్త విషయాలు ఇక్కడ వస్తాయి.</p><p>అప్రమేయంగా 2 రోజులలోపు సృష్టించిన అన్ని విషయాలూ కొత్తగా భావించబడతాయి మరియు  <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">కొత్త</span> ఇండికేటరు తో చూపబడతాయి.</p><p>మీరు దీన్ని మీ <a href="%{userPrefsUrl}">అభీష్టాలులో</a> మార్చుకోవచ్చు.</p>'
+          unread: '<p>మీరు చదవని విషయాలు ఇక్కడ కనబడుతాయి.</p><p>అప్రమేయంగా, విషయాలు చదవని వాటిగా పరిశీలించబడతాయి మరియు చదవని వాటి సంఖ్య మీకు చూపబడతాయి <span class="badge new-posts badge-notification">1</span> మీరు:</p><ul><li>విషయం సృష్టించినట్లయితే</li><li>విషయానికి సమాధానం ఇచ్చినట్లయితే</li><li>విషయం 4 నిమిషాల కంటే ఎక్కువ చదివినట్లయితే</li></ul><p>లేదా మీరు స్పష్టముగా విషయం అమర్చినట్లయితే ప్రతి విషయానికి క్రింది భాగంలో నియంత్రణ ప్రకటన ద్వారా గమనించబడుతుంది లేదా కనిపెడుతూ ఉంటుంది  .</p><p>మీరు ఇది మార్చగలరు <a href="%{userPrefsUrl}"> మీ preferences లో</a>.</p>'
+      bottom:
+        latest: "ఇంకా కొత్త విషయాలు లేవు."
+        hot: "ఇంకా వేడివేడి విషయాలు లేవు."
+        posted: "ఇంకా రాసిన విషయాలు లేవు."
+        read: "ఇంకా చదవని విషయాలు లేవు."
+        new: "కొత్త విషయాలు లేవు."
+        unread: "ఇంకా చదవని విషయాలు లేవు."
+        category: "ఇంకా {{category}}  విషయాలు లేవు."
+        top: "ఇంకా అగ్ర విషయాలు లేవు."
+        bookmarks: "ఇంకా పేజీక విషయాలు లేవు."
+    topic:
+      filter_to: "విషయంలో {{post_count}} టపాలున్నాయి"
+      create: 'కొత్త విషయం'
+      create_long: 'కొత్త విషయం సృష్టించు'
+      list: 'విషయాలు'
+      new: 'కొత్త విషయం'
+      unread: 'చదవని'
+      new_topics:
+        one: '1 కొత్త విషయం'
+        other: '{{count}} కొత్త విషయాలు'
+      unread_topics:
+        one: '1 చదవని విషయం'
+        other: '{{count}} చదవని విషయాలు'
+      title: 'విషయం'
+      invalid_access:
+        title: "విషయం ప్రైవేటు"
+        description: "క్షమించాలి, ఆ విషయానికి మీకు అనుమతి లేదు!"
+        login_required: "ఆ విషయం చదవడానికి మీరు లాగిన్ అయి ఉండాలి."
+      server_error:
+        title: "విషయాలు చూపుట విఫలమైంది"
+        description: "క్షమించాలి. ఆ విషయం చూపలేకున్నాము. బహుశా కనక్షను సమస్య వల్ల అనుకుంటాను.దయచేసి మరలా ప్రయత్నించండి. సమస్య కొనసాగితే మాకు తెలియపర్చండి."
+      not_found:
+        title: "విషయం కనిపించలేదు"
+        description: "క్షమించాలి. ఆ విషయం మేము కనుగొనలేకున్నాము. బహుశా నిర్వాహకులు దాన్ని తొలగించారేమో?"
+      total_unread_posts:
+        one: "మీకు ఈ విషయంలో 1 చదవని టపా ఉంది"
+        other: "మీకు ఈ విషయంలో {{count}} చదవని టపాలు ఉన్నాయి"
+      unread_posts:
+        one: "మీకు ఈ విషయంలో 1 చదవని పాత టపా ఉంది"
+        other: "మీకు ఈ విషయంలో {{count}} చదవని పాత టపాలు ఉన్నాయి"
+      new_posts:
+        one: "మీరు చివరసారి చదివాక ఈ విషయంలో  1 కొత్త టపా వచ్చింది"
+        other: "మీరు చివరసారి చదివాక ఈ విషయంలో  {{count}} కొత్త టపాలు వచ్చాయి"
+      likes:
+        one: "ఈ విషయానికి 1 ఇష్టం ఉంది"
+        other: "ఈ విషయానికి {{count}} ఇష్టాలు ఉన్నాయి"
+      back_to_list: "విషయాల జాబితాకు మరలు"
+      options: "విషయపు ఐచ్చికాలు"
+      show_links: "ఈ విషయంలో లంకెలు చూపు"
+      toggle_information: "విషయపు వివరాలు అటుఇటుచేయి"
+      read_more_in_category: "మరింత చదవాలనుకుంటున్నారా? {{catLink}} లేదా {{latestLink}} లో ఇతర విషయాలు చూడు."
+      read_more: "మరిన్ని చదవాలనుకుంటున్నారా? {{catLink}} లేదా {{latestLink}}."
+      browse_all_categories: అన్ని వర్గాలూ జల్లించు
+      view_latest_topics: తాజా విషయాలు చూడు
+      suggest_create_topic: ఓ విషయమెందుకు సృష్టించకూడదూ?
+      jump_reply_up: పాత జవాబుకు వెళ్లు
+      jump_reply_down: తరువాతి జవాబుకు వెళ్లు
+      deleted: "ఈ విషయం తొలగించబడింది"
+      auto_close_notice: "ఈ విషయం %{timeLeft} తర్వాత స్వీయంగా మూయబడుతుంది."
+      auto_close_notice_based_on_last_post: "చివరి జవాబు తర్వాత %{duration}కు ఈ విషయం స్వీయ మూయబడుతుంది"
+      auto_close_title: 'స్వీయ ముగింపు అమరికలు'
+      auto_close_save: "దాచు"
+      auto_close_remove: "ఈ విషయాన్ని స్వీయ ముగించవద్దు"
+      progress:
+        title: విషయపు పురోగతి
+        go_top: "అగ్ర"
+        go_bottom: "అడుగు"
+        go: "వెళ్లు"
+        jump_bottom_with_number: "%{post_number} టపాకు వళ్లు"
+        total: అన్ని టపాలు
+        current: ప్రస్తుత టపా
+        position: "%{total} లో %{current} టపా"
+      notifications:
+        reasons:
+          '3_6': 'మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ వర్గాంపై కన్నేసారు'
+          '3_5': 'మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే ఈ విషయం స్వీయ కన్నేసారు. '
+          '3_2': 'మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు.'
+          '3_1': 'మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ విషయాన్ని సృష్టించారు.'
+          '3': 'మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే మీరు ఈ విషయంపై కన్నేసారు.'
+          '2_8': 'మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ వర్గాన్ని గమనిస్తున్నారు.'
+          '2_4': 'మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ విషయానికి జవాబిచ్చారు.'
+          '2_2': 'మీకు ప్రకటనలు వస్తాయి ఎందుకంటే మీరు ఈ విషయాన్ని గమనిస్తున్నారు.'
+          '2': 'మీకు ప్రకటనలు వస్తాయి, ఎందుకంటే <a href="/users/{{username}}/preferences">మీరు ఈ విషయాన్ని చదివారు</a>.'
+          '1_2': 'ఎవరన్నా మీ టపాకు జవాబిచ్చినా లేదా @పేరు తో మిమ్ము ప్రస్తావించినా మీకు ప్రకటన వస్తుంది.'
+          '1': 'ఎవరన్నా మీ టపాకు జవాబిచ్చినా లేదా @పేరు తో మిమ్ము ప్రస్తావించినా మీకు ప్రకటన వస్తుంది.'
+          '0_7': 'ఈ వర్గంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు.'
+          '0_2': 'ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు.'
+          '0': 'ఈ విషయంలోని అన్ని ప్రకటనలనూ మీరు విస్మరిస్తున్నారు.'
+        watching_pm:
+          title: "కన్నేసారు"
+        watching:
+          title: "కన్నేసారు"
+          description: "ఈ విషయంలోని ప్రతి కొత్త టపాకు మీకు ప్రకటన వస్తుంది. ఇంకా చదవని మరియు కొత్త టపాల సంఖ్య విషయం పక్కన వస్తుంది."
+        tracking_pm:
+          title: "గమనిస్తున్నారు"
+        tracking:
+          title: "గమనిస్తున్నారు"
+          description: "ప్రైవేటు సందేశం పక్కన కొత్త మరియు చదవని టపాల సంఖ్య వస్తుంది. ఎవరన్నా మీకు జవాబిచ్చినా లేదా @మీ పేరు ప్రస్తావించినా మీకు ప్రకటన వస్తుంది. "
+        regular:
+          title: "రెగ్యులరు"
+          description: "ఎవరన్నా మీ @పేరు ప్రస్తావించినా లేదా జవాబిచ్చినా మీకు ప్రకటన వస్తుంది"
+        regular_pm:
+          title: "రెగ్యులరు"
+        muted_pm:
+          title: "నిశ్శబ్దం"
+        muted:
+          title: "నిశ్శబ్దం"
+          description: "ఈ ప్రైవేటు సందేశం నుండి మీకు అస్సలు ప్రకటనలు రావు. ఇంకా చదవని సంఖ్య కనిపించదు."
+      actions:
+        recover: "విషయం తొలగింపు రద్దుచేయి"
+        delete: "విషయం తొలగించు"
+        open: "విషయం తెరువు"
+        close: "విషయం మూయు"
+        unarchive: "విషయాన్ని కట్టవిప్పు"
+        archive: "విషయాన్ని కట్టకట్టు"
+        invisible: "అజ్జాబితాగా గుర్తించు"
+        visible: "జాబితాగా గుర్తించు"
+        reset_read: "చదివిన గణాంకాలను రీసెట్ చేయి"
+      reply:
+        title: 'జవాబు'
+        help: 'ఈ విషయానికి జవాబివ్వుట ప్రారంభించు'
+      clear_pin:
+        title: "గుచ్చు శుభ్రపరుచు"
+        help: "ఈ విషయపు గుచ్చు స్థితి శుభ్రపరుచు. తద్వారా అది ఇహ అగ్ర భాగాన కనిపించదు"
+      share:
+        title: 'పంచు'
+        help: 'ఈ విషయపులంకెను పంచు'
+      flag_topic:
+        title: 'కేతనం'
+        help: 'ఈ విషయాన్ని ప్రైవేటుగా కేతనించు లేదా ప్రైవేటు ప్రకటన పంపు'
+        success_message: 'ఈ విషయాన్ని మీరు కేతనించారు'
+      inviting: "ఆహ్వానిస్తున్నామ్..."
+      automatically_add_to_groups_optional: "ఈ ఆహ్వానం ఈ గుంపులకు అనుమతిని కూడా కలిగి ఉంది:(ఐచ్చికం, అధికారులు మాత్రమే)"
+      automatically_add_to_groups_required: "ఈ ఆహ్వానం ఈ గుంపులకు అనుమతిని కూడా కలిగి ఉంది:(<b>తప్పనిసరి</b>, అధికారులు మాత్రమే)"
+      invite_private:
+        email_or_username: "ఆహ్వానితుని ఈమెయిల్ లేదా సభ్యనామం"
+        email_or_username_placeholder: "ఈమెయిల్ చిరునామా లేదా సభ్యనామం"
+        action: "ఆహ్వానించు"
+        error: "క్షమించాలి. ఆ సభ్యుడిని ఆహ్వానించుటలో దోషం."
+        group_name: "గుంపు పేరు"
+      invite_reply:
+        title: 'ఆహ్వానించు'
+        username_placeholder: "వాడుకరి పేరు"
+        to_forum: "మేము మీ స్నేహితునికి ఒక ఈమెయిల్ పంపుతాము. అందులోని లంకె ద్వారా వారు లాగిన్ అవసరం లేకుండానే నేరుగా ఈ చర్చలో పాల్గొనవచ్చు, జవాబివ్వవచ్చు."
+        email_placeholder: 'name@example.com'
+      login_reply: 'జవాబివ్వడానికి లాగిన్ అవ్వండి'
+      filters:
+        n_posts:
+          one: "1 టపా"
+          other: "{{count}} టపాలు"
+        cancel: "జల్లెడ తొలగించు"
+      split_topic:
+        title: "కొత్త విషయానికి జరుపు"
+        action: "కొత్త విషయానికి జరుపు"
+        topic_name: "కొత్త విషయపు పేరు"
+        error: "టపాలను కొత్త విషయానికి జరిపేటప్పుడు దోషం తలెత్తింది"
+        instructions:
+          one: "మీరు కొత్త విషయం సృష్టించి దాన్ని మీరు ఈ  టపాతో నింపబోతున్నారు."
+          other: "మీరు కొత్త విషయం సృష్టించి దాన్ని <b>{{count}}</b>  టపాలతో నింపబోతున్నారు."
+      merge_topic:
+        title: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
+        action: "ఇప్పటికే ఉన్న విషయానికి జరుపు"
+        error: " ఆ విషయంలోకి టపాలను జరపడంలో దోషం."
+        instructions:
+          one: "ఈ  టపాలు జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+          other: "ఈ  <b>{{count}}</b> టపాలను జరపాలనుకున్న విషయాన్ని ఎంచుకోండి."
+      change_owner:
+        title: "టపాల యజమానిని మార్చండి"
+        action: "యజమానిని మార్చు"
+        error: "ఆ టపాల యజమానిని మార్చేప్పుడు దోషం జరిగింది."
+        label: "టపాల కొత్త యజమాని"
+        placeholder: "కొత్త యజమాని సభ్యనామం"
+        instructions:
+          one: "<b>{{old_user}}</b> యొక్క టపాకు కొత్త యజమానిని ఎంచుకోండి."
+          other: "<b>{{old_user}}</b> యొక్క {{count}} టపాల కొత్త యజమానిని ఎంచుకోండి."
+        instructions_warn: "ఈ పోస్ట్ గురించిన ఏ గత ప్రకటనలైనా కొత్త వినియోగదారునికి బదిలీకావని గమనించండి.<br>హెచ్చరిక: ప్రస్తుతం,ఏ ఆధారిత సమాచారం కొత్త వినియోగదారుకి బదిలీ చేయబడదు.ముందుజాగ్రత్త తో వినియోగించండి."
+      multi_select:
+        select: 'ఎంచుకో'
+        selected: 'ఎంచుకున్నవి  ({{count}})'
+        select_replies: 'ఎంచుకున్నవి +జవాబులు'
+        delete: ఎంచుకున్నవి తొలగించు
+        cancel: ఎంపిక రద్దు
+        select_all: అన్నీ ఎంచుకో
+        deselect_all: అన్నీ వియెంచుకో
+        description:
+          one: మీరు <b>1</b> టపా ఎంచుకున్నారు
+          other: మీరు <b>{{count}}</b> టపాలు ఎంచుకున్నారు
+    post:
+      reply_topic: " {{link}} కు జవాబివ్వు"
+      quote_reply: "కోట్ జవాబు"
+      edit_reason: "కారణం:"
+      post_number: "టపా {{number}}"
+      last_edited_on: "టపా చివర సవరించిన కాలం"
+      reply_as_new_topic: "లంకె విషయంగా జవాబివ్వు"
+      continue_discussion: "{{postLink}} నుండి చర్చ కొనసాగుతుంది;"
+      follow_quote: "కోటెడ్ టపాకు వెళ్లు"
+      show_full: "పూర్తి టపా చూపు"
+      show_hidden: 'దాగిన విషయం చూపు'
+      deleted_by_author:
+        one: " (టపా రచయిత ద్వారా తొలగింపబడింది , స్వతస్సిధ్దంగా తొలగింపబ[ది %{count} కాకపోతే సమయం కేతనించలేదు)"
+        other: "(టపా రచయిత ద్వారా ఉపసంహరించబడింది , స్వతసిధ్ధంగా తొలగించబడతాయి %{count} కాకపోతే సమయం కేతనించలేదు)"
+      expand_collapse: "పెంచు/తుంచు"
+      gap:
+        one: "1 టపా దాగి ఉంది"
+        other: "{{count}}  టపాలు దాగిఉన్నాయి"
+      more_links: "{{count}} ఇంకా..."
+      unread: "టపా చదవనిది"
+      has_replies:
+        one: "జవాబు"
+        other: "జవాబులు"
+      errors:
+        create: "క్షమించాలి. మీ టపా సృష్టించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
+        edit: "క్షమించాలి. మీ టపా సవరించుటలో దోషం. మరలా ప్రయత్నించండి"
+        upload: "క్షమించాలి. దస్త్రం ఎగుమతించుటలో దోషం. దయచేసి మరలా ప్రయత్నించండి. "
+        attachment_too_large: "క్షమించాలి. మీరు ఎగుమతించ ప్రయత్నిస్తున్న దస్త్రం మరీ పెద్దది. (గరిష్ట పరిమాణ పరిమితి {{max_size_kb}}కేబీ)."
+        file_too_large: "క్షమించాలి. మీరు ఎగుమతించ ప్రయత్నిస్తున్న దస్త్రం మరీ పెద్దది. (గరిష్ట పరిమాణ పరిమితి {{max_size_kb}}కేబీ)."
+        too_many_uploads: "క్షమించాలి. మీరు ఒకసారి ఒక దస్త్రం మాత్రమే ఎగుమతించగలరు"
+        too_many_dragged_and_dropped_files: "క్షమించాలి. మీరు కేవలం 10 దస్త్రాల వరకు మాత్రమే ఒకేమారు లాగి వదలగలరు. "
+        upload_not_authorized: "క్షమించాలి. మీరు ఎగుమతించాలనుకుంటున్న దస్త్రం అధీకృతమైనది కాదు. (అధీకృత పొడిగింతలు:{{authorized_extensions}})."
+        image_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు బొమ్మలు ఎగుమతి చేయలేరు."
+        attachment_upload_not_allowed_for_new_user: "క్షమించాలి. కొత్త సభ్యులు జోడింపులు ఎగుమతి చేయలేరు."
+        attachment_download_requires_login: "క్షమించాలి. జోడింపులు దిగుమతి చేసుకోవడానికి మీరు లాగిన్ అయి ఉండాలి."
+      abandon:
+        confirm: "మీరు నిజంగానే మీ టపాను వదిలేద్దామనుకుంటున్నారా?"
+        no_value: "లేదు, ఉంచండి"
+        yes_value: "అవును. వదిలేయండి"
+      via_email: "ఈ టపా ఈమెయిల్ ద్వారా వచ్చింది"
+      wiki:
+        about: "ఈ టపా వికీ: ప్రాథమిక సభ్యులు దీన్ని సవరించలేరు"
+      archetypes:
+        save: 'భద్రపరుచు ఐచ్చికాలు'
+      controls:
+        reply: "ఈ టపాకు జవాబు రాయుట మొదలుపెట్టండి"
+        like: "ఈ టపాను ఇష్టపడు"
+        has_liked: "మీరు ఈ టపాను ఇష్టపడ్డారు"
+        undo_like: "ఇష్టాన్ని రద్దుచేయి"
+        edit: "ఈ టపాను సవరించు"
+        edit_anonymous: "క్షమించాలి. ఈ టపాను సవరించడానికి మీరు లాగిన్ అయి ఉండాలి. "
+        flag: "దృష్టికొరకు ఈ టపాను ప్రైవేటుగా కేతనించు లేదా దీని గురించి ప్రైవేటు ప్రకటన పంపు"
+        delete: "ఈ టపాను తొలగించు"
+        undelete: "ఈ టపాను పునస్తాపించు"
+        share: "ఈ టపా లంకెను పంచు"
+        more: "మరింత"
+        delete_replies:
+          confirm:
+            one: "ఈ టపా యొక్క నేరు జవాబు కూడా తొలగించాలనుకుంటున్నారా?"
+            other: "ఈ టపా యొక్క {{count}} నేరు జవాబులు కూడా తొలగించాలనుకుంటున్నారా?"
+          yes_value: "అవును, జవాబులు కూడా తొలగించు."
+          no_value: "లేదు, కేవలం ఈ టపానే"
+        admin: "టపా అధికారి చర్యలు"
+        wiki: "వికీ చేయి"
+        unwiki: "వికీ తొలగించు"
+        convert_to_moderator: "సిబ్బంది రంగు కలుపు"
+        revert_to_regular: "సిబ్బంది రంగు తొలగించు"
+        rebake: "హెచే టీ యం యల్ పునర్నిర్మించు"
+        unhide: "చూపు"
+      actions:
+        flag: 'కేతనం'
+        defer_flags:
+          one: "కేతనం వాయిదావేయి"
+          other: "కేతనాలు వాయిదావేయి"
+        it_too:
+          off_topic: "దీన్ని కూడా కేతనించు"
+          spam: "దీన్ని కూడా కేతనించు"
+          inappropriate: "దీన్ని కూడా కేతనించు"
+          custom_flag: "దీన్ని కూడా కేతనించు"
+          bookmark: "దీన్ని కూడా పేజీకించు"
+          like: "దీన్ని కూడా ఇష్టపడు"
+          vote: "దీనికి కూడా ఓటు వేయి"
+        undo:
+          off_topic: "కేతనం రద్దు"
+          spam: "కేతనం రద్దు"
+          inappropriate: "కేతనం రద్దు"
+          bookmark: "పేజీక రద్దు"
+          like: "ఇష్టం రద్దు"
+          vote: "ఓటు రద్దు"
+        people:
+          off_topic: "{{icons}} దీన్ని విషయాంతరంగా కేతనించాయి"
+          spam: "{{icons}} దీన్ని స్పాముగా కేతనించాయి"
+          spam_with_url: "{{ప్రతీకలు}} స్పామ్ లా <a href='{{postUrl}}'>కేతనించు</a>"
+          inappropriate: "{{icons}} దీన్ని అసమంజసంగా కేతనించాయి"
+          notify_moderators: "{{icons}} దీన్ని నిర్వాహకుల దృష్టికి తెచ్చాయి"
+          notify_moderators_with_url: "{{icons}} <a href='{{postUrl}}'>నిర్వాహకుల దృష్టికి తెచ్చారు</a>"
+          bookmark: "{{icons}} పేజీక ఉంచారు"
+          like: "{{icons}} ఇష్టపడ్డారు"
+          vote: "{{icons}}  దీనికి ఓటు వేసారు"
+        by_you:
+          off_topic: "మీరు దీన్ని విషయాంతరంగా కేతనించారు"
+          spam: "మీరు దీన్ని స్పాముగా కేతనించారు"
+          inappropriate: "మీరు దీన్ని అసమంజసంగా కేతనించారు"
+          notify_moderators: "మీరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
+          bookmark: "మీరు దీనికి పేజీక ఉంచారు"
+          like: "మీరు దీన్ని ఇష్టపడ్డారు"
+          vote: "మీరు ఈ టపాకు ఓటు వేశారు"
+        by_you_and_others:
+          off_topic:
+            one: "మీరు మరియు ఇంకొకరు దీన్ని విషయాంతరంగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని విషయాంతరంగా కేతనించారు. "
+          spam:
+            one: "మీరు మరియు ఇంకొకరు దీన్ని స్పాముగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని స్పాముగా కేతనించారు. "
+          inappropriate:
+            one: "మీరు మరియు ఇంకొకరు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని అసమంజసమైనదిగా కేతనించారు. "
+          notify_moderators:
+            one: "మీరు మరియు ఇంకొకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
+            other: "మీరు మరియు [[count]] ఇతర జనులు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు."
+          bookmark:
+            one: "మీరు మరియు ఇంకొకరు దీనికి పేజీక ఉంచారు."
+            other: "మీరు మరియు {{count}} ఇతరులు దీనికి పేజీక ఉంచారు."
+          like:
+            one: "మీరు మరొకరు దీన్ని ఇష్టపడ్డారు"
+            other: "మీరు మరియు {{count}} గురు దీన్ని ఇష్టపడ్డారు"
+          vote:
+            one: "మీరు మరియొకరు ఈ టపాకు వోటు వేసారు"
+            other: "మీరు మరియు {{count}} గురు ఈ టపాకు ఓటు వేసారు."
+        by_others:
+          off_topic:
+            one: "ఒకరు దీన్ని విషయాంతరంగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని విషయాంతరంగా కేతనించారు"
+          spam:
+            one: "ఒకరు దీన్ని స్పాముగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని స్పాముగా కేతనించారు"
+          inappropriate:
+            one: "ఒకరు దీన్ని అసమంజసంగా కేతనించారు"
+            other: "{{count}} గురు దీన్ని అసమంజసంగా కేతనించారు"
+          notify_moderators:
+            one: "ఒకరు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
+            other: "{{count}} గురు దీన్ని నిర్వాహకుల దృష్టికి తెచ్చారు"
+          bookmark:
+            one: "ఒకరు ఈ టపాకు పేజీక ఉంచారు"
+            other: "{{count}} గురు ఈ విషయానికి పేజీక ఉంచారు"
+          like:
+            one: "ఒకరు దీన్ని ఇష్టపడ్డారు"
+            other: "{{count}} గురు దీన్నిఇష్టపడ్డారు."
+          vote:
+            one: "ఒకరు దీనికి ఓటు వేశారు"
+            other: "{{count}} గురు దీనికి ఓటు వేసారు"
+      edits:
+        one: 1 సవరణ
+        other: "{{count}} సవరణలు"
+        zero: ఎట్టి సవరణలూ లేవు
+      delete:
+        confirm:
+          one: "మీరు నిజ్జంగా ఈ టపాను తొలగించాలనుకుంటున్నారా?"
+          other: "మీరు నిజ్జంగానే ఈ టపాలన్నీ తొలగించాలనుకుంటున్నారా?"
+      revisions:
+        controls:
+          first: "తొలి దిద్దుబాటు"
+          previous: "గత దిద్దుబాటు"
+          next: "తరువాతి దిద్దుబాటు"
+          last: "చివరి దిద్దుబాటు"
+          hide: "దిద్దుబాటు దాచు"
+          show: "దిద్దుబాటు చూపు"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> vs <strong>{{current}}</strong> / {{total}}"
+        displays:
+          inline:
+            title: "వ్యవకలనాలు మరియు సంకలనాలను సాలు మధ్యలో చూపుతూ మొత్తం చూపు"
+            button: '<i class="fa fa-square-o"></i> హెచ్ టీ యం టల్'
+          side_by_side:
+            title: "పక్క పక్కన తేడాలు చూపుతూ మొత్తం చూపు"
+            button: '<i class="fa fa-columns"></i> హెచ్ టీయంయల్'
+          side_by_side_markdown:
+            title: "ముడి మూల తేడాను పక్కపక్కన చూపు"
+            button: '<i class="fa fa-columns"></i> ముడి'
+    category:
+      can: 'can&hellip;'
+      none: '(ఏ వర్గం లేదు)'
+      choose: 'వర్గం ఎంచుకో&hellip;'
+      edit: 'సవరించు'
+      edit_long: "సవరించు"
+      view: 'ఈ వర్గంలోని విషయాలు చూడు'
+      general: 'సాధారణ'
+      settings: 'అమరికలు'
+      delete: 'వర్గం తొలగించు'
+      create: 'కొత్త వర్గం'
+      save: 'వర్గం దాచు'
+      slug: 'వర్గం స్లగ్'
+      slug_placeholder: '(ఐచ్చికం) వెబ్ చిరునామాలో పేరు డాష్ లతో'
+      creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
+      save_error: ఈ వర్గం భద్రపరిచేప్పుడు దోషం
+      name: "వర్గం పేరు"
+      description: "వివరణ"
+      topic: "వర్గం విషయం"
+      logo: "వర్గం లోగో బొమ్మ"
+      background_image: "వర్గం వెనుతలపు బొమ్మ"
+      badge_colors: "బ్యాడ్జి రంగులు"
+      background_color: "వెనుతలపు రంగు"
+      foreground_color: "మునుతలపు రంగు"
+      name_placeholder: "గరిష్టం ఒకటి లేదా రెండు పదాలు"
+      color_placeholder: "ఏదేనీ జాల రంగు"
+      delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
+      delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
+      list: "వర్గాల జాబితా చూపు"
+      no_description: "ఈ వర్గానికి వివరణ రాయండి"
+      change_in_category_topic: "వివరణ సవరించు"
+      already_used: 'ఈ రంగు వేరే వర్గం వాడింది'
+      security: "సంరక్షణ"
+      images: "బొమ్మలు"
+      auto_close_label: "ఇంత కాలం తర్వాత ఈ విషయం స్వీయ మూయు:"
+      auto_close_units: "గంటలు"
+      email_in: "అనురూప లోపలికి వచ్చే ఈమెయిల్ చిరునామా:"
+      email_in_allow_strangers: "ఎటువంటి ఖాతాలు లేని అనామక సభ్యుల నుండి వచ్చే ఈమెయిల్లు అంగీకరించు"
+      email_in_disabled: "సైటు అమరికల్లో ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుడ అచేతనమైంది. ఈమెయిల్ ద్వారా కొత్త విషయాలు రాయుట చేతనం చేయుటకు,"
+      email_in_disabled_click: '"ఈమెయిల్ ఇన్" అమరికను చేతనం చేయి.'
+      allow_badges_label: "ఈ వర్గంలో బ్యాడ్జిలు బహూకరించుట అనుమతించు"
+      edit_permissions: "అనుమతులు సవరించు"
+      add_permission: "అనుమతి కలుపు"
+      this_year: "ఈ సంవత్సరం"
+      position: "స్థానం"
+      default_position: "అప్రమేయ స్థానం"
+      position_disabled: "వర్గాలు కలాపం వరుసలో చూపబడతాయి. జాబితాల్లో వర్గాల వరుసను నియంత్రించడానికి,"
+      position_disabled_click: '"స్థిర వర్గ స్థాయిలు" అమరికను చేతనం చేయండి'
+      parent: "తండ్రి వర్గం"
+      notifications:
+        watching:
+          title: "కన్నేసారు"
+          description: "మీరు స్వయంచాలకంగా ఈ వర్గాల లోని అన్ని విషయాలను చూడగలరు.మీకు అన్ని కొత్త టపాలు మరియు విషయాలు తెలియజేయబడతాయి,చదవని మరియు కొత్త టపాల లెక్క కలిపి విషయం ప్రక్కన కనిపిస్తుంది."
+        tracking:
+          title: "గమనిస్తున్నారు"
+          description: "ఈ వర్గాల లోని అన్ని విషయాలను మీరు స్వయంచాలకంగా కనిపెట్టగలరు.చదవని మరియు కొత్త టపాల సంఖ్య విషయం పక్కన కనిపిస్తుంది."
+        regular:
+          title: "రెగ్యులర్"
+          description: "ఎవరన్నా @మీపేరు ప్రస్తావిస్తే లేదా మీ టపాకు జవాబిస్తే మీకు ప్రకటన అందుతుంది."
+        muted:
+          title: "నిశ్శబ్దం"
+          description: "ఈ వర్గాల్లో కొత్త విషయాల గురించి మీకు ప్రకటన రాదు. ఇంకా చదవి సంఖ్యలు కనిపించవు."
+    flagging:
+      title: 'మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు'
+      private_reminder: 'కేతనాలు ప్రైవేటు. <b>కేవలం</b> సిబ్బందికి మాత్రమే కనిపిస్తాయి'
+      action: 'టపాను కేతనించు'
+      take_action: "చర్య తీసుకో"
+      delete_spammer: "స్పామరును తొలగించు"
+      delete_confirm: "మీరు ఈ వినియోగదారుని <b>%{టపాలు}</b> టపాలు మరియు <b>%{విషయాలు}</b> విషయాలు తొలగించబోతున్నారు, వారి ఖాతా తొలగించి,వారి IP అడ్రస్ నుండి సైన్‌అప్‌లు మూసివేయండి<b>%{ip_అడ్రస్}</b>, మరియు శాశ్వత మూసివేత జాబితాకి వారి ఈ-మెయిల్ అడ్రస్ <b>%{ఈ-మెయిల్}</b> ని కలపండి.మీరు నిజంగా ఈ వినియోగదారుని స్పామర్ గా భావిస్తున్నారా ?"
+      yes_delete_spammer: "అవులు, స్పామరును తొలగించు"
+      ip_address_missing: "వర్తించదు"
+      hidden_email_address: "(దాయబడింది)"
+      submit_tooltip: "ఒక ప్రైవేటు కేతనం అందించు"
+      take_action_tooltip: "మరిన్ని కమ్యునిటీ కేతనాల కోసం ఎదురు చూడకుండా ఇప్పుడే కేతన గట్టు చేరు"
+      cant: "క్షమించాలి. ఇప్పుడు ఈ టపాను కేతనిచంలేరు."
+      formatted_name:
+        off_topic: "ఇది విషయాంతరం"
+        inappropriate: "ఇది అసమంజసం"
+        spam: "ఇది స్పాము"
+      custom_placeholder_notify_user: "నిక్కచ్చిగా ఉండు, నిర్మాణాత్మకంగా ఉండు మరియు ఎల్లప్పుడూ దయతో ఉండు"
+      custom_placeholder_notify_moderators: "మీరు ఏ విషయంలో ఇబ్బందిపడుతున్నారో మాకు తెలియజేయండి. ఉదాహరణలు, లంకెలు మరియు సంబంధిత సమాచారం పొందుపరచండి. "
+      custom_message:
+        at_least: "కనీసం {{n}} అక్షరాలు రాయండి"
+        more: "{{n}} కావాలి..."
+        left: "{{n}} ఉన్నాయి"
+    flagging_topic:
+      title: "మా కమ్యునిటీని నాగరికంగా ఉంచుటలో సహాయానికి ధన్యవాదములు!"
+      action: "విషయాన్ని కేతనించు"
+    topic_map:
+      title: "విషయ సారం"
+      links_shown: "అన్ని {{totalLinks}} లంకెలూ చూపు..."
+      clicks:
+        one: "ఒక నొక్కు"
+        other: "%{count} నొక్కులు"
+    topic_statuses:
+      warning:
+        help: "ఇది అధికారిక హెచ్చరిక"
+      bookmarked:
+        help: "ఈ విషయానికి పేజీక ఉంచారు"
+      locked:
+        help: "ఈ విషయం ముగిసింది. కొత్త జవాబులు అంగీకరించదు. "
+      unpinned:
+        title: "అగ్గుచ్చిన"
+        help: "ఈ విషయం మీకు అగ్గుచ్చబడింది. ఇది ఇహ క్రమ వరుసలోనే కనిపిస్తుంది"
+      pinned_globally:
+        title: "సార్వత్రికంగా గుచ్చారు"
+        help: "ఈ విషయం సార్వత్రికంగా గుచ్చారు; అన్ని వరుసల్లోనూ ఇది అగ్రభాగాన కనిపిస్తుంది."
+      pinned:
+        title: "గుచ్చారు"
+        help: "ఈ విషయం మీకు గుచ్చబడింది. దాని వర్గంలో అది అగ్రభాగాన కనిపిస్తుంది."
+      archived:
+        help: "ఈ విషయం కట్టకట్టబడింది. ఇది గడ్డకట్టుకుంది ఇహ మార్చయిత కాదు"
+      invisible:
+        help: "ఈ విషయం జాబితాలనుండి తొలగించబడింది. ఇహ కేవలం నేరు లంకె ద్వారా మాత్రమే చూడగలరు."
+    posts: "టపాలు"
+    posts_lowercase: "టపాలు"
+    posts_long: "ఈ విషయానికి {{number}}  టపాలు ఉన్నాయి. "
+    original_post: "మూల టపా"
+    views: "చూపులు"
+    replies: "జవాబులు"
+    views_long: "ఈ విషయం  {{number}}  సార్లు చూడబడింది."
+    activity: "కలాపం"
+    likes: "ఇష్టాలు"
+    likes_long: "ఈ విషయానికి  {{number}}  ఇష్టాలు ఉన్నాయి"
+    users: "సభ్యులు"
+    category_title: "వర్గం"
+    history: "చరిత్ర"
+    changed_by: " {{author}} రాసిన"
+    raw_email:
+      title: "ముడి ఈమెయిల్"
+      not_available: "అందుబాటులో లేదు!"
+    categories_list: "వర్గాల జాబితా"
+    filters:
+      with_topics: "%{filter} విషయాలు"
+      with_category: "%{filter} %{category} విషయాలు"
+      latest:
+        title: "తాజా"
+        help: "ఇటీవలి టపాలతోని విషయాలు"
+      hot:
+        title: "వేడివేడి"
+        help: "ఎంపికైన వేడివేడి విషయాలు"
+      read:
+        title: "చదివిన"
+        help: "మీరు చదివిన విషయాలు, మీరు చివరిసారి చదివిన వరుసలో"
+      categories:
+        title: "వర్గాలు"
+        title_in: "వర్గం - {{categoryName}}"
+        help: "వర్గాల వారీగా జట్టు కట్టిన అన్ని విషయాలూ"
+      unread:
+        title:
+          zero: "చదవని"
+          one: "చదవని (1)"
+          other: "చదవని ({{count}})"
+        help: "మీరు ప్రస్తుతం కన్నేసిన లేదా గమనిస్తున్న చదవని టపాలతో ఉన్న  విషయాలు "
+        lower_title_with_count:
+          one: "1 చదవని"
+          other: "{{count}} చదవని"
+      new:
+        lower_title_with_count:
+          one: "1 కొత్త "
+          other: "{{count}} కొత్త"
+        lower_title: "కొత్త"
+        title:
+          zero: "కొత్త"
+          one: "కొత్త (1)"
+          other: "కొత్త ({{count}})"
+        help: "గత కొద్ది రోజులలో సృష్టించిన టపాలు"
+      posted:
+        title: "నా టపాలు"
+        help: "మీరు టపా రాసిన విషయాలు"
+      bookmarks:
+        title: "పేజీకలు"
+        help: "మీరు పేజీక ఉంచిన విషయాలు"
+      category:
+        title:
+          zero: "{{categoryName}}"
+          one: "{{categoryName}} (1)"
+          other: "{{categoryName}} ({{count}})"
+        help: "{{categoryName}} వర్గంలోని కొత్త విషయాలు"
+      top:
+        title: "అగ్ర"
+        help: "గత సంవత్సరం, నెల, వారం లేదా రోజులోని అత్యంత క్రియాశీల విషయాలు"
+        this_year: "ఈ సంవత్సరం"
+        this_month: "ఈ నెల"
+        this_week: "ఈ వారం"
+        today: "ఈ రోజు"
+        other_periods: "మరిన్ని అగ్ర విషయాలు చూడు"
+    browser_update: 'దురదృష్టవశాత్తు, <a href="http://www.discourse.org/faq/#browser">ఈ సైట్ లో పనిచేయడానికి మీ బ్రౌజర్ చాలా పాతది </a>. దయచేసి <a href="http://browsehappy.com">మీ బ్రౌజర్ ని నవీకరించండి</a>.'
+    permission_types:
+      full: "సృష్టించి / జవాబివ్వు / చూడు"
+      create_post: "జవాబివ్వు / చూడు"
+      readonly: "చూడు"
+  admin_js:
+    type_to_filter: "జల్లించుటకు రాయి..."
+    admin:
+      title: 'డిస్కోర్సు అధికారి'
+      moderator: 'నిర్వాహకుడు'
+      dashboard:
+        title: "రంగస్థలం"
+        last_updated: "రంగస్థలం చివరగా నవీకరించినది:"
+        version: "రూపాంతరం"
+        up_to_date: "మీరు తాజాగా ఉన్నారు! "
+        critical_available: "ఒక క్రిటికల్ ఉన్నతీకరణ అందుబాటులో ఉంది."
+        updates_available: "ఉన్నతీకరణలు అందుబాటులో ఉన్నాయి."
+        please_upgrade: "దయచేసి ఉన్నతీకరించు!"
+        no_check_performed: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
+        stale_data: "ఉన్నతీకరణల కోసం పరికింపు జరగలేదు. sidekiq నడుస్తున్నట్టు సరిచూడండి."
+        version_check_pending: "మీరు ఇటీవలే ఉన్నతీకరించినట్టున్నారు. అద్భుతం!"
+        installed_version: "ప్రతిష్టించబడింది"
+        latest_version: "తాజా"
+        problems_found: "మీ డిస్కోర్సు ప్రతిష్టాపనతో కొన్ని సమస్యలు కనిపించాయి."
+        last_checked: "చివరగా సరిచూసినది"
+        refresh_problems: "తాజాపరుచు"
+        no_problems: "ఎటువంటి సమస్యలూ కనిపించలేదు"
+        moderators: 'నిర్వాహకులు:'
+        admins: 'అధికారులు:'
+        blocked: 'నిలిపిన:'
+        suspended: 'సస్పెండయిన:'
+        space_free: "{{size}} ఖాలీ"
+        uploads: "ఎగుమతులు"
+        backups: "బ్యాకప్లు"
+        traffic_short: "ట్రాఫిక్"
+        traffic: "అనువర్తన జాల రిక్వెస్టులు"
+        page_views: "API అభ్యర్ధనలు"
+        page_views_short: "API అభ్యర్ధనలు"
+        show_traffic_report: "సవివరణ ట్రాఫిక్ రిపోర్టు చూపు"
+        reports:
+          today: "ఈరోజు"
+          yesterday: "నిన్న"
+          last_7_days: "చివరి ఏడు రోజులు"
+          last_30_days: "చివరి ముప్పై రోజులు"
+          all_time: "ఆల్ టైమ్"
+          7_days_ago: "ఏడు రోజుల క్రితం"
+          30_days_ago: "ముప్పై రోజుల క్రితం"
+          all: "అన్ని"
+          view_table: "టేబుల్"
+          view_chart: "బార్ పట్టిక"
+          refresh_report: "రిపోర్టు తాజాపరుచు"
+          start_date: "ఆరంభ తేదీ"
+          end_date: "ముగింపు తేదీ"
+      commits:
+        latest_changes: "తాజా మార్పులు: దయచేసి తరచూ ఉన్నతీకరించండి!"
+        by: "నుండి"
+      flags:
+        title: "కేతనాలు"
+        old: "పాత"
+        active: "చేతన"
+        agree: "ఒప్పుకోండి"
+        agree_title: "ఈ కేతనం సరైనదిగా చెప్పండి"
+        agree_flag_modal_title: "ఒప్పుకొను మరియు"
+        agree_flag_hide_post: "ఒప్పుకొని (టపా దాచు మరియు ప్రైవేటు సందేశం పంపు)"
+        agree_flag_restore_post: "ఒప్పుకొను (టపా పునస్తాపించు)"
+        agree_flag_restore_post_title: "ఈ టపా పునస్తాపించు"
+        agree_flag: "కేతనంతో ఒప్పుకో"
+        agree_flag_title: "కేతనంతో ఒప్పుకో మరియు టపాను మార్చకుండా ఉంచు"
+        defer_flag: "వాయిదావేయి"
+        defer_flag_title: "ఈ కేతనం తొలగించు; ఇప్పుడు ఎటువంటి చర్య అవసరంలేదు."
+        delete: "తొలగించు"
+        delete_title: "ఈ కేతనం వర్తించే టపా తొలగించు"
+        delete_post_defer_flag: "టపా తొలగించు మరియు కేతనం వాయిదా వేయి"
+        delete_post_defer_flag_title: "టపా తొలగించు; ఇదే తొలి టపా అయితే ఈ విషయాన్ని తొలగించు"
+        delete_post_agree_flag: "టపా తొలగించు మరియు కేతనంతో అంగీకరించు"
+        delete_post_agree_flag_title: "టపా తొలగించు; తొలగి టపా అయితే, విషయాన్ని కూడా తొలగించు"
+        delete_flag_modal_title: "తొలగించు మరియు..."
+        delete_spammer: "స్పామరును తొలగించు"
+        delete_spammer_title: "ఈ సభ్యుడిని తొలగించు మరియు ఇతని అన్ని టపాలు, విషయాలూ కూడా తొలగించు. "
+        disagree_flag_unhide_post: "ఒప్పుకోకు (టపా దాచు)"
+        disagree_flag_unhide_post_title: "ఈ టపాకు ఉన్న అన్ని కేతనాలూ తొలగించు మరియు టపాను మరలా సందర్శనీయం చేయి"
+        disagree_flag: "ఒప్పుకోకు"
+        disagree_flag_title: "ఈ కేతనాన్ని చెల్లనిదిగా లేదా తప్పుగా  నిరాకరించు"
+        clear_topic_flags: "ముగిసింది"
+        clear_topic_flags_title: "ఈ విషయం పరిశీలించబడింది మరియు అన్ని సమస్యలూ సరిచేయబడ్డాయి. ముగిసింది నొక్కి అన్ని కేతనాలూ తొలగించు."
+        more: "(మరిన్ని జవాబులు...)"
+        dispositions:
+          agreed: "ఒప్పుకున్నారు"
+          disagreed: "ఒప్పుకోలేదు"
+          deferred: "వాయిదా వేసారు"
+        flagged_by: "కేతనించినవారు"
+        resolved_by: "సరిచేసినవారు"
+        took_action: "చర్య తీసుకున్నారు"
+        system: "వ్యవస్థ"
+        error: "ఏదే తేడా జరిగింది"
+        reply_message: "జవాబు"
+        no_results: "ఎట్టి కేతనాలూ లేవు"
+        topic_flagged: "ఈ <strong>విషయం</strong> కేతనించబడింది."
+        visit_topic: "చర్య తీసుకోడానికి విషయం దర్శించు"
+        was_edited: "తొలి కేతనం తర్వాత టపా సవరించబడింది"
+        previous_flags_count: "ఈ టపా ఇప్పటికే {{count}}  కేతనించబడింది."
+        summary:
+          action_type_3:
+            one: "విషయాంతరం"
+            other: "విషయాంతరం x{{count}}"
+          action_type_4:
+            one: "అసమంజసం "
+            other: "అసమంజసం x{{count}}"
+          action_type_6:
+            one: "అనురూపం"
+            other: "అనురూప x{{count}}"
+          action_type_7:
+            one: "అనురూపం"
+            other: "అనురూపం x{{count}}"
+          action_type_8:
+            one: "స్పాము"
+            other: "స్పామ్ x{{count}}"
+      groups:
+        primary: "ప్రాథమిక గుంపు"
+        no_primary: "(ప్రాథమిక గుంపు లేదు)"
+        title: "గుంపులు"
+        edit: "గుంపులు సవరించు"
+        refresh: "తాజా పరుచు"
+        new: "కొత్త"
+        selector_placeholder: "సభ్యనామం రాయండి"
+        name_placeholder: "గంపు పేరు, జాగా లేకుండా, సభ్యనామం వలె"
+        about: "మీ గుంపు మెంబర్షిప్పు మరియు పేర్లు ఇక్కడ సవరించండి"
+        group_members: "గుంపు సభ్యులు"
+        delete: "తొలగించు"
+        delete_confirm: "ఈ గుంపును తొలగించాలనుకుంటున్నారా? "
+        delete_failed: "గుంపును తొలగించలేకున్నాము. ఇది స్వీయ గుంపు అయితే దీన్ని నాశనం చేయలేరు."
+        delete_member_confirm: " '%{group}' గుంపు నుండి '%{username}' ను తొలగించాలా?"
+        name: "పేరు"
+        add: "కలుపు"
+        add_members: "సభ్యులను కలుపు"
+        automatic_membership_email_domains: "వినియోగదారుడు ఏ ఈ-మెయిల్ డొమైన్ తో నమోదు చేసుకున్నాడో అది ఖచ్చితంగా  ఈ జాబితాలో ఒక దానిని పోలి స్వయంసిధ్ధంగా గ్రూప్ కి కలుస్తాయి:"
+        automatic_membership_retroactive: "ఇప్పటికే నమోదిత వినియోగదారులను జోడించడానికి అదే ఇమెయిల్ డొమైన్ రూల్ వర్తిస్తుంది"
+      api:
+        generate_master: "మాస్టరు ఏపీఐ కీ ఉత్తపత్తించు"
+        none: "ప్రస్తుతం చేతన ఏపీఐ కీలు లేవు."
+        user: "సభ్యుడు"
+        title: "ఏపీఐ"
+        key: "ఏపీఐ కీ"
+        generate: "ఉత్పత్తించు"
+        regenerate: "పునరుత్పత్తించు"
+        revoke: "రివోక్"
+        confirm_regen: "మీరు నిజంగా పాత ఏపీఐ కీని కొత్త దానితో రీప్లేస్ చెయ్యాలనుకుంటున్నారా?"
+        confirm_revoke: "మీరు నిజంగా ఆ కీని రివోకే చెయ్యాలనుకుంటున్నారా? "
+        info_html: "మీ ఏపీఐ కీ జేసన్ వాడి విషయాలు సృష్టించుట, ఉన్నతీకరించుటకు దోహదం చేస్తుంది."
+        all_users: "అందరు సభ్యులు"
+        note_html: "ఈ కీ ని <strong> రహస్యంగా ఉంచండి </strong>, అది కలిగివున్న అందరూ వినియోగదారులు ఏ వినియోగదారునిలా నైనా ఏకపక్ష టపాలు సృష్టించవచ్చు."
+      plugins:
+        title: "చొప్పింతలు"
+        installed: "ప్రతిష్టించిన చొప్పింతలు"
+        name: "పేరు"
+        none_installed: "ఎటువంటి చొప్పింతలు ప్రతిష్టించిలేవు."
+        version: "సంచిక"
+        change_settings: "అమరికలు మార్చు"
+        howto: "పొడిగింతలు నేను ఎలా ప్రతిష్టించగలను?"
+      backups:
+        title: "బ్యాకప్పులు"
+        menu:
+          backups: "బ్యాకప్పులు"
+          logs: "లాగ్స్"
+        none: "ఎట్టి బ్యాకప్పులూ లేవు"
+        read_only:
+          enable:
+            title: "కేవలం చదివే రీతే చేతనం చేయి"
+            confirm: "మీరు నిజంగా కేవలం చదివే రీతి చేతనంచేయాలనుకుంటున్నారా?"
+          disable:
+            title: "కేవలం చదివే రీతి అచేతనం చేయి"
+        logs:
+          none: "ఇంకా లాగులు లేవు..."
+        columns:
+          filename: "దస్త్రం పేరు"
+          size: "పరిమాణం"
+        upload:
+          uploading: "ఎగుమతవుతోంది..."
+          success: "'{{filename}}' విజయవంతంగా ఎగుమతయింది."
+          error: "'{{filename}}' ఎగుమతించుటలో దోషం: {{message}}"
+        operations:
+          is_running: "ఒక కార్యం ప్రస్తుతం నడుస్తోంది..."
+          failed: "కార్యం విఫలమైంది. దయచేసి లాగులు చూడండి."
+          cancel:
+            title: "ప్రస్తుత కార్యం రద్దుచేయి"
+            confirm: "మీరు నిజంగానే ప్రస్తుత కార్యం రద్దుచేయాలనుకుంటున్నారా?"
+          backup:
+            title: "బ్యాకప్ సృష్టించు"
+            confirm: "మీరు కొత్త బ్యాకప్ మొదలుపెట్టాలనుకుంటున్నారా?"
+            without_uploads: "అవులు (దస్త్రాలు కాకుండా)"
+          download:
+            title: "బ్యాకప్ దిగుమతించు"
+          destroy:
+            title: "బ్యాకప్ తొలగించు"
+            confirm: "మీరు నిజంగానే బ్యాకప్ ను నాశనం చేయాలనుకుంటున్నారా?"
+          restore:
+            is_disabled: "సైటు అమరికల్లో రీస్టోరు అచేతనమైంది. "
+            title: "బ్యాకప్ ను రీస్టోరు చేయి"
+            confirm: "మీరు నిజంగానే ఈ బ్యాకప్ ను రీస్టోరు చేయాలనుకుంటున్నారా?"
+          rollback:
+            title: "డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయి"
+            confirm: "మీరు నిజంగానే డాటాబేసును గత పనిచేసే స్థితికి రోల్ బ్యాక్ చేయాలనుకుంటున్నారా?"
+      export_csv:
+        user_archive_confirm: "మీరు నిజంగా మీ టపాల దిగుమతి కోరుకుంటున్నారా ?"
+        failed: "ఎగుమతి విఫలమైంది. దయచేసి లాగులు చూడంది. "
+        rate_limit_error: "టపాలు కేవలం రోజుకు ఒకసారి మాత్రమే దిగుమతించుకోగలరు. దయచేసి రేపు ప్రయత్నించండి."
+        button_text: "ఎగుమతి"
+        button_title:
+          user: "పూర్తి సభ్యుల జాబితా సీయస్వీ రూపులో ఎగుమతించండి"
+          staff_action: "పూర్తి సిబ్బంది చర్యా లాగు సీయస్వీ రూపులో ఎగుమతించండి."
+          screened_email: "వడకట్టిన ఈమెయిల్ల పూర్తి జాబితా సీయస్వీ రూపులో ఎగుమతించు"
+          screened_ip: "వడకట్టిన ఐపీల పూర్తి జాబితా సియస్వీ రూపులో ఎగుమతించు"
+          screened_url: "వడకట్టిన యూఆర్ యల్ల పూర్తి జాబితాను సీయస్వీ రూపులో ఎగుమతించు"
+      invite:
+        button_text: "ఆహ్వానాలు పంపు"
+        button_title: "ఆహ్వానాలు పంపు"
+      customize:
+        title: "కస్టమైజ్"
+        long_title: "సైట్ కస్టమైజేషనులు"
+        css: "సీయస్ యస్"
+        header: "హెడర్"
+        top: "అగ్ర"
+        footer: "ఫుటరు"
+        head_tag:
+          text: "</head>"
+          title: "</head> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
+        body_tag:
+          text: "</body>"
+          title: "</body> కొస ముందు ఉంచే హెచ్ టీ యం యల్"
+        override_default: "స్టాండర్డ్ సైల్ షీట్ ఉంచకు"
+        enabled: "చేతమైందా?"
+        preview: "మునుజూపు"
+        undo_preview: "మునుజూపు తొలగించు"
+        rescue_preview: "అప్రమేయ స్టైలు"
+        explain_preview: "సైటును అనురూప స్టైల్షీటుతో దర్శించు"
+        explain_undo_preview: "ప్రస్తుతం చేతనం చేసిఉన్న కస్టమ్ స్టైల్ షీటుకు మరలు"
+        explain_rescue_preview: "సైటును అప్రమేయ స్టైల్ షీటుతో చూడు"
+        save: "భద్రపరుచు"
+        new: "కొత్త"
+        new_style: "కొత్త స్టైలు"
+        delete: "తొలగించు"
+        delete_confirm: "ఈ కస్టమైజేషనులు తొలగించు? "
+        about: "సైట్లో CSS స్టైల్‌షీట్స్ and HTML హెడర్స్ మార్చండి.స్టార్ట్‌కి కస్టమైజేషన్ కలపండి."
+        color: "రంగు"
+        opacity: "అపారదర్శకత"
+        copy: "నకలు"
+        css_html:
+          title: "సీయస్ యస్ / హెచ్ టీ యం యల్"
+          long_title: "సీ యస్ యస్ మరియు హెచ్ టీ యం యల్ కస్టమైజేషనులు"
+        colors:
+          title: "రంగులు"
+          long_title: "రంగు స్కీములు"
+          about: "సైట్లో వాడే రంగులు CSS వ్రాయకుండా మార్చండి.స్కీమ్ ను స్టార్ట్ కు కలపండి."
+          new_name: "కొత్త రంగు స్కీము"
+          copy_name_prefix: "దీనికి నకలు"
+          delete_confirm: "ఈ రంగు స్కీము తొలగించు?"
+          undo: "రద్దు"
+          undo_title: "చివరిసారి భధ్రపరచినప్పటి నుండి మీ రంగుల మార్పులు తిరగదోడండి."
+          revert: "తిద్దు"
+          revert_title: "డిస్కోర్సు అప్రమేయ రంగు స్కీముకు రంగులను రీసెట్ చేయి"
+          primary:
+            name: 'ప్రాథమిక'
+            description: 'పాఠ్యం, చిహ్నాలు మరియు సరిహద్దులు.'
+          secondary:
+            name: 'ద్వితీయ'
+            description: 'ప్రధాన వెనుతలం రంగు మరియు కొన్ని మీటల పాఠ్యం రంగు.'
+          tertiary:
+            name: 'తృతీయ'
+            description: 'లంకెలు, కొన్ని మీటలు, ప్రకటనలు, మరియు ఎసెంట్ రంగు.'
+          quaternary:
+            name: "చతుర్థీ"
+            description: "నావిగేషను లంకెలు"
+          header_background:
+            name: "హెడరు వెనుతలం"
+            description: "సైటు హెడరు వెనుతలం రంగు."
+          header_primary:
+            name: "హెడరు ప్రాథమిక"
+            description: "సైటు హెడరు పాఠ్యం మరియు చిహ్నాలు"
+          highlight:
+            name: 'హైలైట్'
+            description: 'ఒక పుటలో వెనుతల రంగు ప్రత్యేకతగా కల్గిన అంశాలు, టపాలు మరియు విషయాలు అయి ఉంటాయి.'
+          danger:
+            name: 'ప్రమాదం'
+            description: 'తొలగించిన టపాలు మరియు విషయాల వంటి చర్యలకు రంగులు అద్దారు.'
+          success:
+            name: 'విజయం'
+            description: 'ఒక చర్య విజయవంతమైందని చూపడానికి వాడబడేది'
+          love:
+            name: 'ప్రేమ'
+            description: "ఇష్ఠ బటను రంగు."
+          wiki:
+            name: 'వికీ'
+            description: "వికీ టపాలు వెనుతలంకు ప్రాథమిక రంగు"
+      email:
+        title: "ఈమెయిల్"
+        settings: "అమరికలు"
+        all: "అన్నీ"
+        sending_test: "పరీక్షా ఈమెయిల్ పంపుతున్నామ్..."
+        error: "<b>దోషం</b> - %{server_error}"
+        test_error: "టెస్ట్ మెయిల్ పంపడంలో  ఒక సమస్య ఉంది.దయచేసి మీ మెయిల్ సెట్టింగ్స్ రెండోసారి తనిఖీ చేసి,మీ హోస్ట్ మెయిల్ కనెక్షన్ నిరోధించుటలేదని నిర్ధారించుకోండి, మరియు తిరిగి ప్రయత్నించండి."
+        sent: "పంపిన"
+        skipped: "వదిలిన"
+        sent_at: "వద్ద పంపారు"
+        time: "కాలం"
+        user: "సభ్యుడు"
+        email_type: "ఈమెయిల్ టైపు"
+        to_address: "చిరునామాకు"
+        test_email_address: "పరీక్షించుటు ఈమెయిల్ "
+        send_test: "పరీక్షా  మెయిల్ పంపారు"
+        sent_test: "పంపారు!"
+        delivery_method: "డెలివరీ పద్దతి"
+        preview_digest: "డైజెస్టు మునుజూపు"
+        preview_digest_desc: "క్రియారహిత వినియోగదారులకు పంపిన వార సారాంశ ఈ-మెయిల్ యొక్క విషయాన్ని ముందుగా చూడండి."
+        refresh: "తాజాపరుచు"
+        format: "రూపు"
+        html: "హెచ్ టీయంయల్"
+        text: "పాఠ్యం"
+        last_seen_user: "చివరగా చూసిన సభ్యుడు:"
+        reply_key: "జవాబు కీ"
+        skipped_reason: "వదిలిన కారణం"
+        logs:
+          none: "ఎట్టి లాగులు కనిపించలేదు"
+          filters:
+            title: "జల్లెడ"
+            user_placeholder: "సభ్యనామం"
+            address_placeholder: "name@example.com"
+            type_placeholder: "డైజెస్ట్, సైనప్..."
+            reply_key_placeholder: "జవాబు కీ"
+            skipped_reason_placeholder: "కారణం"
+      logs:
+        title: "లాగులు"
+        action: "చర్య"
+        created_at: "సృష్టించినది"
+        last_match_at: "చివరగా జతైనది"
+        match_count: "సరిపోతుంది"
+        ip_address: "ఐపీ"
+        topic_id: "విషయపు ఐడీ"
+        post_id: "టపా ఐడీ"
+        delete: 'తొలగించు'
+        edit: 'సవరణ'
+        save: 'భద్రపరుచు'
+        screened_actions:
+          block: "నిలుపు"
+          do_nothing: "ఏమీ చేయకు"
+        staff_actions:
+          title: "సిబ్బింది చర్యలు"
+          instructions: "వినియోగదారు పేరు మరియు చర్యల వడపోత చిట్టాను నొక్కండి.చిత్రాలు వినియోగదారు పుట కి వెళతాయి."
+          clear_filters: "మొత్తం చూపు"
+          staff_user: "సిబ్బంది సభ్యుడు"
+          target_user: "లక్షిత సభ్యుడు"
+          subject: "సబ్జెక్టు"
+          when: "ఎప్పుడు"
+          context: "సందర్భం"
+          details: "వివరాలు"
+          previous_value: "గత"
+          new_value: "కొత్త"
+          diff: "తేడా"
+          show: "చూపు"
+          modal_title: "వివరాలు"
+          no_previous: "గత విలువ లేదు"
+          deleted: "కొత్త విలువ లేదు. రికార్డు తొలగించబడింది"
+          actions:
+            delete_user: "సభ్యుడిని తొలగించు"
+            change_trust_level: "నమ్మకపు స్థాయి మార్చు"
+            change_username: "సభ్యనామం మార్చు"
+            change_site_setting: "సైటు అమరిక మార్చు"
+            change_site_customization: "సైట్ కస్టమైజేషను మార్చు"
+            delete_site_customization: "సైటు కస్టమైజేషను తొలగించు"
+            suspend_user: "సభ్యుడిని సస్పెండు చేయి"
+            unsuspend_user: "సస్పెండు కాని సభ్యుడు"
+            grant_badge: "బ్యాడ్జ్ ఇవ్వు"
+            revoke_badge: "బ్యాడ్జ్ తొలగించు"
+            check_email: "ఈమెయిల్ చూడు"
+            delete_topic: "విషయం తొలగించు"
+            delete_post: "విషయం తొలగించు"
+            impersonate: "పరకాయప్రవేశించు"
+        screened_emails:
+          title: "స్క్రీన్ చేసిన ఈమెయిల్లు"
+          email: "ఈమెయిల్ చిరునామా"
+          actions:
+            allow: "అనుమతించు"
+        screened_urls:
+          title: "స్క్రీన్ చేసిన యూఆర్ యల్ లు"
+          description: "ఇక్కడ టపాలో ఉపయోగించిన URLల జాబితా వినియోగదారులు స్పామర్లుగా గుర్తించారు."
+          url: "యూఆర్ యల్"
+          domain: "డొమైన్"
+        screened_ips:
+          title: "స్క్రీన్ చేసిన ఐపీలు"
+          description: 'IP చిరునామాలు చూస్తారు.IP చిరునామాల "అనుమతి"లో మంచివరుస పాటించండి.'
+          delete_confirm: "మీరు నిజంగా %{ip_address} కు ఈ నియమాన్ని తొలగించాలనుకుంటున్నారా? "
+          rolled_up_some_subnets: "IP నిషేధిత ప్రవేశాలు ఈ సబ్‌నెట్స్‌కు విజయవంతంగా చేర్చారు: %{subnets}."
+          rolled_up_no_subnet: "రోల్ అప్ చేయుటకు ఏమీ లేదు."
+          actions:
+            block: "ఖండం"
+            do_nothing: "అనుమతించు"
+            allow_admin: "అధికారిని అనుమతించు"
+          form:
+            label: "కొత్త:"
+            ip_address: "ఐపీ చిరునామా"
+            add: "కలుపు"
+            filter: "వెతుకు"
+          roll_up:
+            text: "రోల్ అప్"
+            title: "కనీస ప్రవేశాలు ఉంటే కొత్త సబ్‌నెట్ నిషేధిత ప్రవేశాలు 'min_ban_entries_for_roll_up' సృష్టిస్తుంది."
+        logster:
+          title: "దోష లాగులు"
+      impersonate:
+        title: "పరకాయప్రవేశించు"
+        help: "అనుకరించిన వినియోగదారుని ఖాతా దోషవిశ్లేషణ ప్రయోజనాలకు ఈ ఉపకరణం వినియోగించండి.పూర్తి అయిన తర్వాత మీరు లాగవుట్ చేయండి."
+      users:
+        title: 'సభ్యులు'
+        create: 'అధికారి సభ్యుడిని కలుపు'
+        last_emailed: "చివరగా ఈమెయిల్ చేసినది"
+        not_found: "క్షమించాలి, ఆ సభ్యనామం మా వ్వవస్థలో లేదు."
+        id_not_found: "క్షమించాలి, ఆ సభ్య ఐడీ మా వ్యవస్థలో లేదు"
+        active: "క్రియాశీల"
+        show_emails: "ఈమెయిల్లు చూపు"
+        nav:
+          new: "కొత్త"
+          active: "క్రియాశీల"
+          pending: "పెండింగు"
+          staff: 'సిబ్బంది'
+          suspended: 'సస్పెడయ్యాడు'
+          blocked: 'నిలిపాడు'
+          suspect: 'అనుమానించు'
+        approved: "అంగీకరించు"
+        approved_selected:
+          one: "సభ్యుడిని అంగీకరించు"
+          other: "({{count}}) సభ్యులను అంగీకరించు"
+        reject_selected:
+          one: "సభ్యుడిని నిరాకరించు"
+          other: "({{count}}) సభ్యులను నిరాకరించు"
+        titles:
+          active: 'క్రియాశీల సభ్యులు'
+          new: 'కొత్త సభ్యులు'
+          pending: 'రివ్యూ పెండింగులో ఉన్న సభ్యులు'
+          newuser: 'నమ్మకం స్థాయి 0 సభ్యులు (కొత్త సభ్యుడు)'
+          basic: 'నమ్మకపు స్థాయి 1 వినియోగదారులు (ప్రాధమిక వినియోగదారు)'
+          regular: 'నమ్మకపు స్థాయి 2 వినియోగదారులు (సభ్యులు)'
+          leader: 'నమ్మకపు స్థాయి 3 వినియోగదారులు (నిత్యం)'
+          elder: 'నమ్మకపు స్థాయి 4 వినియోగదారులు (నాయకుడు)'
+          staff: "సిబ్బంది"
+          admins: 'అధికారి సభ్యులు'
+          moderators: 'నిర్వాహకులు'
+          blocked: 'నిలిపిన సభ్యులు'
+          suspended: 'సస్పెండయిన సభ్యులు'
+          suspect: 'అనుమానిత సభ్యులు'
+        reject_successful:
+          one: "వినియోగదారులు విజయవంతంగా "
+          other: "వినియోగదారులు విజయవంతంగా %{సంఖ్య} తిరస్కరింపబడ్డారు.."
+        reject_failures:
+          one: "వినియోగదారులు 1 ని తిరస్కరించుటలో వైఫల్యం."
+        not_verified: "ద్రువీకరించలేదు"
+        check_email:
+          title: "ఈ సభ్యుని ఈమెయిల్ చూపు"
+          text: "చూపు"
+      user:
+        suspend_failed: "ఈ సభ్యుడిని సస్పెండ్ చేసేప్పుడు ఏదో తేడా జరిగింది.  {{error}}"
+        unsuspend_failed: "ఈ వినియోగదారు వలన ఏదో తొలగింపబడని తప్పు జరిగింది {{దోషం}}"
+        suspend_duration: "వినియోగదారు ఎంతకాలం నిలిపివేయబడ్డాడు?"
+        suspend_duration_units: "(రోజులు)"
+        suspend_reason_label: "మీరు ఎందుకు తొలగించబడ్డారు? ఈ పాఠ్యం <b> వినియోగదారును ప్రొఫైల్ పుట మీద ప్రతివారికి </b> కనబడుతుంది, మరియు వినియోగదారుడు లాగిన్‌కు ప్రయత్నించినపుడు చూస్తారు.చిన్నదిగా ఉంచండి."
+        suspend_reason: "కారణం"
+        suspended_by: "సస్పెండు చేసినవారు"
+        delete_all_posts: "అన్ని టపాలూ తొలగించు"
+        delete_all_posts_confirm: "మీరు తొలగించబడిన %{టపాలు} టపాలు మరియు %{విషయాలు} విషయాలు గురించి మాట్లాడుతున్నారు. ఖచ్చితమా ?"
+        suspend: "సస్పెండు"
+        unsuspend: "సస్పెండు తొలగించు"
+        suspended: "సస్పెండయ్యాడా? "
+        moderator: "నిర్వాహకుడు?"
+        admin: "అధికారి?"
+        blocked: "నిలిపిన?"
+        show_admin_profile: "అధికారి"
+        edit_title: "శీర్షిక సవరించు"
+        save_title: "శీర్షిక భద్రపరుచు"
+        refresh_browsers: "బ్రౌజరు తాజాకరణ బలవంతంచేయి"
+        refresh_browsers_message: "అన్ని క్లైంటులకు సందేశం పంపబడింది!"
+        show_public_profile: "ప్రజా ప్రవర చూపు"
+        impersonate: 'పరకాయప్రవేశం చేయి'
+        ip_lookup: "ఐపీ లుకప్"
+        log_out: "లాగవుట్"
+        logged_out: "వినియోగదారుడు అన్ని పరికరాలు లాగవుట్ చేశారు"
+        revoke_admin: 'నిర్వాహకులు తొలగించారు'
+        grant_admin: 'నిర్వాహకులు సమ్మతించారు'
+        revoke_moderation: 'సమన్వయం నిలిపివేశారు'
+        grant_moderation: 'సమన్వయం అనుమతించారు'
+        unblock: 'అడ్డగింపలేదు'
+        block: 'నిలుపు'
+        reputation: ప్రసిధ్ధ
+        permissions: అనుమతులు
+        activity: కలాపం
+        like_count: ఇష్టాలు ఇచ్చినవి/స్వీకరించినవి
+        last_100_days: 'గత నూరు రోజుల్లో'
+        private_topics_count: ప్రైవేటు విషయాలు
+        posts_read_count: చదివిన టపాలు
+        post_count: టపాలు సృష్టించిన
+        topics_entered: 'సందర్శించిన విషయాలు '
+        flags_given_count: 'ఇచ్చిన కేతనాలు '
+        flags_received_count: వచ్చిన కేతనాలు
+        warnings_received_count: అందిన హెచ్చరికలు
+        flags_given_received_count: 'ఇచ్చిన కేతనాలు'
+        approve: 'అనుమతించు'
+        approved_by: "అనుమతించినవారు"
+        approve_success: "యాక్టివేషన్ సూచనలతో పాటు వినియోగదారు ఆమోదం మరియు ఈ-మెయిల్ పంపుతారు."
+        approve_bulk_success: "విజయవంతం! ఎంచుకున్న వినియోగదారులందరినీ ఆమోదించారు మరియు ప్రకటన చేశారు."
+        time_read: "చదువు సమయం"
+        delete: "సభ్యుడిని తొలగించు"
+        delete_forbidden_because_staff: "అధికారులు మరియు నిర్వాహకులను తొలగించలేరు"
+        delete_posts_forbidden_because_staff: "నిర్వాహకుల మరియు పరిశీలకుల అన్ని టపాలు తొలగించలేము."
+        delete_confirm: "మీరు నిజంగా ఈ వినియోగదారుని తొలగిద్దాం అనుకుంటున్నారా ? ఇది శాశ్వతం!"
+        delete_and_block: "ఈ ఈ-మెయిల్ మరియు IP అడ్రస్ ను తొలగించండి మరియు <b>నిరోధించండి</b>"
+        delete_dont_block: "తొలగింపు మాత్రమే"
+        deleted: "ఈ సభ్యుడు తొలగించబడ్డాడు"
+        delete_failed: "వినియోగదారుని తొలగించుటలో ఒక దోషం ఉంది.వినియోగదారుని తొలగించడానికి   ప్రయత్నించకముందే టపాలు అన్ని తొలగించండి."
+        send_activation_email: "చేతన ఈమెయిల్ పంపు"
+        activation_email_sent: "ఒక చేతన ఈమెయిల్ పంపాము."
+        send_activation_email_failed: "చేతన ఈమెయిల్ పంపుటలో దోషం  %{error}"
+        activate: "ఖాతా క్రియాశీలం చేయి"
+        activate_failed: "సభ్యుడిని చేతనం చేయుటలో దోషం"
+        deactivate_account: "ఖాతా అక్రియాశీలం చేయి"
+        deactivate_failed: "వినియోగదారుని నిర్వీర్యం చేసే ఒక సమస్య ఉంది."
+        unblock_failed: 'వినియోగదారుని అనుమతించడంలో ఒక సమస్య ఉంది.'
+        block_failed: 'వినియోగదారుని ఒక సమస్య నిరోధిస్తుంది.'
+        deactivate_explanation: "క్రియారహిత వినియోగదారు తప్పనిసరిగా వారి ఈ-మెయిల్ ను సరిదిద్దాలి."
+        suspended_explanation: "నిలిపివేయబడ్డ వినియోగదారు లాగిన్ కాలేరు."
+        block_explanation: "అడ్డగింపబడ్డ వినియోగదారు టపాలు చేయలేరు లేదా విషయాలు మొదలుపెట్టలేరు."
+        trust_level_change_failed: "వినియోగదారు నమ్మకపు స్థాయి మార్చడానికి సమస్య ఉంది."
+        grant_admin_failed: "నిర్వాహక అధికారాలను మంజూరు చేయుటలో సమస్య ఉంది."
+        grant_moderation_failed: "నిర్వాహక అధికారాలు మంజూరుచేయుటలో సమస్య ఉంది."
+        suspend_modal_title: "సభ్యుడిని సస్పెండు చేయి"
+        trust_level_2_users: "నమ్మకం స్థాయి 2 సభ్యులు"
+        trust_level_3_requirements: "నమ్మకపు స్థాయి 3 అవసరాలు"
+        trust_level_locked_tip: "నమ్మకపు స్థాయి బంధింపబడిఉంది, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించలేదు లేదా స్థాయి తగ్గించలేదు"
+        trust_level_unlocked_tip: "నమ్మకపు స్థాయి బంధింపబడలేదు, వ్యవస్థ వినియోగదారుని ప్రోత్సాహించవచ్చు లేదా స్థాయి తగ్గించవచ్చు"
+        lock_trust_level: "నమ్మకపు స్థాయి ని బంధించు"
+        unlock_trust_level: "నమ్మకపు స్థాయిని వదిలేయి"
+        tl3_requirements:
+          title: "నమ్మకపు స్థాయి 3 అవసరాలు"
+          table_title: "గత 100 రోజుల్లో:"
+          value_heading: "విలువ"
+          requirement_heading: "అవసరం"
+          visits: "సందర్శనాలు"
+          days: "రోజులు"
+          topics_replied_to: "విషయాలు సమాధానంగా"
+          topics_viewed: "చూసిన విషయాలు "
+          topics_viewed_all_time: "చూసిన విషయాలు (అన్ని వేళలా)"
+          posts_read: "చదివిన టపాలు"
+          posts_read_all_time: "చదివిన టపాలు (అన్ని వేళలా)"
+          flagged_posts: "కేతనించిన టపాలు"
+          flagged_by_users: "ఏ వినియోగదారులు కేతనించారు"
+          likes_given: "ఇచ్చిన ఇష్టాలు"
+          likes_received: "అందుకున్న ఇష్టాలు"
+          likes_received_days: "స్వీకరించిన ఇష్టాలు:ప్రత్యేకమైన రోజులు"
+          likes_received_users: "స్వీకరించిన ఇష్టాలు:ప్రత్యేకమైన వినియోగదారులు"
+          qualifies: "నమ్మకపు స్థాయి 3 కు అర్హత ."
+          does_not_qualify: "నమ్మకపు స్థాయి 3 కు అర్హత లేదు."
+          will_be_promoted: "త్వరలో స్థాయి పెరుగును."
+          will_be_demoted: "త్వరలో స్థాయి తగ్గును."
+          on_grace_period: "ప్రస్తుతం స్థాయి పెరుగుదల అదనపుకాలంలో ఉంది, స్థాయి తగ్గింపు జరగదు."
+          locked_will_not_be_promoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది. స్థాయి పెరుగుదల ఉండదు."
+          locked_will_not_be_demoted: "నమ్మకపు స్థాయి బంధించబడి ఉంది.ఎప్పటికీ స్థానాన్ని తగ్గించలేరు."
+        sso:
+          title: "ఒక సైన్ ఆన్"
+          external_id: "బాహ్య ఐడీ"
+          external_username: "సభ్యనామం"
+          external_name: "పేరు"
+          external_email: "ఈమెయిల్"
+          external_avatar_url: "ప్రవర బొమ్మ యూఆర్ యల్"
+      user_fields:
+        title: "సభ్య క్షేత్రాలు"
+        help: "వినియోగదారులు పూర్తి చేసిన వాటిని జోడించండి."
+        create: "సభ్య క్షేత్రం సృష్టించు"
+        untitled: "పేరులేని"
+        name: "క్షేత్రం పేరు"
+        type: "క్షేత్రం టైపు"
+        description: "క్షేత్రం వివరణ"
+        save: "భద్రపరచు"
+        edit: "సవరణ"
+        delete: "తొలగించు"
+        cancel: "రద్దుచేయి"
+        delete_confirm: "మీరు నిజంగా ఈ సభ్య క్షేత్రం తొలగించాలనుకుంటున్నారా?"
+        required:
+          title: "సైన్అప్ అవసరమా?"
+          enabled: "కావాలి"
+          disabled: "అవసరంలేదు"
+        editable:
+          title: "సైన్అప్ తరువాత సవరించగలమా?"
+          enabled: "సవరించదగిన"
+          disabled: "సవరించలేని"
+        show_on_profile:
+          title: "ప్రజా ప్రవరపై చూపు?"
+          enabled: "ప్రవరపై చూపు"
+          disabled: "ప్రవరపై చూపబడలేదు"
+        field_types:
+          text: 'పాఠ్య క్షేత్రం'
+          confirm: 'ఖాయము'
+      site_text:
+        none: "సవరణను ప్రారంభించడానికి విషయం రకాన్ని ఎంచుకోండి."
+        title: 'పాఠ్య కాంటెంటు'
+      site_settings:
+        show_overriden: 'ప్రాబల్యం ఉన్న వాటిని మాత్రమే చూపించు'
+        title: 'అమరికలు'
+        reset: 'రీసెట్'
+        none: 'ఏదీకాదు'
+        no_results: "ఏ ఫలితాలూ కనిపించలేదు."
+        clear_filter: "శుభ్రపరుచు"
+        add_url: "URL కలుపు"
+        categories:
+          all_results: 'అన్నీ'
+          required: 'కావాలి'
+          basic: 'ప్రాథమిక సెటప్'
+          users: 'వాడుకరులు'
+          posting: 'రాస్తున్నారు'
+          email: 'మెయిల్'
+          files: 'దస్త్రాలు'
+          trust: 'నమ్మకపు స్థాయిలు'
+          security: 'సెక్యూరిటీ'
+          onebox: "ఒకపెట్టె"
+          seo: 'యస్ ఈ ఓ'
+          spam: 'స్పాము'
+          rate_limits: 'రోట్ హద్దులు'
+          developer: 'డవలపరు'
+          embedding: "దేనిలోనైనా ఒదుగు"
+          legal: "న్యాయ"
+          uncategorized: 'ఇతర'
+          backups: "బ్యాకప్పులు"
+          login: "లాగిన్"
+          plugins: "చొప్పింతలు"
+      badges:
+        title: బ్యాడ్జీలు
+        new_badge: కొత్త బ్యాడ్జీ
+        new: 'కొత్త '
+        name: పేరు
+        badge: బ్యాడ్జీ
+        display_name: ప్రదర్శించు పేరు
+        description: వివరణ
+        badge_type: బ్యాడ్జి టైపు
+        badge_grouping: గుంపు
+        badge_groupings:
+          modal_title: బ్యాడ్జ్ గ్రూపులు
+        granted_by: ఇచ్చిన వారు
+        granted_at: ఇచ్చిన సమయం
+        reason_help: (టపాకి లేదా విషయానికి లంకె )
+        save: భద్రపరచు
+        delete: తొలగించు
+        delete_confirm: మీరు నిజంగా ఈ బ్యాడ్జి తొలగించాలనుకుంటున్నారా?
+        revoke: రివోక్
+        reason: కారణం
+        revoke_confirm: 'మీరు నిజంగా ఈ బ్యాడ్జిని రివోక్ చేయాలనుకుంటున్నారా? '
+        edit_badges: బ్యాడ్జీలు సవరించు
+        grant_badge: బ్యాడ్జి ఇవ్వు
+        granted_badges: ఇచ్చిన బ్యాడ్జీలు
+        grant: ఇవ్వు
+        no_user_badges: "%{పేరు} ఏ చిహ్నాలు మంజూరు చేయలేదు."
+        no_badges: మంజూరు చేసే చిహ్నాలు లేవు.
+        none_selected: "ఆరంభించడానికి ఒక బ్యాడ్జీని ఎంచుకోండి."
+        allow_title: చిహ్నాన్ని శీర్షికగా వాడుకోవడానికి అనుమతి ఇవ్వండి.
+        multiple_grant: అనేకసార్లు మంజూరు చేయవచ్చు
+        listable: బహిరంగ చిహ్నాల పుటలో చూపండి
+        enabled: బ్యాడ్జి చేతనం చేయి
+        icon: ఐకాన్
+        image: బొమ్మ
+        icon_help: "చిత్రానికి బ్రహ్మాండమైన ఫాంట్  లేదా URL గాని ఉపయోగించండి"
+        target_posts: టపాలు లక్ష్యంగా ప్రశ్న
+        show_posts: చిహ్నాల పుటలో మంజూరు అయిన చిహ్నాన్ని చూపండి
+        trigger: ట్రిగ్గరు
+        trigger_type:
+          none: "రోజు ఉన్నతీకరించు"
+          post_action: "వినియోగదారుడు టపాపై పనిచేసినపుడు"
+          post_revision: "వినియోగదారుడు టపా సృష్టిస్తున్నప్పుడు లేదా సవరిస్తున్నప్పుడు"
+          trust_level_change: "వినియోగదారుడు నమ్మకపుస్థాయి మార్చినప్పుడు"
+          user_change: "వినియోగదారుడు సవరిస్తున్నపుడు లేదా సృష్టిస్తున్నపుడు"
+        preview:
+          sql_error_header: "ప్రశ్నతో దోషం ఉంది."
+          bad_count_warning:
+            header: "హెచ్చరిక!"
+          grant_count:
+            zero: "ఏ చిహ్నాలు కేటాయించలేదు."
+            one: "<b>1</b> కేటాయించిన చిహ్నం."
+            other: "<b>%{లెక్క}</b> కేటాయించిన చిహ్నాలు."
+          sample: "నమూనా:"
+          grant:
+            with: <span class="username">%{వినియోగదారు పేరు}</span>
+            with_post: <span class="username">%{వినియోగదారు పేరు}</span> టపా కొరకు%{లంకె}
+            with_post_time: <span class="సభ్యుల పేరు">%{username}</span> for post in %{link} at <span class="సమయం">%{time}</span>
+      emoji:
+        title: "ఇమోజి"
+        add: "కొత్త ఇమోజి కలుపు"
+        name: "పేరు"
+        image: "బొమ్మ"
+        delete_confirm: "మీరు నిజంగా %{పేరు}: ఎమోజీ ని తొలగించాలనుకుంటున్నారా ?"
+    lightbox:
+      download: "దిగుమతించు"
+    search_help:
+      title: 'సహాయం వెతుకు'
+    keyboard_shortcuts_help:
+      title: 'కీబోర్డు షార్ట్ కట్లు'
+      jump_to:
+        title: 'వెళ్లు'
+        home: '<b>g</b>, <b>h</b> హోమ్ (తాజా)'
+        latest: '<b>g</b>, <b>l</b> తాజా'
+        new: '<b>g</b>, <b>n</b> కొత్త'
+        unread: '<b>g</b>, <b>u</b> చదవనవి'
+        categories: '<b>g</b>, <b>c</b> వర్గాలు'
+        top: '<b>g</b>, <b>t</b> పైన'
+      navigation:
+        title: 'నావిగేషను'
+        jump: '<b>#</b> టపాకు వెళ్లు #'
+        back: '<b>u</b> వెనుకకు'
+        open: '<b>o</b> or <b>ప్రవేశం</b> ఎంచుకున్న విషయం తెరువు'
+        next_prev: '<b>మార్పు</b>+<b>j</b>/<b>మార్పు</b>+<b>k</b> తర్వాతి/ముందరి విభాగం'
+      application:
+        title: 'అనువర్తనం'
+        create: '<b>c</b> కొత్త టపా సృష్టించు'
+        notifications: '<b>n</b> తెరచిన ప్రకటనలు'
+        site_map_menu: '<b>=</b> సైట్ మెనూ తెరువు'
+        user_profile_menu: '<b>p</b> యూజర్ మెనూ తెరువు'
+        show_incoming_updated_topics: '<b>.</b> నవీకరించిన విషయాలను చూపించండి'
+        search: '<b>/</b> వెతుకు'
+        help: '<b>?</b> కీ బోర్డ్ సహాయాన్ని తెరువు'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> తీసివేసిన కొత్త/టపాలు'
+        dismiss_topics: '<b>x</b>, <b>t</b> తీసివేసిన విషయాలు'
+      actions:
+        title: 'చర్యలు'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> విషయం చేర్చు/విడదీయు'
+        share_topic: '<b>shift</b>+<b>s</b> విషయం పంచు'
+        share_post: '<b>s</b> టపా పంచు'
+        reply_as_new_topic: '<b>t</b> లంకె విషయంగా సమాధానం'
+        reply_topic: '<b>shift</b>+<b>r</b> టపా కి సమాధానం'
+        reply_post: '<b>r</b> టపా కి సమాధానం'
+        like: '<b>l</b> టపా ని ఇష్టపడు'
+        flag: '<b>!</b> టపా కేతనం'
+        bookmark: '<b>b</b>టపా పేజీక'
+        edit: '<b>e</b> టపా సవరణ'
+        delete: '<b>d</b> టపా తొలగించు'
+        mark_muted: '<b>m</b>, <b>m</b> విషయాన్ని ఆపివేయండి'
+        mark_regular: '<b>m</b>, <b>r</b> నిత్య (అప్రమేయ) విషయం'
+        mark_tracking: '<b>m</b>, <b>t</b> విషయం వెతుకు'
+        mark_watching: '<b>m</b>, <b>w</b> చూసిన విషయం'
+    badges:
+      title: బ్యాడ్జీలు
+      allow_title: "శీర్షికగా కూడా వాడవచ్చు"
+      multiple_grant: "పలుమార్లు బహూకరించవచ్చు"
+      more_badges:
+        one: "+%{count} కంటే"
+        other: "+%{count} ఇంకా"
+      granted:
+        one: "1 మంజూరు"
+        other: "%{లెక్క} మంజూరు"
+      select_badge_for_title: మీ శీర్షికగా ఉపయోగించడానికి ఒక చిహ్నాన్ని ఎంపిక చేయండి.
+      none: "<none>"
+      badge_grouping:
+        getting_started:
+          name: మొదలుపెట్టడం
+        community:
+          name: కమ్యునిటీ
+        trust_level:
+          name: నమ్మకపు స్థాయి
+        other:
+          name: ఇతర
+        posting:
+          name: రాస్తున్నారు
+      badge:
+        editor:
+          name: ఎడిటరు
+          description: తొలి టపా సవరణ
+        basic_user:
+          name: ప్రాథమిక
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">మంజూరు చేసిన</a> అన్ని ఆవశ్యక సామాజిక చర్యలు
+        member:
+          name: సభ్యుడు
+          description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">మంజూరు చేసిన </a> ఆహ్వానాలు
+        regular:
+          name: రెగ్యులరు
+        leader:
+          name: లీడరు
+        welcome:
+          name: సుస్వాగతం
+          description: ఒక ఇష్టాన్ని అందుకున్నారు
+        autobiographer:
+          name: ఆత్మకధావాది
+          description: వినియోగదారు నింపిన <a href="/my/preferences">ఫ్రొపైల్ </a> సమాచారం
+        anniversary:
+          name: వార్షికోత్సవం
+          description: ఒక సంవత్సరం నుండి చురుకైన సభ్యుడు, కనీసం ఒకసారి టపా చేశాడు
+        nice_post:
+          name: మంచి టపా
+          description: ఒక టపా 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        good_post:
+          name: చాలా మంచి టపా
+          description: ఒక టపా 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        great_post:
+          name: బహుమంచి టపా
+          description: ఒక టపా 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        nice_topic:
+          name: మంచి విషయం
+          description: ఒక విషయం 10 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        good_topic:
+          name: చాలా మంచి విషయం
+          description: ఒక విషయం 25 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        great_topic:
+          name: బహుమంచి విషయం
+          description: ఒక విషయం 50 ఇష్టాలు స్వీకరిస్తే , ఈ చిహ్నం అనేక సార్లు మంజూరు అవుతుంది
+        nice_share:
+          name: మంచి పంపకం
+          description: ఒక టపాను 25మంది సభ్యులతో పంచుకున్నారు
+        good_share:
+          name: చాలామంచి పంపకం
+          description: ఒక టపాను 300మంది సభ్యులతో పంచుకున్నారు
+        great_share:
+          name: బహుమంచి పంపకం
+          description: ఒక టపాను 1000 మంది సభ్యులతో పంచుకున్నారు
+        first_like:
+          name: తొలి ఇష్టం
+          description: టపాను ఇష్టపడ్డారు
+        first_flag:
+          name: తొలి కేతనం
+          description: ఒక టపాను కేతనించారు
+        first_share:
+          name: తొలి పంపకం
+          description: ఒక టపాను పంచారు
+        first_link:
+          name: తొలి లంకె
+          description: వేరొక విషయానికి అంతర్గతంగా లంకె కలిపారు
+        first_quote:
+          name: తొలి కోట్
+          description: ఒక సభ్యుడిని కోట్ చేసారు
+        read_guidelines:
+          name: మార్గదర్శకాలు చదువు
+          description: <a href="/guidelines">కమ్యునిటీ మార్గదర్శకాలు</a> చదవండి
+        reader:
+          name: చదువరి
+          description: 100 టపాల కన్నా ఎక్కువ ఉన్న అంశంలో ప్రతి టపా చదవండి
+    google_search: |
+      <h2>గూగుల్ తో వెతుకు</h2>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">గూగుల్</button>
+      </form>
+      </p>

@@ -192,6 +192,9 @@ class Search
         elsif word == 'in:private'
           @search_pms = true
           nil
+        elsif word == 'in:bookmarks'
+          @bookmarked_only = true
+          nil
         else
           word
         end
@@ -291,7 +294,9 @@ class Search
                   .where("topics.deleted_at" => nil)
                   .where("topics.visible")
 
-      if opts[:private_messages]
+      is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
+
+      if opts[:private_messages] || (is_topic_search && @search_context.private_message?)
          posts = posts.where("topics.archetype =  ?", Archetype.private_message)
 
          unless @guardian.is_admin?
@@ -301,7 +306,7 @@ class Search
          posts = posts.where("topics.archetype <> ?", Archetype.private_message)
       end
 
-      if @search_context.present? && @search_context.is_a?(Topic)
+      if is_topic_search
         posts = posts.joins('JOIN users u ON u.id = posts.user_id')
         posts = posts.where("posts.raw  || ' ' || u.username || ' ' || u.name ilike ?", "%#{@term}%")
       else
@@ -329,11 +334,15 @@ class Search
       end
 
       if @guardian.user
-        if @liked_only
+        if @liked_only || @bookmarked_only
+
+          post_action_type = PostActionType.types[:like] if @liked_only
+          post_action_type = PostActionType.types[:bookmark] if @bookmarked_only
+
           posts = posts.where("posts.id IN (
                                 SELECT pa.post_id FROM post_actions pa
                                 WHERE pa.user_id = #{@guardian.user.id} AND
-                                      pa.post_action_type_id = #{PostActionType.types[:like]}
+                                      pa.post_action_type_id = #{post_action_type}
                              )")
         end
 
@@ -417,7 +426,7 @@ class Search
 
     def self.ts_query(term, locale = nil, joiner = "&")
       locale = Post.sanitize(locale) if locale
-      all_terms = term.gsub(/[*:()&!'"]/,'').squish.split
+      all_terms = term.gsub(/[\p{P}\p{S}]+/, ' ').squish.split
       query = Post.sanitize(all_terms.map {|t| "#{PG::Connection.escape_string(t)}:*"}.join(" #{joiner} "))
       "TO_TSQUERY(#{locale || query_locale}, #{query})"
     end

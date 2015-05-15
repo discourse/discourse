@@ -36,7 +36,7 @@ module Jobs
             message = UserNotifications.mailing_list_notify(user, post)
             Email::Sender.new(message, :mailing_list, user).send
           rescue => e
-            Discourse.handle_exception(e, error_context(
+            Discourse.handle_job_exception(e, error_context(
                 args,
                 "Sending post to mailing list subscribers", {
                 user_id: user.id,

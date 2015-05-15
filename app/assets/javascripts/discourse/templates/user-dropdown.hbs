@@ -8,6 +8,9 @@
     </li>
     <li>{{#link-to 'userActivity.bookmarks' currentUser}}{{i18n 'user.bookmarks'}}{{/link-to}}</li>
     <li>{{#link-to 'preferences' currentUser}}{{i18n 'user.preferences'}}{{/link-to}}</li>
+    {{#if allowAnon}}
+      <li><a href {{action 'toggleAnon'}}>{{#if isAnon}}{{i18n 'switch_from_anon'}}{{else}}{{i18n 'switch_to_anon'}}{{/if}}</a></li>
+    {{/if}}
     <li>{{d-button action="logout" class="btn-danger right logout" icon="sign-out" label="user.log_out"}}</li>
   </ul>
 </section>

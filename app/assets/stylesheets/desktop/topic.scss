@@ -41,7 +41,6 @@
     line-height: 1.2em;
     overflow: hidden;
     a {color: $primary;}
-    margin-bottom: 5px;
   }
 
 
@@ -114,7 +113,6 @@ a:hover.reply-new {
   width: 0;
   bottom: 0;
   z-index: 500;
-  outline: 1px solid transparent;
   &.docked {
     position: absolute;
     bottom: -70px;

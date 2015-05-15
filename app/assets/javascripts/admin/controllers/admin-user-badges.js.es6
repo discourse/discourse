@@ -13,6 +13,42 @@ export default Ember.ArrayController.extend({
   sortProperties: ['granted_at'],
   sortAscending: false,
 
+  groupedBadges: function(){
+    const badges = this.get('model');
+
+    var grouped = _.groupBy(badges, badge => badge.badge_id);
+
+    var expanded = [];
+    const expandedBadges = badges.get('expandedBadges');
+
+    _(grouped).each(function(badges){
+      var lastGranted = badges[0].granted_at;
+
+      _.each(badges, function(badge) {
+        lastGranted = lastGranted < badge.granted_at ? badge.granted_at : lastGranted;
+      });
+
+      if(badges.length===1 || _.include(expandedBadges, badges[0].badge.id)){
+        _.each(badges, badge => expanded.push(badge));
+        return;
+      }
+
+      var result = {
+        badge: badges[0].badge,
+        granted_at: lastGranted,
+        badges: badges,
+        count: badges.length,
+        grouped: true
+      };
+
+      expanded.push(result);
+    });
+
+    return _(expanded).sortBy(group => group.granted_at).reverse().value();
+
+
+  }.property('model', 'model.@each', 'model.expandedBadges.@each'),
+
   /**
     Array of badges that have not been granted to this user.
 
@@ -32,7 +68,7 @@ export default Ember.ArrayController.extend({
       }
     });
 
-    return badges;
+    return _.sortBy(badges, "name");
   }.property('badges.@each', 'model.@each'),
 
   /**
@@ -45,6 +81,12 @@ export default Ember.ArrayController.extend({
 
   actions: {
 
+    expandGroup: function(userBadge){
+      const model = this.get('model');
+      model.set('expandedBadges', model.get('expandedBadges') || []);
+      model.get('expandedBadges').pushObject(userBadge.badge.id);
+    },
+
     /**
       Grant the selected badge to the user.
 
@@ -53,7 +95,8 @@ export default Ember.ArrayController.extend({
     **/
     grantBadge: function(badgeId) {
       var self = this;
-      Discourse.UserBadge.grant(badgeId, this.get('user.username')).then(function(userBadge) {
+      Discourse.UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(function(userBadge) {
+        self.set('badgeReason', '');
         self.pushObject(userBadge);
         Ember.run.next(function() {
           // Update the selected badge ID after the combobox has re-rendered.

@@ -20,5 +20,4 @@ class LocaleSiteSetting < EnumSiteSetting
     end
   end
 
-  private_class_method :supported_locales
 end

@@ -4,7 +4,7 @@ class UploadsController < ApplicationController
 
   def create
     file = params[:file] || params[:files].first
-    filesize = File.size(file.tempfile)
+    filesize = file.tempfile.size
     upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, { content_type: file.content_type })
 
     if upload.errors.empty? && current_user.admin?

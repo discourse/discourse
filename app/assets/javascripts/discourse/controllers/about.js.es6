@@ -1,9 +1,11 @@
-import ObjectController from 'discourse/controllers/object';
+export default Ember.Controller.extend({
+  faqOverriden: Ember.computed.gt('siteSettings.faq_url.length', 0),
 
-export default ObjectController.extend({
   contactInfo: function() {
-    if (Discourse.SiteSettings.contact_email) {
-      return I18n.t('about.contact_info', {contact_email: Discourse.SiteSettings.contact_email});
+    if (this.siteSettings.contact_url) {
+      return I18n.t('about.contact_info', {contact_info: "<a href='"+ this.siteSettings.contact_url +"' target='_blank'>"+ this.siteSettings.contact_url +"</a>"});
+    } else if (this.siteSettings.contact_email) {
+      return I18n.t('about.contact_info', {contact_info: this.siteSettings.contact_email});
     } else {
       return null;
     }

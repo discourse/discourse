@@ -1,15 +1,9 @@
-var asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
 
 module("Discourse.NavItem", {
   setup: function() {
     Ember.run(function() {
+      const asianCategory = Discourse.Category.create({name: '确实是这样', id: 343434});
       Discourse.Site.currentProp('categories').addObject(asianCategory);
-    });
-  },
-
-  teardown: function() {
-    Em.run(function() {
-      Discourse.Site.currentProp('categories').removeObject(asianCategory);
     });
   }
 });

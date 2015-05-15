@@ -50,46 +50,33 @@ class Upload < ActiveRecord::Base
   #   - content_type
   #   - origin
   def self.create_for(user_id, file, filename, filesize, options = {})
-    # compute the sha
     sha1 = Digest::SHA1.file(file).hexdigest
-    # check if the file has already been uploaded
-    upload = Upload.find_by(sha1: sha1)
-    # delete the previously uploaded file if there's been an error
-    if upload && upload.url.blank?
-      upload.destroy
-      upload = nil
-    end
-    # create the upload
-    unless upload
-      # initialize a new upload
-      upload = Upload.new(
-        user_id: user_id,
-        original_filename: filename,
-        filesize: filesize,
-        sha1: sha1,
-        url: ""
-      )
-      # trim the origin if any
-      upload.origin = options[:origin][0...1000] if options[:origin]
 
-      # check the size of the upload
-      if FileHelper.is_image?(filename)
-        if SiteSetting.max_image_size_kb > 0 && filesize >= SiteSetting.max_image_size_kb.kilobytes
-          upload.errors.add(:base, I18n.t("upload.images.too_large", max_size_kb: SiteSetting.max_image_size_kb))
-        else
-          # deal with width & height for images
-          upload = Upload.resize_image(filename, file, upload)
-        end
-      else
-        if SiteSetting.max_attachment_size_kb > 0 && filesize >= SiteSetting.max_attachment_size_kb.kilobytes
-          upload.errors.add(:base, I18n.t("upload.attachments.too_large", max_size_kb: SiteSetting.max_attachment_size_kb))
-        end
+    DistributedMutex.synchronize("upload_#{sha1}") do
+      # do we already have that upload?
+      upload = find_by(sha1: sha1)
+
+      # make sure the previous upload has not failed
+      if upload && upload.url.blank?
+        upload.destroy
+        upload = nil
       end
 
-      # make sure there is no error
-      return upload unless upload.errors.empty?
+      # return the previous upload if any
+      return upload unless upload.nil?
 
-      # create a db record (so we can use the id)
+      # create the upload otherwise
+      upload = Upload.new
+      upload.user_id           = user_id
+      upload.original_filename = filename
+      upload.filesize          = filesize
+      upload.sha1              = sha1
+      upload.url               = ""
+      upload.origin            = options[:origin][0...1000] if options[:origin]
+
+      # deal with width & height for images
+      upload = resize_image(filename, file, upload) if FileHelper.is_image?(filename)
+
       return upload unless upload.save
 
       # store the file and update its url
@@ -100,10 +87,10 @@ class Upload < ActiveRecord::Base
       else
         upload.errors.add(:url, I18n.t("upload.store_failure", { upload_id: upload.id, user_id: user_id }))
       end
-    end
 
-    # return the uploaded file
-    upload
+      # return the uploaded file
+      upload
+    end
   end
 
   def self.resize_image(filename, file, upload)

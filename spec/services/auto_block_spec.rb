@@ -144,7 +144,7 @@ describe SpamRule::AutoBlock do
           enforcer = described_class.new(user)
           enforcer.expects(:num_spam_flags_against_user).never
           enforcer.expects(:num_users_who_flagged_spam_against_user).never
-          enforcer.block?.should eq(false)
+          expect(enforcer.block?).to eq(false)
         end
       end
 

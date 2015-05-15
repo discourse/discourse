@@ -40,26 +40,54 @@ describe CookedPostProcessor do
 
   context ".post_process_images" do
 
-    context "with image_sizes" do
-
-      let(:post) { build(:post_with_image_urls) }
-      let(:cpp) { CookedPostProcessor.new(post, image_sizes: {"http://foo.bar/image.png" => {"width" => 111, "height" => 222}}) }
-
-      before { cpp.post_process_images }
-
-      it "works" do
+    shared_examples "leave dimensions alone" do
+      it "doesn't use them" do
         # adds the width from the image sizes provided when no dimension is provided
-        expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
+        expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="" height=""/)
         # adds the width from the image sizes provided
         expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
         expect(cpp).to be_dirty
+      end
+    end
+
+    context "with image_sizes" do
+      let(:post) { Fabricate(:post_with_image_urls) }
+      let(:cpp) { CookedPostProcessor.new(post, image_sizes: image_sizes) }
+
+      before { cpp.post_process_images }
+
+      context "valid" do
+        let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 111, "height" => 222}} }
+
+        it "use them" do
+          # adds the width from the image sizes provided when no dimension is provided
+          expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
+          # adds the width from the image sizes provided
+          expect(cpp.html).to match(/src="http:\/\/domain.com\/picture.jpg" width="50" height="42"/)
+          expect(cpp).to be_dirty
+        end
+      end
+
+      context "invalid width" do
+        let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 0, "height" => 222}} }
+        include_examples "leave dimensions alone"
+      end
+
+      context "invalid height" do
+        let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 111, "height" => 0}} }
+        include_examples "leave dimensions alone"
+      end
+
+      context "invalid width & height" do
+        let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 0, "height" => 0}} }
+        include_examples "leave dimensions alone"
       end
 
     end
 
     context "with unsized images" do
 
-      let(:post) { build(:post_with_unsized_images) }
+      let(:post) { Fabricate(:post_with_unsized_images) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       it "adds the width and height to images that don't have them" do
@@ -74,7 +102,7 @@ describe CookedPostProcessor do
     context "with large images" do
 
       let(:upload) { Fabricate(:upload) }
-      let(:post) { build(:post_with_large_image) }
+      let(:post) { Fabricate(:post_with_large_image) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do
@@ -101,7 +129,7 @@ describe CookedPostProcessor do
     context "with title" do
 
       let(:upload) { Fabricate(:upload) }
-      let(:post) { build(:post_with_large_image_and_title) }
+      let(:post) { Fabricate(:post_with_large_image_and_title) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
       before do

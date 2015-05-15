@@ -60,6 +60,22 @@ describe PostTiming do
     end
   end
 
+  describe 'safeguard' do
+    it "doesn't store timings that are larger than the account lifetime" do
+      user = Fabricate(:user, created_at: 3.minutes.ago)
+      post = Fabricate(:post)
+
+      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 123]])
+      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      expect(msecs).to eq(123)
+
+      PostTiming.process_timings(user, post.topic_id, 1, [[post.post_number, 10.minutes.to_i * 1000]])
+      msecs = PostTiming.where(post_number: post.post_number, user_id: user.id).pluck(:msecs)[0]
+      expect(msecs).to eq(123)
+    end
+
+  end
+
   describe 'process_timings' do
 
     # integration test
@@ -74,12 +90,10 @@ describe PostTiming do
       PostAction.act(user2, post, PostActionType.types[:like])
 
       expect(post.user.unread_notifications).to eq(1)
-      expect(post.user.unread_notifications_by_type).to eq({Notification.types[:liked] => 1 })
 
       PostTiming.process_timings(post.user, post.topic_id, 1, [[post.post_number, 100]])
 
       post.user.reload
-      expect(post.user.unread_notifications_by_type).to eq({})
       expect(post.user.unread_notifications).to eq(0)
 
     end

@@ -93,17 +93,12 @@
   .toggle-preview {
     right: 5px;
   }
-  #file-uploading {
-    left: 51%;
-    font-size: 0.857em;
-    color: $primary;
-  }
-  #draft-status {
+  #draft-status, #file-uploading {
     right: 51%;
     color: $primary;
-    &.flash {
-      color: $danger;
-    }
+  }
+  #file-uploading {
+    font-size: 0.857em;
   }
   transition: height 0.4s ease;
   width: 100%;
@@ -218,7 +213,7 @@
       display: inline-block;
       .select2-container {
         width: 400px;
-        margin-top: 6px;
+        margin-top: 5px;
         a {
           padding-top: 4px;
           height: 28px;
@@ -329,6 +324,10 @@
 
 .reply-to {
   margin-bottom: 10px;
+
+  .reply-to-glyph {
+    color: scale-color($primary, $lightness: 50%);
+  }
 }
 
 #reply-control {

@@ -15,33 +15,33 @@
     </li>
     <li>
       <a {{bind-attr href="topic.lastPostUrl"}}>
-      <h4>{{i18n 'last_post_lowercase'}}</h4>
+      <h4>{{i18n 'last_reply_lowercase'}}</h4>
       {{avatar details.last_poster imageSize="tiny"}}
       {{format-date topic.last_posted_at}}
       </a>
     </li>
     <li>
-      {{number topic.posts_count}}
-      <h4>{{i18n 'posts_lowercase'}}</h4>
+      {{number topic.replyCount}}
+      <h4>{{i18n 'replies_lowercase' count=topic.replyCount}}</h4>
     </li>
     <li class='secondary'>
       {{number topic.views class=topic.viewsHeat}}
-      <h4>{{i18n 'views_lowercase'}}</h4>
+      <h4>{{i18n 'views_lowercase' count=topic.views}}</h4>
     </li>
     <li class='secondary'>
       {{number topic.participant_count}}
-      <h4>{{i18n 'users_lowercase'}}</h4>
+      <h4>{{i18n 'users_lowercase' count=topic.participant_count}}</h4>
     </li>
     {{#if topic.like_count}}
       <li class='secondary'>
         {{number topic.like_count}}
-        <h4>{{i18n 'likes_lowercase'}}</h4>
+        <h4>{{i18n 'likes_lowercase' count=topic.like_count}}</h4>
       </li>
     {{/if}}
     {{#if details.links.length}}
       <li class='secondary'>
         {{number details.links.length}}
-        <h4>{{i18n 'links_lowercase'}}</h4>
+        <h4>{{i18n 'links_lowercase' count=details.links.length}}</h4>
       </li>
     {{/if}}
     {{#if showPosterAvatar}}

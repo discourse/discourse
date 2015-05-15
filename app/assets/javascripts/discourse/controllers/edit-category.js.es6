@@ -6,6 +6,10 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 export default ObjectController.extend(ModalFunctionality, {
   foregroundColors: ['FFFFFF', '000000'],
   categoryUploadUrl: '/category/uploads',
+  editingPermissions: false,
+  selectedTab: null,
+  saving: false,
+  deleting: false,
 
   parentCategories: function() {
     return Discourse.Category.list().filter(function (c) {
@@ -15,31 +19,31 @@ export default ObjectController.extend(ModalFunctionality, {
 
   // We can change the parent if there are no children
   subCategories: function() {
-    if (Em.isEmpty(this.get('id'))) { return null; }
-    return Discourse.Category.list().filterBy('parent_category_id', this.get('id'));
+    if (Em.isEmpty(this.get('model.id'))) { return null; }
+    return Discourse.Category.list().filterBy('parent_category_id', this.get('model.id'));
   }.property('model.id'),
 
-  canSelectParentCategory: Em.computed.not('isUncategorizedCategory'),
+  canSelectParentCategory: Em.computed.not('model.isUncategorizedCategory'),
 
-  onShow: function() {
+  onShow() {
     this.changeSize();
     this.titleChanged();
   },
 
   changeSize: function() {
-    if (this.present('description')) {
+    if (this.present('model.description')) {
       this.set('controllers.modal.modalClass', 'edit-category-modal full');
     } else {
       this.set('controllers.modal.modalClass', 'edit-category-modal small');
     }
-  }.observes('description'),
+  }.observes('model.description'),
 
   title: function() {
-    if (this.get('id')) {
+    if (this.get('model.id')) {
       return I18n.t("category.edit_long") + " : " + this.get('model.name');
     }
     return I18n.t("category.create") + (this.get('model.name') ? (" : " + this.get('model.name')) : '');
-  }.property('id', 'model.name'),
+  }.property('model.id', 'model.name'),
 
   titleChanged: function() {
     this.set('controllers.modal.title', this.get('title'));
@@ -47,10 +51,10 @@ export default ObjectController.extend(ModalFunctionality, {
 
   disabled: function() {
     if (this.get('saving') || this.get('deleting')) return true;
-    if (!this.get('name')) return true;
-    if (!this.get('color')) return true;
+    if (!this.get('model.name')) return true;
+    if (!this.get('model.color')) return true;
     return false;
-  }.property('saving', 'name', 'color', 'deleting'),
+  }.property('saving', 'model.name', 'model.color', 'deleting'),
 
   emailInEnabled: Discourse.computed.setting('email_in'),
 
@@ -59,80 +63,82 @@ export default ObjectController.extend(ModalFunctionality, {
   }.property('disabled', 'saving', 'deleting'),
 
   colorStyle: function() {
-    return "background-color: #" + (this.get('color')) + "; color: #" + (this.get('text_color')) + ";";
-  }.property('color', 'text_color'),
+    return "background-color: #" + this.get('model.color') + "; color: #" + this.get('model.text_color') + ";";
+  }.property('model.color', 'model.text_color'),
 
   categoryBadgePreview: function() {
-    var c = Discourse.Category.create({
-      name: this.get('categoryName'),
-      color: this.get('color'),
-      text_color: this.get('text_color'),
-      parent_category_id: parseInt(this.get('parent_category_id'),10),
-      read_restricted: this.get('model.read_restricted')
+    const model = this.get('model');
+    const c = Discourse.Category.create({
+      name: model.get('categoryName'),
+      color: model.get('color'),
+      text_color: model.get('text_color'),
+      parent_category_id: parseInt(model.get('parent_category_id'),10),
+      read_restricted: model.get('read_restricted')
     });
     return categoryBadgeHTML(c, {link: false});
-  }.property('parent_category_id', 'categoryName', 'color', 'text_color'),
+  }.property('model.parent_category_id', 'model.categoryName', 'model.color', 'model.text_color'),
 
   // background colors are available as a pipe-separated string
   backgroundColors: function() {
-    var categories = Discourse.Category.list();
+    const categories = Discourse.Category.list();
     return Discourse.SiteSettings.category_colors.split("|").map(function(i) { return i.toUpperCase(); }).concat(
                 categories.map(function(c) { return c.color.toUpperCase(); }) ).uniq();
   }.property('Discourse.SiteSettings.category_colors'),
 
   usedBackgroundColors: function() {
-    var categories = Discourse.Category.list();
+    const categories = Discourse.Category.list();
 
-    var currentCat = this.get('model');
+    const currentCat = this.get('model');
 
     return categories.map(function(c) {
       // If editing a category, don't include its color:
       return (currentCat.get('id') && currentCat.get('color').toUpperCase() === c.color.toUpperCase()) ? null : c.color.toUpperCase();
     }, this).compact();
-  }.property('id', 'color'),
+  }.property('model.id', 'model.color'),
 
   categoryName: function() {
-    var name = this.get('name') || "";
+    const name = this.get('name') || "";
     return name.trim().length > 0 ? name : I18n.t("preview");
   }.property('name'),
 
   buttonTitle: function() {
     if (this.get('saving')) return I18n.t("saving");
-    if (this.get('isUncategorizedCategory')) return I18n.t("save");
-    return (this.get('id') ? I18n.t("category.save") : I18n.t("category.create"));
-  }.property('saving', 'id'),
+    if (this.get('model.isUncategorizedCategory')) return I18n.t("save");
+    return (this.get('model.id') ? I18n.t("category.save") : I18n.t("category.create"));
+  }.property('saving', 'model.id'),
 
   deleteButtonTitle: function() {
     return I18n.t('category.delete');
   }.property(),
 
   showDescription: function() {
-    return !this.get('isUncategorizedCategory') && this.get('id');
-  }.property('isUncategorizedCategory', 'id'),
+    return !this.get('model.isUncategorizedCategory') && this.get('model.id');
+  }.property('model.isUncategorizedCategory', 'model.id'),
 
   showPositionInput: Discourse.computed.setting('fixed_category_positions'),
 
   actions: {
-    showCategoryTopic: function() {
+    showCategoryTopic() {
       this.send('closeModal');
-      Discourse.URL.routeTo(this.get('topic_url'));
+      Discourse.URL.routeTo(this.get('model.topic_url'));
       return false;
     },
 
-    editPermissions: function(){
+    editPermissions() {
       this.set('editingPermissions', true);
     },
 
-    addPermission: function(group, permission_id){
-      this.get('model').addPermission({group_name: group + "", permission: Discourse.PermissionType.create({id: permission_id})});
+    addPermission(group, id) {
+      this.get('model').addPermission({group_name: group + "",
+                                       permission: Discourse.PermissionType.create({id})});
     },
 
-    removePermission: function(permission){
+    removePermission(permission) {
       this.get('model').removePermission(permission);
     },
 
-    saveCategory: function() {
-      var self = this,
+    saveCategory() {
+      const self = this,
           model = this.get('model'),
           parentCategory = Discourse.Category.list().findBy('id', parseInt(model.get('parent_category_id'), 10));
 
@@ -155,8 +161,8 @@ export default ObjectController.extend(ModalFunctionality, {
       });
     },
 
-    deleteCategory: function() {
-      var self = this;
+    deleteCategory() {
+      const self = this;
       this.set('deleting', true);
 
       this.send('hideModal');
@@ -174,12 +180,12 @@ export default ObjectController.extend(ModalFunctionality, {
               self.flash(I18n.t('generic_error'));
             }
 
-            self.send('showModal');
+            self.send('reopenModal');
             self.displayErrors([I18n.t("category.delete_error")]);
             self.set('deleting', false);
           });
         } else {
-          self.send('showModal');
+          self.send('reopenModal');
           self.set('deleting', false);
         }
       });

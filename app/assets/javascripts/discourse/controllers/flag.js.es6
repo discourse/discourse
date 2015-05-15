@@ -2,8 +2,13 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 export default ObjectController.extend(ModalFunctionality, {
+  userDetails: null,
+  selected: null,
+  flagTopic: null,
+  message: null,
+  topicActionByName: null,
 
-  onShow: function() {
+  onShow() {
     this.set('selected', null);
   },
 
@@ -11,32 +16,31 @@ export default ObjectController.extend(ModalFunctionality, {
     if (!this.get('flagTopic')) {
       return this.get('model.flagsAvailable');
     } else {
-      var self = this,
+      const self = this,
           lookup = Em.Object.create();
 
-      _.each(this.get("actions_summary"),function(a) {
-        var actionSummary;
+      _.each(this.get("model.actions_summary"),function(a) {
         a.flagTopic = self.get('model');
-        a.actionType = Discourse.Site.current().topicFlagTypeById(a.id);
-        actionSummary = Discourse.ActionSummary.create(a);
+        a.actionType = self.site.topicFlagTypeById(a.id);
+        const actionSummary = Discourse.ActionSummary.create(a);
         lookup.set(a.actionType.get('name_key'), actionSummary);
       });
       this.set('topicActionByName', lookup);
 
-      return Discourse.Site.currentProp('topic_flag_types').filter(function(item) {
-        return _.any(self.get("actions_summary"), function(a) {
+      return this.site.get('topic_flag_types').filter(function(item) {
+        return _.any(self.get("model.actions_summary"), function(a) {
           return (a.id === item.get('id') && a.can_act);
         });
       });
     }
-  }.property('post', 'flagTopic', 'actions_summary.@each.can_act'),
+  }.property('post', 'flagTopic', 'model.actions_summary.@each.can_act'),
 
   submitEnabled: function() {
-    var selected = this.get('selected');
+    const selected = this.get('selected');
     if (!selected) return false;
 
     if (selected.get('is_custom_flag')) {
-      var len = this.get('message.length') || 0;
+      const len = this.get('message.length') || 0;
       return len >= Discourse.SiteSettings.min_private_message_post_length &&
              len <= Discourse.PostActionType.MAX_MESSAGE_LENGTH;
     }
@@ -63,26 +67,29 @@ export default ObjectController.extend(ModalFunctionality, {
   }.property('selected.is_custom_flag'),
 
   actions: {
-    takeAction: function() {
+    takeAction() {
       this.send('createFlag', {takeAction: true});
-      this.set('hidden', true);
+      this.set('model.hidden', true);
     },
 
-    createFlag: function(opts) {
-      var self = this;
-      var postAction; // an instance of ActionSummary
+    createFlag(opts) {
+      const self = this;
+      let postAction; // an instance of ActionSummary
       if (!this.get('flagTopic')) {
-        postAction = this.get('actionByName.' + this.get('selected.name_key'));
+        postAction = this.get('model.actionByName.' + this.get('selected.name_key'));
       } else {
         postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
       }
-      var params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
-
-      if (opts) params = $.extend(params, opts);
+      let params = this.get('selected.is_custom_flag') ? {message: this.get('message')} : {};
+      if (opts) { params = $.extend(params, opts); }
 
       this.send('hideModal');
-      postAction.act(params).then(function(result) {
+
+      postAction.act(this.get('model'), params).then(function() {
         self.send('closeModal');
+        if (params.message) {
+          self.set('message', '');
+        }
       }, function(errors) {
         self.send('closeModal');
         if (errors && errors.responseText) {
@@ -93,7 +100,7 @@ export default ObjectController.extend(ModalFunctionality, {
       });
     },
 
-    changePostActionType: function(action) {
+    changePostActionType(action) {
       this.set('selected', action);
     },
   },
@@ -111,12 +118,12 @@ export default ObjectController.extend(ModalFunctionality, {
   usernameChanged: function() {
     this.set('userDetails', null);
     this.fetchUserDetails();
-  }.observes('username'),
+  }.observes('model.username'),
 
   fetchUserDetails: function() {
-    if( Discourse.User.currentProp('staff') && this.get('username') ) {
-      var flagController = this;
-      Discourse.AdminUser.find(this.get('username').toLowerCase()).then(function(user){
+    if( Discourse.User.currentProp('staff') && this.get('model.username') ) {
+      const flagController = this;
+      Discourse.AdminUser.find(this.get('model.username').toLowerCase()).then(function(user){
         flagController.set('userDetails', user);
       });
     }

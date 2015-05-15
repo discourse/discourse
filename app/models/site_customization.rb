@@ -139,7 +139,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def self.link_css_tag(href)
-    href = (GlobalSetting.cdn_url || "") + "#{href}&__ws=#{Discourse.current_hostname}"
+    href = (GlobalSetting.cdn_url || "") + "#{GlobalSetting.relative_url_root}#{href}&__ws=#{Discourse.current_hostname}"
     %Q{<link class="custom-css" rel="stylesheet" href="#{href}" type="text/css" media="all">}.html_safe
   end
 end
@@ -163,6 +163,10 @@ end
 #  mobile_stylesheet_baked :text
 #  footer                  :text
 #  mobile_footer           :text
+#  head_tag                :text
+#  body_tag                :text
+#  top                     :text
+#  mobile_top              :text
 #
 # Indexes
 #

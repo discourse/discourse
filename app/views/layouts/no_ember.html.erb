@@ -15,29 +15,14 @@
   <%= yield(:no_ember_head) %>
 </head>
 <body>
-<%- unless customization_disabled? %>
+  <%- unless customization_disabled? %>
     <%= SiteCustomization.custom_header(session[:preview_style]) %>
-<%- end %>
-<section id='main'>
-  <header class="d-header">
-    <div class="container">
-      <div class="contents">
-        <div class="row">
-          <div class="title span13">
-            <a href="/"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo"></a>
-          </div>
-          <% unless current_user %>
-              <div class='panel clearfix'>
-                <a href="/login" class='btn btn-primary btn-small'><i class="fa fa-user"></i><%= I18n.t('log_in') %></a>
-              </div>
-          <% end %>
-        </div>
-      </div>
+  <%- end %>
+  <section id='main'>
+    <%= render partial: 'header' %>
+    <div id="main-outlet" class="<%= @container_class ? @container_class : 'container' %>">
+      <%= yield %>
     </div>
-  </header>
-  <div id="main-outlet" class="container">
-    <%= yield %>
-  </div>
-</section>
+  </section>
 </body>
 </html>

@@ -55,6 +55,12 @@ class PostAnalyzer
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
+  # from rack ... compat with ruby 2.2
+  def self.parse_uri_rfc2396(uri)
+    @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
+    @parser.parse(uri)
+  end
+
   # Count how many hosts are linked in the post
   def linked_hosts
     return {} if raw_links.blank?
@@ -64,7 +70,7 @@ class PostAnalyzer
 
     raw_links.each do |u|
       begin
-        uri = URI.parse(u)
+        uri = self.class.parse_uri_rfc2396(u)
         host = uri.host
         @linked_hosts[host] ||= 1 unless host.nil?
       rescue URI::InvalidURIError

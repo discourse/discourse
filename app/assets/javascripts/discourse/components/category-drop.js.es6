@@ -2,10 +2,7 @@ var get = Ember.get;
 
 export default Ember.Component.extend({
   classNameBindings: ['category::no-category', 'categories:has-drop','categoryStyle'],
-
-  categoryStyle: function(){
-    return Discourse.SiteSettings.category_style;
-  }.property(),
+  categoryStyle: Discourse.computed.setting('category_style'),
 
   tagName: 'li',
 
@@ -41,6 +38,22 @@ export default Ember.Component.extend({
     return result;
   }.property('category'),
 
+  categoryColor: function() {
+    var category = this.get('category');
+
+    if (category) {
+      var color = get(category, 'color');
+
+      if (color) {
+        var style = "";
+        if (color) { style += "background-color: #" + color + ";" }
+        return style.htmlSafe();
+      }
+    }
+
+    return "background-color: #eee;".htmlSafe();
+  }.property('category'),
+
   badgeStyle: function() {
     var category = this.get('category');
 
@@ -52,11 +65,11 @@ export default Ember.Component.extend({
         var style = "";
         if (color) { style += "background-color: #" + color + "; border-color: #" + color + ";"; }
         if (textColor) { style += "color: #" + textColor + "; "; }
-        return style;
+        return style.htmlSafe();
       }
     }
 
-    return "background-color: #eee; color: #333";
+    return "background-color: #eee; color: #333".htmlSafe();
   }.property('category'),
 
   clickEventName: function() {

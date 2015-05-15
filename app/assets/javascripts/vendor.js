@@ -10,7 +10,6 @@
 //= require loader
 //= require message-bus
 //= require jquery.ui.widget.js
-//= require LAB.js
 //= require Markdown.Converter.js
 //= require better_markdown.js
 //= require bootbox.js
@@ -29,7 +28,6 @@
 //= require jquery.iframe-transport.js
 //= require jquery.putcursoratend.js
 //= require jquery.tagsinput.js
-//= require jquery.ui.widget.js
 //= require jquery.sortable.js
 //= require lodash.js
 //= require md5.js
@@ -38,7 +36,6 @@
 //= require rsvp.js
 //= require show-html.js
 //= require lock-on.js
-//= require ember-cloaking
 //= require break_string
 //= require buffered-proxy
 //= require jquery.autoellipsis-1.0.10.min.js

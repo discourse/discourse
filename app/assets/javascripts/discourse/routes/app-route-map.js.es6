@@ -52,6 +52,7 @@ export default function() {
   });
 
   // User routes
+  this.resource('users');
   this.resource('user', { path: '/users/:username' }, function() {
     this.resource('userActivity', { path: '/activity' }, function() {
       var self = this;
@@ -65,7 +66,7 @@ export default function() {
     this.route('flaggedPosts', { path: '/flagged-posts' });
     this.route('deletedPosts', { path: '/deleted-posts' });
 
-    this.resource('userPrivateMessages', { path: '/private-messages' }, function() {
+    this.resource('userPrivateMessages', { path: '/messages' }, function() {
       this.route('mine');
       this.route('unread');
     });
@@ -83,12 +84,17 @@ export default function() {
 
   this.route('signup', {path: '/signup'});
   this.route('login', {path: '/login'});
+  this.route('forgot-password', {path: '/password-reset'});
   this.route('faq', {path: '/faq'});
   this.route('tos', {path: '/tos'});
   this.route('privacy', {path: '/privacy'});
   this.route('guidelines', {path: '/guidelines'});
 
+  this.route('new-topic', {path: '/new-topic'});
+
   this.resource('badges', function() {
     this.route('show', {path: '/:id/:slug'});
   });
+
+  this.resource('queued-posts', { path: '/queued-posts' });
 }

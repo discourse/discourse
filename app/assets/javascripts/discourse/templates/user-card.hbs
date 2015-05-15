@@ -5,7 +5,7 @@
   <div class="names">
     <span>
       <h1 {{bind-attr class="staff new_user"}}>
-        {{#link-to 'user' user}}{{username}} {{user-status user}}{{/link-to}}
+        {{#link-to 'user' user}}{{username}} {{user-status user currentUser=currentUser}}{{/link-to}}
       </h1>
 
       {{#if user.name}}
@@ -24,11 +24,11 @@
 
   <ul class="usercard-controls">
     {{#if user.can_send_private_message_to_user}}
-      <li><a class='btn btn-primary' {{action "composePrivateMessage" user}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
+      <li><a class='btn btn-primary' {{action "composePrivateMessage" user post}}>{{fa-icon "envelope"}}{{i18n 'user.private_message'}}</a></li>
     {{/if}}
 
     {{#if showFilter}}
-      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username post_count=participant.post_count}}</a></li>
+      <li><a class='btn' {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username post_count=topicPostCount}}</a></li>
     {{/if}}
 
     {{#if hasUserFilters}}

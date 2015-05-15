@@ -2,23 +2,42 @@
   <ul class="location-links">
     {{#if showAdminLinks}}
       <li>
-        <a href="/admin" class="admin-link"><i class='fa fa-wrench'></i> {{i18n 'admin_title'}}</a>
+        {{#link-to "admin" class="admin-link"}}
+          <i class='fa fa-wrench'></i> {{i18n 'admin_title'}}
+        {{/link-to}}
       </li>
       <li>
-        <a href="/admin/flags/active" class="flagged-posts-link">
-          <i class='fa fa-flag'></i> {{i18n 'flags_title'}}
-          {{#if flaggedPostsCount}}
-            <span title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</span>
+        {{#link-to "adminFlags" class="flagged-posts-link"}}
+          {{fa-icon "flag"}} {{i18n 'flags_title'}}
+          {{#if currentUser.site_flagged_posts_count}}
+            <span title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</span>
           {{/if}}
-        </a>
+        {{/link-to}}
       </li>
     {{/if}}
     <li>
-      <a href="/latest" title="{{i18n 'filters.latest.help'}}" class="latest-topics-link">{{i18n 'filters.latest.title'}}</a>
+      {{#link-to "discovery.latest" class="latest-topics-link"}}
+        {{i18n 'filters.latest.title'}}
+      {{/link-to}}
     </li>
     {{#if showBadgesLink}}
       <li>
         <a href="{{unbound badgesUrl}}" class="badge-link">{{i18n 'badges.title'}}</a>
+      </li>
+    {{/if}}
+
+    {{#if siteSettings.enable_user_directory}}
+      <li>{{#link-to 'users'}}{{i18n "directory.title"}}{{/link-to}}</li>
+    {{/if}}
+
+    {{#if currentUser.show_queued_posts}}
+      <li>
+        {{#link-to 'queued-posts'}}
+          {{i18n "queue.title"}}
+          {{#if currentUser.post_queue_new_count}}
+            <span class='badge-notification flagged-posts'>{{currentUser.post_queue_new_count}}</span>
+          {{/if}}
+        {{/link-to}}
       </li>
     {{/if}}
 
@@ -46,14 +65,14 @@
 
       {{#each c in categories itemController='site-map-category'}}
         <li class="category">
-          {{category-link c allowUncategorized="true"}}
+          {{category-link c.model allowUncategorized="true"}}
 
           {{#if c.unreadTotal}}
-            <a href={{unbound c.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
+            <a href={{unbound c.model.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
           {{/if}}
 
           {{#if c.showTopicCount}}
-            <b class="topics-count">{{unbound c.topic_count}}</b>
+            <b class="topics-count">{{unbound c.model.topic_count}}</b>
           {{/if}}
         </li>
       {{/each}}

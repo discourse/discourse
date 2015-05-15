@@ -5,98 +5,59 @@ export default Ember.ArrayController.extend({
   // Whether we've checked our messages
   checkedMessages: false,
 
-  /**
-    Initialize the controller
-  **/
-  init: function() {
-    this._super();
+  _init: function() {
     this.reset();
-  },
+  }.on("init"),
 
   actions: {
-    /**
-      Closes and hides a message.
-
-      @method closeMessage
-      @params {Object} message The message to dismiss
-    **/
-    closeMessage: function(message) {
+    closeMessage(message) {
       this.removeObject(message);
     },
 
-    hideMessage: function(message) {
-      var messagesByTemplate = this.get('messagesByTemplate'),
-        templateName = message.get('templateName');
-
-      // kind of hacky but the visibility depends on this
-      messagesByTemplate[templateName] = undefined;
+    hideMessage(message) {
       this.removeObject(message);
+      // kind of hacky but the visibility depends on this
+      this.get('messagesByTemplate')[message.get('templateName')] = undefined;
+    },
+
+    popup(message) {
+      let messagesByTemplate = this.get('messagesByTemplate');
+      const templateName = message.get('templateName');
+
+      if (!messagesByTemplate[templateName]) {
+        this.pushObject(message);
+        messagesByTemplate[templateName] = message;
+      }
     }
   },
 
-  /**
-    Displays a new message
-
-    @method popup
-    @params {Object} msg The message to display
-  **/
-  popup: function(msg) {
-    var messagesByTemplate = this.get('messagesByTemplate'),
-        templateName = msg.get('templateName'),
-        existing = messagesByTemplate[templateName];
-
-    if (!existing) {
-      this.pushObject(msg);
-      messagesByTemplate[templateName] = msg;
-    }
-  },
-
-  /**
-    Resets all active messages. For example if composing a new post.
-
-    @method reset
-  **/
-  reset: function() {
+  // Resets all active messages.
+  // For example if composing a new post.
+  reset() {
     this.clear();
-    this.set('messagesByTemplate', {});
-    this.set('queuedForTyping', []);
-    this.set('checkedMessages', false);
-  },
-
-  /**
-    Called after the user has typed a reply. Some messages only get shown after being
-    typed.
-
-    @method typedReply
-  **/
-  typedReply: function() {
-    var self = this;
-    this.get('queuedForTyping').forEach(function (msg) {
-      self.popup(msg);
+    this.setProperties({
+      messagesByTemplate: {},
+      queuedForTyping: [],
+      checkedMessages: false
     });
   },
 
-  /**
-    Figure out if there are any messages that should be displayed above the composer.
+  // Called after the user has typed a reply.
+  // Some messages only get shown after being typed.
+  typedReply() {
+    this.get('queuedForTyping').forEach(msg => this.send("popup", msg));
+  },
 
-    @method queryFor
-    @params {Discourse.Composer} composer The composer model
-  **/
-  queryFor: function(composer) {
+  // Figure out if there are any messages that should be displayed above the composer.
+  queryFor(composer) {
     if (this.get('checkedMessages')) { return; }
 
-    var self = this,
-        queuedForTyping = self.get('queuedForTyping');
+    const self = this;
+    var queuedForTyping = self.get('queuedForTyping');
 
-    Discourse.ComposerMessage.find(composer).then(function (messages) {
+    Discourse.ComposerMessage.find(composer).then(messages => {
       self.set('checkedMessages', true);
-      messages.forEach(function (msg) {
-        if (msg.wait_for_typing) {
-          queuedForTyping.addObject(msg);
-        } else {
-          self.popup(msg);
-        }
-      });
+      messages.forEach(msg => msg.wait_for_typing ? queuedForTyping.addObject(msg) : self.send("popup", msg));
     });
   }
 

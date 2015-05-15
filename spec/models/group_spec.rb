@@ -47,6 +47,90 @@ describe Group do
     Group[:staff].user_ids - [-1]
   end
 
+  it "Correctly handles primary groups" do
+    group = Fabricate(:group, primary_group: true)
+    user = Fabricate(:user)
+
+    group.add(user)
+
+    user.reload
+    expect(user.primary_group_id).to eq group.id
+
+    group.remove(user)
+
+    user.reload
+    expect(user.primary_group_id).to eq nil
+
+    group.add(user)
+    group.primary_group = false
+    group.save
+
+    user.reload
+    expect(user.primary_group_id).to eq nil
+
+  end
+
+  it "Correctly handles title" do
+
+    group = Fabricate(:group, title: 'Super Awesome')
+    user = Fabricate(:user)
+
+    expect(user.title).to eq nil
+
+    group.add(user)
+    user.reload
+
+    expect(user.title).to eq 'Super Awesome'
+
+    group.title = 'BOOM'
+    group.save
+
+    user.reload
+    expect(user.title).to eq 'BOOM'
+
+    group.title = nil
+    group.save
+
+    user.reload
+    expect(user.title).to eq nil
+
+    group.title = "BOB"
+    group.save
+
+    user.reload
+    expect(user.title).to eq "BOB"
+
+    group.remove(user)
+
+    user.reload
+    expect(user.title).to eq nil
+
+    group.add(user)
+    group.destroy
+
+    user.reload
+    expect(user.title).to eq nil
+
+  end
+
+  it "Correctly handles removal of primary group" do
+    group = Fabricate(:group)
+    user = Fabricate(:user)
+    group.add(user)
+    group.save
+
+    user.primary_group = group
+    user.save
+
+    group.reload
+
+    group.remove(user)
+    group.save
+
+    user.reload
+    expect(user.primary_group).to eq nil
+  end
+
   it "Can update moderator/staff/admin groups correctly" do
 
     admin = Fabricate(:admin)
@@ -208,7 +292,7 @@ describe Group do
     let(:group) {Fabricate(:group)}
 
     it "by default has no managers" do
-      group.managers.should be_empty
+      expect(group.managers).to be_empty
     end
 
     it "multiple managers can be appointed" do

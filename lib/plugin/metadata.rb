@@ -2,7 +2,7 @@
 module Plugin; end
 
 class Plugin::Metadata
-  FIELDS ||= [:name, :about, :version, :authors]
+  FIELDS ||= [:name, :about, :version, :authors, :url, :required_version]
   attr_accessor *FIELDS
 
   def self.parse(text)
@@ -21,7 +21,7 @@ class Plugin::Metadata
       attribute, *description = line[1..-1].split(":")
 
       description = description.join(":")
-      attribute = attribute.strip.to_sym
+      attribute = attribute.strip.gsub(/ /, '_').to_sym
 
       if FIELDS.include?(attribute)
         self.send("#{attribute}=", description.strip)

@@ -20,15 +20,27 @@ class Emoji
   end
 
   def self.all
-    Discourse.cache.fetch("all", family: "emoji") { standard | custom }
+    Discourse.cache.fetch("all_emojis") { standard | custom }
   end
 
   def self.standard
-    Discourse.cache.fetch("standard", family: "emoji") { load_standard }
+    Discourse.cache.fetch("standard_emojis") { load_standard }
+  end
+
+  def self.aliases
+    Discourse.cache.fetch("aliases_emojis") { load_aliases }
   end
 
   def self.custom
-    Discourse.cache.fetch("custom", family: "emoji") { load_custom }
+    Discourse.cache.fetch("custom_emojis") { load_custom }
+  end
+
+  def self.exists?(name)
+    Emoji[name].present?
+  end
+
+  def self.[](name)
+    Emoji.custom.detect { |e| e.name == name }
   end
 
   def self.create_from_path(path)
@@ -51,6 +63,7 @@ class Emoji
   def self.create_for(file, name)
     extension = File.extname(file.original_filename)
     path = "#{Emoji.base_directory}/#{name}#{extension}"
+
     # store the emoji
     FileUtils.mkdir_p(Pathname.new(path).dirname)
     File.open(path, "wb") { |f| f << file.tempfile.read }
@@ -59,20 +72,35 @@ class Emoji
     # launch resize job
     Jobs.enqueue(:resize_emoji, path: path)
     # return created emoji
-    Emoji.custom.detect { |e| e.name == name }
+    Emoji[name]
   end
 
   def self.clear_cache
-    Discourse.cache.delete_by_family("emoji")
+    Discourse.cache.delete("custom_emojis")
+    Discourse.cache.delete("standard_emojis")
+    Discourse.cache.delete("aliases_emojis")
+    Discourse.cache.delete("all_emojis")
   end
 
   def self.db_file
     "#{Rails.root}/lib/emoji/db.json"
   end
 
+  def self.db
+    @db ||= File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
+  end
+
   def self.load_standard
-    File.open(db_file, "r:UTF-8") { |f| JSON.parse(f.read) }
-        .map { |emoji| Emoji.create_from_db_item(emoji) }
+    db.map { |emoji| Emoji.create_from_db_item(emoji) }
+  end
+
+  def self.load_aliases
+    aliases = {}
+
+    db.select { |emoji| emoji["aliases"].count > 1 }
+      .each { |emoji| aliases[emoji["aliases"][0]] = emoji["aliases"][1..-1] }
+
+    aliases
   end
 
   def self.load_custom

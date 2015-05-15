@@ -1,10 +1,10 @@
-export default Ember.ObjectController.extend(Discourse.HasCurrentUser, {
+export default Ember.Controller.extend({
   needs: ['site-map'],
 
   unreadTotal: function() {
-    return parseInt(this.get('unreadTopics'), 10) +
-           parseInt(this.get('newTopics'), 10);
-  }.property('unreadTopics', 'newTopics'),
+    return parseInt(this.get('model.unreadTopics'), 10) +
+           parseInt(this.get('model.newTopics'), 10);
+  }.property('model.unreadTopics', 'model.newTopics'),
 
   showTopicCount: Em.computed.not('currentUser')
 });

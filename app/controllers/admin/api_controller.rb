@@ -6,7 +6,7 @@ class Admin::ApiController < Admin::AdminController
 
   def regenerate_key
     api_key = ApiKey.find_by(id: params[:id])
-    raise Discourse::NotFound.new if api_key.blank?
+    raise Discourse::NotFound if api_key.blank?
 
     api_key.regenerate!(current_user)
     render_serialized(api_key, ApiKeySerializer)
@@ -14,7 +14,7 @@ class Admin::ApiController < Admin::AdminController
 
   def revoke_key
     api_key = ApiKey.find_by(id: params[:id])
-    raise Discourse::NotFound.new if api_key.blank?
+    raise Discourse::NotFound if api_key.blank?
 
     api_key.destroy
     render nothing: true

@@ -6,11 +6,23 @@ require_dependency 'age_words'
 require_dependency 'configurable_urls'
 require_dependency 'mobile_detection'
 require_dependency 'category_badge'
+require_dependency 'global_path'
+require_dependency 'canonical_url'
 
 module ApplicationHelper
   include CurrentUser
   include CanonicalURL::Helpers
   include ConfigurableUrls
+  include GlobalPath
+
+  def ga_universal_json
+    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
+    result = {cookieDomain: cookie_domain}
+    if current_user.present?
+      result[:userId] = current_user.id
+    end
+    result.to_json.html_safe
+  end
 
   def shared_session_key
     if SiteSetting.long_polling_base_url != '/'.freeze && current_user
@@ -137,6 +149,10 @@ module ApplicationHelper
     end
   end
 
+  def application_logo_url
+    @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
+  end
+
   def login_path
     "#{Discourse::base_uri}/login"
   end
@@ -149,9 +165,12 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
-
   def customization_disabled?
-    controller.class.name.split("::").first == "Admin" || session[:disable_customization]
+    session[:disable_customization]
+  end
+
+  def loading_admin?
+    controller.class.name.split("::").first == "Admin"
   end
 
   def category_badge(category, opts=nil)

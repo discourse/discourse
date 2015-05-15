@@ -62,14 +62,14 @@
                 {{#if invite.reinvited}}
                   {{i18n 'user.invited.reinvited'}}
                 {{else}}
-                  <button class='btn' {{action "reinvite" invite}}><i class="fa fa-envelope"></i>{{i18n 'user.invited.reinvite'}}</button>
+                  <button class='btn' {{action "reinvite" invite}}><i class="fa fa-user-plus"></i>{{i18n 'user.invited.reinvite'}}</button>
                 {{/if}}
               </td>
             {{/if}}
           </tr>
         {{/each}}
       </table>
-      {{loading-spinner condition=invitesLoading}}
+      {{conditional-loading-spinner condition=invitesLoading}}
 
     {{else}}
       {{#if canBulkInvite}}

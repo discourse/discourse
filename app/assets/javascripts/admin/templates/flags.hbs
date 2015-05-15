@@ -1,11 +1,7 @@
-<div class='admin-controls'>
-  <div class='span15'>
-    <ul class="nav nav-pills">
-      <li>{{#link-to 'adminFlags.list' 'active'}}{{i18n 'admin.flags.active'}}{{/link-to}}</li>
-      <li>{{#link-to 'adminFlags.list' 'old'}}{{i18n 'admin.flags.old'}}{{/link-to}}</li>
-    </ul>
-  </div>
-</div>
+{{#admin-nav}}
+  {{admin-nav-item route='adminFlags.list' routeParam='active' label='admin.flags.active'}}
+  {{admin-nav-item route='adminFlags.list' routeParam='old' label='admin.flags.old'}}
+{{/admin-nav}}
 
 <div class="admin-container">
   {{outlet}}

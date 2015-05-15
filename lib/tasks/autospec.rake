@@ -6,7 +6,7 @@ desc "Run all specs automatically as needed"
 task "autospec" => :environment do
   require 'autospec/manager'
 
-  debug = ARGV.any? { |a|  a == "d" || a == "debug" }
+  debug = ARGV.any?{ |a|  a == "d" || a == "debug" } || ENV["DEBUG"]
   force_polling = ARGV.any? { |a| a == "p" || a == "polling" }
   latency = ((ARGV.find { |a| a =~ /l=|latency=/ } || "").split("=")[1] || 3).to_i
 

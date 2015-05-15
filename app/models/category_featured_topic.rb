@@ -25,7 +25,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
       visible: true,
       no_definitions: true)
 
-    results = query.list_category(c).topic_ids.uniq
+    results = query.list_category_topic_ids(c).uniq
 
     return if results == existing
 

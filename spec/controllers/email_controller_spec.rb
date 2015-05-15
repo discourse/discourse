@@ -22,10 +22,11 @@ describe EmailController do
   context '.resubscribe' do
 
     let(:user) { Fabricate(:user, email_digests: false) }
+    let(:key) { DigestUnsubscribeKey.create_key_for(user) }
 
     context 'with a valid key' do
       before do
-        get :resubscribe, key: user.temporary_key
+        get :resubscribe, key: key
         user.reload
       end
 
@@ -39,10 +40,11 @@ describe EmailController do
   context '.unsubscribe' do
 
     let(:user) { Fabricate(:user) }
+    let(:key) { DigestUnsubscribeKey.create_key_for(user) }
 
     context 'with a valid key' do
       before do
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: key
         user.reload
       end
 
@@ -69,7 +71,7 @@ describe EmailController do
       let!(:logged_in_user) { log_in(:coding_horror) }
 
       before do
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: key
         user.reload
       end
 
@@ -87,7 +89,7 @@ describe EmailController do
 
       before do
         log_in_user(user)
-        get :unsubscribe, key: user.temporary_key
+        get :unsubscribe, key: DigestUnsubscribeKey.create_key_for(user)
         user.reload
       end
 

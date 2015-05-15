@@ -1,21 +1,35 @@
-<div class="topic-list">
-<% @list.topics.each do |t| %>
-  <a href="<%= t.relative_url %>"><%= t.title %></a>
-  <% if !@category && t.category %>
-    [<a href="<%= t.category.url%>"><%= t.category.name %></a>]
-  <% end %>
-  <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
+<% if @category %>
+  <h1>
+    <%= link_to @category.url, itemprop: 'item' do %>
+      <span itemprop='name'><%= @category.name %></span>
+    <% end %>
+  </h1>
+  <br/>
 <% end %>
+
+<div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+  <% @list.topics.each_with_index do |t,i| %>
+    <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <meta itemprop='url' content='<%= t.url %>'>
+      <a href='<%= t.relative_url %>' itemprop='item'>
+        <span itemprop='name'><%= t.title %></span>
+      </a>
+      <% if !@category && t.category %>
+        <span>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
+      <% end %>
+      <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+    </div>
+  <% end %>
 </div>
 
-
-<% if @list.topics.length > 0 %>
-  <p>
-  <% if params[:page].to_i > 0 %>
-    <a href="<%= @list.prev_topics_url.sub('.json?','?') %>" rel="prev"><%= t 'prev_page'%></a> &nbsp;
-  <% end %>
-    <b><a href="<%= @list.more_topics_url.sub('.json?','?') %>" rel="next"><%= t 'next_page'%></a></b>
-  </p>
+<% if @list.topics.length > 0 && @list.more_topics_url %>
+  <div role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <% if params[:page].to_i > 0 %>
+      <span itemprop='url'><a href='<%= @list.prev_topics_url %>' rel='prev' itemprop='name'><%= t 'prev_page' %></a> &nbsp;</span>
+    <% end %>
+    <span itemprop='url'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='name'><%= t 'next_page' %></a></b></span>
+  </div>
 <% end %>
 
 <% if @rss %>

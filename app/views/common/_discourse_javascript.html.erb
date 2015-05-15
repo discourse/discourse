@@ -1,15 +1,12 @@
 <script>
   window.assetPath = (function(){
-
     var map = <%= deferred_scripts %>;
-
-    return function(asset){ return map[asset]; };
+    return function(asset) { return map[asset]; };
   })();
 </script>
 
 <script>
   Ember.RSVP.configure('onerror', function(e) {
-
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") { return; }
 
@@ -35,14 +32,14 @@
   Discourse.BaseUri = '<%= Discourse::base_uri "/" %>';
   Discourse.Environment = '<%= Rails.env %>';
   Discourse.SiteSettings = PreloadStore.get('siteSettings');
-  Discourse.LetterAvatarVersion = <%= LetterAvatar::VERSION %>;
+  Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
   PreloadStore.get("customEmoji").forEach(function(emoji) {
     Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
   });
-  Discourse.Router = Ember.Router.extend({ location: 'discourse-location' });
-  Discourse.Route.mapRoutes();
   Discourse.start();
   Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
+  Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
+  Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
 </script>
 
 <%= script 'browser-update' %>

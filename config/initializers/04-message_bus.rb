@@ -4,7 +4,7 @@ end
 
 MessageBus.extra_response_headers_lookup do |env|
   {
-    "Access-Control-Allow-Origin" => Discourse.base_url,
+    "Access-Control-Allow-Origin" => Discourse.base_url_no_prefix,
     "Access-Control-Allow-Methods" => "GET, POST",
     "Access-Control-Allow-Headers" => "X-SILENCE-LOGGER, X-Shared-Session-Key"
   }

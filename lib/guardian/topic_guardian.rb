@@ -28,9 +28,12 @@ module TopicGuardian
   # Editing Method
   def can_edit_topic?(topic)
     return false if Discourse.static_doc_topic_ids.include?(topic.id) && !is_admin?
-    return true if is_staff? || (!topic.private_message? && user.has_trust_level?(TrustLevel[3]))
+    return false unless can_see?(topic)
+    return true if is_staff?
+    return true if (!topic.private_message? && user.has_trust_level?(TrustLevel[3]) && can_create_post?(topic))
+
     return false if topic.archived
-    is_my_own?(topic)
+    is_my_own?(topic) && !topic.edit_time_limit_expired?
   end
 
   # Recovery Method
@@ -67,6 +70,19 @@ module TopicGuardian
 
     # not secure, or I can see it
     !topic.read_restricted_category? || can_see_category?(topic.category)
-
   end
+
+  def filter_allowed_categories(records)
+    unless is_admin?
+      allowed_ids = allowed_category_ids
+      if allowed_ids.length > 0
+        records = records.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
+      else
+        records = records.where('topics.category_id IS NULL')
+      end
+      records = records.references(:categories)
+    end
+    records
+  end
+
 end

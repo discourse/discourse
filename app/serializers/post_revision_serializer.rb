@@ -112,9 +112,11 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def title_changes
-    prev = "<div>#{CGI::escapeHTML(previous["title"])}</div>"
-    cur = "<div>#{CGI::escapeHTML(current["title"])}</div>"
-    return if prev == cur
+    prev = "<div>#{previous["title"] && CGI::escapeHTML(previous["title"])}</div>"
+    cur = "<div>#{current["title"] && CGI::escapeHTML(current["title"])}</div>"
+
+    # always show the title for post_number == 1
+    return if object.post.post_number > 1 && prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
 
@@ -176,7 +178,7 @@ class PostRevisionSerializer < ApplicationSerializer
       }
 
       # Retrieve any `tracked_topic_fields`
-      PostRevisor.tracked_topic_fields.keys.each do |field|
+      PostRevisor.tracked_topic_fields.each_key do |field|
         if topic.respond_to?(field)
           latest_modifications[field.to_s] = [topic.send(field)]
         end
@@ -196,7 +198,7 @@ class PostRevisionSerializer < ApplicationSerializer
         revision[:revision] = pr.number
         revision[:hidden] = pr.hidden
 
-        pr.modifications.keys.each do |field|
+        pr.modifications.each_key do |field|
           revision[field] = pr.modifications[field][0]
         end
 
@@ -208,7 +210,7 @@ class PostRevisionSerializer < ApplicationSerializer
         cur = @all_revisions[r]
         prev = @all_revisions[r - 1]
 
-        cur.keys.each do |field|
+        cur.each_key do |field|
           prev[field] = prev.has_key?(field) ? prev[field] : cur[field]
         end
       end

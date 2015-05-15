@@ -24,7 +24,6 @@ Spork.prefork do
   ENV["RAILS_ENV"] ||= 'test'
   require File.expand_path("../../config/environment", __FILE__)
   require 'rspec/rails'
-  require 'rspec/autorun'
   require 'shoulda'
 
   # Requires supporting ruby files with custom matchers and macros, etc,
@@ -82,8 +81,29 @@ Spork.prefork do
       SiteSetting.provider = SiteSettings::LocalProcessProvider.new
     end
 
+    class DiscourseMockRedis < MockRedis
+      def without_namespace
+        self
+      end
+
+      def delete_prefixed(prefix)
+        keys("#{prefix}*").each { |k| del(k) }
+      end
+    end
+
     config.before :each do |x|
+      # TODO not sure about this, we could use a mock redis implementation here:
+      #   this gives us really clean "flush" semantics, howere the side-effect is that
+      #   we are no longer using a clean redis implementation, a preferable solution may
+      #   be simply flushing before tests, trouble is that redis may be reused with dev
+      #   so that would mean the dev would act weird
+      #
+      #   perf benefit seems low (shaves 20 secs off a 4 minute test suite)
+      #
+      # $redis = DiscourseMockRedis.new
+      #
       # disable all observers, enable as needed during specs
+      #
       ActiveRecord::Base.observers.disable :all
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
@@ -91,6 +111,8 @@ Spork.prefork do
 
       # very expensive IO operations
       SiteSetting.automatically_download_gravatars = false
+
+      Discourse.clear_readonly!
 
       I18n.locale = :en
     end

@@ -30,16 +30,10 @@
 .topic-list {
 
   > tbody > tr {
-    &:nth-child(even) {
-      background-color: darken($secondary, 3%);
-      }
-    &:nth-child(odd) {
-      background-color: $secondary;
-      }
     &.highlighted {
       background-color: scale-color($tertiary, $lightness: 85%);
     }
-    }
+  }
 
   th,
   td {
@@ -48,7 +42,6 @@
   }
 
   a.title {color: $primary;}
-  a.title:visited:not(.badge-notification) {color: scale-color($primary, $lightness: 35%);}
 
   .badge-notification {
     position: relative;
@@ -63,8 +56,6 @@
     }
     .category a {
       max-width: 160px;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .num .fa {
       color: scale-color($primary, $lightness: 50%);
@@ -88,7 +79,7 @@
 
 tr.category-topic-link:nth-of-type(odd) {
     background-color: darken($secondary, 3%) !important;
-    }
+}
 
 .topic-list.categories {
   td.latest {
@@ -99,9 +90,6 @@ tr.category-topic-link:nth-of-type(odd) {
   .badge-category {
     display: inline-block;
     margin-top: 1px;
-  }
-  .category-description {
-    margin-top: 8px;
   }
   .featured-users {
     @include mobile-portrait  {
@@ -132,16 +120,41 @@ tr.category-topic-link:nth-of-type(odd) {
 
 .category-list-item {
 
+  border-left: 6px solid;
+
+  h3 {
+    display: inline-block;
+    font-size: 1.286em;
+    margin: 10px 0 0 5px;
+    i {
+      margin-right: 5px;
+    }
+    a[href] {
+      color: $primary;
+    }
+  }
+
+  .category-topic-link .main-link, .subcategories-list td, .category-description td {
+    padding-left: 10px;
+  }
+
+  .category-description td {
+    padding-top: 0;
+    padding-bottom: 15px;
+  }
+
+  .subcategories-list td {
+    padding-top: 15px;
+  }
+
   .topic-list > tbody > tr {
     &:nth-child(odd) {
       background-color: $secondary;
-      }
-      &:nth-child(even) {
-        background-color: $secondary;
-      }
     }
-
-  margin-bottom: 10px;
+    &:nth-child(even) {
+      background-color: $secondary;
+    }
+  }
 
   th .badge-category {
     margin: 0;
@@ -265,7 +278,6 @@ ol.category-breadcrumb {
 
 .category-dropdown-menu {
   height: 200px;
-  margin-top: 31px;
 
   a.badge-category {
     line-height: 26px !important;

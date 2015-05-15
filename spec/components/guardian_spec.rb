@@ -19,7 +19,7 @@ describe Guardian do
     expect { Guardian.new }.not_to raise_error
   end
 
-  it 'can be instantiaed with a user instance' do
+  it 'can be instantiated with a user instance' do
     expect { Guardian.new(user) }.not_to raise_error
   end
 
@@ -266,6 +266,9 @@ describe Guardian do
     let(:user) { topic.user }
     let(:moderator) { Fabricate(:moderator) }
     let(:admin) { Fabricate(:admin) }
+    let(:private_category)  { Fabricate(:private_category, group: group) }
+    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+    let(:group_manager) { group_private_topic.user.tap { |u| group.add(u); group.appoint_manager(u) } }
 
     it 'handles invitation correctly' do
       expect(Guardian.new(nil).can_invite_to?(topic)).to be_falsey
@@ -298,6 +301,9 @@ describe Guardian do
       expect(Guardian.new(admin).can_invite_to?(private_topic)).to be_truthy
     end
 
+    it 'returns true for a group manager' do
+      expect(Guardian.new(group_manager).can_invite_to?(group_private_topic)).to be_truthy
+    end
   end
 
   describe 'can_see?' do
@@ -380,6 +386,19 @@ describe Guardian do
         expect(Guardian.new(build(:user)).can_edit?(tos_topic)).to be_falsey
         expect(Guardian.new(moderator).can_edit?(tos_topic)).to be_falsey
         expect(Guardian.new(admin).can_edit?(tos_topic)).to be_truthy
+      end
+
+      it "allows moderators to see a flagged private message" do
+        moderator.save!
+        user.save!
+
+        private_topic = Fabricate(:private_message_topic, user: user)
+        first_post = Fabricate(:post, topic: private_topic, user: user)
+
+        expect(Guardian.new(moderator).can_see?(private_topic)).to be_falsey
+
+        PostAction.act(user, first_post, PostActionType.types[:off_topic])
+        expect(Guardian.new(moderator).can_see?(private_topic)).to be_truthy
       end
     end
 
@@ -511,7 +530,6 @@ describe Guardian do
         category.save
 
         expect(Guardian.new(topic.user).can_create?(Post, topic)).to be_falsey
-
       end
 
       it "is false when not logged in" do
@@ -779,6 +797,30 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false when another user has too low trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        coding_horror.trust_level = 1
+
+        expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
+      end
+
+      it 'returns true when another user has adequate trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        coding_horror.trust_level = 2
+
+        expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
+      end
+
+      it 'returns true for post author even when he has too low trust level to edit wiki post' do
+        SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
+        post.wiki = true
+        post.user.trust_level = 1
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
       context 'post is older than post_edit_time_limit' do
         let(:old_post) { build(:post, topic: topic, user: topic.user, created_at: 6.minutes.ago) }
         before do
@@ -805,30 +847,6 @@ describe Guardian do
           old_post.wiki = true
           expect(Guardian.new(coding_horror).can_edit?(old_post)).to be_truthy
         end
-
-        it 'returns false when another user has too low trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          coding_horror.trust_level = 1
-
-          expect(Guardian.new(coding_horror).can_edit?(post)).to be_falsey
-        end
-
-        it 'returns true when another user has adequate trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          coding_horror.trust_level = 2
-
-          expect(Guardian.new(coding_horror).can_edit?(post)).to be_truthy
-        end
-
-        it 'returns true for post author even when he has too low trust level to edit wiki post' do
-          SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
-          post.wiki = true
-          post.user.trust_level = 1
-
-          expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
-        end
       end
 
       context "first post of a static page doc" do
@@ -854,7 +872,6 @@ describe Guardian do
         expect(Guardian.new(topic.user).can_edit?(topic)).to eq(true)
       end
 
-
       it 'returns false as a regular user' do
         expect(Guardian.new(coding_horror).can_edit?(topic)).to be_falsey
       end
@@ -871,6 +888,13 @@ describe Guardian do
         it 'returns true at trust level 3' do
           expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(true)
         end
+
+        it "returns false when the category is read only" do
+          topic.category.set_permissions(everyone: :readonly)
+          topic.category.save
+
+          expect(Guardian.new(trust_level_3).can_edit?(topic)).to eq(false)
+        end
       end
 
       context 'private message' do
@@ -881,20 +905,44 @@ describe Guardian do
       end
 
       context 'archived' do
+        let(:archived_topic) { build(:topic, user: user, archived: true) }
+
         it 'returns true as a moderator' do
-          expect(Guardian.new(moderator).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(moderator).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns true as an admin' do
-          expect(Guardian.new(admin).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(admin).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns true at trust level 3' do
-          expect(Guardian.new(trust_level_3).can_edit?(build(:topic, user: user, archived: true))).to be_truthy
+          expect(Guardian.new(trust_level_3).can_edit?(archived_topic)).to be_truthy
         end
 
         it 'returns false as a topic creator' do
-          expect(Guardian.new(user).can_edit?(build(:topic, user: user, archived: true))).to be_falsey
+          expect(Guardian.new(user).can_edit?(archived_topic)).to be_falsey
+        end
+      end
+
+      context 'very old' do
+        let(:old_topic) { build(:topic, user: user, created_at: 6.minutes.ago) }
+
+        before { SiteSetting.stubs(:post_edit_time_limit).returns(5) }
+
+        it 'returns true as a moderator' do
+          expect(Guardian.new(moderator).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns true as an admin' do
+          expect(Guardian.new(admin).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns true at trust level 3' do
+          expect(Guardian.new(trust_level_3).can_edit?(old_topic)).to be_truthy
+        end
+
+        it 'returns false as a topic creator' do
+          expect(Guardian.new(user).can_edit?(old_topic)).to be_falsey
         end
       end
     end
@@ -1546,6 +1594,48 @@ describe Guardian do
     context "for admins" do
       let(:actor) { admin }
       include_examples "can_delete_all_posts examples"
+    end
+  end
+
+  describe "can_anonymize_user?" do
+    it "is false without a logged in user" do
+      expect(Guardian.new(nil).can_anonymize_user?(user)).to be_falsey
+    end
+
+    it "is false without a user to look at" do
+      expect(Guardian.new(admin).can_anonymize_user?(nil)).to be_falsey
+    end
+
+    it "is false for a regular user" do
+      expect(Guardian.new(user).can_anonymize_user?(coding_horror)).to be_falsey
+    end
+
+    it "is false for myself" do
+      expect(Guardian.new(user).can_anonymize_user?(user)).to be_falsey
+    end
+
+    it "is true for admin anonymizing a regular user" do
+      expect(Guardian.new(admin).can_anonymize_user?(user)).to eq(true)
+    end
+
+    it "is true for moderator anonymizing a regular user" do
+      expect(Guardian.new(moderator).can_anonymize_user?(user)).to eq(true)
+    end
+
+    it "is false for admin anonymizing an admin" do
+      expect(Guardian.new(admin).can_anonymize_user?(Fabricate(:admin))).to be_falsey
+    end
+
+    it "is false for admin anonymizing a moderator" do
+      expect(Guardian.new(admin).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
+    end
+
+    it "is false for moderator anonymizing an admin" do
+      expect(Guardian.new(moderator).can_anonymize_user?(admin)).to be_falsey
+    end
+
+    it "is false for moderator anonymizing a moderator" do
+      expect(Guardian.new(moderator).can_anonymize_user?(Fabricate(:moderator))).to be_falsey
     end
   end
 

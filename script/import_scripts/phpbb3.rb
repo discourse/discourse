@@ -1,6 +1,5 @@
-require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require "mysql2"
-
+require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::PhpBB3 < ImportScripts::Base
 
@@ -114,8 +113,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     create_categories(results) do |row|
       h = {id: row['id'], name: CGI.unescapeHTML(row['name']), description: CGI.unescapeHTML(row['description'])}
       if row['parent_id'].to_i > 0
-        parent = category_from_imported_category_id(row['parent_id'])
-        h[:parent_category_id] = parent.id if parent
+        h[:parent_category_id] = category_id_from_imported_category_id(row['parent_id'])
       end
       h
     end
@@ -156,7 +154,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
         mapped[:created_at] = Time.zone.at(m['post_time'])
 
         if m['id'] == m['first_post_id']
-          mapped[:category] = category_from_imported_category_id(m['category_id']).try(:name)
+          mapped[:category] = category_id_from_imported_category_id(m['category_id'])
           mapped[:title] = CGI.unescapeHTML(m['title'])
         else
           parent = topic_lookup_from_imported_post_id(m['first_post_id'])
@@ -276,7 +274,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
     s = raw.dup
 
     # :) is encoded as <!-- s:) --><img src="{SMILIES_PATH}/icon_e_smile.gif" alt=":)" title="Smile" /><!-- s:) -->
-    s.gsub!(/<!-- s(\S+) -->(?:.*)<!-- s(?:\S+) -->/, '\1')
+    s.gsub!(/<!-- s(\S+) --><img (?:[^>]+) \/><!-- s(?:\S+) -->/, '\1')
 
     # Internal forum links of this form: <!-- l --><a class="postlink-local" href="https://example.com/forums/viewtopic.php?f=26&amp;t=3412">viewtopic.php?f=26&amp;t=3412</a><!-- l -->
     s.gsub!(/<!-- l --><a(?:.+)href="(?:\S+)"(?:.*)>viewtopic(?:.*)t=(\d+)<\/a><!-- l -->/) do |phpbb_link|
@@ -408,7 +406,7 @@ class ImportScripts::PhpBB3 < ImportScripts::Base
 
         success_count += 1
 
-        html_for_upload(upload)
+        html_for_upload(upload, real_filename)
       end
 
       if new_raw != post.raw

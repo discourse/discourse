@@ -13,8 +13,8 @@ class Report
     @data = nil
     @total = nil
     @prev30Days = nil
-    @start_date ||= 1.month.ago.utc.beginning_of_day
-    @end_date ||= Time.now.utc.end_of_day
+    @start_date ||= 1.month.ago.beginning_of_day
+    @end_date ||= Time.zone.now.end_of_day
   end
 
   def as_json(options = nil)
@@ -33,17 +33,46 @@ class Report
 
   def self.find(type, opts=nil)
     opts ||= {}
-    report_method = :"report_#{type}"
-    return nil unless respond_to?(report_method)
-
     # Load the report
     report = Report.new(type)
-
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
-    send(report_method, report)
+    report_method = :"report_#{type}"
+
+    if respond_to?(report_method)
+      send(report_method, report)
+    elsif type =~ /_reqs$/
+      req_report(report, type.split(/_reqs$/)[0].to_sym)
+    else
+      return nil
+    end
     report
   end
+
+  def self.req_report(report, filter=nil)
+    data =
+      if filter == :page_view_total
+        ApplicationRequest.where(req_type: [
+          ApplicationRequest.req_types.map{|k,v| v if k =~ /page_view/}.compact
+        ])
+      else
+        ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
+      end
+
+    filtered_results = data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+
+    report.data = []
+    filtered_results.order(date: :asc)
+                    .group(:date)
+                    .sum(:count)
+                    .each do |date, count|
+      report.data << {x: date, y: count}
+    end
+
+    report.total      = data.sum(:count)
+    report.prev30Days = filtered_results.sum(:count)
+  end
+
 
   def self.report_visits(report)
     basic_report_about report, UserVisit, :by_day, report.start_date, report.end_date

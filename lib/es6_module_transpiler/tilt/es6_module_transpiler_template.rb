@@ -1,6 +1,22 @@
 require 'execjs'
+require 'babel/transpiler'
 
 module Tilt
+
+  class Console
+    def initialize(prefix=nil)
+      @prefix = prefix || ''
+    end
+
+    def log(msg)
+      Rails.logger.info("#{@prefix}#{msg}")
+    end
+
+    def error(msg)
+      Rails.logger.error("#{@prefix}#{msg}")
+    end
+  end
+
   class ES6ModuleTranspilerTemplate < Tilt::Template
     self.default_mime_type = 'application/javascript'
 
@@ -14,6 +30,7 @@ module Tilt
 
     def self.create_new_context
       ctx = V8::Context.new(timeout: 5000)
+      ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx
@@ -62,6 +79,7 @@ module Tilt
 
       klass = self.class
       klass.protect do
+        klass.v8['console'] = Console.new("BABEL: #{scope.logical_path}: ")
         @output = klass.v8.eval(generate_source(scope))
       end
 
@@ -70,7 +88,9 @@ module Tilt
       # For backwards compatibility with plugins, for now export the Global format too.
       # We should eventually have an upgrade system for plugins to use ES6 or some other
       # resolve based API.
-      if ENV['DISCOURSE_NO_CONSTANTS'].nil? && scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
+      if ENV['DISCOURSE_NO_CONSTANTS'].nil? &&
+        scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
+
         type = Regexp.last_match[2]
         file_name = Regexp.last_match[3].gsub(/[\-\/]/, '_')
         class_name = file_name.classify
@@ -81,11 +101,13 @@ module Tilt
         end
         require_name = module_name(scope.root_path, scope.logical_path)
 
-        if require_name !~ /\-test$/
+        if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
           result = "#{class_name}#{type.classify}"
 
           # HAX
           result = "Controller" if result == "ControllerController"
+          result = "Route" if result == "DiscourseRoute"
+          result = "View" if result == "ViewView"
           result.gsub!(/Mixin$/, '')
           result.gsub!(/Model$/, '')
 
@@ -95,8 +117,16 @@ module Tilt
 
       # Include JS code for JSHint
       unless Rails.env.production?
-        req_path = "/assets/#{scope.logical_path}.js"
-        @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{source.to_json};\n"
+        if scope.pathname.to_s =~ /js\.es6/
+          extension = "js.es6"
+        elsif scope.pathname.to_s =~ /\.es6/
+          extension = "es6"
+        else
+          extension = "js"
+        end
+        req_path = "/assets/#{scope.logical_path}.#{extension}"
+
+        @output << "\nwindow.__jshintSrc = window.__jshintSrc || {}; window.__jshintSrc['#{req_path}'] = #{data.to_json};\n"
       end
 
       @output
@@ -105,7 +135,9 @@ module Tilt
     private
 
     def generate_source(scope)
-      "new module.exports.Compiler(#{::JSON.generate(data, quirks_mode: true)}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
+      js_source = ::JSON.generate(data, quirks_mode: true)
+      js_source = "babel.transform(#{js_source}, {ast: false, whitelist: ['es6.constants', 'es6.properties.shorthand', 'es6.arrowFunctions', 'es6.blockScoping', 'es6.destructuring']})['code']"
+      "new module.exports.Compiler(#{js_source}, '#{module_name(scope.root_path, scope.logical_path)}', #{compiler_options}).#{compiler_method}()"
     end
 
     def module_name(root_path, logical_path)

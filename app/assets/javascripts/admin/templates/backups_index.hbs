@@ -4,8 +4,12 @@
     <th width="10%">{{i18n 'admin.backups.columns.size'}}</th>
     <th>
       <div class="pull-right">
-        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
-        <button {{action "toggleReadOnlyMode"}} class="btn" {{bind-attr disabled="readOnlyModeDisabled" title="readOnlyModeTitle"}}><i class="fa fa-eye"></i>{{readOnlyModeText}}</button>
+        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title"}}
+        {{#if site.isReadOnly}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
+        {{else}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
+        {{/if}}
       </div>
     </th>
   </tr>
@@ -15,9 +19,14 @@
       <td>{{human-size backup.size}}</td>
       <td>
         <div class="pull-right">
-          <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n 'admin.backups.operations.download.title'}}"><i class="fa fa-download"></i>{{i18n 'admin.backups.operations.download.text'}}</a>
-          <button {{action "destroyBackup" backup}} class="btn btn-danger no-text" {{bind-attr disabled="destroyDisabled" title="destroyTitle"}}><i class="fa fa-trash-o"></i></button>
-          <button {{action "startRestore" backup}} class="btn" {{bind-attr disabled="restoreDisabled" title="restoreTitle"}}><i class="fa fa-play"></i>{{i18n 'admin.backups.operations.restore.text'}}</button>
+          <a {{bind-attr href="backup.link"}} class="btn download" title="{{i18n 'admin.backups.operations.download.title'}}">{{fa-icon "download"}}{{i18n 'admin.backups.operations.download.label'}}</a>
+          {{#if isOperationRunning}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger no-text" disabled="true" title="admin.backups.operations.is_running"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+          {{else}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger no-text" title="admin.backups.operations.destroy.title"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+          {{/if}}
         </div>
       </td>
     </tr>

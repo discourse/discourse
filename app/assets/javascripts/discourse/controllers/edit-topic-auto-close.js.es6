@@ -9,20 +9,20 @@ export default ObjectController.extend(ModalFunctionality, {
   setAutoCloseTime: function() {
     var autoCloseTime = null;
 
-    if (this.get("details.auto_close_based_on_last_post")) {
-      autoCloseTime = this.get("details.auto_close_hours");
-    } else if (this.get("details.auto_close_at")) {
-      var closeTime = new Date(this.get("details.auto_close_at"));
+    if (this.get("model.details.auto_close_based_on_last_post")) {
+      autoCloseTime = this.get("model.details.auto_close_hours");
+    } else if (this.get("model.details.auto_close_at")) {
+      var closeTime = new Date(this.get("model.details.auto_close_at"));
       if (closeTime > new Date()) {
         autoCloseTime = moment(closeTime).format("YYYY-MM-DD HH:mm");
       }
     }
 
-    this.set("auto_close_time", autoCloseTime);
-  }.observes("details.{auto_close_at,auto_close_hours}"),
+    this.set("model.auto_close_time", autoCloseTime);
+  }.observes("model.details.{auto_close_at,auto_close_hours}"),
 
   actions: {
-    saveAutoClose: function() { this.setAutoClose(this.get("auto_close_time")); },
+    saveAutoClose: function() { this.setAutoClose(this.get("model.auto_close_time")); },
     removeAutoClose: function() { this.setAutoClose(null); }
   },
 
@@ -30,23 +30,23 @@ export default ObjectController.extend(ModalFunctionality, {
     var self = this;
     this.send('hideModal');
     Discourse.ajax({
-      url: '/t/' + this.get('id') + '/autoclose',
+      url: '/t/' + this.get('model.id') + '/autoclose',
       type: 'PUT',
       dataType: 'json',
       data: {
         auto_close_time: time,
-        auto_close_based_on_last_post: this.get("details.auto_close_based_on_last_post"),
+        auto_close_based_on_last_post: this.get("model.details.auto_close_based_on_last_post"),
       }
     }).then(function(result){
       if (result.success) {
         self.send('closeModal');
-        self.set('details.auto_close_at', result.auto_close_at);
-        self.set('details.auto_close_hours', result.auto_close_hours);
+        self.set('model.details.auto_close_at', result.auto_close_at);
+        self.set('model.details.auto_close_hours', result.auto_close_hours);
       } else {
-        bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('showModal'); } );
+        bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
       }
     }, function () {
-      bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('showModal'); } );
+      bootbox.alert(I18n.t('composer.auto_close.error'), function() { self.send('reopenModal'); } );
     });
   }
 

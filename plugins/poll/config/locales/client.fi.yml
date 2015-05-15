@@ -8,11 +8,37 @@
 fi:
   js:
     poll:
-      voteCount:
-        one: "1 ääni"
-        other: "%{count} ääntä"
-      results:
-        show: Näytä tulokset
-        hide: Piilota tulokset
-      close_poll: "Sulje kysely"
-      open_poll: "Avaa kysely"
+      voters:
+        zero: "äänestäjät"
+        one: "äänestäjä"
+        other: "äänestäjät"
+      total_votes:
+        zero: "ääntä"
+        one: "ääni"
+        other: "ääntä"
+      average_rating: "Keskivertoarvio: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Voita valita vähintään <strong>%{count}</strong> vaihtoehtoa."
+          up_to_max_options: "Voit valita enintään <strong>%{count}</strong>  vaihtoehtoa."
+          x_options: "Voit valita <strong>%{count}</strong> vaihtoehtoa."
+          between_min_and_max_options: "Voit valita <strong>%{min}</strong>-<strong>%{max}</strong vaihtoehtoa."
+      cast-votes:
+        title: "Antakaa äänenne"
+        label: "Äänestä nyt!"
+      show-results:
+        title: "Näytä äänestystulos"
+        label: "Näytä tulos"
+      hide-results:
+        title: "Palaa äänestysvalintaasi"
+        label: "Piilota tulos"
+      open:
+        title: "Avaa äänestys"
+        label: "Avaa"
+        confirm: "Avataanko äänestys?"
+      close:
+        title: "Sulje äänestys"
+        label: "Sulje"
+        confirm: "Suljetaanko äänestys?"
+      error_while_toggling_status: "Äänestyksen tilaa muutettaessa tapahtui virhe."
+      error_while_casting_votes: "Äänesi annettaessa tapahtui virhe."

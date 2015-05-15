@@ -1,6 +1,6 @@
 <div class="dashboard-left">
   {{#if showVersionChecks}}
-    {{partial 'admin/templates/version_checks'}}
+    {{partial 'admin/templates/version-checks'}}
   {{/if}}
 
   <div class="dashboard-stats trust-levels">
@@ -15,9 +15,11 @@
           <th>4</th>
         </tr>
       </thead>
-      {{#unless loading}}
-        {{ render 'admin/templates/reports/trust_levels_report' users_by_trust_level tagName="tbody" }}
-      {{/unless}}
+      <tbody>
+        {{#unless loading}}
+          {{admin-report-trust-level-counts report=users_by_trust_level}}
+        {{/unless}}
+      </tbody>
     </table>
   </div>
 
@@ -50,17 +52,44 @@
           <th>{{i18n 'admin.dashboard.reports.all'}}</th>
         </tr>
       </thead>
-      {{#unless loading}}
-        {{ render 'admin_report_counts' signups }}
-        {{ render 'admin_report_counts' topics }}
-        {{ render 'admin_report_counts' posts }}
-        {{ render 'admin_report_counts' likes }}
-        {{ render 'admin_report_counts' flags }}
-        {{ render 'admin_report_counts' bookmarks }}
-        {{ render 'admin_report_counts' emails }}
-      {{/unless}}
+      <tbody>
+        {{#unless loading}}
+          {{admin-report-per-day-counts report=visits}}
+          {{admin-report-counts report=signups}}
+          {{admin-report-counts report=topics}}
+          {{admin-report-counts report=posts}}
+          {{admin-report-counts report=likes}}
+          {{admin-report-counts report=flags}}
+          {{admin-report-counts report=bookmarks}}
+          {{admin-report-counts report=emails}}
+        {{/unless}}
+      </tbody>
     </table>
   </div>
+
+  <div class="dashboard-stats">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th class="title" title="{{i18n 'admin.dashboard.page_views'}}">{{i18n 'admin.dashboard.page_views_short'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+          <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#unless loading}}
+          {{admin-report-counts report=page_view_anon_reqs}}
+          {{admin-report-counts report=page_view_logged_in_reqs}}
+          {{admin-report-counts report=page_view_crawler_reqs}}
+          {{admin-report-counts report=page_view_total_reqs}}
+        {{/unless}}
+      </tbody>
+    </table>
+  </div>
+
 
   <div class="dashboard-stats">
     <table class="table table-condensed table-hover">
@@ -74,13 +103,15 @@
           <th>{{i18n 'admin.dashboard.reports.all'}}</th>
         </tr>
       </thead>
-      {{#unless loading}}
-        {{ render 'admin_report_counts' user_to_user_private_messages }}
-        {{ render 'admin_report_counts' system_private_messages }}
-        {{ render 'admin_report_counts' notify_moderators_private_messages }}
-        {{ render 'admin_report_counts' notify_user_private_messages }}
-        {{ render 'admin_report_counts' moderator_warning_private_messages }}
-      {{/unless}}
+      <tbody>
+        {{#unless loading}}
+          {{admin-report-counts report=user_to_user_private_messages}}
+          {{admin-report-counts report=system_private_messages}}
+          {{admin-report-counts report=notify_moderators_private_messages}}
+          {{admin-report-counts report=notify_user_private_messages}}
+          {{admin-report-counts report=moderator_warning_private_messages}}
+        {{/unless}}
+      </tbody>
     </table>
   </div>
 
@@ -89,17 +120,56 @@
       <thead>
         <tr>
           <th>&nbsp;</th>
-          <th>{{i18n 'admin.dashboard.reports.today'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.7_days_ago'}}</th>
-          <th>{{i18n 'admin.dashboard.reports.30_days_ago'}}</th>
+          <th></th>
+          <th></th>
+          <th></th>
         </tr>
       </thead>
-      {{#unless loading}}
-        {{ render 'admin/templates/reports/per_day_counts_report' visits tagName="tbody"}}
-      {{/unless}}
+      <tbody>
+        {{#unless loading}}
+          <tr>
+            <td>{{i18n 'admin.dashboard.uploads'}}</td>
+            <td>{{disk_space.uploads_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.uploads_free}})</td>
+            <td><a href="/admin/backups">{{i18n 'admin.dashboard.backups'}}</a></td>
+            <td>{{disk_space.backups_used}} ({{i18n 'admin.dashboard.space_free' size=disk_space.backups_free}})</td>
+          </tr>
+        {{/unless}}
+      </tbody>
     </table>
   </div>
+
+  {{#unless loading}}
+    {{#if showTrafficReport}}
+    <div class="dashboard-stats">
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th class="title" title="{{i18n 'admin.dashboard.traffic'}}">{{i18n 'admin.dashboard.traffic_short'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.today'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.yesterday'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.last_7_days'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.last_30_days'}}</th>
+            <th>{{i18n 'admin.dashboard.reports.all'}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#unless loading}}
+            {{admin-report-counts report=http_2xx_reqs}}
+            {{admin-report-counts report=http_3xx_reqs}}
+            {{admin-report-counts report=http_4xx_reqs}}
+            {{admin-report-counts report=http_5xx_reqs}}
+            {{admin-report-counts report=http_background_reqs}}
+            {{admin-report-counts report=http_total_reqs}}
+          {{/unless}}
+        </tbody>
+      </table>
+    </div>
+    {{else}}
+      <div class="dashboard-stats">
+        <a href {{action 'showTrafficReport'}}>{{i18n 'admin.dashboard.show_traffic_report'}}</a>
+      </div>
+    {{/if}}
+  {{/unless}}
 </div>
 
 <div class="dashboard-right">

@@ -1,6 +1,6 @@
+require "csv"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require "optparse"
-require "csv"
 
 class ImportScripts::VBulletinOld < ImportScripts::Base
 
@@ -460,7 +460,7 @@ class ImportScripts::VBulletinOld < ImportScripts::Base
           id: id,
           user_id: user_id_from_imported_user_id(topic[:postuserid]) || Discourse::SYSTEM_USER_ID,
           title: CGI.unescapeHTML(topic[:title]).strip[0...255],
-          category: category_from_imported_category_id(topic[:forumid]).try(:name),
+          category: category_id_from_imported_category_id(topic[:forumid]),
           raw: post[:raw],
           created_at: Time.at(topic[:dateline].to_i),
           visible: topic[:visible].to_i == 1,

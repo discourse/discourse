@@ -22,14 +22,16 @@
 }
 
 .user-preferences {
-  input.category-group {
-    width: 500px;
+  input.category-group, input.user-selector {
+    width: 530px;
   }
 
   textarea {
     width: 530px;
     height: 100px;
   }
+
+  input
 
   input[type=text] {
     @include small-width {
@@ -168,6 +170,13 @@
       td {
         padding: 5px;
         border-bottom: 1px solid scale-color-diff();
+      }
+    }
+
+    .pref-avatar {
+      .avatar {
+        max-width: 45px;
+        max-height: 45px;
       }
     }
   }
@@ -573,14 +582,6 @@
 }
 
 .paginated-topics-list {
-  .topic-list > tbody > tr:nth-child(odd) {
-    background-color: darken($secondary, 3%);
-  }
-
-  .topic-list > tbody > tr:nth-child(even) {
-    background-color: $secondary;
-  }
-
   .user-content {
     width: 100%;
     margin-top: 0;

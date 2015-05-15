@@ -11,7 +11,7 @@ export default Ember.Object.extend({
 
   title: function() {
     return I18n.messageFormat('posts_likes_MF', {
-      count: this.get('topic.posts_count'),
+      count: this.get('topic.replyCount'),
       ratio: this.get('ratioText')
     }).trim();
   }.property(),

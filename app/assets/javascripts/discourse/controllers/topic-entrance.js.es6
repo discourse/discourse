@@ -17,7 +17,7 @@ function entranceDate(dt, showTime) {
   );
 }
 
-export default Ember.ObjectController.extend({
+export default Ember.Controller.extend({
   position: null,
 
   createdDate: function() {
@@ -51,11 +51,11 @@ export default Ember.ObjectController.extend({
     },
 
     enterTop: function() {
-      Discourse.URL.routeTo(this.get('url'));
+      Discourse.URL.routeTo(this.get('model.url'));
     },
 
     enterBottom: function() {
-      Discourse.URL.routeTo(this.get('lastPostUrl'));
+      Discourse.URL.routeTo(this.get('model.lastPostUrl'));
     }
   }
 });

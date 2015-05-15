@@ -10,14 +10,14 @@ class PostAlerter
   def after_create_post(post)
     if post.topic.private_message?
       # If it's a private message, notify the topic_allowed_users
-      post.topic.all_allowed_users.reject{ |user| user.id == post.user_id }.each do |user|
-        next if user.blank?
-
+      post.topic.all_allowed_users.reject do |user|
+        user.blank? ||
+        user.id == Discourse::SYSTEM_USER_ID ||
+        user.id == post.user_id
+      end.each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
-          next unless post.reply_to_post_number
-          next unless post.reply_to_post.user_id == user.id
+          next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
         end
-
         create_notification(user, Notification.types[:private_message], post)
       end
     elsif post.post_type != Post.types[:moderator_action]
@@ -80,11 +80,24 @@ class PostAlerter
     user.reload
   end
 
+  NOTIFIABLE_TYPES = [:mentioned, :replied, :quoted, :posted, :linked, :private_message].map{ |t|
+    Notification.types[t]
+  }
+
   def create_notification(user, type, post, opts={})
     return if user.blank?
+    return if user.id == Discourse::SYSTEM_USER_ID
 
     # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
+
+    notifier_id = opts[:user_id] || post.user_id
+
+    # apply muting here
+    return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
+                                      .joins(:muted_user)
+                                      .where('NOT admin AND NOT moderator')
+                                      .exists?
 
     # skip if muted on the topic
     return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
@@ -92,9 +105,9 @@ class PostAlerter
     # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
                                 .order("notifications.id desc")
-                                .find_by(notification_type: type, topic_id: post.topic_id, post_number: post.post_number)
+                                .find_by(topic_id: post.topic_id, post_number: post.post_number)
 
-    if existing_notification
+    if existing_notification && existing_notification.notification_type == type
        return unless existing_notification.notification_type == Notification.types[:edited] &&
                      existing_notification.data_hash["display_username"] = opts[:display_username]
     end
@@ -118,11 +131,7 @@ class PostAlerter
     if collapsed
       post = first_unread_post(user,post.topic) || post
       count = unread_count(user, post.topic)
-      I18n.with_locale(if SiteSetting.allow_user_locale && user.locale.present?
-                         user.locale
-                       else
-                         SiteSetting.default_locale
-                       end) do
+      I18n.with_locale(user.effective_locale) do
         opts[:display_username] = I18n.t('embed.replies', count: count) if count > 1
       end
     end
@@ -138,6 +147,24 @@ class PostAlerter
                                       original_post_id: original_post.id,
                                       original_username: original_username,
                                       display_username: opts[:display_username] || post.user.username }.to_json)
+
+   if (!existing_notification) && NOTIFIABLE_TYPES.include?(type)
+
+     # we may have an invalid post somehow, dont blow up
+     post_url = original_post.url rescue nil
+     if post_url
+        MessageBus.publish("/notification-alert/#{user.id}", {
+          notification_type: type,
+          post_number: original_post.post_number,
+          topic_title: original_post.topic.title,
+          topic_id: original_post.topic.id,
+          excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
+          username: original_username,
+          post_url: post_url
+        }, user_ids: [user.id])
+     end
+   end
+
   end
 
   # TODO: Move to post-analyzer?
@@ -185,6 +212,7 @@ class PostAlerter
 
     exclude_user_ids << reply_to_user.id if reply_to_user.present?
     exclude_user_ids.flatten!
+
     TopicUser
       .where(topic_id: post.topic_id, notification_level: TopicUser.notification_levels[:watching])
       .includes(:user).each do |tu|

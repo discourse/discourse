@@ -6,13 +6,25 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 de:
-  activerecord:
-    attributes:
-      post:
-        poll_options: "Umfrageoptionen"
+  site_settings:
+    poll_enabled: "Benutzern das Erstellen von Umfragen erlauben?"
+    poll_maximum_options: "Maximale Anzahl der in einer Umfrage erlaubten Optionen."
   poll:
-    must_contain_poll_options: "muss eine Liste mit Umfrageoptionen enthalten"
-    cannot_have_modified_options: "können nach den ersten 5 Minuten nicht mehr geändert werden. Kontaktiere einen Moderator, wenn du sie ändern möchtest."
-    cannot_add_or_remove_options: "können nur bearbeitet, jedoch nicht hinzugefügt oder entfernt werden. Wenn du Optionen hinzufügen oder entfernen möchtest, solltest du dieses Thema sperren und ein neues erstellen."
-    prefix: "Umfrage"
-    closed_prefix: "Beendete Umfrage"
+    multiple_polls_without_name: "Es gibt mehrere namenlose Umfragen. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
+    multiple_polls_with_same_name: "Es gibt mehre Umfragen mit dem selben Namen: <strong>%{name}</strong>. Benutze das Attribute '<code>name</code>', um deine Umfragen eindeutig identifizierbar zu machen."
+    default_poll_must_have_at_least_2_options: "Umfragen müssen mindestens 2 Optionen haben."
+    named_poll_must_have_at_least_2_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss mindestens 2 Optionen haben."
+    default_poll_must_have_less_options: "Die Umfrage muss weniger als %{max} Optionen haben."
+    named_poll_must_have_less_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss weniger als %{max} Optionen haben."
+    default_poll_must_have_different_options: "Die Umfrage muss unterschiedliche Optionen haben."
+    named_poll_must_have_different_options: "Die Umfrage mit dem Namen <strong>%{name}</strong> muss unterschiedliche Optionen haben."
+    requires_at_least_1_valid_option: "Sie müssen mindestens 1 gültige Option auswählen."
+    cannot_change_polls_after_5_minutes: "Nach den ersten 5 Minuten können Sie keine Umfragen mehr hinzufügen, entfernen oder umbenennen."
+    op_cannot_edit_options_after_5_minutes: "Nach den ersten 5 Minuten können keine Umfrageoptionen mehr hinzugefügt oder entfernt werden. Kontaktieren Sie einen Moderator, wenn Sie eine Umfrageoption ändern müssen."
+    staff_cannot_add_or_remove_options_after_5_minutes: "Nach den ersten 5 Minuten können keine Umfrageoptionen mehr hinzugefügt oder entfernt werden. Sie sollten dieses Thema schließen und stattdessen ein neues erstellen."
+    no_polls_associated_with_this_post: "Diesem Beitrag sind keine Umfragen zugeordnet."
+    no_poll_with_this_name: "Diesem Beitrag ist keine Umfrage mit dem Namen <strong>%{name}</strong> zugeordnet."
+    topic_must_be_open_to_vote: "Das Thema muss zum Abstimmen geöffnet sein."
+    poll_must_be_open_to_vote: "Die Umfrage muss zum Abstimmen gestartet sein."
+    topic_must_be_open_to_toggle_status: "Das Thema muss geöffnet sein, um den Status zu ändern."
+    only_staff_or_op_can_toggle_status: "Nur Mitarbeiter oder der Erstautor können den Status der Umfrage ändern."

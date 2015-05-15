@@ -140,6 +140,29 @@ Badge.seed do |b|
   b.system = true
 end
 
+
+[
+  [Badge::Promoter,"Promoter",BadgeType::Bronze,1,0],
+  [Badge::Campaigner,"Campaigner",BadgeType::Silver,3,2],
+  [Badge::Champion,"Champion",BadgeType::Gold,10,2],
+].each do |id, name, type, count, trust_level|
+  Badge.seed do |b|
+    b.id = id
+    b.default_name = name
+    b.default_icon = "fa-user-plus"
+    b.badge_type_id = type
+    b.multiple_grant = false
+    b.target_posts = false
+    b.show_posts = false
+    b.query = Badge::Queries.invite_badge(count,trust_level)
+    b.default_badge_grouping_id = BadgeGrouping::Community
+    # daily is good enough
+    b.trigger = Badge::Trigger::None
+    b.auto_revoke = true
+    b.system = true
+  end
+end
+
 Badge.seed do |b|
   b.id = Badge::FirstShare
   b.default_name = "First Share"
@@ -236,6 +259,18 @@ like_badges.each do |spec|
     b.trigger = Badge::Trigger::PostAction
     b.system = true
   end
+end
+
+Badge.seed do |b|
+  b.id = Badge::OneYearAnniversary
+  b.default_name = "Anniversary"
+  b.default_icon = "fa-clock-o"
+  b.badge_type_id = BadgeType::Silver
+  b.query = Badge::Queries::OneYearAnniversary
+  b.default_badge_grouping_id = BadgeGrouping::Community
+  b.trigger = Badge::Trigger::None
+  b.auto_revoke = false
+  b.system = true
 end
 
 Badge.where("NOT system AND id < 100").each do |badge|

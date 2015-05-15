@@ -6,13 +6,5 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 ru:
-  activerecord:
-    attributes:
-      post:
-        poll_options: "Варианты ответов"
-  poll:
-    must_contain_poll_options: "должен содержать варианты ответов (список)"
-    cannot_have_modified_options: "нельзя изменять после первых пяти минут. Если все же нужно их отредактировать, свяжитесь с модератором."
-    cannot_add_or_remove_options: "можно редактировать, но не добавлять или удалять. Если нужно добавить или удалить, закройте эту тему и создайте новую."
-    prefix: "Опрос"
-    closed_prefix: "Завершившийся опрос"
+  site_settings:
+    poll_enabled: "Разрешить содание опросов?"

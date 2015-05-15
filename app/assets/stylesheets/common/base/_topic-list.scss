@@ -2,6 +2,7 @@
   position: absolute;
   top: 4px;
   width: 100%;
+  z-index: 1;
 }
 
 .list-controls {
@@ -15,20 +16,19 @@
 
 .topic-list {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  border-collapse: collapse;
   background: rgba($secondary, .8);
 
   > tbody > tr {
-
-    &.archived a {
-      opacity: 0.6;
-    }
     &.has-excerpt .star {
       vertical-align: top;
       margin-top: 2px;
     }
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+  }
+
+  > tbody > tr:first-of-type {
+    border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
   }
 
   th,
@@ -99,10 +99,6 @@
     }
   }
 
-  td.category a {
-    max-width:150px;
-  }
-
 }
 
 
@@ -156,24 +152,6 @@
     margin-left: 8px;
   }
 
-  .badge-category {
-    padding: 4px 10px;
-    display: inline-block;
-    line-height: 24px;
-  }
-
-  .category-dropdown-menu .badge-category {
-    width: 100%;
-  }
-  .category-dropdown-button {
-    font-size: 1.143em;
-    width: 10px;
-    text-align: center;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
   clear: both;
 }
 
@@ -223,10 +201,6 @@ ol.category-breadcrumb {
   background-color: $secondary;
   z-index: 100;
 
-  .cat {
-    margin-right: 20px;
-  }
-
   a.badge-category, a.badge-category-parent {
     line-height: 19px;
     overflow:hidden;
@@ -252,11 +226,12 @@ ol.category-breadcrumb {
 }
 
 .period-chooser {
-
+  display: inline-block;
   @include unselectable;
 
   h2 {
     float: left;
+    margin: 5px 0 10px;
   }
 
   button {
@@ -300,6 +275,10 @@ ol.category-breadcrumb {
 
 .top-title-buttons {
   display: inline;
+
+  button {
+    margin-right: 0.5em;
+  }
 }
 
 div.education {

@@ -4,10 +4,12 @@ require_dependency 'rate_limiter'
 require_dependency 'topic_creator'
 require_dependency 'post_jobs_enqueuer'
 require_dependency 'distributed_mutex'
+require_dependency 'has_errors'
 
 class PostCreator
+  include HasErrors
 
-  attr_reader :errors, :opts
+  attr_reader :opts
 
   # Acceptable options:
   #
@@ -43,6 +45,7 @@ class PostCreator
   #     meta_data             - Topic meta data hash
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
+  #     pinned_globally       - Is the topic pinned globally (optional)
   #
   def initialize(user, opts)
     # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
@@ -65,42 +68,73 @@ class PostCreator
     @guardian ||= Guardian.new(@user)
   end
 
-  def create
+  def valid?
     @topic = nil
     @post = nil
 
     if @user.suspended? && !skip_validations?
-      @errors = Post.new.errors
-      @errors.add(:base, I18n.t(:user_is_suspended))
-      return
+      errors[:base] << I18n.t(:user_is_suspended)
+      return false
     end
 
-    transaction do
-      setup_topic
-      setup_post
-      rollback_if_host_spam_detected
-      plugin_callbacks
-      save_post
-      extract_links
-      store_unique_post_key
-      track_topic
-      update_topic_stats
-      update_topic_auto_close
-      update_user_counts
-      create_embedded_topic
-
-      ensure_in_allowed_users if guardian.is_staff?
-      @post.advance_draft_sequence
-      @post.save_reply_relationships
+    if new_topic?
+      topic_creator = TopicCreator.new(@user, guardian, @opts)
+      return false unless skip_validations? || validate_child(topic_creator)
+    else
+      @topic = Topic.find_by(id: @opts[:topic_id])
+      if (@topic.blank? || !guardian.can_create?(Post, @topic))
+        errors[:base] << I18n.t(:topic_not_found)
+        return false
+      end
     end
 
-    if @post && @post.errors.empty?
+    setup_post
+
+    return true if skip_validations?
+    if @post.has_host_spam?
+      @spam = true
+      errors[:base] << I18n.t(:spamming_host)
+      return false
+    end
+
+    DiscourseEvent.trigger :before_create_post, @post
+    DiscourseEvent.trigger :validate_post, @post
+
+    post_validator = Validators::PostValidator.new(skip_topic: true)
+    post_validator.validate(@post)
+
+    valid = @post.errors.blank?
+    add_errors_from(@post) unless valid
+    valid
+  end
+
+  def create
+    if valid?
+      transaction do
+        create_topic
+        save_post
+        extract_links
+        store_unique_post_key
+        track_topic
+        update_topic_stats
+        update_topic_auto_close
+        update_user_counts
+        create_embedded_topic
+
+        ensure_in_allowed_users if guardian.is_staff?
+        @post.advance_draft_sequence
+        @post.save_reply_relationships
+      end
+    end
+
+    if @post && errors.blank?
       publish
-      PostAlerter.post_created(@post) unless @opts[:import_mode]
 
       track_latest_on_category
       enqueue_jobs
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
+
+      trigger_after_events(@post)
     end
 
     if @post || @spam
@@ -136,6 +170,11 @@ class PostCreator
 
   protected
 
+  def trigger_after_events(post)
+    DiscourseEvent.trigger(:topic_created, post.topic, @opts, @user) unless @opts[:topic_id]
+    DiscourseEvent.trigger(:post_created, post, @opts, @user)
+  end
+
   def transaction(&blk)
     Post.transaction do
       if new_topic?
@@ -163,21 +202,16 @@ class PostCreator
                            { user: @user,
                              limit_once_per: 24.hours,
                              message_params: {domains: @post.linked_hosts.keys.join(', ')} } )
-    elsif @post && !@post.errors.present? && !skip_validations?
+    elsif @post && errors.blank? && !skip_validations?
       SpamRulesEnforcer.enforce!(@post)
     end
-  end
-
-  def plugin_callbacks
-    DiscourseEvent.trigger :before_create_post, @post
-    DiscourseEvent.trigger :validate_post, @post
   end
 
   def track_latest_on_category
     return unless @post && @post.errors.count == 0 && @topic && @topic.category_id
 
     Category.where(id: @topic.category_id).update_all(latest_post_id: @post.id)
-    Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id) if @post.post_number == 1
+    Category.where(id: @topic.category_id).update_all(latest_topic_id: @topic.id) if @post.is_first_post?
   end
 
   def ensure_in_allowed_users
@@ -190,23 +224,17 @@ class PostCreator
 
   private
 
-  def setup_topic
-    if new_topic?
+  def create_topic
+    return if @topic
+    begin
       topic_creator = TopicCreator.new(@user, guardian, @opts)
-
-      begin
-        topic = topic_creator.create
-        @errors = topic_creator.errors
-      rescue ActiveRecord::Rollback => ex
-        # In the event of a rollback, grab the errors from the topic
-        @errors = topic_creator.errors
-        raise ex
-      end
-    else
-      topic = Topic.find_by(id: @opts[:topic_id])
-      guardian.ensure_can_create!(Post, topic)
+      @topic = topic_creator.create
+    rescue ActiveRecord::Rollback
+      add_errors_from(topic_creator)
+      return
     end
-    @topic = topic
+    @post.topic_id = @topic.id
+    @post.topic = @topic
   end
 
   def update_topic_stats
@@ -227,9 +255,10 @@ class PostCreator
   def setup_post
     @opts[:raw] = TextCleaner.normalize_whitespaces(@opts[:raw]).gsub(/\s+\z/, "")
 
-    post = @topic.posts.new(raw: @opts[:raw],
-                            user: @user,
-                            reply_to_post_number: @opts[:reply_to_post_number])
+    post = Post.new(raw: @opts[:raw],
+                    topic_id: @topic.try(:id),
+                    user: @user,
+                    reply_to_post_number: @opts[:reply_to_post_number])
 
     # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email].each do |a|
@@ -246,21 +275,10 @@ class PostCreator
     @post = post
   end
 
-  def rollback_if_host_spam_detected
-    return if skip_validations?
-    if @post.has_host_spam?
-      @post.errors.add(:base, I18n.t(:spamming_host))
-      @errors = @post.errors
-      @spam = true
-      raise ActiveRecord::Rollback.new
-    end
-  end
-
   def save_post
-    unless @post.save(validate: !skip_validations?)
-      @errors = @post.errors
-      raise ActiveRecord::Rollback.new
-    end
+    @post.disable_rate_limits! if skip_validations?
+    saved = @post.save(validate: !skip_validations?)
+    rollback_from_errors!(@post) unless saved
   end
 
   def store_unique_post_key
@@ -275,7 +293,7 @@ class PostCreator
     end
 
     @user.user_stat.post_count += 1
-    @user.user_stat.topic_count += 1 if @post.post_number == 1
+    @user.user_stat.topic_count += 1 if @post.is_first_post?
 
     # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id

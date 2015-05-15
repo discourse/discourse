@@ -3,8 +3,10 @@ moduleFor('controller:topic', 'controller:topic', {
           'controller:search', 'controller:topic-progress', 'controller:application']
 });
 
+import Topic from 'discourse/models/topic';
+
 var buildTopic = function() {
-  return Discourse.Topic.create({
+  return Topic.create({
     title: "Qunit Test Topic",
     participants: [
       {id: 1234,

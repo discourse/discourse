@@ -6,6 +6,13 @@
     .btn-small {
       margin: 0 6px 0 0;
     }
+
+    .badge-wrapper {
+      float: left;
+      &.bullet {
+        margin-top: 5px;
+      }
+    }
   }
 
   a.badge-category {
@@ -17,4 +24,22 @@
 
 .topic-title-outlet {
   clear: both;
+}
+
+.extra-info-wrapper {
+  .badge-wrapper {
+    float: left;
+    &.bullet {
+      margin-top: 5px;
+    }
+  }
+
+}
+
+.has-pending-posts {
+  padding: 0.5em;
+  background-color: dark-light-diff($highlight, $secondary, 50%, -70%);
+  a[href] {
+    float: right;
+  }
 }

@@ -9,8 +9,10 @@
       // This id must be present in the `share_links` site setting too
       id: 'twitter',
 
-      // The icon that will be displayed
-      iconClass: 'fa-twitter-square',
+      // The icon that will be displayed, choose between font awesome class name `faIcon` and custom HTML `htmlIcon`.
+      // When both provided, prefer `faIcon`
+      faIcon: 'fa-twitter-square'
+      htmlIcon: '<img src="example.com/example.jpg">',
 
       // A callback for generating the remote link from the `link` and `title`
       generateUrl: function(link, title) {
@@ -24,17 +26,14 @@
   ```
 **/
 
-var _sources = [];
+var _sources = {};
 
 export default {
-  addSource: function (source) {
-    _sources.push(source);
+  addSource(source) {
+    _sources[source.id] = source;
   },
 
-  activeSources: function() {
-    var enabled = Discourse.SiteSettings.share_links.split('|');
-    return _sources.filter(function(s) {
-      return enabled.indexOf(s.id) !== -1;
-    });
+  activeSources(linksSetting) {
+    return linksSetting.split('|').map(s => _sources[s]).compact();
   }
 };

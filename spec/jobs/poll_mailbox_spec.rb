@@ -34,7 +34,7 @@ describe Jobs::PollMailbox do
 
       Net::POP3.any_instance.expects(:start).raises(error)
 
-      Discourse.expects(:handle_exception)
+      Discourse.expects(:handle_job_exception)
 
       poller.poll_pop3
     end
@@ -150,6 +150,23 @@ describe Jobs::PollMailbox do
             category.email_in_allow_strangers = false
             category.save
           end
+        end
+      end
+
+      describe "user in restricted group" do
+
+        it "raises InvalidAccess error" do
+          restricted_group = Fabricate(:group)
+          restricted_group.add(user)
+          restricted_group.save
+
+          category.set_permissions(restricted_group => :readonly)
+          category.save
+
+          expect_exception Discourse::InvalidAccess
+
+          poller.handle_mail(email)
+          expect(email).to be_deleted
         end
       end
     end

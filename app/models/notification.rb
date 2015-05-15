@@ -8,7 +8,10 @@ class Notification < ActiveRecord::Base
   validates_presence_of :notification_type
 
   scope :unread, lambda { where(read: false) }
-  scope :recent, lambda {|n=nil| n ||= 10; order('created_at desc').limit(n) }
+  scope :recent, lambda {|n=nil| n ||= 10; order('notifications.created_at desc').limit(n) }
+  scope :visible , lambda { where('notifications.topic_id IS NULL OR notifications.topic_id IN (
+                                SELECT id FROM topics
+                                  WHERE deleted_at IS NULL)') }
 
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
@@ -28,7 +31,7 @@ class Notification < ActiveRecord::Base
     @types ||= Enum.new(
       :mentioned, :replied, :quoted, :edited, :liked, :private_message,
       :invited_to_private_message, :invitee_accepted, :posted, :moved_post,
-      :linked, :granted_badge
+      :linked, :granted_badge, :invited_to_topic
     )
   end
 
@@ -39,6 +42,7 @@ class Notification < ActiveRecord::Base
   def self.interesting_after(min_date)
     result =  where("created_at > ?", min_date)
               .includes(:topic)
+              .visible
               .unread
               .limit(20)
               .order("CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
@@ -98,13 +102,19 @@ class Notification < ActiveRecord::Base
 
   def self.recent_report(user, count = nil)
     count ||= 10
-    notifications = user.notifications.recent(count).includes(:topic).to_a
+    notifications = user.notifications
+                        .visible
+                        .recent(count)
+                        .includes(:topic)
+                        .to_a
 
     if notifications.present?
-      notifications += user.notifications
-        .order('created_at desc')
+      notifications += user
+        .notifications
+        .order('notifications.created_at desc')
         .where(read: false, notification_type: Notification.types[:private_message])
-        .where('id < ?', notifications.last.id)
+        .joins(:topic)
+        .where('notifications.id < ?', notifications.last.id)
         .limit(count)
 
       notifications.sort do |x,y|

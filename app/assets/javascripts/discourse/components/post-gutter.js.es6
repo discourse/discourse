@@ -1,6 +1,7 @@
 var MAX_SHOWN = 5;
 
 import StringBuffer from 'discourse/mixins/string-buffer';
+import { iconHTML } from 'discourse/helpers/fa-icon';
 
 export default Em.Component.extend(StringBuffer, {
   classNameBindings: [':gutter'],
@@ -55,14 +56,14 @@ export default Em.Component.extend(StringBuffer, {
       if (collapsed) {
         var remaining = links.length - MAX_SHOWN;
         if (remaining > 0) {
-          buffer.push("<li><a href='#' class='toggle-more'>" + I18n.t('post.more_links', {count: remaining}) + "</a></li>");
+          buffer.push("<li><a href class='toggle-more'>" + I18n.t('post.more_links', {count: remaining}) + "</a></li>");
         }
       }
       buffer.push('</ul>');
     }
 
     if ((links.length <= MAX_SHOWN || !collapsed) && this.get('canReplyAsNewTopic')) {
-      buffer.push("<a href='#' class='reply-new'><i class='fa fa-plus'></i>" + I18n.t('post.reply_as_new_topic') + "</a>");
+      buffer.push("<a href class='reply-new'>" + iconHTML('plus') + I18n.t('post.reply_as_new_topic') + "</a>");
     }
   },
 

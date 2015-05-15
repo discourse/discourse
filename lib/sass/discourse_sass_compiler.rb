@@ -64,12 +64,12 @@ class DiscourseSassCompiler
     }.merge(debug_opts)).render
 
     # Check if CSS needs to be RTLed after compilation
-    # and run RTLit gem on compiled CSS if true and RTLit gem is available
+    # and run R2 gem on compiled CSS if true and R2 gem is available
     css_output = css
-    if GlobalSetting.rtl_css
+    if !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(%w(he ar fa_IR))
       begin
-        require 'rtlit'
-        css_output = RTLit::Converter.to_rtl(css) if defined?(RTLit)
+        require 'r2'
+        css_output = R2.r2(css) if defined?(R2)
       rescue; end
     end
     css_output

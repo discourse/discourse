@@ -1,14 +1,26 @@
-<% @list.categories.each do |c| %>
-  <div class="category">
-    <h2><a href="/c/<%= c.slug.blank? ? c.id : c.slug %>"><%= c.name %></a></h2>
-    <div class="topic-list">
-      <%- if c.displayable_topics.present? %>
-        <% c.displayable_topics.each do |t| %>
-          <a href="<%= t.relative_url %>"><%= t.title %></a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span><br/>
-        <% end %>
-      <%- end %>
+<div class='category-list' itemscope itemtype='http://schema.org/ItemList'>
+  <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
+  <% @list.categories.each do |c| %>
+    <div class='category' itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+      <meta itemprop='url' content='<%= c.url %>'>
+      <h2><a href='<%= c.url %>' itemprop='item'>
+        <span itemprop='name'><%= c.name %></span>
+      </a></h2>
+      <span itemprop='description'><%= c.description %></span>
+      <div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
+        <%- if c.displayable_topics.present? %>
+          <% c.displayable_topics.each do |t| %>
+            <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+              <meta itemprop='url' content='<%= t.url %>'>
+              <a href='<%= t.relative_url %>' itemprop='item'>
+                <span itemprop='name'><%= t.title %></span>
+              </a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
+            </div>
+          <% end %>
+        <%- end %>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 
 <% content_for :title do %><%= I18n.t('js.filters.categories.title') %><% end %>

@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+te:
+  site_settings:
+    enable_imgur: "దస్త్రాలు స్థానికంగా ఉంచవద్దు. imgur ను చేతనం చేయి"
+    imgur_client_id: "మీ imgur.com క్లైంట్ ఐడీ. బొమ్మ ఎగుమతి ప్రమేయానికి కావాలి."
+    imgur_client_secret: "మీ imgur.com క్లైంట్ రహస్యం. ప్రస్తుతం బొమ్మ ఎగుమతించు ప్రమేయానికి అవసరం లేదు, కానీ భవిష్యత్తులో అవసరం కావచ్చు."

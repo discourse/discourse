@@ -67,6 +67,53 @@ describe SessionController do
       expect(logged_on_user.single_sign_on_record.external_username).to eq('sam')
     end
 
+    def sso_for_ip_specs
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+      sso
+    end
+
+    it 'respects IP restrictions on create' do
+      screened_ip = Fabricate(:screened_ip_address)
+      ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
+
+      sso = sso_for_ip_specs
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
+    it 'respects IP restrictions on login' do
+      sso = sso_for_ip_specs
+      _user = DiscourseSingleSignOn.parse(sso.payload).lookup_or_create_user(request.remote_ip)
+
+      sso = sso_for_ip_specs
+      screened_ip = Fabricate(:screened_ip_address)
+      ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to be_blank
+    end
+
+    it 'respects email restrictions' do
+      sso = get_sso('/a/')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      ScreenedEmail.block('bob@bob.com')
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+      logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+      expect(logged_on_user).to eq(nil)
+    end
+
     it 'allows you to create an admin account' do
       sso = get_sso('/a/')
       sso.external_id = '666' # the number of the beast
@@ -241,7 +288,7 @@ describe SessionController do
         logged_on_user = Discourse.current_user_provider.new(request.env).current_user
         expect(logged_on_user.username).to eq(@suggested_username)
         expect(logged_on_user.email).to eq("#{@reversed_username}@garbage.org")
-        expect(logged_on_user.name).to eq(@suggested_name)
+        expect(logged_on_user.name).to eq(@sso.name)
       end
 
       it 'does not change matching attributes for an existing account' do
@@ -257,18 +304,6 @@ describe SessionController do
         expect(logged_on_user.email).to eq(@user.email)
       end
 
-      it 'does not change attributes for unchanged external attributes' do
-        @user.single_sign_on_record.external_username = @sso.username
-        @user.single_sign_on_record.external_email = @sso.email
-        @user.single_sign_on_record.external_name = @sso.name
-        @user.single_sign_on_record.save
-
-        get :sso_login, Rack::Utils.parse_query(@sso.payload)
-        logged_on_user = Discourse.current_user_provider.new(request.env).current_user
-        expect(logged_on_user.username).to eq(@user.username)
-        expect(logged_on_user.email).to eq(@user.email)
-        expect(logged_on_user.name).to eq(@user.name)
-      end
     end
   end
 
@@ -335,6 +370,19 @@ describe SessionController do
           SiteSetting.stubs(:enable_local_logins).returns(false)
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
           expect(response.status.to_i).to eq(500)
+        end
+      end
+
+      describe 'with a blocked IP' do
+        before do
+          screened_ip = Fabricate(:screened_ip_address)
+          ActionDispatch::Request.any_instance.stubs(:remote_ip).returns(screened_ip.ip_address)
+          xhr :post, :create, login: "@" + user.username, password: 'myawesomepassword'
+          user.reload
+        end
+
+        it "doesn't log in" do
+          expect(session[:current_user_id]).to be_nil
         end
       end
 
@@ -409,7 +457,6 @@ describe SessionController do
 
       context 'when admins are restricted by ip address' do
         let(:permitted_ip_address) { '111.234.23.11' }
-
         before do
           Fabricate(:screened_ip_address, ip_address: permitted_ip_address, action_type: ScreenedIpAddress.actions[:allow_admin])
         end
