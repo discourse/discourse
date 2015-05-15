@@ -2521,6 +2521,15 @@ en:
         first_flag:
           name: First Flag
           description: Flagged a post
+        promoter:
+          name: Promoter
+          description: Invited a user
+        campaigner:
+          name: Campaigner
+          description: Invited 3 members
+        champion:
+          name: Champion
+          description: Invited 10 members
         first_share:
           name: First Share
           description: Shared a post
