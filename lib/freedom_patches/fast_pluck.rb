@@ -5,6 +5,8 @@ require_dependency 'sql_builder'
 
 class ActiveRecord::Relation
 
+  # Note: In discourse, the following code is included in lib/sql_builder.rb
+  #
   # class RailsDateTimeDecoder < PG::SimpleDecoder
   #   def decode(string, tuple=nil, field=nil)
   #     if Rails.version >= "4.2.0"
