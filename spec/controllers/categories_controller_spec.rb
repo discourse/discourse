@@ -174,6 +174,14 @@ describe CategoriesController do
         end
       end
 
+      it "returns 422 if email_in address is already in use for other category" do
+        @other_category = Fabricate(:category, name: "Other", email_in: "mail@examle.com" )
+        xhr :put, :update, id: @category.id, name: "Email", email_in: "mail@examle.com", color: "ff0", text_color: "fff"
+
+        expect(response).not_to be_success
+        expect(response.code.to_i).to eq(422)
+      end
+
       describe "success" do
 
         it "updates the group correctly" do
@@ -224,15 +232,21 @@ describe CategoriesController do
       it 'accepts valid custom slug' do
         xhr :put, :update_slug, category_id: @category.id, slug: 'valid-slug'
         expect(response).to be_success
-        category = Category.find(@category.id)
-        expect(category.slug).to eq('valid-slug')
+        expect(@category.reload.slug).to eq('valid-slug')
       end
 
       it 'accepts not well formed custom slug' do
         xhr :put, :update_slug, category_id: @category.id, slug: ' valid slug'
         expect(response).to be_success
-        category = Category.find(@category.id)
-        expect(category.slug).to eq('valid-slug')
+        expect(@category.reload.slug).to eq('valid-slug')
+      end
+
+      it 'accepts and sanitize custom slug when the slug generation method is not english' do
+        SiteSetting.slug_generation_method = 'none'
+        xhr :put, :update_slug, category_id: @category.id, slug: ' another !_ slug @'
+        expect(response).to be_success
+        expect(@category.reload.slug).to eq('another-slug')
+        SiteSetting.slug_generation_method = 'ascii'
       end
 
       it 'rejects invalid custom slug' do

@@ -1,6 +1,7 @@
 require 'cache'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
+require_dependency 'version'
 
 module Discourse
 
@@ -15,7 +16,7 @@ module Discourse
   # error_context() method in Jobs::Base to pass the job arguments and any
   # other desired context.
   # See app/jobs/base.rb for the error_context function.
-  def self.handle_exception(ex, context = {}, parent_logger = nil)
+  def self.handle_job_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
 
@@ -27,36 +28,34 @@ module Discourse
   end
 
   # Expected less matches than what we got in a find
-  class TooManyMatches < Exception; end
+  class TooManyMatches < StandardError; end
 
   # When they try to do something they should be logged in for
-  class NotLoggedIn < Exception; end
+  class NotLoggedIn < StandardError; end
 
   # When the input is somehow bad
-  class InvalidParameters < Exception; end
+  class InvalidParameters < StandardError; end
 
   # When they don't have permission to do something
-  class InvalidAccess < Exception; end
+  class InvalidAccess < StandardError; end
 
   # When something they want is not found
-  class NotFound < Exception; end
+  class NotFound < StandardError; end
 
   # When a setting is missing
-  class SiteSettingMissing < Exception; end
+  class SiteSettingMissing < StandardError; end
 
   # When ImageMagick is missing
-  class ImageMagickMissing < Exception; end
-
-  class InvalidPost < Exception; end
+  class ImageMagickMissing < StandardError; end
 
   # When read-only mode is enabled
-  class ReadOnly < Exception; end
+  class ReadOnly < StandardError; end
 
   # Cross site request forgery
-  class CSRF < Exception; end
+  class CSRF < StandardError; end
 
   def self.filters
-    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks]
+    @filters ||= [:latest, :unread, :new, :read, :posted, :bookmarks, :search]
   end
 
   def self.feed_filters
@@ -64,7 +63,7 @@ module Discourse
   end
 
   def self.anonymous_filters
-    @anonymous_filters ||= [:latest, :top, :categories]
+    @anonymous_filters ||= [:latest, :top, :categories, :search]
   end
 
   def self.logged_in_filters
@@ -80,12 +79,39 @@ module Discourse
   end
 
   def self.activate_plugins!
-    @plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
-    @plugins.each { |plugin| plugin.activate! }
+    all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
+
+    @plugins = []
+    all_plugins.each do |p|
+      v = p.metadata.required_version || Discourse::VERSION::STRING
+      if Discourse.has_needed_version?(Discourse::VERSION::STRING, v)
+        p.activate!
+        @plugins << p
+      else
+        STDERR.puts "Could not activate #{p.metadata.name}, discourse does not meet required version (#{v})"
+      end
+    end
+  end
+
+  def self.recently_readonly?
+    return false unless @last_read_only
+    @last_read_only > 15.seconds.ago
+  end
+
+  def self.received_readonly!
+    @last_read_only = Time.now
+  end
+
+  def self.clear_readonly!
+    @last_read_only = nil
+  end
+
+  def self.disabled_plugin_names
+    plugins.select {|p| !p.enabled?}.map(&:name)
   end
 
   def self.plugins
-    @plugins
+    @plugins ||= []
   end
 
   def self.assets_digest
@@ -114,12 +140,10 @@ module Discourse
 
   def self.auth_providers
     providers = []
-    if plugins
-      plugins.each do |p|
-        next unless p.auth_providers
-        p.auth_providers.each do |prov|
-          providers << prov
-        end
+    plugins.each do |p|
+      next unless p.auth_providers
+      p.auth_providers.each do |prov|
+        providers << prov
       end
     end
     providers
@@ -168,19 +192,30 @@ module Discourse
   end
 
   def self.enable_readonly_mode
-    $redis.set readonly_mode_key, 1
+    $redis.set(readonly_mode_key, 1)
     MessageBus.publish(readonly_channel, true)
+    keep_readonly_mode
     true
   end
 
+  def self.keep_readonly_mode
+    # extend the expiry by 1 minute every 30 seconds
+    Thread.new do
+      while readonly_mode?
+        $redis.expire(readonly_mode_key, 1.minute)
+        sleep 30.seconds
+      end
+    end
+  end
+
   def self.disable_readonly_mode
-    $redis.del readonly_mode_key
+    $redis.del(readonly_mode_key)
     MessageBus.publish(readonly_channel, false)
     true
   end
 
   def self.readonly_mode?
-    !!$redis.get(readonly_mode_key)
+    recently_readonly? || !!$redis.get(readonly_mode_key)
   end
 
   def self.request_refresh!
@@ -221,7 +256,7 @@ module Discourse
     user ||= User.admins.real.order(:id).first
   end
 
-  SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
+  SYSTEM_USER_ID ||= -1
 
   def self.system_user
     User.find_by(id: SYSTEM_USER_ID)
@@ -261,6 +296,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     current_db = RailsMultisite::ConnectionManagement.current_db
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
@@ -276,18 +312,29 @@ module Discourse
     nil
   end
 
-  def self.start_connection_reaper(interval=30, age=30)
+  def self.start_connection_reaper
+    return if GlobalSetting.connection_reaper_age < 1 ||
+              GlobalSetting.connection_reaper_interval < 1
+
     # this helps keep connection counts in check
     Thread.new do
       while true
-        sleep interval
-        pools = []
-        ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
-
-        pools.each do |pool|
-          pool.drain(age.seconds)
+        begin
+          sleep GlobalSetting.connection_reaper_interval
+          reap_connections(GlobalSetting.connection_reaper_age)
+        rescue => e
+          Discourse.handle_exception(e, {message: "Error reaping connections"})
         end
       end
+    end
+  end
+
+  def self.reap_connections(age)
+    pools = []
+    ObjectSpace.each_object(ActiveRecord::ConnectionAdapters::ConnectionPool){|pool| pools << pool}
+
+    pools.each do |pool|
+      pool.drain(age.seconds)
     end
   end
 

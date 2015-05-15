@@ -1,25 +1,19 @@
 import ObjectController from 'discourse/controllers/object';
 
-/**
-  Controller for showing a particular badge.
-
-  @class BadgesShowController
-  @extends ObjectController
-  @namespace Discourse
-  @module Discourse
-**/
 export default ObjectController.extend({
+  noMoreBadges: false,
+  userBadges: null,
   needs: ["application"],
 
   actions: {
-    loadMore: function() {
-      var self = this;
-      var userBadges = this.get('userBadges');
+    loadMore() {
+      const self = this;
+      const userBadges = this.get('userBadges');
 
       Discourse.UserBadge.findByBadgeId(this.get('model.id'), {
         offset: userBadges.length
-      }).then(function(userBadges) {
-        self.get('userBadges').pushObjects(userBadges);
+      }).then(function(result) {
+        userBadges.pushObjects(result);
         if(userBadges.length === 0){
           self.set('noMoreBadges', true);
         }
@@ -48,6 +42,10 @@ export default ObjectController.extend({
 
   _showFooter: function() {
     this.set("controllers.application.showFooter", !this.get("canLoadMore"));
-  }.observes("canLoadMore")
+  }.observes("canLoadMore"),
+
+  showLongDescription: function(){
+    return window.location.search.match("long-description");
+  }.property('userBadges')
 
 });

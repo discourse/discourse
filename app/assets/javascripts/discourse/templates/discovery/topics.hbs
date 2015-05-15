@@ -14,22 +14,18 @@
   </div>
 {{/if}}
 
-{{#if selected}}
-  <div id='bulk-select'>
-    {{d-button action="showBulkActions" icon="wrench" class="no-text"}}
-  </div>
-{{/if}}
+{{bulk-select-button selected=selected refreshTarget=controller}}
 
 <div class='contents'>
   {{#if top}}
     <div class='top-lists'>
-      {{top-period-chooser period=period}}
+      {{period-chooser period=period action="changePeriod"}}
     </div>
   {{/if}}
   {{#if topicTrackingState.hasIncoming}}
     <div class="show-more">
       <div class='alert alert-info clickable' {{action "showInserted"}}>
-        {{countI18n topic_count_ suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
+        {{count-i18n key="topic_count_" suffix=topicTrackingState.filter count=topicTrackingState.incomingCount}}
         {{i18n 'click_to_show'}}
       </div>
     </div>
@@ -43,19 +39,19 @@
         canBulkSelect=canBulkSelect
         changeSort="changeSort"
         toggleBulkSelect="toggleBulkSelect"
-        hideCategory=hideCategory
+        hideCategory=model.hideCategory
         order=order
         ascending=ascending
         bulkSelectEnabled=bulkSelectEnabled
         selected=selected
         expandGloballyPinned=expandGloballyPinned
         expandAllPinned=expandAllPinned
-        topics=topics}}
+        topics=model.topics}}
   {{/if}}
 </div>
 
 <footer class='topic-list-bottom'>
-  {{loading-spinner condition=loadingMore}}
+  {{conditional-loading-spinner condition=model.loadingMore}}
   {{#if allLoaded}}
     {{#if showDismissRead}}
       <button title="{{i18n 'topics.bulk.dismiss_topics_tooltip'}}" id='dismiss-topics' class='btn dismiss-read' {{action "dismissRead" "topics"}}>{{i18n 'topics.bulk.dismiss_topics'}}</button>
@@ -71,13 +67,13 @@
       </div>
       <h3>
         {{footerMessage}}
-        {{#if can_create_topic}}<a href='#' {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
+        {{#if model.can_create_topic}}<a href {{action "createTopic"}}>{{i18n 'topic.suggest_create_topic'}}</a>{{/if}}
       </h3>
     {{else}}
       {{#if top}}
         <h3>
           {{#link-to "discovery.categories"}}{{i18n 'topic.browse_all_categories'}}{{/link-to}}, {{#link-to 'discovery.latest'}}{{i18n 'topic.view_latest_topics'}}{{/link-to}} {{i18n 'or'}} {{i18n 'filters.top.other_periods'}}
-        {{top-period-buttons period=period}}
+        {{top-period-buttons period=period action="changePeriod"}}
         </h3>
       {{else}}
         <div class="education">

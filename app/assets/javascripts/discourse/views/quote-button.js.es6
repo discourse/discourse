@@ -1,11 +1,3 @@
-/**
-  This view is used for rendering the pop-up quote button
-
-  @class QuoteButtonView
-  @extends Discourse.View
-  @namespace Discourse
-  @module Discourse
-**/
 export default Discourse.View.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
@@ -13,20 +5,12 @@ export default Discourse.View.extend({
   isTouchInProgress: false,
 
   /**
-    Determines whether the pop-up quote button should be visible.
     The button is visible whenever there is something in the buffer
     (ie. something has been selected)
-
-    @property visible
   **/
   visible: Em.computed.notEmpty('controller.buffer'),
 
-  /**
-    Renders the pop-up quote button.
-
-    @method render
-  **/
-  render: function(buffer) {
+  render(buffer) {
     buffer.push(I18n.t("post.quote_reply"));
   },
 
@@ -38,15 +22,27 @@ export default Discourse.View.extend({
 
     @method didInsertElement
   **/
-  didInsertElement: function() {
-    var controller = this.get('controller'),
-        view = this;
+  didInsertElement() {
+    const controller = this.get('controller'),
+          view = this;
+
+    var onSelectionChanged = function() {
+      view.selectText(window.getSelection().anchorNode, controller);
+    };
+
+    // Windows Phone hack, it is not firing the touch events
+    // best we can do is debounce this so we dont keep locking up
+    // the selection when we add the caret to measure where we place
+    // the quote reply widget
+    if (navigator.userAgent.match(/Windows Phone/)) {
+      onSelectionChanged = _.debounce(onSelectionChanged, 500);
+    }
 
     $(document)
       .on("mousedown.quote-button", function(e) {
         view.set('isMouseDown', true);
 
-        var $target = $(e.target);
+        const $target = $(e.target);
         // we don't want to deselect when we click on buttons that use it
         if ($target.hasClass('quote-button') ||
             $target.closest('.create').length ||
@@ -71,31 +67,21 @@ export default Discourse.View.extend({
         // or if there a touch in progress
         if (view.get('isMouseDown') || view.get('isTouchInProgress')) return;
         // `selection.anchorNode` is used as a target
-        view.selectText(window.getSelection().anchorNode, controller);
+        onSelectionChanged();
       });
   },
 
-  /**
-    Selects the text
-
-    @method selectText
-  **/
-  selectText: function(target, controller) {
-    var $target = $(target);
+  selectText(target, controller) {
+    const $target = $(target);
     // breaks if quoting has been disabled by the user
     if (!Discourse.User.currentProp('enable_quoting')) return;
     // retrieve the post id from the DOM
-    var postId = $target.closest('.boxed').data('post-id');
+    const postId = $target.closest('.boxed').data('post-id');
     // select the text
     if (postId) controller.selectText(postId);
   },
 
-  /**
-    Unbinds from global `mouseup, mousedown, selectionchange` events
-
-    @method willDestroyElement
-  **/
-  willDestroyElement: function() {
+  willDestroyElement() {
     $(document)
       .off("mousedown.quote-button")
       .off("mouseup.quote-button")
@@ -104,12 +90,7 @@ export default Discourse.View.extend({
       .off("selectionchange");
   },
 
-  /**
-    Quote the selected text when clicking on the quote button.
-
-    @method click
-  **/
-  click: function(e) {
+  click(e) {
     e.stopPropagation();
     return this.get('controller').quoteText(e);
   }

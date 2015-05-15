@@ -19,22 +19,13 @@ describe Cache do
   end
 
   it "can be cleared" do
+    $redis.set("boo", "boo")
     cache.write("hello0", "world")
     cache.write("hello1", "world")
     cache.clear
 
+    expect($redis.get("boo")).to eq("boo")
     expect(cache.read("hello0")).to eq(nil)
-  end
-
-  it "can delete by family" do
-    cache.write("key2", "test", family: "my_family")
-    cache.write("key", "test", expires_in: 1.minute, family: "my_family")
-
-    cache.delete_by_family("my_family")
-
-    expect(cache.fetch("key")).to eq(nil)
-    expect(cache.fetch("key2")).to eq(nil)
-
   end
 
   it "can delete correctly" do
@@ -46,16 +37,23 @@ describe Cache do
     expect(cache.fetch("key")).to eq(nil)
   end
 
-  #TODO yuck on this mock
   it "calls setex in redis" do
     cache.delete("key")
+    cache.delete("bla")
 
     key = cache.namespaced_key("key")
-    $redis.expects(:setex).with(key, 60 , Marshal.dump("bob"))
 
     cache.fetch("key", expires_in: 1.minute) do
       "bob"
     end
+
+    expect($redis.ttl(key)).to be_within(2.seconds).of(1.minute)
+
+    # we always expire withing a day
+    cache.fetch("bla"){ "hi" }
+
+    key = cache.namespaced_key("bla")
+    expect($redis.ttl(key)).to be_within(2.seconds).of(1.day)
   end
 
   it "can store and fetch correctly" do

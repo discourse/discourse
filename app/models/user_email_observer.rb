@@ -32,6 +32,10 @@ class UserEmailObserver < ActiveRecord::Observer
       enqueue :user_invited_to_private_message
     end
 
+    def invited_to_topic
+      enqueue :user_invited_to_topic
+    end
+
     private
 
     def enqueue(type)

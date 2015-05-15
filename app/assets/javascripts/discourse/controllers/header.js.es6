@@ -1,6 +1,6 @@
 import DiscourseController from 'discourse/controllers/controller';
 
-export default DiscourseController.extend({
+const HeaderController = DiscourseController.extend({
   topic: null,
   showExtraInfo: null,
   notifications: null,
@@ -10,15 +10,6 @@ export default DiscourseController.extend({
   loginRequired: Em.computed.alias('controllers.application.loginRequired'),
   canSignUp: Em.computed.alias('controllers.application.canSignUp'),
 
-  hasCategory: function() {
-    var cat = this.get('topic.category');
-    return cat && (!cat.get('isUncategorizedCategory') || !this.siteSettings.suppress_uncategorized_badge);
-  }.property('topic.category'),
-
-  showPrivateMessageGlyph: function() {
-    return !this.get('topic.is_warning') && this.get('topic.isPrivateMessage');
-  }.property('topic.is_warning', 'topic.isPrivateMessage'),
-
   showSignUpButton: function() {
     return this.get('canSignUp') && !this.get('showExtraInfo');
   }.property('canSignUp', 'showExtraInfo'),
@@ -27,9 +18,9 @@ export default DiscourseController.extend({
     return Discourse.User.current() && !this.get('topic.isPrivateMessage');
   }.property('topic.isPrivateMessage'),
 
-  _resetCachedNotifications: function(){
+  _resetCachedNotifications: function() {
     // a bit hacky, but if we have no focus, hide notifications first
-    var visible = $("#notifications-dropdown").is(":visible");
+    const visible = $("#notifications-dropdown").is(":visible");
 
     if(!Discourse.get("hasFocus")) {
       if(visible){
@@ -46,14 +37,15 @@ export default DiscourseController.extend({
   }.observes("currentUser.lastNotificationChange"),
 
   refreshNotifications: function(){
-    var self = this;
+    const self = this;
     if (self.get("loadingNotifications")) { return; }
 
     self.set("loadingNotifications", true);
-    Discourse.NotificationContainer.loadRecent().then(function(result) {
+
+    this.store.find('notification', {recent: true}).then(function(notifications) {
       self.setProperties({
         'currentUser.unread_notifications': 0,
-        notifications: result
+        notifications
       });
     }).catch(function() {
       self.setProperties({
@@ -65,27 +57,41 @@ export default DiscourseController.extend({
   },
 
   actions: {
-    toggleStar: function() {
-      var topic = this.get('topic');
+    toggleStar() {
+      const topic = this.get('topic');
       if (topic) topic.toggleStar();
       return false;
     },
 
-    showNotifications: function(headerView) {
-      var self = this;
+    showNotifications(headerView) {
+      const self = this;
 
       if (self.get('currentUser.unread_notifications') || self.get('currentUser.unread_private_messages') || !self.get('notifications')) {
         self.refreshNotifications();
       }
       headerView.showDropdownBySelector("#user-notifications");
-    },
-
-    jumpToTopPost: function () {
-      var topic = this.get('topic');
-      if (topic) {
-        Discourse.URL.routeTo(topic.get('firstPostUrl'));
-      }
     }
   }
-
 });
+
+// Allow plugins to add to the sum of "flags" above the site map
+const _flagProperties = [];
+function addFlagProperty(prop) {
+  _flagProperties.pushObject(prop);
+}
+
+function applyFlaggedProperties() {
+  const args = _flagProperties.slice();
+  args.push(function() {
+    let sum = 0;
+    _flagProperties.forEach((fp) => sum += (this.get(fp) || 0));
+    return sum;
+  });
+  HeaderController.reopen({ flaggedPostsCount: Ember.computed.apply(this, args) });
+}
+
+addFlagProperty('currentUser.site_flagged_posts_count');
+addFlagProperty('currentUser.post_queue_new_count');
+
+export { addFlagProperty, applyFlaggedProperties };
+export default HeaderController;

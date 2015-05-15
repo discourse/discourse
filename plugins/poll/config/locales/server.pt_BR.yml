@@ -1,28 +1,18 @@
 # encoding: utf-8
 #
-# This file contains content for the server portion of Discourse used by Ruby
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
 #
-# To work with us on translations, see:
+# To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
-#
-# This is a "source" file, which is used by Transifex to get translations for other languages.
-# After this file is changed, it needs to be pushed by a maintainer to Transifex:
-#
-#   tx push -s
-#
-# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
-#
-# To validate this YAML file after you change it, please paste it into
-# http://yamllint.com/
 
 pt_BR:
-  activerecord:
-    attributes:
-      post:
-        poll_options: "Opções de votação "
+  site_settings:
+    poll_enabled: "Permitir que usuários criem votações?"
+    poll_maximum_options: "Número máximo de opções permitidas em uma enquete."
   poll:
-    must_contain_poll_options: "deve conter uma lista de opções de votação"
-    cannot_have_modified_options: "não pode ser modificado após os primeiros cinco minutos. Contate o moderador se necessitar fazer alguma mudança."
-    cannot_add_or_remove_options: "Só pode ser editado, mas não adicionar nem remover. Se precisar das opções para adicionar ou remover, você deve bloquear este tópico e criar um novo."
-    prefix: "Votação"
-    closed_prefix: "Votação encerrada"
+    multiple_polls_without_name: "Existem várias enquetes sem nome. Use o atributo '<code>name</code>' para identificar suas enquetes."
+    multiple_polls_with_same_name: "Existem várias enquetes com o mesmo nome: <strong>%{name}</strong>. Use o atributo '<code>name</code>' para identificar suas enquetes."
+    default_poll_must_have_at_least_2_options: "Enquetes devem ter ao mínimo 2 opções."
+    named_poll_must_have_at_least_2_options: "A enquete de nome <strong>%{name}</strong> deve ter ao menos 2 opções."
+    default_poll_must_have_different_options: "A votação deve ter opções diferentes."
+    no_polls_associated_with_this_post: "Nenhuma votação está associada com essa mensagem."

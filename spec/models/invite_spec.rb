@@ -127,6 +127,28 @@ describe Invite do
     end
   end
 
+  context 'to a group-private topic' do
+    let(:group) { Fabricate(:group) }
+    let(:private_category)  { Fabricate(:private_category, group: group) }
+    let(:group_private_topic) { Fabricate(:topic, category: private_category) }
+    let(:inviter) { group_private_topic.user }
+
+    before do
+      @invite = group_private_topic.invite_by_email(inviter, iceking)
+    end
+
+    it 'should add the groups to the invite' do
+      expect(@invite.groups).to eq([group])
+    end
+
+    context 'when duplicated' do
+      it 'should not duplicate the groups' do
+        expect(group_private_topic.invite_by_email(inviter, iceking)).to eq(@invite)
+        expect(@invite.groups).to eq([group])
+      end
+    end
+  end
+
   context 'an existing user' do
     let(:topic) { Fabricate(:topic, category_id: nil, archetype: 'private_message') }
     let(:coding_horror) { Fabricate(:coding_horror) }
@@ -164,6 +186,25 @@ describe Invite do
     it "won't redeem an invalidated invite" do
       invite.invalidated_at = 1.day.ago
       expect(invite.redeem).to be_blank
+    end
+
+    context "deletes duplicate invites" do
+      let(:another_user) { Fabricate(:user) }
+
+      it 'delete duplicate invite' do
+        another_invite = Fabricate(:invite, email: invite.email, invited_by: another_user)
+        invite.redeem
+        duplicate_invite = Invite.find_by(id: another_invite.id)
+        expect(duplicate_invite).to be_nil
+      end
+
+      it 'does not delete already redeemed invite' do
+        redeemed_invite = Fabricate(:invite, email: invite.email, invited_by: another_user, redeemed_at: 1.day.ago)
+        invite.redeem
+        used_invite = Invite.find_by(id: redeemed_invite.id)
+        expect(used_invite).not_to be_nil
+      end
+
     end
 
     context 'enqueues a job to email "set password" instructions' do
@@ -307,17 +348,14 @@ describe Invite do
         it 'adds the user to the topic_users of the first topic' do
           expect(topic.allowed_users.include?(user)).to eq(true)
           expect(another_topic.allowed_users.include?(user)).to eq(true)
-          another_invite.reload
-          expect(another_invite).not_to be_redeemed
+          duplicate_invite = Invite.find_by(id: another_invite.id)
+          expect(duplicate_invite).to be_nil
         end
 
         context 'if they redeem the other invite afterwards' do
 
-          it 'returns the same user' do
-            result = another_invite.redeem
-            expect(result).to eq(user)
-            another_invite.reload
-            expect(another_invite).to be_redeemed
+          it 'wont redeem a duplicate invite' do
+            expect(another_invite.redeem).to be_blank
           end
 
         end

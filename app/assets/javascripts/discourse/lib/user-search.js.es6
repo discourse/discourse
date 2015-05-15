@@ -6,7 +6,7 @@ var cache = {},
     currentTerm,
     oldSearch;
 
-function performSearch(term, topicId, includeGroups, resultsFn) {
+function performSearch(term, topicId, includeGroups, allowedUsers, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
@@ -17,7 +17,8 @@ function performSearch(term, topicId, includeGroups, resultsFn) {
   oldSearch = $.ajax(Discourse.getURL('/users/search/users'), {
     data: { term: term,
             topic_id: topicId,
-            include_groups: includeGroups }
+            include_groups: includeGroups,
+            topic_allowed_users: allowedUsers }
   });
 
   var returnVal = CANCELLED_STATUS;
@@ -75,6 +76,7 @@ function organizeResults(r, options) {
 export default function userSearch(options) {
   var term = options.term || "",
       includeGroups = options.includeGroups,
+      allowedUsers = options.allowedUsers,
       topicId = options.topicId;
 
 
@@ -101,7 +103,7 @@ export default function userSearch(options) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
-    debouncedSearch(term, topicId, includeGroups, function(r) {
+    debouncedSearch(term, topicId, includeGroups, allowedUsers, function(r) {
       clearTimeout(clearPromise);
       resolve(organizeResults(r, options));
     });

@@ -10,7 +10,7 @@
   </div>
 </div>
 
-{{loading-spinner condition=loading}}
+{{conditional-loading-spinner condition=loading}}
 
 <div {{bind-attr class=":container :list-container loading:hidden"}}>
   <div class="row">
@@ -23,6 +23,7 @@
   <div class="row">
     <div class="full-width">
       <div id='list-area'>
+        {{plugin-outlet "discovery-list-container-top"}}
         {{outlet "list-container"}}
       </div>
     </div>

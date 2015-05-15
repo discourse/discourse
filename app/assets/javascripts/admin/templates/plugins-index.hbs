@@ -1,0 +1,39 @@
+{{#if length}}
+
+  {{d-button label="admin.plugins.change_settings"
+             icon="gear"
+             class='settings-button pull-right'
+             action="showSettings"}}
+
+  <h3>{{i18n "admin.plugins.installed"}}</h3>
+
+  <br/>
+
+  <table>
+    <thead>
+      <tr>
+        <th>{{i18n "admin.plugins.name"}}</th>
+        <th>{{i18n "admin.plugins.version"}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each plugin in controller}}
+        <tr>
+          <td>
+            {{#if plugin.url}}
+              <a {{bind-attr href=plugin.url}} target="_blank">{{plugin.name}}</a>
+            {{else}}
+              {{plugin.name}}
+            {{/if}}
+          </td>
+          <td>{{plugin.version}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>{{i18n "admin.plugins.none_installed"}}</p>
+{{/if}}
+
+<p><a href="https://meta.discourse.org/t/install-a-plugin/19157">{{i18n "admin.plugins.howto"}}</a></p>
+

@@ -51,7 +51,7 @@ Discourse.Utilities = {
 
     var classes = "avatar" + (options.extraClasses ? " " + options.extraClasses : "");
     var title = (options.title) ? " title='" + Handlebars.Utils.escapeExpression(options.title || "") + "'" : "";
-    return "<img width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
+    return "<img alt='' width='" + size + "' height='" + size + "' src='" + url + "' class='" + classes + "'" + title + ">";
   },
 
   tinyAvatar: function(avatarTemplate, options) {
@@ -146,16 +146,9 @@ Discourse.Utilities = {
     }
   },
 
-  /**
-    Validate a list of files to be uploaded
-
-    @method validateUploadedFiles
-    @param {Array} files The list of files we want to upload
-  **/
   validateUploadedFiles: function(files, bypassNewUserRestriction) {
     if (!files || files.length === 0) { return false; }
 
-    // can only upload one file at a time
     if (files.length > 1) {
       bootbox.alert(I18n.t('post.errors.too_many_uploads'));
       return false;
@@ -173,15 +166,6 @@ Discourse.Utilities = {
     return Discourse.Utilities.validateUploadedFile(upload, type, bypassNewUserRestriction);
   },
 
-  /**
-    Validate a file to be uploaded
-
-    @method validateUploadedFile
-    @param {File} file The file to be uploaded
-    @param {string} type The type of the upload (image, attachment)
-    @params {bool} bypassNewUserRestriction
-    @returns true whenever the upload is valid
-  **/
   validateUploadedFile: function(file, type, bypassNewUserRestriction) {
     // check that the uploaded file is authorized
     if (!Discourse.Utilities.authorizesAllExtensions() &&
@@ -272,7 +256,12 @@ Discourse.Utilities = {
     @param {String} path The path
   **/
   isAnImage: function(path) {
-    return (/\.(png|jpg|jpeg|gif|bmp|tif|tiff|svg|webp)$/i).test(path);
+    return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp)$/i).test(path);
+  },
+
+  allowsImages: function() {
+    return Discourse.Utilities.authorizesAllExtensions() ||
+           (/(png|jpe?g|gif|bmp|tiff?|svg|webp)/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   /**
@@ -282,7 +271,7 @@ Discourse.Utilities = {
   **/
   allowsAttachments: function() {
     return Discourse.Utilities.authorizesAllExtensions() ||
-           !(/((png|jpg|jpeg|gif|bmp|tif|tiff|svg|webp)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
+           !(/((png|jpe?g|gif|bmp|tiff?|svg|webp)(,\s)?)+$/i).test(Discourse.Utilities.authorizedExtensions());
   },
 
   displayErrorForUpload: function(data) {
@@ -329,6 +318,7 @@ Discourse.Utilities = {
     } else {
       return new Ember.RSVP.Promise(function(resolve) {
         var image = document.createElement("img");
+        image.crossOrigin = 'Anonymous';
         // this event will be fired as soon as the image is loaded
         image.onload = function(e) {
           var img = e.target;

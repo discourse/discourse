@@ -174,7 +174,7 @@ module BackupRestore
     def pg_dump_command
       db_conf = BackupRestore.database_configuration
 
-      password_argument = "PGPASSWORD=#{db_conf.password}" if db_conf.password.present?
+      password_argument = "PGPASSWORD='#{db_conf.password}'" if db_conf.password.present?
       host_argument     = "--host=#{db_conf.host}"         if db_conf.host.present?
       port_argument     = "--port=#{db_conf.port}"         if db_conf.port.present?
       username_argument = "--username=#{db_conf.username}" if db_conf.username.present?
@@ -258,7 +258,7 @@ module BackupRestore
       end
 
       log "Gzipping archive..."
-      `gzip --best #{tar_filename}`
+      `gzip #{tar_filename}`
     end
 
     def after_create_hook
@@ -283,11 +283,17 @@ module BackupRestore
 
     def clean_up
       log "Cleaning stuff up..."
+      remove_tar_leftovers
       remove_tmp_directory
       unpause_sidekiq
       disable_readonly_mode if Discourse.readonly_mode?
       mark_backup_as_not_running
       log "Finished!"
+    end
+
+    def remove_tar_leftovers
+      log "Removing '.tar' leftovers..."
+      `rm -f #{@archive_directory}/*.tar`
     end
 
     def remove_tmp_directory
@@ -321,19 +327,20 @@ module BackupRestore
     end
 
     def log(message)
+      timestamp = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       puts(message) rescue nil
-      publish_log(message) rescue nil
-      save_log(message)
+      publish_log(message, timestamp) rescue nil
+      save_log(message, timestamp)
     end
 
-    def publish_log(message)
+    def publish_log(message, timestamp)
       return unless @publish_to_message_bus
-      data = { timestamp: Time.now, operation: "backup", message: message }
+      data = { timestamp: timestamp, operation: "backup", message: message }
       MessageBus.publish(BackupRestore::LOGS_CHANNEL, data, user_ids: [@user_id])
     end
 
-    def save_log(message)
-      @logs << "[#{Time.now}] #{message}"
+    def save_log(message, timestamp)
+      @logs << "[#{timestamp}] #{message}"
     end
 
   end

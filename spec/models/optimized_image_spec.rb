@@ -71,7 +71,7 @@ describe OptimizedImage do
         end
 
         it "downloads a copy of the original image" do
-          Tempfile.any_instance.expects(:close!).twice
+          Tempfile.any_instance.expects(:close!)
           store.expects(:download).with(upload).returns(Tempfile.new(["discourse-external", ".png"]))
           OptimizedImage.create_for(upload, 100, 200)
         end

@@ -6,13 +6,22 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 fi:
-  activerecord:
-    attributes:
-      post:
-        poll_options: "Kyselyn vaihtoehtoja"
+  site_settings:
+    poll_enabled: "Annetaanko käyttäjien luoda äänestyskyselyitä?"
+    poll_maximum_options: "Äänestysvaihtoehtojen suurin sallittu määrä."
   poll:
-    must_contain_poll_options: "täytyy sisältää lista vastausvaihtoehdoista"
-    cannot_have_modified_options: "ei voi muokata kun viisi minuuttia on kulunut kyselyn luomisesta. Ota yhteyttä valvojaan jos sinun tarvitsee muokata vaihtoehtoja."
-    cannot_add_or_remove_options: "voi vain muokata, ei lisätä tai poistaa. Jos sinun tarvitsee lisätä tai poistaa vaihtoehtoja, sinun tulee lukita tämä ketju ja luoda uusi."
-    prefix: "Kysely"
-    closed_prefix: "Suljettu kysely"
+    multiple_polls_without_name: "Viesti sisältää useamman nimettömän äänestyskyselyn. Nimeä ne '<code>name</code>'-määreellä."
+    multiple_polls_with_same_name: "Useamman kyselyn nimi on <strong>%{name}</strong>. Anna kaikille eri nimet '<code>name</code>'-määreellä."
+    default_poll_must_have_at_least_2_options: "Äänestyksessä pitää olla vähintään 2 vaihtoehtoa."
+    named_poll_must_have_at_least_2_options: "Äänestyksessä nimeltä <strong>%{name}</strong> pitää olla vähintään 2 vaihtoehtoa."
+    default_poll_must_have_less_options: "Äänestyksessä pitää olla vähemmän, kuin %{max} vaihtoehtoa."
+    named_poll_must_have_less_options: "Äänestyksen nimeltä <strong>%{name}</strong> pitää sisältää vähemmän, kuin %{max} vaihtoehtoa."
+    default_poll_must_have_different_options: "Äänestysvaihtoehtojen on erottava toisistaan."
+    named_poll_must_have_different_options: "Äänestyksen nimeltä <strong>%{name}</strong> vaihtoehtojen on erottava toisistaan."
+    requires_at_least_1_valid_option: "Sinun täytyy valita vähintään 1 vaihtoehto."
+    no_polls_associated_with_this_post: "Tämä viesti ei sisällä äänestyskyselyä."
+    no_poll_with_this_name: "Tämä viesti ei sisällä äänestyskyselyä nimeltä <strong>%{name}</strong>."
+    topic_must_be_open_to_vote: "Vain avoimessa ketjussa voi äänestää."
+    poll_must_be_open_to_vote: "Vain avoimessa kyselyssä voi äänestää."
+    topic_must_be_open_to_toggle_status: "Vain avoimessa ketjussa voi muuttaa äänestyksen tilaa."
+    only_staff_or_op_can_toggle_status: "Vain henkilökunta tai kyselyn laatija voi muuttaa äänestyksen tilaa."

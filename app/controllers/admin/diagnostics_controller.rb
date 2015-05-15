@@ -1,22 +1,26 @@
+require_dependency 'memory_diagnostics'
+
 class Admin::DiagnosticsController < Admin::AdminController
   layout false
   skip_before_filter :check_xhr
 
   def memory_stats
+    text = nil
 
-    begin
-      # ruby 2.1
-      GC.start(full_mark: true)
-    rescue
-      GC.start
+    if params.key?(:diff)
+      if !MemoryDiagnostics.snapshot_exists?
+        text = "No initial snapshot exists"
+      else
+        text = MemoryDiagnostics.compare
+      end
+    elsif params.key?(:snapshot)
+      MemoryDiagnostics.snapshot_current_process
+      text = "Writing snapshot to: #{MemoryDiagnostics.snapshot_filename}\n\nTo get a diff use ?diff=1"
+    else
+      text = MemoryDiagnostics.memory_report(class_report: params.key?(:full))
     end
 
-    stats = GC.stat.map{|k,v| "#{k}: #{v}"}
-    counts = ObjectSpace.count_objects.map{|k,v| "#{k}: #{v}"}
-
-    render text: "GC STATS:\n#{stats.join("\n")} \n\nObjects:\n#{counts.join("\n")}",
-      content_type: Mime::TEXT
-
+    render text: text, content_type: Mime::TEXT
   end
 
   def dump_heap
@@ -34,4 +38,5 @@ class Admin::DiagnosticsController < Admin::AdminController
       render text: "HEAP DUMP:\nnot supported", content_type: Mime::TEXT
     end
   end
+
 end

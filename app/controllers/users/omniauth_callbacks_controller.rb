@@ -85,8 +85,10 @@ class Users::OmniauthCallbacksController < ApplicationController
       user.toggle(:active).save
     end
 
-    if ScreenedIpAddress.block_login?(user, request.remote_ip)
+    if ScreenedIpAddress.should_block?(request.remote_ip)
       @data.not_allowed_from_ip_address = true
+    elsif ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      @data.admin_not_allowed_from_ip_address = true
     elsif Guardian.new(user).can_access_forum? && user.active # log on any account that is active with forum access
       log_on_user(user)
       Invite.invalidate_for_email(user.email) # invite link can't be used to log in anymore

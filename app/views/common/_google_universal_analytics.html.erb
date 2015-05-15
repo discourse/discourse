@@ -4,7 +4,7 @@
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', '<%= SiteSetting.ga_universal_tracking_code %>', '<%= SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '') %>');
+  ga('create', '<%= SiteSetting.ga_universal_tracking_code %>', <%= ga_universal_json %>);
   ga('send', 'pageview');
 
 </script>

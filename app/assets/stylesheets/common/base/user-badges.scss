@@ -3,7 +3,6 @@
   padding: 3px 8px;
   color: $primary;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -65%);
-  font-size: $base-font-size * 0.86;
   line-height: 19px;
   margin: 0;
   display: inline-block;
@@ -144,7 +143,7 @@ table.badges-listing {
   width: 45%;
   padding: 0 0 0 4%;
   margin-bottom: 20px;
-  
+
   .badge-info {
     width: 100px;
     display: block;
@@ -158,4 +157,9 @@ table.badges-listing {
     margin-left: 18px;
     text-align: left;
   }
+}
+
+.long-description.banner {
+  width: 88%;
+  margin-bottom: 20px;
 }

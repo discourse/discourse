@@ -12,7 +12,7 @@ class SessionController < ApplicationController
 
   def sso
     if SiteSetting.enable_sso
-      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || '/')
+      redirect_to DiscourseSingleSignOn.generate_url(params[:return_path] || path('/'))
     else
       render nothing: true, status: 404
     end
@@ -32,7 +32,7 @@ class SessionController < ApplicationController
         redirect_to sso.to_url(sso.return_sso_url)
       else
         session[:sso_payload] = request.query_string
-        redirect_to '/login'
+        redirect_to path('/login')
       end
     else
       render nothing: true, status: 404
@@ -47,28 +47,32 @@ class SessionController < ApplicationController
     raise "User #{params[:session_id]} not found" if user.blank?
 
     log_on_user(user)
-    redirect_to "/"
+    redirect_to path("/")
   end
 
   def sso_login
     unless SiteSetting.enable_sso
-      render nothing: true, status: 404
-      return
+      return render(nothing: true, status: 404)
     end
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
-      render text: I18n.t("sso.timeout_expired"), status: 500
-      return
+      return render(text: I18n.t("sso.timeout_expired"), status: 500)
+    end
+
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return render(text: I18n.t("sso.unknown_error"), status: 500)
     end
 
     return_path = sso.return_path
     sso.expire_nonce!
 
     begin
-      if user = sso.lookup_or_create_user
+      if user = sso.lookup_or_create_user(request.remote_ip)
+
         if SiteSetting.must_approve_users? && !user.approved?
           render text: I18n.t("sso.account_not_approved"), status: 403
+          return
         else
           log_on_user user
         end
@@ -77,9 +81,9 @@ class SessionController < ApplicationController
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
-            return_path = "/" unless uri.host == Discourse.current_hostname
+            return_path = path("/") unless uri.host == Discourse.current_hostname
           rescue
-            return_path = "/"
+            return_path = path("/")
           end
         end
 
@@ -92,7 +96,7 @@ class SessionController < ApplicationController
       SingleSignOn::ACCESSORS.each do |a|
         details[a] = sso.send(a)
       end
-      Discourse.handle_exception(e, details)
+      Discourse.handle_job_exception(e, details)
 
       render text: I18n.t("sso.unknown_error"), status: 500
     end
@@ -144,9 +148,12 @@ class SessionController < ApplicationController
       return
     end
 
-    if ScreenedIpAddress.block_login?(user, request.remote_ip)
-      not_allowed_from_ip_address(user)
-      return
+    if ScreenedIpAddress.should_block?(request.remote_ip)
+      return not_allowed_from_ip_address(user)
+    end
+
+    if ScreenedIpAddress.block_admin_login?(user, request.remote_ip)
+      return admin_not_allowed_from_ip_address(user)
     end
 
     (user.active && user.email_confirmed?) ? login(user) : not_activated(user)
@@ -224,6 +231,10 @@ class SessionController < ApplicationController
 
   def not_allowed_from_ip_address(user)
     render json: {error: I18n.t("login.not_allowed_from_ip_address", username: user.username)}
+  end
+
+  def admin_not_allowed_from_ip_address(user)
+    render json: {error: I18n.t("login.admin_not_allowed_from_ip_address", username: user.username)}
   end
 
   def failed_to_login(user)

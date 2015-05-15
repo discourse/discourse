@@ -3,7 +3,7 @@
   <a {{action "filterByStaffUser" acting_user}} class="btn btn-small">{{acting_user.username}}</a>
 </div>
 <div class="col value action">
-  <a {{action "filterByAction" action_name}} class="btn btn-small">{{actionName}}</a>
+  <a {{action "filterByAction" this}} class="btn btn-small">{{actionName}}</a>
 </div>
 <div class="col value subject">
   {{#if target_user}}

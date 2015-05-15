@@ -98,7 +98,10 @@ class CookedPostProcessor
     return unless image_sizes.present?
     image_sizes.each do |image_size|
       url, size = image_size[0], image_size[1]
-      return [size["width"], size["height"]] if url && size && url.include?(src)
+      if url && url.include?(src) &&
+         size && size["width"].to_i > 0 && size["height"].to_i > 0
+        return [size["width"], size["height"]]
+      end
     end
   end
 
@@ -202,7 +205,7 @@ class CookedPostProcessor
   end
 
   def update_topic_image(images)
-    if @post.post_number == 1
+    if @post.is_first_post?
       img = images.first
       @post.topic.update_column(:image_url, img["src"]) if img["src"].present?
     end

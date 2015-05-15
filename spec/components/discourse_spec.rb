@@ -106,17 +106,19 @@ describe Discourse do
   end
 
   context "#readonly_mode?" do
+    it "is false by default" do
+      expect(Discourse.readonly_mode?).to eq(false)
+    end
 
     it "returns true when the key is present in redis" do
       $redis.expects(:get).with(Discourse.readonly_mode_key).returns("1")
       expect(Discourse.readonly_mode?).to eq(true)
     end
 
-    it "returns false when the key is not present in redis" do
-      $redis.expects(:get).with(Discourse.readonly_mode_key).returns(nil)
-      expect(Discourse.readonly_mode?).to eq(false)
+    it "returns true when Discourse is recently read only" do
+      Discourse.received_readonly!
+      expect(Discourse.readonly_mode?).to eq(true)
     end
-
   end
 
   context "#handle_exception" do
@@ -139,7 +141,7 @@ describe Discourse do
     it "should not fail when called" do
       exception = StandardError.new
 
-      Discourse.handle_exception(exception, nil, nil)
+      Discourse.handle_job_exception(exception, nil, nil)
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys).to eq([:current_db, :current_hostname])
     end
@@ -147,7 +149,7 @@ describe Discourse do
     it "correctly passes extra context" do
       exception = StandardError.new
 
-      Discourse.handle_exception(exception, {message: "Doing a test", post_id: 31}, nil)
+      Discourse.handle_job_exception(exception, {message: "Doing a test", post_id: 31}, nil)
       expect(logger.exception).to eq(exception)
       expect(logger.context.keys.sort).to eq([:current_db, :current_hostname, :message, :post_id].sort)
     end

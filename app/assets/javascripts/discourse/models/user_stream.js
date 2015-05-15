@@ -20,7 +20,6 @@ Discourse.UserStream = Discourse.Model.extend({
     var filter = this.get('filter');
     if (filter === Discourse.UserAction.TYPES.replies) {
       return [Discourse.UserAction.TYPES.replies,
-              Discourse.UserAction.TYPES.mentions,
               Discourse.UserAction.TYPES.quotes].join(",");
     }
 

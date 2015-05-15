@@ -26,10 +26,15 @@ task "uploads:migrate_from_s3" => :environment do
   local_store = FileStore::LocalStore.new
   max_file_size = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
 
+  puts "Deleting all optimized images..."
+  puts
+
+  OptimizedImage.destroy_all
+
   puts "Migrating uploads from S3 to local storage"
   puts
 
-  Upload.order(:id).find_each do |upload|
+  Upload.find_each do |upload|
 
     # remove invalid uploads
     if upload.url.blank?
@@ -57,8 +62,8 @@ task "uploads:migrate_from_s3" => :environment do
       if upload.save
         # update & rebake the posts (if any)
         Post.where("raw ILIKE ?", "%#{previous_url}%").find_each do |post|
-          post.raw.gsub!(previous_url, upload.url)
-          post.rebake!
+          post.raw = post.raw.gsub(previous_url, upload.url)
+          post.save
         end
 
         putc '#'
@@ -95,7 +100,7 @@ task "uploads:clean_up" => :environment do
     ##
 
     # uploads & avatars
-    Upload.order(:id).find_each do |upload|
+    Upload.find_each do |upload|
       path = "#{public_directory}#{upload.url}"
       if !File.exists?(path)
         upload.destroy rescue nil
@@ -106,7 +111,7 @@ task "uploads:clean_up" => :environment do
     end
 
     # optimized images
-    OptimizedImage.order(:id).find_each do |optimized_image|
+    OptimizedImage.find_each do |optimized_image|
       path = "#{public_directory}#{optimized_image.url}"
       if !File.exists?(path)
         optimized_image.destroy rescue nil
@@ -151,4 +156,124 @@ task "uploads:clean_up" => :environment do
 
   end
 
+end
+
+
+# list all missing uploads and optimized images
+task "uploads:missing" => :environment do
+
+  public_directory = "#{Rails.root}/public"
+
+  RailsMultisite::ConnectionManagement.each_connection do |db|
+
+    if Discourse.store.external?
+      puts "This task only works for internal storages."
+      next
+    end
+
+
+    Upload.find_each do |upload|
+
+      # could be a remote image
+      next unless upload.url =~ /^\/[^\/]/
+
+      path = "#{public_directory}#{upload.url}"
+      bad = true
+      begin
+        bad = false if File.size(path) != 0
+      rescue
+        # something is messed up
+      end
+      puts path if bad
+    end
+
+    OptimizedImage.find_each do |optimized_image|
+
+      # remote?
+      next unless optimized_image.url =~ /^\/[^\/]/
+
+      path = "#{public_directory}#{optimized_image.url}"
+
+      bad = true
+      begin
+        bad = false if File.size(path) != 0
+      rescue
+        # something is messed up
+      end
+      puts path if bad
+    end
+
+  end
+
+end
+
+# regenerate missing optimized images
+task "uploads:regenerate_missing_optimized" => :environment do
+  ENV["RAILS_DB"] ? regenerate_missing_optimized : regenerate_missing_optimized_all_sites
+end
+
+def regenerate_missing_optimized_all_sites
+  RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+end
+
+def regenerate_missing_optimized
+  db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Regenerating missing optimized images for '#{db}'..."
+
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  public_directory = "#{Rails.root}/public"
+  missing_uploads = Set.new
+
+  OptimizedImage.includes(:upload)
+                .where("LENGTH(COALESCE(url, '')) > 0")
+                .where("width > 0 AND height > 0")
+                .find_each do |optimized_image|
+
+    upload = optimized_image.upload
+
+    next unless optimized_image.url =~ /^\/[^\/]/
+    next unless upload.url =~ /^\/[^\/]/
+
+    thumbnail = "#{public_directory}#{optimized_image.url}"
+    original = "#{public_directory}#{upload.url}"
+
+    if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+      # make sure the original image exists locally
+      if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
+        # try to fix it by redownloading it
+        begin
+          downloaded = FileHelper.download(upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
+          if downloaded && downloaded.size > 0
+            FileUtils.mkdir_p(File.dirname(original))
+            File.open(original, "wb") { |f| f.write(downloaded.read) }
+          end
+        ensure
+          downloaded.try(:close!) if downloaded.respond_to?(:close!)
+        end
+      end
+
+      if File.exists?(original) && File.size(original) > 0
+        FileUtils.mkdir_p(File.dirname(thumbnail))
+        OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
+        putc "#"
+      else
+        missing_uploads << original
+        putc "X"
+      end
+    else
+      putc "."
+    end
+  end
+
+  puts "", "Done"
+
+  if missing_uploads.size > 0
+    puts "Missing uploads:"
+    missing_uploads.sort.each { |u| puts u }
+  end
 end

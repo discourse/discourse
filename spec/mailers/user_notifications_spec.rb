@@ -90,7 +90,8 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
       # from should include full user name
@@ -113,7 +114,7 @@ describe UserNotifications do
       response.user.mailing_list_mode = true
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
-      if rails_master?
+      if Rails.version >= "4.2.0"
         expect(mail.message.class).to eq(ActionMailer::Base::NullMail)
       else
         expect(mail.class).to eq(ActionMailer::Base::NullMail)
@@ -122,7 +123,7 @@ describe UserNotifications do
       response.user.mailing_list_mode = nil
       mail = UserNotifications.user_replied(response.user, post: response, notification: notification)
 
-      if rails_master?
+      if Rails.version >= "4.2.0"
         expect(mail.message.class).not_to eq(ActionMailer::Base::NullMail)
       else
         expect(mail.class).not_to eq(ActionMailer::Base::NullMail)
@@ -138,7 +139,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(false)
+      SiteSetting.enable_names = false
       mail = UserNotifications.user_posted(response.user, post: response, notification: notification)
 
       # from should not include full user name if "show user full names" is disabled
@@ -170,7 +171,7 @@ describe UserNotifications do
     let(:notification) { Fabricate(:notification, user: user, data: {original_username: response_by_user.username}.to_json) }
 
     it 'generates a correct email' do
-      SiteSetting.stubs(:enable_names).returns(true)
+      SiteSetting.enable_names = true
       mail = UserNotifications.user_private_message(response.user, post: response, notification: notification)
 
       # from should include username if full user name is not provided
@@ -195,7 +196,7 @@ describe UserNotifications do
     UserNotifications.any_instance.expects(:build_email).with(user.email, condition)
     mailer = UserNotifications.send(mail_type, user, notification: notification, post: notification.post)
 
-    if rails_master?
+    if Rails.version >= "4.2.0"
       # Starting from Rails 4.2, calling MyMailer.some_method no longer result
       # in an immediate call to MyMailer#some_method. Instead, a "lazy proxy" is
       # returned (this is changed to support #deliver_later). As a quick hack to
@@ -267,9 +268,16 @@ describe UserNotifications do
         expects_build_with(has_key(:topic_id))
       end
 
-      it "has a from alias" do
-        SiteSetting.stubs(:enable_names).returns(true)
+      it "should have user name as from_alias" do
+        SiteSetting.enable_names = true
+        SiteSetting.display_name_on_posts = true
         expects_build_with(has_entry(:from_alias, "#{user.name}"))
+      end
+
+      it "should not have user name as from_alias if display_name_on_posts is disabled" do
+        SiteSetting.enable_names = false
+        SiteSetting.display_name_on_posts = false
+        expects_build_with(has_entry(:from_alias, "walterwhite"))
       end
 
       it "should explain how to respond" do
@@ -314,6 +322,13 @@ describe UserNotifications do
   describe "user invited to a private message" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_private_message }
+      include_examples "no reply by email"
+    end
+  end
+
+  describe "user invited to a topic" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_topic }
       include_examples "no reply by email"
     end
   end

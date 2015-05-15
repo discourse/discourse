@@ -1,48 +1,50 @@
 import Session from 'discourse/models/session';
 import AppEvents from 'discourse/lib/app-events';
+import Store from 'discourse/models/store';
+
+function inject() {
+  const app = arguments[0],
+        name = arguments[1],
+        singletonName = Ember.String.underscore(name).replace(/_/, '-') + ':main';
+
+  Array.prototype.slice.call(arguments, 2).forEach(function(dest) {
+    app.inject(dest, name, singletonName);
+  });
+}
+
+function injectAll(app, name) {
+  inject(app, name, 'controller', 'component', 'route', 'view', 'model');
+}
 
 export default {
   name: "inject-objects",
-  initialize: function(container, application) {
+  initialize(container, app) {
 
-    // Inject appEvents everywhere
-    var appEvents = AppEvents.create();
-    application.register('app-events:main', appEvents, { instantiate: false });
-
-    application.inject('controller', 'appEvents', 'app-events:main');
-    application.inject('component', 'appEvents', 'app-events:main');
-    application.inject('route', 'appEvents', 'app-events:main');
-    application.inject('view', 'appEvents', 'app-events:main');
-    application.inject('model', 'appEvents', 'app-events:main');
+    const appEvents = AppEvents.create();
+    app.register('app-events:main', appEvents, { instantiate: false });
+    injectAll(app, 'appEvents');
     Discourse.URL.appEvents = appEvents;
 
     // Inject Discourse.Site to avoid using Discourse.Site.current()
-    var site = Discourse.Site.current();
-    application.register('site:main', site, { instantiate: false });
-    application.inject('controller', 'site', 'site:main');
-    application.inject('component', 'site', 'site:main');
-    application.inject('route', 'site', 'site:main');
-    application.inject('view', 'site', 'site:main');
-    application.inject('model', 'site', 'site:main');
+    const site = Discourse.Site.current();
+    app.register('site:main', site, { instantiate: false });
+    injectAll(app, 'site');
 
     // Inject Discourse.SiteSettings to avoid using Discourse.SiteSettings globals
-    application.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
-    application.inject('controller', 'siteSettings', 'site-settings:main');
-    application.inject('component', 'siteSettings', 'site-settings:main');
-    application.inject('route', 'siteSettings', 'site-settings:main');
-    application.inject('view', 'siteSettings', 'site-settings:main');
-    application.inject('model', 'siteSettings', 'site-settings:main');
+    app.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
+    injectAll(app, 'siteSettings');
 
     // Inject Session for transient data
-    application.register('session:main', Session.current(), { instantiate: false });
-    application.inject('controller', 'session', 'session:main');
-    application.inject('component', 'session', 'session:main');
-    application.inject('route', 'session', 'session:main');
-    application.inject('view', 'session', 'session:main');
-    application.inject('model', 'session', 'session:main');
+    app.register('session:main', Session.current(), { instantiate: false });
+    injectAll(app, 'session');
 
-    // Inject currentUser. Components only for now to prevent any breakage
-    application.register('current-user:main', Discourse.User.current(), { instantiate: false });
-    application.inject('component', 'currentUser', 'current-user:main');
+    app.register('store:main', Store);
+    inject(app, 'store', 'route', 'controller');
+
+    app.register('current-user:main', Discourse.User.current(), { instantiate: false });
+    inject(app, 'currentUser', 'component', 'route', 'controller');
+
+    app.register('message-bus:main', window.MessageBus, { instantiate: false });
+    inject(app, 'messageBus', 'route', 'controller', 'view');
   }
 };

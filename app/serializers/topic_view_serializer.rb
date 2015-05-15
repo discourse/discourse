@@ -1,4 +1,5 @@
 require_dependency 'pinned_check'
+require_dependency 'new_post_manager'
 
 class TopicViewSerializer < ApplicationSerializer
   include PostStreamSerializerMixin
@@ -30,7 +31,8 @@ class TopicViewSerializer < ApplicationSerializer
                         :slug,
                         :category_id,
                         :word_count,
-                        :deleted_at
+                        :deleted_at,
+                        :pending_posts_count
 
   attributes :draft,
              :draft_key,
@@ -122,6 +124,7 @@ class TopicViewSerializer < ApplicationSerializer
   def include_is_warning?
     is_warning
   end
+
   def draft
     object.draft
   end
@@ -204,6 +207,10 @@ class TopicViewSerializer < ApplicationSerializer
 
   def bookmarked
     object.topic_user.try(:bookmarked)
+  end
+
+  def include_pending_posts_count
+    scope.user.staff? && NewPostManager.queue_enabled?
   end
 
 end

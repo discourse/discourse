@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+da:
+  site_settings:
+    enable_imgur: "Slå imgur api til for upload, gem ikke filer lokalt"
+    imgur_client_id: "Dit imgur.com klient ID, nødvendigt for billed upload funktionen"
+    imgur_client_secret: "Din imgur.com client secret. ikke nødvendig i øjeblikket for billed upload funktionen, men måske nødvendig i fremtiden."

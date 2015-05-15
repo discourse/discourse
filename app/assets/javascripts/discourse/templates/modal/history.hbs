@@ -4,9 +4,9 @@
       <button title="{{i18n 'post.revisions.controls.first'}}" {{bind-attr class=":btn :standard :no-text displayGoToFirst::invisible" disabled=loading}} {{action "loadFirstVersion"}}><i class="fa fa-fast-backward"></i></button>
       <button title="{{i18n 'post.revisions.controls.previous'}}" {{bind-attr class=":btn :standard :no-text displayGoToPrevious::invisible" disabled=loading}} {{action "loadPreviousVersion"}}><i class="fa fa-backward"></i></button>
       <div id="revision-numbers" {{bind-attr class="displayRevisions::invisible"}}>
-        {{#loading-spinner condition=loading size="small"}}
+        {{#conditional-loading-spinner condition=loading size="small"}}
           {{boundI18n revisionsTextKey previousBinding="previousVersion" currentBinding="current_version" totalBinding="version_count"}}
-        {{/loading-spinner}}
+        {{/conditional-loading-spinner}}
       </div>
       <button title="{{i18n 'post.revisions.controls.next'}}" {{bind-attr class=":btn :standard :no-text displayGoToNext::invisible" disabled=loading}} {{action "loadNextVersion"}}><i class="fa fa-forward"></i></button>
       <button title="{{i18n 'post.revisions.controls.last'}}" {{bind-attr class=":btn :standard :no-text displayGoToLast::invisible" disabled=loading}} {{action "loadLastVersion"}}><i class="fa fa-fast-forward"></i></button>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div id="revision-details">
-    {{i18n 'post.revisions.details.edited_by'}}
+    <i class="fa fa-pencil"></i>
     {{#link-to 'user' username}}
       {{bound-avatar-template content.avatar_template "small"}} {{username}}
     {{/link-to}}

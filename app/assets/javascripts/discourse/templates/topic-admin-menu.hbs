@@ -5,7 +5,7 @@
     {{d-button action="toggleMultiSelect" icon="tasks" label="topic.actions.multi_select" class="btn-admin"}}
   </li>
 
-  {{#if details.can_delete}}
+  {{#if model.details.can_delete}}
     <li>
       {{d-button action="deleteTopic" icon="trash-o" label="topic.actions.delete" class="btn-admin btn-danger"}}
     </li>
@@ -18,7 +18,7 @@
   {{/if}}
 
   <li>
-    {{#if closed}}
+    {{#if model.closed}}
       {{d-button action="toggleClosed" icon="unlock" label="topic.actions.open" class="btn-admin"}}
     {{else}}
       {{d-button action="toggleClosed" icon="lock" label="topic.actions.close" class="btn-admin"}}
@@ -26,31 +26,20 @@
     {{/if}}
   </li>
 
-  {{#unless isPrivateMessage}}
-    <li>
-      {{#if isBanner}}
-        {{d-button action="removeBanner" icon="bullhorn" label="topic.actions.remove_banner" class="btn-admin"}}
-      {{else}}
-        {{#if visible}}
-          {{d-button action="makeBanner" icon="bullhorn" label="topic.actions.make_banner" class="btn-admin"}}
+  {{#unless model.isPrivateMessage}}
+    {{#if model.visible}}
+      <li>
+        {{#if isFeatured}}
+          {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.unpin" class="btn-admin"}}
+        {{else}}
+          {{d-button action="showFeatureTopic" icon="thumb-tack" label="topic.actions.pin" class="btn-admin"}}
         {{/if}}
-      {{/if}}
-    </li>
-
-    <li>
-      {{#if pinned_at}}
-        {{d-button action="togglePinned" icon="thumb-tack" label="topic.actions.unpin" class="btn-admin"}}
-      {{else}}
-        {{#if visible}}
-          {{d-button action="togglePinned" icon="thumb-tack" label="topic.actions.pin" class="btn-admin"}}
-          {{d-button action="togglePinnedGlobally" icon="thumb-tack" label="topic.actions.pin_globally" class="btn-admin"}}
-        {{/if}}
-      {{/if}}
-    </li>
+      </li>
+    {{/if}}
   {{/unless}}
 
   <li>
-    {{#if archived}}
+    {{#if model.archived}}
       {{d-button action="toggleArchived" icon="folder" label="topic.actions.unarchive" class="btn-admin"}}
     {{else}}
       {{d-button action="toggleArchived" icon="folder" label="topic.actions.archive" class="btn-admin"}}
@@ -58,7 +47,7 @@
   </li>
 
   <li>
-    {{#if visible}}
+    {{#if model.visible}}
       {{d-button action="toggleVisibility" icon="eye-slash" label="topic.actions.invisible" class="btn-admin"}}
     {{else}}
       {{d-button action="toggleVisibility" icon="eye" label="topic.actions.visible" class="btn-admin"}}

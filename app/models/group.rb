@@ -12,6 +12,8 @@ class Group < ActiveRecord::Base
 
   after_save :destroy_deletions
   after_save :automatic_group_membership
+  after_save :update_primary_group
+  after_save :update_title
 
   validate :name_format_validator
   validates_uniqueness_of :name, case_sensitive: false
@@ -46,15 +48,7 @@ class Group < ActiveRecord::Base
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
 
-    unless guardian.is_admin?
-      allowed_ids = guardian.allowed_category_ids
-      if allowed_ids.length > 0
-        result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-      else
-        result = result.where('topics.category_id IS NULL')
-      end
-    end
-
+    result = guardian.filter_allowed_categories(result)
     result = result.where('posts.id < ?', before_post_id) if before_post_id
     result.order('posts.created_at desc')
   end
@@ -157,7 +151,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.ensure_automatic_groups!
-    AUTO_GROUPS.keys.each do |name|
+    AUTO_GROUPS.each_key do |name|
       refresh_automatic_group!(name) unless lookup_group(name)
     end
   end
@@ -279,6 +273,7 @@ class Group < ActiveRecord::Base
 
   def remove(user)
     self.group_users.where(user: user).each(&:destroy)
+    user.update_columns(primary_group_id: nil) if user.primary_group_id == self.id
   end
 
   def appoint_manager(user)
@@ -308,20 +303,75 @@ class Group < ActiveRecord::Base
       end
     end
 
+    def update_title
+      return if new_record? && !self.title.present?
+
+      if self.title_changed?
+        sql = <<SQL
+        UPDATE users SET title = :title
+        WHERE (title = :title_was OR
+              title = '' OR
+              title IS NULL) AND
+              COALESCE(title,'') <> COALESCE(:title,'') AND
+              id IN (
+                SELECT user_id
+                FROM group_users
+                WHERE group_id = :id
+              )
+SQL
+
+        self.class.exec_sql(sql,
+              title: title,
+              title_was: title_was,
+              id: id
+        )
+      end
+    end
+
+    def update_primary_group
+      return if new_record? && !self.primary_group?
+
+      if self.primary_group_changed?
+        sql = <<SQL
+        UPDATE users
+        /*set*/
+        /*where*/
+SQL
+
+        builder = SqlBuilder.new(sql)
+        builder.where("
+              id IN (
+                SELECT user_id
+                FROM group_users
+                WHERE group_id = :id
+              )", id: id)
+
+        if primary_group
+          builder.set("primary_group_id = :id")
+        else
+          builder.set("primary_group_id = NULL")
+          builder.where("primary_group_id = :id")
+        end
+
+        builder.exec
+      end
+    end
 end
 
 # == Schema Information
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  name        :string(255)      not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  automatic   :boolean          default(FALSE), not null
-#  user_count  :integer          default(0), not null
-#  alias_level :integer          default(0)
-#  visible     :boolean          default(TRUE), not null
+#  id                                 :integer          not null, primary key
+#  name                               :string(255)      not null
+#  created_at                         :datetime         not null
+#  updated_at                         :datetime         not null
+#  automatic                          :boolean          default(FALSE), not null
+#  user_count                         :integer          default(0), not null
+#  alias_level                        :integer          default(0)
+#  visible                            :boolean          default(TRUE), not null
+#  automatic_membership_email_domains :text
+#  automatic_membership_retroactive   :boolean          default(FALSE)
 #
 # Indexes
 #

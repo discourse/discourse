@@ -10,11 +10,6 @@ uk:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
-  time:
-    formats:
-      short: "%m-%d-%Y"
-      short_no_year: "%B %-d"
-      date_only: "%b %-d, %Y"
   title: "Discourse"
   topics: "Теми"
   posts: "дописи"
@@ -64,7 +59,6 @@ uk:
   num_posts: "Дописи:"
   num_participants: "Учасники:"
   read_full_topic: "Читати тему цілком"
-  private_message_abbrev: "ПП"
   rss_description:
     latest: "Останні теми"
     hot: "Гарячі теми"
@@ -89,14 +83,6 @@ uk:
       Чи не хотіли б Ви **[відвідати свій профіль](%{profile_path})** та завантажити зображення, що представляло б Вас?
 
       Легше стежити за обговореннями спільноти і шукати цікавих людей в цих обговореннях, коли кожен має унікальну аватарку!
-    sequential_replies: |
-      ### Спробуйте відповідати на декілька дописів одразу
-
-      Замість декількох послідовних відповідей на тему, будь ласка, спробуйте використовувати одну відповідь, що включатиме цитати або посилання на @Імена користувачів з попередніх дописів.
-
-      Ви можете відредагувати свою попередню відповідь, щоб додати цитату, виділивши текст і натиснувши кнопку <b>відповісти на цитату</b>, яка з'явиться над виділеним текстом.
-
-      Всім буде зручніше читати теми, в яких є мало великих відповідей, а не багато окремих маленьких відповідей.
     dominating_topic: |
       ### Дайте можливість іншим включитися до обговорення
 
@@ -154,7 +140,6 @@ uk:
     distance_in_words_verbose:
       half_a_minute: "щойно"
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
     choose_new: "Будь ласка, оберіть новий пароль"
     choose: "Будь ласка, оберіть пароль"
     update: 'Оновити пароль'
@@ -228,7 +213,6 @@ uk:
       xaxis: "День"
       yaxis: "Кількість відвідин"
     signups:
-      title: "Користувачі"
       xaxis: "День"
       yaxis: "Кількість нових користувачів"
     topics:
@@ -266,23 +250,18 @@ uk:
     user_to_user_private_messages:
       title: "Користувач користувачу"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     system_private_messages:
       title: "Системні"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     moderator_warning_private_messages:
       title: "Попередження модератора"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     notify_moderators_private_messages:
       title: "Сповіщення модераторів"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     notify_user_private_messages:
       title: "Сповіщення користувача"
       xaxis: "День"
-      yaxis: "Кількість приватних повідомлень"
     top_referrers:
       title: "Дали найбільше посилань"
       xaxis: "Користувач"
@@ -304,7 +283,6 @@ uk:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
@@ -322,10 +300,8 @@ uk:
       description: "Спливні настанови, що одразу автоматично відображаються над редактором, коли новий користувач починає вводити свої перші дві нові теми."
     welcome_user:
       title: "Вітання: Новий користувач"
-      description: "Приватне повідомлення, що автоматично надсилається всім новим користувачам під час реєстрації."
     welcome_invite:
       title: "Вітання: Запрошений користувач"
-      description: "Приватне повідомлення, що автоматично надсилається всім новим запрошеним користувачам, коли вони приймають запрошення взяти участь від іншого користувача."
     login_required_welcome_message:
       title: "Потрібно увійти: Вітальне повідомлення"
       description: "Вітальне повідомлення, що відображається для користувачів, що вийшли, коли налаштування 'потрібен вхід' увімкнено."
@@ -343,7 +319,6 @@ uk:
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
     allow_user_locale: "Allow users to choose their own language interface preference"
-    min_private_message_title_length: "Мінімальна допустима довжина назви для приватного повідомлення в символах"
     min_search_term_length: "Мінімальна дозволена довжина пошукової фрази у символах"
     allow_uncategorized_topics: "Дозволити створювати теми без категорії."
     allow_duplicate_topic_titles: "Дозволити теми з однаковими, дублюючими назвами."
@@ -370,7 +345,6 @@ uk:
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
-    top_menu: "Визначає, які елементи з'являються в навігації головної сторінки, та в якому порядку. Наприклад, latest|new|unread|starred|categories|top|read|posted"
     post_menu: "Визначає, які елементи з'являються в меню допису, та в якому порядку. Наприклад, like|edit|flag|delete|share|bookmark|reply"
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
     port: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! Використовувати цей HTTP-порт замість звичайного порту 80. Лишіть порожнім, щоб використовувати значення за замовчуванням 80."
@@ -378,10 +352,8 @@ uk:
     invite_expiry_days: "Скільки днів ключі запрошення користувачів лишаються чинними"
     min_password_length: "Мінімальна довжина пароля."
     sso_url: "URL of single sign on endpoint"
-    sso_secret: "Secret string used to encrypt/decrypt SSO information, be sure it is 10 chars or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
     enable_yahoo_logins: "Увімкнути вхід через Yahoo"
     enable_twitter_logins: "Увімкнути вхід через Twitter; потребує twitter_consumer_key та twitter_consumer_secret"
     twitter_consumer_key: "Consumer key для входу через Twitter, зареєстрований на http://dev.twitter.com"
@@ -415,12 +387,10 @@ uk:
     default_external_links_in_new_tab: "Відкривати нові посилання у новій вкладці. Користувачі можуть змінити це у своїх налаштуваннях."
     allow_profile_backgrounds: "Дозволити користувачам завантажувати фони профілю."
     enable_mobile_theme: "Мобільні пристрої використовуватимуть тему, дружню для них, з можливістю перемикатися на повний сайт. Відключіть це, якщо хочете використовувати власну, повністю чутливу, таблицю стилів."
-    enable_names: "Дозволити показувати повні імена користувачів. Відключити, щоб сховати повні імена."
     display_name_on_posts: "Показувати повні імена користувачів на їх дописах у додаток до їх @username."
     invites_per_page: "Запрошення по замовчуванню показані на сторінці користувача."
     short_progress_text_threshold: "Після того, як кількість дописів в темі перевищить це число, індикатор просування по темі показуватиме тільки номер поточного допису. Якщо Ви зміните ширину індикатора, Вам, ймовірно, знадобиться змінити це значення."
     default_code_lang: "Мова програмування для підсвітки синтаксису, що за замовчуванням застосовуватиметься для блоків коду GitHub (lang-auto, ruby, python і т. ін.)"
-    embeddable_host: "Хост, що можете вставляти коментарі з цього Discourse форуму."
     embed_truncate: "Обрізати вбудовані повідомлення. "
     embed_category: "Категорія вбудованих тем. "
     errors:
@@ -438,8 +408,6 @@ uk:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
   search:
     types:
@@ -501,8 +469,6 @@ uk:
       subject_template: "Масове запрошення користувачів оброблено успішно"
     bulk_invite_failed:
       subject_template: "Масове запрошення користувачів оброблено з помилками"
-    email_reject_empty:
-      subject_template: "Питання з email -- Немає змісту"
     too_many_spam_flags:
       subject_template: "Новий обліковий запис заблоковано"
     blocked_by_staff:
@@ -531,12 +497,6 @@ uk:
     reply_by_email: "Щоб відповісти, надішліть відповідь на цей лист або відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     visit_link_to_respond: "Щоб відповісти, відвідайте %{base_url}%{url} у своєму веб-оглядачі."
     posted_by: "Опубліковано %{username} %{post_date}"
-    user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
-      text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
-
-        Please visit this link to view the topic: %{base_url}%{url}
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
@@ -640,10 +600,7 @@ uk:
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Вставлене зображення"
     store_failure: "Не вдалося зберегти завантаження #%{upload_id} для користувача #%{user_id}."
-    attachments:
-      too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}%kb)."
     images:
-      too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}%kb), please resize it and try again."
       fetch_failure: "Sorry, there has been an error while fetching the image."
       unknown_image_type: "Sorry, but the file you tried to upload doesn't appear to be an image."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"

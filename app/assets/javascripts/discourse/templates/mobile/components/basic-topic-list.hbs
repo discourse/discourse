@@ -1,4 +1,4 @@
-{{#loading-spinner condition=loading}}
+{{#conditional-loading-spinner condition=loading}}
   {{#if topics}}
     <table class="topic-list">
       <tbody>
@@ -15,7 +15,7 @@
 
               {{#if t.hasExcerpt}}
                 <div class="topic-excerpt">
-                  {{t.excerpt}}
+                  {{{t.excerpt}}}
                   {{#if t.excerptTruncated}}
                     {{#unless t.canClearPin}}<a href="{{unbound t.url}}">{{i18n 'read_more'}}</a>{{/unless}}
                   {{/if}}
@@ -54,4 +54,4 @@
       {{i18n 'choose_topic.none_found'}}
     </div>
   {{/if}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

@@ -29,6 +29,10 @@ Discourse.Category = Discourse.Model.extend({
     return Discourse.getURL("/c/") + Discourse.Category.slugFor(this);
   }.property('name'),
 
+  fullSlug: function() {
+    return this.get("url").slice(3).replace("/", "-");
+  }.property("url"),
+
   nameLower: function() {
     return this.get('name').toLowerCase();
   }.property('name'),
@@ -187,13 +191,6 @@ Discourse.Category = Discourse.Model.extend({
 var _uncategorized;
 
 Discourse.Category.reopenClass({
-
-  NotificationLevel: {
-    WATCHING: 3,
-    TRACKING: 2,
-    REGULAR: 1,
-    MUTED: 0
-  },
 
   findUncategorized: function() {
     _uncategorized = _uncategorized || Discourse.Category.list().findBy('id', Discourse.Site.currentProp('uncategorized_category_id'));

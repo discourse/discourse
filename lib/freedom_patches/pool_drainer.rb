@@ -1,5 +1,5 @@
 
-if rails_master?
+if Rails.version >= "4.2.0"
   class ActiveRecord::ConnectionAdapters::AbstractAdapter
     module LastUseExtension
       attr_reader :last_use

@@ -28,7 +28,9 @@ function animateHeart($elem, start, end, complete) {
 Button.prototype.render = function(buffer) {
   var opts = this.opts;
 
-  buffer.push("<button title=\"" + I18n.t(this.label) + "\"");
+  var label = I18n.t(this.label);
+
+  buffer.push("<button aria-label=\"" + label +"\" " + "title=\"" + label + "\"");
   if (opts.disabled) { buffer.push(" disabled"); }
   if (opts.className) { buffer.push(" class=\"" + opts.className + "\""); }
   if (opts.shareUrl) { buffer.push(" data-share-url=\"" + opts.shareUrl + "\""); }
@@ -42,7 +44,7 @@ Button.prototype.render = function(buffer) {
 
 var hiddenButtons;
 
-export default Discourse.View.extend(StringBuffer, {
+var PostMenuView = Discourse.View.extend(StringBuffer, {
   tagName: 'section',
   classNames: ['post-menu-area', 'clearfix'],
 
@@ -137,6 +139,13 @@ export default Discourse.View.extend(StringBuffer, {
       visibleButtons = allButtons;
     } else {
       visibleButtons.splice(visibleButtons.length - 1, 0, this.buttonForShowMoreActions(post));
+    }
+
+    var callbacks = PostMenuView._registerButtonCallbacks;
+    if (callbacks) {
+      _.each(callbacks, function(callback) {
+        callback.apply(self, [visibleButtons]);
+      });
     }
 
     buffer.push('<div class="actions">');
@@ -372,3 +381,12 @@ export default Discourse.View.extend(StringBuffer, {
   }
 
 });
+
+PostMenuView.reopenClass({
+  registerButton: function(callback){
+    this._registerButtonCallbacks = this._registerButtonCallbacks || [];
+    this._registerButtonCallbacks.push(callback);
+  }
+});
+
+export default PostMenuView;

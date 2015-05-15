@@ -57,7 +57,7 @@ class ScreenedEmail < ActiveRecord::Base
         end
       end
     end
-    return matrix.last.last
+    matrix.last.last
   end
 
 end

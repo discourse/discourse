@@ -6,7 +6,7 @@ require_dependency 'gaps'
 class TopicView
 
   attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
-  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields
+  attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
 
   def self.slow_chunk_size
     10
@@ -14,6 +14,18 @@ class TopicView
 
   def self.chunk_size
     20
+  end
+
+  def self.post_custom_fields_whitelisters
+    @post_custom_fields_whitelisters ||= Set.new
+  end
+
+  def self.add_post_custom_fields_whitelister(&block)
+    post_custom_fields_whitelisters << block
+  end
+
+  def self.whitelisted_post_custom_fields(user)
+    post_custom_fields_whitelisters.map { |w| w.call(user) }.flatten.uniq
   end
 
   def initialize(topic_id, user=nil, options={})
@@ -26,7 +38,9 @@ class TopicView
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    @page = @page.to_i
+    # work around people somehow sending in arrays,
+    # arrays are not supported
+    @page = @page.to_i rescue 1
     @page = 1 if @page.zero?
     @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
     @limit ||= @chunk_size
@@ -40,6 +54,16 @@ class TopicView
 
     if SiteSetting.public_user_custom_fields.present? && @posts
       @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.public_user_custom_fields.split('|'))
+    end
+
+    if @guardian.is_staff? && SiteSetting.staff_user_custom_fields.present? && @posts
+      @user_custom_fields ||= {}
+      @user_custom_fields.deep_merge!(User.custom_fields_for_ids(@posts.map(&:user_id), SiteSetting.staff_user_custom_fields.split('|')))
+    end
+
+    whitelisted_fields = TopicView.whitelisted_post_custom_fields(@user)
+    if whitelisted_fields.present? && @posts
+      @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), whitelisted_fields)
     end
 
     @draft_key = @topic.draft_key
@@ -411,10 +435,17 @@ class TopicView
   end
 
   def closest_post_to(post_number)
-    closest_posts = filter_post_ids_by("@(post_number - #{post_number})")
-    return nil if closest_posts.empty?
+    # happy path
+    closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
 
-    filtered_post_ids.index(closest_posts.first) || filtered_post_ids[0]
+    if closest_post.empty?
+      # less happy path, missing post
+      closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
+    end
+
+    return nil if closest_post.empty?
+
+    filtered_post_ids.index(closest_post.first) || filtered_post_ids[0]
   end
 
 end

@@ -32,6 +32,7 @@ class ImportScripts::Base
     @categories_lookup = {}
     @existing_posts = {}
     @topic_lookup = {}
+    @site_settings_during_import
     @old_site_settings = {}
     @start_time = Time.now
 
@@ -47,7 +48,7 @@ class ImportScripts::Base
 
     puts "loading existing categories..."
     CategoryCustomField.where(name: 'import_id').pluck(:category_id, :value).each do |category_id, import_id|
-      @categories_lookup[import_id] = Category.find(category_id.to_i)
+      @categories_lookup[import_id] = category_id
     end
 
     puts "loading existing posts..."
@@ -80,6 +81,7 @@ class ImportScripts::Base
 
     update_bumped_at
     update_last_posted_at
+    update_last_seen_at
     update_feature_topic_users
     update_category_featured_topics
     update_topic_count_replies
@@ -93,18 +95,19 @@ class ImportScripts::Base
   end
 
   def change_site_settings
-    new_settings = {
+    @site_settings_during_import = {
       email_domains_blacklist: '',
       min_topic_title_length: 1,
       min_post_length: 1,
+      min_first_post_length: 1,
       min_private_message_post_length: 1,
       min_private_message_title_length: 1,
       allow_duplicate_topic_titles: true,
-      default_digest_email_frequency: '',
-      disable_emails: true
+      disable_emails: true,
+      authorized_extensions: '*'
     }
 
-    new_settings.each do |key, value|
+    @site_settings_during_import.each do |key, value|
       @old_site_settings[key] = SiteSetting.send(key)
       SiteSetting.set(key, value)
     end
@@ -114,7 +117,8 @@ class ImportScripts::Base
 
   def reset_site_settings
     @old_site_settings.each do |key, value|
-      SiteSetting.set(key, value)
+      current_value = SiteSetting.send(key)
+      SiteSetting.set(key, value) unless current_value != @site_settings_during_import[key]
     end
 
     RateLimiter.enable
@@ -156,7 +160,7 @@ class ImportScripts::Base
   end
 
   # Get the Discourse Category id based on the id of the source category
-  def category_from_imported_category_id(import_id)
+  def category_id_from_imported_category_id(import_id)
     @categories_lookup[import_id] || @categories_lookup[import_id.to_s]
   end
 
@@ -245,12 +249,14 @@ class ImportScripts::Base
         elsif u[:email].present?
           new_user = create_user(u, import_id)
 
-          if new_user.valid?
+          if new_user.valid? && new_user.user_profile.valid?
             @existing_users[import_id.to_s] = new_user.id
             users_created += 1
           else
             @failed_users << u
-            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}: #{new_user.errors.full_messages}"
+            puts "Failed to create user id: #{import_id}, username: #{new_user.username}, email: #{new_user.email}"
+            puts "user errors: #{new_user.errors.full_messages}"
+            puts "user_profile errors: #{new_user.user_profiler.errors.full_messages}"
           end
         else
           @failed_users << u
@@ -290,6 +296,7 @@ class ImportScripts::Base
     opts[:trust_level] = TrustLevel[1] unless opts[:trust_level]
     opts[:active] = opts.fetch(:active, true)
     opts[:import_mode] = true
+    opts[:last_emailed_at] = opts.fetch(:last_emailed_at, Time.now)
 
     u = User.new(opts)
     u.custom_fields["import_id"] = import_id
@@ -299,7 +306,7 @@ class ImportScripts::Base
     begin
       User.transaction do
         u.save!
-        if bio_raw.present? || website.present?
+        if bio_raw.present? || website.present? || location.present?
           u.user_profile.bio_raw = bio_raw if bio_raw.present?
           u.user_profile.website = website if website.present?
           u.user_profile.location = location if location.present?
@@ -330,7 +337,8 @@ class ImportScripts::Base
     results.each do |c|
       params = yield(c)
 
-      next if params.nil? # block returns nil to skip
+      # block returns nil to skip
+      next if params.nil? || category_id_from_imported_category_id(params[:id])
 
       # Basic massaging on the category name
       params[:name] = "Blank" if params[:name].blank?
@@ -347,13 +355,13 @@ class ImportScripts::Base
       end
 
       new_category = create_category(params, params[:id])
-      @categories_lookup[params[:id]] = new_category
+      @categories_lookup[params[:id]] = new_category.id
     end
   end
 
   def create_category(opts, import_id)
-    existing = category_from_imported_category_id(import_id) || Category.where("LOWER(name) = ?", opts[:name].downcase).first
-    return existing if existing
+    existing = Category.where("LOWER(name) = ?", opts[:name].downcase).first
+    return existing if existing && existing.parent_category.try(:id) == opts[:parent_category_id]
 
     post_create_action = opts.delete(:post_create_action)
 
@@ -462,10 +470,46 @@ class ImportScripts::Base
     src.close
     tmp.rewind
 
-    Upload.create_for(user_id, tmp, source_filename, File.size(tmp))
+    Upload.create_for(user_id, tmp, source_filename, tmp.size)
   ensure
     tmp.close rescue nil
     tmp.unlink rescue nil
+  end
+
+  # Iterate through a list of bookmark records to be imported.
+  # Takes a collection, and yields to the block for each element.
+  # Block should return a hash with the attributes for the bookmark.
+  # Required fields are :user_id and :post_id, where both ids are
+  # the values in the original datasource.
+  def create_bookmarks(results, opts={})
+    bookmarks_created = 0
+    bookmarks_skipped = 0
+    total = opts[:total] || results.size
+
+    user = User.new
+    post = Post.new
+
+    results.each do |result|
+      params = yield(result)
+
+      # only the IDs are needed, so this should be enough
+      user.id = user_id_from_imported_user_id(params[:user_id])
+      post.id = post_id_from_imported_post_id(params[:post_id])
+
+      if user.id.nil? || post.id.nil?
+        bookmarks_skipped += 1
+        puts "Skipping bookmark for user id #{params[:user_id]} and post id #{params[:post_id]}"
+      else
+        begin
+          PostAction.act(user, post, PostActionType.types[:bookmark])
+          bookmarks_created += 1
+        rescue PostAction::AlreadyActed
+          bookmarks_skipped += 1
+        end
+
+        print_status bookmarks_created + bookmarks_skipped + (opts[:offset] || 0), total
+      end
+    end
   end
 
   def close_inactive_topics(opts={})
@@ -506,6 +550,14 @@ class ImportScripts::Base
     SQL
 
     User.exec_sql(sql)
+  end
+
+  # scripts that are able to import last_seen_at from the source data should override this method
+  def update_last_seen_at
+    puts "", "updating last seen at on users"
+
+    User.exec_sql("UPDATE users SET last_seen_at = created_at WHERE last_seen_at IS NULL")
+    User.exec_sql("UPDATE users SET last_seen_at = last_posted_at WHERE last_posted_at IS NOT NULL")
   end
 
   def update_feature_topic_users
@@ -561,6 +613,23 @@ class ImportScripts::Base
     end
   end
 
+  def update_tl0
+    puts "", "setting users with no posts to trust level 0"
+
+    total_count = User.count
+    progress_count = 0
+
+    User.find_each do |user|
+      begin
+        user.change_trust_level!(0) if Post.where(user_id: user.id).count == 0
+      rescue Discourse::InvalidAccess
+        nil
+      end
+      progress_count += 1
+      print_status(progress_count, total_count)
+    end
+  end
+
   def html_for_upload(upload, display_filename)
     if FileHelper.is_image?(upload.url)
       embedded_image_html(upload)
@@ -579,6 +648,12 @@ class ImportScripts::Base
 
   def print_status(current, max)
     print "\r%9d / %d (%5.1f%%)  " % [current, max, ((current.to_f / max.to_f) * 100).round(1)]
+  end
+
+  def print_spinner
+    @spinner_chars ||= %w{ | / - \\ }
+    @spinner_chars.push @spinner_chars.shift
+    print "\b#{@spinner_chars[0]}"
   end
 
   def batches(batch_size)

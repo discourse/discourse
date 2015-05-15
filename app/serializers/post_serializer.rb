@@ -1,13 +1,15 @@
 class PostSerializer < BasicPostSerializer
 
   # To pass in additional information we might need
-  INSTANCE_VARS = [:topic_view,
-                :parent_post,
-                :add_raw,
-                :single_post_link_counts,
-                :draft_sequence,
-                :post_actions,
-                :all_post_actions]
+  INSTANCE_VARS = [
+    :topic_view,
+    :parent_post,
+    :add_raw,
+    :single_post_link_counts,
+    :draft_sequence,
+    :post_actions,
+    :all_post_actions
+  ]
 
   INSTANCE_VARS.each do |v|
     self.send(:attr_accessor, v)
@@ -27,7 +29,6 @@ class PostSerializer < BasicPostSerializer
              :yours,
              :topic_id,
              :topic_slug,
-             :topic_auto_close_at,
              :display_username,
              :primary_group_name,
              :version,
@@ -70,10 +71,6 @@ class PostSerializer < BasicPostSerializer
 
   def topic_slug
     object.try(:topic).try(:slug)
-  end
-
-  def topic_auto_close_at
-    object.try(:topic).try(:auto_close_at)
   end
 
   def moderator?
@@ -273,7 +270,7 @@ class PostSerializer < BasicPostSerializer
   end
 
   def include_static_doc?
-    object.post_number == 1 && Discourse.static_doc_topic_ids.include?(object.topic_id)
+    object.is_first_post? && Discourse.static_doc_topic_ids.include?(object.topic_id)
   end
 
   def include_via_email?
@@ -292,6 +289,15 @@ class PostSerializer < BasicPostSerializer
 
     def active_flags
       @active_flags ||= (@topic_view.present? && @topic_view.all_active_flags.present?) ? @topic_view.all_active_flags[object.id] : nil
+    end
+
+    def post_custom_fields
+      @post_custom_fields ||=
+        if @topic_view
+          @topic_view.post_custom_fields && @topic_view.post_custom_fields[object.id]
+        else
+          object.custom_fields
+        end
     end
 
 end

@@ -1,28 +1,29 @@
 import { outputExportResult } from 'discourse/lib/export-result';
 
-export default Ember.ArrayController.extend(Discourse.Presence, {
+export default Ember.ArrayController.extend({
   loading: false,
   itemController: 'admin-log-screened-ip-address',
+  filter: null,
 
-  show: function() {
+  show: Discourse.debounce(function() {
     var self = this;
     self.set('loading', true);
-    Discourse.ScreenedIpAddress.findAll().then(function(result) {
+    Discourse.ScreenedIpAddress.findAll(this.get("filter")).then(function(result) {
       self.set('model', result);
       self.set('loading', false);
     });
-  },
+  }, 250).observes("filter"),
 
   actions: {
-    recordAdded: function(arg) {
+    recordAdded(arg) {
       this.get("model").unshiftObject(arg);
     },
 
-    rollUp: function() {
-      var self = this;
+    rollUp() {
+      const self = this;
       return bootbox.confirm(I18n.t("admin.logs.screened_ips.roll_up_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function (confirmed) {
         if (confirmed) {
-          self.set("loading", true)
+          self.set("loading", true);
           return Discourse.ScreenedIpAddress.rollUp().then(function(results) {
             if (results && results.subnets) {
               if (results.subnets.length > 0) {
@@ -38,7 +39,7 @@ export default Ember.ArrayController.extend(Discourse.Presence, {
       });
     },
 
-    exportScreenedIpList: function(subject) {
+    exportScreenedIpList() {
       Discourse.ExportCsv.exportScreenedIpList().then(outputExportResult);
     }
   }

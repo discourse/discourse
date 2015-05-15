@@ -1,4 +1,4 @@
-import { queryParams, filterQueryParams } from 'discourse/routes/build-topic-route';
+import { queryParams, filterQueryParams, findTopicList } from 'discourse/routes/build-topic-route';
 
 // A helper function to create a category route with parameters
 export default function(filter, params) {
@@ -28,8 +28,7 @@ export default function(filter, params) {
         category: model,
         filterMode: filterMode,
         noSubcategories: params && params.no_subcategories,
-        canEditCategory: model.get('can_edit'),
-        canChangeCategoryNotificationLevel: Discourse.User.current()
+        canEditCategory: model.get('can_edit')
       });
     },
 
@@ -53,7 +52,7 @@ export default function(filter, params) {
       var findOpts = filterQueryParams(transition.queryParams, params),
           extras = { cached: this.isPoppedState(transition) };
 
-      return Discourse.TopicList.list(listFilter, findOpts, extras).then(function(list) {
+      return findTopicList(this.store, listFilter, findOpts, extras).then(function(list) {
         Discourse.TopicList.hideUniformCategory(list, model);
         self.set('topics', list);
       });
@@ -68,14 +67,13 @@ export default function(filter, params) {
 
     setupController: function(controller, model) {
       var topics = this.get('topics'),
-          periods = this.controllerFor('discovery').get('periods'),
           periodId = topics.get('for_period') || (filter.indexOf('/') > 0 ? filter.split('/')[1] : '');
 
       this.controllerFor('navigation/category').set('canCreateTopic', topics.get('can_create_topic'));
       this.controllerFor('discovery/topics').setProperties({
         model: topics,
         category: model,
-        period: periods.findBy('id', periodId),
+        period: periodId,
         selected: [],
         noSubcategories: params && !!params.no_subcategories,
         order: topics.get('params.order'),

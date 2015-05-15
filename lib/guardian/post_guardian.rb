@@ -1,5 +1,6 @@
 #mixin for all guardian methods dealing with post permissions
 module PostGuardian
+
   # Can the user act on the post in a particular way.
   #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})
@@ -8,7 +9,7 @@ module PostGuardian
     already_taken_this_action = taken.any? && taken.include?(PostActionType.types[action_key])
     already_did_flagging      = taken.any? && (taken & PostActionType.flag_types.values).any?
 
-    if authenticated? && post
+    result = if authenticated? && post && !@user.anonymous?
 
       return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
 
@@ -20,7 +21,7 @@ module PostGuardian
       not(is_flag || already_taken_this_action) &&
 
       # nothing except flagging on archived topics
-      not(post.topic.archived?) &&
+      not(post.topic.try(:archived?)) &&
 
       # nothing except flagging on deleted posts
       not(post.trashed?) &&
@@ -37,6 +38,8 @@ module PostGuardian
       # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
     end
+
+    !!result
   end
 
   def can_defer_flags?(post)
@@ -113,7 +116,7 @@ module PostGuardian
   # Deleting Methods
   def can_delete_post?(post)
     # Can't delete the first post
-    return false if post.post_number == 1
+    return false if post.is_first_post?
 
     # Can't delete after post_edit_time_limit minutes have passed
     return false if !is_staff? && post.edit_time_limit_expired?
@@ -176,7 +179,7 @@ module PostGuardian
   end
 
   def can_rebake?
-    is_staff?
+    is_staff? || @user.has_trust_level?(TrustLevel[4])
   end
 
   def can_see_flagged_posts?

@@ -2,6 +2,7 @@
 # about: Uses the lazyYT plugin to lazy load Youtube videos
 # version: 1.0.1
 # authors: Arpit Jalan
+# url: https://github.com/discourse/discourse/tree/master/plugins/lazyYT
 
 # javascript
 register_asset "javascripts/lazyYT.js"
@@ -17,7 +18,7 @@ class Onebox::Engine::YoutubeOnebox
   def to_html
     if video_id
       # Put in the LazyYT div instead of the iframe
-      "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-width=\"480\" data-height=\"270\" data-parameters=\"#{embed_params}\"></div>"
+      "<div class=\"lazyYT\" data-youtube-id=\"#{video_id}\" data-youtube-title=\"#{video_title}\" data-width=\"480\" data-height=\"270\" data-parameters=\"#{embed_params}\"></div>"
     else
       super
     end

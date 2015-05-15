@@ -1,12 +1,3 @@
-/**
-  A data model representing actions users have taken
-
-  @class UserAction
-  @extends Discourse.Model
-  @namespace Discourse
-  @module Discourse
-**/
-
 var UserActionTypes = {
       likes_given: 1,
       likes_received: 2,
@@ -18,7 +9,8 @@ var UserActionTypes = {
       quotes: 9,
       edits: 11,
       messages_sent: 12,
-      messages_received: 13
+      messages_received: 13,
+      pending: 14
     },
     InvertedActionTypes = {};
 

@@ -1,7 +1,0 @@
-.*
-!.gitignore
-!.kitchen.yml
-bin
-Gemfile.lock
-Cheffile.lock
-tmp*

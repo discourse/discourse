@@ -62,11 +62,15 @@ class TopicQuery
     end
     builder.add_results(random_suggested(topic, builder.results_left, builder.excluded_topic_ids)) unless builder.full?
 
-    create_list(:suggested, {}, builder.results)
+    create_list(:suggested, {unordered: true}, builder.results)
   end
 
   # The latest view of topics
   def list_latest
+    create_list(:latest, {}, latest_results)
+  end
+
+  def list_search
     create_list(:latest, {}, latest_results)
   end
 
@@ -77,11 +81,11 @@ class TopicQuery
   end
 
   def list_new
-    create_list(:new, {}, new_results)
+    create_list(:new, {unordered: true}, new_results)
   end
 
   def list_unread
-    create_list(:unread, {}, unread_results)
+    create_list(:unread, {unordered: true}, unread_results)
   end
 
   def list_posted
@@ -105,6 +109,7 @@ class TopicQuery
   end
 
   def list_topics_by(user)
+    @options[:filtered_to_user] = user.id
     create_list(:user_topics) do |topics|
       topics.where(user_id: user.id)
     end
@@ -127,14 +132,12 @@ class TopicQuery
     create_list(:private_messages, {}, list)
   end
 
-  def list_category(category)
-    create_list(:category, unordered: true, category: category.id) do |list|
-      if @user
-        list.order(TopicQuerySQL.order_with_pinned_sql)
-      else
-        list.order(TopicQuerySQL.order_basic_bumped)
-      end
-    end
+  def list_category_topic_ids(category)
+    query = default_results(category: category.id)
+    pinned_ids = query.where('pinned_at IS NOT NULL AND category_id = ?', category.id)
+                      .order('pinned_at DESC').pluck(:id)
+    non_pinned_ids = query.where('pinned_at IS NULL OR category_id <> ?', category.id).pluck(:id)
+    (pinned_ids + non_pinned_ids)[0...@options[:per_page]]
   end
 
   def list_new_in_category(category)
@@ -154,10 +157,45 @@ class TopicQuery
         .where("COALESCE(tu.notification_level, :regular) >= :tracking", regular: TopicUser.notification_levels[:regular], tracking: TopicUser.notification_levels[:tracking])
   end
 
+  def prioritize_pinned_topics(topics, options)
+
+    pinned_clause = options[:category_id] ? "topics.category_id = #{options[:category_id].to_i} AND" : "pinned_globally AND "
+    pinned_clause << " pinned_at IS NOT NULL "
+    if @user
+      pinned_clause << " AND (topics.pinned_at > tu.cleared_pinned_at OR tu.cleared_pinned_at IS NULL)"
+    end
+
+    unpinned_topics = topics.where("NOT ( #{pinned_clause} )")
+    pinned_topics = topics.where(pinned_clause)
+
+    per_page = options[:per_page] || per_page_setting
+    limit = per_page unless options[:limit] == false
+    page = options[:page].to_i
+
+    if page == 0
+      (pinned_topics + unpinned_topics)[0...limit] if limit
+    else
+      offset = (page * per_page - pinned_topics.count) - 1
+      offset = 0 unless offset > 0
+      unpinned_topics.offset(offset).to_a
+    end
+
+  end
+
   def create_list(filter, options={}, topics = nil)
     topics ||= default_results(options)
     topics = yield(topics) if block_given?
-    list = TopicList.new(filter, @user, topics, options.merge(@options))
+
+    options = options.merge(@options)
+    if (options[:order] || "activity") == "activity" && !options[:unordered]
+      topics = prioritize_pinned_topics(topics, options)
+    end
+
+    topics = topics.to_a.each do |t|
+      t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
+    end
+
+    list = TopicList.new(filter, @user, topics.to_a, options.merge(@options))
     list.per_page = per_page_setting
     list
   end
@@ -171,11 +209,12 @@ class TopicQuery
   def unread_results(options={})
     result = TopicQuery.unread_filter(default_results(options.reverse_merge(:unordered => true)))
     .order('CASE WHEN topics.user_id = tu.user_id THEN 1 ELSE 2 END')
-
     suggested_ordering(result, options)
   end
 
   def new_results(options={})
+    # TODO does this make sense or should it be ordered on created_at
+    #  it is ordering on bumped_at now
     result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     suggested_ordering(result, options)
@@ -196,24 +235,12 @@ class TopicQuery
       result = Topic.includes(:allowed_users)
                     .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
-                    .order(TopicQuerySQL.order_nocategory_basic_bumped)
+                    .order("topics.bumped_at DESC")
                     .private_messages
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
       result = result.visible if options[:visible] || @user.nil? || @user.regular?
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
-      result
-    end
-
-    def default_ordering(result, options)
-      # If we're logged in, we have to pay attention to our pinned settings
-      if @user
-        result = options[:category].blank? ? result.order(TopicQuerySQL.order_nocategory_with_pinned_sql) :
-                                             result.order(TopicQuerySQL.order_with_pinned_sql)
-      else
-        result = options[:category].blank? ? result.order(TopicQuerySQL.order_nocategory_basic_bumped) :
-                                             result.order(TopicQuerySQL.order_basic_bumped)
-      end
       result
     end
 
@@ -228,14 +255,13 @@ class TopicQuery
           # If something requires a custom order, for example "unread" which sorts the least read
           # to the top, do nothing
           return result if options[:unordered]
-          # Otherwise apply our default ordering
-          return default_ordering(result, options)
         end
         sort_column = 'bumped_at'
       end
 
       # If we are sorting by category, actually use the name
       if sort_column == 'category_id'
+        # TODO forces a table scan, slow
         return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
       end
 
@@ -258,6 +284,10 @@ class TopicQuery
     def default_results(options={})
       options.reverse_merge!(@options)
       options.reverse_merge!(per_page: per_page_setting)
+
+      # Whether to return visible topics
+      options[:visible] = true if @user.nil? || @user.regular?
+      options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
       # Start with a list of all topics
       result = Topic.unscoped
@@ -288,7 +318,8 @@ class TopicQuery
       end
 
       result = result.limit(options[:per_page]) unless options[:limit] == false
-      result = result.visible if options[:visible] || @user.nil? || @user.regular?
+
+      result = result.visible if options[:visible]
       result = result.where.not(topics: {id: options[:except_topic_ids]}).references(:topics) if options[:except_topic_ids]
       result = result.offset(options[:page].to_i * options[:per_page]) if options[:page]
 
@@ -359,18 +390,7 @@ class TopicQuery
       result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
       result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
 
-      guardian = Guardian.new(@user)
-      if !guardian.is_admin?
-        allowed_ids = guardian.allowed_category_ids
-        if allowed_ids.length > 0
-          result = result.where('topics.category_id IS NULL or topics.category_id IN (?)', allowed_ids)
-        else
-          result = result.where('topics.category_id IS NULL')
-        end
-        result = result.references(:categories)
-      end
-
-      result
+      Guardian.new(@user).filter_allowed_categories(result)
     end
 
     def remove_muted_categories(list, user, opts=nil)
@@ -406,7 +426,16 @@ class TopicQuery
         result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END")
       end
 
-      result.order("RANDOM()")
+      # Best effort, it over selects, however if you have a high number
+      # of muted categories there is tiny chance we will not select enough
+      # in particular this can happen if current category is empty and tons
+      # of muted, big edge case
+      #
+      # we over select in case cache is stale
+      max = (count*1.3).to_i
+      ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
+
+      result.where(id: ids.uniq)
     end
 
     def suggested_ordering(result, options)
@@ -415,6 +444,6 @@ class TopicQuery
         result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
       end
 
-      result.order(TopicQuerySQL.order_nocategory_with_pinned_sql)
+      result.order('topics.bumped_at DESC')
     end
 end

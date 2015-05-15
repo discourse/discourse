@@ -3,7 +3,7 @@
   padding: 5px 15px;
   color: $primary;
   text-align: center;
-  margin: 0 10px;
+  margin: 10px 0;
 }
 
 .topic-post {
@@ -188,14 +188,14 @@ a.star {
     }
     .post-count {
       position: absolute;
-      top: 2px;
-      right: 6px;
-      padding: 0 4px;
+      right: 3px;
+      border-radius: 100px;
+      padding: 4px 5px 2px 5px;
+      text-align: center;
       font-weight: normal;
       font-size: 11px;
-      line-height: 14px;
+      line-height: 1;
     }
-
   }
 
   /* in expanded avatar view, limit to one line for now */
@@ -338,7 +338,7 @@ span.post-count {
 
 .topic-post {
   &.moderator {
-    background-color: scale-color($highlight, $lightness: 75%);
+    background-color: dark-light-diff($highlight, $secondary, 70%, -80%);
   }
 }
 
@@ -423,7 +423,7 @@ button.select-post {
 
 
 .deleted {
-background-color: scale-color($danger, $lightness: 75%);
+  background-color: dark-light-diff(rgba($danger,.7), $secondary, 50%, -60%);
 }
 
 #show-topic-admin {
@@ -500,4 +500,3 @@ span.highlighted {
 .read-state {
   display: none;
 }
-

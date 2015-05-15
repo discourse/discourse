@@ -1,11 +1,48 @@
 /* global asyncTest */
 
+import sessionFixtures from 'fixtures/session-fixtures';
 import siteFixtures from 'fixtures/site_fixtures';
+import HeaderView from 'discourse/views/header';
 
-export function integration(name, options) {
-  module("Integration: " + name, {
+function currentUser() {
+  return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
+}
+
+function logIn() {
+  Discourse.User.resetCurrent(currentUser());
+}
+
+const Plugin = $.fn.modal;
+const Modal = Plugin.Constructor;
+
+function AcceptanceModal(option, _relatedTarget) {
+  return this.each(function () {
+    var $this   = $(this);
+    var data    = $this.data('bs.modal');
+    var options = $.extend({}, Modal.DEFAULTS, $this.data(), typeof option === 'object' && option);
+
+    if (!data) $this.data('bs.modal', (data = new Modal(this, options)));
+    data.$body = $('#ember-testing');
+
+    if (typeof option === 'string') data[option](_relatedTarget);
+    else if (options.show) data.show(_relatedTarget);
+  });
+}
+
+window.bootbox.$body = $('#ember-testing');
+$.fn.modal = AcceptanceModal;
+
+var oldAvatar = Discourse.Utilities.avatarImg;
+
+function acceptance(name, options) {
+  module("Acceptance: " + name, {
     setup: function() {
-      Ember.run(Discourse, Discourse.advanceReadiness);
+      // Don't render avatars in acceptance tests, it's faster and no 404s
+      Discourse.Utilities.avatarImg = () => "";
+
+      // For now don't do scrolling stuff in Test Mode
+      Ember.CloakedCollectionView.scrolled = Ember.K;
+      HeaderView.reopen({examineDockHeader: Ember.K});
 
       var siteJson = siteFixtures['site.json'].site;
       if (options) {
@@ -13,8 +50,8 @@ export function integration(name, options) {
           options.setup.call(this);
         }
 
-        if (options.user) {
-          Discourse.User.resetCurrent(Discourse.User.create(options.user));
+        if (options.loggedIn) {
+          logIn();
         }
 
         if (options.settings) {
@@ -33,19 +70,22 @@ export function integration(name, options) {
       if (options && options.teardown) {
         options.teardown.call(this);
       }
+      Discourse.User.resetCurrent();
+      Discourse.Site.resetCurrent(Discourse.Site.create(fixtures['site.json'].site));
 
+      Discourse.Utilities.avatarImg = oldAvatar;
       Discourse.reset();
     }
   });
 }
 
-export function controllerFor(controller, model) {
+function controllerFor(controller, model) {
   controller = Discourse.__container__.lookup('controller:' + controller);
   if (model) { controller.set('model', model ); }
   return controller;
 }
 
-export function asyncTestDiscourse(text, func) {
+function asyncTestDiscourse(text, func) {
   asyncTest(text, function () {
     var self = this;
     Ember.run(function () {
@@ -54,9 +94,11 @@ export function asyncTestDiscourse(text, func) {
   });
 }
 
-export function fixture(selector) {
+function fixture(selector) {
   if (selector) {
     return $("#qunit-fixture").find(selector);
   }
   return $("#qunit-fixture");
 }
+
+export { acceptance, controllerFor, asyncTestDiscourse, fixture, logIn, currentUser };

@@ -1,13 +1,14 @@
 # Available options:
 #
-# default - The default value of the setting.
-# client  - Set to true if the javascript should have access to this setting's value.
-# refresh - Set to true if clients should refresh when the setting is changed.
-# min     - For a string setting, the minimum length. For an integer setting, the minimum value.
-# max     - For a string setting, the maximum length. For an integer setting, the maximum value.
-# regex   - A regex that the value must match.
-# enum    - The setting has a fixed set of allowed values, and only one can be chosen.
-#           Set to the class name that defines the set.
+# default   - The default value of the setting.
+# client    - Set to true if the javascript should have access to this setting's value.
+# refresh   - Set to true if clients should refresh when the setting is changed.
+# min       - For a string setting, the minimum length. For an integer setting, the minimum value.
+# max       - For a string setting, the maximum length. For an integer setting, the maximum value.
+# regex     - A regex that the value must match.
+# validator - The name of the class that will be use to validate the value of the setting.
+# enum      - The setting has a fixed set of allowed values, and only one can be chosen.
+#             Set to the class name that defines the set.
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
 # type: list     - A list of values, chosen from a set of valid values defined in the choices option.
@@ -24,9 +25,13 @@ required:
     client: true
     default: ''
     type: email
+  contact_url:
+    client: true
+    default: ''
   notification_email:
     default: 'noreply@unconfigured.discourse.org'
     type: email
+    shadowed_by_global: true
   site_contact_username:
     default: ''
     type: username
@@ -52,6 +57,7 @@ basic:
     default: 'en'
     enum: 'LocaleSiteSetting'
     refresh: true
+    shadowed_by_global: true
   allow_user_locale:
     client: true
     default: false
@@ -83,7 +89,9 @@ basic:
     client: true
     refresh: true
     type: list
-    default: 'latest|new|unread|top|categories'
+    default: "latest|new|unread|top|categories"
+    regex: "latest"
+    regex_error: "site_settings.errors.must_include_latest"
     choices:
      - latest
      - new
@@ -268,6 +276,9 @@ users:
   logout_redirect:
     client: true
     default: ''
+  full_name_required:
+    client: true
+    default: false
   enable_names:
     client: true
     default: true
@@ -292,9 +303,29 @@ users:
   public_user_custom_fields:
     type: list
     default: ''
+  staff_user_custom_fields:
+    type: list
+    default: ''
+  enable_user_directory:
+    client: true
+    default: true
+  allow_anonymous_posting:
+    default: false
+    client: true
+  anonymous_posting_min_trust_level:
+    default: 1
+    client: true
+  anonymous_account_duration_minutes:
+    default: 10080
 
 posting:
   min_post_length:
+    client: true
+    min: 1
+    default:
+      test: 5
+      default: 20
+  min_first_post_length:
     client: true
     min: 1
     default:
@@ -336,7 +367,7 @@ posting:
     default: 15
   enable_private_messages: true
   ninja_edit_window: 300
-  post_edit_time_limit: 262800
+  post_edit_time_limit: 86400
   edit_history_visible_to_public:
     client: true
     default: true
@@ -365,7 +396,7 @@ posting:
   max_mentions_per_post: 10
   newuser_max_replies_per_topic: 3
   newuser_max_mentions_per_post: 2
-  max_word_length: 30
+  title_max_word_length: 30
   newuser_max_links: 2
   newuser_max_images:
     client: true
@@ -390,6 +421,11 @@ posting:
   autohighlight_all_code:
     client: true
     default: false
+  highlighted_languages:
+    default: 'apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars'
+    choices: 'HighlightJs.languages'
+    type: list
+    client: true
   delete_old_hidden_posts: true
   censored_words:
     client: true
@@ -403,6 +439,13 @@ posting:
     default: 'emoji_one'
     client: true
     enum: 'EmojiSetSiteSetting'
+  enforce_square_emoji:
+    default: true
+  approve_post_count:
+    default: 0
+  approve_unless_trust_level:
+    default: 0
+    enum: 'TrustLevelSetting'
 
 email:
   email_time_window_mins:
@@ -423,7 +466,7 @@ email:
   reply_by_email_enabled: false
   reply_by_email_address:
     default: ''
-    regex: "%{reply_key}"
+    validator: "ReplyByEmailAddressValidator"
   pop3_polling_enabled: false
   pop3_polling_ssl: true
   pop3_polling_period_mins: 5
@@ -451,7 +494,7 @@ files:
     default: 3072
   max_attachment_size_kb:
     client: true
-    default: 1024
+    default: 3072
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'
@@ -471,7 +514,7 @@ files:
     default:
       test: false
       default: true
-  download_remote_images_threshold: 20
+  download_remote_images_threshold: 10
   disabled_image_download_domains:
     type: list
     default: ''
@@ -482,7 +525,9 @@ files:
   prevent_anons_from_downloading_files:
     default: false
     client: true
-  enable_s3_uploads: false
+  enable_s3_uploads:
+    default: false
+    client: true
   s3_use_iam_profile: false
   s3_access_key_id: ''
   s3_secret_access_key: ''
@@ -491,7 +536,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[^\\.]*$"
+    regex: "^[^A-Z._]+$"
   allow_profile_backgrounds:
     client: true
     default: true
@@ -502,7 +547,11 @@ files:
   allow_animated_avatars:
     client: true
     default: false
-  allow_animated_thumbnails: false
+  allow_animated_thumbnails: true
+  default_avatars:
+    default: ''
+    type: url_list
+    client: true
 
 trust:
   default_trust_level:
@@ -562,7 +611,9 @@ trust:
   tl3_requires_likes_received:
     default: 20
     min: 0
-  tl3_links_no_follow: false
+  tl3_links_no_follow:
+    default: false
+    client: true
 
 security:
   use_https: false
@@ -606,6 +657,7 @@ spam:
   max_age_unmatched_ips: 365
   num_flaggers_to_close_topic: 5
   num_flags_to_close_topic: 12
+  auto_respond_to_flag_actions: true
 
 rate_limits:
   unique_posts_mins:
@@ -623,8 +675,12 @@ rate_limits:
   max_flags_per_day: 20
   max_edits_per_day: 30
   max_invites_per_day: 10
+  max_topic_invitations_per_day: 30
   max_topics_in_first_day: 5
   max_replies_in_first_day: 10
+  tl2_additional_likes_per_day_multiplier: 1.5
+  tl3_additional_likes_per_day_multiplier: 2
+  tl4_additional_likes_per_day_multiplier: 3
 
 developer:
   force_hostname:
@@ -671,7 +727,9 @@ developer:
     client: true
 
 embedding:
-  embeddable_host: ''
+  embeddable_host:
+      default: ''
+      regex: "^(?!http).+" # don't allow this to start with http:// or https://
   feed_polling_enabled: false
   feed_polling_url: ''
   embed_by_username:
@@ -724,6 +782,10 @@ uncategorized:
     client: true
     default: true
 
+  slug_generation_method:
+    default: 'ascii'
+    enum: 'SlugSetting'
+
   # Search
   min_search_term_length:
     client: true
@@ -734,6 +796,7 @@ uncategorized:
   new_topic_duration_minutes: 2880
   previous_visit_timeout_hours: 1
   staff_like_weight: 3
+  topic_view_duration_hours: 8
 
   # Summary mode
   summary_score_threshold: 15

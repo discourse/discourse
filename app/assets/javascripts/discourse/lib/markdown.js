@@ -259,14 +259,14 @@ Discourse.Markdown = {
     // The first time, let's add some more whitelisted tags
     if (!_decoratedCaja) {
 
-      // Add anything whitelisted to the list of elements if it's not in there
-      // already.
+      // Add anything whitelisted to the list of elements if it's not in there already.
       var elements = window.html4.ELEMENTS;
       Object.keys(_validTags).forEach(function(t) {
         if (!elements[t]) {
           elements[t] = 0;
         }
       });
+
       _decoratedCaja = true;
     }
 

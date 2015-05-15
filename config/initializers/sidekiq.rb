@@ -33,7 +33,7 @@ if Sidekiq.server?
           manager.tick
         rescue => e
           # the show must go on
-          Discourse.handle_exception(e, {message: "While ticking scheduling manager"})
+          Discourse.handle_job_exception(e, {message: "While ticking scheduling manager"})
         end
         sleep 1
       end
@@ -55,6 +55,8 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
     if ex.backtrace
       Logster.add_to_env(fake_env, :backtrace, ex.backtrace)
     end
+
+    Logster.add_to_env(fake_env, :current_hostname, Discourse.current_hostname)
 
     Thread.current[Logster::Logger::LOGSTER_ENV] = fake_env
     Logster.logger.error(text)

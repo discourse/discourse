@@ -17,7 +17,6 @@ var PATH_BINDINGS = {
     },
 
     CLICK_BINDINGS = {
-      'f': '#topic-footer-buttons button.bookmark',                             // bookmark topic
       'm m': 'div.notification-options li[data-id="0"] a',                      // mark topic as muted
       'm r': 'div.notification-options li[data-id="1"] a',                      // mark topic as regular
       'm t': 'div.notification-options li[data-id="2"] a',                      // mark topic as tracking
@@ -50,7 +49,8 @@ var PATH_BINDINGS = {
       'command+f': 'showBuiltinSearch',
       '?': 'showHelpModal',                                                     // open keyboard shortcut help
       'q': 'quoteReply',
-      'b': 'toggleBookmark'
+      'b': 'toggleBookmark',
+      'f': 'toggleBookmarkTopic'
     };
 
 
@@ -68,6 +68,16 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
   toggleBookmark: function(){
     this.sendToSelectedPost('toggleBookmark');
     this.sendToTopicListItemView('toggleBookmark');
+  },
+
+  toggleBookmarkTopic: function(){
+    var topic = this.currentTopic();
+    // BIG hack, need a cleaner way
+    if(topic && $('.posts-wrapper').length > 0) {
+      topic.toggleBookmark();
+    } else {
+      this.sendToTopicListItemView('toggleBookmark');
+    }
   },
 
   quoteReply: function(){
@@ -170,13 +180,23 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     }
   },
 
+  currentTopic: function(){
+    var topicController = this.container.lookup('controller:topic');
+    if(topicController) {
+      var topic = topicController.get('model');
+      if(topic){
+        return topic;
+      }
+    }
+  },
+
   sendToSelectedPost: function(action){
     var container = this.container;
     // TODO: We should keep track of the post without a CSS class
     var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
     if (selectedPostId) {
       var topicController = container.lookup('controller:topic'),
-          post = topicController.get('postStream.posts').findBy('id', selectedPostId);
+          post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         topicController.send(action, post);
       }

@@ -1,5 +1,6 @@
 import ObjectController from 'discourse/controllers/object';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default ObjectController.extend(CanCheckEmails, {
 
@@ -10,8 +11,10 @@ export default ObjectController.extend(CanCheckEmails, {
   editHistoryVisible: Discourse.computed.setting('edit_history_visible_to_public'),
 
   selectedCategories: function(){
-    return [].concat(this.get("watchedCategories"), this.get("trackedCategories"), this.get("mutedCategories"));
-  }.property("watchedCategories", "trackedCategories", "mutedCategories"),
+    return [].concat(this.get("model.watchedCategories"),
+                     this.get("model.trackedCategories"),
+                     this.get("model.mutedCategories"));
+  }.property("model.watchedCategories", "model.trackedCategories", "model.mutedCategories"),
 
   // By default we haven't saved anything
   saved: false,
@@ -19,20 +22,29 @@ export default ObjectController.extend(CanCheckEmails, {
   newNameInput: null,
 
   userFields: function() {
-    var siteUserFields = this.site.get('user_fields');
+    let siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      var userFields = this.get('user_fields');
-      return siteUserFields.filterProperty('editable', true).sortBy('field_type').map(function(uf) {
-        var val = userFields ? userFields[uf.get('id').toString()] : null;
-        return Ember.Object.create({value: val, field: uf});
+      const userFields = this.get('model.user_fields');
+
+      // Staff can edit fields that are not `editable`
+      if (!this.get('currentUser.staff')) {
+        siteUserFields = siteUserFields.filterProperty('editable', true);
+      }
+      return siteUserFields.sortBy('field_type').map(function(field) {
+        const value = userFields ? userFields[field.get('id').toString()] : null;
+        return Ember.Object.create({ value, field });
       });
     }
-  }.property('user_fields.@each.value'),
+  }.property('model.user_fields.@each.value'),
 
   cannotDeleteAccount: Em.computed.not('can_delete_account'),
   deleteDisabled: Em.computed.or('saving', 'deleting', 'cannotDeleteAccount'),
 
   canEditName: Discourse.computed.setting('enable_names'),
+
+  nameInstructions: function() {
+    return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
+  }.property(),
 
   canSelectTitle: function() {
     return this.siteSettings.enable_badges && this.get('model.has_title_badges');
@@ -53,11 +65,12 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property(),
 
   digestFrequencies: [{ name: I18n.t('user.email_digests.daily'), value: 1 },
+                      { name: I18n.t('user.email_digests.every_three_days'), value: 3 },
                       { name: I18n.t('user.email_digests.weekly'), value: 7 },
-                      { name: I18n.t('user.email_digests.bi_weekly'), value: 14 }],
+                      { name: I18n.t('user.email_digests.every_two_weeks'), value: 14 }],
 
   autoTrackDurations: [{ name: I18n.t('user.auto_track_options.never'), value: -1 },
-                       { name: I18n.t('user.auto_track_options.always'), value: 0 },
+                       { name: I18n.t('user.auto_track_options.immediately'), value: 0 },
                        { name: I18n.t('user.auto_track_options.after_n_seconds', { count: 30 }), value: 30000 },
                        { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 1 }), value: 60000 },
                        { name: I18n.t('user.auto_track_options.after_n_minutes', { count: 2 }), value: 120000 },
@@ -74,23 +87,24 @@ export default ObjectController.extend(CanCheckEmails, {
                             { name: I18n.t('user.new_topic_duration.last_here'), value: -2 }],
 
   saveButtonText: function() {
-    return this.get('saving') ? I18n.t('saving') : I18n.t('save');
-  }.property('saving'),
+    return this.get('model.isSaving') ? I18n.t('saving') : I18n.t('save');
+  }.property('model.isSaving'),
 
-  imageUploadUrl: Discourse.computed.url('username', '/users/%@/preferences/user_image'),
+  passwordProgress: null,
+  imageUploadUrl: Discourse.computed.url('model.username', '/users/%@/preferences/user_image'),
 
   actions: {
 
-    save: function() {
-      var self = this;
-      this.setProperties({ saving: true, saved: false });
+    save() {
+      const self = this;
+      this.set('saved', false);
 
-      var model = this.get('model'),
-          userFields = this.get('userFields');
+      const model = this.get('model');
+      const userFields = this.get('userFields');
 
       // Update the user fields
       if (!Ember.isEmpty(userFields)) {
-        var modelFields = model.get('user_fields');
+        const modelFields = model.get('user_fields');
         if (!Ember.isEmpty(modelFields)) {
           userFields.forEach(function(uf) {
             modelFields[uf.get('field.id').toString()] = uf.get('value');
@@ -101,26 +115,16 @@ export default ObjectController.extend(CanCheckEmails, {
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
       return model.save().then(function() {
-        // model was saved
-        self.set('saving', false);
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }
-        self.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(self.get('bio_raw'))));
+        model.set('bio_cooked', Discourse.Markdown.cook(Discourse.Markdown.sanitize(model.get('bio_raw'))));
         self.set('saved', true);
-      }, function(error) {
-        // model failed to save
-        self.set('saving', false);
-        if (error && error.responseText) {
-          alert($.parseJSON(error.responseText).errors[0]);
-        } else {
-          alert(I18n.t('generic_error'));
-        }
-      });
+      }).catch(popupAjaxError);
     },
 
-    changePassword: function() {
-      var self = this;
+    changePassword() {
+      const self = this;
       if (!this.get('passwordProgress')) {
         this.set('passwordProgress', I18n.t("user.change_password.in_progress"));
         return this.get('model').changePassword().then(function() {
@@ -139,32 +143,31 @@ export default ObjectController.extend(CanCheckEmails, {
       }
     },
 
-    delete: function() {
+    delete() {
       this.set('deleting', true);
-      var self = this,
+      const self = this,
           message = I18n.t('user.delete_account_confirm'),
           model = this.get('model'),
-          buttons = [{
-        "label": I18n.t("cancel"),
-        "class": "cancel-inline",
-        "link":  true,
-        "callback": function() {
-          self.set('deleting', false);
-        }
-      }, {
-        "label": '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
-        "class": "btn btn-danger",
-        "callback": function() {
-          model.delete().then(function() {
-            bootbox.alert(I18n.t('user.deleted_yourself'), function() {
-              window.location.pathname = Discourse.getURL('/');
-            });
-          }, function() {
-            bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
-            self.set('deleting', false);
-          });
-        }
-      }];
+          buttons = [
+            { label: I18n.t("cancel"),
+              class: "cancel-inline",
+              link:  true,
+              callback: () => { this.set('deleting', false); }
+            },
+            { label: '<i class="fa fa-exclamation-triangle"></i> ' + I18n.t("user.delete_account"),
+              class: "btn btn-danger",
+              callback() {
+                model.delete().then(function() {
+                  bootbox.alert(I18n.t('user.deleted_yourself'), function() {
+                    window.location.pathname = Discourse.getURL('/');
+                  });
+                }, function() {
+                  bootbox.alert(I18n.t('user.delete_yourself_not_allowed'));
+                  self.set('deleting', false);
+                });
+              }
+            }
+          ];
       bootbox.dialog(message, buttons, {"classes": "delete-account"});
     }
   }

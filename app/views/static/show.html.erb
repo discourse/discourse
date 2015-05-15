@@ -1,19 +1,25 @@
-<ul class="nav-pills">
-  <% if @faq_overriden %>
-    <li class="nav-item-guidelines"><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=guidelines_path%>"><%=t "guidelines" %></a></li>
-    <li class="nav-item-faq"><a href="<%=faq_path%>"><%=t "js.faq" %></a></li>
-  <% else %>
-    <li class="nav-item-faq"><a class="<%= @page == 'faq' ? 'active' : '' %>" href="<%=faq_path%>"><%=t "js.faq" %></a></li>
+<div itemscope itemtype='http://schema.org/WebPage'>
+  <meta itemprop='lastReviewed' content='<%= @topic.first_post.updated_at.to_date.to_formatted_s(:iso_8601) %>'>
+  <ul class='nav-pills' role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
+    <li class="nav-item-about"><%= link_to t('about'), '/about' %></a></li>
+    <% if @faq_overriden %>
+      <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%= guidelines_path %>'><%= t 'guidelines' %></a></li>
+      <li class='nav-item-faq'><a href='<%= faq_path %>'><%= t 'js.faq' %></a></li>
+    <% else %>
+      <li class='nav-item-faq'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%=faq_path%>'><%= t 'js.faq' %></a></li>
+    <% end %>
+    <li class='nav-item-tos'><a href='<%= tos_path %>' class='<%= @page == 'tos' ? 'active' : '' %>'><%= t 'terms_of_service.title' %></a></li>
+    <li class='nav-item-privacy'><a href='<%= privacy_path %>' class='<%= @page == 'privacy' ? 'active' : '' %>'><%= t 'privacy' %></a></li>
+  </ul>
+
+  <% if staff? %>
+    <p><a href='<%= @topic.url %>'><i class='fa fa-pencil'></i> <%= t 'edit_this_page' %></a></p>
   <% end %>
-  <li class="nav-item-tos"><a href="<%=tos_path%>" class="<%= @page == 'tos' ? 'active' : '' %>"><%=t "terms_of_service.title" %></a></li>
-  <li class="nav-item-privacy"><a href="<%=privacy_path%>" class="<%= @page == 'privacy' ? 'active' : '' %>"><%=t "privacy" %></a></li>
-</ul>
 
-<% if staff? %>
-  <p><a href="<%= @topic.url %>"><i class="fa fa-pencil"></i> <%=t "edit_this_page" -%></a></p>
-<% end %>
-
-<%= @body.html_safe %>
+  <div itemprop='mainContentOfPage'>
+    <%= @body.html_safe %>
+  </div>
+</div>
 
 <% if @title %>
   <% content_for :title do %><%= @title %><% end %>

@@ -3,7 +3,9 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 
 export default ObjectController.extend(CanCheckEmails, {
   indexStream: false,
-  needs: ['user-notifications', 'user_topics_list'],
+  pmView: false,
+  userActionType: null,
+  needs: ['user-notifications', 'user-topics-list'],
 
   viewingSelf: function() {
     return this.get('content.username') === Discourse.User.currentProp('username');
@@ -12,17 +14,18 @@ export default ObjectController.extend(CanCheckEmails, {
   collapsedInfo: Em.computed.not('indexStream'),
 
   websiteName: function() {
-    var website = this.get('website');
+    var website = this.get('model.website');
     if (Em.isEmpty(website)) { return; }
-    return this.get('website').split("/")[2];
-  }.property('website'),
+    return website.split("/")[2];
+  }.property('model.website'),
 
-  linkWebsite: Em.computed.not('isBasic'),
+  linkWebsite: Em.computed.not('model.isBasic'),
 
-  canSeePrivateMessages: function() {
-    return this.get('viewingSelf') || Discourse.User.currentProp('admin');
-  }.property('viewingSelf'),
+  removeNoFollow: function() {
+    return this.get('model.trust_level') > 2 && !this.siteSettings.tl3_links_no_follow;
+  }.property('model.trust_level'),
 
+  canSeePrivateMessages: Ember.computed.or('viewingSelf', 'currentUser.admin'),
   canSeeNotificationHistory: Em.computed.alias('canSeePrivateMessages'),
 
   showBadges: function() {
@@ -39,13 +42,13 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property(),
 
   canDeleteUser: function() {
-    return this.get('can_be_deleted') && this.get('can_delete_all_posts');
-  }.property('can_be_deleted', 'can_delete_all_posts'),
+    return this.get('model.can_be_deleted') && this.get('model.can_delete_all_posts');
+  }.property('model.can_be_deleted', 'model.can_delete_all_posts'),
 
   publicUserFields: function() {
     var siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
-      var userFields = this.get('user_fields');
+      var userFields = this.get('model.user_fields');
       return siteUserFields.filterProperty('show_on_profile', true).sortBy('id').map(function(uf) {
         var val = userFields ? userFields[uf.get('id').toString()] : null;
         if (Ember.isEmpty(val)) {
@@ -55,7 +58,7 @@ export default ObjectController.extend(CanCheckEmails, {
         }
       }).compact();
     }
-  }.property('user_fields.@each.value'),
+  }.property('model.user_fields.@each.value'),
 
   privateMessagesActive: Em.computed.equal('pmView', 'index'),
   privateMessagesMineActive: Em.computed.equal('pmView', 'mine'),
@@ -69,7 +72,16 @@ export default ObjectController.extend(CanCheckEmails, {
     },
 
     exportUserArchive: function() {
-      Discourse.ExportCsv.exportUserArchive();
+      bootbox.confirm(
+        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("no_value"),
+        I18n.t("yes_value"),
+        function(confirmed) {
+          if (confirmed) {
+            Discourse.ExportCsv.exportUserArchive();
+          }
+        }
+      );
     }
   }
 });

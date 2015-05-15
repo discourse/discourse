@@ -5,7 +5,7 @@ export default Discourse.View.extend(LoadMore, UrlRefresh, {
   eyelineSelector: '.topic-list-item',
 
   actions: {
-    loadMore: function() {
+    loadMore() {
       var self = this;
       Discourse.notifyTitle(0);
       this.get('controller').loadMoreTopics().then(function (hasMoreResults) {
@@ -34,14 +34,13 @@ export default Discourse.View.extend(LoadMore, UrlRefresh, {
   }.observes('controller.topicTrackingState.incomingCount'),
 
   // Remember where we were scrolled to
-  saveScrollPosition: function() {
+  saveScrollPosition() {
     this.session.set('topicListScrollPosition', $(window).scrollTop());
   },
 
   // When the topic list is scrolled
-  scrolled: function() {
+  scrolled() {
     this._super();
     this.saveScrollPosition();
   }
 });
-

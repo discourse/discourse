@@ -1,35 +1,35 @@
 <div class="col first ip_address">
   {{#if editing}}
-    {{text-field value=ip_address autofocus="autofocus"}}
+    {{text-field value=model.ip_address autofocus="autofocus"}}
   {{else}}
     <span {{action "edit" this}}>
       {{#if isRange}}
-        <strong>{{ip_address}}</strong>
+        <strong>{{model.ip_address}}</strong>
       {{else}}
-        {{ip_address}}
+        {{model.ip_address}}
       {{/if}}
     </span>
   {{/if}}
 </div>
 <div class="col action">
-  <i {{bind-attr class=":fa actionIcon"}}></i>
-  {{actionName}}
+  {{fa-icon model.actionIcon}}
+  {{model.actionName}}
 </div>
-<div class="col match_count">{{match_count}}</div>
+<div class="col match_count">{{model.match_count}}</div>
 <div class="col last_match_at">
-  {{#if last_match_at}}
-    {{age-with-tooltip last_match_at}}
+  {{#if model.last_match_at}}
+    {{age-with-tooltip model.last_match_at}}
   {{/if}}
 </div>
-<div class="col created_at">{{age-with-tooltip created_at}}</div>
+<div class="col created_at">{{age-with-tooltip model.created_at}}</div>
 <div class="col actions">
   {{#unless editing}}
     <button class="btn btn-danger" {{action "destroy" this}}><i class="fa fa-trash-o"></i></button>
     <button class="btn" {{action "edit" this}}><i class="fa fa-pencil"></i></button>
-    {{#if isBlocked}}
-      <button class="btn" {{action "allow" this}}><i {{bind-attr class=":fa doNothingIcon"}}></i> {{i18n 'admin.logs.screened_ips.actions.do_nothing'}}</button>
+    {{#if model.isBlocked}}
+    <button class="btn" {{action "allow" this}}>{{fa-icon "check"}} {{i18n 'admin.logs.screened_ips.actions.do_nothing'}}</button>
     {{else}}
-      <button class="btn" {{action "block" this}}><i {{bind-attr class=":fa blockIcon"}}></i> {{i18n 'admin.logs.screened_ips.actions.block'}}</button>
+    <button class="btn" {{action "block" this}}>{{fa-icon "ban"}} {{i18n 'admin.logs.screened_ips.actions.block'}}</button>
     {{/if}}
   {{else}}
     <button class="btn" {{action "save" this}}>{{i18n 'admin.logs.save'}}</button>

@@ -13,14 +13,14 @@
       <ul class='icons clearfix' role='navigation'>
         {{#if currentUser}}
           <li class='notifications'>
-            <a class='icon' href="#" {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
+            <a class='icon' href {{action "showNotifications" target="view"}} data-notifications="notifications-dropdown" id='user-notifications' title='{{i18n 'notifications.title'}}'>
               {{fa-icon "comment" label="notifications.title"}}
             </a>
             {{#if currentUser.unread_notifications}}
-              <a href='#' class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
+              <a href class='badge-notification unread-notifications'>{{currentUser.unread_notifications}}</a>
             {{/if}}
             {{#if currentUser.unread_private_messages}}
-              <a href='#' class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
+              <a href class='badge-notification unread-private-messages'>{{currentUser.unread_private_messages}}</a>
             {{/if}}
           </li>
         {{/if}}
@@ -52,14 +52,14 @@
             <a class='icon'
                data-dropdown="site-map-dropdown"
                data-render="renderSiteMap"
-               href="#"
+               href
                title='{{i18n 'site_map'}}'
                id="site-map">
                {{fa-icon "bars" label="site_map"}}
             </a>
           {{/if}}
-          {{#if currentUser.site_flagged_posts_count}}
-            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{currentUser.site_flagged_posts_count}}</a>
+          {{#if flaggedPostsCount}}
+            <a href='/admin/flags/active' title='{{i18n 'notifications.total_flagged'}}' class='badge-notification flagged-posts'>{{flaggedPostsCount}}</a>
           {{/if}}
         </li>
         {{#if currentUser}}
@@ -77,9 +77,7 @@
       </ul>
 
       {{#if view.renderDropdowns}}
-
         {{render "search"}}
-
         {{render "notifications" notifications}}
 
         {{#if view.renderSiteMap}}
@@ -87,36 +85,11 @@
         {{/if}}
 
         {{render "user-dropdown"}}
-
       {{/if}}
-
     </div>
 
     {{#if showExtraInfo}}
-      <div class="extra-info-wrapper">
-        <div {{bind-attr class=":extra-info hasCategory"}}>
-          <div class="title-wrapper">
-            <h1>
-              {{#if showPrivateMessageGlyph}}
-                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-              {{/if}}
-
-              {{#if topic.details.loaded}}
-                {{topic-status topic=topic}}
-                <a class='topic-link' href='{{unbound topic.url}}' {{action "jumpToTopPost"}}>{{{topic.fancy_title}}}</a>
-              {{else}}
-                {{#if topic.errorLoading}}
-                  <span class="error">{{topic.errorTitle}}</span>
-                {{else}}
-                  <span class="loading">{{i18n 'topic.loading'}}</span>
-                {{/if}}
-              {{/if}}
-            </h1>
-            {{topic-category topic=topic}}
-          </div>
-        </div>
-      </div>
+      {{header-extra-info topic=topic}}
     {{/if}}
-
   </div>
 </div>

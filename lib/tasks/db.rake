@@ -1,6 +1,10 @@
-# we need to run seed_fu every time we run rake db:migrate
-task 'db:migrate' => 'environment' do
+# we should set the locale before the migration
+task 'set_locale' do
   I18n.locale = (SiteSetting.default_locale || :en) rescue :en
+end
+
+# we need to run seed_fu every time we run rake db:migrate
+task 'db:migrate' => ['environment', 'set_locale'] do
   SeedFu.seed
 
   if SiteSetting.vacuum_db_days > 0 &&

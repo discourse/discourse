@@ -48,6 +48,8 @@ describe DiscourseSingleSignOn do
     expect(sso.email).to eq "sam@sam.com"
   end
 
+  let(:ip_address) { "127.0.0.1" }
+
   it "can lookup or create user when name is blank" do
     # so we can create system messages
     Fabricate(:admin)
@@ -56,8 +58,42 @@ describe DiscourseSingleSignOn do
     sso.name = ""
     sso.email = "test@test.com"
     sso.external_id = "A"
-    user = sso.lookup_or_create_user
+    user = sso.lookup_or_create_user(ip_address)
     expect(user).to_not be_nil
+  end
+
+  it "can override name / email / username" do
+    admin = Fabricate(:admin)
+
+    SiteSetting.sso_overrides_name = true
+    SiteSetting.sso_overrides_email = true
+    SiteSetting.sso_overrides_username = true
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "bob%the$admin"
+    sso.name = "Bob Admin"
+    sso.email = admin.email
+    sso.external_id = "A"
+
+    sso.lookup_or_create_user(ip_address)
+
+    admin.reload
+
+    expect(admin.name).to eq "Bob Admin"
+    expect(admin.username).to eq "bob_the_admin"
+    expect(admin.email).to eq admin.email
+
+    sso.email = "TEST@bob.com"
+
+    sso.name = "Louis C.K."
+
+    sso.lookup_or_create_user(ip_address)
+
+    admin.reload
+
+    expect(admin.email).to eq("test@bob.com")
+    expect(admin.username).to eq "bob_the_admin"
+    expect(admin.name).to eq "Louis C.K."
   end
 
   it "can fill in data on way back" do
@@ -104,6 +140,28 @@ describe DiscourseSingleSignOn do
     expect(sso.nonce).to_not be_nil
   end
 
+  context 'welcome emails' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@example.com"
+      sso.external_id = "A"
+      sso
+    }
+
+    it "sends a welcome email by default" do
+      User.any_instance.expects(:enqueue_welcome_message).once
+      user = sso.lookup_or_create_user(ip_address)
+    end
+
+    it "suppresses the welcome email when asked to" do
+      User.any_instance.expects(:enqueue_welcome_message).never
+      sso.suppress_welcome_message = true
+      user = sso.lookup_or_create_user(ip_address)
+    end
+  end
+
   context 'when sso_overrides_avatar is enabled' do
     let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
     let!(:sso) {
@@ -123,7 +181,7 @@ describe DiscourseSingleSignOn do
     it "deal with no avatar url passed for an existing user with an avatar" do
       # Deliberately not setting avatar_url.
 
-      user = sso.lookup_or_create_user
+      user = sso.lookup_or_create_user(ip_address)
       expect(user).to_not be_nil
     end
 
@@ -133,7 +191,7 @@ describe DiscourseSingleSignOn do
       sso.avatar_url = "http://example.com/a_different_image.png"
       sso.avatar_force_update = true
 
-      user = sso.lookup_or_create_user
+      user = sso.lookup_or_create_user(ip_address)
       expect(user).to_not be_nil
     end
   end

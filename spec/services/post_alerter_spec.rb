@@ -11,24 +11,33 @@ describe PostAlerter do
 
   context 'quotes' do
 
+    it 'does not notify for muted users' do
+      post = Fabricate(:post, raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
+      MutedUser.create!(user_id: evil_trout.id, muted_user_id: post.user_id)
+
+      expect {
+        PostAlerter.post_created(post)
+      }.to change(evil_trout.notifications, :count).by(0)
+    end
+
     it 'notifies a user by username' do
-      lambda {
+      expect {
         create_post_with_alerts(raw: '[quote="EvilTrout, post:1"]whatup[/quote]')
-      }.should change(evil_trout.notifications, :count).by(1)
+      }.to change(evil_trout.notifications, :count).by(1)
     end
 
     it "won't notify the user a second time on revision" do
       p1 = create_post_with_alerts(raw: '[quote="Evil Trout, post:1"]whatup[/quote]')
-      lambda {
+      expect {
         p1.revise(p1.user, { raw: '[quote="Evil Trout, post:1"]whatup now?[/quote]' })
-      }.should_not change(evil_trout.notifications, :count)
+      }.not_to change(evil_trout.notifications, :count)
     end
 
     it "doesn't notify the poster" do
       topic = create_post_with_alerts.topic
-      lambda {
+      expect {
         Fabricate(:post, topic: topic, user: topic.user, raw: '[quote="Bruce Wayne, post:1"]whatup[/quote]')
-      }.should_not change(topic.user.notifications, :count)
+      }.not_to change(topic.user.notifications, :count)
     end
   end
 
@@ -38,16 +47,16 @@ describe PostAlerter do
       user = post1.user
       create_post(raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
 
-      user.notifications.count.should == 1
+      expect(user.notifications.count).to eq(1)
 
       create_post(user: user, raw: "my magic topic\n##{Discourse.base_url}#{post1.url}")
 
       user.reload
-      user.notifications.count.should == 1
+      expect(user.notifications.count).to eq(1)
 
       # don't notify on reflection
       post1.reload
-      PostAlerter.new.extract_linked_users(post1).length.should == 0
+      expect(PostAlerter.new.extract_linked_users(post1).length).to eq(0)
 
     end
   end
@@ -59,24 +68,24 @@ describe PostAlerter do
     let(:topic) { mention_post.topic }
 
     it 'notifies a user' do
-      lambda {
+      expect {
         mention_post
-      }.should change(evil_trout.notifications, :count).by(1)
+      }.to change(evil_trout.notifications, :count).by(1)
     end
 
     it "won't notify the user a second time on revision" do
       mention_post
-      lambda {
+      expect {
         mention_post.revise(mention_post.user, { raw: "New raw content that still mentions @eviltrout" })
-      }.should_not change(evil_trout.notifications, :count)
+      }.not_to change(evil_trout.notifications, :count)
     end
 
     it "doesn't notify the user who created the topic in regular mode" do
       topic.notify_regular!(user)
       mention_post
-      lambda {
+      expect {
         create_post_with_alerts(user: user, raw: 'second post', topic: topic)
-      }.should_not change(user.notifications, :count)
+      }.not_to change(user.notifications, :count)
     end
 
   end

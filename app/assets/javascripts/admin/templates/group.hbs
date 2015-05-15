@@ -38,6 +38,15 @@
     </label>
   </div>
 
+  {{#unless automatic}}
+  <div>
+    <label for="primary_group">
+      {{input type="checkbox" checked=primary_group}}
+      {{i18n 'admin.groups.primary_group'}}
+    </label>
+  </div>
+  {{/unless}}
+
   <div>
     <label for="alias">{{i18n 'groups.alias_levels.title'}}</label>
     {{combo-box name="alias" valueAttribute="value" value=alias_level content=aliasLevelOptions}}
@@ -51,6 +60,13 @@
         {{input type="checkbox" checked=automatic_membership_retroactive}}
         {{i18n 'admin.groups.automatic_membership_retroactive'}}
       </label>
+    </div>
+
+    <div>
+      <label for="title">
+        {{i18n 'admin.groups.default_title'}}
+      </label>
+        {{input value=title}}
     </div>
   {{/unless}}
 

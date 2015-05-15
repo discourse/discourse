@@ -21,14 +21,15 @@ describe Admin::GroupsController do
       expect(response.status).to eq(200)
       expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
-        "automatic"=>false,
         "name"=>group.name,
         "user_count"=>1,
         "automatic"=>false,
         "alias_level"=>0,
         "visible"=>true,
         "automatic_membership_email_domains"=>nil,
-        "automatic_membership_retroactive"=>false
+        "automatic_membership_retroactive"=>false,
+        "title"=>nil,
+        "primary_group"=>false
       }])
     end
 
@@ -62,13 +63,15 @@ describe Admin::GroupsController do
 
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
       Jobs.expects(:enqueue).never
-      xhr :put, :update, id: 1, automatic_membership_retroactive: "false"
+      group = Fabricate(:group)
+      xhr :put, :update, id: group.id, automatic_membership_retroactive: "false"
       expect(response).to be_success
     end
 
     it "launches the 'automatic group membership' job when it's retroactive" do
-      Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: 1)
-      xhr :put, :update, id: 1, automatic_membership_retroactive: "true"
+      group = Fabricate(:group)
+      Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: group.id)
+      xhr :put, :update, id: group.id, automatic_membership_retroactive: "true"
       expect(response).to be_success
     end
 
@@ -110,16 +113,37 @@ describe Admin::GroupsController do
       expect(response.status).to eq(422)
     end
 
-    it "is able to add several members to a group" do
-      user1 = Fabricate(:user)
-      user2 = Fabricate(:user)
+    context "is able to add several members to a group" do
+
+      let(:user1) { Fabricate(:user) }
+      let(:user2) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
+
+      it "adds by username" do
+        xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
+
+      it "adds by id" do
+        xhr :put, :add_members, id: group.id, user_ids: [user1.id, user2.id].join(",")
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(2)
+      end
+    end
+
+    it "returns 422 if member already exists" do
       group = Fabricate(:group)
+      existing_member = Fabricate(:user)
+      group.add(existing_member)
+      group.save
 
-      xhr :put, :add_members, id: group.id, usernames: [user1.username, user2.username].join(",")
-
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(2)
+      xhr :put, :add_members, id: group.id, usernames: existing_member.username
+      expect(response.status).to eq(422)
     end
 
   end
@@ -131,17 +155,41 @@ describe Admin::GroupsController do
       expect(response.status).to eq(422)
     end
 
-    it "is able to remove a member" do
-      group = Fabricate(:group)
-      user = Fabricate(:user)
-      group.add(user)
-      group.save
+    context "is able to remove a member" do
 
-      xhr :delete, :remove_member, id: group.id, user_id: user.id
+      let(:user) { Fabricate(:user) }
+      let(:group) { Fabricate(:group) }
 
-      expect(response).to be_success
-      group.reload
-      expect(group.users.count).to eq(0)
+      before do
+        group.add(user)
+        group.save
+      end
+
+      it "removes by id" do
+        xhr :delete, :remove_member, id: group.id, user_id: user.id
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes by username" do
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
+
+      it "removes user.primary_group_id when user is removed from group" do
+        user.primary_group_id = group.id
+        user.save
+
+        xhr :delete, :remove_member, id: group.id, username: user.username
+
+        user.reload
+        expect(user.primary_group_id).to eq(nil)
+      end
     end
 
   end

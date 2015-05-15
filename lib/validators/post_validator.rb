@@ -1,6 +1,7 @@
 require_dependency 'validators/stripped_length_validator'
 module Validators; end
 class Validators::PostValidator < ActiveModel::Validator
+
   def validate(record)
     presence(record)
     unless Discourse.static_doc_topic_ids.include?(record.topic_id) && record.acting_user.try(:admin?)
@@ -16,16 +17,29 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-    [:raw,:topic_id].each do |attr_name|
-       post.errors.add(attr_name, :blank, options) if post.send(attr_name).blank?
+
+    post.errors.add(:raw, :blank, options) if post.raw.blank?
+    unless options[:skip_topic]
+      post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
+
     if post.new_record? and post.user_id.nil?
       post.errors.add(:user_id, :blank, options)
     end
   end
 
   def stripped_length(post)
-    range = post.topic.try(:private_message?) ? SiteSetting.private_message_post_length : SiteSetting.post_length
+    range = if post.topic.try(:private_message?)
+      # private message
+      SiteSetting.private_message_post_length
+    elsif ( post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0) )
+      # creating/editing first post
+      SiteSetting.first_post_length
+    else
+      # regular post
+      SiteSetting.post_length
+    end
+
     Validators::StrippedLengthValidator.validate(post, :raw, post.raw, range)
   end
 

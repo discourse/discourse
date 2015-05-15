@@ -13,7 +13,7 @@ class UserAvatarsController < ApplicationController
       user.create_user_avatar(user_id: user.id) unless user.user_avatar
       user.user_avatar.update_gravatar!
 
-      render json: {upload_id: user.user_avatar.gravatar_upload_id}
+      render json: { upload_id: user.user_avatar.gravatar_upload_id }
     else
       raise Discourse::NotFound
     end
@@ -24,7 +24,7 @@ class UserAvatarsController < ApplicationController
     params.require(:version)
     params.require(:size)
 
-    return render_dot if params[:version].to_i > LetterAvatar::VERSION
+    return render_dot if params[:version] != LetterAvatar.version
 
     image = LetterAvatar.generate(params[:username].to_s, params[:size].to_i)
 
@@ -58,7 +58,7 @@ class UserAvatarsController < ApplicationController
     upload ||= user.uploaded_avatar if user.uploaded_avatar_id == version
 
     if user.uploaded_avatar && !upload
-      return redirect_to "/user_avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png"
+      return redirect_to path("/user_avatar/#{hostname}/#{user.username_lower}/#{size}/#{user.uploaded_avatar_id}.png")
     elsif upload
       original = Discourse.store.path_for(upload)
       if Discourse.store.external? || File.exists?(original)

@@ -3,11 +3,12 @@ import DiscoveryController from 'discourse/controllers/discovery';
 export default DiscoveryController.extend({
   needs: ['modal', 'discovery'],
 
-  withLogo: Em.computed.filterBy('categories', 'logo_url'),
+  withLogo: Em.computed.filterBy('model.categories', 'logo_url'),
   showPostsColumn: Em.computed.empty('withLogo'),
 
   actions: {
-    refresh: function() {
+
+    refresh() {
 
       // Don't refresh if we're still loading
       if (this.get('controllers.discovery.loading')) { return; }
@@ -17,15 +18,11 @@ export default DiscoveryController.extend({
       // Lesson learned: Don't call `loading` yourself.
       this.set('controllers.discovery.loading', true);
 
-      var parentCategory = this.get('model.parentCategory');
-      var promise;
-      if (parentCategory) {
-        promise = Discourse.CategoryList.listForParent(parentCategory);
-      } else {
-        promise = Discourse.CategoryList.list();
-      }
+      const parentCategory = this.get('model.parentCategory');
+      const promise = parentCategory ? Discourse.CategoryList.listForParent(parentCategory) :
+                                       Discourse.CategoryList.list();
 
-      var self = this;
+      const self = this;
       promise.then(function(list) {
         self.set('model', list);
         self.send('loadingComplete');
@@ -38,7 +35,7 @@ export default DiscoveryController.extend({
   }.property(),
 
   latestTopicOnly: function() {
-    return this.get('categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
-  }.property('categories.@each.featuredTopics.length')
+    return this.get('model.categories').find(function(c) { return c.get('featuredTopics.length') > 1; }) === undefined;
+  }.property('model.categories.@each.featuredTopics.length')
 
 });

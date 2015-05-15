@@ -19,6 +19,9 @@ class UserDestroyer
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
 
     User.transaction do
+
+      QueuedPost.where(user_id: user.id).delete_all
+
       if opts[:delete_posts]
         user.posts.each do |post|
           # agree with flags
@@ -35,7 +38,7 @@ class UserDestroyer
 
           PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
 
-          if post.topic and post.post_number == 1
+          if post.topic and post.is_first_post?
             Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
           end
         end

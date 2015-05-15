@@ -42,13 +42,13 @@ class DiscourseSingleSignOn < SingleSignOn
     "SSO_NONCE_#{nonce}"
   end
 
-  def lookup_or_create_user
+  def lookup_or_create_user(ip_address=nil)
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
     if sso_record && user = sso_record.user
       sso_record.last_payload = unsigned_payload
     else
-      user = match_email_or_create_user
+      user = match_email_or_create_user(ip_address)
       sso_record = user.single_sign_on_record
     end
 
@@ -60,13 +60,14 @@ class DiscourseSingleSignOn < SingleSignOn
     if sso_record && (user = sso_record.user) && !user.active
       user.active = true
       user.save!
-      user.enqueue_welcome_message('welcome_user')
+      user.enqueue_welcome_message('welcome_user') unless suppress_welcome_message
     end
 
     custom_fields.each do |k,v|
       user.custom_fields[k] = v
     end
 
+    user.ip_address = ip_address
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
@@ -79,16 +80,17 @@ class DiscourseSingleSignOn < SingleSignOn
 
   private
 
-  def match_email_or_create_user
+  def match_email_or_create_user(ip_address)
     user = User.find_by_email(email)
 
     try_name = name.blank? ? nil : name
     try_username = username.blank? ? nil : username
 
     user_params = {
-        email: email,
-        name:  User.suggest_name(try_name || try_username || email),
-        username: UserNameSuggester.suggest(try_username || try_name || email),
+      email: email,
+      name:  try_name || User.suggest_name(try_username || email),
+      username: UserNameSuggester.suggest(try_username || try_name || email),
+      ip_address: ip_address
     }
 
     if user || user = User.create!(user_params)
@@ -108,21 +110,17 @@ class DiscourseSingleSignOn < SingleSignOn
   end
 
   def change_external_attributes_and_override(sso_record, user)
-    if SiteSetting.sso_overrides_email && email != sso_record.external_email
-      # set the user's email to whatever came in the payload
+    if SiteSetting.sso_overrides_email && user.email != email
       user.email = email
     end
 
-    if SiteSetting.sso_overrides_username && username != sso_record.external_username && user.username != username
-      # we have an external username change, and the user's current username doesn't match
-      # run it through the UserNameSuggester to override it
-      user.username = UserNameSuggester.suggest(username || name || email)
+    if SiteSetting.sso_overrides_username &&
+        user.username != username
+      user.username = UserNameSuggester.suggest(username || name || email, user.username)
     end
 
-    if SiteSetting.sso_overrides_name && name != sso_record.external_name && user.name != name
-      # we have an external name change, and the user's current name doesn't match
-      # run it through the name suggester to override it
-      user.name = User.suggest_name(name || username || email)
+    if SiteSetting.sso_overrides_name && user.name != name
+      user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
     if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
@@ -130,12 +128,12 @@ class DiscourseSingleSignOn < SingleSignOn
       sso_record.external_avatar_url != avatar_url)
 
       begin
-        tempfile = FileHelper.download(avatar_url, 1.megabyte, "sso-avatar", true)
+        tempfile = FileHelper.download(avatar_url, SiteSetting.max_image_size_kb.kilobytes, "sso-avatar", true)
 
         ext = FastImage.type(tempfile).to_s
         tempfile.rewind
 
-        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), { origin: avatar_url })
+        upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, tempfile.size, { origin: avatar_url })
         user.uploaded_avatar_id = upload.id
 
         unless user.user_avatar

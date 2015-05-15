@@ -2,9 +2,6 @@ require 'spec_helper'
 require_dependency 'post_destroyer'
 
 describe PostAction do
-  it { is_expected.to belong_to :user }
-  it { is_expected.to belong_to :post }
-  it { is_expected.to belong_to :post_action_type }
   it { is_expected.to rate_limit }
 
   let(:moderator) { Fabricate(:moderator) }
@@ -28,7 +25,7 @@ describe PostAction do
       mod = moderator
       Group.refresh_automatic_groups!
 
-      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message");
+      action = PostAction.act(codinghorror, post, PostActionType.types[:notify_moderators], message: "this is my special long message")
 
       posts = Post.joins(:topic)
                   .select('posts.id, topics.subtype, posts.topic_id')
@@ -54,18 +51,28 @@ describe PostAction do
       action.reload
       expect(action.deleted_at).to eq(nil)
 
-      # Acting on the flag should post an automated status message
+      # Acting on the flag should not post an automated status message (since a moderator already replied)
       expect(topic.posts.count).to eq(2)
       PostAction.agree_flags!(post, admin)
       topic.reload
-      expect(topic.posts.count).to eq(3)
-      expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
+      expect(topic.posts.count).to eq(2)
 
-      # Clearing the flags should not post another automated status message
+      # Clearing the flags should not post an automated status message
       PostAction.act(mod, post, PostActionType.types[:notify_moderators], message: "another special message")
       PostAction.clear_flags!(post, admin)
       topic.reload
-      expect(topic.posts.count).to eq(3)
+      expect(topic.posts.count).to eq(2)
+
+      # Acting on the flag should post an automated status message
+      another_post = create_post
+      action = PostAction.act(codinghorror, another_post, PostActionType.types[:notify_moderators], message: "foobar")
+      topic = action.related_post.topic
+
+      expect(topic.posts.count).to eq(1)
+      PostAction.agree_flags!(another_post, admin)
+      topic.reload
+      expect(topic.posts.count).to eq(2)
+      expect(topic.posts.last.post_type).to eq(Post.types[:moderator_action])
     end
 
     describe 'notify_moderators' do
@@ -76,7 +83,7 @@ describe PostAction do
       it "creates a pm if selected" do
         post = build(:post, id: 1000)
         PostCreator.any_instance.expects(:create).returns(post)
-        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message");
+        PostAction.act(build(:user), build(:post), PostActionType.types[:notify_moderators], message: "this is my special message")
       end
     end
 
@@ -89,7 +96,7 @@ describe PostAction do
 
       it "sends an email to user if selected" do
         PostCreator.any_instance.expects(:create).returns(build(:post))
-        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message");
+        PostAction.act(build(:user), post, PostActionType.types[:notify_user], message: "this is my special message")
       end
     end
   end
@@ -188,6 +195,28 @@ describe PostAction do
   end
 
   describe 'when a user likes something' do
+
+    it 'should generate notifications correctly' do
+      ActiveRecord::Base.observers.enable :all
+      PostAction.act(codinghorror, post, PostActionType.types[:like])
+      expect(Notification.count).to eq(1)
+
+      mutee = Fabricate(:user)
+
+      post = Fabricate(:post)
+      MutedUser.create!(user_id: post.user.id, muted_user_id: mutee.id)
+      PostAction.act(mutee, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(1)
+
+      # you can not mute admin, sorry
+      MutedUser.create!(user_id: post.user.id, muted_user_id: admin.id)
+      PostAction.act(admin, post, PostActionType.types[:like])
+
+      expect(Notification.count).to eq(2)
+
+    end
+
     it 'should increase the `like_count` and `like_score` when a user likes something' do
       PostAction.act(codinghorror, post, PostActionType.types[:like])
       post.reload
@@ -255,7 +284,7 @@ describe PostAction do
         # A post with no flags has 0 for flag counts
         expect(PostAction.flag_counts_for(post.id)).to eq([0, 0])
 
-        flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
+        _flag = PostAction.act(eviltrout, post, PostActionType.types[:spam])
         expect(PostAction.flag_counts_for(post.id)).to eq([0, 1])
 
         # If staff takes action, it is ranked higher
@@ -357,7 +386,7 @@ describe PostAction do
 
     it "can flag the topic instead of a post" do
       post1 = create_post
-      post2 = create_post(topic: post1.topic)
+      _post2 = create_post(topic: post1.topic)
       post_action = PostAction.act(Fabricate(:user), post1, PostActionType.types[:spam], { flag_topic: true })
       expect(post_action.targets_topic).to eq(true)
     end
@@ -426,6 +455,7 @@ describe PostAction do
       end
 
       expect(topic.reload.closed).to eq(true)
+
     end
 
   end
@@ -441,6 +471,79 @@ describe PostAction do
         PostAction.act(eviltrout, post, action)
       end.to raise_error(PostAction::AlreadyActed)
     end
+  end
+
+  describe "#create_message_for_post_action" do
+    it "does not create a message when there is no message" do
+      message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[:spam], {})
+      expect(message_id).to be_nil
+    end
+
+    [:notify_moderators, :notify_user, :spam].each do |post_action_type|
+      it "creates a message for #{post_action_type}" do
+        message_id = PostAction.create_message_for_post_action(Discourse.system_user, post, PostActionType.types[post_action_type], message: "WAT")
+        expect(message_id).to be_present
+      end
+    end
+
+  end
+
+  describe ".lookup_for" do
+    it "returns the correct map" do
+      user = Fabricate(:user)
+      post = Fabricate(:post)
+      post_action = PostAction.create(user_id: user.id, post_id: post.id, post_action_type_id: 1)
+
+      map = PostAction.lookup_for(user, [post.topic], post_action.post_action_type_id)
+
+      expect(map).to eq({post.topic_id => [post.post_number]})
+    end
+  end
+
+  describe ".add_moderator_post_if_needed" do
+
+    it "should not add a moderator post when it's disabled" do
+      post = create_post
+
+      action = PostAction.act(moderator, post, PostActionType.types[:spam], message: "WAT")
+      action.reload
+      topic = action.related_post.topic
+      expect(topic.posts.count).to eq(1)
+
+      SiteSetting.expects(:auto_respond_to_flag_actions).returns(false)
+      PostAction.agree_flags!(post, admin)
+
+      topic.reload
+      expect(topic.posts.count).to eq(1)
+    end
+  end
+
+  describe "rate limiting" do
+
+    def limiter(tl)
+      user = Fabricate.build(:user)
+      user.trust_level = tl
+      action = PostAction.new(user: user, post_action_type_id: PostActionType.types[:like])
+      action.post_action_rate_limiter
+    end
+
+    it "should scale up like limits depending on liker" do
+      expect(limiter(0).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(1).max).to eq SiteSetting.max_likes_per_day
+      expect(limiter(2).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl2_additional_likes_per_day_multiplier).to_i
+      expect(limiter(3).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl3_additional_likes_per_day_multiplier).to_i
+      expect(limiter(4).max).to eq (SiteSetting.max_likes_per_day * SiteSetting.tl4_additional_likes_per_day_multiplier).to_i
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = -1
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = 0.8
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+
+      SiteSetting.tl2_additional_likes_per_day_multiplier = "bob"
+      expect(limiter(2).max).to eq SiteSetting.max_likes_per_day
+    end
+
   end
 
 end

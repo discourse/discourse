@@ -1,9 +1,9 @@
 module UserNameSuggester
 
-  def self.suggest(name)
+  def self.suggest(name, allow_username = nil)
     return unless name.present?
     name = parse_name_from_email(name)
-    find_available_username_based_on(name)
+    find_available_username_based_on(name, allow_username)
   end
 
   def self.parse_name_from_email(name)
@@ -16,11 +16,11 @@ module UserNameSuggester
     name
   end
 
-  def self.find_available_username_based_on(name)
+  def self.find_available_username_based_on(name, allow_username = nil)
     name = fix_username(name)
     i = 1
     attempt = name
-    until User.username_available?(attempt)
+    until attempt == allow_username || User.username_available?(attempt)
       suffix = i.to_s
       max_length = User.username_length.end - suffix.length - 1
       attempt = "#{name[0..max_length]}#{suffix}"

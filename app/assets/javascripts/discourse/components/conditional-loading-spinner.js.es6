@@ -9,7 +9,7 @@ export default Ember.Component.extend({
     if (this.get('condition')) {
       buffer.push('<div class="spinner ' + this.get('size') + '"}}></div>');
     } else {
-      return this._super();
+      return this._super(buffer);
     }
   },
 

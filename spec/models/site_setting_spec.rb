@@ -35,6 +35,12 @@ describe SiteSetting do
     end
   end
 
+  describe 'first_post_length' do
+    it 'returns a range of min/max first post length' do
+      expect(SiteSetting.first_post_length).to eq(SiteSetting.defaults[:min_first_post_length]..SiteSetting.defaults[:max_post_length])
+    end
+  end
+
   describe 'private_message_title_length' do
     it 'returns a range of min/max pm topic title length' do
       expect(SiteSetting.private_message_title_length).to eq(SiteSetting.defaults[:min_private_message_title_length]..SiteSetting.defaults[:max_topic_title_length])
@@ -63,7 +69,7 @@ describe SiteSetting do
   end
 
   describe "top_menu" do
-    before(:each) { SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|category/xyz' }
+    before { SiteSetting.top_menu = 'one,-nope|two|three,-not|four,ignored|category/xyz|latest' }
 
     describe "items" do
       let(:items) { SiteSetting.top_menu_items }
@@ -83,7 +89,7 @@ describe SiteSetting do
   describe "scheme" do
 
     it "returns http when ssl is disabled" do
-      SiteSetting.expects(:use_https).returns(false)
+      SiteSetting.use_https = false
       expect(SiteSetting.scheme).to eq("http")
     end
 

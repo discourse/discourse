@@ -7,6 +7,7 @@ module DiscourseUpdates
         DiscourseVersionCheck.new(
           installed_version: Discourse::VERSION::STRING,
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+          installed_describe: `git describe --dirty`,
           updated_at: nil
         )
       else
@@ -15,9 +16,15 @@ module DiscourseUpdates
           critical_updates: critical_updates_available?,
           installed_version: Discourse::VERSION::STRING,
           installed_sha: (Discourse.git_version == 'unknown' ? nil : Discourse.git_version),
+          installed_describe: `git describe --dirty`,
           missing_versions_count: missing_versions_count,
           updated_at: updated_at
         )
+      end
+
+      # replace -commit_count with +commit_count
+      if version_info.installed_describe =~ /-(\d+)-/
+        version_info.installed_describe = version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
       end
 
       if SiteSetting.version_checks?

@@ -1,10 +1,7 @@
-<p>Choose the new category for the topics:</p>
+<p>{{i18n "topics.bulk.choose_new_category"}}</p>
 
 <p>{{category-chooser value=newCategoryId}}</p>
 
-{{#if loading}}
-  <div class='loading'>{{i18n 'loading'}}</div>
-{{else}}
-  <button class='btn' {{action "changeCategory"}}>Change Category</button>
-{{/if}}
-
+{{#conditional-loading-spinner condition=loading}}
+  {{d-button action="changeCategory" label="topics.bulk.change_category"}}
+{{/conditional-loading-spinner}}

@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-#^syntax detection
-
-site 'http://community.opscode.com/api/v1'
-
-cookbook 'apt'
-cookbook 'vim'
-cookbook 'build-essential'
-cookbook 'omnibus_updater'

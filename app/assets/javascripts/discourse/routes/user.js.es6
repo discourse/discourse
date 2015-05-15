@@ -15,13 +15,16 @@ export default Discourse.Route.extend({
       Discourse.logout();
     },
 
-    composePrivateMessage: function(user) {
-      var recipient = user ? user.get('username') : '';
+    composePrivateMessage: function(user, post) {
+      var recipient = user ? user.get('username') : '',
+          reply = post ? window.location.protocol + "//" + window.location.host + post.get("url") : null;
+
       return this.controllerFor('composer').open({
         action: Discourse.Composer.PRIVATE_MESSAGE,
         usernames: recipient,
         archetypeId: 'private_message',
-        draftKey: 'new_private_message'
+        draftKey: 'new_private_message',
+        reply: reply
       });
     },
 
@@ -66,14 +69,14 @@ export default Discourse.Route.extend({
   activate: function() {
     this._super();
     var user = this.modelFor('user');
-    Discourse.MessageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
+    this.messageBus.subscribe("/users/" + user.get('username_lower'), function(data) {
       user.loadUserAction(data);
     });
   },
 
   deactivate: function() {
     this._super();
-    Discourse.MessageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
+    this.messageBus.unsubscribe("/users/" + this.modelFor('user').get('username_lower'));
 
     // Remove the search context
     this.controllerFor('search').set('searchContext', null);

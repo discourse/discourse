@@ -15,18 +15,6 @@
 # http://yamllint.com/
 
 en:
-  stringex:
-    characters:
-      ellipsis: ""
-      number: "-"
-  # some default transliteration rules may be missing, add them to your locale
-  i18n:
-    transliterate:
-      rule:
-        ț: "t"
-        Ț: "t"
-        ș: "s"
-        Ș: "s"
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
@@ -56,14 +44,59 @@ en:
 
   purge_reason: "Automatically deleted as abandoned, unactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  anonymous: "Anonymous"
 
-  errors:
+  errors: &errors
+    format: ! '%{attribute} %{message}'
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Invalid boolean."
-      taken: "has already been taken. (group names are case insensitive)"
+      taken: "has already been taken"
+      accepted: must be accepted
+      blank: can't be blank
+      present: must be blank
+      confirmation: ! "doesn't match %{attribute}"
+      empty: can't be empty
+      equal_to: must be equal to %{count}
+      even: must be even
+      exclusion: is reserved
+      greater_than: must be greater than %{count}
+      greater_than_or_equal_to: must be greater than or equal to %{count}
+      inclusion: is not included in the list
+      invalid: is invalid
+      less_than: must be less than %{count}
+      less_than_or_equal_to: must be less than or equal to %{count}
+      not_a_number: is not a number
+      not_an_integer: must be an integer
+      odd: must be odd
+      record_invalid: ! 'Validation failed: %{errors}'
+      restrict_dependent_destroy:
+        one: "Cannot delete record because a dependent %{record} exists"
+        many: "Cannot delete record because dependent %{record} exist"
+      too_long:
+        one: is too long (maximum is 1 character)
+        other: is too long (maximum is %{count} characters)
+      too_short:
+        one: is too short (minimum is 1 character)
+        other: is too short (minimum is %{count} characters)
+      wrong_length:
+        one: is the wrong length (should be 1 character)
+        other: is the wrong length (should be %{count} characters)
+      other_than: "must be other than %{count}"
+    template:
+      body: ! 'There were problems with the following fields:'
+      header:
+        one: 1 error prohibited this %{model} from being saved
+        other: ! '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "There was an error loading that post."
+
+  activemodel:
+    errors:
+      <<: *errors
+  activerecord:
+    errors:
+      <<: *errors
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv or txt format."
@@ -74,6 +107,8 @@ en:
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
 
   not_logged_in: "You need to be logged in to do that."
+  not_found: "The requested URL or resource could not be found."
+  invalid_access: "You are not permitted to view the requested resource."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
 
   too_many_replies:
@@ -117,6 +152,7 @@ en:
     other: "Sorry, new users can only put %{count} links in a post."
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
+  topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
 
   just_posted_that: "is too similar to what you recently posted"
   has_already_been_used: "has already been used"
@@ -125,6 +161,7 @@ en:
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
+  home_title: "Home"
   topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "RSS feed of '%{topic}'"
   rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
@@ -132,7 +169,7 @@ en:
   num_posts: "Posts:"
   num_participants: "Participants:"
   read_full_topic: "Read full topic"
-  private_message_abbrev: "PM"
+  private_message_abbrev: "Msg"
   rss_description:
     latest: "Latest topics"
     hot: "Hot topics"
@@ -140,9 +177,13 @@ en:
 
   excerpt_image: "image"
 
+  queue:
+    delete_reason: "Deleted via post moderation queue"
+
   groups:
     errors:
       can_not_modify_automatic: "You can not modify an automatic group"
+      member_already_exist: "'%{username}' is already a member of this group."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -162,11 +203,11 @@ en:
     'new-topic': |
       Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
 
-      - Does the title accurately describe your topic? Does it sound interesting?
+      - Does the title sound interesting if you read it out loud? Is it a good summary?
 
-      - What is this about? Who would be interested in it? Why does it matter? What kind of responses are you hoping for from the community?
+      - Who would be interested in this? Why does it matter? What kind of responses do you want?
 
-      - Include good search words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
 
@@ -193,7 +234,7 @@ en:
     sequential_replies: |
       ### Consider replying to several posts at once
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
+      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
 
       You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
 
@@ -246,6 +287,8 @@ en:
           attributes:
             password:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
+              same_as_username: "is the same as your username. Please use a more secure password."
+              same_as_email: "is the same as your email. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
@@ -301,6 +344,7 @@ en:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
+      email_in_already_exist: "Incoming email address '%{email_in}' is already in use for '%{category_name}' category."
     cannot_delete:
       uncategorized: "Can't delete Uncategorized"
       has_subcategories: "Can't delete this category because it has sub-categories."
@@ -409,7 +453,7 @@ en:
         other: "almost %{count} years ago"
 
   password_reset:
-    no_token: "Sorry, your token has expired. Please try resetting your password again."
+    no_token: "Sorry, that password change link is too old. Log in again and select 'I forgot my password' to get a new link."
     choose_new: "Please choose a new password"
     choose: "Please choose a password"
     update: 'Update Password'
@@ -431,7 +475,7 @@ en:
     continue_button: "Continue to %{site_name}"
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
-
+    missing_session: "We can not detect if your account was created, please ensure you have cookies enabled."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -441,14 +485,16 @@ en:
       title: 'Spam'
       description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
       long_form: 'flagged this as spam'
+      email_title: '"%{title}" was flagged as spam'
+      email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inappropriate'
       description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
       long_form: 'flagged this as inappropriate'
     notify_user:
-      title: 'Private Message @{{username}}'
+      title: 'Message @{{username}}'
       description: 'This post contains something I want to talk to this person directly and privately about. Does not cast a flag.'
-      long_form: 'private messaged user'
+      long_form: 'messaged user'
       email_title: 'Your post in "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -487,7 +533,7 @@ en:
       email_body: "%{link}\n\n%{message}"
 
   flagging:
-    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/private-messages">see your private messages</a>.</p>'
+    you_must_edit: '<p>Your post was flagged by the community. Please <a href="/my/messages">see your messages</a>.</p>'
     user_must_edit: '<p>This post was flagged by the community and is temporarily hidden.</p>'
 
   archetypes:
@@ -518,7 +564,7 @@ en:
       xaxis: "Day"
       yaxis: "Number of visits"
     signups:
-      title: "Users"
+      title: "New Users"
       xaxis: "Day"
       yaxis: "Number of new users"
     topics:
@@ -556,23 +602,23 @@ en:
     user_to_user_private_messages:
       title: "User-to-User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     system_private_messages:
       title: "System"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     moderator_warning_private_messages:
       title: "Moderator Warning"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     notify_moderators_private_messages:
       title: "Notify Moderators"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     notify_user_private_messages:
       title: "Notify User"
       xaxis: "Day"
-      yaxis: "Number of private messages"
+      yaxis: "Number of messages"
     top_referrers:
       title: "Top Referrers"
       xaxis: "User"
@@ -588,6 +634,46 @@ en:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    page_view_anon_reqs:
+      title: "Anonymous"
+      xaxis: "Day"
+      yaxis: "Anonymous API Requests"
+    page_view_logged_in_reqs:
+      title: "Logged In"
+      xaxis: "Day"
+      yaxis: "Logged In API Requests"
+    page_view_crawler_reqs:
+      title: "Web Crawlers"
+      xaxis: "Day"
+      yaxis: "Web Crawler API Requests"
+    page_view_total_reqs:
+      title: "Total"
+      xaxis: "Day"
+      yaxis: "Total API Requests"
+    http_background_reqs:
+      title: "Background"
+      xaxis: "Day"
+      yaxis: "Requests used for live update and tracking"
+    http_2xx_reqs:
+      title: "Status 2xx (OK)"
+      xaxis: "Day"
+      yaxis: "Successful requests (Status 2xx)"
+    http_3xx_reqs:
+      title: "HTTP 3xx (Redirect)"
+      xaxis: "Day"
+      yaxis: "Redirect requests (Status 3xx)"
+    http_4xx_reqs:
+      title: "HTTP 4xx (Client Error)"
+      xaxis: "Day"
+      yaxis: "Client Errors (Status 4xx)"
+    http_5xx_reqs:
+      title: "HTTP 5xx (Server Error)"
+      xaxis: "Day"
+      yaxis: "Server Errors (Status 5xx)"
+    http_total_reqs:
+      title: "Total"
+      xaxis: "Day"
+      yaxis: "Total requests"
 
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
@@ -595,9 +681,8 @@ en:
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
-    queue_size_warning: 'The number of queued jobs is %{queue_size}, which is high. This could indicate a problem with the Sidekiq process(es), or you may need to add more Sidekiq workers.'
     memory_warning: 'Your server is running with less than 1 GB of total memory. At least 1 GB of memory is recommended.'
-    enable_google_logins_warning: "You are using a deprecated version of Google's OpenID authentication. Google will be ending support for OpenID by April 20, 2015. Start using Google OAuth2 as soon as possible. <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>See this guide to learn more</a>"
+    enable_google_logins_warning: "WARNING! Support is ending for your current method of Google authentication on April 20, 2015! Please <a href='https://meta.discourse.org/t/configuring-google-login-for-discourse/15858' target='_blank'>switch to the new method now!</a>"
     both_googles_warning: "You have both enable_google_logins and enable_google_oauth2_logins checked in the site settings. Disable enable_google_logins."
     google_oauth2_config_warning: 'The server is configured to allow signup and log in with Google OAuth2 (enable_google_oauth2_logins), but the client id and client secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">See this guide to learn more</a>.'
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
@@ -613,7 +698,7 @@ en:
     title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
     site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated private messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
+    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
 
   content_types:
@@ -628,10 +713,10 @@ en:
       description: "Guidance and essential information for new users."
     welcome_user:
       title: "Welcome: New User"
-      description: "A private message automatically sent to all new users when they sign up."
+      description: "A message automatically sent to all new users when they sign up."
     welcome_invite:
       title: "Welcome: Invited User"
-      description: "A private message automatically sent to all new invited users when they accept the invitation from another user to participate."
+      description: "A message automatically sent to all new invited users when they accept the invitation from another user to participate."
     login_required_welcome_message:
       title: "Login Required: Welcome Message"
       description: "Welcome message that is displayed to logged out users when the 'login required' setting is enabled."
@@ -654,11 +739,12 @@ en:
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
     min_post_length: "Minimum allowed post length in characters"
-    min_private_message_post_length: "Minimum allowed post length in characters for private messages"
+    min_first_post_length: "Minimum allowed first post (topic body) length in characters"
+    min_private_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
-    min_private_message_title_length: "Minimum allowed title length for a private message in characters"
+    min_private_message_title_length: "Minimum allowed title length for a message in characters"
     min_search_term_length: "Minimum valid search term length in characters"
     allow_uncategorized_topics: "Allow topics to be created without a category."
     uncategorized_description: "The description of the uncategorized category. Leave blank for no description."
@@ -668,6 +754,7 @@ en:
     title: "The name of this site, as used in the title tag."
     site_description: "Describe this site in one sentence, as used in the meta description tag."
     contact_email: "Email address of key contact responsible for this site. Used for critical notifications such as unhandled flags, as well as on the /about contact form for urgent matters."
+    contact_url: "Contact URL for this site. Used on the /about contact form for urgent matters."
     queue_jobs: "DEVELOPER ONLY! WARNING! By default, queue jobs in sidekiq. If disabled, your site will be broken."
     crawl_images: "Retrieve images from remote URLs to insert the correct width and height dimensions."
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
@@ -693,7 +780,7 @@ en:
     digest_logo_url: "The alternate logo used at the top of your site's email digest. If left blank `logo_url` will be used. eg: http://example.com/logo.png"
     logo_small_url: "The small logo image at the top left of your site, seen when scrolling down. If left blank, a home glyph will be shown."
     favicon_url: "A favicon for your site, see http://en.wikipedia.org/wiki/Favicon"
-    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank, the site title text will be used."
+    mobile_logo_url: "The fixed position logo image used at the top left of your mobile site. If left blank `logo_url` will be used."
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
@@ -706,7 +793,7 @@ en:
     summary_percent_filter: "When a user clicks 'Summarize This Topic', show the top % of posts"
     summary_max_results: "Maximum posts returned by 'Summary This Topic'"
 
-    enable_private_messages: "Allow trust level 1 users to create private messages and reply to private messages"
+    enable_private_messages: "Allow trust level 1 users to create messages and reply to messages"
 
     enable_long_polling: "Message bus used for notification can use long polling"
     long_polling_base_url: "Base URL used for long polling (when a CDN is serving dynamic content, be sure to set this to origin pull) eg: http://origin.site.com"
@@ -724,6 +811,10 @@ en:
     max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
     max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
 
+    tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
+    tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
+    tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
+
     num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
     num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
@@ -731,7 +822,7 @@ en:
 
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
-    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site."
+    must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
     ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
@@ -745,8 +836,8 @@ en:
     post_menu_hidden_items: "The menu items to hide by default in the post menu unless an expansion ellipsis is clicked on."
     share_links: "Determine which items appear on the share dialog, and in what order."
     track_external_right_clicks: "Track external links that are right clicked (eg: open in new tab) disabled by default because it rewrites URLs"
-    site_contact_username: "A valid staff username to send all automated private messages from. If left blank the default System account will be used."
-    send_welcome_message: "Send all new users a welcome private message with a quick start guide."
+    site_contact_username: "A valid staff username to send all automated messages from. If left blank the default System account will be used."
+    send_welcome_message: "Send all new users a welcome message with a quick start guide."
     suppress_reply_directly_below: "Don't show the expandable reply count on a post when there is only a single reply directly below this post."
     suppress_reply_directly_above: "Don't show the expandable in-reply-to on a post when there is only a single reply directly above this post."
     suppress_reply_when_quoting: "Don't show the expandable in-reply-to on a post when post quotes reply."
@@ -765,8 +856,8 @@ en:
     enable_badges: "Enable the badge system"
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
-    email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
-    email_domains_whitelist: "A list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
+    email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
+    email_domains_whitelist: "A pipe-delimited list of email domains that users MUST register accounts with. WARNING: Users with email domains other than those listed will not be allowed!"
     forgot_password_strict: "Don't inform users of an account's existance when they use the forgot password dialog."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
     version_checks: "Ping the Discourse Hub for version updates and show new version messages on the /admin dashboard"
@@ -790,13 +881,13 @@ en:
     min_password_length: "Minimum password length."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
-    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in if not properly configured when enabled; also disables invites)"
-    enable_sso_provider: "Implement Discourse SSO protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
+    enable_sso: "Enable single sign on via an external site (WARNING: can prevent anyone from logging in, INCLUDING YOU, if not properly configured when enabled! Also disables invites)"
+    enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_url: "URL of single sign on endpoint"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
     sso_overrides_email: "Overrides local email with external site email from SSO payload (WARNING: discrepancies can occur due to normalization of local emails)"
     sso_overrides_username: "Overrides local username with external site username from SSO payload (WARNING: discrepancies can occur due to differences in username length/requirements)"
-    sso_overrides_name: "Overrides local name with external site name from SSO payload (WARNING: discrepancies can occur due to normalization of local names)"
+    sso_overrides_name: "Overrides local full name with external site full name from SSO payload"
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
@@ -840,8 +931,9 @@ en:
     max_bookmarks_per_day: "Maximum number of bookmarks per user per day."
     max_edits_per_day: "Maximum number of edits per user per day."
     max_topics_per_day: "Maximum number of topics a user can create per day."
-    max_private_messages_per_day: "Maximum number of private messages users can create per day."
+    max_private_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
+    max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
 
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
@@ -860,7 +952,7 @@ en:
     enable_flash_video_onebox: "Enable embedding of swf and flv (Adobe Flash) links in oneboxes. WARNING: may introduce security risks."
 
     default_invitee_trust_level: "Default trust level (0-4) for invited users."
-    default_trust_level: "Default trust level (0-4) for all new users."
+    default_trust_level: "Default trust level (0-4) for all new users. WARNING! Changing this will put you at serious risk for spam."
 
     tl1_requires_topics_entered: "How many topics a new user must enter before promotion to trust level 1."
     tl1_requires_read_posts: "How many posts a new user must read before promotion to trust level 1."
@@ -902,7 +994,7 @@ en:
     email_time_window_mins: "Wait (n) minutes before sending any notification emails, to give users a chance to edit and finalize their posts."
     email_posts_context: "How many prior replies to include as context in notification emails."
     flush_timings_secs: "How frequently we flush timing data to the server, in seconds."
-    max_word_length: "The maximum allowed word length, in characters, in a topic title."
+    title_max_word_length: "The maximum allowed word length, in characters, in a topic title."
     title_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a topic title."
     body_min_entropy: "The minimum entropy (unique characters, non-english count for more) required for a post body."
 
@@ -945,6 +1037,7 @@ en:
 
     white_listed_spam_host_domains: "A list of domains excluded from spam host testing. New users will never be restricted from creating posts with links to these domains."
     staff_like_weight: "How much extra weighting factor to give staff likes."
+    topic_view_duration_hours: "Count new a topic view once per IP/User every N hours"
 
     levenshtein_distance_spammer_emails: "When matching spammer emails, number of characters difference that will still allow a fuzzy match."
     max_new_accounts_per_registration_ip: "If there are already (n) trust level 0 accounts from this IP (and none is a staff member or at TL2 or higher), stop accepting new signups from that IP."
@@ -955,6 +1048,8 @@ en:
 
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
     num_flags_to_close_topic: "Minimum number of active flags that is required to automatically pause a topic for intervention"
+
+    auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
 
     reply_by_email_enabled: "Enable replying to topics via email."
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
@@ -988,6 +1083,7 @@ en:
     allow_uploaded_avatars: "Allow users to upload custom avatars."
     allow_animated_avatars: "Allow users to use animated gif avatars. WARNING: run the avatars:refresh rake task after changing this setting."
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
+    default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email digest."
     digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
@@ -998,7 +1094,12 @@ en:
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom avatars."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
-    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publically."
+    public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
+    staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
+    enable_user_directory: "Provide a directory of users for browsing"
+    allow_anonymous_posting: "Allow users to switch to anonymous mode"
+    anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
+    anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -1013,6 +1114,7 @@ en:
 
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
 
+    full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
     invites_per_page: "Default invites shown on the user page."
@@ -1020,8 +1122,9 @@ en:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
+    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many langauges may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
 
-    embeddable_host: "Host that can embed the comments from this Discourse forum."
+    embeddable_host: "Host that can embed the comments from this Discourse forum. Hostname only, do not begin with http://"
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."
@@ -1039,8 +1142,14 @@ en:
 
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
+    slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
+
     enable_emoji: "Enable emoji"
     emoji_set: "How would you like your emoji?"
+    enforce_square_emoji: "Force a square aspect ratio to all emojis."
+
+    approve_post_count: "The amount of posts from a new user that must be approved"
+    approve_unless_trust_level: "Posts for users below this trust level must be approved"
 
     errors:
       invalid_email: "Invalid email address."
@@ -1050,10 +1159,12 @@ en:
       invalid_integer_max: "Value cannot be higher than %{max}."
       invalid_integer: "Value must be an integer."
       regex_mismatch: "Value doesn't match the required format."
+      must_include_latest: "Top menu must include the 'latest' tab."
       invalid_string: "Invalid value."
       invalid_string_min_max: "Must be between %{min} and %{max} characters."
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
+      invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
 
   notification_types:
     mentioned: "%{display_username} mentioned you in %{link}"
@@ -1063,8 +1174,9 @@ en:
     edited: "%{display_username} edited your post in %{link}"
     posted: "%{display_username} posted in %{link}"
     moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a private message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a private message: %{link}"
+    private_message: "%{display_username} sent you a message: %{link}"
+    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
+    invited_to_topic: "%{display_username} invited you to a topic: %{link}"
     invitee_accepted: "%{display_username} accepted your invitation"
     linked: "%{display_username} linked you in %{link}"
     granted_badge: "You earned %{link}"
@@ -1146,7 +1258,8 @@ en:
     active: "Your account is activated and ready to use."
     activate_email: "<p>You're almost done! We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, check your spam folder, or try to log in again to send another activation mail.</p>"
     not_activated: "You can't log in yet. We sent an activation email to you. Please follow the instructions in the email to activate your account."
-    not_allowed_from_ip_address: "You can't login as %{username} from that IP address."
+    not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
+    admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
     suspended_with_reason: "You can't log in until %{date}. The reason you were suspended: %{reason}"
     errors: "%{errors}"
@@ -1213,8 +1326,10 @@ en:
     text_body_template: |
       Thanks for accepting your invitation to %{site_name} -- welcome!
 
-      To log in again, click the following link to choose a password:
+      Click this link to choose a password now:
       %{base_url}/users/password-reset/%{email_token}
+
+      If you don't remember your password, or don't have one yet, choose "I forgot my password" when logging in with your email address.
 
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
@@ -1254,7 +1369,7 @@ en:
       [8]: http://www.openspf.org/SPF_Record_Syntax
       [md]: http://mandrill.com
       [mg]: http://www.mailgun.com/
-      [mj]: http://www.mailjet.com/pricing
+      [mj]: https://www.mailjet.com/pricing
 
   new_version_mailer:
     subject_template: "[%{site_name}] New Discourse version, update available"
@@ -1330,7 +1445,7 @@ en:
 
         %{flag_reason}
 
-        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.** This will increase your trust level.
+        Multiple community members flagged this post before it was hidden, so please consider how you might revise your post to reflect their feedback. **You can edit your post after %{edit_delay} minutes, and it will be automatically unhidden.**
 
         However, if the post is hidden by the community a second time, it will remain hidden until handled by staff – and there may be further action, including the possible suspension of your account.
 
@@ -1338,7 +1453,7 @@ en:
 
     usage_tips:
       text_body_template: |
-        This private message has a few quick tips to get you started.
+        A few quick tips to get you started:
 
         ## Keep scrolling
 
@@ -1390,7 +1505,7 @@ en:
 
         <img src="/images/welcome/notification-panel.png" width="178" height="59">
 
-        Don't worry about missing a reply – you'll be emailed direct replies (and private messages) if you aren't online when they arrive.
+        Don't worry about missing a reply – you'll be emailed replies (and messages) if you aren't online when they arrive.
 
         ## When are conversations new?
 
@@ -1400,7 +1515,7 @@ en:
 
         <img src="/images/welcome/topics-new-unread.png" width="368" height="89">
 
-        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](/my/preferences).
+        You can change the individual notification state of a topic via the control at the bottom of the topic (this can also be set per category). To change how you track topics, or the definition of new, see [your user preferences](%{base_url}/my/preferences).
 
         ## Why can't I do certain things?
 
@@ -1415,9 +1530,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     welcome_invite:
       subject_template: "Welcome to %{site_name}!"
@@ -1436,9 +1551,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
         [prefs]: %{user_preferences_url}
 
@@ -1503,21 +1618,21 @@ en:
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
     email_reject_trust_level:
-      subject_template: "Email issue -- Insufficient Trust Level"
+      subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Your account does not have the required trust level to post new topics to this email address. If you believe this is in error, contact a staff member.
 
     email_reject_no_account:
-      subject_template: "Email issue -- Unknown Account"
+      subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         There is no known user account with this email address. Try sending from a different email address, or contact a staff member.
 
     email_reject_empty:
-      subject_template: "Email issue -- No Content"
+      subject_template: "[%{site_name}] Email issue -- No Content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -1526,21 +1641,28 @@ en:
         If you're getting this and you _did_ include content, try again with HTML content included in your email (not just plain text only).
 
     email_reject_parsing:
-      subject_template: "Email issue -- Content unrecognized"
+      subject_template: "[%{site_name}] Email issue -- Content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         We couldn't find your reply in the provided email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
 
+    email_reject_invalid_access:
+      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your account does not have the privileges to post new topics in that category. If you believe this is in error, contact a staff member.
+
     email_reject_post_error:
-      subject_template: "Email issue -- Posting error"
+      subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
 
     email_reject_post_error_specified:
-      subject_template: "Email issue -- Posting error"
+      subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -1551,35 +1673,42 @@ en:
         If you can correct the problem, please try again.
 
     email_reject_reply_key:
-      subject_template: "Email issue -- Unknown Reply Key"
+      subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The provided reply key is invalid or unknown, so we don't know what this email is in reply to. Contact a staff member.
 
     email_reject_destination:
-      subject_template: "Email issue -- Unknown To: Address"
+      subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         None of the destination addresses are recognized. Please make sure that the site address is in the To: line (not Cc: or Bcc:), and that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
-      subject_template: "Email issue -- Topic Not Found"
+      subject_template: "[%{site_name}] Email issue -- Topic Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The topic is not found, it may have been deleted. If you believe this is in error, contact a staff member.
 
     email_reject_topic_closed:
-      subject_template: "Email issue -- Topic Closed"
+      subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
         The topic is closed. If you believe this is in error, contact a staff member.
 
+    email_reject_auto_generated:
+      subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
+      text_body_template: |
+        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
+
+        Your email reply was auto generated, which we don't accept. If you believe this is in error, contact a staff member.
+
     email_error_notification:
-      subject_template: "Email issue -- POP authentication error"
+      subject_template: "[%{site_name}] Email issue -- POP authentication error"
       text_body_template: |
         There has been an authentication error while polling mails from the POP server.
 
@@ -1666,11 +1795,36 @@ en:
     posted_by: "Posted by %{username} on %{post_date}"
 
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} invited you to a private message '%{topic_title}'"
+      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
-        %{username} invited you to a private message '%{topic_title}' on %{site_name}:
 
-        Please visit this link to view the topic: %{base_url}%{url}
+        %{username} invited you to a message
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        at
+
+        > %{site_title} -- %{site_description}
+
+        Please visit this link to view the message: %{base_url}%{url}
+
+    user_invited_to_topic:
+      subject_template: "[%{site_name}] %{username} invited you to a topic '%{topic_title}'"
+      text_body_template: |
+
+        %{username} invited you to a discussion
+
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
+
+        at
+
+        > %{site_title} -- %{site_description}
+
+        Please visit this link to view the message: %{base_url}%{url}
 
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
@@ -1724,7 +1878,7 @@ en:
 
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
-      subject_template: "[%{site_name}] Digest for %{date}"
+      subject_template: "[%{site_name}] Digest"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
@@ -1759,6 +1913,16 @@ en:
         Click the following link to choose a password:
         %{base_url}/users/password-reset/%{email_token}
 
+    admin_login:
+      subject_template: "[%{site_name}] Login"
+      text_body_template: |
+        Somebody asked to login to your account on [%{site_name}](%{base_url}).
+
+        If you did not make this request, you can safely ignore this email.
+
+        Click the following link to login:
+        %{base_url}/users/admin-login/%{email_token}
+
     account_created:
       subject_template: "[%{site_name}] Your New Account"
       text_body_template: |
@@ -1790,9 +1954,9 @@ en:
 
         We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
 
-        (If you need to privately communicate with [staff members](/about) as a new user, just reply to this private message.)
-
         Enjoy your stay!
+
+        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     signup:
       subject_template: "[%{site_name}] Activate your new account"
@@ -1842,7 +2006,8 @@ en:
 
   email_log:
     no_user: "Can't find user with id %{user_id}"
-    suspended_not_pm: "User is suspended, not a private message"
+    anonymous_user: "User is anonymous"
+    suspended_not_pm: "User is suspended, not a message"
     seen_recently: "User was seen recently"
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
@@ -1858,6 +2023,7 @@ en:
   color_schemes:
     base_theme_name: "Base"
 
+  about: "About"
   guidelines: "Guidelines"
   privacy: "Privacy"
 
@@ -2212,8 +2378,91 @@ en:
         <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:singleuser</code></td></tr>
         <tr><td><code>category:foo</code></td><td><code>user:foo</code></td><td colspan=3></td></tr>
         <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+        <tr><td><code>in:bookmarks</code></td><td colspan=4></td></tr>
         </table>
       </p>
       <p>
         <code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.
       </p>
+
+  badges:
+    long_descriptions:
+      autobiographer: |
+        Blah blah blah
+        Blah blah blah
+      first_like: |
+        Blah blah blah
+        Blah blah blah
+      first_link: |
+        Blah blah blah
+        Blah blah blah
+      first_quote: |
+        Blah blah blah
+        Blah blah blah
+      first_share: |
+        Blah blah blah
+        Blah blah blah
+      read_guidelines: |
+        Blah blah blah
+        Blah blah blah
+      reader: |
+        Blah blah blah
+        Blah blah blah
+      editor: |
+        Blah blah blah
+        Blah blah blah
+      first_flag: |
+        Flagging is critical to the health of your community. If you notice any posts that require moderator attention please
+        do not hesitate to flag. You may also use the flagging dialog to send <b>messages</b> to users once you reach
+        trust level 1.
+      nice_share: |
+        Blah blah blah
+        Blah blah blah
+      welcome: |
+        Blah blah blah
+        Blah blah blah
+      anniversary: |
+        Blah blah blah
+        Blah blah blah
+      good_share: |
+        Blah blah blah
+        Blah blah blah
+      great_share: |
+        Blah blah blah
+        Blah blah blah
+      nice_post: |
+        Blah blah blah
+        Blah blah blah
+      nice_topic: |
+        Blah blah blah
+        Blah blah blah
+      good_post: |
+        Blah blah blah
+        Blah blah blah
+      good_topic: |
+        Blah blah blah
+        Blah blah blah
+      great_post: |
+        Blah blah blah
+        Blah blah blah
+      great_topic: |
+        Blah blah blah
+        Blah blah blah
+      basic: |
+        Blah blah blah
+        Blah blah blah
+      member: |
+        Blah blah blah
+        Blah blah blah
+      regular: |
+        Blah blah blah
+        Blah blah blah
+      leader: |
+        Blah blah blah
+        Blah blah blah
+
+  admin_login:
+    success: "Email Sent"
+    error: "Error!"
+    email_input: "Admin Email"
+    submit_button: "Send Email"
