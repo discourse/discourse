@@ -215,7 +215,7 @@ SQL
 
     if slug.present?
       # santized custom slug
-      self.slug = Slug.for(slug, '')
+      self.slug = Slug.sanitize(slug)
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
       # auto slug
