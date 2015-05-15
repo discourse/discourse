@@ -1,4 +1,7 @@
-Discourse.ActionSummary = Discourse.Model.extend({
+import RestModel from 'discourse/models/rest';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
+export default RestModel.extend({
 
   // Description for the action
   description: function() {
@@ -84,10 +87,9 @@ Discourse.ActionSummary = Discourse.Model.extend({
       if (!self.get('flagTopic')) {
         return post.updateActionsSummary(result);
       }
-    }).catch(function (error) {
+    }).catch(function(error) {
+      popupAjaxError(error);
       self.removeAction();
-      var message = $.parseJSON(error.responseText).errors;
-      bootbox.alert(message);
     });
   },
 
