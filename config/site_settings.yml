@@ -234,6 +234,7 @@ login:
   enable_sso_provider: false
   sso_url: ''
   sso_secret: ''
+  sso_trusts_email: true
   sso_overrides_email: false
   sso_overrides_username: false
   sso_overrides_name: false
