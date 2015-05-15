@@ -1,12 +1,13 @@
 import UploadMixin from 'discourse/mixins/upload';
 
 export default Em.Component.extend(UploadMixin, {
+  classNames: ['image-uploader'],
 
   backgroundStyle: function() {
-    var imageUrl = this.get('imageUrl');
+    const imageUrl = this.get('imageUrl');
     if (Em.isNone(imageUrl)) { return; }
 
-    return "background-image: url(" + imageUrl + ")";
+    return ("background-image: url(" + imageUrl + ")").htmlSafe();
   }.property('imageUrl'),
 
   uploadDone: function(data) {
@@ -14,7 +15,7 @@ export default Em.Component.extend(UploadMixin, {
   },
 
   actions: {
-    trash: function() {
+    trash() {
       this.set('imageUrl', null);
 
       // Do we want to signal the delete to the server right away?
