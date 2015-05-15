@@ -193,6 +193,54 @@ describe SessionController do
       expect(logged_on_user.custom_fields["bla"]).to eq(nil)
     end
 
+    context 'when sso emails are not trusted' do
+      before do
+        SiteSetting.sso_trusts_email = false
+      end
+
+      context 'if you have not activated your account' do
+        it 'does not log you in' do
+          sso = get_sso('/a/')
+          sso.external_id = '666' # the number of the beast
+          sso.email = 'bob@bob.com'
+          sso.name = 'Sam Saffron'
+          sso.username = 'sam'
+
+          get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+          logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+          expect(logged_on_user).to eq(nil)
+        end
+
+        it 'sends an activation email' do
+          Jobs.expects(:enqueue).with(:user_email, has_entries(type: :signup))
+          sso = get_sso('/a/')
+          sso.external_id = '666' # the number of the beast
+          sso.email = 'bob@bob.com'
+          sso.name = 'Sam Saffron'
+          sso.username = 'sam'
+          get :sso_login, Rack::Utils.parse_query(sso.payload)
+        end
+      end
+
+      context 'if you have activated your account' do
+        it 'allows you to log in' do
+          sso = get_sso('/hello/world')
+          sso.external_id = '997'
+          sso.sso_url = "http://somewhere.over.com/sso_login"
+
+          user = Fabricate(:user)
+          user.create_single_sign_on_record(external_id: '997', last_payload: '')
+          user.stubs(:active?).returns(true)
+
+          get :sso_login, Rack::Utils.parse_query(sso.payload)
+
+          logged_on_user = Discourse.current_user_provider.new(request.env).current_user
+          expect(user.id).to eq(logged_on_user.id)
+        end
+      end
+    end
+
     it 'allows login to existing account with valid nonce' do
       sso = get_sso('/hello/world')
       sso.external_id = '997'

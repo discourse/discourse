@@ -73,6 +73,11 @@ class SessionController < ApplicationController
         if SiteSetting.must_approve_users? && !user.approved?
           render text: I18n.t("sso.account_not_approved"), status: 403
           return
+        elsif !user.active?
+          activation = UserActivator.new(user, request, session, cookies)
+          activation.finish
+          session["user_created_message"] = activation.message
+          redirect_to users_account_created_path and return
         else
           log_on_user user
         end
