@@ -1,6 +1,6 @@
 <section class='field'>
   <ul class='permission-list'>
-    {{#each p in permissions}}
+    {{#each model.permissions as |p|}}
       <li>
         <span class="name"><span class="badge-group">{{p.group_name}}</span></span>
         {{{i18n "category.can"}}}
