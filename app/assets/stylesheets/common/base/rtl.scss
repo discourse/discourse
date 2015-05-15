@@ -42,10 +42,10 @@
 left: 360px  !important;
 }
 .rtl .customize .current-style .toggle-mobile {
-position: static !important;
+position: static !important; /* mobile toggle position changed to 'static'  */
 float: left;
 }
 .rtl .customize .current-style .toggle-maximize {
-position: static !important;
+position: static !important;  /* maximize toggle position changed to 'static'  */
 float: left;
 }
