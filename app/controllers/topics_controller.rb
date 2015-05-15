@@ -261,6 +261,8 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
+    DiscourseEvent.trigger(:topic_destroyed, topic, current_user)
+
     render nothing: true
   end
 
@@ -270,6 +272,8 @@ class TopicsController < ApplicationController
 
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
+
+    DiscourseEvent.trigger(:topic_recovered, topic, current_user)
 
     render nothing: true
   end
