@@ -46,6 +46,7 @@ class PostDestroyer
     elsif @user.id == @post.user_id
       mark_for_deletion
     end
+    DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
   end
 
   def recover
@@ -57,6 +58,7 @@ class PostDestroyer
     topic = Topic.with_deleted.find @post.topic_id
     topic.recover! if @post.is_first_post?
     topic.update_statistics
+    DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
   end
 
   def staff_recovered
