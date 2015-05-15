@@ -5,8 +5,7 @@
   const DATA_PREFIX = "data-poll-";
   const DEFAULT_POLL_NAME = "poll";
 
-  const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "color", "background", "status"];
-  const WHITELISTED_STYLES = ["color", "background"];
+  const WHITELISTED_ATTRIBUTES = ["type", "name", "min", "max", "step", "order", "status"];
 
   const ATTRIBUTES_REGEX = new RegExp("(" + WHITELISTED_ATTRIBUTES.join("|") + ")=['\"]?[^\\s\\]]+['\"]?", "g");
 
@@ -81,21 +80,9 @@
 
       // TODO: remove non whitelisted content
 
-      // generate <li> styles (if any)
-      var styles = [];
-      WHITELISTED_STYLES.forEach(function(style) {
-        if (attributes[DATA_PREFIX + style]) {
-          styles.push(style + ":" + attributes[DATA_PREFIX + style]);
-        }
-      });
-
-      var style = styles.join(";");
-
-      // add option id (hash) + style
+      // add option id (hash)
       for (o = 1; o < contents[0].length; o++) {
         var attr = {};
-        // apply styles if any
-        if (style.length > 0) { attr["style"] = style; }
         // compute md5 hash of the content of the option
         attr[DATA_PREFIX + "option-id"] = md5(JSON.stringify(contents[0][o].slice(1)));
         // store options attributes
@@ -178,6 +165,4 @@
   Discourse.Markdown.whiteListTag("a", "class", /^button (cast-votes|toggle-results)/);
 
   Discourse.Markdown.whiteListTag("li", "data-*");
-  Discourse.Markdown.whiteListTag("li", "style", /^(color=#?\w+;)?(background=#?\w+;)?$/);
-
 })();
