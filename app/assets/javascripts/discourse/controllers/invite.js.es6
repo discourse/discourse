@@ -16,12 +16,13 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
   disabled: function() {
     if (this.get('saving')) return true;
     if (this.blank('emailOrUsername')) return true;
+    const emailOrUsername = this.get('emailOrUsername').trim();
     // when inviting to forum, email must be valid
-    if (!this.get('invitingToTopic') && !Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
+    if (!this.get('invitingToTopic') && !Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // normal users (not admin) can't invite users to private topic via email
-    if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
+    if (!this.get('isAdmin') && this.get('isPrivateTopic') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     // when invting to private topic via email, group name must be specified
-    if (this.get('isPrivateTopic') && this.blank('groupNames') && Discourse.Utilities.emailValid(this.get('emailOrUsername'))) return true;
+    if (this.get('isPrivateTopic') && this.blank('groupNames') && Discourse.Utilities.emailValid(emailOrUsername)) return true;
     if (this.get('model.details.can_invite_to')) return false;
     return false;
   }.property('isAdmin', 'emailOrUsername', 'invitingToTopic', 'isPrivateTopic', 'groupNames', 'saving'),
@@ -135,7 +136,7 @@ export default ObjectController.extend(Presence, ModalFunctionality, {
 
       this.setProperties({ saving: true, error: false });
 
-      return this.get('model').createInvite(this.get('emailOrUsername'), groupNames).then(result => {
+      return this.get('model').createInvite(this.get('emailOrUsername').trim(), groupNames).then(result => {
               this.setProperties({ saving: false, finished: true });
               if (!this.get('invitingToTopic')) {
                 Discourse.Invite.findInvitedBy(Discourse.User.current()).then(invite_model => {
