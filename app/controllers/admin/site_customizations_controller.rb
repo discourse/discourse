@@ -62,7 +62,7 @@ class Admin::SiteCustomizationsController < Admin::AdminController
       format.any(:html, :text) do
         raise RenderEmpty.new if request.xhr?
 
-        response.headers['Content-Disposition'] = "attachment; filename=#{@site_customization.name.parameterize}.dcstyle.json"
+        response.headers['Content-Disposition'] = "attachment; filename=#{@site_customization.name.parameterize}.dcstylejson"
         response.sending_file = true
         render json: SiteCustomizationSerializer.new(@site_customization)
       end

@@ -32,6 +32,10 @@ export default Em.Component.extend({
 
   }.on('didInsertElement'),
 
+  accept: function() {
+    return ".json,application/json" + (this.get('extension') ? "," + this.get('extension') : "");
+  }.property('extension'),
+
   setReady: function() {
     let parsed;
     try {
