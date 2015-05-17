@@ -2,6 +2,8 @@ class Admin::SiteCustomizationsController < Admin::AdminController
 
   before_filter :enable_customization
 
+  skip_before_filter :check_xhr, only: [:show]
+
   def index
     @site_customizations = SiteCustomization.order(:name)
 
@@ -46,6 +48,26 @@ class Admin::SiteCustomizationsController < Admin::AdminController
     respond_to do |format|
       format.json { head :no_content }
     end
+  end
+
+  def show
+    @site_customization = SiteCustomization.find(params[:id])
+
+    respond_to do |format|
+      format.json do
+        check_xhr
+        render json: SiteCustomizationSerializer.new(@site_customization)
+      end
+
+      format.any(:html, :text) do
+        raise RenderEmpty.new if request.xhr?
+
+        response.headers['Content-Disposition'] = "attachment; filename=#{@site_customization.name.parameterize}.dcstyle.json"
+        response.sending_file = true
+        render json: SiteCustomizationSerializer.new(@site_customization)
+      end
+    end
+
   end
 
   private

@@ -84,7 +84,11 @@ Discourse.SiteCustomization = Discourse.Model.extend({
   destroy: function() {
     if (!this.id) return;
     return Discourse.ajax("/admin/site_customizations/" + this.id, { type: 'DELETE' });
-  }
+  },
+
+  download_url: function() {
+    return Discourse.getURL('/admin/site_customizations/' + this.id);
+  }.property('id')
 });
 
 var SiteCustomizations = Ember.ArrayProxy.extend({
