@@ -139,7 +139,33 @@
       height: 300px;
     }
     .json-uploader {
-      display: table-row;
+      .jsfu-shade-container {
+        display: table-row;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      .jsfu-shade {
+        z-index: 1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        .text {
+          color: rgb(255,255,255);
+          position: absolute;
+          top: 40%;
+          font-size: 36px;
+          text-align: center;
+          line-height: 38px;
+          margin-left: auto;
+          margin-right: auto;
+          left: 0;
+          right: 0;
+        }
+      }
       .jsfu-file {
         display: table-cell;
         vertical-align: middle;

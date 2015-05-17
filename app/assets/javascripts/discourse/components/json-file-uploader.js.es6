@@ -3,6 +3,7 @@ export default Em.Component.extend({
   fileInput: null,
   loading: false,
   expectedRootObjectName: null,
+  hover: 0,
 
   classNames: ['json-uploader'],
 
@@ -17,15 +18,29 @@ export default Em.Component.extend({
       self.fileSelected(this.files);
     });
 
-    const $fileSelect = $this.find('.fileSelect');
+    const $dragContainer = $this.find('.jsfu-shade-container');
 
-    $fileSelect.on('dragover dragenter', function(e) {
+    $this.on('dragover', function(e) {
       if (e.preventDefault) e.preventDefault();
+      //self.set('hover', true);
       return false;
     });
-    $fileSelect.on('drop', function(e) {
+    $this.on('dragenter', function(e) {
+      if (e.preventDefault) e.preventDefault();
+      console.log('dragenter');
+      self.set('hover', self.get('hover') + 1);
+      return false;
+    });
+    $this.on('dragleave', function(e) {
+      if (e.preventDefault) e.preventDefault();
+      console.log('dragleave');
+      self.set('hover', self.get('hover') - 1);
+      return false;
+    });
+    $this.on('drop', function(e) {
       if (e.preventDefault) e.preventDefault();
 
+      self.set('hover', 0);
       self.fileSelected(e.dataTransfer.files);
       return false;
     });
