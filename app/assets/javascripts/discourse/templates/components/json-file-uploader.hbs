@@ -1,0 +1,10 @@
+<div class="jsfu-file">
+  <input id="js-file-input" type="file" style="display:none;" accept=".json,application/json">
+  {{d-button class="fileSelect" action="selectFile" class="" icon="upload" label="upload_selector.select_file"}}
+  {{conditional-loading-spinner condition=loading size="small"}}
+</div>
+<div class="jsfu-separator">{{i18n "alternation"}}</div>
+<div class="jsfu-paste">
+  {{textarea value=value}}
+</div>
+

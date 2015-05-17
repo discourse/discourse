@@ -138,6 +138,29 @@
     .raw-email-textarea {
       height: 300px;
     }
+    .json-uploader {
+      display: table-row;
+      .jsfu-file {
+        display: table-cell;
+        vertical-align: middle;
+        min-width: 120px;
+      }
+      .jsfu-separator {
+        vertical-align: middle;
+        display: table-cell;
+        font-size: 36px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+      .jsfu-paste {
+        display: table-cell;
+        width: 100%;
+        textarea {
+          margin-bottom: 0;
+          margin-top: 4px;
+        }
+      }
+    }
   }
   .password-confirmation {
     display: none;
