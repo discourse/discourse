@@ -1863,6 +1863,8 @@ en:
           screened_email: "Export full screened email list in CSV format."
           screened_ip: "Export full screened IP list in CSV format."
           screened_url: "Export full screened URL list in CSV format."
+      export_json:
+        button_text: "Export"
 
       invite:
         button_text: "Send Invites"
