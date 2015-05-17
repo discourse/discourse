@@ -78,6 +78,7 @@ Discourse.SiteCustomization = Discourse.Model.extend({
       siteCustomization.set('savingStatus', I18n.t('saved'));
       siteCustomization.set('saving',false);
       siteCustomization.startTrackingChanges();
+      return siteCustomization;
     });
   },
 
