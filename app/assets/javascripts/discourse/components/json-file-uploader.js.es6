@@ -22,18 +22,15 @@ export default Em.Component.extend({
 
     $this.on('dragover', function(e) {
       if (e.preventDefault) e.preventDefault();
-      //self.set('hover', true);
       return false;
     });
     $this.on('dragenter', function(e) {
       if (e.preventDefault) e.preventDefault();
-      console.log('dragenter');
       self.set('hover', self.get('hover') + 1);
       return false;
     });
     $this.on('dragleave', function(e) {
       if (e.preventDefault) e.preventDefault();
-      console.log('dragleave');
       self.set('hover', self.get('hover') - 1);
       return false;
     });
@@ -78,7 +75,20 @@ export default Em.Component.extend({
 
   fileSelected(fileList) {
     const self = this;
-    const numFiles = fileList.length;
+    let files = [];
+    for (let i = 0; i < fileList.length; i++) {
+      files[i] = fileList[i];
+    }
+    const fileNameRegex = /\.(json|txt)$/;
+    files = files.filter(function(file) {
+      if (fileNameRegex.test(file.name)) {
+        return true;
+      }
+      if (file.type === "text/plain") {
+        return true;
+      }
+      return false;
+    });
     const firstFile = fileList[0];
 
     this.set('loading', true);
