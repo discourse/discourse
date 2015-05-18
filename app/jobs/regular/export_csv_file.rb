@@ -130,11 +130,9 @@ module Jobs
         user_archive_array = []
         topic_data = user_archive.topic
         user_archive = user_archive.as_json
-        if topic_data.nil?
-          # deleted topic
-          topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id'])
-        end
-        category = topic_data.category if topic_data
+        topic_data = Topic.with_deleted.find_by(id: user_archive['topic_id']) if topic_data.nil?
+        return user_archive_array if topic_data.nil?
+        category = topic_data.category
         sub_category = "-"
         if category
           category_name = category.name
