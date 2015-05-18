@@ -27,13 +27,11 @@ export default Discourse.View.extend(CleansUp, {
   }.observes('controller.user.card_background'),
 
   _setup: function() {
-    const self = this;
-
-    afterTransition(self.$(), this._hide.bind(this));
+    afterTransition(this.$(), this._hide.bind(this));
 
     $('html').off(clickOutsideEventName)
-             .on(clickOutsideEventName, function(e) {
-      if (self.get('controller.visible')) {
+             .on(clickOutsideEventName, (e) => {
+      if (this.get('controller.visible')) {
         const $target = $(e.target);
         if ($target.closest('[data-user-card]').data('userCard') ||
             $target.closest('a.mention').length > 0 ||
@@ -41,25 +39,28 @@ export default Discourse.View.extend(CleansUp, {
           return;
         }
 
-        self.get('controller').close();
+        this.get('controller').close();
       }
 
       return true;
     });
 
-    var expand = function(username, $target) {
-      const postId = $target.parents('article').data('post-id');
-      self.get('controller')
-          .show(username, postId, $target[0])
-          .then(function() {
-            self._willShow($target);
-          }).catch(function() {
-            self._hide();
-          });
+    const expand = (username, $target) => {
+      const postId = $target.parents('article').data('post-id'),
+          user = this.get('controller').show(username, postId, $target[0]);
+      if (user !== undefined) {
+        user.then(() => {
+          this._willShow($target);
+        }).catch(() => {
+          this._hide();
+        });
+      } else {
+        this._hide();
+      }
       return false;
     };
 
-    $('#main-outlet').on(clickDataExpand, '[data-user-card]', function(e) {
+    $('#main-outlet').on(clickDataExpand, '[data-user-card]', (e) => {
       if (e.ctrlKey || e.metaKey) { return; }
 
       const $target = $(e.currentTarget),
@@ -67,7 +68,7 @@ export default Discourse.View.extend(CleansUp, {
       return expand(username, $target);
     });
 
-    $('#main-outlet').on(clickMention, 'a.mention', function(e) {
+    $('#main-outlet').on(clickMention, 'a.mention', (e) => {
       if (e.ctrlKey || e.metaKey) { return; }
 
       const $target = $(e.target),
@@ -89,9 +90,8 @@ export default Discourse.View.extend(CleansUp, {
 
   _willShow(target) {
     if (!target) { return; }
-    const self = this,
-          width = this.$().width();
-    Em.run.schedule('afterRender', function() {
+    const width = this.$().width();
+    Em.run.schedule('afterRender', () => {
       if (target) {
         let position = target.offset();
         if (position) {
@@ -100,11 +100,11 @@ export default Discourse.View.extend(CleansUp, {
           const overage = ($(window).width() - 50) - (position.left + width);
           if (overage < 0) {
             position.left += overage;
-            position.top += target.height() + 8;
+            position.top += target.height() + 48;
           }
 
           position.top -= $('#main-outlet').offset().top;
-          self.$().css(position);
+          this.$().css(position);
         }
       }
     });
@@ -112,7 +112,7 @@ export default Discourse.View.extend(CleansUp, {
 
   _hide() {
     if (!this.get('controller.visible')) {
-      this.$().css({ left: -9999, top: -9999 });
+      this.$().css({left: -9999, top: -9999});
     }
   },
 
