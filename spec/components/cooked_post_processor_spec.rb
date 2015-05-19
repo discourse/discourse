@@ -118,7 +118,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" width="690" height="1380"><div class="meta">
+        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/optimized/d/a/da39a3ee5e6b4b0d3255bfef95601890afd80709_690x1380.png" width="690" height="1380"><div class="meta">
 <span class="filename">logo.png</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
 </div></a></div>'
         expect(cpp).to be_dirty
@@ -145,7 +145,7 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/_optimized/da3/9a3/ee5e6b4b0d_690x1380.png" title="WAT" width="690" height="1380"><div class="meta">
+        expect(cpp.html).to match_html '<div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/optimized/d/a/da39a3ee5e6b4b0d3255bfef95601890afd80709_690x1380.png" title="WAT" width="690" height="1380"><div class="meta">
        <span class="filename">WAT</span><span class="informations">1000x2000 1.21 KB</span><span class="expand"></span>
        </div></a></div>'
         expect(cpp).to be_dirty

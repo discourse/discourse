@@ -54,8 +54,7 @@ describe UploadsController do
           it 'correctly sets retain_hours for admins' do
             log_in :admin
             xhr :post, :create, file: logo, retain_hours: 100
-            url = JSON.parse(response.body)["url"]
-            id = url.split("/")[3].to_i
+            id = JSON.parse(response.body)["id"]
             expect(Upload.find(id).retain_hours).to eq(100)
           end
 
@@ -121,30 +120,33 @@ describe UploadsController do
 
   context '.show' do
 
+    let(:site) { "default" }
+    let(:sha) { Digest::SHA1.hexdigest("discourse") }
+
     it "returns 404 when using external storage" do
       store = stub(internal?: false)
       Discourse.stubs(:store).returns(store)
       Upload.expects(:find_by).never
-      get :show, site: "default", id: 1, sha: "1234567890abcdef", extension: "pdf"
+
+      get :show, site: site, sha: sha, extension: "pdf"
       expect(response.response_code).to eq(404)
     end
 
     it "returns 404 when the upload doens't exist" do
-      Upload.expects(:find_by).with(id: 2, url: "/uploads/default/2/1234567890abcdef.pdf").returns(nil)
-      Upload.expects(:find_by).with(sha1: "1234567890abcdef").returns(nil)
+      Upload.expects(:find_by).with(sha1: sha).returns(nil)
 
-      get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+      get :show, site: site, sha: sha, extension: "pdf"
       expect(response.response_code).to eq(404)
     end
 
     it 'uses send_file' do
       upload = build(:upload)
-      Upload.expects(:find_by).with(id: 42, url: "/uploads/default/42/66b3ed1503efc936.zip").returns(upload)
+      Upload.expects(:find_by).with(sha1: sha).returns(upload)
 
       controller.stubs(:render)
       controller.expects(:send_file)
 
-      get :show, site: "default", id: 42, sha: "66b3ed1503efc936", extension: "zip"
+      get :show, site: site, sha: sha, extension: "zip"
     end
 
     context "prevent anons from downloading files" do
@@ -153,7 +155,8 @@ describe UploadsController do
 
       it "returns 404 when an anonymous user tries to download a file" do
         Upload.expects(:find_by).never
-        get :show, site: "default", id: 2, sha: "1234567890abcdef", extension: "pdf"
+
+        get :show, site: site, sha: sha, extension: "pdf"
         expect(response.response_code).to eq(404)
       end
 
