@@ -39,5 +39,13 @@
   float:right !important;
 }
 .rtl .autocomplete {
-left: 360px  !important;
+left: 0px!important;
+}
+.rtl .customize .current-style .toggle-mobile {
+position: static !important; /* mobile toggle position changed to 'static'  */
+float: left;
+}
+.rtl .customize .current-style .toggle-maximize {
+position: static !important;  /* maximize toggle position changed to 'static'  */
+float: left;
 }
