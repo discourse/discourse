@@ -171,27 +171,31 @@ const User = RestModel.extend({
     @returns {Promise} the result of the operation
   **/
   save: function() {
-    var self = this,
-        data = this.getProperties('auto_track_topics_after_msecs',
-                               'bio_raw',
-                               'website',
-                               'location',
-                               'name',
-                               'locale',
-                               'email_digests',
-                               'email_direct',
-                               'email_always',
-                               'email_private_messages',
-                               'dynamic_favicon',
-                               'digest_after_days',
-                               'new_topic_duration_minutes',
-                               'external_links_in_new_tab',
-                               'mailing_list_mode',
-                               'enable_quoting',
-                               'disable_jump_reply',
-                               'custom_fields',
-                               'user_fields',
-                               'muted_usernames');
+    const self = this,
+          data = this.getProperties(
+            'auto_track_topics_after_msecs',
+            'bio_raw',
+            'website',
+            'location',
+            'name',
+            'locale',
+            'email_digests',
+            'email_direct',
+            'email_always',
+            'email_private_messages',
+            'dynamic_favicon',
+            'digest_after_days',
+            'new_topic_duration_minutes',
+            'external_links_in_new_tab',
+            'mailing_list_mode',
+            'enable_quoting',
+            'disable_jump_reply',
+            'custom_fields',
+            'user_fields',
+            'muted_usernames',
+            'profile_background',
+            'card_background'
+          );
 
     ['muted','watched','tracked'].forEach(function(s){
       var cats = self.get(s + 'Categories').map(function(c){ return c.get('id')});

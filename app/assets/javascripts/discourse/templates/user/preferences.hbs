@@ -104,10 +104,7 @@
       <div class="control-group pref-profile-bg">
         <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
         <div class="controls">
-          {{image-uploader uploadUrl=imageUploadUrl
-                           imageUrl=model.profile_background
-                           instantDelete="true"
-                           type="profile_background"}}
+          {{image-uploader imageUrl=model.profile_background type="profile_background"}}
         </div>
         <div class='instructions'>
           {{i18n 'user.change_profile_background.instructions'}}
@@ -117,10 +114,7 @@
       <div class="control-group pref-profile-bg">
         <label class="control-label">{{i18n 'user.change_card_background.title'}}</label>
         <div class="controls">
-          {{image-uploader uploadUrl=imageUploadUrl
-                           imageUrl=model.card_background
-                           instantDelete="true"
-                           type="card_background"}}
+          {{image-uploader imageUrl=model.card_background type="card_background"}}
         </div>
         <div class='instructions'>
           {{i18n 'user.change_card_background.instructions'}}

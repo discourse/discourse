@@ -3,23 +3,35 @@ class UploadsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, only: [:show]
 
   def create
+    type = params.require(:type)
     file = params[:file] || params[:files].first
-    filesize = file.tempfile.size
-    upload = Upload.create_for(current_user.id, file.tempfile, file.original_filename, filesize, { content_type: file.content_type })
+    url = params[:url]
 
-    if upload.errors.empty? && current_user.admin?
-      retain_hours = params[:retain_hours].to_i
-      upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
+    # TODO: support for API providing a URL (cf. AvatarUploadService)
+
+    Scheduler::Defer.later("Create Upload") do
+      upload = Upload.create_for(
+        current_user.id,
+        file.tempfile,
+        file.original_filename,
+        file.tempfile.size,
+        content_type: file.content_type
+      )
+
+      if upload.errors.empty? && current_user.admin?
+        retain_hours = params[:retain_hours].to_i
+        upload.update_columns(retain_hours: retain_hours) if retain_hours > 0
+      end
+
+      data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
+
+      MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
     end
 
     # HACK FOR IE9 to prevent the "download dialog"
     response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
 
-    if upload.errors.empty?
-      render_serialized(upload, UploadSerializer, root: false)
-    else
-      render status: 422, text: upload.errors.full_messages
-    end
+    render json: success_json
   end
 
   def show
