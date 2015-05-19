@@ -8,7 +8,6 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 BB_PRESS_DB = ENV['BBPRESS_DB'] || "bbpress"
 DB_TABLE_PREFIX = "wp_"
 
-
 class ImportScripts::Bbpress < ImportScripts::Base
 
   def initialize
