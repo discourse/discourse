@@ -1,8 +1,9 @@
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import ScrollTop from 'discourse/mixins/scroll-top';
 
 var readFaq = false;
 
-export default Ember.View.extend(Discourse.ScrollTop, {
+export default Ember.View.extend(ScrollTop, {
 
   _checkRead: function() {
     const path = this.get('controller.model.path');
