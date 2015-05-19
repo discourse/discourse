@@ -38,6 +38,14 @@
 .rtl .pull-left {
   float:right !important;
 }
-.rtl .autocomplete {
-left: 360px  !important;
+
+left: 0px !important;
+}
+.rtl .customize .current-style .toggle-mobile {
+position: static !important;
+float: left;
+}
+.rtl .customize .current-style .toggle-maximize {
+position: static !important;
+float: left;
 }
