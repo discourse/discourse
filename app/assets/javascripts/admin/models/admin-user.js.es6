@@ -1,3 +1,5 @@
+import { popupAjaxError } from 'discourse/lib/ajax-error';
+
 const AdminUser = Discourse.User.extend({
 
   customGroups: Em.computed.filter("groups", (g) => !g.automatic && Discourse.Group.create(g)),
@@ -90,14 +92,7 @@ const AdminUser = Discourse.User.extend({
         can_grant_admin: false,
         can_revoke_admin: true
       });
-    }).catch(function(e) {
-      let error;
-      if (e.responseJSON && e.responseJSON.error) {
-        error = e.responseJSON.error;
-      }
-      error = error || I18n.t('admin.user.grant_admin_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-    });
+    }).catch(popupAjaxError);
   },
 
   revokeModeration() {
@@ -110,7 +105,7 @@ const AdminUser = Discourse.User.extend({
         can_grant_moderation: true,
         can_revoke_moderation: false
       });
-    });
+    }).catch(popupAjaxError);
   },
 
   grantModeration() {
@@ -123,14 +118,7 @@ const AdminUser = Discourse.User.extend({
         can_grant_moderation: false,
         can_revoke_moderation: true
       });
-    }).catch(function(e) {
-      let error;
-      if (e.responseJSON && e.responseJSON.error) {
-        error = e.responseJSON.error;
-      }
-      error = error || I18n.t('admin.user.grant_moderation_failed', { error: "http: " + e.status + " - " + e.body });
-      bootbox.alert(error);
-     });
+    }).catch(popupAjaxError);
   },
 
   refreshBrowsers() {
@@ -155,10 +143,6 @@ const AdminUser = Discourse.User.extend({
   setOriginalTrustLevel() {
     this.set('originalTrustLevel', this.get('trust_level'));
   },
-
-  trustLevels: function() {
-    return Discourse.Site.currentProp('trustLevels');
-  }.property(),
 
   dirty: Discourse.computed.propertyNotEqual('originalTrustLevel', 'trustLevel.id'),
 
