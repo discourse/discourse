@@ -287,10 +287,14 @@ Discourse::Application.routes.draw do
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
-  get "stylesheets/:name.css" => "stylesheets#show", constraints: {name: /[a-z0-9_]+/}
+  get "stylesheets/:name.css" => "stylesheets#show", constraints: { name: /[a-z0-9_]+/ }
 
-  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/}
   post "uploads" => "uploads#create"
+
+  # used to download original images
+  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
+  # used to download attachments
+  get "uploads/:site/original/:dir1/:dir2/:sha.:extension" => "uploads#show", constraints: { site: /\w+/, dir1: /[a-f0-9]/, dir2: /[a-f0-9]/, sha: /[a-f0-9]{40}/, extension: /\w{2,}/ }
 
   get "posts" => "posts#latest"
   get "posts/by_number/:topic_id/:post_number" => "posts#by_number"
