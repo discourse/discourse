@@ -230,7 +230,7 @@ Discourse.URL = Ember.Object.createWithMixins({
         var self = this;
         postStream.refresh(opts).then(function() {
           topicController.setProperties({
-            currentPost: closest,
+            'model.currentPost': closest,
             enteredAt: new Date().getTime().toString()
           });
           var closestPost = postStream.closestPostForPostNumber(closest),
