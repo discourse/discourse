@@ -155,8 +155,8 @@ describe DiscourseSingleSignOn do
       expect(user.active).to eq(true)
     end
 
-    it 'does not activate user when asked to' do
-      SiteSetting.sso_trusts_email = false
+    it 'does not activate user when asked not to' do
+      sso.require_activation = true
       user = sso.lookup_or_create_user(ip_address)
       expect(user.active).to eq(false)
     end

@@ -194,10 +194,6 @@ describe SessionController do
     end
 
     context 'when sso emails are not trusted' do
-      before do
-        SiteSetting.sso_trusts_email = false
-      end
-
       context 'if you have not activated your account' do
         it 'does not log you in' do
           sso = get_sso('/a/')
@@ -205,6 +201,7 @@ describe SessionController do
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
+          sso.require_activation = true
 
           get :sso_login, Rack::Utils.parse_query(sso.payload)
 
@@ -219,6 +216,8 @@ describe SessionController do
           sso.email = 'bob@bob.com'
           sso.name = 'Sam Saffron'
           sso.username = 'sam'
+          sso.require_activation = true
+
           get :sso_login, Rack::Utils.parse_query(sso.payload)
         end
       end
@@ -228,6 +227,7 @@ describe SessionController do
           sso = get_sso('/hello/world')
           sso.external_id = '997'
           sso.sso_url = "http://somewhere.over.com/sso_login"
+          sso.require_activation = true
 
           user = Fabricate(:user)
           user.create_single_sign_on_record(external_id: '997', last_payload: '')
