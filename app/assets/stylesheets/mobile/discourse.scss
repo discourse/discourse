@@ -19,7 +19,7 @@ body {
   }
   #main {
     position: relative;
-    
+
     img.avatar {
       &.header {
         width: 45px;
@@ -62,7 +62,6 @@ blockquote {
   vertical-align: middle;
   .topic-status {
     i {
-      font-size: 1.429em;
       color: dark-light-diff($secondary, $primary, 40%, -20%);
     }
   }
