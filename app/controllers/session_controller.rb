@@ -57,7 +57,7 @@ class SessionController < ApplicationController
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
-      return render(text: I18n.t("sso.timeout_expired"), status: 400)
+      return render(text: I18n.t("sso.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
