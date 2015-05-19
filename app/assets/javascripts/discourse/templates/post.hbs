@@ -72,6 +72,9 @@
       <div {{bind-attr class="showUserReplyTab:avoid-tab view.repliesShown::contents :regular view.extraClass"}}>
         <div class='cooked'>
           {{{cooked}}}
+          {{#if firstPost}}
+            {{plugin-outlet "topic-after-cooked"}}
+          {{/if}}
         </div>
         {{#if cooked_hidden}}
           <a href {{action "expandHidden" this}}>{{i18n 'post.show_hidden'}}</a>
