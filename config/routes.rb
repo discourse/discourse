@@ -289,8 +289,7 @@ Discourse::Application.routes.draw do
 
   get "stylesheets/:name.css" => "stylesheets#show", constraints: {name: /[a-z0-9_]+/}
 
-  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
-  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-z0-9]{40}/}
+  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/}
   post "uploads" => "uploads#create"
 
   get "posts" => "posts#latest"

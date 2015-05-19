@@ -102,14 +102,6 @@ describe FileStore::S3Store do
 
   end
 
-  describe ".avatar_template" do
-
-    it "is present" do
-      expect(store.avatar_template(avatar)).to eq("//s3_upload_bucket.s3.amazonaws.com/avatars/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98/{size}.png")
-    end
-
-  end
-
   describe ".purge_tombstone" do
 
     it "updates tombstone lifecycle" do
