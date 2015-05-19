@@ -4,7 +4,8 @@ var PATH_BINDINGS = {
       'g n': '/new',
       'g u': '/unread',
       'g c': '/categories',
-      'g t': '/top'
+      'g t': '/top',
+      'g b': '/bookmarks'
     },
 
     SELECTED_POST_BINDINGS = {
