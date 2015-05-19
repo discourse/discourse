@@ -177,15 +177,6 @@
   th.posts {
     position: relative;
   }
-  > tbody > tr {
-    border-bottom: none;
-    &:nth-child(odd) {
-        background-color: darken($secondary, 3%);
-      }
-    &:nth-child(even) {
-      background-color: $secondary;
-      }
-  }
   th.stats {
     width: 90px;
   }
