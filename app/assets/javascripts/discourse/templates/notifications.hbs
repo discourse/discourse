@@ -1,9 +1,9 @@
 <section class="d-dropdown" id="notifications-dropdown">
-  {{#loading-spinner condition=loadingNotifications}}
+  {{#conditional-loading-spinner condition=loadingNotifications}}
     {{#if content}}
       <ul>
-        {{#each n in model itemController="notification"}}
-          {{notification-item notification=n scope=n.scope}}
+        {{#each n in model}}
+          {{notification-item notification=n}}
         {{/each}}
         <li class="read last">
           <a href="{{unbound myNotificationsUrl}}">{{i18n 'notifications.more'}}&hellip;</a>
@@ -12,5 +12,5 @@
     {{else}}
       <div class="none">{{i18n 'notifications.none'}}</div>
     {{/if}}
-  {{/loading-spinner}}
+  {{/conditional-loading-spinner}}
 </section>

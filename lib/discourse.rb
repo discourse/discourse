@@ -256,7 +256,7 @@ module Discourse
     user ||= User.admins.real.order(:id).first
   end
 
-  SYSTEM_USER_ID = -1 unless defined? SYSTEM_USER_ID
+  SYSTEM_USER_ID ||= -1
 
   def self.system_user
     User.find_by(id: SYSTEM_USER_ID)
@@ -296,6 +296,7 @@ module Discourse
   # after fork, otherwise Discourse will be
   # in a bad state
   def self.after_fork
+    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     current_db = RailsMultisite::ConnectionManagement.current_db
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork

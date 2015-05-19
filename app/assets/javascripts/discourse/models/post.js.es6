@@ -398,7 +398,7 @@ Post.reopenClass({
   loadQuote(postId) {
     return Discourse.ajax("/posts/" + postId + ".json").then(function (result) {
       const post = Discourse.Post.create(result);
-      return Discourse.Quote.build(post, post.get('raw'));
+      return Discourse.Quote.build(post, post.get('raw'), {raw: true, full: true});
     });
   },
 

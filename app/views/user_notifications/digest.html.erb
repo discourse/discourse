@@ -22,7 +22,7 @@
         <div class='featured-topic'>
           <%= link_to t.title, "#{Discourse.base_url}#{t.relative_url}" %>
           <br/>
-          <%= category_badge(t.category) %>
+          <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </div>
 
         <%- if t.best_post.present? %>

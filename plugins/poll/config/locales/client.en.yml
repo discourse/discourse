@@ -9,18 +9,22 @@ en:
   js:
     poll:
       voters:
-        zero: "No votes yet. Want to be the first?"
-        one: "There's only 1 vote."
-        other: "There are %{count} total votes."
+        zero: "voters"
+        one: "voter"
+        other: "voters"
+      total_votes:
+        zero: "total votes"
+        one: "total vote"
+        other: "total votes"
 
       average_rating: "Average rating: <strong>%{average}</strong>."
 
       multiple:
         help:
-          at_least_min_options: "You may choose at least %{count} options."
-          up_to_max_options: "You may choose up to %{count} options."
-          x_options: "You may choose %{count} options."
-          between_min_and_max_options: "You may choose between %{min} and %{max} options."
+          at_least_min_options: "You may choose at least <strong>%{count}</strong> options."
+          up_to_max_options: "You may choose up to <strong>%{count}</strong> options."
+          x_options: "You may choose <strong>%{count}</strong> options."
+          between_min_and_max_options: "You may choose between <strong>%{min}</strong> and <strong>%{max}</strong> options."
 
       cast-votes:
         title: "Cast your votes"

@@ -1,6 +1,5 @@
 # bespoke importer for a customer, feel free to borrow ideas
-#
-#
+
 require 'csv'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 

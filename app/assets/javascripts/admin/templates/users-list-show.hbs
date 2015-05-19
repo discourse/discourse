@@ -1,7 +1,7 @@
 {{#if hasSelection}}
   <div id='selected-controls'>
-    <button {{action "approveUsers"}} class='btn'>{{countI18n admin.users.approved_selected count=selectedCount}}</button>
-    <button {{action "rejectUsers"}}  class='btn btn-danger'>{{countI18n admin.users.reject_selected count=selectedCount}}</button>
+    <button {{action "approveUsers"}} class='btn'>{{count-i18n key="admin.users.approved_selected" count=selectedCount}}</button>
+    <button {{action "rejectUsers"}}  class='btn btn-danger'>{{count-i18n key="admin.users.reject_selected" count=selectedCount}}</button>
   </div>
 {{/if}}
 
@@ -19,7 +19,7 @@
   {{/unless}}
 </div>
 
-{{#loading-spinner condition=refreshing}}
+{{#conditional-loading-spinner condition=refreshing}}
   {{#if model}}
     <table class='table'>
       <tr>
@@ -81,4 +81,4 @@
   {{else}}
     <p>{{i18n 'search.no_results'}}</p>
   {{/if}}
-{{/loading-spinner}}
+{{/conditional-loading-spinner}}

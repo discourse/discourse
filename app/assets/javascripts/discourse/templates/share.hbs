@@ -11,10 +11,10 @@
   </div>
 
   {{#each s in sources}}
-    {{share-source source=s title=title action="share"}}
+    {{share-source source=s title=view.title action="share"}}
   {{/each}}
 
   <div class='link'>
-    <a href {{action "close"}} title='{{i18n 'share.close'}}'>{{fa-icon "times-circle"}}</a>
+    <a href {{action "close"}} aria-label='{{i18n 'share.close'}}' title='{{i18n 'share.close'}}'>{{fa-icon "times-circle"}}</a>
   </div>
 {{/if}}

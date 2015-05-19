@@ -65,14 +65,14 @@
 
       {{#each c in categories itemController='site-map-category'}}
         <li class="category">
-          {{category-link c allowUncategorized="true"}}
+          {{category-link c.model allowUncategorized="true"}}
 
           {{#if c.unreadTotal}}
-            <a href={{unbound c.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
+            <a href={{unbound c.model.url}} class='badge badge-notification'>{{c.unreadTotal}}</a>
           {{/if}}
 
           {{#if c.showTopicCount}}
-            <b class="topics-count">{{unbound c.topic_count}}</b>
+            <b class="topics-count">{{unbound c.model.topic_count}}</b>
           {{/if}}
         </li>
       {{/each}}

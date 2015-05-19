@@ -1,8 +1,10 @@
+import Presence from 'discourse/mixins/presence';
+import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ObjectController from 'discourse/controllers/object';
 
 // Modal related to merging of topics
-export default ObjectController.extend(Discourse.SelectedPostsCount, ModalFunctionality, {
+export default ObjectController.extend(SelectedPostsCount, ModalFunctionality, Presence, {
   needs: ['topic'],
 
   topicController: Em.computed.alias('controllers.topic'),

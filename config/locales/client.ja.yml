@@ -180,14 +180,18 @@ ja:
       topic: "トピック："
       approve: '承認'
       reject: 'リジェクト'
+      delete_user: '削除されたユーザー'
       title: "承認待ち"
       none: "レビュー待ちの投稿はございません。"
       edit: "編集"
       cancel: "取り消し"
+      view_pending: "保留とされている投稿を閲覧する"
+      has_pending_posts:
+        one: "このトピックは<b>1</b>個の投稿が承認待ちです。"
       confirm: "変更を保存"
       approval:
         title: "この投稿は承認が必要"
-        description: "投稿された新規のポストは受付されましたがモデレイターによる承認が必要です。もう少々お待ち下さい。"
+        description: "投稿された新規のポストは受付されましたがモデレーターによる承認が必要です。もう少々お待ち下さい。"
         ok: "実行"
     user_action:
       user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> が <a href='{{topicUrl}}'>トピック</a> を作成"
@@ -300,7 +304,6 @@ ja:
       dismiss_notifications: "全て既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信したあとに投稿に移動しない"
-      dynamic_favicon: "favicon に受信したメッセージ通知を表示する"
       edit_history_public: "投稿編集履歴を公開する"
       external_links_in_new_tab: "外部リンクを全て新しいタブで開く"
       enable_quoting: "ハイライトしたテキストを引用して回答する"
@@ -519,9 +522,7 @@ ja:
     logout: "ログアウトしました"
     refresh: "Refresh"
     read_only_mode:
-      enabled: "読み取り専用モードにされています。サイトインターアクションを無効されています。"
       login_disabled: "読み取り専用モードにされています。ログインできません。"
-    too_few_topics_notice: "Create at least 5 public topics and %{posts} public posts to get discussion started. New users cannot earn trust levels unless there's content for them to read. This message appears only to staff."
     learn_more: "より詳しく..."
     year: '年'
     year_desc: '過去365日間に投稿されたトピック'
@@ -643,7 +644,6 @@ ja:
       title_placeholder: "このディスカッションを簡潔に説明してください。"
       edit_reason_placeholder: "編集する理由は何ですか?"
       show_edit_reason: "(編集理由を追加)"
-      reply_placeholder: "本文をここに入力してください。Markdown や BBCode を利用することもできます。画像をアップロードするにはドラッグまたはペーストしてください。"
       view_new_post: "新規ポストを見る。"
       saving: "保存中..."
       saved: "保存完了!"
@@ -811,7 +811,6 @@ ja:
       toggle_information: "トピック詳細をトグル"
       read_more_in_category: "{{catLink}} の他のトピックを見る or {{latestLink}}。"
       read_more: "{{catLink}} or {{latestLink}}。"
-      read_more_MF: "{ UNREAD, plural, =0 {} one { <a href='/unread'>未読ポスト1つ</a> } other { <a href='/unread'>未読ポスト#つ</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック1つ</a>c} other { {BOTH, select, true{and } false {} other{}} <a href='/new'>新規トピック#つ</a>} }を読む or {CATEGORY, select, true {{catLink} の他のトピックを読む} false {{latestLink}} other {}} "
       browse_all_categories: 全てのカテゴリをブラウズする
       view_latest_topics: 最新のトピックを見る
       suggest_create_topic: 新しいトピックを作成しますか？
@@ -835,10 +834,10 @@ ja:
       notifications:
         reasons:
           '3_6': 'このカテゴリを参加中のため通知されます'
-          '3_5': 'このトピックを参加中のため通知されます'
-          '3_2': 'このトピックを参加中のため通知されます。'
+          '3_5': 'このトピックに参加中のため通知されます'
+          '3_2': 'このトピックに参加中のため通知されます。'
           '3_1': 'このトピックを作成したため通知されます。'
-          '3': 'このトピックを参加中のため通知されます。'
+          '3': 'このトピックに参加中のため通知されます。'
           '2_8': 'このカテゴリをトラック中のため通知されます。'
           '2_4': 'このトピックに回答したため通知されます。'
           '2_2': 'このトピックをトラック中のため通知されます。'
@@ -850,11 +849,13 @@ ja:
           '0': 'このトピックに関して一切通知を受けません。'
         watching_pm:
           title: "参加中"
+          description: "このメッセージに対して新しい投稿があった場合、登録されたメールアドレスと、コミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         watching:
           title: "参加中"
           description: "このトピックに対して新しい投稿があった場合、登録されたメールアドレスと、NVコミュニティ内の通知ボックスに通知が届き、トピック一覧に新しい投稿数がつきます。"
         tracking_pm:
           title: "トラック中"
+          description: "未読件数と新しい投稿がメッセージの横に表示されます。他ユーザから@ユーザ名でタグ付けされた場合、またはあなたの投稿に回答がついた場合に通知されます。"
         tracking:
           title: "トラック中"
           description: "未読件数と新しい投稿がプライベートメッセージされます。他ユーザーからタグ付けをされた場合、またはあなたの投稿に回答が付いた場合に通知されます"
@@ -865,6 +866,7 @@ ja:
           title: "通常"
         muted_pm:
           title: "ミュートされました"
+          description: "このメッセージについての通知を受け取りません。"
         muted:
           title: "ミュート"
           description: "このトピックについての通知を受け取りません。また、未読タブにも通知されません。"
@@ -874,6 +876,7 @@ ja:
         open: "トピックを開く"
         close: "トピックを終了する"
         multi_select: "投稿の選択。。。"
+        auto_close: "自動終了する。。。"
         pin: "トピックをピンで留める。。。"
         unpin: "トピックのピンを取り除く。。。"
         unarchive: "トピックのアーカイブ解除"
@@ -922,6 +925,7 @@ ja:
       automatically_add_to_groups_optional: "この招待によって、リストされたグループに参加することができます。"
       automatically_add_to_groups_required: "この招待によって、リストされたグループに参加することができます。"
       invite_private:
+        title: 'メッサージ参加へ招待する'
         email_or_username: "招待するユーザのメールアドレスまたはユーザ名"
         email_or_username_placeholder: "メールアドレスまたはユーザ名"
         action: "招待"
@@ -929,6 +933,8 @@ ja:
         group_name: "グループ名"
       invite_reply:
         title: '友人を招待して回答してもらう'
+        username_placeholder: "ユーザー名"
+        action: '招待状を送る'
         to_forum: "ログインしなくてもこの投稿に返信ができることを、あなたの友人に知らせます。"
         email_placeholder: 'メールアドレス'
       login_reply: 'ログインして返信'
@@ -1027,8 +1033,8 @@ ja:
           yes_value: "はい、回答も一緒に削除する"
           no_value: "いいえ、ポストのみ削除する"
         admin: "ポスト管理"
-        wiki: "ウィキーポストにする"
-        unwiki: "ウィキーポストから外す"
+        wiki: "wikiポストにする"
+        unwiki: "wikiポストから外す"
         convert_to_moderator: "スタッフ色を追加"
         revert_to_regular: "スタッフ色を削除"
         rebake: "HTML再建築"
@@ -1128,8 +1134,6 @@ ja:
           side_by_side_markdown:
             title: "ソース文書で表示する"
             button: 'ソース文書'
-        details:
-          edited_by: "編集者"
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'
@@ -1237,7 +1241,7 @@ ja:
         help: "このトピックはピン留めされていません。 既定の順番に表示されます。"
       pinned_globally:
         title: "全サイト的にピン留めされました"
-        help: "このトピックは全サイト的にピン留めされました；全てのリストのトップに表示されます。"
+        help: "このトピックは全サイト的にピン留めされました。全てのリストのトップに表示されます。"
       pinned:
         title: "ピン留め"
         help: "このトピックはピン留めされています。常にカテゴリのトップに表示されます"
@@ -1256,6 +1260,8 @@ ja:
       other {}}
     original_post: "大元のポスト"
     views: "閲覧"
+    views_lowercase:
+      other: " 閲覧"
     replies: "回答"
     views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
@@ -1327,6 +1333,10 @@ ja:
         help: "過去年間、月間、週間及び日間のアクティブトピック"
         all:
           title: "今まで"
+        yearly:
+          title: "今年"
+        monthly:
+          title: "今月"
         weekly:
           title: "毎週"
         daily:
@@ -1368,6 +1378,7 @@ ja:
         admins: '管理者:'
         blocked: 'ブロック中:'
         suspended: '停止中:'
+        private_messages_short: "メッセージ"
         private_messages_title: "メッセージ"
         space_free: "{{size}} free"
         uploads: "アップロード"
@@ -1469,6 +1480,7 @@ ja:
         add: "追加"
         add_members: "メンバー追加"
         custom: "カスタム"
+        automatic: "自動的"
         automatic_membership_email_domains: "リスト内のメールアドレスのドメインに正確に一致したユーザーは自動的にグループに追加される"
         automatic_membership_retroactive: "同じメールアドレスドメインのルールを既に登録済みのユーザにも適用"
       api:

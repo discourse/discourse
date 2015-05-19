@@ -287,8 +287,9 @@ Discourse::Application.routes.draw do
 
   get "highlight-js/:hostname/:version.js" => "highlight_js#show", format: false, constraints: { hostname: /[\w\.-]+/ }
 
-  get "uploads/:site/:id/:sha.:extension" => "uploads#show", constraints: {site: /\w+/, id: /\d+/, sha: /[a-z0-9]{15,16}/i, extension: /\w{2,}/}
-  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-z0-9]{40}/}
+  get "stylesheets/:name.css" => "stylesheets#show", constraints: {name: /[a-z0-9_]+/}
+
+  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/}
   post "uploads" => "uploads#create"
 
   get "posts" => "posts#latest"
@@ -327,9 +328,8 @@ Discourse::Application.routes.draw do
     end
   end
 
-  get "notifications" => "notifications#recent"
-  get "notifications/history" => "notifications#history"
-  put "notifications/reset-new" => 'notifications#reset_new'
+  get 'notifications' => 'notifications#index'
+  put 'notifications/mark-read' => 'notifications#mark_read'
 
   match "/auth/:provider/callback", to: "users/omniauth_callbacks#complete", via: [:get, :post]
   match "/auth/failure", to: "users/omniauth_callbacks#failure", via: [:get, :post]

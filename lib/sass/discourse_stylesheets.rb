@@ -3,7 +3,7 @@ require_dependency 'distributed_cache'
 
 class DiscourseStylesheets
 
-  CACHE_PATH ||= 'uploads/stylesheet-cache'
+  CACHE_PATH ||= 'tmp/stylesheet-cache'
   MANIFEST_DIR ||= "#{Rails.root}/tmp/cache/assets/#{Rails.env}"
   MANIFEST_FULL_PATH ||= "#{MANIFEST_DIR}/stylesheet-manifest"
 
@@ -33,9 +33,9 @@ class DiscourseStylesheets
 
   def self.compile(target = :desktop, opts={})
     @lock.synchronize do
-      FileUtils.rm(MANIFEST_FULL_PATH, force: true) if opts[:force] # Force a recompile, even in production env
+      FileUtils.rm(MANIFEST_FULL_PATH, force: true) if opts[:force]
       builder = self.new(target)
-      builder.compile
+      builder.compile(opts)
       builder.stylesheet_filename
     end
   end
@@ -76,7 +76,20 @@ class DiscourseStylesheets
     @target = target
   end
 
-  def compile
+  def compile(opts={})
+    unless opts[:force]
+      if File.exists?(stylesheet_fullpath)
+        unless StylesheetCache.where(target: @target, digest: digest).exists?
+          begin
+            StylesheetCache.add(@target, digest, File.read(stylesheet_fullpath))
+          rescue => e
+            Rails.logger.warn "Completely unexpected error adding contents of '#{stylesheet_fullpath}' to cache #{e}"
+          end
+        end
+        return true
+      end
+    end
+
     scss = File.read("#{Rails.root}/app/assets/stylesheets/#{@target}.scss")
     rtl = @target == :desktop_rtl || @target == :mobile_rtl
     css = begin
@@ -90,6 +103,11 @@ class DiscourseStylesheets
     File.open(stylesheet_fullpath, "w") do |f|
       f.puts css
     end
+    begin
+      StylesheetCache.add(@target, digest, css)
+    rescue => e
+      Rails.logger.warn "Completely unexpected error adding item to cache #{e}"
+    end
     css
   end
 
@@ -101,7 +119,7 @@ class DiscourseStylesheets
   end
 
   def cache_fullpath
-    "#{Rails.root}/public/#{CACHE_PATH}"
+    "#{Rails.root}/#{CACHE_PATH}"
   end
 
   def stylesheet_fullpath
@@ -119,12 +137,13 @@ class DiscourseStylesheets
     "#{GlobalSetting.relative_url_root}/"
   end
 
+  # using uploads cause we already have all the routing in place
   def stylesheet_relpath
-    "#{root_path}#{CACHE_PATH}/#{stylesheet_filename}"
+    "#{root_path}stylesheets/#{stylesheet_filename}"
   end
 
   def stylesheet_relpath_no_digest
-    "#{root_path}#{CACHE_PATH}/#{stylesheet_filename_no_digest}"
+    "#{root_path}stylesheets/#{stylesheet_filename_no_digest}"
   end
 
   def stylesheet_filename
@@ -137,9 +156,14 @@ class DiscourseStylesheets
   # digest encodes the things that trigger a recompile
   def digest
     @digest ||= begin
-      theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : 0
-      category_updated = Category.last_updated_at
-      Digest::SHA1.hexdigest("#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}")
+      theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : false
+      category_updated = Category.where("background_url IS NOT NULL and background_url != ''").last_updated_at
+
+      if theme || category_updated > 0
+        Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}"
+      else
+        Digest::SHA1.hexdigest "defaults-#{DiscourseStylesheets.last_file_updated}"
+      end
     end
   end
 end

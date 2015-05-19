@@ -4,7 +4,8 @@ var PATH_BINDINGS = {
       'g n': '/new',
       'g u': '/unread',
       'g c': '/categories',
-      'g t': '/top'
+      'g t': '/top',
+      'g b': '/bookmarks'
     },
 
     SELECTED_POST_BINDINGS = {
@@ -196,7 +197,7 @@ Discourse.KeyboardShortcuts = Ember.Object.createWithMixins({
     var selectedPostId = parseInt($('.topic-post.selected article.boxed').data('post-id'), 10);
     if (selectedPostId) {
       var topicController = container.lookup('controller:topic'),
-          post = topicController.get('postStream.posts').findBy('id', selectedPostId);
+          post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         topicController.send(action, post);
       }

@@ -73,6 +73,8 @@ describe Category do
       expect(Category.post_create_allowed(guardian).count).to be(4)
       expect(Category.topic_create_allowed(guardian).count).to be(3) # explicitly allowed once, default allowed once
 
+      expect(Category.scoped_to_permissions(nil, [:readonly]).count).to be(2)
+
       # everyone has special semantics, test it as well
       can_post_category.set_permissions(:everyone => :create_post)
       can_post_category.save
@@ -82,6 +84,8 @@ describe Category do
       # anonymous has permission to create no topics
       guardian = Guardian.new(nil)
       expect(Category.post_create_allowed(guardian).count).to be(0)
+      expect(Category.topic_create_allowed(guardian).count).to be(0)
+      expect(Category.scoped_to_permissions(guardian, [:readonly]).count).to be(3)
 
     end
 
@@ -169,22 +173,54 @@ describe Category do
   end
 
   describe 'non-english characters' do
-    let(:category) { Fabricate(:category, name: "测试") }
+    context 'uses ascii slug generator' do
+      before do
+        SiteSetting.slug_generation_method = 'ascii'
+        @category = Fabricate(:category, name: "测试")
+      end
+      after { @category.destroy }
 
-    it "creates a blank slug, this is OK." do
-      expect(category.slug).to be_blank
-      expect(category.slug_for_url).to eq("#{category.id}-category")
+      it "creates a blank slug" do
+        expect(@category.slug).to be_blank
+        expect(@category.slug_for_url).to eq("#{@category.id}-category")
+      end
     end
 
-    it "creates a localized slug if default locale is zh_CN" do
-      SiteSetting.default_locale = 'zh_CN'
-      expect(category.slug).to_not be_blank
-      expect(category.slug_for_url).to eq("ce-shi")
+    context 'uses none slug generator' do
+      before do
+        SiteSetting.slug_generation_method = 'none'
+        @category = Fabricate(:category, name: "测试")
+      end
+      after do
+        SiteSetting.slug_generation_method = 'ascii'
+        @category.destroy
+      end
+
+      it "creates a blank slug" do
+        expect(@category.slug).to be_blank
+        expect(@category.slug_for_url).to eq("#{@category.id}-category")
+      end
+    end
+
+    context 'uses encoded slug generator' do
+      before do
+        SiteSetting.slug_generation_method = 'encoded'
+        @category = Fabricate(:category, name: "测试")
+      end
+      after do
+        SiteSetting.slug_generation_method = 'ascii'
+        @category.destroy
+      end
+
+      it "creates a slug" do
+        expect(@category.slug).to eq("测试")
+        expect(@category.slug_for_url).to eq("测试")
+      end
     end
   end
 
   describe 'slug would be a number' do
-    let(:category) { Fabricate(:category, name: "2") }
+    let(:category) { Fabricate.build(:category, name: "2") }
 
     it 'creates a blank slug' do
       expect(category.slug).to be_blank
@@ -193,21 +229,25 @@ describe Category do
   end
 
   describe 'custom slug can be provided' do
-    it 'has the custom value' do
-      c = Fabricate(:category, name: "Cats", slug: "cats-category")
-      expect(c.slug).to eq("cats-category")
-    end
+    it 'can be sanitized' do
+      @c = Fabricate(:category, name: "Fun Cats", slug: "fun-cats")
+      @cat = Fabricate(:category, name: "love cats", slug: "love-cats")
 
-    it 'and be sanitized' do
-      c = Fabricate(:category, name: 'Cats', slug: '  invalid slug')
-      expect(c.slug).to eq('invalid-slug')
-    end
+      @c.slug = '  invalid slug'
+      @c.save
+      expect(@c.slug).to eq('invalid-slug')
 
-    it 'fails if custom slug is duplicate with existing' do
-      c1 = Fabricate(:category, name: "Cats", slug: "cats")
-      c2 = Fabricate.build(:category, name: "More Cats", slug: "cats")
-      expect(c2).to_not be_valid
-      expect(c2.errors[:slug]).to be_present
+      c = Fabricate.build(:category, name: "More Fun Cats", slug: "love-cats")
+      expect(c).not_to be_valid
+      expect(c.errors[:slug]).to be_present
+
+      @cat.slug = "#{@c.id}-category"
+      expect(@cat).not_to be_valid
+      expect(@cat.errors[:slug]).to be_present
+
+      @cat.slug = "#{@cat.id}-category"
+      expect(@cat).to be_valid
+      expect(@cat.errors[:slug]).not_to be_present
     end
   end
 

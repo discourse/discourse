@@ -65,8 +65,8 @@ export default Ember.Component.extend(BufferedContent, Discourse.ScrollTop, {
       self.set('validationMessage', null);
       self.commitBuffer();
     }).catch(function(e) {
-      if (e.responseJSON && e.responseJSON.errors) {
-        self.set('validationMessage', e.responseJSON.errors[0]);
+      if (e.jqXHR.responseJSON && e.jqXHR.responseJSON.errors) {
+        self.set('validationMessage', e.jqXHR.responseJSON.errors[0]);
       } else {
         self.set('validationMessage', I18n.t('generic_error'));
       }

@@ -1,9 +1,10 @@
-module("Discourse.SelectedPostsCount");
+module("SelectedPostsCount");
 
+import SelectedPostsCount from 'discourse/mixins/selected-posts-count';
 import Topic from 'discourse/models/topic';
 
 var buildTestObj = function(params) {
-  return Ember.Object.createWithMixins(Discourse.SelectedPostsCount, params || {});
+  return Ember.Object.createWithMixins(SelectedPostsCount, params || {});
 };
 
 test("without selectedPosts", function () {

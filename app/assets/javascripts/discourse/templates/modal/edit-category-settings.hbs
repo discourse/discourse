@@ -1,13 +1,13 @@
 <section class='field'>
-  {{auto-close-form autoCloseTime=auto_close_hours
-                    autoCloseBasedOnLastPost=auto_close_based_on_last_post
+  {{auto-close-form autoCloseTime=model.auto_close_hours
+                    autoCloseBasedOnLastPost=model.auto_close_based_on_last_post
                     limited="true" }}
 </section>
 
 <section class='field'>
   <div class="allow-badges">
     <div>
-      {{input type="checkbox" checked=allow_badges}}
+      {{input type="checkbox" checked=model.allow_badges}}
       {{i18n 'category.allow_badges_label'}}
     </div>
   </div>

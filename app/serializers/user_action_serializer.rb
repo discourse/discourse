@@ -26,6 +26,8 @@ class UserActionSerializer < ApplicationSerializer
              :edit_reason,
              :category_id,
              :uploaded_avatar_id,
+             :closed,
+             :archived,
              :acting_uploaded_avatar_id
 
   def excerpt
@@ -75,6 +77,14 @@ class UserActionSerializer < ApplicationSerializer
 
   def include_edit_reason?
     object.action_type == UserAction::EDIT
+  end
+
+  def closed
+    object.topic_closed
+  end
+
+  def archived
+    object.topic_archived
   end
 
 end

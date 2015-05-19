@@ -19,9 +19,13 @@ export default Ember.Mixin.create({
   },
 
   _rerenderString() {
+    const $sel = this.$();
+    if (!$sel) { return; }
+
     const buffer = [];
     this.renderString(buffer);
-    this.$().html(buffer.join(''));
+
+    $sel.html(buffer.join(''));
   },
 
   rerenderString() {

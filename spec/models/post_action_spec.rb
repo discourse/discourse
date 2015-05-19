@@ -2,9 +2,6 @@ require 'spec_helper'
 require_dependency 'post_destroyer'
 
 describe PostAction do
-  it { is_expected.to belong_to :user }
-  it { is_expected.to belong_to :post }
-  it { is_expected.to belong_to :post_action_type }
   it { is_expected.to rate_limit }
 
   let(:moderator) { Fabricate(:moderator) }
@@ -458,6 +455,7 @@ describe PostAction do
       end
 
       expect(topic.reload.closed).to eq(true)
+
     end
 
   end

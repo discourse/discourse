@@ -1403,6 +1403,10 @@
                 xPosition += 25;
                 button.id = id + postfix;
                 button.title = title;
+                // we really should just use jquery here
+                if (button.setAttribute) {
+                  button.setAttribute('aria-label', title);
+                }
                 if (textOp)
                     button.textOp = textOp;
                 setupButton(button, true);

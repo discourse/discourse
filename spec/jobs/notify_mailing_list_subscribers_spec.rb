@@ -47,6 +47,16 @@ describe Jobs::NotifyMailingListSubscribers do
 
   end
 
+  context "to an anonymous user with mailing list on" do
+    let(:user) { Fabricate(:anonymous, mailing_list_mode: true) }
+    let!(:post) { Fabricate(:post, user: user) }
+
+    it "doesn't send the email to the user" do
+      UserNotifications.expects(:mailing_list_notify).with(user, post).never
+      Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+    end
+  end
+
   context "with mailing list off" do
     let(:user) { Fabricate(:user, mailing_list_mode: false) }
     let!(:post) { Fabricate(:post, user: user) }

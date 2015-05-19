@@ -72,6 +72,7 @@ task 'assets:precompile:before' do
 end
 
 task 'assets:precompile:css' => 'environment' do
+  puts "Start compiling CSS: #{Time.zone.now}"
   RailsMultisite::ConnectionManagement.each_connection do |db|
     # Heroku precompiles assets before db migration, so tables may not exist.
     # css will get precompiled during first request instead in that case.
@@ -82,6 +83,7 @@ task 'assets:precompile:css' => 'environment' do
       end
     end
   end
+  puts "Done compiling CSS: #{Time.zone.now}"
 end
 
 def assets_path

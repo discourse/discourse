@@ -1,0 +1,27 @@
+<p>{{count-i18n key="topic.multi_select.description" count=selectedPostsCount}}</p>
+
+{{#if canSelectAll}}
+  <p><a href {{action "selectAll"}}>{{i18n 'topic.multi_select.select_all'}}</a></p>
+{{/if}}
+
+{{#if canDeselectAll}}
+  <p><a href {{action "deselectAll"}}>{{i18n 'topic.multi_select.deselect_all'}}</a></p>
+{{/if}}
+
+{{#if canDeleteSelected}}
+  {{d-button action="deleteSelected" icon="trash-o" label="topic.multi_select.delete"}}
+{{/if}}
+
+{{#if canSplitTopic}}
+  {{d-button action="splitTopic" icon="sign-out" label="topic.split_topic.action"}}
+{{/if}}
+
+{{#if canMergeTopic}}
+  {{d-button action="mergeTopic" icon="sign-out" label="topic.merge_topic.action"}}
+{{/if}}
+
+{{#if canChangeOwner}}
+  {{d-button action="changeOwner" icon="user" label="topic.change_owner.action"}}
+{{/if}}
+
+<p class='cancel'><a href {{action "toggleMultiSelect"}}>{{i18n 'topic.multi_select.cancel'}}</a></p>

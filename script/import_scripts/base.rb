@@ -370,7 +370,9 @@ class ImportScripts::Base
       user_id: opts[:user_id] || opts[:user].try(:id) || -1,
       position: opts[:position],
       description: opts[:description],
-      parent_category_id: opts[:parent_category_id]
+      parent_category_id: opts[:parent_category_id],
+      color: opts[:color] || "AB9364",
+      text_color: opts[:text_color] || "FFF",
     )
 
     new_category.custom_fields["import_id"] = import_id if import_id

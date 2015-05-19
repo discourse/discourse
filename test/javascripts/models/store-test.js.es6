@@ -37,7 +37,7 @@ test('createRecord with a record as attributes returns that record from the map'
 
 test('find', function() {
   const store = createStore();
-  store.find('widget', 123).then(function(w) {
+  return store.find('widget', 123).then(function(w) {
     equal(w.get('name'), 'Trout Lure');
     equal(w.get('id'), 123);
     ok(!w.get('isNew'), 'found records are not new');
@@ -51,28 +51,28 @@ test('find', function() {
 
 test('find with object id', function() {
   const store = createStore();
-  store.find('widget', {id: 123}).then(function(w) {
+  return store.find('widget', {id: 123}).then(function(w) {
     equal(w.get('firstObject.name'), 'Trout Lure');
   });
 });
 
 test('find with query param', function() {
   const store = createStore();
-  store.find('widget', {name: 'Trout Lure'}).then(function(w) {
+  return store.find('widget', {name: 'Trout Lure'}).then(function(w) {
     equal(w.get('firstObject.id'), 123);
   });
 });
 
 test('update', function() {
   const store = createStore();
-  store.update('widget', 123, {name: 'hello'}).then(function(result) {
+  return store.update('widget', 123, {name: 'hello'}).then(function(result) {
     ok(result);
   });
 });
 
 test('findAll', function() {
   const store = createStore();
-  store.findAll('widget').then(function(result) {
+  return store.findAll('widget').then(function(result) {
     equal(result.get('length'), 2);
     const w = result.findBy('id', 124);
     ok(!w.get('isNew'), 'found records are not new');
@@ -80,9 +80,9 @@ test('findAll', function() {
   });
 });
 
-test('destroyRecord', function() {
+test('destroyRecord', function(assert) {
   const store = createStore();
-  store.find('widget', 123).then(function(w) {
+  return store.find('widget', 123).then(function(w) {
     store.destroyRecord('widget', w).then(function(result) {
       ok(result);
     });
@@ -91,7 +91,7 @@ test('destroyRecord', function() {
 
 test('find embedded', function() {
   const store = createStore();
-  store.find('fruit', 1).then(function(f) {
+  return store.find('fruit', 1).then(function(f) {
     ok(f.get('farmer'), 'it has the embedded object');
     ok(f.get('category'), 'categories are found automatically');
   });
@@ -99,7 +99,7 @@ test('find embedded', function() {
 
 test('findAll embedded', function() {
   const store = createStore();
-  store.findAll('fruit').then(function(fruits) {
+  return store.findAll('fruit').then(function(fruits) {
     equal(fruits.objectAt(0).get('farmer.name'), 'Old MacDonald');
     equal(fruits.objectAt(0).get('farmer'), fruits.objectAt(1).get('farmer'), 'points at the same object');
     equal(fruits.objectAt(2).get('farmer.name'), 'Luke Skywalker');

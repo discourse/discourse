@@ -56,6 +56,8 @@ class TopicLinkClick < ActiveRecord::Base
       link = TopicLink.find_by(url: url)
       return link.url if link.present?
 
+      return nil unless uri
+
       # Only redirect to whitelisted hostnames
       return WHITELISTED_REDIRECT_HOSTNAMES.include?(uri.hostname) ? url : nil
     end

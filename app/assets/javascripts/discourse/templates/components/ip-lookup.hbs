@@ -46,7 +46,7 @@
           </button>
         {{/if}}
       </dt>
-      {{#loading-spinner size="small" condition=otherAccountsLoading}}
+      {{#conditional-loading-spinner size="small" condition=otherAccountsLoading}}
         {{#if other_accounts.length}}
           <dd class="other-accounts">
             <table class="table table-condensed table-hover">
@@ -73,7 +73,7 @@
             </table>
           </dd>
         {{/if}}
-      {{/loading-spinner}}
+      {{/conditional-loading-spinner}}
     </dl>
   </div>
 {{/if}}

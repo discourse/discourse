@@ -31,3 +31,13 @@
   border-left-color: transparent !important;
   border-right-color: $secondary !important;
 }
+.rtl code {
+    direction: ltr !important;
+    text-aligh: left !important;
+}
+.rtl .pull-left {
+  float:right !important;
+}
+.rtl .autocomplete {
+left: 360px  !important;
+}

@@ -76,9 +76,13 @@ module HasCustomFields
   end
 
   def reload(options = nil)
+    clear_custom_fields
+    super
+  end
+
+  def clear_custom_fields
     @custom_fields = nil
     @custom_fields_orig = nil
-    super
   end
 
   def custom_fields

@@ -87,8 +87,24 @@ export default function() {
       return response(json);
     });
 
+    this.get('/users/eviltrout.json', () => {
+      const json = fixturesByUrl['/users/eviltrout.json'];
+      if (loggedIn()) {
+        json.user.can_edit = true;
+      }
+      return response(json);
+    });
+
+    this.put('/users/eviltrout', () => {
+      return response({ user: {} });
+    });
+
     this.get("/t/280.json", function() {
       return response(fixturesByUrl['/t/280/1.json']);
+    });
+
+    this.get("/t/28830.json", function() {
+      return response(fixturesByUrl['/t/28830/1.json']);
     });
 
     this.get("/t/id_for/:slug", function() {

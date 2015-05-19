@@ -5,8 +5,9 @@ describe ClicksController do
   context 'create' do
 
     context 'missing params' do
-      it 'raises an error without the url param' do
-        expect { xhr :get, :track, post_id: 123 }.to raise_error(ActionController::ParameterMissing)
+      it 'raises a 404 without the url param' do
+        xhr :get, :track, post_id: 123
+        expect(response).to be_not_found
       end
 
       it "redirects to the url even without the topic_id or post_id params" do

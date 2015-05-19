@@ -69,7 +69,7 @@ const User = RestModel.extend({
   profileBackground: function() {
     var url = this.get('profile_background');
     if (Em.isEmpty(url) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
-    return 'background-image: url(' + Discourse.getURLWithCDN(url) + ')';
+    return ('background-image: url(' + Discourse.getURLWithCDN(url) + ')').htmlSafe();
   }.property('profile_background'),
 
   /**
@@ -204,6 +204,8 @@ const User = RestModel.extend({
       data['edit_history_public'] = this.get('edit_history_public');
     }
 
+    // TODO: We can remove this when migrated fully to rest model.
+    this.set('isSaving', true);
     return Discourse.ajax("/users/" + this.get('username_lower'), {
       data: data,
       type: 'PUT'
@@ -212,6 +214,8 @@ const User = RestModel.extend({
 
       var userProps = self.getProperties('enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
+    }).finally(() => {
+      this.set('isSaving', false);
     });
   },
 
@@ -434,16 +438,13 @@ User.reopenClass(Discourse.Singleton, {
     return user.findDetails(options);
   },
 
-  /**
-    The current singleton will retrieve its attributes from the `PreloadStore`
-    if it exists. Otherwise, no instance is created.
-
-    @method createCurrent
-    @returns {Discourse.User} the user, if logged in.
-  **/
+  // TODO: Use app.register and junk Discourse.Singleton
   createCurrent: function() {
     var userJson = PreloadStore.get('currentUser');
-    if (userJson) { return Discourse.User.create(userJson); }
+    if (userJson) {
+      const store = Discourse.__container__.lookup('store:main');
+      return store.createRecord('user', userJson);
+    }
     return null;
   },
 
