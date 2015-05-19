@@ -306,81 +306,75 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     // in case it's still bound somehow
     this._unbindUploadTarget();
 
-    const $uploadTarget = $('#reply-control'),
-        csrf = Discourse.Session.currentProp('csrfToken');
-    let cancelledByTheUser;
+    const $uploadTarget = $("#reply-control"),
+          csrf = Discourse.Session.currentProp("csrfToken"),
+          reset = () => this.setProperties({ uploadProgress: 0, isUploading: false });
 
-    // NOTE: we need both the .json extension and the CSRF token as a query parameter for IE9
+    var cancelledByTheUser;
+
+    this.messageBus.subscribe("/uploads/composer", upload => {
+      if (!cancelledByTheUser) {
+        if (upload && upload.url) {
+          const markdown = Discourse.Utilities.getUploadMarkdown(upload);
+          this.addMarkdown(markdown + " ");
+        } else {
+          Discourse.Utilities.displayErrorForUpload(upload);
+        }
+      }
+    });
+
     $uploadTarget.fileupload({
-      url: Discourse.getURL('/uploads.json?authenticity_token=' + encodeURIComponent(csrf)),
-      dataType: 'json',
-      pasteZone: $uploadTarget
+      url: Discourse.getURL("/uploads.json?authenticity_token=" + encodeURIComponent(csrf)),
+      dataType: "json",
+      pasteZone: $uploadTarget,
     });
 
-    // submit - this event is triggered for each upload
-    $uploadTarget.on('fileuploadsubmit', function (e, data) {
-      const result = Discourse.Utilities.validateUploadedFiles(data.files);
-      // reset upload status when everything is ok
-      if (result) self.setProperties({ uploadProgress: 0, isUploading: true });
-      return result;
+    $uploadTarget.on("fileuploadsubmit", (e, data) => {
+      const isValid = Discourse.Utilities.validateUploadedFiles(data.files);
+      data.formData = { type: "composer" };
+      this.setProperties({ uploadProgress: 0, isUploading: isValid });
+      return isValid;
     });
 
-    // send - this event is triggered when the upload request is about to start
-    $uploadTarget.on('fileuploadsend', function (e, data) {
-      cancelledByTheUser = false;
+    $uploadTarget.on("fileuploadsend", (e, data) => {
       // hide the "file selector" modal
-      self.get('controller').send('closeModal');
-      // NOTE: IE9 doesn't support XHR
+      this.get("controller").send("closeModal");
+      // deal with cancellation
+      cancelledByTheUser = false;
       if (data["xhr"]) {
         const jqHXR = data.xhr();
         if (jqHXR) {
           // need to wait for the link to show up in the DOM
-          Em.run.schedule('afterRender', function() {
-            // bind on the click event on the cancel link
-            $('#cancel-file-upload').on('click', function() {
-              // cancel the upload
-              self.set('isUploading', false);
-              // NOTE: this might trigger a 'fileuploadfail' event with status = 0
-              if (jqHXR) { cancelledByTheUser = true; jqHXR.abort(); }
+          Em.run.schedule("afterRender", () => {
+            const $cancel = $("#cancel-file-upload");
+            $cancel.on("click", () => {
+              if (jqHXR) {
+                cancelledByTheUser = true;
+                // might trigger a "fileuploadfail" event with status = 0
+                jqHXR.abort();
+                // doesn't trigger the "fileuploadalways" event
+                reset();
+              }
               // unbind
-              $(this).off('click');
+              $cancel.off("click");
             });
           });
         }
       }
     });
 
-    // progress all
-    $uploadTarget.on('fileuploadprogressall', function (e, data) {
+    $uploadTarget.on("fileuploadprogressall", (e, data) => {
       const progress = parseInt(data.loaded / data.total * 100, 10);
-      self.set('uploadProgress', progress);
+      this.set("uploadProgress", progress);
     });
 
-    // done
-    $uploadTarget.on('fileuploaddone', function (e, data) {
+    $uploadTarget.on("fileuploadfail", (e, data) => {
       if (!cancelledByTheUser) {
-        // make sure we have a url
-        if (data.result.url) {
-          const markdown = Discourse.Utilities.getUploadMarkdown(data.result);
-          // appends a space at the end of the inserted markdown
-          self.addMarkdown(markdown + " ");
-          self.set('isUploading', false);
-        } else {
-          // display the error message sent by the server
-          bootbox.alert(data.result.join("\n"));
-        }
-      }
-    });
-
-    // fail
-    $uploadTarget.on('fileuploadfail', function (e, data) {
-      // hide upload status
-      self.set('isUploading', false);
-      if (!cancelledByTheUser) {
-        // display an error message
         Discourse.Utilities.displayErrorForUpload(data);
       }
     });
+
+    $uploadTarget.on("fileuploadalways", reset);
 
     // contenteditable div hack for getting image paste to upload working in
     // Firefox. This is pretty dangerous because it can potentially break
@@ -538,6 +532,14 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
     });
   },
 
+  _unbindUploadTarget() {
+    this.messageBus.unsubscribe("/uploads/composer");
+    const $uploadTarget = $("#reply-controler");
+    try { $uploadTarget.fileupload("destroy"); }
+    catch (e) { /* wasn't initialized yet */ }
+    $uploadTarget.off();
+  },
+
   titleValidation: function() {
     const titleLength = this.get('model.titleLength'),
         missingChars = this.get('model.missingTitleCharacters');
@@ -580,13 +582,6 @@ const ComposerView = Discourse.View.extend(Ember.Evented, {
       return Discourse.InputValidation.create({ failed: true, reason });
     }
   }.property('model.reply', 'model.replyLength', 'model.missingReplyCharacters', 'model.minimumPostLength'),
-
-  _unbindUploadTarget() {
-    const $uploadTarget = $('#reply-control');
-    try { $uploadTarget.fileupload('destroy'); }
-    catch (e) { /* wasn't initialized yet */ }
-    $uploadTarget.off();
-  }
 });
 
 RSVP.EventTarget.mixin(ComposerView);

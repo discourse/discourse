@@ -95,37 +95,6 @@ describe CategoriesController do
 
   end
 
-  describe "upload" do
-    it "requires the user to be logged in" do
-      expect { xhr :post, :upload, image_type: 'logo'}.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    describe "logged in" do
-      let!(:user) { log_in(:admin) }
-
-      let(:logo) { file_from_fixtures("logo.png") }
-      let(:upload) do
-        ActionDispatch::Http::UploadedFile.new({ filename: 'logo.png', tempfile: logo })
-      end
-
-      it "raises an error when you don't have permission to upload" do
-        Guardian.any_instance.expects(:can_create?).with(Category).returns(false)
-        xhr :post, :upload, image_type: 'logo', file: upload
-        expect(response).to be_forbidden
-      end
-
-      it "requires the `image_type` param" do
-        expect { xhr :post, :upload }.to raise_error(ActionController::ParameterMissing)
-      end
-
-      it "calls Upload.create_for" do
-        Upload.expects(:create_for).returns(Upload.new)
-        xhr :post, :upload, image_type: 'logo', file: upload
-        expect(response).to be_success
-      end
-    end
-  end
-
   describe "update" do
 
     it "requires the user to be logged in" do

@@ -296,6 +296,8 @@ Discourse.Utilities = {
           }
           return;
       }
+    } else if (data.errors) {
+      bootbox.alert(data.errors.join("\n"));
     }
     // otherwise, display a generic error message
     bootbox.alert(I18n.t('post.errors.upload'));

@@ -91,7 +91,6 @@ export default ObjectController.extend(CanCheckEmails, {
   }.property('model.isSaving'),
 
   passwordProgress: null,
-  imageUploadUrl: Discourse.computed.url('model.username', '/users/%@/preferences/user_image'),
 
   actions: {
 

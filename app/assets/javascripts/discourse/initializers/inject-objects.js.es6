@@ -45,6 +45,6 @@ export default {
     inject(app, 'currentUser', 'component', 'route', 'controller');
 
     app.register('message-bus:main', window.MessageBus, { instantiate: false });
-    inject(app, 'messageBus', 'route', 'controller', 'view');
+    inject(app, 'messageBus', 'route', 'controller', 'view', 'component');
   }
 };

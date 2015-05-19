@@ -346,7 +346,6 @@ class UsersController < ApplicationController
   end
 
   def admin_login
-
     unless SiteSetting.enable_sso && !current_user
       return redirect_to path("/")
     end
@@ -465,7 +464,6 @@ class UsersController < ApplicationController
   end
 
   def send_activation_email
-
     RateLimiter.new(nil, "activate-hr-#{request.remote_ip}", 30, 1.hour).performed!
     RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
 
@@ -503,38 +501,6 @@ class UsersController < ApplicationController
     render json: to_render
   end
 
-  def upload_user_image
-    params.require(:image_type)
-    user = fetch_user_from_params
-    guardian.ensure_can_edit!(user)
-
-    file = params[:file] || params[:files].first
-
-    # HACK FOR IE9 to prevent the "download dialog"
-    response.headers["Content-Type"] = "text/plain" if request.user_agent =~ /MSIE 9/
-
-    begin
-      image = build_user_image_from(file)
-    rescue Discourse::InvalidParameters
-      return render status: 422, text: I18n.t("upload.images.unknown_image_type")
-    end
-
-    upload = Upload.create_for(user.id, image.file, image.filename, image.filesize)
-
-    if upload.errors.empty?
-      case params[:image_type]
-      when "avatar"
-        upload_avatar_for(user, upload)
-      when "profile_background"
-        upload_profile_background_for(user.user_profile, upload)
-      when "card_background"
-        upload_card_background_for(user.user_profile, upload)
-      end
-    else
-      render status: 422, text: upload.errors.full_messages
-    end
-  end
-
   def pick_avatar
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
@@ -555,16 +521,16 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    image_type = params.require(:image_type)
-    if image_type == 'profile_background'
+    case params.require(:type)
+    when "profile_background"
       user.user_profile.clear_profile_background
-    elsif image_type == 'card_background'
+    when "card_background"
       user.user_profile.clear_card_background
     else
-      raise Discourse::InvalidParameters.new(:image_type)
+      raise Discourse::InvalidParameters.new(:type)
     end
 
-    render nothing: true
+    render json: success_json
   end
 
   def destroy
@@ -614,51 +580,23 @@ class UsersController < ApplicationController
       challenge
     end
 
-    def build_user_image_from(file)
-      source = if file.is_a?(String)
-                 is_api? ? :url : (raise Discourse::InvalidParameters)
-               else
-                 :image
-               end
-
-      AvatarUploadService.new(file, source)
-    end
-
-    def upload_avatar_for(user, upload)
-      render json: { upload_id: upload.id, url: upload.url, width: upload.width, height: upload.height }
-    end
-
-    def upload_profile_background_for(user_profile, upload)
-      user_profile.upload_profile_background(upload)
-      render json: { url: upload.url, width: upload.width, height: upload.height }
-    end
-
-    def upload_card_background_for(user_profile, upload)
-      user_profile.upload_card_background(upload)
-      render json: { url: upload.url, width: upload.width, height: upload.height }
-    end
-
     def respond_to_suspicious_request
       if suspicious?(params)
-        render(
-          json: {
-            success: true,
-            active: false,
-            message: I18n.t("login.activate_email", email: params[:email])
-          }
-        )
+        render json: {
+          success: true,
+          active: false,
+          message: I18n.t("login.activate_email", email: params[:email])
+        }
       end
     end
 
     def suspicious?(params)
       return false if current_user && is_api? && current_user.admin?
-
       honeypot_or_challenge_fails?(params) || SiteSetting.invite_only?
     end
 
     def honeypot_or_challenge_fails?(params)
       return false if is_api?
-
       params[:password_confirmation] != honeypot_value ||
       params[:challenge] != challenge_value.try(:reverse)
     end

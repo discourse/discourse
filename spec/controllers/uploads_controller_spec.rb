@@ -19,13 +19,6 @@ describe UploadsController do
         })
       end
 
-      let(:logo_dev) do
-        ActionDispatch::Http::UploadedFile.new({
-          filename: 'logo-dev.png',
-          tempfile: file_from_fixtures("logo-dev.png")
-        })
-      end
-
       let(:text_file) do
         ActionDispatch::Http::UploadedFile.new({
           filename: 'LICENSE.TXT',
@@ -33,85 +26,47 @@ describe UploadsController do
         })
       end
 
-      let(:files) { [ logo_dev, logo ] }
+      it 'is successful with an image' do
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: logo, type: "composer"
+        end.first
 
-      context 'with a file' do
+        expect(response.status).to eq 200
 
-        context 'when authorized' do
-
-          before { SiteSetting.stubs(:authorized_extensions).returns(".PNG|.txt") }
-
-          it 'is successful with an image' do
-            xhr :post, :create, file: logo
-            expect(response.status).to eq 200
-          end
-
-          it 'is successful with an attachment' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 200
-          end
-
-          it 'correctly sets retain_hours for admins' do
-            log_in :admin
-            xhr :post, :create, file: logo, retain_hours: 100
-            id = JSON.parse(response.body)["id"]
-            expect(Upload.find(id).retain_hours).to eq(100)
-          end
-
-          context 'with a big file' do
-
-            before { SiteSetting.stubs(:max_attachment_size_kb).returns(1) }
-
-            it 'rejects the upload' do
-              xhr :post, :create, file: text_file
-              expect(response.status).to eq 422
-            end
-
-          end
-
-        end
-
-        context 'when not authorized' do
-
-          before { SiteSetting.stubs(:authorized_extensions).returns(".png") }
-
-          it 'rejects the upload' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 422
-          end
-
-        end
-
-        context 'when everything is authorized' do
-
-          before { SiteSetting.stubs(:authorized_extensions).returns("*") }
-
-          it 'is successful with an image' do
-            xhr :post, :create, file: logo
-            expect(response.status).to eq 200
-          end
-
-          it 'is successful with an attachment' do
-            xhr :post, :create, file: text_file
-            expect(response.status).to eq 200
-          end
-
-        end
-
+        expect(message.channel).to eq("/uploads/composer")
+        expect(message.data).to be
       end
 
-      context 'with some files' do
+      it 'is successful with an attachment' do
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: text_file, type: "avatar"
+        end.first
 
-        it 'is successful' do
-          xhr :post, :create, files: files
-          expect(response).to be_success
-        end
+        expect(response.status).to eq 200
+        expect(message.channel).to eq("/uploads/avatar")
+        expect(message.data).to be
+      end
 
-        it 'takes the first file' do
-          xhr :post, :create, files: files
-          expect(response.body).to match /logo-dev.png/
-        end
+      it 'correctly sets retain_hours for admins' do
+        log_in :admin
 
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: logo, retain_hours: 100, type: "profile_background"
+        end.first
+
+        id = message.data["id"]
+        expect(Upload.find(id).retain_hours).to eq(100)
+      end
+
+      it 'properly returns errors' do
+        SiteSetting.stubs(:max_attachment_size_kb).returns(1)
+
+        message = MessageBus.track_publish do
+          xhr :post, :create, file: text_file, type: "avatar"
+        end.first
+
+        expect(response.status).to eq 200
+        expect(message.data["errors"]).to be
       end
 
     end
