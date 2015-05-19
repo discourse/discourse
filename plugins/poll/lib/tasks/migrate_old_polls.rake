@@ -40,15 +40,16 @@ task "poll:migrate_old_polls" => :environment do
       next if post.custom_fields.include?("polls")
       # go back in time
       Timecop.freeze(post.created_at + 1.minute) do
-        post.raw = post.raw.gsub(/\n\n([ ]*[-\*\+] )/, "\n\\1") + "\n\n"
+        raw = post.raw.gsub(/\n\n([ ]*[-\*\+] )/, "\n\\1") + "\n\n"
         # fix the RAW when needed
-        if post.raw !~ /\[poll\]/
-          lists = /^[ ]*[-\*\+] .+?$\n\n/m.match(post.raw)
+        if raw !~ /\[poll\]/
+          lists = /^[ ]*[-\*\+] .+?$\n\n/m.match(raw)
           next if lists.blank? || lists.length == 0
           first_list = lists[0]
-          post.raw = post.raw.sub(first_list, "\n[poll]\n#{first_list}\n[/poll]\n")
+          raw = raw.sub(first_list, "\n[poll]\n#{first_list}\n[/poll]\n")
         end
         # save the poll
+        post.raw = raw
         post.save
         # make sure we have a poll
         next if post.custom_fields.blank? || !post.custom_fields.include?("polls")
