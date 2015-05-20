@@ -112,7 +112,7 @@ nav.post-controls {
   button.create {
     margin-right: 0;
     color: $tertiary;
-    background: dark-light-diff($tertiary, $secondary, 90%, -65%);
+    background: dark-light-diff($tertiary, $secondary, 85%, -65%);
     padding: 8px 20px;
     margin-left: 10px;
 
@@ -711,7 +711,7 @@ $topic-avatar-width: 45px;
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding: 12px $topic-body-width-padding 15px $topic-body-width-padding;
   &.highlighted {
-    background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
 }
 .topic-avatar {
@@ -793,7 +793,7 @@ $topic-avatar-width: 45px;
 .dropdown-menu .disabled > a:hover {
   text-decoration: none;
   color: $primary;
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   cursor: default;
 }
 
@@ -816,7 +816,7 @@ $topic-avatar-width: 45px;
   position: fixed;
   z-index: 1000;
   left: 50%;
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   border: 1px solid $tertiary;
   padding: 5px;
   margin-bottom: 5px;
@@ -957,7 +957,7 @@ a.attachment:before {
 }
 
 span.highlighted {
-  background-color: dark-light-diff($tertiary, $secondary, 90%, -40%);
+  background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
 }
 
 .username.new-user a {
