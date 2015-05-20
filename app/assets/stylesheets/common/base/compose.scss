@@ -27,7 +27,7 @@
           vertical-align: middle;
         }
         &.selected {
-          background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+          background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
         }
         @include hover {
           background-color: dark-light-diff($highlight, $secondary, 90%, -80%);

@@ -186,7 +186,7 @@
   }
 
   .selected {
-    background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
 
 
@@ -195,7 +195,7 @@
     .fa { color: scale-color($primary, $lightness: 50%); }
     .icon { color: scale-color($primary, $lightness: 30%); }
     li {
-      background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+      background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
       i {
         float: left;
         margin-right: 5px;
