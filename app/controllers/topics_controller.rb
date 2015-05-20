@@ -439,6 +439,9 @@ class TopicsController < ApplicationController
     url << "/#{post_number}" if post_number.to_i > 0
     url << ".json" if request.format.json?
 
+    page = params[:page].to_i
+    url << "?page=#{page}" if page != 0
+
     redirect_to url, status: 301
   end
 
