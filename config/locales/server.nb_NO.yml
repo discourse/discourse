@@ -20,6 +20,7 @@ nb_NO:
   is_reserved: "er reservert"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
+  anonymous: "Anonym"
   errors:
     format: '%{attribute} %{message}'
     messages:
@@ -120,6 +121,7 @@ nb_NO:
   next_page: "neste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"
+  home_title: "Hjem"
   topics_in_category: "Emner i '%{category}' kategorien"
   rss_posts_in_topic: "RSS feed av '%{topic}'"
   rss_topics_in_category: "RSS feed av emner i '%{category}' kategorien"
@@ -760,6 +762,7 @@ nb_NO:
         Trykk på denne lenken for å aktivere kontoen din:
         %{base_url}/users/activate-account/%{email_token}
   page_not_found:
+    recent_topics: "Nylig"
     see_more: "Mer"
     search_title: "Søk i denne siden"
     search_google: "Google"

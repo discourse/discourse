@@ -622,7 +622,6 @@ fi:
     consumer_email_warning: "Sivusto on konfiguroitu käyttämään Gmailia (tai muuta yksityishenkilöille suunnattua sähköpostipalvelua) sähköpostin lähettämiseen. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail rajoittaa lähetettävien sähköpostien määrää</a>. Harkitse sähköpostipalveluntarjoajaa, kuten mandrill.com varmistaaksesi sähköpostin lähetyksen."
     site_contact_username_warning: "Aseta käyttäjänimi, jonka nimissä palsta automaattiset viestit lähetetään. Muokkaa asetusta site_contact <a href='/admin/site_settings'>sivuston asetuksissa</a>."
     notification_email_warning: "Palstan sähköpostien lähettäjäosoite ei ole kelvollinen, josta johtuen sähköpostit eivät mene perille luotettavasti. Aseta toimiva sähköpostiosoite kohtaan notification_email <a href='/admin/site_settings'>sivuston asetuksissa</a>."
-    s3_deprecation_warning: "VAROITUS! Kuvien ja liitetiedostojen tallentamisen Amazon S3-tuki lakkautetaan kohta. Ole hyvä ja seuraa <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>ohjeita</a> siirtyäksesi paikalliseen tallennukseen."
   content_types:
     education_new_reply:
       title: "Uuden käyttäjän opastus: Ensimmäinen vastaus"

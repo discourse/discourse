@@ -92,7 +92,6 @@ pt:
       email: 'enviar esta hiperligação por email'
     topic_admin_menu: "Ações administrativas dos Tópicos"
     emails_are_disabled: "Todos os envios de e-mail foram globalmente desativados por um administrador. Nenhum e-mail de notificação será enviado."
-    s3_deprecation_warning: "CUIDADO! O Amazon S3 irá tornar-se obsoleto para armazenamento de imagens/anexos. Por favor, siga  <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>as instruções</a> para migrar para armazenamento local."
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -1998,8 +1997,6 @@ pt:
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
         block_explanation: "Um utilizador bloqueado não pode publicar mensagens ou iniciar tópicos."
         trust_level_change_failed: "Ocorreu um problema ao alterar o Nível de Confiança do utilizador."
-        grant_admin_failed: "Ocorreu um problema ao conceder privilégios de administrador."
-        grant_moderation_failed: "Ocorreu um problema ao conceder privilégios de moderador."
         suspend_modal_title: "Utilizador Suspenso"
         trust_level_2_users: "Utilizadores no Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
@@ -2180,7 +2177,6 @@ pt:
       title: 'Atalhos de Teclado'
       jump_to:
         title: 'Ir Para'
-        home: '<b>g</b>, <b>h</b> Página Principal (Mais recente)'
         latest: '<b>g</b>, <b>l</b> Recentes'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não lido'

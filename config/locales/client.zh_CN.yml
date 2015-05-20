@@ -76,7 +76,6 @@ zh_CN:
       email: '用电子邮件发送这个链接'
     topic_admin_menu: "主题管理操作"
     emails_are_disabled: "所有的出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
-    s3_deprecation_warning: "警告！Amazon S3 将不再能作为图片/附件存储区了。请按照<a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>指引</a>迁移至本地存储。"
     edit: '编辑本主题的标题和分类'
     not_implemented: "非常抱歉，此功能暂时尚未实现！"
     no_value: "否"
@@ -1188,7 +1187,7 @@ zh_CN:
       create: '新分类'
       save: '保存分类'
       slug: '分类 Slug'
-      slug_placeholder: '（可选）用于 url 的用-分割的单词'
+      slug_placeholder: '（可选）用于分类的 URL'
       creation_error: 创建此分类时发生了错误。
       save_error: 在保存此分类时发生了错误。
       name: "分类名称"
@@ -1938,8 +1937,6 @@ zh_CN:
         suspended_explanation: "一个被封禁的用户不能登录。"
         block_explanation: "被封禁的用户不能发表主题或者评论。"
         trust_level_change_failed: "改变用户等级时出现了一个问题。"
-        grant_admin_failed: "授予管理员权限时发生问题。"
-        grant_moderation_failed: "授予版主权限时发生问题"
         suspend_modal_title: "被禁用户"
         trust_level_2_users: "二级信任等级用户"
         trust_level_3_requirements: "三级信任等级需求"
@@ -2120,12 +2117,13 @@ zh_CN:
       title: '键盘快捷键'
       jump_to:
         title: '跳转'
-        home: '<b>g</b> 然后 <b>h</b> 首页（最新内容）'
+        home: '<b>g</b> 然后 <b>h</b> 主页'
         latest: '<b>g</b> 然后 <b>l</b> 最新内容'
         new: '<b>g</b> 然后 <b>n</b> 近期主题'
         unread: '<b>g</b> 然后 <b>u</b> 未读主题'
         categories: '<b>g</b> 然后 <b>c</b> 分类列表'
         top: '<b>g</b>, <b>t</b> 顶部'
+        bookmarks: '<b>g</b> 然后 <b>b</b> 书签'
       navigation:
         title: '导航'
         jump: '<b>#</b> 跳转到帖子 #'
@@ -2244,6 +2242,15 @@ zh_CN:
         first_flag:
           name: 首个标记
           description: 标记帖子
+        promoter:
+          name: 推广
+          description: 已邀请了 1 个用户
+        campaigner:
+          name: 资深推广
+          description: 已邀请了 3 个用户
+        champion:
+          name: 元老推广
+          description: 已邀请了 10 个用户
         first_share:
           name: 首次分享
           description: 已分享了一个帖子

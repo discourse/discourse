@@ -187,6 +187,8 @@ nb_NO:
     undo: "Angre"
     revert: "Reverser"
     failed: "Mislykket"
+    switch_to_anon: "Anonym modus"
+    switch_from_anon: "Avslutt anonym modus"
     banner:
       close: "Fjern denne banneren"
     choose_topic:
@@ -195,6 +197,13 @@ nb_NO:
         search: "Søk etter et emne ved navn, url eller id:"
         placeholder: "skriv emnetittelen her"
     queue:
+      topic: "Emne:"
+      approve: 'Godkjenn'
+      reject: 'Avvis'
+      delete_user: 'Slett Bruker'
+      title: "Trenger godkjenning"
+      edit: "Rediger"
+      cancel: "Avbryt"
       confirm: "Lagre endringer"
       approval:
         ok: "OK"
@@ -578,7 +587,7 @@ nb_NO:
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
       title: "Nullstill Passord"
-      action: "Jeg glemte mitt passord"
+      action: "Glemt passord"
       invite: "Skriv inn ditt brukernavn eller din e-postadresse, så sender vi deg en e-post for å nullstille ditt passord."
       reset: "Nullstill passord"
       complete_username: "Hvis en konto med brukernavn <b>%{username}</b> finnes vil du motta en e-post om kort tid med instruksjoner om hvordan du kan nullstille passordet."
@@ -658,6 +667,7 @@ nb_NO:
       title_placeholder: "Oppsummert i en setning, hva handler denne diskusjonen om?"
       edit_reason_placeholder: "hvorfor endrer du?"
       show_edit_reason: "(legg till endringsbegrunnelse)"
+      reply_placeholder: "Skriv her. Bruk Markdown, BBCode eller HTML for formattering. Dra og slipp et bilde for å laste det opp."
       view_new_post: "Se ditt nye innlegg."
       saving: "Lagrer..."
       saved: "Lagret!"
@@ -778,6 +788,7 @@ nb_NO:
         bookmarks: "Du har ingen bokmerkede emner."
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
+        search: "Det er ingen søkeresultater"
         educate:
           new: '<p>Dine nye emner vises her.</p><p>Som standard anses emner som nye, og vil ha indikatoren <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">ny</span> hvis emnet ble opprettet de siste 2 dagene</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
           unread: '<p>Dine uleste emner vises her.</p><p>Som standard anses emner som uleste, og vil vise antall uleste <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du eksplisitt har satt emnet som Sporet eller Fulgt via varslingskontrollene under hvert emne.</p><p>Du kan endre dette i dine <a href="%{userPrefsUrl}">innstillinger</a>.</p>'
@@ -791,9 +802,10 @@ nb_NO:
         category: "Det er ikke noen {{category}} emner igjen."
         top: "Det er ingen flere populære emner."
         bookmarks: "Det er ingen bokmerkede emner."
+        search: "Det er ingen flere søkeresultater"
     topic:
       filter_to: "{{post_count}} innlegg i dette emnet."
-      create: 'Nytt Emne'
+      create: 'Nytt emne'
       create_long: 'Opprett et nytt emne'
       private_message: 'Begynn en melding'
       list: 'Emner'
@@ -895,6 +907,7 @@ nb_NO:
         delete: "slett emne"
         open: "Åpne Emne"
         close: "Lukk Emne"
+        pin: "Feste emnet..."
         unarchive: "Uarkiver Emne"
         archive: "Arkiver Emne"
         invisible: "Skjul Emnet"
@@ -955,6 +968,8 @@ nb_NO:
         group_name: "gruppenavn"
       invite_reply:
         title: 'Inviter'
+        username_placeholder: "brukernavn"
+        action: 'Send Invitasjon'
         to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         email_placeholder: 'navn@example.com'
       login_reply: 'Logg Inn for å svare'
@@ -1104,6 +1119,7 @@ nb_NO:
           spam: "Du rapporterte dette som spam"
           inappropriate: "Du rapporterte dette som upassende"
           notify_moderators: "Du rapporterte dette for moderering"
+          notify_user: "Du sendte en melding til denne brukeren"
           bookmark: "Du bokmerket dette innlegget"
           like: "Du likte dette"
           vote: "Du stemte for dette innlegget"
@@ -1245,6 +1261,7 @@ nb_NO:
       private_reminder: 'flagg er private, <b>bare</b> synlige for staben'
       action: 'Rapporter innlegg'
       take_action: "Ta Handling"
+      notify_action: 'Melding'
       delete_spammer: "Slett spammer"
       delete_confirm: "Du er i ferd med å slette <b>%{posts}</b> innlegg og <b>%{topics}</b> emner av denne brukeren, slette brukerens konto, blokkere registrering fra brukerens IP-adresse <b>%{ip_address}</b>, og legge brukerens e-postadresse <b>%{email}</b> i en permanent svarteliste. Er du sikker på at denne brukeren virkelig er en spammer?"
       yes_delete_spammer: "Ja, slett spammer"
@@ -1266,6 +1283,7 @@ nb_NO:
     flagging_topic:
       title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter emne"
+      notify_action: "Melding"
     topic_map:
       title: "Emneoppsummering"
       links_shown: "vis alle {{totalLinks}} linker..."
@@ -1331,6 +1349,9 @@ nb_NO:
       read:
         title: "Lest"
         help: "emner du har lest, i den rekkefølgen du har lest dem"
+      search:
+        title: "Søk"
+        help: "Søk i alle emner"
       categories:
         title: "Kategorier"
         title_in: "Kategori - {{categoryName}}"
@@ -1369,6 +1390,17 @@ nb_NO:
       top:
         title: "Aktive"
         help: "de mest aktive emnene det siste året, den siste måneden, den siste uken eller i dag"
+        all:
+          title: "Totalt"
+        yearly:
+          title: "Årlig"
+        monthly:
+          title: "Månedlig"
+        weekly:
+          title: "Ukentlig"
+        daily:
+          title: "Daglig"
+        all_time: "Totalt"
         this_year: "Dette året"
         this_month: "Denne måneden"
         this_week: "Denne uken"
@@ -1405,6 +1437,7 @@ nb_NO:
         admins: 'Adminer:'
         blocked: 'sperret:'
         suspended: 'Bannlyst:'
+        private_messages_short: "Meldinger"
         private_messages_title: "Meldinger"
         space_free: "{{size}} ledig"
         uploads: "opplastinger"
@@ -1509,6 +1542,8 @@ nb_NO:
         name: "Navn"
         add: "Legg til"
         add_members: "Legg til medlemmer"
+        custom: "Egendefinert"
+        automatic: "Automatisk"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -1549,6 +1584,7 @@ nb_NO:
           filename: "Filnavn"
           size: "Størrelse"
         upload:
+          label: "Last opp"
           uploading: "Laster opp..."
           success: "'{{filename}}' har blitt lastet opp."
           error: "Det oppsto en feil ved opplastingen av '{{filename}}': {{message}}"
@@ -1556,22 +1592,27 @@ nb_NO:
           is_running: "En prosess pågår..."
           failed: " {{operation}} feilet. Venligst undersøk loggene."
           cancel:
+            label: "Avbryt"
             title: "Avbryt den nåværende handlingen"
             confirm: "Er du sikker på at du vil avbryte denne operasjonen?"
           backup:
+            label: "Sikkerhetskopi"
             title: "Opprett en sikkerhetskopiering"
             confirm: "Vil du starte en ny sikkerhetskopiering?"
             without_uploads: "Ja (ikke inkluder filer)"
           download:
+            label: "Last ned"
             title: "Last ned sikkerhetskopi"
           destroy:
             title: "Fjern sikkerhetskopi"
             confirm: "Er du sikker på at du vil slette denne sikkerhetskopien"
           restore:
             is_disabled: "Gjenoppretting er deaktivert i nettstedsinnstillingene."
+            label: "Gjenooprett"
             title: "Gjenopprett sikkerhetskopien"
             confirm: "Er du sikker på at du vil gjenopprette denne sikkerhetskopien?"
           rollback:
+            label: "Gjenopprett"
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
             confirm: "Er du sikker på at du vil gjenopprette databasen til en tidligere fungerende tilstand?"
       export_csv:
@@ -2087,7 +2128,6 @@ nb_NO:
       title: 'Tastatursnarveier'
       jump_to:
         title: 'Hopp til'
-        home: '<b>g</b>, <b>h</b> Hjem (Siste)'
         latest: '<b>g</b>, <b>l</b> Siste'
         new: '<b>g</b>, <b>n</b> Nye'
         unread: '<b>g</b>, <b>u</b> Ules'

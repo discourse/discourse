@@ -92,7 +92,6 @@ sq:
       email: 'dërgo këtë lidhje me email'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
-    s3_deprecation_warning: "WARNING! Amazon S3 will soon be deprecated for image/attachment storage. Please, follow the <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instructions</a> to migrate to local storage."
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -2010,8 +2009,6 @@ sq:
         suspended_explanation: "A suspended user can't log in."
         block_explanation: "A blocked user can't post or start topics."
         trust_level_change_failed: "There was a problem changing the user's trust level."
-        grant_admin_failed: "There was a problem granting admin privileges."
-        grant_moderation_failed: "There was a problem granting moderation privileges."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "Trust Level 2 Users"
         trust_level_3_requirements: "Trust Level 3 Requirements"
@@ -2192,7 +2189,6 @@ sq:
       title: 'Shkurtimet e Tastierës '
       jump_to:
         title: 'Kalo tek'
-        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Latest'
         new: '<b>g</b>, <b>n</b> New'
         unread: '<b>g</b>, <b>u</b> Unread'
