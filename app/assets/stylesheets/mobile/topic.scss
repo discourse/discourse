@@ -138,8 +138,9 @@
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid scale-color($success, $lightness: 50%);
-    background-color: scale-color($success, $lightness: 50%);
+    border-right: 1px solid  dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color:  dark-light-diff($tertiary, $secondary, 85%, -65%);
+    transition: width .75s;
   }
 }
 
