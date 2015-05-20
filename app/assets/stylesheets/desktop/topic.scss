@@ -80,7 +80,7 @@ a.reply-new {
 a:hover.reply-new {
   color: $tertiary;
   i {
-    background: dark-light-diff($tertiary, $secondary, 90%, -65%);
+    background: dark-light-diff($tertiary, $secondary, 85%, -65%);
   }
 }
 
@@ -166,8 +166,10 @@ a:hover.reply-new {
     display: none;
   }
   border: none;
-  background-color: scale-color-diff();
-  color: scale-color($primary, $lightness: 50%);
+  background-color: $secondary;
+  color: $tertiary;
+  border: 1px solid dark-light-diff($tertiary, $secondary, 85%, -65%);
+  border-bottom: none;
   width: 145px;
   height: 34px;
 
@@ -200,8 +202,8 @@ a:hover.reply-new {
     top: 0;
     bottom: 0;
     width: 0;
-    border-right: 1px solid  scale-color-diff();
-    background-color:  desaturate(dark-light-diff($success, $secondary, 60%, -35%), 30%);
+    border-right: 1px solid  dark-light-diff($tertiary, $secondary, 85%, -65%);
+    background-color:  dark-light-diff($tertiary, $secondary, 85%, -65%);
     transition: width .75s;
 
   }
