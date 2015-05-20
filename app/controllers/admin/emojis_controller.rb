@@ -8,21 +8,25 @@ class Admin::EmojisController < Admin::AdminController
     file = params[:file] || params[:files].first
     name = params[:name] || File.basename(file.original_filename, ".*")
 
-    # fix the name
-    name = name.gsub(/[^a-z0-9]+/i, '_')
-               .gsub(/_{2,}/, '_')
-               .downcase
+    Scheduler::Defer.later("Upload Emoji") do
+      # fix the name
+      name = name.gsub(/[^a-z0-9]+/i, '_')
+                 .gsub(/_{2,}/, '_')
+                 .downcase
 
-    if Emoji.exists?(name)
-      render json: failed_json.merge(message: I18n.t("emoji.errors.name_already_exists", name: name)), status: 422
-    else
-      if emoji = Emoji.create_for(file, name)
-        render_serialized(emoji, EmojiSerializer, root: false)
+      data = if Emoji.exists?(name)
+        failed_json.merge(errors: [I18n.t("emoji.errors.name_already_exists", name: name)])
+      elsif emoji = Emoji.create_for(file, name)
+        emoji
       else
-        render json: failed_json.merge(message: I18n.t("emoji.errors.error_while_storing_emoji")), status: 422
+        failed_json.merge(errors: [I18n.t("emoji.errors.error_while_storing_emoji")])
       end
+
+      MessageBus.publish("/uploads/emoji", data.as_json, user_ids: [current_user.id])
     end
 
+
+    render json: success_json
   end
 
   def destroy
