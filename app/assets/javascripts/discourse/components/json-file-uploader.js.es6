@@ -45,7 +45,7 @@ export default Em.Component.extend({
   }.on('didInsertElement'),
 
   accept: function() {
-    return ".json,application/json" + (this.get('extension') ? "," + this.get('extension') : "");
+    return ".json,application/json,application/x-javascript,text/json" + (this.get('extension') ? "," + this.get('extension') : "");
   }.property('extension'),
 
   setReady: function() {
