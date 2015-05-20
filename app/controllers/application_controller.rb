@@ -168,6 +168,10 @@ class ApplicationController < ActionController::Base
     # We don't preload JSON on xhr or JSON request
     return if request.xhr? || request.format.json?
 
+    # if we are posting in makes no sense to preload
+    return if request.method != "GET"
+
+    # TODO should not be invoked on redirection so this should be further deferred
     preload_anonymous_data
 
     if current_user

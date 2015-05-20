@@ -9,7 +9,7 @@ class PostsController < ApplicationController
   # Need to be logged in for all actions here
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
-  skip_before_filter :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
+  skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link]
 
   def markdown_id
     markdown Post.find(params[:id].to_i)

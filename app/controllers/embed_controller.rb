@@ -1,7 +1,5 @@
 class EmbedController < ApplicationController
-  skip_before_filter :check_xhr
-  skip_before_filter :preload_json
-  skip_before_filter :verify_authenticity_token
+  skip_before_filter :check_xhr, :preload_json, :verify_authenticity_token
 
   before_filter :ensure_embeddable
 
