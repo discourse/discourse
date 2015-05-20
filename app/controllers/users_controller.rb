@@ -1,6 +1,5 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
-require_dependency 'avatar_upload_service'
 require_dependency 'rate_limiter'
 
 class UsersController < ApplicationController
