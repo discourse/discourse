@@ -92,7 +92,6 @@ es:
       email: 'comparte este enlace por email'
     topic_admin_menu: "acciones de administrador para el tema"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
-    s3_deprecation_warning: "¡AVISO! El almacenamiento para archivos adjuntos e imágenes en Amazon S3 quedará obsoleto. Por favor, sigue las <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instrucciones</a> para trasladarlo a almacenamiento local."
     edit: 'editar el título y la categoría de este tema'
     not_implemented: "Esta característica no ha sido implementada aún, ¡lo sentimos!"
     no_value: "No"
@@ -2019,8 +2018,6 @@ es:
         suspended_explanation: "Un usuario suspendido no puede ingresar al sitio."
         block_explanation: "Un usuario bloqueado no puede publicar posts ni crear temas."
         trust_level_change_failed: "Ha habido un problema cambiando el nivel de confianza del usuario."
-        grant_admin_failed: "Hubo un problema al conceder privilegios de administración."
-        grant_moderation_failed: "Hubo un problema al conceder privilegios de moderación."
         suspend_modal_title: "Suspender Usuario"
         trust_level_2_users: "Usuarios del nivel de Confianza 2"
         trust_level_3_requirements: "Requerimientos para nivel de confianza 3"
@@ -2201,12 +2198,13 @@ es:
       title: 'Atajos de teclado'
       jump_to:
         title: 'Saltar a'
-        home: '<b>g</b>, <b>h</b> Inicio (Recientes)'
+        home: '<b>g</b>, <b>h</b> Inicio'
         latest: '<b>g</b>, <b>l</b> Recientes'
         new: '<b>g</b>, <b>n</b> Nuevos'
         unread: '<b>g</b>, <b>u</b> No leídos'
         categories: '<b>g</b>, <b>c</b> Categorías'
         top: '<b>g</b>, <b>t</b> Arriba'
+        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
       navigation:
         title: 'Navegación'
         jump: '<b>#</b> Ir al post #'
@@ -2328,6 +2326,15 @@ es:
         first_flag:
           name: Primer reporte
           description: Reportó un post
+        promoter:
+          name: Promotor
+          description: Invitó a un usuario
+        campaigner:
+          name: Partidiario
+          description: Invitó a 3 miembros
+        champion:
+          name: Campeón
+          description: Invitó a 10 miembros
         first_share:
           name: Primer Compartido
           description: Compartió un post

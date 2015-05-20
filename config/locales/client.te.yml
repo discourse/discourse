@@ -1808,8 +1808,6 @@ te:
         suspended_explanation: "నిలిపివేయబడ్డ వినియోగదారు లాగిన్ కాలేరు."
         block_explanation: "అడ్డగింపబడ్డ వినియోగదారు టపాలు చేయలేరు లేదా విషయాలు మొదలుపెట్టలేరు."
         trust_level_change_failed: "వినియోగదారు నమ్మకపు స్థాయి మార్చడానికి సమస్య ఉంది."
-        grant_admin_failed: "నిర్వాహక అధికారాలను మంజూరు చేయుటలో సమస్య ఉంది."
-        grant_moderation_failed: "నిర్వాహక అధికారాలు మంజూరుచేయుటలో సమస్య ఉంది."
         suspend_modal_title: "సభ్యుడిని సస్పెండు చేయి"
         trust_level_2_users: "నమ్మకం స్థాయి 2 సభ్యులు"
         trust_level_3_requirements: "నమ్మకపు స్థాయి 3 అవసరాలు"
@@ -1980,7 +1978,6 @@ te:
       title: 'కీబోర్డు షార్ట్ కట్లు'
       jump_to:
         title: 'వెళ్లు'
-        home: '<b>g</b>, <b>h</b> హోమ్ (తాజా)'
         latest: '<b>g</b>, <b>l</b> తాజా'
         new: '<b>g</b>, <b>n</b> కొత్త'
         unread: '<b>g</b>, <b>u</b> చదవనవి'

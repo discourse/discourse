@@ -92,7 +92,6 @@ pt_BR:
       email: 'enviar esse link para um email'
     topic_admin_menu: "ações administrativas do tópico"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
-    s3_deprecation_warning: "AVISO! O servço Amazon S3 será em breve descontinuado para armazenamento de imagens e anexos. Por favor, acesse as <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instruções<a> para migrar para armazenamento local."
     edit: 'edite o título e a categoria deste tópico'
     not_implemented: "Esse recurso ainda não foi implementado, desculpe!"
     no_value: "Não"
@@ -334,6 +333,7 @@ pt_BR:
       dismiss_notifications: "Marcar todas como lidas"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
+      dynamic_favicon: "Exibir ícone no navegador de tópicos novos / atualizados."
       edit_history_public: "Deixar que os outros usuários visualizem minhas revisões na resposta"
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
       enable_quoting: "Ativar resposta citando o texto destacado"
@@ -556,7 +556,9 @@ pt_BR:
     logout: "Você foi desconectado."
     refresh: "Atualizar"
     read_only_mode:
+      enabled: "O modo somente-leitura está habilitado. Você pode navegador mas as interações podem não funcionar."
       login_disabled: "Login é desativado enquanto o site está em modo de somente leitura."
+    too_few_topics_notice: "Crie ao menos 5 tópicos e %{posts} respostas públicas para que a discussão seja iniciada. Novos usuários não poderão obter níveis de confiança ao menos que exista conteúdo para que eles leiam. Esta mensagem é apenas para os moderadores."
     learn_more: "aprenda mais..."
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
@@ -741,6 +743,13 @@ pt_BR:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Adquirido '{{description}}'</p>"
+      popup:
+        mentioned: '{{username}} mencionou você em "{{topic}}" - {{site_title}}'
+        quoted: '{{username}} citou você em "{{topic}}" - {{site_title}}'
+        replied: '{{username}} respondeu para você em "{{topic}}" - {{site_title}}'
+        posted: '{{username}} postou em "{{topic}}" - {{site_title}}'
+        private_message: '{{username}} enviou uma mensagem particular para você em "{{topic}}" - {{site_title}}'
+        linked: '{{username}} linkou o seu post de "{{topic}}" - {{site_title}}'
     upload_selector:
       title: "Adicionar uma imagem"
       title_with_attachments: "Adicionar uma imagem ou arquivo"
@@ -2009,8 +2018,6 @@ pt_BR:
         suspended_explanation: "Um usuário suspenso não pode entrar."
         block_explanation: "Um usuário bloqueado não pode postar ou iniciar tópicos."
         trust_level_change_failed: "Houve um problema ao trocar o nível de confiança do usuário."
-        grant_admin_failed: "Houve um problema ao conceder privilégios de administração."
-        grant_moderation_failed: "Houve um problema ao conceder privilégios de moderação."
         suspend_modal_title: "Usuário Suspenso"
         trust_level_2_users: "Usuários de Nível de Confiança 2"
         trust_level_3_requirements: "Requisitos do Nível de Confiança 3"
@@ -2191,12 +2198,13 @@ pt_BR:
       title: 'Atalhos de teclado'
       jump_to:
         title: 'Ir Para'
-        home: '<b>g</b>, <b>h</b> Home (Últimos)'
+        home: '<b>g</b>, <b>h</b> Home'
         latest: '<b>g</b>, <b>l</b> Últimos'
         new: '<b>g</b>, <b>n</b> Novo'
         unread: '<b>g</b>, <b>u</b> Não Lidos'
         categories: '<b>g</b>, <b>c</b> Categorias'
         top: '<b>g</b>, <b>t</b> Topo'
+        bookmarks: '<b>g</b>, <b>b</b> Favoritos'
       navigation:
         title: 'Navegação'
         jump: '<b>#</b> Ir para a resposta #'
@@ -2318,6 +2326,15 @@ pt_BR:
         first_flag:
           name: Primeira Marcação
           description: Sinalizar uma resposta
+        promoter:
+          name: Promotor
+          description: Convidou um usuário
+        campaigner:
+          name: Veterano
+          description: Convidou 3 membros
+        champion:
+          name: Campeão
+          description: Convidou 10 membros
         first_share:
           name: Primeiro Compartilhamento
           description: Compartilhar uma resposta

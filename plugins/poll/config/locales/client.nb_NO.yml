@@ -5,4 +5,40 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nb_NO: {}
+nb_NO:
+  js:
+    poll:
+      voters:
+        zero: "stemmer"
+        one: "stemmer"
+        other: "stemmere"
+      total_votes:
+        zero: "stemmer totalt"
+        one: "stemmer totalt"
+        other: "stemmer totalt"
+      average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options: "Du kan velge minst <strong>%{count}</strong> alternativer."
+          up_to_max_options: "Du kan velge opptil <strong>%{count}</strong> alternativer."
+          x_options: "Du kan velge <strong>%{count}</strong> alternativer."
+          between_min_and_max_options: "Du kan velge mellom <strong>%{min}</strong> og <strong>%{max}</strong> alternativer."
+      cast-votes:
+        title: "Stem nå"
+        label: "Stem!"
+      show-results:
+        title: "Vis resultat"
+        label: "Vis resultat"
+      hide-results:
+        title: "Tilbake til dine stemmer"
+        label: "Skjul resultater"
+      open:
+        title: "Åpne avstemming"
+        label: "Åpne"
+        confirm: "Er du sikker på at du vil åpne avstemmingen?"
+      close:
+        title: "Lukk avstemming"
+        label: "Lukk"
+        confirm: "Er du sikker på at du vil lukke avstemmingen?"
+      error_while_toggling_status: "Det har oppstått en feil"
+      error_while_casting_votes: "Noe gikk galt"
