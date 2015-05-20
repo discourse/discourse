@@ -106,6 +106,16 @@ module ApplicationHelper
     current_user.try(:staff?)
   end
 
+  def rtl?
+    ["ar", "fa_IR", "he"].include?(user_locale)
+  end
+
+  def user_locale
+    locale = current_user.locale if current_user && SiteSetting.allow_user_locale
+    # changing back to default shoves a blank string there
+    locale.present? ? locale : SiteSetting.default_locale
+  end
+
   # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
 
