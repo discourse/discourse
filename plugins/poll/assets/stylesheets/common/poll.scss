@@ -79,7 +79,7 @@ div.poll {
     vertical-align: middle;
     padding: 10px;
 
-    span {
+    & > span {
       font-size: 2em;
     }
   }
