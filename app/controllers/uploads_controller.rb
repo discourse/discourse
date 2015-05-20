@@ -7,16 +7,18 @@ class UploadsController < ApplicationController
     file = params[:file] || params[:files].first
     url = params[:url]
 
-    # TODO: support for API providing a URL (cf. AvatarUploadService)
-
     Scheduler::Defer.later("Create Upload") do
-      upload = Upload.create_for(
-        current_user.id,
-        file.tempfile,
-        file.original_filename,
-        file.tempfile.size,
-        content_type: file.content_type
-      )
+      # API can provide a URL
+      if file.nil? && url.present? && is_api?
+        tempfile = FileHelper.download(url, SiteSetting.max_image_size_kb.kilobytes, "discourse-upload-#{type}") rescue nil
+        filename = File.basename(URI.parse(file).path)
+      else
+        tempfile = file.tempfile
+        filename = file.original_filename
+        content_type = file.content_type
+      end
+
+      upload = Upload.create_for(current_user.id, tempfile, filename, tempfile.size, content_type: content_type)
 
       if upload.errors.empty? && current_user.admin?
         retain_hours = params[:retain_hours].to_i
@@ -26,6 +28,8 @@ class UploadsController < ApplicationController
       data = upload.errors.empty? ? upload : { errors: upload.errors.values.flatten }
 
       MessageBus.publish("/uploads/#{type}", data.as_json, user_ids: [current_user.id])
+
+      tempfile.try(:close!) rescue nil
     end
 
     # HACK FOR IE9 to prevent the "download dialog"
