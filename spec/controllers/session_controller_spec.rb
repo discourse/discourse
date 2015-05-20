@@ -261,7 +261,7 @@ describe SessionController do
 
       # nonce is bad now
       get :sso_login, Rack::Utils.parse_query(sso.payload)
-      expect(response.code).to eq('500')
+      expect(response.code).to eq('419')
     end
 
     it 'can act as an SSO provider' do
