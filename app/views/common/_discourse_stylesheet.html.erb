@@ -1,4 +1,28 @@
-<%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<!-- If the locale is RTL or if it could be set to RTL by a user -->
+<%- if SiteSetting.default_locale.in?(%w(ar fa_IR he)) || SiteSetting.allow_user_locale %>
+
+    <!-- If there is no logged in user, serve the stylesheet based on SiteSetting.default -->
+    <%- if !current_user.present? %>
+        <%- if SiteSetting.default_locale.in?(%w(ar fa_IR he)) %>
+            <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+        <%- else %>
+            <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+        <%- end %>
+
+    <!-- If there is a logged in user and their locale is RTL, or SiteSetting.allow_user_locale is false and the default_locale is RTL -->
+    <%- elsif SiteSetting.allow_user_locale && current_user.try(:locale).in?(%w(ar fa_IR he)) ||
+                       !SiteSetting.allow_user_locale && SiteSetting.default_locale.in?(%w(ar fa_IR he)) %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+
+        <!-- SiteSetting.allow_user_locale is true and the current user's locale is LTR -->
+    <%- else %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+    <%- end %>
+
+    <!-- The locale is LTR and SiteSetting.allow_user_locale is false -->
+<%- else %>
+    <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+<%- end %>
 
 <%- if staff? %>
   <%= stylesheet_link_tag "admin"%>
