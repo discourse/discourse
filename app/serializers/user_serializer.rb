@@ -196,16 +196,7 @@ class UserSerializer < BasicUserSerializer
   end
 
   def bio_excerpt
-    # If they have a bio return it
-    excerpt = object.user_profile.bio_excerpt
-    return excerpt if excerpt.present?
-
-    # Without a bio, determine what message to show
-    if scope.user && scope.user.id == object.id
-      I18n.t('user_profile.no_info_me', username_lower: object.username_lower)
-    else
-      I18n.t('user_profile.no_info_other', name: object.name)
-    end
+    object.user_profile.bio_excerpt(350 ,keep_newlines: true)
   end
 
   def include_suspend_reason?
