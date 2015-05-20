@@ -581,7 +581,6 @@ fa_IR:
     consumer_email_warning: "سایت شما  برای استفاده از ایمیل گوگل پیکربندی شده (یا دیگر سرویس دهندگان ایمیل) برای ارسال ایمیل. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'> جیمیل  محدود می کند که چند ایمیل می توانی بفرستی</a>. استفاده از یک ارائه دهنده خدمات ایمیل را مانند mandrill.com در نظر بگیرید برای اطمنیان از قابلیت تحوبل ایمیل. "
     site_contact_username_warning: "برای ارسال پیام خودکار ایمیل یکی از کارکنان مهربان را وارد کن . اطلاعات تماس وب سایت را به روز کن در <a href='/admin/site_settings'> تنظیمات سایت </a>."
     notification_email_warning: "ایمیل های آگهی دهنده از طریق ایمیل نا صحیح در دامنه شما ارسال نمی شوند; تحویل ایمیل  نامنظم و غیر قابل اعتماد خواهد بود. لطفا ایمیل آگهی دهنده را با یک ایمیل آدرس محلی وارد کنید در <a href='/admin/site_settings'> تنظیمات سایت </a>."
-    s3_deprecation_warning: "اخطار! آمازون S3 برای ذخیره سازی تصویر / فایل ضمیمه توصیه نمی شود. لطفا، دنبال کنید <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>دستورالعمل ها</a> و مهاجرت به ذخیره سازی محلی."
   content_types:
     education_new_reply:
       title: "آموزش کاربر جدید: پاسخ های اول"

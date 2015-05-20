@@ -92,7 +92,6 @@ sv:
       email: 'skicka denna länk i ett email'
     topic_admin_menu: "ämne admin åtgärder"
     emails_are_disabled: "Alla utgående email har blivit deaktiverad av en administratör. Inga kungörelser av någon sort kommer att bli skickad."
-    s3_deprecation_warning: "VARNING! Stödet för Amazon S3-lagring av bilder/bilagor kommer snart överges. Följ <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instruktionerna</a> för migrering till lokal lagring."
     edit: 'redigera titel och kategori för denna tråd'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
@@ -1913,8 +1912,6 @@ sv:
         suspended_explanation: "En avstängd användare kan inte logga in."
         block_explanation: "En blockerad användare kan inte posta inlägg eller starta trådar."
         trust_level_change_failed: "Ett problem uppstod då användarens förtroendenivå skulle ändras."
-        grant_admin_failed: "Det skedde ett problem i försöket att ge admin rättigheter."
-        grant_moderation_failed: "Det skedde ett problem i försöket att ge moderator rättigheter."
         suspend_modal_title: "Stäng av användare"
         trust_level_2_users: "Användare med Förtroendenivå 2"
         trust_level_3_requirements: "Krav för Förtroendenivå 3"

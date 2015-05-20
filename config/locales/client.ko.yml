@@ -189,6 +189,7 @@ ko:
         one: "이 토픽은 <b>1</b>개의 승인 대기중인 게시글이 있습니다."
         many: "이 토픽은 <b>{{count}}</b>개의 승인 대기중인 게시글이 있습니다."
       confirm: "변경사항 저장"
+      delete_prompt: "Are you sure you want to delete <b>%{username}</b>? This will remove all of their posts and block their email and ip address."
       approval:
         title: "게시글 승인 필요"
         pending_posts:
@@ -640,6 +641,7 @@ ko:
       title_placeholder: "이야기 나누고자 하는 내용을 한문장으로 적는다면?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
+      reply_placeholder: "여기에 입력하세요. 마크 다운이나 BBCode 혹은 HTML 형식을 사용하세요. 이미지는 드래그나 붙여넣고로 업로드 할 수 있어요."
       view_new_post: "새로운 게시물을 볼 수 있습니다."
       saving: "저장 중..."
       saved: "저장 완료!"
@@ -901,6 +903,7 @@ ko:
         help: '운영자에게 이 글을 신고합니다.'
         success_message: '성공적으로 토픽을 신고 하였습니다.'
       feature_topic:
+        title: "Feature 토픽"
         pin: "이 토픽을 {{categoryLink}} 카테고리 상단에 노출하도록 합니다."
         confirm_pin: "이미 {{count}}개의 고정된 토픽이 있습니다. 너무 많은 토픽이 고정되어 있으면 새로운 사용자나 익명사용자에게 부담이 될 수 있습니다. 정말로 이 카테고리에 추가적으로 토픽을 고정하시겠습니까?"
         unpin: "이 토픽을 {{categoryLink}} 카테고리 상단에서 제거 합니다."
@@ -927,6 +930,7 @@ ko:
         email_or_username: "초대하려는 이메일 또는 아이디"
         email_or_username_placeholder: "이메일 또는 아이디"
         action: "초대"
+        success: "사용자가 메세지에 참여할 수 있도록 초대했습니다."
         error: "죄송합니다. 해당 사용자를 초대하는 도중 오류가 발생했습니다."
         group_name: "그룹명"
       invite_reply:
@@ -935,7 +939,15 @@ ko:
         action: '초대장 보내기'
         help: '이메일을 통해 다른 사람을 이 토픽에 초대합니다.'
         to_forum: "친구에게 요약 이메일을 보내고 이 포럼에 가입할 수 있도록 링크를 전송합니다."
+        sso_enabled: "이 토픽에 초대하고 싶은 사람의 아이디를 입력하세요."
+        to_topic_blank: "이 토픽에 초대하고 싶은 사람의 아이디나 이메일주소를 입력하세요."
+        to_topic_email: "이메일 주소를 입력하셨습니다. 당신의 친구에게 이 토픽에 답변 달기가 가능한 초대장을 보내겠습니다."
+        to_topic_username: "아이디를 입력했습니다. 해당 사용자에게 이 토픽으로 초대하는 링크와 함께 알림을 보내겠습니다."
+        to_username: "초대하고 싶은 사용자 아이디를 입력하세요. 해당 사용자에게 이 토픽에 초대하는 링크와 함께 알림을 보내겠습니다."
         email_placeholder: '이메일 주소'
+        success_email: "<b>{{emailOrUsername}}</b>로 초대장을 발송했습니다. 초대를 수락하면 알려 드리겠습니다. 초대상태를 확인하려면 사용자 페이지에서 '초대장' 탭을 선택하세요."
+        success_username: "사용자가 이 토픽에 참여할 수 있도록 초대했습니다."
+        error: "그 사람을 초대할 수 없습니다. 혹시 이미 초대하진 않았나요?  (Invites are rate limited)"
       login_reply: '로그인하고 답글 쓰기'
       filters:
         n_posts:
@@ -974,8 +986,10 @@ ko:
         description:
           other: <b>{{count}}</b>개의 개시글을 선택하셨어요.
     post:
+      reply: "{{link}}{{replyAvatar}} {{username}}에 답글 작성"
       reply_topic: "{{link}}에 답글 작성"
       quote_reply: "인용한 답글"
+      edit: "{{link}} {{replyAvatar}} {{username}} 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 게시물"
       last_edited_on: "마지막으로 편집:"
@@ -1060,9 +1074,12 @@ ko:
         people:
           off_topic: "{{icons}}님이 이 게시물을 토픽에서 제외했습니다."
           spam: "{{icons}} 스팸으로 신고되었습니다"
+          spam_with_url: "{{icons}} <a href='{{postUrl}}'>스팸으로</a> 표시됨"
           inappropriate: "{{icons}} 부적절하다고 신고했습니다"
           notify_moderators: "{{icons}}님은 이 게시물을 운영자에게 보고했습니다."
           notify_moderators_with_url: "{{icons}}님은 이 <a href='{{postUrl}}'>게시물</a>을 운영자에게 보고했습니다."
+          notify_user: "{{icons}} 메시지를 보냈습니다"
+          notify_user_with_url: "{{icons}} <a href='{{postUrl}}'>메시지</a>를 보냈습니다."
           bookmark: "{{icons}}님이 북마크했습니다."
           like: "{{icons}}님이 좋아합니다."
           vote: "{{icons}}님이 투표했습니다."
@@ -1071,6 +1088,7 @@ ko:
           spam: "당신은 이 게시물을 스팸으로 신고했습니다."
           inappropriate: "당신은 이 게시물을 부적절하다고 신고했습니다"
           notify_moderators: "당신은 이 게시물을 운영자에게 보고했습니다."
+          notify_user: "이 사용자에게 메시지를 보냈습니다."
           bookmark: "당신은 이 게시물을 북마크했습니다."
           like: "'좋아요' 했습니다"
           vote: "당신은 이 게시물을 위해 투표했습니다."
@@ -1083,6 +1101,8 @@ ko:
             other: "당신과 {{count}}명의 다른 사람들이 부적절하다고 신고했습니다"
           notify_moderators:
             other: "당신과 {{count}}명의 다른 사람들이 적당하다고 표시했습니다."
+          notify_user:
+            other: "당신과 {{count}}명의 사용자가 이 사용자에게 메시지를 보냈습니다."
           bookmark:
             other: "당신과 {{count}}명의 다른 사람들이 북마크 했습니다."
           like:
@@ -1098,6 +1118,8 @@ ko:
             other: "{{count}}명의 사람들이 부적절하다고 신고했습니다"
           notify_moderators:
             other: "{{count}}명의 사람들이 이 게시물을 운영자에게 신고했습니다"
+          notify_user:
+            other: "{{count}}명이 이 사용자에게 메시지를 보냈습니다."
           bookmark:
             other: "{{count}}명의 사용자가 이 게시물을 북마크했습니다."
           like:
@@ -1887,8 +1909,6 @@ ko:
         suspended_explanation: "접근 금지된 유저는 로그인 할 수 없습니다."
         block_explanation: "블락 사용자는 게시글을 작성하거나 토픽을 작성할 수 없습니다."
         trust_level_change_failed: "신뢰도 변경에 문제가 있습니다."
-        grant_admin_failed: "There was a problem granting admin privileges."
-        grant_moderation_failed: "There was a problem granting moderation privileges."
         suspend_modal_title: "Suspend User"
         trust_level_2_users: "신뢰도 2 사용자들"
         trust_level_3_requirements: "사용자 신뢰도 3 이상이 필요"
@@ -2069,7 +2089,6 @@ ko:
       title: '키보드 단축키'
       jump_to:
         title: 'Jump To'
-        home: '<b>g</b>, <b>h</b> 홈 (Latest)'
         latest: '<b>g</b>, <b>l</b> 최신'
         new: '<b>g</b>, <b>n</b> 새로운'
         unread: '<b>g</b>, <b>u</b> 읽지 않은'

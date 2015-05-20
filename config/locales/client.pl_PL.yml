@@ -108,7 +108,6 @@ pl_PL:
       email: 'wyślij ten odnośnik przez email'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
-    s3_deprecation_warning: "UWAGA! Amazon S3 zostanie wkrótce wycofany jako przestrzeń dla obrazków i załączników. Zapoznaj się z <a href='https://meta.discourse.org/t/warning-amazon-s3-is-deprecated-in-1-3-for-image-attachment-storage/26594'>instrukcją</a> jak przenieść dane na lokalny dysk."
     edit: 'edytuj tytuł i kategorię tego tematu'
     not_implemented: "Bardzo nam przykro, ale ta funkcja nie została jeszcze zaimplementowana."
     no_value: "Nie"
@@ -2095,8 +2094,6 @@ pl_PL:
         suspended_explanation: "Zawieszony użytkownik nie może się logować."
         block_explanation: "Zablokowany użytkownik nie może tworzyć wpisów ani zaczynać tematów."
         trust_level_change_failed: "Wystąpił problem przy zmianie poziomu zaufania użytkowanika."
-        grant_admin_failed: "Wystąpił problem z przyznaniem przywileju administratora,"
-        grant_moderation_failed: "Wystąpił problem z przyznaniem przywileju moderatora,"
         suspend_modal_title: "Zawieś użytkownika"
         trust_level_2_users: "Użytkownicy o 2. poziomie zaufania"
         trust_level_3_requirements: "Wymagania 3. poziomu zaufania"
@@ -2277,12 +2274,13 @@ pl_PL:
       title: 'Skróty klawiszowe'
       jump_to:
         title: 'Skocz do'
-        home: '<b>g</b>, <b>h</b> strona główna (Aktualne)'
+        home: '<b>g</b>, <b>h</b> Strona główna'
         latest: '<b>g</b>, <b>l</b> Aktualne'
         new: '<b>g</b>, <b>n</b> Nowe'
         unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
         categories: '<b>g</b>, <b>c</b> Kategorie'
         top: '<b>g</b>, <b>t</b> Popularne'
+        bookmarks: '<b>g</b>, <b>b</b> Zakładki'
       navigation:
         title: 'Nawigacja'
         jump: '<b>#</b> idź do wpisu #'
@@ -2407,6 +2405,15 @@ pl_PL:
         first_flag:
           name: Pierwsza flaga
           description: Zgłoszenie wpisu
+        promoter:
+          name: Promotor
+          description: Zaproszenie użytkownika
+        campaigner:
+          name: Działacz
+          description: Zaproszenie 3 użytkowników
+        champion:
+          name: Czempion
+          description: Zaproszenie 10 użytkowników
         first_share:
           name: Pierwsze udostępnienie
           description: Udostępniono wpis
