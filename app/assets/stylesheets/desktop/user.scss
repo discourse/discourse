@@ -470,7 +470,7 @@
     }
     .notification {
       &.unread {
-        background-color: dark-light-diff($tertiary, $secondary, 90%, -60%);
+        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
       }
 
       li { display: inline-block; }
