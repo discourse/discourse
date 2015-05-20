@@ -133,7 +133,7 @@ describe UploadsController do
     end
 
     it "returns 404 when the upload doens't exist" do
-      Upload.expects(:find_by).with(sha1: sha).returns(nil)
+      Upload.stubs(:find_by).returns(nil)
 
       get :show, site: site, sha: sha, extension: "pdf"
       expect(response.response_code).to eq(404)
